@@ -2,124 +2,153 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A363BC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090ECC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBDC2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D1D2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h2DAYTb9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="p2E5qUKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391451AbgAXSmH (ORCPT
+        id S2391472AbgAXSmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:42:07 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:32996 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390147AbgAXSmH (ORCPT
+        Fri, 24 Jan 2020 13:42:36 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:32850 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389067AbgAXSmg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:42:07 -0500
-Received: by mail-vs1-f66.google.com with SMTP id n27so1894362vsa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:42:06 -0800 (PST)
+        Fri, 24 Jan 2020 13:42:36 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b6so3230759wrq.0;
+        Fri, 24 Jan 2020 10:42:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=48FEuH9EzQeY2PBZotAukaxCb1+PqqfajszpsDI4a/I=;
-        b=h2DAYTb9VsQ+QjqncuR5l68KeBwSCp968ZGMuifSCzx2SFdsigmou1urYD8Qli/yIB
-         ULZ0o/3CoryFzCD4BFqX954rkrHj470+rHobBAglYt1Vxiwm7khjQG/kjmroNTFrCvsi
-         I329X/GLMuSBuWI8KCtdY5NBsyORT8NbXyDuQgmFnxmUlvz9Cf0PXPHXJxKHo+kVRo4l
-         P2UKLmHy2GX9TupKjVOdg155kOC+XwGwiV0oRLpjIhPR6FxlVtifpDh+VhCIufozcHMv
-         bQPfhLDNAoc3eo20FQRCH+xZ+YybjoqD37GFmGIFPQB8tVNwpEwxt82eDzxc7tDL+Lym
-         ilhw==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hxaGriu+6OASXqVTTD7fqR/Evc+gXUed/rL6pEHioHM=;
+        b=p2E5qUKf/90BiHk6doo6hKQ2tmAsndtzrVRKNHBT2hGtfSRR9F7fAxcefAXwRNjEWk
+         5AKziF4gPF/m5+W7fbc+/4f3/GPamv6RoxHy+/mYY2sXfpwMA6iS+wNJjRt1Dk30hRBM
+         WVvvHsTNnPEWQq0uAkigFjPfQwZ3T25oul13qzHnqt5T9SF0u3nHJX+AzDArAVBVg54L
+         pv7vCHjtLr9NHAJC8qqK50+3+3+RVI79Tqq6XQdwcARzzkom2Ca6Wm5vkwXS45mgH8eY
+         9QTrnbhpBY4vGKq07Clx0/y4ni7+SoaS+3qSCvF0k3TzpfPwbKYxKGAs6c1qBTK2SmcP
+         f9jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=48FEuH9EzQeY2PBZotAukaxCb1+PqqfajszpsDI4a/I=;
-        b=KhX9dsEwHEGvSBmzka6TkngtjGXLR78TLGQVnZIfWs4e0Fu3V2krXhrhcywwlsUFpM
-         6ylvpVnwTt94ZV90hyT2G4BhbC29GLhqZA/87oQ8IXeA3igt3ni/65FT+23bh/oA8pSC
-         Bo+rOFfL+yvhUhT0hioO/p4175Mfv09qxqL1pntKT6KPvoipCJFPw6cmRnI1CqV4Dhpe
-         kPJ5ezrv277mdZmFCtPOn4TKzwl7gsn0osjAcnhzbYOO3YPfZ3v6SGB2DeniwqNXWAyB
-         Bcrsw8SgySsi3X8M/Ay2WB4ypaxYpKCs4GdGEMQedajIMTM2p4d8IRh51oDDGKq42yer
-         aSWQ==
-X-Gm-Message-State: APjAAAUsE1YGkO8NMQcrJ39FbnuZL1dRXqTzl59KyT6HU1/RCY7DfmUn
-        VWGX0fqyI1rpJIB7Rnldh3arhXld2RNsnzesK5As2g==
-X-Google-Smtp-Source: APXvYqwBMegd+R+iEIyOxrLLSSG25ZR0bNGvDF2TyU33C6lJzgeFsPuzLdUFCxmatMXomV9oKoh27bIVvPlErYJbBqs=
-X-Received: by 2002:a67:df96:: with SMTP id x22mr953575vsk.235.1579891326150;
- Fri, 24 Jan 2020 10:42:06 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hxaGriu+6OASXqVTTD7fqR/Evc+gXUed/rL6pEHioHM=;
+        b=NLzFhisAgTK0KO5seNaRv+phSpFp2ocicFaDVdXQKQGDWe6tjmeOIb+apsTIPH9W3K
+         gS2ac0p6J4OHN6gJze0J7f3x8aAqLyK3A8jpV4KKFiDt5IwbQlDMIqeM5aLIZeQa9/BQ
+         EUme5No/bouwTSh5+Wc0kqCkn12JTTJ7hOvvVF/WnPts6iQxt+aS0ufInAnawUWf/eMY
+         KAdqzV2GWMjJ+5lBCYpPiN76KvjhWRYdC42qHOs+lBmmFfxemz2nohXZO/uuvuWp3kai
+         QulGGd5mzO4/3hBKeUoho4HP8utQMPWpPi/KMbg0HCpWhAuMU9b0qTjmUhcVU+m+6CSX
+         YJIQ==
+X-Gm-Message-State: APjAAAXxbLD1ttK7fjCbjx2ra9KwsbYfxnhUaM+9cx18YgxZMozx/gWE
+        0XNAm5OC8enBePfsOZclbYo=
+X-Google-Smtp-Source: APXvYqzEXpUS4DI6SZ7C8bn6Zh3dAPRFC02N9FBQ/+W5uZf8HmUz7IrPEpYcSLhpvX2wEORsxjB2Iw==
+X-Received: by 2002:adf:ef8b:: with SMTP id d11mr5492462wro.45.1579891354616;
+        Fri, 24 Jan 2020 10:42:34 -0800 (PST)
+Received: from desktopdebian.localdomain (x4d03a6f1.dyn.telefonica.de. [77.3.166.241])
+        by smtp.gmail.com with ESMTPSA id d14sm9302724wru.9.2020.01.24.10.42.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 10:42:34 -0800 (PST)
+From:   =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
+Cc:     cgzones@googlemail.com, Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] selinux: allow kernfs symlinks to inherit parent directory context
+Date:   Fri, 24 Jan 2020 19:42:21 +0100
+Message-Id: <20200124184221.322248-1-cgzones@googlemail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200123180436.99487-1-bgardon@google.com> <20200123180436.99487-10-bgardon@google.com>
- <92042648-e43a-d996-dc38-aded106b976b@redhat.com>
-In-Reply-To: <92042648-e43a-d996-dc38-aded106b976b@redhat.com>
-From:   Ben Gardon <bgardon@google.com>
-Date:   Fri, 24 Jan 2020 10:41:55 -0800
-Message-ID: <CANgfPd8jpUykwrOnToXx+zhJOJvnWvxhZPSKhAwST=wwYdtA3A@mail.gmail.com>
-Subject: Re: [PATCH v4 09/10] KVM: selftests: Stop memslot creation in KVM
- internal memslot region
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 12:58 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 23/01/20 19:04, Ben Gardon wrote:
-> > KVM creates internal memslots covering the region between 3G and 4G in
-> > the guest physical address space, when the first vCPU is created.
-> > Mapping this region before creation of the first vCPU causes vCPU
-> > creation to fail. Prohibit tests from creating such a memslot and fail
-> > with a helpful warning when they try to.
-> >
-> > Signed-off-by: Ben Gardon <bgardon@google.com>
-> > ---
->
-> The internal memslots are much higher than this (0xfffbc000 and
-> 0xfee00000).  I'm changing the patch to block 0xfe0000000 and above,
-> otherwise it breaks vmx_dirty_log_test.
+Currently symlinks on kernel filesystems, like sysfs, are labeled on
+creation with the parent fs root sid.
 
-Perhaps we're working in different units, but I believe paddrs
-0xfffbc000 and 0xfee00000 are between 3GiB and 4GiB.
-"Proof by Python":
->>> B=1
->>> KB=1024*B
->>> MB=1024*KB
->>> GB=1024*MB
->>> hex(3*GB)
-'0xc0000000'
->>> hex(4*GB)
-'0x100000000'
->>> 3*GB == 3<<30
-True
->>> 0xfffbc000 > 3*GB
-True
->>> 0xfffbc000 < 4*GB
-True
->>> 0xfee00000 > 3*GB
-True
->>> 0xfee00000 < 4*GB
-True
+Allow symlinks to inherit the parent directory context, so fine-grained
+kernfs labeling can be applied to symlinks too and checking contexts
+doesn't complain about them.
 
-Am I missing something?
+For backward-compatibility this behavior is contained in a new policy
+capability: kernfs_sovereign_symlinks
 
-I don't think blocking 0xfe0000000 and above is useful, as there's
-nothing mapped in that region and AFAIK it's perfectly valid to create
-memslots there.
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+---
+ security/selinux/hooks.c            | 5 ++++-
+ security/selinux/include/security.h | 8 ++++++++
+ security/selinux/ss/services.c      | 3 ++-
+ 3 files changed, 14 insertions(+), 2 deletions(-)
 
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index d9e8b2131..1303bc8c4 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -1475,7 +1475,10 @@ static int inode_doinit_with_dentry(struct inode *inode, struct dentry *opt_dent
+ 		/* Default to the fs superblock SID. */
+ 		sid = sbsec->sid;
+ 
+-		if ((sbsec->flags & SE_SBGENFS) && !S_ISLNK(inode->i_mode)) {
++		if (((sbsec->flags & SE_SBGENFS) &&
++		     (!S_ISLNK(inode->i_mode))) ||
++		    (selinux_policycap_kernfs_sovereign_symlinks() &&
++		     (sbsec->flags & SE_SBGENFS_XATTR))) {
+ 			/* We must have a dentry to determine the label on
+ 			 * procfs inodes */
+ 			if (opt_dentry) {
+diff --git a/security/selinux/include/security.h b/security/selinux/include/security.h
+index a39f9565d..cc8217848 100644
+--- a/security/selinux/include/security.h
++++ b/security/selinux/include/security.h
+@@ -79,6 +79,7 @@ enum {
+ 	POLICYDB_CAPABILITY_ALWAYSNETWORK,
+ 	POLICYDB_CAPABILITY_CGROUPSECLABEL,
+ 	POLICYDB_CAPABILITY_NNP_NOSUID_TRANSITION,
++	POLICYDB_CAPABILITY_KERNFS_SOVEREIGN_SYMLINKS,
+ 	__POLICYDB_CAPABILITY_MAX
+ };
+ #define POLICYDB_CAPABILITY_MAX (__POLICYDB_CAPABILITY_MAX - 1)
+@@ -209,6 +210,13 @@ static inline bool selinux_policycap_nnp_nosuid_transition(void)
+ 	return state->policycap[POLICYDB_CAPABILITY_NNP_NOSUID_TRANSITION];
+ }
+ 
++static inline bool selinux_policycap_kernfs_sovereign_symlinks(void)
++{
++	struct selinux_state *state = &selinux_state;
++
++	return state->policycap[POLICYDB_CAPABILITY_KERNFS_SOVEREIGN_SYMLINKS];
++}
++
+ int security_mls_enabled(struct selinux_state *state);
+ int security_load_policy(struct selinux_state *state,
+ 			 void *data, size_t len);
+diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+index 216ce602a..b70380947 100644
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -73,7 +73,8 @@ const char *selinux_policycap_names[__POLICYDB_CAPABILITY_MAX] = {
+ 	"extended_socket_class",
+ 	"always_check_network",
+ 	"cgroup_seclabel",
+-	"nnp_nosuid_transition"
++	"nnp_nosuid_transition",
++	"kernfs_sovereign_symlinks"
+ };
+ 
+ static struct selinux_ss selinux_ss;
+-- 
+2.25.0
 
->
-> Paolo
->
