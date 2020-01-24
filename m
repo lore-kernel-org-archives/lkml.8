@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73576C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1A2C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C71B2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253302071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876687;
-	bh=wvibL/N1DiVGTjKauXYmvr6WaMH6WexNX705Ykpmzik=;
+	s=default; t=1579876691;
+	bh=/0Ksl39P2LVCGJpGFA7i6rnSlgdgbXNvz6q6O1RuE+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VuPwRa6XVUJjlAkAlE3c5us8rc0o6MSBnQKSmRC5BqRziupss9yoALtmlo9ZKW3/H
-	 VQF5P8U4nEVflqKdg3Cpx3H+6eieCVHBknKafIKtyvnqhhyAgOIJcFUhTaudifC9JW
-	 ukOwGRcpKqL5IxzUKYA2wPswqhRZE4o/c7tpCk0g=
+	b=pdc6g5DLysSpEgV5p/iZiIaVbgPE0wvOS7/TdG3xF+3xhHUbGo2UdbquUjt9nEGJo
+	 CEVvdlEibc25HeJo2pJFWq2p21naUWxV1ktqVfJvMZ3VfCcjy5p5Vfp0cUcKgFSfxX
+	 DwueIEbT6OnFShoQWgrBmrCy9t0FeUPmDvVf9IqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388391AbgAXOiG (ORCPT
+        id S2391116AbgAXOSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:38:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38780 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:18:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391130AbgAXOSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:51 -0500
+        id S2390998AbgAXOSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB2502465B;
-        Fri, 24 Jan 2020 14:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B4B214DB;
+        Fri, 24 Jan 2020 14:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875530;
-        bh=wvibL/N1DiVGTjKauXYmvr6WaMH6WexNX705Ykpmzik=;
+        s=default; t=1579875522;
+        bh=/0Ksl39P2LVCGJpGFA7i6rnSlgdgbXNvz6q6O1RuE+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V/A7tYjSkiUdNYXjFZUBHg2WfBPSqRkWG5s28YwmqcTjt/TQaqWlz2WbGzWU5fZ7d
-         08f1D8SSnJOwd2MYfgB3JQkUOT2TulsNaag5i/yM6pjNn2Y0x5kCGZ5XsTGLoZQz9y
-         wJ5Q3TTI37iMh5HJWyMRwQVtwI/pxqVLfM4+33dM=
+        b=kI4djcW4exCiDjImmWiKjhjkXtRsEsx7+w2m++g94/8aZLBF1GPT3xgEkoAh6Bvlw
+         c0ryfrv3IBxWIpW1seCbzkWDd0C9l3KqTHngiKC1wTlttxcVOCzu0/wmUJxGtFBSr6
+         bl6mLs2fopjfNTT75KGJ0Vtwo8rNNkuPT9JAiwWg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Stephen Boyd <sboyd@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 028/107] clk: mmp2: Fix the order of timer mux parents
-Date:   Fri, 24 Jan 2020 09:16:58 -0500
-Message-Id: <20200124141817.28793-28-sashal@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 021/107] efi/earlycon: Fix write-combine mapping on x86
+Date:   Fri, 24 Jan 2020 09:16:51 -0500
+Message-Id: <20200124141817.28793-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -59,39 +64,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit 8bea5ac0fbc5b2103f8779ddff216122e3c2e1ad ]
+[ Upstream commit d92b54570d24d017d2630e314b525ed792f5aa6c ]
 
-Determined empirically, no documentation is available.
+On x86, until PAT is initialized, WC translates into UC-. Since we
+calculate and store pgprot_writecombine(PAGE_KERNEL) when earlycon is
+initialized, this means we actually use UC- mappings instead of WC
+mappings, which makes scrolling very slow.
 
-The OLPC XO-1.75 laptop used parent 1, that one being VCTCXO/4 (65MHz), but
-thought it's a VCTCXO/2 (130MHz). The mmp2 timer driver, not knowing
-what is going on, ended up just dividing the rate as of
-commit f36797ee4380 ("ARM: mmp/mmp2: dt: enable the clock")'
+Instead store a boolean flag to indicate whether we want to use
+writeback or write-combine mappings, and recalculate the actual pgprot_t
+we need on every mapping. Once PAT is initialized, we will start using
+write-combine mappings, which speeds up the scrolling considerably.
 
-Link: https://lore.kernel.org/r/20191218190454.420358-3-lkundrak@v3.sk
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Fixes: 69c1f396f25b ("efi/x86: Convert x86 EFI earlyprintk into generic earlycon implementation")
+Link: https://lkml.kernel.org/r/20191224132909.102540-2-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mmp/clk-of-mmp2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/efi/earlycon.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
-index a60a1be937ad6..b4a95cbbda989 100644
---- a/drivers/clk/mmp/clk-of-mmp2.c
-+++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -134,7 +134,7 @@ static DEFINE_SPINLOCK(ssp3_lock);
- static const char *ssp_parent_names[] = {"vctcxo_4", "vctcxo_2", "vctcxo", "pll1_16"};
+diff --git a/drivers/firmware/efi/earlycon.c b/drivers/firmware/efi/earlycon.c
+index d4077db6dc97f..5d4f84781aa03 100644
+--- a/drivers/firmware/efi/earlycon.c
++++ b/drivers/firmware/efi/earlycon.c
+@@ -17,7 +17,7 @@ static const struct console *earlycon_console __initdata;
+ static const struct font_desc *font;
+ static u32 efi_x, efi_y;
+ static u64 fb_base;
+-static pgprot_t fb_prot;
++static bool fb_wb;
+ static void *efi_fb;
  
- static DEFINE_SPINLOCK(timer_lock);
--static const char *timer_parent_names[] = {"clk32", "vctcxo_2", "vctcxo_4", "vctcxo"};
-+static const char *timer_parent_names[] = {"clk32", "vctcxo_4", "vctcxo_2", "vctcxo"};
+ /*
+@@ -33,10 +33,8 @@ static int __init efi_earlycon_remap_fb(void)
+ 	if (!earlycon_console || !(earlycon_console->flags & CON_ENABLED))
+ 		return 0;
  
- static DEFINE_SPINLOCK(reset_lock);
+-	if (pgprot_val(fb_prot) == pgprot_val(PAGE_KERNEL))
+-		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WB);
+-	else
+-		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WC);
++	efi_fb = memremap(fb_base, screen_info.lfb_size,
++			  fb_wb ? MEMREMAP_WB : MEMREMAP_WC);
  
+ 	return efi_fb ? 0 : -ENOMEM;
+ }
+@@ -53,9 +51,12 @@ late_initcall(efi_earlycon_unmap_fb);
+ 
+ static __ref void *efi_earlycon_map(unsigned long start, unsigned long len)
+ {
++	pgprot_t fb_prot;
++
+ 	if (efi_fb)
+ 		return efi_fb + start;
+ 
++	fb_prot = fb_wb ? PAGE_KERNEL : pgprot_writecombine(PAGE_KERNEL);
+ 	return early_memremap_prot(fb_base + start, len, pgprot_val(fb_prot));
+ }
+ 
+@@ -215,10 +216,7 @@ static int __init efi_earlycon_setup(struct earlycon_device *device,
+ 	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+ 		fb_base |= (u64)screen_info.ext_lfb_base << 32;
+ 
+-	if (opt && !strcmp(opt, "ram"))
+-		fb_prot = PAGE_KERNEL;
+-	else
+-		fb_prot = pgprot_writecombine(PAGE_KERNEL);
++	fb_wb = opt && !strcmp(opt, "ram");
+ 
+ 	si = &screen_info;
+ 	xres = si->lfb_width;
 -- 
 2.20.1
 
