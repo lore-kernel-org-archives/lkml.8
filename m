@@ -2,419 +2,221 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4ECC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E842C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32CAD2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579906643;
-	bh=uEwRyd/kCuzxK41onqOdXQyVYqH3TKGRLcUJ7YQGFkQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=Acs/RAhpyeKXdzgdP7yQiCJnMPYyvUqqsheikwnwTC82g5KJPPvqDF7zU6u6ltGQL
-	 6/iUK1RhYuRJR9lDdc+lQ/1di7mJTrYKE82vKYvckIJ15Uq5m8MMMpE9EPctAZNrFb
-	 UGpVRdRt2469yJ7mPehIlnlR7eVIm/mrICdDP5nc=
+	by mail.kernel.org (Postfix) with ESMTP id EA7512071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 22:58:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m9ORxpje"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387544AbgAXW5W (ORCPT
+        id S2387435AbgAXW6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 17:57:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729355AbgAXW4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 17:56:37 -0500
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D19E420880;
-        Fri, 24 Jan 2020 22:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579906596;
-        bh=uEwRyd/kCuzxK41onqOdXQyVYqH3TKGRLcUJ7YQGFkQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=L3NTExagokzBLMxf3AK3dtSa6wyZuXnSo4wMB6tYGaw9MbuU0C+/YVAWB4yPrbWSW
-         MQmfX5n7i/3qsYhgWwPUak5A9B6LsKAj3Mp4RhRG7ffrXh+m/dM7yZQ1q/xTrIbRtQ
-         D1JzVdWmpsi/dD+bkY6kAbpudw96dxYF19lc6YAI=
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     rostedt@goodmis.org
-Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        ndesaulniers@google.com
-Subject: [PATCH v3 04/12] tracing: Add dynamic event command creation interface
-Date:   Fri, 24 Jan 2020 16:56:15 -0600
-Message-Id: <4a38478f56b9e831803500f82af896bda92a5370.1579904761.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1579904761.git.zanussi@kernel.org>
-References: <cover.1579904761.git.zanussi@kernel.org>
-In-Reply-To: <cover.1579904761.git.zanussi@kernel.org>
-References: <cover.1579904761.git.zanussi@kernel.org>
+        Fri, 24 Jan 2020 17:58:24 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45486 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729163AbgAXW6X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 17:58:23 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b9so1850841pgk.12;
+        Fri, 24 Jan 2020 14:58:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=t39JTGNX1Yzdh4JGqIo59vMhFZ+cg3GQlNWADxR95/U=;
+        b=m9ORxpjeevQCL17gBwN7N4HGjGipItXb70tWmUubOyHx4AceW9ME8tWnjBv7aNOD9G
+         5Q5DQW0MSyV1K/WdPrGhPsMVrUTrjo9dcVE0kflxMEWbJNiPWHxkdfH885amCN69vh3F
+         c0fj+B3x81kacf0r1DpQ2Qa9RZPJOH98Mj7drDDntFV2J0hA29dNpc7aWAsSmDNOJVOo
+         yPdmhhRSDSCfS2DsqZlshU0UtRftf6g7+6gHpgZsTgHVpyNANpFN9+yuBRk/FIWH6nFa
+         Xqi4lcWe8ynPIg21ir8YyGr9P2CY4QXE29GcDwYMUBNk9lKD4uEB4oj6Qo1x5K4U7wZJ
+         fR+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=t39JTGNX1Yzdh4JGqIo59vMhFZ+cg3GQlNWADxR95/U=;
+        b=T8sKGjKZM8DXdckwBQEtwNDRvcXSWd7VLaqUyiNULkIiXaGh0E9B+30O5WU5owu5fh
+         igX5G354R/Jlg8BPdybsYNG+YNUUcTWm6IskuZUF2maKCYjPytuJRDG+e5t1Q1Z618X+
+         SpbW1yBI617yemuuY5zqQuLo25meyHeDAPgFtTjZM8+QOW+14pYx/a7LbZFgwgDYsEUL
+         0hSPSpSgDuIFiS2SW/+othsSnuGlEYZt07LMfwV+bCJlhZQIYplBHtx0pPB8oKW8vm68
+         cUATjp8HShq29K4k5UNuH9g5mPRjdqD55dNMZti5UwUW7Sv0NfmUH6sji04LHILBQe53
+         XfuA==
+X-Gm-Message-State: APjAAAWkfnu+oDjRkTNjvmRLfxdOmIc0hAfcE5g8S7wGsS32dltzD5kp
+        IoilRPAPFhY9tPGKThP6xxQ=
+X-Google-Smtp-Source: APXvYqww4AnO5LunvjFqB+26WTK+6hnEJdzRQoKZnBwd50hY10JjFAZM7BWfx4bSpatn0d6+mGTFHg==
+X-Received: by 2002:a63:a34b:: with SMTP id v11mr6406064pgn.229.1579906702909;
+        Fri, 24 Jan 2020 14:58:22 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id b8sm7547349pff.114.2020.01.24.14.58.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jan 2020 14:58:22 -0800 (PST)
+Subject: Re: memory leak in em_nbyte_change
+To:     syzbot <syzbot+03c4738ed29d5d366ddf@syzkaller.appspotmail.com>,
+        davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
+References: <000000000000ad33b8059cea8966@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <220c88d1-56ea-d4ef-4f0e-690d77ae2b0e@gmail.com>
+Date:   Fri, 24 Jan 2020 14:58:21 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <000000000000ad33b8059cea8966@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an interface used to build up dynamic event creation commands,
-such as synthetic and kprobe events.  Interfaces specific to those
-particular types of events and others can be built on top of this
-interface.
 
-Command creation is started by first using the dynevent_cmd_init()
-function to initialize the dynevent_cmd object.  Following that, args
-are appended and optionally checked by the dynevent_arg_add() and
-dynevent_arg_pair_add() functions, which use objects representing
-arguments and pairs of arguments, initialized respectively by
-dynevent_arg_init() and dynevent_arg_pair_init().  Finally, once all
-args have been successfully added, the command is finalized and
-actually created using dynevent_create().
 
-The code here for actually printing into the dyn_event->cmd buffer
-using snprintf() etc was adapted from v4 of Masami's 'tracing/boot:
-Add synthetic event support' patch.
+On 1/24/20 2:47 PM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    4703d911 Merge tag 'xarray-5.5' of git://git.infradead.org..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1031e335e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=15478c61c836a72e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=03c4738ed29d5d366ddf
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1277ce01e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16681611e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+03c4738ed29d5d366ddf@syzkaller.appspotmail.com
+> 
+> BUG: memory leak
+> unreferenced object 0xffff888121850a40 (size 32):
+>   comm "syz-executor927", pid 7193, jiffies 4294941655 (age 19.840s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000f67036ea>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+>     [<00000000f67036ea>] slab_post_alloc_hook mm/slab.h:586 [inline]
+>     [<00000000f67036ea>] slab_alloc mm/slab.c:3320 [inline]
+>     [<00000000f67036ea>] __do_kmalloc mm/slab.c:3654 [inline]
+>     [<00000000f67036ea>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
+>     [<00000000fab0cc8e>] kmemdup+0x27/0x60 mm/util.c:127
+>     [<00000000d9992e0a>] kmemdup include/linux/string.h:453 [inline]
+>     [<00000000d9992e0a>] em_nbyte_change+0x5b/0x90 net/sched/em_nbyte.c:32
+>     [<000000007e04f711>] tcf_em_validate net/sched/ematch.c:241 [inline]
+>     [<000000007e04f711>] tcf_em_tree_validate net/sched/ematch.c:359 [inline]
+>     [<000000007e04f711>] tcf_em_tree_validate+0x332/0x46f net/sched/ematch.c:300
+>     [<000000007a769204>] basic_set_parms net/sched/cls_basic.c:157 [inline]
+>     [<000000007a769204>] basic_change+0x1d7/0x5f0 net/sched/cls_basic.c:219
+>     [<00000000e57a5997>] tc_new_tfilter+0x566/0xf70 net/sched/cls_api.c:2104
+>     [<0000000074b68559>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5415
+>     [<00000000b7fe53fb>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
+>     [<00000000e83a40d0>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+>     [<00000000d62ba933>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>     [<00000000d62ba933>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
+>     [<0000000088070f72>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
+>     [<00000000f70b15ea>] sock_sendmsg_nosec net/socket.c:639 [inline]
+>     [<00000000f70b15ea>] sock_sendmsg+0x54/0x70 net/socket.c:659
+>     [<00000000ef95a9be>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
+>     [<00000000b650f1ab>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
+>     [<0000000055bfa74a>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
+>     [<000000002abac183>] __do_sys_sendmsg net/socket.c:2426 [inline]
+>     [<000000002abac183>] __se_sys_sendmsg net/socket.c:2424 [inline]
+>     [<000000002abac183>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
+> 
+> BUG: memory leak
+> unreferenced object 0xffff888115438ea0 (size 32):
+>   comm "syz-executor927", pid 7194, jiffies 4294942248 (age 13.910s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000f67036ea>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+>     [<00000000f67036ea>] slab_post_alloc_hook mm/slab.h:586 [inline]
+>     [<00000000f67036ea>] slab_alloc mm/slab.c:3320 [inline]
+>     [<00000000f67036ea>] __do_kmalloc mm/slab.c:3654 [inline]
+>     [<00000000f67036ea>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
+>     [<00000000fab0cc8e>] kmemdup+0x27/0x60 mm/util.c:127
+>     [<00000000d9992e0a>] kmemdup include/linux/string.h:453 [inline]
+>     [<00000000d9992e0a>] em_nbyte_change+0x5b/0x90 net/sched/em_nbyte.c:32
+>     [<000000007e04f711>] tcf_em_validate net/sched/ematch.c:241 [inline]
+>     [<000000007e04f711>] tcf_em_tree_validate net/sched/ematch.c:359 [inline]
+>     [<000000007e04f711>] tcf_em_tree_validate+0x332/0x46f net/sched/ematch.c:300
+>     [<000000007a769204>] basic_set_parms net/sched/cls_basic.c:157 [inline]
+>     [<000000007a769204>] basic_change+0x1d7/0x5f0 net/sched/cls_basic.c:219
+>     [<00000000e57a5997>] tc_new_tfilter+0x566/0xf70 net/sched/cls_api.c:2104
+>     [<0000000074b68559>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5415
+>     [<00000000b7fe53fb>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
+>     [<00000000e83a40d0>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+>     [<00000000d62ba933>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>     [<00000000d62ba933>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
+>     [<0000000088070f72>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
+>     [<00000000f70b15ea>] sock_sendmsg_nosec net/socket.c:639 [inline]
+>     [<00000000f70b15ea>] sock_sendmsg+0x54/0x70 net/socket.c:659
+>     [<00000000ef95a9be>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
+>     [<00000000b650f1ab>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
+>     [<0000000055bfa74a>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
+>     [<000000002abac183>] __do_sys_sendmsg net/socket.c:2426 [inline]
+>     [<000000002abac183>] __se_sys_sendmsg net/socket.c:2424 [inline]
+>     [<000000002abac183>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
+> 
+> BUG: memory leak
+> unreferenced object 0xffff88811c962180 (size 32):
+>   comm "syz-executor927", pid 7195, jiffies 4294942844 (age 7.950s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000f67036ea>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+>     [<00000000f67036ea>] slab_post_alloc_hook mm/slab.h:586 [inline]
+>     [<00000000f67036ea>] slab_alloc mm/slab.c:3320 [inline]
+>     [<00000000f67036ea>] __do_kmalloc mm/slab.c:3654 [inline]
+>     [<00000000f67036ea>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
+>     [<00000000fab0cc8e>] kmemdup+0x27/0x60 mm/util.c:127
+>     [<00000000d9992e0a>] kmemdup include/linux/string.h:453 [inline]
+>     [<00000000d9992e0a>] em_nbyte_change+0x5b/0x90 net/sched/em_nbyte.c:32
+>     [<000000007e04f711>] tcf_em_validate net/sched/ematch.c:241 [inline]
+>     [<000000007e04f711>] tcf_em_tree_validate net/sched/ematch.c:359 [inline]
+>     [<000000007e04f711>] tcf_em_tree_validate+0x332/0x46f net/sched/ematch.c:300
+>     [<000000007a769204>] basic_set_parms net/sched/cls_basic.c:157 [inline]
+>     [<000000007a769204>] basic_change+0x1d7/0x5f0 net/sched/cls_basic.c:219
+>     [<00000000e57a5997>] tc_new_tfilter+0x566/0xf70 net/sched/cls_api.c:2104
+>     [<0000000074b68559>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5415
+>     [<00000000b7fe53fb>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
+>     [<00000000e83a40d0>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+>     [<00000000d62ba933>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>     [<00000000d62ba933>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
+>     [<0000000088070f72>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
+>     [<00000000f70b15ea>] sock_sendmsg_nosec net/socket.c:639 [inline]
+>     [<00000000f70b15ea>] sock_sendmsg+0x54/0x70 net/socket.c:659
+>     [<00000000ef95a9be>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
+>     [<00000000b650f1ab>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
+>     [<0000000055bfa74a>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
+>     [<000000002abac183>] __do_sys_sendmsg net/socket.c:2426 [inline]
+>     [<000000002abac183>] __se_sys_sendmsg net/socket.c:2424 [inline]
+>     [<000000002abac183>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
+> 
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> 
 
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- include/linux/trace_events.h |  23 +++++
- kernel/trace/trace.h         |  34 ++++++
- kernel/trace/trace_events.c  | 240 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 297 insertions(+)
-
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 25fe743bcbaf..651b03d5e272 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -354,6 +354,29 @@ extern struct trace_event_file *trace_get_event_file(const char *instance,
- 						     const char *event);
- extern void trace_put_event_file(struct trace_event_file *file);
- 
-+#define MAX_DYNEVENT_CMD_LEN	(2048)
-+
-+enum dynevent_type {
-+	DYNEVENT_TYPE_NONE,
-+};
-+
-+struct dynevent_cmd;
-+
-+typedef int (*dynevent_create_fn_t)(struct dynevent_cmd *cmd);
-+
-+struct dynevent_cmd {
-+	char			*buf;
-+	const char		*event_name;
-+	int			maxlen;
-+	int			remaining;
-+	unsigned int		n_fields;
-+	enum dynevent_type	type;
-+	dynevent_create_fn_t	run_command;
-+	void			*private_data;
-+};
-+
-+extern int dynevent_create(struct dynevent_cmd *cmd);
-+
- extern int synth_event_delete(const char *name);
- 
- /*
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 8fe3b16c8cec..0e8afc32d972 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1877,6 +1877,40 @@ static inline bool event_command_needs_rec(struct event_command *cmd_ops)
- 
- extern int trace_event_enable_disable(struct trace_event_file *file,
- 				      int enable, int soft_disable);
-+
-+extern void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
-+			      enum dynevent_type type,
-+			      dynevent_create_fn_t run_command);
-+
-+typedef int (*dynevent_check_arg_fn_t)(void *data);
-+
-+struct dynevent_arg {
-+	const char		*str;
-+	char			separator; /* e.g. ';', ',', or nothing */
-+	dynevent_check_arg_fn_t	check_arg;
-+};
-+
-+extern void dynevent_arg_init(struct dynevent_arg *arg,
-+			      dynevent_check_arg_fn_t check_arg,
-+			      char separator);
-+extern int dynevent_arg_add(struct dynevent_cmd *cmd,
-+			    struct dynevent_arg *arg);
-+
-+struct dynevent_arg_pair {
-+	const char		*lhs;
-+	const char		*rhs;
-+	char			operator; /* e.g. '=' or nothing */
-+	char			separator; /* e.g. ';', ',', or nothing */
-+	dynevent_check_arg_fn_t	check_arg;
-+};
-+
-+extern void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
-+				   dynevent_check_arg_fn_t check_arg,
-+				   char operator, char separator);
-+extern int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
-+				 struct dynevent_arg_pair *arg_pair);
-+extern int dynevent_str_add(struct dynevent_cmd *cmd, const char *str);
-+
- extern int tracing_alloc_snapshot(void);
- extern void tracing_snapshot_cond(struct trace_array *tr, void *cond_data);
- extern int tracing_snapshot_cond_enable(struct trace_array *tr, void *cond_data, cond_update_fn_t update);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 402426a82cfb..aa56bb6ff6ca 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3300,6 +3300,246 @@ void __init trace_event_init(void)
- 	event_trace_enable();
- }
- 
-+/**
-+ * dynevent_arg_add - Add an arg to a dynevent_cmd
-+ * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
-+ * @arg: The argument to append to the current cmd
-+ *
-+ * Append an argument to a dynevent_cmd.  The argument string will be
-+ * appended to the current cmd string, followed by a separator, if
-+ * applicable.  Before the argument is added, the check_arg()
-+ * function, if defined, is called.
-+ *
-+ * The cmd string, separator, and check_arg() function should be set
-+ * using the dynevent_arg_init() before any arguments are added using
-+ * this function.
-+ *
-+ * Return: 0 if successful, error otherwise.
-+ */
-+int dynevent_arg_add(struct dynevent_cmd *cmd,
-+		     struct dynevent_arg *arg)
-+{
-+	int ret = 0;
-+	int delta;
-+	char *q;
-+
-+	if (arg->check_arg) {
-+		ret = arg->check_arg(arg);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	q = cmd->buf + (cmd->maxlen - cmd->remaining);
-+
-+	delta = snprintf(q, cmd->remaining, " %s%c", arg->str, arg->separator);
-+	if (delta >= cmd->remaining) {
-+		pr_err("String is too long: %s\n", arg->str);
-+		return -E2BIG;
-+	}
-+	cmd->remaining -= delta;
-+
-+	return ret;
-+}
-+
-+/**
-+ * dynevent_arg_pair_add - Add an arg pair to a dynevent_cmd
-+ * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
-+ * @arg_pair: The argument pair to append to the current cmd
-+ *
-+ * Append an argument pair to a dynevent_cmd.  An argument pair
-+ * consists of a left-hand-side argument and a right-hand-side
-+ * argument separated by an operator, which can be whitespace, all
-+ * followed by a separator, if applicable.  This can be used to add
-+ * arguments of the form 'type variable_name;' or 'x+y'.
-+ *
-+ * The lhs argument string will be appended to the current cmd string,
-+ * followed by an operator, if applicable, followd by the rhs string,
-+ * followed finally by a separator, if applicable.  Before anything is
-+ * added, the check_arg() function, if defined, is called.
-+ *
-+ * The cmd strings, operator, separator, and check_arg() function
-+ * should be set using the dynevent_arg_pair_init() before any arguments
-+ * are added using this function.
-+ *
-+ * Return: 0 if successful, error otherwise.
-+ */
-+int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
-+			  struct dynevent_arg_pair *arg_pair)
-+{
-+	int ret = 0;
-+	int delta;
-+	char *q;
-+
-+	if (arg_pair->check_arg) {
-+		ret = arg_pair->check_arg(arg_pair);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	q = cmd->buf + (cmd->maxlen - cmd->remaining);
-+
-+	delta = snprintf(q, cmd->remaining, " %s%c", arg_pair->lhs,
-+			 arg_pair->operator);
-+	if (delta >= cmd->remaining) {
-+		pr_err("field string is too long: %s\n", arg_pair->lhs);
-+		return -E2BIG;
-+	}
-+	cmd->remaining -= delta; q += delta;
-+
-+	delta = snprintf(q, cmd->remaining, "%s%c", arg_pair->rhs,
-+			 arg_pair->separator);
-+	if (delta >= cmd->remaining) {
-+		pr_err("field string is too long: %s\n", arg_pair->rhs);
-+		return -E2BIG;
-+	}
-+	cmd->remaining -= delta; q += delta;
-+
-+	return ret;
-+}
-+
-+/**
-+ * dynevent_str_add - Add a string to a dynevent_cmd
-+ * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
-+ * @str: The string to append to the current cmd
-+ *
-+ * Append a string to a dynevent_cmd.  The string will be appended to
-+ * the current cmd string as-is, with nothing prepended or appended.
-+ *
-+ * Return: 0 if successful, error otherwise.
-+ */
-+int dynevent_str_add(struct dynevent_cmd *cmd, const char *str)
-+{
-+	int ret = 0;
-+	int delta;
-+	char *q;
-+
-+	q = cmd->buf + (cmd->maxlen - cmd->remaining);
-+
-+	delta = snprintf(q, cmd->remaining, "%s", str);
-+	if (delta >= cmd->remaining) {
-+		pr_err("String is too long: %s\n", str);
-+		return -E2BIG;
-+	}
-+	cmd->remaining -= delta;
-+
-+	return ret;
-+}
-+
-+/**
-+ * dynevent_cmd_init - Initialize a dynevent_cmd object
-+ * @cmd: A pointer to the dynevent_cmd struct representing the cmd
-+ * @buf: A pointer to the buffer to generate the command into
-+ * @maxlen: The length of the buffer the command will be generated into
-+ * @type: The type of the cmd, checked against further operations
-+ * @run_command: The type-specific function that will actually run the command
-+ *
-+ * Initialize a dynevent_cmd.  A dynevent_cmd is used to build up and
-+ * run dynamic event creation commands, such as commands for creating
-+ * synthetic and kprobe events.  Before calling any of the functions
-+ * used to build the command, a dynevent_cmd object should be
-+ * instantiated and initialized using this function.
-+ *
-+ * The initialization sets things up by saving a pointer to the
-+ * user-supplied buffer and its length via the @buf and @maxlen
-+ * params, and by saving the cmd-specific @type and @run_command
-+ * params which are used to check subsequent dynevent_cmd operations
-+ * and actually run the command when complete.
-+ */
-+void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
-+		       enum dynevent_type type,
-+		       dynevent_create_fn_t run_command)
-+{
-+	memset(cmd, '\0', sizeof(*cmd));
-+
-+	cmd->buf = buf;
-+	cmd->maxlen = maxlen;
-+	cmd->remaining = cmd->maxlen;
-+	cmd->type = type;
-+	cmd->run_command = run_command;
-+}
-+
-+/**
-+ * dynevent_arg_init - Initialize a dynevent_arg object
-+ * @arg: A pointer to the dynevent_arg struct representing the arg
-+ * @check_arg: An (optional) pointer to a function checking arg sanity
-+ * @separator: An (optional) separator, appended after adding the arg
-+ *
-+ * Initialize a dynevent_arg object.  A dynevent_arg represents an
-+ * object used to append single arguments to the current command
-+ * string.  The @check_arg function, if present, will be used to check
-+ * the sanity of the current arg string (which is directly set by the
-+ * caller).  After the arg string is successfully appended to the
-+ * command string, the optional @separator is appended.  If no
-+ * separator was specified when initializing the arg, a space will be
-+ * appended.
-+ */
-+void dynevent_arg_init(struct dynevent_arg *arg,
-+		       dynevent_check_arg_fn_t check_arg,
-+		       char separator)
-+{
-+	memset(arg, '\0', sizeof(*arg));
-+
-+	if (!separator)
-+		separator = ' ';
-+	arg->separator = separator;
-+
-+	arg->check_arg = check_arg;
-+}
-+
-+/**
-+ * dynevent_arg_pair_init - Initialize a dynevent_arg_pair object
-+ * @arg_pair: A pointer to the dynevent_arg_pair struct representing the arg
-+ * @check_arg: An (optional) pointer to a function checking arg sanity
-+ * @operator: An (optional) operator, appended after adding the first arg
-+ * @separator: An (optional) separator, appended after adding the second arg
-+ *
-+ * Initialize a dynevent_arg_pair object.  A dynevent_arg_pair
-+ * represents an object used to append argument pairs such as 'type
-+ * variable_name;' or 'x+y' to the current command string.  An
-+ * argument pair consists of a left-hand-side argument and a
-+ * right-hand-side argument separated by an operator, which can be
-+ * whitespace, all followed by a separator, if applicable. The
-+ * @check_arg function, if present, will be used to check the sanity
-+ * of the current arg strings (which is directly set by the caller).
-+ * After the first arg string is successfully appended to the command
-+ * string, the optional @operator is appended, followed by the second
-+ * arg and and optional @separator.  If no separator was specified
-+ * when initializing the arg, a space will be appended.
-+ */
-+void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
-+			    dynevent_check_arg_fn_t check_arg,
-+			    char operator, char separator)
-+{
-+	memset(arg_pair, '\0', sizeof(*arg_pair));
-+
-+	if (!operator)
-+		operator = ' ';
-+	arg_pair->operator = operator;
-+
-+	if (!separator)
-+		separator = ' ';
-+	arg_pair->separator = separator;
-+
-+	arg_pair->check_arg = check_arg;
-+}
-+
-+/**
-+ * dynevent_create - Create the dynamic event contained in dynevent_cmd
-+ * @cmd: The dynevent_cmd object containing the dynamic event creation command
-+ *
-+ * Once a dynevent_cmd object has been successfully built up via the
-+ * dynevent_cmd_init(), dynevent_arg_add() and dynevent_arg_pair_add()
-+ * functions, this function runs the final command to actually create
-+ * the event.
-+ *
-+ * Return: 0 if the event was successfully created, error otherwise.
-+ */
-+int dynevent_create(struct dynevent_cmd *cmd)
-+{
-+	return cmd->run_command(cmd);
-+}
-+EXPORT_SYMBOL_GPL(dynevent_create);
-+
- #ifdef CONFIG_EVENT_TRACE_STARTUP_TEST
- 
- static DEFINE_SPINLOCK(test_spinlock);
--- 
-2.14.1
-
+Fixed in https://patchwork.ozlabs.org/patch/1229100/
