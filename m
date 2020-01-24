@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE449C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD2AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B566120718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1AC21556
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859801;
-	bh=AwD1W9Ge++vD1TBgPbiOKJHMrdglQf5gdZit915jsJ8=;
+	s=default; t=1579859804;
+	bh=yxzE6Q6G1HyDd7Hp/2whV3DEWIk8OkEHIbMZ/0oh4aY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ELqBoNt1u0iaKy69HUHSwwhMp07EOgqXF+2jC/yi/jxU8DXlLlOC6pZMp6j6mZkCf
-	 2LJfJ3VbfuI3hTOF7BHwcNBkmSNCj/ytdZv99lmbJQLiLQuLwfCQLVCig4DWYuixeT
-	 B6EN+XpEGYKrDjo7kX7NY+isyZutVlrn/rOBg6ak=
+	b=2cJq711RwFCvv4/L2/zpzNdcoT13PR5afYU2EiYLumw/1O3x54YkS2U4lhiQViZha
+	 dAubAnpopx8kamFDtrRl+FT5nH5n0czj+dtMT7fH05+oUWVSgg/+x9C/C+/K/5pKKv
+	 IOJ3u+aerlevPmyuCtf+JVAcwWt65LfrhKgWDk6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388567AbgAXJ4l (ORCPT
+        id S2388558AbgAXJ4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:56:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388041AbgAXJ4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 04:56:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731098AbgAXJ4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:56:35 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8F95214AF;
-        Fri, 24 Jan 2020 09:56:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B3C121556;
+        Fri, 24 Jan 2020 09:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859799;
-        bh=AwD1W9Ge++vD1TBgPbiOKJHMrdglQf5gdZit915jsJ8=;
+        s=default; t=1579859795;
+        bh=yxzE6Q6G1HyDd7Hp/2whV3DEWIk8OkEHIbMZ/0oh4aY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gStCmNxRR59vSaCxOJMZAIioIRWcYY9l8rCrSoMhVzG0L+hGCUEbbl90U4+cW6ao5
-         Gusd7gMaYFjQsgZ6QueduKb82kp47S/prks5knwoxSQa6f387TD0RjaiE+NUD9A+rY
-         66+evfN8xFFUN64k5YoFT3kOD7uBGNPO0a0BLWSg=
+        b=e4/VPL/TqCJNzUQVJIzHQIfH4JbiTtk32gHyRlEFv5w2oR36SrwOFMTzur5KLvNgG
+         0bSCNL2p15YZtV4jm+pxWoL+Dt+RLAJtCdlP0uxKLGT4mXHQNHXZzN05gNkNYtg66G
+         5sM3fNH7GZNGr2Il/Td6xCDeAtzyb1t3M0Ys9wN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 185/343] dwc2: gadget: Fix completed transfer size calculation in DDMA
-Date:   Fri, 24 Jan 2020 10:30:03 +0100
-Message-Id: <20200124092944.350824198@linuxfoundation.org>
+Subject: [PATCH 4.14 184/343] usb: gadget: fsl: fix link error against usb-gadget module
+Date:   Fri, 24 Jan 2020 10:30:02 +0100
+Message-Id: <20200124092944.229320453@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -60,37 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minas Harutyunyan <minas.harutyunyan@synopsys.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 5acb4b970184d189d901192d075997c933b82260 ]
+[ Upstream commit 2100e3ca3676e894fa48b8f6f01d01733387fe81 ]
 
-Fix calculation of transfer size on completion in function
-dwc2_gadget_get_xfersize_ddma().
+The dependency to ensure this driver links correctly fails since
+it can not be a loadable module:
 
-Added increment of descriptor pointer to move to next descriptor in
-the loop.
+drivers/usb/phy/phy-fsl-usb.o: In function `fsl_otg_set_peripheral':
+phy-fsl-usb.c:(.text+0x2224): undefined reference to `usb_gadget_vbus_disconnect'
 
-Fixes: aa3e8bc81311 ("usb: dwc2: gadget: DDMA transfer start and complete")
+Make the option 'tristate' so it can work correctly.
 
-Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Fixes: 5a8d651a2bde ("usb: gadget: move gadget API functions to udc-core")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/gadget.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/phy/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index e164439b21542..4af9a1c652edb 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -2276,6 +2276,7 @@ static unsigned int dwc2_gadget_get_xfersize_ddma(struct dwc2_hsotg_ep *hs_ep)
- 		if (status & DEV_DMA_STS_MASK)
- 			dev_err(hsotg->dev, "descriptor %d closed with %x\n",
- 				i, status & DEV_DMA_STS_MASK);
-+		desc++;
- 	}
+diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+index 85a92d0813dd0..440238061eddf 100644
+--- a/drivers/usb/phy/Kconfig
++++ b/drivers/usb/phy/Kconfig
+@@ -20,7 +20,7 @@ config AB8500_USB
+ 	  in host mode, low speed.
  
- 	return bytes_rem;
+ config FSL_USB2_OTG
+-	bool "Freescale USB OTG Transceiver Driver"
++	tristate "Freescale USB OTG Transceiver Driver"
+ 	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM=y && PM
+ 	depends on USB_GADGET || !USB_GADGET # if USB_GADGET=m, this can't be 'y'
+ 	select USB_PHY
 -- 
 2.20.1
 
