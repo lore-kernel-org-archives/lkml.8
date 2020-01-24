@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCBCC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C50C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B9C20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C926820709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 10:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579860263;
-	bh=KJGNqo10mAJdeZR1iC0ThmXuqdofLYgqTNzk8qDPVd4=;
+	s=default; t=1579860266;
+	bh=am4pkmskYqjK8X4F25lbDrfas4anZNJMxIlFNg/Pt8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZJP2H193KUybM8ZQYe9vRekfPLK65jw8pCkaUC1cJQmX3OVnwhtkmiT5nMKrd59xB
-	 Huvv1KQ5cbIgEqjR324+Nqgsv5lX4Lz0NWqdTlGOPgN/HqXA9HIEwATx75U55kfHWW
-	 f8AR3gTKXVZm21fb5DWrrVjJlnP6O3UUqj9yF4t4=
+	b=UX6TBcG9FLo8l6AJcOsv5ksTMgtCAwSJze5k5qVfF02vkkGoWMNhfNv0X0fxdrIf8
+	 aBA7z3gJQzaMuRVLNGxGiSJcRHS48eWmRFRN/AIfttm0xeZyLs/Eo800Tg8RU35ggM
+	 l7ceWi32fygEoQuYbFfS15JwqEhvPCjohZHTtqos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388849AbgAXKEQ (ORCPT
+        id S2389125AbgAXKE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 05:04:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40324 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 05:04:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389097AbgAXKEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 05:04:12 -0500
+        id S2388694AbgAXKEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 05:04:24 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90812218AC;
-        Fri, 24 Jan 2020 10:04:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F26208C4;
+        Fri, 24 Jan 2020 10:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579860252;
-        bh=KJGNqo10mAJdeZR1iC0ThmXuqdofLYgqTNzk8qDPVd4=;
+        s=default; t=1579860264;
+        bh=am4pkmskYqjK8X4F25lbDrfas4anZNJMxIlFNg/Pt8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vLHnXRreW3oP6Y29WNxhzzt106/fnx+v2hzajC6ypPDBF6p3Xhhy7sFImlXVFVGSR
-         anUMlfylhSY8yQcZkGrqxQ3gMFLbKaSz/uCwkxt3iWnrpZVWOI77DRnbCp0osUaUc0
-         jNnBXNRoVJx3idzgfy9n6a9RHZzUHJOyUOEujFXI=
+        b=mnHtHfYdyGLll+o9AfXq4XbHD17f9Zk3exYLOAnEksBEGxL9m67DowOdqx9sNwrdz
+         5OwfHLOSL79zPHy/jZ+fRjeyicAIGNAYjICCY4gYmMsGIadJdQUoCv/zz18L3bj2Kp
+         5CRfmI2qtpehwNovSnwYnFBWYs+yFWMrG1EnKraU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Govindarajulu Varadarajan <gvaradar@cisco.com>,
-        Satish Kharat <satishkh@cisco.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 295/343] scsi: fnic: fix msix interrupt allocation
-Date:   Fri, 24 Jan 2020 10:31:53 +0100
-Message-Id: <20200124092958.760582258@linuxfoundation.org>
+Subject: [PATCH 4.14 298/343] Btrfs: fix inode cache waiters hanging on path allocation failure
+Date:   Fri, 24 Jan 2020 10:31:56 +0100
+Message-Id: <20200124092959.138875840@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,45 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Govindarajulu Varadarajan <gvaradar@cisco.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 3ec24fb4c035e9cbb2f02a48640a09aa913442a2 ]
+[ Upstream commit 9d123a35d7e97bb2139747b16127c9b22b6a593e ]
 
-pci_alloc_irq_vectors() returns number of vectors allocated.  Fix the check
-for error condition.
+If the caching thread fails to allocate a path, it returns without waking
+up any cache waiters, leaving them hang forever. Fix this by following the
+same approach as when we fail to start the caching thread: print an error
+message, disable inode caching and make the wakers fallback to non-caching
+mode behaviour (calling btrfs_find_free_objectid()).
 
-Fixes: cca678dfbad49 ("scsi: fnic: switch to pci_alloc_irq_vectors")
-Link: https://lore.kernel.org/r/20190827211340.1095-1-gvaradar@cisco.com
-Signed-off-by: Govindarajulu Varadarajan <gvaradar@cisco.com>
-Acked-by: Satish Kharat <satishkh@cisco.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 581bb050941b4f ("Btrfs: Cache free inode numbers in memory")
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/fnic/fnic_isr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/inode-map.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/fnic/fnic_isr.c b/drivers/scsi/fnic/fnic_isr.c
-index 4e3a50202e8c5..d28088218c364 100644
---- a/drivers/scsi/fnic/fnic_isr.c
-+++ b/drivers/scsi/fnic/fnic_isr.c
-@@ -254,7 +254,7 @@ int fnic_set_intr_mode(struct fnic *fnic)
- 		int vecs = n + m + o + 1;
+diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
+index b1c3a4ec76c8c..2ae32451fb5b0 100644
+--- a/fs/btrfs/inode-map.c
++++ b/fs/btrfs/inode-map.c
+@@ -55,8 +55,10 @@ static int caching_kthread(void *data)
+ 		return 0;
  
- 		if (pci_alloc_irq_vectors(fnic->pdev, vecs, vecs,
--				PCI_IRQ_MSIX) < 0) {
-+				PCI_IRQ_MSIX) == vecs) {
- 			fnic->rq_count = n;
- 			fnic->raw_wq_count = m;
- 			fnic->wq_copy_count = o;
-@@ -280,7 +280,7 @@ int fnic_set_intr_mode(struct fnic *fnic)
- 	    fnic->wq_copy_count >= 1 &&
- 	    fnic->cq_count >= 3 &&
- 	    fnic->intr_count >= 1 &&
--	    pci_alloc_irq_vectors(fnic->pdev, 1, 1, PCI_IRQ_MSI) < 0) {
-+	    pci_alloc_irq_vectors(fnic->pdev, 1, 1, PCI_IRQ_MSI) == 1) {
- 		fnic->rq_count = 1;
- 		fnic->raw_wq_count = 1;
- 		fnic->wq_copy_count = 1;
+ 	path = btrfs_alloc_path();
+-	if (!path)
++	if (!path) {
++		fail_caching_thread(root);
+ 		return -ENOMEM;
++	}
+ 
+ 	/* Since the commit root is read-only, we can safely skip locking. */
+ 	path->skip_locking = 1;
 -- 
 2.20.1
 
