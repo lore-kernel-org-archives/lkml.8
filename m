@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6B6C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED4FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464012077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931F42075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864798;
-	bh=fCQsnPtM9ZRfbPias8TGji/+GGIu4tOHPoDAXc5izl4=;
+	s=default; t=1579864801;
+	bh=bS3BpH1jsiAl5BZqxsk4NeHi/IKq3LT4SMF9wXBNaoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tvGefbhgll6Co1aUxD/UMpbPqFMez+e3PlFl6agBI/nVb7YUZuT+LxPSKz7TI22vL
-	 1m+hYdGW6aEpfJodwlqEPYds3OcuMbnNR311NLC9M03TAChYSsFL3KIYKGffE5bpPN
-	 Ez8gFcWpUXuwugWAneGHhnZTsRHA0YYzDmH8PA1Q=
+	b=UC3/8vKZH6qCjvOXxPSUVQM/RuP0usbwLmUs6CvC0vU8EHCJMefOCnYAdaqt/1/Id
+	 4EbK3NRg2cZW1N7j3Q5yxdVxneOp5dEVWfivvjy7QuUn5tOD+o1Ezrb3EPuncy0xej
+	 i8W1zvsPlq0rJz0BVgxp8b0Tbq9ijErQVIvah9iQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390832AbgAXLTr (ORCPT
+        id S2390860AbgAXLUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:19:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57100 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:20:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390802AbgAXLTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:19:42 -0500
+        id S2390640AbgAXLT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:19:57 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49A1E20708;
-        Fri, 24 Jan 2020 11:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA1A320708;
+        Fri, 24 Jan 2020 11:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864782;
-        bh=fCQsnPtM9ZRfbPias8TGji/+GGIu4tOHPoDAXc5izl4=;
+        s=default; t=1579864797;
+        bh=bS3BpH1jsiAl5BZqxsk4NeHi/IKq3LT4SMF9wXBNaoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EgpkanhiFuelfCWtgmMySkV799a89v36wTARUC0MJMEEBIeobLY6bM/a5U+3AP+Bk
-         g+ujI4uua2vPlhmM87UVdFUrYLIDOe5MVifAMYwfhnIIDhFllEbXiVYLKXu6+Oo5IX
-         aGxvYWb6TlLkdp/p50aogmlUdmaiez3dgdAEVmQk=
+        b=vL2DUOi8TO24hO69PiyWLf1sa5oNMWpcOODEEk/MqRcvW8gLTmc4X7K/GnODq0O3t
+         Wd4w+mveGRrsN/TQPnXbnNp9jhbvnBFGyljTqsrKiIyTuu+KslZ42WmB5riO8LLolM
+         gyZ8KBUilAc/8ON/wJ91S0XOeSDTRFHd+vFiirNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 364/639] netfilter: ebtables: CONFIG_COMPAT: reject trailing data after last rule
-Date:   Fri, 24 Jan 2020 10:28:54 +0100
-Message-Id: <20200124093132.717691202@linuxfoundation.org>
+Subject: [PATCH 4.19 355/639] vfio/mdev: Avoid release parent reference during error path
+Date:   Fri, 24 Jan 2020 10:28:45 +0100
+Message-Id: <20200124093131.575240489@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,41 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit 680f6af5337c98d116e4f127cea7845339dba8da ]
+[ Upstream commit 60e7f2c3fe9919cee9534b422865eed49f4efb15 ]
 
-If userspace provides a rule blob with trailing data after last target,
-we trigger a splat, then convert ruleset to 64bit format (with trailing
-data), then pass that to do_replace_finish() which then returns -EINVAL.
+During mdev parent registration in mdev_register_device(),
+if parent device is duplicate, it releases the reference of existing
+parent device.
+This is incorrect. Existing parent device should not be touched.
 
-Erroring out right away avoids the splat plus unneeded translation and
-error unwind.
-
-Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/vfio/mdev/mdev_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index 785e19afd6aaa..f59230e4fc295 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2165,7 +2165,9 @@ static int compat_copy_entries(unsigned char *data, unsigned int size_user,
- 	if (ret < 0)
- 		return ret;
- 
--	WARN_ON(size_remaining);
-+	if (size_remaining)
-+		return -EINVAL;
-+
- 	return state->buf_kern_offset;
- }
- 
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index 0212f0ee8aea7..8cfa712308773 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -182,6 +182,7 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+ 	/* Check for duplicate */
+ 	parent = __find_parent_device(dev);
+ 	if (parent) {
++		parent = NULL;
+ 		ret = -EEXIST;
+ 		goto add_dev_err;
+ 	}
 -- 
 2.20.1
 
