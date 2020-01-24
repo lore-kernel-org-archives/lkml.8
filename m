@@ -2,155 +2,101 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57610C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B634DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39468206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9342B206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387907AbgAXOpr (ORCPT
+        id S2388366AbgAXOqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:45:47 -0500
-Received: from mga03.intel.com ([134.134.136.65]:33746 "EHLO mga03.intel.com"
+        Fri, 24 Jan 2020 09:46:32 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43370 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgAXOpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:45:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 06:43:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
-   d="scan'208";a="400676239"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga005.jf.intel.com with ESMTP; 24 Jan 2020 06:43:35 -0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH][RFC] PCI: Add "pci=blacklist_dev=" parameter to blacklist specific devices
-Date:   Fri, 24 Jan 2020 22:42:48 +0800
-Message-Id: <20200124144248.11719-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S2387979AbgAXOqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:46:31 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D7510AFA8;
+        Fri, 24 Jan 2020 14:46:29 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     gregkh@linuxfoundation.org
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/22] staging: vc04_services: suspend/resume cleanup
+Date:   Fri, 24 Jan 2020 15:45:54 +0100
+Message-Id: <20200124144617.2213-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It was found that on some platforms the bogus pci device might bring
-troubles to the system. For example, on a MacBookPro the system could
-not be power off or suspended due to internal pci resource confliction
-between bogus pci device and [io 0x1804]. Another case is that, once
-resumed from hibernation on a VM, the pci config space of a pci device
-is corrupt.
+While in the process of preparing vchiq to support the Raspberry Pi 4, I
+stumbled upon a bunch of dead code in it. Which this series deletes.
 
-To narrow down and benefit future debugging for such kind of issues,
-introduce the command line blacklist_dev=<vendor:device_id>> to blacklist
-such pci devices thus they will not be scanned thus not visible after
-bootup. For example,
+Ultimately the idea is to clean up vchiq_bcm2835_arm.c up to a point
+where it'll be easy to join it with vchiq_arm.c, which IIRC the TODO
+file states, should be the sole responsible for platform code.
 
- pci.blacklist_dev=8086:293e
+With this we'll be able to introduce RPi4's functionality in a cleaner
+way.
 
-forbid the audio device to be exposed to the OS.
+Overall it's a 500 line clean up, I tried to keep the patches as small and
+manageable as possible, but I'd be happy to squash them if you prefer it
+that way.
 
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+This was tested on a RPi3-B using the camera and HDMI audio and
+vchiq_test app.
+
 ---
- Documentation/admin-guide/kernel-parameters.txt |  6 ++++++
- drivers/pci/pci.c                               | 17 +++++++++++++++++
- drivers/pci/pci.h                               |  1 +
- drivers/pci/probe.c                             |  3 +++
- 4 files changed, 27 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ade4e6ec23e0..cd4a47e236aa 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3583,6 +3583,12 @@
- 				may put more devices in an IOMMU group.
- 		force_floating	[S390] Force usage of floating interrupts.
- 		nomio		[S390] Do not use MIO instructions.
-+		blacklist_dev=<vendor:device_id>[; ...]
-+				Specify one or more PCI devices (in the format
-+				specified above) separated by semicolons.
-+				Each device specified will not be scanned thus
-+				will be invisible after boot up. This can be
-+				used for debugging purpose.
- 
- 	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
- 			Management.
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e87196cc1a7f..0e3626a401f4 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6393,6 +6393,19 @@ void __weak pci_fixup_cardbus(struct pci_bus *bus)
- }
- EXPORT_SYMBOL(pci_fixup_cardbus);
- 
-+static const char *pci_blacklist_devs_param;
-+
-+bool pci_is_blacklist_dev(unsigned short vendor, unsigned short device)
-+{
-+	char search[10];
-+
-+	if (!pci_blacklist_devs_param)
-+		return false;
-+	sprintf(search, "%x:%x", vendor, device);
-+
-+	return strstr(pci_blacklist_devs_param, search) ? true : false;
-+}
-+
- static int __init pci_setup(char *str)
- {
- 	while (str) {
-@@ -6451,6 +6464,8 @@ static int __init pci_setup(char *str)
- 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
- 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
- 				disable_acs_redir_param = str + 18;
-+			} else if (!strncmp(str, "blacklist_dev=", 14)) {
-+				pci_blacklist_devs_param = str + 14;
- 			} else {
- 				pr_err("PCI: Unknown option `%s'\n", str);
- 			}
-@@ -6476,6 +6491,8 @@ static int __init pci_realloc_setup_params(void)
- 					   GFP_KERNEL);
- 	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
- 
-+	pci_blacklist_devs_param = kstrdup(pci_blacklist_devs_param, GFP_KERNEL);
-+
- 	return 0;
- }
- pure_initcall(pci_realloc_setup_params);
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index a0a53bd05a0b..01b8ab2da065 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -669,4 +669,5 @@ static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
- extern const struct attribute_group aspm_ctrl_attr_group;
- #endif
- 
-+bool pci_is_blacklist_dev(unsigned short vendor, unsigned short device);
- #endif /* DRIVERS_PCI_H */
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 512cb4312ddd..812ef901ecea 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2271,6 +2271,9 @@ static struct pci_dev *pci_scan_device(struct pci_bus *bus, int devfn)
- 	if (!pci_bus_read_dev_vendor_id(bus, devfn, &l, 60*1000))
- 		return NULL;
- 
-+	if (pci_is_blacklist_dev(l & 0xffff, (l >> 16) & 0xffff))
-+		return NULL;
-+
- 	dev = pci_alloc_dev(bus);
- 	if (!dev)
- 		return NULL;
+Nicolas Saenz Julienne (22):
+  staging: vc04_services: Remove unused variables in struct
+    vchiq_arm_state
+  staging: vc04_services: Get rid of resume_blocked in struct
+    vchiq_arm_state
+  staging: vc04_services: Get rid of resume_blocker completion in struct
+    vchiq_arm_state
+  staging: vc04_services: get rid of blocked_blocker completion in
+    struct vchiq_arm_state
+  staging: vc04_services: Delete blocked_count in struct vchiq_arm_state
+  staging: vc04_services: get rid of vchiq_platform_use_suspend_timer()
+  staging: vc04_services: Get rid of vchiq_platform_paused/resumed()
+  staging: vc04_services: Get rid of vchiq_platform_suspend/resume()
+  staging: vc04_services: Get rid of vchiq_platform_videocore_wanted()
+  staging: vc04_services: Get rid of vchiq_platform_handle_timeout()
+  staging: vc04_services: Get rid of vchiq_on_remote_use_active()
+  staging: vc04_services: Get rid of vchiq_arm_vcsuspend()
+  staging: vc04_services: Get rid of vchiq_check_resume()
+  staging: vc04_services: Delete vc_suspend_complete completion
+  staging: vc04_services: Get rid of unused suspend/resume states
+  staging: vc04_services: Get rid of USE_TYPE_SERVICE_NO_RESUME
+  staging: vc04_services: Delete vchiq_platform_check_suspend()
+  staging: vc04_services: Get of even more suspend/resume states
+  staging: vc04_services: Get rid of vc_suspend_state in struct
+    vchiq_arm_state
+  staging: vc04_services: Get rid of vchiq_arm_vcresume()'s signature
+  staging: vc04_services: Get rid of the rest of suspend/resume state
+    handling
+  staging: vc04_services: vchiq_arm: Get rid of unused defines
+
+ .../interface/vchiq_arm/vchiq_2835_arm.c      |  43 --
+ .../interface/vchiq_arm/vchiq_arm.c           | 496 +-----------------
+ .../interface/vchiq_arm/vchiq_arm.h           |  81 +--
+ .../interface/vchiq_arm/vchiq_core.c          |  16 -
+ .../interface/vchiq_arm/vchiq_core.h          |  15 -
+ 5 files changed, 11 insertions(+), 640 deletions(-)
+
 -- 
-2.17.1
+2.25.0
 
