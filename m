@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FF0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E407C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3AB24125
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 357D0206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865724;
-	bh=GAGFq6L4ACu09icvD+WmqG9Paps4qEGo+Ta0x9IQa4M=;
+	s=default; t=1579865728;
+	bh=t60YEIkTPM+weChxBuQ9RL7zky9tW+NV2nEWVLpqr8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YW4xvn4LdmRcl+RopSxqUEIPjakFFbpYkADDflV5Re3FdNEB1R3noUDt3AEehAb2S
-	 ZXvtFOqo8OxLRwM+haukj1nlIbChOjCcbG82CvbpEmha62D9zioCYXl3XpERS8JKgl
-	 klrdpHtdb/X90F1dtVQx4Hn4MYWWrgPaujN4This=
+	b=1l9yjAvUxq8YRX7HXtvBrjuFdc0aYQhxv7DhcY4ftiNQOXjwNdhdq8ZTT6baG+6I9
+	 7uu+oqvBqoshVvnOi4Annep073RcsuhOYtiAE+gCMoAhgs6Ow5byIzblTl7SKoeZwk
+	 wMwyJFmTPHGQqQ/E3RySA/IhikyZBYNi6LdIKYnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404837AbgAXLfY (ORCPT
+        id S2404805AbgAXLfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:35:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55374 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:35:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404580AbgAXLfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:35:22 -0500
+        id S2404795AbgAXLfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:35:06 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96E98222D9;
-        Fri, 24 Jan 2020 11:35:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 936DB222D9;
+        Fri, 24 Jan 2020 11:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865722;
-        bh=GAGFq6L4ACu09icvD+WmqG9Paps4qEGo+Ta0x9IQa4M=;
+        s=default; t=1579865705;
+        bh=t60YEIkTPM+weChxBuQ9RL7zky9tW+NV2nEWVLpqr8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hmBAQRnzHKgIsJ6V3SZ12LJapl0wjOG4X5Z6hqRYAxAbjqpoTR5ifCoyhF4Oq9la2
-         GwIXAht5GssCatk+fC/JJVEf4Um3buMnVc37gKwqKjw5F4QX1f1QGa/sMGF75jT83i
-         ZKKCFZbmMC9OMzvT8sMOajWBeMunozCKwfBTPzFE=
+        b=LciA+VKWQRN+78uX5BzQizNJdJd8ZWpd3ugvQ00HOnGu+2Ci/tRAvCRfr83wxOcsh
+         4TwypCYuJmPiPPczrt60ZXGrbyxHwS90tly5GTwKa4JnCNRaSUTrDm1jjTpyoQv0a3
+         xY/peEnLHVo0TLUoD1b4JpwuAFgFCWPeWNk6jp40=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 612/639] bpf, offload: Unlock on error in bpf_offload_dev_create()
-Date:   Fri, 24 Jan 2020 10:33:02 +0100
-Message-Id: <20200124093206.126283044@linuxfoundation.org>
+Subject: [PATCH 4.19 603/639] net/smc: receive pending data after RCV_SHUTDOWN
+Date:   Fri, 24 Jan 2020 10:32:53 +0100
+Message-Id: <20200124093204.933660026@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,38 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Karsten Graul <kgraul@linux.ibm.com>
 
-[ Upstream commit d0fbb51dfaa612f960519b798387be436e8f83c5 ]
+[ Upstream commit 107529e31a87acd475ff6a0f82745821b8f70fec ]
 
-We need to drop the bpf_devs_lock on error before returning.
+smc_rx_recvmsg() first checks if data is available, and then if
+RCV_SHUTDOWN is set. There is a race when smc_cdc_msg_recv_action() runs
+in between these 2 checks, receives data and sets RCV_SHUTDOWN.
+In that case smc_rx_recvmsg() would return from receive without to
+process the available data.
+Fix that with a final check for data available if RCV_SHUTDOWN is set.
+Move the check for data into a function and call it twice.
+And use the existing helper smc_rx_data_available().
 
-Fixes: 9fd7c5559165 ("bpf: offload: aggregate offloads per-device")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Link: https://lore.kernel.org/bpf/20191104091536.GB31509@mwanda
+Fixes: 952310ccf2d8 ("smc: receive data from RMBE")
+Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/offload.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/smc/smc_rx.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/bpf/offload.c b/kernel/bpf/offload.c
-index 177a524363942..86477f3894e52 100644
---- a/kernel/bpf/offload.c
-+++ b/kernel/bpf/offload.c
-@@ -645,8 +645,10 @@ struct bpf_offload_dev *bpf_offload_dev_create(void)
- 	down_write(&bpf_devs_lock);
- 	if (!offdevs_inited) {
- 		err = rhashtable_init(&offdevs, &offdevs_params);
--		if (err)
-+		if (err) {
-+			up_write(&bpf_devs_lock);
- 			return ERR_PTR(err);
+diff --git a/net/smc/smc_rx.c b/net/smc/smc_rx.c
+index 1ee5fdbf8284e..36340912df48a 100644
+--- a/net/smc/smc_rx.c
++++ b/net/smc/smc_rx.c
+@@ -262,6 +262,18 @@ static int smc_rx_recv_urg(struct smc_sock *smc, struct msghdr *msg, int len,
+ 	return -EAGAIN;
+ }
+ 
++static bool smc_rx_recvmsg_data_available(struct smc_sock *smc)
++{
++	struct smc_connection *conn = &smc->conn;
++
++	if (smc_rx_data_available(conn))
++		return true;
++	else if (conn->urg_state == SMC_URG_VALID)
++		/* we received a single urgent Byte - skip */
++		smc_rx_update_cons(smc, 0);
++	return false;
++}
++
+ /* smc_rx_recvmsg - receive data from RMBE
+  * @msg:	copy data to receive buffer
+  * @pipe:	copy data to pipe if set - indicates splice() call
+@@ -303,15 +315,18 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msghdr *msg,
+ 		if (read_done >= target || (pipe && read_done))
+ 			break;
+ 
+-		if (atomic_read(&conn->bytes_to_rcv))
++		if (smc_rx_recvmsg_data_available(smc))
+ 			goto copy;
+-		else if (conn->urg_state == SMC_URG_VALID)
+-			/* we received a single urgent Byte - skip */
+-			smc_rx_update_cons(smc, 0);
+ 
+ 		if (sk->sk_shutdown & RCV_SHUTDOWN ||
+-		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort)
++		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort) {
++			/* smc_cdc_msg_recv_action() could have run after
++			 * above smc_rx_recvmsg_data_available()
++			 */
++			if (smc_rx_recvmsg_data_available(smc))
++				goto copy;
+ 			break;
 +		}
- 		offdevs_inited = true;
- 	}
- 	up_write(&bpf_devs_lock);
+ 
+ 		if (read_done) {
+ 			if (sk->sk_err ||
 -- 
 2.20.1
 
