@@ -2,153 +2,209 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 090ECC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4485DC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D1D2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E4F2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 18:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="p2E5qUKf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sUkSU5BA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391472AbgAXSmg (ORCPT
+        id S2391491AbgAXSoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 13:42:36 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32850 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389067AbgAXSmg (ORCPT
+        Fri, 24 Jan 2020 13:44:13 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38343 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390349AbgAXSoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 13:42:36 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b6so3230759wrq.0;
-        Fri, 24 Jan 2020 10:42:35 -0800 (PST)
+        Fri, 24 Jan 2020 13:44:12 -0500
+Received: by mail-il1-f194.google.com with SMTP id f5so2416395ilq.5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 10:44:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hxaGriu+6OASXqVTTD7fqR/Evc+gXUed/rL6pEHioHM=;
-        b=p2E5qUKf/90BiHk6doo6hKQ2tmAsndtzrVRKNHBT2hGtfSRR9F7fAxcefAXwRNjEWk
-         5AKziF4gPF/m5+W7fbc+/4f3/GPamv6RoxHy+/mYY2sXfpwMA6iS+wNJjRt1Dk30hRBM
-         WVvvHsTNnPEWQq0uAkigFjPfQwZ3T25oul13qzHnqt5T9SF0u3nHJX+AzDArAVBVg54L
-         pv7vCHjtLr9NHAJC8qqK50+3+3+RVI79Tqq6XQdwcARzzkom2Ca6Wm5vkwXS45mgH8eY
-         9QTrnbhpBY4vGKq07Clx0/y4ni7+SoaS+3qSCvF0k3TzpfPwbKYxKGAs6c1qBTK2SmcP
-         f9jw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2JH3g8dh1GU5H/sR8ZGM8+SPJang7iCUnM35EHBf4U0=;
+        b=sUkSU5BA0VaUZ1EqVvXDp51LYwWh8WYDrTrgFbKo+7QPyswRoDgFoi1glh31ryC55F
+         joWVg7mLUImUZ4Aid7XBHsWeIuDHvsgy3aDseDuFQtApK7qwAcr9c5yEYP6/M5X1dIrS
+         1kPS+k7s42fZJrSBm3SHTA10KKfJ8Pg2qmSaHlRYe4ROGkS19U3MgA7WeKhMI62PuQQc
+         278elf6xZJ6AFO46/kc11Jup6m9V36bx6zA7dB0csGj0AODlywdtqP3CxRPcg8zuU99j
+         YB8IysZfqhUl8CWnQYf/hrW0+IxYvuG1L+t3ddU798J28xwtHQBnFY2CCtUpsQC2GPDb
+         7gPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hxaGriu+6OASXqVTTD7fqR/Evc+gXUed/rL6pEHioHM=;
-        b=NLzFhisAgTK0KO5seNaRv+phSpFp2ocicFaDVdXQKQGDWe6tjmeOIb+apsTIPH9W3K
-         gS2ac0p6J4OHN6gJze0J7f3x8aAqLyK3A8jpV4KKFiDt5IwbQlDMIqeM5aLIZeQa9/BQ
-         EUme5No/bouwTSh5+Wc0kqCkn12JTTJ7hOvvVF/WnPts6iQxt+aS0ufInAnawUWf/eMY
-         KAdqzV2GWMjJ+5lBCYpPiN76KvjhWRYdC42qHOs+lBmmFfxemz2nohXZO/uuvuWp3kai
-         QulGGd5mzO4/3hBKeUoho4HP8utQMPWpPi/KMbg0HCpWhAuMU9b0qTjmUhcVU+m+6CSX
-         YJIQ==
-X-Gm-Message-State: APjAAAXxbLD1ttK7fjCbjx2ra9KwsbYfxnhUaM+9cx18YgxZMozx/gWE
-        0XNAm5OC8enBePfsOZclbYo=
-X-Google-Smtp-Source: APXvYqzEXpUS4DI6SZ7C8bn6Zh3dAPRFC02N9FBQ/+W5uZf8HmUz7IrPEpYcSLhpvX2wEORsxjB2Iw==
-X-Received: by 2002:adf:ef8b:: with SMTP id d11mr5492462wro.45.1579891354616;
-        Fri, 24 Jan 2020 10:42:34 -0800 (PST)
-Received: from desktopdebian.localdomain (x4d03a6f1.dyn.telefonica.de. [77.3.166.241])
-        by smtp.gmail.com with ESMTPSA id d14sm9302724wru.9.2020.01.24.10.42.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 10:42:34 -0800 (PST)
-From:   =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
-Cc:     cgzones@googlemail.com, Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] selinux: allow kernfs symlinks to inherit parent directory context
-Date:   Fri, 24 Jan 2020 19:42:21 +0100
-Message-Id: <20200124184221.322248-1-cgzones@googlemail.com>
-X-Mailer: git-send-email 2.25.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2JH3g8dh1GU5H/sR8ZGM8+SPJang7iCUnM35EHBf4U0=;
+        b=s+8msZaUoiJYIeQK8qW/H2rXOpa3iklV/+qoskEq9Dpt3TCcVVWEW+DTmJWPql5Q56
+         TrNt3j1Dq4FBVGl7qJBxMBXu902OWkKc8hBiRSaHDhqCJzqsyIme4qllwBbuP1ojoc2b
+         zd2J3Ne0v5HfJqLH8bhPcDzAE4jeckF46vK32DGAJ6TL7b+d8AVv4chLH4mgsGAk5BLr
+         +lGTk6PRgI2pYrxqAIghZIwlNGhlf99sXWsdCbFP87OKXWSN3GcS8pg1uS5Q3BDfCTd9
+         iIQw2iOXZR/9Q1NBt41xjJLFP53LNI9aJjpRebcA9rDdXasNYKXgQB5uWWwaI5G0Ldej
+         f04w==
+X-Gm-Message-State: APjAAAXXuqCikZquD1RcIbxfRqv4PeZ/+XSNJjdvstgzlcmLtsKwy/WY
+        fAUtBy92ij+44HuuMikehyy1k1LnieUkKXdeRdK5sA==
+X-Google-Smtp-Source: APXvYqzcz7qW8iCmlEijtCdDmXnM/4jHbABwlE7vzpx8FPgzBZy4Ux5rA5eM0SAF78/80UKHi7OLzdscbESCeOArY74=
+X-Received: by 2002:a92:2907:: with SMTP id l7mr4349749ilg.140.1579891451965;
+ Fri, 24 Jan 2020 10:44:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
+ <20191227053215.423811-8-bjorn.andersson@linaro.org> <20200110212806.GD11555@xps15>
+ <20200122193936.GB3261042@ripper> <CANLsYkx-C9U4W3R3Xo6t3BJBM4UK_i3zuwzhnXMMEQ0-ur+8Kg@mail.gmail.com>
+ <20200123171524.GV1511@yoga> <8d92c4b5-4238-23d2-50fc-1a5bdfc2c67b@st.com>
+In-Reply-To: <8d92c4b5-4238-23d2-50fc-1a5bdfc2c67b@st.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Fri, 24 Jan 2020 11:44:01 -0700
+Message-ID: <CANLsYkyhGjrxGiYqtCijwQiMOnvGdpXNKJ0XpxXsFYe=XEY0ZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] remoteproc: qcom: q6v5: Add common panic handler
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently symlinks on kernel filesystems, like sysfs, are labeled on
-creation with the parent fs root sid.
+On Thu, 23 Jan 2020 at 10:49, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+>
+> Hi Bjorn, Mathieu
+>
+> On 1/23/20 6:15 PM, Bjorn Andersson wrote:
+> > On Thu 23 Jan 09:01 PST 2020, Mathieu Poirier wrote:
+> >
+> >> On Wed, 22 Jan 2020 at 12:40, Bjorn Andersson
+> >> <bjorn.andersson@linaro.org> wrote:
+> >>>
+> >>> On Fri 10 Jan 13:28 PST 2020, Mathieu Poirier wrote:
+> >>>
+> >>>> On Thu, Dec 26, 2019 at 09:32:14PM -0800, Bjorn Andersson wrote:
+> >>>>> Add a common panic handler that invokes a stop request and sleep enough
+> >>>>> to let the remoteproc flush it's caches etc in order to aid post mortem
+> >>>>> debugging.
+> >>>>>
+> >>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >>>>> ---
+> >>>>>
+> >>>>> Changes since v1:
+> >>>>> - None
+> >>>>>
+> >>>>>  drivers/remoteproc/qcom_q6v5.c | 19 +++++++++++++++++++
+> >>>>>  drivers/remoteproc/qcom_q6v5.h |  1 +
+> >>>>>  2 files changed, 20 insertions(+)
+> >>>>>
+> >>>>> diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
+> >>>>> index cb0f4a0be032..17167c980e02 100644
+> >>>>> --- a/drivers/remoteproc/qcom_q6v5.c
+> >>>>> +++ b/drivers/remoteproc/qcom_q6v5.c
+> >>>>> @@ -6,6 +6,7 @@
+> >>>>>   * Copyright (C) 2014 Sony Mobile Communications AB
+> >>>>>   * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+> >>>>>   */
+> >>>>> +#include <linux/delay.h>
+> >>>>>  #include <linux/kernel.h>
+> >>>>>  #include <linux/platform_device.h>
+> >>>>>  #include <linux/interrupt.h>
+> >>>>> @@ -15,6 +16,8 @@
+> >>>>>  #include <linux/remoteproc.h>
+> >>>>>  #include "qcom_q6v5.h"
+> >>>>>
+> >>>>> +#define Q6V5_PANIC_DELAY_MS        200
+> >>>>> +
+> >>>>>  /**
+> >>>>>   * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
+> >>>>>   * @q6v5:  reference to qcom_q6v5 context to be reinitialized
+> >>>>> @@ -162,6 +165,22 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
+> >>>>>  }
+> >>>>>  EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
+> >>>>>
+> >>>>> +/**
+> >>>>> + * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
+> >>>>> + * @q6v5:  reference to qcom_q6v5 context
+> >>>>> + *
+> >>>>> + * Set the stop bit and sleep in order to allow the remote processor to flush
+> >>>>> + * its caches etc for post mortem debugging.
+> >>>>> + */
+> >>>>> +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
+> >>>>> +{
+> >>>>> +   qcom_smem_state_update_bits(q6v5->state,
+> >>>>> +                               BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
+> >>>>> +
+> >>>>> +   mdelay(Q6V5_PANIC_DELAY_MS);
+> >>>>
+> >>>> I really wonder if the delay should be part of the remoteproc core and
+> >>>> configurable via device tree.  Wanting the remote processor to flush its caches
+> >>>> is likely something other vendors will want when dealing with a kernel panic.
+> >>>> It would be nice to see if other people have an opinion on this topic.  If not
+> >>>> then we can keep the delay here and move it to the core if need be.
+> >>>>
+> >>>
+> >>> I gave this some more thought and what we're trying to achieve is to
+> >>> signal the remote processors about the panic and then give them time to
+> >>> react, but per the proposal (and Qualcomm downstream iirc) we will do
+> >>> this for each remote processor, one by one.
+> >>>
+> >>> So in the typical case of a Qualcomm platform with 4-5 remoteprocs we'll
+> >>> end up giving the first one a whole second to react and the last one
+> >>> "only" 200ms.
+> >>>
+> >>> Moving the delay to the core by iterating over rproc_list calling
+> >>> panic() and then delaying would be cleaner imo.
+> >>
+> >> I agree.
+> >>
+> >>>
+> >>> It might be nice to make this configurable in DT, but I agree that it
+> >>> would be nice to hear from others if this would be useful.
+> >>
+> >> I think the delay has to be configurable via DT if we move this to the
+> >> core.  The binding can be optional and default to 200ms if not
+> >> present.
+> >>
+> >
+> > How about I make the panic() return the required delay and then we let
+> > the core sleep for MAX() of the returned durations?
 
-Allow symlinks to inherit the parent directory context, so fine-grained
-kernfs labeling can be applied to symlinks too and checking contexts
-doesn't complain about them.
+I like it.
 
-For backward-compatibility this behavior is contained in a new policy
-capability: kernfs_sovereign_symlinks
+> That way the default
+> > is still a property of the remoteproc drivers - and 200ms seems rather
+> > arbitrary to put in the core, even as a default.
+>
+> I agree with Bjorn, the delay should be provided by the platform.
+> But in this case i wonder if it is simpler to just let the platform take care it?
 
-Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
----
- security/selinux/hooks.c            | 5 ++++-
- security/selinux/include/security.h | 8 ++++++++
- security/selinux/ss/services.c      | 3 ++-
- 3 files changed, 14 insertions(+), 2 deletions(-)
+If I understand you correctly, that is what Bjorn's original
+implementation was doing and it had drawbacks.
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index d9e8b2131..1303bc8c4 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -1475,7 +1475,10 @@ static int inode_doinit_with_dentry(struct inode *inode, struct dentry *opt_dent
- 		/* Default to the fs superblock SID. */
- 		sid = sbsec->sid;
- 
--		if ((sbsec->flags & SE_SBGENFS) && !S_ISLNK(inode->i_mode)) {
-+		if (((sbsec->flags & SE_SBGENFS) &&
-+		     (!S_ISLNK(inode->i_mode))) ||
-+		    (selinux_policycap_kernfs_sovereign_symlinks() &&
-+		     (sbsec->flags & SE_SBGENFS_XATTR))) {
- 			/* We must have a dentry to determine the label on
- 			 * procfs inodes */
- 			if (opt_dentry) {
-diff --git a/security/selinux/include/security.h b/security/selinux/include/security.h
-index a39f9565d..cc8217848 100644
---- a/security/selinux/include/security.h
-+++ b/security/selinux/include/security.h
-@@ -79,6 +79,7 @@ enum {
- 	POLICYDB_CAPABILITY_ALWAYSNETWORK,
- 	POLICYDB_CAPABILITY_CGROUPSECLABEL,
- 	POLICYDB_CAPABILITY_NNP_NOSUID_TRANSITION,
-+	POLICYDB_CAPABILITY_KERNFS_SOVEREIGN_SYMLINKS,
- 	__POLICYDB_CAPABILITY_MAX
- };
- #define POLICYDB_CAPABILITY_MAX (__POLICYDB_CAPABILITY_MAX - 1)
-@@ -209,6 +210,13 @@ static inline bool selinux_policycap_nnp_nosuid_transition(void)
- 	return state->policycap[POLICYDB_CAPABILITY_NNP_NOSUID_TRANSITION];
- }
- 
-+static inline bool selinux_policycap_kernfs_sovereign_symlinks(void)
-+{
-+	struct selinux_state *state = &selinux_state;
-+
-+	return state->policycap[POLICYDB_CAPABILITY_KERNFS_SOVEREIGN_SYMLINKS];
-+}
-+
- int security_mls_enabled(struct selinux_state *state);
- int security_load_policy(struct selinux_state *state,
- 			 void *data, size_t len);
-diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
-index 216ce602a..b70380947 100644
---- a/security/selinux/ss/services.c
-+++ b/security/selinux/ss/services.c
-@@ -73,7 +73,8 @@ const char *selinux_policycap_names[__POLICYDB_CAPABILITY_MAX] = {
- 	"extended_socket_class",
- 	"always_check_network",
- 	"cgroup_seclabel",
--	"nnp_nosuid_transition"
-+	"nnp_nosuid_transition",
-+	"kernfs_sovereign_symlinks"
- };
- 
- static struct selinux_ss selinux_ss;
--- 
-2.25.0
+> For instance for stm32mp1 the stop corresponds to the reset on the remote processor core. To inform the coprocessor about an imminent shutdown we use a signal relying on a mailbox (cf. stm32_rproc_stop).
+> In this case we would need a delay between the signal and the reset, but not after (no cache management).
 
+Here I believe you are referring to the upper limit of 500ms that is
+needed for the mbox_send_message() in stm32_rproc_stop() to complete.
+Since that is a blocking call I think it would fit with Bjorn's
+proposal above if a value of '0' is returned by rproc->ops->panic().
+That would mean no further delays are needed (because the blocking
+mbox_send_message() would have done the job already).  Let me know if
+I'm in the weeds.
+
+>
+> Regards,
+> Arnaud
+> >
+> > Regards,
+> > Bjorn
+> >
