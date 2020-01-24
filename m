@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885B2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A893AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E703218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7631E2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859840;
-	bh=7bw2nOfb9pp3DL6IT/E9v7cEYrhBwFKvdoBR3TwdHVE=;
+	s=default; t=1579859844;
+	bh=Be775YfMZRAshdeiSYxip5rPo/rAYt/NxuZ4l4lI9vU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXdbcslY6YsC288YcXASYfYUVWeETb1ndT+MVepdImqiMl0JDLYvsW7cGbAI29ql+
-	 6ujBe1Qz6w8M6mxF6BWXGYSunV/OtFa7Tqcq0HRvArYgTHv5N5O/lQ6S+O/+kMvouu
-	 x70NaKqGTZvS2vQF8IWjFyD3AYYJ3OU31mfPRDm0=
+	b=iwgJdBYyitnvpnr0Aw1bLmHnUMwAc/AyOXOZFCLf1vLHELJ9IhO/3T6kR9mUyESpy
+	 j+FFBPoaosbiBIrKlZ5tSGjyX8nH/72k9ttz0znX8BDEg7naffxOpz2NfFgQ7bY37f
+	 NLUq8vQwG5D8sjPZADJzF0B1Mv2B/YP8NMYZvxRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388604AbgAXJ5T (ORCPT
+        id S2388606AbgAXJ5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:57:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32816 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:57:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731035AbgAXJ5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:57:17 -0500
+        id S1730740AbgAXJ5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:57:21 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AB6F214AF;
-        Fri, 24 Jan 2020 09:57:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2831C20709;
+        Fri, 24 Jan 2020 09:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859836;
-        bh=7bw2nOfb9pp3DL6IT/E9v7cEYrhBwFKvdoBR3TwdHVE=;
+        s=default; t=1579859841;
+        bh=Be775YfMZRAshdeiSYxip5rPo/rAYt/NxuZ4l4lI9vU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bWpXK+E2EJIb4NMYbTV2K8sZWsUEv84+PJ/z2BiKntKrTnar/90rcfVXKeqJvUCYF
-         XbemyNEPHBaxIJRaz9FP7hdpIC0su6gy6mvOXTHC576HtQoMTVoWjVwrhZnxe1pHez
-         yj4N+8EVIudw4GjRwZTno+m4Z0Rd/oiJOsag3YQI=
+        b=11wG4CsSaZbFH8aD1aqY89BGFniGinaFP1qvBt0QD5UzUIMib+Y1HRV3k84vgzDSk
+         67oxQZl9sSVTjD3Vjc2rG3lWi4y27IL0Qd5CxNCIKsraI0sQ4sa4D+89hhJucG8kp+
+         p+Vz1dH6QVm6CQkIlJj7UzPDcyEGXrBUqBPUbSCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 197/343] vfio/mdev: Fix aborting mdev child device removal if one fails
-Date:   Fri, 24 Jan 2020 10:30:15 +0100
-Message-Id: <20200124092945.891331671@linuxfoundation.org>
+Subject: [PATCH 4.14 206/343] ARM: riscpc: fix lack of keyboard interrupts after irq conversion
+Date:   Fri, 24 Jan 2020 10:30:24 +0100
+Message-Id: <20200124092947.146420136@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,75 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 6093e348a5e2475c5bb2e571346460f939998670 ]
+[ Upstream commit 63a0666bca9311f35017be454587f3ba903644b8 ]
 
-device_for_each_child() stops executing callback function for remaining
-child devices, if callback hits an error.
-Each child mdev device is independent of each other.
-While unregistering parent device, mdev core must remove all child mdev
-devices.
-Therefore, mdev_device_remove_cb() always returns success so that
-device_for_each_child doesn't abort if one child removal hits error.
+Fix lack of keyboard interrupts for RiscPC due to incorrect conversion.
 
-While at it, improve remove and unregister functions for below simplicity.
-
-There isn't need to pass forced flag pointer during mdev parent
-removal which invokes mdev_device_remove(). So simplify the flow.
-
-mdev_device_remove() is called from two paths.
-1. mdev_unregister_driver()
-     mdev_device_remove_cb()
-       mdev_device_remove()
-2. remove_store()
-     mdev_device_remove()
-
-Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fixes: e8d36d5dbb6a ("ARM: kill off set_irq_flags usage")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/mdev/mdev_core.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ arch/arm/mach-rpc/irq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index 8cfa712308773..e052f62fdea7e 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -150,10 +150,10 @@ static int mdev_device_remove_ops(struct mdev_device *mdev, bool force_remove)
+diff --git a/arch/arm/mach-rpc/irq.c b/arch/arm/mach-rpc/irq.c
+index b8a61cb112073..7f0f401786344 100644
+--- a/arch/arm/mach-rpc/irq.c
++++ b/arch/arm/mach-rpc/irq.c
+@@ -118,7 +118,7 @@ extern unsigned char rpc_default_fiq_start, rpc_default_fiq_end;
  
- static int mdev_device_remove_cb(struct device *dev, void *data)
+ void __init rpc_init_irq(void)
  {
--	if (!dev_is_mdev(dev))
--		return 0;
-+	if (dev_is_mdev(dev))
-+		mdev_device_remove(dev, true);
+-	unsigned int irq, clr, set = 0;
++	unsigned int irq, clr, set;
  
--	return mdev_device_remove(dev, data ? *(bool *)data : true);
-+	return 0;
- }
+ 	iomd_writeb(0, IOMD_IRQMASKA);
+ 	iomd_writeb(0, IOMD_IRQMASKB);
+@@ -130,6 +130,7 @@ void __init rpc_init_irq(void)
  
- /*
-@@ -241,7 +241,6 @@ EXPORT_SYMBOL(mdev_register_device);
- void mdev_unregister_device(struct device *dev)
- {
- 	struct mdev_parent *parent;
--	bool force_remove = true;
+ 	for (irq = 0; irq < NR_IRQS; irq++) {
+ 		clr = IRQ_NOREQUEST;
++		set = 0;
  
- 	mutex_lock(&parent_list_lock);
- 	parent = __find_parent_device(dev);
-@@ -255,8 +254,7 @@ void mdev_unregister_device(struct device *dev)
- 	list_del(&parent->next);
- 	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
- 
--	device_for_each_child(dev, (void *)&force_remove,
--			      mdev_device_remove_cb);
-+	device_for_each_child(dev, NULL, mdev_device_remove_cb);
- 
- 	parent_remove_sysfs_files(parent);
- 
+ 		if (irq <= 6 || (irq >= 9 && irq <= 15))
+ 			clr |= IRQ_NOPROBE;
 -- 
 2.20.1
 
