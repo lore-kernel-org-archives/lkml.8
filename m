@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1AEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B281C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55BE20661
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D8720661
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876276;
-	bh=G2VOsEbEc+dMho5fyhWCrtwPYAPYFgFjSpokoeq08uY=;
+	s=default; t=1579876279;
+	bh=7yves8TjxduWUO08r7fbAwx8OgmvxDGlAZ6NoGUW03I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GrNG9tFeyBrrgk0yPYdVAxSs9Yi5zG/KKgPlj/wAKUzwo6upAfu4DwlrGaBkzhLTN
-	 wyurFBGMLbdCrhAWwVZAjKByqXtwuEeRwqN2IYebJEN47UNAHsUn1OdqJXq3DxBl4Y
-	 3z83ps9zpjeEohfkhNErFnGrync6fu9hLLjNGSFc=
+	b=ZGTbFE710ZREyBBpUbwAGt+UQr/IFfWlGm682zj5K1ZJm2SPh09gobTuANQPEdf+4
+	 uuIZ3Lq+rxofwIjFsqMshYxbL54RGTD5Ro2BeJNi7HymEZfrS1jBmLo3Z4lwHZfI2d
+	 fmziyAGkVK60IAxpPpHNgbTnBPWLXa/NVt/hQ5Wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbgAXOU2 (ORCPT
+        id S2404005AbgAXObS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:20:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40868 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:31:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404401AbgAXOUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:20:06 -0500
+        id S1730970AbgAXOU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A58A22464;
-        Fri, 24 Jan 2020 14:20:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E61A21569;
+        Fri, 24 Jan 2020 14:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875605;
-        bh=G2VOsEbEc+dMho5fyhWCrtwPYAPYFgFjSpokoeq08uY=;
+        s=default; t=1579875628;
+        bh=7yves8TjxduWUO08r7fbAwx8OgmvxDGlAZ6NoGUW03I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=htmTAk8WrPZ34R41qi4tJpOIrckGKVBCB04kNcFcfJ9l4UedDeCbJJrzW/VLB0lxL
-         tYQKFOj8E5TK+kBypst3KbZJ+TI9CEW3ZySm6MtYkomOToAaozPHjqAlDkpVvOVDQh
-         8QAByoyiqajZGmexj7aD9xW5H4HQsqxSNEVGvwVc=
+        b=W3YFs65x/FKi9nMuu+EWX1WYHhVuc5tIrZ7GoIbO5oZcr+dQQKlBSpOJrtEkOHaL/
+         5VJn+etVDx3C2WNM0a7V9TFTRmwNjdLM2aKXVJe1gMAv0PdZT0UQ5FTePx34L5GwCO
+         56sh5w6qiplnV5TVoQuB4CI6jpCB7OL05yvPQpPo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        syzbot+0e63ae76d117ae1c3a01@syzkaller.appspotmail.com,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 093/107] netfilter: nf_tables: remove WARN and add NLA_STRING upper limits
-Date:   Fri, 24 Jan 2020 09:18:03 -0500
-Message-Id: <20200124141817.28793-93-sashal@kernel.org>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 13/56] clk: sunxi-ng: h6-r: Fix AR100/R_APB2 parent order
+Date:   Fri, 24 Jan 2020 09:19:29 -0500
+Message-Id: <20200124142012.29752-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
-References: <20200124141817.28793-1-sashal@kernel.org>
+In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
+References: <20200124142012.29752-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,76 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Samuel Holland <samuel@sholland.org>
 
-[ Upstream commit 9332d27d7918182add34e8043f6a754530fdd022 ]
+[ Upstream commit 0c545240aebc2ccb8f661dc54283a14d64659804 ]
 
-This WARN can trigger because some of the names fed to the module
-autoload function can be of arbitrary length.
+According to the BSP source code, both the AR100 and R_APB2 clocks have
+PLL_PERIPH0 as mux index 3, not 2 as it was on previous chips. The pre-
+divider used for PLL_PERIPH0 should be changed to index 3 to match.
 
-Remove the WARN and add limits for all NLA_STRING attributes.
+This was verified by running a rough benchmark on the AR100 with various
+clock settings:
 
-Reported-by: syzbot+0e63ae76d117ae1c3a01@syzkaller.appspotmail.com
-Fixes: 452238e8d5ffd8 ("netfilter: nf_tables: add and use helper for module autoload")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+        | mux | pre-divider | iterations/second | clock source |
+        |=====|=============|===================|==============|
+        |   0 |           0 |  19033   (stable) |       osc24M |
+        |   2 |           5 |  11466 (unstable) |  iosc/osc16M |
+        |   2 |          17 |  11422 (unstable) |  iosc/osc16M |
+        |   3 |           5 |  85338   (stable) |  pll-periph0 |
+        |   3 |          17 |  27167   (stable) |  pll-periph0 |
+
+The relative performance numbers all match up (with pll-periph0 running
+at its default 600MHz).
+
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index b0cd1cee412b2..6fa315b73a66a 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -22,6 +22,8 @@
- #include <net/net_namespace.h>
- #include <net/sock.h>
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+index 27554eaf69298..3f78035ff85af 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+@@ -23,9 +23,9 @@
+  */
  
-+#define NFT_MODULE_AUTOLOAD_LIMIT (MODULE_NAME_LEN - sizeof("nft-expr-255-"))
-+
- static LIST_HEAD(nf_tables_expressions);
- static LIST_HEAD(nf_tables_objects);
- static LIST_HEAD(nf_tables_flowtables);
-@@ -519,7 +521,7 @@ static void nft_request_module(struct net *net, const char *fmt, ...)
- 	va_start(args, fmt);
- 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
- 	va_end(args);
--	if (WARN(ret >= MODULE_NAME_LEN, "truncated: '%s' (len %d)", module_name, ret))
-+	if (ret >= MODULE_NAME_LEN)
- 		return;
- 
- 	mutex_unlock(&net->nft.commit_mutex);
-@@ -1175,7 +1177,8 @@ static const struct nla_policy nft_chain_policy[NFTA_CHAIN_MAX + 1] = {
- 				    .len = NFT_CHAIN_MAXNAMELEN - 1 },
- 	[NFTA_CHAIN_HOOK]	= { .type = NLA_NESTED },
- 	[NFTA_CHAIN_POLICY]	= { .type = NLA_U32 },
--	[NFTA_CHAIN_TYPE]	= { .type = NLA_STRING },
-+	[NFTA_CHAIN_TYPE]	= { .type = NLA_STRING,
-+				    .len = NFT_MODULE_AUTOLOAD_LIMIT },
- 	[NFTA_CHAIN_COUNTERS]	= { .type = NLA_NESTED },
- 	[NFTA_CHAIN_FLAGS]	= { .type = NLA_U32 },
- };
-@@ -2089,7 +2092,8 @@ static const struct nft_expr_type *nft_expr_type_get(struct net *net,
- }
- 
- static const struct nla_policy nft_expr_policy[NFTA_EXPR_MAX + 1] = {
--	[NFTA_EXPR_NAME]	= { .type = NLA_STRING },
-+	[NFTA_EXPR_NAME]	= { .type = NLA_STRING,
-+				    .len = NFT_MODULE_AUTOLOAD_LIMIT },
- 	[NFTA_EXPR_DATA]	= { .type = NLA_NESTED },
+ static const char * const ar100_r_apb2_parents[] = { "osc24M", "osc32k",
+-					     "pll-periph0", "iosc" };
++						     "iosc", "pll-periph0" };
+ static const struct ccu_mux_var_prediv ar100_r_apb2_predivs[] = {
+-	{ .index = 2, .shift = 0, .width = 5 },
++	{ .index = 3, .shift = 0, .width = 5 },
  };
  
-@@ -3932,7 +3936,8 @@ static const struct nla_policy nft_set_elem_policy[NFTA_SET_ELEM_MAX + 1] = {
- 	[NFTA_SET_ELEM_USERDATA]	= { .type = NLA_BINARY,
- 					    .len = NFT_USERDATA_MAXLEN },
- 	[NFTA_SET_ELEM_EXPR]		= { .type = NLA_NESTED },
--	[NFTA_SET_ELEM_OBJREF]		= { .type = NLA_STRING },
-+	[NFTA_SET_ELEM_OBJREF]		= { .type = NLA_STRING,
-+					    .len = NFT_OBJ_MAXNAMELEN - 1 },
- };
- 
- static const struct nla_policy nft_set_elem_list_policy[NFTA_SET_ELEM_LIST_MAX + 1] = {
+ static struct ccu_div ar100_clk = {
 -- 
 2.20.1
 
