@@ -2,87 +2,129 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1535C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687EEC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8848721569
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579902509;
-	bh=7Yjq+vDxOYsrQQm3Kcl0cS81mS27ugwgb7t3BK6sV7o=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Mb5VUrXYd4aWZVXvEy/tUxijzwD2DgecgEY7Uw3gY2ru90Exk4SS6O07f/EGPjYdb
-	 2MqUT6U//RQa8Kn7VKkEGaq/240ofz4ktBrX3LFMiLQ+VLT4jwk5AD72hMCIhsEYUy
-	 3pjfBGVKtutVahol9v9JxXRWEUdheVseicN9xtJU=
+	by mail.kernel.org (Postfix) with ESMTP id 3559520838
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:53:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hdSRR6y3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgAXVs2 (ORCPT
+        id S1727163AbgAXVxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:48:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgAXVs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:48:28 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F20D2077C;
-        Fri, 24 Jan 2020 21:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579902508;
-        bh=7Yjq+vDxOYsrQQm3Kcl0cS81mS27ugwgb7t3BK6sV7o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=0aAFfrhgbFUEYE/irU3nV2FO8uQJFPxin2DB1MC02mqduPw1AHt/gHrv9qZL0LtOM
-         /9bd3wmUyxatuS6/sU/t5VFKVoGPE2KE/AT/PQA0MagYIU57nv/q2OgUOcxF4mCKs/
-         ox9EiR9ph4Nha2UtrQXrIwZQ2uAVy/wXao7Nk6xE=
-Subject: Re: [PATCH 4.14 000/343] 4.14.168-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200124092919.490687572@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <eea5b549-9db8-726b-25b8-df92ad3ea25b@kernel.org>
-Date:   Fri, 24 Jan 2020 14:48:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Jan 2020 16:53:06 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:40890 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAXVxG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 16:53:06 -0500
+Received: by mail-qv1-f65.google.com with SMTP id dp13so1661587qvb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 13:53:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EwPE2uTviQEjsE1utp28wLeHm+u6Nm1mopOXiGOBzew=;
+        b=hdSRR6y3yyYN5tacXi+RUq0t2z4YfE1ePsXUhGNpUWKTMDRZTr0wsZPXDXhVSa8tA3
+         CAW1ZeaBTTIg/bnTiHLkBV0tSmf2R9eAHjlHSvTCE3u0S4VczhZas42sBXaqKOA0K1WF
+         OzJBeZRPvezT+6eL4IyyN1n8kytHgbLrRA+jk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EwPE2uTviQEjsE1utp28wLeHm+u6Nm1mopOXiGOBzew=;
+        b=Jr6OJUhOtNHr58K7yfEBwD2Mzyeh4vioYlWiUpOCR38M3Q9B9r1f45H28bSCWNloPi
+         dtehB8G1te2bFTj4O8xt3N+A2lg9Klkl3paihFWZF1+y+Dv/o1SQ0KcTl5pkrBeXj7+R
+         Ud5fTp+PlpqeTwBQKcgRduCXZVazRkPyMlyvqEWU4a3+p4I9ZsSX4Hk9kq4wnbOFXoHJ
+         Oy92DDb1lu/qK8A4uxHvJtIrfKrWuyhWcgnTASqV1+oXaA+++s42fSDbOy+qC4YOr2xx
+         g9sFHa/LNb0o+0W0s2TtEuKDnY128v3oMQcpNmGo1Sh6nGW7rVv/ehoqL05J/gUKHjcx
+         OPug==
+X-Gm-Message-State: APjAAAXjDy95+GxhzjkmG0FPsuHC79uc9CTdAkRypnlSXpNrbKrcfh+I
+        vg+6TIXoLPumn9GpwKQQ+hH8w1kGe1zUUQWQPiTMzg==
+X-Google-Smtp-Source: APXvYqwaEBzde+nCZdruWwVj8c3DUWHnDaZLJU9IaZnAYEkiij1P43wPznbHTec6Ot4T0ZERdsB+1brEdVsmz/xobxI=
+X-Received: by 2002:a05:6214:bc6:: with SMTP id ff6mr5098954qvb.133.1579902784863;
+ Fri, 24 Jan 2020 13:53:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200117002820.56872-1-pmalani@chromium.org> <c338d46d-5600-a53e-5a04-12100f5628b1@collabora.com>
+ <CACeCKafMOUgLgrO-VwAH5so-O7ALZXdTaiC_=2E9M91mhfFt6g@mail.gmail.com> <75dc83a6-c183-6808-c668-d31a71a31682@collabora.com>
+In-Reply-To: <75dc83a6-c183-6808-c668-d31a71a31682@collabora.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Fri, 24 Jan 2020 13:52:54 -0800
+Message-ID: <CACeCKafersQp9gx_zSYNczNTbB7u-2UYdxsrrgPhAmpW_nC2rQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] platform: chrome: Add cros-usbpd-notify driver
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, sre@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Jon Flatley <jflat@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/20 2:26 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.168 release.
-> There are 343 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 26 Jan 2020 09:26:30 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.168-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hi Enric
 
-Compiled and booted on my test system. No dmesg regressions.
-
-thanks,
--- Shuah
+(removed lot of the context text to keep the message length small)
+> > So, in summary, my proposed additions to the edits you suggested are:
+> > - Remove IS_ENABLED(CONFIG_OF)... checks from
+> > cros_usbpd_notify_probe_plat() and cros_usbpd_notify_remove_plat()
+> > - Change check in cros_ec_dev to be:
+> >               if (IS_ENABLED(CONFIG_OF) && ec->ec_dev->dev->of_node)
+> >
+> > WDYT? Could you kindly try this on your kevin configuration? I've
+> > tried it for the cases "CONFIG_OF && !CONFIG_ACPI" and "!CONFIG_OF &&
+> > CONFIG_ACPI" but not the third one (CONFIG_OF && CONFIG_ACPI) since I
+> > don't have an environment to test with (I can confirm it builds).
+> >
+> > Thanks as always for helping iterate on this.
+> >
+> >
+>
+> Let's continue talking with a new version. Could you send another one and I can
+> check. I have now setup both systems one with ACPi and another one with OF.
+Sounds good. Will push a new version. Thanks.
+>
+> Thanks,
+>  Enric
+>
+>
+> >>                 if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
+> >>                         retval = mfd_add_hotplug_devices(ec->dev,
+> >>                                         cros_usbpd_notify_cells,
+> >>
+> >>
+> >>> diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/include/linux/platform_data/cros_usbpd_notify.h
+> >>> new file mode 100644
+> >>> index 0000000000000..4f2791722b6d3
+> >>> --- /dev/null
+> >>> +++ b/include/linux/platform_data/cros_usbpd_notify.h
+> >>> @@ -0,0 +1,17 @@
+> >>> +// SPDX-License-Identifier: GPL-2.0-only
+> >>> +/*
+> >>> + * ChromeOS EC Power Delivery Notifier Driver
+> >>> + *
+> >>> + * Copyright 2020 Google LLC
+> >>> + */
+> >>> +
+> >>> +#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
+> >>> +#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
+> >>> +
+> >>> +#include <linux/notifier.h>
+> >>> +
+> >>> +int cros_usbpd_register_notify(struct notifier_block *nb);
+> >>> +
+> >>> +void cros_usbpd_unregister_notify(struct notifier_block *nb);
+> >>> +
+> >>> +#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
+> >>>
+> >>
+> >> Cheers,
+> >>  Enric
