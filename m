@@ -2,105 +2,101 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7658DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEB4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF9720678
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:44:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579866241;
-	bh=R42p8EilbRbVFkTD4UNRS3mWkYYHpNPIw5FbffRX+gQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XoytaM4ARsu2zOxh5x4DVIlvmJAqy/MQXW5wn5QEZKvO63F5qoRPtEhr0Oif2JCwR
-	 tyDdWfFI12c69fevp4tVPo0J5hQ54K4ErT8eXx2A+KgS9ppf1hBLrTrEGZholvEVLA
-	 LpeH0S4/RRuELKcviyWeoFRQHxpoIqwrgH2yIW8w=
+	by mail.kernel.org (Postfix) with ESMTP id 20CDE20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nfb4fQD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392129AbgAXLn7 (ORCPT
+        id S1732804AbgAXLqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:43:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387775AbgAXLBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:01:47 -0500
-Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 246C32075D;
-        Fri, 24 Jan 2020 11:01:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863706;
-        bh=R42p8EilbRbVFkTD4UNRS3mWkYYHpNPIw5FbffRX+gQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xCURA0MPHLuT8IT8TY1Goj7Y2itYBfpKN8nUV6P65tVs20VNdmPNjApAHizeB59ik
-         fT/nnChQRoSGgQyZCs9QNXH3HmjtPq3ziFwOPhaTADlBELqFA1R6LBc8aGP051Lzjz
-         K2BXPqN5A0ug3colISHLA640yfatc7Yws87GQIY0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/639] RDMA/bnxt_re: Add missing spin lock initialization
-Date:   Fri, 24 Jan 2020 10:23:43 +0100
-Message-Id: <20200124093054.050445323@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
-References: <20200124093047.008739095@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 24 Jan 2020 06:46:37 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33716 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729095AbgAXLqg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:46:36 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y6so2195298lji.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 03:46:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F2G1ORi33EQjZONnTNxOFvz/ixSFTtSO2wAQsE2faxE=;
+        b=nfb4fQD15j+5/qjRtx4pMNiyZI56Aajq55aOdEvUCguiaHOrzYWDxCICiuXTUzyz+y
+         D3jRv28eoV+WsKPXY300w6ZZkURRfuOqK+7nYost2bZsyNV03v0h0lf0FkwWOH7ltx5G
+         1FGrMCZe9qfMluIkRd9zFw0RVZaF47aekKsUcQb9qenQ1JTAAOxC9i1vR2MuOq7qVWWq
+         dOP7Ix6WPD52I8YVhwCWnjR/n9f6Jkut2Dzace3dlmu4eJUUINc6jZNpISd2ZW4y7Cqt
+         Ol6tZ3LVmUyGkiVJePfhbGDhKvAIf7zFDwDv9xDBC7tRnKLzAOGJ6Np7lDyqyfbp+lsk
+         cr8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F2G1ORi33EQjZONnTNxOFvz/ixSFTtSO2wAQsE2faxE=;
+        b=KKkzqX/rrY6R6JlXFlcG73DmPrjkVgrL5WvSd0umrqaRWtmzALJu3AP2O0w3gyN9of
+         eNXvaYJhZD/LMprQBH+EgjtJqCawm5WOviVWEVvDQ2J83s9S4By9F/14ca1nQquCMeTt
+         6qJDRIoS/tilQ3ePyu1V3OINPO396daHsS3CpBJkQgEM5MZg0BbHvTjOmZtEDiEcXRvA
+         qHGNPiOKe7HNnVhPXgq0Zihki+qIRaeBGv5sV6b8DbX6zdms8F7TVuivaFXEhzPjUoLc
+         nRNwDw0fDggwfL9J/UaRxIABcXmCwvTi9QovcrAttjzbv4YfP7lfgJNxsQCEV8CFvla/
+         fGiw==
+X-Gm-Message-State: APjAAAXjViqUqA1/ftNvUwgys4kfMbTU215Hz5HR1rphv1vpP2beg9Ht
+        nF/tvbwOJUSdyQoDWdzvZra3Nw==
+X-Google-Smtp-Source: APXvYqzm//t0nGqXj1IjiQlBpurYhxhakJnv3gh/mxGnI3im9FLSe1dHxI7gZyvW5y3SK/gnWNWI6g==
+X-Received: by 2002:a2e:7009:: with SMTP id l9mr2008261ljc.96.1579866394478;
+        Fri, 24 Jan 2020 03:46:34 -0800 (PST)
+Received: from localhost (c-413e70d5.07-21-73746f28.bbcust.telenor.se. [213.112.62.65])
+        by smtp.gmail.com with ESMTPSA id i197sm2596473lfi.56.2020.01.24.03.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 03:46:33 -0800 (PST)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] x86: Kconfig: make CMDLINE_OVERRIDE depend on CMDLINE
+Date:   Fri, 24 Jan 2020 12:46:15 +0100
+Message-Id: <20200124114615.11577-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Selvin Xavier <selvin.xavier@broadcom.com>
+When trying to boot an allmodconfig kernel that is build with
+KCONFIG_ALLCONFIG=$(pwd)/arch/x86/configs/x86_64_defconfig, it doesn't
+boot since CONFIG_CMDLINE_OVERRIDE gets enabled. Which forces the user
+to pass the full cmdline to CONFIG_CMDLINE="...".
 
-[ Upstream commit 5a23e0b1dd51fe0efae666b03fdb15e1301f437a ]
+Rework so that CONFIG_CMDLINE_OVERRIDE gets set only if CONFIG_CMDLINE
+is set to something except an empty string.
 
-Add the missing initalization of the cq_lock and qplib.flush_lock.
-
-Fixes: 942c9b6ca8de ("RDMA/bnxt_re: Avoid Hard lockup during error CQE processing")
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- drivers/infiniband/hw/bnxt_re/ib_verbs.c | 1 +
- drivers/infiniband/hw/bnxt_re/qplib_fp.c | 1 +
- 2 files changed, 2 insertions(+)
+ arch/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/ib_verbs.c b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-index a69632f1fab0b..c9af2d139f5cb 100644
---- a/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-+++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-@@ -2664,6 +2664,7 @@ struct ib_cq *bnxt_re_create_cq(struct ib_device *ibdev,
- 	nq->budget++;
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index f2dcd9ab6ef6..598b6325a027 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2447,7 +2447,7 @@ config CMDLINE
  
- 	atomic_inc(&rdev->cq_count);
-+	spin_lock_init(&cq->cq_lock);
- 
- 	if (context) {
- 		struct bnxt_re_cq_resp resp;
-diff --git a/drivers/infiniband/hw/bnxt_re/qplib_fp.c b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-index c15335dc8f614..60f2fb7e7dbfe 100644
---- a/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-@@ -1970,6 +1970,7 @@ int bnxt_qplib_create_cq(struct bnxt_qplib_res *res, struct bnxt_qplib_cq *cq)
- 	INIT_LIST_HEAD(&cq->sqf_head);
- 	INIT_LIST_HEAD(&cq->rqf_head);
- 	spin_lock_init(&cq->compl_lock);
-+	spin_lock_init(&cq->flush_lock);
- 
- 	bnxt_qplib_arm_cq_enable(cq);
- 	return 0;
+ config CMDLINE_OVERRIDE
+ 	bool "Built-in command line overrides boot loader arguments"
+-	depends on CMDLINE_BOOL
++	depends on CMDLINE_BOOL && CMDLINE != ""
+ 	---help---
+ 	  Set this option to 'Y' to have the kernel ignore the boot loader
+ 	  command line, and use ONLY the built-in command line.
 -- 
 2.20.1
-
-
 
