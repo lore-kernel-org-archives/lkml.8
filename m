@@ -2,170 +2,429 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9268DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1826C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D94920709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9E420709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 15:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389127AbgAXPSB (ORCPT
+        id S2389338AbgAXPSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 10:18:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34090 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 10:18:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:53764 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387438AbgAXPR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 10:17:26 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4576214DB;
-        Fri, 24 Jan 2020 15:17:25 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1iv0i4-000qCG-RP; Fri, 24 Jan 2020 10:17:24 -0500
-Message-Id: <20200124151724.737628955@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Fri, 24 Jan 2020 10:16:54 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 03/14] tracing: Allow trace_printk() to nest in other tracing code
-References: <20200124151651.852781301@goodmis.org>
+        id S2389173AbgAXPSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 10:18:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53E521FB;
+        Fri, 24 Jan 2020 07:18:02 -0800 (PST)
+Received: from [10.37.12.50] (unknown [10.37.12.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 651403F6C4;
+        Fri, 24 Jan 2020 07:17:55 -0800 (PST)
+Subject: Re: [PATCH v2 6/6] arm64: use activity monitors for frequency
+ invariance
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        dietmar.eggemann@arm.com, peterz@infradead.org, mingo@redhat.com,
+        ggherdovich@suse.cz, vincent.guittot@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191218182607.21607-1-ionela.voinescu@arm.com>
+ <20191218182607.21607-7-ionela.voinescu@arm.com>
+ <0ca05a2d-918b-0c70-6dc6-ef1f5f58f388@arm.com>
+ <20200123170716.GA28719@arm.com>
+ <bddfdb83-c6cb-a809-8781-80e1117a2d6c@arm.com>
+ <20200124131134.GA15164@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <d541c4ae-8419-0204-f399-7f0f0a18eb38@arm.com>
+Date:   Fri, 24 Jan 2020 15:17:48 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+In-Reply-To: <20200124131134.GA15164@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-trace_printk() is used to debug the kernel which includes the tracing
-infrastructure. But because it writes to the ring buffer, and so does much
-of the tracing infrastructure, the ring buffer's recursive detection will
-drop writes to the ring buffer that is in the same context as the current
-write is happening (it allows interrupts to write when normal context is
-writing, but wont let normal context write while normal context is writing).
 
-This can cause confusion and think that the code is where the trace_printk()
-exists is not hit. To solve this, up the recursive nesting of the ring
-buffer when trace_printk() is called before it writes to the buffer itself.
+On 1/24/20 1:12 PM, Ionela Voinescu wrote:
+> Hi Lukasz,
+> 
+> On Friday 24 Jan 2020 at 01:19:31 (+0000), Lukasz Luba wrote:
+>>
+>>
+>> On 1/23/20 5:07 PM, Ionela Voinescu wrote:
+>>> Hi Lukasz,
+>>>
+>>> Thank you for taking a look over the patches.
+>>>
+>>> On Thursday 23 Jan 2020 at 11:49:29 (+0000), Lukasz Luba wrote:
+>>>> Hi Ionela,
+>>>>
+>>>> Please find my few comments below.
+>>>>
+>>>> On 12/18/19 6:26 PM, Ionela Voinescu wrote:
+>>>>> The Frequency Invariance Engine (FIE) is providing a frequency
+>>>>> scaling correction factor that helps achieve more accurate
+>>>>> load-tracking.
+>>>>>
+>>>>> So far, for arm and arm64 platforms, this scale factor has been
+>>>>> obtained based on the ratio between the current frequency and the
+>>>>> maximum supported frequency recorded by the cpufreq policy. The
+>>>>> setting of this scale factor is triggered from cpufreq drivers by
+>>>>> calling arch_set_freq_scale. The current frequency used in computation
+>>>>> is the frequency requested by a governor, but it may not be the
+>>>>> frequency that was implemented by the platform.
+>>>>>
+>>>>> This correction factor can also be obtained using a core counter and a
+>>>>> constant counter to get information on the performance (frequency based
+>>>>> only) obtained in a period of time. This will more accurately reflect
+>>>>> the actual current frequency of the CPU, compared with the alternative
+>>>>> implementation that reflects the request of a performance level from
+>>>>> the OS.
+>>>>>
+>>>>> Therefore, implement arch_scale_freq_tick to use activity monitors, if
+>>>>> present, for the computation of the frequency scale factor.
+>>>>>
+>>>>> The use of AMU counters depends on:
+>>>>>     - CONFIG_ARM64_AMU_EXTN - depents on the AMU extension being present
+>>>>>     - CONFIG_CPU_FREQ - the current frequency obtained using counter
+>>>>>       information is divided by the maximum frequency obtained from the
+>>>>>       cpufreq policy.
+>>>>>
+>>>>> While it is possible to have a combination of CPUs in the system with
+>>>>> and without support for activity monitors, the use of counters for
+>>>>> frequency invariance is only enabled for a CPU, if all related CPUs
+>>>>> (CPUs in the same frequency domain) support and have enabled the core
+>>>>
+>>>> This looks like an edge case scenario, for which we are designing the
+>>>> whole machinery with workqueues. AFAIU we cannot run the code in
+>>>> arch_set_freq_scale() and you want to be check all CPUs upfront.
+>>>>
+>>>
+>>> Unfortunately, I don't believe it to be be an edge-case. Given that this
+>>> is an optional feature, I do believe that people might skip on
+>>> implementing it on some CPUs(LITTLEs) while keeping it for CPUs(bigs)
+>>> where power and thermal mitigation is more probable to happen in firmware.
+>>> This is the main reason to be conservative in the validation of CPUs and
+>>> cpufreq policies.
+>>>
+>>> In regards to arch_set_freq_scale, I want to be able to tell, when that
+>>> function is called, if I should return a scale factor based on cpufreq
+>>> for the current policy. If activity monitors are useable for the CPUs in
+>>> the full policy, than I'm bailing out and leave the AMU FIE machinery
+>>> set the scale factor. Unfortunately this works at policy granularity.
+>>>
+>>> This could  be done in a nicer way by setting the scale factor per cpu
+>>> and not for all CPUs in a policy in this arch_set_freq_scale function.
+>>> But this would require some rewriting for the full frequency invariance
+>>> support in drivers which we've talked about for a while but it was not
+>>> the purpose of this patch set. But it would eliminate the policy
+>>> verification I do with the second workqueue.
+>>>
+>>>> Maybe you can just wait till all CPUs boot and then set the proper
+>>>> flags and finish initialization. Something like:
+>>>> per_cpu(s8, amu_feat) /* form the patch 1/6 */
+>>>> OR
+>>>> per_cpu(u8, amu_scale_freq) /* from this patch */
+>>>> with maybe some values:
+>>>> 0 - not checked yet
+>>>> 1 - checked and present
+>>>> -1 - checked and not available
+>>>> -2 - checked but in conflict with others in the freq domain
+>>>> -3..-k - other odd configurations
+>>>>
+>>>> could potentially eliminate the need of workqueues.
+>>>>
+>>>> Then, if we could trigger this from i.e. late_initcall, the CPUs
+>>>> should be online and you can validate them.
+>>>>
+>>>
+>>> I did initially give such a state machine a try but it proved to be
+>>> quite messy. A big reason for this is that the activity monitors unit
+>>> has multiple counters that can be used for different purposes.
+>>>
+>>> The amu_feat per_cpu variable only flags that you have the AMU present
+>>> for potential users (in this case FIE) to validate the counters they
+>>> need for their respective usecase. For this reason I don't want to
+>>> overload the meaning of amu_feat. For the same reason I'm not doing the
+>>> validation of the counters in a generic way, but I'm tying it to the
+>>> usecase for particular counters. For example, it would not matter if
+>>> the instructions retired counter is not enabled from firmware for the
+>>> usecase of FIE. For frequency invariance we only need the core and
+>>> constant cycle counters and I'm making it the job of the user (arm64
+>>> topology code) to do the checking.
+>>>
+>>> Secondly, for amu_scale_freq I could have added such a state machine,
+>>> but I did not think it was useful. The only thing it would change is
+>>> that I would not have to use the cpu_amu_fie variable in the data
+>>> structure that gets passed to the work functions. The only way I would
+>>> eliminate the second workqueue was if I did not do a check of all CPUs
+>>> in a policy, as described above, and rewrite frequency invariance to
+>>> work at CPU granularity and not policy granularity. This would eliminate
+>>> the dependency on cpufreq policy all-together, so it would be worth
+>>> doing if only for this reason alone :).
+>>>
+>>> But even in that case, it's probably not needed to have more than two
+>>> states for amu_freq_scale.
+>>>
+>>> What do you think?
+>>
+>> I think currently we are the only users for this AMU and if there will
+>> be another in the future, then we can start thinking about his proposed
+>> changes. Let's cross that bridge when we come to it.
+>>
+>> Regarding the code, in the arch/arm64/cpufeature.c you can already
+>> read the cycle registers. All the CPUs are going through that code
+>> during start. If you use this fact in the late_initcall() all CPUs
+>> should be checked and you can just ask for cpufreq policy, calculate the
+>> max_freq ratio, set the per cpu config value to 'ready' state.
+>>
+>> Something like in the code below, it is on top of your patch set.
+>>
+>> ------------------------>8-------------------------------------
+>>
+>>
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index c639b3e052d7..837ea46d8867 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -1168,19 +1168,26 @@ static bool has_hw_dbm(const struct
+>> arm64_cpu_capabilities *cap,
+>>    * from the current cpu.
+>>    *  - cpu_has_amu_feat()
+>>    */
+>> -static DEFINE_PER_CPU_READ_MOSTLY(u8, amu_feat);
+>> -
+>> -inline bool cpu_has_amu_feat(void)
+>> -{
+>> -	return !!this_cpu_read(amu_feat);
+>> -}
+>> +DECLARE_PER_CPU(u64, arch_const_cycles_prev);
+>> +DECLARE_PER_CPU(u64, arch_core_cycles_prev);
+>> +DECLARE_PER_CPU(u8, amu_scale_freq);
+>>
+>>   static void cpu_amu_enable(struct arm64_cpu_capabilities const *cap)
+>>   {
+>> +	u64 core_cnt, const_cnt;
+>> +
+>>   	if (has_cpuid_feature(cap, SCOPE_LOCAL_CPU)) {
+>>   		pr_info("detected CPU%d: Activity Monitors Unit (AMU)\n",
+>>   			smp_processor_id());
+>> -		this_cpu_write(amu_feat, 1);
+>> +		core_cnt = read_sysreg_s(SYS_AMEVCNTR0_CORE_EL0);
+>> +		const_cnt = read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0);
+>> +
+>> +		this_cpu_write(arch_core_cycles_prev, core_cnt);
+>> +		this_cpu_write(arch_const_cycles_prev, const_cnt);
+>> +
+>> +		this_cpu_write(amu_scale_freq, 1);
+>> +	} else {
+>> +		this_cpu_write(amu_scale_freq, 2);
+>>   	}
+>>   }
+> 
+> 
+> Yes, functionally this can be done here (it would need some extra checks
+> on the initial values of core_cnt and const_cnt), but what I was saying
+> in my previous comment is that I don't want to mix generic feature
+> detection, which should happen here, with counter validation for
+> frequency invariance. As you see, this would already bring here per-cpu
+> variables for counters and amu_scale_freq flag, and I only see this
+> getting more messy with the future use of more counters. I don't believe
+> this code belongs here.
+> 
+> Looking a bit more over the code and checking against the new frequency
+> invariance code for x86, there is a case of either doing this CPU
+> validation in smp_prepare_cpus (separately for arm64 and x86) or calling
+> an arch_init_freq_invariance() maybe in sched_init_smp to be defined with
+> the proper frequency invariance counter initialisation code separately
+> for x86 and arm64. I'll have to look more over the details to make sure
+> this is feasible.
 
-Note, this does make it dangerous to use trace_printk() in the ring buffer
-code itself, because this basically disables the recursion protection of
-trace_printk() buffer writes. But as trace_printk() is only used for
-debugging, and if this does occur, the developer will see the cause real
-quick (recursive blowing up of the stack). Thus the developer can deal with
-that. But having trace_printk() silently ignored is a much bigger problem,
-and disabling recursive protection is a small price to pay to fix it.
+I have found that we could simply draw on from Mark's solution to
+similar problem. In commit:
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+commit df857416a13734ed9356f6e4f0152d55e4fb748a
+Author: Mark Rutland <mark.rutland@arm.com>
+Date:   Wed Jul 16 16:32:44 2014 +0100
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 106bbc0988fe..2e1db19dce97 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -866,10 +866,13 @@ int __trace_puts(unsigned long ip, const char *str, int size)
- 
- 	local_save_flags(irq_flags);
- 	buffer = global_trace.array_buffer.buffer;
-+	ring_buffer_nest_start(buffer);
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, alloc, 
- 					    irq_flags, pc);
--	if (!event)
--		return 0;
-+	if (!event) {
-+		size = 0;
-+		goto out;
-+	}
- 
- 	entry = ring_buffer_event_data(event);
- 	entry->ip = ip;
-@@ -885,7 +888,8 @@ int __trace_puts(unsigned long ip, const char *str, int size)
- 
- 	__buffer_unlock_commit(buffer, event);
- 	ftrace_trace_stack(&global_trace, buffer, irq_flags, 4, pc, NULL);
--
-+ out:
-+	ring_buffer_nest_end(buffer);
- 	return size;
- }
- EXPORT_SYMBOL_GPL(__trace_puts);
-@@ -902,6 +906,7 @@ int __trace_bputs(unsigned long ip, const char *str)
- 	struct bputs_entry *entry;
- 	unsigned long irq_flags;
- 	int size = sizeof(struct bputs_entry);
-+	int ret = 0;
- 	int pc;
- 
- 	if (!(global_trace.trace_flags & TRACE_ITER_PRINTK))
-@@ -914,10 +919,12 @@ int __trace_bputs(unsigned long ip, const char *str)
- 
- 	local_save_flags(irq_flags);
- 	buffer = global_trace.array_buffer.buffer;
-+
-+	ring_buffer_nest_start(buffer);
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_BPUTS, size,
- 					    irq_flags, pc);
- 	if (!event)
--		return 0;
-+		goto out;
- 
- 	entry = ring_buffer_event_data(event);
- 	entry->ip			= ip;
-@@ -926,7 +933,10 @@ int __trace_bputs(unsigned long ip, const char *str)
- 	__buffer_unlock_commit(buffer, event);
- 	ftrace_trace_stack(&global_trace, buffer, irq_flags, 4, pc, NULL);
- 
--	return 1;
-+	ret = 1;
-+ out:
-+	ring_buffer_nest_end(buffer);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(__trace_bputs);
- 
-@@ -3225,6 +3235,7 @@ int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
- 	local_save_flags(flags);
- 	size = sizeof(*entry) + sizeof(u32) * len;
- 	buffer = tr->array_buffer.buffer;
-+	ring_buffer_nest_start(buffer);
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_BPRINT, size,
- 					    flags, pc);
- 	if (!event)
-@@ -3240,6 +3251,7 @@ int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
- 	}
- 
- out:
-+	ring_buffer_nest_end(buffer);
- 	put_trace_buf();
- 
- out_nobuffer:
-@@ -3282,6 +3294,7 @@ __trace_array_vprintk(struct trace_buffer *buffer,
- 
- 	local_save_flags(flags);
- 	size = sizeof(*entry) + len + 1;
-+	ring_buffer_nest_start(buffer);
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
- 					    flags, pc);
- 	if (!event)
-@@ -3296,6 +3309,7 @@ __trace_array_vprintk(struct trace_buffer *buffer,
- 	}
- 
- out:
-+	ring_buffer_nest_end(buffer);
- 	put_trace_buf();
- 
- out_nobuffer:
--- 
-2.24.1
+     arm64: cpuinfo: record cpu system register values
+
+     Several kernel subsystems need to know details about CPU system 
+register
+     values, sometimes for CPUs other than that they are executing on. 
+Rather
+     than hard-coding system register accesses and cross-calls for these
+     cases, this patch adds logic to record various system register 
+values at
+     boot-time. This may be used for feature reporting, firmware bug
+     detection, etc.
+
+     Separate hooks are added for the boot and hotplug paths to enable
+     one-time intialisation and cold/warm boot value mismatch detection in
+     later patches.
+
+     Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+     Reviewed-by: Will Deacon <will.deacon@arm.com>
+     Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+     Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+
+
+He added cpuinfo_store_cpu() call in secondary_start_kernel()
+[in arm64 smp.c]. Please check the file:
+arch/arm64/kernel/cpuinfo.c
+
+We can probably add our read-amu-regs-and-setup-invariance call
+just below his cpuinfo_store_cpu.
+
+Then the arm64 cpufeature.c would be clean, we will be called for
+each cpu, late_initcal() will finish setup with edge case policy
+check like in the init_amu_feature() code below.
+
+
+> 
+>>
+>> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+>> index 61f8264afec9..95b34085ae64 100644
+>> --- a/arch/arm64/kernel/topology.c
+>> +++ b/arch/arm64/kernel/topology.c
+>> @@ -144,8 +144,8 @@ static struct cpu_amu_work __percpu *works;
+>>   static cpumask_var_t cpus_to_visit;
+>>
+>>   static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale);
+>> -static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
+>> -static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
+>> +DEFINE_PER_CPU(u64, arch_const_cycles_prev);
+>> +DEFINE_PER_CPU(u64, arch_core_cycles_prev);
+>>   DECLARE_PER_CPU(u8, amu_scale_freq);
+>>
+>>   static void cpu_amu_fie_init_workfn(struct work_struct *work)
+>> @@ -323,12 +323,64 @@ static int __init
+>> register_fie_counters_cpufreq_notifier(void)
+>>   }
+>>   core_initcall(register_fie_counters_cpufreq_notifier);
+>>
+>> +static int __init init_amu_feature(void)
+>> +{
+>> +	struct cpufreq_policy *policy;
+>> +	struct cpumask *checked_cpus;
+>> +	int count, total;
+>> +	int cpu, i;
+>> +	s8 amu_config;
+>> +	u64 ratio;
+>> +
+>> +	checked_cpus = kzalloc(cpumask_size(), GFP_KERNEL);
+>> +	if (!checked_cpus)
+>> +		return -ENOMEM;
+>> +
+>> +	for_each_possible_cpu(cpu) {
+>> +		if (cpumask_test_cpu(cpu, checked_cpus))
+>> +			continue;
+>> +
+>> +		policy = cpufreq_cpu_get(cpu);
+>> +		if (!policy) {
+>> +			pr_warn("No cpufreq policy found for CPU%d\n", cpu);
+>> +			continue;
+>> +		}
+>> +
+>> +		count = total = 0;
+>> +
+>> +		for_each_cpu(i, policy->related_cpus) {
+>> +			amu_config = per_cpu(amu_scale_freq, i);
+>> +			if (amu_config == 1)
+>> +				count++;
+>> +			total++;
+>> +		}
+>> +
+>> +		amu_config = (total == count) ? 3 : 4;
+>> +
+>> +		ratio = (u64)arch_timer_get_rate() << (2 * SCHED_CAPACITY_SHIFT);
+>> +		ratio = div64_u64(ratio, policy->cpuinfo.max_freq * 1000);
+>> +
+>> +		for_each_cpu(i, policy->related_cpus) {
+>> +			per_cpu(arch_max_freq_scale, i) = (unsigned long)ratio;
+>> +			per_cpu(amu_scale_freq, i) = amu_config;
+>> +			cpumask_set_cpu(i, checked_cpus);
+>> +		}
+>> +
+>> +		cpufreq_cpu_put(policy);
+>> +	}
+>> +
+>> +	kfree(checked_cpus);
+>> +
+>> +	return 0;
+>> +}
+>> +late_initcall(init_amu_feature);
+>> +
+> 
+> Yes, with the design I mentioned above, this CPU policy validation could
+> move to a late_initcall and I could drop the workqueues and the extra
+> data structure. Thanks for this!
+> 
+> Let me know what you think!
+> 
+
+One think is still open, the file drivers/base/arch_topology.c and
+#ifdef in function arch_set_freq_scale().
+
+Generally, if there is such need, it's better to put such stuff into the
+header and make dual implementation not polluting generic code with:
+#if defined(CONFIG_ARM64_XZY)
+#endif
+#if defined(CONFIG_POWERPC_ABC)
+#endif
+#if defined(CONFIG_x86_QAZ)
+#endif
+...
+
+
+In our case we would need i.e. linux/topology.h because it includes
+asm/topology.h, which might provide a needed symbol. At the end of
+linux/topology.h we can have:
+
+#ifndef arch_cpu_auto_scaling
+static __always_inline
+bool arch_cpu_auto_scaling(void) { return False; }
+#endif
+
+Then, when the symbol was missing and we got the default one,
+it should be easily optimized by the compiler.
+
+We could have a much cleaner function arch_set_freq_scale()
+in drivers/base/ and all architecture will deal with specific
+#ifdef CONFIG in their <asm/topology.h> implementations or
+use default.
+
+Example:
+arch_set_freq_scale()
+{
+	unsigned long scale;
+	int i;
+	
+	if (arch_cpu_auto_scaling(cpu))
+		return;
+
+	scale = (cur_freq << SCHED_CAPACITY_SHIFT) / max_freq;
+	for_each_cpu(i, cpus)
+		per_cpu(freq_scale, i) = scale;
+}
+
+Regards,
+Lukasz
+
+
+
+
 
 
