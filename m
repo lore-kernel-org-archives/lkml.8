@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBFFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90224C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928B921569
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6558C214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863689;
-	bh=BP7R04dc2l2DbOg8N+2HRcjcolSB/0sllc1I+f4cwps=;
+	s=default; t=1579863694;
+	bh=6vN8yAvuv2mIxnl69qt0BC6aB8iw1WxfoMTr+3DNk/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B6z4YejwG8veKF6pP43HML5QvpV0VRvw0QDpPyPvWqzlanwdWOX3MDxh33XNEay/f
-	 NgFjrUfV9VP/MOCSf9SekQhNhgy80IXy18i3p1XuoY6PK83OmliTuJXVgTDazxJdDn
-	 5ouaSAk6PIymyLdDgR1GnzjbhfdGL1e5bhYSet3s=
+	b=eWW6dbvglsZMCryPOqUqRAgf8aumYKOxQT7HJZOCcPn3KScOb4PsekCcQ7jC4TtKw
+	 2fmSWQUhsoLofD9yMXS8izN8uYmHcXEAwtbw7RboyFD0WVsanoZZf306y/2oguOm0E
+	 HnAt5GXrCR7/lpxL4idHyVQ55gEX6QfbO5ZdFVV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387698AbgAXLB2 (ORCPT
+        id S2387709AbgAXLBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:01:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34248 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:01:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbgAXLB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:01:26 -0500
+        id S1730614AbgAXLBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:01:30 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1636A2077C;
-        Fri, 24 Jan 2020 11:01:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A83A92075D;
+        Fri, 24 Jan 2020 11:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863685;
-        bh=BP7R04dc2l2DbOg8N+2HRcjcolSB/0sllc1I+f4cwps=;
+        s=default; t=1579863689;
+        bh=6vN8yAvuv2mIxnl69qt0BC6aB8iw1WxfoMTr+3DNk/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZMz4denuw54CVcdUSBlaxpPqwcTbxrrR8YupK2MWx11eBenOzmIwkcWreOFmkXMLz
-         VVr74RWEEKBeVkRxFNYzFsBUTb7Z/vtymwEVaPcwhH4VpKcG4lss520x9iirg5WdeH
-         mUT1AOPLqispDoB7QSb8jz/YotXrz98lvU23Y0gY=
+        b=gatTKJ6AkFA05ghqpCftzKmHWc4WG79Pj8sYm0aI6ED6sD+CM2lChaVMBj+pTkRgu
+         z9mL780MeNNTxJKIhCpPUD70qP2Yfsn1COvx/rgSlAakInWjlGdDmsUvP9flE/vuVb
+         8I/gCQ5XIPijPbdF14DYMrnWPAalovyzBviY2aWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ido Schimmel <idosch@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 060/639] mlxsw: reg: QEEC: Add minimum shaper fields
-Date:   Fri, 24 Jan 2020 10:23:50 +0100
-Message-Id: <20200124093054.932399262@linuxfoundation.org>
+Subject: [PATCH 4.19 061/639] mlxsw: spectrum: Set minimum shaper on MC TCs
+Date:   Fri, 24 Jan 2020 10:23:51 +0100
+Message-Id: <20200124093055.057770252@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,73 +63,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 8b931821aa04823e2e5df0ae93937baabbd23286 ]
+[ Upstream commit 0fe64023162aef123de2f1993ba13a35a786e1de ]
 
-Add QEEC.mise (minimum shaper enable) and QEEC.min_shaper_rate to enable
-configuration of minimum shaper.
+An MC-aware mode was introduced in commit 7b8195306694 ("mlxsw:
+spectrum: Configure MC-aware mode on mlxsw ports"). In MC-aware mode,
+BUM traffic gets a special treatment by being assigned to a separate set
+of traffic classes 8..15. Pairs of TCs 0 and 8, 1 and 9, etc., are then
+configured to strictly prioritize the lower-numbered ones. The intention
+is to prevent BUM traffic from flooding the switch and push out all UC
+traffic, which would otherwise happen, and instead give UC traffic
+precedence.
 
-Increase the QEEC length to 0x20 as well: that's the length that the
-register has had for a long time now, but with the configurations that
-mlxsw typically exercises, the firmware tolerated 0x1C-sized packets.
-With mise=true however, FW rejects packets unless they have the full
-required length.
+However strictly prioritizing UC traffic has the effect that UC overload
+pushes out all BUM traffic, such as legitimate ARP queries. These
+packets are kept in queues for a while, but under sustained UC overload,
+their lifetime eventually expires and these packets are dropped. That is
+detrimental to network performance as well.
 
-Fixes: b9b7cee40579 ("mlxsw: reg: Add QoS ETS Element Configuration register")
+Therefore configure the MC TCs (8..15) with minimum shaper of 200Mbps (a
+minimum permitted value) to allow a trickle of necessary control traffic
+to get through.
+
+Fixes: 7b8195306694 ("mlxsw: spectrum: Configure MC-aware mode on mlxsw ports")
 Signed-off-by: Petr Machata <petrm@mellanox.com>
 Signed-off-by: Ido Schimmel <idosch@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/reg.h | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ .../net/ethernet/mellanox/mlxsw/spectrum.c    | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-index aee58b3892f20..c9895876a2317 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-@@ -3215,7 +3215,7 @@ static inline void mlxsw_reg_qtct_pack(char *payload, u8 local_port,
-  * Configures the ETS elements.
-  */
- #define MLXSW_REG_QEEC_ID 0x400D
--#define MLXSW_REG_QEEC_LEN 0x1C
-+#define MLXSW_REG_QEEC_LEN 0x20
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index 30ef318b3d68d..5df9b25cab27d 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -2753,6 +2753,21 @@ int mlxsw_sp_port_ets_maxrate_set(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	return mlxsw_reg_write(mlxsw_sp->core, MLXSW_REG(qeec), qeec_pl);
+ }
  
- MLXSW_REG_DEFINE(qeec, MLXSW_REG_QEEC_ID, MLXSW_REG_QEEC_LEN);
- 
-@@ -3257,6 +3257,15 @@ MLXSW_ITEM32(reg, qeec, element_index, 0x04, 0, 8);
-  */
- MLXSW_ITEM32(reg, qeec, next_element_index, 0x08, 0, 8);
- 
-+/* reg_qeec_mise
-+ * Min shaper configuration enable. Enables configuration of the min
-+ * shaper on this ETS element
-+ * 0 - Disable
-+ * 1 - Enable
-+ * Access: RW
-+ */
-+MLXSW_ITEM32(reg, qeec, mise, 0x0C, 31, 1);
++static int mlxsw_sp_port_min_bw_set(struct mlxsw_sp_port *mlxsw_sp_port,
++				    enum mlxsw_reg_qeec_hr hr, u8 index,
++				    u8 next_index, u32 minrate)
++{
++	struct mlxsw_sp *mlxsw_sp = mlxsw_sp_port->mlxsw_sp;
++	char qeec_pl[MLXSW_REG_QEEC_LEN];
 +
- enum {
- 	MLXSW_REG_QEEC_BYTES_MODE,
- 	MLXSW_REG_QEEC_PACKETS_MODE,
-@@ -3273,6 +3282,17 @@ enum {
-  */
- MLXSW_ITEM32(reg, qeec, pb, 0x0C, 28, 1);
++	mlxsw_reg_qeec_pack(qeec_pl, mlxsw_sp_port->local_port, hr, index,
++			    next_index);
++	mlxsw_reg_qeec_mise_set(qeec_pl, true);
++	mlxsw_reg_qeec_min_shaper_rate_set(qeec_pl, minrate);
++
++	return mlxsw_reg_write(mlxsw_sp->core, MLXSW_REG(qeec), qeec_pl);
++}
++
+ int mlxsw_sp_port_prio_tc_set(struct mlxsw_sp_port *mlxsw_sp_port,
+ 			      u8 switch_prio, u8 tclass)
+ {
+@@ -2830,6 +2845,16 @@ static int mlxsw_sp_port_ets_init(struct mlxsw_sp_port *mlxsw_sp_port)
+ 			return err;
+ 	}
  
-+/* The smallest permitted min shaper rate. */
-+#define MLXSW_REG_QEEC_MIS_MIN	200000		/* Kbps */
++	/* Configure the min shaper for multicast TCs. */
++	for (i = 0; i < IEEE_8021QAZ_MAX_TCS; i++) {
++		err = mlxsw_sp_port_min_bw_set(mlxsw_sp_port,
++					       MLXSW_REG_QEEC_HIERARCY_TC,
++					       i + 8, i,
++					       MLXSW_REG_QEEC_MIS_MIN);
++		if (err)
++			return err;
++	}
 +
-+/* reg_qeec_min_shaper_rate
-+ * Min shaper information rate.
-+ * For CPU port, can only be configured for port hierarchy.
-+ * When in bytes mode, value is specified in units of 1000bps.
-+ * Access: RW
-+ */
-+MLXSW_ITEM32(reg, qeec, min_shaper_rate, 0x0C, 0, 28);
-+
- /* reg_qeec_mase
-  * Max shaper configuration enable. Enables configuration of the max
-  * shaper on this ETS element.
+ 	/* Map all priorities to traffic class 0. */
+ 	for (i = 0; i < IEEE_8021QAZ_MAX_TCS; i++) {
+ 		err = mlxsw_sp_port_prio_tc_set(mlxsw_sp_port, i, 0);
 -- 
 2.20.1
 
