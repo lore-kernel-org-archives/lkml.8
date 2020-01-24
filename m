@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC80C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97935C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219CC206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BAC6222D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876227;
-	bh=0JWmRm7twNzWFAnJhWYBpGSoOmzLET+276Z/o2Em/DI=;
+	s=default; t=1579876229;
+	bh=qZ/AK7qDtTJakLsjaUI3mUDTzYXOk3amPehL/OjaO/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GT58/LU77Kt9/WExuUtK0r7k/5GLH5UKF9PHWECQY8kBDr3zZXJZo2V/88EAju1H3
-	 BNZA3c7a8pQZGSm8o34PDSqjdno5T1+OOoGNDSuub/c5CID56mfwR70Mw6B+6q6I47
-	 uQKBDT/vdndMXxZXm7A8Y/9JPkboc4PadBgU2ZmA=
+	b=E6iW+sES7Mt+CvbtSKn4dwBF9HduS6tMmkJuSiMqd6+vxl3tuZu2Ap63bd800hd9u
+	 AJ2uovBGPObBOSE0lsnSQTs9URYnKacw5i8C+sZay2CxjH8LqleWVuLt1dA88JesVd
+	 pUB+BvGI1dCuvxAbqSQ6K7DXSYDtzz7jFZrxK39c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392525AbgAXOa0 (ORCPT
+        id S2405016AbgAXOUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:30:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405020AbgAXOUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 09:20:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404879AbgAXOUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:20:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 606CC2467E;
-        Fri, 24 Jan 2020 14:20:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40F592077C;
+        Fri, 24 Jan 2020 14:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875644;
-        bh=0JWmRm7twNzWFAnJhWYBpGSoOmzLET+276Z/o2Em/DI=;
+        s=default; t=1579875632;
+        bh=qZ/AK7qDtTJakLsjaUI3mUDTzYXOk3amPehL/OjaO/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YspxQqvTap+A81506yh4zYRuxEykM3CKvBarMrPJmKik7VlJoDjxuJIA7bMW5ROfD
-         AmPg0FKsFmQoNSisKBVhDsvekaP6YIpXHQSXrNHbeiMXhlYypAbUv1BHAw28y8KRWX
-         vOPrq+XzoXr1jTC77Lyn+C6y2rrHWjcZv4df/JHs=
+        b=PjOGT76wvXQbHp3rSUX+AgBe+jcQJKD9gGj5gmjIl0NPAF6ynZjuXUqMJC8CWQ8mr
+         qB5+k1Ps5nRDIyVFeBVy0YXicnEefPbPFBzs4CNsYsR9njTcl3xYRTwoJFB6lWIws8
+         yKUUryEOw4nlZ48cXOQjlNULTIXUjmwwazMjfXpM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 27/56] ASoC: msm8916-wcd-analog: Fix MIC BIAS Internal1
-Date:   Fri, 24 Jan 2020 09:19:43 -0500
-Message-Id: <20200124142012.29752-27-sashal@kernel.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 16/56] clk: qcom: gcc-sdm845: Add missing flag to votable GDSCs
+Date:   Fri, 24 Jan 2020 09:19:32 -0500
+Message-Id: <20200124142012.29752-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 References: <20200124142012.29752-1-sashal@kernel.org>
@@ -60,69 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Georgi Djakov <georgi.djakov@linaro.org>
 
-[ Upstream commit 057efcf9faea4769cf1020677d93d040db9b23f3 ]
+[ Upstream commit 5e82548e26ef62e257dc2ff37c11acb5eb72728e ]
 
-MIC BIAS Internal1 is broken at the moment because we always
-enable the internal rbias resistor to the TX2 line (connected to
-the headset microphone), rather than enabling the resistor connected
-to TX1.
+On sdm845 devices, during boot we see the following warnings (unless we
+have added 'pd_ignore_unused' to the kernel command line):
+	hlos1_vote_mmnoc_mmu_tbu_sf_gdsc status stuck at 'on'
+	hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc status stuck at 'on'
+	hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc status stuck at 'on'
+	hlos1_vote_aggre_noc_mmu_tbu2_gdsc status stuck at 'on'
+	hlos1_vote_aggre_noc_mmu_tbu1_gdsc status stuck at 'on'
+	hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc status stuck at 'on'
+	hlos1_vote_aggre_noc_mmu_audio_tbu_gdsc status stuck at 'on'
 
-Move the RBIAS code to pm8916_wcd_analog_enable_micbias_int1/2()
-to fix this.
+As the name of these GDSCs suggests, they are "votable" and in downstream
+DT, they all have the property "qcom,no-status-check-on-disable", which
+means that we should not poll the status bit when we disable them.
 
-Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200111164006.43074-3-stephan@gerhold.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Luckily the VOTABLE flag already exists and it does exactly what we need,
+so let's make use of it to make the warnings disappear.
+
+Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver for SDM845")
+Reported-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Link: https://lkml.kernel.org/r/20191126153437.11808-1-georgi.djakov@linaro.org
+Tested-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/msm8916-wcd-analog.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/clk/qcom/gcc-sdm845.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
-index 6083b44ce1c6c..cbdb6d4bb91ef 100644
---- a/sound/soc/codecs/msm8916-wcd-analog.c
-+++ b/sound/soc/codecs/msm8916-wcd-analog.c
-@@ -388,9 +388,6 @@ static int pm8916_wcd_analog_enable_micbias_int(struct snd_soc_component
+diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
+index ada3e4aeb38f9..6bd96ddadbe31 100644
+--- a/drivers/clk/qcom/gcc-sdm845.c
++++ b/drivers/clk/qcom/gcc-sdm845.c
+@@ -3150,6 +3150,7 @@ static struct gdsc hlos1_vote_aggre_noc_mmu_audio_tbu_gdsc = {
+ 		.name = "hlos1_vote_aggre_noc_mmu_audio_tbu_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
  
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
--		snd_soc_component_update_bits(component, CDC_A_MICB_1_INT_RBIAS,
--				    MICB_1_INT_TX2_INT_RBIAS_EN_MASK,
--				    MICB_1_INT_TX2_INT_RBIAS_EN_ENABLE);
- 		snd_soc_component_update_bits(component, reg, MICB_1_EN_PULL_DOWN_EN_MASK, 0);
- 		snd_soc_component_update_bits(component, CDC_A_MICB_1_EN,
- 				    MICB_1_EN_OPA_STG2_TAIL_CURR_MASK,
-@@ -440,6 +437,14 @@ static int pm8916_wcd_analog_enable_micbias_int1(struct
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
- 	struct pm8916_wcd_analog_priv *wcd = snd_soc_component_get_drvdata(component);
+ static struct gdsc hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc = {
+@@ -3158,6 +3159,7 @@ static struct gdsc hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc = {
+ 		.name = "hlos1_vote_aggre_noc_mmu_pcie_tbu_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
  
-+	switch (event) {
-+	case SND_SOC_DAPM_PRE_PMU:
-+		snd_soc_component_update_bits(component, CDC_A_MICB_1_INT_RBIAS,
-+				    MICB_1_INT_TX1_INT_RBIAS_EN_MASK,
-+				    MICB_1_INT_TX1_INT_RBIAS_EN_ENABLE);
-+		break;
-+	}
-+
- 	return pm8916_wcd_analog_enable_micbias_int(component, event, w->reg,
- 						     wcd->micbias1_cap_mode);
- }
-@@ -550,6 +555,11 @@ static int pm8916_wcd_analog_enable_micbias_int2(struct
- 	struct pm8916_wcd_analog_priv *wcd = snd_soc_component_get_drvdata(component);
+ static struct gdsc hlos1_vote_aggre_noc_mmu_tbu1_gdsc = {
+@@ -3166,6 +3168,7 @@ static struct gdsc hlos1_vote_aggre_noc_mmu_tbu1_gdsc = {
+ 		.name = "hlos1_vote_aggre_noc_mmu_tbu1_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
  
- 	switch (event) {
-+	case SND_SOC_DAPM_PRE_PMU:
-+		snd_soc_component_update_bits(component, CDC_A_MICB_1_INT_RBIAS,
-+				    MICB_1_INT_TX2_INT_RBIAS_EN_MASK,
-+				    MICB_1_INT_TX2_INT_RBIAS_EN_ENABLE);
-+		break;
- 	case SND_SOC_DAPM_POST_PMU:
- 		pm8916_mbhc_configure_bias(wcd, true);
- 		break;
+ static struct gdsc hlos1_vote_aggre_noc_mmu_tbu2_gdsc = {
+@@ -3174,6 +3177,7 @@ static struct gdsc hlos1_vote_aggre_noc_mmu_tbu2_gdsc = {
+ 		.name = "hlos1_vote_aggre_noc_mmu_tbu2_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
+ 
+ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc = {
+@@ -3182,6 +3186,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc = {
+ 		.name = "hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
+ 
+ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc = {
+@@ -3190,6 +3195,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc = {
+ 		.name = "hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
+ 
+ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_sf_gdsc = {
+@@ -3198,6 +3204,7 @@ static struct gdsc hlos1_vote_mmnoc_mmu_tbu_sf_gdsc = {
+ 		.name = "hlos1_vote_mmnoc_mmu_tbu_sf_gdsc",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
+ 
+ static struct clk_regmap *gcc_sdm845_clocks[] = {
 -- 
 2.20.1
 
