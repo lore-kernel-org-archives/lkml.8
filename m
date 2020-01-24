@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DB4C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37457C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4464124676
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F9D24655
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828680;
-	bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
+	s=default; t=1579828687;
+	bh=jMpYoVKZZmhxfblWsVYFG09q0ERX0bmgtj5z33SF3hY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HdufBvc68e8fQeL9veC7UtoBWV0a0Oa/AB9Hg1LehCHYZozYMPDCRNvtbCCNuWIft
-	 YGuE/zd1sufuWyHN4tmpvcTPGIhdqaVM4C04eXDaVS2BHW7hJSModwK45h2ANW9nJb
-	 RDV/ngM343hP7hHNXRNB35ZZhK1o41RnlJ4i9nUY=
+	b=t35YJvdbav9WspbvxhWyiyDDdENwCKH2Up+UTsq8iyu/lX1F7hSQ7NsnamE005Yvp
+	 sN2n2V3mETAGU9+SMH6kMYlsAOK/pviUEE3v5HUV8RdjCWuzzwCwRZMdTnfx7odQf6
+	 WAKOwcSzy5t8EQKxmngpUvRJoXkn0j+u0UYrLxmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730853AbgAXBR6 (ORCPT
+        id S1730974AbgAXBSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:17:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33024 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:18:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729316AbgAXBR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:57 -0500
+        id S1730879AbgAXBSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:18:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 563E721D7E;
-        Fri, 24 Jan 2020 01:17:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE0FE24655;
+        Fri, 24 Jan 2020 01:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828676;
-        bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
+        s=default; t=1579828680;
+        bh=jMpYoVKZZmhxfblWsVYFG09q0ERX0bmgtj5z33SF3hY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2lEpOucFuMhjdV97nN50aalPNQfiAjn0tiqKQutag4+oFEQlu2W35BU9okjRFNpUR
-         pONDzLncejMEcVedeADipaQWxB1V+tbKHjLm0ezNaP7SXELnw4pf+obkRLwqzy0FNx
-         NvWqm99hWn1BB7MPXOaIhwemDHKksI5A48g4BGy4=
+        b=yjYCPlUarSMF6ha7/j8mr0TkZFRk5EI0E70JAKw2EaDPJyZZdqY8/NLB9/6ZftaJp
+         dDpXP11pGOI8HctoILzVLQwZhEp0UUSbhrFqsDP3ntS5kqgEL+EmebX7kuDyFT3ykT
+         PHiQvQhaq0cuGok2579FpJMqTcBJFtNiOKRlS8yM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laura Abbott <labbott@fedoraproject.org>,
-        Steven Ellis <sellis@redhat.com>,
-        Pacho Ramos <pachoramos@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net
-Subject: [PATCH AUTOSEL 4.19 07/11] usb-storage: Disable UAS on JMicron SATA enclosure
-Date:   Thu, 23 Jan 2020 20:17:43 -0500
-Message-Id: <20200124011747.18575-7-sashal@kernel.org>
+Cc:     Pan Zhang <zhangpan26@huawei.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 11/11] drivers/hid/hid-multitouch.c: fix a possible null pointer access.
+Date:   Thu, 23 Jan 2020 20:17:47 -0500
+Message-Id: <20200124011747.18575-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011747.18575-1-sashal@kernel.org>
 References: <20200124011747.18575-1-sashal@kernel.org>
@@ -62,45 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@fedoraproject.org>
+From: Pan Zhang <zhangpan26@huawei.com>
 
-[ Upstream commit bc3bdb12bbb3492067c8719011576370e959a2e6 ]
+[ Upstream commit 306d5acbfc66e7cccb4d8f91fc857206b8df80d1 ]
 
-Steve Ellis reported incorrect block sizes and alignement
-offsets with a SATA enclosure. Adding a quirk to disable
-UAS fixes the problems.
+1002     if ((quirks & MT_QUIRK_IGNORE_DUPLICATES) && mt) {
+1003         struct input_mt_slot *i_slot = &mt->slots[slotnum];
+1004
+1005         if (input_mt_is_active(i_slot) &&
+1006             input_mt_is_used(mt, i_slot))
+1007             return -EAGAIN;
+1008     }
 
-Reported-by: Steven Ellis <sellis@redhat.com>
-Cc: Pacho Ramos <pachoramos@gmail.com>
-Signed-off-by: Laura Abbott <labbott@fedoraproject.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We previously assumed 'mt' could be null (see line 1002).
+
+The following situation is similar, so add a judgement.
+
+Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/unusual_uas.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/hid/hid-multitouch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
-index d0bdebd87ce3a..1b23741036ee8 100644
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -87,12 +87,15 @@ UNUSUAL_DEV(0x2537, 0x1068, 0x0000, 0x9999,
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_IGNORE_UAS),
- 
--/* Reported-by: Takeo Nakayama <javhera@gmx.com> */
-+/*
-+ * Initially Reported-by: Takeo Nakayama <javhera@gmx.com>
-+ * UAS Ignore Reported by Steven Ellis <sellis@redhat.com>
-+ */
- UNUSUAL_DEV(0x357d, 0x7788, 0x0000, 0x9999,
- 		"JMicron",
- 		"JMS566",
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
--		US_FL_NO_REPORT_OPCODES),
-+		US_FL_NO_REPORT_OPCODES | US_FL_IGNORE_UAS),
- 
- /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
- UNUSUAL_DEV(0x4971, 0x1012, 0x0000, 0x9999,
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index f9167d0e095ce..4a1e13ec7e7f0 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1007,7 +1007,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
+ 		tool = MT_TOOL_DIAL;
+ 	else if (unlikely(!confidence_state)) {
+ 		tool = MT_TOOL_PALM;
+-		if (!active &&
++		if (!active && mt &&
+ 		    input_mt_is_active(&mt->slots[slotnum])) {
+ 			/*
+ 			 * The non-confidence was reported for
 -- 
 2.20.1
 
