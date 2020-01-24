@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331B5C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91214C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094C320708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C51221556
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864660;
-	bh=s/NLmvRDh3F5T79oMLtiHhYPV4HGJch2s+FoFKZcbc8=;
+	s=default; t=1579864662;
+	bh=+MMg2XdhxrswezAWV62UDDA+ElFjAwDS2z2pJ8DrAzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NLXg+rTXT4tkzw4mOFNMxxS7dmht+0Oh84kj6K5vjYwOqsm1s6jr65sxMvAedcuMZ
-	 mRjMKBCOs2jrdMDeI0K2YKraQ7aRRJUv2M5ZKZjYpyMdccCNTJXHvpUHkJWUl6pvqf
-	 D/EGhCaRSn7Qkp6Ihg0tpd/miT0K9LyxnbYJoIOY=
+	b=ZitMcjceZU16dxbvwq6X5kQ2mfIIl0ms11Huk2unPyRiawaFe0KK/9lPMgapCxGir
+	 tRzD+695M7SBBC8/YTYcE2WW2/aqDL48LGfsUnjdu+UeWTLNEY2naIHT3Oa6kvAjXI
+	 aZLuOviitzbdnt1ShbrqEBLWeREXw8ZYxmeXea3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390187AbgAXLRi (ORCPT
+        id S2390322AbgAXLRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:17:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54550 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:17:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390204AbgAXLRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:17:33 -0500
+        id S1726173AbgAXLRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:17:30 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B3C720708;
-        Fri, 24 Jan 2020 11:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4814720704;
+        Fri, 24 Jan 2020 11:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864653;
-        bh=s/NLmvRDh3F5T79oMLtiHhYPV4HGJch2s+FoFKZcbc8=;
+        s=default; t=1579864649;
+        bh=+MMg2XdhxrswezAWV62UDDA+ElFjAwDS2z2pJ8DrAzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmYXJr+xCF/tDJFSaQzV850LEzTamImGB3Pf7o3geHlhLJodRM3YPEsq66lYHYCHL
-         VkTNEWYGI5Ehu6JAUI36+9T7fgtdB4cHLQAwdIV1o1LyhS0ktItlaC4pSZnspihpho
-         sZ2IQhSxUL4GIeCdu0xUyFZ53RcsXBiOL3aATIQU=
+        b=FB/b7J7wHbI+hfAlFHFgvPcvC2BnnvBarK8j31AiKTqs9y2GFz94mCk7fN7oaFwhv
+         Jyo4jptv6Y6P1/vgIdGvlyyGASyn/vNrd12iRIhVvxNyyuXir/WBQoeU9C1ZlRjWxw
+         JnNAU1RklnbtqxNWo5mXitRI/xmxW4M56iHl8dUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 314/639] platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
-Date:   Fri, 24 Jan 2020 10:28:04 +0100
-Message-Id: <20200124093126.286697396@linuxfoundation.org>
+Subject: [PATCH 4.19 313/639] soc: amlogic: meson-gx-pwrc-vpu: Fix power on/off register bitmask
+Date:   Fri, 24 Jan 2020 10:28:03 +0100
+Message-Id: <20200124093126.169366114@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,62 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 98e2630284ab741804bd0713e932e725466f2f84 ]
+[ Upstream commit 2fe3b4bbc93ec30a173ebae7d2b8c530416df3af ]
 
-Currently the kfree of output.pointer can be potentially freeing
-an uninitalized pointer in the case where out_data is NULL. Fix this
-by reworking the case where out_data is not-null to perform the
-ACPI status check and also the kfree of outpoint.pointer in one block
-and hence ensuring the pointer is only freed when it has been used.
+The register bitmask to power on/off the VPU memories was incorectly set
+to 0x2 instead of 0x3. While still working, let's use the recommended
+vendor value instead.
 
-Also replace the if (ptr != NULL) idiom with just if (ptr).
-
-Fixes: ff0e9f26288d ("platform/x86: alienware-wmi: Correct a memory leak")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Fixes: 75fcb5ca4b46 ("soc: amlogic: add Meson GX VPU Domains driver")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/alienware-wmi.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/soc/amlogic/meson-gx-pwrc-vpu.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index f10af5c383c55..c0d1555735cdd 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -522,23 +522,22 @@ static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
- 
- 	input.length = (acpi_size) sizeof(*in_args);
- 	input.pointer = in_args;
--	if (out_data != NULL) {
-+	if (out_data) {
- 		output.length = ACPI_ALLOCATE_BUFFER;
- 		output.pointer = NULL;
- 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
- 					     command, &input, &output);
--	} else
-+		if (ACPI_SUCCESS(status)) {
-+			obj = (union acpi_object *)output.pointer;
-+			if (obj && obj->type == ACPI_TYPE_INTEGER)
-+				*out_data = (u32)obj->integer.value;
-+		}
-+		kfree(output.pointer);
-+	} else {
- 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
- 					     command, &input, NULL);
--
--	if (ACPI_SUCCESS(status) && out_data != NULL) {
--		obj = (union acpi_object *)output.pointer;
--		if (obj && obj->type == ACPI_TYPE_INTEGER)
--			*out_data = (u32) obj->integer.value;
+diff --git a/drivers/soc/amlogic/meson-gx-pwrc-vpu.c b/drivers/soc/amlogic/meson-gx-pwrc-vpu.c
+index 6289965c42e98..05421d029dff9 100644
+--- a/drivers/soc/amlogic/meson-gx-pwrc-vpu.c
++++ b/drivers/soc/amlogic/meson-gx-pwrc-vpu.c
+@@ -54,12 +54,12 @@ static int meson_gx_pwrc_vpu_power_off(struct generic_pm_domain *genpd)
+ 	/* Power Down Memories */
+ 	for (i = 0; i < 32; i += 2) {
+ 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG0,
+-				   0x2 << i, 0x3 << i);
++				   0x3 << i, 0x3 << i);
+ 		udelay(5);
  	}
--	kfree(output.pointer);
- 	return status;
--
- }
+ 	for (i = 0; i < 32; i += 2) {
+ 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG1,
+-				   0x2 << i, 0x3 << i);
++				   0x3 << i, 0x3 << i);
+ 		udelay(5);
+ 	}
+ 	for (i = 8; i < 16; i++) {
+@@ -108,13 +108,13 @@ static int meson_gx_pwrc_vpu_power_on(struct generic_pm_domain *genpd)
+ 	/* Power Up Memories */
+ 	for (i = 0; i < 32; i += 2) {
+ 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG0,
+-				   0x2 << i, 0);
++				   0x3 << i, 0);
+ 		udelay(5);
+ 	}
  
- /*
+ 	for (i = 0; i < 32; i += 2) {
+ 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG1,
+-				   0x2 << i, 0);
++				   0x3 << i, 0);
+ 		udelay(5);
+ 	}
+ 
 -- 
 2.20.1
 
