@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F8CC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29820C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664422071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7903214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876575;
-	bh=818dV68auhzfZV8Z6AwH03tA4JCYnv794bYqjpVR21c=;
+	s=default; t=1579876580;
+	bh=gwglXmvrIi4VDRmJR5DkNs9Ge87mVzgPfw3jUvzxi4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C+RWfnQ8RcqMDfSOnpByHbBeKRQwlahCVP3TkgpUD4Q+/pCdKy7+/KwWhUN4210bQ
-	 u9LRtqnA2kkJHcYQrxmpML2YgVC5zyaVLhimBRVtQkBm0wqCQEQ1rZIyX1/ahoEGDN
-	 ofC5Db0AUHTMdWlcF57gvH8gubScolLKgVw8Whdk=
+	b=nOkcPmwW+IAuqJaXRdxcY9Fk/4u1CdJriZ2V4D+iq4X7U8LmgMbNSc7AW0+NgOGcf
+	 0LOqE0tyUoXK57s9LjVC1b0HXshYeRZ67BBizenjqpD0O5t5Dj5TVOp+lhbiqKjnZU
+	 PnQVpRiTYL6lmScUax9J/Tt/mEouHRuQqK2aqS2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391452AbgAXOTP (ORCPT
+        id S2388294AbgAXOgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:19:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:36:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403984AbgAXOTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:10 -0500
+        id S2391437AbgAXOTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9022F214AF;
-        Fri, 24 Jan 2020 14:19:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B04D22527;
+        Fri, 24 Jan 2020 14:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875549;
-        bh=818dV68auhzfZV8Z6AwH03tA4JCYnv794bYqjpVR21c=;
+        s=default; t=1579875554;
+        bh=gwglXmvrIi4VDRmJR5DkNs9Ge87mVzgPfw3jUvzxi4s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kp5f89L3W2SQNelsC3+v9B5AhvMe4uczht4aq62s/zdsYaeJ9peiUKgK3GFGItKf6
-         +XVTVSd9TISMXQwOVAkeUtfvAGmCOBbMk9HoDX8A6QQ0qqkr3BGHAp3ANaM4Zsg42t
-         uykbhpadGk3jKKWNL9s4GOqIe6jsnf4ZzETHvOX8=
+        b=K5wcELfc2gYDqKxlPYmJEMV80CvZ15DNCx0lk6p04MrAwBFV2jaY7EAQ/57nRstsR
+         lg6/+mpfd6xnMnhj3yl97QiFcyTYEnGXycAU/ac+OBXR2CzJoIol8EIGRhzEzHAjyQ
+         MGwJGFroEBy9MLuxno1X5ITjaayPgvEjoF8EXVfo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lingpeng Chen <forrest0579@gmail.com>,
-        Arika Chen <eaglesora@gmail.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 044/107] bpf/sockmap: Read psock ingress_msg before sk_receive_queue
-Date:   Fri, 24 Jan 2020 09:17:14 -0500
-Message-Id: <20200124141817.28793-44-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 049/107] net: stmmac: tc: Do not setup flower filtering if RSS is enabled
+Date:   Fri, 24 Jan 2020 09:17:19 -0500
+Message-Id: <20200124141817.28793-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -62,63 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lingpeng Chen <forrest0579@gmail.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit e7a5f1f1cd0008e5ad379270a8657e121eedb669 ]
+[ Upstream commit 7bd754c47dd3ad1b048c9641294b0234fcce2c58 ]
 
-Right now in tcp_bpf_recvmsg, sock read data first from sk_receive_queue
-if not empty than psock->ingress_msg otherwise. If a FIN packet arrives
-and there's also some data in psock->ingress_msg, the data in
-psock->ingress_msg will be purged. It is always happen when request to a
-HTTP1.0 server like python SimpleHTTPServer since the server send FIN
-packet after data is sent out.
+RSS, when enabled, will bypass the L3 and L4 filtering causing it not
+to work. Add a check before trying to setup the filters.
 
-Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
-Reported-by: Arika Chen <eaglesora@gmail.com>
-Suggested-by: Arika Chen <eaglesora@gmail.com>
-Signed-off-by: Lingpeng Chen <forrest0579@gmail.com>
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/bpf/20200109014833.18951-1-forrest0579@gmail.com
+Fixes: 425eabddaf0f ("net: stmmac: Implement L3/L4 Filters using TC Flower")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_bpf.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index e38705165ac9b..e6b08b5a08955 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -121,14 +121,14 @@ int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	struct sk_psock *psock;
- 	int copied, ret;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+index f9a9a9d822333..1d135b02ea021 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+@@ -579,6 +579,10 @@ static int tc_setup_cls(struct stmmac_priv *priv,
+ {
+ 	int ret = 0;
  
--	if (unlikely(flags & MSG_ERRQUEUE))
--		return inet_recv_error(sk, msg, len, addr_len);
--	if (!skb_queue_empty(&sk->sk_receive_queue))
--		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
--
- 	psock = sk_psock_get(sk);
- 	if (unlikely(!psock))
- 		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
-+	if (unlikely(flags & MSG_ERRQUEUE))
-+		return inet_recv_error(sk, msg, len, addr_len);
-+	if (!skb_queue_empty(&sk->sk_receive_queue) &&
-+	    sk_psock_queue_empty(psock))
-+		return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
- 	lock_sock(sk);
- msg_bytes_ready:
- 	copied = __tcp_bpf_recvmsg(sk, psock, msg, len, flags);
-@@ -139,7 +139,7 @@ msg_bytes_ready:
- 		timeo = sock_rcvtimeo(sk, nonblock);
- 		data = tcp_bpf_wait_data(sk, psock, flags, timeo, &err);
- 		if (data) {
--			if (skb_queue_empty(&sk->sk_receive_queue))
-+			if (!sk_psock_queue_empty(psock))
- 				goto msg_bytes_ready;
- 			release_sock(sk);
- 			sk_psock_put(sk, psock);
++	/* When RSS is enabled, the filtering will be bypassed */
++	if (priv->rss.enable)
++		return -EBUSY;
++
+ 	switch (cls->command) {
+ 	case FLOW_CLS_REPLACE:
+ 		ret = tc_add_flow(priv, cls);
 -- 
 2.20.1
 
