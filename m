@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F889C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83ED0C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2592075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526372075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876063;
-	bh=etC/B8dEpS/6lnY1kBW+7QBYg5mcAEoucXW2nGYOFC0=;
+	s=default; t=1579876066;
+	bh=juo3GS7boxFKexj+JW88vhjeX/iXSAXwaH0be0zL5jc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mu0EkbbAJHZ9Md5Ydf4ZwbR0XVmsGdJ8Xzu/7MhKdHTYgjnhM5WxsOq+ZhOlgrzuN
-	 CVUg2a5VP7P740uHh0fYYNGS2W9IbDgCCvHAhkdSUff2YBz4SnxPgMVsCuBLKt9wib
-	 H51IdHSmqimsrRuxBxyoxvYSsqg99cOvmy6kaQZ0=
+	b=LYv0e3QEJvnvqABbf4y2L6vGH07Z5hbfbrcVr9jedOykVEcDGXz+fb06HowBp4XAM
+	 BOe2k68Uwm9SBI5Pp2EWvttQIcIFerdaZcwrBjwXJ+3c3vxF46BueZb1savGcDwpfI
+	 lVgwfl/88FfbzuFyM9xflNKvIwBCHH+Izx7KG/+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390167AbgAXO1f (ORCPT
+        id S2392177AbgAXOVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:27:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43066 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:21:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392192AbgAXOVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:23 -0500
+        id S2405236AbgAXOVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F7DF2077C;
-        Fri, 24 Jan 2020 14:21:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9F792077C;
+        Fri, 24 Jan 2020 14:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875683;
-        bh=etC/B8dEpS/6lnY1kBW+7QBYg5mcAEoucXW2nGYOFC0=;
+        s=default; t=1579875671;
+        bh=juo3GS7boxFKexj+JW88vhjeX/iXSAXwaH0be0zL5jc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CBml1Gpp/Bq05ntQw/u/H5G8BanqFIQJdPhau+wJAQq1Dul/UzrykX0s+EWgtoW/a
-         boOpthPkBEf6hurHP6uS0W/c2vM7xl+xo9FbUOh7fneiqNuXV1Zd49/MJDbhoF/T+0
-         5U8Q0RUA7nnJCLtCayhdHwUULp1KVXCwjL7RT5uo=
+        b=oQDwpKlxLexfFurn8IMko3x/zEwGOQtlxV1j7+WEjTI29wIcVwtKM+XfBBsl7FdC5
+         zVwvKg5uIEFOAWtHClhyhOpmRbL64TzIuG5RoaTx3xtt5inUuCJmBV7G3WOrcrCeFr
+         lwcxHEYzPaGmXGUimoEk6p4FuHg7J8R0uAVqbGxc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 03/32] ARM: dts: sun8i: a83t: Correct USB3503 GPIOs polarity
-Date:   Fri, 24 Jan 2020 09:20:50 -0500
-Message-Id: <20200124142119.30484-3-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 50/56] netfilter: nft_tunnel: ERSPAN_VERSION must not be null
+Date:   Fri, 24 Jan 2020 09:20:06 -0500
+Message-Id: <20200124142012.29752-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
-References: <20200124142119.30484-1-sashal@kernel.org>
+In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
+References: <20200124142012.29752-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,38 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 1c226017d3ec93547b58082bdf778d9db7401c95 ]
+[ Upstream commit 9ec22d7c6c69146180577f3ad5fdf504beeaee62 ]
 
-Current USB3503 driver ignores GPIO polarity and always operates as if the
-GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
-USB3503 chip applications to match the chip specification and common
-convention for naming the pins. The only pin, which has to be ACTIVE_LOW
-is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
-to fix the USB3503 driver to properly use generic GPIO bindings and read
-polarity from DT.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: af308b94a2a4a5 ("netfilter: nf_tables: add tunnel support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nft_tunnel.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-index 716a205c6dbbe..1fed3231f5c18 100644
---- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-@@ -90,7 +90,7 @@
- 		initial-mode = <1>; /* initialize in HUB mode */
- 		disabled-ports = <1>;
- 		intn-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
--		reset-gpios = <&pio 4 16 GPIO_ACTIVE_HIGH>; /* PE16 */
-+		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
- 		connect-gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* PE17 */
- 		refclk-frequency = <19200000>;
- 	};
+diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
+index 09441bbb0166f..e5444f3ff43fc 100644
+--- a/net/netfilter/nft_tunnel.c
++++ b/net/netfilter/nft_tunnel.c
+@@ -235,6 +235,9 @@ static int nft_tunnel_obj_erspan_init(const struct nlattr *attr,
+ 	if (err < 0)
+ 		return err;
+ 
++	if (!tb[NFTA_TUNNEL_KEY_ERSPAN_VERSION])
++		 return -EINVAL;
++
+ 	version = ntohl(nla_get_be32(tb[NFTA_TUNNEL_KEY_ERSPAN_VERSION]));
+ 	switch (version) {
+ 	case ERSPAN_VERSION:
 -- 
 2.20.1
 
