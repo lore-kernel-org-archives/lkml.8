@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA7DC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDECC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A76208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39D8208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579858947;
-	bh=1Z30YvobrovymqmVeIeZ2ZcTosiixf4aUJ3Vw5PR/R0=;
+	s=default; t=1579858955;
+	bh=QY51Z+nIptKudmzQUdKzVVjuB+ekYFzz2SMEMulsYyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2Nj/mKEEDV+MgyjKyloKMkgWVbezaCg1mAmNKR3JRhnJ3cFxeleRFmCx5ez1avmI
-	 l5Lu50A5AmWhn4t4XIX4i/rtCBEQrb1SjK7OwnWjdTsYKM53s4S4ci2O4fH0ug+YTQ
-	 a6SUhE2v+I+2M3E5+R2j3D0OeRKOosEsRtACYhKI=
+	b=rogyZd0h3DeZxP+rQ1chHam1oTRnQN1V2GYcRv6NkxJRBwVdVxPG/tE3uEf9zq5KR
+	 5rg5RMiYQMyStyCulS1uDSdwJn1lEf1Ps9x1fwbkQgae/jsllDFT+I2+7X6LZTOljt
+	 VqCxlPjC9WtYIW8AkFwOwVP2CbkloycCQceMVSD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgAXJm0 (ORCPT
+        id S1732280AbgAXJme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:42:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40100 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:42:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732644AbgAXJmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:42:23 -0500
+        id S1730677AbgAXJmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:42:31 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D5D320718;
-        Fri, 24 Jan 2020 09:42:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 997A020718;
+        Fri, 24 Jan 2020 09:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579858943;
-        bh=1Z30YvobrovymqmVeIeZ2ZcTosiixf4aUJ3Vw5PR/R0=;
+        s=default; t=1579858950;
+        bh=QY51Z+nIptKudmzQUdKzVVjuB+ekYFzz2SMEMulsYyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RJr5ZxxWOXC/xl9tfW0mAr9QJhkVeLuE1cEPsIkhK2Af2XwJXdFOEx+JeT3WlkNuM
-         +ObaBXRTgw/lpAHKMEO4JdLlwgQjy3HCo9b8I1ff96lQ+3Lsv8IUalwzKs8Z14+olz
-         Z0MpmuFcCo2q+/CV5xbYQw9Ta74YW/sXG8jfKPqc=
+        b=p3GyfjHoQLpFA3T3+BVx4w9Y9pyZ4OM3m4zAazp85ZerzsZsO3azzCfV+0v/DT310
+         2URuGaMG5SoKTTFfzuVUylVku91Bx2925wgIqcp8gJ3eVXGqGmwoHGFj9JxmV+jGlL
+         lspacgdq4SBteI/nIDaLsZVM9hhBNTHsFvTdMxZs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 086/102] tee: optee: fix device enumeration error handling
-Date:   Fri, 24 Jan 2020 10:31:27 +0100
-Message-Id: <20200124092819.662526497@linuxfoundation.org>
+Subject: [PATCH 5.4 077/102] selftests: gen_kselftest_tar.sh: Do not clobber kselftest/
+Date:   Fri, 24 Jan 2020 10:31:18 +0100
+Message-Id: <20200124092818.279058054@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
 References: <20200124092806.004582306@linuxfoundation.org>
@@ -60,75 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Wiklander <jens.wiklander@linaro.org>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 03212e347f9443e524d6383c6806ac08295c1fb0 ]
+[ Upstream commit ea1bf0bb18c0bd627d7b551196453ff2fff44225 ]
 
-Prior to this patch in optee_probe() when optee_enumerate_devices() was
-called the struct optee was fully initialized. If
-optee_enumerate_devices() returns an error optee_probe() is supposed to
-clean up and free the struct optee completely, but will at this late
-stage need to call optee_remove() instead. This isn't done and thus
-freeing the struct optee prematurely.
+The default installation location for gen_kselftest_tar.sh was still
+"kselftest/" which collides with the existing directory. Instead, this
+moves the installation target into "kselftest_install/kselftest/" and
+adjusts the tar creation accordingly. This also adjusts indentation and
+logic to be consistent.
 
-With this patch the call to optee_enumerate_devices() is done after
-optee_probe() has returned successfully and in case
-optee_enumerate_devices() fails everything is cleaned up with a call to
-optee_remove().
-
-Fixes: c3fa24af9244 ("tee: optee: add TEE bus device enumeration support")
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+Fixes: 42d46e57ec97 ("selftests: Extract single-test shell logic from lib.mk")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tee/optee/core.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ tools/testing/selftests/gen_kselftest_tar.sh | 21 ++++++++++-------
+ tools/testing/selftests/kselftest_install.sh | 24 ++++++++++----------
+ 2 files changed, 25 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-index 1854a3db73457..b830e0a87fbac 100644
---- a/drivers/tee/optee/core.c
-+++ b/drivers/tee/optee/core.c
-@@ -643,11 +643,6 @@ static struct optee *optee_probe(struct device_node *np)
- 	if (optee->sec_caps & OPTEE_SMC_SEC_CAP_DYNAMIC_SHM)
- 		pr_info("dynamic shared memory is enabled\n");
+diff --git a/tools/testing/selftests/gen_kselftest_tar.sh b/tools/testing/selftests/gen_kselftest_tar.sh
+index a27e2eec35867..8b2b6088540d4 100755
+--- a/tools/testing/selftests/gen_kselftest_tar.sh
++++ b/tools/testing/selftests/gen_kselftest_tar.sh
+@@ -38,16 +38,21 @@ main()
+ 	esac
+ 	fi
  
--	rc = optee_enumerate_devices();
--	if (rc)
--		goto err;
+-	install_dir=./kselftest
++	# Create working directory.
++	dest=`pwd`
++	install_work="$dest"/kselftest_install
++	install_name=kselftest
++	install_dir="$install_work"/"$install_name"
++	mkdir -p "$install_dir"
+ 
+-# Run install using INSTALL_KSFT_PATH override to generate install
+-# directory
+-./kselftest_install.sh
+-tar $copts kselftest${ext} $install_dir
+-echo "Kselftest archive kselftest${ext} created!"
++	# Run install using INSTALL_KSFT_PATH override to generate install
++	# directory
++	./kselftest_install.sh "$install_dir"
++	(cd "$install_work"; tar $copts "$dest"/kselftest${ext} $install_name)
++	echo "Kselftest archive kselftest${ext} created!"
+ 
+-# clean up install directory
+-rm -rf kselftest
++	# clean up top-level install work directory
++	rm -rf "$install_work"
+ }
+ 
+ main "$@"
+diff --git a/tools/testing/selftests/kselftest_install.sh b/tools/testing/selftests/kselftest_install.sh
+index e2e1911d62d50..407af7da70372 100755
+--- a/tools/testing/selftests/kselftest_install.sh
++++ b/tools/testing/selftests/kselftest_install.sh
+@@ -6,30 +6,30 @@
+ # Author: Shuah Khan <shuahkh@osg.samsung.com>
+ # Copyright (C) 2015 Samsung Electronics Co., Ltd.
+ 
+-install_loc=`pwd`
 -
--	pr_info("initialized driver\n");
- 	return optee;
- err:
- 	if (optee) {
-@@ -702,9 +697,10 @@ static struct optee *optee_svc;
- 
- static int __init optee_driver_init(void)
+ main()
  {
--	struct device_node *fw_np;
--	struct device_node *np;
--	struct optee *optee;
-+	struct device_node *fw_np = NULL;
-+	struct device_node *np = NULL;
-+	struct optee *optee = NULL;
-+	int rc = 0;
- 
- 	/* Node is supposed to be below /firmware */
- 	fw_np = of_find_node_by_name(NULL, "firmware");
-@@ -723,6 +719,14 @@ static int __init optee_driver_init(void)
- 	if (IS_ERR(optee))
- 		return PTR_ERR(optee);
- 
-+	rc = optee_enumerate_devices();
-+	if (rc) {
-+		optee_remove(optee);
-+		return rc;
-+	}
+-	if [ $(basename $install_loc) !=  "selftests" ]; then
++	base_dir=`pwd`
++	install_dir="$base_dir"/kselftest_install
 +
-+	pr_info("initialized driver\n");
++	# Make sure we're in the selftests top-level directory.
++	if [ $(basename "$base_dir") !=  "selftests" ]; then
+ 		echo "$0: Please run it in selftests directory ..."
+ 		exit 1;
+ 	fi
 +
- 	optee_svc = optee;
++	# Only allow installation into an existing location.
+ 	if [ "$#" -eq 0 ]; then
+-		echo "$0: Installing in default location - $install_loc ..."
++		echo "$0: Installing in default location - $install_dir ..."
+ 	elif [ ! -d "$1" ]; then
+ 		echo "$0: $1 doesn't exist!!"
+ 		exit 1;
+ 	else
+-		install_loc=$1
+-		echo "$0: Installing in specified location - $install_loc ..."
++		install_dir="$1"
++		echo "$0: Installing in specified location - $install_dir ..."
+ 	fi
  
- 	return 0;
+-	install_dir=$install_loc/kselftest_install
+-
+-# Create install directory
+-	mkdir -p $install_dir
+-# Build tests
+-	KSFT_INSTALL_PATH=$install_dir make install
++	# Build tests
++	KSFT_INSTALL_PATH="$install_dir" make install
+ }
+ 
+ main "$@"
 -- 
 2.20.1
 
