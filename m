@@ -2,121 +2,126 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C83C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9E6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3AD2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404BE20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 13:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579872879;
+	bh=7L3LQxwcMn0sL99Kg9Iw/6y7YYRrD0myNYQr201fsnk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XSE1QzDxniScAw+oGGUfqHFF90F5z/B5rcBNfXB8dim5sZ+sZQs7NlUjJwCCk6Poq
+	 A2e3nUWmsAv4Wovg9ldy6MlcPOmQhrPHWejczfmZGrGUEQDO7+8t17dw5A4E5GakCy
+	 RFzSvVCTqlbWZwJR/ecftGO6+iQtoOT56UrvF3wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388490AbgAXNcX (ORCPT
+        id S2389890AbgAXNei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 08:32:23 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55374 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388310AbgAXNcW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 08:32:22 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00ODTqVR082549
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 08:32:21 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xqaxwwvw5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 08:32:20 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Fri, 24 Jan 2020 13:32:19 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 24 Jan 2020 13:32:16 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00ODWFYv56688816
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jan 2020 13:32:15 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97CF852050;
-        Fri, 24 Jan 2020 13:32:15 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 0FB745204F;
-        Fri, 24 Jan 2020 13:32:13 +0000 (GMT)
-Date:   Fri, 24 Jan 2020 19:02:13 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v2] sched/fair: Optimize select_idle_core
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20191206172422.6578-1-srikar@linux.vnet.ibm.com>
+        Fri, 24 Jan 2020 08:34:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388262AbgAXNei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 08:34:38 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45D6A2087E;
+        Fri, 24 Jan 2020 13:34:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579872877;
+        bh=7L3LQxwcMn0sL99Kg9Iw/6y7YYRrD0myNYQr201fsnk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0C+Q1CJKCYngonwYHsFw0cvUJaGwCYR31GdsPpHgLdcp/LB8OLUFNNDmAHxHHGpIS
+         SWhInojOa2FB8a+OAO/a+YkLO9er7YMVTdy13fyo6MxGzveKs+gGtIqazSMn7xXyHh
+         jGcMTIIkXJyvx5FXhwLAP8xmJPXwPSNy6dpASKT4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1iuz6Z-001Bnc-HH; Fri, 24 Jan 2020 13:34:35 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20191206172422.6578-1-srikar@linux.vnet.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 20012413-0016-0000-0000-000002E04FA8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012413-0017-0000-0000-0000334304C5
-Message-Id: <20200124133213.GA28610@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-24_04:2020-01-24,2020-01-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- phishscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
- suspectscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001240112
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 24 Jan 2020 13:34:35 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     Will Deacon <will@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        kvmarm@lists.cs.columbia.edu, kernel-team@android.com
+Subject: Re: [PATCH v2 0/1] arm/arm64: add support for folded p4d page tables
+In-Reply-To: <20200124122053.GA150292@google.com>
+References: <20200113111323.10463-1-rppt@kernel.org>
+ <20200122185017.GA17321@willie-the-truck>
+ <cb6357040bd5d9fa061a8d3bd96fb571@kernel.org>
+ <20200124122053.GA150292@google.com>
+Message-ID: <af9e7292f723f808406510f437d5b0eb@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: qperret@google.com, will@kernel.org, rppt@kernel.org, anshuman.khandual@arm.com, catalin.marinas@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org, rppt@linux.ibm.com, kvmarm@lists.cs.columbia.edu, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Quentin,
 
-Hey Peter, Ingo,
+On 2020-01-24 12:20, Quentin Perret wrote:
+> Hi Marc,
+> 
+> On Wednesday 22 Jan 2020 at 18:56:38 (+0000), Marc Zyngier wrote:
+>> But maybe this is the reason we've all been waiting for, for which we
+>> sacrifice 32bit KVM host on the altar of progress, and finally move 
+>> along.
+>> 
+>> Will and I are the only known users, and that'd be a good incentive to
+>> experience some if this 64bit goodness... ;-)
 
-* Srikar Dronamraju <srikar@linux.vnet.ibm.com> [2019-12-06 22:54:22]:
+[future work for which 32bit support gets in the way]
 
-> Currently we loop through all threads of a core to evaluate if the core is
-> idle or not. This is unnecessary. If a thread of a core is not idle, skip
-> evaluating other threads of a core. Also while clearing the cpumask, bits
-> of all CPUs of a core can be cleared in one-shot.
-> 
-> Collecting ticks on a Power 9 SMT 8 system around select_idle_core
-> while running schbench shows us
-> 
-> (units are in ticks, hence lesser is better)
-> Without patch
->     N        Min     Max     Median         Avg      Stddev
-> x 130        151    1083        284   322.72308   144.41494
-> 
-> 
-> With patch
->     N        Min     Max     Median         Avg      Stddev   Improvement
-> x 164         88     610        201   225.79268   106.78943        30.03%
-> 
-> 
-> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> ---
-> Changelog v1->v2:
-> Updated patch description with measurements made from a debug patch.
-> 
->  kernel/sched/fair.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> This would a be perfectly reasonable and acceptable overhead if this 
+> had
+> to be done to keep 32bit KVM host support for a real user community, 
+> but
+> since it doesn't seem to exist (?), fighting with the above options
+> feels like a lot of wasted efforts. (Note: I am not implying that Will
+> and you are not real persons, but well, you see what I mean ;-)).
 
-Do you have any comments or improvements to be done for this patch?
+I don't disagree at all. To be honest, I've been on the cusp of getting
+rid of it for a while, for multiple reasons:
 
+- It has no users (as you noticed)
+- It is hardly tested (a consequence of the above)
+- It isn't feature complete (no debug, no PMU)
+- It doesn't follow any of the evolution of the architecture (a more
+   generic feature of the 32bit port, probably because people run their
+   64bit-capable cores in 64bit mode)
+- It is becoming a mess of empty stubs
+
+The maintenance aspect hasn't been a real problem so far. Even the NV
+support is only about 200 lines of stubs. But what you have in mind is
+going to be much more invasive, and I wouldn't want an unused feature to
+get in the way.
+
+What I may end-up doing is to send a RFC series to remove the 32bit host
+support from the tree during in the 5.6 cycle, targeting 5.7. If someone
+shouts loudly during that time frame, we keep it and you'll have to work
+around it. If nobody cares, then dropping it is the right thing to do.
+
+Would that be OK with you?
+
+         M.
 -- 
-Thanks and Regards
-Srikar Dronamraju
-
+Jazz is not dead. It just smells funny...
