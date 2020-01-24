@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E321C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3359C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3945320718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A56C20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859852;
-	bh=KQwFnlFj/knXAB6kuN3/XLy7vseHLHLagofxE3P5t7Q=;
+	s=default; t=1579859856;
+	bh=80aKupzaJsS9mnB6gBE43Z68OF/c5dylWDYXMrSLlR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MS+0wp/NA4uiPcKSdn56U5fu+t8qAjDiLRCUI5C0xHzOxY+EBSbgTWLggxdco/4I1
-	 AtOOfIQZastFDhfHHVLaOkbY/Ql0mCChuJ2ZZhww6q8oWhJLJNO1UuCilHARZB1y2N
-	 lNmtEpp+kCzgtldefgvjtjGdUqHT9oaOjLLrpDL8=
+	b=Btck6bGUp18JDRGOtMpP6cM4zdRoIsAxk3/+UCgKK6I5fX8KHUzlF7eJehyI/IXsX
+	 LNx0EPqaiWq/pa0HE92Y9+21vtnrSy0nVOq/bOwiGSOtLB5xRh7tItJDtjVOJ8mc9n
+	 zy6IT9Fg1LMqrmTJCnu5Fsx0PDmJvpSC8t1QX+8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388610AbgAXJ5b (ORCPT
+        id S2388614AbgAXJ5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:57:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33074 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:57:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730740AbgAXJ5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:57:30 -0500
+        id S1730740AbgAXJ5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:57:33 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E6EE2075D;
-        Fri, 24 Jan 2020 09:57:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38F2A20709;
+        Fri, 24 Jan 2020 09:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859849;
-        bh=KQwFnlFj/knXAB6kuN3/XLy7vseHLHLagofxE3P5t7Q=;
+        s=default; t=1579859852;
+        bh=80aKupzaJsS9mnB6gBE43Z68OF/c5dylWDYXMrSLlR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qiSO+apqtIF+iQdfjjHO6wM4u3ss3u5ZF2eUjjkFeL10ttwWLe1IRhdW43wq4Sn0n
-         C7zrkdN6cXBK5p95mSoAXenDiP6z7AsxJ3JbdZm4bwFQLmTDlXepHQ93NeWstoaTjV
-         Egn1J6A1K6zboWczmfzxEb31HjdHI06l5S6/QBPE=
+        b=fo3wK9bI0OStsIGWIN1SSkkzbzi9/+3y7A0zIKAt8nK/ONByPWM55cJ3ucxTkBEyU
+         Im5bJOe3prZadNZSxt9uAFcNiJnZELCWCuVM+1RYA0Q1/1yr51FPu4qOklTiMVdsS4
+         wHpRA0YR7Lr5PZUPrOHXlAqkCyCRfuVbrWCC8x8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 208/343] backlight: lm3630a: Return 0 on success in update_status functions
-Date:   Fri, 24 Jan 2020 10:30:26 +0100
-Message-Id: <20200124092947.455394663@linuxfoundation.org>
+Subject: [PATCH 4.14 209/343] thermal: cpu_cooling: Actually trace CPU load in thermal_power_cpu_get_power
+Date:   Fri, 24 Jan 2020 10:30:27 +0100
+Message-Id: <20200124092947.583894719@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -62,48 +63,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Matthias Kaehlcke <mka@chromium.org>
 
-[ Upstream commit d3f48ec0954c6aac736ab21c34a35d7554409112 ]
+[ Upstream commit bf45ac18b78038e43af3c1a273cae4ab5704d2ce ]
 
-lm3630a_bank_a_update_status() and lm3630a_bank_b_update_status()
-both return the brightness value if the brightness was successfully
-updated. Writing to these attributes via sysfs would cause a 'Bad
-address' error to be returned. These functions should return 0 on
-success, so let's change it to correct that error.
+The CPU load values passed to the thermal_power_cpu_get_power
+tracepoint are zero for all CPUs, unless, unless the
+thermal_power_cpu_limit tracepoint is enabled too:
 
-Fixes: 28e64a68a2ef ("backlight: lm3630: apply chip revision")
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+  irq/41-rockchip-98    [000] ....   290.972410: thermal_power_cpu_get_power:
+  cpus=0000000f freq=1800000 load={{0x0,0x0,0x0,0x0}} dynamic_power=4815
+
+vs
+
+  irq/41-rockchip-96    [000] ....    95.773585: thermal_power_cpu_get_power:
+  cpus=0000000f freq=1800000 load={{0x56,0x64,0x64,0x5e}} dynamic_power=4959
+  irq/41-rockchip-96    [000] ....    95.773596: thermal_power_cpu_limit:
+  cpus=0000000f freq=408000 cdev_state=10 power=416
+
+There seems to be no good reason for omitting the CPU load information
+depending on another tracepoint. My guess is that the intention was to
+check whether thermal_power_cpu_get_power is (still) enabled, however
+'load_cpu != NULL' already indicates that it was at least enabled when
+cpufreq_get_requested_power() was entered, there seems little gain
+from omitting the assignment if the tracepoint was just disabled, so
+just remove the check.
+
+Fixes: 6828a4711f99 ("thermal: add trace events to the power allocator governor")
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Javi Merino <javi.merino@kernel.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/thermal/cpu_cooling.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 2030a6b77a097..ef2553f452ca9 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -201,7 +201,7 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
- 				      LM3630A_LEDA_ENABLE, LM3630A_LEDA_ENABLE);
- 	if (ret < 0)
- 		goto out_i2c_err;
--	return bl->props.brightness;
-+	return 0;
+diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+index 908a8014cf767..aed995ec2c909 100644
+--- a/drivers/thermal/cpu_cooling.c
++++ b/drivers/thermal/cpu_cooling.c
+@@ -514,7 +514,7 @@ static int cpufreq_get_requested_power(struct thermal_cooling_device *cdev,
+ 			load = 0;
  
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access\n");
-@@ -278,7 +278,7 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
- 				      LM3630A_LEDB_ENABLE, LM3630A_LEDB_ENABLE);
- 	if (ret < 0)
- 		goto out_i2c_err;
--	return bl->props.brightness;
-+	return 0;
+ 		total_load += load;
+-		if (trace_thermal_power_cpu_limit_enabled() && load_cpu)
++		if (load_cpu)
+ 			load_cpu[i] = load;
  
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access REG_CTRL\n");
+ 		i++;
 -- 
 2.20.1
 
