@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651AFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB81C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E792071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93F1214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864013;
-	bh=40Zodo+wKCCu9fsjcp24ZcTvNJAKtnk69lIPtJiO0cs=;
+	s=default; t=1579864016;
+	bh=CMmrG1Krn981BFeYs8Nwv5F3gDnF8U99tH+6SAxUW8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IN6nMjLhmbYp/bqm8iCcG6F20MIouBZ9LkJQotOnBtfScmr4dtFe/9AHRwVaa4SYs
-	 gqtSCI1YFAlTqZ/VbHTFiNfJ5Zbig4DWhMkp5lQOQFZBEOWfIqesTxGldDyGMLOmD3
-	 V8SFCINCCi9CVuG09Gwd7k6IjbebtnUI80THB9j0=
+	b=qBOAmeWwUoXJVjpoaLxkxuhsftik1Fy5mDS/Kuu2nMW2FehzHe9UzFwwK93i0wFoE
+	 sbgHTC3RFVVg5BmBNrBNjysDmt0HZEQ6APXH+LItG4tjyjPHr30genTPeTCzxRYjV5
+	 5tL9hZCeb3KsDxQ+PKbmaapbXnj+Dfw04S4H7Src=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389340AbgAXLGw (ORCPT
+        id S2389355AbgAXLGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:06:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41764 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:06:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387790AbgAXLGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:06:50 -0500
+        id S2387790AbgAXLGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:06:53 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BACA0214AF;
-        Fri, 24 Jan 2020 11:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25E9020663;
+        Fri, 24 Jan 2020 11:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864009;
-        bh=40Zodo+wKCCu9fsjcp24ZcTvNJAKtnk69lIPtJiO0cs=;
+        s=default; t=1579864012;
+        bh=CMmrG1Krn981BFeYs8Nwv5F3gDnF8U99tH+6SAxUW8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ME3Ggr+FoNU0iY1qDPrAbqa293scrTVtUQAFSL2RHf23v0oy62J8LzWG6hINkTQba
-         G95cBAYacPF/Xagwd2KgAs385hJ5EqLX49SHcZDtqVS20u4XR8SW3/Ol9Zgds1Kpmg
-         yEjc03/BL1ZLxbbig8UejcdhzQYAtoTv84ZgT8r0=
+        b=E1LuUbbm4eqbCwwddjFepkyorM9bQd1xu1JhS6C6s61blb6dNzAjDdHykXpemKtCa
+         amBa5d4wOmtxes5MkCrm+VhzBgA7/iGROBaIyfxnnHavAXW60s7f65L9mB72lifJ+w
+         fl9pGXKP4JFtSaMVxmEOVHXXIgkRgpKdyvjz8ERA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 132/639] memory: tegra: Dont invoke Tegra30+ specific memory timing setup on Tegra20
-Date:   Fri, 24 Jan 2020 10:25:02 +0100
-Message-Id: <20200124093103.816845759@linuxfoundation.org>
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 123/639] fork, memcg: fix cached_stacks case
+Date:   Fri, 24 Jan 2020 10:24:53 +0100
+Message-Id: <20200124093102.707201224@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,47 +66,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-[ Upstream commit be4dbdec2bab8635c7a41573668624ee13d83022 ]
+[ Upstream commit ba4a45746c362b665e245c50b870615f02f34781 ]
 
-This fixes irrelevant "tegra-mc 7000f000.memory-controller: no memory
-timings for RAM code 0 registered" warning message during of kernels
-boot-up on Tegra20.
+Commit 5eed6f1dff87 ("fork,memcg: fix crash in free_thread_stack on
+memcg charge fail") fixes a crash caused due to failed memcg charge of
+the kernel stack.  However the fix misses the cached_stacks case which
+this patch fixes.  So, the same crash can happen if the memcg charge of
+a cached stack is failed.
 
-Fixes: a8d502fd3348 ("memory: tegra: Squash tegra20-mc into common tegra-mc driver")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: http://lkml.kernel.org/r/20190102180145.57406-1-shakeelb@google.com
+Fixes: 5eed6f1dff87 ("fork,memcg: fix crash in free_thread_stack on memcg charge fail")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Rik van Riel <riel@surriel.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memory/tegra/mc.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ kernel/fork.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
-index c8f16666256cc..346d8eadb44b1 100644
---- a/drivers/memory/tegra/mc.c
-+++ b/drivers/memory/tegra/mc.c
-@@ -664,12 +664,13 @@ static int tegra_mc_probe(struct platform_device *pdev)
- 		}
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 5718c5decc55b..1bd119530a492 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -216,6 +216,7 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)
+ 		memset(s->addr, 0, THREAD_SIZE);
  
- 		isr = tegra_mc_irq;
--	}
- 
--	err = tegra_mc_setup_timings(mc);
--	if (err < 0) {
--		dev_err(&pdev->dev, "failed to setup timings: %d\n", err);
--		return err;
-+		err = tegra_mc_setup_timings(mc);
-+		if (err < 0) {
-+			dev_err(&pdev->dev, "failed to setup timings: %d\n",
-+				err);
-+			return err;
-+		}
+ 		tsk->stack_vm_area = s;
++		tsk->stack = s->addr;
+ 		return s->addr;
  	}
  
- 	mc->irq = platform_get_irq(pdev, 0);
 -- 
 2.20.1
 
