@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F8EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B8DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B6922464
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 353EB22464
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875701;
-	bh=9er1V+v/1Md2BF4a+9WoWg0NKWYmvPyreoFkcrN3+H4=;
+	s=default; t=1579875706;
+	bh=k5OAPK/Q9V2qMlz9alH4BM1w8L1wut7OFR8509l6y2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FqnuFdYwBMPaUG5DKZ0FJznTdBr0KwAnheokcMjRjbsPIjTgA96WIFqFccmbuQJYQ
-	 PhjAAVIw3pB6DsAQymTiuUGYfKxSay8YwBI0769UxQzR044XZQSAo7kq7XhLIjXBlz
-	 w3m/HwCdSj8ZsVxjH1KN/YBZxivg557EEgyD91zg=
+	b=OsxeAnpRj8ICbCFddj6/V100byp58EZI8pzqUZXm0/C/G5E8ZahrAYOXgKXwXfZDl
+	 UGpWTaF/b5cWY2Iq/FAhBvOmzEcJaBGXSQ8p+vBHUaK7fguqPqN8hjpTFhY8eJ4MFZ
+	 MIe4EOOOLE7rIFPy2v/D9Vh0aLX41QCShWfoE41s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405373AbgAXOVk (ORCPT
+        id S2392212AbgAXOVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:21:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43510 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:21:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405346AbgAXOVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:21:38 -0500
+        id S2387774AbgAXOVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:21:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FFEA218AC;
-        Fri, 24 Jan 2020 14:21:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFC83222C2;
+        Fri, 24 Jan 2020 14:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875697;
-        bh=9er1V+v/1Md2BF4a+9WoWg0NKWYmvPyreoFkcrN3+H4=;
+        s=default; t=1579875702;
+        bh=k5OAPK/Q9V2qMlz9alH4BM1w8L1wut7OFR8509l6y2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WBhjK407WD7t626RNzPJma+wlJaJIZxY2xVx81N7kHEY2VfO4KHMos8Mm5OcFY5rE
-         GglRtXE2lIkHtxpTMRWQaXt/32rZId541gOkYnio08CQRAWxlc5j71qXDXXEPJc0YV
-         kjPuYjrdEMArJbtCXAje7MQ6Lf3UHELItc0PjCY8=
+        b=0FsK2cSg/VpT4w+0k2Bmd4W3iLOpTmigx+S5Un1QOsI5echHDveMPcXQbTO2mYnqK
+         dilYAxhr1ormm9Qx88v/KnGGj6HflRgdoVp+gMWGBkdSA4dA2g94LtJu8HSu/1egEm
+         pSdZ+G7YZwxlJrVFQd0WCTEFOiI9I8sBUm+u00m4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+Cc:     Eric Dumazet <edumazet@google.com>,
+        RENARD Pierre-Francois <pfrenard@gmail.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/32] netfilter: arp_tables: init netns pointer in xt_tgdtor_param struct
-Date:   Fri, 24 Jan 2020 09:21:02 -0500
-Message-Id: <20200124142119.30484-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 19/32] net: usb: lan78xx: limit size of local TSO packets
+Date:   Fri, 24 Jan 2020 09:21:06 -0500
+Message-Id: <20200124142119.30484-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124142119.30484-1-sashal@kernel.org>
 References: <20200124142119.30484-1-sashal@kernel.org>
@@ -62,126 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 212e7f56605ef9688d0846db60c6c6ec06544095 ]
+[ Upstream commit f8d7408a4d7f60f8b2df0f81decdc882dd9c20dc ]
 
-An earlier commit (1b789577f655060d98d20e,
-"netfilter: arp_tables: init netns pointer in xt_tgchk_param struct")
-fixed missing net initialization for arptables, but turns out it was
-incomplete.  We can get a very similar struct net NULL deref during
-error unwinding:
+lan78xx_tx_bh() makes sure to not exceed MAX_SINGLE_PACKET_SIZE
+bytes in the aggregated packets it builds, but does
+nothing to prevent large GSO packets being submitted.
 
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
- xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
- cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
- translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
- do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
- do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
+Pierre-Francois reported various hangs when/if TSO is enabled.
 
-Also init the netns pointer in xt_tgdtor_param struct.
+For localy generated packets, we can use netif_set_gso_max_size()
+to limit the size of TSO packets.
 
-Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
-Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Note that forwarded packets could still hit the issue,
+so a complete fix might require implementing .ndo_features_check
+for this driver, forcing a software segmentation if the size
+of the TSO packet exceeds MAX_SINGLE_PACKET_SIZE.
+
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: RENARD Pierre-Francois <pfrenard@gmail.com>
+Tested-by: RENARD Pierre-Francois <pfrenard@gmail.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Woojung Huh <woojung.huh@microchip.com>
+Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/netfilter/arp_tables.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/net/usb/lan78xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/netfilter/arp_tables.c b/net/ipv4/netfilter/arp_tables.c
-index e288489ae3d56..6dd727e0a72f6 100644
---- a/net/ipv4/netfilter/arp_tables.c
-+++ b/net/ipv4/netfilter/arp_tables.c
-@@ -506,12 +506,13 @@ static inline int check_entry_size_and_hooks(struct arpt_entry *e,
- 	return 0;
- }
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index c23f35dba7188..ee7194a9e2315 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -3612,6 +3612,7 @@ static int lan78xx_probe(struct usb_interface *intf,
  
--static inline void cleanup_entry(struct arpt_entry *e)
-+static void cleanup_entry(struct arpt_entry *e, struct net *net)
- {
- 	struct xt_tgdtor_param par;
- 	struct xt_entry_target *t;
+ 	/* MTU range: 68 - 9000 */
+ 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
++	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
  
- 	t = arpt_get_target(e);
-+	par.net      = net;
- 	par.target   = t->u.kernel.target;
- 	par.targinfo = t->data;
- 	par.family   = NFPROTO_ARP;
-@@ -601,7 +602,7 @@ static int translate_table(struct net *net,
- 		xt_entry_foreach(iter, entry0, newinfo->size) {
- 			if (i-- == 0)
- 				break;
--			cleanup_entry(iter);
-+			cleanup_entry(iter, net);
- 		}
- 		return ret;
- 	}
-@@ -926,7 +927,7 @@ static int __do_replace(struct net *net, const char *name,
- 	/* Decrease module usage counts and free resource */
- 	loc_cpu_old_entry = oldinfo->entries;
- 	xt_entry_foreach(iter, loc_cpu_old_entry, oldinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
- 
- 	xt_free_table_info(oldinfo);
- 	if (copy_to_user(counters_ptr, counters,
-@@ -990,7 +991,7 @@ static int do_replace(struct net *net, const void __user *user,
- 
-  free_newinfo_untrans:
- 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
-  free_newinfo:
- 	xt_free_table_info(newinfo);
- 	return ret;
-@@ -1287,7 +1288,7 @@ static int compat_do_replace(struct net *net, void __user *user,
- 
-  free_newinfo_untrans:
- 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
-  free_newinfo:
- 	xt_free_table_info(newinfo);
- 	return ret;
-@@ -1514,7 +1515,7 @@ static int do_arpt_get_ctl(struct sock *sk, int cmd, void __user *user, int *len
- 	return ret;
- }
- 
--static void __arpt_unregister_table(struct xt_table *table)
-+static void __arpt_unregister_table(struct net *net, struct xt_table *table)
- {
- 	struct xt_table_info *private;
- 	void *loc_cpu_entry;
-@@ -1526,7 +1527,7 @@ static void __arpt_unregister_table(struct xt_table *table)
- 	/* Decrease module usage counts and free resources */
- 	loc_cpu_entry = private->entries;
- 	xt_entry_foreach(iter, loc_cpu_entry, private->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
- 	if (private->number > private->initial_entries)
- 		module_put(table_owner);
- 	xt_free_table_info(private);
-@@ -1566,7 +1567,7 @@ int arpt_register_table(struct net *net,
- 
- 	ret = nf_register_net_hooks(net, ops, hweight32(table->valid_hooks));
- 	if (ret != 0) {
--		__arpt_unregister_table(new_table);
-+		__arpt_unregister_table(net, new_table);
- 		*res = NULL;
- 	}
- 
-@@ -1581,7 +1582,7 @@ void arpt_unregister_table(struct net *net, struct xt_table *table,
- 			   const struct nf_hook_ops *ops)
- {
- 	nf_unregister_net_hooks(net, ops, hweight32(table->valid_hooks));
--	__arpt_unregister_table(table);
-+	__arpt_unregister_table(net, table);
- }
- 
- /* The built-in targets: standard (NULL) and error. */
+ 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
+ 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
 -- 
 2.20.1
 
