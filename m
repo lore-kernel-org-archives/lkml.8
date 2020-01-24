@@ -2,218 +2,143 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED82CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380B7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DEF20709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:44:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="0myUXlwg"
+	by mail.kernel.org (Postfix) with ESMTP id 0A8272072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 06:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579848415;
+	bh=2i6FY5eoOCqLYRHL/0noT72s7tj2A/ChhJRcbKgY7PI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tWk/iFbvng243z4z/V6fDydq7+7oX2GacA4YqIfrT6oY3DHAAf4cn6GD13iLOKath
+	 hyfRd+SfsNzJNEBFt/+6DyC4ThM75woQlJlYQgRaSR21xayQH/45Iu5l4Zad/BfpEQ
+	 2+/tS+5eL2ovAOg2cNBoou6k3KIcNtvWxI/zCXGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbgAXGoa (ORCPT
+        id S1730713AbgAXGqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 01:44:30 -0500
-Received: from mail-bn8nam11on2075.outbound.protection.outlook.com ([40.107.236.75]:61405
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725843AbgAXGoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 01:44:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d2J3HDVHosgoiXmykcU6KR6kYW6YkftoHe1U3FNeUyjdEYsm5QUR0ngSjm2xqhtntymZCjdSBJ7WSxKVczqD0M1vQY3MNqMSbk7+nikkOUUuI4KE47psBlXp4rQKwdknDC44xp040tQAVGmEL3SJQX9AxrHB96NJkAZm9zMyBeB91v70yeCwHCRzb/dDXU+fcJGPtdrLO6aZZlIoiGDSge56yeIgilYapoPK52xPSqprYPiUpFfP1RXWCIJtD63eg/31MfoUYVVviL3jSXYe7wydfMVVKhyvFB+Xn/LTETxp0FH7NXQyFpolEG5jaDvTN0S+WgABW0Yrc3nQ/DngCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HXCiy03WiCi6K2N+t1TTvlrJMiLxF7FXK0aLQsRFCtw=;
- b=f+nTuPjZUWT+wTPR34nGSLWRpOyZMT3RpJud9DbeXDf7xtCDFnXc1DHuAjWMp8KPVrnAr5fHwqEbUfADQdTWcOa3vzOVaJlnAS5Vw24cXKgDpozZRMAKoj30/5LrkdfzQUa0/WfOgrGcLvbKzPjGXDgGEV2+EdWRH0Y8YfxAHGtfCDSjmHw9kMQO2B3I16EnLIG27MsmWKzYWCUPJYZwWYNGiuWFjDksJjMjqqzGS0JutZUfH/tsmT4P0k8Kx0SMcywZRU5WRwnFHvjrziqrHZaxfpOnidruxk+LZSxFYDI175U2H2EITBehuAN065YSyXPNEAxH+z5RNnVwkYRc/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HXCiy03WiCi6K2N+t1TTvlrJMiLxF7FXK0aLQsRFCtw=;
- b=0myUXlwgu1VhQvLeu30qZP8WV+CbYP050N6QCsJLRkMYuWUwOMBNrTqjA/rFjOAQS7lDMuf2uwF1yn4WLNkIdPvmU9Pb4zL94/pZzN7mU8nv5X14pernodU96MuRS3cQIU87O2o/Hc7P0yXWaAXeH+Exog9sp8s1KnVMxu2xXww=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.172.206) by
- DM6PR12MB2651.namprd12.prod.outlook.com (20.176.118.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.20; Fri, 24 Jan 2020 06:44:26 +0000
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::fdd1:4a97:85cc:d302]) by DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::fdd1:4a97:85cc:d302%3]) with mapi id 15.20.2665.017; Fri, 24 Jan 2020
- 06:44:26 +0000
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: Re: [PATCH v2] iommu: amd: Fix IOMMU perf counter clobbering during
- init
-To:     Shuah Khan <skhan@linuxfoundation.org>, joro@8bytes.org
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        "Grimm, Jon" <jon.grimm@amd.com>
-References: <20200123223214.2566-1-skhan@linuxfoundation.org>
-Message-ID: <096ee758-a372-4caa-c082-e1e8cff3f033@amd.com>
-Date:   Fri, 24 Jan 2020 13:43:37 +0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200123223214.2566-1-skhan@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: KL1PR0601CA0015.apcprd06.prod.outlook.com
- (2603:1096:802:1::25) To DM6PR12MB3865.namprd12.prod.outlook.com
- (2603:10b6:5:1c4::14)
+        Fri, 24 Jan 2020 01:46:54 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36359 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgAXGqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 01:46:54 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so604384wma.1;
+        Thu, 23 Jan 2020 22:46:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ceFjGGiWoFMAA9UT7Zn787IQlb7e7FJtvY2pMaDdPIg=;
+        b=Gxv17RncT8ap+fPBQKE0R2CiM54rC0fSHbxygq/XRUYNjrV31iZvWV4xlMrtxu6rGI
+         ai055BGisTLXK4RXCzGT9SngPOoiDesG07pNwLlZ3vaevUt5WIEjdTp9RgrwTGNuhB+B
+         M4tya5TI5l73YwaAzA/s26ctPoEpUDqXelWs81Gzdpk8Rj6ehO0xMb1hH3fyOMyLOY3D
+         WdF1fuQ5Av8a4mDhIrs7auQybSFH32TuW977uUqN7vliWJ60Yvdz4N2LUlSi1gvG4dNy
+         dxT2NS7EaKbnMbbaGe1dl2Bu5iBh7a8YPaz6xReHfq89wPYEN+SP64vwh83DucPKsQ3E
+         Sm5g==
+X-Gm-Message-State: APjAAAUCOmAk0GseUO+QcI/kGs4eXpdPdJDuYkA1v2InFv60ims03lBb
+        BljGKzCtOl9lVmPFJd1/EbpVZrei
+X-Google-Smtp-Source: APXvYqwVDEdRt5Olnj1NsGVliK0l7NWMm0Od52XXHYIaFzv034E6xvGh2WxWdUyCXdlSGFI7kDuovQ==
+X-Received: by 2002:a1c:7c11:: with SMTP id x17mr1871368wmc.168.1579848411533;
+        Thu, 23 Jan 2020 22:46:51 -0800 (PST)
+Received: from localhost (ip-37-188-162-110.eurotel.cz. [37.188.162.110])
+        by smtp.gmail.com with ESMTPSA id c195sm6257033wmd.45.2020.01.23.22.46.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 22:46:50 -0800 (PST)
+Date:   Fri, 24 Jan 2020 07:46:49 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
+ pages
+Message-ID: <20200124064649.GM29276@dhcp22.suse.cz>
+References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200123032736.GA22196@richard>
+ <20200123085526.GH29276@dhcp22.suse.cz>
+ <20200123225647.GB29851@richard>
 MIME-Version: 1.0
-Received: from [10.252.73.101] (165.204.80.7) by KL1PR0601CA0015.apcprd06.prod.outlook.com (2603:1096:802:1::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend Transport; Fri, 24 Jan 2020 06:44:24 +0000
-X-Originating-IP: [165.204.80.7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1a0621e4-c678-4595-45c0-08d7a098da8f
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2651:|DM6PR12MB2651:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB26516DE9B422D57E1D6BD404F30E0@DM6PR12MB2651.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 02929ECF07
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(136003)(376002)(346002)(199004)(189003)(2906002)(36756003)(31686004)(4326008)(5660300002)(26005)(186003)(16526019)(31696002)(86362001)(81166006)(81156014)(478600001)(2616005)(44832011)(8676002)(52116002)(956004)(8936002)(6666004)(16576012)(66946007)(316002)(6486002)(66476007)(66556008)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2651;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rhGuklFp+Or+wbSiTNWa4IntWOjtCMxVoOugSooPv4bhzlTwJSGZIMnxru39WkZTVlielYYuz5O/wLsImgrwgD2VuQf2jQ8tWhpdRDNPKkr5vTpkxOLa42aXGTewZWiLT90MmT/LIB6JgCXVOZUOKcrR4VtvNGV6g5EYC33XDhY9aFPfmCh72Z489u0vEcZbS3o66gOohA83IdGp7X4p3RA2cZ9w3x8gNQSyO93UgUSd4tN/3Y4V97fVMA9M2gJ4cnOssKfSDYFZX4KkS4sW9Pv/kQf6ScJ4V4EPdKSfqYo725F4bJXoedRTaPs74k6mfWhK+Tdbpq5cLyrR9Vrwmmud5Gvk6F4wOPO/KZDtwKSSY1GPw9pGU16iVN3b4+ADL9XAap8aKC6oZ/zVeIK49VJiEAhXGaKW/NgqOh0hE64vUS9bLVdmYDKnn70EOAjZ
-X-MS-Exchange-AntiSpam-MessageData: EMfA0iKmxOxH10E2uE/9RO10uCY4P1+7YqCxn2PFqUxfjYkm4Z0rPLPh795La0eq9sdp+gdeZ7DNNrtykQVNGvOshVNcUpi0QbPEOeb8YW8dIDc8k7H6GlE5i+HgGFTiSPRJZAxAaEj0mHeSwrYcNw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a0621e4-c678-4595-45c0-08d7a098da8f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2020 06:44:26.1348
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AOLM+e+lqGZrKwvtQRh6tldA0/zhH7dM32z0WunhvGwhvB3Ls4oHIu60cp16ihviAl+qn2nobUpmRY3ADAhFMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2651
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123225647.GB29851@richard>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/24/20 5:32 AM, Shuah Khan wrote:
-> init_iommu_perf_ctr() clobbers the register when it checks write access
-> to IOMMU perf counters and fails to restore when they are writable.
+On Fri 24-01-20 06:56:47, Wei Yang wrote:
+> On Thu, Jan 23, 2020 at 09:55:26AM +0100, Michal Hocko wrote:
+> >On Thu 23-01-20 11:27:36, Wei Yang wrote:
+> >> On Thu, Jan 23, 2020 at 07:38:51AM +0800, Yang Shi wrote:
+> >> >Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
+> >> >the semantic of move_pages() was changed to return the number of
+> >> >non-migrated pages (failed to migration) and the call would be aborted
+> >> >immediately if migrate_pages() returns positive value.  But it didn't
+> >> >report the number of pages that we even haven't attempted to migrate.
+> >> >So, fix it by including non-attempted pages in the return value.
+> >> >
+> >> 
+> >> First, we want to change the semantic of move_pages(2). The return value
+> >> indicates the number of pages we didn't managed to migrate?
+> >> 
+> >> Second, the return value from migrate_pages() doesn't mean the number of pages
+> >> we failed to migrate. For example, one -ENOMEM is returned on the first page,
+> >> migrate_pages() would return 1. But actually, no page successfully migrated.
+> >
+> >ENOMEM is considered a permanent failure and as such it is returned by
+> >migrate pages (see goto out).
+> >
+> >> Third, even the migrate_pages() return the exact non-migrate page, we are not
+> >> sure those non-migrated pages are at the tail of the list. Because in the last
+> >> case in migrate_pages(), it just remove the page from list. It could be a page
+> >> in the middle of the list. Then, in userspace, how the return value be
+> >> leveraged to determine the valid status? Any page in the list could be the
+> >> victim.
+> >
+> >Yes, I was wrong when stating that the caller would know better which
+> >status to check. I misremembered the original patch as it was quite some
+> >time ago. While storing the error code would be possible after some
+> >massaging of migrate_pages is this really something we deeply care
+> >about. The caller can achieve the same by initializing the status array
+> >to a non-node number - e.g. -1 - and check based on that.
+> >
 > 
-> Add save and restore to fix it.
-> 
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> ---
-> Changes since v1:
-> -- Fix bug in sucessful return path. Add a return instead of
->     fall through to pc_false error case
-> 
->   drivers/iommu/amd_iommu_init.c | 24 ++++++++++++++++++------
->   1 file changed, 18 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-> index 568c52317757..483f7bc379fa 100644
-> --- a/drivers/iommu/amd_iommu_init.c
-> +++ b/drivers/iommu/amd_iommu_init.c
-> @@ -1655,27 +1655,39 @@ static int iommu_pc_get_set_reg(struct amd_iommu *iommu, u8 bank, u8 cntr,
->   static void init_iommu_perf_ctr(struct amd_iommu *iommu)
->   {
->   	struct pci_dev *pdev = iommu->dev;
-> -	u64 val = 0xabcd, val2 = 0;
-> +	u64 val = 0xabcd, val2 = 0, save_reg = 0;
->   
->   	if (!iommu_feature(iommu, FEATURE_PC))
->   		return;
->   
->   	amd_iommu_pc_present = true;
->   
-> +	/* save the value to restore, if writable */
-> +	if (iommu_pc_get_set_reg(iommu, 0, 0, 0, &save_reg, false))
-> +		goto pc_false;
-> +
->   	/* Check if the performance counters can be written to */
->   	if ((iommu_pc_get_set_reg(iommu, 0, 0, 0, &val, true)) ||
->   	    (iommu_pc_get_set_reg(iommu, 0, 0, 0, &val2, false)) ||
-> -	    (val != val2)) {
-> -		pci_err(pdev, "Unable to write to IOMMU perf counter.\n");
-> -		amd_iommu_pc_present = false;
-> -		return;
-> -	}
-> +	    (val != val2))
-> +		goto pc_false;
-> +
-> +	/* restore */
-> +	if (iommu_pc_get_set_reg(iommu, 0, 0, 0, &save_reg, true))
-> +		goto pc_false;
->   
->   	pci_info(pdev, "IOMMU performance counters supported\n");
->   
->   	val = readl(iommu->mmio_base + MMIO_CNTR_CONF_OFFSET);
->   	iommu->max_banks = (u8) ((val >> 12) & 0x3f);
->   	iommu->max_counters = (u8) ((val >> 7) & 0xf);
-> +
-> +	return;
-> +
+> So for a user, the best practice is to initialize the status array to -1 and
+> check each status to see whether the page is migrated successfully?
 
-Good catch. Sorry, I missed this part as well :(
+Yes IMO. Just consider -errno return value. You have no way to find out
+which pages have been migrated until we reached that error. The
+possitive return value would fall into the same case.
 
-> +pc_false:
-> +	pci_err(pdev, "Unable to read/write to IOMMU perf counter.\n");
-> +	amd_iommu_pc_present = false;
-> +	return;
->   }
->   
->   static ssize_t amd_iommu_show_cap(struct device *dev,
-> 
+> Then do we need to return the number of non-migrated page? What benefit could
+> user get from the number. How about just return an error code to indicate the
+> failure? I may miss some point, would you mind giving me a hint?
 
-As for your question in v1:
+This is certainly possible. We can return -EAGAIN if some pages couldn't
+be migrated because they are pinned. But please read my previous email
+to the very end for arguments why this might cause more problems than it
+actually solves.
 
- > I see 2 banks and 4 counters on my system. Is it sufficient to check
- > the first bank and first counter? In other words, if the first one
- > isn't writable, are all counters non-writable?
+> >This system call has quite a complex semantic and I am not 100% sure
+> >what is the right thing to do here. Maybe we do want to continue and try
+> >to migrate as much as possible on non-fatal migration failures and
+> >accumulate the number of failed pages while doing so.
+> >
+> >The main problem is that we can have an academic discussion but
+> >the primary question is what do actual users want. A lack of real
+> >bug reports suggests that nobody has actually noticed this. So I
+> >would rather keep returning the correct number of non-migrated
+> >pages. Why? Because new users could have started depending on it. It
+> >is not all that unlikely that the current implementation would just
+> >work for them because they are migrating a set of pages on to the same
+> >node so the batch would be a single list throughout the whole given
+> >page set.
 
-We currently assume all counters have the same write-ability. So, it should be sufficient
-to just check the first one.
-
- > Should we read the config first and then, try to see if any of the
- > counters are writable? I have a patch that does that, I can send it
- > out for review.
-
-Which config are you referring to? Not sure what you mean.
-
-By the way, here is the output from booting the system with this patch (+ debug messages).
-
-[   14.408834] pci 0000:60:00.2: AMD-Vi: IOMMU performance counters supported
-[   14.416526] DEBUG: init_iommu_perf_ctr: amd_iommu_pc_present=0x1
-[   14.429602] pci 0000:40:00.2: AMD-Vi: IOMMU performance counters supported
-[   14.437275] DEBUG: init_iommu_perf_ctr: amd_iommu_pc_present=0x1
-[   14.450320] pci 0000:20:00.2: AMD-Vi: IOMMU performance counters supported
-[   14.457991] DEBUG: init_iommu_perf_ctr: amd_iommu_pc_present=0x1
-[   14.471049] pci 0000:00:00.2: AMD-Vi: IOMMU performance counters supported
-[   14.478722] DEBUG: init_iommu_perf_ctr: amd_iommu_pc_present=0x1
-
-Also, here is the perf amd_iommu testing.
-
-# perf stat -e 'amd_iommu_0/cmd_processed/,\
-		amd_iommu_1/cmd_processed/,\
-		amd_iommu_2/cmd_processed/,\
-		amd_iommu_3/cmd_processed/'
-
-  Performance counter stats for 'system wide':
-
-                204      amd_iommu_0/cmd_processed/
-                  0      amd_iommu_1/cmd_processed/
-                472      amd_iommu_2/cmd_processed/
-                  2      amd_iommu_3/cmd_processed/
-
-       10.198257728 seconds time elapsed
-
-Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Tested-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-
-Thanks,
-Suravee
+-- 
+Michal Hocko
+SUSE Labs
