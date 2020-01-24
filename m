@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8C1C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E2AC35241
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840D42087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3E321D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828775;
-	bh=/MsGUyie8WthYfpkbM9zdRl34allauhAsvBE1wCo43A=;
+	s=default; t=1579828779;
+	bh=U9J6SAGCr4N06fDBextBl9dpxjurIa6c2Yu7jpChH4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=no/joSH7BevpFwUUBKAbuJyc1T6eWr+g/MJUpdnZrNuBeQU9DVc2yKPLFp2EIvgdQ
-	 oznIdces7m2DLaDnFBy1Fut7a47x/6OjgaxGeewZqG+OrsFp3T7eVH/za2rClgpZTE
-	 a8YNSIs/zM30K0oFxBPrSa25IBLmRSKYlWbr0Mz0=
+	b=IMAEAp3WkMmbSz40ZLLxSCfgkZvpJ1WW1qWfq0nLNXP/q3GQZqkslXBdfFT5Lnd3+
+	 XTkLSs4LYrIygu/6ZvxEPUFiPvKgAOHzyU0ChJglXJ6BwK58IwfD+16uQ9XQgAs+4T
+	 wpRmKVagSlxokaPB2QCpiZuXoY/dkmaMFQOPumRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbgAXBTe (ORCPT
+        id S1730688AbgAXBRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:19:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60882 "EHLO mail.kernel.org"
+        Thu, 23 Jan 2020 20:17:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730695AbgAXBRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jan 2020 20:17:42 -0500
+        id S1730468AbgAXBRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7572824655;
-        Fri, 24 Jan 2020 01:17:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96DFA21D7D;
+        Fri, 24 Jan 2020 01:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828662;
-        bh=/MsGUyie8WthYfpkbM9zdRl34allauhAsvBE1wCo43A=;
+        s=default; t=1579828655;
+        bh=U9J6SAGCr4N06fDBextBl9dpxjurIa6c2Yu7jpChH4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FVBQFW2J0XkQXeSG3lwIH/UnPB8F+068jhJgyZph+h22rtxjRp4pwrc2MHJQqNcNk
-         jG3YzrZ0Oot6dZ7SwYhfe7FjIJLHWs5BRQScicVq+9tdocGMc7jXMtKVF08IC57Bvt
-         VId4LnjrqL828ZHFhDicGo/hag7PBUi71xh4+Yys=
+        b=Ax1GVpEny5Q4RDZac2Mn7FjdsPhdclS7mwlnajO6xt9+B+zIpe3UUKsO0IhGNxmV2
+         dl2t3SFpGdlPuFyNN7fdC1DAmC2bq3ZTimaULbXFE8eCFmDjlriUugGjshrZ17qDUE
+         ymx88mianXO78hDZ+SCi7LsxwdpUsFHzieUt6bxg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 29/33] bus: ti-sysc: Fix missing force mstandby quirk handling
-Date:   Thu, 23 Jan 2020 20:17:04 -0500
-Message-Id: <20200124011708.18232-29-sashal@kernel.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 23/33] mmc: sdio: fix wl1251 vendor id
+Date:   Thu, 23 Jan 2020 20:16:58 -0500
+Message-Id: <20200124011708.18232-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -58,52 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit 93c60483b5feefced92b869d5f97769495bc6313 ]
+[ Upstream commit e5db673e7fe2f971ec82039a28dc0811c2100e87 ]
 
-Commit 03856e928b0e ("bus: ti-sysc: Handle mstandby quirk and use it for
-musb") added quirk handling for mstandby quirk but did not consider that
-we also need a quirk variant for SYSC_QUIRK_FORCE_MSTANDBY.
+v4.11-rc1 did introduce a patch series that rearranged the
+sdio quirks into a header file. Unfortunately this did forget
+to handle SDIO_VENDOR_ID_TI differently between wl1251 and
+wl1271 with the result that although the wl1251 was found on
+the sdio bus, the firmware did not load any more and there was
+no interface registration.
 
-We need to use forced idle mode for both SYSC_QUIRK_SWSUP_MSTANDBY and
-SYSC_QUIRK_FORCE_MSTANDBY, but SYSC_QUIRK_SWSUP_MSTANDBY also need to
-additionally also configure no-idle mode when enabled.
+This patch defines separate constants to be used by sdio quirks
+and drivers.
 
-Fixes: 03856e928b0e ("bus: ti-sysc: Handle mstandby quirk and use it for musb")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # v4.11+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c                 | 3 ++-
- include/linux/platform_data/ti-sysc.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ include/linux/mmc/sdio_ids.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 6dc9d460e3065..52c2485498109 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -981,7 +981,8 @@ static int sysc_disable_module(struct device *dev)
- 		return ret;
- 	}
+diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
+index d1a5d5df02f57..08b25c02b5a11 100644
+--- a/include/linux/mmc/sdio_ids.h
++++ b/include/linux/mmc/sdio_ids.h
+@@ -71,6 +71,8 @@
  
--	if (ddata->cfg.quirks & SYSC_QUIRK_SWSUP_MSTANDBY)
-+	if (ddata->cfg.quirks & (SYSC_QUIRK_SWSUP_MSTANDBY) ||
-+	    ddata->cfg.quirks & (SYSC_QUIRK_FORCE_MSTANDBY))
- 		best_mode = SYSC_IDLE_FORCE;
+ #define SDIO_VENDOR_ID_TI			0x0097
+ #define SDIO_DEVICE_ID_TI_WL1271		0x4076
++#define SDIO_VENDOR_ID_TI_WL1251		0x104c
++#define SDIO_DEVICE_ID_TI_WL1251		0x9066
  
- 	reg &= ~(SYSC_IDLE_MASK << regbits->midle_shift);
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
-index 0b93804751444..8cfe570fdece6 100644
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -49,6 +49,7 @@ struct sysc_regbits {
- 	s8 emufree_shift;
- };
- 
-+#define SYSC_QUIRK_FORCE_MSTANDBY	BIT(20)
- #define SYSC_MODULE_QUIRK_AESS		BIT(19)
- #define SYSC_MODULE_QUIRK_SGX		BIT(18)
- #define SYSC_MODULE_QUIRK_HDQ1W		BIT(17)
+ #define SDIO_VENDOR_ID_STE			0x0020
+ #define SDIO_DEVICE_ID_STE_CW1200		0x2280
 -- 
 2.20.1
 
