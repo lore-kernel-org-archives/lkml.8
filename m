@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C56AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ECEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6269214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FBB2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579876726;
-	bh=TDxPorzrIJGs1ZqB7kiIUwv25RiRwUZ8gQeU5ZGA0Yc=;
+	s=default; t=1579876732;
+	bh=7uUGsk4n0XXVgZsu9YNHGZEaSX4/OsqDtUdjcRoeTZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TlZXfFElTICpR6sYxJVNhqTicWpjBTLizCzxWSVoHRCD+5NrFwBy+F39q7KBhfNIc
-	 nfdO1jd1S9xyYfgBUB4Xr7m8Y4BV0WHSDDdZXGvONu87rkSeAxqtfTtHF21kdqgm6/
-	 TxIEtg6sZGNRZYgzHO4+VXtucf0GtaLbYpldCCdY=
+	b=ezB/fwiSoBSMEPmywc1rK0TIaNqeaDsbN4uteRcOhYcIftQLEEoFlcf8UlfizsZdz
+	 ZXmA6sCFBNcLDPWOjpaUb7aBzwbsuF42GWCjLj5a+zKBS1x/MwqvSNcfeIfCYb7e7x
+	 2XgTJBXT/hhoS+FilATlKaBIBuI6ccnPMWyxybWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388750AbgAXOio (ORCPT
+        id S2390825AbgAXOSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:38:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38270 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:18:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390932AbgAXOSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:18:39 -0500
+        id S2390774AbgAXOSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:18:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF94F208C4;
-        Fri, 24 Jan 2020 14:18:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DB58208C4;
+        Fri, 24 Jan 2020 14:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875518;
-        bh=TDxPorzrIJGs1ZqB7kiIUwv25RiRwUZ8gQeU5ZGA0Yc=;
+        s=default; t=1579875510;
+        bh=7uUGsk4n0XXVgZsu9YNHGZEaSX4/OsqDtUdjcRoeTZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r0fV1D/da4A/2mpzyJpC950PQ2V/861yc9+JBLLk5ULwQcs49yUvC8CtDkAiN4MEG
-         7CORZZHhFFiy3XWGQT0H4D//0fUOGapTgqBB1ooHK0kampU0e8rAW/kukr+9gYjsoC
-         2TRdR+Jh1dpDimQuq7Ye9i3HUBakBZix9CfDTE6M=
+        b=etqrt8Nry6TimpWEieuEZL7LsqI8bmGnruxTCAw+gOHrKQz9c+QQkJmq9a6DNoohi
+         /FEkjziHDdhxH49QNjkUeEk5oV6ia6EwKmqFcEtUliogQtJReZAVnm3Bj+MuK8XKFl
+         lf6X6Z8dBBUp4PwWfp0rGSk5tnmfU87eLjIAMD+Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+Cc:     Dave Gerlach <d-gerlach@ti.com>, Suman Anna <s-anna@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 018/107] arm64: dts: imx8mq-librem5-devkit: use correct interrupt for the magnetometer
-Date:   Fri, 24 Jan 2020 09:16:48 -0500
-Message-Id: <20200124141817.28793-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 011/107] soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
+Date:   Fri, 24 Jan 2020 09:16:41 -0500
+Message-Id: <20200124141817.28793-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -61,34 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+From: Dave Gerlach <d-gerlach@ti.com>
 
-[ Upstream commit 106f7b3bf943d267eb657f34616adcaadb2ab07f ]
+[ Upstream commit 03729cfa0d543bc996bf959e762ec999afc8f3d2 ]
 
-The LSM9DS1 uses a high level interrupt.
+Any user of wkup_m3_ipc calls wkup_m3_ipc_get to get a handle and this
+checks the value of the static variable m3_ipc_state to see if the
+wkup_m3 is ready. Currently this is populated during probe before
+rproc_boot has been called, meaning there is a window of time that
+wkup_m3_ipc_get can return a valid handle but the wkup_m3 itself is not
+ready, leading to invalid IPC calls to the wkup_m3 and system
+instability.
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Fixes: eb4ea0857c83 ("arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+To avoid this, move the population of the m3_ipc_state variable until
+after rproc_boot has succeeded to guarantee a valid and usable handle
+is always returned.
+
+Reported-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/ti/wkup_m3_ipc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 683a110356431..98cfe67b7db7b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -421,7 +421,7 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_imu>;
- 		interrupt-parent = <&gpio3>;
--		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
- 		vdd-supply = <&reg_3v3_p>;
- 		vddio-supply = <&reg_3v3_p>;
- 	};
+diff --git a/drivers/soc/ti/wkup_m3_ipc.c b/drivers/soc/ti/wkup_m3_ipc.c
+index 378369d9364ae..e9ece45d7a333 100644
+--- a/drivers/soc/ti/wkup_m3_ipc.c
++++ b/drivers/soc/ti/wkup_m3_ipc.c
+@@ -419,6 +419,8 @@ static void wkup_m3_rproc_boot_thread(struct wkup_m3_ipc *m3_ipc)
+ 	ret = rproc_boot(m3_ipc->rproc);
+ 	if (ret)
+ 		dev_err(dev, "rproc_boot failed\n");
++	else
++		m3_ipc_state = m3_ipc;
+ 
+ 	do_exit(0);
+ }
+@@ -505,8 +507,6 @@ static int wkup_m3_ipc_probe(struct platform_device *pdev)
+ 		goto err_put_rproc;
+ 	}
+ 
+-	m3_ipc_state = m3_ipc;
+-
+ 	return 0;
+ 
+ err_put_rproc:
 -- 
 2.20.1
 
