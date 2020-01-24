@@ -2,125 +2,173 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDBDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97576C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764B520704
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:13:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="kvsO7yi0"
+	by mail.kernel.org (Postfix) with ESMTP id 77087206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 12:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731622AbgAXMNf (ORCPT
+        id S1731792AbgAXMOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 07:13:35 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50905 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729396AbgAXMNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 07:13:35 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 24 Jan 2020 07:14:05 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:55183 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731628AbgAXMOF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 07:14:05 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 7DAD63C00C5;
+        Fri, 24 Jan 2020 13:14:01 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2nUthvKNpzTE; Fri, 24 Jan 2020 13:13:56 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 483yj81rSxz9sSD;
-        Fri, 24 Jan 2020 23:13:32 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1579868012;
-        bh=mvUiJElIyk4EAjVnu52b+VpTHph+MbXwLjPi7+Mdbjg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kvsO7yi0Q3x6EVEmh9WFec5ltH7SPXt2mIlSO88aLu/sSU7wwigX7Rw6vjklBonDe
-         ZmFknE2WXZXYTqJSWlXKovnu7DnhNCd6Ev13xMte1EdRmVLdmqYCQVWW68qJ66G97V
-         DHirbvgEpbtS+hDcDgHbEHZSEVkX8N/zi0Q8dRAAszGtSPzt7jIlFUfUWC9px93Utv
-         nhQdvZt1A2676gIvtrYcxd8RFYTWbtZ97alrzmq/kbZltzLOVzmdk7bRXz5r6a6rVO
-         7EcuZhnivoOL3XHqonKoWx/nDyVSeOv75iYzCu2cIixzRWymOQFqWx0O74kWoNe6w2
-         ULZ1KtWWTcPqw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     aneesh.kumar@linux.ibm.com, bharata@linux.ibm.com,
-        fbarrat@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-6 tag
-Date:   Fri, 24 Jan 2020 23:13:30 +1100
-Message-ID: <87zhedgihh.fsf@mpe.ellerman.id.au>
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 457193C009E;
+        Fri, 24 Jan 2020 13:13:56 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Fri, 24 Jan
+ 2020 13:13:55 +0100
+Date:   Fri, 24 Jan 2020 13:13:53 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     John Ogness <john.ogness@linutronix.de>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Dean Jenkins <dean_jenkins@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        <linux-serial@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+Message-ID: <20200124121353.GA22616@lxhi-065.adit-jv.com>
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+ <20200120230522.GA23636@lxhi-065.adit-jv.com>
+ <87v9p4mkhr.fsf@linutronix.de>
+ <20200122023422.GA926@lxhi-065.adit-jv.com>
+ <87zhefu6fr.fsf@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <87zhefu6fr.fsf@linutronix.de>
+X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+Hi John,
 
-Hi Linus,
+On Wed, Jan 22, 2020 at 11:33:12AM +0100, John Ogness wrote:
+> On 2020-01-22, Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> > So, what's specific to R-Car3, based on my testing, is that the issue
+> > can only be reproduced if the printk storm originates on CPU0 (it does
+> > not matter if from interrupt or task context, both have been
+> > tested). If the printk storm is initiated on any other CPU (there are
+> > 7 secondary ones on R-Car H3), there is no regression in the audio
+> > quality/latency.
+> >
+> > I cannot fully explain this empirical observation, but it directs my
+> > mind to the following workaround, for which I have a PoC:
+> >  - employ vprintk_safe() any time CPU0 is the owner/caller of printk
+> >  - tie CPU0-private printk internal IRQ workers to another CPU
+> >
+> > The above makes sure nothing is printed to the serial console on
+> > behalf of CPU0. I don't even hope this to be accepted by community,
+> > but can you please share your opinion the idea itself is sane?
+> 
+> It is a problem-specific hack. You will need to be certain that CPU1-7
+> will never have problems with console printing storms.
+> 
+> Be aware that vprintk_safe() is not particularly reliable in many crash
+> scenarios. If seeing oops output on the console is important, this can
+> be a risky hack.
+> 
+> Also, be aware that it has its own config option for the safe buffer
+> size: PRINTK_SAFE_LOG_BUF_SHIFT
 
-Please pull some more powerpc fixes for 5.5:
+The warnings and pitfalls are much appreciated. Also, this whole
+discussion has been referenced in the recently started communication
+thread with Renesas, to raise the awareness of what looks to be not
+only the limitation of Renesas BSP, but the mainline kernel in the
+first place.
 
-The following changes since commit 6da3eced8c5f3b03340b0c395bacd552c4d52411:
+> >> The printk rework focusses on making printk non-interfering by
+> >> decoupling console printing from printk() callers. However, the
+> >> console printing itself will still do just as much interrupt
+> >> disabling as before. That is driver-related, not printk-related.
+> >
+> > I didn't dive into the internals of this series, but decoupling the
+> > execution context of the serial driver from the execution context of
+> > the printk callers sounds very good to me (this is what i try to
+> > achieve via vanilla vprintk_safe). I wonder if it's easier to remove
+> > CPU0 from equation with this series applied.
+> 
+> Yes, it would be quite easy. The console printers run as dedicated
+> kthreads. It is only a matter of setting the CPU affinity for the
+> related kthread.
 
-  powerpc/spinlocks: Include correct header for static key (2019-12-30 21:2=
-0:41 +1100)
+Confirmed. Below two lines do the job (v5.4.13-rt7+).
 
-are available in the git repository at:
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 0605a74ad76b..7bc2cdabf516 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2733,11 +2733,12 @@ static int __init init_printk_kthread(void)
+ {
+        struct task_struct *thread;
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/po=
-werpc-5.5-6
+-       thread = kthread_run(printk_kthread_func, NULL, "printk");
++       thread = kthread_create_on_cpu(printk_kthread_func, NULL, 7, "printk");
+        if (IS_ERR(thread)) {
+                pr_err("printk: unable to create printing thread\n");
+                return PTR_ERR(thread);
+        }
++       wake_up_process(thread);
 
-for you to fetch changes up to 5d2e5dd5849b4ef5e8ec35e812cdb732c13cd27e:
+        return 0;
+ }
 
-  powerpc/mm/hash: Fix sharing context ids between kernel & userspace (2020=
--01-23 21:26:20 +1100)
+>
+> >> The linux-rt patches (which include this printk rework) *are* being
+> >> ported to mainline now. My recommendation is to continue using the
+> >> linux-rt patches (with PREEMPT_RT=y) until PREEMPT_RT is available
+> >> mainline.
 
-- ------------------------------------------------------------------
-powerpc fixes for 5.5 #6
+This has been relayed to Renesas. Thanks.
 
-Fix our hash MMU code to avoid having overlapping ids between user and kern=
-el,
-which isn't as bad as it sounds but led to crashes on some machines.
+> >
+> > If there is any roadmap publicly available, I would appreciate a
+> > reference.
+> 
+> I am only aware of the quilt "series" file [0] that is roughly
+> documenting the status of the effort.
+> 
+> John Ogness
+> 
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/tree/patches/series?h=linux-5.4.y-rt-patches
 
-A fix for the Power9 XIVE interrupt code, which could return the wrong inte=
-rrupt
-state in obscure error conditions.
+Great.
 
-A minor Kconfig fix for the recently added CONFIG_PPC_UV code.
-
-Thanks to:
-  Aneesh Kumar K.V, Bharata B Rao, C=C3=A9dric Le Goater, Frederic Barrat.
-
-- ------------------------------------------------------------------
-Aneesh Kumar K.V (1):
-      powerpc/mm/hash: Fix sharing context ids between kernel & userspace
-
-Bharata B Rao (1):
-      powerpc: Ultravisor: Fix the dependencies for CONFIG_PPC_UV
-
-Frederic Barrat (1):
-      powerpc/xive: Discard ESB load value when interrupt is invalid
-
-
- arch/powerpc/Kconfig                          |  6 +-----
- arch/powerpc/include/asm/book3s/64/mmu-hash.h |  5 ++++-
- arch/powerpc/include/asm/xive-regs.h          |  1 +
- arch/powerpc/sysdev/xive/common.c             | 15 ++++++++++++---
- 4 files changed, 18 insertions(+), 9 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl4q30AACgkQUevqPMjh
-pYCwSQ//Xbc8BofjbbiGambesHUG3Bkho8K38HSXfj9wdFdDS1f5PnUnTVNtNsch
-GAXYEnreN33I5MZnOQO3Zaa6Ub+DPyDIn5dq1alo2uv/sJY4zyC/lwCeLNOAbC93
-lj1s7laC7SQG6phf7hVT0xFMYA/j0GhQG8w4RIxiyJEXnm+Vb9SGUgbrArxmYRwF
-dI7wHxEHdixMBgdA1q00inv51UIqmNJS/nPyBJUxBbKp1Kkzy0fOTLhgFCj4um6g
-kX1AEzEkiNNpWDG30Hu6qrapa5181tet07ABgSxdyTB0pElbsigoFR5mRgeTWuAk
-mP14couPhOx3NkW90yvuI9AvLAQIlvMH4rGbB61rqNgiLnfTGiYxy1Hvq2ihbXQy
-TVdlLdjW2pa3vqz04vZa09NOjz9CHY1/llunpkJvUhd/ddXa+Cieu9fzDDC0fheF
-ftZD4o9LtloGbWpa+re81uuQ/V6MhEOPbP44PJI70bVG+OWY0GPTuvqgKS/yckTv
-Xxs5lTsU9qKDGsNOFzqwjTCLd3o4hPurfo6xrzyyMin2LRm4t8sTWLRm8SVoL+Wh
-KRydvI8oE9qXNNCwwDnMYtiDmisZPWpWWRyPG+e34TXjc0SSEoeZUoVV+B/u5pVu
-BIbzhRbbKY80E/m1virbaB+7Z92omfMnenIUdt3ZDTarh/INMdA=3D
-=3DcoVk
------END PGP SIGNATURE-----
+-- 
+Best Regards
+Eugeniu Rosca
