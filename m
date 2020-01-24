@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EF0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C36C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1774D24685
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8CC21569
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 14:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579875562;
-	bh=42WkP/Rp3pK4A21HaZqFzJemGQbzr/tGytg8oylj2Yc=;
+	s=default; t=1579875568;
+	bh=2dCeTe+htp6bYLj6TEvc7v6Uv3nrYBGHsJ2ytgCOJwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G1SqHk/ihQrHGP6aZ/iEwfwoQsssSe2gaoR/zOSuhs/iG09R+fkdoHeSpEnN3pJ4C
-	 hJbtzoRoXgXbwS6zDSg+W4l+oBNgDTt8KCo2LEnOswHckMOYZeESsXBpviBfgjsKSw
-	 y05xAQiY2S5YqTUG6ZQAVdDZb5JJHR2eEiFCBzm4=
+	b=1iwyI25/tg8gYwAzLuUJreBWevzYNaZO16s2rgenQMpv7yqouimRza2USwM1uW5oz
+	 yZdsuNeZJbAWqbn4lNfwWO7TiW2Aboi8nGryTWrWqbtxKavADD352TW6GhzI5dbVW3
+	 scKqi5ODt6s56fHV0gmO25qrLJMXFfgAhF4tPyuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391555AbgAXOTV (ORCPT
+        id S2391649AbgAXOT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 09:19:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39462 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 09:19:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391462AbgAXOTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:16 -0500
+        id S2391538AbgAXOTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C39F208C4;
-        Fri, 24 Jan 2020 14:19:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E64C22522;
+        Fri, 24 Jan 2020 14:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875555;
-        bh=42WkP/Rp3pK4A21HaZqFzJemGQbzr/tGytg8oylj2Yc=;
+        s=default; t=1579875560;
+        bh=2dCeTe+htp6bYLj6TEvc7v6Uv3nrYBGHsJ2ytgCOJwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QMaQbmP1p+qZ6HkvS0NFOau8Yo+Ojw73EMGx5FdSOQuL30c5sbzXn7dKJU/dcS0hk
-         1aA1s0x2e0G7SmY+6Cz/cwroYKtM2QRDEzOZm8I48Hge4iAUeh4EnKXbNDDWOJTWl0
-         kQzP2xfWXm8BhbENzgEAgOHyKXtLzHDHL+NeLmpI=
+        b=qf+KVs/j+NZdccPeR7K11nfWMilqR/NcCfFKzpcsNUq+kjQ7GbfTakvHykyOen7be
+         qiqSj2eU1nbVSU20SVS+XAmOZdMUssfiKvH9ovQt8hJ2O3ibdMX7KucTZ3x1lqwL0C
+         dVgxSAcUmTs7wLRdFBvoQbYnVfJx4iT5LhIpLONw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin KaFai Lau <kafai@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 050/107] bpftool: Fix printing incorrect pointer in btf_dump_ptr
-Date:   Fri, 24 Jan 2020 09:17:20 -0500
-Message-Id: <20200124141817.28793-50-sashal@kernel.org>
+Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 054/107] ASoC: hdac_hda: Fix error in driver removal after failed probe
+Date:   Fri, 24 Jan 2020 09:17:24 -0500
+Message-Id: <20200124141817.28793-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
 References: <20200124141817.28793-1-sashal@kernel.org>
@@ -60,42 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 555089fdfc37ad65e0ee9b42ca40c238ff546f83 ]
+[ Upstream commit 552b1a85da9f63856e7e341b81c16e0e078204f1 ]
 
-For plain text output, it incorrectly prints the pointer value
-"void *data".  The "void *data" is actually pointing to memory that
-contains a bpf-map's value.  The intention is to print the content of
-the bpf-map's value instead of printing the pointer pointing to the
-bpf-map's value.
+In case system has multiple HDA codecs, and codec probe fails for
+at least one but not all codecs, driver will end up cancelling
+a non-initialized timer context upon driver removal.
 
-In this case, a member of the bpf-map's value is a pointer type.
-Thus, it should print the "*(void **)data".
+Call trace of typical case:
 
-Fixes: 22c349e8db89 ("tools: bpftool: fix format strings and arguments for jsonw_printf()")
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Link: https://lore.kernel.org/bpf/20200110231644.3484151-1-kafai@fb.com
+[   60.593646] WARNING: CPU: 1 PID: 1147 at kernel/workqueue.c:3032
+__flush_work+0x18b/0x1a0
+[...]
+[   60.593670]  __cancel_work_timer+0x11f/0x1a0
+[   60.593673]  hdac_hda_dev_remove+0x25/0x30 [snd_soc_hdac_hda]
+[   60.593674]  device_release_driver_internal+0xe0/0x1c0
+[   60.593675]  bus_remove_device+0xd6/0x140
+[   60.593677]  device_del+0x175/0x3e0
+[   60.593679]  ? widget_tree_free.isra.7+0x90/0xb0 [snd_hda_core]
+[   60.593680]  snd_hdac_device_unregister+0x34/0x50 [snd_hda_core]
+[   60.593682]  snd_hdac_ext_bus_device_remove+0x2a/0x60 [snd_hda_ext_core]
+[   60.593684]  hda_dsp_remove+0x26/0x100 [snd_sof_intel_hda_common]
+[   60.593686]  snd_sof_device_remove+0x84/0xa0 [snd_sof]
+[   60.593687]  sof_pci_remove+0x10/0x30 [snd_sof_pci]
+[   60.593689]  pci_device_remove+0x36/0xb0
+
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200110235751.3404-9-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/btf_dumper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/hdac_hda.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/btf_dumper.c b/tools/bpf/bpftool/btf_dumper.c
-index d66131f696892..397e5716ab6d8 100644
---- a/tools/bpf/bpftool/btf_dumper.c
-+++ b/tools/bpf/bpftool/btf_dumper.c
-@@ -26,7 +26,7 @@ static void btf_dumper_ptr(const void *data, json_writer_t *jw,
- 			   bool is_plain_text)
- {
- 	if (is_plain_text)
--		jsonw_printf(jw, "%p", data);
-+		jsonw_printf(jw, "%p", *(void **)data);
- 	else
- 		jsonw_printf(jw, "%lu", *(unsigned long *)data);
+diff --git a/sound/soc/codecs/hdac_hda.c b/sound/soc/codecs/hdac_hda.c
+index 4570f662fb48b..d78f4d856aaff 100644
+--- a/sound/soc/codecs/hdac_hda.c
++++ b/sound/soc/codecs/hdac_hda.c
+@@ -498,7 +498,9 @@ static int hdac_hda_dev_remove(struct hdac_device *hdev)
+ 	struct hdac_hda_priv *hda_pvt;
+ 
+ 	hda_pvt = dev_get_drvdata(&hdev->dev);
+-	cancel_delayed_work_sync(&hda_pvt->codec.jackpoll_work);
++	if (hda_pvt && hda_pvt->codec.registered)
++		cancel_delayed_work_sync(&hda_pvt->codec.jackpoll_work);
++
+ 	return 0;
  }
+ 
 -- 
 2.20.1
 
