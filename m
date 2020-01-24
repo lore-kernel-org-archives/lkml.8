@@ -2,174 +2,121 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE78C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD88C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263EC2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D092072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 17:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QxlCezIM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a4dVXxPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731921AbgAXRSt (ORCPT
+        id S2387987AbgAXRU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 12:18:49 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37207 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731739AbgAXRSt (ORCPT
+        Fri, 24 Jan 2020 12:20:26 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36580 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387531AbgAXRU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 12:18:49 -0500
-Received: by mail-lf1-f66.google.com with SMTP id b15so1621487lfc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 09:18:47 -0800 (PST)
+        Fri, 24 Jan 2020 12:20:26 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k3so1453407pgc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 09:20:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GGYB6jueNzLWlzDitXtevx7ZQ7yH7Ug1+jvT1w8K0OQ=;
-        b=QxlCezIMXJU2YkAbdVDQKpQb4nJ7CkAZKu+LFvDeNyff+P0KqUExZjeTOqm6PSH87v
-         tLNT1qMhznurTS16F5d4kgJVvMzNH4XaqRSmJrxgKHbAMWT6bsujqR5THdDDRMfDZzGC
-         0yrtL3YmJ9HdAoV9iGp1n6hJbjMXuOOko/idoDsBSUkZ6xprD0CA018k1lMPuP466GP/
-         vEUrvgR+bGjGT72lScwdloo573l02kGaBr+3rY8dgCkJ5UR+8mLHp5s556I5ROMStn04
-         O9+Zj5Up560+OkkRymhdydHrwWpzZaMs1Sr7fvp54jhRDPl4cuxbaICpBHMTLrpK9c49
-         ojiQ==
+         :cc;
+        bh=3bs90XjUYMO1YPG7bJhgYggIHQGa3xCMAwvskxDOh3k=;
+        b=a4dVXxPuiruxw8rtFKoZ6kNGVafNrVqCDVUh1UJ1FoRsnV+PG4E0bhfBBpHRaoSonQ
+         YaZB3M2bC2FY582MMMref3d3YaYxNd3pp0uYPOUsF7b577uC7nTSX4UMKlkrLR+rucPm
+         Z8hSY2J2ao1kz2eoCsXaw5ersUa6NnnQbMt8vX1kbBaSzCWJoO9na6YNogES4989qy+1
+         CrFjGBEkkkgHi9bTCsWDRhnFPO9EDSmMcu9m7Dvxm1GBj3E7H6Imv/pL2GSPgeziqe8l
+         f8+yOk+9oNubYAbSOGdQ/ZGnsh459B0gxgIQlWgPd0aUJ3vukEFvRiKEskT7Q5RLtTGX
+         5akg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GGYB6jueNzLWlzDitXtevx7ZQ7yH7Ug1+jvT1w8K0OQ=;
-        b=W88A7jHc1CTG6rVXMZ5k3wBynAkTbcm7xduTIUGqprd18iYRWBINdhQYGQ+7fofgQw
-         4bJVAGuWR3XbpPCXoiknM96tOgzlhz0055Jc73+zT2CI9Mc3HnlJvT2vhUpVx7r6QCBq
-         vKZUbXXPyS2tKiLnzK6Q4lAVfg9Y2FNAl3ks4OQNH7vQQsd2GOS3ZRlFrVJDdhuphxoQ
-         kyFQIUHdlmyi12Vm9MmRacV6uWwHWo+vac9PnZb/tgra9AVIF88OOGtIUd0izNVXO2D4
-         tllHKdvkXlX3/gTh/OhPzdYUQZlJ1gFVdM71jWJorM2ltZGDbcnKy9Wm1/FNLXAusERA
-         RUPg==
-X-Gm-Message-State: APjAAAUhwVcwmZphACZu6ZlQt7ThQ1+xu4EHmw6v8XQJorNdFkBt09D6
-        mzjporZOAyMrHGlAFTQ3M+E1cU+hYZwbyUE7f9jK+VFoVcA=
-X-Google-Smtp-Source: APXvYqzTZIrbrs3d7PShNVk9imhxRJTbJ4cw3aSNA1Hig1k0j4P+eWe9ts2FI9mOG102SbwHaGQD6JFXKcIsZJV/Jis=
-X-Received: by 2002:ac2:59dd:: with SMTP id x29mr1822640lfn.95.1579886326583;
- Fri, 24 Jan 2020 09:18:46 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=3bs90XjUYMO1YPG7bJhgYggIHQGa3xCMAwvskxDOh3k=;
+        b=T2a3fDwz5nmEEcIF0nOjHw+2U8YSEuS3vYfAnCWNZ14tjUQ8e1G8FhJEh/Xqaqe2Qk
+         s2MB3eoN4V1AoNaUFAztvyHU7vHJvRGjL5NO+kMJwp816mvJt6VVQr+jbH0vgdooX+XG
+         GxCFviKySTdG5k+GxIbcalH6mi+LESjVyFWRZaz9KPywznnV8qlE+0Yk1IK1I2fW/8fn
+         XG2cDnjGI1EiaRXSJUeARLVfRQuLicfwPCNo4w0GJRhZak59zNBh/7oZOHIXB3IKkcpG
+         VZgTRuTsWZqHLlJqQfcPYfVW7L9fpIdnfxKob/BZi4ONr4GfvxdbRue8tdZRizTrGSl5
+         /F3A==
+X-Gm-Message-State: APjAAAWGhKl5e/DxnNmcZzqprnQhrOA2JX3+aQnufm9MxSuS//tjuebD
+        R7BzRs05xEnUfiY2iJ7qzADC6Qthsybmph/e6Yq0jQ==
+X-Google-Smtp-Source: APXvYqyPC1tuztho8bkaXOVF7RDbM0R+AbuQOx09meijPzDaIhSpkrDwTE+Ulpx+9k7fdY23v3w7uXyyKDv7Ew3hXkM=
+X-Received: by 2002:a62:e215:: with SMTP id a21mr4264005pfi.3.1579886425680;
+ Fri, 24 Jan 2020 09:20:25 -0800 (PST)
 MIME-Version: 1.0
-References: <20200124092919.490687572@linuxfoundation.org>
-In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 24 Jan 2020 22:48:35 +0530
-Message-ID: <CA+G9fYvBS+VcFuanjpKf+UgNa1Z=_Ctk1jGcZezVNtWRzpXSKA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 000/343] 4.14.168-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
+References: <20200123153341.19947-1-will@kernel.org> <20200123153341.19947-3-will@kernel.org>
+ <CAKwvOdm2snorniFunMF=0nDH8-RFwm7wtjYK_Tcwkd+JZinYPg@mail.gmail.com> <20200124082443.GY14914@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200124082443.GY14914@hirez.programming.kicks-ass.net>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 24 Jan 2020 09:20:14 -0800
+Message-ID: <CAKwvOdmTOoTXCGN9NaO5_+sqDsK364=oCiVO_D5=btj1GsJrnw@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] netfilter: Avoid assigning 'const' pointer to
+ non-const pointer
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jan 2020 at 15:07, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Fri, Jan 24, 2020 at 12:24 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> This is the start of the stable review cycle for the 4.14.168 release.
-> There are 343 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> On Thu, Jan 23, 2020 at 11:07:59AM -0800, Nick Desaulniers wrote:
 >
-> Responses should be made by Sun, 26 Jan 2020 09:26:30 +0000.
-> Anything received after that time might be too late.
+> > Good thing it's the variable being modified was not declared const; I
+> > get spooked when I see -Wdiscarded-qualifiers because of Section
+> > 6.7.3.6 of the ISO C11 draft spec:
+> >
+> > ```
+> > If an attempt is made to modify an object defined with a
+> > const-qualified type through use
+> > of an lvalue with non-const-qualified type, the behavior is undefined.
+> > If an attempt is
+> > made to refer to an object defined with a volatile-qualified type
+> > through use of an lvalue
+> > with non-volatile-qualified type, the behavior is undefined.133)
+> >
+> > 133) This applies to those objects that behave as if they were defined
+> > with qualified types, even if they are
+> > never actually defined as objects in the program (such as an object at
+> > a memory-mapped input/output
+> > address).
+> > ```
+> >
+> > Which is about the modification of a const-declared variable (explicit
+> > UB which Clang actively exploits),
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.168-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
+> Just for curiosity's sake. What does clang actually do in that case?
 >
-> thanks,
->
-> greg k-h
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.14.168-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 44ca37a00ad6e970111780ebce3b3b2b127ba3d6
-git describe: v4.14.167-344-g44ca37a00ad6
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.167-344-g44ca37a00ad6
-
-No regressions (compared to build v4.14.167)
-
-No fixes (compared to build v4.14.167)
-
-Ran 22734 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* libhugetlbfs
-* linux-log-parser
-* ltp-containers-tests
-* kselftest
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* network-basic-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+https://bugs.llvm.org/show_bug.cgi?id=42763
+I was playing around with this in godbolt but couldn't quickly come up
+with a simple reproducer.  IIRC, I've fixed maybe 3 instances of this
+recently in code though.
+-- 
+Thanks,
+~Nick Desaulniers
