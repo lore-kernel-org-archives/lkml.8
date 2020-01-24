@@ -2,345 +2,154 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24560C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71580C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF06A2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431432087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 21:12:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PIg2gflQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbgAXVJr (ORCPT
+        id S1728767AbgAXVMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 16:09:47 -0500
-Received: from mga02.intel.com ([134.134.136.20]:21288 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbgAXVJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 16:09:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 13:09:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,358,1574150400"; 
-   d="scan'208";a="276425966"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Jan 2020 13:09:43 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iv6D1-0001aj-4n; Sat, 25 Jan 2020 05:09:43 +0800
-Date:   Sat, 25 Jan 2020 05:08:44 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:timers/core] BUILD SUCCESS
- eb5a4d0a9ee976008d1add75e3d64545399e80a3
-Message-ID: <5e2b5cdc.cGb433M6zLSd61/u%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 24 Jan 2020 16:12:41 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47764 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725747AbgAXVMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 16:12:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579900360;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r88FQ3jP4tbWAociS00rg3LER5v2m7ImuFP1hdddwiI=;
+        b=PIg2gflQcuvfi4kx1aRZwF4LlegAknhYbI6a++gt3+Mh11psbes0kRk05UOnZ3x3Ns+ent
+        HnNj8JAjD4hi0bmPjuqoK5phhS1mXJEUmcZWetQdRNGyP22twwY1dwSA3qd1Uc8xOgeyOf
+        IQ9ctWyh1OOf8yPDD5Y9z4zkc3kIkpQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-195-ZycLx2YZN7We8FdE4kvvzg-1; Fri, 24 Jan 2020 16:12:35 -0500
+X-MC-Unique: ZycLx2YZN7We8FdE4kvvzg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B89218017CC;
+        Fri, 24 Jan 2020 21:12:32 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-124-92.rdu2.redhat.com [10.10.124.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E6C20859AA;
+        Fri, 24 Jan 2020 21:12:29 +0000 (UTC)
+Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
+ into CNA
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, linux@armlinux.org.uk,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        dave.dice@oracle.com
+References: <20191230194042.67789-1-alex.kogan@oracle.com>
+ <20191230194042.67789-5-alex.kogan@oracle.com>
+ <20200121132949.GL14914@hirez.programming.kicks-ass.net>
+ <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
+ <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
+ <20200124075235.GX14914@hirez.programming.kicks-ass.net>
+ <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
+ <48ce49e5-98a7-23cd-09f4-8290a65abbb5@redhat.com>
+ <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
+ <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
+ <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
+ <45660873-731a-a810-8c57-1a5a19d266b4@redhat.com>
+ <693E6287-E37C-4C5D-BE33-B3D813BE505D@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <edc53126-bfe4-5102-d2eb-2332bf3a68e5@redhat.com>
+Date:   Fri, 24 Jan 2020 16:12:30 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <693E6287-E37C-4C5D-BE33-B3D813BE505D@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/core
-branch HEAD: eb5a4d0a9ee976008d1add75e3d64545399e80a3  hrtimer: Add missing sparse annotation for __run_timer()
+On 1/24/20 3:09 PM, Alex Kogan wrote:
+>>> We also probably do not want those =E2=80=9Cprioritized=E2=80=9D thre=
+ads to disrupt
+>>> normal
+>>> CNA operation. E.g., if the main queue looks like T1_1, P2_1, T1_2,
+>>> =E2=80=A6, where
+>>> T1_x is a thread running on node 1 and P2_1 is a prioritized thread
+>>> running
+>>> on node 2, we want to pass the lock from T1_1 to P2_1 and then to T1_=
+2
+>>> (rather than have P2_1 to scan for another thread on node 2).
+>>>
+>>> There is a way to achieve that =E2=80=94 when we pass the lock to P2_=
+1,
+>>> we can set its numa node field to 1. This means that we need to
+>>> reset the numa
+>>> node field in cna_init_node(), but AFAICT this is relatively cheap.
+>>> The rest
+>>> of the CNA logic should not change.
+>>
+>> I won't recommend doing that. If the lock cacheline has been moved
+>> from node 1 to 2, I will say it is better to stick with node 2 rather
+>> than switching back to node 1. That will mean that the secondary
+>> queue may contain lock waiters from the same nodes, but they will
+>> eventually be flushed back to the primary queue.
+>>
+> That=E2=80=99s right, assuming we do not reset intra_node count when
+> transferring the
+> lock to a prioritized thread from another node. Otherwise, we may starv=
+e
+> waiters in the secondary queue.=C2=A0
+>
+> Still, that can make the lock even less fair to non-prioritized
+> threads. When
+> you flush the secondary queue, the preference may remain with the same
+> node. This will not happen in the current form of CNA, as we never get=C2=
+=A0
+> threads from the preferred node in the secondary queue.
 
-elapsed time: 2894m
+That is true.
 
-configs tested: 282
-configs skipped: 0
+However, it is no different from the current scheme that a waiter from
+another node may have to wait for 64k other waiters to go first before
+it has a chance to get it. Now that waiter can be from the same node as
+well.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>
+> Besides, I think that will decrease the benefit of CNA, especially if s=
+uch
+> prioritized threads are frequent, switching the preference from one nod=
+e
+> to another. But this is something I can evaluate, unless
+> there is some fundamental objection to the idea of tweaking the numa
+> node of prioritized threads.
 
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-c6x                  randconfig-a001-20200123
-h8300                randconfig-a001-20200123
-microblaze           randconfig-a001-20200123
-nios2                randconfig-a001-20200123
-sparc64              randconfig-a001-20200123
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-x86_64               randconfig-e001-20200123
-x86_64               randconfig-e002-20200123
-x86_64               randconfig-e003-20200123
-i386                 randconfig-e001-20200123
-i386                 randconfig-e002-20200123
-i386                 randconfig-e003-20200123
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-x86_64               randconfig-g001-20200123
-x86_64               randconfig-g002-20200123
-x86_64               randconfig-g003-20200123
-i386                 randconfig-g001-20200123
-i386                 randconfig-g002-20200123
-i386                 randconfig-g003-20200123
-c6x                  randconfig-a001-20200124
-h8300                randconfig-a001-20200124
-microblaze           randconfig-a001-20200124
-nios2                randconfig-a001-20200124
-sparc64              randconfig-a001-20200124
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-arm                              allmodconfig
-arm64                            allmodconfig
-x86_64               randconfig-b001-20200123
-x86_64               randconfig-b002-20200123
-x86_64               randconfig-b003-20200123
-i386                 randconfig-b001-20200123
-i386                 randconfig-b002-20200123
-i386                 randconfig-b003-20200123
-ia64                                defconfig
-powerpc                             defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-x86_64               randconfig-g001-20200124
-x86_64               randconfig-g002-20200124
-x86_64               randconfig-g003-20200124
-i386                 randconfig-g001-20200124
-i386                 randconfig-g002-20200124
-i386                 randconfig-g003-20200124
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-x86_64               randconfig-e001-20200124
-x86_64               randconfig-e002-20200124
-x86_64               randconfig-e003-20200124
-i386                 randconfig-e001-20200124
-i386                 randconfig-e002-20200124
-i386                 randconfig-e003-20200124
-x86_64               randconfig-a001-20200124
-x86_64               randconfig-a002-20200124
-x86_64               randconfig-a003-20200124
-i386                 randconfig-a001-20200124
-i386                 randconfig-a002-20200124
-i386                 randconfig-a003-20200124
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64               randconfig-d001-20200124
-x86_64               randconfig-d002-20200124
-x86_64               randconfig-d003-20200124
-i386                 randconfig-d001-20200124
-i386                 randconfig-d002-20200124
-i386                 randconfig-d003-20200124
-x86_64               randconfig-a001-20200123
-x86_64               randconfig-a002-20200123
-x86_64               randconfig-a003-20200123
-i386                 randconfig-a001-20200123
-i386                 randconfig-a002-20200123
-i386                 randconfig-a003-20200123
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arc                  randconfig-a001-20200124
-arm                  randconfig-a001-20200124
-arm64                randconfig-a001-20200124
-ia64                 randconfig-a001-20200124
-powerpc              randconfig-a001-20200124
-sparc                randconfig-a001-20200124
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64               randconfig-c001-20200124
-x86_64               randconfig-c002-20200124
-x86_64               randconfig-c003-20200124
-i386                 randconfig-c001-20200124
-i386                 randconfig-c002-20200124
-i386                 randconfig-c003-20200124
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-x86_64               randconfig-f001-20200124
-x86_64               randconfig-f002-20200124
-x86_64               randconfig-f003-20200124
-i386                 randconfig-f001-20200124
-i386                 randconfig-f002-20200124
-i386                 randconfig-f003-20200124
-alpha                randconfig-a001-20200124
-m68k                 randconfig-a001-20200124
-mips                 randconfig-a001-20200124
-nds32                randconfig-a001-20200124
-parisc               randconfig-a001-20200124
-riscv                randconfig-a001-20200124
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-csky                 randconfig-a001-20200124
-openrisc             randconfig-a001-20200124
-s390                 randconfig-a001-20200124
-sh                   randconfig-a001-20200124
-xtensa               randconfig-a001-20200124
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-x86_64               randconfig-b001-20200124
-x86_64               randconfig-b002-20200124
-x86_64               randconfig-b003-20200124
-i386                 randconfig-b001-20200124
-i386                 randconfig-b002-20200124
-i386                 randconfig-b003-20200124
-x86_64               randconfig-b001-20200125
-x86_64               randconfig-b002-20200125
-x86_64               randconfig-b003-20200125
-i386                 randconfig-b001-20200125
-i386                 randconfig-b002-20200125
-i386                 randconfig-b003-20200125
-x86_64               randconfig-e001-20200125
-x86_64               randconfig-e002-20200125
-x86_64               randconfig-e003-20200125
-i386                 randconfig-e001-20200125
-i386                 randconfig-e002-20200125
-i386                 randconfig-e003-20200125
-arc                  randconfig-a001-20200123
-arm                  randconfig-a001-20200123
-arm64                randconfig-a001-20200123
-ia64                 randconfig-a001-20200123
-powerpc              randconfig-a001-20200123
-sparc                randconfig-a001-20200123
-x86_64               randconfig-c001-20200125
-x86_64               randconfig-c002-20200125
-x86_64               randconfig-c003-20200125
-i386                 randconfig-c001-20200125
-i386                 randconfig-c002-20200125
-i386                 randconfig-c003-20200125
-arc                  randconfig-a001-20200125
-arm                  randconfig-a001-20200125
-arm64                randconfig-a001-20200125
-ia64                 randconfig-a001-20200125
-powerpc              randconfig-a001-20200125
-sparc                randconfig-a001-20200125
-x86_64               randconfig-a001-20200125
-x86_64               randconfig-a002-20200125
-x86_64               randconfig-a003-20200125
-i386                 randconfig-a001-20200125
-i386                 randconfig-a002-20200125
-i386                 randconfig-a003-20200125
-x86_64               randconfig-h001-20200124
-x86_64               randconfig-h002-20200124
-x86_64               randconfig-h003-20200124
-i386                 randconfig-h001-20200124
-i386                 randconfig-h002-20200124
-i386                 randconfig-h003-20200124
-csky                 randconfig-a001-20200123
-openrisc             randconfig-a001-20200123
-s390                 randconfig-a001-20200123
-sh                   randconfig-a001-20200123
-xtensa               randconfig-a001-20200123
-x86_64               randconfig-d001-20200123
-x86_64               randconfig-d002-20200123
-x86_64               randconfig-d003-20200123
-i386                 randconfig-d001-20200123
-i386                 randconfig-d002-20200123
-i386                 randconfig-d003-20200123
-x86_64               randconfig-f001-20200123
-x86_64               randconfig-f002-20200123
-x86_64               randconfig-f003-20200123
-i386                 randconfig-f001-20200123
-i386                 randconfig-f002-20200123
-i386                 randconfig-f003-20200123
-x86_64               randconfig-c001-20200123
-x86_64               randconfig-c002-20200123
-x86_64               randconfig-c003-20200123
-i386                 randconfig-c001-20200123
-i386                 randconfig-c002-20200123
-i386                 randconfig-c003-20200123
-x86_64               randconfig-d001-20200125
-x86_64               randconfig-d002-20200125
-x86_64               randconfig-d003-20200125
-i386                 randconfig-d001-20200125
-i386                 randconfig-d002-20200125
-i386                 randconfig-d003-20200125
-alpha                randconfig-a001-20200123
-m68k                 randconfig-a001-20200123
-mips                 randconfig-a001-20200123
-nds32                randconfig-a001-20200123
-parisc               randconfig-a001-20200123
-riscv                randconfig-a001-20200123
-alpha                randconfig-a001-20200125
-m68k                 randconfig-a001-20200125
-mips                 randconfig-a001-20200125
-nds32                randconfig-a001-20200125
-parisc               randconfig-a001-20200125
-riscv                randconfig-a001-20200125
-c6x                  randconfig-a001-20200125
-h8300                randconfig-a001-20200125
-microblaze           randconfig-a001-20200125
-nios2                randconfig-a001-20200125
-sparc64              randconfig-a001-20200125
-x86_64               randconfig-h001-20200125
-x86_64               randconfig-h002-20200125
-x86_64               randconfig-h003-20200125
-i386                 randconfig-h001-20200125
-i386                 randconfig-h002-20200125
-i386                 randconfig-h003-20200125
+Usually the locks used in interrupt context are not that contended to
+the point that CNA can kick in. Of course, there are exceptions in some
+circumstances and we do not want to introduce additional latency to
+their lock waiting time.
 
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+Cheers,
+Longman
+
