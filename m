@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F43CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D7DC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713EE24673
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC5324125
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865778;
-	bh=G7yiM4Mx4FQY3C0RGbZOxU31hHPfQB51XNmbhiDL2CQ=;
+	s=default; t=1579865779;
+	bh=1g51mCM576KXk7ji3ixXcf9nDw3EQhTrDO8ED8Rl4u8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V/umjXqDe8D6Fs8EbYx+bVbGlwAt13EDe4lFX4ZwvI6HdB9tyLyeg9sA4cwMepO0j
-	 rk37w4YHEFi/7Ho/dzYUk+0VPAG2USbg1OhAF5yGvGOJf57yrMPpRHc9Vv9gn79pF1
-	 i6iBPLPFISrMQDSwFxIoaUOHZcXMPYLUaDH/Za6E=
+	b=2GKFZE0ov6zLpg5b/5ZUUx2fcTh4K14O9Qv/BlQVwR1+scFm67WoJO1+u6d6KkKYb
+	 zr/InjJQiKqzP352LKd3UhIliBcGhidt2g55+chLBrqaKYt3jyWjuzpXb16s9RXuPq
+	 bdHO6F2SMIz+5oxeTcqGdP+MZ719dq++mKA2Dc94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404757AbgAXLgR (ORCPT
+        id S2404921AbgAXLgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:36:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51908 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:36:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404494AbgAXLcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:32:48 -0500
+        id S2404551AbgAXLgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:36:15 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F01BA20718;
-        Fri, 24 Jan 2020 11:32:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 569E3206F0;
+        Fri, 24 Jan 2020 11:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865567;
-        bh=G7yiM4Mx4FQY3C0RGbZOxU31hHPfQB51XNmbhiDL2CQ=;
+        s=default; t=1579865774;
+        bh=1g51mCM576KXk7ji3ixXcf9nDw3EQhTrDO8ED8Rl4u8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BP7B99ffkboJcWATw2voNa1lNNAPnfPrrNlAb2ONc7OLd1jOtTMPeob2GhTIccRvF
-         0nlU5aYYFAppgbNZYTlc1KZFyXnAHfBQVUP8xDc2MJvTEaMwRZzmmL1msDQC+Mctgh
-         aNdJQIYdu/Cr+OT2XnqHRNN8AfpR0oPZgaVaSExs=
+        b=k/6WRaXqDwscb1cPcoz2kO6B+R1tQKxGgoNtgCcU7PF0raRrTCdysNXFbUpknkVZ1
+         ugbEJ7i9EKvWavFBAejsRpI9IpfVkdnPemu+UCbmuYpvoqM8cPnauGH2W8i9SXsgh6
+         CsTALPHTP//h1xQY3AymeCxGA12U/eilQM0hHIj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 565/639] um: Fix off by one error in IRQ enumeration
-Date:   Fri, 24 Jan 2020 10:32:15 +0100
-Message-Id: <20200124093200.123988574@linuxfoundation.org>
+Subject: [PATCH 4.19 617/639] afs: Fix large file support
+Date:   Fri, 24 Jan 2020 10:33:07 +0100
+Message-Id: <20200124093206.900172997@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,34 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+From: Marc Dionne <marc.dionne@auristor.com>
 
-[ Upstream commit 09ccf0364ca3e94aba4093707ef433ea8014e2a4 ]
+[ Upstream commit b485275f1aca8a9da37fd35e4fad673935e827da ]
 
-Fix an off-by-one in IRQ enumeration
+By default s_maxbytes is set to MAX_NON_LFS, which limits the usable
+file size to 2GB, enforced by the vfs.
 
-Fixes: 49da7e64f33e ("High Performance UML Vector Network Driver")
-Reported by: Dana Johnson <djohns042@gmail.com>
-Signed-off-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Commit b9b1f8d5930a ("AFS: write support fixes") added support for the
+64-bit fetch and store server operations, but did not change this value.
+As a result, attempts to write past the 2G mark result in EFBIG errors:
+
+ $ dd if=/dev/zero of=foo bs=1M count=1 seek=2048
+ dd: error writing 'foo': File too large
+
+Set s_maxbytes to MAX_LFS_FILESIZE.
+
+Fixes: b9b1f8d5930a ("AFS: write support fixes")
+Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/include/asm/irq.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/afs/super.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/um/include/asm/irq.h b/arch/um/include/asm/irq.h
-index 49ed3e35b35ad..ce7a78c3bcf21 100644
---- a/arch/um/include/asm/irq.h
-+++ b/arch/um/include/asm/irq.h
-@@ -23,7 +23,7 @@
- #define VECTOR_BASE_IRQ		15
- #define VECTOR_IRQ_SPACE	8
- 
--#define LAST_IRQ (VECTOR_IRQ_SPACE + VECTOR_BASE_IRQ)
-+#define LAST_IRQ (VECTOR_IRQ_SPACE + VECTOR_BASE_IRQ - 1)
- 
- #else
- 
+diff --git a/fs/afs/super.c b/fs/afs/super.c
+index 18b9b7ca20c92..4961d32ccd1e0 100644
+--- a/fs/afs/super.c
++++ b/fs/afs/super.c
+@@ -393,6 +393,7 @@ static int afs_fill_super(struct super_block *sb,
+ 	/* fill in the superblock */
+ 	sb->s_blocksize		= PAGE_SIZE;
+ 	sb->s_blocksize_bits	= PAGE_SHIFT;
++	sb->s_maxbytes		= MAX_LFS_FILESIZE;
+ 	sb->s_magic		= AFS_FS_MAGIC;
+ 	sb->s_op		= &afs_super_ops;
+ 	if (!as->dyn_root)
 -- 
 2.20.1
 
