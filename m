@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ACFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CE7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062762077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CC02077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865100;
-	bh=3nooC2UunGL8B2T106tkeTkCAOGTWVThgtaw3AM+Pds=;
+	s=default; t=1579865104;
+	bh=8PFPAo7LKAsL+hbiYjRGYrr6ICWfxTaaMKpgSCTVCE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aGQj2gfNkmVgyewaxA0ILaEBHmVzbzJMvQbdRaoPA9Q3x6LoncZx7mT+LStwon8Ua
-	 mO+h50wA6dvjL4GclkbjgxLOwz26qGizPDhQ4uSHaFjLgHWbvbFtWOFurbr7FnAMq8
-	 KA5Ss562RCA4dnev5ZmGxJIBKYUCSz1bGVNmafq0=
+	b=jRY6o/UnHnhbi4D2EneKvv6pIeadoaS2TnmVOJYCqXGgcvDGsoNQAaY6I6rMbFbIu
+	 673rXR5ZEUijv3V2m89Z7ncyC0Qw1EweVPMYm0ll5KXH87R6fircER+x6ShCg2doNt
+	 elS/m2mDrxKVFlHYxdbIQDnj6ux6pQhW8tWjvHD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391447AbgAXLY7 (ORCPT
+        id S2403840AbgAXLZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:24:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38742 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:25:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391123AbgAXLY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:24:56 -0500
+        id S2391123AbgAXLZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:25:00 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66271206D4;
-        Fri, 24 Jan 2020 11:24:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F26DF20704;
+        Fri, 24 Jan 2020 11:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865096;
-        bh=3nooC2UunGL8B2T106tkeTkCAOGTWVThgtaw3AM+Pds=;
+        s=default; t=1579865099;
+        bh=8PFPAo7LKAsL+hbiYjRGYrr6ICWfxTaaMKpgSCTVCE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lEU7UplIkyJCQACHNXC3qUyqrc9AMwHJUq+oF6R5F2DeswdEwB+TpjDuUS1eUHRi4
-         eEl/g/6/8aFCAfG0JoP2oEyXON7SwRSDMk3xHzi7PJpqpJv1kbaB3/CMs/KtkG5sOg
-         Oq7WQy82YCfllCzf9+0DiRyAzvokiCF4YqFt+dpE=
+        b=RkjaAENhgRCLcVFczv48j1Zr1HN3JM8ZfmxvGXHikDDVtH6jWvuLIn6ERWoodNwi+
+         HcJ1WLoeUWYb5Q5UkWLzp/vzhOkFy6f9d4+ek0MTVD9FyJHaQkLfypYZH5HFW2qWAb
+         xtNXpj4PltT7EydW9/caLV3HeZRC7eezheqWtObQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 429/639] qed: iWARP - fix uninitialized callback
-Date:   Fri, 24 Jan 2020 10:29:59 +0100
-Message-Id: <20200124093140.761410114@linuxfoundation.org>
+Subject: [PATCH 4.19 445/639] drm/msm/a3xx: remove TPL1 regs from snapshot
+Date:   Fri, 24 Jan 2020 10:30:15 +0100
+Message-Id: <20200124093142.777312016@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,33 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit 43cf40d93fadbb0d3edf0942a4612f8ff67478a1 ]
+[ Upstream commit f47bee2ba447bebc304111c16ef1e1a73a9744dd ]
 
-Fix uninitialized variable warning by static checker.
+These regs are write-only, and the hw throws a hissy-fit (ie. reboots)
+when we try to read them for GPU state snapshot, in response to a GPU
+hang.  It is rather impolite when GPU recovery triggers an insta-
+reboot, so lets remove the TPL1 registers from the snapshot.
 
-Fixes: ae3488ff37dc ("qed: Add ll2 connection for processing unaligned MPA packets")
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7198e6b03155 drm/msm: add a3xx gpu support
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index c77babd0ef952..39787bb885c86 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -2641,6 +2641,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 	cbs.rx_release_cb = qed_iwarp_ll2_rel_rx_pkt;
- 	cbs.tx_comp_cb = qed_iwarp_ll2_comp_tx_pkt;
- 	cbs.tx_release_cb = qed_iwarp_ll2_rel_tx_pkt;
-+	cbs.slowpath_cb = NULL;
- 	cbs.cookie = p_hwfn;
+diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+index 669c2d4b070de..5c068301d817c 100644
+--- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+@@ -395,19 +395,17 @@ static const unsigned int a3xx_registers[] = {
+ 	0x2200, 0x2212, 0x2214, 0x2217, 0x221a, 0x221a, 0x2240, 0x227e,
+ 	0x2280, 0x228b, 0x22c0, 0x22c0, 0x22c4, 0x22ce, 0x22d0, 0x22d8,
+ 	0x22df, 0x22e6, 0x22e8, 0x22e9, 0x22ec, 0x22ec, 0x22f0, 0x22f7,
+-	0x22ff, 0x22ff, 0x2340, 0x2343, 0x2348, 0x2349, 0x2350, 0x2356,
+-	0x2360, 0x2360, 0x2440, 0x2440, 0x2444, 0x2444, 0x2448, 0x244d,
+-	0x2468, 0x2469, 0x246c, 0x246d, 0x2470, 0x2470, 0x2472, 0x2472,
+-	0x2474, 0x2475, 0x2479, 0x247a, 0x24c0, 0x24d3, 0x24e4, 0x24ef,
+-	0x2500, 0x2509, 0x250c, 0x250c, 0x250e, 0x250e, 0x2510, 0x2511,
+-	0x2514, 0x2515, 0x25e4, 0x25e4, 0x25ea, 0x25ea, 0x25ec, 0x25ed,
+-	0x25f0, 0x25f0, 0x2600, 0x2612, 0x2614, 0x2617, 0x261a, 0x261a,
+-	0x2640, 0x267e, 0x2680, 0x268b, 0x26c0, 0x26c0, 0x26c4, 0x26ce,
+-	0x26d0, 0x26d8, 0x26df, 0x26e6, 0x26e8, 0x26e9, 0x26ec, 0x26ec,
+-	0x26f0, 0x26f7, 0x26ff, 0x26ff, 0x2740, 0x2743, 0x2748, 0x2749,
+-	0x2750, 0x2756, 0x2760, 0x2760, 0x300c, 0x300e, 0x301c, 0x301d,
+-	0x302a, 0x302a, 0x302c, 0x302d, 0x3030, 0x3031, 0x3034, 0x3036,
+-	0x303c, 0x303c, 0x305e, 0x305f,
++	0x22ff, 0x22ff, 0x2340, 0x2343, 0x2440, 0x2440, 0x2444, 0x2444,
++	0x2448, 0x244d, 0x2468, 0x2469, 0x246c, 0x246d, 0x2470, 0x2470,
++	0x2472, 0x2472, 0x2474, 0x2475, 0x2479, 0x247a, 0x24c0, 0x24d3,
++	0x24e4, 0x24ef, 0x2500, 0x2509, 0x250c, 0x250c, 0x250e, 0x250e,
++	0x2510, 0x2511, 0x2514, 0x2515, 0x25e4, 0x25e4, 0x25ea, 0x25ea,
++	0x25ec, 0x25ed, 0x25f0, 0x25f0, 0x2600, 0x2612, 0x2614, 0x2617,
++	0x261a, 0x261a, 0x2640, 0x267e, 0x2680, 0x268b, 0x26c0, 0x26c0,
++	0x26c4, 0x26ce, 0x26d0, 0x26d8, 0x26df, 0x26e6, 0x26e8, 0x26e9,
++	0x26ec, 0x26ec, 0x26f0, 0x26f7, 0x26ff, 0x26ff, 0x2740, 0x2743,
++	0x300c, 0x300e, 0x301c, 0x301d, 0x302a, 0x302a, 0x302c, 0x302d,
++	0x3030, 0x3031, 0x3034, 0x3036, 0x303c, 0x303c, 0x305e, 0x305f,
+ 	~0   /* sentinel */
+ };
  
- 	memset(&data, 0, sizeof(data));
 -- 
 2.20.1
 
