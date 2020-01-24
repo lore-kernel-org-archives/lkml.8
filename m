@@ -2,89 +2,88 @@ Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4B7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67C8C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63E12070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977052070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 08:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbgAXIpW (ORCPT
+        id S1729751AbgAXIqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 03:45:22 -0500
-Received: from gate.crashing.org ([63.228.1.57]:53033 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgAXIpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 03:45:21 -0500
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 00O8ipf2015536;
-        Fri, 24 Jan 2020 02:44:51 -0600
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id 00O8ioUT015535;
-        Fri, 24 Jan 2020 02:44:50 -0600
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Fri, 24 Jan 2020 02:44:50 -0600
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 1/2] powerpc/irq: don't use current_stack_pointer() in check_stack_overflow()
-Message-ID: <20200124084450.GS3191@gate.crashing.org>
-References: <bae3e75a0c7f9037e4012ee547842c04cd527931.1575871613.git.christophe.leroy@c-s.fr> <87d0b9iez3.fsf@mpe.ellerman.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d0b9iez3.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.4.2.3i
+        Fri, 24 Jan 2020 03:46:34 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:52023 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729604AbgAXIqd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 03:46:33 -0500
+Received: from [109.168.11.45] (port=51208 helo=[192.168.101.73])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1iuubk-0004bC-SO; Fri, 24 Jan 2020 09:46:28 +0100
+Subject: Re: [PATCH] iwlwifi: fix config variable name in comment
+To:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+References: <20191202101339.24265-1-luca@lucaceresoli.net>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <bcf538ea-cfbd-c6b7-5fbe-dd647b6a7e9c@lucaceresoli.net>
+Date:   Fri, 24 Jan 2020 09:46:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191202101339.24265-1-luca@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Hi,
 
-On Fri, Jan 24, 2020 at 04:46:24PM +1100, Michael Ellerman wrote:
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> >  static inline void check_stack_overflow(void)
-> >  {
-> >  #ifdef CONFIG_DEBUG_STACKOVERFLOW
-> > -	long sp;
-> > -
-> > -	sp = current_stack_pointer() & (THREAD_SIZE-1);
-> > +	register unsigned long r1 asm("r1");
-> > +	long sp = r1 & (THREAD_SIZE - 1);
+On 02/12/19 11:13, Luca Ceresoli wrote:
+> The correct variable name was replaced here by mistake.
 > 
-> This appears to work but seems to be "unsupported" by GCC, and clang
-> actually complains about it:
+> Fixes: ab27926d9e4a ("iwlwifi: fix devices with PCI Device ID 0x34F0 and 11ac RF modules")
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> ---
+>  drivers/net/wireless/intel/iwlwifi/iwl-config.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->   /linux/arch/powerpc/kernel/irq.c:603:12: error: variable 'r1' is uninitialized when used here [-Werror,-Wuninitialized]
->           long sp = r1 & (THREAD_SIZE - 1);
->                     ^~
-> 
-> The GCC docs say:
-> 
->   The only supported use for this feature is to specify registers for
->   input and output operands when calling Extended asm (see Extended
->   Asm).
-> 
-> https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Local-Register-Variables.html#Local-Register-Variables
+> diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-config.h b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
+> index 317eac066082..fb6838527e28 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/iwl-config.h
+> +++ b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
+> @@ -636,6 +636,6 @@ extern const struct iwl_cfg iwlax210_2ax_cfg_so_hr_a0;
+>  extern const struct iwl_cfg iwlax211_2ax_cfg_so_gf_a0;
+>  extern const struct iwl_cfg iwlax210_2ax_cfg_ty_gf_a0;
+>  extern const struct iwl_cfg iwlax411_2ax_cfg_so_gf4_a0;
+> -#endif /* CPTCFG_IWLMVM || CPTCFG_IWLFMAC */
+> +#endif /* CONFIG_IWLMVM */
 
-Yes.  Don't use local register variables any other way.  It *will* break.
+A gentle ping about this patch.
 
-> If I do this it seems to work, but feels a little dicey:
-> 
-> 	asm ("" : "=r" (r1));
-> 	sp = r1 & (THREAD_SIZE - 1);
-
-The only thing dicey about that is that you are writing to r1.  Heh.
-Well that certainly is bad enough, the compiler does not know how to
-handle that at all...  Of course you aren't *actually* changing
-anything, so it might just work.
-
-
-Segher
+Thanks,
+-- 
+Luca
