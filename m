@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F9CC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EECC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6EF2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C632075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864607;
-	bh=osi1W9jS6dAWGE0kotGyZrk0kq1+kl8eMHki/GUOQ1c=;
+	s=default; t=1579864610;
+	bh=dExcBcGAWKP7IlXaZlS37lYKI9YwuOlr4ID0inXC1ig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O6+xF0UX8JB3u1tPphFDH1ty+2Xmf0R8u4SdwqdeGxMRphX2eZCiHe9+DX9wiZ6MP
-	 x5Proc5xWvZbpXcyAX9xqTxIzT2HJerEWgqVLzhOMD1JoMCjEc2dnGdGbYlBHg6m3B
-	 j+Zu9kCuadbpNOTnljHq4ohrbLWFo9fHm/HGf184=
+	b=IMuCHiKle3l7HvSAtnWcjb4WcelVKjCWjQh34dee60rxT4iLogeeDF/PWxGacpkTy
+	 w6w0fjGT4UFkdgHLMuJjoiRLufrs5SIfcuvCIq0ZOQ5Mbk5hVyT7GpPotFH/nkCvNH
+	 AtHv5J89YpdDlWYzqNATNVhygvhfba4dqgTrGQnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390418AbgAXLQq (ORCPT
+        id S2390427AbgAXLQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:16:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53546 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:16:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389916AbgAXLQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:16:44 -0500
+        id S2390419AbgAXLQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:16:47 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B304720704;
-        Fri, 24 Jan 2020 11:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F25B520704;
+        Fri, 24 Jan 2020 11:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864603;
-        bh=osi1W9jS6dAWGE0kotGyZrk0kq1+kl8eMHki/GUOQ1c=;
+        s=default; t=1579864606;
+        bh=dExcBcGAWKP7IlXaZlS37lYKI9YwuOlr4ID0inXC1ig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lwQm5S4wZCQKR8w9VrsVFRFWKVsSW6hcs4FjrPxF6dvemHd2jDk5LyzPI8YTpIOjt
-         pLhiqjaD20ahf6krIgq3CcZGYzowxSd0SEOlObLGdIMR31Ue+Cn3aOIqhGBMDyf3h4
-         02LiHiJUFfMBfZY74xP9dGHv5BHmi823n5NnMYhM=
+        b=l+VVXKNSQ7TfOHLHuSDxYCtS8Sbd1o/84ij1QaeHhTHIx+mbs7T/LcAx90y5Lo0pU
+         oUFG9JaEwxj4WxGjiuzMmOcYzjHZgJ06kqm6heW4X7as69nWBroWBcjnHl9WbMxmlo
+         tmsgmyVtFXdqDapHTfL/WeZFmJo/HuxPdJe/Io3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Leandro Dorileo <leandro.maciel.dorileo@intel.com>,
-        Vedang Patel <vedang.patel@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 299/639] net/sched: cbs: fix port_rate miscalculation
-Date:   Fri, 24 Jan 2020 10:27:49 +0100
-Message-Id: <20200124093124.367513117@linuxfoundation.org>
+Subject: [PATCH 4.19 300/639] clk: qcom: Skip halt checks on gcc_pcie_0_pipe_clk for 8998
+Date:   Fri, 24 Jan 2020 10:27:50 +0100
+Message-Id: <20200124093124.507613997@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -62,225 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leandro Dorileo <leandro.maciel.dorileo@intel.com>
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
 
-[ Upstream commit e0a7683d30e91e30ee6cf96314ae58a0314a095e ]
+[ Upstream commit c0ee0e43c049a13d11e913edf875e4ee376dc84b ]
 
-The Credit Based Shaper heavily depends on link speed to calculate
-the scheduling credits, we can't properly calculate the credits if the
-device has failed to report the link speed.
+See similar issue solved by commit 5f2420ed2189
+("clk: qcom: Skip halt checks on gcc_usb3_phy_pipe_clk for 8998")
 
-In that case we can't dequeue packets assuming a wrong port rate that will
-result into an inconsistent credit distribution.
+Without this patch, PCIe PHY init fails:
 
-This patch makes sure we fail to dequeue case:
+qcom-qmp-phy 1c06000.phy: pipe_clk enable failed err=-16
+phy phy-1c06000.phy.0: phy init failed --> -16
 
-1) __ethtool_get_link_ksettings() reports error or 2) the ethernet driver
-failed to set the ksettings' speed value (setting link speed to
-SPEED_UNKNOWN).
-
-Additionally we properly re calculate the port rate whenever the link speed
-is changed.
-
-Fixes: 3d0bd028ffb4a ("net/sched: Add support for HW offloading for CBS")
-Signed-off-by: Leandro Dorileo <leandro.maciel.dorileo@intel.com>
-Reviewed-by: Vedang Patel <vedang.patel@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Fixes: b5f5f525c547 ("clk: qcom: Add MSM8998 Global Clock Control (GCC) driver")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_cbs.c | 98 ++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 84 insertions(+), 14 deletions(-)
+ drivers/clk/qcom/gcc-msm8998.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sched/sch_cbs.c b/net/sched/sch_cbs.c
-index e26a24017faa6..81f84cb5dd23b 100644
---- a/net/sched/sch_cbs.c
-+++ b/net/sched/sch_cbs.c
-@@ -61,16 +61,20 @@
- #include <linux/string.h>
- #include <linux/errno.h>
- #include <linux/skbuff.h>
-+#include <net/netevent.h>
- #include <net/netlink.h>
- #include <net/sch_generic.h>
- #include <net/pkt_sched.h>
+diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
+index 4e23973b6cd16..772a08101ddf2 100644
+--- a/drivers/clk/qcom/gcc-msm8998.c
++++ b/drivers/clk/qcom/gcc-msm8998.c
+@@ -2144,7 +2144,7 @@ static struct clk_branch gcc_pcie_0_mstr_axi_clk = {
  
-+static LIST_HEAD(cbs_list);
-+static DEFINE_SPINLOCK(cbs_list_lock);
-+
- #define BYTES_PER_KBIT (1000LL / 8)
- 
- struct cbs_sched_data {
- 	bool offload;
- 	int queue;
--	s64 port_rate; /* in bytes/s */
-+	atomic64_t port_rate; /* in bytes/s */
- 	s64 last; /* timestamp in ns */
- 	s64 credits; /* in bytes */
- 	s32 locredit; /* in bytes */
-@@ -82,6 +86,7 @@ struct cbs_sched_data {
- 		       struct sk_buff **to_free);
- 	struct sk_buff *(*dequeue)(struct Qdisc *sch);
- 	struct Qdisc *qdisc;
-+	struct list_head cbs_list;
- };
- 
- static int cbs_child_enqueue(struct sk_buff *skb, struct Qdisc *sch,
-@@ -180,6 +185,11 @@ static struct sk_buff *cbs_dequeue_soft(struct Qdisc *sch)
- 	s64 credits;
- 	int len;
- 
-+	if (atomic64_read(&q->port_rate) == -1) {
-+		WARN_ONCE(1, "cbs: dequeue() called with unknown port rate.");
-+		return NULL;
-+	}
-+
- 	if (q->credits < 0) {
- 		credits = timediff_to_credits(now - q->last, q->idleslope);
- 
-@@ -206,7 +216,8 @@ static struct sk_buff *cbs_dequeue_soft(struct Qdisc *sch)
- 	/* As sendslope is a negative number, this will decrease the
- 	 * amount of q->credits.
- 	 */
--	credits = credits_from_len(len, q->sendslope, q->port_rate);
-+	credits = credits_from_len(len, q->sendslope,
-+				   atomic64_read(&q->port_rate));
- 	credits += q->credits;
- 
- 	q->credits = max_t(s64, credits, q->locredit);
-@@ -293,6 +304,50 @@ static int cbs_enable_offload(struct net_device *dev, struct cbs_sched_data *q,
- 	return 0;
- }
- 
-+static void cbs_set_port_rate(struct net_device *dev, struct cbs_sched_data *q)
-+{
-+	struct ethtool_link_ksettings ecmd;
-+	int port_rate = -1;
-+
-+	if (!__ethtool_get_link_ksettings(dev, &ecmd) &&
-+	    ecmd.base.speed != SPEED_UNKNOWN)
-+		port_rate = ecmd.base.speed * 1000 * BYTES_PER_KBIT;
-+
-+	atomic64_set(&q->port_rate, port_rate);
-+	netdev_dbg(dev, "cbs: set %s's port_rate to: %lld, linkspeed: %d\n",
-+		   dev->name, (long long)atomic64_read(&q->port_rate),
-+		   ecmd.base.speed);
-+}
-+
-+static int cbs_dev_notifier(struct notifier_block *nb, unsigned long event,
-+			    void *ptr)
-+{
-+	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-+	struct cbs_sched_data *q;
-+	struct net_device *qdev;
-+	bool found = false;
-+
-+	ASSERT_RTNL();
-+
-+	if (event != NETDEV_UP && event != NETDEV_CHANGE)
-+		return NOTIFY_DONE;
-+
-+	spin_lock(&cbs_list_lock);
-+	list_for_each_entry(q, &cbs_list, cbs_list) {
-+		qdev = qdisc_dev(q->qdisc);
-+		if (qdev == dev) {
-+			found = true;
-+			break;
-+		}
-+	}
-+	spin_unlock(&cbs_list_lock);
-+
-+	if (found)
-+		cbs_set_port_rate(dev, q);
-+
-+	return NOTIFY_DONE;
-+}
-+
- static int cbs_change(struct Qdisc *sch, struct nlattr *opt,
- 		      struct netlink_ext_ack *extack)
- {
-@@ -314,16 +369,7 @@ static int cbs_change(struct Qdisc *sch, struct nlattr *opt,
- 	qopt = nla_data(tb[TCA_CBS_PARMS]);
- 
- 	if (!qopt->offload) {
--		struct ethtool_link_ksettings ecmd;
--		s64 link_speed;
--
--		if (!__ethtool_get_link_ksettings(dev, &ecmd))
--			link_speed = ecmd.base.speed;
--		else
--			link_speed = SPEED_1000;
--
--		q->port_rate = link_speed * 1000 * BYTES_PER_KBIT;
--
-+		cbs_set_port_rate(dev, q);
- 		cbs_disable_offload(dev, q);
- 	} else {
- 		err = cbs_enable_offload(dev, q, qopt, extack);
-@@ -346,6 +392,7 @@ static int cbs_init(struct Qdisc *sch, struct nlattr *opt,
- {
- 	struct cbs_sched_data *q = qdisc_priv(sch);
- 	struct net_device *dev = qdisc_dev(sch);
-+	int err;
- 
- 	if (!opt) {
- 		NL_SET_ERR_MSG(extack, "Missing CBS qdisc options  which are mandatory");
-@@ -366,7 +413,17 @@ static int cbs_init(struct Qdisc *sch, struct nlattr *opt,
- 
- 	qdisc_watchdog_init(&q->watchdog, sch);
- 
--	return cbs_change(sch, opt, extack);
-+	err = cbs_change(sch, opt, extack);
-+	if (err)
-+		return err;
-+
-+	if (!q->offload) {
-+		spin_lock(&cbs_list_lock);
-+		list_add(&q->cbs_list, &cbs_list);
-+		spin_unlock(&cbs_list_lock);
-+	}
-+
-+	return 0;
- }
- 
- static void cbs_destroy(struct Qdisc *sch)
-@@ -374,8 +431,11 @@ static void cbs_destroy(struct Qdisc *sch)
- 	struct cbs_sched_data *q = qdisc_priv(sch);
- 	struct net_device *dev = qdisc_dev(sch);
- 
--	qdisc_watchdog_cancel(&q->watchdog);
-+	spin_lock(&cbs_list_lock);
-+	list_del(&q->cbs_list);
-+	spin_unlock(&cbs_list_lock);
- 
-+	qdisc_watchdog_cancel(&q->watchdog);
- 	cbs_disable_offload(dev, q);
- 
- 	if (q->qdisc)
-@@ -486,14 +546,24 @@ static struct Qdisc_ops cbs_qdisc_ops __read_mostly = {
- 	.owner		=	THIS_MODULE,
- };
- 
-+static struct notifier_block cbs_device_notifier = {
-+	.notifier_call = cbs_dev_notifier,
-+};
-+
- static int __init cbs_module_init(void)
- {
-+	int err = register_netdevice_notifier(&cbs_device_notifier);
-+
-+	if (err)
-+		return err;
-+
- 	return register_qdisc(&cbs_qdisc_ops);
- }
- 
- static void __exit cbs_module_exit(void)
- {
- 	unregister_qdisc(&cbs_qdisc_ops);
-+	unregister_netdevice_notifier(&cbs_device_notifier);
- }
- module_init(cbs_module_init)
- module_exit(cbs_module_exit)
+ static struct clk_branch gcc_pcie_0_pipe_clk = {
+ 	.halt_reg = 0x6b018,
+-	.halt_check = BRANCH_HALT,
++	.halt_check = BRANCH_HALT_SKIP,
+ 	.clkr = {
+ 		.enable_reg = 0x6b018,
+ 		.enable_mask = BIT(0),
 -- 
 2.20.1
 
