@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596B2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02950C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2137C2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFAA42077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579865215;
-	bh=CHakN+mBFNg7zyA+oUB7U/ojbnS3nlpGBy8uEgjSruU=;
+	s=default; t=1579865219;
+	bh=/Xyrt+GlzXqdolnXrvTicWdp54n+ZBtuc5H/3+PFcwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZ/Gk8wP5T/kqLEoTEuT2j4LyYQi12UIXYv2qKdKFjCpqd5kSZhHQek5UI61arlRK
-	 TbinONl8ENX+F13INWJOnCCI2//4iwqBIZnevtf6NExm8LIMEnF0Ov4S/9DruzS+cb
-	 d+AATSfNoW3IrA48wY8VkpYo339Gyiie8i3gTZ5Y=
+	b=jjcTcg+5p3A73fMeTOZ7ZH6SG2JzAJIIMFlFrquUAhy9fQb9t5NjvqsgnST+wu+tz
+	 Bv5Z9/IT0xtAxxri5dseWk/kCVPFNJgtYaAv2tQVQfvDpZPTG/s0EUO6UcEz/jbODG
+	 6HG2O2PSrHR95g13qvt/5uCrtIxTHOw/A6SlC89E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391605AbgAXL0x (ORCPT
+        id S2391613AbgAXL07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:26:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41964 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:26:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391469AbgAXL0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:26:50 -0500
+        id S2391599AbgAXL0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:26:53 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6E2620718;
-        Fri, 24 Jan 2020 11:26:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34CE42075D;
+        Fri, 24 Jan 2020 11:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579865209;
-        bh=CHakN+mBFNg7zyA+oUB7U/ojbnS3nlpGBy8uEgjSruU=;
+        s=default; t=1579865213;
+        bh=/Xyrt+GlzXqdolnXrvTicWdp54n+ZBtuc5H/3+PFcwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WKCxgz+W1P2OE1p9s+ZWPcUa2pSg/nYZxSOLa+zNTA/CxZYgEcDBr7J2sTlu7xkf8
-         EcpXaAR2r1uZQKeYdNIhKlPzsukhhkUNY8e8T+INRMxBQG7wXxzUVqh9tA5IFuvN9g
-         j48mWDigvUDxbcltL2HfWb5dpJqTakc0UKVVwAdY=
+        b=tG86WkaZ41hkudbrW1tw2iBb9uryAnHvnqLDbVIHRq4V/TJvSdw84jmr2agEYHi8q
+         q1YvC7C7tmoZ/iECseRN++fZjr4WuNtJs40XieAJiWPeYjIuTsp1h+iE9cl12tgEdM
+         xnOCWGVrjkW7ui/jaD8eSm0NJERzffiPGLUSg53g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 470/639] PCI: mobiveil: Fix devfn check in mobiveil_pcie_valid_device()
-Date:   Fri, 24 Jan 2020 10:30:40 +0100
-Message-Id: <20200124093146.309905812@linuxfoundation.org>
+Subject: [PATCH 4.19 471/639] PCI: mobiveil: Fix the valid check for inbound and outbound windows
+Date:   Fri, 24 Jan 2020 10:30:41 +0100
+Message-Id: <20200124093146.440853123@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -63,37 +64,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit cbd50b3ca3964c79dac65fda277637577e029e8c ]
+[ Upstream commit ccd34dac2ed596b1f26079912bdf638e002a3979 ]
 
-Current check for devfn number in mobiveil_pci_valid_device() is
-wrong in that it flags as invalid functions present in PCI device 0
-in the root bus while it is perfectly valid to access all functions
-in PCI device 0 in the root bus.
-
-Update the check in mobiveil_pci_valid_device() to fix the issue.
+In program_ib/ob_windows() check the window index from the function
+parameter instead of the total number of initialized windows to
+determine if the specified window is valid.
 
 Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pcie-mobiveil.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index dc228eb500edd..476be4f3c7f6e 100644
+index 476be4f3c7f6e..14f816591e844 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -174,7 +174,7 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
- 	 * Do not read more than one device on the bus directly
- 	 * attached to RC
- 	 */
--	if ((bus->primary == pcie->root_bus_nr) && (devfn > 0))
-+	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
- 		return false;
+@@ -395,7 +395,7 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+ 	int amap_ctrl_dw;
+ 	u64 size64 = ~(size - 1);
  
- 	return true;
+-	if ((pcie->ib_wins_configured + 1) > pcie->ppio_wins) {
++	if (win_num >= pcie->ppio_wins) {
+ 		dev_err(&pcie->pdev->dev,
+ 			"ERROR: max inbound windows reached !\n");
+ 		return;
+@@ -429,7 +429,7 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
+ 	u32 value, type;
+ 	u64 size64 = ~(size - 1);
+ 
+-	if ((pcie->ob_wins_configured + 1) > pcie->apio_wins) {
++	if (win_num >= pcie->apio_wins) {
+ 		dev_err(&pcie->pdev->dev,
+ 			"ERROR: max outbound windows reached !\n");
+ 		return;
 -- 
 2.20.1
 
