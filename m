@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9F7C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A77DC35241
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077722087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9AD2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 01:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579828807;
-	bh=8EYe6y5wyOfEea0xvGBOkJ7h0WnL6V5YlGvBrH3c06k=;
+	s=default; t=1579828809;
+	bh=S3Q/7HKETBNsxezU1zyq7X4p5x3UXFHpUKWfBenxpD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dzyd7IOxk0HC2zPraq1N+qrk4stS93AJQg2JQ3N7WD3rAEs6pqulsq9mlNHH39+nT
-	 jKOTgknnmQ27X/lJ0BVEQqDEpFDzj9LxdbHRhnSSNnx6cPcIPwou+ekGVkvP0dJSoc
-	 CGjspjSpOesQSycfvDnIurAUmB78pEwhce/mf9U8=
+	b=H53VIf7OKdtoJ7xcKeFRE2QYwaEA/N4HNiwEnUfX/CYTDgfNnMF70F6oFHFS7fJb3
+	 y6b5qzcCeZ3hj+/x2dU3epvoCR4+W9V/LD27ebgfSBs8dHg3IOrxxJrwtklOFUfkad
+	 cBs//6KNs/K4xMylAVmq5NrZFpZdAcL0nWtEkVSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgAXBUG (ORCPT
+        id S1730572AbgAXBRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jan 2020 20:20:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730555AbgAXBRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jan 2020 20:17:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730468AbgAXBR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jan 2020 20:17:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DEA521D7D;
-        Fri, 24 Jan 2020 01:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A737D206A2;
+        Fri, 24 Jan 2020 01:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579828653;
-        bh=8EYe6y5wyOfEea0xvGBOkJ7h0WnL6V5YlGvBrH3c06k=;
+        s=default; t=1579828647;
+        bh=S3Q/7HKETBNsxezU1zyq7X4p5x3UXFHpUKWfBenxpD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IEy4eZLcIGSS2XJ21GCIUM7HVzQDIsRglT5tLXKtn3QAAT6UmK9/jNisH9LO6ndxL
-         UG6uYQ8APl33HfhGdPgLovmAGV5Dy2iDHj8pEx524xsy5ferwdS9FlUps6VBDky/I/
-         ALHJqDPYvqtanoQoGiyTdHgzATEFG1k81dEbqkS0=
+        b=2C4MoNeaZtkUgjLethbkT333fBvZ7hexwHFPhtqGX8pFCfzEM+c3vMx9ICicLHrdH
+         eD6C2gdRgMqrZq1rQ9AupamQG7EUuYoAr/WuCr36goTWy2HNIQuUAJvIb3ZijyUewI
+         BaYeovXtEkQGXyhLYplLOdmVvjUY6lMh2lA8aCOE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 21/33] mmc: sdhci-pci: Add support for Intel JSL
-Date:   Thu, 23 Jan 2020 20:16:56 -0500
-Message-Id: <20200124011708.18232-21-sashal@kernel.org>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Chris Chiu <chiu@endlessm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 16/33] mfd: intel-lpss: Add default I2C device properties for Gemini Lake
+Date:   Thu, 23 Jan 2020 20:16:51 -0500
+Message-Id: <20200124011708.18232-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
 References: <20200124011708.18232-1-sashal@kernel.org>
@@ -59,46 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
-[ Upstream commit 315e3bd7ac19b18ba704d96cbb9b79bad485c01f ]
+[ Upstream commit 3f31bc67e4dc6a555341dffefe328ddd58e8b431 ]
 
-Add PCI Ids for Intel JSL.
+It turned out Intel Gemini Lake doesn't use the same I2C timing
+parameters as Broxton.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+I got confirmation from the Windows team that Gemini Lake systems should
+use updated timing parameters that differ from those used in Broxton
+based systems.
+
+Fixes: f80e78aa11ad ("mfd: intel-lpss: Add Intel Gemini Lake PCI IDs")
+Tested-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-pci-core.c | 2 ++
- drivers/mmc/host/sdhci-pci.h      | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/mfd/intel-lpss-pci.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index 96a163f36a395..c9ea365c248c0 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -1730,6 +1730,8 @@ static const struct pci_device_id pci_ids[] = {
- 	SDHCI_PCI_DEVICE(INTEL, CML_EMMC,  intel_glk_emmc),
- 	SDHCI_PCI_DEVICE(INTEL, CML_SD,    intel_byt_sd),
- 	SDHCI_PCI_DEVICE(INTEL, CMLH_SD,   intel_byt_sd),
-+	SDHCI_PCI_DEVICE(INTEL, JSL_EMMC,  intel_glk_emmc),
-+	SDHCI_PCI_DEVICE(INTEL, JSL_SD,    intel_byt_sd),
- 	SDHCI_PCI_DEVICE(O2, 8120,     o2),
- 	SDHCI_PCI_DEVICE(O2, 8220,     o2),
- 	SDHCI_PCI_DEVICE(O2, 8221,     o2),
-diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
-index 558202fe64c67..981bbbe63aff5 100644
---- a/drivers/mmc/host/sdhci-pci.h
-+++ b/drivers/mmc/host/sdhci-pci.h
-@@ -55,6 +55,8 @@
- #define PCI_DEVICE_ID_INTEL_CML_EMMC	0x02c4
- #define PCI_DEVICE_ID_INTEL_CML_SD	0x02f5
- #define PCI_DEVICE_ID_INTEL_CMLH_SD	0x06f5
-+#define PCI_DEVICE_ID_INTEL_JSL_EMMC	0x4dc4
-+#define PCI_DEVICE_ID_INTEL_JSL_SD	0x4df8
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 9355db29d2f97..1767f30a16761 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -122,6 +122,18 @@ static const struct intel_lpss_platform_info apl_i2c_info = {
+ 	.properties = apl_i2c_properties,
+ };
  
- #define PCI_DEVICE_ID_SYSKONNECT_8000	0x8000
- #define PCI_DEVICE_ID_VIA_95D0		0x95d0
++static struct property_entry glk_i2c_properties[] = {
++	PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 313),
++	PROPERTY_ENTRY_U32("i2c-sda-falling-time-ns", 171),
++	PROPERTY_ENTRY_U32("i2c-scl-falling-time-ns", 290),
++	{ },
++};
++
++static const struct intel_lpss_platform_info glk_i2c_info = {
++	.clk_rate = 133000000,
++	.properties = glk_i2c_properties,
++};
++
+ static const struct intel_lpss_platform_info cnl_i2c_info = {
+ 	.clk_rate = 216000000,
+ 	.properties = spt_i2c_properties,
+@@ -174,14 +186,14 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
+ 	/* GLK */
+-	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&bxt_i2c_info },
+-	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&bxt_i2c_info },
+-	{ PCI_VDEVICE(INTEL, 0x31b0), (kernel_ulong_t)&bxt_i2c_info },
+-	{ PCI_VDEVICE(INTEL, 0x31b2), (kernel_ulong_t)&bxt_i2c_info },
+-	{ PCI_VDEVICE(INTEL, 0x31b4), (kernel_ulong_t)&bxt_i2c_info },
+-	{ PCI_VDEVICE(INTEL, 0x31b6), (kernel_ulong_t)&bxt_i2c_info },
+-	{ PCI_VDEVICE(INTEL, 0x31b8), (kernel_ulong_t)&bxt_i2c_info },
+-	{ PCI_VDEVICE(INTEL, 0x31ba), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x31b0), (kernel_ulong_t)&glk_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x31b2), (kernel_ulong_t)&glk_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x31b4), (kernel_ulong_t)&glk_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x31b6), (kernel_ulong_t)&glk_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x31b8), (kernel_ulong_t)&glk_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x31ba), (kernel_ulong_t)&glk_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x31bc), (kernel_ulong_t)&bxt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x31be), (kernel_ulong_t)&bxt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x31c0), (kernel_ulong_t)&bxt_uart_info },
 -- 
 2.20.1
 
