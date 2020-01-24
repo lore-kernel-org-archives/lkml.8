@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF949C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB68C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939FB20718
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2025420718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859096;
-	bh=SdlvnvSTKjq9F67Dssl3iH+ACt71AD9/66iLmeoZHrc=;
+	s=default; t=1579859101;
+	bh=ypgp3PxSJtflknrnZM/yMRSldZn+Y5/zuv4400N799Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nt6IaHYD8wlMOveBDiggknNlgcbugRdVPyrCTBrAnu6vLbRjPLT3/t3w7y34b5aUK
-	 male99cJHz1T0OOqQiCBqVtfFtcUzbZKLN6FrtoMAiK4QqDyBZvkt7pZctgIjbvoLt
-	 crh9arLZ9AEmlW8tLPE5YH8TUVlSgQ6gO2M+edHQ=
+	b=yYvT52nMhPgIJCkQGiKEJmE8AWpWS8sJONReiFpQz7WcK4/kG3rwD/Ggqr3zPSKWZ
+	 YpL3QS3ftqyfZy3rjg3n6hU1S4EBRSJF/n9mmsZe+4uHRA02Vmek5DOXagclkM1fEe
+	 k2+wOc6WyzgU8VwspzY1KxC0dfisK0xMwtIMlGWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733210AbgAXJoz (ORCPT
+        id S2387435AbgAXJpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:44:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43538 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:45:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729719AbgAXJoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:44:54 -0500
+        id S1732415AbgAXJok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:44:40 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C62B20718;
-        Fri, 24 Jan 2020 09:44:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA30120718;
+        Fri, 24 Jan 2020 09:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859093;
-        bh=SdlvnvSTKjq9F67Dssl3iH+ACt71AD9/66iLmeoZHrc=;
+        s=default; t=1579859079;
+        bh=ypgp3PxSJtflknrnZM/yMRSldZn+Y5/zuv4400N799Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=io15iipxzO7AGaok0H3tVVWO/IqBpZd5wT2uXxOdqBO/GQZlc9qFJhSjo548cQCBH
-         qGriGdg3nPvyoGrLtXFAO5UyULjxv+9neJwkDVVPV3reYV7uJEh7JigfnrExVYclSc
-         U13ZZYV8wg23/X/bEub5htdZ9ARVSH66Q6NDVtwo=
+        b=nOwsuf5vZZubrGj1zJktroQQyxDXRplEiEtOSHHvEtOMmnCUerRP0FGtvWc+lrEh2
+         CYZ7EFdib3gcjfZosHoWl0aEdvfeWOlYHfEONKwh/HyrsGma7045GHwzAq6W2jjLOK
+         Llz8vDn1j+Kkr9Pjf5M58zE/5RNldafjDkVRz/FU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuval Shaia <yuval.shaia@oracle.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 028/343] IB/rxe: Fix incorrect cache cleanup in error flow
-Date:   Fri, 24 Jan 2020 10:27:26 +0100
-Message-Id: <20200124092923.440793278@linuxfoundation.org>
+Subject: [PATCH 4.14 038/343] pinctrl: sh-pfc: r8a77995: Remove bogus SEL_PWM[0-3]_3 configurations
+Date:   Fri, 24 Jan 2020 10:27:36 +0100
+Message-Id: <20200124092924.798270341@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -63,73 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuval Shaia <yuval.shaia@oracle.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 6db21d8986e14e2e86573a3b055b05296188bd2c ]
+[ Upstream commit e28dc3f09c9d2555a9bd982f0847988591052226 ]
 
-Array iterator stays at the same slot, fix it.
+While the SEL_PWM[0-3] fields in the Module Select Register 0 support 4
+possible configurations per PWM pin, only the first 3 are valid.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Yuval Shaia <yuval.shaia@oracle.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Replace the invalid and unused configurations for SEL_PWM[0-3]_3 by
+dummies.
+
+Fixes: 794a6711764658a1 ("pinctrl: sh-pfc: Initial R8A77995 PFC support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_pool.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_pool.c b/drivers/infiniband/sw/rxe/rxe_pool.c
-index b4a8acc7bb7d6..0e2425f282335 100644
---- a/drivers/infiniband/sw/rxe/rxe_pool.c
-+++ b/drivers/infiniband/sw/rxe/rxe_pool.c
-@@ -112,6 +112,18 @@ static inline struct kmem_cache *pool_cache(struct rxe_pool *pool)
- 	return rxe_type_info[pool->type].cache;
- }
- 
-+static void rxe_cache_clean(size_t cnt)
-+{
-+	int i;
-+	struct rxe_type_info *type;
-+
-+	for (i = 0; i < cnt; i++) {
-+		type = &rxe_type_info[i];
-+		kmem_cache_destroy(type->cache);
-+		type->cache = NULL;
-+	}
-+}
-+
- int rxe_cache_init(void)
- {
- 	int err;
-@@ -136,24 +148,14 @@ int rxe_cache_init(void)
- 	return 0;
- 
- err1:
--	while (--i >= 0) {
--		kmem_cache_destroy(type->cache);
--		type->cache = NULL;
--	}
-+	rxe_cache_clean(i);
- 
- 	return err;
- }
- 
- void rxe_cache_exit(void)
- {
--	int i;
--	struct rxe_type_info *type;
--
--	for (i = 0; i < RXE_NUM_TYPES; i++) {
--		type = &rxe_type_info[i];
--		kmem_cache_destroy(type->cache);
--		type->cache = NULL;
--	}
-+	rxe_cache_clean(RXE_NUM_TYPES);
- }
- 
- static int rxe_pool_init_index(struct rxe_pool *pool, u32 max, u32 min)
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+index 4f5ee1d7317d3..36421df1b3260 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+@@ -391,10 +391,10 @@ FM(IP12_31_28)	IP12_31_28 \
+ #define MOD_SEL0_27		FM(SEL_MSIOF3_0)	FM(SEL_MSIOF3_1)
+ #define MOD_SEL0_26		FM(SEL_HSCIF3_0)	FM(SEL_HSCIF3_1)
+ #define MOD_SEL0_25		FM(SEL_SCIF4_0)		FM(SEL_SCIF4_1)
+-#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		FM(SEL_PWM0_3)
+-#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		FM(SEL_PWM1_3)
+-#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		FM(SEL_PWM2_3)
+-#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		FM(SEL_PWM3_3)
++#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		F_(0, 0)
++#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		F_(0, 0)
++#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		F_(0, 0)
++#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		F_(0, 0)
+ #define MOD_SEL0_15		FM(SEL_IRQ_0_0)		FM(SEL_IRQ_0_1)
+ #define MOD_SEL0_14		FM(SEL_IRQ_1_0)		FM(SEL_IRQ_1_1)
+ #define MOD_SEL0_13		FM(SEL_IRQ_2_0)		FM(SEL_IRQ_2_1)
 -- 
 2.20.1
 
