@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B49C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ED8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA552087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA962087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579863658;
-	bh=b+o3zGzEFYXqTT/+j3VpTMFE2Ngr9EM1dX3QrS2h22A=;
+	s=default; t=1579863661;
+	bh=hHZ0r5koTcCu61eYNLhQfmBQtmAHcR0VNmlmXonSSHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBzQRSFp/kZ+DSBN3O3ROrqjtpYqiawD6MxaDPTXcRzBcH/okBa+fpjn2KrR7GH3n
-	 yzRi3MDv9ArON+48YDXMV/UGo8qUB+nwPpjKXNq9S3NIPoO1clo6LiqpYMUrzFrTkX
-	 KBJ0EoveBcUd151vJqSndE+A3P4+cx+kaV0CJkuk=
+	b=nqKbHvSyMUxp5ejll9crCLML0Y6Fc7up//Sp49fGkmrrZ6rKZTW3KoA8CnL4ICUEy
+	 a0LFxuuoO7pzTo1+q5uJORHLJLPvkZSWYBQUspAynCeQfloSoiHVVRzoZXym0dEIH2
+	 yA3on3hnFut7qcFILqz3/uVbEp+FUiknXSNciVJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387465AbgAXLA5 (ORCPT
+        id S2387488AbgAXLBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:00:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33024 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:01:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387408AbgAXLAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:00:54 -0500
+        id S2387461AbgAXLA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:00:57 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C86542071A;
-        Fri, 24 Jan 2020 11:00:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 318342075D;
+        Fri, 24 Jan 2020 11:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579863653;
-        bh=b+o3zGzEFYXqTT/+j3VpTMFE2Ngr9EM1dX3QrS2h22A=;
+        s=default; t=1579863656;
+        bh=hHZ0r5koTcCu61eYNLhQfmBQtmAHcR0VNmlmXonSSHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HNse8cF+BPNHGf8iuSwtnWX76E13OfkNLMAP6AOC0+b9BG3tinBv4DxLHkVeWCn2t
-         8RhZKZ8zsllXJYtmuJ1I0ZSjF+so0znV3H2DTbCwplJGMBMqwSZLtqWZemhsASLBKG
-         sKWAguHkMIkAmAYk36wbYY7vFmU+WQISVx8c17iY=
+        b=Z5iOOhtuBtQRt82j4OoBCDrqpST9Rf3zDcHt2o5jOAm4n/c8B+//Wh7moLui6Fa85
+         lprU4V+9mAR/nK8jO3ahuliXbjdPVRw9ehYWW9C11SPFg1hs1oY4Tz5bvs3tVrrvIy
+         csYab+egRtE3zJx8lfwoCkkqJGPEWNDLZBh4dfBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/639] genirq/debugfs: Reinstate full OF path for domain name
-Date:   Fri, 24 Jan 2020 10:23:28 +0100
-Message-Id: <20200124093052.220266299@linuxfoundation.org>
+Subject: [PATCH 4.19 039/639] usb: dwc3: add EXTCON dependency for qcom
+Date:   Fri, 24 Jan 2020 10:23:29 +0100
+Message-Id: <20200124093052.344471658@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -60,45 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 94967b55ebf3b603f2fe750ecedd896042585a1c ]
+[ Upstream commit 3def4031b3e3fbb524cbd01555b057a6cef0d5e6 ]
 
-On a DT based system, we use the of_node full name to name the
-corresponding irq domain. We expect that name to be unique, so so that
-domains with the same base name won't clash (this happens on multi-node
-topologies, for example).
+Like the omap back-end, we get a link error with CONFIG_EXTCON=m
+when building the qcom back-end into the kernel:
 
-Since a7e4cfb0a7ca ("of/fdt: only store the device node basename in
-full_name"), of_node_full_name() lies and only returns the basename. This
-breaks the above requirement, and we end-up with only a subset of the
-domains in /sys/kernel/debug/irq/domains.
+drivers/usb/dwc3/dwc3-qcom.o: In function `dwc3_qcom_probe':
+dwc3-qcom.c:(.text+0x13dc): undefined reference to `extcon_get_edev_by_phandle'
+dwc3-qcom.c:(.text+0x1b18): undefined reference to `devm_extcon_register_notifier'
+dwc3-qcom.c:(.text+0x1b9c): undefined reference to `extcon_get_state'
 
-Let's reinstate the feature by using the fancy new %pOF format specifier,
-which happens to do the right thing.
+Do the same thing as OMAP and add an explicit dependency on
+EXTCON.
 
-Fixes: a7e4cfb0a7ca ("of/fdt: only store the device node basename in full_name")
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20181001100522.180054-3-marc.zyngier@arm.com
+Fixes: a4333c3a6ba9 ("usb: dwc3: Add Qualcomm DWC3 glue driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq/irqdomain.c | 2 +-
+ drivers/usb/dwc3/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 5d9fc01b60a61..0b90be3607249 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -183,7 +183,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
- 		 * unhappy about. Replace them with ':', which does
- 		 * the trick and is not as offensive as '\'...
- 		 */
--		name = kstrdup(of_node_full_name(of_node), GFP_KERNEL);
-+		name = kasprintf(GFP_KERNEL, "%pOF", of_node);
- 		if (!name) {
- 			kfree(domain);
- 			return NULL;
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 518ead12458d0..1a0404fda596b 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -113,7 +113,7 @@ config USB_DWC3_ST
+ 
+ config USB_DWC3_QCOM
+ 	tristate "Qualcomm Platform"
+-	depends on ARCH_QCOM || COMPILE_TEST
++	depends on EXTCON && (ARCH_QCOM || COMPILE_TEST)
+ 	depends on OF
+ 	default USB_DWC3
+ 	help
 -- 
 2.20.1
 
