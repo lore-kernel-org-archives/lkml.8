@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1193EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007FFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE60420708
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C04C020663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 11:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579864156;
-	bh=LcaHQk7HlJHcJORtK8v+0Ss5+sdO4zXKEWyscC+SkXA=;
+	s=default; t=1579864161;
+	bh=UaEYRrOoQzEpKhJZlEPag8xkffPbpJE5+D8b6xKTf9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yXcjFUxMLbNvJKIImhPMuo0C62YY1aSHZ9QsnCf4fxedrb6jOeUnxsVXxwSQXlZXf
-	 /x6Q1geceZL3nEOr6f/M3MJzTDNZii7NiLa+4pia4u/X5DPMc9WNHZZ8Abh9OlFyn4
-	 eVdWXuSvNbDQkZ8Iy92Rc7teNkhCqjbuufAiGOwU=
+	b=vBFDBbl9nJH2cZ70KsRDcFNc6CXMyKkip6DKUvwMeGp+tlkqG7Ksffht4ioO9P8w0
+	 ZP2UdmdBjZKfSAx/QaFIPeN7zLjb62t5I3H5NfH6utIvo/9ZzCaeMKTA38hyOw1Ixt
+	 ZHFncvShCp7qtMgoWOPXqDORpzoFhNjB6Yk/ySRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388333AbgAXLJQ (ORCPT
+        id S1730613AbgAXLJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 06:09:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44746 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 06:09:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729188AbgAXLJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 06:09:13 -0500
+        id S2389758AbgAXLJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 06:09:16 -0500
 Received: from localhost (ip-213-127-102-57.ip.prioritytelecom.net [213.127.102.57])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9B8820708;
-        Fri, 24 Jan 2020 11:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A60820663;
+        Fri, 24 Jan 2020 11:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579864152;
-        bh=LcaHQk7HlJHcJORtK8v+0Ss5+sdO4zXKEWyscC+SkXA=;
+        s=default; t=1579864156;
+        bh=UaEYRrOoQzEpKhJZlEPag8xkffPbpJE5+D8b6xKTf9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GjeSKMaiuMTtPmCQK9fp72XcOrJcsI9m118pwPCbKMLYE/Gt5E6tW7nNGzef30AWF
-         WRAPPv0sqXwqhB43Tl1P1jTqsggkahOBKbx1r9aFYYe3+vBrgoRkfEPS2YixxIeDRg
-         Qz33O8lMSIwhqvv37/vRmGL66ihMO+keujgnHx/s=
+        b=rqKNxE90lxOrNIMM3DHWVEqb2Dd8k5j0zKyucERpsdd+3KS+lDgeHKwtPPfwAcPmk
+         /YBswVxlH2xVzHBGHMWjSlAJhl98B/RpLXbc02+Lig2ltX3TGrTyHjvwMizFZSGAgW
+         WtOHllkamygowMwbkklewaIwfa+BUwu/j6qNaFDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 186/639] xsk: add missing smp_rmb() in xsk_mmap
-Date:   Fri, 24 Jan 2020 10:25:56 +0100
-Message-Id: <20200124093110.430156249@linuxfoundation.org>
+Subject: [PATCH 4.19 187/639] drm/etnaviv: potential NULL dereference
+Date:   Fri, 24 Jan 2020 10:25:57 +0100
+Message-Id: <20200124093110.546875636@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124093047.008739095@linuxfoundation.org>
 References: <20200124093047.008739095@linuxfoundation.org>
@@ -61,50 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Magnus Karlsson <magnus.karlsson@intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit e6762c8bcf982821935a2b1cb33cf8335d0eefae ]
+[ Upstream commit 9e05352340d3a3e68c144136db9810b26ebb88c3 ]
 
-All the setup code in AF_XDP is protected by a mutex with the
-exception of the mmap code that cannot use it. To make sure that a
-process banging on the mmap call at the same time as another process
-is setting up the socket, smp_wmb() calls were added in the umem
-registration code and the queue creation code, so that the published
-structures that xsk_mmap needs would be consistent. However, the
-corresponding smp_rmb() calls were not added to the xsk_mmap
-code. This patch adds these calls.
+The etnaviv_gem_prime_get_sg_table() is supposed to return error
+pointers.  Otherwise it can lead to a NULL dereference when it's called
+from drm_gem_map_dma_buf().
 
-Fixes: 37b076933a8e3 ("xsk: add missing write- and data-dependency barrier")
-Fixes: c0c77d8fb787c ("xsk: add user memory registration support sockopt")
-Signed-off-by: Magnus Karlsson <magnus.karlsson@intel.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 5f4a4a73f437 ("drm/etnaviv: fix gem_prime_get_sg_table to return new SG table")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xsk.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index ff15207036dc5..547fc4554b22c 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -661,6 +661,8 @@ static int xsk_mmap(struct file *file, struct socket *sock,
- 		if (!umem)
- 			return -EINVAL;
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
+index 0566171f8df22..f21529e635e3d 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
+@@ -15,7 +15,7 @@ struct sg_table *etnaviv_gem_prime_get_sg_table(struct drm_gem_object *obj)
+ 	int npages = obj->size >> PAGE_SHIFT;
  
-+		/* Matches the smp_wmb() in XDP_UMEM_REG */
-+		smp_rmb();
- 		if (offset == XDP_UMEM_PGOFF_FILL_RING)
- 			q = READ_ONCE(umem->fq);
- 		else if (offset == XDP_UMEM_PGOFF_COMPLETION_RING)
-@@ -670,6 +672,8 @@ static int xsk_mmap(struct file *file, struct socket *sock,
- 	if (!q)
- 		return -EINVAL;
+ 	if (WARN_ON(!etnaviv_obj->pages))  /* should have already pinned! */
+-		return NULL;
++		return ERR_PTR(-EINVAL);
  
-+	/* Matches the smp_wmb() in xsk_init_queue */
-+	smp_rmb();
- 	qpg = virt_to_head_page(q->ring);
- 	if (size > (PAGE_SIZE << compound_order(qpg)))
- 		return -EINVAL;
+ 	return drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
+ }
 -- 
 2.20.1
 
