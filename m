@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFCAC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B75FC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170E120709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC8820718
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 09:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579859773;
-	bh=3JNHxqSOL6IW0z4LiY4CBWCxFhq36dwC5JGGAApbR9I=;
+	s=default; t=1579859778;
+	bh=Q02J/GZJFdeNELe5RyPHNSHC6s660rLzv3qwk8uItGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ojvWNc4ezau64VLZ4I3rCjsf5N0bSijKUJivuQBD18tjsSGBbsIgh4VYgPbo4dXpE
-	 WyRBtxZW/RFJjHngArzt5wZOxLWg4dZaTiJhHjoAhKnt0kFOkrHNSXB7b08oNyI8I8
-	 aO9GzRAZCs3E/0X6a34XQyIZKyl79PkzDzgkM9VI=
+	b=cG04IvRTTCkTSACnSaSlHwvXUzgjrqBB9uIhstWVrU2I1+iha92f/8ofG+1aPreEJ
+	 XgUy9THABmfi2sWU3BT2zi53xjgJbDS0B94V1WjfzmrI4fe4uGCbdigce6DrDAVAr/
+	 PZi4KpZwOlDTck/a9K6EPLc/LGp385TjwkRk0638=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388516AbgAXJ4M (ORCPT
+        id S2388524AbgAXJ4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 04:56:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59886 "EHLO mail.kernel.org"
+        Fri, 24 Jan 2020 04:56:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731830AbgAXJ4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 04:56:11 -0500
+        id S1731830AbgAXJ4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 04:56:16 -0500
 Received: from localhost (unknown [145.15.244.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32EAE2075D;
-        Fri, 24 Jan 2020 09:56:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C51120718;
+        Fri, 24 Jan 2020 09:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579859770;
-        bh=3JNHxqSOL6IW0z4LiY4CBWCxFhq36dwC5JGGAApbR9I=;
+        s=default; t=1579859775;
+        bh=Q02J/GZJFdeNELe5RyPHNSHC6s660rLzv3qwk8uItGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NIxBjtG/Wy+yqwH2486g+FP7E6HGlnzWu7WvliGSRf+xkmj0vF3eVyDFrlMVPiwxH
-         kw1uWwc9wClvYFuBhW4VYg0TnAZKWrqfFDEsWd6rj8mqpWCtnGZSXyXqNey3Qb1z6f
-         Ugu/Q9XmCHd4mjaVeSfqIHm/kbyevMH0n87SGQRQ=
+        b=Og7ChOms9C3lZn6nrtpCeySR4Vel4dLXy0pyGu8Y28kS5FrZ6vg98H3rinHJFpcNK
+         JW0RBR9ni4q4ge/GugT5qLUon7CyGYZH4DvSPY2Udq3SKoCka+KqjezHAoPxB8s0V6
+         zMIcoYwEWZlFJbidwAeFwdjfI2G5cWK4e+Xo2LHg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Netanel Belgazal <netanel@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 191/343] net: ena: fix ena_com_fill_hash_function() implementation
-Date:   Fri, 24 Jan 2020 10:30:09 +0100
-Message-Id: <20200124092945.104574737@linuxfoundation.org>
+        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 192/343] dmaengine: tegra210-adma: restore channel status
+Date:   Fri, 24 Jan 2020 10:30:10 +0100
+Message-Id: <20200124092945.221038524@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200124092919.490687572@linuxfoundation.org>
 References: <20200124092919.490687572@linuxfoundation.org>
@@ -61,33 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Sameer Pujar <spujar@nvidia.com>
 
-[ Upstream commit 11bd7a00c0d8ffe33d1e926f8e789b4aea787186 ]
+[ Upstream commit f33e7bb3eb922618612a90f0a828c790e8880773 ]
 
-ena_com_fill_hash_function() didn't configure the rss->hash_func.
+Status of ADMA channel registers is not saved and restored during system
+suspend. During active playback if system enters suspend, this results in
+wrong state of channel registers during system resume and playback fails
+to resume properly. Fix this by saving following channel registers in
+runtime suspend and restore during runtime resume.
+ * ADMA_CH_LOWER_SRC_ADDR
+ * ADMA_CH_LOWER_TRG_ADDR
+ * ADMA_CH_FIFO_CTRL
+ * ADMA_CH_CONFIG
+ * ADMA_CH_CTRL
+ * ADMA_CH_CMD
+ * ADMA_CH_TC
+Runtime PM calls will be inovked during system resume path if a playback
+or capture needs to be resumed. Hence above changes work fine for system
+suspend case.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Netanel Belgazal <netanel@amazon.com>
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/tegra210-adma.c | 46 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 011b54c541aae..10e6053f66712 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -2087,6 +2087,7 @@ int ena_com_fill_hash_function(struct ena_com_dev *ena_dev,
- 		return -EINVAL;
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index 09b6756366c30..ac2a6b800db3e 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -98,6 +98,7 @@ struct tegra_adma_chan_regs {
+ 	unsigned int src_addr;
+ 	unsigned int trg_addr;
+ 	unsigned int fifo_ctrl;
++	unsigned int cmd;
+ 	unsigned int tc;
+ };
+ 
+@@ -127,6 +128,7 @@ struct tegra_adma_chan {
+ 	enum dma_transfer_direction	sreq_dir;
+ 	unsigned int			sreq_index;
+ 	bool				sreq_reserved;
++	struct tegra_adma_chan_regs	ch_regs;
+ 
+ 	/* Transfer count and position info */
+ 	unsigned int			tx_buf_count;
+@@ -635,8 +637,30 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
+ static int tegra_adma_runtime_suspend(struct device *dev)
+ {
+ 	struct tegra_adma *tdma = dev_get_drvdata(dev);
++	struct tegra_adma_chan_regs *ch_reg;
++	struct tegra_adma_chan *tdc;
++	int i;
+ 
+ 	tdma->global_cmd = tdma_read(tdma, ADMA_GLOBAL_CMD);
++	if (!tdma->global_cmd)
++		goto clk_disable;
++
++	for (i = 0; i < tdma->nr_channels; i++) {
++		tdc = &tdma->channels[i];
++		ch_reg = &tdc->ch_regs;
++		ch_reg->cmd = tdma_ch_read(tdc, ADMA_CH_CMD);
++		/* skip if channel is not active */
++		if (!ch_reg->cmd)
++			continue;
++		ch_reg->tc = tdma_ch_read(tdc, ADMA_CH_TC);
++		ch_reg->src_addr = tdma_ch_read(tdc, ADMA_CH_LOWER_SRC_ADDR);
++		ch_reg->trg_addr = tdma_ch_read(tdc, ADMA_CH_LOWER_TRG_ADDR);
++		ch_reg->ctrl = tdma_ch_read(tdc, ADMA_CH_CTRL);
++		ch_reg->fifo_ctrl = tdma_ch_read(tdc, ADMA_CH_FIFO_CTRL);
++		ch_reg->config = tdma_ch_read(tdc, ADMA_CH_CONFIG);
++	}
++
++clk_disable:
+ 	clk_disable_unprepare(tdma->ahub_clk);
+ 
+ 	return 0;
+@@ -645,7 +669,9 @@ static int tegra_adma_runtime_suspend(struct device *dev)
+ static int tegra_adma_runtime_resume(struct device *dev)
+ {
+ 	struct tegra_adma *tdma = dev_get_drvdata(dev);
+-	int ret;
++	struct tegra_adma_chan_regs *ch_reg;
++	struct tegra_adma_chan *tdc;
++	int ret, i;
+ 
+ 	ret = clk_prepare_enable(tdma->ahub_clk);
+ 	if (ret) {
+@@ -654,6 +680,24 @@ static int tegra_adma_runtime_resume(struct device *dev)
  	}
+ 	tdma_write(tdma, ADMA_GLOBAL_CMD, tdma->global_cmd);
  
-+	rss->hash_func = func;
- 	rc = ena_com_set_hash_function(ena_dev);
++	if (!tdma->global_cmd)
++		return 0;
++
++	for (i = 0; i < tdma->nr_channels; i++) {
++		tdc = &tdma->channels[i];
++		ch_reg = &tdc->ch_regs;
++		/* skip if channel was not active earlier */
++		if (!ch_reg->cmd)
++			continue;
++		tdma_ch_write(tdc, ADMA_CH_TC, ch_reg->tc);
++		tdma_ch_write(tdc, ADMA_CH_LOWER_SRC_ADDR, ch_reg->src_addr);
++		tdma_ch_write(tdc, ADMA_CH_LOWER_TRG_ADDR, ch_reg->trg_addr);
++		tdma_ch_write(tdc, ADMA_CH_CTRL, ch_reg->ctrl);
++		tdma_ch_write(tdc, ADMA_CH_FIFO_CTRL, ch_reg->fifo_ctrl);
++		tdma_ch_write(tdc, ADMA_CH_CONFIG, ch_reg->config);
++		tdma_ch_write(tdc, ADMA_CH_CMD, ch_reg->cmd);
++	}
++
+ 	return 0;
+ }
  
- 	/* Restore the old function */
 -- 
 2.20.1
 
