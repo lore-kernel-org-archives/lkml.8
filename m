@@ -2,163 +2,89 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1775C35244
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC5AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87891208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF712071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9SqrNVf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ek6lLXLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgAYPqv (ORCPT
+        id S1726858AbgAYPrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 10:46:51 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:34368 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgAYPqv (ORCPT
+        Sat, 25 Jan 2020 10:47:46 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44739 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgAYPrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 10:46:51 -0500
-Received: by mail-yb1-f193.google.com with SMTP id w17so2627030ybm.1;
-        Sat, 25 Jan 2020 07:46:50 -0800 (PST)
+        Sat, 25 Jan 2020 10:47:46 -0500
+Received: by mail-qk1-f193.google.com with SMTP id v195so5231462qkb.11;
+        Sat, 25 Jan 2020 07:47:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0HpMnKuQ13CXcvq8WRFBP0W35enuEY45QliPMV8nJdA=;
-        b=D9SqrNVf907tFfv22pxqSkkCNnDMUeARyYHgrR2XN3/gAxRPxXrCwagiQgqmaWx/Eh
-         LDGuHzr2V0x3XJLjzbD+sqaYOHRztly28rKinQC4w8qH28xczTpP+DI+k0CQh9M6xIU7
-         dglD+CT/l6Y6kKKpG48eUzDjkLGdBObbT2oJUpdlJOT1L+qa7yuqeMN9SpOnMCpnjfqP
-         sbDRtboU2/fr07dZ/wKxHBUBtUHRfmZRK46b82Bdkfci7MUCxoICTQL789wPdjMKIIuT
-         6uCbTVGy1XLzjDOlyGVzT1HuC9iHmwgMLcknVnlf5kNLzgKx73xk9jPeWP31w3DJz/TV
-         tNYg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sGDKkzK7pZH1PmjbRgCXBtXFFSFzoo8Sm5ticdUWb/Y=;
+        b=Ek6lLXLjzoJfwVim+l+BqHvXuPHoK0JuIYZ6CkmXG2gKo6+otdKOBuFOWaNi8D29vO
+         cW/Ygi98XEOGQeQTYEtDhYpvaa/4E7oDlvFmrVAlhhr8s2ugd40EcBUsrJl4Pl9bnoSJ
+         hQS3tdCZNfcbYkoHi3IPR4hO8Df1nPMBLDmwWHQxgNwECLxsDqWKlSp/dw8REerlbCGn
+         BhbBaciLwhr0NmN0gsCQvs892OlrfkSXhgF33iNVy46f4SWZ2rhTP5C/7DaxRiEINnOo
+         Pq2eiaQabZCp7bjqPQ9MY2pS7gyW8h/R5htaTSxAlMyBco52cPKQopjfQz6lUF4eKFhY
+         rLUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0HpMnKuQ13CXcvq8WRFBP0W35enuEY45QliPMV8nJdA=;
-        b=jLbrzvZL9wNDZ4qV8oypPFv6/i7048mqPZsV5TfKuFIyu6fvX89vx+bQsHgeC6yY87
-         XlUBaPqsVgLe1IwCmiJx7ZW8ST+27mSDE6t0CMfO+7Xpu/kYVzZl7CbK0iFSrb2Mz2e9
-         oMkqAX9MWnmXk1eNlgxKDBwKgXXUqUu3wSd/QqFwaW2/rrn5j5HSnenI6r0nflgUmcjv
-         fOwRybUnXc/zK1eDU/0619kwhbw/jikVV6pdeDq1uxv8fFS9PrRwVBlz8IjsQif1sQRV
-         DPtUogJvOIq5MbscggIn/jYbV9AtWolq4eGRTzKpgPRcm2872c1oG6vy62KTNGRPNFKM
-         KITA==
-X-Gm-Message-State: APjAAAUV7Fj0Jbw+0bo9adDQL7dWKkVlj14WuHiYIqK7/7JgzfaD2HyE
-        uTH5SoG29Rh1oqlZ1YVeyJqoJkUh
-X-Google-Smtp-Source: APXvYqyHjAB5Ui3Om0EFYjY+B9Wiklfo/+/sC02dHKHo7e5HKtSsofsdKPBYJefwq972gJBxLZDeAw==
-X-Received: by 2002:a25:d413:: with SMTP id m19mr6432911ybf.51.1579967210148;
-        Sat, 25 Jan 2020 07:46:50 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c21sm926829ywb.71.2020.01.25.07.46.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Jan 2020 07:46:49 -0800 (PST)
-Subject: Re: [PATCH 4.19 000/639] 4.19.99-stable review
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200124093047.008739095@linuxfoundation.org>
- <23f2a904-3351-4a75-aaaf-2623dc55d114@nvidia.com>
- <20200124173659.GD3166016@kroah.com>
- <8a782263-aca3-3846-12a0-4eb21f015894@nvidia.com>
- <87fcb1f0-b1b8-a6e2-b8f6-b95a07f67919@nvidia.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <eadee1dd-fb6d-855d-935a-4bf93a9ad505@roeck-us.net>
-Date:   Sat, 25 Jan 2020 07:46:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sGDKkzK7pZH1PmjbRgCXBtXFFSFzoo8Sm5ticdUWb/Y=;
+        b=kqMTeX9IN2DBmmqmwzyhqk3sfBXSc5I0jSi6WMqyc36R7A1Q8AbaZl7roP+QTduiJr
+         BD6yeTWr8cSjmtFUxQ6fCeeB5D+U7bXBE8T/MVQRv3Lblt36RMWTfA2H9guJRq+dNMcC
+         AD/lsXmI0Eq7SIE4sgV8aVNaowgINVqvV0rwdRlD0fojd8uk50ysk1Y31K1l1l/RHc/b
+         p4UaiKKbpOqnwyLxZFNNsBIZmYqW/bTF+pvWGFuWULTdwA+SxZFHml5d7W/2rFTKs8Qq
+         Yq7TTOMf6pNuqRcvZOB/SR7wtlrQwQqfbrLnsoP16P0BtZ3/F18xe2iWEcb57FgNeNMm
+         RUMw==
+X-Gm-Message-State: APjAAAWCc+m1hm7vG1y/pOOE/iNjgOYR+D2tz7FX4x5bHqRG1q5WhrfO
+        izbkipcT1nVU4/lCLFn+epI=
+X-Google-Smtp-Source: APXvYqxe40f442y6Yy/twjmskp3nwtpwelm7ROmTKIylcz9quGK4E33pHF6O79B21/VjpmUC/RGU+A==
+X-Received: by 2002:a05:620a:1333:: with SMTP id p19mr8556368qkj.73.1579967265411;
+        Sat, 25 Jan 2020 07:47:45 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c091:480::c331])
+        by smtp.gmail.com with ESMTPSA id 13sm5305093qke.85.2020.01.25.07.47.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 Jan 2020 07:47:44 -0800 (PST)
+Date:   Sat, 25 Jan 2020 07:47:40 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org
+Subject: Re: [PATCH v4 bpf-next 2/3] tools/bpf: Sync uapi header bpf.h
+Message-ID: <20200125154739.jfsl4cubpkpciq56@ast-mbp>
+References: <20200124211705.24759-1-dxu@dxuuu.xyz>
+ <20200124211705.24759-3-dxu@dxuuu.xyz>
 MIME-Version: 1.0
-In-Reply-To: <87fcb1f0-b1b8-a6e2-b8f6-b95a07f67919@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124211705.24759-3-dxu@dxuuu.xyz>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/25/20 3:32 AM, Jon Hunter wrote:
+On Fri, Jan 24, 2020 at 01:17:04PM -0800, Daniel Xu wrote:
+> Sync the header file in a separate commit to help with external sync.
 > 
-> On 24/01/2020 18:07, Jon Hunter wrote:
->>
->> On 24/01/2020 17:36, Greg Kroah-Hartman wrote:
->>> On Fri, Jan 24, 2020 at 02:50:05PM +0000, Jon Hunter wrote:
->>>> Hi Greg,
->>>>
->>>> On 24/01/2020 09:22, Greg Kroah-Hartman wrote:
->>>>> This is the start of the stable review cycle for the 4.19.99 release.
->>>>> There are 639 patches in this series, all will be posted as a response
->>>>> to this one.  If anyone has any issues with these being applied, please
->>>>> let me know.
->>>>>
->>>>> Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
->>>>> Anything received after that time might be too late.
->>>>>
->>>>> The whole patch series can be found in one patch at:
->>>>> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.99-rc1.gz
->>>>> or in the git tree and branch at:
->>>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
->>>>> and the diffstat can be found below.
->>>>>
->>>>> thanks,
->>>>>
->>>>> greg k-h
->>>>>
->>>>> -------------
->>>>> Pseudo-Shortlog of commits:
->>>>
->>>> ...
->>>>
->>>>> Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>>>      PCI: PM: Skip devices in D0 for suspend-to-idle
->>>>
->>>> The above commit is causing a suspend regression on Tegra124 Jetson-TK1.
->>>> Reverting this on top of v4.19.99-rc1 fixes the issue.
->>>
->>> This is also in the 4.14 queue, so should I drop it there too?
->>
->> I did not see any failures with the same board on that branch, so I
->> would say no, but odd that it only fails here. It was failing for me
->> 100% so I would have expected to see if there too if it was a problem.
-> 
-> Hmmm, rc2 still not working for me ...
-> 
-> Test results for stable-v4.19:
->      11 builds:	11 pass, 0 fail
->      22 boots:	22 pass, 0 fail
->      32 tests:	30 pass, 2 fail
-> 
-> Linux version:	4.19.99-rc2-g24832ad2c623
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                  tegra194-p2972-0000, tegra20-ventana,
->                  tegra210-p2371-2180, tegra30-cardhu-a04
-> 
-> I still see the following commit in rc2 ...
-> 
-> commit bb52152abe85f971278a7a4f033b29483f64bfdb
-> Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Date:   Thu Jun 13 23:59:45 2019 +0200
-> 
->      PCI: PM: Skip devices in D0 for suspend-to-idle
-> 
-> BTW, I checked the 4.14. queue and I do not see the above change in
-> there, however, there is similar change ...
-> 
-> Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->      PCI: PM: Avoid possible suspend-to-idle issue
-> 
-bb52152abe85 fixes this one, which in turn fixes 33e4f80ee69b.
-The above in 4.14 but not its fixes is spelling a bit of trouble.
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
+>  tools/include/uapi/linux/bpf.h | 25 ++++++++++++++++++++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
 
-Maybe commit 471a739a47aa7 ("PCI: PM: Avoid skipping bus-level
-PM on platforms without ACPI") was added to -rc2, since it is
-supposed to fix bb52152abe85.
-
-Guenter
+fyi we don't have to split tools/ update into separate patch.
+Feel free to squash into patch 3 or keep it as-is.
