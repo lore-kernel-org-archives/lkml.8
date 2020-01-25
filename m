@@ -2,116 +2,119 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A571CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 14:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B70C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 14:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7793120704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 14:19:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u4rlrp5t"
+	by mail.kernel.org (Postfix) with ESMTP id 1157620704
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 14:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgAYOTN (ORCPT
+        id S1726690AbgAYOTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 09:19:13 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:33835 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgAYOTN (ORCPT
+        Sat, 25 Jan 2020 09:19:54 -0500
+Received: from 9.mo177.mail-out.ovh.net ([46.105.72.238]:51879 "EHLO
+        9.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgAYOTx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 09:19:13 -0500
-Received: by mail-il1-f193.google.com with SMTP id l4so3966440ilj.1
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 06:19:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4IOcKziXindsQxuZaTjh7EfVGTRkJPvoLSajMaYU4bQ=;
-        b=u4rlrp5t1zdQUP2lrVYfF1zHeG2xC8st3jya0uH58+r0q/il3Fw1F8ivF1eSce9grP
-         XWBVQZOejohVU+nwMb1/WpTbOrDm7ZgSOANXYEt5Akfa+uZdQnaxRKe08ZHnzaklBXoK
-         m9mqix9iA+l8cSTE9jp4PiAt2nuSo0ikktCfxigc7gm6VwSe0InRjGKkfFS2ft2n2Qou
-         F2b4RZoQZIlwoZz1gXNjYMsbIzLScTQ48DNjELDgV6Uf4659ulgJrcGeIxjWTClOakiK
-         l/IkUPDrThalszO+O57JcxT+jOgWcH1wrz1HIbzW7QTKCZmy1t52jhcU9BrUcMtyM3kC
-         HPsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4IOcKziXindsQxuZaTjh7EfVGTRkJPvoLSajMaYU4bQ=;
-        b=Z4Bpzu5rYUar1WUWutIQ5khyiThbgiqYUVI0j3tBA+ANm4mEqTdnhRBB6aLKRQdCmr
-         k7Npxb4/L13pMRFIqsmZOqaQZo794oys4y7e6sKdmUDjJeb9khu8aif+2gTN4Wx1FgAj
-         zGTC7SH5lNaVQqv7mwDs1lm0SeALWVGPEWYIrLsPudVqo6CZ3yrrWJBl3Nqwx6on3OkL
-         CJ4NHElcWngtkNG4qsCGMQCNzaTe+wmMchJdbwNHBtfZcVc1wiz5J5dXr3q976UITmeT
-         hJeMv4VmcVOszvI7e2rlJUHg81RC2wJ/A7HovjIl/l+ujf/wsSwDRqBc5y4ilODFpPzB
-         yvdw==
-X-Gm-Message-State: APjAAAXbi3CiKu31pAWycWWDneetKH5tUcEFj+YgsMLGX6Wz0LUoTeEo
-        4rT1OTtiE1RtsVG9dBCiuI3LrSs9qIiU+4Xu5ppvig==
-X-Google-Smtp-Source: APXvYqyM+JwU8gSk9qSy3E4AogkJSqMITiwY8nohhcaRXZroA6u/BFZkaxl05hUDIryEk+6OhG1pl1qRfPJQEWplfwg=
-X-Received: by 2002:a92:9c52:: with SMTP id h79mr952579ili.213.1579961952536;
- Sat, 25 Jan 2020 06:19:12 -0800 (PST)
+        Sat, 25 Jan 2020 09:19:53 -0500
+X-Greylist: delayed 8831 seconds by postgrey-1.27 at vger.kernel.org; Sat, 25 Jan 2020 09:19:52 EST
+Received: from player734.ha.ovh.net (unknown [10.108.42.142])
+        by mo177.mail-out.ovh.net (Postfix) with ESMTP id 099A6120F82
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 12:52:39 +0100 (CET)
+Received: from RCM-web9.webmail.mail.ovh.net (unknown [147.229.117.36])
+        (Authenticated sender: steve@sk2.org)
+        by player734.ha.ovh.net (Postfix) with ESMTPSA id 98DE3E7D3290;
+        Sat, 25 Jan 2020 11:52:28 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200124161811.105623-1-yuhsuan@chromium.org>
-In-Reply-To: <20200124161811.105623-1-yuhsuan@chromium.org>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Sat, 25 Jan 2020 22:19:01 +0800
-Message-ID: <CA+Px+wVzK=L9nUTEzhPY36Zee-ZZOgFMCNvOi+tQ2Un0as9QDA@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: cros_ec_codec: Support setting bclk ratio
-To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Benson Leung <bleung@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sat, 25 Jan 2020 12:52:23 +0100
+From:   Stephen Kitt <steve@sk2.org>
+To:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        steve@sk2.org
+Subject: Re: [PATCH] amdgpu: use dma-resv API instead of manual kmalloc
+In-Reply-To: <20200125114624.2093235-1-steve@sk2.org>
+References: <20200125114624.2093235-1-steve@sk2.org>
+User-Agent: Roundcube Webmail/1.4.2
+Message-ID: <a413396eed8390fc95fedabae9ae5afb@sk2.org>
+X-Sender: steve@sk2.org
+X-Originating-IP: 147.229.117.36
+X-Webmail-UserID: steve@sk2.org
+X-Ovh-Tracer-Id: 3172504463427325436
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrvdejgdeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeggtgfgfffhvffujghffgfkgihisehtkehjtddtreejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucfkpheptddrtddrtddrtddpudegjedrvddvledruddujedrfeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeefgedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 12:18 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> wrote:
->
-> Support setting bclk ratio from machine drivers.
->
-> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+And of course I forgot this is an internal API, so this doesn't work 
+without some of other stuff which isn't ready.
 
-Please at least cc to <alsa-devel@alsa-project.org> for ASoC-related patches.
+Please ignore...
 
-> @@ -42,6 +42,8 @@ struct cros_ec_codec_priv {
->         uint64_t ap_shm_addr;
->         uint64_t ap_shm_last_alloc;
->
-> +       uint32_t i2s_rx_bclk_ratio;
-> +
+Regards,
 
-To be consistent, move the variable after the "DMIC" part and add a /*
-I2S_RX */ comment.
+Stephen
 
->         /* DMIC */
->         atomic_t dmic_probed;
 
->         if (params_rate(params) != 48000)
-> @@ -284,15 +287,30 @@ static int i2s_rx_hw_params(struct snd_pcm_substream *substream,
->         if (ret < 0)
->                 return ret;
->
-> -       dev_dbg(component->dev, "set bclk to %u\n",
-> -               snd_soc_params_to_bclk(params));
-> +       /* If the blck ratio is not set, get bclk from hw_params. */
-
-A typo, s/blck/bclk/.  I don't think the comment is very necessary.
-The code block is obvious.
-
-> +       if (priv->i2s_rx_bclk_ratio)
-> +               bclk = params_rate(params) * priv->i2s_rx_bclk_ratio;
-> +       else
-> +               bclk = snd_soc_params_to_bclk(params);
-> +
-> +       dev_dbg(component->dev, "set bclk to %u\n", bclk);
+Le 25/01/2020 12:46, Stephen Kitt a écrit :
+> Instead of hand-coding the dma_resv_list allocation, use
+> dma_resv_list_alloc, which masks the shared_max handling. While we're
+> at it, since we only need shared_count fences, allocate shared_count
+> fences rather than shared_max.
+> 
+> (This is the only place in the kernel, outside of dma-resv.c, which
+> touches shared_max. This suggests we'd probably be better off without
+> it!)
+> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> index 888209eb8cec..aec595752200 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> @@ -234,12 +234,11 @@ static int
+> amdgpu_amdkfd_remove_eviction_fence(struct amdgpu_bo *bo,
+>  	if (!old)
+>  		return 0;
+> 
+> -	new = kmalloc(offsetof(typeof(*new), shared[old->shared_max]),
+> -		      GFP_KERNEL);
+> +	new = dma_resv_list_alloc(old->shared_count);
+>  	if (!new)
+>  		return -ENOMEM;
+> 
+> -	/* Go through all the shared fences in the resevation object and sort
+> +	/* Go through all the shared fences in the reservation object and 
+> sort
+>  	 * the interesting ones to the end of the list.
+>  	 */
+>  	for (i = 0, j = old->shared_count, k = 0; i < old->shared_count; ++i) 
+> {
+> @@ -253,7 +252,6 @@ static int
+> amdgpu_amdkfd_remove_eviction_fence(struct amdgpu_bo *bo,
+>  		else
+>  			RCU_INIT_POINTER(new->shared[k++], f);
+>  	}
+> -	new->shared_max = old->shared_max;
+>  	new->shared_count = k;
+> 
+>  	/* Install the new fence list, seqcount provides the barriers */
