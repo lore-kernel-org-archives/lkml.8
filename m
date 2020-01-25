@@ -7,44 +7,38 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29104C35246
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7995C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A28624125
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F2B24125
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbgAYKnm (ORCPT
+        id S1730099AbgAYKnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:43:42 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44303 "EHLO
+        Sat, 25 Jan 2020 05:43:46 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44363 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729638AbgAYKnP (ORCPT
+        with ESMTP id S1729821AbgAYKnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 05:43:15 -0500
+        Sat, 25 Jan 2020 05:43:23 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ivIu1-0008VZ-RP; Sat, 25 Jan 2020 11:42:58 +0100
+        id 1ivIuN-0000Cn-4b; Sat, 25 Jan 2020 11:43:19 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B3F4D1C1A74;
-        Sat, 25 Jan 2020 11:42:48 +0100 (CET)
-Date:   Sat, 25 Jan 2020 10:42:48 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BC5371C1A8E;
+        Sat, 25 Jan 2020 11:42:55 +0100 (CET)
+Date:   Sat, 25 Jan 2020 10:42:55 -0000
+From:   "tip-bot2 for Stefan Reiter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] net/tipc: Replace rcu_swap_protected() with
- rcu_replace_pointer()
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        kbuild test robot <lkp@intel.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <tipc-discussion@lists.sourceforge.net>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] rcu/nocb: Fix dump_tree hierarchy print always active
+Cc:     Stefan Reiter <stefan@pimaker.at>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157994896855.396.463583645581287836.tip-bot2@tip-bot2>
+Message-ID: <157994897557.396.7518376565482337804.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,53 +54,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     1a271ebbfe33a44f61e02d35a2950ab00b32850b
-Gitweb:        https://git.kernel.org/tip/1a271ebbfe33a44f61e02d35a2950ab00b32850b
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Mon, 09 Dec 2019 19:13:45 -08:00
+Commit-ID:     610dea36d3083a977e4f156206cbe1eaa2a532f0
+Gitweb:        https://git.kernel.org/tip/610dea36d3083a977e4f156206cbe1eaa2a532f0
+Author:        Stefan Reiter <stefan@pimaker.at>
+AuthorDate:    Fri, 04 Oct 2019 19:49:10 
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 12 Dec 2019 10:19:40 -08:00
+CommitterDate: Mon, 09 Dec 2019 12:37:50 -08:00
 
-net/tipc: Replace rcu_swap_protected() with rcu_replace_pointer()
+rcu/nocb: Fix dump_tree hierarchy print always active
 
-This commit replaces the use of rcu_swap_protected() with the more
-intuitively appealing rcu_replace_pointer() as a step towards removing
-rcu_swap_protected().
+Commit 18cd8c93e69e ("rcu/nocb: Print gp/cb kthread hierarchy if
+dump_tree") added print statements to rcu_organize_nocb_kthreads for
+debugging, but incorrectly guarded them, causing the function to always
+spew out its message.
 
-Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: kbuild test robot <lkp@intel.com>
+This patch fixes it by guarding both pr_alert statements with dump_tree,
+while also changing the second pr_alert to a pr_cont, to print the
+hierarchy in a single line (assuming that's how it was supposed to
+work).
+
+Fixes: 18cd8c93e69e ("rcu/nocb: Print gp/cb kthread hierarchy if dump_tree")
+Signed-off-by: Stefan Reiter <stefan@pimaker.at>
+[ paulmck: Make single-nocbs-CPU GP kthreads look less erroneous. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-[ paulmck: Updated based on Ying Xue and Tuong Lien Tong feedback. ]
-Cc: Jon Maloy <jon.maloy@ericsson.com>
-Cc: Ying Xue <ying.xue@windriver.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: <netdev@vger.kernel.org>
-Cc: <tipc-discussion@lists.sourceforge.net>
 ---
- net/tipc/crypto.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ kernel/rcu/tree_plugin.h | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
-index 990a872..c8c47fc 100644
---- a/net/tipc/crypto.c
-+++ b/net/tipc/crypto.c
-@@ -257,9 +257,6 @@ static char *tipc_key_change_dump(struct tipc_key old, struct tipc_key new,
- #define tipc_aead_rcu_ptr(rcu_ptr, lock)				\
- 	rcu_dereference_protected((rcu_ptr), lockdep_is_held(lock))
- 
--#define tipc_aead_rcu_swap(rcu_ptr, ptr, lock)				\
--	rcu_swap_protected((rcu_ptr), (ptr), lockdep_is_held(lock))
--
- #define tipc_aead_rcu_replace(rcu_ptr, ptr, lock)			\
- do {									\
- 	typeof(rcu_ptr) __tmp = rcu_dereference_protected((rcu_ptr),	\
-@@ -1189,7 +1186,7 @@ static bool tipc_crypto_key_try_align(struct tipc_crypto *rx, u8 new_pending)
- 
- 	/* Move passive key if any */
- 	if (key.passive) {
--		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
-+		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2, lockdep_is_held(&rx->lock));
- 		x = (key.passive - key.pending + new_pending) % KEY_MAX;
- 		new_passive = (x <= 0) ? x + KEY_MAX : x;
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index fa08d55..758bfe1 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -2321,6 +2321,8 @@ static void __init rcu_organize_nocb_kthreads(void)
+ {
+ 	int cpu;
+ 	bool firsttime = true;
++	bool gotnocbs = false;
++	bool gotnocbscbs = true;
+ 	int ls = rcu_nocb_gp_stride;
+ 	int nl = 0;  /* Next GP kthread. */
+ 	struct rcu_data *rdp;
+@@ -2343,21 +2345,31 @@ static void __init rcu_organize_nocb_kthreads(void)
+ 		rdp = per_cpu_ptr(&rcu_data, cpu);
+ 		if (rdp->cpu >= nl) {
+ 			/* New GP kthread, set up for CBs & next GP. */
++			gotnocbs = true;
+ 			nl = DIV_ROUND_UP(rdp->cpu + 1, ls) * ls;
+ 			rdp->nocb_gp_rdp = rdp;
+ 			rdp_gp = rdp;
+-			if (!firsttime && dump_tree)
+-				pr_cont("\n");
+-			firsttime = false;
+-			pr_alert("%s: No-CB GP kthread CPU %d:", __func__, cpu);
++			if (dump_tree) {
++				if (!firsttime)
++					pr_cont("%s\n", gotnocbscbs
++							? "" : " (self only)");
++				gotnocbscbs = false;
++				firsttime = false;
++				pr_alert("%s: No-CB GP kthread CPU %d:",
++					 __func__, cpu);
++			}
+ 		} else {
+ 			/* Another CB kthread, link to previous GP kthread. */
++			gotnocbscbs = true;
+ 			rdp->nocb_gp_rdp = rdp_gp;
+ 			rdp_prev->nocb_next_cb_rdp = rdp;
+-			pr_alert(" %d", cpu);
++			if (dump_tree)
++				pr_cont(" %d", cpu);
+ 		}
+ 		rdp_prev = rdp;
  	}
++	if (gotnocbs && dump_tree)
++		pr_cont("%s\n", gotnocbscbs ? "" : " (self only)");
+ }
+ 
+ /*
