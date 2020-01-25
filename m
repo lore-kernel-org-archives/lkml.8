@@ -5,52 +5,43 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11450C35243
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6724DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E630C218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45155218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgAYKo2 (ORCPT
+        id S1730256AbgAYKod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:44:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44387 "EHLO
+        Sat, 25 Jan 2020 05:44:33 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44388 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729868AbgAYKn0 (ORCPT
+        with ESMTP id S1729866AbgAYKn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 25 Jan 2020 05:43:26 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ivIu5-0008V2-8j; Sat, 25 Jan 2020 11:43:01 +0100
+        id 1ivIuQ-0000HC-HW; Sat, 25 Jan 2020 11:43:22 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 74CF51C1A72;
-        Sat, 25 Jan 2020 11:42:48 +0100 (CET)
-Date:   Sat, 25 Jan 2020 10:42:48 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1A9521C1A95;
+        Sat, 25 Jan 2020 11:42:59 +0100 (CET)
+Date:   Sat, 25 Jan 2020 10:42:58 -0000
+From:   "tip-bot2 for Boqun Feng" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] wireless/mediatek: Replace rcu_swap_protected() with
- rcu_replace_pointer()
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+Subject: [tip: core/rcu] rcu: Avoid modifying mask_ofl_ipi in
+ sync_rcu_exp_select_node_cpus()
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, x86 <x86@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Marco Elver <elver@google.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157994896823.396.3709123757914257242.tip-bot2@tip-bot2>
+Message-ID: <157994897887.396.17380984006682495096.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,52 +57,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     a191c9e9f73a78e8801b5eeb3d43bbd6fd73b86f
-Gitweb:        https://git.kernel.org/tip/a191c9e9f73a78e8801b5eeb3d43bbd6fd73b86f
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Wed, 11 Dec 2019 10:30:21 -08:00
+Commit-ID:     9f08cf088676c12a5b53bd5a29cf04f00c787b5d
+Gitweb:        https://git.kernel.org/tip/9f08cf088676c12a5b53bd5a29cf04f00c787b5d
+Author:        Boqun Feng <boqun.feng@gmail.com>
+AuthorDate:    Tue, 08 Oct 2019 13:01:40 +08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 12 Dec 2019 10:20:51 -08:00
+CommitterDate: Mon, 09 Dec 2019 12:24:56 -08:00
 
-wireless/mediatek: Replace rcu_swap_protected() with rcu_replace_pointer()
+rcu: Avoid modifying mask_ofl_ipi in sync_rcu_exp_select_node_cpus()
 
-This commit replaces the use of rcu_swap_protected() with the more
-intuitively appealing rcu_replace_pointer() as a step towards removing
-rcu_swap_protected().
+The "mask_ofl_ipi" is used to track which CPUs get IPIed, however
+in the IPI sending loop, "mask_ofl_ipi" along with another variable
+"mask_ofl_test" might also get modified to record which CPUs' quiesent
+states must be reported by the sync_rcu_exp_select_node_cpus() at
+the end of sync_rcu_exp_select_node_cpus().  This overlap of roles
+can be confusing, so this patch cleans things a little by using
+"mask_ofl_ipi" solely for determining which CPUs must be IPIed  and
+"mask_ofl_test" for solely determining on behalf of  which CPUs
+sync_rcu_exp_select_node_cpus() must report a quiscent state.
 
-Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: "Martin K. Petersen" <martin.petersen@oracle.com>
-[ paulmck: Apply Matthias Brugger feedback. ]
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: "Martin K. Petersen" <martin.petersen@oracle.com>
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: Felix Fietkau <nbd@nbd.name>
-Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Roy Luo <royluo@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: <linux-wireless@vger.kernel.org>
-Cc: <netdev@vger.kernel.org>
-Cc: <linux-arm-kernel@lists.infradead.org>
-Cc: <linux-mediatek@lists.infradead.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Acked-by: Marco Elver <elver@google.com>
 ---
- drivers/net/wireless/mediatek/mt76/agg-rx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/rcu/tree_exp.h | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/agg-rx.c b/drivers/net/wireless/mediatek/mt76/agg-rx.c
-index 53b5a4b..59c1878 100644
---- a/drivers/net/wireless/mediatek/mt76/agg-rx.c
-+++ b/drivers/net/wireless/mediatek/mt76/agg-rx.c
-@@ -281,8 +281,8 @@ void mt76_rx_aggr_stop(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tidno)
- {
- 	struct mt76_rx_tid *tid = NULL;
- 
--	rcu_swap_protected(wcid->aggr[tidno], tid,
--			   lockdep_is_held(&dev->mutex));
-+	tid = rcu_replace_pointer(wcid->aggr[tidno], tid,
-+				  lockdep_is_held(&dev->mutex));
- 	if (tid) {
- 		mt76_rx_aggr_shutdown(dev, tid);
- 		kfree_rcu(tid, rcu_head);
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index 69c5aa6..6a6f328 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -387,10 +387,10 @@ retry_ipi:
+ 		}
+ 		ret = smp_call_function_single(cpu, rcu_exp_handler, NULL, 0);
+ 		put_cpu();
+-		if (!ret) {
+-			mask_ofl_ipi &= ~mask;
++		/* The CPU will report the QS in response to the IPI. */
++		if (!ret)
+ 			continue;
+-		}
++
+ 		/* Failed, raced with CPU hotplug operation. */
+ 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 		if ((rnp->qsmaskinitnext & mask) &&
+@@ -401,13 +401,12 @@ retry_ipi:
+ 			schedule_timeout_uninterruptible(1);
+ 			goto retry_ipi;
+ 		}
+-		/* CPU really is offline, so we can ignore it. */
+-		if (!(rnp->expmask & mask))
+-			mask_ofl_ipi &= ~mask;
++		/* CPU really is offline, so we must report its QS. */
++		if (rnp->expmask & mask)
++			mask_ofl_test |= mask;
+ 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	}
+ 	/* Report quiescent states for those that went offline. */
+-	mask_ofl_test |= mask_ofl_ipi;
+ 	if (mask_ofl_test)
+ 		rcu_report_exp_cpu_mult(rnp, mask_ofl_test, false);
+ }
