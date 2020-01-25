@@ -2,77 +2,86 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85828C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9A3C35244
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505DE2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02362208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:36:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pDIorN8G"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GJoXW9Kz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgAYPeI (ORCPT
+        id S1726612AbgAYPgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 10:34:08 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:54080 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgAYPeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 10:34:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ZDYNRqwBExDRXRR1MBnllajpDkmWN72OefXMTvnpJxM=; b=pDIorN8GkvUAsYHcE3q9XkvtTH
-        mOTju6Vz+39zitPiVfOOFlVO3gk1nnvmtxsftHXu6kBK+clKmN4Qs49LI426KGZjMaXrfkaWd0Blw
-        dp9dEIcx9aDhwQIwJF/SpK5+tY3ght5DlnK+0dqsmyZbsUKcV11klQ5fU5csoI+uVJp4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ivNRj-0006wc-7X; Sat, 25 Jan 2020 16:34:03 +0100
-Date:   Sat, 25 Jan 2020 16:34:03 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bridge@lists.linux-foundation.org, jiri@resnulli.us,
-        ivecera@redhat.com, davem@davemloft.net, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com, anirudh.venkataramanan@intel.com,
-        olteanv@gmail.com, jeffrey.t.kirsher@intel.com,
-        UNGLinuxDriver@microchip.com
-Subject: Re: [RFC net-next v3 04/10] net: bridge: mrp: Add generic netlink
- interface to configure MRP
-Message-ID: <20200125153403.GB18311@lunn.ch>
-References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
- <20200124161828.12206-5-horatiu.vultur@microchip.com>
+        Sat, 25 Jan 2020 10:36:31 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:53790 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725821AbgAYPgb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 10:36:31 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579966590; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ZishNxIYOars2iJxl3ot5DDo7EJhr+VfSTqCJaW0wP0=; b=GJoXW9Kzh1rKkrzad+p949HMi73B8Bt5NvxMDeLhPH7xp9f4FbnRO8EyM8mcr/53C54SegV6
+ q5BcEpVmCDbkTuX46JHj5sh5+jNOuNzvSM26aDeWcy7TfWTJLtxOH3hbbwM4T+dElloAKyRZ
+ qIGAMXalLp2nIj2Fy8UwdB8TUFg=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2c607d.7f605d9f9308-smtp-out-n01;
+ Sat, 25 Jan 2020 15:36:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1452CC447A1; Sat, 25 Jan 2020 15:36:29 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.209.170.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90669C433CB;
+        Sat, 25 Jan 2020 15:36:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 90669C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 0/6] Add RSC power domain support
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org
+References: <20190823081703.17325-1-mkshah@codeaurora.org>
+ <20200121190521.GT89495@google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <49df6ec5-311e-43d9-9244-aaf35cc721bb@codeaurora.org>
+Date:   Sat, 25 Jan 2020 21:06:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124161828.12206-5-horatiu.vultur@microchip.com>
+In-Reply-To: <20200121190521.GT89495@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 05:18:22PM +0100, Horatiu Vultur wrote:
-> Implement the generic netlink interface to configure MRP. The implementation
-> will do sanity checks over the attributes and then eventually call the MRP
-> interface which eventually will call the switchdev API.
+Hi Matthias,
 
-Hi Horatiu
+Yes i will soon post a v3 series addressing outstanding comments.
 
-What was your thinking between adding a new generic netlink interface,
-and extending the current one?
+Thanks,
 
-I've not looked at your user space code yet, but i assume it has to
-make use of both? It needs to create the bridge and add the
-interfaces. And then it needs to control the MRP state.
+Maulik
 
-Allan mentioned you might get around to implementing 802.1CB? Would
-that be another generic netlink interface, or would you extend the MRP
-interface?
+On 1/22/2020 12:35 AM, Matthias Kaehlcke wrote:
+> Hi Maulik,
+>
+> What is the status of this series? It seems it hasn't been updated since
+> you sent it in August last year. Do you plan to send a v3 in the near future
+> to address the outstanding comments?
 
-Thanks
-	Andrew			
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
