@@ -2,179 +2,137 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765E2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 00:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF56C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA192075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 00:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579913836;
-	bh=7jt0GTJ/WTvnJW0J0lj3B8HCo6k1PQjNhvzflXBV4Tk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=VOmZ88mAzEn/nxRi33VP4PpFQoMgxSBycjBhxJK2NeY3sHe23X+hNvkGWfgAW3ODj
-	 NkXRaZ0HtC70u4v3QY4VqrRH5GXNanobkXCqz4i6NcgN7vGsONZrVfyvtYb1RdT8YB
-	 RHKCazdy4kTF7g1WI4MHEPkFXjzaWy3aNrZLP2WM=
+	by mail.kernel.org (Postfix) with ESMTP id 73B8F2073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:01:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZZ3UTU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387594AbgAYA5P (ORCPT
+        id S2387604AbgAYBB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 19:57:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387475AbgAYA5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 19:57:14 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D40442071E;
-        Sat, 25 Jan 2020 00:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579913833;
-        bh=7jt0GTJ/WTvnJW0J0lj3B8HCo6k1PQjNhvzflXBV4Tk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=p2zHxPE5tfiNPi2OhmhFXsfhjkb6uZL1MmWFtLvtH2bHlq5/tAqcHCSP2TZe7SDkn
-         3iI69TItHEfO9zhVah9QIqJaHhMn6rGJOIRtvf1kNaBL232FKwpOvMViCH4EG9f1R4
-         /Cbm/Lyzh+kK/9ABYtItJ/s72k1nCeBSgG6Of1Bs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A729D352018E; Fri, 24 Jan 2020 16:57:13 -0800 (PST)
-Date:   Fri, 24 Jan 2020 16:57:13 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Waiman Long <longman@redhat.com>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-Message-ID: <20200125005713.GZ2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200124222434.GA7196@paulmck-ThinkPad-P72>
- <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
+        Fri, 24 Jan 2020 20:01:56 -0500
+Received: from mail-pg1-f182.google.com ([209.85.215.182]:41724 "EHLO
+        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387475AbgAYBB4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 20:01:56 -0500
+Received: by mail-pg1-f182.google.com with SMTP id x8so1985252pgk.8;
+        Fri, 24 Jan 2020 17:01:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=LkUPWh5kdl4Sg46sJyfitt6HLC6I557q2490DP7qh3M=;
+        b=dZZ3UTU4UOOlw606J6+uj+IkABJEPApFTlmhcoT0n6lu9OHkz1ziZqvbJNTEOebkaM
+         ZzwKG1IUL3AZK07M1F8Qg8B7BMwaN3SQoCvy9nirCrzrEs2utFvaXKht5HdttlldovxP
+         Hc2mgCFGckAiybUbdH1zq88owtW8V3rqT6rAxoxUKNwt9uGUy+t7fz2JO2zs7p4cz8lg
+         KEcylnv9u56hg9zEZf5LvQfRhGsMT4KX5Q/oev9cQl9r8OuDid18rVmaAtqqNrDK3d/C
+         wWEC7cuFKOu2hVfV7vOpj37Qox77SkqbZ9PhGGk+1+EmG/RPZwGgFgxDKJGAyXHHXJKH
+         HDTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=LkUPWh5kdl4Sg46sJyfitt6HLC6I557q2490DP7qh3M=;
+        b=goaZj5OzRgnU+bQUKj69FhK++CIFOp83aN+LeJRDDaNvTCc26Pol0lq9XiHsO6wcVp
+         QYlLFjZUr1BxVLDlGVjVaRZMHJ/JMj6ndfx+zrG175TxlpBwhkDR+PXqECptIuGI4UgO
+         xuT7fQGblMeV/QWb3sGJQEXomAdKxBdq4GV3F79TidUxyhHUl1nxP954Vnat6vlDUfFH
+         3n/Kw8nSx0vI8zulERIfWAfCK5/HgVHRkq8q2wWTl7S0bqpsDjMgvm1VZ7fksfpqcBYt
+         SglAR0u4znwCy6Q0ln0jvOcTiAHj55Nmxrzem71rl/tRFVL8XLBwo5vJ10EFHHG370na
+         Q6yw==
+X-Gm-Message-State: APjAAAXT+3x+WoP7mosKqgRuBJNuwR6Y2FyFeIJkoiwiyIMYd61XyP7C
+        rp4aEP+oK3ZFYivFkoW3RrU=
+X-Google-Smtp-Source: APXvYqxDiDA5+kIDCFhEfVFU67Utzivxc1wCtaT/Q51DKRn9CC1Bi7/2Z2qQ9hNsj+8hA331vUjfzw==
+X-Received: by 2002:a63:d047:: with SMTP id s7mr6922468pgi.81.1579914115234;
+        Fri, 24 Jan 2020 17:01:55 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id c184sm7662382pfa.39.2020.01.24.17.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 17:01:54 -0800 (PST)
+Date:   Fri, 24 Jan 2020 17:01:52 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v5.5-rc7
+Message-ID: <20200125010152.GA14053@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 06:39:02PM -0500, Alex Kogan wrote:
-> Hi, Paul.
-> 
-> Thanks for running those experiments!
-> 
-> > On Jan 24, 2020, at 5:24 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > 
-> > On Tue, Jan 14, 2020 at 10:59:15PM -0500, Alex Kogan wrote:
-> >> Minor changes from v8 based on feedback from Longman:
-> >> -----------------------------------------------------
-> >> 
-> >> - Add __init to cna_configure_spin_lock_slowpath().
-> >> 
-> >> - Fix the comment for cna_scan_main_queue().
-> >> 
-> >> - Change the type of intra_node_handoff_threshold to unsigned int.
-> >> 
-> >> 
-> >> Summary
-> >> -------
-> >> 
-> >> Lock throughput can be increased by handing a lock to a waiter on the
-> >> same NUMA node as the lock holder, provided care is taken to avoid
-> >> starvation of waiters on other NUMA nodes. This patch introduces CNA
-> >> (compact NUMA-aware lock) as the slow path for qspinlock. It is
-> >> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
-> >> 
-> >> CNA is a NUMA-aware version of the MCS lock. Spinning threads are
-> >> organized in two queues, a main queue for threads running on the same
-> >> node as the current lock holder, and a secondary queue for threads
-> >> running on other nodes. Threads store the ID of the node on which
-> >> they are running in their queue nodes. After acquiring the MCS lock and
-> >> before acquiring the spinlock, the lock holder scans the main queue
-> >> looking for a thread running on the same node (pre-scan). If found (call
-> >> it thread T), all threads in the main queue between the current lock
-> >> holder and T are moved to the end of the secondary queue.  If such T
-> >> is not found, we make another scan of the main queue after acquiring 
-> >> the spinlock when unlocking the MCS lock (post-scan), starting at the
-> >> node where pre-scan stopped. If both scans fail to find such T, the
-> >> MCS lock is passed to the first thread in the secondary queue. If the
-> >> secondary queue is empty, the MCS lock is passed to the next thread in the
-> >> main queue. To avoid starvation of threads in the secondary queue, those
-> >> threads are moved back to the head of the main queue after a certain
-> >> number of intra-node lock hand-offs.
-> >> 
-> >> More details are available at https://urldefense.proofpoint.com/v2/url?u=https-3A__arxiv.org_abs_1810.05600&d=DwIBAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=Hvhk3F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&m=1KUGGZYTHnQ25fgRFppdNvpJfI0rOO_Usdu18RDu_14&s=F12nhHutwnPNt_TQ2ELER0DhtsHlEI9EiW1nDPhm5-Y&e= <https://urldefense.proofpoint.com/v2/url?u=https-3A__arxiv.org_abs_1810.05600&d=DwIBAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=Hvhk3F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&m=1KUGGZYTHnQ25fgRFppdNvpJfI0rOO_Usdu18RDu_14&s=F12nhHutwnPNt_TQ2ELER0DhtsHlEI9EiW1nDPhm5-Y&e=> .
-> >> 
-> >> The series applies on top of v5.5.0-rc6, commit b3a987b026.
-> >> Performance numbers are available in previous revisions
-> >> of the series.
-> >> 
-> >> Further comments are welcome and appreciated.
-> > 
-> > I ran this on a large system with a version of locktorture that was
-> > modified to print out the maximum and minimum per-CPU lock-acquisition
-> > counts, and with CPU hotplug disabled.  I also modified the LOCK01 and
-> > LOCK04 scenarios to use 220 hardware threads.
-> > 
-> > Here is what the test ended up with at the end of a one-hour run:
-> > 
-> > LOCK01 (exclusive):
-> > Writes:  Total: 1241107333  Max/Min: 9206962/60902 ???  Fail: 0
-> > 
-> > LOCK04 (rwlock):
-> > Writes:  Total: 232991963  Max/Min: 2631574/74582 ???  Fail: 0
-> > Reads :  Total: 216935386  Max/Min: 2735939/28665 ???  Fail: 0
-> > 
-> > The "???" strings are printed because the ratio of maximum to minimum exceeds
-> > a factor of two.
-> Is this what you expect / have seen with the existing qspinlock?
-> 
-> > 
-> > I also ran 30-minute runs on my laptop, which has 12 hardware threads:
-> > 
-> > LOCK01 (exclusive):
-> > Writes:  Total: 3992072782  Max/Min: 259368782/97231961 ???  Fail: 0
-> > 
-> > LOCK04 (rwlock):
-> > Writes:  Total: 131063892  Max/Min: 13136206/5876157 ???  Fail: 0
-> > Reads :  Total: 144876801  Max/Min: 19999535/4873442 ???  Fail: 0
-> I assume the system above is multi-socket, but your laptop is probably not?
-> 
-> If that’s the case, CNA should not be enabled on your laptop (grep
-> kernel logs for "Enabling CNA spinlock” to be sure).
-> 
-> > 
-> > These also exceed the factor-of-two cutoff, but not as dramatically.
-> > The readers for the reader-writer lock fared worst, with a 4-to-1 ratio.
-> > 
-> > These tests did run within guest OSes.
-> So I really wonder if CNA was enabled here, or whether this is what you get
-> with paravirt qspinlock.
-> 
-> >  Is that configuration out of
-> > scope for this locking algorithm?  In addition (as might well also have
-> > been the case for the locktorture runs in your paper), these tests run
-> > a pair of stress-test tasks for each hardware thread.
-> > 
-> > Is this expected behavior?
-> The results do appear skewed a bit too much, but it would be helpful to know
-> what qspinlock we are looking at, and how they compare to the existing qspinlock,
-> in case it is indeed CNA.
+Hi Linus,
 
-You called it!  I will play with QEMU's -numa argument to see if I can get
-CNA to run for me.  Please accept my apologies for the false alarm.
+Please pull from:
 
-							Thanx, Paul
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+
+to receive updates for the input subsystem. You will receive:
+
+- patches adding sanoty checks to USB endpoints in various dirvers
+- max77650-onkey was missing a OF table which was preventing module
+  autoloading
+- a revert and a different fix for F54 handling in Synaptics dirver
+- a fixup for handling register in pm8xxx vibrator driver.
+
+Changelog:
+---------
+
+Bartosz Golaszewski (1):
+      Input: max77650-onkey - add of_match table
+
+Chuhong Yuan (1):
+      Input: sun4i-ts - add a check for devm_thermal_zone_of_sensor_register
+
+Hans Verkuil (2):
+      Revert "Input: synaptics-rmi4 - don't increment rmiaddr for SMBus transfers"
+      Input: rmi_f54 - read from FIFO in 32 byte blocks
+
+Johan Hovold (8):
+      Input: pegasus_notetaker - fix endpoint sanity check
+      Input: aiptek - fix endpoint sanity check
+      Input: aiptek - use descriptors of current altsetting
+      Input: gtco - fix endpoint sanity check
+      Input: gtco - fix extra-descriptor debug message
+      Input: gtco - drop redundant variable reinit
+      Input: sur40 - fix interface sanity checks
+      Input: keyspan-remote - fix control-message timeouts
+
+Miles Chen (1):
+      Input: evdev - convert kzalloc()/vzalloc() to kvzalloc()
+
+Stephan Gerhold (1):
+      Input: pm8xxx-vib - fix handling of separate enable register
+
+Diffstat:
+--------
+
+ drivers/input/evdev.c                    |  5 +---
+ drivers/input/misc/keyspan_remote.c      |  9 ++++---
+ drivers/input/misc/max77650-onkey.c      |  7 ++++++
+ drivers/input/misc/pm8xxx-vibrator.c     |  2 +-
+ drivers/input/rmi4/rmi_f54.c             | 43 ++++++++++++++++++++------------
+ drivers/input/rmi4/rmi_smbus.c           |  2 ++
+ drivers/input/tablet/aiptek.c            |  8 +++---
+ drivers/input/tablet/gtco.c              | 13 +++-------
+ drivers/input/tablet/pegasus_notetaker.c |  2 +-
+ drivers/input/touchscreen/sun4i-ts.c     |  6 ++++-
+ drivers/input/touchscreen/sur40.c        |  2 +-
+ 11 files changed, 59 insertions(+), 40 deletions(-)
+
+Thanks.
+
+
+-- 
+Dmitry
