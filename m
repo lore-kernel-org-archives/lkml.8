@@ -2,145 +2,112 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE61C35244
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD0FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC432075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:15:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Blv863ue"
+	by mail.kernel.org (Postfix) with ESMTP id 679142071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgAYTPK (ORCPT
+        id S1727440AbgAYTQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 14:15:10 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:32850 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAYTPK (ORCPT
+        Sat, 25 Jan 2020 14:16:15 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:4736 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAYTQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 14:15:10 -0500
-Received: by mail-yw1-f67.google.com with SMTP id 192so2714280ywy.0;
-        Sat, 25 Jan 2020 11:15:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gVIu3ANFBGqPHt5YpcXKFOsWWJSpzcjW04aSB17DZsQ=;
-        b=Blv863uek7BG2QNlgQc6ZtWXNmtq191HBVgp9hw1q1o9lZpveHOgRilm2+30Ip6Ngs
-         pycOdbY39oraoEwovy21aTkiuJMgEsDv4ZHgQ2Yb4KNrUsy3l+rQFhbWp6eTOHEo0s6+
-         GOrN0S7g9iIiDjIB2B58Iclw2EK41s0MSH1f65V5zzXnDB7eJIVfLRBsSYJDNvZAV8Vc
-         cDCx7JfJhhFHZHwz5El3yoh4nGIobXJa/M7xuhgEED0ZqVQK/qBtv7vBbnfRwkRutsZW
-         FEpiStXP6CrOMuneNXTANXin4E1zBvHDRZLO4sF4CxHgiMI+DqnqyWDMhh904ulirfWe
-         QJFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gVIu3ANFBGqPHt5YpcXKFOsWWJSpzcjW04aSB17DZsQ=;
-        b=Af+/AgXByzSv32UWY6wuWUdlBhiAogvLD0FqTM9zmGNHXi13I+9MZRI8b1BYjzGoIU
-         AyvDh+bEzO8tsxPrk9PbTOUAuJLXN1fdiIJxwaVFhJqQmilFHvBdQzvYYNP5rxdqtHfb
-         Qs4XZVwxc3l5WwAWHP04Qanlr3TQX9/iyNAZgXxNDBc2agIlpkpvuw2FxRH+gHzkFtOg
-         XlyMV3WbNqCtwQcIginNq1arQxbFnWkZTX2iHFNKGrw9QqPtV/o2+m2KWxTPB5BIlS6M
-         PJ1RyZhZxIKTvFIqHSrNmWPAVku1DgYDTi/TWYDUf08AWG7sTGhpFMcfjVApGdsGJDne
-         ihsg==
-X-Gm-Message-State: APjAAAUOJkwm5WUjjgMFZQH4j2tmpKe6vGFuPrj3Pj8DhqRdgPUR8oPl
-        l3ydwnwTogT5LlB6piayxIraz4p3
-X-Google-Smtp-Source: APXvYqxdjmiFY/ZuMr/x5G3hemgvHZE+sCniybmoAyXj9JGrA0gIPXLA5UWBTCmWehIq+G/liC7Vsg==
-X-Received: by 2002:a81:5ad4:: with SMTP id o203mr6260075ywb.262.1579979709001;
-        Sat, 25 Jan 2020 11:15:09 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x84sm4158920ywg.47.2020.01.25.11.15.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Jan 2020 11:15:08 -0800 (PST)
-Subject: Re: [PATCH 4.19 309/639] hwmon: (w83627hf) Use request_muxed_region
- for Super-IO accesses
-To:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-References: <20200124093047.008739095@linuxfoundation.org>
- <20200124093125.642179022@linuxfoundation.org>
- <20200125185935.GF14064@duo.ucw.cz>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <9639ba77-ece0-d825-a1b0-cbf8b45af3ab@roeck-us.net>
-Date:   Sat, 25 Jan 2020 11:14:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sat, 25 Jan 2020 14:16:15 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: x4hJIa9iFYOUSnyqOswuEs0+n+ZxsmpfPXpEgiDhuhDL0Gwz6TaW3pQJqhqTRYRY8gh+3zqhda
+ 4w1HvNB6gKkxBTF/2gIHo9+DBL2gd2zi2Orhow8IJD3v21SpsDEfhDSIDwCC3m1ah7LgXCUQ/O
+ NRS+wpWlgnfnKYhumxYyfCRN7yyFCNHRebzFu1l9AUhz63JQ6F4VUv++HJ4ltlqUOfqb1Sjk0O
+ nGm/t/9lu1JP+PHCsNE+SicBt2LBUxoWDLOj0dKn0q24PQhb56yAGy51iCca6qNLHM3zbMsXDx
+ Zto=
+X-IronPort-AV: E=Sophos;i="5.70,362,1574146800"; 
+   d="scan'208";a="63745682"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jan 2020 12:16:14 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 25 Jan 2020 12:16:11 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sat, 25 Jan 2020 12:16:13 -0700
+Date:   Sat, 25 Jan 2020 20:16:12 +0100
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
+        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v3 03/10] net: bridge: mrp: Add MRP interface used
+ by netlink
+Message-ID: <20200125191612.5dlzlvb7g2bucqna@lx-anielsen.microsemi.net>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-4-horatiu.vultur@microchip.com>
+ <20200124174315.GC13647@lunn.ch>
+ <20200125113726.ousbmm4n3ab4xnqt@soft-dev3.microsemi.net>
+ <20200125152023.GA18311@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20200125185935.GF14064@duo.ucw.cz>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200125152023.GA18311@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/25/20 10:59 AM, Pavel Machek wrote:
-> Hi!
->> [ Upstream commit e95fd518d05bfc087da6fcdea4900a57cfb083bd ]
+On 25.01.2020 16:20, Andrew Lunn wrote:
+>EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>
+>On Sat, Jan 25, 2020 at 12:37:26PM +0100, Horatiu Vultur wrote:
+>> The 01/24/2020 18:43, Andrew Lunn wrote:
+>> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>> >
+>> > > br_mrp_flush - will flush the FDB.
+>> >
+>> > How does this differ from a normal bridge flush? I assume there is a
+>> > way for user space to flush the bridge FDB.
 >>
->> Super-IO accesses may fail on a system with no or unmapped LPC bus.
+>> Hi,
 >>
->> Also, other drivers may attempt to access the LPC bus at the same time,
->> resulting in undefined behavior.
->>
->> Use request_muxed_region() to ensure that IO access on the requested
->> address space is supported, and to ensure that access by multiple drivers
->> is synchronized.
->>
-> 
->> @@ -1644,9 +1654,21 @@ static int w83627thf_read_gpio5(struct platform_device *pdev)
->>   	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
->>   	int res = 0xff, sel;
->>   
->> -	superio_enter(sio_data);
->> +	if (superio_enter(sio_data)) {
->> +		/*
->> +		 * Some other driver reserved the address space for itself.
->> +		 * We don't want to fail driver instantiation because of that,
->> +		 * so display a warning and keep going.
->> +		 */
->> +		dev_warn(&pdev->dev,
->> +			 "Can not read VID data: Failed to enable SuperIO access\n");
->> +		return res;
->> +	}
->> +
->>   	superio_select(sio_data, W83627HF_LD_GPIO5);
->>   
->> +	res = 0xff;
->> +
-> 
-> This is strange. res is not actually assigned in the code above, so we
-> have res = 0xff twice. Can we remove one of the initializations and do
-> 'return 0xff' directly to make code more clear?
-> 
-> 
->> @@ -1677,7 +1699,17 @@ static int w83687thf_read_vid(struct platform_device *pdev)
->>   	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
->>   	int res = 0xff;
->>   
->> -	superio_enter(sio_data);
->> +	if (superio_enter(sio_data)) {
->> +		/*
->> +		 * Some other driver reserved the address space for itself.
->> +		 * We don't want to fail driver instantiation because of that,
->> +		 * so display a warning and keep going.
->> +		 */
->> +		dev_warn(&pdev->dev,
->> +			 "Can not read VID data: Failed to enable SuperIO access\n");
->> +		return res;
->> +	}
-> 
-> Direct "return 0xff" would make more sense here, too.
-> 
+>> If I seen corectly the normal bridge flush will clear the entire FDB for
+>> all the ports of the bridge. In this case it is require to clear FDB
+>> entries only for the ring ports.
+>
+>Maybe it would be better to extend the current bridge netlink call to
+>be able to pass an optional interface to be flushed?  I'm not sure it
+>is a good idea to have two APIs doing very similar things.
+I agree.
 
-Please feel free to submit a patch to improve the upstream code.
+And when looking at this again, I start to think that we should have
+extended the existing netlink interface with new commands, instead of
+adding a generic netlink.
 
-Thanks,
-Guenter
+/Allan
 
