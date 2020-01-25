@@ -2,99 +2,79 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45527C35243
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 03:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAE5C35241
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 03:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4352077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 03:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="cjn8Q6oq"
+	by mail.kernel.org (Postfix) with ESMTP id 965312075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 03:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387752AbgAYDbf (ORCPT
+        id S1727295AbgAYDrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 22:31:35 -0500
-Received: from forward105o.mail.yandex.net ([37.140.190.183]:57143 "EHLO
-        forward105o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387685AbgAYDbe (ORCPT
+        Fri, 24 Jan 2020 22:47:11 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:39172 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725955AbgAYDrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 22:31:34 -0500
-Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
-        by forward105o.mail.yandex.net (Yandex) with ESMTP id B81154200869;
-        Sat, 25 Jan 2020 06:31:30 +0300 (MSK)
-Received: from mxback12q.mail.yandex.net (mxback12q.mail.yandex.net [IPv6:2a02:6b8:c0e:1b3:0:640:3818:d096])
-        by forward101q.mail.yandex.net (Yandex) with ESMTP id B110CCF40005;
-        Sat, 25 Jan 2020 06:31:30 +0300 (MSK)
-Received: from vla3-4c649d03f525.qloud-c.yandex.net (vla3-4c649d03f525.qloud-c.yandex.net [2a02:6b8:c15:2584:0:640:4c64:9d03])
-        by mxback12q.mail.yandex.net (mxback/Yandex) with ESMTP id YGif5pMyK6-VUDqJquG;
-        Sat, 25 Jan 2020 06:31:30 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1579923090;
-        bh=rUlyNvljBdCjkYu35RmmYwvqN2tBKCJRMe6BpvB/5Q0=;
-        h=From:To:Subject:CC:References:Date:In-Reply-To:Message-ID;
-        b=cjn8Q6oq38+pdhcwqDXwXphBA1/onoHk0mUEmnBuVel7ln8j1v3ic82WuXkHj04Y8
-         6ZVQImYcyVEpkZaR611e9r8S4ta3OoWmemQRLvvFi/63dupbJwzfKk887ooNH2A/Vg
-         PWEfufBBooxU+o/RLhJ1Lb0rFmmTeYNDQBg9g3Xg=
-Authentication-Results: mxback12q.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by vla3-4c649d03f525.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 1iJhSA3EGT-VS1WBnYX;
-        Sat, 25 Jan 2020 06:31:28 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Date:   Sat, 25 Jan 2020 11:31:00 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200124140751.GA17030@alpha.franken.de>
-References: <20200114122343.163685-1-jiaxun.yang@flygoat.com> <20200122184506.7zbzetn5xturxamj@pburton-laptop> <20200124140751.GA17030@alpha.franken.de>
+        Fri, 24 Jan 2020 22:47:10 -0500
+Received: from callcc.thunk.org (rrcs-67-53-201-206.west.biz.rr.com [67.53.201.206])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00P3kN5M015593
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jan 2020 22:46:25 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 93AA742014A; Fri, 24 Jan 2020 22:46:22 -0500 (EST)
+Date:   Fri, 24 Jan 2020 22:46:22 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Jan Kara <jack@suse.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        Paul Mackerras <paulus@samba.org>, linux-ppp@vger.kernel.org,
+        reiserfs-devel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: changes.rst: update several outdated
+ project URLs
+Message-ID: <20200125034622.GA1107489@mit.edu>
+References: <efb1f518-9e66-c472-d124-4b7d91e56639@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] MIPS: Introduce aligned IO memory operations
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>
-CC:     linux-mips@vger.kernel.org, chenhc@lemote.com,
-        paul.burton@mips.com, linux-kernel@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <41DEDE07-DBA6-4397-A6F5-07D650436A6A@flygoat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <efb1f518-9e66-c472-d124-4b7d91e56639@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 23, 2020 at 11:00:12AM -0800, Randy Dunlap wrote:
+>  ---------
+>  
+>  - <http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-1.29.tar.gz>
+> +- <https://www.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/>
+> +- <https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git/>
 
+You might as well deleted the URL for e2fsprogs-1.29.tar.gz while
+you're at it.  That version is *old*.  I do actually still upload
+e2fsprogs releases to
 
-=E4=BA=8E 2020=E5=B9=B41=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
-0:07:51, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=
-=88=B0:
->On Wed, Jan 22, 2020 at 10:45:06AM -0800, Paul Burton wrote:
->> Hi Jiaxun,
->>=20
->> On Tue, Jan 14, 2020 at 08:23:43PM +0800, Jiaxun Yang wrote:
->> > Some platforms, such as Loongson64 or QEMU/KVM, don't support
->unaligned
->> > instructions like lwl or lwr in IO memory access=2E However, our
->current
->> > IO memcpy/memset is wired to the generic implementation, which
->leads
->> > to a fatal result=2E
->>=20
->> Hmm, I wonder if we should just do this unconditionally on all
->systems=2E
->> I can't think of a reason it'd ever be a good idea to use lwl/lwr on
->an
->> MMIO device=2E Any thoughts on that?
->
->depends on the type of device=2E I can see benefits for framebuffers
->and memory devices since memset/memcpy are more optimised than the
->function in this patch=2E
+	https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/
 
-lwl/lwr is slower than this implementation on your system?
-I thought that other platforms support unaligned request can be benefited =
-from speed up of these instructions=2E
+... but I think just listing the www.kernel.org URL is quite
+sufficient.
 
->
->Thomas=2E
+Other than that,
 
---=20
-Jiaxun Yang
+Acked-by: Theodore Ts'o <tytso@mit.edu>
+
+						- Ted
