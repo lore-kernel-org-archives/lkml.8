@@ -2,119 +2,108 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4E4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB72C35244
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5C320716
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 405D12071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:34:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbKU7cti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbgAYT3A (ORCPT
+        id S1727046AbgAYTeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 14:29:00 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:58892 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAYT27 (ORCPT
+        Sat, 25 Jan 2020 14:34:50 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44769 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAYTet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 14:28:59 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: LmzuGqhttF/xfKlz3vN8UCSxVJmlEhupmImJsA7v4AzRU/HKQvQqYBREmoaEzf+fHW7WIsMl7d
- CJQdgDUnTp8T+WbR1g4LluoF3HR3zCJ7ZS99n26UVEIn0FbZK8bmD1e+kFjofsUYFwG9eFW0fq
- YSB+PhTunKvzHwEISleY9WBeDY944oDZV4e2oWUl8bJMVeei5KZm5G91QMePUXiW3RM+myr0qX
- RV2LMM1yghDqn02BzjkdGJHEtTxOxSjdOVElTsrCJjxcqXr1teKz1+mNmt078ke8Q6gaseFvj5
- 0CY=
-X-IronPort-AV: E=Sophos;i="5.70,362,1574146800"; 
-   d="scan'208";a="63107753"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jan 2020 12:28:58 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 25 Jan 2020 12:28:53 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sat, 25 Jan 2020 12:28:55 -0700
-Date:   Sat, 25 Jan 2020 20:28:54 +0100
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <davem@davemloft.net>,
-        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
-        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
-        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next v3 04/10] net: bridge: mrp: Add generic netlink
- interface to configure MRP
-Message-ID: <20200125192854.yi544iu2atvbbwey@lx-anielsen.microsemi.net>
-References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
- <20200124161828.12206-5-horatiu.vultur@microchip.com>
- <20200125153403.GB18311@lunn.ch>
+        Sat, 25 Jan 2020 14:34:49 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q10so6074978wrm.11;
+        Sat, 25 Jan 2020 11:34:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=82JZcqh6qYU+2jSmoXnBYDPtQm7jo0Dy9k4oselAfsA=;
+        b=sbKU7ctix9s7eHmwQilaO4kNFWuxNgwBiUTGZfiiY+VO/i5M6ywJIsvZc8ipXCKDna
+         LFIG4HV7bAiZX1NKOOrC74zGIAfFe6iXVQPQvrpDHj/yWOWir8zptb+ykdCyvu21B2e+
+         mV0bYXGV95qeCSi32pm8Yb4ExRvKlbhar87OpEzUEm9R2JwEqfeVoRirLUOrrf8tESzE
+         vPzwNUBMK7sFtX0BtE8JVrr50uaXEuvFNV7jZpXxEt3/4zPvua+joQUpr2jMX7By11lQ
+         fB0+T6wpH7b8PalQjf3sUZYCJRCWp3YjJ0ZAI5d5dpz6BAKf8Gj8rOJ3TZst9ocyt+HP
+         +QNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=82JZcqh6qYU+2jSmoXnBYDPtQm7jo0Dy9k4oselAfsA=;
+        b=T2qb/hK/oKHQvPLAPpQvhAInVXVatoFJw5hAEwnK1H+CJ5k99PZSbjl/GLuHjMYp1Y
+         BnEjjcYCRtl4HNNRMh7+TMJyIXCc6gtbxURqKxyhSJoKbkxDjQzg6Z1vZyvMgoiPF3dB
+         /lpMKzjc4UjTWttv0iQ2uIVL+L9y3x6WitSmT2mXXLy7muRi6ne+aOvzNQt9OiF6vepU
+         8qwN9gGk1I5IIdmmZK95VLZDEVIEKJ1IZ4eQO3VvTmNWe0Hh25hnRELAsrjhMOnvHVIV
+         FFunivJQWr+7UomwoKS3Zj/FlNMCvCRyuJmtftOUAfgieQTvsvl9q1+Ww5VeFXPOofAI
+         v++Q==
+X-Gm-Message-State: APjAAAVj7O1sTX7weMuQlbke8zmle7bNDhqZD00Xla6wRw7rU3DO/8IK
+        4DUSA9fmqJECUWsa9fTq89g=
+X-Google-Smtp-Source: APXvYqy1Rmc7s5O8QczWwmaQ1K4XBwZSHniHdOJajdSmwK8YdcmwHYHwD5pEGVlI6OnWdSZGysqwwg==
+X-Received: by 2002:adf:ef49:: with SMTP id c9mr12296497wrp.292.1579980887112;
+        Sat, 25 Jan 2020 11:34:47 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id g7sm12843472wrq.21.2020.01.25.11.34.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jan 2020 11:34:46 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] io_uring: fix refcounting with OOM
+Date:   Sat, 25 Jan 2020 22:34:01 +0300
+Message-Id: <17022002efedf99758627055901c94d9fa344ec9.1579980745.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <fa69cae513308ef3f681e13888a4f551c67ef3a2.1579942715.git.asml.silence@gmail.com>
+References: <fa69cae513308ef3f681e13888a4f551c67ef3a2.1579942715.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200125153403.GB18311@lunn.ch>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.01.2020 16:34, Andrew Lunn wrote:
->EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->
->On Fri, Jan 24, 2020 at 05:18:22PM +0100, Horatiu Vultur wrote:
->> Implement the generic netlink interface to configure MRP. The implementation
->> will do sanity checks over the attributes and then eventually call the MRP
->> interface which eventually will call the switchdev API.
->What was your thinking between adding a new generic netlink interface,
->and extending the current one?
->
->I've not looked at your user space code yet, but i assume it has to
->make use of both? It needs to create the bridge and add the
->interfaces. And then it needs to control the MRP state.
->
->Allan mentioned you might get around to implementing 802.1CB? Would
->that be another generic netlink interface, or would you extend the MRP
->interface?
-Horatiu, if you have given this any thoughts, then please share them.
+In case of out of memory the second argument of percpu_ref_put_many() in
+io_submit_sqes() may evaluate into "nr - (-EAGAIN)", that is clearly
+wrong.
 
-Here are my thoughts on 802.1CB: If we look at this with the traditional
-NIC/host POW, then it would be natural to look at the HSR interface as
-Vinicius suggested, and expose it as a new interface (HSR0). But when
-looking at how 802.1CB say a bridge should act, and also what the
-capabilities of the HW are, then it seem more natural to extend the TC
-system. In HW it is a TCAM classifying the traffic, and it has some
-actions to either replicate the matched frames, or eliminate the
-additional copies.
+Fixes: 2b85edfc0c90 ("io_uring: batch getting pcpu references")
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
 
-The HW also supports CFM (see [1]), which we need (partly) to complete
-the MRP implementation with MIM/MIC roles. This is also useful for none
-MRP users (like ERPS).
+v2: rebase
 
-This seems like an argument for moving this to the existing netlink
-interfaces instead of having it as a generic netlink.
+ fs/io_uring.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-[1] https://en.wikipedia.org/wiki/IEEE_802.1ag
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 25f29ef81698..e79d6e47dc7b 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4896,8 +4896,11 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 			break;
+ 	}
+ 
+-	if (submitted != nr)
+-		percpu_ref_put_many(&ctx->refs, nr - submitted);
++	if (unlikely(submitted != nr)) {
++		int ref_used = (submitted == -EAGAIN) ? 0 : submitted;
++
++		percpu_ref_put_many(&ctx->refs, nr - ref_used);
++	}
+ 	if (link)
+ 		io_queue_link_head(link);
+ 	if (statep)
+-- 
+2.24.0
 
-/Allan
