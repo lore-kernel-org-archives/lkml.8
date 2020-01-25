@@ -2,107 +2,149 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB618C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC13C35244
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17882071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EAFD2077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:33:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="g9yNRH+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgAYL3l (ORCPT
+        id S1728026AbgAYLdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 06:29:41 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:54883 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgAYL3l (ORCPT
+        Sat, 25 Jan 2020 06:33:08 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12075 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgAYLdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 06:29:41 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: YOnk5drxK7Jpd2XG1B+HjfM0noQe2DtXTSNsjG+XS55FIQnn7ArShJbh7pwZY+ZDqepeEZDudK
- urBkBgizLTrF8rx4CODFkaPZiU9Zo0zZppnK/X5v+ceIpwotzGkvp9r0t/tIqtLqe0THCStemj
- aDLNurw1bQmrrQtRb/xTc+JC14GNGKBpNtL/kRoEtuyiF7kWlr6QF5xgOCpo3PQZLX1FRJwPSH
- xbX8gYai+50jniOR4iSttOsY9VLU5gkqDqCDaIZdOe0wpIFcIRGQxgqwgykljvmVFAOj+/Jtje
- i2M=
-X-IronPort-AV: E=Sophos;i="5.70,361,1574146800"; 
-   d="scan'208";a="64499800"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jan 2020 04:29:39 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 25 Jan 2020 04:29:23 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sat, 25 Jan 2020 04:29:23 -0700
-Date:   Sat, 25 Jan 2020 12:29:22 +0100
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <davem@davemloft.net>,
-        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
-        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
-        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next v3 02/10] net: bridge: mrp: Expose function
- br_mrp_port_open
-Message-ID: <20200125112922.xrskly7d2qb7t22c@soft-dev3.microsemi.net>
-References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
- <20200124161828.12206-3-horatiu.vultur@microchip.com>
- <20200124173718.GB13647@lunn.ch>
+        Sat, 25 Jan 2020 06:33:08 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2c27440000>; Sat, 25 Jan 2020 03:32:20 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sat, 25 Jan 2020 03:33:07 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sat, 25 Jan 2020 03:33:07 -0800
+Received: from [10.26.11.150] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Jan
+ 2020 11:33:04 +0000
+Subject: Re: [PATCH 4.19 000/639] 4.19.99-stable review
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
+        <akpm@linux-foundation.org>, <linux@roeck-us.net>,
+        <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <23f2a904-3351-4a75-aaaf-2623dc55d114@nvidia.com>
+ <20200124173659.GD3166016@kroah.com>
+ <8a782263-aca3-3846-12a0-4eb21f015894@nvidia.com>
+Message-ID: <87fcb1f0-b1b8-a6e2-b8f6-b95a07f67919@nvidia.com>
+Date:   Sat, 25 Jan 2020 11:32:59 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <8a782263-aca3-3846-12a0-4eb21f015894@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200124173718.GB13647@lunn.ch>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579951940; bh=5uX1s/9t9VDPUmWZvxsiTCjNWLCYbyyF6/dJ+3YHqBI=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=g9yNRH+f4Go/OS/kwHzJ5irvQQwk67ixAiuDb9zKPOFQNyZo1aZGaF3sjliL/1Qrh
+         BNIaElWaUNjy6XcRbk8p9RxwmfpffhrhORFxf1ex6z4t9UN7dqTgW5s/vi9qoBaG5H
+         UtpZYiwksKGkef/SORAFH8lXYzjCm3vmTfBMabcn8BenTTi0ju9Hc4YQVg3uGc06B8
+         xiJMmAFKhWO6ovKFHRNqHuS4fZu+dxZhZV2sxaI0NdisM7I5+mOvgmPQ3qhG/xqCce
+         Z43BTsU0hzEys8xKvYLAltrdrOO1uUJ0SEQKJbd3rEn+GfC8edCjP3iE5MzSz9dvgp
+         Nh113M9PapWNQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 01/24/2020 18:37, Andrew Lunn wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On Fri, Jan 24, 2020 at 05:18:20PM +0100, Horatiu Vultur wrote:
-> > In case the HW is capable to detect when the MRP ring is open or closed. It is
-> > expected that the network driver will notify the bridge that the ring is open or
-> > closed.
-> >
-> > The function br_mrp_port_open is used to notify the kernel that one of the ports
-> > stopped receiving MRP_Test frames. The argument 'loc' has a value of '1' when
-> > the port stopped receiving MRP_Test and '0' when it started to receive MRP_Test.
-> 
-> Hi Horatiu
-> 
-> Given the name of the function, br_mrp_port_open(), how about replacing
-> loc with a bool with the name open?
 
-Hi Andrew,
-
-Well spotted, yes I will replace this in the next series.
-
+On 24/01/2020 18:07, Jon Hunter wrote:
 > 
->     Andrew
+> On 24/01/2020 17:36, Greg Kroah-Hartman wrote:
+>> On Fri, Jan 24, 2020 at 02:50:05PM +0000, Jon Hunter wrote:
+>>> Hi Greg,
+>>>
+>>> On 24/01/2020 09:22, Greg Kroah-Hartman wrote:
+>>>> This is the start of the stable review cycle for the 4.19.99 release.
+>>>> There are 639 patches in this series, all will be posted as a response
+>>>> to this one.  If anyone has any issues with these being applied, please
+>>>> let me know.
+>>>>
+>>>> Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
+>>>> Anything received after that time might be too late.
+>>>>
+>>>> The whole patch series can be found in one patch at:
+>>>> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.99-rc1.gz
+>>>> or in the git tree and branch at:
+>>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+>>>> and the diffstat can be found below.
+>>>>
+>>>> thanks,
+>>>>
+>>>> greg k-h
+>>>>
+>>>> -------------
+>>>> Pseudo-Shortlog of commits:
+>>>
+>>> ...
+>>>
+>>>> Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>>     PCI: PM: Skip devices in D0 for suspend-to-idle
+>>>
+>>> The above commit is causing a suspend regression on Tegra124 Jetson-TK1.
+>>> Reverting this on top of v4.19.99-rc1 fixes the issue.
+>>
+>> This is also in the 4.14 queue, so should I drop it there too?
+> 
+> I did not see any failures with the same board on that branch, so I
+> would say no, but odd that it only fails here. It was failing for me
+> 100% so I would have expected to see if there too if it was a problem.
+
+Hmmm, rc2 still not working for me ...
+
+Test results for stable-v4.19:
+    11 builds:	11 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	30 pass, 2 fail
+
+Linux version:	4.19.99-rc2-g24832ad2c623
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+I still see the following commit in rc2 ...
+
+commit bb52152abe85f971278a7a4f033b29483f64bfdb
+Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Date:   Thu Jun 13 23:59:45 2019 +0200
+
+    PCI: PM: Skip devices in D0 for suspend-to-idle
+
+BTW, I checked the 4.14. queue and I do not see the above change in
+there, however, there is similar change ...
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    PCI: PM: Avoid possible suspend-to-idle issue
+
+Cheers
+Jon
 
 -- 
-/Horatiu
+nvpublic
