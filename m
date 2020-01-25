@@ -2,252 +2,221 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1051BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1744BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D670B218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="MDBES6Jf"
+	by mail.kernel.org (Postfix) with ESMTP id E246C22522
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbgAYKom (ORCPT
+        id S1729838AbgAYKnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:44:42 -0500
-Received: from onstation.org ([52.200.56.107]:46744 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729747AbgAYKok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 05:44:40 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 02C023E89A;
-        Sat, 25 Jan 2020 10:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1579949079;
-        bh=Lz0pxK/LetnayMAtW2akT3tAhYG5/kRtAyz7pWruqMw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MDBES6JfqmFchwVZ3bnEO+Eg4s5HT2u51Utes9/mH+ZNEOnVOm8FguULJwLYsUGbq
-         2xfLF798fxp1uOkJP7ghLHQnrMDjrMxiVINfBKZWzO+WfAwcl0PrL28J34EK4Tf0OK
-         SU4YdGPODj0bQN9hQt0Y7zKrMHX64Vpqumav/D7w=
-Date:   Sat, 25 Jan 2020 05:44:38 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ARM: qcom_defconfig: Regenerate
-Message-ID: <20200125104438.GA5646@onstation.org>
-References: <20191104210943.101393-1-luca@z3ntu.xyz>
+        Sat, 25 Jan 2020 05:43:23 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44236 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729436AbgAYKnE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 05:43:04 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ivIu3-0008U3-E0; Sat, 25 Jan 2020 11:42:59 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 72B411C1A77;
+        Sat, 25 Jan 2020 11:42:47 +0100 (CET)
+Date:   Sat, 25 Jan 2020 10:42:47 -0000
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/rcu] rcu: Use WRITE_ONCE() for assignments to ->pprev for
+ hlist_nulls
+Cc:     Eric Dumazet <edumazet@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104210943.101393-1-luca@z3ntu.xyz>
+Message-ID: <157994896728.396.17368765060660717156.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luca,
+The following commit has been merged into the core/rcu branch of tip:
 
-On Mon, Nov 04, 2019 at 10:09:40PM +0100, Luca Weiss wrote:
-> Several options were dropped a while ago and the options QCOM_ADSP_PIL
-> and QCOM_Q6V5_PIL have been renamed.
-> 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
+Commit-ID:     860c8802ace14c646864795e057349c9fb2d60ad
+Gitweb:        https://git.kernel.org/tip/860c8802ace14c646864795e057349c9fb2d60ad
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Sat, 09 Nov 2019 09:42:13 -08:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Fri, 10 Jan 2020 14:00:56 -08:00
 
-Thanks for the pointer to these two patches today. I confirmed that I'm
-able to get the modem booted on the Nexus 5 with these two patches, plus
-these two patches from Bjorn:
-https://lore.kernel.org/lkml/20191109004033.1496871-1-bjorn.andersson@linaro.org/
+rcu: Use WRITE_ONCE() for assignments to ->pprev for hlist_nulls
 
-I see this patch series wasn't applied. I suggest making a few minor
-changes:
+Eric Dumazet supplied a KCSAN report of a bug that forces use
+of hlist_unhashed_lockless() from sk_unhashed():
 
-- I would make one patch that drops the options that are no longer
-  present.
-- Make one or two more patches for the QCOM_ADSP_PIL / QCOM_Q6V5_PIL
-  renames.
-- I know that running 'make savedefconfig' causes a big diff when the
-  generated file is moved to qcom_defconfig. I've been using that as a
-  guide of where to put the new config option and then dropping all of
-  the other unrelated changes. Maybe if you do this as a separate patch
-  it'll make the overall diff much smaller and easier to review. I'd put
-  it at the very end of the series in case it's rejected.
+------------------------------------------------------------------------
 
-Brian
+BUG: KCSAN: data-race in inet_unhash / inet_unhash
 
+write to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 1:
+ __hlist_nulls_del include/linux/list_nulls.h:88 [inline]
+ hlist_nulls_del_init_rcu include/linux/rculist_nulls.h:36 [inline]
+ __sk_nulls_del_node_init_rcu include/net/sock.h:676 [inline]
+ inet_unhash+0x38f/0x4a0 net/ipv4/inet_hashtables.c:612
+ tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+ tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+ tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+ tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+ call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ start_secondary+0x208/0x260 arch/x86/kernel/smpboot.c:264
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
 
->  arch/arm/configs/qcom_defconfig | 45 ++++++++++++---------------------
->  1 file changed, 16 insertions(+), 29 deletions(-)
-> 
-> diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-> index 9792dd0aae0c..94d5e1a8c61a 100644
-> --- a/arch/arm/configs/qcom_defconfig
-> +++ b/arch/arm/configs/qcom_defconfig
-> @@ -1,6 +1,7 @@
->  CONFIG_SYSVIPC=y
->  CONFIG_NO_HZ=y
->  CONFIG_HIGH_RES_TIMERS=y
-> +CONFIG_PREEMPT=y
->  CONFIG_IKCONFIG=y
->  CONFIG_IKCONFIG_PROC=y
->  CONFIG_CGROUPS=y
-> @@ -11,32 +12,28 @@ CONFIG_EMBEDDED=y
->  # CONFIG_SLUB_DEBUG is not set
->  # CONFIG_COMPAT_BRK is not set
->  CONFIG_PROFILING=y
-> -CONFIG_OPROFILE=y
-> -CONFIG_KPROBES=y
-> -CONFIG_MODULES=y
-> -CONFIG_MODULE_UNLOAD=y
-> -CONFIG_MODULE_FORCE_UNLOAD=y
-> -CONFIG_MODVERSIONS=y
-> -CONFIG_PARTITION_ADVANCED=y
->  CONFIG_ARCH_QCOM=y
->  CONFIG_ARCH_MSM8X60=y
->  CONFIG_ARCH_MSM8960=y
->  CONFIG_ARCH_MSM8974=y
->  CONFIG_ARCH_MDM9615=y
-> -CONFIG_PCI=y
-> -CONFIG_PCI_MSI=y
-> -CONFIG_PCIE_QCOM=y
->  CONFIG_SMP=y
-> -CONFIG_PREEMPT=y
->  CONFIG_HIGHMEM=y
-> -CONFIG_CLEANCACHE=y
->  CONFIG_ARM_APPENDED_DTB=y
->  CONFIG_ARM_ATAG_DTB_COMPAT=y
->  CONFIG_CPU_IDLE=y
->  CONFIG_ARM_CPUIDLE=y
->  CONFIG_VFP=y
->  CONFIG_NEON=y
-> +CONFIG_OPROFILE=y
-> +CONFIG_KPROBES=y
-> +CONFIG_MODULES=y
-> +CONFIG_MODULE_UNLOAD=y
-> +CONFIG_MODULE_FORCE_UNLOAD=y
-> +CONFIG_MODVERSIONS=y
-> +CONFIG_PARTITION_ADVANCED=y
->  # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
-> +CONFIG_CLEANCACHE=y
->  CONFIG_CMA=y
->  CONFIG_NET=y
->  CONFIG_PACKET=y
-> @@ -47,18 +44,17 @@ CONFIG_IP_MULTIPLE_TABLES=y
->  CONFIG_IP_ROUTE_VERBOSE=y
->  CONFIG_IP_PNP=y
->  CONFIG_IP_PNP_DHCP=y
-> -# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
-> -# CONFIG_INET_XFRM_MODE_TUNNEL is not set
-> -# CONFIG_INET_XFRM_MODE_BEET is not set
->  # CONFIG_IPV6 is not set
->  CONFIG_CFG80211=m
->  CONFIG_MAC80211=m
->  CONFIG_RFKILL=y
-> +CONFIG_PCI=y
-> +CONFIG_PCI_MSI=y
-> +CONFIG_PCIE_QCOM=y
->  CONFIG_DEVTMPFS=y
->  CONFIG_DEVTMPFS_MOUNT=y
->  CONFIG_MTD=y
->  CONFIG_MTD_BLOCK=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_RAW_NAND=y
->  CONFIG_MTD_NAND_QCOM=y
->  CONFIG_MTD_SPI_NOR=y
-> @@ -113,7 +109,6 @@ CONFIG_SERIO_LIBPS2=y
->  CONFIG_SERIAL_MSM=y
->  CONFIG_SERIAL_MSM_CONSOLE=y
->  CONFIG_HW_RANDOM=y
-> -CONFIG_I2C=y
->  CONFIG_I2C_CHARDEV=y
->  CONFIG_I2C_QUP=y
->  CONFIG_SPI=y
-> @@ -140,7 +135,6 @@ CONFIG_QCOM_TSENS=y
->  CONFIG_MFD_PM8XXX=y
->  CONFIG_MFD_QCOM_RPM=y
->  CONFIG_MFD_SPMI_PMIC=y
-> -CONFIG_REGULATOR=y
->  CONFIG_REGULATOR_FIXED_VOLTAGE=y
->  CONFIG_REGULATOR_QCOM_RPM=y
->  CONFIG_REGULATOR_QCOM_SMD_RPM=y
-> @@ -149,13 +143,11 @@ CONFIG_MEDIA_SUPPORT=y
->  CONFIG_DRM=y
->  CONFIG_DRM_MSM=m
->  CONFIG_DRM_PANEL_SIMPLE=y
-> -CONFIG_FB=y
-> -CONFIG_FRAMEBUFFER_CONSOLE=y
-> -# CONFIG_LCD_CLASS_DEVICE is not set
->  CONFIG_BACKLIGHT_CLASS_DEVICE=y
->  # CONFIG_BACKLIGHT_GENERIC is not set
->  CONFIG_BACKLIGHT_LM3630A=y
->  CONFIG_BACKLIGHT_LP855X=y
-> +CONFIG_FRAMEBUFFER_CONSOLE=y
->  CONFIG_SOUND=y
->  CONFIG_SND=y
->  CONFIG_SND_DYNAMIC_MINORS=y
-> @@ -169,15 +161,12 @@ CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
->  CONFIG_USB_OTG=y
->  CONFIG_USB_MON=y
->  CONFIG_USB_EHCI_HCD=y
-> -CONFIG_USB_EHCI_MSM=y
->  CONFIG_USB_ACM=y
->  CONFIG_USB_CHIPIDEA=y
->  CONFIG_USB_CHIPIDEA_UDC=y
->  CONFIG_USB_CHIPIDEA_HOST=y
-> -CONFIG_USB_CHIPIDEA_ULPI=y
->  CONFIG_USB_SERIAL=y
->  CONFIG_USB_HSIC_USB4604=y
-> -CONFIG_USB_MSM_OTG=y
->  CONFIG_USB_GADGET=y
->  CONFIG_USB_GADGET_DEBUG_FILES=y
->  CONFIG_USB_GADGET_VBUS_DRAW=500
-> @@ -185,7 +174,6 @@ CONFIG_USB_CONFIGFS=y
->  CONFIG_USB_CONFIGFS_NCM=y
->  CONFIG_USB_CONFIGFS_ECM=y
->  CONFIG_USB_CONFIGFS_F_FS=y
-> -CONFIG_USB_ULPI_BUS=y
->  CONFIG_USB_ETH=m
->  CONFIG_MMC=y
->  CONFIG_MMC_BLOCK_MINORS=32
-> @@ -215,13 +203,13 @@ CONFIG_MSM_LCC_8960=y
->  CONFIG_MDM_LCC_9615=y
->  CONFIG_MSM_MMCC_8960=y
->  CONFIG_MSM_MMCC_8974=y
-> -CONFIG_MSM_IOMMU=y
->  CONFIG_HWSPINLOCK=y
->  CONFIG_HWSPINLOCK_QCOM=y
->  CONFIG_MAILBOX=y
-> +CONFIG_MSM_IOMMU=y
->  CONFIG_REMOTEPROC=y
-> -CONFIG_QCOM_ADSP_PIL=y
-> -CONFIG_QCOM_Q6V5_PIL=y
-> +CONFIG_QCOM_Q6V5_MSS=y
-> +CONFIG_QCOM_Q6V5_PAS=y
->  CONFIG_QCOM_WCNSS_PIL=y
->  CONFIG_RPMSG_CHAR=y
->  CONFIG_RPMSG_QCOM_SMD=y
-> @@ -257,7 +245,6 @@ CONFIG_EXT2_FS_XATTR=y
->  CONFIG_EXT3_FS=y
->  CONFIG_FUSE_FS=y
->  CONFIG_VFAT_FS=y
-> -CONFIG_TMPFS=y
->  CONFIG_JFFS2_FS=y
->  CONFIG_NFS_FS=y
->  CONFIG_NFS_V3_ACL=y
-> -- 
-> 2.23.0
-> 
+read to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 0:
+ sk_unhashed include/net/sock.h:607 [inline]
+ inet_unhash+0x3d/0x4a0 net/ipv4/inet_hashtables.c:592
+ tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+ tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+ tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+ tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+ call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ rest_init+0xec/0xf6 init/main.c:452
+ arch_call_rest_init+0x17/0x37
+ start_kernel+0x838/0x85e init/main.c:786
+ x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+ x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+
+------------------------------------------------------------------------
+
+This commit therefore replaces C-language assignments with WRITE_ONCE()
+in include/linux/list_nulls.h and include/linux/rculist_nulls.h.
+
+Reported-by: Eric Dumazet <edumazet@google.com> # For KCSAN
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ include/linux/list_nulls.h    | 8 ++++----
+ include/linux/rculist_nulls.h | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
+index 3ef9674..1ecd356 100644
+--- a/include/linux/list_nulls.h
++++ b/include/linux/list_nulls.h
+@@ -72,10 +72,10 @@ static inline void hlist_nulls_add_head(struct hlist_nulls_node *n,
+ 	struct hlist_nulls_node *first = h->first;
+ 
+ 	n->next = first;
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ 	h->first = n;
+ 	if (!is_a_nulls(first))
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
+ }
+ 
+ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
+@@ -85,13 +85,13 @@ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
+ 
+ 	WRITE_ONCE(*pprev, next);
+ 	if (!is_a_nulls(next))
+-		next->pprev = pprev;
++		WRITE_ONCE(next->pprev, pprev);
+ }
+ 
+ static inline void hlist_nulls_del(struct hlist_nulls_node *n)
+ {
+ 	__hlist_nulls_del(n);
+-	n->pprev = LIST_POISON2;
++	WRITE_ONCE(n->pprev, LIST_POISON2);
+ }
+ 
+ /**
+diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
+index bc8206a..517a06f 100644
+--- a/include/linux/rculist_nulls.h
++++ b/include/linux/rculist_nulls.h
+@@ -34,7 +34,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
+ {
+ 	if (!hlist_nulls_unhashed(n)) {
+ 		__hlist_nulls_del(n);
+-		n->pprev = NULL;
++		WRITE_ONCE(n->pprev, NULL);
+ 	}
+ }
+ 
+@@ -66,7 +66,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
+ static inline void hlist_nulls_del_rcu(struct hlist_nulls_node *n)
+ {
+ 	__hlist_nulls_del(n);
+-	n->pprev = LIST_POISON2;
++	WRITE_ONCE(n->pprev, LIST_POISON2);
+ }
+ 
+ /**
+@@ -94,10 +94,10 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
+ 	struct hlist_nulls_node *first = h->first;
+ 
+ 	n->next = first;
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ 	rcu_assign_pointer(hlist_nulls_first_rcu(h), n);
+ 	if (!is_a_nulls(first))
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
+ }
+ 
+ /**
