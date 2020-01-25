@@ -2,93 +2,94 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2DBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE496C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D96FD2075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA17206D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:20:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UOyLhHIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbgAYLUW (ORCPT
+        id S1728939AbgAYLU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 06:20:22 -0500
-Received: from mailoutvs4.siol.net ([185.57.226.195]:34697 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725767AbgAYLUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 06:20:22 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 7DE3B520C74;
-        Sat, 25 Jan 2020 12:20:19 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ydjZDDwb9wfv; Sat, 25 Jan 2020 12:20:19 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 2BF84520C7E;
-        Sat, 25 Jan 2020 12:20:19 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id AF879520C74;
-        Sat, 25 Jan 2020 12:20:18 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        Sat, 25 Jan 2020 06:20:59 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52478 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgAYLU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 06:20:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LQclcc/iHz+UluZUUVN5bYPkULWxZm0NAtmv8jLa33E=; b=UOyLhHITbrqmU2/KnPPEmd42/
+        2LlBjJTe2clynX01qlgxdIY0tm6AtJHMWdcXKGohJRUOyr747Iio0zP7Pr92dUSGNwJyXyg89kxmT
+        YZS0pts0CkUg2PzsMbmJNLK9XEPjyaMMNVGZGQ8ZZ2+CnqeqUvD18yqkqSEG0hNGTQkdOc5yU63pb
+        pNKyir/P9IUZZzl7tfR/u69bxmpAYZR4YBHKZYvKwoD/mkA94Nm1goYRBMZG0D6+vw0ZcPY3DfBPc
+        PJepegAWFbwhrA/JJuBMfBc/opFgbcmk0wUNgD+orUvKn5Pn44FSMCEWf4D3lCmB4/2j0JKdMRkju
+        R2evE6eKg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ivJUY-0005d4-0o; Sat, 25 Jan 2020 11:20:42 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1F4A2980BB0; Sat, 25 Jan 2020 12:20:39 +0100 (CET)
+Date:   Sat, 25 Jan 2020 12:20:39 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] [PATCH 1/8] clk: sunxi-ng: sun8i-de2: Swap A64 and H6 definitions
-Date:   Sat, 25 Jan 2020 12:20:18 +0100
-Message-ID: <2008374.irdbgypaU6@jernej-laptop>
-In-Reply-To: <CAGb2v6680yWT8KtjK0uKM00+6ed4NoPpsMaDyfYERwOXgb8Vbg@mail.gmail.com>
-References: <20200124232014.574989-1-jernej.skrabec@siol.net> <20200124232014.574989-2-jernej.skrabec@siol.net> <CAGb2v6680yWT8KtjK0uKM00+6ed4NoPpsMaDyfYERwOXgb8Vbg@mail.gmail.com>
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        dave.dice@oracle.com
+Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
+ into CNA
+Message-ID: <20200125112039.GX11457@worktop.programming.kicks-ass.net>
+References: <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
+ <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
+ <20200124075235.GX14914@hirez.programming.kicks-ass.net>
+ <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
+ <48ce49e5-98a7-23cd-09f4-8290a65abbb5@redhat.com>
+ <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
+ <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
+ <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
+ <45660873-731a-a810-8c57-1a5a19d266b4@redhat.com>
+ <b26837a9-d0cd-4413-95ec-1deaca184324@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b26837a9-d0cd-4413-95ec-1deaca184324@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Fri, Jan 24, 2020 at 01:51:34PM -0500, Waiman Long wrote:
 
-Dne sobota, 25. januar 2020 ob 04:05:33 CET je Chen-Yu Tsai napisal(a):
-> On Sat, Jan 25, 2020 at 7:20 AM Jernej Skrabec <jernej.skrabec@siol.net> 
-wrote:
-> > For some reason, A64 and H6 have swapped clocks and resets definitions.
-> > H6 doesn't have rotation unit while A64 has. Swap around to correct the
-> > issue.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> Could you add Fixes tags for this one?
+< 71 lines of garbage >
 
-I'm not sure which commit to reference. H6 one? or also initial A64 one?
+> > You can use the in_task() macro in include/linux/preempt.h. This is
+> > just a percpu preempt_count read and test. If in_task() is false, it
+> > is in a {soft|hard}irq or nmi context. If it is true, you can check
+> > the rt_task() macro to see if it is an RT task. That will access to
+> > the current task structure. So it may cost a little bit more if you
+> > want to handle the RT task the same way.
+> >
+> We may not need to do that for softIRQ context. If that is the case, you
+> can use in_irq() which checks for hardirq and nmi only. Peter, what is
+> your thought on that?
 
-I just found out that H5 compatible uses A64 structure, which is not correct. 
-H5 doesn't contain rotate core.
-
-Do you have any better idea how to nicely solve this mess? I'm thinking that 
-for v2 I would first decouple some compatibles, like this for H5 and R40 and 
-V3s from A83T (as it can be seen in the next patch). After that, rather than 
-switching definitions I would fix each compatible one by one. At the end, if any 
-entry is duplicated, I can add one commit to merge same structures.
-
-What do you think?
-
-Best regards,
-Jernej
-
-
-
+Can you lot please start trimming emails when you reply?
