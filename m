@@ -2,119 +2,103 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B70C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 14:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5795AC35244
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 14:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1157620704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 14:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A732075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 14:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgAYOTy (ORCPT
+        id S1726485AbgAYOeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 09:19:54 -0500
-Received: from 9.mo177.mail-out.ovh.net ([46.105.72.238]:51879 "EHLO
-        9.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgAYOTx (ORCPT
+        Sat, 25 Jan 2020 09:34:06 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:43237 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgAYOeF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 09:19:53 -0500
-X-Greylist: delayed 8831 seconds by postgrey-1.27 at vger.kernel.org; Sat, 25 Jan 2020 09:19:52 EST
-Received: from player734.ha.ovh.net (unknown [10.108.42.142])
-        by mo177.mail-out.ovh.net (Postfix) with ESMTP id 099A6120F82
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 12:52:39 +0100 (CET)
-Received: from RCM-web9.webmail.mail.ovh.net (unknown [147.229.117.36])
-        (Authenticated sender: steve@sk2.org)
-        by player734.ha.ovh.net (Postfix) with ESMTPSA id 98DE3E7D3290;
-        Sat, 25 Jan 2020 11:52:28 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Sat, 25 Jan 2020 12:52:23 +0100
-From:   Stephen Kitt <steve@sk2.org>
-To:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        steve@sk2.org
-Subject: Re: [PATCH] amdgpu: use dma-resv API instead of manual kmalloc
-In-Reply-To: <20200125114624.2093235-1-steve@sk2.org>
-References: <20200125114624.2093235-1-steve@sk2.org>
-User-Agent: Roundcube Webmail/1.4.2
-Message-ID: <a413396eed8390fc95fedabae9ae5afb@sk2.org>
-X-Sender: steve@sk2.org
-X-Originating-IP: 147.229.117.36
-X-Webmail-UserID: steve@sk2.org
-X-Ovh-Tracer-Id: 3172504463427325436
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrvdejgdeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeggtgfgfffhvffujghffgfkgihisehtkehjtddtreejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucfkpheptddrtddrtddrtddpudegjedrvddvledruddujedrfeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeefgedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+        Sat, 25 Jan 2020 09:34:05 -0500
+Received: by mail-yb1-f196.google.com with SMTP id k15so2522427ybd.10;
+        Sat, 25 Jan 2020 06:34:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CII6fgxbbjlcfCpxODLXxfNy5r0J8+wQSLmq3GYEul8=;
+        b=bCU7L5sVpBqdGp101C3t9B7mPY5AA86EIWEbjwzOBx7DLxkZH7t1SK7kR8d7E1d7Zk
+         76q7Sj/QVgHWs/y+psith8oD9iPNbbz6ErD8HjLmlPiVwUL4+2IXnf2qByLuw40R6sjF
+         KwX6Q09tMbE97pTFrc6CJ7AnyCWeRHxmVac56L4PC/dr5My5gJHevMkF2KvrxA4dlafo
+         Z50Wf2Yj0MKJlns9kBdROmBehotF9B7umAjGCFZtLmr7JZa7+7N6xpI4edzveC1rp0EL
+         R+1AIqOzbrqnsHqDzOdtBhuEZFVdzGpLlTwlMMTU/BOEHj9yp5ComC7W541do6cGB2jx
+         XuGw==
+X-Gm-Message-State: APjAAAUROxTT72gzEUuvPvfNKCccetpfnyk6fz/KlVx1+bpf8p2x3iPo
+        G0gfgjJqdAcMzTiOQokHd+E=
+X-Google-Smtp-Source: APXvYqyz8SWMF/sNYdsq9JDkVs9ZnyCPh+bhesv9tVDOFL94tGNrbROb3Dmgkdh4KJ03cU8P1sNnbA==
+X-Received: by 2002:a25:6184:: with SMTP id v126mr6092142ybb.427.1579962844821;
+        Sat, 25 Jan 2020 06:34:04 -0800 (PST)
+Received: from localhost.localdomain (h198-137-20-41.xnet.uga.edu. [198.137.20.41])
+        by smtp.gmail.com with ESMTPSA id w132sm3723295ywc.51.2020.01.25.06.34.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jan 2020 06:34:03 -0800 (PST)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Chas Williams <3chas3@gmail.com>,
+        linux-atm-general@lists.sourceforge.net (moderated list:ATM),
+        netdev@vger.kernel.org (open list:ATM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] firestream: fix memory leaks
+Date:   Sat, 25 Jan 2020 14:33:29 +0000
+Message-Id: <20200125143329.11766-1-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And of course I forgot this is an internal API, so this doesn't work 
-without some of other stuff which isn't ready.
+In fs_open(), 'vcc' is allocated through kmalloc() and assigned to
+'atm_vcc->dev_data.' In the following execution, if an error occurs, e.g.,
+there is no more free channel, an error code EBUSY or ENOMEM will be
+returned. However, 'vcc' is not deallocated, leading to memory leaks. Note
+that, in normal cases where fs_open() returns 0, 'vcc' will be deallocated
+in fs_close(). But, if fs_open() fails, there is no guarantee that
+fs_close() will be invoked.
 
-Please ignore...
+To fix this issue, deallocate 'vcc' before the error code is returned.
 
-Regards,
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/atm/firestream.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Stephen
+diff --git a/drivers/atm/firestream.c b/drivers/atm/firestream.c
+index aad00d2b28f5..cc87004d5e2d 100644
+--- a/drivers/atm/firestream.c
++++ b/drivers/atm/firestream.c
+@@ -912,6 +912,7 @@ static int fs_open(struct atm_vcc *atm_vcc)
+ 			}
+ 			if (!to) {
+ 				printk ("No more free channels for FS50..\n");
++				kfree(vcc);
+ 				return -EBUSY;
+ 			}
+ 			vcc->channo = dev->channo;
+@@ -922,6 +923,7 @@ static int fs_open(struct atm_vcc *atm_vcc)
+ 			if (((DO_DIRECTION(rxtp) && dev->atm_vccs[vcc->channo])) ||
+ 			    ( DO_DIRECTION(txtp) && test_bit (vcc->channo, dev->tx_inuse))) {
+ 				printk ("Channel is in use for FS155.\n");
++				kfree(vcc);
+ 				return -EBUSY;
+ 			}
+ 		}
+@@ -935,6 +937,7 @@ static int fs_open(struct atm_vcc *atm_vcc)
+ 			    tc, sizeof (struct fs_transmit_config));
+ 		if (!tc) {
+ 			fs_dprintk (FS_DEBUG_OPEN, "fs: can't alloc transmit_config.\n");
++			kfree(vcc);
+ 			return -ENOMEM;
+ 		}
+ 
+-- 
+2.17.1
 
-
-Le 25/01/2020 12:46, Stephen Kitt a écrit :
-> Instead of hand-coding the dma_resv_list allocation, use
-> dma_resv_list_alloc, which masks the shared_max handling. While we're
-> at it, since we only need shared_count fences, allocate shared_count
-> fences rather than shared_max.
-> 
-> (This is the only place in the kernel, outside of dma-resv.c, which
-> touches shared_max. This suggests we'd probably be better off without
-> it!)
-> 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> index 888209eb8cec..aec595752200 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> @@ -234,12 +234,11 @@ static int
-> amdgpu_amdkfd_remove_eviction_fence(struct amdgpu_bo *bo,
->  	if (!old)
->  		return 0;
-> 
-> -	new = kmalloc(offsetof(typeof(*new), shared[old->shared_max]),
-> -		      GFP_KERNEL);
-> +	new = dma_resv_list_alloc(old->shared_count);
->  	if (!new)
->  		return -ENOMEM;
-> 
-> -	/* Go through all the shared fences in the resevation object and sort
-> +	/* Go through all the shared fences in the reservation object and 
-> sort
->  	 * the interesting ones to the end of the list.
->  	 */
->  	for (i = 0, j = old->shared_count, k = 0; i < old->shared_count; ++i) 
-> {
-> @@ -253,7 +252,6 @@ static int
-> amdgpu_amdkfd_remove_eviction_fence(struct amdgpu_bo *bo,
->  		else
->  			RCU_INIT_POINTER(new->shared[k++], f);
->  	}
-> -	new->shared_max = old->shared_max;
->  	new->shared_count = k;
-> 
->  	/* Install the new fence list, seqcount provides the barriers */
