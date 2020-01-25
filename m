@@ -2,88 +2,112 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2FEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697BAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF52B2070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:46:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="DOoL2RfM"
+	by mail.kernel.org (Postfix) with ESMTP id 3A84F2071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgAYQqp (ORCPT
+        id S1726725AbgAYQw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 11:46:45 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:54664 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgAYQqo (ORCPT
+        Sat, 25 Jan 2020 11:52:58 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:36466 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgAYQw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 11:46:44 -0500
-Received: by mail-pj1-f68.google.com with SMTP id dw13so744514pjb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 08:46:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Da0HM3we7N/C1GUMxu+zimrEHhE4JWPgKR0nOJHOax0=;
-        b=DOoL2RfM7S03QgOEhu9APCrjgDReQAzGLqgnqfVD/kg3Wnb/WyeqAXAHjIWfft58gv
-         Fn7DMFWB+E7KZI66PXQVf47Ugp6ccVqVDXTgHqyBnuv3rpzf0bdkHZwkWL+NFx6RwxWL
-         sCMYTwSAjxbhs1HtqMjYSzgHRiVdDeVE13dEpjCOGxFdoI5fspABUYMLFbXspnBfCKSJ
-         NKUp0+FVBRnCSdSM1WbYPc4SQ4WXWjDwH0vsFqXDDXDzQ9OZRxC4LQpCAnLf2Imtbhzk
-         Pu1N/QT+4TxPqbmKcWzDeS6BBT+WXB2vLEPpFo5gcjwhYxwhzGfJmXeSfklOEECTL8zI
-         K7DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Da0HM3we7N/C1GUMxu+zimrEHhE4JWPgKR0nOJHOax0=;
-        b=A+fWkfpdjZYw/J3ODe3EXP3t141Krpkfb5vCkkqWwFqC0Csj2STyyoSWLMQrauA5+9
-         UV05HwImW11F6UNbnn78KK/3jiGjazvDFz7yY+zqBRJrPKavluHPhED/ACLBw1ChhOXl
-         aVlmHS+qq9VMXcO5fbpybAI9UKopZH3a6qX7n0+vKhTJd/Z/Mr1glwFyfHeEX3dp2HAa
-         mEL9m4Ay7fAvlvV+uSqcRMol8J0lN6Z8jtzoIJqVIJjtuqSBbWYa4eggjBQmePF46tqi
-         CYjtZE1IwpWyBLod7fvtoRiFn14loBLWgvI+zFi4H/ILqpTjZtIrfROkLCyij8NKy6Ud
-         wqdg==
-X-Gm-Message-State: APjAAAUBEVhjUKBXt9X3P5TwI0P8ghnUn5mQfPh3uMN8WzMQIDPn0g6P
-        qfM6XZDMeBlaqeO9CdcZ8S3ySi/LBUY=
-X-Google-Smtp-Source: APXvYqzUVDfKigGPxPBhqtthKCCZlJs5VZVdHR7gptb0w7GufSkBbH6yqjC3m4DmbZzvF/98/18JXQ==
-X-Received: by 2002:a17:902:7d86:: with SMTP id a6mr9752568plm.212.1579970804021;
-        Sat, 25 Jan 2020 08:46:44 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id r3sm10273769pfg.145.2020.01.25.08.46.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Jan 2020 08:46:43 -0800 (PST)
-Subject: Re: [PATCH 1/1] io_uring: fix refcounting with OOM
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <fa69cae513308ef3f681e13888a4f551c67ef3a2.1579942715.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <78a57f0e-2412-472a-86c2-5e634a74147f@kernel.dk>
-Date:   Sat, 25 Jan 2020 09:46:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 25 Jan 2020 11:52:58 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 792101C25DE; Sat, 25 Jan 2020 17:52:56 +0100 (CET)
+Date:   Sat, 25 Jan 2020 17:52:55 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Steve Sistare <steven.sistare@oracle.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 255/639] scsi: megaraid_sas: reduce module load time
+Message-ID: <20200125165255.GE14064@duo.ucw.cz>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <20200124093118.649741900@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <fa69cae513308ef3f681e13888a4f551c67ef3a2.1579942715.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="brEuL7wsLY8+TuWz"
+Content-Disposition: inline
+In-Reply-To: <20200124093118.649741900@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/25/20 1:59 AM, Pavel Begunkov wrote:
-> In case of out of memory the second argument of percpu_ref_put_many() in
-> io_submit_sqes() may evaluate into "nr - (-EAGAIN)", that is clearly
-> wrong.
 
-Can you reorder this one before your series, I haven't had time
-to take a look at that yet and I don't think this bug fix should
-depend on it.
+--brEuL7wsLY8+TuWz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Jens Axboe
+Hi!
 
+> [ Upstream commit 31b6a05f86e690e1818116fd23c3be915cc9d9ed ]
+>=20
+> megaraid_sas takes 1+ seconds to load while waiting for firmware:
+>=20
+> [2.822603] megaraid_sas 0000:03:00.0: Waiting for FW to come to ready sta=
+te
+> [3.871003] megaraid_sas 0000:03:00.0: FW now in Ready state
+>=20
+> This is due to the following loop in megasas_transition_to_ready(), which
+> waits a minimum of 1 second, even though the FW becomes ready in tens of
+> millisecs:
+>=20
+>         /*
+>          * The cur_state should not last for more than max_wait secs
+>          */
+>         for (i =3D 0; i < max_wait; i++) {
+>                 ...
+>                 msleep(1000);
+>         ...
+>         dev_info(&instance->pdev->dev, "FW now in Ready state\n");
+>=20
+> This is a regression, caused by a change of the msleep granularity from 1
+> to 1000 due to concern about waiting too long on systems with coarse
+> jiffies.
+>=20
+> To fix, increase iterations and use msleep(20), which results in:
+>=20
+> [2.670627] megaraid_sas 0000:03:00.0: Waiting for FW to come to ready sta=
+te
+> [2.739386] megaraid_sas 0000:03:00.0: FW now in Ready state
+>=20
+> Fixes: fb2f3e96d80f ("scsi: megaraid_sas: Fix msleep granularity")
+
+
+That commit does not exist, it seems this fixes:
+
+commit 9155cf30a3c4ef97e225d6daddf9bd4b173267e8
+    scsi: megaraid_sas: Fix msleep granularity
+
+Best regards,
+									Pavel
+								=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--brEuL7wsLY8+TuWz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXixyZwAKCRAw5/Bqldv6
+8uwyAJ95Arp4kjR/80ctKT6yKQsV9JoKZQCeMF+svEnMrBHXsUskWFYN+CnWKPY=
+=Dylx
+-----END PGP SIGNATURE-----
+
+--brEuL7wsLY8+TuWz--
