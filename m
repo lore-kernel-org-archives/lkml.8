@@ -7,39 +7,37 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44D0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BB0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A538422522
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63C922522
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgAYKnJ (ORCPT
+        id S1730387AbgAYKpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:43:09 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44191 "EHLO
+        Sat, 25 Jan 2020 05:45:39 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44275 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729324AbgAYKm7 (ORCPT
+        with ESMTP id S1729543AbgAYKnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 05:42:59 -0500
+        Sat, 25 Jan 2020 05:43:09 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ivItz-0008US-67; Sat, 25 Jan 2020 11:42:55 +0100
+        id 1ivIuB-00006j-H8; Sat, 25 Jan 2020 11:43:07 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B4C0A1C1A73;
-        Sat, 25 Jan 2020 11:42:47 +0100 (CET)
-Date:   Sat, 25 Jan 2020 10:42:47 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 155BA1C1A86;
+        Sat, 25 Jan 2020 11:42:51 +0100 (CET)
+Date:   Sat, 25 Jan 2020 10:42:50 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Mark non-global functions and variables as static
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: [tip: core/rcu] torture: Hoist calls to lscpu to higher-level kvm.sh script
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157994896754.396.1035985898715511278.tip-bot2@tip-bot2>
+Message-ID: <157994897084.396.6588052021936782800.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,78 +53,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     c30fe541896440667bd9e9068aedd1d440fbbcd2
-Gitweb:        https://git.kernel.org/tip/c30fe541896440667bd9e9068aedd1d440fbbcd2
+Commit-ID:     b22eb7cefb9d31cf862542f9cef90f97c0294842
+Gitweb:        https://git.kernel.org/tip/b22eb7cefb9d31cf862542f9cef90f97c0294842
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Fri, 11 Oct 2019 21:40:09 -07:00
+AuthorDate:    Mon, 25 Nov 2019 14:33:28 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 12 Dec 2019 10:24:52 -08:00
+CommitterDate: Mon, 09 Dec 2019 13:00:30 -08:00
 
-rcu: Mark non-global functions and variables as static
+torture: Hoist calls to lscpu to higher-level kvm.sh script
 
-Each of rcu_state, rcu_rnp_online_cpus(), rcu_dynticks_curr_cpu_in_eqs(),
-and rcu_dynticks_snap() are used only in the kernel/rcu/tree.o translation
-unit, and may thus be marked static.  This commit therefore makes this
-change.
+On some kernels, concurrent calls to the lscpu command result in severe
+slowdowns.  For example, on v4.16, a single lscpu invocation takes about
+two milliseconds, four concurrent invocations more than two seconds,
+and 16 concurrent invocations more than 20 seconds.  Given that the only
+goal is to learn the number of CPUs, invoking lscpu but once suffices.
+This commit therefore invokes lscpu early in kvm.sh execution, setting
+the initial value of the TORTURE_ALLOTED_CPUS environment variable.
 
-Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- kernel/rcu/tree.c | 8 ++++----
- kernel/rcu/tree.h | 2 --
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh |  7 +---
+ tools/testing/selftests/rcutorture/bin/kvm.sh            | 11 +++++--
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 1694a6b..dd8cfc3 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -84,7 +84,7 @@ static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
- 	.dynticks_nmi_nesting = DYNTICK_IRQ_NONIDLE,
- 	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
- };
--struct rcu_state rcu_state = {
-+static struct rcu_state rcu_state = {
- 	.level = { &rcu_state.node[0] },
- 	.gp_state = RCU_GP_IDLE,
- 	.gp_seq = (0UL - 300UL) << RCU_SEQ_CTR_SHIFT,
-@@ -188,7 +188,7 @@ EXPORT_SYMBOL_GPL(rcu_get_gp_kthreads_prio);
-  * held, but the bit corresponding to the current CPU will be stable
-  * in most contexts.
-  */
--unsigned long rcu_rnp_online_cpus(struct rcu_node *rnp)
-+static unsigned long rcu_rnp_online_cpus(struct rcu_node *rnp)
- {
- 	return READ_ONCE(rnp->qsmaskinitnext);
- }
-@@ -294,7 +294,7 @@ static void rcu_dynticks_eqs_online(void)
-  *
-  * No ordering, as we are sampling CPU-local information.
-  */
--bool rcu_dynticks_curr_cpu_in_eqs(void)
-+static bool rcu_dynticks_curr_cpu_in_eqs(void)
- {
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+index 1d98992..e035230 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+@@ -133,11 +133,10 @@ fi
+ qemu_args="-enable-kvm -nographic $qemu_args"
+ cpu_count=`configNR_CPUS.sh $resdir/ConfigFragment`
+ cpu_count=`configfrag_boot_cpus "$boot_args" "$config_template" "$cpu_count"`
+-vcpus=`identify_qemu_vcpus`
+-if test $cpu_count -gt $vcpus
++if test "$cpu_count" -gt "$TORTURE_ALLOTED_CPUS"
+ then
+-	echo CPU count limited from $cpu_count to $vcpus | tee -a $resdir/Warnings
+-	cpu_count=$vcpus
++	echo CPU count limited from $cpu_count to $TORTURE_ALLOTED_CPUS | tee -a $resdir/Warnings
++	cpu_count=$TORTURE_ALLOTED_CPUS
+ fi
+ qemu_args="`specify_qemu_cpus "$QEMU" "$qemu_args" "$cpu_count"`"
  
-@@ -305,7 +305,7 @@ bool rcu_dynticks_curr_cpu_in_eqs(void)
-  * Snapshot the ->dynticks counter with full ordering so as to allow
-  * stable comparison of this counter with past and future snapshots.
-  */
--int rcu_dynticks_snap(struct rcu_data *rdp)
-+static int rcu_dynticks_snap(struct rcu_data *rdp)
- {
- 	int snap = atomic_add_return(0, &rdp->dynticks);
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
+index e19151c..78d18ab 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
+@@ -24,7 +24,9 @@ dur=$((30*60))
+ dryrun=""
+ KVM="`pwd`/tools/testing/selftests/rcutorture"; export KVM
+ PATH=${KVM}/bin:$PATH; export PATH
+-TORTURE_ALLOTED_CPUS=""
++. functions.sh
++
++TORTURE_ALLOTED_CPUS="`identify_qemu_vcpus`"
+ TORTURE_DEFCONFIG=defconfig
+ TORTURE_BOOT_IMAGE=""
+ TORTURE_INITRD="$KVM/initrd"; export TORTURE_INITRD
+@@ -40,8 +42,6 @@ cpus=0
+ ds=`date +%Y.%m.%d-%H:%M:%S`
+ jitter="-1"
  
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 055c317..e4dc5de 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -403,8 +403,6 @@ static const char *tp_rcu_varname __used __tracepoint_string = rcu_name;
- #define RCU_NAME rcu_name
- #endif /* #else #ifdef CONFIG_TRACING */
- 
--int rcu_dynticks_snap(struct rcu_data *rdp);
+-. functions.sh
 -
- /* Forward declarations for tree_plugin.h */
- static void rcu_bootup_announce(void);
- static void rcu_qs(void);
+ usage () {
+ 	echo "Usage: $scriptname optional arguments:"
+ 	echo "       --bootargs kernel-boot-arguments"
+@@ -93,6 +93,11 @@ do
+ 		checkarg --cpus "(number)" "$#" "$2" '^[0-9]*$' '^--'
+ 		cpus=$2
+ 		TORTURE_ALLOTED_CPUS="$2"
++		max_cpus="`identify_qemu_vcpus`"
++		if test "$TORTURE_ALLOTED_CPUS" -gt "$max_cpus"
++		then
++			TORTURE_ALLOTED_CPUS=$max_cpus
++		fi
+ 		shift
+ 		;;
+ 	--datestamp)
