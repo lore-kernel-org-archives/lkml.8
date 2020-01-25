@@ -2,80 +2,123 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38CBC35242
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 23:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0E4C35246
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 23:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF1C220704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 23:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69F620704
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 23:11:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQB14srl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgAYXKB (ORCPT
+        id S1728827AbgAYXL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 18:10:01 -0500
-Received: from mga01.intel.com ([192.55.52.88]:23337 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbgAYXKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 18:10:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jan 2020 15:10:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,363,1574150400"; 
-   d="scan'208";a="246059569"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga002.jf.intel.com with ESMTP; 25 Jan 2020 15:10:00 -0800
-Received: from orsmsx114.amr.corp.intel.com ([169.254.8.4]) by
- ORSMSX107.amr.corp.intel.com ([169.254.1.15]) with mapi id 14.03.0439.000;
- Sat, 25 Jan 2020 15:10:00 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Mark D Rustad <mrustad@gmail.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v16] x86/split_lock: Enable split lock detection by
- kernel
-Thread-Topic: [PATCH v16] x86/split_lock: Enable split lock detection by
- kernel
-Thread-Index: AQHV08vIoo9+H20Xn0+pX8CBaZEvcaf8gEOAgAAHYoA=
-Date:   Sat, 25 Jan 2020 23:10:00 +0000
-Message-ID: <C3302B2F-177F-4C39-910E-EADBA9285DD0@intel.com>
-References: <4E95BFAA-A115-4159-AA4F-6AAB548C6E6C@gmail.com>
-In-Reply-To: <4E95BFAA-A115-4159-AA4F-6AAB548C6E6C@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <44124E5DD95A474BBBAE06EC979C7132@intel.com>
-Content-Transfer-Encoding: base64
+        Sat, 25 Jan 2020 18:11:29 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:43501 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbgAYXL3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 18:11:29 -0500
+Received: by mail-yw1-f68.google.com with SMTP id v126so2884989ywc.10;
+        Sat, 25 Jan 2020 15:11:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=q6ZcuyUU+doit7kPbsOnRYJCyiBS+m30mXZlkpyEj44=;
+        b=fQB14srlFUsvbsthSTN425EVpuNWWWzyduWo5AlYxx2lEoL9J//Q5ycxbL/A6e7UgT
+         61y4gig+4dTOZCDZsohGst7k1/6JpnDk4t/QYeeB1Shr7mpwyL25rE82WgC9S53po4Uv
+         h9N4aTxFTBU8QAFqdW9GLyVgfZ41KlL3Xp7jhCMlzpgxpU2BD9eXd5a0WdmJRkN+XF2t
+         k+A6tla3JE/kNUo5aHP9tUetwCvzkjatHOYgZrHLZME2FtK892JbrCO+kwpT7pZi3aJz
+         B7Q2+2JGTraJ8BDjVNkbkO8Wgheal79YREK1s5UocneY26wTJ4UI+lL2X2nabopcJlXs
+         mqFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q6ZcuyUU+doit7kPbsOnRYJCyiBS+m30mXZlkpyEj44=;
+        b=V+3nQLS2g57FxnFx9XPg4zj+ZiYi4Rpf+U7jZx5fRXMsllT91Nwyq/nbcaBzuk+0G6
+         CnEHumDG7fUuEMMAjU8ZTaJM7VKXSay1qtMkDUQWDsvbOllxAxrMGZMvxgToZlgv+dc7
+         mlagWywKeWP8wmsnWX72GVQ8WKdGtW34wx8r/K7H573RJSNH8Mv5UsRXwiFCIRpMrIUK
+         LXpkYWyzBLZuauayOPmSB6WwwQqGLj3gpR+OZgmykOofRcn6B/dwi2bmHS4hSVthgokJ
+         uQIVDiLwaM3o9gzm+XHMDEPl6ZGwl03vnZl5/gTJGgFC8qAzo4gZ7sdMrnLk/NjK5QLg
+         l+5g==
+X-Gm-Message-State: APjAAAXycL05vRkwxuzpKC6U3kMPRZNEA6SXOZMfY2/ESPqMK3Zbn/Mr
+        jQ9zov+VUQpalx86F+5wt4YFclxL
+X-Google-Smtp-Source: APXvYqzfnm4WtAQkAQIkeWXOx8omohb9x0BX8o4ZaN1RQtvM8kw7meqUZXELPvvC2GY+4w8prG5emg==
+X-Received: by 2002:a0d:f5c1:: with SMTP id e184mr7802889ywf.245.1579993888343;
+        Sat, 25 Jan 2020 15:11:28 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9sm4493140ywh.55.2020.01.25.15.11.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 25 Jan 2020 15:11:27 -0800 (PST)
+Date:   Sat, 25 Jan 2020 15:11:26 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, stwiss.opensource@diasemi.com,
+        Adam.Thomson.Opensource@diasemi.com,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] watchdog: da9062: do not ping the hw during stop()
+Message-ID: <20200125231126.GA25513@roeck-us.net>
+References: <20200120091729.16256-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120091729.16256-1-m.felsch@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IA0KPiBNYXliZSAiaXNuJ3Qgc3VwcG9ydGVkIiBpcyBub3QgcmVhbGx5IHRoZSByaWdodCB3
-b3JkaW5nLiBJIHdvdWxkIHRoaW5rIHRoYXQgaWYgaXQgdHJ1bHkgd2VyZW4ndCBzdXBwb3J0ZWQg
-dGhhdCB5b3UgcmVhbGx5IHNob3VsZG4ndCBiZSBjaGFuZ2luZyB0aGUgbW9kZSBhdCBhbGwgYXQg
-cnVudGltZS4gRG8geW91IHJlYWxseSBqdXN0IG1lYW4gImlzbid0IGF0b21pYyI/IE9yIGlzIHRo
-ZXJlIHNvbWV0aGluZyBkZWVwZXIgYWJvdXQgaXQ/IElmIHNvLCBhcmUgdGhlcmUgb3RoZXIgcG9z
-c2libGUgcmlza3MgYXNzb2NpYXRlZCB3aXRoIGNoYW5naW5nIHRoZSBtb2RlIGF0IHJ1bnRpbWU/
-DQo+IA0KPiBTb3JyeSwgdGhlIHdvcmRpbmcganVzdCBoYXBwZW5lZCB0byBjYXRjaCBteSBleWUg
-DQoNClRoZSDigJxtb2Rlc+KAnSBoZXJlIG1lYW5zIHRoZSB0aHJlZSBvcHRpb24gc2VsZWN0YWJs
-ZSBieSBjb21tYW5kIGxpbmUgb3B0aW9uLiBPZmYvd2Fybi9mYXRhbC4gU29tZSBlYXJsaWVyIHZl
-cnNpb25zIG9mIHRoaXMgcGF0Y2ggaGFkIGEgc3lzZnMgaW50ZXJmYWNlIHRvIHN3aXRjaCB0aGlu
-Z3MgYXJvdW5kLg0KDQpOb3Qgd2hldGhlciB3ZSBoYXZlIHRoZSBNU1IgZW5hYmxlZC9kaXNhYmxl
-ZC4NCg0KSWYgVGhvbWFzIG9yIEJvcmlzIGZpbmRzIG1vcmUgdGhpbmdzIHRvIGZpeCB0aGVuIEni
-gJlsbCB0YWtlIGEgbG9vayBhdCBjbGFyaWZ5aW5nIHRoaXMgY29tbWVudCB0b28uDQoNCi1Ub255
+On Mon, Jan 20, 2020 at 10:17:29AM +0100, Marco Felsch wrote:
+> The da9062 hw has a minimum ping cool down phase of at least 200ms. The
+> driver takes that into account by setting the min_hw_heartbeat_ms to
+> 300ms and the core guarantees that the hw limit is observed for the
+> ping() calls. But the core can't guarantees the required minimum ping
+
+guarantee
+
+> cool down phase if a stop() command is send immediately after the ping()
+> command. So it is not allowed to ping the watchdog within the stop()
+> command as the driver do. Remove the ping can be done without doubts
+
+does
+
+> because the watchdog gets disabled anyway and a (re)start reset the
+
+resets
+
+> watchdog counter too.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/watchdog/da9062_wdt.c | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
+> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
+> index 77b6b5336067..0ad15d55071c 100644
+> --- a/drivers/watchdog/da9062_wdt.c
+> +++ b/drivers/watchdog/da9062_wdt.c
+> @@ -97,13 +97,6 @@ static int da9062_wdt_stop(struct watchdog_device *wdd)
+>  	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
+>  	int ret;
+>  
+> -	ret = da9062_reset_watchdog_timer(wdt);
+> -	if (ret) {
+> -		dev_err(wdt->hw->dev, "Failed to ping the watchdog (err = %d)\n",
+> -			ret);
+> -		return ret;
+> -	}
+> -
+>  	ret = regmap_update_bits(wdt->hw->regmap,
+>  				 DA9062AA_CONTROL_D,
+>  				 DA9062AA_TWDSCALE_MASK,
