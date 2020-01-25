@@ -2,88 +2,85 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834C8C35242
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 09:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A21C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 09:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABB82070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 09:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 730942070A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 09:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eaZeYggw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EQgN+UN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbgAYJhq (ORCPT
+        id S1728173AbgAYJje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 04:37:46 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46891 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725945AbgAYJhp (ORCPT
+        Sat, 25 Jan 2020 04:39:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29893 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725945AbgAYJje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 04:37:45 -0500
+        Sat, 25 Jan 2020 04:39:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579945064;
+        s=mimecast20190719; t=1579945173;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6WE2fbQswzs+SJz5n1omfDubg+SoDSvUx44H2FyK3h4=;
-        b=eaZeYggwS/8bHHwpjf8nMVpMyfyzEpj637FO7QYtBgMyYcXpRpET31enMVexkqoy3itMw3
-        LWhEVMNDgjJxbAzLaJ4AtApvcqnTPAJbyNqKHf91xyTiOz3GgwStXT49vXsvRZMAYHHNAk
-        8n6V1Add49aU8QsQa60wNywZgtMkD2c=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-153-qvSXo_EyOB2rbprq75Qocw-1; Sat, 25 Jan 2020 04:37:40 -0500
-X-MC-Unique: qvSXo_EyOB2rbprq75Qocw-1
-Received: by mail-wr1-f70.google.com with SMTP id b13so2722038wrx.22
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 01:37:40 -0800 (PST)
+        bh=tSakUTi8biBaDO4JGr8rcWBisLF05BHEM8+vn5mJmsg=;
+        b=EQgN+UN6Y3h081mR+63On/k5A7TcdvMpOWbQhiIX2gPu1j7MqprntgE7zMtFdhVOxGNmdQ
+        Wxj4mkFcVPJP1btQ+JbCJBW+J40siyQxVqOtC4Ami+5NdmvCwDVrboSzXv/8BX/uHEMp3d
+        hn9eBPo1gS/OWxwyqCw3iQczxzsi4LE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-172-31lPr5QoP2CtWIaxWU6ENw-1; Sat, 25 Jan 2020 04:39:24 -0500
+X-MC-Unique: 31lPr5QoP2CtWIaxWU6ENw-1
+Received: by mail-wr1-f69.google.com with SMTP id j13so2739778wrr.20
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 01:39:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=6WE2fbQswzs+SJz5n1omfDubg+SoDSvUx44H2FyK3h4=;
-        b=F5DAtfjpFrpCtsb4lDFrYS2hxN4LZZETmVeDMV+iniNEFs0orfdC7SsTZun4NpUcw4
-         HX6t/DJ9XhTyRuX9YoFA0I+spi3RcbF0l0O84HQ2oL1Stp00AttaSrFjCKiJBhgeTB2u
-         C44+lf0zOi2IcRo5uE5FQvPJRbr7tbOs0g0BCafQw1/CF8FRE8/Rb0Jrr6GggH/vYMa3
-         bFPOfH03BdZI2/PV6iYx2sryWIXaKzNhRdm9ZyCgvZye1rxR6XEbdf2gRn1dchI+82uu
-         bhGOydxQBGIxWv8baVRqbrFptQ5IV+iqp47JQhyYWSQi6rUtwO93L/ZKmbuqs/RKkNUc
-         eVNg==
-X-Gm-Message-State: APjAAAUUBBKprM6sEmdcvXNqBxAzRBnSJ+BN9P04yM28ZOB5Zwajbyss
-        JaQwvo8MqJZ5dAbe5M41mWaF9IDMltTtU8MJY/T4TVXm3ZKNORxG2su9/5x/H8xdM5JRUOs64Ae
-        fGkoR0M41Cmi59KfvnhNTxkDE
-X-Received: by 2002:adf:fc03:: with SMTP id i3mr9643030wrr.306.1579945059518;
-        Sat, 25 Jan 2020 01:37:39 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzADoueJweyRIZiSjc1N6dPo0jQ7I4gMZv5B4n3ZCIMUKiG1FLlWJFwmcqNLCFzWRZfPX0SfA==
-X-Received: by 2002:adf:fc03:: with SMTP id i3mr9643007wrr.306.1579945059285;
-        Sat, 25 Jan 2020 01:37:39 -0800 (PST)
+        bh=tSakUTi8biBaDO4JGr8rcWBisLF05BHEM8+vn5mJmsg=;
+        b=incdLuIzaK5frPK+9ADjWp5753Fn021IR3ObqJ/03kXZMmx2B7A531H01smC0gLP8G
+         r5UcV+QHIfMUgWeGpcvZX5Es0vQceXMCvp3N9fq13BYZ5lOlp2SHOX8OwSmf8pC55LIx
+         otBBIyJn7dDSWc+oT3rK+ckN7QRoOio4q0xW1Mn0PapgtNkBf/q40IX3NMOdYPEwopRq
+         J5ddcPiNpmE7lCG+NX6Jz7DvWn24oEgOsmQD/tVWDhU4kBKkbafVHc9fojTsd5ke/XiI
+         aNofEOf4GMiSPI/HVYBQbxsI1aRxUNKsL0TBPI+q48+RlUP7q2NPazkWjRi3r6hF7LWU
+         Oifw==
+X-Gm-Message-State: APjAAAXlQqQxG5hcRnt+L48mEs0ijTqklUXRCAZY8V4KSTOTdUTJMUKJ
+        R56Q+vFXpZCP21gqDQ04s72YPWQpTIiD3vsxGZ+Q3SrKouYHY4k9jJdAtVcJaYI3+zBhyWJiwru
+        u8JA6ZnuMQbvJw9O4aEhIw1be
+X-Received: by 2002:a7b:c450:: with SMTP id l16mr3501977wmi.166.1579945163413;
+        Sat, 25 Jan 2020 01:39:23 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxXHzToOxP0s/Db+4GnkirH83ip6eSuf/6sQnScHphAbo+jbh853oEfOBR31PKwD5KTWSeosQ==
+X-Received: by 2002:a7b:c450:: with SMTP id l16mr3501951wmi.166.1579945163182;
+        Sat, 25 Jan 2020 01:39:23 -0800 (PST)
 Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id o1sm10988700wrn.84.2020.01.25.01.37.37
+        by smtp.gmail.com with ESMTPSA id f1sm11276551wro.85.2020.01.25.01.39.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Jan 2020 01:37:38 -0800 (PST)
-Subject: Re: [PATCH v4 09/10] KVM: selftests: Stop memslot creation in KVM
- internal memslot region
-To:     Ben Gardon <bgardon@google.com>
+        Sat, 25 Jan 2020 01:39:22 -0800 (PST)
+Subject: Re: [PATCH v4 07/10] KVM: selftests: Support multiple vCPUs in demand
+ paging test
+To:     Andrew Jones <drjones@redhat.com>, Ben Gardon <bgardon@google.com>
 Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-kselftest@vger.kernel.org,
         Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Peter Shier <pshier@google.com>,
+        Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
         Oliver Upton <oupton@google.com>
 References: <20200123180436.99487-1-bgardon@google.com>
- <20200123180436.99487-10-bgardon@google.com>
- <92042648-e43a-d996-dc38-aded106b976b@redhat.com>
- <CANgfPd8jpUykwrOnToXx+zhJOJvnWvxhZPSKhAwST=wwYdtA3A@mail.gmail.com>
+ <20200123180436.99487-8-bgardon@google.com>
+ <20200124104943.6abkjzegmewnoeiv@kamzik.brq.redhat.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6812a36c-7de6-c0c9-a2f3-5f9e02db6621@redhat.com>
-Date:   Sat, 25 Jan 2020 10:37:37 +0100
+Message-ID: <df86f0da-366d-bb20-d1d0-125697c660a8@redhat.com>
+Date:   Sat, 25 Jan 2020 10:39:20 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <CANgfPd8jpUykwrOnToXx+zhJOJvnWvxhZPSKhAwST=wwYdtA3A@mail.gmail.com>
+In-Reply-To: <20200124104943.6abkjzegmewnoeiv@kamzik.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -92,64 +89,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/01/20 19:41, Ben Gardon wrote:
-> On Fri, Jan 24, 2020 at 12:58 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->> On 23/01/20 19:04, Ben Gardon wrote:
->>> KVM creates internal memslots covering the region between 3G and 4G in
->>> the guest physical address space, when the first vCPU is created.
->>> Mapping this region before creation of the first vCPU causes vCPU
->>> creation to fail. Prohibit tests from creating such a memslot and fail
->>> with a helpful warning when they try to.
->>>
->>> Signed-off-by: Ben Gardon <bgardon@google.com>
->>> ---
->>
->> The internal memslots are much higher than this (0xfffbc000 and
->> 0xfee00000).  I'm changing the patch to block 0xfe0000000 and above,
->> otherwise it breaks vmx_dirty_log_test.
-> 
-> Perhaps we're working in different units, but I believe paddrs
-> 0xfffbc000 and 0xfee00000 are between 3GiB and 4GiB.
-> "Proof by Python":
+On 24/01/20 11:49, Andrew Jones wrote:
+>> +
+>> +	/*
+>> +	 * Reserve twice the ammount of memory needed to map the test region and
+>> +	 * the page table / stacks region, at 4k, for page tables. Do the
+>> +	 * calculation with 4K page size: the smallest of all archs. (e.g., 64K
+>> +	 * page size guest will need even less memory for page tables).
+>> +	 */
+>> +	pages += (2 * pages) / PTES_PER_4K_PT;
+>> +	pages += ((2 * vcpus * vcpu_memory_bytes) >> PAGE_SHIFT_4K) /
+>> +		 PTES_PER_4K_PT;
+> pages needs to be rounded up to the next multiple of 16 in order for this
+> to work on aarch64 machines with 64k pages.
 
-I invoke the "not a native speaker" card.  Rephrasing: there is a large
-part at the beginning of the area between 3GiB and 4GiB that isn't used
-by internal memslot (but is used by vmx_dirty_log_test).
+I think this is best done with a generic function that does the rounding
+and an arch-specific function that returns the page size.  Can you send
+a patch to implement this?
 
-Though I have no excuse for the extra zero, the range to block is
-0xfe000000 to 0x100000000.
+Thanks,
 
 Paolo
-
->>>> B=1
->>>> KB=1024*B
->>>> MB=1024*KB
->>>> GB=1024*MB
->>>> hex(3*GB)
-> '0xc0000000'
->>>> hex(4*GB)
-> '0x100000000'
->>>> 3*GB == 3<<30
-> True
->>>> 0xfffbc000 > 3*GB
-> True
->>>> 0xfffbc000 < 4*GB
-> True
->>>> 0xfee00000 > 3*GB
-> True
->>>> 0xfee00000 < 4*GB
-> True
-> 
-> Am I missing something?
-> 
-> I don't think blocking 0xfe0000000 and above is useful, as there's
-> nothing mapped in that region and AFAIK it's perfectly valid to create
-> memslots there.
-> 
-> 
->>
->> Paolo
->>
-> 
 
