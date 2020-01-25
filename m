@@ -2,113 +2,157 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9141C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 12:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE54C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 12:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBCC206D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 12:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21972075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 12:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579953762;
+	bh=0A/Ixkpv30Yc0M9C6XxheVYT/svxocDivrkuGvIc7ag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=q84utLKcNVA5LMtCuSxBCCGb2d4SwINOleWbHCJaGQlHnz10v1cJmB6TsHY83y3BM
+	 J5hf9Af1SnNO3aFEiX13B99oRa6BnOxrw2/KhE97cnNFnL3J0DEhx+G7a/6zETD3FH
+	 zDSBdpRMWyDb6aa6ZTquCVFMc/ENE8Lkajfpc9tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgAYMCC (ORCPT
+        id S1729098AbgAYMCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 07:02:02 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44487 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgAYMCC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 07:02:02 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ivK8V-0001Ra-2G; Sat, 25 Jan 2020 13:01:59 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7A0E01C1A7C;
-        Sat, 25 Jan 2020 13:01:58 +0100 (CET)
-Date:   Sat, 25 Jan 2020 12:01:58 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/CPU/AMD: Remove amd_get_topology_early()
-Cc:     Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200123165811.5288-1-bp@alien8.de>
-References: <20200123165811.5288-1-bp@alien8.de>
-MIME-Version: 1.0
-Message-ID: <157995371825.396.10029580328827655787.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sat, 25 Jan 2020 07:02:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbgAYMCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 07:02:41 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90285206D3;
+        Sat, 25 Jan 2020 12:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579953760;
+        bh=0A/Ixkpv30Yc0M9C6XxheVYT/svxocDivrkuGvIc7ag=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=O41MDSX7vT1ogXxZh3nbnmV/K4XzYQ4jvMZkaxTgPzZYRoBS/mq1P61c6w8eIXKTf
+         dA5tMBeL7f8JPt7D4nNzU2rOFr2JhrIeg4cAjB4Fs5MjcDqS4v7yz/IPDITp+ebAsG
+         RwUQ2z/x1qjaPQhQXqv3epTRDxXxCwWJgYxp2H4I=
+Received: from [176.12.107.132] (helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1ivK97-001NGG-Ss; Sat, 25 Jan 2020 12:02:38 +0000
+Date:   Sat, 25 Jan 2020 12:02:18 +0000
+Message-ID: <86a76b7nhx.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     okitain@elvees.com
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: irqchip: Figuring out utility of hierarchy irqdomain
+In-Reply-To: <b27626dc-dad7-b19c-dcfd-f3668c5e5be6@elvees.com>
+References: <b27626dc-dad7-b19c-dcfd-f3668c5e5be6@elvees.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 176.12.107.132
+X-SA-Exim-Rcpt-To: okitain@elvees.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On Thu, 16 Jan 2020 15:50:55 +0000,
+Olga Kitaina <okitain@elvees.com> wrote:
 
-Commit-ID:     3c749b81ee99ef1a01d342ee5e4bc01e4332eb75
-Gitweb:        https://git.kernel.org/tip/3c749b81ee99ef1a01d342ee5e4bc01e4332eb75
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Thu, 23 Jan 2020 17:54:33 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sat, 25 Jan 2020 12:59:46 +01:00
+Hi Olga,
 
-x86/CPU/AMD: Remove amd_get_topology_early()
+> 
+> Hi, I'm looking to implement an interrupt controller (referred to here
+> as QLIC) that is based on the RISC-V PLIC (see
+> drivers/irqchip/irq-sifive-plic.c), with the difference that it's not
+> the root interrupt controller, but instead it is connected to a GIC.
 
-... and fold its function body into its single call site.
+Mixing architectures, always a fun thing! WHat could possibly go
+wrong? ;-)
 
-No functional changes:
+> The features of the controller are as follows:
+> 
+> * A cluster of DSPs serve as interrupt sources to QLIC, each DSP
+> with several interrupt lines going to QLIC.
 
-  # arch/x86/kernel/cpu/amd.o:
+I don't think they are relevant to the problem. For the rest of the
+system, these DSPs are just another interrupt source.
 
-   text    data     bss     dec     hex filename
-   5994     385       1    6380    18ec amd.o.before
-   5994     385       1    6380    18ec amd.o.after
+> * Several interrupt lines (documented as TARGET_x) go from QLIC to
+> * the GIC.
 
-md5:
-   99ec6daa095b502297884e949c520f90  amd.o.before.asm
-   99ec6daa095b502297884e949c520f90  amd.o.after.asm
+I suppose each of these lines are what would normally connect to
+RISC-V CPUs, each line targeting a hart, right?
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200123165811.5288-1-bp@alien8.de
----
- arch/x86/kernel/cpu/amd.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+> * Sources are mapped to targets by way of writing a mask of allowed
+> sources in the TARG_x_ENABLE register.
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 90f75e5..8a88d3f 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -319,13 +319,6 @@ static void legacy_fixup_core_id(struct cpuinfo_x86 *c)
- 	c->cpu_core_id %= cus_per_node;
- }
- 
--
--static void amd_get_topology_early(struct cpuinfo_x86 *c)
--{
--	if (cpu_has(c, X86_FEATURE_TOPOEXT))
--		smp_num_siblings = ((cpuid_ebx(0x8000001e) >> 8) & 0xff) + 1;
--}
--
- /*
-  * Fixup core topology information for
-  * (1) AMD multi-node processors
-@@ -717,7 +710,8 @@ static void early_init_amd(struct cpuinfo_x86 *c)
- 		}
- 	}
- 
--	amd_get_topology_early(c);
-+	if (cpu_has(c, X86_FEATURE_TOPOEXT))
-+		smp_num_siblings = ((cpuid_ebx(0x8000001e) >> 8) & 0xff) + 1;
- }
- 
- static void init_amd_k8(struct cpuinfo_x86 *c)
+OK, so that's both your internal routing and the enabling. I expect
+this to be fairly static.
+
+> * The source of an interrupt mapped to TARGET_x can be determined by
+> reading from register TARG_x_CC. Writing the number of the source to
+> TARG_x_CC masks the interrupt.
+
+This doesn't match my reading the PLIC driver. Writing back to the
+CONTEXT_CLAIM register *EOIs* the interrupt. It is *reading* from it
+that has the side effect of masking it, by virtue of being an Ack
+operation that progresses the interrupt state machine.
+
+Masking/unmasking the interrupt seems to be done by writing to an
+offset from CONTEXT_BASE, which is both per hart and per interrupt.
+
+> * To mask all interrupts corresponding to TARGET_x, TARG_x_CC must be
+> read repeatedly, with the values written back after the source
+> interrupt is handled.
+
+See above. You seem to have based your understanding of the PLIC on an
+older version of the driver (before it was fixed), instead of the
+documentation. This is of course assuming your QLIC is actually a
+PLIC. If not, please point me to some documentation.
+
+> * Source numbers start from 1, 0 is a special case in TARG_x_CC - it
+> corresponds to "no interrupt", and writing 0 to the register does
+> nothing.
+
+That's just a spurious interrupt, which can happen at any time. A
+number of interrupt architectures have similar concept (1023 on the
+ARM GIC).
+
+> I am not yet well-acquainted with the irq subsystem, which means I
+> am not sure what kind of APIs I need to use. This is why I have a
+> couple of questions:
+> 1. Do I understand correctly that using hierarchy irqdomain means that
+> the interrupt controller has to have a 1:1 mapping between inputs and
+> outputs?
+
+Yes. The typical use case is stacks of controllers that will never
+multiplex signals along the way. In your case, you have a bunch of
+interrupts that can be mux'ed onto a single output, so a hierarchical
+setup wouldn't work.
+
+> 2. Is a chained handler necessary for this setup, e.g. handling 0 in
+> TARG_x_CC?
+
+It is required (see above), but 0 isn't the reason why. Your QLIC, if
+it is anything like the PLIC, looks like *multiple* chained
+controllers, each one having a *single* output, each one connected to
+a GIC line.
+
+Hope this helps,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
