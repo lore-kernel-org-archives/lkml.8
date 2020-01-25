@@ -2,108 +2,106 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB72C35244
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DA5C35244
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405D12071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F592075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:36:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbKU7cti"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="FYEqJiUL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgAYTeu (ORCPT
+        id S1727177AbgAYTg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 14:34:50 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44769 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAYTet (ORCPT
+        Sat, 25 Jan 2020 14:36:58 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:35413 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAYTg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 14:34:49 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q10so6074978wrm.11;
-        Sat, 25 Jan 2020 11:34:47 -0800 (PST)
+        Sat, 25 Jan 2020 14:36:57 -0500
+Received: by mail-yb1-f195.google.com with SMTP id q190so2861389ybq.2
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 11:36:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=82JZcqh6qYU+2jSmoXnBYDPtQm7jo0Dy9k4oselAfsA=;
-        b=sbKU7ctix9s7eHmwQilaO4kNFWuxNgwBiUTGZfiiY+VO/i5M6ywJIsvZc8ipXCKDna
-         LFIG4HV7bAiZX1NKOOrC74zGIAfFe6iXVQPQvrpDHj/yWOWir8zptb+ykdCyvu21B2e+
-         mV0bYXGV95qeCSi32pm8Yb4ExRvKlbhar87OpEzUEm9R2JwEqfeVoRirLUOrrf8tESzE
-         vPzwNUBMK7sFtX0BtE8JVrr50uaXEuvFNV7jZpXxEt3/4zPvua+joQUpr2jMX7By11lQ
-         fB0+T6wpH7b8PalQjf3sUZYCJRCWp3YjJ0ZAI5d5dpz6BAKf8Gj8rOJ3TZst9ocyt+HP
-         +QNg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/jkLNv4P9QzsHvGacFj4paH67im03/BWQoVxLJL/l4k=;
+        b=FYEqJiULsKV3rEyEmrBwJcJE+3Vaqqm6p0vO+jVSnT9LAeMG/c2SYbklbCnv3W0AA3
+         fHGiFR71TW7rL6EenkNOGJubHSUzMWGr8H0hXiyJHWHxiBBsWhqCJjItr7aRmZDVWkUH
+         eda5M71knTAVAjkNeJeW0fSogSiPEtEqBgKiz8wIcAU1N88gvcYaU/8hQBSRLd7LYgXA
+         Ga2lR5YUMCrnqp6FjBUruin3YrLcWKwSgyvzik9HfKUVs8DqmqU1LWnGL7OLFQJB7ITr
+         QGgkzBgewa3A9JeLWoNYncVD+bgadUCnVHalhGc/bMW/zx0CCSyX2P3ydh+PpZnVFxMt
+         fYag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=82JZcqh6qYU+2jSmoXnBYDPtQm7jo0Dy9k4oselAfsA=;
-        b=T2qb/hK/oKHQvPLAPpQvhAInVXVatoFJw5hAEwnK1H+CJ5k99PZSbjl/GLuHjMYp1Y
-         BnEjjcYCRtl4HNNRMh7+TMJyIXCc6gtbxURqKxyhSJoKbkxDjQzg6Z1vZyvMgoiPF3dB
-         /lpMKzjc4UjTWttv0iQ2uIVL+L9y3x6WitSmT2mXXLy7muRi6ne+aOvzNQt9OiF6vepU
-         8qwN9gGk1I5IIdmmZK95VLZDEVIEKJ1IZ4eQO3VvTmNWe0Hh25hnRELAsrjhMOnvHVIV
-         FFunivJQWr+7UomwoKS3Zj/FlNMCvCRyuJmtftOUAfgieQTvsvl9q1+Ww5VeFXPOofAI
-         v++Q==
-X-Gm-Message-State: APjAAAVj7O1sTX7weMuQlbke8zmle7bNDhqZD00Xla6wRw7rU3DO/8IK
-        4DUSA9fmqJECUWsa9fTq89g=
-X-Google-Smtp-Source: APXvYqy1Rmc7s5O8QczWwmaQ1K4XBwZSHniHdOJajdSmwK8YdcmwHYHwD5pEGVlI6OnWdSZGysqwwg==
-X-Received: by 2002:adf:ef49:: with SMTP id c9mr12296497wrp.292.1579980887112;
-        Sat, 25 Jan 2020 11:34:47 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id g7sm12843472wrq.21.2020.01.25.11.34.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jan 2020 11:34:46 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] io_uring: fix refcounting with OOM
-Date:   Sat, 25 Jan 2020 22:34:01 +0300
-Message-Id: <17022002efedf99758627055901c94d9fa344ec9.1579980745.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <fa69cae513308ef3f681e13888a4f551c67ef3a2.1579942715.git.asml.silence@gmail.com>
-References: <fa69cae513308ef3f681e13888a4f551c67ef3a2.1579942715.git.asml.silence@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/jkLNv4P9QzsHvGacFj4paH67im03/BWQoVxLJL/l4k=;
+        b=sKdLRcRm09Efparg2INGZ+pYq9R8jiu24YoeJQApYA25W8h8C498GkQC+IBf2A5EZO
+         66b3yXPYW6om87GTGNWljCCEakyB+QiI1F6vcbnVz0c1LvOmm8OWExtaCeW4tzg3skei
+         Utc537s3B9rgvpBqjV8ugfiJ9eCV1jRxNd+YD+h2JX1yzxaTLyZYsfhgvXZXr317SfpA
+         +oLjjFZFTtQQPzurn9uq0lr3gWEBZW5kbZhgNXX10WXjWLk38/zldrnh1zaymIUyoiFv
+         Zi6/FI8pLsHhtoeWnDj4Q0EG95Iv3IT9B4/aYqWdTGF+MmoksxqXTzeZezYtpHiOnGc1
+         uITQ==
+X-Gm-Message-State: APjAAAUUwuuhEaZluENRuc8As342WLFxAXxqE3/OS1XXQGMfHCd2KH8r
+        uffX+yGIwtPC/nj9TlJlUBecCzuEQI/Bnw==
+X-Google-Smtp-Source: APXvYqwxNUIOOcm3QO0hrnxz+PMfU5VyAecAS0T8mroEGU6CHKYRBISgpz3GeZHwzJ8mh3eHX6guJw==
+X-Received: by 2002:a25:aa43:: with SMTP id s61mr7054535ybi.407.1579981016669;
+        Sat, 25 Jan 2020 11:36:56 -0800 (PST)
+Received: from ziepe.ca ([199.167.24.140])
+        by smtp.gmail.com with ESMTPSA id g5sm4455303ywk.46.2020.01.25.11.36.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 25 Jan 2020 11:36:56 -0800 (PST)
+Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1ivREi-00080O-F8; Sat, 25 Jan 2020 15:36:52 -0400
+Date:   Sat, 25 Jan 2020 15:36:52 -0400
+From:   Jason <jgg@ziepe.ca>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] IB/hfi1: Fix logical condition in msix_request_irq
+Message-ID: <20200125193652.GA30707@jggl>
+References: <20200116222658.5285-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116222658.5285-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of out of memory the second argument of percpu_ref_put_many() in
-io_submit_sqes() may evaluate into "nr - (-EAGAIN)", that is clearly
-wrong.
+On Thu, Jan 16, 2020 at 03:26:58PM -0700, Nathan Chancellor wrote:
+> Clang warns:
+> 
+> drivers/infiniband/hw/hfi1/msix.c:136:22: warning: overlapping
+> comparisons always evaluate to false [-Wtautological-overlap-compare]
+>         if (type < IRQ_SDMA && type >= IRQ_OTHER)
+>             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+> 1 warning generated.
+> 
+> It is impossible for something to be less than 0 (IRQ_SDMA) and greater
+> than or equal to 3 (IRQ_OTHER) at the same time. A logical OR should
+> have been used to keep the same logic as before.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/841
+> Fixes: 13d2a8384bd9 ("IB/hfi1: Decouple IRQ name from type")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+> ---
+>  drivers/infiniband/hw/hfi1/msix.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Fixes: 2b85edfc0c90 ("io_uring: batch getting pcpu references")
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
+Applied to for-next, thanks
 
-v2: rebase
-
- fs/io_uring.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 25f29ef81698..e79d6e47dc7b 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4896,8 +4896,11 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 			break;
- 	}
- 
--	if (submitted != nr)
--		percpu_ref_put_many(&ctx->refs, nr - submitted);
-+	if (unlikely(submitted != nr)) {
-+		int ref_used = (submitted == -EAGAIN) ? 0 : submitted;
-+
-+		percpu_ref_put_many(&ctx->refs, nr - ref_used);
-+	}
- 	if (link)
- 		io_queue_link_head(link);
- 	if (statep)
--- 
-2.24.0
-
+Jason
