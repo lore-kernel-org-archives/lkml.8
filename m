@@ -2,71 +2,54 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E53C35241
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 07:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37A4C35241
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 07:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D842071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 07:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7091520716
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 07:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgAYHLY (ORCPT
+        id S1728436AbgAYHYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 02:11:24 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:48330 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgAYHLY (ORCPT
+        Sat, 25 Jan 2020 02:24:00 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:51706 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726470AbgAYHYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 02:11:24 -0500
-Received: from localhost (unknown [62.209.224.147])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6705115A16B9C;
-        Fri, 24 Jan 2020 23:11:20 -0800 (PST)
-Date:   Sat, 25 Jan 2020 08:11:07 +0100 (CET)
-Message-Id: <20200125.081107.914737890991760251.davem@davemloft.net>
-To:     wenwen@cs.uga.edu
-Cc:     3chas3@gmail.com, linux-atm-general@lists.sourceforge.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firestream: fix memory leaks
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200125051134.11557-1-wenwen@cs.uga.edu>
-References: <20200125051134.11557-1-wenwen@cs.uga.edu>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 Jan 2020 23:11:21 -0800 (PST)
+        Sat, 25 Jan 2020 02:24:00 -0500
+Received: from callcc.thunk.org (rrcs-67-53-201-206.west.biz.rr.com [67.53.201.206])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00P7Nh8X025287
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 25 Jan 2020 02:23:46 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id C8B3842014A; Sat, 25 Jan 2020 02:23:42 -0500 (EST)
+Date:   Sat, 25 Jan 2020 02:23:42 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     wangyan <wangyan122@huawei.com>
+Cc:     jack@suse.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] jbd2: delete the duplicated words in the comments
+Message-ID: <20200125072342.GE1108497@mit.edu>
+References: <12087f77-ab4d-c7ba-53b4-893dbf0026f0@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12087f77-ab4d-c7ba-53b4-893dbf0026f0@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
-Date: Sat, 25 Jan 2020 05:11:34 +0000
+On Wed, Jan 22, 2020 at 05:33:10PM +0800, wangyan wrote:
+> Delete the duplicated words "is" in the comments
+> 
+> Signed-off-by: Yan Wang <wangyan122@huawei.com>
 
-> @@ -922,6 +923,7 @@ static int fs_open(struct atm_vcc *atm_vcc)
->  			if (((DO_DIRECTION(rxtp) && dev->atm_vccs[vcc->channo])) ||
->  			    ( DO_DIRECTION(txtp) && test_bit (vcc->channo, dev->tx_inuse))) {
->  				printk ("Channel is in use for FS155.\n");
-> +				kfree(vcc);
->  				return -EBUSY;
->  			}
->  		}
-> -- 
+Thanks, applied.
 
-There is another case just below this line:
-
-			    tc, sizeof (struct fs_transmit_config));
-		if (!tc) {
-			fs_dprintk (FS_DEBUG_OPEN, "fs: can't alloc transmit_config.\n");
-			return -ENOMEM;
-		}
-
-Please audit the entire function and make sure your patch fixes all of these
-missing vcc free cases.
-
-Thank you.
+					- Ted
