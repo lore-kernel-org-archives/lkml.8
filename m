@@ -7,40 +7,38 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750DAC35244
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA98C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532B7218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E27D246A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbgAYKqq (ORCPT
+        id S1730247AbgAYKqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:46:46 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44126 "EHLO
+        Sat, 25 Jan 2020 05:46:53 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44108 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729107AbgAYKmu (ORCPT
+        with ESMTP id S1729008AbgAYKms (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 05:42:50 -0500
+        Sat, 25 Jan 2020 05:42:48 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ivItl-0008Ku-Tz; Sat, 25 Jan 2020 11:42:42 +0100
+        id 1ivIto-0008Ln-2Z; Sat, 25 Jan 2020 11:42:44 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EDEE81C1A77;
-        Sat, 25 Jan 2020 11:42:40 +0100 (CET)
-Date:   Sat, 25 Jan 2020 10:42:40 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B343E1C1A72;
+        Sat, 25 Jan 2020 11:42:42 +0100 (CET)
+Date:   Sat, 25 Jan 2020 10:42:42 -0000
 From:   "tip-bot2 for Lai Jiangshan" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Move gp_state_names[] and gp_state_getname() to
- tree_stall.h
-Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
+Subject: [tip: core/rcu] rcu: Provide wrappers for uses of ->rcu_read_lock_nesting
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
         "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157994896075.396.16467629081499061048.tip-bot2@tip-bot2>
+Message-ID: <157994896248.396.15169661003351967632.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,105 +54,188 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     e2167b38c87a0c9e85c342a823dae1e6f67b11d9
-Gitweb:        https://git.kernel.org/tip/e2167b38c87a0c9e85c342a823dae1e6f67b11d9
-Author:        Lai Jiangshan <jiangshanlai@gmail.com>
-AuthorDate:    Tue, 15 Oct 2019 10:28:47 
+Commit-ID:     77339e61aa309310a535bd01eb3388f7a27b36f9
+Gitweb:        https://git.kernel.org/tip/77339e61aa309310a535bd01eb3388f7a27b36f9
+Author:        Lai Jiangshan <laijs@linux.alibaba.com>
+AuthorDate:    Fri, 15 Nov 2019 14:08:53 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Fri, 24 Jan 2020 10:33:45 -08:00
+CommitterDate: Fri, 24 Jan 2020 10:27:33 -08:00
 
-rcu: Move gp_state_names[] and gp_state_getname() to tree_stall.h
+rcu: Provide wrappers for uses of ->rcu_read_lock_nesting
 
-Only tree_stall.h needs to get name from GP state, so this commit
-moves the gp_state_names[] array and the gp_state_getname()
-from kernel/rcu/tree.h and kernel/rcu/tree.c, respectively, to
-kernel/rcu/tree_stall.h.  While moving gp_state_names[], this commit
-uses the GCC syntax to ensure that the right string is associated with
-the right CPP macro.
+This commit provides wrapper functions for uses of ->rcu_read_lock_nesting
+to improve readability and to ease future changes to support inlining
+of __rcu_read_lock() and __rcu_read_unlock().
 
-Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
 Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c       | 10 ----------
- kernel/rcu/tree.h       | 12 ------------
- kernel/rcu/tree_stall.h | 22 ++++++++++++++++++++++
- 3 files changed, 22 insertions(+), 22 deletions(-)
+ kernel/rcu/tree_exp.h    |  4 +--
+ kernel/rcu/tree_plugin.h | 53 +++++++++++++++++++++++++--------------
+ 2 files changed, 36 insertions(+), 21 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index ba154a3..bbb60ed 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -529,16 +529,6 @@ static struct rcu_node *rcu_get_root(void)
- }
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index 98d078c..d8da6b1 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -610,7 +610,7 @@ static void rcu_exp_handler(void *unused)
+ 	 * critical section.  If also enabled or idle, immediately
+ 	 * report the quiescent state, otherwise defer.
+ 	 */
+-	if (!t->rcu_read_lock_nesting) {
++	if (!rcu_preempt_depth()) {
+ 		if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
+ 		    rcu_dynticks_curr_cpu_in_eqs()) {
+ 			rcu_report_exp_rdp(rdp);
+@@ -634,7 +634,7 @@ static void rcu_exp_handler(void *unused)
+ 	 * can have caused this quiescent state to already have been
+ 	 * reported, so we really do need to check ->expmask.
+ 	 */
+-	if (t->rcu_read_lock_nesting > 0) {
++	if (rcu_preempt_depth() > 0) {
+ 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 		if (rnp->expmask & rdp->grpmask) {
+ 			rdp->exp_deferred_qs = true;
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 698a7f1..ebdbdec 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -290,8 +290,8 @@ void rcu_note_context_switch(bool preempt)
  
- /*
-- * Convert a ->gp_state value to a character string.
-- */
--static const char *gp_state_getname(short gs)
--{
--	if (gs < 0 || gs >= ARRAY_SIZE(gp_state_names))
--		return "???";
--	return gp_state_names[gs];
--}
--
--/*
-  * Send along grace-period-related data for rcutorture diagnostics.
-  */
- void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 54ff989..9d5986a 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -368,18 +368,6 @@ struct rcu_state {
- #define RCU_GP_CLEANUP   7	/* Grace-period cleanup started. */
- #define RCU_GP_CLEANED   8	/* Grace-period cleanup complete. */
+ 	trace_rcu_utilization(TPS("Start context switch"));
+ 	lockdep_assert_irqs_disabled();
+-	WARN_ON_ONCE(!preempt && t->rcu_read_lock_nesting > 0);
+-	if (t->rcu_read_lock_nesting > 0 &&
++	WARN_ON_ONCE(!preempt && rcu_preempt_depth() > 0);
++	if (rcu_preempt_depth() > 0 &&
+ 	    !t->rcu_read_unlock_special.b.blocked) {
  
--static const char * const gp_state_names[] = {
--	"RCU_GP_IDLE",
--	"RCU_GP_WAIT_GPS",
--	"RCU_GP_DONE_GPS",
--	"RCU_GP_ONOFF",
--	"RCU_GP_INIT",
--	"RCU_GP_WAIT_FQS",
--	"RCU_GP_DOING_FQS",
--	"RCU_GP_CLEANUP",
--	"RCU_GP_CLEANED",
--};
--
- /*
-  * In order to export the rcu_state name to the tracing tools, it
-  * needs to be added in the __tracepoint_string section.
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index c0b8c45..f18adaf 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -279,6 +279,28 @@ static void print_cpu_stall_fast_no_hz(char *cp, int cpu)
+ 		/* Possibly blocking in an RCU read-side critical section. */
+@@ -348,6 +348,21 @@ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
+ #define RCU_NEST_NMAX (-INT_MAX / 2)
+ #define RCU_NEST_PMAX (INT_MAX / 2)
  
- #endif /* #else #ifdef CONFIG_RCU_FAST_NO_HZ */
- 
-+static const char * const gp_state_names[] = {
-+	[RCU_GP_IDLE] = "RCU_GP_IDLE",
-+	[RCU_GP_WAIT_GPS] = "RCU_GP_WAIT_GPS",
-+	[RCU_GP_DONE_GPS] = "RCU_GP_DONE_GPS",
-+	[RCU_GP_ONOFF] = "RCU_GP_ONOFF",
-+	[RCU_GP_INIT] = "RCU_GP_INIT",
-+	[RCU_GP_WAIT_FQS] = "RCU_GP_WAIT_FQS",
-+	[RCU_GP_DOING_FQS] = "RCU_GP_DOING_FQS",
-+	[RCU_GP_CLEANUP] = "RCU_GP_CLEANUP",
-+	[RCU_GP_CLEANED] = "RCU_GP_CLEANED",
-+};
-+
-+/*
-+ * Convert a ->gp_state value to a character string.
-+ */
-+static const char *gp_state_getname(short gs)
++static void rcu_preempt_read_enter(void)
 +{
-+	if (gs < 0 || gs >= ARRAY_SIZE(gp_state_names))
-+		return "???";
-+	return gp_state_names[gs];
++	current->rcu_read_lock_nesting++;
++}
++
++static void rcu_preempt_read_exit(void)
++{
++	current->rcu_read_lock_nesting--;
++}
++
++static void rcu_preempt_depth_set(int val)
++{
++	current->rcu_read_lock_nesting = val;
 +}
 +
  /*
-  * Print out diagnostic information for the specified stalled CPU.
-  *
+  * Preemptible RCU implementation for rcu_read_lock().
+  * Just increment ->rcu_read_lock_nesting, shared state will be updated
+@@ -355,9 +370,9 @@ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
+  */
+ void __rcu_read_lock(void)
+ {
+-	current->rcu_read_lock_nesting++;
++	rcu_preempt_read_enter();
+ 	if (IS_ENABLED(CONFIG_PROVE_LOCKING))
+-		WARN_ON_ONCE(current->rcu_read_lock_nesting > RCU_NEST_PMAX);
++		WARN_ON_ONCE(rcu_preempt_depth() > RCU_NEST_PMAX);
+ 	barrier();  /* critical section after entry code. */
+ }
+ EXPORT_SYMBOL_GPL(__rcu_read_lock);
+@@ -373,19 +388,19 @@ void __rcu_read_unlock(void)
+ {
+ 	struct task_struct *t = current;
+ 
+-	if (t->rcu_read_lock_nesting != 1) {
+-		--t->rcu_read_lock_nesting;
++	if (rcu_preempt_depth() != 1) {
++		rcu_preempt_read_exit();
+ 	} else {
+ 		barrier();  /* critical section before exit code. */
+-		t->rcu_read_lock_nesting = -RCU_NEST_BIAS;
++		rcu_preempt_depth_set(-RCU_NEST_BIAS);
+ 		barrier();  /* assign before ->rcu_read_unlock_special load */
+ 		if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
+ 			rcu_read_unlock_special(t);
+ 		barrier();  /* ->rcu_read_unlock_special load before assign */
+-		t->rcu_read_lock_nesting = 0;
++		rcu_preempt_depth_set(0);
+ 	}
+ 	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
+-		int rrln = t->rcu_read_lock_nesting;
++		int rrln = rcu_preempt_depth();
+ 
+ 		WARN_ON_ONCE(rrln < 0 && rrln > RCU_NEST_NMAX);
+ 	}
+@@ -539,7 +554,7 @@ static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
+ {
+ 	return (__this_cpu_read(rcu_data.exp_deferred_qs) ||
+ 		READ_ONCE(t->rcu_read_unlock_special.s)) &&
+-	       t->rcu_read_lock_nesting <= 0;
++	       rcu_preempt_depth() <= 0;
+ }
+ 
+ /*
+@@ -552,16 +567,16 @@ static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
+ static void rcu_preempt_deferred_qs(struct task_struct *t)
+ {
+ 	unsigned long flags;
+-	bool couldrecurse = t->rcu_read_lock_nesting >= 0;
++	bool couldrecurse = rcu_preempt_depth() >= 0;
+ 
+ 	if (!rcu_preempt_need_deferred_qs(t))
+ 		return;
+ 	if (couldrecurse)
+-		t->rcu_read_lock_nesting -= RCU_NEST_BIAS;
++		rcu_preempt_depth_set(rcu_preempt_depth() - RCU_NEST_BIAS);
+ 	local_irq_save(flags);
+ 	rcu_preempt_deferred_qs_irqrestore(t, flags);
+ 	if (couldrecurse)
+-		t->rcu_read_lock_nesting += RCU_NEST_BIAS;
++		rcu_preempt_depth_set(rcu_preempt_depth() + RCU_NEST_BIAS);
+ }
+ 
+ /*
+@@ -672,7 +687,7 @@ static void rcu_flavor_sched_clock_irq(int user)
+ 	if (user || rcu_is_cpu_rrupt_from_idle()) {
+ 		rcu_note_voluntary_context_switch(current);
+ 	}
+-	if (t->rcu_read_lock_nesting > 0 ||
++	if (rcu_preempt_depth() > 0 ||
+ 	    (preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK))) {
+ 		/* No QS, force context switch if deferred. */
+ 		if (rcu_preempt_need_deferred_qs(t)) {
+@@ -682,13 +697,13 @@ static void rcu_flavor_sched_clock_irq(int user)
+ 	} else if (rcu_preempt_need_deferred_qs(t)) {
+ 		rcu_preempt_deferred_qs(t); /* Report deferred QS. */
+ 		return;
+-	} else if (!t->rcu_read_lock_nesting) {
++	} else if (!rcu_preempt_depth()) {
+ 		rcu_qs(); /* Report immediate QS. */
+ 		return;
+ 	}
+ 
+ 	/* If GP is oldish, ask for help from rcu_read_unlock_special(). */
+-	if (t->rcu_read_lock_nesting > 0 &&
++	if (rcu_preempt_depth() > 0 &&
+ 	    __this_cpu_read(rcu_data.core_needs_qs) &&
+ 	    __this_cpu_read(rcu_data.cpu_no_qs.b.norm) &&
+ 	    !t->rcu_read_unlock_special.b.need_qs &&
+@@ -709,11 +724,11 @@ void exit_rcu(void)
+ 	struct task_struct *t = current;
+ 
+ 	if (unlikely(!list_empty(&current->rcu_node_entry))) {
+-		t->rcu_read_lock_nesting = 1;
++		rcu_preempt_depth_set(1);
+ 		barrier();
+ 		WRITE_ONCE(t->rcu_read_unlock_special.b.blocked, true);
+-	} else if (unlikely(t->rcu_read_lock_nesting)) {
+-		t->rcu_read_lock_nesting = 1;
++	} else if (unlikely(rcu_preempt_depth())) {
++		rcu_preempt_depth_set(1);
+ 	} else {
+ 		return;
+ 	}
