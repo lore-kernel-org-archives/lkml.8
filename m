@@ -2,127 +2,134 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CC6C32771
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64942C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8EA2075D
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A402075D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:15:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=neuralgames.com header.i=@neuralgames.com header.b="g1w1f5kv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xo/QhzDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387621AbgAYBKH (ORCPT
+        id S2387627AbgAYBPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 20:10:07 -0500
-Received: from kross.rwserver.com ([69.13.37.146]:43868 "EHLO
-        kross2019.rwserver.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387564AbgAYBKG (ORCPT
+        Fri, 24 Jan 2020 20:15:03 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:48992 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387405AbgAYBPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 20:10:06 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by kross2019.rwserver.com (Postfix) with ESMTP id ADA55B3DC2;
-        Fri, 24 Jan 2020 19:10:05 -0600 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=neuralgames.com;
-         h=user-agent:message-id:references:in-reply-to:subject:subject
-        :from:from:date:date:content-transfer-encoding:content-type
-        :content-type:mime-version; s=default; t=1579914605; x=
-        1581729006; bh=oobQmrNrtMrH5ic0QlZWtjmXlS2bin04onbQAnRpyJI=; b=g
-        1w1f5kv5ixK4UfVj48ni8bD3RCw1DXYJy8+YnATBfjEGqB7+wMPBm5d3kIcsaOBS
-        MEeRZDujLnNQIP/QVcKRCPUD1fIf260MmOsEJUlzojaejtbETzjCLfHYU/ISy84P
-        KyvzeG7ldpFXIES2zkKUcV/P7FgNrAGQnQH+zEr3es=
-X-Virus-Scanned: Debian amavisd-new at kross2019.rwserver.com
-Received: from kross2019.rwserver.com ([127.0.0.1])
-        by localhost (kross2019.rwserver.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yE5rXoj6bgXT; Fri, 24 Jan 2020 19:10:05 -0600 (CST)
-Received: from rwserver.com (localhost [IPv6:::1])
-        (Authenticated sender: linux@neuralgames.com)
-        by kross2019.rwserver.com (Postfix) with ESMTPA id 30E46B3DC1;
-        Fri, 24 Jan 2020 19:10:05 -0600 (CST)
+        Fri, 24 Jan 2020 20:15:02 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00P1EdNe195498;
+        Sat, 25 Jan 2020 01:14:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=17knrJksP07qis7PEJyABHNMWewFGgVAI4x1jGUutC0=;
+ b=Xo/QhzDfwD1G+Nmv3NBUbufAf5H9RZoT3rg7zH8uqywDwxNb+cP+GVN4eM8rfmNBChgz
+ fdPUTDgSRrn5GbC2JnalpFDu0vYR/X6sQ1cvLaP7j4QT/V3laAXbHBlGlViIednzIxbI
+ i2erBdMgOnJG2AT8PTXIOi1A83BjWwInOlKUr89i07mZwUsFNAQ95ewMPjnKN45rrb63
+ dOSQl07sg1NJzeYkDPSfEW71mRU86tWWmy0pmT4hYnk9XOLs4usUe3iXE6kBfgS8dxD+
+ 3HFgzW4k1X+ORnmB/OLL859y1m3ZxbY/lky0qsbcmXxh2/aLQI7TTjcibnqokvz2TmY8 9w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xksev4aaj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 25 Jan 2020 01:14:54 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00P1Dwlq086174;
+        Sat, 25 Jan 2020 01:14:54 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xratajvw4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 25 Jan 2020 01:14:54 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00P1Eq2K007309;
+        Sat, 25 Jan 2020 01:14:52 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Jan 2020 17:14:52 -0800
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] workqueue: don't use wq_select_unbound_cpu() for bound works
+Date:   Fri, 24 Jan 2020 20:14:45 -0500
+Message-Id: <20200125011445.983252-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 24 Jan 2020 19:10:05 -0600
-From:   linux@neuralgames.com
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     Joel Stanley <joel@jms.id.au>, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] hwrng: Add support for ASPEED RNG
-In-Reply-To: <575811fd-24ca-409c-8d33-c2152ee401d7@www.fastmail.com>
-References: <20200120150113.2565-1-linux@neuralgames.com>
- <CACPK8XfuVN3Q=npEoOP-amQS0-wemxcx6LKaHHZEsBAHzq1wzA@mail.gmail.com>
- <4446ffb694c7742ca9492c7360856789@neuralgames.com>
- <575811fd-24ca-409c-8d33-c2152ee401d7@www.fastmail.com>
-Message-ID: <136bbab84d13d8d56a5ac297e415975e@neuralgames.com>
-X-Sender: linux@neuralgames.com
-User-Agent: Roundcube Webmail/1.3.8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9510 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001250008
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9510 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001250008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 19:53, Andrew Jeffery wrote:
->> Thanks for reviewing the patch.
->> 
->> The RNG on Aspeed hardware allows eight different modes for combining
->> its four internal Ring Oscillators that together generate a stream of
->> random bits. However, the timeriomem-rng driver does not allow for 
->> mode
->> selection so, the Aspeed RNG with this generic driver runs always on
->> mode 'seven' (The default value for mode according to the AspeedTech
->> datasheets).
->> 
->> I've performed some testings on this Aspeed RNG using the NIST
->> Statistical Test Suite (NIST 800-22r1a) and, the results I got show 
->> that
->> the default mode 'seven' isn't producing the best entropy and linear
->> rank when compared against the other modes available on these SOCs.  
->> On
->> the other hand, the driver that I'm proposing here allows for mode
->> selection which would help improve the random output for those looking
->> to get the best out of this Aspeed RNG.
-> 
-> Have you published the data and results of this study somewhere? This
-> really should be mentioned in the commit message as justification for
-> not using timeriomem-rng.
-> 
-> Andrew
+From: Hillf Danton <hdanton@sina.com>
 
-Hi Andrew,
+wq_select_unbound_cpu() is designed for unbound workqueues only, but
+it's wrongly called when using a bound workqueue too.
 
-I have uploaded the results of my tests to my GitHub, along with all the 
-binaries
-containing the random bits that I collected from this Aspeed RNG using 
-all 8 modes.
-You can also find in this repository a patch for the hw_random core 
-driver that
-I've been using to collect this data. Here is the link:
-   https://github.com/operezmuena/aspeed-rng-testing
+Fixing this ensures work queued to a bound workqueue with
+cpu=WORK_CPU_UNBOUND always runs on the local CPU.
 
-You can see in the reports that when using large enough samples (40Mb in 
-size)
-this Aspeed RNG consistently fails the linear rank and entropy tests, no 
-matter
-what RNG mode is selected. However, modes 2, 4 and 6 produce better 
-entropy than
-the rest.
-I'm now collecting rng data from 2 other AST2520 SOCs that I have in 
-order to
-compare results.
+Before, that would happen only if wq_unbound_cpumask happened to include
+it (likely almost always the case), or was empty, or we got lucky with
+forced round-robin placement.  So restricting
+/sys/devices/virtual/workqueue/cpumask to a small subset of a machine's
+CPUs would cause some bound work items to run unexpectedly there.
 
-Regards,
-Oscar
+Fixes: ef557180447f ("workqueue: schedule WORK_CPU_UNBOUND work on wq_unbound_cpumask CPUs")
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+[dj: massage changelog]
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/workqueue.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index cfc923558e04..6978892b0d8a 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1411,14 +1411,16 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
+ 		return;
+ 	rcu_read_lock();
+ retry:
+-	if (req_cpu == WORK_CPU_UNBOUND)
+-		cpu = wq_select_unbound_cpu(raw_smp_processor_id());
+-
+ 	/* pwq which will be used unless @work is executing elsewhere */
+-	if (!(wq->flags & WQ_UNBOUND))
+-		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
+-	else
++	if (wq->flags & WQ_UNBOUND) {
++		if (req_cpu == WORK_CPU_UNBOUND)
++			cpu = wq_select_unbound_cpu(raw_smp_processor_id());
+ 		pwq = unbound_pwq_by_node(wq, cpu_to_node(cpu));
++	} else {
++		if (req_cpu == WORK_CPU_UNBOUND)
++			cpu = raw_smp_processor_id();
++		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
++	}
+ 
+ 	/*
+ 	 * If @work was previously on a different pool, it might still be
+-- 
+2.24.1
 
