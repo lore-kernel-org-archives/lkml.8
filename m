@@ -2,58 +2,75 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA766C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEBBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC1D220704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558962071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OqEfS3Uc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgAYQdB (ORCPT
+        id S1726518AbgAYQfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 11:33:01 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:33922 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgAYQdB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 11:33:01 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ivOMd-002TGu-VY; Sat, 25 Jan 2020 16:32:52 +0000
-Date:   Sat, 25 Jan 2020 16:32:51 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] fs/adfs: bigdir: Fix an error code in adfs_fplus_read()
-Message-ID: <20200125163251.GL23230@ZenIV.linux.org.uk>
-References: <20200124101537.z6n242eovocfbdha@kili.mountain>
- <20200125092930.GQ25745@shell.armlinux.org.uk>
+        Sat, 25 Jan 2020 11:35:10 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:54192 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbgAYQfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 11:35:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/uAT0LRlvL6fbNuydQ0A53uGpAnx3j1J3+NiJXl3x7U=; b=OqEfS3UcXkdg9h4WbKKcVQgC/t
+        5/PuS0PCXTBINgJePmxDpcTK5KQztSXpJgIYQQkWChc0lhdBoDTsYQgPRevDqsYXcqwM+JSzNKOHo
+        g0Xi+Pk3qhWC76LuLhaSOXhleHrje3xPU7KBOF9I/lYZ4M+dWDX2MhaBwotRxdgl0ChU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ivOOm-00078b-I0; Sat, 25 Jan 2020 17:35:04 +0100
+Date:   Sat, 25 Jan 2020 17:35:04 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bridge@lists.linux-foundation.org, jiri@resnulli.us,
+        ivecera@redhat.com, davem@davemloft.net, roopa@cumulusnetworks.com,
+        nikolay@cumulusnetworks.com, anirudh.venkataramanan@intel.com,
+        olteanv@gmail.com, jeffrey.t.kirsher@intel.com,
+        UNGLinuxDriver@microchip.com
+Subject: Re: [RFC net-next v3 06/10] net: bridge: mrp: switchdev: Extend
+ switchdev API to offload MRP
+Message-ID: <20200125163504.GF18311@lunn.ch>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-7-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200125092930.GQ25745@shell.armlinux.org.uk>
+In-Reply-To: <20200124161828.12206-7-horatiu.vultur@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 09:29:30AM +0000, Russell King - ARM Linux admin wrote:
-> On Fri, Jan 24, 2020 at 01:15:37PM +0300, Dan Carpenter wrote:
-> > This code accidentally returns success, but it should return the
-> > -EIO error code from adfs_fplus_validate_header().
-> > 
-> > Fixes: d79288b4f61b ("fs/adfs: bigdir: calculate and validate directory checkbyte")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> 
-> Good catch.
-> 
-> Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
-> 
-> Al, please apply, thanks.
+> SWITCHDEV_OBJ_ID_RING_TEST_MRP: This is used when to start/stop sending
+>   MRP_Test frames on the mrp ring ports. This is called only on nodes that have
+>   the role Media Redundancy Manager.
 
-Applied and pushed out.
+How do you handle the 'headless chicken' scenario? User space tells
+the port to start sending MRP_Test frames. It then dies. The hardware
+continues sending these messages, and the neighbours thinks everything
+is O.K, but in reality the state machine is dead, and when the ring
+breaks, the daemon is not there to fix it?
+
+And it is not just the daemon that could die. The kernel could opps or
+deadlock, etc.
+
+For a robust design, it seems like SWITCHDEV_OBJ_ID_RING_TEST_MRP
+should mean: start sending MRP_Test frames for the next X seconds, and
+then stop. And the request is repeated every X-1 seconds.
+
+     Andrew
