@@ -2,125 +2,128 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 612D7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64F4C35244
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3008F2071A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8141E20880
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbgAYTM7 (ORCPT
+        id S1727285AbgAYTNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 14:12:59 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:59937 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAYTM6 (ORCPT
+        Sat, 25 Jan 2020 14:13:35 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:45278 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAYTNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 14:12:58 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: ppyGr4ZrbbLxA9FJJpjlT4jyq7JrfUhPuP8l8uVPYjEJDwjLTEidleLsv7UMa+xPh3ldIAd405
- lgIPgQZS54dr1HgBm0nXCX3/McHZdKU5xyW+kubq5dDmjaNuennDaifGt2QxTq2vlrRFbOBCwG
- tt9zxjblPCr92vK/XdEfk+fMCkUd1WL8ZQFY7oNvJ8baQmP5bU+kdpWsg4mXdMvavEU+uYsonm
- v4ocG5uzlp3n5cMQ8cp8eVdiv0I/EkFiFb4EOsYQbdhagLK5OITrcMNCG0BOnD/JYoS2/xiHpH
- t4Q=
-X-IronPort-AV: E=Sophos;i="5.70,362,1574146800"; 
-   d="scan'208";a="66006820"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jan 2020 12:12:57 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 25 Jan 2020 12:12:37 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sat, 25 Jan 2020 12:12:39 -0700
-Date:   Sat, 25 Jan 2020 20:12:38 +0100
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <davem@davemloft.net>,
-        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
-        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
-        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next v3 00/10]  net: bridge: mrp: Add support for Media
- Redundancy Protocol (MRP)
-Message-ID: <20200125191238.qdtd2elypnz6ewhm@lx-anielsen.microsemi.net>
-References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
- <20200124203406.2ci7w3w6zzj6yibz@lx-anielsen.microsemi.net>
- <87zhecimza.fsf@linux.intel.com>
- <20200125094441.kgbw7rdkuleqn23a@lx-anielsen.microsemi.net>
- <20200125162357.GE18311@lunn.ch>
+        Sat, 25 Jan 2020 14:13:35 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 979671C213B; Sat, 25 Jan 2020 20:13:33 +0100 (CET)
+Date:   Sat, 25 Jan 2020 20:13:33 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 320/639] ARM: dts: ls1021: Fix SGMII PCS link
+ remaining down after PHY disconnect
+Message-ID: <20200125191333.GG14064@duo.ucw.cz>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <20200124093127.122646308@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="eMnpOGXCMazMAbfp"
 Content-Disposition: inline
-In-Reply-To: <20200125162357.GE18311@lunn.ch>
+In-Reply-To: <20200124093127.122646308@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.01.2020 17:23, Andrew Lunn wrote:
->EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->
->> Lets say that the link between H1 and H2 goes down:
->>
->>     +------------------------------------------+
->>     |                                          |
->>     +-->|H1|<---  / --->|H2|<---------->|H3|<--+
->>     eth0    eth1    eth0    eth1    eth0    eth1
->>
->> H1 will now observe that the test packets it sends on eth1, is not
->> received in eth0, meaninf that the ring is open
->
->Is H1 the only device sending test packets? It is assumed that H2 and
->H3 will forward them?
-Horatiu, please correct me if I'm wrong, you have been spending more
-time with the standard.
 
-It is only the manager/MRM (in this case H1) which sends test-frames.
-The other nodes (the MRC's) must forward the MRP-test frames, but only
-on the ports which is part of the ring.
+--eMnpOGXCMazMAbfp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Or does each device send test packets, and when it stops hearing these
-> packets from a neighbour, it assumes the link is open?
-No.
+Hi!
 
-This also means that most non-MRP aware switches can properly act as
-MRC with HW offload. It is good to have that in mind when reviewing the
-netlink interface.
+> [ Upstream commit c7861adbe37f576931650ad8ef805e0c47564b9a ]
+>=20
+> Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
+> But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
+> are pointing towards the same internal PCS. Therefore nobody is
+> controlling the internal PCS of eTSEC0.
+>=20
+> Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
+> initialization. But upon an ifdown/ifup sequence, the code path from
+> ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
+> the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
+> link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
+> failure condition, the PHY driver keeps printing
+> '803x_aneg_done: SGMII link is not ok'.
+>=20
+> Also, it changes compatible of mdio0 to "fsl,etsec2-mdio" to match
+> mdio1 device.
 
-It is worth mentioning that the client shall send a frame if they see a
-link up/down on one of the ring ports. This is to allow the manager to
-react faster.
+It actually changes compatible of both devices.
 
-Also, in this first patch we have only defined the MRM and MRC roles. In
-future version we would also like to support a MRA (auto manager), where
-the clients is monitoring the test frames, and if there are no manager
-(it disappear, or they are all MRA) then they can negotiate who should
-take the role as manager.
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -584,7 +584,7 @@
+>  		};
+> =20
+>  		mdio0: mdio@2d24000 {
+> -			compatible =3D "gianfar";
+> +			compatible =3D "fsl,etsec2-mdio";
+>  			device_type =3D "mdio";
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <0>;
+> @@ -592,6 +592,15 @@
+>  			      <0x0 0x2d10030 0x0 0x4>;
+>  		};
+> =20
+> +		mdio1: mdio@2d64000 {
+> +			compatible =3D "fsl,etsec2-mdio";
 
-/Allan
+
+And they trigger different code in the driver:
+
+                .type =3D "mdio",
+                .compatible =3D "gianfar",
+                .data =3D &(struct fsl_pq_mdio_data) {
+		...
+                        .get_tbipa =3D get_gfar_tbipa_from_mdio,
+                },
+
+		.compatible =3D "fsl,etsec2-mdio",
+                .data =3D &(struct fsl_pq_mdio_data) {
+		...
+                        .get_tbipa =3D get_etsec_tbipa,
+                },
+
+Are you sure that is good idea for both mainline and stable?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--eMnpOGXCMazMAbfp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXiyTXQAKCRAw5/Bqldv6
+8lthAJsFS4MIGcrzWmnFBIdYp4eiyOFHegCdG8BpkQDKgCgDkHc7nkBzU9L3m3M=
+=mao9
+-----END PGP SIGNATURE-----
+
+--eMnpOGXCMazMAbfp--
