@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC81C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876D9C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBA92075D
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1F72077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:36:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DxRonwa2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F+6jSwd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbgAYBgZ (ORCPT
+        id S2387666AbgAYBf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 20:36:25 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36752 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387670AbgAYBf6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jan 2020 20:35:58 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36706 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729732AbgAYBfz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 20:35:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7T6itBiApRciaky4TlalX8Xey/dXpsbhmN7GfbwBCQQ=; b=DxRonwa2QYlElfNBEWmAtkxGW5
-        a+qzOqVyOnpV9ng+GGQLu0dCroxyHhTOmveg7eC6DPYkLIxXX8cmeb/FMB4JgbUIVbcM1s8zsJHlx
-        hHP2ch0JRU0s3hlIHPqthqZLlaTIJebEuwN5Tie716V104obqf5kO+4Pf/E/4GJkaU8G6B4ryuEpB
-        FZbpMjtvWW66ymbzqmCY2Lu194yftYGSOpuwn4fRHubL99p4uYEOkwdQC5TtSsS3U08Ml1/HghPRQ
-        FLDcUkBZwuQOXcI+uaumyK8W903NxQ0PkGuO+Ps5MKk0jXA14bN0utjxBjZlgcyE4ArUykHJ+rpWq
-        Ok4sC1tw==;
+        bh=HHnoA5dlhyhneD6+Obykceh6U0fhtgzOm0Z80uarkuw=; b=F+6jSwd5w3xYt/eqTfmrV4G1O5
+        n1Hp/wxUv5nlFPpKyBIJ7sAWu5aSuYikwpOTQBYk38RZGa+NPovOEXyenAMkxLMlJETHfJPr7GaQ8
+        nGwH0CEKtEZ/zB82686JHeybpxdixbocJIKONd5GBoIL5dWemPivB3fFz6onPtGGrSYT3mI2K570J
+        HspG26VYHDwRFNXMP6ZohqOmpwjoQmA3xKnSQFLzFFCIwNHzq5EfgBIspMZNuy/MQL6Noz3vYUSM1
+        H1sJkK/f3tiDZJCl01yXtZftlJ+oRv/qPuRXc2Vq8a3BF388m516PTRwxfdsf+fiObg3f9HUwX3p9
+        lF81g+Ew==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ivAMd-0006VD-79; Sat, 25 Jan 2020 01:35:55 +0000
+        id 1ivAMd-0006Va-CG; Sat, 25 Jan 2020 01:35:55 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 01/12] mm: Fix the return type of __do_page_cache_readahead
-Date:   Fri, 24 Jan 2020 17:35:42 -0800
-Message-Id: <20200125013553.24899-2-willy@infradead.org>
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: [PATCH 06/12] btrfs: Convert from readpages to readahead
+Date:   Fri, 24 Jan 2020 17:35:47 -0800
+Message-Id: <20200125013553.24899-7-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200125013553.24899-1-willy@infradead.org>
 References: <20200125013553.24899-1-willy@infradead.org>
@@ -56,53 +57,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-ra_submit() which is a wrapper around __do_page_cache_readahead() already
-returns an unsigned long, and the 'nr_to_read' parameter is an unsigned
-long, so fix __do_page_cache_readahead() to return an unsigned long,
-even though I'm pretty sure we're not going to readahead more than 2^32
-pages ever.
+Use the new readahead operation in btrfs
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: linux-btrfs@vger.kernel.org
 ---
- mm/internal.h  | 2 +-
- mm/readahead.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ fs/btrfs/extent_io.c | 15 ++++-----------
+ fs/btrfs/extent_io.h |  2 +-
+ fs/btrfs/inode.c     | 18 +++++++++---------
+ 3 files changed, 14 insertions(+), 21 deletions(-)
 
-diff --git a/mm/internal.h b/mm/internal.h
-index 3cf20ab3ca01..41b93c4b3ab7 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -49,7 +49,7 @@ void unmap_page_range(struct mmu_gather *tlb,
- 			     unsigned long addr, unsigned long end,
- 			     struct zap_details *details);
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 2f4802f405a2..b1e2acbec165 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4283,7 +4283,7 @@ int extent_writepages(struct address_space *mapping,
+ 	return ret;
+ }
  
--extern unsigned int __do_page_cache_readahead(struct address_space *mapping,
-+extern unsigned long __do_page_cache_readahead(struct address_space *mapping,
- 		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
- 		unsigned long lookahead_size);
- 
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 2fe72cd29b47..6bf73ef33b7e 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -152,7 +152,7 @@ static int read_pages(struct address_space *mapping, struct file *filp,
-  *
-  * Returns the number of pages requested, or the maximum amount of I/O allowed.
-  */
--unsigned int __do_page_cache_readahead(struct address_space *mapping,
-+unsigned long __do_page_cache_readahead(struct address_space *mapping,
- 		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
- 		unsigned long lookahead_size)
+-int extent_readpages(struct address_space *mapping, struct list_head *pages,
++unsigned extent_readahead(struct address_space *mapping, pgoff_t start,
+ 		     unsigned nr_pages)
  {
-@@ -161,7 +161,7 @@ unsigned int __do_page_cache_readahead(struct address_space *mapping,
- 	unsigned long end_index;	/* The last page we want to read */
- 	LIST_HEAD(page_pool);
- 	int page_idx;
--	unsigned int nr_pages = 0;
-+	unsigned long nr_pages = 0;
- 	loff_t isize = i_size_read(inode);
- 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+ 	struct bio *bio = NULL;
+@@ -4294,20 +4294,13 @@ int extent_readpages(struct address_space *mapping, struct list_head *pages,
+ 	int nr = 0;
+ 	u64 prev_em_start = (u64)-1;
  
+-	while (!list_empty(pages)) {
++	while (nr_pages) {
+ 		u64 contig_end = 0;
+ 
+-		for (nr = 0; nr < ARRAY_SIZE(pagepool) && !list_empty(pages);) {
+-			struct page *page = lru_to_page(pages);
++		for (nr = 0; nr < ARRAY_SIZE(pagepool) && nr_pages--;) {
++			struct page *page = readahead_page(mapping, start++);
+ 
+ 			prefetchw(&page->flags);
+-			list_del(&page->lru);
+-			if (add_to_page_cache_lru(page, mapping, page->index,
+-						readahead_gfp_mask(mapping))) {
+-				put_page(page);
+-				break;
+-			}
+-
+ 			pagepool[nr++] = page;
+ 			contig_end = page_offset(page) + PAGE_SIZE - 1;
+ 		}
+diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h
+index a8551a1f56e2..d0f154766a02 100644
+--- a/fs/btrfs/extent_io.h
++++ b/fs/btrfs/extent_io.h
+@@ -200,7 +200,7 @@ int extent_writepages(struct address_space *mapping,
+ 		      struct writeback_control *wbc);
+ int btree_write_cache_pages(struct address_space *mapping,
+ 			    struct writeback_control *wbc);
+-int extent_readpages(struct address_space *mapping, struct list_head *pages,
++unsigned extent_readahead(struct address_space *mapping, pgoff_t start,
+ 		     unsigned nr_pages);
+ int extent_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+ 		__u64 start, __u64 len);
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index c70baafb2a39..4f223b4f7dff 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -5395,8 +5395,8 @@ static void evict_inode_truncate_pages(struct inode *inode)
+ 
+ 	/*
+ 	 * Keep looping until we have no more ranges in the io tree.
+-	 * We can have ongoing bios started by readpages (called from readahead)
+-	 * that have their endio callback (extent_io.c:end_bio_extent_readpage)
++	 * We can have ongoing bios started by readahead that have
++	 * their endio callback (extent_io.c:end_bio_extent_readpage)
+ 	 * still in progress (unlocked the pages in the bio but did not yet
+ 	 * unlocked the ranges in the io tree). Therefore this means some
+ 	 * ranges can still be locked and eviction started because before
+@@ -7586,11 +7586,11 @@ static int lock_extent_direct(struct inode *inode, u64 lockstart, u64 lockend,
+ 			 * for it to complete) and then invalidate the pages for
+ 			 * this range (through invalidate_inode_pages2_range()),
+ 			 * but that can lead us to a deadlock with a concurrent
+-			 * call to readpages() (a buffered read or a defrag call
++			 * call to readahead (a buffered read or a defrag call
+ 			 * triggered a readahead) on a page lock due to an
+ 			 * ordered dio extent we created before but did not have
+ 			 * yet a corresponding bio submitted (whence it can not
+-			 * complete), which makes readpages() wait for that
++			 * complete), which makes readahead wait for that
+ 			 * ordered extent to complete while holding a lock on
+ 			 * that page.
+ 			 */
+@@ -8829,11 +8829,11 @@ static int btrfs_writepages(struct address_space *mapping,
+ 	return extent_writepages(mapping, wbc);
+ }
+ 
+-static int
+-btrfs_readpages(struct file *file, struct address_space *mapping,
+-		struct list_head *pages, unsigned nr_pages)
++static unsigned
++btrfs_readahead(struct file *file, struct address_space *mapping,
++		pgoff_t start, unsigned nr_pages)
+ {
+-	return extent_readpages(mapping, pages, nr_pages);
++	return extent_readahead(mapping, start, nr_pages);
+ }
+ 
+ static int __btrfs_releasepage(struct page *page, gfp_t gfp_flags)
+@@ -11045,7 +11045,7 @@ static const struct address_space_operations btrfs_aops = {
+ 	.readpage	= btrfs_readpage,
+ 	.writepage	= btrfs_writepage,
+ 	.writepages	= btrfs_writepages,
+-	.readpages	= btrfs_readpages,
++	.readahead	= btrfs_readahead,
+ 	.direct_IO	= btrfs_direct_IO,
+ 	.invalidatepage = btrfs_invalidatepage,
+ 	.releasepage	= btrfs_releasepage,
 -- 
 2.24.1
 
