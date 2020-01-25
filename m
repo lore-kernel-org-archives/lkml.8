@@ -7,37 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EF0C35244
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29104C35246
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B792467B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A28624125
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbgAYKnk (ORCPT
+        id S1730051AbgAYKnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:43:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44310 "EHLO
+        Sat, 25 Jan 2020 05:43:42 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44303 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729401AbgAYKnP (ORCPT
+        with ESMTP id S1729638AbgAYKnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 25 Jan 2020 05:43:15 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ivIuH-0000AW-FR; Sat, 25 Jan 2020 11:43:13 +0100
+        id 1ivIu1-0008VZ-RP; Sat, 25 Jan 2020 11:42:58 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C38921C1A8B;
-        Sat, 25 Jan 2020 11:42:53 +0100 (CET)
-Date:   Sat, 25 Jan 2020 10:42:53 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B3F4D1C1A74;
+        Sat, 25 Jan 2020 11:42:48 +0100 (CET)
+Date:   Sat, 25 Jan 2020 10:42:48 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] torture: Handle jitter for CPUs that cannot be offlined
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] net/tipc: Replace rcu_swap_protected() with
+ rcu_replace_pointer()
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        kbuild test robot <lkp@intel.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <tipc-discussion@lists.sourceforge.net>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157994897358.396.12993561123302180210.tip-bot2@tip-bot2>
+Message-ID: <157994896855.396.463583645581287836.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,69 +60,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     517f17aed0ce678dfa82d7dd4e2593fc1bac799c
-Gitweb:        https://git.kernel.org/tip/517f17aed0ce678dfa82d7dd4e2593fc1bac799c
+Commit-ID:     1a271ebbfe33a44f61e02d35a2950ab00b32850b
+Gitweb:        https://git.kernel.org/tip/1a271ebbfe33a44f61e02d35a2950ab00b32850b
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Mon, 14 Oct 2019 07:05:38 -07:00
+AuthorDate:    Mon, 09 Dec 2019 19:13:45 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Mon, 09 Dec 2019 13:00:26 -08:00
+CommitterDate: Thu, 12 Dec 2019 10:19:40 -08:00
 
-torture: Handle jitter for CPUs that cannot be offlined
+net/tipc: Replace rcu_swap_protected() with rcu_replace_pointer()
 
-Currently, jitter.sh assumes that the underlying hypervisor will be
-configured with all CPUs hotpluggable, with the possible exception
-of CPU 0.  However, there are installations where the hypervisor
-prohibits offlining, which breaks jitter.sh.  This commit therefore
-lists the CPUs that cannot be offlined up front, and checks for the
-case where no CPU can be offlined in the loop.
+This commit replaces the use of rcu_swap_protected() with the more
+intuitively appealing rcu_replace_pointer() as a step towards removing
+rcu_swap_protected().
 
+Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+[ paulmck: Updated based on Ying Xue and Tuong Lien Tong feedback. ]
+Cc: Jon Maloy <jon.maloy@ericsson.com>
+Cc: Ying Xue <ying.xue@windriver.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: <netdev@vger.kernel.org>
+Cc: <tipc-discussion@lists.sourceforge.net>
 ---
- tools/testing/selftests/rcutorture/bin/jitter.sh | 26 +++++++++++----
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ net/tipc/crypto.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/jitter.sh b/tools/testing/selftests/rcutorture/bin/jitter.sh
-index 86a217b..30cb5b2 100755
---- a/tools/testing/selftests/rcutorture/bin/jitter.sh
-+++ b/tools/testing/selftests/rcutorture/bin/jitter.sh
-@@ -25,6 +25,18 @@ n=1
+diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
+index 990a872..c8c47fc 100644
+--- a/net/tipc/crypto.c
++++ b/net/tipc/crypto.c
+@@ -257,9 +257,6 @@ static char *tipc_key_change_dump(struct tipc_key old, struct tipc_key new,
+ #define tipc_aead_rcu_ptr(rcu_ptr, lock)				\
+ 	rcu_dereference_protected((rcu_ptr), lockdep_is_held(lock))
  
- starttime=`gawk 'BEGIN { print systime(); }' < /dev/null`
- 
-+nohotplugcpus=
-+for i in /sys/devices/system/cpu/cpu[0-9]*
-+do
-+	if test -f $i/online
-+	then
-+		:
-+	else
-+		curcpu=`echo $i | sed -e 's/^[^0-9]*//'`
-+		nohotplugcpus="$nohotplugcpus $curcpu"
-+	fi
-+done
-+
- while :
- do
- 	# Check for done.
-@@ -35,13 +47,15 @@ do
- 	fi
- 
- 	# Set affinity to randomly selected online CPU
--	cpus=`grep 1 /sys/devices/system/cpu/*/online |
--		sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//'`
+-#define tipc_aead_rcu_swap(rcu_ptr, ptr, lock)				\
+-	rcu_swap_protected((rcu_ptr), (ptr), lockdep_is_held(lock))
 -
--	# Do not leave out poor old cpu0 which may not be hot-pluggable
--	if [ ! -f "/sys/devices/system/cpu/cpu0/online" ]; then
--		cpus="0 $cpus"
-+	if cpus=`grep 1 /sys/devices/system/cpu/*/online 2>&1 |
-+		 sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//'`
-+	then
-+		:
-+	else
-+		cpus=
- 	fi
-+	# Do not leave out non-hot-pluggable CPUs
-+	cpus="$cpus $nohotplugcpus"
+ #define tipc_aead_rcu_replace(rcu_ptr, ptr, lock)			\
+ do {									\
+ 	typeof(rcu_ptr) __tmp = rcu_dereference_protected((rcu_ptr),	\
+@@ -1189,7 +1186,7 @@ static bool tipc_crypto_key_try_align(struct tipc_crypto *rx, u8 new_pending)
  
- 	cpumask=`awk -v cpus="$cpus" -v me=$me -v n=$n 'BEGIN {
- 		srand(n + me + systime());
+ 	/* Move passive key if any */
+ 	if (key.passive) {
+-		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
++		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2, lockdep_is_held(&rx->lock));
+ 		x = (key.passive - key.pending + new_pending) % KEY_MAX;
+ 		new_passive = (x <= 0) ? x + KEY_MAX : x;
+ 	}
