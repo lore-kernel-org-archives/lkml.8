@@ -5,39 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4065C35244
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE007C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D71218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE4E218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbgAYKnf (ORCPT
+        id S1729165AbgAYKoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:43:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44291 "EHLO
+        Sat, 25 Jan 2020 05:44:10 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44416 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729612AbgAYKnN (ORCPT
+        with ESMTP id S1729967AbgAYKng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 05:43:13 -0500
+        Sat, 25 Jan 2020 05:43:36 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ivIuE-0000Ba-MP; Sat, 25 Jan 2020 11:43:10 +0100
+        id 1ivIuR-0000Gl-AO; Sat, 25 Jan 2020 11:43:23 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5CA321C1A7F;
-        Sat, 25 Jan 2020 11:42:54 +0100 (CET)
-Date:   Sat, 25 Jan 2020 10:42:54 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C44A61C1A76;
+        Sat, 25 Jan 2020 11:42:58 +0100 (CET)
+Date:   Sat, 25 Jan 2020 10:42:58 -0000
+From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] torture: Use gawk instead of awk for systime() function
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+Subject: [tip: core/rcu] rcu: Fix data-race due to atomic_t copy-by-value
+Cc:     Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86 <x86@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157994897417.396.8674695189827096548.tip-bot2@tip-bot2>
+Message-ID: <157994897860.396.6879509763648984595.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,72 +60,131 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     c493f1c9c4094afae7f3a0693ae395f3859022b4
-Gitweb:        https://git.kernel.org/tip/c493f1c9c4094afae7f3a0693ae395f3859022b4
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Sun, 06 Oct 2019 14:33:22 -07:00
+Commit-ID:     6cf539a87a61a4fbc43f625267dbcbcf283872ed
+Gitweb:        https://git.kernel.org/tip/6cf539a87a61a4fbc43f625267dbcbcf283872ed
+Author:        Marco Elver <elver@google.com>
+AuthorDate:    Wed, 09 Oct 2019 17:57:43 +02:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Mon, 09 Dec 2019 13:00:26 -08:00
+CommitterDate: Mon, 09 Dec 2019 12:24:56 -08:00
 
-torture: Use gawk instead of awk for systime() function
+rcu: Fix data-race due to atomic_t copy-by-value
 
-In many environments, gawk provides systime(), but awk doesn't.
-This commit therefore changes awk scripts using systime() to instead be
-gawk scripts.
+This fixes a data-race where `atomic_t dynticks` is copied by value. The
+copy is performed non-atomically, resulting in a data-race if `dynticks`
+is updated concurrently.
 
+This data-race was found with KCSAN:
+==================================================================
+BUG: KCSAN: data-race in dyntick_save_progress_counter / rcu_irq_enter
+
+write to 0xffff989dbdbe98e0 of 4 bytes by task 10 on cpu 3:
+ atomic_add_return include/asm-generic/atomic-instrumented.h:78 [inline]
+ rcu_dynticks_snap kernel/rcu/tree.c:310 [inline]
+ dyntick_save_progress_counter+0x43/0x1b0 kernel/rcu/tree.c:984
+ force_qs_rnp+0x183/0x200 kernel/rcu/tree.c:2286
+ rcu_gp_fqs kernel/rcu/tree.c:1601 [inline]
+ rcu_gp_fqs_loop+0x71/0x880 kernel/rcu/tree.c:1653
+ rcu_gp_kthread+0x22c/0x3b0 kernel/rcu/tree.c:1799
+ kthread+0x1b5/0x200 kernel/kthread.c:255
+ <snip>
+
+read to 0xffff989dbdbe98e0 of 4 bytes by task 154 on cpu 7:
+ rcu_nmi_enter_common kernel/rcu/tree.c:828 [inline]
+ rcu_irq_enter+0xda/0x240 kernel/rcu/tree.c:870
+ irq_enter+0x5/0x50 kernel/softirq.c:347
+ <snip>
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 7 PID: 154 Comm: kworker/7:1H Not tainted 5.3.0+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+Workqueue: kblockd blk_mq_run_work_fn
+==================================================================
+
+Signed-off-by: Marco Elver <elver@google.com>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/bin/jitter.sh         | 4 ++--
- tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ include/trace/events/rcu.h |  4 ++--
+ kernel/rcu/tree.c          | 11 ++++++-----
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/jitter.sh b/tools/testing/selftests/rcutorture/bin/jitter.sh
-index dc49a3b..86a217b 100755
---- a/tools/testing/selftests/rcutorture/bin/jitter.sh
-+++ b/tools/testing/selftests/rcutorture/bin/jitter.sh
-@@ -23,12 +23,12 @@ spinmax=${4-1000}
+diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+index 6612260..697e2c0 100644
+--- a/include/trace/events/rcu.h
++++ b/include/trace/events/rcu.h
+@@ -449,7 +449,7 @@ TRACE_EVENT_RCU(rcu_fqs,
+  */
+ TRACE_EVENT_RCU(rcu_dyntick,
  
- n=1
+-	TP_PROTO(const char *polarity, long oldnesting, long newnesting, atomic_t dynticks),
++	TP_PROTO(const char *polarity, long oldnesting, long newnesting, int dynticks),
  
--starttime=`awk 'BEGIN { print systime(); }' < /dev/null`
-+starttime=`gawk 'BEGIN { print systime(); }' < /dev/null`
+ 	TP_ARGS(polarity, oldnesting, newnesting, dynticks),
  
- while :
- do
- 	# Check for done.
--	t=`awk -v s=$starttime 'BEGIN { print systime() - s; }' < /dev/null`
-+	t=`gawk -v s=$starttime 'BEGIN { print systime() - s; }' < /dev/null`
- 	if test "$t" -gt "$duration"
- 	then
- 		exit 0;
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-index 33c6696..1d98992 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-@@ -123,7 +123,7 @@ qemu_args=$5
- boot_args=$6
+@@ -464,7 +464,7 @@ TRACE_EVENT_RCU(rcu_dyntick,
+ 		__entry->polarity = polarity;
+ 		__entry->oldnesting = oldnesting;
+ 		__entry->newnesting = newnesting;
+-		__entry->dynticks = atomic_read(&dynticks);
++		__entry->dynticks = dynticks;
+ 	),
  
- cd $KVM
--kstarttime=`awk 'BEGIN { print systime() }' < /dev/null`
-+kstarttime=`gawk 'BEGIN { print systime() }' < /dev/null`
- if test -z "$TORTURE_BUILDONLY"
- then
- 	echo ' ---' `date`: Starting kernel
-@@ -177,7 +177,7 @@ do
- 	then
- 		qemu_pid=`cat "$resdir/qemu_pid"`
- 	fi
--	kruntime=`awk 'BEGIN { print systime() - '"$kstarttime"' }' < /dev/null`
-+	kruntime=`gawk 'BEGIN { print systime() - '"$kstarttime"' }' < /dev/null`
- 	if test -z "$qemu_pid" || kill -0 "$qemu_pid" > /dev/null 2>&1
- 	then
- 		if test $kruntime -ge $seconds
-@@ -213,7 +213,7 @@ then
- 	oldline="`tail $resdir/console.log`"
- 	while :
- 	do
--		kruntime=`awk 'BEGIN { print systime() - '"$kstarttime"' }' < /dev/null`
-+		kruntime=`gawk 'BEGIN { print systime() - '"$kstarttime"' }' < /dev/null`
- 		if kill -0 $qemu_pid > /dev/null 2>&1
- 		then
- 			:
+ 	TP_printk("%s %lx %lx %#3x", __entry->polarity,
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 1694a6b..6145e08 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -577,7 +577,7 @@ static void rcu_eqs_enter(bool user)
+ 	}
+ 
+ 	lockdep_assert_irqs_disabled();
+-	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, rdp->dynticks);
++	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, atomic_read(&rdp->dynticks));
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+ 	rdp = this_cpu_ptr(&rcu_data);
+ 	do_nocb_deferred_wakeup(rdp);
+@@ -650,14 +650,15 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+ 	 * leave it in non-RCU-idle state.
+ 	 */
+ 	if (rdp->dynticks_nmi_nesting != 1) {
+-		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2, rdp->dynticks);
++		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
++				  atomic_read(&rdp->dynticks));
+ 		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+ 			   rdp->dynticks_nmi_nesting - 2);
+ 		return;
+ 	}
+ 
+ 	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
+-	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, rdp->dynticks);
++	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+ 	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+ 
+ 	if (irq)
+@@ -744,7 +745,7 @@ static void rcu_eqs_exit(bool user)
+ 	rcu_dynticks_task_exit();
+ 	rcu_dynticks_eqs_exit();
+ 	rcu_cleanup_after_idle();
+-	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, rdp->dynticks);
++	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+ 	WRITE_ONCE(rdp->dynticks_nesting, 1);
+ 	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+@@ -833,7 +834,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+ 	}
+ 	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
+ 			  rdp->dynticks_nmi_nesting,
+-			  rdp->dynticks_nmi_nesting + incby, rdp->dynticks);
++			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
+ 	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* Prevent store tearing. */
+ 		   rdp->dynticks_nmi_nesting + incby);
+ 	barrier();
