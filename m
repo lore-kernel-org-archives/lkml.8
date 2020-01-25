@@ -2,101 +2,108 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACEBC35241
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ABEC35241
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5202A2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621352077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dk0l57cF"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="aLDSmnkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgAYIoL (ORCPT
+        id S1729138AbgAYItK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 03:44:11 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34963 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgAYIoK (ORCPT
+        Sat, 25 Jan 2020 03:49:10 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41872 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgAYItJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 03:44:10 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so1790515plt.2
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 00:44:10 -0800 (PST)
+        Sat, 25 Jan 2020 03:49:09 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so5248564ljc.8
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 00:49:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Sg499Tfb3mohA4p0m6z4rC8Gw18lzl843VQiZsEcJYk=;
-        b=dk0l57cF9lRQaWGwIvxjXe+NoAH6ao/tNUFBd/bpqpCSWiIjuln2HYMQybiYS21HnU
-         IXF9wbTdpRCaxLd0ITc/LK8Y3RgXgYgAVm+pGDfy0n8Hg72ut6O+1B916MNpkiQpDRI1
-         sfg3rDCfNaUB1QGNROSBfbGaqrHKOFxRz+NW9Ga6EX8LRFAGQxZh1R5V3aS6OGF9ZLvr
-         IPoQZq/PkwUjMiGEGsQU9e/I+6SsRGbZDsREZJFZNY/Q5TeZbPtYGGgiWXlk8f5Tcohf
-         ug9fGjCLhuY1k6Snd5s63f0DSwFkIYUIlwhLiS1+l3tnZlWPt51tLdp/fgFpVeeS+BDN
-         MOLA==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JGAjdva52XclcmBAYiWTp7Sd6GB5NNj9om2nEpGZk4U=;
+        b=aLDSmnknhi9UiBMok0kuHJCnAZeY4uhtKYH/X+BORsVDr5YF+JcIFAAry3K+SLxJW9
+         slQTT3g2gR43PUn5n6+7pN2bDRtM4PQ8g7bQUbMK1erMENPyIZi36xwsGPEoMdIu25Cw
+         YxyoARbdk24rAXOrf8OY6A8FsQ9grxqvMTe2e3q5R55FmenLHXj8UnblpkoOSPC/3ZzI
+         JYSERj5m8SieDB3gs2qxHpS9IQdqqTZ3dL7us3qn8p9PIiBmmpJ7uwPVaigJPvkT3CJY
+         5z9ApOEs8SBEVmxdjcdmko0TPJ7nrt9VnQVHmyfVMinGmi5Hvbnfsjq8Z8wuayQGQUCR
+         slrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Sg499Tfb3mohA4p0m6z4rC8Gw18lzl843VQiZsEcJYk=;
-        b=TPwk0OLbUN0ZDYnSauBZlANZyGGjeLqEqHTGCp+EgGueXhlSjxoqskj1wohQEIPCnf
-         X5AwtBjEKgAjVfVqORL4bLX5NV/UBDfTb5DDp6Ol2fj9USOn5RQfQiHhCNT6YaVCMhSw
-         mKI1cgQrxt1l0eVNKmP6wSj915YkLxCPBETnJDMRW9PCSmekhlrDkMgwdlHVQzR+2Jtt
-         JQO0IdyyLKWCgnw2Ux1L0gWq5HxnOCP+8HRq6XDlEeZjhk03OHg7wgRPK7fhvisOBCbf
-         v79L3zRk1DxYeDuE5npDUgLrP/COMH+AVa/j792T7r6luoyAB4WYyQicWd+YeIP8S0V6
-         L3Sg==
-X-Gm-Message-State: APjAAAVWZ3Ji4yoYNVynsxNexa83n0kH1L5Izg4b1BEtkRn+BKTtureW
-        pEisTVT78ROITv/pY6M501U=
-X-Google-Smtp-Source: APXvYqxLq5+2a/fDIqR8qQFe+R5NU9WyWT2LBE3BHKqfc/VYQFv7x8Qrw8QSq7Oj9w+//LR26z40Kw==
-X-Received: by 2002:a17:90a:8a12:: with SMTP id w18mr3725137pjn.68.1579941850044;
-        Sat, 25 Jan 2020 00:44:10 -0800 (PST)
-Received: from google.com ([123.201.163.7])
-        by smtp.gmail.com with ESMTPSA id w38sm9267986pgk.45.2020.01.25.00.44.07
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sat, 25 Jan 2020 00:44:09 -0800 (PST)
-Date:   Sat, 25 Jan 2020 14:14:03 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     vireshk@kernel.org, johan@kernel.org, elder@kernel.org,
-        gregkh@linuxfoundation.org, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] staging: greybus: bootrom: fix uninitialized variables
-Message-ID: <20200125084403.GA3386@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JGAjdva52XclcmBAYiWTp7Sd6GB5NNj9om2nEpGZk4U=;
+        b=Jp612DcAxAAlvL5P8Vk1fwjknOgTtLeHvpA8BB8R4Q9MG8R0PZkMc9uK/9hY7JKcRS
+         +M2lbWD9E0aOnv6yMyvACTPDwATkwB+iSugcJB4k4uR1jdfkVeLDKTn+saBiYwRpSXa3
+         jogJPW/KUlsxWuVNUty1HzInSlAYElacCVr29w5xSsUmUBQ49iLjGL41vTOTYyNPsLdY
+         uxZAN7KBPsjEgPagByfAzuuWsJP0qc3/IAySxPgJiJRlNCroYPhisKVC/DsmI+LVtMMv
+         +a8xnrObbINY8Dv7XXGiB/Td1W394sTip9DuNvZoFfIZnw2iRg8MawBBthRDhxNNP50y
+         kYZg==
+X-Gm-Message-State: APjAAAXVo9pB8jI2rNa32M1ri5MmR5n8xjrZp85xpe4juU/8E2nRodgR
+        /SX2ysuOdfK/04mZVU3iant0RQ==
+X-Google-Smtp-Source: APXvYqxB5+w6lkhCPG17xoLx9bc1dwUJrL5ZeRIdjTz9PZTEzoSIgRCEd7LlLdpXT5XwmkCrh4735A==
+X-Received: by 2002:a2e:9c85:: with SMTP id x5mr4772403lji.50.1579942147515;
+        Sat, 25 Jan 2020 00:49:07 -0800 (PST)
+Received: from ?IPv6:2a00:1fa0:4d4:a77b:25e8:958f:2b17:6e20? ([2a00:1fa0:4d4:a77b:25e8:958f:2b17:6e20])
+        by smtp.gmail.com with ESMTPSA id w71sm5005098lff.0.2020.01.25.00.49.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Jan 2020 00:49:06 -0800 (PST)
+Subject: Re: [PATCH] net: cxgb3_main: Add CAP_NET_ADMIN check to
+ CHELSIO_GET_MEM
+To:     Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        security@kernel.org, ivansprundel@ioactive.com, vishal@chelsio.com
+References: <20200124094144.15831-1-mpe@ellerman.id.au>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <7a7d18d3-8c8d-af05-9aa0-fa54fa0dc0b7@cogentembedded.com>
+Date:   Sat, 25 Jan 2020 11:48:51 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-User-Agent: Mutt/1.6.2-neo (NetBSD/sparc64)
+In-Reply-To: <20200124094144.15831-1-mpe@ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix uninitialized variables issue found using static code analysis tool
+Hello!
 
-(error) Uninitialized variable: offset
-(error) Uninitialized variable: size
+On 24.01.2020 12:41, Michael Ellerman wrote:
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
-  drivers/staging/greybus/bootrom.c | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
+> The cxgb3 driver for "Chelsio T3-based gigabit and 10Gb Ethernet
+> adapters" implements a custom ioctl as SIOCCHIOCTL/SIOCDEVPRIVATE in
+> cxgb_extension_ioctl().
+> 
+> One of the subcommands of the ioctl is CHELSIO_GET_MEM, which appears
+> to read memory directly out of the adapter and return it to userspace.
+> It's not entirely clear what the contents of the adapter memory
+> contains, but the assumption is that it shouldn't be accessible to all
 
-diff --git a/drivers/staging/greybus/bootrom.c b/drivers/staging/greybus/bootrom.c
-index a8efb86..9eabeb3 100644
---- a/drivers/staging/greybus/bootrom.c
-+++ b/drivers/staging/greybus/bootrom.c
-@@ -245,7 +245,7 @@ static int gb_bootrom_get_firmware(struct gb_operation *op)
-  	struct gb_bootrom_get_firmware_request *firmware_request;
-  	struct gb_bootrom_get_firmware_response *firmware_response;
-  	struct device *dev = &op->connection->bundle->dev;
--	unsigned int offset, size;
-+	unsigned int offset = 0, size = 0;
-  	enum next_request_type next_request;
-  	int ret = 0;
-  
--- 
-1.9.1
+    s/contains/is/? Else it sounds tautological. :-)
 
+> users.
+> 
+> So add a CAP_NET_ADMIN check to the CHELSIO_GET_MEM case. Put it after
+> the is_offload() check, which matches two of the other subcommands in
+> the same function which also check for is_offload() and CAP_NET_ADMIN.
+> 
+> Found by Ilja by code inspection, not tested as I don't have the
+> required hardware.
+> 
+> Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+[...]
+
+MBR, Sergei
