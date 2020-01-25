@@ -2,115 +2,214 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FF9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D92C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680FF20718
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1010E2071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXJqv9wx"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="WrMXvB2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387684AbgAYBov (ORCPT
+        id S2387671AbgAYBxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 20:44:51 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42248 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387542AbgAYBou (ORCPT
+        Fri, 24 Jan 2020 20:53:39 -0500
+Received: from sonic316-55.consmr.mail.gq1.yahoo.com ([98.137.69.31]:35223
+        "EHLO sonic316-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387584AbgAYBxj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 20:44:50 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q6so4287464wro.9;
-        Fri, 24 Jan 2020 17:44:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=YClYexq+U3tIz5ISpWhnb2Lm7QGjVoZX5YmTNUyCVtU=;
-        b=YXJqv9wxQBkENUOockt5+aawuWFcE0wjQdXFzS0iKKyqjk03J4QSI8OnPoMx8Ukto0
-         gmXP6S/ts2Rz9hzGwBNZbxQhx+0hFVnn79pwD30zGfclegT30v0jTVQOVyNeoebJI3E7
-         t/EaitjgD4Qr7m70Pd11HNAV21HhZSglJ9l68bt40JbMBlqQPBc9KN4slcvhvTyCFn+D
-         AFBHdoSNZ+2bphDW6JBEcgJK21mQc9SrU4LyDpXf4/jsX9DEt3qyDKPLfOeeRkPRISJY
-         vAyhTKPPqzgB5iBW9XGRTmPZYPQWnItzu0LO1P1UatayU2QnEssQZcO44ovwXy0oLyVL
-         y3AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=YClYexq+U3tIz5ISpWhnb2Lm7QGjVoZX5YmTNUyCVtU=;
-        b=tz5bKgdx8KVLpNFzyolFo6wozB7UPhKywm4+ZsRil4CPznVWA6G2bzyuLrnW+LYCpG
-         LCG8DnEa7c6ZENZIsMaLpy/y6HtAdQYSnirMB5s0+ad7A3j4rYsHOV23+8Xr6hYG3Gdy
-         xUCm+CKbyMjv+dYqCoxTFG0Q0pMK8kX7j36mIkFJKAELlXa6fYjBqnaTKKijXp6Uh0xc
-         DeUtkI59yfqrOa6wxwio+V8zR3/zR41iPx0EJ23eMJuSStou2Xi87uKlu3Cf13drQP9j
-         h37CsZSVDiD5z1ZqHA4MnL2eiWxg1GPN0wyvEMPp6U1L6E0AXyFzFPVLIlIiff4Plm0S
-         Tv8w==
-X-Gm-Message-State: APjAAAWlQyPo93siD2JlGBxGbYh5jCOyCwR5jab2MEOVah/S1PqDgKJ3
-        1c64p9El6BWLc+/FDaQ7GQ==
-X-Google-Smtp-Source: APXvYqy92Jrg/NagayiSDkKqSxRYjyJJsZlQyqhvw4LUT8Cgid/6A+PrQi0vOrjXtcJOxujf+ZbD0g==
-X-Received: by 2002:adf:e6c5:: with SMTP id y5mr8006042wrm.210.1579916687640;
-        Fri, 24 Jan 2020 17:44:47 -0800 (PST)
-Received: from ninjahub.lan (host-92-15-174-87.as43234.net. [92.15.174.87])
-        by smtp.gmail.com with ESMTPSA id y20sm8534407wmi.25.2020.01.24.17.44.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 17:44:47 -0800 (PST)
-From:   Jules Irenge <jbi.octave@gmail.com>
-X-Google-Original-From: Jules Irenge <maxx@ninjahub.org>
-Date:   Sat, 25 Jan 2020 01:44:39 +0000 (GMT)
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-cc:     Jules Irenge <jbi.octave@gmail.com>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH 0/5] Lock warning clean up
-In-Reply-To: <20200122012630.GE2935@paulmck-ThinkPad-P72>
-Message-ID: <alpine.LFD.2.21.2001250140570.9357@ninjahub.org>
-References: <20200120223515.51287-1-jbi.octave@gmail.com> <20200122012630.GE2935@paulmck-ThinkPad-P72>
+        Fri, 24 Jan 2020 20:53:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1579917218; bh=OSF/YZenuXTg1qFTi8ZYIQJDfr1uhEPEs+4F4QHiI5E=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=WrMXvB2lMELCodxUGngV8nvB/aC3Qj0QuK9MforNrQhadL3kIPSsWEIB6gy/0PSTEvPmxtPeSz6S6tW2UI5nAhF3A1nV+dP6CAzSyZplvjD2fWNtXR/SPZ6Wmh4Z1O/Xp13OX/CuMNeDIPgQx4GbGs7YSQvdBDdQFlkX7wgA1yNTT7Wn0Wm/2SNCZ5v0lllgSXvTgwg6GfZq+O+jDHQtri9IPSlGH8RysyeddHffWgTzqgb9aAzwnyUohDyioZady8RNtcOSuWtB8SdR2miFyO2Ox1CSkYfugRAWZw1mDBU8Bv2XUwfG6fM2pmy4tkAdvd63W3Kf9r9LbL6AF+7Dkw==
+X-YMail-OSG: aYXMQNEVM1nDz4Kv4vEmGo7L7ozmjTrkNHVTBZW_gfGXEql0FXsFaMFi5CaIP41
+ m1kh5xSBDb6DXU8Y4i5bCcSR2lFOedaWIfmluPpACNF9SgG2HrkAE1Qy0iYNJrDgEkUSswOGCdJD
+ 8K4ZM4D5Ajt2DGSBNHKBqPExeREMRzGjD.7mMMnTElrRZZ9sJonC1HNaZpjt3x9WUsYBQn4oWW6y
+ fIo3JRWaSgUkFb_qwzj9rWFefpDjsmi3FDAPKlJwKDTkRCaHS_b9tiX5ymqIzzg82TfD62MLFOBu
+ IdjTbO2WaqyO6FQT1SFOEJMYE.j4crxixcd7V5HW.Q5pAQP3nk3IFLF1r3PRxyTEujldVZ2Qt4lI
+ vLn07740c_VWDPRbO20Wf45pTV_I.W68.VFxTJ8SlzJmgrWBQ6JpJ6HmLDVH9dgydFfdV0AcJAnf
+ C2uVKNEShiKRdS7eBA2D1idCPtXfqD4iytiPefw8RFaXqlSDMGqiXco6tQzcCJgHpGyXdG9e8PL3
+ RyCfQGEGv1YllzYc7BF2NBAmjqoEaFeLBiqDXVVC_DoTJS9TNNcrWrYqY1Pj8yCOhUM5brRl52rV
+ lI7Lix6dujIgp8qYsH1l.S2oRxXBDY7VcImL7rK6D4V.bRHDxkSGU5m3Rh8qg4x3A9YQGWct1bmz
+ aTS.Y5SPMItW1EjDwWRa6_Kefo9KaQYRm2unFqVBElJUcX0jgAtJQYSEja4enP7Nb6Y1k2rtY69k
+ BI0gD_NbYHdQsx5EDrwanL9m1FsuAf9HR5rtB6ZRjlzmfVGQFnzUfwcKEkVD1Y8YOhjLgejxEcLw
+ 0Nsn4ixBV8MFrKa7ca7WH5wQdhZuxOD3v9BnivN5BsQa5ToFeLae4uQYTIM4zvyF9myduUJyZCok
+ CraPU7KpsxaazsEe7yGRvkr.ljTublOLnM.n.DyLexYEeQXKcYfTIbJR62TJRSQzacCDodTpKtwu
+ Vgjtp3wa9vvRaHm5LNvqGkUMkscdh3MH8pO6WKt47cLkG8ftsJ7HAtlJANLdCVNcMUhdLL5tj6i3
+ XXY0NAHSxOZXTZvmbjPHGTM_71QoOexBXQ0rKWwxF7ahZcameQs7JERbifss6ZVmnfVj7wjTSY7q
+ feSBdX4TD7SK_3NNJEfKKvllMG1dXIYTVMrKlQOlaGo.B7T467aMxrqZUfxP_kiEw.HLCGjFFS9B
+ LXJD0tohnZroYTSPfo.D2LD3b5JItc_znVc895b49t65MHZHF.o_25bKNHz1ADr6tN4SCm1vPzVD
+ ruHq84YD5QHjm8AP1Pu47pH3ELNwnXsqL91w.awNy7r8XKIF0tkQi2_h.a88el32VVZlnlDVE3x0
+ KR5EYZBMRzGcNaabuqaAyuWSR1_pjPEv4w5HSb.DYJ7SPFtb6aHZDjsWYK5sw4gHf22NytsyoaBO
+ 64e4eHg_76BOYlABM.otWHAZM39kqrml1kGugqT_LxHsbkkI-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Sat, 25 Jan 2020 01:53:38 +0000
+Received: by smtp416.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID d56121dea07e775f13fa3ee1b8543b78;
+          Sat, 25 Jan 2020 01:53:34 +0000 (UTC)
+Date:   Sat, 25 Jan 2020 09:53:29 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/12] erofs: Convert uncompressed files from readpages
+ to readahead
+Message-ID: <20200125015323.GA9918@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20200125013553.24899-1-willy@infradead.org>
+ <20200125013553.24899-8-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200125013553.24899-8-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.14873 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Matthew,
 
-Thanks I am currently an intern with Outreachy program. I am happy to 
-receive any comment or recommendation so as I can improve.
-Best Regards,
-Jules
+On Fri, Jan 24, 2020 at 05:35:48PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Use the new readahead operation in erofs.  Fix what I believe to be
+> a refcounting bug in the error case.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Cc: linux-erofs@lists.ozlabs.org
+> ---
+>  fs/erofs/data.c              | 34 ++++++++++++++--------------------
+>  fs/erofs/zdata.c             |  2 +-
+>  include/trace/events/erofs.h |  6 +++---
+>  3 files changed, 18 insertions(+), 24 deletions(-)
+> 
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index fc3a8d8064f8..335c1ab05312 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -280,42 +280,36 @@ static int erofs_raw_access_readpage(struct file *file, struct page *page)
+>  	return 0;
+>  }
+>  
+> -static int erofs_raw_access_readpages(struct file *filp,
+> +static unsigned erofs_raw_access_readahead(struct file *file,
+>  				      struct address_space *mapping,
+> -				      struct list_head *pages,
+> +				      pgoff_t start,
+>  				      unsigned int nr_pages)
+>  {
+>  	erofs_off_t last_block;
+>  	struct bio *bio = NULL;
+> -	gfp_t gfp = readahead_gfp_mask(mapping);
+> -	struct page *page = list_last_entry(pages, struct page, lru);
+>  
+> -	trace_erofs_readpages(mapping->host, page, nr_pages, true);
+> +	trace_erofs_readpages(mapping->host, start, nr_pages, true);
+>  
+>  	for (; nr_pages; --nr_pages) {
+> -		page = list_entry(pages->prev, struct page, lru);
+> +		struct page *page = readahead_page(mapping, start++);
+>  
+>  		prefetchw(&page->flags);
+> -		list_del(&page->lru);
+>  
+> -		if (!add_to_page_cache_lru(page, mapping, page->index, gfp)) {
+> -			bio = erofs_read_raw_page(bio, mapping, page,
+> -						  &last_block, nr_pages, true);
+> +		bio = erofs_read_raw_page(bio, mapping, page, &last_block,
+> +				nr_pages, true);
+>  
+> -			/* all the page errors are ignored when readahead */
+> -			if (IS_ERR(bio)) {
+> -				pr_err("%s, readahead error at page %lu of nid %llu\n",
+> -				       __func__, page->index,
+> -				       EROFS_I(mapping->host)->nid);
+> +		/* all the page errors are ignored when readahead */
+> +		if (IS_ERR(bio)) {
+> +			pr_err("%s, readahead error at page %lu of nid %llu\n",
+> +			       __func__, page->index,
+> +			       EROFS_I(mapping->host)->nid);
+>  
+> -				bio = NULL;
+> -			}
+> +			bio = NULL;
+> +			put_page(page);
 
-On Tue, 21 Jan 2020, Paul E. McKenney wrote:
+Out of curiously, some little question... Why we need put_page(page) twice
+if erofs_read_raw_page returns with error...
 
-> On Mon, Jan 20, 2020 at 10:35:15PM +0000, Jules Irenge wrote:
-> > This patch series adds missing annotations to functions that register warnings of context imbalance when built with Sparse tool.
-> > The adds fix these warnings and give insight on what the functions are actually doing.
-> > In the core kernel,
-> > 
-> > 1. IRQ and RCU subsystems: exactly patch 1 and 3,  __releases() annotations were added as these functions exit the critical section
-> > 2. RCU subsystem again, patch 2 and 4, __acquire() annotations were added as the functions allow entry to the critical section.
-> > 3. TIME subsystem, patch 5 where lock is held at entry and exit of the function, an __must_hold() annotation was added.
-> 
-> Queued for review and testing, thank you!
-> 
-> I edited the commit logs, so please check to make sure that I did not
-> mess something up.
-> 
-> 							Thanx, Paul
-> 
-> > Jules Irenge (5):
-> >   irq: Add  missing annotation for __irq_put_desc_unlock()
-> >   rcu: Add missing annotation for exit_tasks_rcu_start()
-> >   rcu: Add missing annotation for exit_tasks_rcu_finish()
-> >   rcu: Add missing annotation for rcu_nocb_bypass_lock()
-> >   time: Add missing annotation for __run_timer()
-> > 
-> >  kernel/irq/irqdesc.c     | 1 +
-> >  kernel/rcu/tree_plugin.h | 1 +
-> >  kernel/rcu/update.c      | 4 ++--
-> >  kernel/time/hrtimer.c    | 2 +-
-> >  4 files changed, 5 insertions(+), 3 deletions(-)
-> > 
-> > -- 
-> > 2.24.1
-> > 
+One put_page(page) is used as a temporary reference count for this request,
+we could put_page(page) in advance since pages are still locked before endio.
+
+Another put_page(page) is used for page cache xarray. I think in this case
+the page has been successfully inserted to the page cache anyway, after erroring
+out it will trigger .readpage again... so probably we need to keep this
+refcount count for page cache xarray?
+
+If I'm missing something, kindly correct me if I'm wrong....
+
+Thanks,
+Gao Xiang
+
+>  		}
+>  
+> -		/* pages could still be locked */
+>  		put_page(page);
+>  	}
+> -	DBG_BUGON(!list_empty(pages));
+>  
+>  	/* the rare case (end in gaps) */
+>  	if (bio)
+> @@ -358,7 +352,7 @@ static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
+>  /* for uncompressed (aligned) files and raw access for other files */
+>  const struct address_space_operations erofs_raw_access_aops = {
+>  	.readpage = erofs_raw_access_readpage,
+> -	.readpages = erofs_raw_access_readpages,
+> +	.readahead = erofs_raw_access_readahead,
+>  	.bmap = erofs_bmap,
+>  };
+>  
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index ca99425a4536..d3dd8cf1fc01 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -1340,7 +1340,7 @@ static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
+>  	struct page *head = NULL;
+>  	LIST_HEAD(pagepool);
+>  
+> -	trace_erofs_readpages(mapping->host, lru_to_page(pages),
+> +	trace_erofs_readpages(mapping->host, lru_to_page(pages)->index,
+>  			      nr_pages, false);
+>  
+>  	f.headoffset = (erofs_off_t)lru_to_page(pages)->index << PAGE_SHIFT;
+> diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
+> index 27f5caa6299a..bf9806fd1306 100644
+> --- a/include/trace/events/erofs.h
+> +++ b/include/trace/events/erofs.h
+> @@ -113,10 +113,10 @@ TRACE_EVENT(erofs_readpage,
+>  
+>  TRACE_EVENT(erofs_readpages,
+>  
+> -	TP_PROTO(struct inode *inode, struct page *page, unsigned int nrpage,
+> +	TP_PROTO(struct inode *inode, pgoff_t start, unsigned int nrpage,
+>  		bool raw),
+>  
+> -	TP_ARGS(inode, page, nrpage, raw),
+> +	TP_ARGS(inode, start, nrpage, raw),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(dev_t,		dev	)
+> @@ -129,7 +129,7 @@ TRACE_EVENT(erofs_readpages,
+>  	TP_fast_assign(
+>  		__entry->dev	= inode->i_sb->s_dev;
+>  		__entry->nid	= EROFS_I(inode)->nid;
+> -		__entry->start	= page->index;
+> +		__entry->start	= start;
+>  		__entry->nrpage	= nrpage;
+>  		__entry->raw	= raw;
+>  	),
+> -- 
+> 2.24.1
 > 
