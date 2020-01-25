@@ -2,103 +2,133 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780A2C35243
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 09:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18E1C35243
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 09:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E3C2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 09:00:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rvai70gM"
+	by mail.kernel.org (Postfix) with ESMTP id C94662071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 09:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579943572;
+	bh=3GTS5JoiKBkZZMU9qHZEEsN6Dxmap7FOcDs0ym5esXo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i+lVJng2S5FrqORkYSYk1DjTOMFk1wH+KcXELOhfOeXGglNKPc3a4SnCjwUkueINK
+	 JRBmDzGbcId6AtF2JONE/XQ7oFL7e0IoKd8WrvKETJ37lfcubC6MAmg2Rr+1COWCXw
+	 dSQyB+N4k1DiszMCeqR6Q2aoTdmKGtCIEzaEAp4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAYJAp (ORCPT
+        id S1726351AbgAYJMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 04:00:45 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39719 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgAYJAp (ORCPT
+        Sat, 25 Jan 2020 04:12:52 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33210 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgAYJMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 04:00:45 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c84so1842663wme.4;
-        Sat, 25 Jan 2020 01:00:44 -0800 (PST)
+        Sat, 25 Jan 2020 04:12:51 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b6so4969647wrq.0;
+        Sat, 25 Jan 2020 01:12:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GchmmZAhlU8Co5U1q3zcxajpizhbMQGLMHtACB5nzyQ=;
-        b=Rvai70gMz3sVqPtPLTYrPnb42K/8SueeKq7npnqZMuKJnASRWGoDJoIj/A8Uaqa+Y1
-         1PDCNXIHKq/xACnbdflJjMo7wW1j4GV2Em+7qzXL7T0eeYB2vEjZXCkCWD1mqDVygRv9
-         MYRy37PbyKc9sL+szLOclJQiaDDuIxErBplqctLxJED+UAzz0Fm1F4vHf0dyNVeXjC9J
-         UiQjlaz76FPCjSngXHPSolZP2zHl+HHnMi9bURixE7NBMmSqRhhBp/FGL8ylmyeigraJ
-         CegQyplu9SK/MACWx4ZkEV/aroZr/UNOTKjNiMAgKxay1sHOOy+4OHQonX35nrdxJTut
-         4OsA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DGhvVqW5myL1qX8XhMf5p5YSpZ2Kzi7HZG5T95QDfq0=;
+        b=csCUk16YjSkFbkGccWgYuAGBtgbQUSMLW5aKQ+wvQzeZss0mibeNaIvTM7ADdlVAXd
+         UTD41j3IDD7/NS4jeoG6Et16ccWR+eINuEquc4lMFrXm8iAh1GyKrlVp+X/7uh/oPZdO
+         dcuhBN4v95SHm6vWeCzSBdmaf02RQ1vUlZizB8VV0abBAojO+bEBhAZxYyqOpk79tO3T
+         IUHLgo6XQ5WjItnhD5+1FZeM98y6ffmLaSn22BI3odvluTNHd4F6BnWTTpbzou4OF6R2
+         DD473+no85uxgtN6Ku4xfZ7yojdzIKi75UZYmtWVTTny143917kggXoS+QdIDGYELInQ
+         BZEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GchmmZAhlU8Co5U1q3zcxajpizhbMQGLMHtACB5nzyQ=;
-        b=B550Zhxo5m1kVLbTxp+QXjxfV1dm+v9fEBGBVUMZHZOh92GmrlTx3lKIDMh2ir8eiz
-         FGRDbtNFMHqn3Dzy4qG0tPlKTruVmYqh7eKcuaU4EGTZHzn3E1I7uODvQ2SN+cPre+aN
-         vT/2r7Mr3tI6D1Iu+v6Xv8+CKXLH+cpc4J37b91ip0vzwQnF0qe4mV5FTHkVgprJnX+X
-         otMwFcYC9eeaJ5WZiPtOsGazCX3Gag1x70PhCIZDXu39X1G6PY1V/PhGYLT14huWmEoc
-         /W9DcXKt6UxfSvncFz2IQRIEiL4zogdvdAAIkdUqhMd67TYtFn/4Nk2BzQBeUUFNp3S+
-         BKjQ==
-X-Gm-Message-State: APjAAAU06+IE7ACxBviogabFqdVGBVkP9Vw22Kjt9FS4NZMMQLIqc11W
-        Kz0uW6aazgJaOA2R4s5mp0rOh6ax
-X-Google-Smtp-Source: APXvYqwfIf3KOlD0xYres/MByZ2hWFZYxKFDhuoyIRk1vPfHTsjSVOYEMgdI2/iY6YAEAMEcQcv/vA==
-X-Received: by 2002:a1c:7718:: with SMTP id t24mr3450608wmi.119.1579942843388;
-        Sat, 25 Jan 2020 01:00:43 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id a5sm9866897wmb.37.2020.01.25.01.00.41
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DGhvVqW5myL1qX8XhMf5p5YSpZ2Kzi7HZG5T95QDfq0=;
+        b=GOyu7/x5zEIQa+McDS6hajtjj37v0PHXg7ut43eSnCbzJFT6nfYB4vg2hnxL7o3ul5
+         oD13SI0bebsKUnpQgWNmWx5Gk8kIBWvX+fWcYjDDXTbRKTWYX58L37agTx3nLQSe18XR
+         ZPQgGlvkgrpA7J36N5O18bfWQwmaNmEBK+BEUqXY8/5RK1XsiVLxqlGOSYjWQMnzJ9gb
+         v3FJrCaTGOOb+fptdObs/nXxXyw51lcEeBZMLwWnnRwR/zs0gNE2sfZbOj6zQdXKf2sZ
+         9vvwBsIn/BV9UEtX8R9rR17WFr91bIq0eS7vvJRbPX3H6tvqzjBGbXzx0tMZEd8AW/ei
+         FReQ==
+X-Gm-Message-State: APjAAAVY2BQjLCioO900TAqtPJXjeZcY1Jjvt/BDXmtssM/kg77tC8of
+        EJqFTYJIOgoJV+vUloW/FM4=
+X-Google-Smtp-Source: APXvYqz7DD1aj8WqnelJyQVSzVTbX879cPiG4iMawjI634I8UE/9j1iG5F7Hm/puJMq2fOk+eoGiIg==
+X-Received: by 2002:adf:df83:: with SMTP id z3mr9281392wrl.389.1579943570008;
+        Sat, 25 Jan 2020 01:12:50 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id c5sm10400872wmb.9.2020.01.25.01.12.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jan 2020 01:00:42 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] io_uring: fix refcounting with OOM
-Date:   Sat, 25 Jan 2020 11:59:30 +0300
-Message-Id: <fa69cae513308ef3f681e13888a4f551c67ef3a2.1579942715.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sat, 25 Jan 2020 01:12:49 -0800 (PST)
+Date:   Sat, 25 Jan 2020 10:12:47 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Qian Cai <cai@lca.pw>, Ingo Molnar <mingo@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] efi/libstub/x86: fix an EFI server boot failure
+Message-ID: <20200125091247.GC3028@gmail.com>
+References: <20200122191430.4888-1-cai@lca.pw>
+ <CAKv+Gu_snhTpsM4cjZ38UhH02v151NW4cJdQu9QVqCWu4rFVZw@mail.gmail.com>
+ <CAKv+Gu9R40uywfPkq02AGtKAWqvq+63EEOrhGJf5_gY1xfHkNQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu9R40uywfPkq02AGtKAWqvq+63EEOrhGJf5_gY1xfHkNQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of out of memory the second argument of percpu_ref_put_many() in
-io_submit_sqes() may evaluate into "nr - (-EAGAIN)", that is clearly
-wrong.
 
-Fixes: 2b85edfc0c90 ("io_uring: batch getting pcpu references")
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+* Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index a4b496815783..744e8a90b543 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4912,8 +4912,11 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 			break;
- 	}
- 
--	if (submitted != nr)
--		percpu_ref_put_many(&ctx->refs, nr - submitted);
-+	if (unlikely(submitted != nr)) {
-+		int ref_used = (submitted == -EAGAIN) ? 0 : submitted;
-+
-+		percpu_ref_put_many(&ctx->refs, nr - ref_used);
-+	}
- 
- 	io_submit_end(ctx);
- 	if (nr > IO_PLUG_THRESHOLD)
--- 
-2.24.0
+> On Wed, 22 Jan 2020 at 20:17, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> >
+> > On Wed, 22 Jan 2020 at 20:15, Qian Cai <cai@lca.pw> wrote:
+> > >
+> > > x86_64 EFI systems are unable to boot due to a typo in the recent commit.
+> > >
+> > > EFI config tables not found.
+> > >  -- System halted
+> > >
+> > > Fixes: 796eb8d26a57 ("efi/libstub/x86: Use const attribute for efi_is_64bit()")
+> > > Signed-off-by: Qian Cai <cai@lca.pw>
+> > > ---
+> > >  arch/x86/boot/compressed/eboot.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
+> > > index 82e26d0ff075..287393d725f0 100644
+> > > --- a/arch/x86/boot/compressed/eboot.c
+> > > +++ b/arch/x86/boot/compressed/eboot.c
+> > > @@ -32,7 +32,7 @@ __attribute_const__ bool efi_is_64bit(void)
+> > >  {
+> > >         if (IS_ENABLED(CONFIG_EFI_MIXED))
+> > >                 return efi_is64;
+> > > -       return IS_ENABLED(CONFIG_X64_64);
+> > > +       return IS_ENABLED(CONFIG_X86_64);
+> > >  }
+> > >
+> > >  static efi_status_t
+> >
+> > Apologies for the breakage - your fix is obviously correct. But I did
+> > test this code, so I am curious why I didn't see this problem. Are you
+> > booting via GRUB or from the UEFI shell? Can you share your .config
+> > please?
+> 
+> Hmm, I guess it is simply the absence of CONFIG_EFI_MIXED=y ...
+> 
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> 
+> Ingo, Thomas, could you drop this into efi/core directly please? Thanks.
 
+Sure, done!
+
+Thanks,
+
+	Ingo
