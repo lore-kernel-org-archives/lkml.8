@@ -2,138 +2,101 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B476C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA141C35244
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 193AA2077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579981729;
-	bh=qc/oReZntO+DEJfAdW9I3PzrnYoGP3Q/Si+WAw90qlQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=OjqCfrdfafJYbUEHQTbRwId2tS+yxfK6J1yAyk0dSUgYvNh8bXpWMAltK6IUZbx0N
-	 HH2PkTRe+nnQeb1LAo/UXPFR7ZpM6kfCB1oQ1NtUKoLWkHor/rcbcQu09ddcA0DnFU
-	 +2BLAHOZWkFPOGJPH4MOk9XwNxzG79mPk/P7rAq8=
+	by mail.kernel.org (Postfix) with ESMTP id BAB79208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:54:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHYwEsXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgAYTss (ORCPT
+        id S1727322AbgAYTyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 14:48:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbgAYTss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 14:48:48 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134AE20708;
-        Sat, 25 Jan 2020 19:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579981727;
-        bh=qc/oReZntO+DEJfAdW9I3PzrnYoGP3Q/Si+WAw90qlQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=t06DNwJBZl5AeGt5+/RMncfvDWRW8Bl2zdc3jcSNFvEVMzc64Hbu6Cfws4Hhrskep
-         I+uudPMPaZqRQZ8tZ2i2pJDVoDdm1qOLbM0LrZ942YRTdwUcedVief+31WNWAJoDAL
-         J2ze1pMlCZChulVrZyu/O15yur3laVsLfSxpNZOI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B69B3352274E; Sat, 25 Jan 2020 11:48:46 -0800 (PST)
-Date:   Sat, 25 Jan 2020 11:48:46 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        x86 <x86@kernel.org>
-Subject: Re: [tip: core/rcu] rcu: Enable tick for nohz_full CPUs slow to
- provide expedited QS
-Message-ID: <20200125194846.GF2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <157994897654.396.5667707782512768142.tip-bot2@tip-bot2>
- <20200125131425.GB16136@zn.tnic>
- <20200125161050.GE2935@paulmck-ThinkPad-P72>
- <20200125175442.GA4369@zn.tnic>
+        Sat, 25 Jan 2020 14:54:32 -0500
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:37112 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAYTyc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 14:54:32 -0500
+Received: by mail-wr1-f49.google.com with SMTP id w15so6133494wru.4;
+        Sat, 25 Jan 2020 11:54:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=pB7UN8ZNyEDMSk8Y+JG22bv0njEEqIZh39ZLWw6SiFU=;
+        b=XHYwEsXZ8aEHZ3lToYcBzM7jXQpbmLdD+acyKgLB1620pluMiMNY3OjZUoDrgIi9ks
+         d9dCJXGnVeBna8eTK/iZENM8mIRqJt4fnMnuYzo2lPu2IE5tkbmeGJYGZ/yVJzAKCuBp
+         D0w68Gr5rAGcFq8GanrETHBDxoPPdU6GWpP4yZ75OTdsRocLA2xUaYxVLqTXjaaEQPXj
+         m2sgcFHT4r7hhL2FeXPPbVyJDapiDJzls5YOd4MGwkrsVwrqdgi8Y2zZMyHSoUXoLHCv
+         2XoYDhu0iv5YkSlvEo/yL5eaGmfUe/Vdjt/Kex5+L3fAey17oJDwg+89nUuAvwpkRcvR
+         w+fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pB7UN8ZNyEDMSk8Y+JG22bv0njEEqIZh39ZLWw6SiFU=;
+        b=sBf5ssE1Jw5E67AK5O10CjfPXapvA266XZydETcyTZOs58tRNo4mSmD+rs2o4tdKT6
+         481n4D2+rIdXdnkrjre8ZwC4pzr6wQldZnjphBBVdvHtazyRkkRsasZI5qWIaGSuIRSZ
+         zCcJrSbgxXPLCairfqTOed6q3Ey+NerFotuxcqmLGjTHWZooe7wkFCBTdZsiP9ev2YrB
+         dfSHHObkiI94wGFBdC2TRRmdscWd8bUeGLEiZ3pbS/7B5xaMpfh+KGpCQhorb3MCv40w
+         XOVtfxWxYkz26OxOXPkCGGWF/S0AA9guakOyZMT9PGXg5ToDdJ4qIZP3GcisSl2rhm77
+         k1og==
+X-Gm-Message-State: APjAAAXCZm6EiZOM3mX4llV8CtGH8gebNfbSD/aPPgMnHGagP2vjMDty
+        IMkUm5dK4L/kHsXih/Bmj2k=
+X-Google-Smtp-Source: APXvYqymvxsm3O3qtufCFQT0KnZLMducZtIrPqt+xlEY4pr6wdA+Ba6XXhcN67+hmsHq3ZIWU7lt3g==
+X-Received: by 2002:a5d:6852:: with SMTP id o18mr5387107wrw.426.1579982069879;
+        Sat, 25 Jan 2020 11:54:29 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id m21sm11883712wmi.27.2020.01.25.11.54.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jan 2020 11:54:29 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/8] add persistent submission state
+Date:   Sat, 25 Jan 2020 22:53:37 +0300
+Message-Id: <cover.1579981749.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1579901866.git.asml.silence@gmail.com>
+References: <cover.1579901866.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200125175442.GA4369@zn.tnic>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 06:54:42PM +0100, Borislav Petkov wrote:
-> On Sat, Jan 25, 2020 at 08:10:50AM -0800, Paul E. McKenney wrote:
-> > How big?  (Seriously, given that the fix may depend on the number of CPUs.)
-> 
-> [    7.660017] smp: Brought up 2 nodes, 256 CPUs
-> 
-> > So the problem appears to be that some of the boot-time processing
-> > is looping in the kernel, which is preventing the grace period from
-> > completing.  One could argue that such code should be fixed, but on the
-> > other hand, boot time is a bit special.  Later in -rcu's dev branch,
-> > there are commits that forgive this boot-time misbehavior, but this is
-> > a bit late in process to dump all of those commits into -tip.
-> 
-> Aha.
-> 
-> > The RT guys might need the warning, and it was them that I was thinking
-> > of when adding it. 
-> 
-> But "boot time is a bit special". Or do they care about deadlines during
-> boot too?
+Apart from unrelated first patch, this persues two goals:
 
-Maybe, but not that I know of.  If they do, this would be an excellent
-time for them to let me know!
+1. start preparing io_uring to move resources handling into
+opcode specific functions, and thus for splice(2)
 
-My guess is "no" because the real-time application would not yet be
-running during boot.  On the other hand, if this issue is due not so much
-to boot, but to (say) expensive filesystem operations on large systems,
-that might be a different story.
+2. make the first step towards some long-standing optimisation ideas
 
-Except that I would have hard questions to ask of someone doing expensive
-filesystem operations while their deep-sub-millisecond real-time
-application was running.  So even then, I doubt that they would care.
+Basically, it makes struct io_submit_state embedded into ctx, so
+easily accessible and persistent, and then plays a bit around that.
 
-Again, if I am wrong about this, this would be an excellent time for
-them to let me know.
+v2: rebase
 
-> > But let's see what works for mainline first.  And
-> > since your box was booting fine without the warning before, I bet that
-> > it boots just fine with that warning removed.
-> 
-> Yes, it does.
+Pavel Begunkov (8):
+  io_uring: leave a comment for drain_next
+  io_uring: always pass non-null io_submit_state
+  io_uring: place io_submit_state into ctx
+  io_uring: move ring_fd  into io_submit_state
+  io_uring: move cur_mm into io_submit_state
+  io_uring: move *link into io_submit_state
+  io_uring: persistent req bulk allocation cache
+  io_uring: optimise req bulk allocation cache
 
-Woo-hoo!!!
+ fs/io_uring.c | 219 +++++++++++++++++++++++++++-----------------------
+ 1 file changed, 120 insertions(+), 99 deletions(-)
 
-> > So could you please try out the (untested) patch below?
-> 
-> Warning's gone.
+-- 
+2.24.0
 
-Very good.  I will get it property prepared and tested, then send it
-along to Ingo.
-
-> > If that works, I will re-introduce the warning with proper protection
-> > for the merge window following this coming one.
-> 
-> My big box is at your service if you need stuff tested later.
-
-Thank you in advance!  I just might take you up on that!
-
-In the meantime, one question...  Are you testing for realtime suitability
-on your big box?  If so, to what extent?
-
-> Thx Paul.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-
-Aside from habitually failing to trim emails, which of these was I
-violating?  ;-)
-
-							Thanx, Paul
