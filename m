@@ -2,137 +2,127 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF56C35242
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CC6C32771
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B8F2073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8EA2075D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZZ3UTU4"
+	dkim=pass (1024-bit key) header.d=neuralgames.com header.i=@neuralgames.com header.b="g1w1f5kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387604AbgAYBB4 (ORCPT
+        id S2387621AbgAYBKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 20:01:56 -0500
-Received: from mail-pg1-f182.google.com ([209.85.215.182]:41724 "EHLO
-        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387475AbgAYBB4 (ORCPT
+        Fri, 24 Jan 2020 20:10:07 -0500
+Received: from kross.rwserver.com ([69.13.37.146]:43868 "EHLO
+        kross2019.rwserver.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387564AbgAYBKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 20:01:56 -0500
-Received: by mail-pg1-f182.google.com with SMTP id x8so1985252pgk.8;
-        Fri, 24 Jan 2020 17:01:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=LkUPWh5kdl4Sg46sJyfitt6HLC6I557q2490DP7qh3M=;
-        b=dZZ3UTU4UOOlw606J6+uj+IkABJEPApFTlmhcoT0n6lu9OHkz1ziZqvbJNTEOebkaM
-         ZzwKG1IUL3AZK07M1F8Qg8B7BMwaN3SQoCvy9nirCrzrEs2utFvaXKht5HdttlldovxP
-         Hc2mgCFGckAiybUbdH1zq88owtW8V3rqT6rAxoxUKNwt9uGUy+t7fz2JO2zs7p4cz8lg
-         KEcylnv9u56hg9zEZf5LvQfRhGsMT4KX5Q/oev9cQl9r8OuDid18rVmaAtqqNrDK3d/C
-         wWEC7cuFKOu2hVfV7vOpj37Qox77SkqbZ9PhGGk+1+EmG/RPZwGgFgxDKJGAyXHHXJKH
-         HDTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=LkUPWh5kdl4Sg46sJyfitt6HLC6I557q2490DP7qh3M=;
-        b=goaZj5OzRgnU+bQUKj69FhK++CIFOp83aN+LeJRDDaNvTCc26Pol0lq9XiHsO6wcVp
-         QYlLFjZUr1BxVLDlGVjVaRZMHJ/JMj6ndfx+zrG175TxlpBwhkDR+PXqECptIuGI4UgO
-         xuT7fQGblMeV/QWb3sGJQEXomAdKxBdq4GV3F79TidUxyhHUl1nxP954Vnat6vlDUfFH
-         3n/Kw8nSx0vI8zulERIfWAfCK5/HgVHRkq8q2wWTl7S0bqpsDjMgvm1VZ7fksfpqcBYt
-         SglAR0u4znwCy6Q0ln0jvOcTiAHj55Nmxrzem71rl/tRFVL8XLBwo5vJ10EFHHG370na
-         Q6yw==
-X-Gm-Message-State: APjAAAXT+3x+WoP7mosKqgRuBJNuwR6Y2FyFeIJkoiwiyIMYd61XyP7C
-        rp4aEP+oK3ZFYivFkoW3RrU=
-X-Google-Smtp-Source: APXvYqxDiDA5+kIDCFhEfVFU67Utzivxc1wCtaT/Q51DKRn9CC1Bi7/2Z2qQ9hNsj+8hA331vUjfzw==
-X-Received: by 2002:a63:d047:: with SMTP id s7mr6922468pgi.81.1579914115234;
-        Fri, 24 Jan 2020 17:01:55 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id c184sm7662382pfa.39.2020.01.24.17.01.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 17:01:54 -0800 (PST)
-Date:   Fri, 24 Jan 2020 17:01:52 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v5.5-rc7
-Message-ID: <20200125010152.GA14053@dtor-ws>
+        Fri, 24 Jan 2020 20:10:06 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by kross2019.rwserver.com (Postfix) with ESMTP id ADA55B3DC2;
+        Fri, 24 Jan 2020 19:10:05 -0600 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=neuralgames.com;
+         h=user-agent:message-id:references:in-reply-to:subject:subject
+        :from:from:date:date:content-transfer-encoding:content-type
+        :content-type:mime-version; s=default; t=1579914605; x=
+        1581729006; bh=oobQmrNrtMrH5ic0QlZWtjmXlS2bin04onbQAnRpyJI=; b=g
+        1w1f5kv5ixK4UfVj48ni8bD3RCw1DXYJy8+YnATBfjEGqB7+wMPBm5d3kIcsaOBS
+        MEeRZDujLnNQIP/QVcKRCPUD1fIf260MmOsEJUlzojaejtbETzjCLfHYU/ISy84P
+        KyvzeG7ldpFXIES2zkKUcV/P7FgNrAGQnQH+zEr3es=
+X-Virus-Scanned: Debian amavisd-new at kross2019.rwserver.com
+Received: from kross2019.rwserver.com ([127.0.0.1])
+        by localhost (kross2019.rwserver.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id yE5rXoj6bgXT; Fri, 24 Jan 2020 19:10:05 -0600 (CST)
+Received: from rwserver.com (localhost [IPv6:::1])
+        (Authenticated sender: linux@neuralgames.com)
+        by kross2019.rwserver.com (Postfix) with ESMTPA id 30E46B3DC1;
+        Fri, 24 Jan 2020 19:10:05 -0600 (CST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 24 Jan 2020 19:10:05 -0600
+From:   linux@neuralgames.com
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Joel Stanley <joel@jms.id.au>, Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] hwrng: Add support for ASPEED RNG
+In-Reply-To: <575811fd-24ca-409c-8d33-c2152ee401d7@www.fastmail.com>
+References: <20200120150113.2565-1-linux@neuralgames.com>
+ <CACPK8XfuVN3Q=npEoOP-amQS0-wemxcx6LKaHHZEsBAHzq1wzA@mail.gmail.com>
+ <4446ffb694c7742ca9492c7360856789@neuralgames.com>
+ <575811fd-24ca-409c-8d33-c2152ee401d7@www.fastmail.com>
+Message-ID: <136bbab84d13d8d56a5ac297e415975e@neuralgames.com>
+X-Sender: linux@neuralgames.com
+User-Agent: Roundcube Webmail/1.3.8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 2020-01-22 19:53, Andrew Jeffery wrote:
+>> Thanks for reviewing the patch.
+>> 
+>> The RNG on Aspeed hardware allows eight different modes for combining
+>> its four internal Ring Oscillators that together generate a stream of
+>> random bits. However, the timeriomem-rng driver does not allow for 
+>> mode
+>> selection so, the Aspeed RNG with this generic driver runs always on
+>> mode 'seven' (The default value for mode according to the AspeedTech
+>> datasheets).
+>> 
+>> I've performed some testings on this Aspeed RNG using the NIST
+>> Statistical Test Suite (NIST 800-22r1a) and, the results I got show 
+>> that
+>> the default mode 'seven' isn't producing the best entropy and linear
+>> rank when compared against the other modes available on these SOCs.  
+>> On
+>> the other hand, the driver that I'm proposing here allows for mode
+>> selection which would help improve the random output for those looking
+>> to get the best out of this Aspeed RNG.
+> 
+> Have you published the data and results of this study somewhere? This
+> really should be mentioned in the commit message as justification for
+> not using timeriomem-rng.
+> 
+> Andrew
 
-Please pull from:
+Hi Andrew,
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+I have uploaded the results of my tests to my GitHub, along with all the 
+binaries
+containing the random bits that I collected from this Aspeed RNG using 
+all 8 modes.
+You can also find in this repository a patch for the hw_random core 
+driver that
+I've been using to collect this data. Here is the link:
+   https://github.com/operezmuena/aspeed-rng-testing
 
-to receive updates for the input subsystem. You will receive:
+You can see in the reports that when using large enough samples (40Mb in 
+size)
+this Aspeed RNG consistently fails the linear rank and entropy tests, no 
+matter
+what RNG mode is selected. However, modes 2, 4 and 6 produce better 
+entropy than
+the rest.
+I'm now collecting rng data from 2 other AST2520 SOCs that I have in 
+order to
+compare results.
 
-- patches adding sanoty checks to USB endpoints in various dirvers
-- max77650-onkey was missing a OF table which was preventing module
-  autoloading
-- a revert and a different fix for F54 handling in Synaptics dirver
-- a fixup for handling register in pm8xxx vibrator driver.
-
-Changelog:
----------
-
-Bartosz Golaszewski (1):
-      Input: max77650-onkey - add of_match table
-
-Chuhong Yuan (1):
-      Input: sun4i-ts - add a check for devm_thermal_zone_of_sensor_register
-
-Hans Verkuil (2):
-      Revert "Input: synaptics-rmi4 - don't increment rmiaddr for SMBus transfers"
-      Input: rmi_f54 - read from FIFO in 32 byte blocks
-
-Johan Hovold (8):
-      Input: pegasus_notetaker - fix endpoint sanity check
-      Input: aiptek - fix endpoint sanity check
-      Input: aiptek - use descriptors of current altsetting
-      Input: gtco - fix endpoint sanity check
-      Input: gtco - fix extra-descriptor debug message
-      Input: gtco - drop redundant variable reinit
-      Input: sur40 - fix interface sanity checks
-      Input: keyspan-remote - fix control-message timeouts
-
-Miles Chen (1):
-      Input: evdev - convert kzalloc()/vzalloc() to kvzalloc()
-
-Stephan Gerhold (1):
-      Input: pm8xxx-vib - fix handling of separate enable register
-
-Diffstat:
---------
-
- drivers/input/evdev.c                    |  5 +---
- drivers/input/misc/keyspan_remote.c      |  9 ++++---
- drivers/input/misc/max77650-onkey.c      |  7 ++++++
- drivers/input/misc/pm8xxx-vibrator.c     |  2 +-
- drivers/input/rmi4/rmi_f54.c             | 43 ++++++++++++++++++++------------
- drivers/input/rmi4/rmi_smbus.c           |  2 ++
- drivers/input/tablet/aiptek.c            |  8 +++---
- drivers/input/tablet/gtco.c              | 13 +++-------
- drivers/input/tablet/pegasus_notetaker.c |  2 +-
- drivers/input/touchscreen/sun4i-ts.c     |  6 ++++-
- drivers/input/touchscreen/sur40.c        |  2 +-
- 11 files changed, 59 insertions(+), 40 deletions(-)
-
-Thanks.
+Regards,
+Oscar
 
 
--- 
-Dmitry
+
