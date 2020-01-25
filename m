@@ -2,171 +2,91 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9FCC35246
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 20:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9C3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 20:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228642075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 20:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208A320708
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 20:29:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpWNw2I1"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="a9eF+DOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgAYU1X (ORCPT
+        id S1727409AbgAYU3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 15:27:23 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46861 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAYU1X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 15:27:23 -0500
-Received: by mail-ed1-f65.google.com with SMTP id m8so6608573edi.13;
-        Sat, 25 Jan 2020 12:27:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tmtvZ7+Bxr7d5ieDrIi/rySNUKYiB6ocaNnAhvSWmSs=;
-        b=WpWNw2I12JdqnEw49VZ4yXrElgq01aqx2UNQjTKBgi3UavvRRup++2C9yOf0Rw3XYp
-         hfDnhztTtSs5OGfdPUqYiLMqf6Ug6J/tVMMT7Jep9BjlnRUC1UWVaAf7hmszhlTjsOXx
-         ZlTs8Dqus8GUJ//gGuOw9J04YVrGUGFKVx6dPRmzBZwu08jH6oo99/iObBGafcENMcya
-         cge917M9Ma5boCncT5DbRhH8FitHjXTx8oyqG0a3r3qn1NRpN1GcQ8aAaFPHz6pxSFCD
-         9PoIrZ2IwV1833Qic1jCIMQ2fYIcEB9X0JIj9ihsLRnJW+oZyUDIiZQRUooC7PbEp70e
-         9hiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tmtvZ7+Bxr7d5ieDrIi/rySNUKYiB6ocaNnAhvSWmSs=;
-        b=Zm3oSDAD9fgDJn9yvsOPrUgMxKb7Ppo1ggxqka5uEDdFlFMPeuk5uDHieJjxrt0+UV
-         DT7EUazyp8unwhZWSdlrHz+UnjXI197BJOKl95VlyXsWgLQ+w+9sDZhm+NVJLAD1vZFI
-         v5bUSFYMBRtWx9CtqgaeaL34+TcWatO0nUDwK0QfhHwSRVd+zkig6XYnSeyPwtYiPSBk
-         pKil+pTp9Ip7PMNw+sr+xmiHDlLUZj4rrzsst7zkWrf0AiNULP5NNigT7z+OBTmOT34T
-         zc0mMOl4C1P1fNQHiq+yBlnqD53IgMHOwIr/jwfiZoBFTfIYm3uqJlwA9iGFAFbTdaRb
-         LjVg==
-X-Gm-Message-State: APjAAAU7woTKKnKvQ02EETRhXydQ6UMmHB/js7J+uoyMBcZpt9kIxEyk
-        /OQckiEHdvuuv4EfB5rdGb/w0hICBXj7ZHMGxfQ=
-X-Google-Smtp-Source: APXvYqyfJlkeCGXAjSuG0GeYRh2mx4h1xrB6y0VvhtLPD7oexpo8GY7Own0wYzBhiOyBBQ6JyuSRolO+tOJBTPol9Es=
-X-Received: by 2002:aa7:c44e:: with SMTP id n14mr8196842edr.179.1579984041043;
- Sat, 25 Jan 2020 12:27:21 -0800 (PST)
+        Sat, 25 Jan 2020 15:29:54 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:39104 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726454AbgAYU3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 15:29:53 -0500
+Received: from zn.tnic (p200300EC2F1CE900698071F6EB5AEF0D.dip0.t-ipconnect.de [IPv6:2003:ec:2f1c:e900:6980:71f6:eb5a:ef0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ED1DD1EC0AA0;
+        Sat, 25 Jan 2020 21:29:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579984192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=UGB09dF/Gks2th5CmJckVsOZrAsgXGHQ//Z+awLH+4A=;
+        b=a9eF+DOz+IwZjF0FdxjplFQzHXpS5MEEa5GMPZOGmSEQOxH3Kfbs8wZOstD29OKm814GF+
+        uDHBHw5HCGwnN9qfT5uTcQynbax8fS/mKdkg/Z9SRswH7mIkeMHo1b9aKl6QBY6+uT9TEM
+        HuiEQqCeM+dOUf+/i33QtEQP0LZsUNg=
+Date:   Sat, 25 Jan 2020 21:29:51 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v15] x86/split_lock: Enable split lock detection by kernel
+Message-ID: <20200125202951.GD4369@zn.tnic>
+References: <20200122224245.GA2331824@rani.riverdale.lan>
+ <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
+ <20200123004507.GA2403906@rani.riverdale.lan>
+ <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com>
+ <20200123044514.GA2453000@rani.riverdale.lan>
+ <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
+ <87h80kmta4.fsf@nanos.tec.linutronix.de>
+ <20200125024727.GA32483@agluck-desk2.amr.corp.intel.com>
+ <20200125104419.GA16136@zn.tnic>
+ <20200125195513.GA15834@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <20200124093047.008739095@linuxfoundation.org> <20200124093127.122646308@linuxfoundation.org>
- <20200125191333.GG14064@duo.ucw.cz>
-In-Reply-To: <20200125191333.GG14064@duo.ucw.cz>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sat, 25 Jan 2020 22:27:10 +0200
-Message-ID: <CA+h21hrcv3=xyJY-LdpdDyTRjsEy6jfhgdWT=Jr04_MMgSn25A@mail.gmail.com>
-Subject: Re: [PATCH 4.19 320/639] ARM: dts: ls1021: Fix SGMII PCS link
- remaining down after PHY disconnect
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        lkml <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200125195513.GA15834@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On Sat, Jan 25, 2020 at 11:55:13AM -0800, Luck, Tony wrote:
+> I don't have a good abbreviation.  It would become the joint 2nd longest
+> flag name ... top ten lengths look like this on my test machine. So while
+> long, not unprecedented.
 
-On Sat, 25 Jan 2020 at 21:13, Pavel Machek <pavel@denx.de> wrote:
->
-> Hi!
->
-> > [ Upstream commit c7861adbe37f576931650ad8ef805e0c47564b9a ]
-> >
-> > Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-> > But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-> > are pointing towards the same internal PCS. Therefore nobody is
-> > controlling the internal PCS of eTSEC0.
-> >
-> > Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-> > initialization. But upon an ifdown/ifup sequence, the code path from
-> > ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-> > the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-> > link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-> > failure condition, the PHY driver keeps printing
-> > '803x_aneg_done: SGMII link is not ok'.
-> >
-> > Also, it changes compatible of mdio0 to "fsl,etsec2-mdio" to match
-> > mdio1 device.
->
-> It actually changes compatible of both devices.
->
-> > +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> > @@ -584,7 +584,7 @@
-> >               };
-> >
-> >               mdio0: mdio@2d24000 {
-> > -                     compatible = "gianfar";
-> > +                     compatible = "fsl,etsec2-mdio";
-> >                       device_type = "mdio";
-> >                       #address-cells = <1>;
-> >                       #size-cells = <0>;
-> > @@ -592,6 +592,15 @@
-> >                             <0x0 0x2d10030 0x0 0x4>;
-> >               };
-> >
-> > +             mdio1: mdio@2d64000 {
-> > +                     compatible = "fsl,etsec2-mdio";
->
->
-> And they trigger different code in the driver:
->
->                 .type = "mdio",
->                 .compatible = "gianfar",
->                 .data = &(struct fsl_pq_mdio_data) {
->                 ...
->                         .get_tbipa = get_gfar_tbipa_from_mdio,
->                 },
->
->                 .compatible = "fsl,etsec2-mdio",
->                 .data = &(struct fsl_pq_mdio_data) {
->                 ...
->                         .get_tbipa = get_etsec_tbipa,
->                 },
->
-> Are you sure that is good idea for both mainline and stable?
->
+Yah, I guess we lost that battle long ago.
 
-Thanks for spotting this.
+> Thomas explained how to fix it so we only call the function if TIF_SLD
+> is set in either the previous or next process (but not both). So the
+> overhead is just extra XOR/AND in the caller.
 
-What has happened is that [ Leo ] Li Yang suggested me to change the
-compatible in v1 of this patch here:
-https://patchwork.ozlabs.org/patch/1064015/
+Yeah.
 
-Not having any argument to oppose (and not much experience, to be
-frank) I complied and sent out a 2-patch v2 series:
-https://patchwork.ozlabs.org/patch/1084366/
-https://patchwork.ozlabs.org/patch/1084365/
+Thx.
 
-And Shawn squashed them when merging them, "to get it land as fix a bit easier".
+-- 
+Regards/Gruss,
+    Boris.
 
-Judging the code in more detail, you are indeed correct that the
-"gianfar" compatible was the right one for this hardware. The
-difference being the "get_tbipa" function which calculates the address
-of the TBIPA register automatically, if not explicitly specified.
-However, for ls1021a.dtsi, the TBIPA register _is_ explicitly
-specified via the second "reg" (<0x0 0x2d10030 0x0 0x4>), so the
-"get_tbipa" function is dead code for LS1021A. Therefore, luckily no
-harm was done.
-
-I would suggest that this patch continues to be applied as-is to the
-stable kernels, just for the sake of not having divergent patches
-across branches, and I'll send a new one that turns the compatible
-back into "gianfar".
-
-> Best regards,
->                                                                         Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-Thanks,
--Vladimir
+https://people.kernel.org/tglx/notes-about-netiquette
