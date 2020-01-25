@@ -2,95 +2,106 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827B4C35243
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 06:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8640C35241
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 06:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 628A32071A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 06:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9862077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 06:17:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iY+grmAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgAYGMn (ORCPT
+        id S1728436AbgAYGRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 01:12:43 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:55026 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgAYGMm (ORCPT
+        Sat, 25 Jan 2020 01:17:16 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40411 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgAYGRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 01:12:42 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id AD421200BF;
-        Sat, 25 Jan 2020 07:12:37 +0100 (CET)
-Date:   Sat, 25 Jan 2020 07:12:36 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Jitao Shi <jitao.shi@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/panel: Fix boe,tv101wum-n53 htotal timing
-Message-ID: <20200125061236.GA25729@ravnborg.org>
-References: <20200125050256.107404-1-drinkcat@chromium.org>
+        Sat, 25 Jan 2020 01:17:15 -0500
+Received: by mail-qk1-f193.google.com with SMTP id t204so3573066qke.7;
+        Fri, 24 Jan 2020 22:17:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tsg/r/0YkW+EwvqQByRlznkOGOX8nMWqFwoWlOGNvn8=;
+        b=iY+grmAPc30j6s7U+lRPizYmH7hV2PAWEKR71dLE2dmN6yU1rFMyesbZUFSMOauaVf
+         AQ9cpT68ECqVY+efd5oKkLJvdlIt9sZXp1sT7hhWx7cKC3Z0kVr+qI6rJzJHuS7+OAYT
+         9tP8OzS97Jt32QTS1CFNMlc2IzGOFYPry2npjIJ+lyjXTv+Qg1tlLW3anAB8VyEs0WHd
+         b1Q+rh7P8cnrvzw0V6HrjKy4O80PZNQnYnI1jN1Xd2QA1VsboWQ9oZ6Bv8rfkVJAhaIK
+         22EQOoPEm6OaRMU3O4rOgxpn0I1J4f5p8qRuDarvNU+gH14FZqOSSJ0iow23txsL6/SX
+         NIsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tsg/r/0YkW+EwvqQByRlznkOGOX8nMWqFwoWlOGNvn8=;
+        b=swPbXZpzIymRlRkx8eDj9P4dz+a0CRt53QWFKhqU+ZR9BB8Es3pJQgwm/YSNoo+b9F
+         v/FHJX3vY05pstG46Sxu6ktVr0GI0lAi0VZiljowP0RccWgZrsfzd+RK1NzwL6YpSr/C
+         u14e/7wW8Tp3mHLvuOTWMmo7lSl5XiFZFufTYMrb8Y0H/tJELqj2Jj8iaYT5BFvUCwrk
+         82ZmDtaqf+tGRq+L2QafvbdkSOlQSqhgRJm5YnFn/Am/LCC4TP3D2KNJtIvYbZ03OcuX
+         OB6/hshFPmVAVEuwhPpCkIohkrsOFTjqmnLRAf3uY3bpWR3tGxk79t582zB+PEpwFps6
+         ut1Q==
+X-Gm-Message-State: APjAAAWgkfYDXLXLCfn+ouFySxI1v6tevNJXz45wQkzj5/V2johfhpNJ
+        gBrL/SQUUntKkkRgBu6lj2ZhEC7+UPq9Ef9xAJA=
+X-Google-Smtp-Source: APXvYqzXMH2ecc4WrNRTSRqMoJiY5NdwoAvLhz3IqzcpCpum0aGfk2zEnLWmJG13dZn/DF6tLcJ+3/2VAi47wkEYVVY=
+X-Received: by 2002:a05:620a:15e9:: with SMTP id p9mr6924393qkm.490.1579933034407;
+ Fri, 24 Jan 2020 22:17:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200125050256.107404-1-drinkcat@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cm27Pg_UAAAA:8
-        a=O7XAfuiZUNRsPy4Z4nUA:9 a=CjuIK1q_8ugA:10 a=xmb-EsYY8bH0VWELuYED:22
+References: <fed4f49349913cb6739dac647ba6a61d56b989d2.1579783936.git.christophe.leroy@c-s.fr>
+ <e11a8f0670251267f87e3114e0bdbacb1eb72980.1579783936.git.christophe.leroy@c-s.fr>
+ <CAHk-=wg4HEABOZdjxMzbembNmxs1zYfrNAEc2L+JS9FBSnM8JA@mail.gmail.com>
+In-Reply-To: <CAHk-=wg4HEABOZdjxMzbembNmxs1zYfrNAEc2L+JS9FBSnM8JA@mail.gmail.com>
+From:   Tony Luck <tony.luck@gmail.com>
+Date:   Fri, 24 Jan 2020 22:17:03 -0800
+Message-ID: <CA+8MBb++x2onyy0obGKc=3exTCekWRJ98xhQZuvHMQbFvV7zCw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] uaccess: Tell user_access_begin() if it's for a
+ write or not
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas.
+On Thu, Jan 23, 2020 at 10:03 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> We used to have a read/write argument to the old "verify_area()" and
+> "access_ok()" model, and it was a mistake. It was due to odd i386 user
+> access issues. We got rid of it. I'm not convinced this is any better
+> - it looks very similar and for odd ppc access issues.
 
-On Sat, Jan 25, 2020 at 01:02:56PM +0800, Nicolas Boichat wrote:
-> The datasheet suggests 60 for tHFP, so let's adjust the number
-> accordingly.
-> 
-> This also makes the framerate be 60Hz as intended:
-> 159916.0 * 1000 / ((1200 + 80 + 24 + 60)*(1920 + 20 + 4 + 10))
-> => 60.00 Hz
-> 
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+If the mode (read or write) were made visible to the trap handler, I'd
+find that useful for machine check recovery.  If I'm in the middle of a
+copy_from_user() and I get a machine check reading poison from a
+user address ... then I could try to recover in the same way as for the
+user accessing the poison (offline the page, SIGBUS the task). But if
+the poison is in kernel memory and we are doing a copy_to_user(), then
+we are hosed (or would need some more complex recovery plan).
 
-Thanks. Added Fixes: tag and applied to drm-misc-next.
+[Note that we only get recoverable machine checks on loads... writes
+are posted, so if something goes wrong it isn't synchronous with the store
+instruction that initiated it]
 
-	Sam
-
-
-> 
-> ---
-> 
-> This also matches the values that we use in our chromeos-4.19
-> vendor kernel.
-> 
-> Applies on top or drm-misc/drm-misc-next.
-> 
->  drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> index 01faf8597700005..48a164257d18c35 100644
-> --- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> @@ -645,7 +645,7 @@ static const struct drm_display_mode boe_tv101wum_n53_default_mode = {
->  	.hdisplay = 1200,
->  	.hsync_start = 1200 + 80,
->  	.hsync_end = 1200 + 80 + 24,
-> -	.htotal = 1200 + 80 + 24 + 40,
-> +	.htotal = 1200 + 80 + 24 + 60,
->  	.vdisplay = 1920,
->  	.vsync_start = 1920 + 20,
->  	.vsync_end = 1920 + 20 + 4,
-> -- 
-> 2.25.0.341.g760bfbb309-goog
+-Tony
