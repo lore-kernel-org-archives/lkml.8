@@ -2,151 +2,171 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A912C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 20:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9FCC35246
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 20:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31DB20708
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 20:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228642075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 20:27:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpWNw2I1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgAYU0T (ORCPT
+        id S1727872AbgAYU1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 15:26:19 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:43541 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAYU0S (ORCPT
+        Sat, 25 Jan 2020 15:27:23 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46861 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAYU1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 15:26:18 -0500
-Received: from [82.43.126.140] (helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ivS0T-00022J-I3; Sat, 25 Jan 2020 20:26:13 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd/powerplay: fix spelling mistake "Attemp" -> "Attempt"
-Date:   Sat, 25 Jan 2020 20:26:13 +0000
-Message-Id: <20200125202613.13448-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Sat, 25 Jan 2020 15:27:23 -0500
+Received: by mail-ed1-f65.google.com with SMTP id m8so6608573edi.13;
+        Sat, 25 Jan 2020 12:27:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tmtvZ7+Bxr7d5ieDrIi/rySNUKYiB6ocaNnAhvSWmSs=;
+        b=WpWNw2I12JdqnEw49VZ4yXrElgq01aqx2UNQjTKBgi3UavvRRup++2C9yOf0Rw3XYp
+         hfDnhztTtSs5OGfdPUqYiLMqf6Ug6J/tVMMT7Jep9BjlnRUC1UWVaAf7hmszhlTjsOXx
+         ZlTs8Dqus8GUJ//gGuOw9J04YVrGUGFKVx6dPRmzBZwu08jH6oo99/iObBGafcENMcya
+         cge917M9Ma5boCncT5DbRhH8FitHjXTx8oyqG0a3r3qn1NRpN1GcQ8aAaFPHz6pxSFCD
+         9PoIrZ2IwV1833Qic1jCIMQ2fYIcEB9X0JIj9ihsLRnJW+oZyUDIiZQRUooC7PbEp70e
+         9hiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tmtvZ7+Bxr7d5ieDrIi/rySNUKYiB6ocaNnAhvSWmSs=;
+        b=Zm3oSDAD9fgDJn9yvsOPrUgMxKb7Ppo1ggxqka5uEDdFlFMPeuk5uDHieJjxrt0+UV
+         DT7EUazyp8unwhZWSdlrHz+UnjXI197BJOKl95VlyXsWgLQ+w+9sDZhm+NVJLAD1vZFI
+         v5bUSFYMBRtWx9CtqgaeaL34+TcWatO0nUDwK0QfhHwSRVd+zkig6XYnSeyPwtYiPSBk
+         pKil+pTp9Ip7PMNw+sr+xmiHDlLUZj4rrzsst7zkWrf0AiNULP5NNigT7z+OBTmOT34T
+         zc0mMOl4C1P1fNQHiq+yBlnqD53IgMHOwIr/jwfiZoBFTfIYm3uqJlwA9iGFAFbTdaRb
+         LjVg==
+X-Gm-Message-State: APjAAAU7woTKKnKvQ02EETRhXydQ6UMmHB/js7J+uoyMBcZpt9kIxEyk
+        /OQckiEHdvuuv4EfB5rdGb/w0hICBXj7ZHMGxfQ=
+X-Google-Smtp-Source: APXvYqyfJlkeCGXAjSuG0GeYRh2mx4h1xrB6y0VvhtLPD7oexpo8GY7Own0wYzBhiOyBBQ6JyuSRolO+tOJBTPol9Es=
+X-Received: by 2002:aa7:c44e:: with SMTP id n14mr8196842edr.179.1579984041043;
+ Sat, 25 Jan 2020 12:27:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200124093047.008739095@linuxfoundation.org> <20200124093127.122646308@linuxfoundation.org>
+ <20200125191333.GG14064@duo.ucw.cz>
+In-Reply-To: <20200125191333.GG14064@duo.ucw.cz>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sat, 25 Jan 2020 22:27:10 +0200
+Message-ID: <CA+h21hrcv3=xyJY-LdpdDyTRjsEy6jfhgdWT=Jr04_MMgSn25A@mail.gmail.com>
+Subject: Re: [PATCH 4.19 320/639] ARM: dts: ls1021: Fix SGMII PCS link
+ remaining down after PHY disconnect
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Pavel,
 
-There are several spelling mistakes in PP_ASSERT_WITH_CODE messages.
-Fix these.
+On Sat, 25 Jan 2020 at 21:13, Pavel Machek <pavel@denx.de> wrote:
+>
+> Hi!
+>
+> > [ Upstream commit c7861adbe37f576931650ad8ef805e0c47564b9a ]
+> >
+> > Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
+> > But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
+> > are pointing towards the same internal PCS. Therefore nobody is
+> > controlling the internal PCS of eTSEC0.
+> >
+> > Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
+> > initialization. But upon an ifdown/ifup sequence, the code path from
+> > ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
+> > the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
+> > link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
+> > failure condition, the PHY driver keeps printing
+> > '803x_aneg_done: SGMII link is not ok'.
+> >
+> > Also, it changes compatible of mdio0 to "fsl,etsec2-mdio" to match
+> > mdio1 device.
+>
+> It actually changes compatible of both devices.
+>
+> > +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> > @@ -584,7 +584,7 @@
+> >               };
+> >
+> >               mdio0: mdio@2d24000 {
+> > -                     compatible = "gianfar";
+> > +                     compatible = "fsl,etsec2-mdio";
+> >                       device_type = "mdio";
+> >                       #address-cells = <1>;
+> >                       #size-cells = <0>;
+> > @@ -592,6 +592,15 @@
+> >                             <0x0 0x2d10030 0x0 0x4>;
+> >               };
+> >
+> > +             mdio1: mdio@2d64000 {
+> > +                     compatible = "fsl,etsec2-mdio";
+>
+>
+> And they trigger different code in the driver:
+>
+>                 .type = "mdio",
+>                 .compatible = "gianfar",
+>                 .data = &(struct fsl_pq_mdio_data) {
+>                 ...
+>                         .get_tbipa = get_gfar_tbipa_from_mdio,
+>                 },
+>
+>                 .compatible = "fsl,etsec2-mdio",
+>                 .data = &(struct fsl_pq_mdio_data) {
+>                 ...
+>                         .get_tbipa = get_etsec_tbipa,
+>                 },
+>
+> Are you sure that is good idea for both mainline and stable?
+>
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/amd/powerplay/smumgr/vega12_smumgr.c | 12 ++++++------
- drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c | 12 ++++++------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+Thanks for spotting this.
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vega12_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/vega12_smumgr.c
-index a3915bfcce81..275dbf65f1a0 100644
---- a/drivers/gpu/drm/amd/powerplay/smumgr/vega12_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/vega12_smumgr.c
-@@ -128,20 +128,20 @@ int vega12_enable_smc_features(struct pp_hwmgr *hwmgr,
- 	if (enable) {
- 		PP_ASSERT_WITH_CODE(smu9_send_msg_to_smc_with_parameter(hwmgr,
- 				PPSMC_MSG_EnableSmuFeaturesLow, smu_features_low) == 0,
--				"[EnableDisableSMCFeatures] Attemp to enable SMU features Low failed!",
-+				"[EnableDisableSMCFeatures] Attempt to enable SMU features Low failed!",
- 				return -EINVAL);
- 		PP_ASSERT_WITH_CODE(smu9_send_msg_to_smc_with_parameter(hwmgr,
- 				PPSMC_MSG_EnableSmuFeaturesHigh, smu_features_high) == 0,
--				"[EnableDisableSMCFeatures] Attemp to enable SMU features High failed!",
-+				"[EnableDisableSMCFeatures] Attempt to enable SMU features High failed!",
- 				return -EINVAL);
- 	} else {
- 		PP_ASSERT_WITH_CODE(smu9_send_msg_to_smc_with_parameter(hwmgr,
- 				PPSMC_MSG_DisableSmuFeaturesLow, smu_features_low) == 0,
--				"[EnableDisableSMCFeatures] Attemp to disable SMU features Low failed!",
-+				"[EnableDisableSMCFeatures] Attempt to disable SMU features Low failed!",
- 				return -EINVAL);
- 		PP_ASSERT_WITH_CODE(smu9_send_msg_to_smc_with_parameter(hwmgr,
- 				PPSMC_MSG_DisableSmuFeaturesHigh, smu_features_high) == 0,
--				"[EnableDisableSMCFeatures] Attemp to disable SMU features High failed!",
-+				"[EnableDisableSMCFeatures] Attempt to disable SMU features High failed!",
- 				return -EINVAL);
- 	}
- 
-@@ -158,13 +158,13 @@ int vega12_get_enabled_smc_features(struct pp_hwmgr *hwmgr,
- 
- 	PP_ASSERT_WITH_CODE(smu9_send_msg_to_smc(hwmgr,
- 			PPSMC_MSG_GetEnabledSmuFeaturesLow) == 0,
--			"[GetEnabledSMCFeatures] Attemp to get SMU features Low failed!",
-+			"[GetEnabledSMCFeatures] Attempt to get SMU features Low failed!",
- 			return -EINVAL);
- 	smc_features_low = smu9_get_argument(hwmgr);
- 
- 	PP_ASSERT_WITH_CODE(smu9_send_msg_to_smc(hwmgr,
- 			PPSMC_MSG_GetEnabledSmuFeaturesHigh) == 0,
--			"[GetEnabledSMCFeatures] Attemp to get SMU features High failed!",
-+			"[GetEnabledSMCFeatures] Attempt to get SMU features High failed!",
- 			return -EINVAL);
- 	smc_features_high = smu9_get_argument(hwmgr);
- 
-diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-index 0db57fb83d30..49e5ef3e3876 100644
---- a/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-@@ -316,20 +316,20 @@ int vega20_enable_smc_features(struct pp_hwmgr *hwmgr,
- 	if (enable) {
- 		PP_ASSERT_WITH_CODE((ret = vega20_send_msg_to_smc_with_parameter(hwmgr,
- 				PPSMC_MSG_EnableSmuFeaturesLow, smu_features_low)) == 0,
--				"[EnableDisableSMCFeatures] Attemp to enable SMU features Low failed!",
-+				"[EnableDisableSMCFeatures] Attempt to enable SMU features Low failed!",
- 				return ret);
- 		PP_ASSERT_WITH_CODE((ret = vega20_send_msg_to_smc_with_parameter(hwmgr,
- 				PPSMC_MSG_EnableSmuFeaturesHigh, smu_features_high)) == 0,
--				"[EnableDisableSMCFeatures] Attemp to enable SMU features High failed!",
-+				"[EnableDisableSMCFeatures] Attempt to enable SMU features High failed!",
- 				return ret);
- 	} else {
- 		PP_ASSERT_WITH_CODE((ret = vega20_send_msg_to_smc_with_parameter(hwmgr,
- 				PPSMC_MSG_DisableSmuFeaturesLow, smu_features_low)) == 0,
--				"[EnableDisableSMCFeatures] Attemp to disable SMU features Low failed!",
-+				"[EnableDisableSMCFeatures] Attempt to disable SMU features Low failed!",
- 				return ret);
- 		PP_ASSERT_WITH_CODE((ret = vega20_send_msg_to_smc_with_parameter(hwmgr,
- 				PPSMC_MSG_DisableSmuFeaturesHigh, smu_features_high)) == 0,
--				"[EnableDisableSMCFeatures] Attemp to disable SMU features High failed!",
-+				"[EnableDisableSMCFeatures] Attempt to disable SMU features High failed!",
- 				return ret);
- 	}
- 
-@@ -347,12 +347,12 @@ int vega20_get_enabled_smc_features(struct pp_hwmgr *hwmgr,
- 
- 	PP_ASSERT_WITH_CODE((ret = vega20_send_msg_to_smc(hwmgr,
- 			PPSMC_MSG_GetEnabledSmuFeaturesLow)) == 0,
--			"[GetEnabledSMCFeatures] Attemp to get SMU features Low failed!",
-+			"[GetEnabledSMCFeatures] Attempt to get SMU features Low failed!",
- 			return ret);
- 	smc_features_low = vega20_get_argument(hwmgr);
- 	PP_ASSERT_WITH_CODE((ret = vega20_send_msg_to_smc(hwmgr,
- 			PPSMC_MSG_GetEnabledSmuFeaturesHigh)) == 0,
--			"[GetEnabledSMCFeatures] Attemp to get SMU features High failed!",
-+			"[GetEnabledSMCFeatures] Attempt to get SMU features High failed!",
- 			return ret);
- 	smc_features_high = vega20_get_argument(hwmgr);
- 
--- 
-2.24.0
+What has happened is that [ Leo ] Li Yang suggested me to change the
+compatible in v1 of this patch here:
+https://patchwork.ozlabs.org/patch/1064015/
 
+Not having any argument to oppose (and not much experience, to be
+frank) I complied and sent out a 2-patch v2 series:
+https://patchwork.ozlabs.org/patch/1084366/
+https://patchwork.ozlabs.org/patch/1084365/
+
+And Shawn squashed them when merging them, "to get it land as fix a bit easier".
+
+Judging the code in more detail, you are indeed correct that the
+"gianfar" compatible was the right one for this hardware. The
+difference being the "get_tbipa" function which calculates the address
+of the TBIPA register automatically, if not explicitly specified.
+However, for ls1021a.dtsi, the TBIPA register _is_ explicitly
+specified via the second "reg" (<0x0 0x2d10030 0x0 0x4>), so the
+"get_tbipa" function is dead code for LS1021A. Therefore, luckily no
+harm was done.
+
+I would suggest that this patch continues to be applied as-is to the
+stable kernels, just for the sake of not having divergent patches
+across branches, and I'll send a new one that turns the compatible
+back into "gianfar".
+
+> Best regards,
+>                                                                         Pavel
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+Thanks,
+-Vladimir
