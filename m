@@ -1,147 +1,91 @@
-Return-Path: <SRS0=1j9/=3N=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F24DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084E1C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 00:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3110A20727
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jan 2020 23:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14332072C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 00:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1e/egiv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wS2WUDV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387494AbgAXX7h (ORCPT
+        id S1729604AbgAYACn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 18:59:37 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41116 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729236AbgAXX7h (ORCPT
+        Fri, 24 Jan 2020 19:02:43 -0500
+Received: from mail-pl1-f179.google.com ([209.85.214.179]:37949 "EHLO
+        mail-pl1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729367AbgAYACm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 18:59:37 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x8so1924508pgk.8;
-        Fri, 24 Jan 2020 15:59:36 -0800 (PST)
+        Fri, 24 Jan 2020 19:02:42 -0500
+Received: by mail-pl1-f179.google.com with SMTP id t6so1432908plj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 16:02:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JUzqmVJFhWwG8HFditFQcO6aapkFWx5TjN8Oa2FhIrM=;
-        b=F1e/egivRVdyTOIgkP8CkoPKuL7Q9M71wcKl7ClErYRfa1GDI9I76QTYf+ygljM75L
-         A4p4dRCsSEsvQJWuYZfpg1sG5Epv1ehn08bNXuaY6ViHLqURPQ06NVfs3acqN6+CnlnF
-         IskPUTPnGZQFmutMrOCI0T/c1mXlEQ38PK2e6XvWc7Mq60VR9Kimi40c+490PF7gB4Qo
-         dCRNpPR7y/0YWyr5hjJcc6ibw2rY/GMTjJjbMsPf+8s9i0/vFjamNYA3iqAyIRBhE/uk
-         nBmMoGoqF+pNZUd9xka3D5vpEB4TcVXDqmcYWzAyRd7MTBImqzHkX4qM5Xkwkxz2nnJ8
-         8rXA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ynnd2SGOMXK9FL1OzGl6AxrSQz4LtuhsqKDnn7ScKAo=;
+        b=wS2WUDV/7szOKx4WVC47xljWaVANkCKfZcuv4uHhbjYz8UVMGzJv/WtL/ZUOKDQdBT
+         eYKLwXmid6jl1YRudXdCBMuqnvIseNtqbAjpFg1AAUB32FlW/sheZ1UyRwpm2Ae32/N0
+         REx3X4Shn79Y4OBsMWBOIC6Ci9/Zwn9BYqS1hkbN86VMoVePiyaNzCteKN1JK0MWbm7u
+         WkXiyWWM0y4updTQjFCJv2PU0aqyfDUWFH3MScocS5IBubO89Gzjl7AlpVBYiSN+qJyL
+         8V87+5EtGpLiSJuC9XOx18ttmdsqMY/at42xiNqJ04q7X9QND3wLHDohtF8JFIZ1jQcK
+         kvWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JUzqmVJFhWwG8HFditFQcO6aapkFWx5TjN8Oa2FhIrM=;
-        b=SOgKuXsdAlOR1u9MfucYhkrBDmi/l0xCQ8OK3MDdz5YIJlGaAmCpg5QJLJ4eI2Rgki
-         ua/xbSMctwlP7dTk9zjzDiRM1UMT6sEiBVT8ujXPswhHmgAKer3NesvLSvuJp/UlZePV
-         ck6E/l3vc2v+U7amNLImEm+DDOJdDYdUbeHg2Zqq1ZZp2KEaimSIy5A2nwl8llSGi7bu
-         m2qNCgLAk/a8VS3wwCNDHPIP/0k0B9XVQScG8DM89y100BS5OCVhd88YIdBoaUkOEKjX
-         mmiIt8PPWi3njm54918yLZmCC4XmLM2fXFhvWWLeTWFJ8JyM0t8eMKjPi5vC9cJKU6y0
-         Fjyw==
-X-Gm-Message-State: APjAAAU1Xmhxr0lQMwuROYWGR2242MuJ1A1LX00kR2km3Bk0kPqDdxYj
-        ox1iZ/rlEd/tEnuvMnigxAKP+jQ9
-X-Google-Smtp-Source: APXvYqxvCowj6sS9W6qTOnidLRAzEdDePooYHcIK4YgYovq0XHgK1Ppz4ODLY66MbvlKJVmFxzAG3A==
-X-Received: by 2002:a62:1bc5:: with SMTP id b188mr5698687pfb.113.1579910375806;
-        Fri, 24 Jan 2020 15:59:35 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id l9sm7407244pgh.34.2020.01.24.15.59.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 15:59:35 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     kuba@kernel.org, edumazet@google.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM SYSTEMPORT
-        ETHERNET DRIVER), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] net: systemport: Do not block interrupts in TX reclaim
-Date:   Fri, 24 Jan 2020 15:59:30 -0800
-Message-Id: <20200124235930.640-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ynnd2SGOMXK9FL1OzGl6AxrSQz4LtuhsqKDnn7ScKAo=;
+        b=XVdw96F8+oprcllgiURDYVA62pWLwTsyh/UilAKks8nr3QJaDYwCYrhZkk8gHkfqNO
+         3ijfR/oNSUYU97B0X/dEHMc2VnWoeXmPvRmw4Rvierbcv2HQ/r/JPuitnjChrCe0ZrRD
+         pZwJxtJFf0ev8NrkhxyupK01CETX3A2BJsM0a9T0OWJFG4I4AxHxkqoMJqSmEDWr8Lum
+         5u9Ywe3fSY/bhbDJt75MJoNAkPsCmMcrW2ZwpveGylKlYeSPbctdCfV9eCn6TkPSXYPA
+         GvvVaBlKb/FXGthOBgRcQAj3fyQ8kmrRA/Xwx/lsSDdZMLywMro23ipjmTsIvWL0ANVU
+         HoMA==
+X-Gm-Message-State: APjAAAXT3PfMGzuysesGGrP/utsVxcp6yXQ9svlUwYVsQ/oa6KRgG4Nu
+        9oNxLD7AE7KNA8dZdY3QiSwVBlfn8zlU5Tyu4pW1JQ==
+X-Google-Smtp-Source: APXvYqyXmULqKveIYsTuaC/0YteujlFex6MeZFhH/+/P6TgnbeZ8qAKVrqmlm1erknjpKVF2xDqMtmfOVWrRbPLVHiU=
+X-Received: by 2002:a17:90a:c390:: with SMTP id h16mr2010910pjt.131.1579910561819;
+ Fri, 24 Jan 2020 16:02:41 -0800 (PST)
+MIME-Version: 1.0
+References: <20200124194507.34121-1-davidgow@google.com> <CAFd5g46Jym_HX+QmX8ffVYfL1KATNjs9U6sR1Qv9SoVLx5GKDg@mail.gmail.com>
+ <CABVgOSnVLyOAYMi2eFaOXtm96SdmrO8hmJ4f2gKbDJ7wS_8d5w@mail.gmail.com>
+In-Reply-To: <CABVgOSnVLyOAYMi2eFaOXtm96SdmrO8hmJ4f2gKbDJ7wS_8d5w@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 24 Jan 2020 16:02:30 -0800
+Message-ID: <CAFd5g45x3A2SdbUtZfGRGmpdEoe0BYsofRogyCXigR+xT_Jy=w@mail.gmail.com>
+Subject: Re: [PATCH] Fix linked-list KUnit test when run multiple times
+To:     David Gow <davidgow@google.com>
+Cc:     shuah <shuah@kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Maguire <alan.maguire@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to disable interrupts with a spin_lock_irqsave() in
-bcm_sysport_tx_poll() since we are in softIRQ context already. Leave
-interrupts enabled, thus giving a chance for the RX interrupts to be
-processed.
+On Fri, Jan 24, 2020 at 3:13 PM David Gow <davidgow@google.com> wrote:
+>
+> On Fri, Jan 24, 2020 at 2:01 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> > Oh good, I am glad we are getting rid of those static variables. (I
+> > thought we already dropped those - whoops.) I think this drops this
+> > last of them, can you confirm David?
+>
+> Yeah, this is the last of them.
+>
+> I vaguely recall a suggestion that it may be worth testing that the
+> LIST_HEAD() macro works with static, but as mentioned in the
+> description, the for_each_entry_* tests probably aren't the best place
+> to do that anyway...
 
-This now makes bcm_sysport_tx_reclaim() equivalent to
-bcm_sysport_tx_clean(), thus remove the former, and make
-bcm_sysport_tx_reclaim_all() to use the latter.
-
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/ethernet/broadcom/bcmsysport.c | 30 ++++++----------------
- 1 file changed, 8 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
-index f07ac0e0af59..dfff0657ce8f 100644
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -925,26 +925,6 @@ static unsigned int __bcm_sysport_tx_reclaim(struct bcm_sysport_priv *priv,
- 	return pkts_compl;
- }
- 
--/* Locked version of the per-ring TX reclaim routine */
--static unsigned int bcm_sysport_tx_reclaim(struct bcm_sysport_priv *priv,
--					   struct bcm_sysport_tx_ring *ring)
--{
--	struct netdev_queue *txq;
--	unsigned int released;
--	unsigned long flags;
--
--	txq = netdev_get_tx_queue(priv->netdev, ring->index);
--
--	spin_lock_irqsave(&ring->lock, flags);
--	released = __bcm_sysport_tx_reclaim(priv, ring);
--	if (released)
--		netif_tx_wake_queue(txq);
--
--	spin_unlock_irqrestore(&ring->lock, flags);
--
--	return released;
--}
--
- /* Locked version of the per-ring TX reclaim, but does not wake the queue */
- static void bcm_sysport_tx_clean(struct bcm_sysport_priv *priv,
- 				 struct bcm_sysport_tx_ring *ring)
-@@ -960,9 +940,15 @@ static int bcm_sysport_tx_poll(struct napi_struct *napi, int budget)
- {
- 	struct bcm_sysport_tx_ring *ring =
- 		container_of(napi, struct bcm_sysport_tx_ring, napi);
-+	struct bcm_sysport_priv *priv = ring->priv;
- 	unsigned int work_done = 0;
- 
--	work_done = bcm_sysport_tx_reclaim(ring->priv, ring);
-+	spin_lock(&ring->lock);
-+	work_done = __bcm_sysport_tx_reclaim(priv, ring);
-+	if (work_done)
-+		netif_tx_wake_queue(netdev_get_tx_queue(priv->netdev,
-+							ring->index));
-+	spin_unlock(&ring->lock);
- 
- 	if (work_done == 0) {
- 		napi_complete(napi);
-@@ -984,7 +970,7 @@ static void bcm_sysport_tx_reclaim_all(struct bcm_sysport_priv *priv)
- 	unsigned int q;
- 
- 	for (q = 0; q < priv->netdev->num_tx_queues; q++)
--		bcm_sysport_tx_reclaim(priv, &priv->tx_rings[q]);
-+		bcm_sysport_tx_clean(priv, &priv->tx_rings[q]);
- }
- 
- static int bcm_sysport_poll(struct napi_struct *napi, int budget)
--- 
-2.17.1
-
+Ah, I think I missed that. Makes sense.
