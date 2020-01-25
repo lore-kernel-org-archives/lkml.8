@@ -2,87 +2,107 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233DBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74305C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 006EB24684
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42751206D5
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:56:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="itKnjINO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgAYKrE (ORCPT
+        id S1726657AbgAYK4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:47:04 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44095 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgAYKmp (ORCPT
+        Sat, 25 Jan 2020 05:56:10 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38067 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgAYK4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 05:42:45 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ivItk-0008KA-TX; Sat, 25 Jan 2020 11:42:41 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 904891C1A72;
-        Sat, 25 Jan 2020 11:42:39 +0100 (CET)
-Date:   Sat, 25 Jan 2020 10:42:39 -0000
-From:   "tip-bot2 for Will Deacon" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] powerpc: Remove comment about read_barrier_depends()
-Cc:     Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Sat, 25 Jan 2020 05:56:10 -0500
+Received: by mail-lj1-f196.google.com with SMTP id w1so5480981ljh.5
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 02:56:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=SqbTjTM9cGAQLtR9udXUrVET7VibCzWALJm9pHODcU4=;
+        b=itKnjINOtfV/SlWBtsrVX+t0CqGRyh2YEz8ddbmAeOh/WSTFwY4y6Rtzx8uNBD097v
+         86kOFQLXBudCkEtN05tIk7kFdgJ2pvqebsWfbeHomXyATmRlhh2AuzQLcpidz1JtuHLD
+         tmllQ7xolnvwL7Ml7MJDDJ3oFx+7jEANC2j8y7P7crUUI2/td4wXQWwqP1uUM3V2Da5W
+         dQBj7SN73HMJLFhg74RzYTUDhZORPcg4XGO+nClmZriHILPzjsaIOm1TW2dEOJHQM3G5
+         2hgmqQFShEqr3IGg4SslsvEpDTaFOKEWRxkO4lb01ocLQMLI/aChBuEqWAfROx/NDxxH
+         p6LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=SqbTjTM9cGAQLtR9udXUrVET7VibCzWALJm9pHODcU4=;
+        b=e6u/Yqnoz/aNhBJnthvt/wSCqSOtPnxcy+K6Dkhf4VaF4h8X0MQJNzFWYjPgWq7zUs
+         z1qxDubCvikXkMP6YwNOuuRrQWdsuk6Xy13KmjrN7I1D5OQtc20abTdzR97tUbpSxbnL
+         la0purC7g4UjgMC4pONyAyO1HLvpzkg776Ry+8DAsrhOXwzyaUMzYooW6ogQAqY4uLcM
+         VkuySDvjVxJaPRX5UQP/eOoRwjV3p9e5AYslYhrSlm3dfk6E10LkWrRo+k3yYgKHKzem
+         ylSqDB053C+IVDKE/HcOOD5zNFPOJfaHoAzbZWwrHaFkCS4+Wo60NUo0R5HaVJv7E0Mq
+         UonA==
+X-Gm-Message-State: APjAAAX8veCEubCanaI/O4k1IgObMhjEI0vQcq890cdTBDcRUkxKUUnr
+        Xcuxf2hBgqewCZXfTOVvagQYpWFtONEpKtaMQRU94w==
+X-Google-Smtp-Source: APXvYqzcNibH5Fa8yhxwhQS5HqJwewF7GHTIcPvOKjg0p+55AdnHXaIqsA1B5JSLx+ifwZsMDZMMI6VZOQ81qugFysM=
+X-Received: by 2002:a2e:2a84:: with SMTP id q126mr4706282ljq.258.1579949768067;
+ Sat, 25 Jan 2020 02:56:08 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157994895940.396.635928895475003187.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 25 Jan 2020 11:55:57 +0100
+Message-ID: <CACRpkdZ746gURHOeNf3Wj3_7BVHtxjd9Hz2n7QTmqxEroZ0N7A@mail.gmail.com>
+Subject: [GIT PULL] pin control fix for v5.5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Boyan Ding <boyan.j.ding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/rcu branch of tip:
+Hi Linus,
 
-Commit-ID:     c7e9c01f928a0e7e467ec3efe1b56bc566678bae
-Gitweb:        https://git.kernel.org/tip/c7e9c01f928a0e7e467ec3efe1b56bc566678bae
-Author:        Will Deacon <will@kernel.org>
-AuthorDate:    Fri, 08 Nov 2019 17:01:18 
-Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Fri, 24 Jan 2020 10:33:52 -08:00
+here is a hopefully last pin control fix for the v5.5
+series fixing up interrupts on the Sunrisepoint.
 
-powerpc: Remove comment about read_barrier_depends()
+Please pull it in!
 
-'read_barrier_depends()' doesn't exist anymore so stop talking about it.
+Yours,
+Linus Walleij
 
-Signed-off-by: Will Deacon <will@kernel.org>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- arch/powerpc/include/asm/barrier.h | 2 --
- 1 file changed, 2 deletions(-)
+The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
 
-diff --git a/arch/powerpc/include/asm/barrier.h b/arch/powerpc/include/asm/barrier.h
-index fbe8df4..123adce 100644
---- a/arch/powerpc/include/asm/barrier.h
-+++ b/arch/powerpc/include/asm/barrier.h
-@@ -18,8 +18,6 @@
-  * mb() prevents loads and stores being reordered across this point.
-  * rmb() prevents loads being reordered across this point.
-  * wmb() prevents stores being reordered across this point.
-- * read_barrier_depends() prevents data-dependent loads being reordered
-- *	across this point (nop on PPC).
-  *
-  * *mb() variants without smp_ prefix must order all types of memory
-  * operations with one another. sync is the only instruction sufficient
+  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.5-5
+
+for you to fetch changes up to 319d5cce728cd70897a1306591a252258fc1428d:
+
+  Merge tag 'intel-pinctrl-v5.5-3' of
+git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into fixes
+(2020-01-17 09:07:26 +0100)
+
+----------------------------------------------------------------
+A single fix for the Intel Sunrisepoint pin controller
+that makes the interrupts work properly on it.
+
+----------------------------------------------------------------
+Boyan Ding (1):
+      pinctrl: sunrisepoint: Add missing Interrupt Status register offset
+
+Linus Walleij (1):
+      Merge tag 'intel-pinctrl-v5.5-3' of
+git://git.kernel.org/.../pinctrl/intel into fixes
+
+ drivers/pinctrl/intel/pinctrl-sunrisepoint.c | 1 +
+ 1 file changed, 1 insertion(+)
