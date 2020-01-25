@@ -2,131 +2,122 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FA3C35246
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 21:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB16AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 21:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1E320716
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 21:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579988751;
-	bh=keOy4GRQhyXRTP/uhH/nLH96KFaq+Sid+s3TTEP9b/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gS0B62gORx7gZf77XFO9zFzHqL2hJQm9PsQnbBVq6BzzC4YC4ubrEhsXhUZAwCFmj
-	 YxFS1vVBDkC8+CycJRESVdqpGpAy2wFC+wuKZVKQMj2zvWinjM48zrlpiCEFwetKvI
-	 dU1AU4zWQDbQY+nXzMGyEGbJa3wyqLOhGU1ssQ4M=
+	by mail.kernel.org (Postfix) with ESMTP id BCAD220716
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 21:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgAYVpv (ORCPT
+        id S1727440AbgAYVuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 16:45:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58940 "EHLO mail.kernel.org"
+        Sat, 25 Jan 2020 16:50:05 -0500
+Received: from mga12.intel.com ([192.55.52.136]:7059 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgAYVpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 16:45:50 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 922B720716;
-        Sat, 25 Jan 2020 21:45:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579988749;
-        bh=keOy4GRQhyXRTP/uhH/nLH96KFaq+Sid+s3TTEP9b/A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q8GDHX7MNYQlUe4RjDIHaJzDlzlesYuLGOvW8lO6ElTcfdwu/Jw/CYhQnQJeV9b0N
-         +DLEHIQnQVJ4BAewHnFPj20dEbTxrVb40917yLeKR8Cm1mIfmfFTLcI44gT6yxHQtY
-         n3hdH6FrK4KMNyoWc/1OANUSHq3dRcDypPED/kSI=
-Date:   Sat, 25 Jan 2020 16:45:48 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: Re: [PATCH][RESEND] Input: hyperv-keyboard: Add the support of
- hibernation
-Message-ID: <20200125214548.GA11467@sasha-vm>
-References: <1578350444-129991-1-git-send-email-decui@microsoft.com>
- <20200111162657.GJ1706@sasha-vm>
- <KU1P153MB01505A56BACA9DA4AF0E7BABBF370@KU1P153MB0150.APCP153.PROD.OUTLOOK.COM>
- <HK0P153MB01489C2ABCFF40822EC8B695BF090@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+        id S1726780AbgAYVuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 16:50:05 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jan 2020 13:50:05 -0800
+X-IronPort-AV: E=Sophos;i="5.70,363,1574150400"; 
+   d="scan'208";a="298427377"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jan 2020 13:50:05 -0800
+Date:   Sat, 25 Jan 2020 13:50:03 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v15] x86/split_lock: Enable split lock detection by kernel
+Message-ID: <20200125215003.GB17914@agluck-desk2.amr.corp.intel.com>
+References: <20200122185514.GA16010@agluck-desk2.amr.corp.intel.com>
+ <20200122224245.GA2331824@rani.riverdale.lan>
+ <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
+ <20200123004507.GA2403906@rani.riverdale.lan>
+ <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com>
+ <20200123044514.GA2453000@rani.riverdale.lan>
+ <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
+ <87h80kmta4.fsf@nanos.tec.linutronix.de>
+ <20200125024727.GA32483@agluck-desk2.amr.corp.intel.com>
+ <20200125212524.GA538225@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <HK0P153MB01489C2ABCFF40822EC8B695BF090@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200125212524.GA538225@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 01:59:03AM +0000, Dexuan Cui wrote:
->> From: linux-hyperv-owner@vger.kernel.org
->> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Dexuan Cui
->> Sent: Wednesday, January 15, 2020 11:53 AM
->> > ...
->> > On Mon, Jan 06, 2020 at 02:40:44PM -0800, Dexuan Cui wrote:
->> > >Add suspend() and resume() functions so the Hyper-V virtual keyboard
->> > >can participate in VM hibernation.
->> > >
->> > >Note that the keyboard is a "wakeup" device that could abort an in-progress
->> > >hibernation if there is keyboard event.  No attempt is made to suppress
->> > this
->> > >behavior.  If desired, a sysadmin can disable the keyboard as a wakeup
->> > device
->> > >using standard mechanisms such as:
->> > >
->> > >echo disabled >
->> > /sys/bus/vmbus/drivers/hyperv_keyboard/XXX/power/wakeup
->> > >(where XXX is the device's GUID)
->> > >
->> > >Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
->> > >Signed-off-by: Dexuan Cui <decui@microsoft.com>
->> > >---
->> > >
->> > >This is a RESEND of https://lkml.org/lkml/2019/11/24/115 .
->> >
->> > >Please review.
->> > >
->> > >If it looks good, Sasha Levin, can you please pick it up via the
->> > >hyperv/linux.git tree, as you did last time for this driver?
->> >
->> > This will need an ack from the input driver maintainers, unless they
->> > want to give a blanket ack to this type of patches.
->> >
->> > Thanks,
->> > Sasha
->>
->> Hi Dmitry,
->> May I have your Acked-by for this patch?
->>
->> Thanks
->> -- Dexuan
->
->It looks Dmitry may be on leave and there is no ACK from any input driver
->maintainers. :-(
->
->Sasha, for this patch, I would suggest it may as well go directly through the
->Hyper-V tree because
->1. It's really small and it's a pure Hyper-V change.
->2. This is for a new functionality and it can not break any existing code.
->3. I'm pretty sure it can not cause any merge conflict or build failure.
->
->It's still wonderful to get an Ack or some comment from the input driver
->maintainer(s), so maybe let's wait more time (e.g. a week?) and then I
->suggust we proceed.
+On Sat, Jan 25, 2020 at 04:25:25PM -0500, Arvind Sankar wrote:
+> On Fri, Jan 24, 2020 at 06:47:27PM -0800, Luck, Tony wrote:
+> > I did find something with a new test. Applications that hit a
+> > split lock warn as expected. But if they sleep before they hit
+> > a new split lock, we get another warning. This is may be because
+> > I messed up when fixing a PeterZ typo in the untested patch.
+> > But I think there may have been bigger problems.
+> > 
+> > Context switch in V14 code did: 
+> > 
+> >        if (tifp & _TIF_SLD)
+> >                switch_to_sld(prev_p);
+> > 
+> > void switch_to_sld(struct task_struct *prev)
+> > {
+> >        __sld_msr_set(true);
+> >        clear_tsk_thread_flag(prev, TIF_SLD);
+> > }
+> > 
+> > Which re-enables split lock checking for the next process to run. But
+> > mysteriously clears the TIF_SLD bit on the previous task.
+> 
+> Did Peter mean to disable it only for the current timeslice and
+> re-enable it for the next time its scheduled?
 
-I'll queue it up via the hyperv tree, if anyone has any objections
-please let me know.
+He's seen and commented on this thread since I made this comment. So
+I'll assume not.  Things get really noisy on the console (even with
+the rate limit) if split lock detection is re-enabled after a context
+switch (my new test highlighted this!)
 
--- 
-Thanks,
-Sasha
+> > +void switch_to_sld(struct task_struct *prev, struct task_struct *next)
+> > +{
+> > +	bool prevflag = test_tsk_thread_flag(prev, TIF_SLD);
+> > +	bool nextflag = test_tsk_thread_flag(next, TIF_SLD);
+> > +
+> > +	/*
+> > +	 * If we are switching between tasks that have the same
+> > +	 * need for split lock checking, then the MSR is (probably)
+> > +	 * right (modulo the other thread messing with it.
+> > +	 * Otherwise look at whether the new task needs split
+> > +	 * lock enabled.
+> > +	 */
+> > +	if (prevflag != nextflag)
+> > +		__sld_msr_set(nextflag);
+> > +}
+> 
+> I might be missing something but shouldnt this be !nextflag given the
+> flag being unset is when the task wants sld?
+
+That logic is convoluted ... but Thomas showed me a much better
+way that is also much simpler ... so this code has gone now. The
+new version is far easier to read (argument is flags for the new task
+that we are switching to)
+
+void switch_to_sld(unsigned long tifn)
+{
+        __sld_msr_set(tifn & _TIF_SLD);
+}
+
+-Tony
