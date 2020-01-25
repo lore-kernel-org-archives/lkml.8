@@ -2,207 +2,156 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8E4C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A86C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1A12072C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3B32072C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:27:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knntdm2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgAYBX0 (ORCPT
+        id S1729701AbgAYB1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 20:23:26 -0500
-Received: from mga01.intel.com ([192.55.52.88]:57666 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAYBX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 20:23:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 17:23:25 -0800
-X-IronPort-AV: E=Sophos;i="5.70,359,1574150400"; 
-   d="scan'208";a="260436197"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jan 2020 17:23:25 -0800
-Subject: [PATCH v5] mm/memory_hotplug: Fix remove_memory() lockdep splat
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     akpm@linux-foundation.org
-Cc:     Vishal Verma <vishal.l.verma@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>, linux-mm@kvack.org,
+        Fri, 24 Jan 2020 20:27:19 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46880 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729195AbgAYB1S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jan 2020 20:27:18 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so4260201wrl.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 17:27:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=0UCdtd5wOKdRZl19WtlX7C/3OJnEBeAa3u4401/i9UY=;
+        b=knntdm2xU2O3mwFLzNREvWmtTcVAqdZBleeKIevo6sb2BmwH1fkitF2kGx6pM5sS09
+         eaTvS2wr8uNsyIJHiowTmDIKkeMG0xCJMH5UamWroahuC56mVb6GLj38TaN/cu+na6PB
+         ZrDPiwE9stbDI3TMnuATu49LW/zClWFpPbsNd19YKTkRi8xHn4+SnwTVMKjjteBAJvtP
+         Ir3Gh5/uCr3nPfaSs8Hv2QJwuosBqNxzIQlsRBj+ZcGZ/twPuq6x5MTgQeXGQhIDDBo2
+         CFixJE70RTiaPPCw/YfA0MHlEuSW5J5i4coiwXz0YSbmE81OifcQG6FQoikFiQHY4Q7B
+         UImw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=0UCdtd5wOKdRZl19WtlX7C/3OJnEBeAa3u4401/i9UY=;
+        b=igtAZoVPy1mEglFX4JD4LOYSBXcfGTa4eZdiNQNnGG4Gla6iN6yD3KZLGjHjOpVS2A
+         fjaCzYXff3u+36pPKsh5fY9cgEgScQd185kq3HhUrOpJV3PAb27Z9G8oQBAHExmoEH2S
+         F4x/aMF0MJS4ZWEWH2ET78tLv1B030zuXvlpyigZSq8OMyDAiXIMDyjrvS6XsicPWXcy
+         IJIKz8IlormZaMBEnI3CvYDAomSL4ShCEB4/EXy84fKFZtKnT8laYF5LIZh2SuXi1ADU
+         4wf2FIH48M2eOUSBsV9tBuZcKXG8E4/z8rea0KYj8B+IGC8/IsKVbzbUx9kGSrxq6KUa
+         3rhg==
+X-Gm-Message-State: APjAAAUAV1XIQwSIOnGgn0zfXk+pggWy8KCiFxioPdVEk2DJN1tEXYtQ
+        dU1sngq/vO5ygps5oO2yUg==
+X-Google-Smtp-Source: APXvYqxfdLmXVGaWTb5Hbrc9hEuoZEqWPZ4wvZv4FeFUEhViyjDufOE+9kimn9bQ0CJLJsqeGuZQFQ==
+X-Received: by 2002:adf:fac1:: with SMTP id a1mr7025104wrs.376.1579915636703;
+        Fri, 24 Jan 2020 17:27:16 -0800 (PST)
+Received: from ninjahub.lan (host-92-15-174-87.as43234.net. [92.15.174.87])
+        by smtp.gmail.com with ESMTPSA id a62sm4496wmh.33.2020.01.24.17.27.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 17:27:15 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+X-Google-Original-From: Jules Irenge <maxx@ninjahub.org>
+Date:   Sat, 25 Jan 2020 01:26:58 +0000 (GMT)
+To:     Thomas Gleixner <tglx@linutronix.de>
+cc:     Jules Irenge <jbi.octave@gmail.com>, boqun.feng@gmail.com,
         linux-kernel@vger.kernel.org
-Date:   Fri, 24 Jan 2020 17:07:21 -0800
-Message-ID: <157991441887.2763922.4770790047389427325.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+Subject: Re: [PATCH 1/3] time: Add missing annotation to
+ lock_hrtimer_base()
+In-Reply-To: <87d0b8mry4.fsf@nanos.tec.linutronix.de>
+Message-ID: <alpine.LFD.2.21.2001250115550.8426@ninjahub.org>
+References: <cover.1579893447.git.jbi.octave@gmail.com> <31c31ca2d78d9368d38e1a5909bc0c9a7be5dc98.1579893447.git.jbi.octave@gmail.com> <87d0b8mry4.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The daxctl unit test for the dax_kmem driver currently triggers the
-(false positive) lockdep splat below. It results from the fact that
-remove_memory_block_devices() is invoked under the mem_hotplug_lock()
-causing lockdep entanglements with cpu_hotplug_lock() and sysfs (kernfs
-active state tracking). It is a false positive because the sysfs
-attribute path triggering the memory remove is not the same attribute
-path associated with memory-block device.
 
-sysfs_break_active_protection() is not applicable since there is no real
-deadlock conflict, instead move memory-block device removal outside the
-lock. The mem_hotplug_lock() is not needed to synchronize the
-memory-block device removal vs the page online state, that is already
-handled by lock_device_hotplug(). Specifically, lock_device_hotplug() is
-sufficient to allow try_remove_memory() to check the offline state of
-the memblocks and be assured that any in progress online attempts are
-flushed / blocked by kernfs_drain() / attribute removal.
-
-The add_memory() path safely creates memblock devices under the
-mem_hotplug_lock(). There is no kernfs active state synchronization in
-the memblock device_register() path, so nothing to fix there.
-
-This change is only possible thanks to the recent change that refactored
-memory block device removal out of arch_remove_memory() (commit
-4c4b7f9ba948 mm/memory_hotplug: remove memory block devices before
-arch_remove_memory()), and David's due diligence tracking down the
-guarantees afforded by kernfs_drain(). Not flagged for -stable since
-this only impacts ongoing development and lockdep validation, not a
-runtime issue.
-
-    ======================================================
-    WARNING: possible circular locking dependency detected
-    5.5.0-rc3+ #230 Tainted: G           OE
-    ------------------------------------------------------
-    lt-daxctl/6459 is trying to acquire lock:
-    ffff99c7f0003510 (kn->count#241){++++}, at: kernfs_remove_by_name_ns+0x41/0x80
-
-    but task is already holding lock:
-    ffffffffa76a5450 (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x20/0xe0
-
-    which lock already depends on the new lock.
-
-
-    the existing dependency chain (in reverse order) is:
-
-    -> #2 (mem_hotplug_lock.rw_sem){++++}:
-           __lock_acquire+0x39c/0x790
-           lock_acquire+0xa2/0x1b0
-           get_online_mems+0x3e/0xb0
-           kmem_cache_create_usercopy+0x2e/0x260
-           kmem_cache_create+0x12/0x20
-           ptlock_cache_init+0x20/0x28
-           start_kernel+0x243/0x547
-           secondary_startup_64+0xb6/0xc0
-
-    -> #1 (cpu_hotplug_lock.rw_sem){++++}:
-           __lock_acquire+0x39c/0x790
-           lock_acquire+0xa2/0x1b0
-           cpus_read_lock+0x3e/0xb0
-           online_pages+0x37/0x300
-           memory_subsys_online+0x17d/0x1c0
-           device_online+0x60/0x80
-           state_store+0x65/0xd0
-           kernfs_fop_write+0xcf/0x1c0
-           vfs_write+0xdb/0x1d0
-           ksys_write+0x65/0xe0
-           do_syscall_64+0x5c/0xa0
-           entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-    -> #0 (kn->count#241){++++}:
-           check_prev_add+0x98/0xa40
-           validate_chain+0x576/0x860
-           __lock_acquire+0x39c/0x790
-           lock_acquire+0xa2/0x1b0
-           __kernfs_remove+0x25f/0x2e0
-           kernfs_remove_by_name_ns+0x41/0x80
-           remove_files.isra.0+0x30/0x70
-           sysfs_remove_group+0x3d/0x80
-           sysfs_remove_groups+0x29/0x40
-           device_remove_attrs+0x39/0x70
-           device_del+0x16a/0x3f0
-           device_unregister+0x16/0x60
-           remove_memory_block_devices+0x82/0xb0
-           try_remove_memory+0xb5/0x130
-           remove_memory+0x26/0x40
-           dev_dax_kmem_remove+0x44/0x6a [kmem]
-           device_release_driver_internal+0xe4/0x1c0
-           unbind_store+0xef/0x120
-           kernfs_fop_write+0xcf/0x1c0
-           vfs_write+0xdb/0x1d0
-           ksys_write+0x65/0xe0
-           do_syscall_64+0x5c/0xa0
-           entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-    other info that might help us debug this:
-
-    Chain exists of:
-      kn->count#241 --> cpu_hotplug_lock.rw_sem --> mem_hotplug_lock.rw_sem
-
-     Possible unsafe locking scenario:
-
-           CPU0                    CPU1
-           ----                    ----
-      lock(mem_hotplug_lock.rw_sem);
-                                   lock(cpu_hotplug_lock.rw_sem);
-                                   lock(mem_hotplug_lock.rw_sem);
-      lock(kn->count#241);
-
-     *** DEADLOCK ***
-
-No fixes tag as this has been a long standing issue that predated the
-addition of kernfs lockdep annotations.
-
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v4 [1]:
-- Drop the unnecessary consideration of mem->section_count.
-  kernfs_drain() + lock_device_hotplug() is sufficient protection
-  (David)
-
-[1]: http://lore.kernel.org/r/157869128062.2451572.4093315441083744888.stgit@dwillia2-desk3.amr.corp.intel.com
-
- mm/memory_hotplug.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 55ac23ef11c1..65ddaf3a2a12 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1763,8 +1763,6 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+Thanks Thomas. I really appreciate your feedback, I take good note and I 
+will send a different version with all the changes in reference to the 
+email. 
  
- 	BUG_ON(check_hotplug_memory_range(start, size));
- 
--	mem_hotplug_begin();
--
- 	/*
- 	 * All memory blocks must be offlined before removing memory.  Check
- 	 * whether all memory blocks in question are offline and return error
-@@ -1777,9 +1775,14 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
- 	/* remove memmap entry */
- 	firmware_map_remove(start, start + size, "System RAM");
- 
--	/* remove memory block devices before removing memory */
-+	/*
-+	 * Memory block device removal under the device_hotplug_lock is
-+	 * a barrier against racing online attempts.
-+	 */
- 	remove_memory_block_devices(start, size);
- 
-+	mem_hotplug_begin();
-+
- 	arch_remove_memory(nid, start, size, NULL);
- 	memblock_free(start, size);
- 	memblock_remove(start, size);
+Thanks again,
+Kind regards
+Jules
 
+On Fri, 24 Jan 2020, Thomas Gleixner wrote:
+
+> Jules,
+> 
+> Jules Irenge <jbi.octave@gmail.com> writes:
+> 
+> Please use the proper subsystem prefixes when sending patches.
+> 
+> git log --oneline path/to/file
+> 
+> gives you usally a pretty good hint.
+> 
+> > Sparse reports a warning at lock_hrtimer_base()
+> >
+> > |warning: context imbalance in lock_hrtimer_base() - wrong count at exit
+> 
+> This leading '|' is pointless
+> 
+> > |warning: context imbalance in hrtimer_start_range_ns() - unexpected unlock
+> > |warning: context imbalance in hrtimer_try_to_cancel() - unexpected unlock
+> > |warning: context imbalance in __hrtimer_get_remaining()
+> > |- unexpected unlock
+> 
+> How are the last 3 related to:
+> 
+> > Sparse reports a warning at lock_hrtimer_base()
+> 
+> ?
+> 
+> > To fix this , an __acquires(timer) annotation is added.
+> 
+>   Add the missing __acquires(timer) annotation.
+> 
+> Is precise and follows the recommendations of Documentation/process/...
+> 
+> > Given that lock_hrtimer_base() does actually call READ_ONCE(timer->base).
+> 
+> Given that the above sentence uses 'Given that' it should not terminate
+> right after explaining the 'Given'.
+> 
+> > This not only fixes the warnings but also improves on readability of
+> > the code.
+> 
+> I tend to disagree. In fact the annotation disturbes the reading flow
+> because it's on a separate line.
+> 
+> Can you please stop using this boilerplate which is neither helping
+> review nor giving someone who looks at the commit later on any useful
+> information?
+> 
+> Here is a suggestion for a change log for this:
+> 
+>   Sparse reports several warnings;
+>    warning: context imbalance in lock_hrtimer_base() - wrong count at exit
+>    warning: context imbalance in hrtimer_start_range_ns() - unexpected unlock
+>    warning: context imbalance in hrtimer_try_to_cancel() - unexpected unlock
+>    warning: context imbalance in __hrtimer_get_remaining()- unexpected unlock
+> 
+>   The root cause is a missing annotation of lock_hrtimer_base() which
+>   causes also the 'unexpected unlock' warnings.
+>   
+>   Add the missing __acquires(timer) annotation.
+> 
+> Hmm?
+> 
+> The other 2 patches of this series have similar issues. The futex
+> changelog is also horribly formatted.
+> 
+> Thanks,
+> 
+>         tglx
+> 
