@@ -2,249 +2,115 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7DBC35243
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E541C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCB820704
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2EC21556
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 15:42:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gG1F/y5z"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1Oo4aMLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgAYPji (ORCPT
+        id S1726657AbgAYPmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 10:39:38 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:44693 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726194AbgAYPji (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 10:39:38 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579966777; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=skCcqIIjztoVbtXxG3qEzRzmN8kZaLooAbtOL8xQJ9A=; b=gG1F/y5zyab/2j+uSSs+C9Uz4Z8pKNJnpc8gz9HwIed3sCfQ0t/i5LpxqPpQ9dDu6+p9JK+I
- U1uy4vbbgEaIzs+SGQXzOVdIZLBcDP2WgnkvhVwK3jBLDDrxcf4nRHrKywjE2Z2y1WOXeemf
- jWUK2cG37ufft9SpkkvfIHJtOuo=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2c6134.7f0607d6db20-smtp-out-n01;
- Sat, 25 Jan 2020 15:39:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CCB22C433A2; Sat, 25 Jan 2020 15:39:32 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.209.170.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36334C43383;
-        Sat, 25 Jan 2020 15:39:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36334C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add cpuidle low power states
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
-        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-References: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org>
- <1572408318-28681-2-git-send-email-mkshah@codeaurora.org>
- <20200121234452.GW89495@google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <948c046a-5e95-104c-0bc0-f3615edddeca@codeaurora.org>
-Date:   Sat, 25 Jan 2020 21:09:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Sat, 25 Jan 2020 10:42:53 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:54112 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgAYPmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 10:42:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=GIFd6ldOKuKN0YVghH/yGsAo5WnGw/L9zQieq8ttDrM=; b=1Oo4aMLVL4WOPNGNDBrnGbMuoK
+        tOgjZF5dIlA65CSCX1fIDj2OjTpaTZpUJHzukaHXhhvMO+ktwOLkSk3iXzrRoQZCyPIsJ4xv7HtuP
+        OCkPowh7h34IKzLSZlUaaKRdRNyZvFZgvC7XRXavUEa6LIfwkqBMteDgU8gam3ZkkcQM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ivNaC-00070X-Hn; Sat, 25 Jan 2020 16:42:48 +0100
+Date:   Sat, 25 Jan 2020 16:42:48 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bridge@lists.linux-foundation.org, jiri@resnulli.us,
+        ivecera@redhat.com, davem@davemloft.net, roopa@cumulusnetworks.com,
+        nikolay@cumulusnetworks.com, anirudh.venkataramanan@intel.com,
+        olteanv@gmail.com, jeffrey.t.kirsher@intel.com,
+        UNGLinuxDriver@microchip.com
+Subject: Re: [RFC net-next v3 09/10] net: bridge: mrp: Integrate MRP into the
+ bridge
+Message-ID: <20200125154248.GC18311@lunn.ch>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-10-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20200121234452.GW89495@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124161828.12206-10-horatiu.vultur@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On Fri, Jan 24, 2020 at 05:18:27PM +0100, Horatiu Vultur wrote:
+> To integrate MRP into the bridge, the bridge needs to do the following:
+> - initialized and destroy the generic netlink used by MRP
+> - detect if the MRP frame was received on a port that is part of a MRP ring. In
+>   case it was not, then forward the frame as usual, otherwise redirect the frame
+>   to the upper layer.
+> 
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  net/bridge/br.c         | 11 +++++++++++
+>  net/bridge/br_device.c  |  3 +++
+>  net/bridge/br_if.c      |  6 ++++++
+>  net/bridge/br_input.c   | 14 ++++++++++++++
+>  net/bridge/br_private.h | 14 ++++++++++++++
+>  5 files changed, 48 insertions(+)
+> 
+> diff --git a/net/bridge/br.c b/net/bridge/br.c
+> index b6fe30e3768f..d5e556eed4ba 100644
+> --- a/net/bridge/br.c
+> +++ b/net/bridge/br.c
+> @@ -344,6 +344,12 @@ static int __init br_init(void)
+>  	if (err)
+>  		goto err_out5;
+>  
+> +#ifdef CONFIG_BRIDGE_MRP
+> +	err = br_mrp_netlink_init();
+> +	if (err)
+> +		goto err_out6;
+> +#endif
 
-Yes, i will post new version very soon.
+Please try to avoid #ifdef's like this in C code. Add a stub function
+to br_private_mrp.h.
 
-Thanks,
+If you really cannot avoid #ifdef, please use #if IS_ENABLED(CONFIG_BRIDGE_MRP).
+That expands to
 
-Maulik
+	if (0) {
 
+        }
 
-On 1/22/2020 5:14 AM, Matthias Kaehlcke wrote:
-> Hi Maulik,
->
-> what is the state of this patch? Sudeep and Stephen had comments requesting
-> minor changes, do you plan to send a v2 soon?
->
-> Thanks
->
-> Matthias
->
-> On Wed, Oct 30, 2019 at 09:35:18AM +0530, Maulik Shah wrote:
->> Add device bindings for cpuidle states for cpu devices.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 78 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index fceac50..69d5e2c 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -70,6 +70,9 @@
->>   			compatible = "arm,armv8";
->>   			reg = <0x0 0x0>;
->>   			enable-method = "psci";
->> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
->> +					   &LITTLE_CPU_SLEEP_1
->> +					   &CLUSTER_SLEEP_0>;
->>   			next-level-cache = <&L2_0>;
->>   			L2_0: l2-cache {
->>   				compatible = "cache";
->> @@ -85,6 +88,9 @@
->>   			compatible = "arm,armv8";
->>   			reg = <0x0 0x100>;
->>   			enable-method = "psci";
->> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
->> +					   &LITTLE_CPU_SLEEP_1
->> +					   &CLUSTER_SLEEP_0>;
->>   			next-level-cache = <&L2_100>;
->>   			L2_100: l2-cache {
->>   				compatible = "cache";
->> @@ -97,6 +103,9 @@
->>   			compatible = "arm,armv8";
->>   			reg = <0x0 0x200>;
->>   			enable-method = "psci";
->> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
->> +					   &LITTLE_CPU_SLEEP_1
->> +					   &CLUSTER_SLEEP_0>;
->>   			next-level-cache = <&L2_200>;
->>   			L2_200: l2-cache {
->>   				compatible = "cache";
->> @@ -109,6 +118,9 @@
->>   			compatible = "arm,armv8";
->>   			reg = <0x0 0x300>;
->>   			enable-method = "psci";
->> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
->> +					   &LITTLE_CPU_SLEEP_1
->> +					   &CLUSTER_SLEEP_0>;
->>   			next-level-cache = <&L2_300>;
->>   			L2_300: l2-cache {
->>   				compatible = "cache";
->> @@ -121,6 +133,9 @@
->>   			compatible = "arm,armv8";
->>   			reg = <0x0 0x400>;
->>   			enable-method = "psci";
->> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
->> +					   &LITTLE_CPU_SLEEP_1
->> +					   &CLUSTER_SLEEP_0>;
->>   			next-level-cache = <&L2_400>;
->>   			L2_400: l2-cache {
->>   				compatible = "cache";
->> @@ -133,6 +148,9 @@
->>   			compatible = "arm,armv8";
->>   			reg = <0x0 0x500>;
->>   			enable-method = "psci";
->> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
->> +					   &LITTLE_CPU_SLEEP_1
->> +					   &CLUSTER_SLEEP_0>;
->>   			next-level-cache = <&L2_500>;
->>   			L2_500: l2-cache {
->>   				compatible = "cache";
->> @@ -145,6 +163,9 @@
->>   			compatible = "arm,armv8";
->>   			reg = <0x0 0x600>;
->>   			enable-method = "psci";
->> +			cpu-idle-states = <&BIG_CPU_SLEEP_0
->> +					   &BIG_CPU_SLEEP_1
->> +					   &CLUSTER_SLEEP_0>;
->>   			next-level-cache = <&L2_600>;
->>   			L2_600: l2-cache {
->>   				compatible = "cache";
->> @@ -157,12 +178,69 @@
->>   			compatible = "arm,armv8";
->>   			reg = <0x0 0x700>;
->>   			enable-method = "psci";
->> +			cpu-idle-states = <&BIG_CPU_SLEEP_0
->> +					   &BIG_CPU_SLEEP_1
->> +					   &CLUSTER_SLEEP_0>;
->>   			next-level-cache = <&L2_700>;
->>   			L2_700: l2-cache {
->>   				compatible = "cache";
->>   				next-level-cache = <&L3_0>;
->>   			};
->>   		};
->> +
->> +		idle-states {
->> +			entry-method = "psci";
->> +
->> +			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
->> +				compatible = "arm,idle-state";
->> +				idle-state-name = "little-power-down";
->> +				arm,psci-suspend-param = <0x40000003>;
->> +				entry-latency-us = <350>;
->> +				exit-latency-us = <461>;
->> +				min-residency-us = <1890>;
->> +				local-timer-stop;
->> +			};
->> +
->> +			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
->> +				compatible = "arm,idle-state";
->> +				idle-state-name = "little-rail-power-down";
->> +				arm,psci-suspend-param = <0x40000004>;
->> +				entry-latency-us = <360>;
->> +				exit-latency-us = <531>;
->> +				min-residency-us = <3934>;
->> +				local-timer-stop;
->> +			};
->> +
->> +			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
->> +				compatible = "arm,idle-state";
->> +				idle-state-name = "big-power-down";
->> +				arm,psci-suspend-param = <0x40000003>;
->> +				entry-latency-us = <264>;
->> +				exit-latency-us = <621>;
->> +				min-residency-us = <952>;
->> +				local-timer-stop;
->> +			};
->> +
->> +			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
->> +				compatible = "arm,idle-state";
->> +				idle-state-name = "big-rail-power-down";
->> +				arm,psci-suspend-param = <0x40000004>;
->> +				entry-latency-us = <702>;
->> +				exit-latency-us = <1061>;
->> +				min-residency-us = <4488>;
->> +				local-timer-stop;
->> +			};
->> +
->> +			CLUSTER_SLEEP_0: cluster-sleep-0 {
->> +				compatible = "arm,idle-state";
->> +				idle-state-name = "cluster-power-down";
->> +				arm,psci-suspend-param = <0x400000F4>;
->> +				entry-latency-us = <3263>;
->> +				exit-latency-us = <6562>;
->> +				min-residency-us = <9987>;
->> +				local-timer-stop;
->> +			};
->> +		};
->>   	};
->>   
->>   	memory@80000000 {
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+So the compiler will compile it and then optimize it out. That gives
+us added benefit of build testing, we don't suddenly find the code no
+longer compiles when we enable the option.
+
+> --- a/net/bridge/br_input.c
+> +++ b/net/bridge/br_input.c
+> @@ -21,6 +21,9 @@
+>  #include <linux/rculist.h>
+>  #include "br_private.h"
+>  #include "br_private_tunnel.h"
+> +#ifdef CONFIG_BRIDGE_MRP
+> +#include "br_private_mrp.h"
+> +#endif
+
+It should always be safe to include a header file.
+
+   Andrew
