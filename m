@@ -7,38 +7,39 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2927FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208A9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F13DB24687
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0244C24687
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgAYKqV (ORCPT
+        id S1730155AbgAYKq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:46:21 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44168 "EHLO
+        Sat, 25 Jan 2020 05:46:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44149 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729235AbgAYKmz (ORCPT
+        with ESMTP id S1729190AbgAYKmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 05:42:55 -0500
+        Sat, 25 Jan 2020 05:42:52 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ivItw-0008Nv-HX; Sat, 25 Jan 2020 11:42:52 +0100
+        id 1ivIts-0008P6-Me; Sat, 25 Jan 2020 11:42:48 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1D2F61C1A78;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ED55D1C0105;
         Sat, 25 Jan 2020 11:42:44 +0100 (CET)
-Date:   Sat, 25 Jan 2020 10:42:43 -0000
+Date:   Sat, 25 Jan 2020 10:42:44 -0000
 From:   "tip-bot2 for Joel Fernandes (Google)" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Remove kfree_call_rcu_nobatch()
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+Subject: [tip: core/rcu] rcu: Add multiple in-flight batches of kfree_rcu() work
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157994896385.396.7647975391977110099.tip-bot2@tip-bot2>
+Message-ID: <157994896478.396.2239574946078408927.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,139 +55,150 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     189a6883dcf7fa70e17403ae4225c60ffc9e404b
-Gitweb:        https://git.kernel.org/tip/189a6883dcf7fa70e17403ae4225c60ffc9e404b
+Commit-ID:     0392bebebf26f09434e6c7ca4c09c014efeef76a
+Gitweb:        https://git.kernel.org/tip/0392bebebf26f09434e6c7ca4c09c014efeef76a
 Author:        Joel Fernandes (Google) <joel@joelfernandes.org>
-AuthorDate:    Fri, 30 Aug 2019 12:36:33 -04:00
+AuthorDate:    Thu, 19 Sep 2019 14:58:26 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
 CommitterDate: Fri, 24 Jan 2020 10:24:31 -08:00
 
-rcu: Remove kfree_call_rcu_nobatch()
+rcu: Add multiple in-flight batches of kfree_rcu() work
 
-Now that the kfree_rcu() special-casing has been removed from tree RCU,
-this commit removes kfree_call_rcu_nobatch() since it is no longer needed.
+During testing, it was observed that amount of memory consumed due
+kfree_rcu() batching is 300-400MB. Previously we had only a single
+head_free pointer pointing to the list of rcu_head(s) that are to be
+freed after a grace period. Until this list is drained, we cannot queue
+any more objects on it since such objects may not be ready to be
+reclaimed when the worker thread eventually gets to drainin g the
+head_free list.
 
+We can do better by maintaining multiple lists as done by this patch.
+Testing shows that memory consumption came down by around 100-150MB with
+just adding another list. Adding more than 1 additional list did not
+show any improvement.
+
+Suggested-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+[ paulmck: Code style and initialization handling. ]
+[ paulmck: Fix field name, reported by kbuild test robot <lkp@intel.com>. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  4 +----
- include/linux/rcutiny.h                         |  5 +----
- include/linux/rcutree.h                         |  1 +-
- kernel/rcu/rcuperf.c                            | 10 +---------
- kernel/rcu/tree.c                               | 18 +++-------------
- 5 files changed, 5 insertions(+), 33 deletions(-)
+ kernel/rcu/tree.c | 51 +++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 39 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 3ce270b..ed83d6d 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3991,10 +3991,6 @@
- 			Number of loops doing rcuperf.kfree_alloc_num number
- 			of allocations and frees.
- 
--	rcuperf.kfree_no_batch= [KNL]
--			Use the non-batching (less efficient) version of kfree_rcu().
--			This is useful for comparing with the batched version.
--
- 	rcuperf.nreaders= [KNL]
- 			Set number of RCU readers.  The value -1 selects
- 			N, where N is the number of CPUs.  A value
-diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-index 1bd166a..b2b2dc9 100644
---- a/include/linux/rcutiny.h
-+++ b/include/linux/rcutiny.h
-@@ -39,11 +39,6 @@ static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	call_rcu(head, func);
- }
- 
--static inline void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func)
--{
--	call_rcu(head, func);
--}
--
- void rcu_qs(void);
- 
- static inline void rcu_softirq_qs(void)
-diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
-index 6a65d3a..2f787b9 100644
---- a/include/linux/rcutree.h
-+++ b/include/linux/rcutree.h
-@@ -34,7 +34,6 @@ static inline void rcu_virt_note_context_switch(int cpu)
- 
- void synchronize_rcu_expedited(void);
- void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
--void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func);
- 
- void rcu_barrier(void);
- bool rcu_eqs_special_set(int cpu);
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index c1e25fd..da94b89 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -593,7 +593,6 @@ rcu_perf_shutdown(void *arg)
- torture_param(int, kfree_nthreads, -1, "Number of threads running loops of kfree_rcu().");
- torture_param(int, kfree_alloc_num, 8000, "Number of allocations and frees done in an iteration.");
- torture_param(int, kfree_loops, 10, "Number of loops doing kfree_alloc_num allocations and frees.");
--torture_param(int, kfree_no_batch, 0, "Use the non-batching (slower) version of kfree_rcu().");
- 
- static struct task_struct **kfree_reader_tasks;
- static int kfree_nrealthreads;
-@@ -632,14 +631,7 @@ kfree_perf_thread(void *arg)
- 			if (!alloc_ptr)
- 				return -ENOMEM;
- 
--			if (!kfree_no_batch) {
--				kfree_rcu(alloc_ptr, rh);
--			} else {
--				rcu_callback_t cb;
--
--				cb = (rcu_callback_t)(unsigned long)offsetof(struct kfree_obj, rh);
--				kfree_call_rcu_nobatch(&(alloc_ptr->rh), cb);
--			}
-+			kfree_rcu(alloc_ptr, rh);
- 		}
- 
- 		cond_resched();
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index a8dd612..31d2d92 100644
+index 6106b9e..a40fd58 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -2763,8 +2763,10 @@ static void kfree_rcu_work(struct work_struct *work)
- 		rcu_lock_acquire(&rcu_callback_map);
- 		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
+@@ -2686,12 +2686,25 @@ EXPORT_SYMBOL_GPL(call_rcu);
  
--		/* Could be possible to optimize with kfree_bulk in future */
--		kfree((void *)head - offset);
-+		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset))) {
-+			/* Could be optimized with kfree_bulk() in future. */
-+			kfree((void *)head - offset);
+ /* Maximum number of jiffies to wait before draining a batch. */
+ #define KFREE_DRAIN_JIFFIES (HZ / 50)
++#define KFREE_N_BATCHES 2
+ 
+ /**
+- * struct kfree_rcu_cpu - batch up kfree_rcu() requests for RCU grace period
++ * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
+  * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
++ * @head_free: List of kfree_rcu() objects waiting for a grace period
++ * @krcp: Pointer to @kfree_rcu_cpu structure
++ */
++
++struct kfree_rcu_cpu_work {
++	struct rcu_work rcu_work;
++	struct rcu_head *head_free;
++	struct kfree_rcu_cpu *krcp;
++};
++
++/**
++ * struct kfree_rcu_cpu - batch up kfree_rcu() requests for RCU grace period
+  * @head: List of kfree_rcu() objects not yet waiting for a grace period
+- * @head_free: List of kfree_rcu() objects already waiting for a grace period
++ * @krw_arr: Array of batches of kfree_rcu() objects waiting for a grace period
+  * @lock: Synchronize access to this structure
+  * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
+  * @monitor_todo: Tracks whether a @monitor_work delayed work is pending
+@@ -2703,9 +2716,8 @@ EXPORT_SYMBOL_GPL(call_rcu);
+  * the interactions with the slab allocators.
+  */
+ struct kfree_rcu_cpu {
+-	struct rcu_work rcu_work;
+ 	struct rcu_head *head;
+-	struct rcu_head *head_free;
++	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
+ 	spinlock_t lock;
+ 	struct delayed_work monitor_work;
+ 	bool monitor_todo;
+@@ -2723,11 +2735,14 @@ static void kfree_rcu_work(struct work_struct *work)
+ 	unsigned long flags;
+ 	struct rcu_head *head, *next;
+ 	struct kfree_rcu_cpu *krcp;
++	struct kfree_rcu_cpu_work *krwp;
+ 
+-	krcp = container_of(to_rcu_work(work), struct kfree_rcu_cpu, rcu_work);
++	krwp = container_of(to_rcu_work(work),
++			    struct kfree_rcu_cpu_work, rcu_work);
++	krcp = krwp->krcp;
+ 	spin_lock_irqsave(&krcp->lock, flags);
+-	head = krcp->head_free;
+-	krcp->head_free = NULL;
++	head = krwp->head_free;
++	krwp->head_free = NULL;
+ 	spin_unlock_irqrestore(&krcp->lock, flags);
+ 
+ 	// List "head" is now private, so traverse locklessly.
+@@ -2747,17 +2762,25 @@ static void kfree_rcu_work(struct work_struct *work)
+  */
+ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+ {
++	int i;
++	struct kfree_rcu_cpu_work *krwp = NULL;
++
+ 	lockdep_assert_held(&krcp->lock);
++	for (i = 0; i < KFREE_N_BATCHES; i++)
++		if (!krcp->krw_arr[i].head_free) {
++			krwp = &(krcp->krw_arr[i]);
++			break;
 +		}
  
- 		rcu_lock_release(&rcu_callback_map);
- 		cond_resched_tasks_rcu_qs();
-@@ -2836,16 +2838,6 @@ static void kfree_rcu_monitor(struct work_struct *work)
+ 	// If a previous RCU batch is in progress, we cannot immediately
+ 	// queue another one, so return false to tell caller to retry.
+-	if (krcp->head_free)
++	if (!krwp)
+ 		return false;
+ 
+-	krcp->head_free = krcp->head;
++	krwp->head_free = krcp->head;
+ 	krcp->head = NULL;
+-	INIT_RCU_WORK(&krcp->rcu_work, kfree_rcu_work);
+-	queue_rcu_work(system_wq, &krcp->rcu_work);
++	INIT_RCU_WORK(&krwp->rcu_work, kfree_rcu_work);
++	queue_rcu_work(system_wq, &krwp->rcu_work);
+ 	return true;
  }
  
- /*
-- * This version of kfree_call_rcu does not do batching of kfree_rcu() requests.
-- * Used only by rcuperf torture test for comparison with kfree_rcu_batch().
-- */
--void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func)
--{
--	__call_rcu(head, func);
--}
--EXPORT_SYMBOL_GPL(kfree_call_rcu_nobatch);
--
--/*
-  * Queue a request for lazy invocation of kfree() after a grace period.
-  *
-  * Each kfree_call_rcu() request is added to a batch. The batch will be drained
-@@ -2864,8 +2856,6 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	unsigned long flags;
- 	struct kfree_rcu_cpu *krcp;
+@@ -2863,7 +2886,8 @@ void __init kfree_rcu_scheduler_running(void)
+ 			continue;
+ 		}
+ 		krcp->monitor_todo = true;
+-		schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
++		schedule_delayed_work_on(cpu, &krcp->monitor_work,
++					 KFREE_DRAIN_JIFFIES);
+ 		spin_unlock_irqrestore(&krcp->lock, flags);
+ 	}
+ }
+@@ -3732,11 +3756,14 @@ struct workqueue_struct *rcu_par_gp_wq;
+ static void __init kfree_rcu_batch_init(void)
+ {
+ 	int cpu;
++	int i;
  
--	head->func = func;
--
- 	local_irq_save(flags);	// For safely calling this_cpu_ptr().
- 	krcp = this_cpu_ptr(&krc);
- 	if (krcp->initialized)
+ 	for_each_possible_cpu(cpu) {
+ 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+ 
+ 		spin_lock_init(&krcp->lock);
++		for (i = 0; i < KFREE_N_BATCHES; i++)
++			krcp->krw_arr[i].krcp = krcp;
+ 		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
+ 		krcp->initialized = true;
+ 	}
