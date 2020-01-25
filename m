@@ -2,108 +2,103 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ABEC35241
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780A2C35243
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 09:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621352077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E3C2071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 09:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="aLDSmnkn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rvai70gM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAYItK (ORCPT
+        id S1728900AbgAYJAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 03:49:10 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41872 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgAYItJ (ORCPT
+        Sat, 25 Jan 2020 04:00:45 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39719 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgAYJAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 03:49:09 -0500
-Received: by mail-lj1-f194.google.com with SMTP id h23so5248564ljc.8
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 00:49:08 -0800 (PST)
+        Sat, 25 Jan 2020 04:00:45 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c84so1842663wme.4;
+        Sat, 25 Jan 2020 01:00:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JGAjdva52XclcmBAYiWTp7Sd6GB5NNj9om2nEpGZk4U=;
-        b=aLDSmnknhi9UiBMok0kuHJCnAZeY4uhtKYH/X+BORsVDr5YF+JcIFAAry3K+SLxJW9
-         slQTT3g2gR43PUn5n6+7pN2bDRtM4PQ8g7bQUbMK1erMENPyIZi36xwsGPEoMdIu25Cw
-         YxyoARbdk24rAXOrf8OY6A8FsQ9grxqvMTe2e3q5R55FmenLHXj8UnblpkoOSPC/3ZzI
-         JYSERj5m8SieDB3gs2qxHpS9IQdqqTZ3dL7us3qn8p9PIiBmmpJ7uwPVaigJPvkT3CJY
-         5z9ApOEs8SBEVmxdjcdmko0TPJ7nrt9VnQVHmyfVMinGmi5Hvbnfsjq8Z8wuayQGQUCR
-         slrg==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GchmmZAhlU8Co5U1q3zcxajpizhbMQGLMHtACB5nzyQ=;
+        b=Rvai70gMz3sVqPtPLTYrPnb42K/8SueeKq7npnqZMuKJnASRWGoDJoIj/A8Uaqa+Y1
+         1PDCNXIHKq/xACnbdflJjMo7wW1j4GV2Em+7qzXL7T0eeYB2vEjZXCkCWD1mqDVygRv9
+         MYRy37PbyKc9sL+szLOclJQiaDDuIxErBplqctLxJED+UAzz0Fm1F4vHf0dyNVeXjC9J
+         UiQjlaz76FPCjSngXHPSolZP2zHl+HHnMi9bURixE7NBMmSqRhhBp/FGL8ylmyeigraJ
+         CegQyplu9SK/MACWx4ZkEV/aroZr/UNOTKjNiMAgKxay1sHOOy+4OHQonX35nrdxJTut
+         4OsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=JGAjdva52XclcmBAYiWTp7Sd6GB5NNj9om2nEpGZk4U=;
-        b=Jp612DcAxAAlvL5P8Vk1fwjknOgTtLeHvpA8BB8R4Q9MG8R0PZkMc9uK/9hY7JKcRS
-         +M2lbWD9E0aOnv6yMyvACTPDwATkwB+iSugcJB4k4uR1jdfkVeLDKTn+saBiYwRpSXa3
-         jogJPW/KUlsxWuVNUty1HzInSlAYElacCVr29w5xSsUmUBQ49iLjGL41vTOTYyNPsLdY
-         uxZAN7KBPsjEgPagByfAzuuWsJP0qc3/IAySxPgJiJRlNCroYPhisKVC/DsmI+LVtMMv
-         +a8xnrObbINY8Dv7XXGiB/Td1W394sTip9DuNvZoFfIZnw2iRg8MawBBthRDhxNNP50y
-         kYZg==
-X-Gm-Message-State: APjAAAXVo9pB8jI2rNa32M1ri5MmR5n8xjrZp85xpe4juU/8E2nRodgR
-        /SX2ysuOdfK/04mZVU3iant0RQ==
-X-Google-Smtp-Source: APXvYqxB5+w6lkhCPG17xoLx9bc1dwUJrL5ZeRIdjTz9PZTEzoSIgRCEd7LlLdpXT5XwmkCrh4735A==
-X-Received: by 2002:a2e:9c85:: with SMTP id x5mr4772403lji.50.1579942147515;
-        Sat, 25 Jan 2020 00:49:07 -0800 (PST)
-Received: from ?IPv6:2a00:1fa0:4d4:a77b:25e8:958f:2b17:6e20? ([2a00:1fa0:4d4:a77b:25e8:958f:2b17:6e20])
-        by smtp.gmail.com with ESMTPSA id w71sm5005098lff.0.2020.01.25.00.49.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Jan 2020 00:49:06 -0800 (PST)
-Subject: Re: [PATCH] net: cxgb3_main: Add CAP_NET_ADMIN check to
- CHELSIO_GET_MEM
-To:     Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        security@kernel.org, ivansprundel@ioactive.com, vishal@chelsio.com
-References: <20200124094144.15831-1-mpe@ellerman.id.au>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <7a7d18d3-8c8d-af05-9aa0-fa54fa0dc0b7@cogentembedded.com>
-Date:   Sat, 25 Jan 2020 11:48:51 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=GchmmZAhlU8Co5U1q3zcxajpizhbMQGLMHtACB5nzyQ=;
+        b=B550Zhxo5m1kVLbTxp+QXjxfV1dm+v9fEBGBVUMZHZOh92GmrlTx3lKIDMh2ir8eiz
+         FGRDbtNFMHqn3Dzy4qG0tPlKTruVmYqh7eKcuaU4EGTZHzn3E1I7uODvQ2SN+cPre+aN
+         vT/2r7Mr3tI6D1Iu+v6Xv8+CKXLH+cpc4J37b91ip0vzwQnF0qe4mV5FTHkVgprJnX+X
+         otMwFcYC9eeaJ5WZiPtOsGazCX3Gag1x70PhCIZDXu39X1G6PY1V/PhGYLT14huWmEoc
+         /W9DcXKt6UxfSvncFz2IQRIEiL4zogdvdAAIkdUqhMd67TYtFn/4Nk2BzQBeUUFNp3S+
+         BKjQ==
+X-Gm-Message-State: APjAAAU06+IE7ACxBviogabFqdVGBVkP9Vw22Kjt9FS4NZMMQLIqc11W
+        Kz0uW6aazgJaOA2R4s5mp0rOh6ax
+X-Google-Smtp-Source: APXvYqwfIf3KOlD0xYres/MByZ2hWFZYxKFDhuoyIRk1vPfHTsjSVOYEMgdI2/iY6YAEAMEcQcv/vA==
+X-Received: by 2002:a1c:7718:: with SMTP id t24mr3450608wmi.119.1579942843388;
+        Sat, 25 Jan 2020 01:00:43 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id a5sm9866897wmb.37.2020.01.25.01.00.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jan 2020 01:00:42 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] io_uring: fix refcounting with OOM
+Date:   Sat, 25 Jan 2020 11:59:30 +0300
+Message-Id: <fa69cae513308ef3f681e13888a4f551c67ef3a2.1579942715.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200124094144.15831-1-mpe@ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+In case of out of memory the second argument of percpu_ref_put_many() in
+io_submit_sqes() may evaluate into "nr - (-EAGAIN)", that is clearly
+wrong.
 
-On 24.01.2020 12:41, Michael Ellerman wrote:
+Fixes: 2b85edfc0c90 ("io_uring: batch getting pcpu references")
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-> The cxgb3 driver for "Chelsio T3-based gigabit and 10Gb Ethernet
-> adapters" implements a custom ioctl as SIOCCHIOCTL/SIOCDEVPRIVATE in
-> cxgb_extension_ioctl().
-> 
-> One of the subcommands of the ioctl is CHELSIO_GET_MEM, which appears
-> to read memory directly out of the adapter and return it to userspace.
-> It's not entirely clear what the contents of the adapter memory
-> contains, but the assumption is that it shouldn't be accessible to all
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index a4b496815783..744e8a90b543 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4912,8 +4912,11 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 			break;
+ 	}
+ 
+-	if (submitted != nr)
+-		percpu_ref_put_many(&ctx->refs, nr - submitted);
++	if (unlikely(submitted != nr)) {
++		int ref_used = (submitted == -EAGAIN) ? 0 : submitted;
++
++		percpu_ref_put_many(&ctx->refs, nr - ref_used);
++	}
+ 
+ 	io_submit_end(ctx);
+ 	if (nr > IO_PLUG_THRESHOLD)
+-- 
+2.24.0
 
-    s/contains/is/? Else it sounds tautological. :-)
-
-> users.
-> 
-> So add a CAP_NET_ADMIN check to the CHELSIO_GET_MEM case. Put it after
-> the is_offload() check, which matches two of the other subcommands in
-> the same function which also check for is_offload() and CAP_NET_ADMIN.
-> 
-> Found by Ilja by code inspection, not tested as I don't have the
-> required hardware.
-> 
-> Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[...]
-
-MBR, Sergei
