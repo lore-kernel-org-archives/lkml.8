@@ -2,132 +2,101 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC22C35241
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACEBC35241
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124BB20880
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5202A2071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:48:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c/pnM4IE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dk0l57cF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgAYI2O (ORCPT
+        id S1728797AbgAYIoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 03:28:14 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58984 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgAYI2O (ORCPT
+        Sat, 25 Jan 2020 03:44:11 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34963 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgAYIoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 03:28:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Qc82lCRrXwn6oUZ7utDJ/FDR/bSN7Hxe0K62S7LoMcs=; b=c/pnM4IE7LfEQip7HXafaL7XE
-        5d5naylieAqWRurTEpMcJHqoP2UZ1XZpeyBKFJM5ri+AlqSPr4ZQu2cnpbtwFn3U4ZblZjA5mHqFR
-        cqthKMvWRAEeMA40WHE7Y377IUw8x+rY9ZJV5awgkZAOLZl/SXklu1mF57Gd6b5eFE11DEVq0Q7r8
-        wp5kKej8RI5c6imSBRAead9jpkgK80VpRChiNljzW06AnuA/Crq7r/JImgGaMQ/6eFpjoPYvIZfqT
-        673JDp20xpdFuRGlszfHnY43mB5sO1C37FMD79TNVJHdRsJf+EEZKtxD+sW7bBJeM9oEy72TCwhzK
-        P1DQk+f9w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ivGnL-0002YQ-D3; Sat, 25 Jan 2020 08:27:55 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 11F61980BB0; Sat, 25 Jan 2020 09:27:47 +0100 (CET)
-Date:   Sat, 25 Jan 2020 09:27:47 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        ying.huang@intel.com, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH v2 05/10] READ_ONCE: Enforce atomicity for
- {READ,WRITE}_ONCE() memory accesses
-Message-ID: <20200125082746.GT11457@worktop.programming.kicks-ass.net>
-References: <20200123153341.19947-1-will@kernel.org>
- <20200123153341.19947-6-will@kernel.org>
+        Sat, 25 Jan 2020 03:44:10 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so1790515plt.2
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 00:44:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Sg499Tfb3mohA4p0m6z4rC8Gw18lzl843VQiZsEcJYk=;
+        b=dk0l57cF9lRQaWGwIvxjXe+NoAH6ao/tNUFBd/bpqpCSWiIjuln2HYMQybiYS21HnU
+         IXF9wbTdpRCaxLd0ITc/LK8Y3RgXgYgAVm+pGDfy0n8Hg72ut6O+1B916MNpkiQpDRI1
+         sfg3rDCfNaUB1QGNROSBfbGaqrHKOFxRz+NW9Ga6EX8LRFAGQxZh1R5V3aS6OGF9ZLvr
+         IPoQZq/PkwUjMiGEGsQU9e/I+6SsRGbZDsREZJFZNY/Q5TeZbPtYGGgiWXlk8f5Tcohf
+         ug9fGjCLhuY1k6Snd5s63f0DSwFkIYUIlwhLiS1+l3tnZlWPt51tLdp/fgFpVeeS+BDN
+         MOLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Sg499Tfb3mohA4p0m6z4rC8Gw18lzl843VQiZsEcJYk=;
+        b=TPwk0OLbUN0ZDYnSauBZlANZyGGjeLqEqHTGCp+EgGueXhlSjxoqskj1wohQEIPCnf
+         X5AwtBjEKgAjVfVqORL4bLX5NV/UBDfTb5DDp6Ol2fj9USOn5RQfQiHhCNT6YaVCMhSw
+         mKI1cgQrxt1l0eVNKmP6wSj915YkLxCPBETnJDMRW9PCSmekhlrDkMgwdlHVQzR+2Jtt
+         JQO0IdyyLKWCgnw2Ux1L0gWq5HxnOCP+8HRq6XDlEeZjhk03OHg7wgRPK7fhvisOBCbf
+         v79L3zRk1DxYeDuE5npDUgLrP/COMH+AVa/j792T7r6luoyAB4WYyQicWd+YeIP8S0V6
+         L3Sg==
+X-Gm-Message-State: APjAAAVWZ3Ji4yoYNVynsxNexa83n0kH1L5Izg4b1BEtkRn+BKTtureW
+        pEisTVT78ROITv/pY6M501U=
+X-Google-Smtp-Source: APXvYqxLq5+2a/fDIqR8qQFe+R5NU9WyWT2LBE3BHKqfc/VYQFv7x8Qrw8QSq7Oj9w+//LR26z40Kw==
+X-Received: by 2002:a17:90a:8a12:: with SMTP id w18mr3725137pjn.68.1579941850044;
+        Sat, 25 Jan 2020 00:44:10 -0800 (PST)
+Received: from google.com ([123.201.163.7])
+        by smtp.gmail.com with ESMTPSA id w38sm9267986pgk.45.2020.01.25.00.44.07
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sat, 25 Jan 2020 00:44:09 -0800 (PST)
+Date:   Sat, 25 Jan 2020 14:14:03 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     vireshk@kernel.org, johan@kernel.org, elder@kernel.org,
+        gregkh@linuxfoundation.org, greybus-dev@lists.linaro.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] staging: greybus: bootrom: fix uninitialized variables
+Message-ID: <20200125084403.GA3386@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200123153341.19947-6-will@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.6.2-neo (NetBSD/sparc64)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 03:33:36PM +0000, Will Deacon wrote:
-> {READ,WRITE}_ONCE() cannot guarantee atomicity for arbitrary data sizes.
-> This can be surprising to callers that might incorrectly be expecting
-> atomicity for accesses to aggregate structures, although there are other
-> callers where tearing is actually permissable (e.g. if they are using
-> something akin to sequence locking to protect the access).
-> 
-> Linus sayeth:
-> 
->   | We could also look at being stricter for the normal READ/WRITE_ONCE(),
->   | and require that they are
->   |
->   | (a) regular integer types
->   |
->   | (b) fit in an atomic word
->   |
->   | We actually did (b) for a while, until we noticed that we do it on
->   | loff_t's etc and relaxed the rules. But maybe we could have a
->   | "non-atomic" version of READ/WRITE_ONCE() that is used for the
->   | questionable cases?
-> 
-> The slight snag is that we also have to support 64-bit accesses on 32-bit
-> architectures, as these appear to be widespread and tend to work out ok
-> if either the architecture supports atomic 64-bit accesses (x86, armv7)
-> or if the variable being accesses represents a virtual address and
-> therefore only requires 32-bit atomicity in practice.
-> 
-> Take a step in that direction by introducing a variant of
-> 'compiletime_assert_atomic_type()' and use it to check the pointer
-> argument to {READ,WRITE}_ONCE(). Expose __{READ,WRITE_ONCE}() variants
-> which are allowed to tear and convert the two broken callers over to the
-> new macros.
+fix uninitialized variables issue found using static code analysis tool
 
-The build robot is telling me we also need this for m68k; they have:
+(error) Uninitialized variable: offset
+(error) Uninitialized variable: size
 
-  arch/m68k/include/asm/page.h:typedef struct { unsigned long pmd[16]; } pmd_t;
-
-Commit 688272809fcce seems to suggest the below is actually wrong tho.
-
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
 ---
-diff --git a/mm/gup.c b/mm/gup.c
-index 7646bf993b25..62885dad5444 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -320,7 +320,7 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
- 	 * The READ_ONCE() will stabilize the pmdval in a register or
- 	 * on the stack so that it will stop changing under the code.
- 	 */
--	pmdval = READ_ONCE(*pmd);
-+	pmdval = __READ_ONCE(*pmd);
- 	if (pmd_none(pmdval))
- 		return no_page_table(vma, flags);
- 	if (pmd_huge(pmdval) && vma->vm_flags & VM_HUGETLB) {
-@@ -345,7 +345,7 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
- 				  !is_pmd_migration_entry(pmdval));
- 		if (is_pmd_migration_entry(pmdval))
- 			pmd_migration_entry_wait(mm, pmd);
--		pmdval = READ_ONCE(*pmd);
-+		pmdval = __READ_ONCE(*pmd);
- 		/*
- 		 * MADV_DONTNEED may convert the pmd to null because
- 		 * mmap_sem is held in read mode
+  drivers/staging/greybus/bootrom.c | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/greybus/bootrom.c b/drivers/staging/greybus/bootrom.c
+index a8efb86..9eabeb3 100644
+--- a/drivers/staging/greybus/bootrom.c
++++ b/drivers/staging/greybus/bootrom.c
+@@ -245,7 +245,7 @@ static int gb_bootrom_get_firmware(struct gb_operation *op)
+  	struct gb_bootrom_get_firmware_request *firmware_request;
+  	struct gb_bootrom_get_firmware_response *firmware_response;
+  	struct device *dev = &op->connection->bundle->dev;
+-	unsigned int offset, size;
++	unsigned int offset = 0, size = 0;
+  	enum next_request_type next_request;
+  	int ret = 0;
+  
+-- 
+1.9.1
 
