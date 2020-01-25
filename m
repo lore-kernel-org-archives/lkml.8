@@ -2,221 +2,280 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336C7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DBAC35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 02:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC972075D
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA13F2075D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 02:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AEcCXV25"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Xh0Rg6kE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387726AbgAYB7j (ORCPT
+        id S2387708AbgAYCLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 20:59:39 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31864 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387716AbgAYB7i (ORCPT
+        Fri, 24 Jan 2020 21:11:22 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5889 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387458AbgAYCLV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 20:59:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579917577;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Gg4F4a9mYRh+jpEKdgokjVZOb6/zcBp7qbgMSy5CMmc=;
-        b=AEcCXV25r/Hl+wRfmHzQmHTQvk+k9PbNj7IPAwZRizseC+yqLRKhZOylirJ7YGIruceETj
-        wiftXAVBiq2RJxpaGoIGT76MkgXCLjA88w8xnYc4gFHZu77/U0Ro63Ypo5i3rHnmJdaZwW
-        WWEsnHNBfkwoBo43d+nxTH5eoz4LT2s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-106-8lYgIV_PPT2LGxRzvacRzw-1; Fri, 24 Jan 2020 20:59:33 -0500
-X-MC-Unique: 8lYgIV_PPT2LGxRzvacRzw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A726F1882CC2;
-        Sat, 25 Jan 2020 01:59:30 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-124-92.rdu2.redhat.com [10.10.124.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 386EF1001B28;
-        Sat, 25 Jan 2020 01:59:28 +0000 (UTC)
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-To:     paulmck@kernel.org, Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200124222434.GA7196@paulmck-ThinkPad-P72>
- <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
- <20200125005713.GZ2935@paulmck-ThinkPad-P72>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
-Date:   Fri, 24 Jan 2020 20:59:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 24 Jan 2020 21:11:21 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2ba3b90003>; Fri, 24 Jan 2020 18:11:06 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 24 Jan 2020 18:11:20 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 24 Jan 2020 18:11:20 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Jan
+ 2020 02:11:20 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 25 Jan 2020 02:11:19 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e2ba3c60001>; Fri, 24 Jan 2020 18:11:19 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 2/3] mm/gup_benchmark: support pin_user_pages() and related calls
+Date:   Fri, 24 Jan 2020 18:11:14 -0800
+Message-ID: <20200125021115.731629-3-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200125021115.731629-1-jhubbard@nvidia.com>
+References: <20200125021115.731629-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200125005713.GZ2935@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579918266; bh=bGcDpEgcB5cYnm4qbdN92T2nBSPMa0aPySSlK6IkO1w=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=Xh0Rg6kEnzwn1N5KZSkdukVzRBN3Q5Bs+F+OmUpW52+IuStnQTm1YXJjQGvRSDG48
+         r6uIOug5DKYFruzE8Xfx8e1Iu/vq50hPQeponCiACYk4aKrEjeCcJuufpv6YkucN+M
+         uGpuag0y3TwsfMo0PVJf9dWSBMjw1fj8mP3GvLMWTJcbQFEv3MjhqMQVhUQFHEhaLd
+         6tHnepaTITLZ8bLkUPbWOJA0XrMkEnXQxI3V5XRXW8ZGWdvMNs2oobdYoakLMadSMk
+         IhJw5aLs/I3IK+GTtDuxbqY9tjvKsNgAzA8VrJipU01FZc74RZ5Sfr4XLYY58EmJFv
+         K5K548i4izJdA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/20 7:57 PM, Paul E. McKenney wrote:
-> On Fri, Jan 24, 2020 at 06:39:02PM -0500, Alex Kogan wrote:
->> Hi, Paul.
->>
->> Thanks for running those experiments!
->>
->>> On Jan 24, 2020, at 5:24 PM, Paul E. McKenney <paulmck@kernel.org> wr=
-ote:
->>>
->>> On Tue, Jan 14, 2020 at 10:59:15PM -0500, Alex Kogan wrote:
->>>> Minor changes from v8 based on feedback from Longman:
->>>> -----------------------------------------------------
->>>>
->>>> - Add __init to cna_configure_spin_lock_slowpath().
->>>>
->>>> - Fix the comment for cna_scan_main_queue().
->>>>
->>>> - Change the type of intra_node_handoff_threshold to unsigned int.
->>>>
->>>>
->>>> Summary
->>>> -------
->>>>
->>>> Lock throughput can be increased by handing a lock to a waiter on th=
-e
->>>> same NUMA node as the lock holder, provided care is taken to avoid
->>>> starvation of waiters on other NUMA nodes. This patch introduces CNA
->>>> (compact NUMA-aware lock) as the slow path for qspinlock. It is
->>>> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
->>>>
->>>> CNA is a NUMA-aware version of the MCS lock. Spinning threads are
->>>> organized in two queues, a main queue for threads running on the sam=
-e
->>>> node as the current lock holder, and a secondary queue for threads
->>>> running on other nodes. Threads store the ID of the node on which
->>>> they are running in their queue nodes. After acquiring the MCS lock =
-and
->>>> before acquiring the spinlock, the lock holder scans the main queue
->>>> looking for a thread running on the same node (pre-scan). If found (=
-call
->>>> it thread T), all threads in the main queue between the current lock
->>>> holder and T are moved to the end of the secondary queue.  If such T
->>>> is not found, we make another scan of the main queue after acquiring=
-=20
->>>> the spinlock when unlocking the MCS lock (post-scan), starting at th=
-e
->>>> node where pre-scan stopped. If both scans fail to find such T, the
->>>> MCS lock is passed to the first thread in the secondary queue. If th=
-e
->>>> secondary queue is empty, the MCS lock is passed to the next thread =
-in the
->>>> main queue. To avoid starvation of threads in the secondary queue, t=
-hose
->>>> threads are moved back to the head of the main queue after a certain
->>>> number of intra-node lock hand-offs.
->>>>
->>>> More details are available at https://urldefense.proofpoint.com/v2/u=
-rl?u=3Dhttps-3A__arxiv.org_abs_1810.05600&d=3DDwIBAg&c=3DRoP1YumCXCgaWHvl=
-ZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3DHvhk3F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK=
-4k&m=3D1KUGGZYTHnQ25fgRFppdNvpJfI0rOO_Usdu18RDu_14&s=3DF12nhHutwnPNt_TQ2E=
-LER0DhtsHlEI9EiW1nDPhm5-Y&e=3D <https://urldefense.proofpoint.com/v2/url?=
-u=3Dhttps-3A__arxiv.org_abs_1810.05600&d=3DDwIBAg&c=3DRoP1YumCXCgaWHvlZYR=
-8PZh8Bv7qIrMUB65eapI_JnE&r=3DHvhk3F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&=
-m=3D1KUGGZYTHnQ25fgRFppdNvpJfI0rOO_Usdu18RDu_14&s=3DF12nhHutwnPNt_TQ2ELER=
-0DhtsHlEI9EiW1nDPhm5-Y&e=3D> .
->>>>
->>>> The series applies on top of v5.5.0-rc6, commit b3a987b026.
->>>> Performance numbers are available in previous revisions
->>>> of the series.
->>>>
->>>> Further comments are welcome and appreciated.
->>> I ran this on a large system with a version of locktorture that was
->>> modified to print out the maximum and minimum per-CPU lock-acquisitio=
-n
->>> counts, and with CPU hotplug disabled.  I also modified the LOCK01 an=
-d
->>> LOCK04 scenarios to use 220 hardware threads.
->>>
->>> Here is what the test ended up with at the end of a one-hour run:
->>>
->>> LOCK01 (exclusive):
->>> Writes:  Total: 1241107333  Max/Min: 9206962/60902 ???  Fail: 0
->>>
->>> LOCK04 (rwlock):
->>> Writes:  Total: 232991963  Max/Min: 2631574/74582 ???  Fail: 0
->>> Reads :  Total: 216935386  Max/Min: 2735939/28665 ???  Fail: 0
->>>
->>> The "???" strings are printed because the ratio of maximum to minimum=
- exceeds
->>> a factor of two.
->> Is this what you expect / have seen with the existing qspinlock?
->>
->>> I also ran 30-minute runs on my laptop, which has 12 hardware threads=
-:
->>>
->>> LOCK01 (exclusive):
->>> Writes:  Total: 3992072782  Max/Min: 259368782/97231961 ???  Fail: 0
->>>
->>> LOCK04 (rwlock):
->>> Writes:  Total: 131063892  Max/Min: 13136206/5876157 ???  Fail: 0
->>> Reads :  Total: 144876801  Max/Min: 19999535/4873442 ???  Fail: 0
->> I assume the system above is multi-socket, but your laptop is probably=
- not?
->>
->> If that=E2=80=99s the case, CNA should not be enabled on your laptop (=
-grep
->> kernel logs for "Enabling CNA spinlock=E2=80=9D to be sure).
->>
->>> These also exceed the factor-of-two cutoff, but not as dramatically.
->>> The readers for the reader-writer lock fared worst, with a 4-to-1 rat=
-io.
->>>
->>> These tests did run within guest OSes.
->> So I really wonder if CNA was enabled here, or whether this is what yo=
-u get
->> with paravirt qspinlock.
->>
->>>  Is that configuration out of
->>> scope for this locking algorithm?  In addition (as might well also ha=
-ve
->>> been the case for the locktorture runs in your paper), these tests ru=
-n
->>> a pair of stress-test tasks for each hardware thread.
->>>
->>> Is this expected behavior?
->> The results do appear skewed a bit too much, but it would be helpful t=
-o know
->> what qspinlock we are looking at, and how they compare to the existing=
- qspinlock,
->> in case it is indeed CNA.
-> You called it!  I will play with QEMU's -numa argument to see if I can =
-get
-> CNA to run for me.  Please accept my apologies for the false alarm.
->
-> 							Thanx, Paul
->
-CNA is not currently supported in a VM guest simply because the numa
-information is not reliable. You will have to run it on baremetal to
-test it. Sorry for that.
+Up until now, gup_benchmark supported testing of the
+following kernel functions:
 
-Regards,
-Longman
+* get_user_pages(): via the '-U' command line option
+* get_user_pages_longterm(): via the '-L' command line option
+* get_user_pages_fast(): as the default (no options required)
+
+Add test coverage for the new corresponding pin_*() functions:
+
+* pin_user_pages_fast(): via the '-a' command line option
+* pin_user_pages():      via the '-b' command line option
+
+Also, add an option for clarity: '-u' for what is now (still) the
+default choice: get_user_pages_fast().
+
+Also, for the commands that set FOLL_PIN, verify that the pages
+really are dma-pinned, via the new is_dma_pinned() routine.
+Those commands are:
+
+    PIN_FAST_BENCHMARK     : calls pin_user_pages_fast()
+    PIN_BENCHMARK          : calls pin_user_pages()
+
+In between the calls to pin_*() and unpin_user_pages(),
+check each page: if page_dma_pinned() returns false, then
+WARN and return.
+
+Do this outside of the benchmark timestamps, so that it doesn't
+affect reported times.
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ mm/gup_benchmark.c                         | 70 ++++++++++++++++++++--
+ tools/testing/selftests/vm/gup_benchmark.c | 15 ++++-
+ 2 files changed, 79 insertions(+), 6 deletions(-)
+
+diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+index 8dba38e79a9f..3d5fb765e4e6 100644
+--- a/mm/gup_benchmark.c
++++ b/mm/gup_benchmark.c
+@@ -8,6 +8,8 @@
+ #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
+ #define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
+ #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
++#define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
++#define PIN_BENCHMARK		_IOWR('g', 5, struct gup_benchmark)
+=20
+ struct gup_benchmark {
+ 	__u64 get_delta_usec;
+@@ -19,6 +21,47 @@ struct gup_benchmark {
+ 	__u64 expansion[10];	/* For future use */
+ };
+=20
++static void put_back_pages(int cmd, struct page **pages, unsigned long nr_=
+pages)
++{
++	int i;
++
++	switch (cmd) {
++	case GUP_FAST_BENCHMARK:
++	case GUP_LONGTERM_BENCHMARK:
++	case GUP_BENCHMARK:
++		for (i =3D 0; i < nr_pages; i++)
++			put_page(pages[i]);
++		break;
++
++	case PIN_FAST_BENCHMARK:
++	case PIN_BENCHMARK:
++		unpin_user_pages(pages, nr_pages);
++		break;
++	}
++}
++
++static void verify_dma_pinned(int cmd, struct page **pages,
++			      unsigned long nr_pages)
++{
++	int i;
++	struct page *page;
++
++	switch (cmd) {
++	case PIN_FAST_BENCHMARK:
++	case PIN_BENCHMARK:
++		for (i =3D 0; i < nr_pages; i++) {
++			page =3D pages[i];
++			if (WARN(!page_dma_pinned(page),
++				 "pages[%d] is NOT dma-pinned\n", i)) {
++
++				dump_page(page, "gup_benchmark failure");
++				break;
++			}
++		}
++		break;
++	}
++}
++
+ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 		struct gup_benchmark *gup)
+ {
+@@ -66,6 +109,14 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 			nr =3D get_user_pages(addr, nr, gup->flags, pages + i,
+ 					    NULL);
+ 			break;
++		case PIN_FAST_BENCHMARK:
++			nr =3D pin_user_pages_fast(addr, nr, gup->flags,
++						 pages + i);
++			break;
++		case PIN_BENCHMARK:
++			nr =3D pin_user_pages(addr, nr, gup->flags, pages + i,
++					    NULL);
++			break;
+ 		default:
+ 			kvfree(pages);
+ 			ret =3D -EINVAL;
+@@ -78,15 +129,22 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 	}
+ 	end_time =3D ktime_get();
+=20
++	/* Shifting the meaning of nr_pages: now it is actual number pinned: */
++	nr_pages =3D i;
++
+ 	gup->get_delta_usec =3D ktime_us_delta(end_time, start_time);
+ 	gup->size =3D addr - gup->addr;
+=20
++	/*
++	 * Take an un-benchmark-timed moment to verify DMA pinned
++	 * state: print a warning if any non-dma-pinned pages are found:
++	 */
++	verify_dma_pinned(cmd, pages, nr_pages);
++
+ 	start_time =3D ktime_get();
+-	for (i =3D 0; i < nr_pages; i++) {
+-		if (!pages[i])
+-			break;
+-		put_page(pages[i]);
+-	}
++
++	put_back_pages(cmd, pages, nr_pages);
++
+ 	end_time =3D ktime_get();
+ 	gup->put_delta_usec =3D ktime_us_delta(end_time, start_time);
+=20
+@@ -105,6 +163,8 @@ static long gup_benchmark_ioctl(struct file *filep, uns=
+igned int cmd,
+ 	case GUP_FAST_BENCHMARK:
+ 	case GUP_LONGTERM_BENCHMARK:
+ 	case GUP_BENCHMARK:
++	case PIN_FAST_BENCHMARK:
++	case PIN_BENCHMARK:
+ 		break;
+ 	default:
+ 		return -EINVAL;
+diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/sel=
+ftests/vm/gup_benchmark.c
+index 389327e9b30a..43b4dfe161a2 100644
+--- a/tools/testing/selftests/vm/gup_benchmark.c
++++ b/tools/testing/selftests/vm/gup_benchmark.c
+@@ -18,6 +18,10 @@
+ #define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
+ #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
+=20
++/* Similar to above, but use FOLL_PIN instead of FOLL_GET. */
++#define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
++#define PIN_BENCHMARK		_IOWR('g', 5, struct gup_benchmark)
++
+ /* Just the flags we need, copied from mm.h: */
+ #define FOLL_WRITE	0x01	/* check pte is writable */
+=20
+@@ -40,8 +44,14 @@ int main(int argc, char **argv)
+ 	char *file =3D "/dev/zero";
+ 	char *p;
+=20
+-	while ((opt =3D getopt(argc, argv, "m:r:n:f:tTLUwSH")) !=3D -1) {
++	while ((opt =3D getopt(argc, argv, "m:r:n:f:abtTLUuwSH")) !=3D -1) {
+ 		switch (opt) {
++		case 'a':
++			cmd =3D PIN_FAST_BENCHMARK;
++			break;
++		case 'b':
++			cmd =3D PIN_BENCHMARK;
++			break;
+ 		case 'm':
+ 			size =3D atoi(optarg) * MB;
+ 			break;
+@@ -63,6 +73,9 @@ int main(int argc, char **argv)
+ 		case 'U':
+ 			cmd =3D GUP_BENCHMARK;
+ 			break;
++		case 'u':
++			cmd =3D GUP_FAST_BENCHMARK;
++			break;
+ 		case 'w':
+ 			write =3D 1;
+ 			break;
+--=20
+2.25.0
 
