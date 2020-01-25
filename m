@@ -2,81 +2,109 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3370DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 07:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1358DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 07:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A61820716
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 07:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCFED214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 07:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580024582;
+	bh=UcAPO1fkxYC4ytyKX1oTy8cKaRy2y2XXPJoZZhR3HRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fAobPMzBCP8Kqf9y+WbCV0jdkQbrhLH2Txl6D5IaYEmIsAJpEEBYkgRoMlncZgqh4
+	 5MeUKwjYdf1/h8ksQI7vFjQGjm0Mad68T4pXHVCrcrHkCwzR3Hvbrsns7P8yOmbsRf
+	 Nf4SZibfOWnpBRowJiO52yPYQ36cZ1aJmKg+1sT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgAZH0C (ORCPT
+        id S1729134AbgAZHnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 02:26:02 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:56611 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgAZH0C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 02:26:02 -0500
-Received: by mail-il1-f198.google.com with SMTP id i68so5137003ill.23
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 23:26:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=d0EAYYoFJs/j+ol20aGJxzlCRa5xPQMsZhQpp42dXF8=;
-        b=YyZWZIykv4lM/zXp9umNGjznnPd3HlPJCx//CGgAu02An/zch8PGWiTlrnL0ZcbDVq
-         Mo0UOJ14baZ6Q6q6KjqQiDu1C0oYDaM+lEmHaE9GYwfth/xmLPwAxlftaNlEsX4lTfVp
-         oh65TwiYIjgk49Ax59IILHKto4/fTp38TXKy/75Hj9TH/zqcNcMszt1L6urbnxlWRpPn
-         1FGUalRLte9B42oJ9eHjWDTVZikVbx9C2wXPGH6IfOvPAb6opSkguPcSQZT/LjgW626i
-         d7M2Uzd9SdRBzStVB8xqarbqoXe3Miq2AeoS2Mz5dj5BS4dSCWIRMFqt2dN0cit4ojgB
-         tm/w==
-X-Gm-Message-State: APjAAAUZJAslQoa+eOkbiSovjcPSTum1edAU/hCpVIALeLx2S0a563rr
-        8Dbc1oE3De6Er5GHFYegKnfi6X7C1BKpqZPCQjKBOg/RX57B
-X-Google-Smtp-Source: APXvYqzP4/VEkdgFaSon67FgAjDduMDSjqndowqxJ0Wgxs/rNFlUGTPeaIFZks4U9WerRYsiCmp64bVGDtHXk327djrJdL8dA5Tn
+        Sun, 26 Jan 2020 02:43:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbgAZHnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 02:43:00 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84A662071E;
+        Sun, 26 Jan 2020 07:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580024579;
+        bh=UcAPO1fkxYC4ytyKX1oTy8cKaRy2y2XXPJoZZhR3HRM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MUnjdjSiO+93K2gosmx9muHilww8DDnIaDl1yb9MgidpGc7L+ryjgf5HzNKDBiUwL
+         28mGAvCoph4j5xoP/y1tqIvdGLc/UaMxw1rKvSKnmoch64U/bSAqIdVM+FK1gd2MLO
+         Sr7HJFObHfskjwzYafH+gR+IPkCGl5HML8cEdnrQ=
+Date:   Sat, 25 Jan 2020 14:38:14 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Pragat Pandya <pragat.pandya@gmail.com>
+Cc:     "valdis.kletnieks@vt.edu" <valdis.kletnieks@vt.edu>,
+        ppandya2103@gmail.com,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [RESEND PATCH] staging: exfat: Fix alignment warnings
+Message-ID: <20200125133814.GA3518118@kroah.com>
+References: <7278a1cb979cd574bccbbbccaf1a9c90acd514b5.camel@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:85d2:: with SMTP id f201mr9111770ilh.45.1580023561398;
- Sat, 25 Jan 2020 23:26:01 -0800 (PST)
-Date:   Sat, 25 Jan 2020 23:26:01 -0800
-In-Reply-To: <000000000000466b64059bcb3843@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001d2faa059d05e738@google.com>
-Subject: Re: INFO: task hung in hashlimit_mt_check_common
-From:   syzbot <syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com>
-To:     aarcange@redhat.com, akpm@linux-foundation.org,
-        coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7278a1cb979cd574bccbbbccaf1a9c90acd514b5.camel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Sat, Jan 25, 2020 at 05:49:48PM +0530, Pragat Pandya wrote:
+> Fix checkpatch warning "Alignment should match open parenthesis".
+> 
+> Signed-off-by: Pragat Pandya <pragat.pandya@gmail.com>
+> ---
+>  drivers/staging/exfat/exfat_blkdev.c |  4 ++--
+>  drivers/staging/exfat/exfat_core.c   | 29 ++++++++++++++--------------
+>  drivers/staging/exfat/exfat_super.c  |  2 +-
+>  3 files changed, 18 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/staging/exfat/exfat_blkdev.c
+> b/drivers/staging/exfat/exfat_blkdev.c
+> index 7bcd98b13109..3068bfda39e4 100644
+> --- a/drivers/staging/exfat/exfat_blkdev.c
+> +++ b/drivers/staging/exfat/exfat_blkdev.c
+> @@ -31,7 +31,7 @@ void exfat_bdev_close(struct super_block *sb)
+>  }
+>  
+>  int exfat_bdev_read(struct super_block *sb, sector_t secno, struct
+> buffer_head **bh,
+> -             u32 num_secs, bool read)
+> +                   u32 num_secs, bool read)
 
-commit 7ddd8faf4399ab4f4edad5604eab35f8a87caf02
-Author: Andrea Arcangeli <aarcange@redhat.com>
-Date:   Fri Oct 13 22:57:54 2017 +0000
+Hi,
 
-    userfaultfd: selftest: exercise -EEXIST only in background transfer
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175625c9e00000
-start commit:   8f8972a3 Merge tag 'mtd/fixes-for-5.5-rc7' of git://git.ke..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=14d625c9e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10d625c9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
-dashboard link: https://syzkaller.appspot.com/bug?extid=adf6c6c2be1c3a718121
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ea2559e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15ffc8bee00000
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-Reported-by: syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
-Fixes: 7ddd8faf4399 ("userfaultfd: selftest: exercise -EEXIST only in background transfer")
+- Your patch is malformed (tabs converted to spaces, linewrapped, etc.)
+  and can not be applied.  Please read the file,
+  Documentation/email-clients.txt in order to fix this.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
