@@ -2,85 +2,79 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CAEC35244
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340A4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF412071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579969425;
-	bh=+juifvxy/KgpR+N92xUOC0DtDVqNTqTxv05RieS1qmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JwtWwJ55NeyXQNVwJ8Wv0gaYfCXlDYpB1qreLrYjsUQNH8orNshodPgRJCXndJxef
-	 BhyzCY85cFcyN8HTtPEx/4U+hZGMYOhoVZrMKMumJ5jVoGhPYtNsHCfZMOX2ZI6Rvt
-	 1RG1F8kt4pIelpjp6D9Ic+CzzwkQNhr5CAzpdYxk=
+	by mail.kernel.org (Postfix) with ESMTP id 01FB020704
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 16:24:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5giQsy/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgAYQXn (ORCPT
+        id S1726729AbgAYQYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 11:23:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35548 "EHLO mail.kernel.org"
+        Sat, 25 Jan 2020 11:24:01 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:54168 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgAYQXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 11:23:43 -0500
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D22F020704;
-        Sat, 25 Jan 2020 16:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579969422;
-        bh=+juifvxy/KgpR+N92xUOC0DtDVqNTqTxv05RieS1qmA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mfCHzU+D6ZZZCxopaMtjDddfjgfuvTMHcnOiGfY7CC6xd4C7o02bFu5tNDdLwQ/bL
-         9l0wyNEVOEJ2zSS3B1b8a6Oi3PU6H8NDmVWYVyzYdngMGA71zdZlOhbcu11rZ89DJp
-         ubvcEAG3XeGfqf8y4Wc4xKNOuBpkgLq0Obto/NYc=
-Date:   Sat, 25 Jan 2020 18:23:39 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] mm/gup: track FOLL_PIN pages (follow on from v12)
-Message-ID: <20200125162339.GA41770@unreal>
-References: <20200125021115.731629-1-jhubbard@nvidia.com>
+        id S1725710AbgAYQYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 11:24:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=jex0E8D9r9+e+6DUpspkCaHnqqzSIrlNGW9e5du01CQ=; b=5giQsy/uLoYYaRrT93K3SefnaL
+        2ak6pJiZ13B/nntmKOnGnbQfkxKTSf9olPDjlx05uT//8td9XJDWtGN3XTmauMwXFzJ5z6IsqUADK
+        oqCIIOr6kmP05O/UmYqYXlLRO6NItWLs29ASGQKqrvCpGoaH4trZVee1a+ygw/kfIR2I=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ivOE1-00076k-75; Sat, 25 Jan 2020 17:23:57 +0100
+Date:   Sat, 25 Jan 2020 17:23:57 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bridge@lists.linux-foundation.org, jiri@resnulli.us,
+        ivecera@redhat.com, davem@davemloft.net, roopa@cumulusnetworks.com,
+        nikolay@cumulusnetworks.com, anirudh.venkataramanan@intel.com,
+        olteanv@gmail.com, jeffrey.t.kirsher@intel.com,
+        UNGLinuxDriver@microchip.com
+Subject: Re: [RFC net-next v3 00/10]  net: bridge: mrp: Add support for Media
+ Redundancy Protocol (MRP)
+Message-ID: <20200125162357.GE18311@lunn.ch>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124203406.2ci7w3w6zzj6yibz@lx-anielsen.microsemi.net>
+ <87zhecimza.fsf@linux.intel.com>
+ <20200125094441.kgbw7rdkuleqn23a@lx-anielsen.microsemi.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200125021115.731629-1-jhubbard@nvidia.com>
+In-Reply-To: <20200125094441.kgbw7rdkuleqn23a@lx-anielsen.microsemi.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 06:11:12PM -0800, John Hubbard wrote:
-> Leon Romanovsky:
->
-> If you get a chance, I'd love to have this short series (or even just
-> the first patch; the others are just selftests) run through your test
-> suite that was previously choking on my earlier v11 patchset. The huge
-> page pincount limitations are removed, so I'm expecting a perfect test
-> run this time!
->
+> Lets say that the link between H1 and H2 goes down:
+> 
+>     +------------------------------------------+
+>     |                                          |
+>     +-->|H1|<---  / --->|H2|<---------->|H3|<--+
+>     eth0    eth1    eth0    eth1    eth0    eth1
+> 
+> H1 will now observe that the test packets it sends on eth1, is not
+> received in eth0, meaninf that the ring is open
 
-I added those patches to our regression and I will post the in the
-couple of days.
+Hi Allan
 
-Thanks
+Is H1 the only device sending test packets? It is assumed that H2 and
+H3 will forward them? Or does each device send test packets, and when
+it stops hearing these packets from a neighbour, it assumes the link
+is open?
+
+   Andrew
