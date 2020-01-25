@@ -2,106 +2,179 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD76C35242
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1A9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF102077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579946415;
-	bh=L07rvQaFkM1gzQAyopMIziX4o5aOxQ65cRpKsEZRb6E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=igaeNJuTMU6WF8IMXibQj9g2ry/6ni25WKTRIPPj+edKl7qvrjH6pQLp11JK0Xi5p
-	 m94lpbvt2LIVn8GIPdY/1teUfzdumQUCoXUrEOQOX7Uwq5beyD5U6to+RoC9mHTOPg
-	 nTBCNrqElrVyXomoH/VvysjiKzm0BjGeKVsnhKVw=
+	by mail.kernel.org (Postfix) with ESMTP id 6C5922070A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:23:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nvHFIm/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgAYKAO (ORCPT
+        id S1726571AbgAYKXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:00:14 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39703 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgAYKAO (ORCPT
+        Sat, 25 Jan 2020 05:23:06 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39343 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgAYKXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 05:00:14 -0500
-Received: by mail-lj1-f193.google.com with SMTP id o11so5384732ljc.6
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 02:00:13 -0800 (PST)
+        Sat, 25 Jan 2020 05:23:06 -0500
+Received: by mail-lf1-f67.google.com with SMTP id t23so2900044lfk.6
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 02:23:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Cg6yf7Xg2bJ6bjO85SSw53ECgULPwUTExuYpSHY8p/0=;
+        b=nvHFIm/9DDj/w0idcoFsxyLE3HhmgnhMFFYuSboc88fwAGfMxZwk9CPXXFUrdNumWD
+         OAs3m2FukpCdiYeVcd4TrPZJGI9A3SGG8vIxlcL1HH7balPK5/KxYzLDZp8U7CCcLRKx
+         /y4HToarp+7zKC1I1OjuSP+iRTyh/3NZeD78DIMdVZwEM0VmxYh3VE5MeME9jYwI/VCl
+         GQhmlnOSPxK+WAvMHulEKPv1hoIGZhmRFGRvPbYvxB2PEuJzpBdVjy9odFrVQM2ZCaVa
+         hvZY+nFBCV21/hwcEzrtAkpe86fW5nsaX1SH84wsJ190qok1Z6o/3ScfBMiXS3Hws9wg
+         ugug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MHWw4kl2aot/YGxzGbaCamrHDbhqRBfZpQ0nnwKFfPM=;
-        b=fYi7Y7PDhcwBV70GKHb6LgD+ZOx+f62SimAYUs9/SusBiu7eHv2d2R6oNnYjB75T//
-         DYgGZBSpGVYg1oimHmJ5Ev+x5/0jaY7Jv6XNiEKCs3U7Y4xU0plJex5eIjJwAufDuXz9
-         Fuk/NUC0UbNzOhteJnyHZFGQmLezhY9hi1XOa8dV0GZtuk9vFnI4howFEDEEwXEDKVDn
-         l4/3tkROYxjQuO/bFRO1z+QjgJOxk/GQrEvl32AXtG1D7/rdNPFixw42eeiZMldiTd4M
-         g9udfmqF9umruMxRxc4Oe7f1TJifSl7j5BR66gwUGP6pPvJki+RKkuI4bJFCsRtxhAIM
-         DvRQ==
-X-Gm-Message-State: APjAAAUaeswCHcsPYNfVwtfKM1uWecmcMIl4IaHrRW/hZm1cQKTeB1/k
-        Raw1+mQMbsebGAIy87jQS/OzJSKZ
-X-Google-Smtp-Source: APXvYqzY/gjJLHtoy42/JWEBqLJS3tnrXvBP3FoLalRJUR3ccUOBE8/r9ZVt6Igb5iCiHrIHlzc/IQ==
-X-Received: by 2002:a2e:96c6:: with SMTP id d6mr4826945ljj.4.1579946412653;
-        Sat, 25 Jan 2020 02:00:12 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id j19sm5025204lfb.90.2020.01.25.02.00.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jan 2020 02:00:11 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ivIEd-0003OI-TL; Sat, 25 Jan 2020 11:00:11 +0100
-Date:   Sat, 25 Jan 2020 11:00:11 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>
-Cc:     vireshk@kernel.org, johan@kernel.org, elder@kernel.org,
-        gregkh@linuxfoundation.org, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        saurav.girepunje@hotmail.com
-Subject: Re: [PATCH] staging: greybus: bootrom: fix uninitialized variables
-Message-ID: <20200125100011.GK8375@localhost>
-References: <20200125084403.GA3386@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Cg6yf7Xg2bJ6bjO85SSw53ECgULPwUTExuYpSHY8p/0=;
+        b=o/2d38Ft37jKECEAh6Ec6olQ5Ce5dC3QL+vniYvvQRGL8TNCjm2OcONx5oOnwS67c8
+         A0ZZDRvUHay1hJmNVM9pKCkMy+z+zUjlIkmPlNU6cY8JtovvmKltKmZ22kPET7xa9GMV
+         HgddtLtdRrlW64De29bq5JGW/EOrdXsCSrHvX9C2Sh8Yjn/RQwYQliP/CLB8CgV1SWTG
+         jd3DVi47tAxcsPXYVlvHq7fuG/1rcw5bNBVZ1shAqcYLUD3xH2qWVFUX7w1gi9xQfF9i
+         1ply2Q1JCC7FrbD2uXEQiPvhTSpsCioUOxK9BTRTX+tUoD/tAjbC2YLOMK1bA55zcomu
+         bvdA==
+X-Gm-Message-State: APjAAAXaFUiiKRY0/lDefkjZI8zWFO0o8dGtWk33X8SUumtwH0HPZtjQ
+        q2DOOP7UcLVCN4if8Qm8jWdBEqzuhSkCINAuRTVp3i/iWfU=
+X-Google-Smtp-Source: APXvYqwJ/ugFa53nnI+4+a4+LVBX8n+5970S/tTWvtc2SNYizZe89o+mfaT86iEtFM0zARv/7RvEMgDRGz/+NRg5ypY=
+X-Received: by 2002:a19:6d13:: with SMTP id i19mr3479868lfc.6.1579947784234;
+ Sat, 25 Jan 2020 02:23:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200125084403.GA3386@google.com>
+References: <20200124092806.004582306@linuxfoundation.org>
+In-Reply-To: <20200124092806.004582306@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sat, 25 Jan 2020 15:52:52 +0530
+Message-ID: <CA+G9fYtCQv-eW3y0ySDmazcCDNXHfLuTcCXWj8kj3y0W_HWyVg@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/102] 5.4.15-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 02:14:03PM +0530, Saurav Girepunje wrote:
-> fix uninitialized variables issue found using static code analysis tool
-
-Which tool is that?
-
-> (error) Uninitialized variable: offset
-> (error) Uninitialized variable: size
+On Fri, 24 Jan 2020 at 15:04, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
-> ---
->   drivers/staging/greybus/bootrom.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/greybus/bootrom.c b/drivers/staging/greybus/bootrom.c
-> index a8efb86..9eabeb3 100644
-> --- a/drivers/staging/greybus/bootrom.c
-> +++ b/drivers/staging/greybus/bootrom.c
-> @@ -245,7 +245,7 @@ static int gb_bootrom_get_firmware(struct gb_operation *op)
->   	struct gb_bootrom_get_firmware_request *firmware_request;
->   	struct gb_bootrom_get_firmware_response *firmware_response;
->   	struct device *dev = &op->connection->bundle->dev;
-> -	unsigned int offset, size;
-> +	unsigned int offset = 0, size = 0;
->   	enum next_request_type next_request;
->   	int ret = 0;
+> This is the start of the stable review cycle for the 5.4.15 release.
+> There are 102 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.15-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-I think this has come up in the past, and while the code in question is
-overly complicated and confuses static checkers as well as humans, it
-looks correct to me.
+rc2 test results report.
 
-Please make sure to verify the output of any tools before posting
-patches based on them.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Johan
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.4.15-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 5b29268443c010e77bd281f8439188f03c4cdf7c
+git describe: v5.4.14-102-g5b29268443c0
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.14-102-g5b29268443c0
+
+No regressions (compared to build v5.4.14)
+
+No fixes (compared to build v5.4.14)
+
+Ran 25632 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* spectre-meltdown-checker-test
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
