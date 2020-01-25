@@ -2,68 +2,97 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563F3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 22:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3845EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 22:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A01C2075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 22:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579990517;
-	bh=GhNPpuFFe63ryKwLhxOo1y8u9Yc2z2Zv/GinOZSQoC4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=FX4ZLlyBWdc+qDQJS9HiKvp8C5pgYtlN7J54/hN6cl/Skr8MOnLFTLcGULf5ASct0
-	 DGwoxwpQ7tXt9E+RfCTx8kerFMyqmXb+5N6lDfLJcW1U9fU7Ue/aB6UkIWgVdof47P
-	 ZDyxefPaAgXZWiQnifpXJq1/eZba7l/vXhgpZx34=
+	by mail.kernel.org (Postfix) with ESMTP id 00F772071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 22:17:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OqKwc7Ew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgAYWPE (ORCPT
+        id S1727601AbgAYWRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 17:15:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36876 "EHLO mail.kernel.org"
+        Sat, 25 Jan 2020 17:17:45 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:54102 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbgAYWPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 17:15:04 -0500
-Subject: Re: [GIT PULL] ARM: SoC fixes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579990503;
-        bh=GhNPpuFFe63ryKwLhxOo1y8u9Yc2z2Zv/GinOZSQoC4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=mDsCgbC/L2/8TlDAQiaUFlHcBSDsun5vjO44ImovLS4nRPVmQbPdqZy7VrQmZWqW7
-         Ugur0hyhS5r4wAB5nRB+AHq48+3Bv58GIu8DHJFJQ1dpFlsAg/aK3FAzlXf7WDyB+q
-         z2IKx7KtICEUylRvfVIaiTfJnU5Fkc2l616fcxKw=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200125213702.tkh5afxz6ao5rsw2@localhost>
-References: <20200125213702.tkh5afxz6ao5rsw2@localhost>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200125213702.tkh5afxz6ao5rsw2@localhost>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
-X-PR-Tracked-Commit-Id: 6716cb162deb9d474095a57d7a515edc13926ea7
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f041eadad7504b1364274494548b9716b2ed59ac
-Message-Id: <157999050390.5823.11026600653641064716.pr-tracker-bot@kernel.org>
-Date:   Sat, 25 Jan 2020 22:15:03 +0000
-To:     Olof Johansson <olof@lixom.net>
-Cc:     torvalds@linux-foundation.org, olof@lixom.net, arm@kernel.org,
-        soc@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
+        id S1726937AbgAYWRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 17:17:45 -0500
+Received: from zn.tnic (p200300EC2F1CE90080C3FC32A2902303.dip0.t-ipconnect.de [IPv6:2003:ec:2f1c:e900:80c3:fc32:a290:2303])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F14781EC0B89;
+        Sat, 25 Jan 2020 23:17:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579990664;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=y/Tx8wNgFYD/6RrPclu+e+WPAGBO2EeSNHlU2NNlnnE=;
+        b=OqKwc7Ewi1aHnWDRvPHo+9yMF6dVgdSijmqWX5Iq7wTeZcwnuhwWqDuAdHLJIt4s31ZZD4
+        03tKtbGJ6C7Am5CWvRcbraC871RZhvkSuk6IlLKAGlmsG3tAfHtLoZ4/2QoM5JCziXZAIB
+        I8RvJLUkxLNoCs6IP0Umhu7aQfed1y8=
+Date:   Sat, 25 Jan 2020 23:17:38 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v15] x86/split_lock: Enable split lock detection by kernel
+Message-ID: <20200125221738.GF4369@zn.tnic>
+References: <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com>
+ <20200123044514.GA2453000@rani.riverdale.lan>
+ <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
+ <87h80kmta4.fsf@nanos.tec.linutronix.de>
+ <20200125024727.GA32483@agluck-desk2.amr.corp.intel.com>
+ <20200125104419.GA16136@zn.tnic>
+ <20200125195513.GA15834@agluck-desk2.amr.corp.intel.com>
+ <20200125201221.GZ11457@worktop.programming.kicks-ass.net>
+ <20200125203312.GE4369@zn.tnic>
+ <20200125214232.GA17914@agluck-desk2.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200125214232.GA17914@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 25 Jan 2020 13:37:02 -0800:
+On Sat, Jan 25, 2020 at 01:42:32PM -0800, Luck, Tony wrote:
+> On Sat, Jan 25, 2020 at 09:33:12PM +0100, Borislav Petkov wrote:
+> > On Sat, Jan 25, 2020 at 09:12:21PM +0100, Peter Zijlstra wrote:
+> > > My thinking was Virt, virt likes to mess up all msr expectations.
+> > 
+> > My only worry is to have it written down why we're doing this so that it
+> > can be changed/removed later, when we've forgotten all about split lock.
+> > Because pretty often we look at a comment-less chunk of code and wonder,
+> > "why the hell did we add this in the first place."
+> 
+> Ok. I added a comment:
+> 
+>  * Use the "safe" versions of rdmsr/wrmsr here because although code
+>  * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
+>  * exist, there may be glitches in virtualization that leave a guest
+>  * with an incorrect view of real h/w capabilities.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
+Yap, nice.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f041eadad7504b1364274494548b9716b2ed59ac
-
-Thank you!
+Thx.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
