@@ -2,128 +2,125 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3868AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E358AC35244
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9B92075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEBE2071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:27:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gM9Yxu1p"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YryjmoVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgAYLYh (ORCPT
+        id S1727479AbgAYL1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 06:24:37 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40948 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgAYLYh (ORCPT
+        Sat, 25 Jan 2020 06:27:16 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12016 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgAYL1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 06:24:37 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c14so5161766wrn.7;
-        Sat, 25 Jan 2020 03:24:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bNk/OspMeZjlVC/SKfI3L+0oFPUb+GRq74FvOVEc3HQ=;
-        b=gM9Yxu1p0Nsi4Zctq5wvCXsMYRrDBm/Vjiqmt/eGl8COnQMgWdfFUfDB3XdbgThdmj
-         NIDlR5Hh4eTMZQjI0hhLZ3T5oyP25FetCvAoeeR3vVXaixcESuqjeHYXQBq1ZxMazQUv
-         EED3txDawm+AoD9BYnHgBzFhO2ixy7WBXUmZqodqGBA+F/61lIWvOFHAf8WGeGrN+S/6
-         EUh5nR99OQiYJNynws8yIw7OvFb6eHFieq8WTEIjONRZK0ogBWVEi8tzyypZW2gMoWPh
-         hQxPbj1Q3NotEc/m5T+JXSaH+8NPHEYRdEZELI72NTWFSVmIMT0O9IJP6FCzpKD2qgY4
-         hBuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bNk/OspMeZjlVC/SKfI3L+0oFPUb+GRq74FvOVEc3HQ=;
-        b=nGtx/6Q6RtAl/5ztzoY4HUArad8czgMWcRFzDGNs0jKtPgdOTIdZZN3dneCSB4pFDb
-         iMKsHgAApBhoOng34OBkwPZNeb49bSZt+wbg/e94oxmQ8YEv6Wl1sUbmadpIzBovknBg
-         xxcRRyPtrZ3Xj2hCB18ApNvqHm7OPqXOsvP3NBeBrfxzll33Z+PnQVlp7WPtFbBw8GnY
-         0L2CN7ShaxnxLJvdwr5cxQdzUwPsSUNVI2lmX0/JpVhhC60c8ueahrMeN/vweh8Qlfi6
-         mn8m0aNBKbMWFd5Lvk0UObgNf3Hb/gbV8w3joUE9xYkmiQhXN7S3a8g+danylQeoIGte
-         Be9g==
-X-Gm-Message-State: APjAAAXtnQVCH3h9NqeLi9ZxTZu9PQ0YC2FUQG17pTE7GBmPuRk2/hbq
-        JHOnj2uJMiSsPoCucz1qIdw=
-X-Google-Smtp-Source: APXvYqwSRB4GnMc8wYHmDCrrOC5fRc3uwvimip3VqhEtndLxWL6dxHIkp/VsDwcDVobhpqSxrQUiNg==
-X-Received: by 2002:a5d:4a8c:: with SMTP id o12mr9736485wrq.43.1579951474523;
-        Sat, 25 Jan 2020 03:24:34 -0800 (PST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
-        by smtp.gmail.com with ESMTPSA id a62sm1604452wmh.33.2020.01.25.03.24.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jan 2020 03:24:33 -0800 (PST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        jernej.skrabec@siol.net
-Subject: Re: [linux-sunxi] [PATCH 1/8] clk: sunxi-ng: sun8i-de2: Swap A64 and H6 definitions
-Date:   Sat, 25 Jan 2020 12:24:31 +0100
-Message-ID: <2701584.e9J7NaK4W3@jernej-laptop>
-In-Reply-To: <2008374.irdbgypaU6@jernej-laptop>
-References: <20200124232014.574989-1-jernej.skrabec@siol.net> <CAGb2v6680yWT8KtjK0uKM00+6ed4NoPpsMaDyfYERwOXgb8Vbg@mail.gmail.com> <2008374.irdbgypaU6@jernej-laptop>
+        Sat, 25 Jan 2020 06:27:15 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2c25e30000>; Sat, 25 Jan 2020 03:26:28 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 25 Jan 2020 03:27:14 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 25 Jan 2020 03:27:14 -0800
+Received: from [10.26.11.150] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Jan
+ 2020 11:27:11 +0000
+Subject: Re: [PATCH 4.19 000/639] 4.19.99-stable review
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
+        <akpm@linux-foundation.org>, <shuah@kernel.org>,
+        <patches@kernelci.org>, <ben.hutchings@codethink.co.uk>,
+        <lkft-triage@lists.linaro.org>, <stable@vger.kernel.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <20200124235537.GB3467@roeck-us.net>
+ <cd504bb5-44b1-415b-edc7-21ee69e9d1fa@nvidia.com>
+ <f634b705-a561-33ee-0b6f-e3f5c1164b38@roeck-us.net>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <5cd2fc9a-e77b-89e5-a752-f3e17615c3d3@nvidia.com>
+Date:   Sat, 25 Jan 2020 11:27:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <f634b705-a561-33ee-0b6f-e3f5c1164b38@roeck-us.net>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579951588; bh=UbGH0wYqwHOi6cUko4B3d4ba7MgU1urGnUdIbx79At4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YryjmoVRCeJCkG2eHnAzsuVVFWvYAI5IQSv78VK2w8Tdmwfmu3n1QaNzqOx8n6Rro
+         sPRqCvZI7ySTUTq0yF608a2HufDLjYOJfUMkn4LPa1DSYrYaaIzFxHesIsEMUT+jJg
+         JtTzKK2vNn+ZlAA7NHnvuqVq+Aw+B2jf+YtTFn6FFO3Qebjk9XxfIn44mTHlVk2h3p
+         ipstYAESbXkNw0rPqOMrsMKlWxwIaKh6boVc2ajYSpqCWypIkwAdAcpYjTHawa7nS/
+         hXuv2ATt1uyPSCBvzidKxzOhUXzuBy2aHN6XRab2a6ueSpb2Cr+c6VelVliKEGDRaY
+         jpKrGRs+9iGgw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne sobota, 25. januar 2020 ob 12:20:18 CET je Jernej =C5=A0krabec napisal(=
-a):
-> Hi!
->=20
-> Dne sobota, 25. januar 2020 ob 04:05:33 CET je Chen-Yu Tsai napisal(a):
-> > On Sat, Jan 25, 2020 at 7:20 AM Jernej Skrabec <jernej.skrabec@siol.net>
->=20
-> wrote:
-> > > For some reason, A64 and H6 have swapped clocks and resets definition=
-s.
-> > > H6 doesn't have rotation unit while A64 has. Swap around to correct t=
-he
-> > > issue.
-> > >=20
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >=20
-> > Could you add Fixes tags for this one?
->=20
-> I'm not sure which commit to reference. H6 one? or also initial A64 one?
->=20
-> I just found out that H5 compatible uses A64 structure, which is not
-> correct. H5 doesn't contain rotate core.
->=20
-> Do you have any better idea how to nicely solve this mess? I'm thinking t=
-hat
-> for v2 I would first decouple some compatibles, like this for H5 and R40
-> and V3s from A83T (as it can be seen in the next patch). After that, rath=
-er
-> than switching definitions I would fix each compatible one by one. At the
-> end, if any entry is duplicated, I can add one commit to merge same
-> structures.
 
-This could also be a separate series of patches on which rotate driver seri=
-es=20
-depends on.
-=20
-Best regards,
-Jernej
+On 25/01/2020 09:25, Guenter Roeck wrote:
+> On 1/25/20 12:24 AM, Jon Hunter wrote:
+>> Hi Guenter,
+>>
+>> On 24/01/2020 23:55, Guenter Roeck wrote:
+>>> On Fri, Jan 24, 2020 at 10:22:50AM +0100, Greg Kroah-Hartman wrote:
+>>>> This is the start of the stable review cycle for the 4.19.99 release.
+>>>> There are 639 patches in this series, all will be posted as a response
+>>>> to this one.=C2=A0 If anyone has any issues with these being applied, =
+please
+>>>> let me know.
+>>>>
+>>>> Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
+>>>> Anything received after that time might be too late.
+>>>>
+>>>
+>>> For v4.19.98-638-g24832ad2c623:
+>>
+>> This does not appear to be the correct tag/version for this review.
+>>
+>=20
+> It is the tip of v4.19.y.queue in my test system.
+>=20
+> $ git describe local-stable/linux-4.19.y.queue
+> v4.19.98-638-g24832ad2c623
+>=20
+> and the tip of the stable-queue repository as of right now.
+>=20
+> $ git describe stable-queue/linux-4.19.y
+> v4.19.98-638-g24832ad2c623
+> $ git remote -v | grep stable-queue
+> stable-queue=C2=A0=C2=A0=C2=A0
+> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> (fetch)
+> stable-queue=C2=A0=C2=A0=C2=A0
+> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> (push)
+>=20
+> What is wrong with it ?
 
+Ah you are right, there is nothing wrong now I look at the git describe
+output. At first glance I thought the tag was not correct.
 
+Sorry for the noise.
 
+Jon
 
+--=20
+nvpublic
