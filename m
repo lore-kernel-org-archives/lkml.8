@@ -2,122 +2,123 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F085C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 18:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD05DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 18:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716172070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 18:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD78E2070A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 18:13:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jnhVI0AC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UmeqDr3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgAYSMP (ORCPT
+        id S1727250AbgAYSNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 13:12:15 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39746 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgAYSMP (ORCPT
+        Sat, 25 Jan 2020 13:13:15 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:43144 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgAYSNP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 13:12:15 -0500
-Received: by mail-wm1-f65.google.com with SMTP id c84so2670751wme.4
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 10:12:14 -0800 (PST)
+        Sat, 25 Jan 2020 13:13:15 -0500
+Received: by mail-qv1-f67.google.com with SMTP id p2so2567734qvo.10
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 10:13:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eF2OUCFn8RXfuPcwbgeBQlCI+YW26selKCHUMVhWZwI=;
-        b=jnhVI0AC7nJ/o836vPGnFVXVOi7ROc8LnQ7lOYUAGtggE1kk/SF7n82HCKQnPvgsfV
-         2ejWwuN5Uz+LfQPWJO2WC/07k1q/YZx9vAACJF4eYwzyQHr+oKlMZ0tc3pq4iImmdx1z
-         3WNyE+KFv/fnwcETR/GQWpffXu+3VLUaHVPdOdXtrSKI0k7zIu+wnaigwdHshFWJLKWv
-         0Xo1Hsn3qJxDV9TZP8WzAeedM8ddFdW58WbZAoCSF0ergdhMItd5ZaIb5OipyKS7gG0n
-         v/tsa+eKEu8IGdHVqByD3xEeoP+H/M+5LXdmkFBzHBEj3SCvrS2hsOUdYWW80UlYXSyd
-         NtiQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=E+cu/QJKN5uT8la7yZxdrY+Jr2Gm5Xc2nC3nhoLTrS8=;
+        b=UmeqDr3LtDrnKxoURMJ2NVNttinEbKnApSiJ5hecVmoSYF+NNk33LGrN5gpKI8h1j5
+         NiXJ+lhrh+TPUWIb4LPEvcRBR1isgyk+ns6dRIo+rQhYOV84VVRU5WtGJa/n1ANZunRr
+         ZX0xqcQdgyCLin0wRfCHP+rag/viDDNJHXdzdvii4YmrQAy6Ciu45C9NL0axmcVXyGdh
+         d1YU8KnvVqWruQhsitVxFu/ZND8SX6h0kn9V7+or2/Pio+OBh3jYEKTaof7f1I9RK9uq
+         IHamWzTJG2KjHBY7FkUIUgVlzbSeaR7DLnsZvAr6dW9a1ruqJl786deHrrIsohzxo6XF
+         w2wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eF2OUCFn8RXfuPcwbgeBQlCI+YW26selKCHUMVhWZwI=;
-        b=ccEV8pt7Qx4l1x10z8/mgNIKrbvdcBdb7hN96K2K1NCLz2vlIvKG1Jm6SYDV0ihnrx
-         JFRdjBeKHZyU/B3GGFLwOZanGtHgdzl5b85GBuD0BakbGgVxMIuZ9yzMwcKblhnrkA6/
-         tmQif3gnKVWEW8vhucLYC6jv2U+IE0P6JnvvumpBLqeTyTkwziBGpvFPEhSqhuTHYbY2
-         0bu8ddNRaGOy7QKX+ddISPci98/Oqyz1DDeSUhpT3NDEqlAFL51GQfeR3s9V1PpFbDdI
-         K3dZ2m3KVV4xkCphi+HlRevChJnI+inhuaU3cs/IXtsDzRulKMZ7sciVYcp8HHJ0NKSc
-         LSmQ==
-X-Gm-Message-State: APjAAAUeR0l6ORe01w3iW1ckWmtJcwn8os8SjOMdL5CotN0cpMeO01D3
-        X9mrwD5Ip2gNgBUwbPgMdfRLuAi+9YaRIwjffGjC2A==
-X-Google-Smtp-Source: APXvYqxSKxGhkxt7MQWWCjOMYviEF8rXOqjrXEu8a4fLOtQXjB/HoMwzih7ccjKRwo7fBxjk5pfLiq8vIkLUkqUzDLU=
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr5114444wmj.1.1579975934034;
- Sat, 25 Jan 2020 10:12:14 -0800 (PST)
+         :message-id:subject:to;
+        bh=E+cu/QJKN5uT8la7yZxdrY+Jr2Gm5Xc2nC3nhoLTrS8=;
+        b=CuM9vQaNXrklsieDDc1dCDyx92zpQrQqjkIfUphP35c/e95/Uc5c5eijFG+MtMDKEp
+         nXl5BjO6M9QCVjWQe1uXeu7nO/IYVK8JcY23feol5IC5g+8BFUqDrrCVr+QzjTglKus/
+         ztJo6sVF8H++0NDM9rCguLXI2fXFptm8SsJHi8uKBN81OXEm5mMGBEgHYRnU0HCbu9Ae
+         C0F+qY88lEKFt0vc7B0PSu4+rME77nKenhrRMnyOI7D98SWvRGCGoVz3IOkfRB6l8HQH
+         boz59SP1AvtDlrtn7+A1CsKG7pPGJ1Lh75aq/7pSS4rypQBWVITEpbt4avFHq4uLBFQ2
+         87lA==
+X-Gm-Message-State: APjAAAVSYow3wCGeD3mnu1mBdBjFvV9AV9sX/lQPFGu6lsJPet7Kzelw
+        3emG3QI3oM258zMpsi7cbtXdexET4tTtXIdJ3l5bPA==
+X-Google-Smtp-Source: APXvYqxm7T6ryNnPOvvufckliHZ/8tFmlEyft2z6YJr6twfkmfUd/0M4VFP/t19+493a+jP4pEDKyHxXqo68wyWg2k8=
+X-Received: by 2002:a0c:ee91:: with SMTP id u17mr8846749qvr.22.1579975994183;
+ Sat, 25 Jan 2020 10:13:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20200125173950.GA19126@roeck-us.net> <20200125180613.GR25745@shell.armlinux.org.uk>
-In-Reply-To: <20200125180613.GR25745@shell.armlinux.org.uk>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 25 Jan 2020 19:12:02 +0100
-Message-ID: <CAKv+Gu-_6oX-AyOdy7ii=3Y3Bf07+YvH7zp9J3x7ckAY5nxRvQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: 8936/1: decompressor: avoid CP15 barrier
- instructions in v7 cache setup code
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>
+References: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
+In-Reply-To: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sat, 25 Jan 2020 19:13:03 +0100
+Message-ID: <CACT4Y+bckC4k-EpWiCkD+BBo5ypmkcb2g8Axb62LnBbwJjcqdw@mail.gmail.com>
+Subject: Re: binderfs interferes with syzkaller?
+To:     Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Jan 2020 at 19:06, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
+On Sat, Jan 25, 2020 at 6:49 PM Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> On Sat, Jan 25, 2020 at 09:39:50AM -0800, Guenter Roeck wrote:
-> > Hi,
-> >
-> > On Fri, Nov 08, 2019 at 01:44:32PM +0100, Ard Biesheuvel wrote:
-> > > Commit e17b1af96b2afc38e684aa2f1033387e2ed10029
-> > >
-> > >   "ARM: 8857/1: efi: enable CP15 DMB instructions before cleaning the cache"
-> > >
-> > > added some explicit handling of the CP15BEN bit in the SCTLR system
-> > > register, to ensure that CP15 barrier instructions are enabled, even
-> > > if we enter the decompressor via the EFI stub.
-> > >
-> > > However, as it turns out, there are other ways in which we may end up
-> > > using CP15 barrier instructions without them being enabled. I.e., when
-> > > the decompressor startup code skips the cache_on() initially, we end
-> > > up calling cache_clean_flush() with the caches and MMU off, in which
-> > > case the CP15BEN bit in SCTLR may not be programmed either. And in
-> > > fact, cache_on() itself issues CP15 barrier instructions before actually
-> > > enabling them by programming the new SCTLR value (and issuing an ISB)
-> > >
-> > > Since all these routines are specific to v7, let's clean this up by
-> > > using the ordinary v7 barrier instructions in the v7 specific cache
-> > > handling routines, so that we never rely on the CP15 ones. This also
-> > > avoids the issue where a barrier is required between programming SCTLR
-> > > and using the CP15 barrier instructions, which would result in two
-> > > different kinds of barriers being used in the same function.
-> > >
-> > > Acked-by: Marc Zyngier <maz@kernel.org>
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> >
-> > This patch causes all qemu emulations for ARM1176 to fail hard (stall with
-> > no console output even with earlycon enabled). This affects witherspoon-bmc,
-> > ast2500-evb, romulus-bmc, and swift-bmc. It does not affect emulations
-> > for other CPU types, even with the same kernel configuration (such as
-> > ast2600-evb).
+> Hi binder maintainers,
 >
-> Hmm, looks like we're going to have to drop 8936/1, 8941/1 and 8942/1
-> in that case.
+> It seems that something has happened and now syzbot has 0 coverage in
+> drivers/android/binder.c:
+> https://storage.googleapis.com/syzkaller/cover/ci-upstream-kasan-gce-root.html
+> It covered at least something there before as it found some bugs in binder code.
+> I _suspect_ it may be related to introduction binderfs, but it's
+> purely based on the fact that binderfs changed lots of things there.
+> And I see it claims to be backward compatible.
 >
+> syzkaller strategy to reach binder devices is to use
+> CONFIG_ANDROID_BINDER_DEVICES to create a bunch of binderN devices (to
+> give each test process a private one):
+> https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-kasan.config#L5671
+>
+> Then it knows how to open these /dev/binderN devices:
+> https://github.com/google/syzkaller/blob/master/sys/linux/dev_binder.txt#L22
+> and do stuff with them.
+>
+> Did these devices disappear or something?
 
-8941 was intended as an alternative approach to 8936, as the latter is
-flawed, given that the v7 cache maintenance routines are shared with
-CPUID capable non-v7 CPUs such as the ARM1176. So it was never the
-intention for both to be applied.
+Oh, I see, it's backwards compatible if it's not enabled, right?
 
-It should be sufficient to revert 8936. Apologies for the confusion.
+if (!IS_ENABLED(CONFIG_ANDROID_BINDERFS) &&
+    strcmp(binder_devices_param, "") != 0) {
+/*
+* Copy the module_parameter string, because we don't want to
+* tokenize it in-place.
+*/
+device_names = kstrdup(binder_devices_param, GFP_KERNEL);
+if (!device_names) {
+ret = -ENOMEM;
+goto err_alloc_device_names_failed;
+}
+
+device_tmp = device_names;
+while ((device_name = strsep(&device_tmp, ","))) {
+ret = init_binder_device(device_name);
+if (ret)
+goto err_init_binder_device_failed;
+}
+}
+
+And we enabled it because, well, enabling things generally gives more
+coverage. I guess I will disable CONFIG_ANDROID_BINDERFS for now to
+restore coverage in the binder itself.
