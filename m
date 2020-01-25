@@ -2,54 +2,95 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37A4C35241
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 07:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5171C35243
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7091520716
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 07:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 785B22071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 08:24:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="q+Aqx/EY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgAYHYA (ORCPT
+        id S1728981AbgAYIYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 02:24:00 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:51706 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726470AbgAYHYA (ORCPT
+        Sat, 25 Jan 2020 03:24:12 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7795 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgAYIYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 02:24:00 -0500
-Received: from callcc.thunk.org (rrcs-67-53-201-206.west.biz.rr.com [67.53.201.206])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00P7Nh8X025287
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 25 Jan 2020 02:23:46 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id C8B3842014A; Sat, 25 Jan 2020 02:23:42 -0500 (EST)
-Date:   Sat, 25 Jan 2020 02:23:42 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     wangyan <wangyan122@huawei.com>
-Cc:     jack@suse.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] jbd2: delete the duplicated words in the comments
-Message-ID: <20200125072342.GE1108497@mit.edu>
-References: <12087f77-ab4d-c7ba-53b4-893dbf0026f0@huawei.com>
+        Sat, 25 Jan 2020 03:24:12 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2bfb1a0000>; Sat, 25 Jan 2020 00:23:54 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 25 Jan 2020 00:24:11 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 25 Jan 2020 00:24:11 -0800
+Received: from [10.26.11.150] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Jan
+ 2020 08:24:09 +0000
+Subject: Re: [PATCH 4.19 000/639] 4.19.99-stable review
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
+        <akpm@linux-foundation.org>, <shuah@kernel.org>,
+        <patches@kernelci.org>, <ben.hutchings@codethink.co.uk>,
+        <lkft-triage@lists.linaro.org>, <stable@vger.kernel.org>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <20200124235537.GB3467@roeck-us.net>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <cd504bb5-44b1-415b-edc7-21ee69e9d1fa@nvidia.com>
+Date:   Sat, 25 Jan 2020 08:24:06 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12087f77-ab4d-c7ba-53b4-893dbf0026f0@huawei.com>
+In-Reply-To: <20200124235537.GB3467@roeck-us.net>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579940634; bh=RFGgFXrilnKFYndVC0uQoLbr5UyaeLbsayCBYjbl1Qw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=q+Aqx/EYyd5yRyKZYPR974fsAYn6lV7E6uY0aBOfthYeo59sb2H1pYbPvk8uiM19+
+         koXBMkGy8E1jdfAG7+xeSbEZ5Y37p7Axyio3pnj25Q00KaMfCB90uvhGU6R0BCEgJJ
+         KTDBEQnhrtoHrQWvIP2qI3x4YCZr4+qpiKKH26wxxW84je8/4DfqTbTE13lft8l6Dz
+         GBOMq749oDHbl3+OMx7N0cYU1HgCyxdqqIGOVEpKa0+y2Lqwn/yyGybdKsOh56bTEH
+         3d7tqnQ/BffgKyPDliQ6IBx6jg8rwYI/3CYRZo/HVzZGYUdm0Q4AsqD6qjW+CYfuy2
+         ze1zXdH5QaA3g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 05:33:10PM +0800, wangyan wrote:
-> Delete the duplicated words "is" in the comments
+Hi Guenter,
+
+On 24/01/2020 23:55, Guenter Roeck wrote:
+> On Fri, Jan 24, 2020 at 10:22:50AM +0100, Greg Kroah-Hartman wrote:
+>> This is the start of the stable review cycle for the 4.19.99 release.
+>> There are 639 patches in this series, all will be posted as a response
+>> to this one.  If anyone has any issues with these being applied, please
+>> let me know.
+>>
+>> Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
+>> Anything received after that time might be too late.
+>>
 > 
-> Signed-off-by: Yan Wang <wangyan122@huawei.com>
+> For v4.19.98-638-g24832ad2c623:
 
-Thanks, applied.
+This does not appear to be the correct tag/version for this review.
 
-					- Ted
+Cheers
+Jon
+
+-- 
+nvpublic
