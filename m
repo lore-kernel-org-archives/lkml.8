@@ -2,43 +2,42 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-11.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,
+	URIBL_SBL_A autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B51EC35244
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54927C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFDB20801
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B5B24125
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgAYKmr (ORCPT
+        id S1729199AbgAYKmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:42:47 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44098 "EHLO
+        Sat, 25 Jan 2020 05:42:52 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44124 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbgAYKmq (ORCPT
+        with ESMTP id S1729106AbgAYKmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 05:42:46 -0500
+        Sat, 25 Jan 2020 05:42:49 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ivItl-0008KI-LB; Sat, 25 Jan 2020 11:42:41 +0100
+        id 1ivItl-0008KB-Bm; Sat, 25 Jan 2020 11:42:41 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A88B31C1A76;
-        Sat, 25 Jan 2020 11:42:40 +0100 (CET)
-Date:   Sat, 25 Jan 2020 10:42:40 -0000
-From:   "tip-bot2 for Ben Dooks" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CF71C1C1A73;
+        Sat, 25 Jan 2020 11:42:39 +0100 (CET)
+Date:   Sat, 25 Jan 2020 10:42:39 -0000
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Move rcu_{expedited,normal} definitions into rcupdate.h
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] .mailmap: Add entries for old paulmck@kernel.org addresses
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157994896050.396.10567855356969877929.tip-bot2@tip-bot2>
+Message-ID: <157994895966.396.2331102015410337763.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,53 +53,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     e1350e8e0ea5d959c23c5e593ff3026a67dbb049
-Gitweb:        https://git.kernel.org/tip/e1350e8e0ea5d959c23c5e593ff3026a67dbb049
-Author:        Ben Dooks <ben.dooks@codethink.co.uk>
-AuthorDate:    Tue, 15 Oct 2019 14:48:22 +01:00
+Commit-ID:     05d35961c20b8919bb94df6f626f306553758d59
+Gitweb:        https://git.kernel.org/tip/05d35961c20b8919bb94df6f626f306553758d59
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Mon, 25 Nov 2019 15:35:26 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Fri, 24 Jan 2020 10:33:50 -08:00
+CommitterDate: Fri, 24 Jan 2020 10:33:52 -08:00
 
-rcu: Move rcu_{expedited,normal} definitions into rcupdate.h
+.mailmap: Add entries for old paulmck@kernel.org addresses
 
-This commit moves the rcu_{expedited,normal} definitions from
-kernel/rcu/update.c to include/linux/rcupdate.h to make sure they are
-in sync, and also to avoid the following warning from sparse:
-
-kernel/ksysfs.c:150:5: warning: symbol 'rcu_expedited' was not declared. Should it be static?
-kernel/ksysfs.c:167:5: warning: symbol 'rcu_normal' was not declared. Should it be static?
-
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+[ paulmck: Apply Florian Fainelli feedback. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/rcupdate.h | 4 ++++
- kernel/rcu/update.c      | 2 --
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ .mailmap | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index fe47024..bb36379 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -896,4 +896,8 @@ rcu_head_after_call_rcu(struct rcu_head *rhp, rcu_callback_t f)
- 	return false;
- }
- 
-+/* kernel/ksysfs.c definitions */
-+extern int rcu_expedited;
-+extern int rcu_normal;
-+
- #endif /* __LINUX_RCUPDATE_H */
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 1861103..294d357 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -51,9 +51,7 @@
- #define MODULE_PARAM_PREFIX "rcupdate."
- 
- #ifndef CONFIG_TINY_RCU
--extern int rcu_expedited; /* from sysctl */
- module_param(rcu_expedited, int, 0);
--extern int rcu_normal; /* from sysctl */
- module_param(rcu_normal, int, 0);
- static int rcu_normal_after_boot;
- module_param(rcu_normal_after_boot, int, 0);
+diff --git a/.mailmap b/.mailmap
+index c24773d..39efbe9 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -207,6 +207,10 @@ Paolo 'Blaisorblade' Giarrusso <blaisorblade@yahoo.it>
+ Patrick Mochel <mochel@digitalimplant.org>
+ Paul Burton <paulburton@kernel.org> <paul.burton@imgtec.com>
+ Paul Burton <paulburton@kernel.org> <paul.burton@mips.com>
++Paul E. McKenney <paulmck@kernel.org> <paulmck@linux.ibm.com>
++Paul E. McKenney <paulmck@kernel.org> <paulmck@linux.vnet.ibm.com>
++Paul E. McKenney <paulmck@kernel.org> <paul.mckenney@linaro.org>
++Paul E. McKenney <paulmck@kernel.org> <paulmck@us.ibm.com>
+ Peter A Jonsson <pj@ludd.ltu.se>
+ Peter Oruba <peter@oruba.de>
+ Peter Oruba <peter.oruba@amd.com>
