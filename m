@@ -2,79 +2,107 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA05C35243
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 17:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDA9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 17:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 116A62071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 17:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E0A92071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 17:09:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B++NlONW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgAYRJU (ORCPT
+        id S1727166AbgAYRJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 12:09:20 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:49927 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725843AbgAYRJT (ORCPT
+        Sat, 25 Jan 2020 12:09:38 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45827 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgAYRJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 12:09:19 -0500
-Received: from callcc.thunk.org (rrcs-67-53-201-206.west.biz.rr.com [67.53.201.206])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00PH8d9t012751
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 25 Jan 2020 12:08:42 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 193AD420324; Sat, 25 Jan 2020 12:08:39 -0500 (EST)
-Date:   Sat, 25 Jan 2020 12:08:39 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, Jan Kara <jack@suse.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        Paul Mackerras <paulus@samba.org>, linux-ppp@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] Documentation: changes.rst: update several outdated
- project URLs
-Message-ID: <20200125170839.GM1108497@mit.edu>
-References: <efb1f518-9e66-c472-d124-4b7d91e56639@infradead.org>
- <20200125034622.GA1107489@mit.edu>
- <c91c1ae1-7eb6-e6fd-57e3-aa8e8f356d45@infradead.org>
+        Sat, 25 Jan 2020 12:09:38 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so2836991pgk.12
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 09:09:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=b6njYIG6ff8eY1VFaMmfpvx8PhOEu/k5+MjVDr3pN7U=;
+        b=B++NlONWRWsNIZANd707V/YLH+WiK/uNB7UNheivQx7q29GhnFHLgKMeyQJFw2E1+g
+         yCcrqPua/dRNSm7m03QQoUPh45oht9Qd8pFbnJ+oxSqXKOocoWzKKeXq7g3g4FqFztVI
+         FZwbhxEYPlKzZPgZUb2TolYCOD0icD/etvjmGu94WoegsE3QfOQokQqTpqGeHyc7u/Iy
+         dW5AJIVQ49LezGnat4UGOe42GXgHS53bzI9SNSuiP2uqZ+2MaZ9gS90nepNTTGzx96eR
+         3+KyiQMiNgcLWuTSqWBt2ydXTjCZ88PTmikQIRgcCTGObuesYbYp7AaueGedDugmFmk0
+         uxzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=b6njYIG6ff8eY1VFaMmfpvx8PhOEu/k5+MjVDr3pN7U=;
+        b=E1lXsmgGKZPkWiOMVbtzvQyj0mYQq+GTkonul/SKyzk5NG3gLPLnB7kxQG9ML+sesM
+         +Ms+UDTc1RAwh1WKD7vadhgEtsnwmuOypku0Ix4UjXlpgDol0zgN0AeXZsjFElx/fDCY
+         ZkinuN5wiJMq8xDUNefO/AJYcQEhGCkwSvUCZ1dNdQcOJB/8bOO45icst8zOGO9zs8iJ
+         h6k2wX5YFNGUljbxvgTMLRhW6fjWjh0LJnmhB3SmBr7H2eRXwywwXpQdi68TgdI+tu/X
+         DaZ8NBn5wc2DZ7zGcTmdAvXrod4krdobSzw6uElyOFe9+c5VjcXQFXN4+wTYQMMlXKuf
+         qgfw==
+X-Gm-Message-State: APjAAAXK6tGA2vppPqkNkBycznSqy7tNKz7+nVZ8D2JJ5lHZVToCZ8DX
+        MN0TabStZ1Qj6PT+aC4FkUo=
+X-Google-Smtp-Source: APXvYqww1GWZAEpKI0hYdg/duDCDhypF8ADpRXtwQ4+BGmX/ggPSVC13d/Tx7TJMcc9V0CaFReRSkg==
+X-Received: by 2002:a63:2a49:: with SMTP id q70mr10278060pgq.265.1579972177300;
+        Sat, 25 Jan 2020 09:09:37 -0800 (PST)
+Received: from google.com ([123.201.163.48])
+        by smtp.gmail.com with ESMTPSA id a12sm10408176pga.11.2020.01.25.09.09.34
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sat, 25 Jan 2020 09:09:36 -0800 (PST)
+Date:   Sat, 25 Jan 2020 22:39:30 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     forest@alittletooquiet.net, gregkh@linuxfoundation.org,
+        quentin.deslandes@itdev.co.uk, colin.king@canonical.com,
+        saurav.girepunje@gmail.com, tvboxspy@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] staging: vt6656: fix Unneeded variable: "ret"
+Message-ID: <20200125170930.GA4809@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <c91c1ae1-7eb6-e6fd-57e3-aa8e8f356d45@infradead.org>
+User-Agent: Mutt/1.6.2-neo (NetBSD/sparc64)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 08:03:03PM -0800, Randy Dunlap wrote:
-> 
-> So drop the git URL also?
+Remove unneeded variable "ret". Issues reported by coccicheck.
 
-Let's keep the git URL; sorry I wasn't precise in my previous message.
-I was referring to where the tarballs could be downloaded.
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+  drivers/staging/vt6656/card.c | 3 +--
+  1 file changed, 1 insertion(+), 2 deletions(-)
 
-      		   	     	      - Ted
+diff --git a/drivers/staging/vt6656/card.c b/drivers/staging/vt6656/card.c
+index 7958fc1..654cebc 100644
+--- a/drivers/staging/vt6656/card.c
++++ b/drivers/staging/vt6656/card.c
+@@ -719,7 +719,6 @@ int vnt_radio_power_off(struct vnt_private *priv)
+   */
+  int vnt_radio_power_on(struct vnt_private *priv)
+  {
+-	int ret = 0;
+  
+  	vnt_exit_deep_sleep(priv);
+  
+@@ -739,7 +738,7 @@ int vnt_radio_power_on(struct vnt_private *priv)
+  
+  	vnt_mac_reg_bits_off(priv, MAC_REG_GPIOCTL1, GPIO3_INTMD);
+  
+-	return ret;
++	return 0;
+  }
+  
+  void vnt_set_bss_mode(struct vnt_private *priv)
+-- 
+1.9.1
 
-P.S. I guess I should mention that there is one reason why some folks
-might still want to download from sourceforge; if they want the
-tarball signed by me, that's the only place you can get it.  For
-$REASONS, the .gpg file on kernel.org is signed by the kernel.org
-automation, and of course the git tree has tags signed for me.  But
-for folks who want the tarball signed by me --- Debian and its
-derivatives want that, for example --- they need to go to sourceforge.
-I dunno if the RPM-based distributions still care about gpg signed
-tarballs.  I'm guessing though that the people who care know where to
-find it.
