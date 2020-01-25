@@ -2,97 +2,99 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AE8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4221C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34512070A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:34:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="m6c5oEoK"
+	by mail.kernel.org (Postfix) with ESMTP id 8CE892077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 10:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgAYKeO (ORCPT
+        id S1727177AbgAYKmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 05:34:14 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52565 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgAYKeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 05:34:13 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 484XS24lytz9sRf;
-        Sat, 25 Jan 2020 21:34:10 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1579948451;
-        bh=AJPU8Hs6GFSApjSXAcOPRu/GO9Tc3s9+wbfyn6Clkrk=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=m6c5oEoKbKQhdcjjPmW9TkV+VkwNGbsJaGAeyyYLSgUf+heWju2xk7X6Ybz1yuZgN
-         2U3Tfgap8+AMnLMF5XCvsj7YU61913Rvo0eYQpUKQIOmLP5x/xqAVbNboD90wtkgFD
-         0L2EliyejJ1qcY/6lThw9dC64978raDnMgqHsMGcuN4Xw96ikCNghs45GkMOIKgsDN
-         BkdCVuROWMZCpqIj6jkobw/5VqAG+uKL/XdhqVqMcbAwTM6QILY4LsZGmvkNFHSXwR
-         FmvMEEYsJact3sNOequMRbv3BQr1lE9JnXyOVNPNHw2uQstSG/8a/1qY8ew6BaQBle
-         tAqc+igl/dFdw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH v2 09/10] compiler/gcc: Raise minimum GCC version for kernel builds to 4.8
-In-Reply-To: <CAKwvOdmFMnCgr3rP5vNkj_H1SnBJ6drdBP1RSGxzfYzSiWGfLg@mail.gmail.com>
-References: <20200123153341.19947-1-will@kernel.org> <20200123153341.19947-10-will@kernel.org> <CAKwvOd=Bp+FWXHUKZnk+_dN=jTYZGdc_QVhErC3N-Frpk4mssQ@mail.gmail.com> <20200124082637.GZ14914@hirez.programming.kicks-ass.net> <CAKwvOdmFMnCgr3rP5vNkj_H1SnBJ6drdBP1RSGxzfYzSiWGfLg@mail.gmail.com>
-Date:   Sat, 25 Jan 2020 21:34:10 +1100
-Message-ID: <87tv4jhljx.fsf@mpe.ellerman.id.au>
+        Sat, 25 Jan 2020 05:42:44 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44081 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgAYKmo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 05:42:44 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ivItl-0008KH-Is; Sat, 25 Jan 2020 11:42:41 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 631131C1A75;
+        Sat, 25 Jan 2020 11:42:40 +0100 (CET)
+Date:   Sat, 25 Jan 2020 10:42:40 -0000
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/rcu] rcu: Switch force_qs_rnp() to for_each_leaf_node_cpu_mask()
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <157994896018.396.6105075370440132665.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nick Desaulniers <ndesaulniers@google.com> writes:
-> On Fri, Jan 24, 2020 at 12:26 AM Peter Zijlstra <peterz@infradead.org> wrote:
->> On Thu, Jan 23, 2020 at 10:36:37AM -0800, Nick Desaulniers wrote:
->> > On Thu, Jan 23, 2020 at 7:34 AM Will Deacon <will@kernel.org> wrote:
->> > > It is very rare to see versions of GCC prior to 4.8 being used to build
->> > > the mainline kernel. These old compilers are also know to have codegen
->> > > issues which can lead to silent miscompilation:
->> > >
->> > > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
->> > >
->> > > Raise the minimum GCC version for kernel build to 4.8 and remove some
->> > > tautological Kconfig dependencies as a consequence.
->> > >
->> > > Cc: Nick Desaulniers <ndesaulniers@google.com>
->> >
->> > Thanks for the patch.
->> > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
->> > I wouldn't mind if this patch preceded the earlier one in the series
->> > adding the warning, should the series require a v2 and if folks are
->> > generally ok with bumping the min version.
->>
->> If I hadn't actually read your reply, I would have never spotted that
->> reviewed-by tag, hidden in a blob of text like that.
->>
->> Adding some whitespace before and after, such that it stands out a
->> little more, might avoid such issues.
->
-> Ack. Do maintainers have tools for fetching patch series and
-> automating collecting Reviewed-by tags, or is it all extremely manual?
+The following commit has been merged into the core/rcu branch of tip:
 
-Patchwork collects them for you. But not all maintainers use patchwork,
-it's a bit new and trendy ;)
+Commit-ID:     7441e7661d6586ae36329b7956e4d713d81e9903
+Gitweb:        https://git.kernel.org/tip/7441e7661d6586ae36329b7956e4d713d81e9903
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Wed, 30 Oct 2019 09:37:11 -07:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Fri, 24 Jan 2020 10:33:51 -08:00
 
-cheers
+rcu: Switch force_qs_rnp() to for_each_leaf_node_cpu_mask()
+
+Currently, force_qs_rnp() uses a for_each_leaf_node_possible_cpu()
+loop containing a check of the current CPU's bit in ->qsmask.
+This works, but this commit saves three lines by instead using
+for_each_leaf_node_cpu_mask(), which combines the functionality of
+for_each_leaf_node_possible_cpu() and leaf_node_cpu_bit().  This commit
+also replaces the use of the local variable "bit" with rdp->grpmask.
+
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/tree.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index bbb60ed..d950764 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2298,14 +2298,11 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
+ 			raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 			continue;
+ 		}
+-		for_each_leaf_node_possible_cpu(rnp, cpu) {
+-			unsigned long bit = leaf_node_cpu_bit(rnp, cpu);
+-			if ((rnp->qsmask & bit) != 0) {
+-				rdp = per_cpu_ptr(&rcu_data, cpu);
+-				if (f(rdp)) {
+-					mask |= bit;
+-					rcu_disable_urgency_upon_qs(rdp);
+-				}
++		for_each_leaf_node_cpu_mask(rnp, cpu, rnp->qsmask) {
++			rdp = per_cpu_ptr(&rcu_data, cpu);
++			if (f(rdp)) {
++				mask |= rdp->grpmask;
++				rcu_disable_urgency_upon_qs(rdp);
+ 			}
+ 		}
+ 		if (mask != 0) {
