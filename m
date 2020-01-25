@@ -2,125 +2,107 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E358AC35244
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB618C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEBE2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:27:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YryjmoVR"
+	by mail.kernel.org (Postfix) with ESMTP id C17882071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 11:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgAYL1Q (ORCPT
+        id S1728827AbgAYL3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 06:27:16 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12016 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgAYL1P (ORCPT
+        Sat, 25 Jan 2020 06:29:41 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:54883 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgAYL3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 06:27:15 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2c25e30000>; Sat, 25 Jan 2020 03:26:28 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 25 Jan 2020 03:27:14 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 25 Jan 2020 03:27:14 -0800
-Received: from [10.26.11.150] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 25 Jan
- 2020 11:27:11 +0000
-Subject: Re: [PATCH 4.19 000/639] 4.19.99-stable review
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-        <akpm@linux-foundation.org>, <shuah@kernel.org>,
-        <patches@kernelci.org>, <ben.hutchings@codethink.co.uk>,
-        <lkft-triage@lists.linaro.org>, <stable@vger.kernel.org>
-References: <20200124093047.008739095@linuxfoundation.org>
- <20200124235537.GB3467@roeck-us.net>
- <cd504bb5-44b1-415b-edc7-21ee69e9d1fa@nvidia.com>
- <f634b705-a561-33ee-0b6f-e3f5c1164b38@roeck-us.net>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <5cd2fc9a-e77b-89e5-a752-f3e17615c3d3@nvidia.com>
-Date:   Sat, 25 Jan 2020 11:27:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 25 Jan 2020 06:29:41 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: YOnk5drxK7Jpd2XG1B+HjfM0noQe2DtXTSNsjG+XS55FIQnn7ArShJbh7pwZY+ZDqepeEZDudK
+ urBkBgizLTrF8rx4CODFkaPZiU9Zo0zZppnK/X5v+ceIpwotzGkvp9r0t/tIqtLqe0THCStemj
+ aDLNurw1bQmrrQtRb/xTc+JC14GNGKBpNtL/kRoEtuyiF7kWlr6QF5xgOCpo3PQZLX1FRJwPSH
+ xbX8gYai+50jniOR4iSttOsY9VLU5gkqDqCDaIZdOe0wpIFcIRGQxgqwgykljvmVFAOj+/Jtje
+ i2M=
+X-IronPort-AV: E=Sophos;i="5.70,361,1574146800"; 
+   d="scan'208";a="64499800"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jan 2020 04:29:39 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 25 Jan 2020 04:29:23 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sat, 25 Jan 2020 04:29:23 -0700
+Date:   Sat, 25 Jan 2020 12:29:22 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
+        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v3 02/10] net: bridge: mrp: Expose function
+ br_mrp_port_open
+Message-ID: <20200125112922.xrskly7d2qb7t22c@soft-dev3.microsemi.net>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-3-horatiu.vultur@microchip.com>
+ <20200124173718.GB13647@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <f634b705-a561-33ee-0b6f-e3f5c1164b38@roeck-us.net>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579951588; bh=UbGH0wYqwHOi6cUko4B3d4ba7MgU1urGnUdIbx79At4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=YryjmoVRCeJCkG2eHnAzsuVVFWvYAI5IQSv78VK2w8Tdmwfmu3n1QaNzqOx8n6Rro
-         sPRqCvZI7ySTUTq0yF608a2HufDLjYOJfUMkn4LPa1DSYrYaaIzFxHesIsEMUT+jJg
-         JtTzKK2vNn+ZlAA7NHnvuqVq+Aw+B2jf+YtTFn6FFO3Qebjk9XxfIn44mTHlVk2h3p
-         ipstYAESbXkNw0rPqOMrsMKlWxwIaKh6boVc2ajYSpqCWypIkwAdAcpYjTHawa7nS/
-         hXuv2ATt1uyPSCBvzidKxzOhUXzuBy2aHN6XRab2a6ueSpb2Cr+c6VelVliKEGDRaY
-         jpKrGRs+9iGgw==
+Content-Disposition: inline
+In-Reply-To: <20200124173718.GB13647@lunn.ch>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The 01/24/2020 18:37, Andrew Lunn wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On Fri, Jan 24, 2020 at 05:18:20PM +0100, Horatiu Vultur wrote:
+> > In case the HW is capable to detect when the MRP ring is open or closed. It is
+> > expected that the network driver will notify the bridge that the ring is open or
+> > closed.
+> >
+> > The function br_mrp_port_open is used to notify the kernel that one of the ports
+> > stopped receiving MRP_Test frames. The argument 'loc' has a value of '1' when
+> > the port stopped receiving MRP_Test and '0' when it started to receive MRP_Test.
+> 
+> Hi Horatiu
+> 
+> Given the name of the function, br_mrp_port_open(), how about replacing
+> loc with a bool with the name open?
 
-On 25/01/2020 09:25, Guenter Roeck wrote:
-> On 1/25/20 12:24 AM, Jon Hunter wrote:
->> Hi Guenter,
->>
->> On 24/01/2020 23:55, Guenter Roeck wrote:
->>> On Fri, Jan 24, 2020 at 10:22:50AM +0100, Greg Kroah-Hartman wrote:
->>>> This is the start of the stable review cycle for the 4.19.99 release.
->>>> There are 639 patches in this series, all will be posted as a response
->>>> to this one.=C2=A0 If anyone has any issues with these being applied, =
-please
->>>> let me know.
->>>>
->>>> Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
->>>> Anything received after that time might be too late.
->>>>
->>>
->>> For v4.19.98-638-g24832ad2c623:
->>
->> This does not appear to be the correct tag/version for this review.
->>
->=20
-> It is the tip of v4.19.y.queue in my test system.
->=20
-> $ git describe local-stable/linux-4.19.y.queue
-> v4.19.98-638-g24832ad2c623
->=20
-> and the tip of the stable-queue repository as of right now.
->=20
-> $ git describe stable-queue/linux-4.19.y
-> v4.19.98-638-g24832ad2c623
-> $ git remote -v | grep stable-queue
-> stable-queue=C2=A0=C2=A0=C2=A0
-> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-> (fetch)
-> stable-queue=C2=A0=C2=A0=C2=A0
-> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-> (push)
->=20
-> What is wrong with it ?
+Hi Andrew,
 
-Ah you are right, there is nothing wrong now I look at the git describe
-output. At first glance I thought the tag was not correct.
+Well spotted, yes I will replace this in the next series.
 
-Sorry for the noise.
+> 
+>     Andrew
 
-Jon
-
---=20
-nvpublic
+-- 
+/Horatiu
