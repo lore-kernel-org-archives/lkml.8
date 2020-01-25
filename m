@@ -2,67 +2,88 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D53C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD045C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C886F2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579979108;
-	bh=H+0XpGFfGPUV2y2iRW2Owf5aTH1ZSxhxku/PWb2qBfY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=y6qu5QpnfSZcwVejIIDsdAYS/DYn5clUPCLRpj34VyXe3FtmxPHdiUZbRXrVGoYbH
-	 J6UU3zDBng8NbR1V4KnntrIDvb1mQBvkEJMcUtKPXV8jE+kLDa04K234GupsWVHS2K
-	 GzXlkkf1iDdC3YFvsXEitNf01758U50WAC0nvUH0=
+	by mail.kernel.org (Postfix) with ESMTP id 8B4F22071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 19:09:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fFmYgDNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbgAYTFG (ORCPT
+        id S1726911AbgAYTJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 14:05:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgAYTFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 14:05:05 -0500
-Subject: Re: [GIT PULL] Btrfs fix for 5.5-rc8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579979105;
-        bh=H+0XpGFfGPUV2y2iRW2Owf5aTH1ZSxhxku/PWb2qBfY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=iEsc696AGm6SJ2x+Ui5BVlpUFLYwr9JmYZ1sP/qpeRZ4zIEGtHyuz4X8rt9bPwYRn
-         Ut3S6XvM3RmXqj9+RaKcn9f2jwWU/qXkUpx7Cv6D1zHeoTeORcqFv7XK9esOBuwvTl
-         cJ+iLEhLXEE7kJ/KRjFJhOeujTONf3sY1Ivdt9bw=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1579953624.git.dsterba@suse.com>
-References: <cover.1579953624.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1579953624.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-rc8-tag
-X-PR-Tracked-Commit-Id: 4cea9037f82a6deed0f2f61e4054b7ae2519ef87
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a075f23dd4b036ebaf918b3af477aa1f249ddfa0
-Message-Id: <157997910521.7716.16664199927978016601.pr-tracker-bot@kernel.org>
-Date:   Sat, 25 Jan 2020 19:05:05 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+        Sat, 25 Jan 2020 14:09:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57876 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAYTJw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 14:09:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=My5//NJQysYMT+Wea8KLUdQ/Ww11h9Uv4t+v7jFecDU=; b=fFmYgDNNvt77kQV4xKWYDlosj
+        tCRnFy39irUUteCkoPzUlBM/Wm5FkejDjX1gLGOh1AOSU9xWtasFCl6Yk4gnJp6YHhDtEnfffUKLF
+        EBp2IlTESitbhAv7sRphU+1LFGbjMg61Nw3xVl/bb+yYBk+izXwb/6w33+zt3U0xxf/W/ggVQJ07u
+        C+r9ejvmR76/vpb7qv/B3UnJlBSOjzyCBm6eBaw8FGfOYR0uAYkhizpzn61a5zTykX2GN2qAM6O8x
+        MUsWC+f6ZstKPT6dK6hp2fpwysNavccb6La+1kyQ4NeJT5uZiEB2XGltOcYtJtuxj3lzmJR+FTww1
+        4eL0GLFtA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ivQoZ-00036i-67; Sat, 25 Jan 2020 19:09:51 +0000
+Date:   Sat, 25 Jan 2020 11:09:51 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/12] erofs: Convert uncompressed files from readpages
+ to readahead
+Message-ID: <20200125190951.GN4675@bombadil.infradead.org>
+References: <20200125013553.24899-1-willy@infradead.org>
+ <20200125013553.24899-8-willy@infradead.org>
+ <20200125015323.GA9918@hsiangkao-HP-ZHAN-66-Pro-G1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200125015323.GA9918@hsiangkao-HP-ZHAN-66-Pro-G1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 25 Jan 2020 13:14:00 +0100:
+On Sat, Jan 25, 2020 at 09:53:29AM +0800, Gao Xiang wrote:
+> > +		/* all the page errors are ignored when readahead */
+> > +		if (IS_ERR(bio)) {
+> > +			pr_err("%s, readahead error at page %lu of nid %llu\n",
+> > +			       __func__, page->index,
+> > +			       EROFS_I(mapping->host)->nid);
+> >  
+> > -				bio = NULL;
+> > -			}
+> > +			bio = NULL;
+> > +			put_page(page);
+> 
+> Out of curiously, some little question... Why we need put_page(page) twice
+> if erofs_read_raw_page returns with error...
+> 
+> One put_page(page) is used as a temporary reference count for this request,
+> we could put_page(page) in advance since pages are still locked before endio.
+> 
+> Another put_page(page) is used for page cache xarray. I think in this case
+> the page has been successfully inserted to the page cache anyway, after erroring
+> out it will trigger .readpage again... so probably we need to keep this
+> refcount count for page cache xarray?
+> 
+> If I'm missing something, kindly correct me if I'm wrong....
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-rc8-tag
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a075f23dd4b036ebaf918b3af477aa1f249ddfa0
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+You're quite right.  After readahead has completed, the page should have
+a refcount of 1 and be unlocked.  If we hit an error, the page should
+be !uptodate.  It doesn't matter whether we set PageError or not in this
+case; filemap_fault() will ClearPageError() before retrying if the page
+is !uptodate.  This extra put_page() is wrong, and I'll remove it from
+the next version.  Thanks!
