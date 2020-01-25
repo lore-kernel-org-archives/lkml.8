@@ -2,96 +2,107 @@ Return-Path: <SRS0=aedO=3O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F40C35241
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 04:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5A4C35241
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 05:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE3120838
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 04:58:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579928327;
-	bh=se8AI+drmz8YaJ/8zhHySxcdJx3cDLiDs/OjJa17Oco=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=StB864jPtxyVSWgA/XH3WzExcZby6jtNeEmRMbKZnW3363IhJqzLYnOOOOVFdgfSA
-	 DvHVKHdkEWg/rBVNLUtpSeoBko8BCSRm3pLY3XIiXMR82XmaBR4yWplLJszI+aWo7o
-	 wbgVT9SSldcmBZBgN/eTJoQL/lKHV+gVQJNwppY0=
+	by mail.kernel.org (Postfix) with ESMTP id 1FB252075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 05:03:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YqVP5RP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgAYE6q (ORCPT
+        id S1726111AbgAYFDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 23:58:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAYE6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 23:58:45 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32D382075E;
-        Sat, 25 Jan 2020 04:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579928325;
-        bh=se8AI+drmz8YaJ/8zhHySxcdJx3cDLiDs/OjJa17Oco=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=kWYruwuKFzmpVprbEiv42WnO1l8hPIhsYJNU87fNFTiwlnIhfPi7wZUzk+7FyHg0t
-         vre9xtm/9e6IgK94Oz2vMRqqCgXVwRQ4V4L2CGyHGqPTraGzKuAiCjU3yHAP7L0KoH
-         hFfWTERFAbBf41FQBHKC55IS0rkQ66hdbmergH+g=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 04EDD352018E; Fri, 24 Jan 2020 20:58:45 -0800 (PST)
-Date:   Fri, 24 Jan 2020 20:58:45 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-Message-ID: <20200125045844.GC2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200124222434.GA7196@paulmck-ThinkPad-P72>
- <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
- <20200125005713.GZ2935@paulmck-ThinkPad-P72>
- <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
- <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
+        Sat, 25 Jan 2020 00:03:02 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44479 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgAYFDC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 00:03:02 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so2174444pgl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 21:03:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=05BwadZAGfXvZZEsxjYXT6rUqTTFlTQilEFLvptCJPo=;
+        b=YqVP5RP5xWZB4sBJe1HZmHil9OccC9kl0tb3x7bCu9FXcd3tLyp/E4T+9HCW29SFiH
+         /R9M1zD7d+9dK50ijCitMnpwNHvthrOgqaPSCINcxLd3uWupPEqxFwzNeK4rSmJfFwNq
+         sUT/Lp79stAriASB+JUvBFs9zWbljhPJ/M7HI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=05BwadZAGfXvZZEsxjYXT6rUqTTFlTQilEFLvptCJPo=;
+        b=Q/hDslcuPscgPhwCAFPNCnj2UgwAa5OB0LW/0jVeLIsqL7nI+nYXqDoOtcK+Eiy/hh
+         E7qGcREjgc9g7jFSUVErxN0dti+++DlbkG/iJCGr2dqNoixx6oEmyAxfDEMQ8ZsI3I8X
+         2rOx9RsQ0GnVfbugoz7oy2QZUluMGmHaFmpDilPaCSZOJaWXvRwM5W+UCu5Fe7xa5Jx6
+         htTEN+g8Ry3Xhpmwp+yjrlM8GW0e86ZBOtHzhvSOuywizt//6bfjWD02a3rpxfeqIokD
+         1QGjhDygeAJvE+ySkr/w5t/vYvUmG6JP6q65qIqnC1duYX4KNnpprJmzg3NEpByOAmSq
+         ZuBQ==
+X-Gm-Message-State: APjAAAVwA1onWXxetDWuX56x5felsluNBfTkC4u9cLWQ6RlHBYZD6jFO
+        tm54UyxwzZtniOaBBp8WtNlXiA==
+X-Google-Smtp-Source: APXvYqxK+vtPL+z8xvYRLD8IJT1FQr68iAfYTPHNHxqoHdUX5xJ5q8BUhQoyEnM+MfyCkMYQBqJrIg==
+X-Received: by 2002:a62:7681:: with SMTP id r123mr6479112pfc.169.1579928581217;
+        Fri, 24 Jan 2020 21:03:01 -0800 (PST)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id u12sm7896585pfm.165.2020.01.24.21.02.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2020 21:03:00 -0800 (PST)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/panel: Fix boe,tv101wum-n53 htotal timing
+Date:   Sat, 25 Jan 2020 13:02:56 +0800
+Message-Id: <20200125050256.107404-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 09:17:05PM -0500, Waiman Long wrote:
-> On 1/24/20 8:59 PM, Waiman Long wrote:
-> >> You called it!  I will play with QEMU's -numa argument to see if I can get
-> >> CNA to run for me.  Please accept my apologies for the false alarm.
-> >>
-> >> 							Thanx, Paul
-> >>
-> > CNA is not currently supported in a VM guest simply because the numa
-> > information is not reliable. You will have to run it on baremetal to
-> > test it. Sorry for that.
-> 
-> Correction. There is a command line option to force CNA lock to be used
-> in a VM. Use the "numa_spinlock=on" boot command line parameter.
+The datasheet suggests 60 for tHFP, so let's adjust the number
+accordingly.
 
-As I understand it, I need to use a series of -numa arguments to qemu
-combined with the numa_spinlock=on (or =1) on the kernel command line.
-If the kernel thinks that there is only one NUMA node, it appears to
-avoid doing CNA.
+This also makes the framerate be 60Hz as intended:
+159916.0 * 1000 / ((1200 + 80 + 24 + 60)*(1920 + 20 + 4 + 10))
+=> 60.00 Hz
 
-Correct?
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 
-							Thanx, Paul
+---
+
+This also matches the values that we use in our chromeos-4.19
+vendor kernel.
+
+Applies on top or drm-misc/drm-misc-next.
+
+ drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+index 01faf8597700005..48a164257d18c35 100644
+--- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
++++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+@@ -645,7 +645,7 @@ static const struct drm_display_mode boe_tv101wum_n53_default_mode = {
+ 	.hdisplay = 1200,
+ 	.hsync_start = 1200 + 80,
+ 	.hsync_end = 1200 + 80 + 24,
+-	.htotal = 1200 + 80 + 24 + 40,
++	.htotal = 1200 + 80 + 24 + 60,
+ 	.vdisplay = 1920,
+ 	.vsync_start = 1920 + 20,
+ 	.vsync_end = 1920 + 20 + 4,
+-- 
+2.25.0.341.g760bfbb309-goog
+
