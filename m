@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003BBC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6600BC32771
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72312073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AB12073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jan 2020 01:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AzMoWvOh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eN8g4PFU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbgAYBVc (ORCPT
+        id S1729758AbgAYBWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jan 2020 20:21:32 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35979 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAYBVb (ORCPT
+        Fri, 24 Jan 2020 20:22:05 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34277 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAYBWF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jan 2020 20:21:31 -0500
-Received: by mail-pf1-f194.google.com with SMTP id w2so1953694pfd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 17:21:31 -0800 (PST)
+        Fri, 24 Jan 2020 20:22:05 -0500
+Received: by mail-pf1-f193.google.com with SMTP id i6so1958112pfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jan 2020 17:22:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ozPe0HVPIC1b0/+mSZyQOpz7fXxujT8sGk4dgUhiBjM=;
-        b=AzMoWvOhecXo4M/VXlM9KeYJENsopNcUxwEwRrlxOxlYKwT+xf67TUnN7SUPV/pDy1
-         k/WKGAo3xA3CmuHKVjPQr6HEnyFgpd/H0Ej6axrKQUgGDgWXZCMKN9ycEIWUTZ/iYv2C
-         bKPB/iR4rPzwDorcV/zZAffX9f5N/pWE6+s6M=
+        bh=JwNAT38uZz21Fou+nxtSqV2POWJ4Lnccl1Lds062gEU=;
+        b=eN8g4PFUQA/zfbSLhLk0EizRBjwVlPnAj486l7RDRW27upiEendjq7GCQDT+V/fTAg
+         21r76jPO1mroldm/9YfgdbOeYXS3ODUtYa2XKmQ9leu14e5NH1lpv4nTnXQY9aS2KoPx
+         Mm+vgQa5lFxjOXYpsRqAZsGAD5nqNo+gcB+Y4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ozPe0HVPIC1b0/+mSZyQOpz7fXxujT8sGk4dgUhiBjM=;
-        b=I/e8UjPLOosCMCKD/pLJxj5gUtIPJAHIr1TzSrdQCCBZp/4hsnHRodKEgEACzoQQEZ
-         27Aiqt/9pLQuTU+4Awn8FXO5FDWqArOf1lzRAwSEMWC3Xn/QpL9XzPhFDj9Cw0EolQj/
-         0N9PK05kTj9/3XxrBrDvG9hDcBdMOkQPNKkjl7G/4rwlk2o15orwylMqOyPJZCFS263u
-         PttgAnlVwo69aeQE46/LyPSnq//n+1ocSEDC5FoMrWt6n8tEUAVjL6IOuIG46nyNVZdl
-         YBbsG4Snew40tm89KGg6jKWn4mMrszGbVHU39nc6g28Yg+o7Ry2rERC+ZF3O4RuzQ9/P
-         5kRA==
-X-Gm-Message-State: APjAAAWiX0DxvUEjFVSBE10nwzbyaAU8O23+i3D5b4HvgipCfUhfTMad
-        C/kJzFeCnSHZhRNqkcHGov2CUw==
-X-Google-Smtp-Source: APXvYqwz8A5b3ZOpRxIiYMPTRMH+JrDjFb2faXAffB5hkPtmOUr+lewKYhxd+K8aazwQRlmnux7x3Q==
-X-Received: by 2002:aa7:9484:: with SMTP id z4mr5864625pfk.88.1579915290903;
-        Fri, 24 Jan 2020 17:21:30 -0800 (PST)
+        bh=JwNAT38uZz21Fou+nxtSqV2POWJ4Lnccl1Lds062gEU=;
+        b=IQVnQJUH0oGPvcUlBMaonJnBqzn7H3Q4ftS7E0k6x22MqP/ZYawqZA+fKQiyx36fMg
+         6GjErSlZeDBcgXRmISsUMiE8MAH22nIPvCS3WC1jorhR2s8V4Zpeuy0zypFUBYnjDtKz
+         dXe864hX/pI0RPueCvn2n5wN14+LyBEs7vyqNONsUjNarv9bkNX5sR/ykFXt9EFD7QxT
+         YZv792+FvUxkB/PGXPJPnc1pV74SeYMIgIWtvGo+cHvqxdMYAt/d8Rb3ZLxEC6sKGwWE
+         VhFBXwsItRh9+qMGvLcZgxjFnuHd0C92YT9RW+It4dedl874nyjx71w1moX5bFPg0Abp
+         dSUQ==
+X-Gm-Message-State: APjAAAWMknLGcYzIw7BYfVcFOIyOY6tXaxRKPA6w8qA5yJZOSvg5tCzk
+        666jRLOmYhyC5vwKqbG+PGQYTw==
+X-Google-Smtp-Source: APXvYqwvoxNwKMUo98vwrwDr1+u1puI/uBM3KIgtz3QvRv/raK6rjKx1MGKPoCSHpOcdTtbi8sIgmw==
+X-Received: by 2002:a62:486:: with SMTP id 128mr5982032pfe.236.1579915324262;
+        Fri, 24 Jan 2020 17:22:04 -0800 (PST)
 Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id n4sm7443337pgg.88.2020.01.24.17.21.30
+        by smtp.gmail.com with ESMTPSA id n4sm7443337pgg.88.2020.01.24.17.22.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 17:21:30 -0800 (PST)
+        Fri, 24 Jan 2020 17:22:03 -0800 (PST)
 From:   Prashant Malani <pmalani@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org
 Cc:     linux-kernel@vger.kernel.org,
         Prashant Malani <pmalani@chromium.org>
-Subject: [PATCH 1/4] platform/chrome: Add EC command msg wrapper
-Date:   Fri, 24 Jan 2020 17:21:03 -0800
-Message-Id: <20200125012105.59903-2-pmalani@chromium.org>
+Subject: [PATCH 3/4] platform/chrome: Use send_cmd_msg in debugfs
+Date:   Fri, 24 Jan 2020 17:21:07 -0800
+Message-Id: <20200125012105.59903-4-pmalani@chromium.org>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200125012105.59903-1-pmalani@chromium.org>
 References: <20200125012105.59903-1-pmalani@chromium.org>
@@ -70,106 +70,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many callers of cros_ec_cmd_xfer_status() use a similar set up of
-allocating and filling a message buffer and then copying any received
-data to a target buffer.
-
-Create a utility function that performs this setup so that callers can
-use this function instead.
+Update Chrome EC's debugfs driver to use the cros_ec_send_cmd_msg()
+wrapper instead of cros_ec_cmd_xfer_status() within the pdinfo_read()
+function. This helps to remove some of the structure and buffer
+definitions and some of the message buffer set up code.
 
 Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
- drivers/platform/chrome/cros_ec_proto.c     | 53 +++++++++++++++++++++
- include/linux/platform_data/cros_ec_proto.h |  5 ++
- 2 files changed, 58 insertions(+)
+ drivers/platform/chrome/cros_ec_debugfs.c | 39 +++++++----------------
+ 1 file changed, 12 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index da1b1c4504333..8ef3b7d27d260 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -5,6 +5,7 @@
+diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+index 6ae484989d1f5..34c1c36be1c51 100644
+--- a/drivers/platform/chrome/cros_ec_debugfs.c
++++ b/drivers/platform/chrome/cros_ec_debugfs.c
+@@ -199,44 +199,29 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
+ 	char read_buf[EC_USB_PD_MAX_PORTS * 40], *p = read_buf;
+ 	struct cros_ec_debugfs *debug_info = file->private_data;
+ 	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
+-	struct {
+-		struct cros_ec_command msg;
+-		union {
+-			struct ec_response_usb_pd_control_v1 resp;
+-			struct ec_params_usb_pd_control params;
+-		};
+-	} __packed ec_buf;
+-	struct cros_ec_command *msg;
+-	struct ec_response_usb_pd_control_v1 *resp;
+-	struct ec_params_usb_pd_control *params;
++	struct ec_response_usb_pd_control_v1 resp = {0};
++	struct ec_params_usb_pd_control params = {0};
+ 	int i;
  
- #include <linux/delay.h>
- #include <linux/device.h>
-+#include <linux/mfd/cros_ec.h>
- #include <linux/module.h>
- #include <linux/platform_data/cros_ec_commands.h>
- #include <linux/platform_data/cros_ec_proto.h>
-@@ -570,6 +571,58 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
- }
- EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
+-	msg = &ec_buf.msg;
+-	params = (struct ec_params_usb_pd_control *)msg->data;
+-	resp = (struct ec_response_usb_pd_control_v1 *)msg->data;
+-
+-	msg->command = EC_CMD_USB_PD_CONTROL;
+-	msg->version = 1;
+-	msg->insize = sizeof(*resp);
+-	msg->outsize = sizeof(*params);
+-
+ 	/*
+ 	 * Read status from all PD ports until failure, typically caused
+ 	 * by attempting to read status on a port that doesn't exist.
+ 	 */
+ 	for (i = 0; i < EC_USB_PD_MAX_PORTS; ++i) {
+-		params->port = i;
+-		params->role = 0;
+-		params->mux = 0;
+-		params->swap = 0;
+-
+-		if (cros_ec_cmd_xfer_status(ec_dev, msg) < 0)
++		params.port = i;
++		params.role = 0;
++		params.mux = 0;
++		params.swap = 0;
++
++		if (cros_ec_send_cmd_msg(ec_dev, 1, EC_CMD_USB_PD_CONTROL,
++					 &params, sizeof(params), &resp,
++					 sizeof(resp)) < 0)
+ 			break;
  
-+/**
-+ * cros_ec_send_cmd_msg() - Utility function to send commands to ChromeOS EC.
-+ * @ec: EC device struct.
-+ * @version: Command version number (often 0).
-+ * @command: Command ID including offset.
-+ * @outdata: Data to be sent to the EC.
-+ * @outsize: Size of the &outdata buffer.
-+ * @indata: Data to be received from the EC.
-+ * @insize: Size of the &indata buffer.
-+ *
-+ * This function is a wrapper around &cros_ec_cmd_xfer_status, and performs
-+ * some of the common work involved with sending a command to the EC. This
-+ * includes allocating and filling up a &struct cros_ec_command message buffer,
-+ * and copying the received data to another buffer.
-+ *
-+ * Return: The number of bytes transferred on success or negative error code.
-+ */
-+int cros_ec_send_cmd_msg(struct cros_ec_device *ec, unsigned int version,
-+			 unsigned int command, void *outdata,
-+			 unsigned int outsize, void *indata,
-+			 unsigned int insize)
-+{
-+	struct cros_ec_command *msg;
-+	int ret;
-+
-+	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	msg->version = version;
-+	msg->command = command;
-+	msg->outsize = outsize;
-+	msg->insize = insize;
-+
-+	if (outdata && outsize > 0)
-+		memcpy(msg->data, outdata, outsize);
-+
-+	ret = cros_ec_cmd_xfer_status(ec, msg);
-+	if (ret < 0) {
-+		dev_warn(ec->dev, "Command failed: %d\n", msg->result);
-+		goto cleanup;
-+	}
-+
-+	if (insize)
-+		memcpy(indata, msg->data, insize);
-+
-+cleanup:
-+	kfree(msg);
-+	return ret;
-+}
-+EXPORT_SYMBOL(cros_ec_send_cmd_msg);
-+
- static int get_next_event_xfer(struct cros_ec_device *ec_dev,
- 			       struct cros_ec_command *msg,
- 			       struct ec_response_get_next_event_v1 *event,
-diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-index 30098a5515231..166ce26bdd79e 100644
---- a/include/linux/platform_data/cros_ec_proto.h
-+++ b/include/linux/platform_data/cros_ec_proto.h
-@@ -201,6 +201,11 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
- int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
- 			    struct cros_ec_command *msg);
+ 		p += scnprintf(p, sizeof(read_buf) + read_buf - p,
+ 			       "p%d: %s en:%.2x role:%.2x pol:%.2x\n", i,
+-			       resp->state, resp->enabled, resp->role,
+-			       resp->polarity);
++			       resp.state, resp.enabled, resp.role,
++			       resp.polarity);
+ 	}
  
-+int cros_ec_send_cmd_msg(struct cros_ec_device *ec_dev, unsigned int version,
-+			 unsigned int command, void *outdata,
-+			 unsigned int outsize, void *indata,
-+			 unsigned int insize);
-+
- int cros_ec_register(struct cros_ec_device *ec_dev);
- 
- int cros_ec_unregister(struct cros_ec_device *ec_dev);
+ 	return simple_read_from_buffer(user_buf, count, ppos,
 -- 
 2.25.0.341.g760bfbb309-goog
 
