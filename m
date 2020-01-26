@@ -2,99 +2,116 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2235C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCB7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C922620720
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:31:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ouZuhw1j"
+	by mail.kernel.org (Postfix) with ESMTP id 9E12A2083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580052937;
+	bh=wNZuYpHo/oqB810XSYgXonQ7QrqECablZ/abB2+Rxq4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=YGqI1u5tClcGpj4wIJGvz6ceywuZtxYMWvr13hoDuy4SVxykShu/62o4rDpB+yLBh
+	 hVjXGLE/uZvkAFhK6t0qPF+YqMmr9YBGFeAwxlaTpmFVSigWLAnfSY7z/z78wdjH2x
+	 1OJsv3/5HtJSnimr2o1h6yNdk53QSXVKqc1jh2SA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbgAZPb2 (ORCPT
+        id S1726771AbgAZPfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 10:31:28 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:45510 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725907AbgAZPbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 10:31:25 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580052685; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=bO52typVteT+dUc0mpKNPXbpFZmLnOhBYL05cpNAgdY=;
- b=ouZuhw1jQ9rQ4LafFuoCAjyrAMClwnm4XZVJzwRHyQsQkfs0pWUBcAtpmOP6xAJ/p8ZSMkEN
- hppLP3sNKNlYmMFeVXLPYgUGU0XVaKPRaa/IwsU72tokc7ixV2JO31WRi4oXjAxPYKiuqTy1
- ZDh+SZa+tkM9yR+kmA0HLynMWho=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2db0c4.7f4b9dbef650-smtp-out-n02;
- Sun, 26 Jan 2020 15:31:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A1C26C4479F; Sun, 26 Jan 2020 15:31:16 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        Sun, 26 Jan 2020 10:35:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725908AbgAZPfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 10:35:36 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96579C433CB;
-        Sun, 26 Jan 2020 15:31:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96579C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EAA12071A;
+        Sun, 26 Jan 2020 15:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580052936;
+        bh=wNZuYpHo/oqB810XSYgXonQ7QrqECablZ/abB2+Rxq4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=eBkcLRR/OVOxK9jF4dAE0VVVJJGuBwoL10Xxa8stXLh38IkJ21JBqYg4pSeBn/9OX
+         Kyf360tAyg43NBsr4G3IyY4D1KKiLXCcEc6kEPqhho9c6c9w9xOMb7y1xEH2f+v4v2
+         FEuL2in2eYunSEnck9fUMP3oOGi950PTouWTQZx0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 070B7352277B; Sun, 26 Jan 2020 07:35:36 -0800 (PST)
+Date:   Sun, 26 Jan 2020 07:35:36 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com, dave.dice@oracle.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
+Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
+Message-ID: <20200126153535.GL2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <20200124222434.GA7196@paulmck-ThinkPad-P72>
+ <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
+ <20200125005713.GZ2935@paulmck-ThinkPad-P72>
+ <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
+ <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
+ <20200125045844.GC2935@paulmck-ThinkPad-P72>
+ <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,
- power-gpio as optional
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
-References: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200126153116.A1C26C4479F@smtp.codeaurora.org>
-Date:   Sun, 26 Jan 2020 15:31:16 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+On Sat, Jan 25, 2020 at 02:41:39PM -0500, Waiman Long wrote:
+> On 1/24/20 11:58 PM, Paul E. McKenney wrote:
+> > On Fri, Jan 24, 2020 at 09:17:05PM -0500, Waiman Long wrote:
+> >> On 1/24/20 8:59 PM, Waiman Long wrote:
+> >>>> You called it!  I will play with QEMU's -numa argument to see if I can get
+> >>>> CNA to run for me.  Please accept my apologies for the false alarm.
+> >>>>
+> >>>> 							Thanx, Paul
+> >>>>
+> >>> CNA is not currently supported in a VM guest simply because the numa
+> >>> information is not reliable. You will have to run it on baremetal to
+> >>> test it. Sorry for that.
+> >> Correction. There is a command line option to force CNA lock to be used
+> >> in a VM. Use the "numa_spinlock=on" boot command line parameter.
+> > As I understand it, I need to use a series of -numa arguments to qemu
+> > combined with the numa_spinlock=on (or =1) on the kernel command line.
+> > If the kernel thinks that there is only one NUMA node, it appears to
+> > avoid doing CNA.
+> >
+> > Correct?
+> >
+> > 							Thanx, Paul
+> >
+> In auto-detection mode (the default), CNA will only be turned on when
+> paravirt qspinlock is not enabled first and there are at least 2 numa
+> nodes. The "numa_spinlock=on" option will force it on even when both of
+> the above conditions are false.
 
-> It is now only useful for SPI interface.
-> Power control of SDIO mode is done through mmc core.
-> 
-> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Hmmm...
 
-Failed to apply to wireless-drivers-next, please rebase and resend.
+Here is my kernel command line taken from the console log:
 
-fatal: sha1 information is lacking or useless (drivers/net/wireless/ti/wl1251/sdio.c).
-error: could not build fake ancestor
-Applying: wl1251: remove ti,power-gpio for SDIO mode
-Patch failed at 0001 wl1251: remove ti,power-gpio for SDIO mode
-The copy of the patch that failed is found in: .git/rebase-apply/patch
+console=ttyS0 locktorture.onoff_interval=0 numa_spinlock=on locktorture.stat_interval=15 locktorture.shutdown_secs=1800 locktorture.verbose=1
 
-2 patches set to Changes Requested.
+Yet the string "Enabling CNA spinlock" does not appear.
 
-11298403 [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,power-gpio as optional
-11298399 [v2,2/2] wl1251: remove ti,power-gpio for SDIO mode
+Ah, idiot here needs to enable CONFIG_NUMA_AWARE_SPINLOCKS in his build.
+Trying again with "--kconfig "CONFIG_NUMA_AWARE_SPINLOCKS=y"...
 
--- 
-https://patchwork.kernel.org/patch/11298403/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+							Thanx, Paul
