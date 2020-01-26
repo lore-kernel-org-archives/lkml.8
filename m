@@ -2,113 +2,127 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAC5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C97C35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1AAE2071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD82920700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:53:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="M0TbBDjY"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="f0lLJ+wL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387435AbgAZLh1 (ORCPT
+        id S2387422AbgAZLxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 06:37:27 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:18543 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387416AbgAZLh0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 06:37:26 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580038646; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=o7Z67Njt6M7BftRiSC70I/zPhgR1uwAuSo7PHvYIVPM=;
- b=M0TbBDjYrzp6Bgyz5HAuoJbmmoXWtogLQfpE5koYVeLV+xZnbl+p1KsFfYjXPAcGrwDws40R
- B13nKZfP3h9geP/tKP2jPz1tQsR1oc3qIX0tWWXCGTlqx/byLthoajYQ4MArIOXSJfVmJVCJ
- +7kszpEIsdH5YENMOZ9XwDvWyp0=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2d79f2.7f18535f7458-smtp-out-n03;
- Sun, 26 Jan 2020 11:37:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D8991C4479C; Sun, 26 Jan 2020 11:37:22 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B869CC433CB;
-        Sun, 26 Jan 2020 11:37:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B869CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Sun, 26 Jan 2020 06:53:02 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43863 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgAZLxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 06:53:01 -0500
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 485B8W5j9qz9sPW; Sun, 26 Jan 2020 22:52:59 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1580039579;
+        bh=p07F/CpplD8xOEUuHxcTkyl+DVWiH+CxasxVO4NeadU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=f0lLJ+wLPW9T1W+7sHA+E5bDTsZsJ1vHmX7yonomPYiVeX08NU5hnJyC+nmEz4Lrv
+         OI+MH+IJOKqsv6jg23Pj2xK2JLw72iMuh/wn+JMBTZExkTJnN2YqvttlMOjTkTbOoO
+         k1OuEUsvpZfEXqmphdbcLZ6RsG+5z4s1w65dRCkvkwJeNTvIFEuEKOcBmlcaRrCtcM
+         B0N/mA0vyZz1CNBrbUFXEAmhRA7H2z5M8yB1EJrr7gf3Oz/YxCswVH5aLxVZavMxxc
+         lF8I+hPprrvKPfL8vTPKRHoPL1JINI3Lrkdf4aG7lX+//IpLqya8QKMLasni6pc48j
+         nbrn11jxgdp6A==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@lst.de, ulf.hansson@linaro.org, chzigotzky@xenosoft.de,
+        linuxppc-dev@ozlabs.org
+Subject: [PATCH] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
+Date:   Sun, 26 Jan 2020 22:52:47 +1100
+Message-Id: <20200126115247.13402-1-mpe@ellerman.id.au>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] mwifiex: drop most magic numbers from
- mwifiex_process_tdls_action_frame()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191206194535.150179-1-briannorris@chromium.org>
-References: <20191206194535.150179-1-briannorris@chromium.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     linux-wireless@vger.kernel.org, <linux-kernel@vger.kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>, dan.carpenter@oracle.com,
-        solar@openwall.com, wangqize888888888@gmail.com,
-        Brian Norris <briannorris@chromium.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200126113722.D8991C4479C@smtp.codeaurora.org>
-Date:   Sun, 26 Jan 2020 11:37:22 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> wrote:
+There's an OF helper called of_dma_is_coherent(), which checks if a
+device has a "dma-coherent" property to see if the device is coherent
+for DMA.
 
-> Before commit 1e58252e334d ("mwifiex: Fix heap overflow in
-> mmwifiex_process_tdls_action_frame()"),
-> mwifiex_process_tdls_action_frame() already had too many magic numbers.
-> But this commit just added a ton more, in the name of checking for
-> buffer overflows. That seems like a really bad idea.
-> 
-> Let's make these magic numbers a little less magic, by
-> (a) factoring out 'pos[1]' as 'ie_len'
-> (b) using 'sizeof' on the appropriate source or destination fields where
->     possible, instead of bare numbers
-> (c) dropping redundant checks, per below.
-> 
-> Regarding redundant checks: the beginning of the loop has this:
-> 
->                 if (pos + 2 + pos[1] > end)
->                         break;
-> 
-> but then individual 'case's include stuff like this:
-> 
->  			if (pos > end - 3)
->  				return;
->  			if (pos[1] != 1)
-> 				return;
-> 
-> Note that the second 'return' (validating the length, pos[1]) combined
-> with the above condition (ensuring 'pos + 2 + length' doesn't exceed
-> 'end'), makes the first 'return' (whose 'if' can be reworded as 'pos >
-> end - pos[1] - 2') redundant. Rather than unwind the magic numbers
-> there, just drop those conditions.
-> 
-> Fixes: 1e58252e334d ("mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()")
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
+But on some platforms devices are coherent by default, and on some
+platforms it's not possible to update existing device trees to add the
+"dma-coherent" property.
 
-Patch applied to wireless-drivers-next.git, thanks.
+So add a Kconfig symbol to allow arch code to tell
+of_dma_is_coherent() that devices are coherent by default, regardless
+of the presence of the property.
 
-70e5b8f445fd mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
+Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
+when the system has a coherent cache.
 
+Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
+Cc: stable@vger.kernel.org # v3.16+
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ arch/powerpc/Kconfig | 1 +
+ drivers/of/Kconfig   | 4 ++++
+ drivers/of/address.c | 6 +++++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 1ec34e16ed65..19f5aa8ac9a3 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -238,6 +238,7 @@ config PPC
+ 	select NEED_DMA_MAP_STATE		if PPC64 || NOT_COHERENT_CACHE
+ 	select NEED_SG_DMA_LENGTH
+ 	select OF
++	select OF_DMA_DEFAULT_COHERENT		if !NOT_COHERENT_CACHE
+ 	select OF_EARLY_FLATTREE
+ 	select OLD_SIGACTION			if PPC32
+ 	select OLD_SIGSUSPEND
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 37c2ccbefecd..d91618641be6 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -103,4 +103,8 @@ config OF_OVERLAY
+ config OF_NUMA
+ 	bool
+ 
++config OF_DMA_DEFAULT_COHERENT
++	# arches should select this if DMA is coherent by default for OF devices
++	bool
++
+ endif # OF
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 99c1b8058559..e8a39c3ec4d4 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -995,12 +995,16 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+  * @np:	device node
+  *
+  * It returns true if "dma-coherent" property was found
+- * for this device in DT.
++ * for this device in the DT, or if DMA is coherent by
++ * default for OF devices on the current platform.
+  */
+ bool of_dma_is_coherent(struct device_node *np)
+ {
+ 	struct device_node *node = of_node_get(np);
+ 
++	if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
++		return true;
++
+ 	while (node) {
+ 		if (of_property_read_bool(node, "dma-coherent")) {
+ 			of_node_put(node);
 -- 
-https://patchwork.kernel.org/patch/11277011/
+2.21.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
