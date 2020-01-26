@@ -2,103 +2,93 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD50C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43423C35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A853520702
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMfvEh8T"
+	by mail.kernel.org (Postfix) with ESMTP id 17DAC20708
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgAZSix (ORCPT
+        id S1728925AbgAZS5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 13:38:53 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:37416 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbgAZSix (ORCPT
+        Sun, 26 Jan 2020 13:57:06 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51010 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgAZS5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 13:38:53 -0500
-Received: by mail-yw1-f67.google.com with SMTP id l5so3714118ywd.4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 10:38:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i69aVqNtUh0aH4/EUSRDvf/FER9Hz68ISkhaUxUzTl0=;
-        b=rMfvEh8T4b186lRHcWlnCCdlJg9db7RjBiyF5TCaQz1NcahGJQ7eCMmDE/JxwOTl7b
-         LHizr5TWq5uqwSzp8Xk0MsEgWlBAejc5L0ULiKQk/ZD9n2y0doi/z55xP00bj3yv3Ava
-         L1t7HDea0d8F2i15NqsG2tcjSbJpeFciT4k6Js5l0jnPrIJaQ1FOAirbv1uves9uyh2Z
-         o3144kE6biOVCtOgZVGZn6xIrQgN6laceEyhtJJnAEV5rVe9ujeKKBx7s3pYa1nxQgzf
-         K2Sjc9L5ypLwirkXI9cgkeeANEbDCpTBHHhXM+dSdh4vjzNWV6apbmPXhJ3d+idb2OX+
-         959g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i69aVqNtUh0aH4/EUSRDvf/FER9Hz68ISkhaUxUzTl0=;
-        b=Eat9MpAO0OhHL5csVs5A6j3x2BjsUFWQB1bJWkGp3nyV4d585dGr1aw4a0hkhe3ytY
-         /kBYJaTLKCHelKHc002SRQRkiiZk4/up1E3ZhqN2RUuKz1I5/xI1Q/1Si9O0U5KeL/vE
-         fqDFJXcdNnjElClg5RATdbt5x170OJGJoSh0YpV+mIrc3/HATdduQMtzNmPyF8uP827C
-         YPuI89b0KIii4gAcZOTFmcBZlMv3drgC8VSef26p6otz/wfEMgY862htIIjznz5MCto+
-         FhCo4jolVi+E9C2JpTsHNzcZTtR+myrW6YEvrSZjTGtlirZcZfUzY4EvnJEcPWeMKuV6
-         Gqlw==
-X-Gm-Message-State: APjAAAUWSUZFPypav6WJeoS92JOTGnm/hCPRQXOdm0VFbZ0TNPTsbew6
-        WgrBCNSgdC0X3kYcLScMZ0cfhU2ln+8jb24Chgd7Sejb
-X-Google-Smtp-Source: APXvYqyWhEZHHYbOhHnC3t0Y6vH6sqNyRu0S2xuvfX0uCPx5pSn6uW89RhMOwvFd1iBNaWGKbGJxIM0/hZDazU7SBIc=
-X-Received: by 2002:a81:53d7:: with SMTP id h206mr8970498ywb.92.1580063932400;
- Sun, 26 Jan 2020 10:38:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20200124093047.008739095@linuxfoundation.org> <20200124093207.912523612@linuxfoundation.org>
- <20200126182917.GA26911@amd>
-In-Reply-To: <20200126182917.GA26911@amd>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Sun, 26 Jan 2020 10:38:41 -0800
-Message-ID: <CANn89iKTYMT8T5tOPmk0j4emHt2gCbJD9Dpjf=5LR88zC1tu4A@mail.gmail.com>
-Subject: Re: [PATCH 4.19 625/639] packet: fix data-race in fanout_flow_is_huge()
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Sun, 26 Jan 2020 13:57:06 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 8F44D1C2453; Sun, 26 Jan 2020 19:57:04 +0100 (CET)
+Date:   Sun, 26 Jan 2020 19:57:03 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jonathan Billings <jsbillings@jsbillings.org>,
+        David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 4.19 325/639] afs: Fix AFS file locking to allow fine
+ grained locks
+Message-ID: <20200126185703.GB26911@amd>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <20200124093127.839498079@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="K8nIJk4ghYZn606h"
+Content-Disposition: inline
+In-Reply-To: <20200124093127.839498079@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 10:29 AM Pavel Machek <pavel@denx.de> wrote:
->
->
-> > -     po->rollover->history[prandom_u32() % ROLLOVER_HLEN] = rxhash;
-> > +     victim = prandom_u32() % ROLLOVER_HLEN;
-> > +
-> > +     /* Avoid dirtying the cache line if possible */
-> > +     if (READ_ONCE(history[victim]) != rxhash)
-> > +             WRITE_ONCE(history[victim], rxhash);
-> > +
->
-> Replacing simple asignment with if() is ... not nice and with all the
-> "volatile" magic in _ONCE macros may not be win for
-> everyone. [Actually, I don't think this is win here. This is not
-> exactly hot path, is it?
 
+--K8nIJk4ghYZn606h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is a critical hot path, eg under DDOS attack.
+On Fri 2020-01-24 10:28:15, Greg Kroah-Hartman wrote:
+> From: David Howells <dhowells@redhat.com>
+>=20
+> [ Upstream commit 68ce801ffd82e72d5005ab5458e8b9e59f24d9cc ]
+>=20
+> Fix AFS file locking to allow fine grained locks as some applications, su=
+ch
+> as firefox, won't work if they can't take such locks on certain state fil=
+es
+> - thereby preventing the use of kAFS to distribute a home directory.
+>=20
+> Note that this cannot be made completely functional as the protocol only
+> has provision for whole-file locks, so there exists the possibility
 
->
-> If this is going to get more common, should we get
-> WRITE_ONCE_NONDIRTY() macro hiding the uglyness?
->
+Is this suitable for -stable?
 
-Sure, but we do not add macros for stable patches, usually.
+"AFS does not support fine-grained locks" is fine and easy to
+understand. "AFS pretends it supports locks and hopes for the best for
+benefit of firefox"... may be good idea for mainline, but I don't
+think it matches -stable criteria.
 
-Honestly, WRITE_ONCE_NONDIRTY() looks ugly to me.
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Note that the KCSAN race might be solved in another way when
-data_race() is available.
+--K8nIJk4ghYZn606h
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4t4P8ACgkQMOfwapXb+vLwFwCfUbbP5RtR+59gSByjFhKJunBx
+wUQAnj0ugFS44DPkt38iQT3IQFA9QQQo
+=rQzi
+-----END PGP SIGNATURE-----
+
+--K8nIJk4ghYZn606h--
