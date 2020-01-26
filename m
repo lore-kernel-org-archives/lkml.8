@@ -2,113 +2,75 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680ADC35240
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE4FC35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA732075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8327420842
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:18:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPwwBpaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgAZEOt (ORCPT
+        id S1729271AbgAZESx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 23:14:49 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43448 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729112AbgAZEOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 23:14:49 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A41ACAC5C;
-        Sun, 26 Jan 2020 04:14:47 +0000 (UTC)
-Date:   Sun, 26 Jan 2020 15:14:39 +1100
-From:   Aleksa Sarai <asarai@suse.de>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, christian.brauner@ubuntu.com
-Subject: Re: [PATCH 3/4] seccomp: Add SECCOMP_USER_NOTIF_FLAG_PIDFD to get
- pidfd on listener trap
-Message-ID: <20200126041439.liwfmb4h74zmhi76@yavin.dot.cyphar.com>
-References: <20200124091743.3357-1-sargun@sargun.me>
- <20200124091743.3357-4-sargun@sargun.me>
- <20200126040325.5eimmm7hli5qcqrr@yavin.dot.cyphar.com>
+        Sat, 25 Jan 2020 23:18:53 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35500 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729159AbgAZESx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 23:18:53 -0500
+Received: by mail-vs1-f67.google.com with SMTP id x123so3723546vsc.2;
+        Sat, 25 Jan 2020 20:18:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lq3lIVfl7ApjZuiHmE6fiMLLbsA7AiogeQoH4ZIMHa8=;
+        b=dPwwBpaPryuxcw1l4lbP4vYM1gqsLMCfn2pk9rnI+IhGSlyh81H5QfsAYJOblF9E0C
+         l00HSeX59GqSds+G3pSY9GbpX/kL/UyvrGf2ol8vFsjvAepM3o+Fi0kr6WaPYyKLtr/O
+         IHIxS9iSD9kaSUAP7FkaGOwriwtdXN8ePW1JaDmTx0hmutHo+8LWb9/j2Ezm1kE2KzPO
+         EvH7GZPucbAAG+AJL3DTpJ7msovpYsyozZB+5J2hDuZ6mit8hgAhNMLeeL6BqoBhzBTl
+         gqtS8pPa/o1/4Cr4EuqGR+oXKuCS1M17lMA+SlRkNJr4DHfrikt0U+DYMmD94lvAlJAg
+         DUeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lq3lIVfl7ApjZuiHmE6fiMLLbsA7AiogeQoH4ZIMHa8=;
+        b=MLsMxv5XTs/qR7IT1tzPHbOGM8JC8l0jVutcAPT71ZOqapAxqpB4oe24znKMX37uP5
+         qoiA6OocPZNpuh/Zs8+nxMXfwnvgIxJ+Wg/bIg74xDdj7B1Qwc4wm2CNZnIh4lb1ufCu
+         nFq+nKdDnbiKuGkJhQiHSq2dMu9/lqwQDZzpUW4w9vvoTpTOIUwa53tDiIqg0NZRo2QI
+         Mqr63U0NZph/AqDbCzyTwHSctQrri9Y2a2Yz7s9ta8T0eOy8jLqONVuKBH7J18nIVqgr
+         26FpLM43qXajEzYsYFbXYBBGzFF4+XSEL1j6UBCUKi/9kbW2rKKRrMOGCFIMAD5oMN/U
+         Bj9g==
+X-Gm-Message-State: APjAAAWReIWz6WT30QoRjzrivjQkQpgx+RzUgxDa25QxAtn5vBEUcnjC
+        nKIU8fNQEryxMOGgsTETp1+4YezUlI5znfeqGpo=
+X-Google-Smtp-Source: APXvYqy6dktF7WcxFxQFinwVQCe98+om3ALC3H32+yhVeALtJYLxCghljNOK0DC9d9HR8Xxnlikix+OwptuLKzGE7DA=
+X-Received: by 2002:a67:f10c:: with SMTP id n12mr6652494vsk.208.1580012332237;
+ Sat, 25 Jan 2020 20:18:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hqgjtbxoii2e4zog"
-Content-Disposition: inline
-In-Reply-To: <20200126040325.5eimmm7hli5qcqrr@yavin.dot.cyphar.com>
+References: <20200123232944.39247-1-swboyd@chromium.org>
+In-Reply-To: <20200123232944.39247-1-swboyd@chromium.org>
+From:   Justin Capella <justincapella@gmail.com>
+Date:   Sat, 25 Jan 2020 20:18:40 -0800
+Message-ID: <CAMrEMU-e55q7uvd220+1kuYJ4Xa-4ckz5CvYezCj2ahn_K8t9w@mail.gmail.com>
+Subject: Re: [PATCH] ath10k: Use device_get_match_data() to simplify code
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ath10k <ath10k@lists.infradead.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Maybe use dev here as well?
 
---hqgjtbxoii2e4zog
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2020-01-26, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2020-01-24, Sargun Dhillon <sargun@sargun.me> wrote:
-> >  static long seccomp_notify_recv(struct seccomp_filter *filter,
-> >  				void __user *buf)
-> >  {
-> >  	struct seccomp_knotif *knotif =3D NULL, *cur;
-> >  	struct seccomp_notif unotif;
-> > +	struct task_struct *group_leader;
-> > +	bool send_pidfd;
-> >  	ssize_t ret;
-> > =20
-> > +	if (copy_from_user(&unotif, buf, sizeof(unotif)))
-> > +		return -EFAULT;
-> >  	/* Verify that we're not given garbage to keep struct extensible. */
-> > -	ret =3D check_zeroed_user(buf, sizeof(unotif));
-> > -	if (ret < 0)
-> > -		return ret;
-> > -	if (!ret)
-> > +	if (unotif.id ||
-> > +	    unotif.pid ||
-> > +	    memchr_inv(&unotif.data, 0, sizeof(unotif.data)) ||
-> > +	    unotif.pidfd)
-> > +		return -EINVAL;
->=20
-> IMHO this check is more confusing than the original check_zeroed_user().
-> Something like the following is simpler and less prone to forgetting to
-> add a new field in the future:
->=20
-> 	if (memchr_inv(&unotif, 0, sizeof(unotif)))
-> 		return -EINVAL;
-
-Also the check in the patch doesn't ensure that any unnamed padding is
-zeroed -- memchr_inv(&unotif, 0, sizeof(unotif)) does.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---hqgjtbxoii2e4zog
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl4tEiwACgkQnhiqJn3b
-jbTteQ/+JshgPkAMJKFvNtMDmJpL7P7c3yj6E3WmLPyOsxvBYndxxt2T8/NGEkps
-dyUtBVjqguB9yUDaHUw5K7Ac86pAlyjG+gQVO0tk3LKA649QJoa05hLw6ix0Eg4E
-W9CkIDesL5daNxCn5Qm6fhB8/KTK2ex4JAQEhLX6wyx2/q+5J0i+ZDdDVhMlQC4N
-XZ+s8p3O6j+sEtA7W1cO7Xq+GWqwOtH772Cy4BT1s6hIIpkBS05VXtN6rzwKj15D
-8QkXyfBhHk1p6C92tr/N0RHZ2k5Im2ySDGGg9G6BVOSoUAIPvUyjRlPIj6gSXsuN
-0HvC4olEAD/9ZQQIoPtfSGYpvG9y/tndpAGKMDZjfKmg/IGFHrfTLAUPPvOYCSox
-elV4e8mfwRu2oOZaYwBRasWc7NNUdYwetOkaRwnMiMoxSMHCBK1JBkhwjVoohAsM
-C84aTpwyJcqCx+HB8drVI28eZp1+ukA/aDdxSW4l6gUSkfwxrkIEMOEFSlwQfrH3
-5R3uYw6FTZL2Pcs6TN1W2oVawF7BYkQnvpvG8iHaflgkICajnMpWrcJT6l+IdkQq
-dmtwaJKc/ExzVmlNzwyVD4nKg00Du1am5Fithn6eRZWj9GY5pMhz6qh9xZJgA03J
-KOtokDIAmVO+C1CieF4aj394NbS4gYm0u9aXgyv0yG6060jcaXw=
-=TQFh
------END PGP SIGNATURE-----
-
---hqgjtbxoii2e4zog--
+>                 dev_err(&pdev->dev, "failed to find matching device tree id\n");
