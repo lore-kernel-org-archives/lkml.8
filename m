@@ -2,102 +2,76 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944ADC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D29C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643E02083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580036683;
-	bh=DsLNHXoFWrnToxH3XEZ4wx+I0bcQ0Yu5DlyMQb0Q858=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NQ6RpJhkxN0bo9GSUGw2A/qPJAWl5i6Hbp6ipF36xc8Q1IsStHgGX3jIPUorhsozg
-	 Vy7yYlVeUQwBl1OL4Y6hjwCzokfuMY8WqsEWdjR4+ETvpWieu0eoQyVLEcDTpuWGR2
-	 Z5ZPN2crHhEnQBm1+QTWgCbpjHqi+bMF7eMJFWkc=
+	by mail.kernel.org (Postfix) with ESMTP id 665EB214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:25:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="m1hG+/H3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbgAZLEm (ORCPT
+        id S1729393AbgAZLZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 06:04:42 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34356 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgAZLEm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 06:04:42 -0500
-Received: by mail-lf1-f65.google.com with SMTP id l18so4226362lfc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 03:04:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cBEvHipDhASp6SrgrMvSSIKcdMGAZhryboaA8IMUX2s=;
-        b=iftzFnmxssGft7AeIUJwCpLPyoe3xJpPeQkE8sXKfTMHLD9Dj3NyKuyhbFsFNA3ewC
-         w97rDRZzlqLvtoIYGnTSABHlbmp4xnc/QeJFpat736o692vuyVWyY5COL44kI6jpbg5T
-         uwniADIqzjPLE36Rna5bFp3jzaSFMDktix760dzPAXP4lc2wnjxMO7VD6Q8BQNBLah4H
-         dMXUisrHyS/52oAZYj5E26i2dQEq3AYZ0NAnCRXPoZ37HMRQwiWRc0H9qjR9pRADaWBI
-         jYn6P5AtcZMNvdJrI0gXKn7tFFDewxwzHmqYYnvA4/NaKnL6uHw5w95gKcCXd96FvM9S
-         BNrg==
-X-Gm-Message-State: APjAAAVe47mH/Vo/7Eq/ebZKf8SieYWubxEZvBpX6vcDsKYvI3cyElnA
-        5cHxP3uF+ZNzhPFKCrzs3Hw=
-X-Google-Smtp-Source: APXvYqxUJWPIUdQ6aj4sUa6PfEhjDgxHlfrOt9/+bFdx0TGpwI3cBGPA3OkKviqn+eYt1PKhd4GFIw==
-X-Received: by 2002:a19:cb95:: with SMTP id b143mr1425364lfg.158.1580036679872;
-        Sun, 26 Jan 2020 03:04:39 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id s15sm812959ljs.58.2020.01.26.03.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jan 2020 03:04:38 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ivfiZ-0002mK-R5; Sun, 26 Jan 2020 12:04:39 +0100
-Date:   Sun, 26 Jan 2020 12:04:39 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>
-Cc:     vireshk@kernel.org, johan@kernel.org, elder@kernel.org,
-        gregkh@linuxfoundation.org, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        saurav.girepunje@hotmail.com
-Subject: Re: [PATCH] staging: greybus: fix fw is NULL but dereferenced.
-Message-ID: <20200126110439.GL8375@localhost>
-References: <20200126083130.GA17725@google.com>
+        Sun, 26 Jan 2020 06:25:42 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:41006 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgAZLZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 06:25:42 -0500
+Received: from zn.tnic (p200300EC2F25DF008C8DC1F5EA2ED5CC.dip0.t-ipconnect.de [IPv6:2003:ec:2f25:df00:8c8d:c1f5:ea2e:d5cc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DE4791EC0CAD;
+        Sun, 26 Jan 2020 12:25:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1580037941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Wq7+mev89++1ohlJHiO+2xBlUXDLtwx077Nyk9oE8k8=;
+        b=m1hG+/H39UpK8PqKd1FMivec2Jh/4sLN8G8CZ08H9FFjFYuQzS15YTgaeghgTPQqJmmgPB
+        loJjkPWCNMvzByjIevktkGrdykB9KEw6FnZE7eKK1kZesAr2RGkphur6O8FV2ejVEIzaIH
+        h1hDNOVU1GClqHzftpohgT3fi0FXEyk=
+Date:   Sun, 26 Jan 2020 12:25:40 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+        x86 <x86@kernel.org>
+Subject: Re: [tip: core/rcu] rcu: Enable tick for nohz_full CPUs slow to
+ provide expedited QS
+Message-ID: <20200126112540.GA5714@zn.tnic>
+References: <157994897654.396.5667707782512768142.tip-bot2@tip-bot2>
+ <20200125131425.GB16136@zn.tnic>
+ <20200125161050.GE2935@paulmck-ThinkPad-P72>
+ <20200125175442.GA4369@zn.tnic>
+ <20200125194846.GF2935@paulmck-ThinkPad-P72>
+ <20200126014318.GA5122@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200126083130.GA17725@google.com>
+In-Reply-To: <20200126014318.GA5122@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 02:01:30PM +0530, Saurav Girepunje wrote:
-> Fix the warning reported by cocci check.
+On Sat, Jan 25, 2020 at 05:43:18PM -0800, Paul E. McKenney wrote:
+> And it passes my rcutorture testing as well!  If it does fine with 0day
+> and -next, I will send a pull request Sunday evening, Pacific Time.
+> In the meantime, it is right here in -rcu:
 > 
-> Changes:
-> 
-> In queue_work fw dereference before it actually get assigned.
-> move queue_work before gb_bootrom_set_timeout.
+> 59d8cc6b2e37 ("rcu: Forgive slow expedited grace periods at boot time")
 
-Nope. As I said yesterday, you need to verify the output of any static
-checkers you use.
+Yap, testing looks good here too.
 
-The code may be unnecessarily subtle, but there's no way fw can be
-dereferenced before being initialised currently.
+Thx Paul.
 
-> -queue_work:
->   	/* Refresh timeout */
->   	if (!ret && (offset + size == fw->size))
+-- 
+Regards/Gruss,
+    Boris.
 
-Specifically, the second operand is never evaluated if ret is non-zero.
-
->   		next_request = NEXT_REQ_READY_TO_BOOT;
-> -	else
-> -		next_request = NEXT_REQ_GET_FIRMWARE;
->   
-> +queue_work:
->   	gb_bootrom_set_timeout(bootrom, next_request, NEXT_REQ_TIMEOUT_MS);
->   
->   	return ret;
-
-Johan
+https://people.kernel.org/tglx/notes-about-netiquette
