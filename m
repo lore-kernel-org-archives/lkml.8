@@ -2,440 +2,118 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2624C35240
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FB8C35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6120B2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D3C20702
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:39:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="sY6E1zCf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n5MoRqO5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e7f4srva"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgAZXgQ (ORCPT
+        id S1726921AbgAZXjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 18:36:16 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:43221 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727493AbgAZXgP (ORCPT
+        Sun, 26 Jan 2020 18:39:37 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33500 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgAZXjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 18:36:15 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 61E5B259E;
-        Sun, 26 Jan 2020 18:36:14 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Sun, 26 Jan 2020 18:36:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=snLw4GgEqA5Ac
-        tJo1Hqc9znd8Ge/i/9/gdxAQ56cuFo=; b=sY6E1zCfSFMmyZ85b/16FsclJ4IGs
-        7KMnOmnKHqBvCPucSrWSDdOiLXOdj/EDv/5S/OZ82ZSI65jllyLLaxV6CV1sw3ST
-        WATWcdqivlCIVaCWUIxU0ReGfWe96Wo8ikYfAfc5NZu8HCYAq4VRu/SpAHWLGrRs
-        He+opCWGmYcHFO/CVwi57A/8h740hFBy4QoTaYov5wT5L+lP1wVl1ZI7ywfu1Rpg
-        MC497gOrz9wRyRexXHrIW3dTDMbwRrM0pWIacVtDANAqK5925OSLirSG2c6qn4jK
-        u0DudjyakEdYobG6SEvv53Laqh3dziQ6OrNuah/NanvNJC3yP2GBQpAbw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=snLw4GgEqA5ActJo1Hqc9znd8Ge/i/9/gdxAQ56cuFo=; b=n5MoRqO5
-        w5lxv0IsXmiRod87ARoksqif6iJOiGxe8k3HmSCzZfD23a7lmcEW4PgoqPV2w8Uv
-        0oZwM4T2B3/w9cqCXLxmTvGGTqWlhyjBhoTTVU0DdijGlruJgviaP9BKlc1KI1py
-        0ITLoD7thSss5Nl+ciW05rPmUj2vL7cSSU4xpvVvgTtl7bqd9DDP8KzeKSJrlV9b
-        e4menz3GqtUkcj7JE1Dh96XMmRZDfmR4j+ox/vnL/P7d5qDDdirbHQdKy60eIokc
-        acaEh7DPw55yey9A6nWJSCb5v+I1mkKvMb8Q6Ou6F84U8XT8tDu/Jrj/xoQGy/eG
-        nn3LFRPC/o1V1A==
-X-ME-Sender: <xms:biIuXvKqHvII4ovMugx1I2ZG5IRxf0ZnEQn4P418TC-Z9ivCwFK72g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfedugdduudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephffvuf
-    ffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougig
-    uhesugiguhhuuhdrgiihiieqnecukfhppeduleelrddvtddurdeigedrfeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhu
-    rdighiii
-X-ME-Proxy: <xmx:biIuXiZtcjweEJ3Mh2Rv-DulwQh9OJ-WP8RJfRNYGK2JFn1tnVmTcA>
-    <xmx:biIuXqiRLzjy0me6Yyhf8HEMpZQXzVdWRf5lOgDWnBeqINyBOJwOsw>
-    <xmx:biIuXv7LzxxdHAbLwVMJwNddc8u2UdMLgZk74FcONnp4mtTnDUkRwg>
-    <xmx:biIuXq7qsseMaFjJ3x0Ae8MPiIK4wx2WAFXmTBaeR84wMsWnxG7IRg>
-Received: from dlxu-fedora-R90QNFJV.thefacebook.com (prn-fbagreements-ext.thefacebook.com [199.201.64.3])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A15D43068AEA;
-        Sun, 26 Jan 2020 18:36:12 -0500 (EST)
-From:   Daniel Xu <dxu@dxuuu.xyz>
-To:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org
-Subject: [PATCH v6 bpf-next 2/2] selftests/bpf: add bpf_read_branch_records() selftest
-Date:   Sun, 26 Jan 2020 15:35:54 -0800
-Message-Id: <20200126233554.20061-3-dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200126233554.20061-1-dxu@dxuuu.xyz>
-References: <20200126233554.20061-1-dxu@dxuuu.xyz>
+        Sun, 26 Jan 2020 18:39:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HccNVAHYrxwNOkvIoab6izWsFUr3C25PEsIHXLsrgR4=; b=e7f4srvaUcflIy2OBKV4jiVAa
+        Xflq/gHQssAbiSP2cMCfQBp+q6DHKlAbn/oTmfEUT80aAcuGTNs56GsICd+pberT7qMe25EjTGxVc
+        r2QTBigxocuowetyeS2VqQ4SIdyy7BjrXHVjlgtwFDRW370aHY/qaQevdFJ+efChT/GmmBrgd24rE
+        rAntuXZAwE5XCDxXuiwNursoCUR3Bjse+feleS/rnwoisvXpiGf1/m2J4DOSBGIK6zWXqqEdtxoZg
+        FT7gSA/NkLl74qIni8PdoUTurXIOD/dxsgTC0l581Ol++Wrdo9H/vNKGutSrGyZas9tu31WxwEG82
+        lXxgvH7Rw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ivrV9-0006zd-BA; Sun, 26 Jan 2020 23:39:35 +0000
+Date:   Sun, 26 Jan 2020 15:39:35 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
+Message-ID: <20200126233935.GA11536@bombadil.infradead.org>
+References: <20200109225646.22983-1-xiyou.wangcong@gmail.com>
+ <20200110073822.GC29802@dhcp22.suse.cz>
+ <CAM_iQpVN4MNhcK0TXvhmxsCdkVOqQ4gZBzkDHykLocPC6Va7LQ@mail.gmail.com>
+ <20200121090048.GG29276@dhcp22.suse.cz>
+ <CAM_iQpU0p7JLyQ4mQ==Kd7+0ugmricsEAp1ST2ShAZar2BLAWg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM_iQpU0p7JLyQ4mQ==Kd7+0ugmricsEAp1ST2ShAZar2BLAWg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a selftest to test:
+On Sun, Jan 26, 2020 at 11:53:55AM -0800, Cong Wang wrote:
+> On Tue, Jan 21, 2020 at 1:00 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Mon 20-01-20 14:48:05, Cong Wang wrote:
+> > > It got stuck somewhere along the call path of mem_cgroup_try_charge(),
+> > > and the trace events of mm_vmscan_lru_shrink_inactive() indicates this
+> > > too:
+> >
+> > So it seems that you are condending on the page lock. It is really
+> > unexpected that the reclaim would take that long though. Please try to
+> > enable more vmscan tracepoints to see where the time is spent.
+> 
+> I suspect the process gets stuck in the retry loop in try_charge(), as
+> the _shortest_ stacktrace of the perf samples indicated:
+> 
+> cycles:ppp:
+>         ffffffffa72963db mem_cgroup_iter
+>         ffffffffa72980ca mem_cgroup_oom_unlock
+>         ffffffffa7298c15 try_charge
+>         ffffffffa729a886 mem_cgroup_try_charge
+>         ffffffffa720ec03 __add_to_page_cache_locked
+>         ffffffffa720ee3a add_to_page_cache_lru
+>         ffffffffa7312ddb iomap_readpages_actor
+>         ffffffffa73133f7 iomap_apply
+>         ffffffffa73135da iomap_readpages
+>         ffffffffa722062e read_pages
+>         ffffffffa7220b3f __do_page_cache_readahead
+>         ffffffffa7210554 filemap_fault
+>         ffffffffc039e41f __xfs_filemap_fault
+>         ffffffffa724f5e7 __do_fault
+>         ffffffffa724c5f2 __handle_mm_fault
+>         ffffffffa724cbc6 handle_mm_fault
+>         ffffffffa70a313e __do_page_fault
+>         ffffffffa7a00dfe page_fault
+> 
+> But I don't see how it could be, the only possible case is when
+> mem_cgroup_oom() returns OOM_SUCCESS. However I can't
+> find any clue in dmesg pointing to OOM. These processes in the
+> same memcg are either running or sleeping (that is not exiting or
+> coredump'ing), I don't see how and why they could be selected as
+> a victim of OOM killer. I don't see any signal pending either from
+> their /proc/X/status.
 
-* default bpf_read_branch_records() behavior
-* BPF_F_GET_BRANCH_RECORDS_SIZE flag behavior
-* error path on non branch record perf events
-* using helper to write to stack
-* using helper to write to map
+I think this is a situation where we might end up with a genuine deadlock
+if we're not trylocking the pages.  readahead allocates a batch of
+locked pages and adds them to the pagecache.  If it has allocated,
+say, 5 pages, successfully inserted the first three into i_pages, then
+needs to allocate memory to insert the fourth one into i_pages, and
+the process then attempts to migrate the pages which are still locked,
+they will never come unlocked because they haven't yet been submitted
+to the filesystem for reading.
 
-On host with hardware counter support:
+Or is this enough?
 
-    # ./test_progs -t perf_branches
-    #27/1 perf_branches_hw:OK
-    #27/2 perf_branches_no_hw:OK
-    #27 perf_branches:OK
-    Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-
-On host without hardware counter support (VM):
-
-    # ./test_progs -t perf_branches
-    #27/1 perf_branches_hw:OK
-    #27/2 perf_branches_no_hw:OK
-    #27 perf_branches:OK
-    Summary: 1/2 PASSED, 1 SKIPPED, 0 FAILED
-
-Also sync tools/include/uapi/linux/bpf.h.
-
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
----
- tools/include/uapi/linux/bpf.h                |  25 ++-
- .../selftests/bpf/prog_tests/perf_branches.c  | 182 ++++++++++++++++++
- .../selftests/bpf/progs/test_perf_branches.c  |  74 +++++++
- 3 files changed, 280 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_branches.c
- create mode 100644 tools/testing/selftests/bpf/progs/test_perf_branches.c
-
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index f1d74a2bd234..332aa433d045 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -2892,6 +2892,25 @@ union bpf_attr {
-  *		Obtain the 64bit jiffies
-  *	Return
-  *		The 64 bit jiffies
-+ *
-+ * int bpf_read_branch_records(struct bpf_perf_event_data *ctx, void *buf, u32 buf_size, u64 flags)
-+ *	Description
-+ *		For an eBPF program attached to a perf event, retrieve the
-+ *		branch records (struct perf_branch_entry) associated to *ctx*
-+ *		and store it in	the buffer pointed by *buf* up to size
-+ *		*buf_size* bytes.
-+ *
-+ *		The *flags* can be set to **BPF_F_GET_BRANCH_RECORDS_SIZE** to
-+ *		instead	return the number of bytes required to store all the
-+ *		branch entries. If this flag is set, *buf* may be NULL.
-+ *	Return
-+ *		On success, number of bytes written to *buf*. On error, a
-+ *		negative value.
-+ *
-+ *		**-EINVAL** if arguments invalid or **buf_size** not a multiple
-+ *		of sizeof(struct perf_branch_entry).
-+ *
-+ *		**-ENOENT** if architecture does not support branch records.
-  */
- #define __BPF_FUNC_MAPPER(FN)		\
- 	FN(unspec),			\
-@@ -3012,7 +3031,8 @@ union bpf_attr {
- 	FN(probe_read_kernel_str),	\
- 	FN(tcp_send_ack),		\
- 	FN(send_signal_thread),		\
--	FN(jiffies64),
-+	FN(jiffies64),			\
-+	FN(read_branch_records),
- 
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-  * function eBPF program intends to call
-@@ -3091,6 +3111,9 @@ enum bpf_func_id {
- /* BPF_FUNC_sk_storage_get flags */
- #define BPF_SK_STORAGE_GET_F_CREATE	(1ULL << 0)
- 
-+/* BPF_FUNC_read_branch_records flags. */
-+#define BPF_F_GET_BRANCH_RECORDS_SIZE	(1ULL << 0)
-+
- /* Mode for BPF_FUNC_skb_adjust_room helper. */
- enum bpf_adj_room_mode {
- 	BPF_ADJ_ROOM_NET,
-diff --git a/tools/testing/selftests/bpf/prog_tests/perf_branches.c b/tools/testing/selftests/bpf/prog_tests/perf_branches.c
-new file mode 100644
-index 000000000000..bceefaea85b9
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/perf_branches.c
-@@ -0,0 +1,182 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <pthread.h>
-+#include <sched.h>
-+#include <sys/socket.h>
-+#include <test_progs.h>
-+#include "bpf/libbpf_internal.h"
-+#include "test_perf_branches.skel.h"
-+
-+struct output {
-+	int required_size;
-+	int written_stack;
-+	int written_map;
-+};
-+
-+static void on_good_sample(void *ctx, int cpu, void *data, __u32 size)
-+{
-+	int required_size = ((struct output *)data)->required_size;
-+	int written_stack = ((struct output *)data)->written_stack;
-+	int written_map = ((struct output *)data)->written_map;
-+	int pbe_size = sizeof(struct perf_branch_entry);
-+	int duration = 0;
-+
-+	/*
-+	 * It's hard to validate the contents of the branch entries b/c it
-+	 * would require some kind of disassembler and also encoding the
-+	 * valid jump instructions for supported architectures. So just check
-+	 * the easy stuff for now.
-+	 */
-+	CHECK(required_size <= 0, "read_branches_size", "err %d\n", required_size);
-+	CHECK(written_stack < 0, "read_branches_stack", "err %d\n", written_stack);
-+	CHECK(written_stack % pbe_size != 0, "read_branches_stack",
-+	      "stack bytes written=%d not multiple of struct size=%d\n",
-+	      written_stack, pbe_size);
-+	CHECK(written_map < 0, "read_branches_map", "err %d\n", written_map);
-+	CHECK(written_map % pbe_size != 0, "read_branches_map",
-+	      "map bytes written=%d not multiple of struct size=%d\n",
-+	      written_map, pbe_size);
-+	CHECK(written_map < written_stack, "read_branches_size",
-+	      "written_map=%d < written_stack=%d\n", written_map, written_stack);
-+
-+	*(int *)ctx = 1;
-+}
-+
-+static void on_bad_sample(void *ctx, int cpu, void *data, __u32 size)
-+{
-+	int required_size = ((struct output *)data)->required_size;
-+	int written_stack = ((struct output *)data)->written_stack;
-+	int written_map = ((struct output *)data)->written_map;
-+	int duration = 0;
-+
-+	CHECK((required_size != -EINVAL && required_size != -ENOENT),
-+	      "read_branches_size", "err %d\n", required_size);
-+	CHECK((written_stack != -EINVAL && written_stack != -ENOENT),
-+	      "read_branches_stack", "written %d\n", written_stack);
-+	CHECK((written_map != -EINVAL && written_map != -ENOENT),
-+	      "read_branches_map", "written %d\n", written_map);
-+
-+	*(int *)ctx = 1;
-+}
-+
-+static void test_perf_branches_common(int perf_fd, void *sample_cb)
-+{
-+	struct perf_buffer_opts pb_opts = {};
-+	int err, i, duration = 0, ok = 0;
-+	struct test_perf_branches *skel;
-+	struct perf_buffer *pb;
-+	struct bpf_link *link;
-+	volatile int j = 0;
-+	cpu_set_t cpu_set;
-+
-+	skel = test_perf_branches__open_and_load();
-+	if (CHECK(!skel, "test_perf_branches_load",
-+		  "perf_branches skeleton failed\n"))
-+		goto out_destroy;
-+
-+	/* attach perf_event */
-+	link = bpf_program__attach_perf_event(skel->progs.perf_branches, perf_fd);
-+	if (CHECK(IS_ERR(link), "attach_perf_event", "err %ld\n", PTR_ERR(link)))
-+		goto out_destroy;
-+
-+	/* set up perf buffer */
-+	pb_opts.sample_cb = sample_cb;
-+	pb_opts.ctx = &ok;
-+	pb = perf_buffer__new(bpf_map__fd(skel->maps.perf_buf_map), 1, &pb_opts);
-+	if (CHECK(IS_ERR(pb), "perf_buf__new", "err %ld\n", PTR_ERR(pb)))
-+		goto out_detach;
-+
-+	/* generate some branches on cpu 0 */
-+	CPU_ZERO(&cpu_set);
-+	CPU_SET(0, &cpu_set);
-+	err = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set), &cpu_set);
-+	if (CHECK(err, "set_affinity", "cpu #0, err %d\n", err))
-+		goto out_free_pb;
-+	/* spin the loop for a while (random high number) */
-+	for (i = 0; i < 1000000; ++i)
-+		++j;
-+
-+	/* read perf buffer */
-+	err = perf_buffer__poll(pb, 500);
-+	if (CHECK(err < 0, "perf_buffer__poll", "err %d\n", err))
-+		goto out_free_pb;
-+
-+	if (CHECK(!ok, "ok", "not ok\n"))
-+		goto out_free_pb;
-+
-+out_free_pb:
-+	perf_buffer__free(pb);
-+out_detach:
-+	bpf_link__destroy(link);
-+out_destroy:
-+	test_perf_branches__destroy(skel);
-+}
-+
-+static void test_perf_branches_hw(void)
-+{
-+	struct perf_event_attr attr = {0};
-+	int duration = 0;
-+	int pfd;
-+
-+	/* create perf event */
-+	attr.size = sizeof(attr);
-+	attr.type = PERF_TYPE_HARDWARE;
-+	attr.config = PERF_COUNT_HW_CPU_CYCLES;
-+	attr.freq = 1;
-+	attr.sample_freq = 4000;
-+	attr.sample_type = PERF_SAMPLE_BRANCH_STACK;
-+	attr.branch_sample_type = PERF_SAMPLE_BRANCH_USER | PERF_SAMPLE_BRANCH_ANY;
-+	pfd = syscall(__NR_perf_event_open, &attr, -1, 0, -1, PERF_FLAG_FD_CLOEXEC);
-+
-+	/*
-+	 * Some setups don't support branch records (virtual machines, !x86),
-+	 * so skip test in this case.
-+	 */
-+	if (pfd == -1) {
-+		if (errno == ENOENT) {
-+			printf("%s:SKIP:no PERF_SAMPLE_BRANCH_STACK\n",
-+			       __func__);
-+			test__skip();
-+			return;
-+		}
-+		if (CHECK(pfd < 0, "perf_event_open", "err %d\n", pfd))
-+			return;
-+	}
-+
-+	test_perf_branches_common(pfd, on_good_sample);
-+
-+	close(pfd);
-+}
-+
-+/*
-+ * Tests negative case -- run bpf_read_branch_records() on improperly configured
-+ * perf event.
-+ */
-+static void test_perf_branches_no_hw(void)
-+{
-+	struct perf_event_attr attr = {0};
-+	int duration = 0;
-+	int pfd;
-+
-+	/* create perf event */
-+	attr.size = sizeof(attr);
-+	attr.type = PERF_TYPE_SOFTWARE;
-+	attr.config = PERF_COUNT_SW_CPU_CLOCK;
-+	attr.freq = 1;
-+	attr.sample_freq = 4000;
-+	pfd = syscall(__NR_perf_event_open, &attr, -1, 0, -1, PERF_FLAG_FD_CLOEXEC);
-+	if (CHECK(pfd < 0, "perf_event_open", "err %d\n", pfd))
-+		return;
-+
-+	test_perf_branches_common(pfd, on_bad_sample);
-+
-+	close(pfd);
-+}
-+
-+void test_perf_branches(void)
-+{
-+	if (test__start_subtest("perf_branches_hw"))
-+		test_perf_branches_hw();
-+	if (test__start_subtest("perf_branches_no_hw"))
-+		test_perf_branches_no_hw();
-+}
-diff --git a/tools/testing/selftests/bpf/progs/test_perf_branches.c b/tools/testing/selftests/bpf/progs/test_perf_branches.c
-new file mode 100644
-index 000000000000..60327d512400
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/test_perf_branches.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019 Facebook
-+
-+#include <stddef.h>
-+#include <linux/ptrace.h>
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include "bpf_trace_helpers.h"
-+
-+struct fake_perf_branch_entry {
-+	__u64 _a;
-+	__u64 _b;
-+	__u64 _c;
-+};
-+
-+struct output {
-+	int required_size;
-+	int written_stack;
-+	int written_map;
-+};
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-+	__uint(key_size, sizeof(int));
-+	__uint(value_size, sizeof(int));
-+} perf_buf_map SEC(".maps");
-+
-+typedef struct fake_perf_branch_entry fpbe_t[30];
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_ARRAY);
-+	__uint(max_entries, 1);
-+	__type(key, __u32);
-+	__type(value, fpbe_t);
-+} scratch_map SEC(".maps");
-+
-+SEC("perf_event")
-+int perf_branches(void *ctx)
-+{
-+	struct fake_perf_branch_entry entries[4] = {0};
-+	struct output output = {0};
-+	__u32 key = 0, *value;
-+
-+	/* write to stack */
-+	output.written_stack = bpf_read_branch_records(ctx, entries,
-+						       sizeof(entries), 0);
-+	/* ignore spurious events */
-+	if (!output.written_stack)
-+		return 1;
-+
-+	/* get required size */
-+	output.required_size =
-+		bpf_read_branch_records(ctx, NULL, 0,
-+					BPF_F_GET_BRANCH_RECORDS_SIZE);
-+
-+	/* write to map */
-+	value = bpf_map_lookup_elem(&scratch_map, &key);
-+	if (value)
-+		output.written_map =
-+			bpf_read_branch_records(ctx,
-+						value,
-+						30 * sizeof(struct fake_perf_branch_entry),
-+						0);
-+
-+	/* ignore spurious events */
-+	if (!output.written_map)
-+		return 1;
-+
-+	bpf_perf_event_output(ctx, &perf_buf_map, BPF_F_CURRENT_CPU,
-+			      &output, sizeof(output));
-+	return 0;
-+}
-+
-+char _license[] SEC("license") = "GPL";
--- 
-2.21.1
+static inline gfp_t readahead_gfp_mask(struct address_space *x)
+        return mapping_gfp_mask(x) | __GFP_NORETRY | __GFP_NOWARN;
 
