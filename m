@@ -2,116 +2,98 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCB7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC76C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E12A2083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580052937;
-	bh=wNZuYpHo/oqB810XSYgXonQ7QrqECablZ/abB2+Rxq4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=YGqI1u5tClcGpj4wIJGvz6ceywuZtxYMWvr13hoDuy4SVxykShu/62o4rDpB+yLBh
-	 hVjXGLE/uZvkAFhK6t0qPF+YqMmr9YBGFeAwxlaTpmFVSigWLAnfSY7z/z78wdjH2x
-	 1OJsv3/5HtJSnimr2o1h6yNdk53QSXVKqc1jh2SA=
+	by mail.kernel.org (Postfix) with ESMTP id F34742083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:36:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="g2zDBk/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgAZPfh (ORCPT
+        id S1727221AbgAZPgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 10:35:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbgAZPfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 10:35:36 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        Sun, 26 Jan 2020 10:36:40 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:17503 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726772AbgAZPgi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 10:36:38 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580052997; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=fB+9Ig6BEvL0LASv8D9I/HUEKOK3HLWIXnz4r7aDix4=;
+ b=g2zDBk/bZ/r1UdKY2bNpA/MTwDA6ogjPrUbz+LjclXC3arLvpcbEJOpxhCAP3F8lyhju+nHl
+ 8U6Whr85Avq77dJiirKINhyJW5yXrfppVm8LNiZleBN53o0mnPmXQzuvPhsqepspy8TCEfUH
+ d7VXLOpqFUxR+XUH+WOovY423yw=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2db201.7f4488a5bca8-smtp-out-n01;
+ Sun, 26 Jan 2020 15:36:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CD520C4479C; Sun, 26 Jan 2020 15:36:33 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EAA12071A;
-        Sun, 26 Jan 2020 15:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580052936;
-        bh=wNZuYpHo/oqB810XSYgXonQ7QrqECablZ/abB2+Rxq4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=eBkcLRR/OVOxK9jF4dAE0VVVJJGuBwoL10Xxa8stXLh38IkJ21JBqYg4pSeBn/9OX
-         Kyf360tAyg43NBsr4G3IyY4D1KKiLXCcEc6kEPqhho9c6c9w9xOMb7y1xEH2f+v4v2
-         FEuL2in2eYunSEnck9fUMP3oOGi950PTouWTQZx0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 070B7352277B; Sun, 26 Jan 2020 07:35:36 -0800 (PST)
-Date:   Sun, 26 Jan 2020 07:35:36 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-Message-ID: <20200126153535.GL2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200124222434.GA7196@paulmck-ThinkPad-P72>
- <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
- <20200125005713.GZ2935@paulmck-ThinkPad-P72>
- <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
- <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
- <20200125045844.GC2935@paulmck-ThinkPad-P72>
- <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2E70FC43383;
+        Sun, 26 Jan 2020 15:36:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2E70FC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] hostap: Adjust indentation in prism2_hostapd_add_sta
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191218011545.40557-1-natechancellor@gmail.com>
+References: <20191218011545.40557-1-natechancellor@gmail.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200126153633.CD520C4479C@smtp.codeaurora.org>
+Date:   Sun, 26 Jan 2020 15:36:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 02:41:39PM -0500, Waiman Long wrote:
-> On 1/24/20 11:58 PM, Paul E. McKenney wrote:
-> > On Fri, Jan 24, 2020 at 09:17:05PM -0500, Waiman Long wrote:
-> >> On 1/24/20 8:59 PM, Waiman Long wrote:
-> >>>> You called it!  I will play with QEMU's -numa argument to see if I can get
-> >>>> CNA to run for me.  Please accept my apologies for the false alarm.
-> >>>>
-> >>>> 							Thanx, Paul
-> >>>>
-> >>> CNA is not currently supported in a VM guest simply because the numa
-> >>> information is not reliable. You will have to run it on baremetal to
-> >>> test it. Sorry for that.
-> >> Correction. There is a command line option to force CNA lock to be used
-> >> in a VM. Use the "numa_spinlock=on" boot command line parameter.
-> > As I understand it, I need to use a series of -numa arguments to qemu
-> > combined with the numa_spinlock=on (or =1) on the kernel command line.
-> > If the kernel thinks that there is only one NUMA node, it appears to
-> > avoid doing CNA.
-> >
-> > Correct?
-> >
-> > 							Thanx, Paul
-> >
-> In auto-detection mode (the default), CNA will only be turned on when
-> paravirt qspinlock is not enabled first and there are at least 2 numa
-> nodes. The "numa_spinlock=on" option will force it on even when both of
-> the above conditions are false.
+Nathan Chancellor <natechancellor@gmail.com> wrote:
 
-Hmmm...
+> Clang warns:
+> 
+> ../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
+> misleading indentation; statement is not part of the previous 'if'
+> [-Wmisleading-indentation]
+>         if (sta->tx_supp_rates & WLAN_RATE_5M5)
+>         ^
+> ../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
+> previous statement is here
+>         if (sta->tx_supp_rates & WLAN_RATE_2M)
+>         ^
+> 1 warning generated.
+> 
+> This warning occurs because there is a space before the tab on this
+> line. Remove it so that the indentation is consistent with the Linux
+> kernel coding style and clang no longer warns.
+> 
+> Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/813
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Here is my kernel command line taken from the console log:
+Patch applied to wireless-drivers-next.git, thanks.
 
-console=ttyS0 locktorture.onoff_interval=0 numa_spinlock=on locktorture.stat_interval=15 locktorture.shutdown_secs=1800 locktorture.verbose=1
+b61156fba74f hostap: Adjust indentation in prism2_hostapd_add_sta
 
-Yet the string "Enabling CNA spinlock" does not appear.
+-- 
+https://patchwork.kernel.org/patch/11299247/
 
-Ah, idiot here needs to enable CONFIG_NUMA_AWARE_SPINLOCKS in his build.
-Trying again with "--kconfig "CONFIG_NUMA_AWARE_SPINLOCKS=y"...
-
-							Thanx, Paul
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
