@@ -2,155 +2,159 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DD9C35242
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 03:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F640C35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 03:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B11320702
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 03:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8A1206D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 03:16:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJIXcxbg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACojz0Ii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgAZDCa (ORCPT
+        id S1729117AbgAZDQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 22:02:30 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:39789 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728842AbgAZDC3 (ORCPT
+        Sat, 25 Jan 2020 22:16:10 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45205 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728899AbgAZDQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 22:02:29 -0500
-Received: by mail-yw1-f66.google.com with SMTP id h126so3053739ywc.6;
-        Sat, 25 Jan 2020 19:02:29 -0800 (PST)
+        Sat, 25 Jan 2020 22:16:09 -0500
+Received: by mail-qk1-f194.google.com with SMTP id x1so6282017qkl.12
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 19:16:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tII4AVx3br1wrYA9rc56+ZdNuhnFX5KM9kteNOyiS3I=;
-        b=lJIXcxbgCpGMRp6Zhvk2vdNUDh4nIe7voMjfHZxQXifoDNtapG1wg1VPXaJ/D5W50V
-         q++Qs7815rrRcG1L7K91MxNz42/vCV917pKz+9tZLTxiAmjfYanj20HwdKQydpmE8KjY
-         tDlpYmVMQWyr6MwKAd9+zqXhUsPdYj3bwOgycRD9kcbZ7EYqcByFtvK6zRrCsz/VBjJ4
-         sLYwOcJ//TFJvb61wypLOyUvG/FePeJawpqNadA7y+xAnoGeTbtGKwBUIsWjy4E82OvC
-         duMEH8TkUvPKoMimw74utO6UXNSMWYG5NgjQfg1fKhnGS4Nb7D9RTS+nENdf6YceeAf7
-         20Bw==
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version;
+        bh=3xZp8vrOAuOOQ1xHL+BM+C43h6UE60eT1akLRCXtuAs=;
+        b=ACojz0IiVuJBtkpcQqLGT/IsaS+GinlPsoTuAym83lDEvID2SKRiX+QgChFrf+J567
+         ALH30bb2TrUKZpst9eFSCu5YvcFQp62qGTWdb0eub7gXJA8wteeX7nkZOdEyaiV8E7lA
+         CepyKHqdGAl87QXdbyGtsjeNhADXpgkuuEEu47aWKWxuYWVEjqhXNfUDW2wx/SUPKipb
+         iVvRXtse0uInCYSykVXUs987MeHTT6OJINu5ei9IWOs/tt3iL0Yvnxexo0JUANzk3QIq
+         n2IFqSsMfoBEpthqnrx3+EGe2tdmec9uwZ/UOCUBr/6knSK2fS7hM6C6BO/9W52nCOBE
+         5h5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tII4AVx3br1wrYA9rc56+ZdNuhnFX5KM9kteNOyiS3I=;
-        b=nFs3ztBonP22UgjL/6bpK5IK+UQmQDL20BrN+rhxSZ0nD8nC8DY8XI5GEqzU7Ze7Jk
-         RLie6Kr+HD1jK/BGr380jmR0/S1UJyFCkRqWeGm84gBZgRj2D8ANx2q68uK41bLHzdub
-         uMzxD8BGWohht2h8YWc1Yeb6fd37N33ylyKVOgb4T1VDc55XmQzfBgRCr5XCNGvX41C7
-         MbdFcy+VFLeKuCOkeWfRV255y5Wgd2vnEzp4G07reMiSV7nIPmsjC8Z1qvGj3sK0qHi0
-         YMQf0nO0gXU28tRATaYdGn2hgNpLVD2eOWIop02+WK9nAdrbb7VJ7tZwCoROnp/wmso/
-         q0Mg==
-X-Gm-Message-State: APjAAAWuTudVSUJUL1ZSrFmY4oTFCyjDZ8EJ+l7VFKUMm7yfZU7xfjTG
-        vpUHZ3aXLgTQY7Yq/WmDV2I=
-X-Google-Smtp-Source: APXvYqxidmu1wxYikxWGAWqi1KWvgtfYYggyQy+ED7b5j1UZ0or2nxTKdnePwrdbB9N0a8F2AlDozg==
-X-Received: by 2002:a0d:d8c2:: with SMTP id a185mr7623650ywe.337.1580007748730;
-        Sat, 25 Jan 2020 19:02:28 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s3sm4845031ywf.22.2020.01.25.19.02.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 25 Jan 2020 19:02:28 -0800 (PST)
-Date:   Sat, 25 Jan 2020 19:02:26 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>
-Subject: Re: [PATCH v2 30/45] KVM: Move vcpu alloc and init invocation to
- common code
-Message-ID: <20200126030226.GA7167@roeck-us.net>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
- <20191218215530.2280-31-sean.j.christopherson@intel.com>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version;
+        bh=3xZp8vrOAuOOQ1xHL+BM+C43h6UE60eT1akLRCXtuAs=;
+        b=sccvaHkAaIRKyGE415eN1qgKEwNBRZPH/g2Lm9VKZHpGSN5HlKX5RmAtsLZEYdjM7A
+         6cif6vJrode5satT6WVio7sY5MtVFYSL0/K/mxkXAqQW5nYtEpUR2/xMhWdQu5qnedl3
+         WOpT9+DvovfizvdG2vuNxoxoNgPAyB7+RF9rqDOr9uGMA3xvgl3NYKPGVFtuZfB8uq1T
+         TRyEwnNWuT7/DTDH5b3Oj0pX3q61apvLqWH9eYRtCvY/DnLRvZGtMysRU6sJzef/q10y
+         cq++t4I9lNjqoWmI+xD4XilrgnGLtlGUwsROfBQXVTECMPnY12l8ny7QGbRty5673gPE
+         Vtlw==
+X-Gm-Message-State: APjAAAVoC9tKbmQ3q0Akz9aOPbeaiE9WcAsZsxzKMp/GsKQmP1HMQZQt
+        PM/+XZOXNw+AISiSJmDdv9Fw3Kv75w==
+X-Google-Smtp-Source: APXvYqyZ/uqvTvy864X99ZunW1Rl7DCCElFl71XtPlIOLunlNvdzOOiCw41+k7LsRA1kP2aD4OS2UQ==
+X-Received: by 2002:a37:9ed3:: with SMTP id h202mr11049971qke.456.1580008568432;
+        Sat, 25 Jan 2020 19:16:08 -0800 (PST)
+Received: from [120.7.1.38] ([184.175.21.212])
+        by smtp.gmail.com with ESMTPSA id f97sm6921319qtb.18.2020.01.25.19.16.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 25 Jan 2020 19:16:07 -0800 (PST)
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     ben@decadent.org.uk
+From:   Woody Suwalski <terraluna977@gmail.com>
+Subject: [PATCH] fix 3.16 unknown rela relocation 4 error
+Message-ID: <48d562fd-f80a-69ae-56e5-d0bada0feeed@gmail.com>
+Date:   Sat, 25 Jan 2020 22:16:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101 Firefox/52.0
+ SeaMonkey/2.49.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218215530.2280-31-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/mixed;
+ boundary="------------556E9E7D66A6EAFDDCA5DC60"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 01:55:15PM -0800, Sean Christopherson wrote:
-> Now that all architectures tightly couple vcpu allocation/free with the
-> mandatory calls to kvm_{un}init_vcpu(), move the sequences verbatim to
-> common KVM code.
-> 
-> Move both allocation and initialization in a single patch to eliminate
-> thrash in arch specific code.  The bisection benefits of moving the two
-> pieces in separate patches is marginal at best, whereas the odds of
-> introducing a transient arch specific bug are non-zero.
-> 
-> Acked-by: Christoffer Dall <christoffer.dall@arm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+This is a multi-part message in MIME format.
+--------------556E9E7D66A6EAFDDCA5DC60
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-[ ... ]
+Trying to use an AMD64 3.16 kernel built on a new Debian system fails 
+because
+most of the kernel modules can not be loaded.
 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 8543d338a06a..2ed76584ebd9 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
->  
+This patch handles the PLT32 relocation errors for kernels modules built 
+with binutils
+newer then 2.31, similar to:
+[    5.742485] module: autofs4: Unknown rela relocation: 4
+[    5.742536] systemd[1]: Failed to insert module 'autofs4': Exec 
+format error
 
-[ ... ]
+This patch is based on a mainline kernel patch 
+b21ebf2fb4cde1618915a97cc773e287ff49173e
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Wed, 7 Feb 2018 14:20:09 -0800
+Subject: x86: Treat R_X86_64_PLT32 as R_X86_64_PC32
 
-> -struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
-> -				      unsigned int id)
-                                      ^^^^^^^^^^^^^^^
-> +int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->  {
-> -	struct kvm_vcpu *vcpu;
->  	struct sie_page *sie_page;
->  	int rc;
->  
-> -	rc = -ENOMEM;
-> -
-> -	vcpu = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL);
-> -	if (!vcpu)
-> -		goto out;
-> -
-> -	rc = kvm_vcpu_init(vcpu, kvm, id);
-> -	if (rc)
-> -		goto out_free_cpu;
-> -
-> -	rc = -ENOMEM;
-> -
->  	BUILD_BUG_ON(sizeof(struct sie_page) != 4096);
->  	sie_page = (struct sie_page *) get_zeroed_page(GFP_KERNEL);
->  	if (!sie_page)
-> -		goto out_uninit_vcpu;
-> +		return -ENOMEM;
->  
->  	vcpu->arch.sie_block = &sie_page->sie_block;
->  	vcpu->arch.sie_block->itdba = (unsigned long) &sie_page->itdb;
-> @@ -3087,15 +3070,11 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
->  		 vcpu->arch.sie_block);
->  	trace_kvm_s390_create_vcpu(id, vcpu, vcpu->arch.sie_block);
-                                   ^^^
+Signed-off-by: Woody Suwalski <terraluna977@gmail.com>
 
-For extensive changes like this, wouldn't it be desirable to at least
-compile test it ?
+--- a/arch/x86/tools/relocs.c    2020-01-24 18:48:09.477919152 -0500
++++ b/arch/x86/tools/relocs.c    2020-01-24 18:48:53.645612045 -0500
+@@ -763,6 +763,7 @@ static int do_reloc64(struct section *se
+      switch (r_type) {
+      case R_X86_64_NONE:
+      case R_X86_64_PC32:
++    case R_X86_64_PLT32:
+          /*
+           * NONE can be ignored and PC relative relocations don't
+           * need to be adjusted.
+--- a/arch/x86/kernel/module.c    2020-01-24 18:46:54.922670590 -0500
++++ b/arch/x86/kernel/module.c    2020-01-24 18:47:46.714112016 -0500
+@@ -180,6 +180,7 @@ int apply_relocate_add(Elf64_Shdr *sechd
+                  goto overflow;
+              break;
+          case R_X86_64_PC32:
++        case R_X86_64_PLT32:
+              val -= (u64)loc;
+              *(u32 *)loc = val;
+  #if 0
 
-Guenter
+
+--------------556E9E7D66A6EAFDDCA5DC60
+Content-Type: text/x-patch;
+ name="reloc_PLT32_3.16.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="reloc_PLT32_3.16.diff"
+
+Handle the PLT32 reloacation errors for kernels binaries built with binutils
+newer then 2.31, similar to:
+[    5.742485] module: autofs4: Unknown rela relocation: 4
+[    5.742536] systemd[1]: Failed to insert module 'autofs4': Exec format error
+
+This patch is based on a mainline kernel patch b21ebf2fb4cde1618915a97cc773e287ff49173e
+From: "H.J. Lu" <hjl.tools@gmail.com>
+Date: Wed, 7 Feb 2018 14:20:09 -0800
+Subject: x86: Treat R_X86_64_PLT32 as R_X86_64_PC32
+
+Signed-off-by: Woody Suwalski <terraluna977@gmail.com>
+
+--- a/arch/x86/tools/relocs.c	2020-01-24 18:48:09.477919152 -0500
++++ b/arch/x86/tools/relocs.c	2020-01-24 18:48:53.645612045 -0500
+@@ -763,6 +763,7 @@ static int do_reloc64(struct section *se
+ 	switch (r_type) {
+ 	case R_X86_64_NONE:
+ 	case R_X86_64_PC32:
++	case R_X86_64_PLT32:
+ 		/*
+ 		 * NONE can be ignored and PC relative relocations don't
+ 		 * need to be adjusted.
+--- a/arch/x86/kernel/module.c	2020-01-24 18:46:54.922670590 -0500
++++ b/arch/x86/kernel/module.c	2020-01-24 18:47:46.714112016 -0500
+@@ -180,6 +180,7 @@ int apply_relocate_add(Elf64_Shdr *sechd
+ 				goto overflow;
+ 			break;
+ 		case R_X86_64_PC32:
++		case R_X86_64_PLT32:
+ 			val -= (u64)loc;
+ 			*(u32 *)loc = val;
+ #if 0
+
+--------------556E9E7D66A6EAFDDCA5DC60--
