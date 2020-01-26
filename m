@@ -2,262 +2,167 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E76C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5AFC35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2998020720
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B9720720
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:51:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="WVJ9pYu/"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="P8RwhOzP";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="aJPxA5pB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgAZEtU (ORCPT
+        id S1729221AbgAZEu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 23:49:20 -0500
-Received: from mail-mw2nam12on2137.outbound.protection.outlook.com ([40.107.244.137]:52193
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729014AbgAZEtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 23:49:20 -0500
+        Sat, 25 Jan 2020 23:50:59 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:50072 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729014AbgAZEu7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 23:50:59 -0500
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00Q4jD3I021064;
+        Sat, 25 Jan 2020 20:50:30 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=Cjm9dlAFlPueRhTet0usxe7Zx6i3snPBTlZUKgY8ty0=;
+ b=P8RwhOzPXT+84gC7yQvKNVrPpdJLsCE4dsYai54y4kNJ5AuUBN6CzoWNT2qatHqCrH8V
+ AzjGR7wddgEjXLXJ5H0tyG1wjlYCCqWK476LjtOFyC5Qj5SGWMqVl+6cpiNxBUAlCwn/
+ 9zacGX5KtRZbDoIbeP79782DWRP0yIQ/uFM= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2xrjkgax9u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 25 Jan 2020 20:50:30 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sat, 25 Jan 2020 20:50:29 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iXIfPBZlSgz5lNnE4Xz8ANcuEml0TW4Y9oP5fcjbK8sUhcc5q2DiySz05sIKjYBw/As4jgNH9fOWv7UOpeAX2zwiVnbqgclIHsdneMEOZaSMJYOVIQrpuxTrSqYEjFU+MCdlbdM1dsQwjt84mgBXxMBSImg5QQhCVDiNrvq6GZqkXrgNvgi+FEhdI6Z3oKolVBlhKVoGPVl8r98mrGrLojq/kiiGo638mfnkBgpDmig5Q84gvLB3g7M+OZ9qBjeNwBQLM7rd0QpNZ3C+UQNi5bFtKtLKgDIqGGIQr1ko0jta61sekM+lJ0FTdiclKbcGXJSyQF4LPvqMSwdGfDCm+Q==
+ b=NAFmS4dqxuGw0upAEh2uhO1UOZ7CkHuMhX4OerUsvMYrrQFIdzmLZfNdtMiQBGTmkm8x6NIehlEkL7++wZ7WORTznU6VtCFfPMmCim4keQTidhVTWT1UQBQNQwzhzFHG1KKxo7a9DIpMotvnb2op33PHwWQhIwkWEm2a3rpjFgmZTO65YNw3wp3o+kqxcdVORkMz8tmzJkOFGoEsoeVwM1Qj1SA/TS/mByKTaKQo2w17/FvO+xFwlCJrRi2aBkeTXRe8BYvDHvfUrhlrO1DXFbWkzzrMu4d6Q1tNw+f9izH4GzXc9txzdC+6K31Q4zYWZh0tUEct/rEwTPuH8aevTA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9qTfxQxYzB08kr8opDAgK8KkIWioFEOjNsWy1uHeqMI=;
- b=NL6/o95I5NTirDxW/i5eVbb0ycyW/EgNhiqZAdotUZhQxVUKxzfFh+ndMhBmyvYrPdavO8LfSkd7BWdi9Wng1nAsZwlYJKrvsazx7jgenTVqY0V0Z/g8z4wLTI7UMoGw1PcRn2PDmv1KSCZA8lPIh8mJnHcb3kCiozKheLlfmRzWqk7QrjNPeDnOctjK8k3gfR2qAo8pVGaBQnYf0Hsjv+fg/+Bh8DsQtk0AknPap64PIyuH+M7BB/AEq8oCZXxNgfhW9nh1SJTtAaFugy6KElNri/qhPmnMgy0dRjR+J/tNDNWddYHTZuKJlTpeg2a7zf7jSI1fIga2cLHKzvfHnw==
+ bh=Cjm9dlAFlPueRhTet0usxe7Zx6i3snPBTlZUKgY8ty0=;
+ b=JTeBefmwF436JwecZomsRpuxRVkJe+066FeNtLhAiY067wISZMTdaTtNr94UyNycdJWlHNYdT/qD0+5wnmBOhGYToxzeR+CvDSBMviF1xFqoK2PaaigaV0GfrwHlRQ7DFeuFWuR6bEPWgdLuBfVjIEHtm2wRU4w7cFt/r3VG2aI5o/nyn0p21TTzMS1FW0lMGPIs2pXqKOQm10mi8+r4qRUcL2AjYu1KaE1C4RfCrhIh7gSMvb1uH35HPgPK2pBdFekL5iGtf9ChCcQUlPkQZqF+ccoE2Z62zfy2u8138GeN1ff1nDn21VuiNpA5dIU+Y2smSKMP9EjXEdTsqCx4qg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9qTfxQxYzB08kr8opDAgK8KkIWioFEOjNsWy1uHeqMI=;
- b=WVJ9pYu/53LDGKNWqhDETCtWKOF3QKdMvXjxCWEC3P3LgdjN546AMXLMklmZFh4EBqpMKM3sqizx0oYOIt+rtajn+DnNl25pXrQc2fLH84vLKqDtrhFskOol2uX4Lpz4DdvW+OUm/hy6EGalF6C2Eq8Dkv1fvh1DiHJf6nT6rIQ=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (52.132.149.16) by
- MW2PR2101MB1116.namprd21.prod.outlook.com (52.132.149.33) with Microsoft SMTP
+ bh=Cjm9dlAFlPueRhTet0usxe7Zx6i3snPBTlZUKgY8ty0=;
+ b=aJPxA5pBlXQmYLczGppVDKr1+o5YnF61lPerEmStOQ6x/ghBkt/p9773Z3cMWZ7cywcr4BvfaEGYsLxL84QZvzZCYv4SMntuma1cb0A38eGffyYpMm0TzFFkjC8G3IGq2rpvnL9A52v8fPOQ+7ul0o4VDP8KTH9jRm3bgyaLL5A=
+Received: from DM6PR15MB3001.namprd15.prod.outlook.com (20.178.231.16) by
+ DM6PR15MB3225.namprd15.prod.outlook.com (20.179.49.94) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.6; Sun, 26 Jan 2020 04:49:15 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d561:cbc4:f1a:e5fe]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d561:cbc4:f1a:e5fe%9]) with mapi id 15.20.2686.013; Sun, 26 Jan 2020
- 04:49:15 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH v3 1/4] Tools: hv: Reopen the devices if read() or write()
- returns errors
-Thread-Topic: [PATCH v3 1/4] Tools: hv: Reopen the devices if read() or
- write() returns errors
-Thread-Index: AQHV07lVd95yjtgTiE+JQQ3vMAq0wKf8XnwA
-Date:   Sun, 26 Jan 2020 04:49:15 +0000
-Message-ID: <MW2PR2101MB105256D6229F97FC16DC4735D7080@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <1579982036-121722-1-git-send-email-decui@microsoft.com>
- <1579982036-121722-2-git-send-email-decui@microsoft.com>
-In-Reply-To: <1579982036-121722-2-git-send-email-decui@microsoft.com>
+ 15.20.2665.24; Sun, 26 Jan 2020 04:50:15 +0000
+Received: from DM6PR15MB3001.namprd15.prod.outlook.com
+ ([fe80::294e:884:76fd:743c]) by DM6PR15MB3001.namprd15.prod.outlook.com
+ ([fe80::294e:884:76fd:743c%4]) with mapi id 15.20.2665.017; Sun, 26 Jan 2020
+ 04:50:14 +0000
+Received: from macbook-pro-52.local.dhcp.thefacebook.com (2620:10d:c090:180::3a87) by MWHPR2001CA0004.namprd20.prod.outlook.com (2603:10b6:301:15::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.22 via Frontend Transport; Sun, 26 Jan 2020 04:50:11 +0000
+From:   Yonghong Song <yhs@fb.com>
+To:     Daniel Xu <dxu@dxuuu.xyz>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+CC:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        "Andrii Nakryiko" <andriin@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v5 bpf-next 2/2] selftests/bpf: add
+ bpf_read_branch_records() selftest
+Thread-Topic: [PATCH v5 bpf-next 2/2] selftests/bpf: add
+ bpf_read_branch_records() selftest
+Thread-Index: AQHV0/6hj37VXzJy60OxdaYnx1/cgKf8YCyA
+Date:   Sun, 26 Jan 2020 04:50:14 +0000
+Message-ID: <fcbc20dd-e5ca-e779-774f-49490dc87c3b@fb.com>
+References: <C05FGIY6DS21.3FOPNFKMT6EWK@dlxu-fedora-R90QNFJV>
+In-Reply-To: <C05FGIY6DS21.3FOPNFKMT6EWK@dlxu-fedora-R90QNFJV>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-26T04:49:13.6387629Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=022339bc-bb50-4127-8274-d3106c3df480;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
+x-clientproxiedby: MWHPR2001CA0004.namprd20.prod.outlook.com
+ (2603:10b6:301:15::14) To DM6PR15MB3001.namprd15.prod.outlook.com
+ (2603:10b6:5:13c::16)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::3a87]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a55a73bd-8dd6-48dc-5e38-08d7a21b18a0
-x-ms-traffictypediagnostic: MW2PR2101MB1116:|MW2PR2101MB1116:|MW2PR2101MB1116:
+x-ms-office365-filtering-correlation-id: e2619412-48a4-47ea-976a-08d7a21b3bbd
+x-ms-traffictypediagnostic: DM6PR15MB3225:
 x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB1116304D71E1B2573377C415D7080@MW2PR2101MB1116.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-microsoft-antispam-prvs: <DM6PR15MB32253A9D88C93C47ECAF39D2D3080@DM6PR15MB3225.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 02945962BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(396003)(136003)(366004)(39860400002)(189003)(199004)(81156014)(316002)(81166006)(7696005)(9686003)(71200400001)(55016002)(2906002)(33656002)(8936002)(10290500003)(110136005)(478600001)(5660300002)(6506007)(86362001)(66446008)(8990500004)(76116006)(26005)(66946007)(64756008)(66556008)(66476007)(186003)(52536014)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1116;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(396003)(376002)(346002)(366004)(189003)(199004)(66946007)(66446008)(64756008)(66556008)(66476007)(966005)(186003)(16526019)(31686004)(5660300002)(6506007)(53546011)(478600001)(2906002)(6486002)(52116002)(316002)(31696002)(86362001)(71200400001)(110136005)(54906003)(81166006)(81156014)(8936002)(36756003)(6512007)(2616005)(8676002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3225;H:DM6PR15MB3001.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LBzAe8q8neaFcqQOn8TL4q1POnf1HaZuv60ei3iW8yxBSiZPcQb4u8ceCgQz0emgbGlEHc0EeUfsM4jGIz1brYkxZQ3NQsZMjpA2iUc2eL8tE8ZVNqtsXH9IfKnLEeIhXP4Goa2bUdeQ6W+to8LzDYF1hItVu2nzyKcq0Yl8lMPQOqCHPRFlNcX9es9zZZqXlGoxBhLpmeZ3181PNXEgp89wEQu0WhX2tINbttVKPiYPLWKL8A+dS0CYC5ESaqZtOQIDJ3VW1V9x69rFYJRE5Fig1E4D72Mqxtu5vYNatHXyhWv1ksQO68K+uneM6SRe6DlfamK3cMBZnbJ24URoz4ZjIIUaFy093/FKU62dXPI5njFZntdC6nNXIl0/1M/mOpxr58N/b+D6xy4KRLS+9q8dTfUwdr+J+ra22m694GFY6xCL6kq3k6Ttxgcuh7b+
-x-ms-exchange-antispam-messagedata: XcdUREvGLKMssgI1lfsuNpK3cbaBEjiGpxorEkYSG+xzKeZNp35Urn75TthTiIys74Lp7LDDvOIKjc6KzbpLQJ0Why9cu8pTlikrwIIgTEZY/TEkRhgxru5oOVoLEKQiY3tHupPI7p1+0Uuopn8hpw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: ZR/gKL9MBnt0+lMozfe0VP4FS2kiUe/UFo4Jd80VVKyvGLa4kj6IyPrm4svx9IOUIys8lDOigwxNGeYO5El7XebBtl5XTg7CbORD+O8kLdVihe387QnPkOJuotVSoysnDu5ozb0RLgF1tJnTXwqBRglIAA/78ZXi6xBkVXwTY+PXqW1M7kgbkYCrw+FST1M2DQbUNONxAFWDvN0He8m+oqZsq/jJxRGxUJF6kvOQZLSpRnPZiAPuTMEnhpaPcfBU/v7k+t/nxZegmx1KpmJ4AI6cWA9gHdrdci4FSBg0nBSmekONBPz8WfMGfFt6H+bxznCQgm5SJ/305T1AZXXlb6HhfEqzEVA4z+RrcSi5hltWIBO0qcfs+Eiy0BP05mO3xLkG56F5yKQNkEpJTMB5FQh8DZ+Iur9fIBQv8BricrTAniQSZ7pprnxCGs30WXz/0UfZp5NCm1LprWX02FGMs8TAMl5S5jRaeTfpzQTYVkgCOkAX61nq7/8LgXOPyVGoJCREQgNkbN7rU4kgKpuv0w==
+x-ms-exchange-antispam-messagedata: /vg1fT8lFOP7Hb0ZMJMSJvl97ngRxGg6uRmT6Sud35ZDfkAEQz8ga6z52HpVRu85hK1IbbTxo3tIgcKbHuSPcIrvnjJfJ7zSCWXqV5bSnBoGWuRwyM+VYSz/sHFcVPQkUdcuM1b1TQlmkaIZt9Q0UQw3g8UysAE3h94zVyx/A/U=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0CE4C37A99A8004492AB79C396ECCD8D@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a55a73bd-8dd6-48dc-5e38-08d7a21b18a0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jan 2020 04:49:15.5975
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2619412-48a4-47ea-976a-08d7a21b3bbd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jan 2020 04:50:14.7581
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eV8vgzy/Ur/jFdieGkSLPjBMa2Zp57bON/hTvGJk/IJkuKxKCYw4e0W0pyzNM8rIKRcEfVeuObyqb9o1NZYPWFSnRQ7qduCpho7rg8rIP0o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1116
+X-MS-Exchange-CrossTenant-userprincipalname: bop8AQdnknPnbXrFsIEgaClIEDn+rtF1KjBzBbdHdkh/NJWhZWxZY8DyG90F6EbE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3225
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-25_09:2020-01-24,2020-01-25 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ phishscore=0 clxscore=1015 spamscore=0 adultscore=0 impostorscore=0
+ mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001260040
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Saturday, January 25, 2020 11:=
-54 AM
->=20
-> The state machine in the hv_utils driver can run out of order in some
-> corner cases, e.g. if the kvp daemon doesn't call write() fast enough
-> due to some reason, kvp_timeout_func() can run first and move the state
-> to HVUTIL_READY; next, when kvp_on_msg() is called it returns -EINVAL
-> since kvp_transaction.state is smaller than HVUTIL_USERSPACE_REQ; later,
-> the daemon's write() gets an error -EINVAL, and the daemon will exit().
->=20
-> We can reproduce the issue by sending a SIGSTOP signal to the daemon, wai=
-t
-> for 1 minute, and send a SIGCONT signal to the daemon: the daemon will
-> exit() quickly.
->=20
-> We can fix the issue by forcing a reset of the device (which means the
-> daemon can close() and open() the device again) and doing extra necessary
-> clean-up.
->=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
->=20
-> ---
-> Changes in v2:
->     This is actually a new patch that makes the daemons more robust.
->=20
-> Changes in v3 (I addressed Michael's comments):
->     Don't reset target_fd, since that's unnecessary.
->     Reset target_fname by: target_fname[0] =3D '\0';
->     Added the missing "fs_frozen =3D true;" in vss_operate().
->     After reopen_vss_fd: if vss_operate(VSS_OP_THAW) can not clear
->         fs_frozen due to an error, we just exit().
->     Added comments.
->=20
->  tools/hv/hv_fcopy_daemon.c | 33 +++++++++++++++++++++----
->  tools/hv/hv_kvp_daemon.c   | 36 ++++++++++++++++------------
->  tools/hv/hv_vss_daemon.c   | 49 +++++++++++++++++++++++++++++---------
->  3 files changed, 88 insertions(+), 30 deletions(-)
->=20
-> diff --git a/tools/hv/hv_fcopy_daemon.c b/tools/hv/hv_fcopy_daemon.c
-> index aea2d91ab364..48cfa032432c 100644
-> --- a/tools/hv/hv_fcopy_daemon.c
-> +++ b/tools/hv/hv_fcopy_daemon.c
-> @@ -80,6 +80,8 @@ static int hv_start_fcopy(struct hv_start_fcopy *smsg)
->=20
->  	error =3D 0;
->  done:
-> +	if (error)
-> +		target_fname[0] =3D '\0';
->  	return error;
->  }
->=20
-> @@ -108,15 +110,29 @@ static int hv_copy_data(struct hv_do_fcopy *cpmsg)
->  	return ret;
->  }
->=20
-> +/*
-> + * Reset target_fname to "" in the two below functions for hibernation: =
-if
-> + * the fcopy operation is aborted by hibernation, the daemon should remo=
-ve the
-> + * partially-copied file; to achieve this, the hv_utils driver always fa=
-kes a
-> + * CANCEL_FCOPY message upon suspend, and later when the VM resumes back=
-,
-> + * the daemon calls hv_copy_cancel() to remove the file; if a file is co=
-pied
-> + * successfully before suspend, hv_copy_finished() must reset target_fna=
-me to
-> + * avoid that the file can be incorrectly removed upon resume, since the=
- faked
-> + * CANCEL_FCOPY message is spurious in this case.
-> + */
->  static int hv_copy_finished(void)
->  {
->  	close(target_fd);
-> +	target_fname[0] =3D '\0';
->  	return 0;
->  }
->  static int hv_copy_cancel(void)
->  {
->  	close(target_fd);
-> -	unlink(target_fname);
-> +	if (strlen(target_fname) > 0) {
-> +		unlink(target_fname);
-> +		target_fname[0] =3D '\0';
-> +	}
->  	return 0;
->=20
->  }
-> @@ -141,7 +157,7 @@ int main(int argc, char *argv[])
->  		struct hv_do_fcopy copy;
->  		__u32 kernel_modver;
->  	} buffer =3D { };
-> -	int in_handshake =3D 1;
-> +	int in_handshake;
->=20
->  	static struct option long_options[] =3D {
->  		{"help",	no_argument,	   0,  'h' },
-> @@ -170,6 +186,10 @@ int main(int argc, char *argv[])
->  	openlog("HV_FCOPY", 0, LOG_USER);
->  	syslog(LOG_INFO, "starting; pid is:%d", getpid());
->=20
-> +reopen_fcopy_fd:
-> +	/* Remove any possible partially-copied file on error */
-> +	hv_copy_cancel();
-
-Since you have removed the calls to close(fcopy_fd) after a
-pread() or pwrite() failure that were in v2 of the patch, I was
-expecting to see
-
-	if (fcopy_fd !=3D -1)
-		close(fcopy_fd)
-
-here, like you've done with the kvp and vss code.  And
-remember to initialize fcopy_fd to -1. :-)
-
-Michael
-
-> +	in_handshake =3D 1;
->  	fcopy_fd =3D open("/dev/vmbus/hv_fcopy", O_RDWR);
->=20
->  	if (fcopy_fd < 0) {
-> @@ -196,7 +216,7 @@ int main(int argc, char *argv[])
->  		len =3D pread(fcopy_fd, &buffer, sizeof(buffer), 0);
->  		if (len < 0) {
->  			syslog(LOG_ERR, "pread failed: %s", strerror(errno));
-> -			exit(EXIT_FAILURE);
-> +			goto reopen_fcopy_fd;
->  		}
->=20
->  		if (in_handshake) {
-> @@ -231,9 +251,14 @@ int main(int argc, char *argv[])
->=20
->  		}
->=20
-> +		/*
-> +		 * pwrite() may return an error due to the faked CANCEL_FCOPY
-> +		 * message upon hibernation. Ignore the error by resetting the
-> +		 * dev file, i.e. closing and re-opening it.
-> +		 */
->  		if (pwrite(fcopy_fd, &error, sizeof(int), 0) !=3D sizeof(int)) {
->  			syslog(LOG_ERR, "pwrite failed: %s", strerror(errno));
-> -			exit(EXIT_FAILURE);
-> +			goto reopen_fcopy_fd;
->  		}
->  	}
->  }
+DQoNCk9uIDEvMjUvMjAgODoxMCBQTSwgRGFuaWVsIFh1IHdyb3RlOg0KPiBPbiBTYXQgSmFuIDI1
+LCAyMDIwIGF0IDY6NTMgUE0sIEFsZXhlaSBTdGFyb3ZvaXRvdiB3cm90ZToNCj4+IE9uIFNhdCwg
+SmFuIDI1LCAyMDIwIGF0IDI6MzIgUE0gRGFuaWVsIFh1IDxkeHVAZHh1dXUueHl6PiB3cm90ZToN
+Cj4+PiArICAgICAgIGF0dHIudHlwZSA9IFBFUkZfVFlQRV9IQVJEV0FSRTsNCj4+PiArICAgICAg
+IGF0dHIuY29uZmlnID0gUEVSRl9DT1VOVF9IV19DUFVfQ1lDTEVTOw0KPj4+ICsgICAgICAgYXR0
+ci5mcmVxID0gMTsNCj4+PiArICAgICAgIGF0dHIuc2FtcGxlX2ZyZXEgPSA0MDAwOw0KPj4+ICsg
+ICAgICAgYXR0ci5zYW1wbGVfdHlwZSA9IFBFUkZfU0FNUExFX0JSQU5DSF9TVEFDSzsNCj4+PiAr
+ICAgICAgIGF0dHIuYnJhbmNoX3NhbXBsZV90eXBlID0gUEVSRl9TQU1QTEVfQlJBTkNIX1VTRVIg
+fCBQRVJGX1NBTVBMRV9CUkFOQ0hfQU5ZOw0KPj4+ICsgICAgICAgcGZkID0gc3lzY2FsbChfX05S
+X3BlcmZfZXZlbnRfb3BlbiwgJmF0dHIsIC0xLCAwLCAtMSwgUEVSRl9GTEFHX0ZEX0NMT0VYRUMp
+Ow0KPj4+ICsgICAgICAgaWYgKENIRUNLKHBmZCA8IDAsICJwZXJmX2V2ZW50X29wZW4iLCAiZXJy
+ICVkXG4iLCBwZmQpKQ0KPj4+ICsgICAgICAgICAgICAgICBnb3RvIG91dF9kZXN0cm95Ow0KPj4N
+Cj4+DQo+PiBJdCdzIGZhaWxpbmcgZm9yIG1lIGluIGt2bS4gSXMgdGhlcmUgd2F5IHRvIG1ha2Ug
+aXQgd29yaz8NCj4+IENJcyB3aWxsIGJlIHZtIGJhc2VkIHRvby4gSWYgdGhpcyB0ZXN0IHJlcXVp
+cmVzIHBoeXNpY2FsIGhvc3QNCj4+IHN1Y2ggdGVzdCB3aWxsIGtlZXAgZmFpbGluZyBpbiBhbGwg
+c3VjaCBlbnZpcm9ubWVudHMuDQo+PiBGb2xrcyB3aWxsIGJlIGFubm95ZWQgYW5kIGV2ZW50dWFs
+bHkgd2lsbCBkaXNhYmxlIHRoZSB0ZXN0Lg0KPj4gQ2FuIHdlIGZpZ3VyZSBvdXQgaG93IHRvIHRl
+c3QgaW4gdGhlIHZtIGZyb20gdGhlIHN0YXJ0Pw0KPiANCj4gSXQgc2VlbXMgdGhlcmUncyBhIHBh
+dGNoc2V0IHRoYXQncyBhZGRpbmcgTEJSIHN1cHBvcnQgdG8gZ3Vlc3QgaG9zdHM6DQo+IGh0dHBz
+Oi8vbGttbC5vcmcvbGttbC8yMDE5LzgvNi8yMTUgLiBIb3dldmVyIGl0IHNlZW1zIHRvIGJlIHN0
+dWNrIGluDQo+IHJldmlldyBsaW1iby4gSXMgdGhlcmUgYW55dGhpbmcgd2UgY2FuIGRvIHRvIGhl
+bHAgdGhhdCBzZXQgYWxvbmc/DQo+IA0KPiBBcyBmYXIgYXMgaGFja2luZyBpdCwgbm90aGluZyBy
+ZWFsbHkgY29tZXMgdG8gbWluZC4gU2VlbXMgdGhhdCBwYXRjaHNldA0KPiBpcyBvdXIgYmVzdCBo
+b3BlLg0KDQpwcm9nX3Rlc3RzL3NlbmRfc2lnbmFsLmMgdGVzdHMgc2VuZF9zaWduYWwgaGVscGVy
+IHVuZGVyIG5taSB3aXRoIA0KaGFyZHdhcmUgY291bnRlcnMuIEl0IGFkZGVkIGEgY2hlY2sgdG8g
+c2VlIHdoZXRoZXIgdGhlIHVuZGVybHlpbmcNCmhhcmR3YXJlIGNvdW50ZXIgaXMgc3VwcG9ydGVk
+LCBpZiBpdCBpcyBub3QsIHRoZSB0ZXN0IGlzDQpza2lwcGVkLg0KDQpNYXliZSB3ZSBjYW4gdXNl
+IHRoZSBzYW1lIGFwcHJhb2NoIGhlcmUuIElmIHBlcmZfZXZlbnRfb3BlbiB3aXRoDQpQRVJGX1RZ
+UEVfSEFSRFdBUkUvUEVSRl9TQU1QTEVfQlJBTkNIX1NUQUNLIGZhaWxlZCwNCndlIGp1c3QgbWFy
+ayB0aGUgdGVzdCBhcyBza2lwcGVkIGluc3RlYWQgb2YgZmFpbGluZy4NCg==
