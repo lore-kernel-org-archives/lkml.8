@@ -2,88 +2,131 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFCAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5B5C35246
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6F52071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C3F2071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tZLYMeGy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sny0Gkwe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgAZPr2 (ORCPT
+        id S1729027AbgAZPrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 10:47:28 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:25618 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726758AbgAZPr2 (ORCPT
+        Sun, 26 Jan 2020 10:47:35 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:45690 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgAZPrd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 10:47:28 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580053648; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=G+/DVGqC+SR9MedkNHgKsJSkunVLn/gMN8RbNOzODpA=;
- b=tZLYMeGy3IKhFLhuF5gox1j1IYb2FON7BBRIC9SW2nKjauQRSXftQh+9OAEN1gmQn+FY7Eow
- dmv/mFwDzgTab4hMV/QtmQvmkCdJCIpyCKSutYDYzLJLsJmB8ZPM2Vsvi81yppYP8379Apxb
- fhv3WZWc5G3ROl1GK/467/5yuxE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2db48f.7ff3823c14c8-smtp-out-n02;
- Sun, 26 Jan 2020 15:47:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 35A1EC43383; Sun, 26 Jan 2020 15:47:27 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6074C433CB;
-        Sun, 26 Jan 2020 15:47:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E6074C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Sun, 26 Jan 2020 10:47:33 -0500
+Received: by mail-yb1-f196.google.com with SMTP id x191so3689882ybg.12;
+        Sun, 26 Jan 2020 07:47:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=2xbk8AdWIZmse3B+nB63l0NWf7gcst2GZzaX7cH6+Rk=;
+        b=Sny0GkweHawfCGschvMy3kTofssyVxPCS0Xe31agFEXH2DnfkqrnpH9Qyfc0gNUm2S
+         7/AxdrHFGQwY2H2dwiP6rvG6tCa7XACRTKzmPzFznJhJj08lAQpMtHczqCjOGVCU3x+i
+         zKP8nUcKQMAGb+UYmJb/7ryPB9Mw/U2oiz1UKb0fPoF4mF5BudiQ2dEx90xLxw5otSAp
+         9fmRu8WNfNuljNOayIvT5boniU6zQErTGsj2ZcYbdPf9aYoDfo7PhcvB8UrjlDlca8ve
+         jVuxbKvrGw1ydhKIIlA+chqZ+AFVeyamBxcdcAyYqTIT47/2VyegmFJdmAFCjlMdBUt1
+         zm2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=2xbk8AdWIZmse3B+nB63l0NWf7gcst2GZzaX7cH6+Rk=;
+        b=sE1iBQhXJKqk3dnxjrV84NaUng/MThGt9t4HXisR7umWdEscNHW3Sg/wEZ0zaf7OvN
+         oJ8oyJhABgxVxqkMNOsr1Ccfr5NMiCPVfiwQZa/tOm1nH2z0OJvqoIUQz4h6l5S6HWO4
+         P8y5GyZ6Eni1VpMdG2xJtoL5L7DkgTMXLQL95dTz7N1Ly6mAwbu85aT2M5ENkvzrFU5u
+         SBFlnZlX4U1aKEhqW8Zx+IT+sutIXZQxlM8Qb0BNH+hXha4ygBYjxcSOfnAPOVtOQnvi
+         M91hy0QxtPf9zbiyYlzjEDtljPThXRgQ8vpmoaRIf1QSrK+0afZtOfXmb90dVaDyrFye
+         ZU1Q==
+X-Gm-Message-State: APjAAAW5L59UXXt3D77Rzc/IUjwT4Y7uevQMB8UGCTGWmIJxIdcE/y4j
+        WiNsddUUqxQM4MK/QIM/ldw=
+X-Google-Smtp-Source: APXvYqxvf/6JwAOXZhkX95ONMDryWNE+o/mE5fN9F9087lRqh1nXGJlr9CV8HaTXjy7HRjgfZPOGKQ==
+X-Received: by 2002:a25:ef51:: with SMTP id w17mr10381069ybm.477.1580053652415;
+        Sun, 26 Jan 2020 07:47:32 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d188sm1747466ywe.50.2020.01.26.07.47.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 26 Jan 2020 07:47:31 -0800 (PST)
+Date:   Sun, 26 Jan 2020 07:47:30 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
+        raven@themaw.net, Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 07/14] Add sample notification program [ver #3]
+Message-ID: <20200126154730.GA18893@roeck-us.net>
+References: <157909503552.20155.3030058841911628518.stgit@warthog.procyon.org.uk>
+ <157909509882.20155.1159021562184142124.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtlwifi: rtl8723ae: remove unused variables
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200121030428.14760-1-yuehaibing@huawei.com>
-References: <20200121030428.14760-1-yuehaibing@huawei.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <pkshih@realtek.com>, <davem@davemloft.net>,
-        <bernd.edlinger@hotmail.de>, <yuehaibing@huawei.com>,
-        <Larry.Finger@lwfinger.net>, <linux-wireless@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200126154727.35A1EC43383@smtp.codeaurora.org>
-Date:   Sun, 26 Jan 2020 15:47:27 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <157909509882.20155.1159021562184142124.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> wrote:
-
-> drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:16:18:
->  warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
-> drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:56:17:
->  warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
-> drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:92:17:
->  warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
+On Wed, Jan 15, 2020 at 01:31:38PM +0000, David Howells wrote:
+> The sample program is run like:
 > 
-> These variable is never used, so remove them.
+> 	./samples/watch_queue/watch_test
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> and watches "/" for mount changes and the current session keyring for key
+> changes:
+> 
+> 	# keyctl add user a a @s
+> 	1035096409
+> 	# keyctl unlink 1035096409 @s
+> 
+> producing:
+> 
+> 	# ./watch_test
+> 	read() = 16
+> 	NOTIFY[000]: ty=000001 sy=02 i=00000110
+> 	KEY 2ffc2e5d change=2[linked] aux=1035096409
+> 	read() = 16
+> 	NOTIFY[000]: ty=000001 sy=02 i=00000110
+> 	KEY 2ffc2e5d change=3[unlinked] aux=1035096409
+> 
+> Other events may be produced, such as with a failing disk:
+> 
+> 	read() = 22
+> 	NOTIFY[000]: ty=000003 sy=02 i=00000416
+> 	USB 3-7.7 dev-reset e=0 r=0
+> 	read() = 24
+> 	NOTIFY[000]: ty=000002 sy=06 i=00000418
+> 	BLOCK 00800050 e=6[critical medium] s=64000ef8
+> 
+> This corresponds to:
+> 
+> 	blk_update_request: critical medium error, dev sdf, sector 1677725432 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0
+> 
+> in dmesg.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
 
-Patch applied to wireless-drivers-next.git, thanks.
+mips:allmodconfig:
 
-c5f985241109 rtlwifi: rtl8723ae: remove unused variables
+samples/watch_queue/watch_test.c: In function ‘keyctl_watch_key’:
+samples/watch_queue/watch_test.c:34:17: error: ‘__NR_keyctl’ undeclared
 
--- 
-https://patchwork.kernel.org/patch/11343053/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Guenter
