@@ -2,79 +2,85 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13346C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44AFC35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE71D2071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D972071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:26:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D27wrEu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387399AbgAZKZw (ORCPT
+        id S1729397AbgAZK0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 05:25:52 -0500
-Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:20555 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729213AbgAZKZv (ORCPT
+        Sun, 26 Jan 2020 05:26:01 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43097 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729213AbgAZK0A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 05:25:51 -0500
-Received: from localhost.localdomain ([92.140.214.230])
-        by mwinf5d67 with ME
-        id uyRn210074ypjRG03yRo0l; Sun, 26 Jan 2020 11:25:49 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 26 Jan 2020 11:25:49 +0100
-X-ME-IP: 92.140.214.230
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     snelson@pensando.io, drivers@pensando.io,
-        jakub.kicinski@netronome.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] ionic: Fix rx queue allocation in 'ionic_lif_alloc()'
-Date:   Sun, 26 Jan 2020 11:25:40 +0100
-Message-Id: <20200126102540.14812-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sun, 26 Jan 2020 05:26:00 -0500
+Received: by mail-io1-f68.google.com with SMTP id n21so6752668ioo.10
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 02:26:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I5ss2A9PhpaPL+Y6/Eq0fV6rb1bJtLZPNb/zRGwXMTE=;
+        b=D27wrEu/CsAGY5dRH3TN2ZKuFTn5laOBjvVfcM1Dw80HaP/96lJhwPSpGcphnf4P7l
+         /97PsAfIHisHOsXwN6XAWK49wscMV82zk/6WTQJMSi3HOOyDuvpDnwUizm4xOs7VHGkc
+         wzP59SUoBy/ZHhg49zAgQOuOsoioFYRyhYMv8opfli6+HZNEJzif+rukPRgpIQNPkxQz
+         NhlSEf+RqIWizq16mTNkzS1FBqlGGpDQ89Yp34/v8jD6wRCPc/DVdPtFND8l5QtBnfqU
+         xqJ6LtQxlBCVej/KSCDIENnA47d2Md0Q5ZYTT7zHH9NQKejWY6VqqYtusjqeG8Y1zKGB
+         +i4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I5ss2A9PhpaPL+Y6/Eq0fV6rb1bJtLZPNb/zRGwXMTE=;
+        b=PxCU/GKDrLg9Xar43A79mOkGafRT+xI9oDJCI/U+EzvrJEXAmfkN8h0HaSEOl0iJ2i
+         kSew5WG4FMCY3nA8OGTi3vZjwA52SdGGMvhhrrUXc7Ea0vbKGxdplx4qh4iq+l9tELB0
+         8pahBbIX6WZMsusHkpsox1weosAwwEMA9d/1Zh7uv1idt1LD63PlHO2vqEG2UaToPsHK
+         HFpAid+0Atbd7L0zIJ784c7rt8yx13KWxms8RNi9TsH7CaXuKXELj6iu/lsiabPBbcpx
+         nUJ/gBgd3ogqyF9BUquU5BPAaddxa3N69MYoXRseY/s/QlpnJle7qmmagXjspiKkQplj
+         Fn5g==
+X-Gm-Message-State: APjAAAUMVY15xwJ6TwPmSYxYr/WFbxADg/LbIXCflPwGj4Vf68xOsjUI
+        QCX8OuZ5HMF7nWa9UR8N+9edKGhqNiIcziPNPI2VXw==
+X-Google-Smtp-Source: APXvYqy/OgLhH2YrMUUnwdGcownsvFIpuD+QssaiI+S932cX8vLLDRtGbVAw6t5Xz6uzY5DtwPKwinFv6tqzMMZmNhg=
+X-Received: by 2002:a02:b615:: with SMTP id h21mr9013386jam.109.1580034359905;
+ Sun, 26 Jan 2020 02:25:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200125162917.247485-1-yuhsuan@chromium.org>
+In-Reply-To: <20200125162917.247485-1-yuhsuan@chromium.org>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Sun, 26 Jan 2020 18:25:48 +0800
+Message-ID: <CA+Px+wU4kxGbZy7VpZ5hb==m7-BYPEOYd5EiWLpNvdD+h9vPOA@mail.gmail.com>
+Subject: Re: [PATCH v2] ASoC: cros_ec_codec: Support setting bclk ratio
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Benson Leung <bleung@chromium.org>,
+        ALSA development <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'struct ionic' has a 'nrxqs_per_lif' field. So use it instead of
-using two times the value of 'ntxqs_per_lif'.
+On Sun, Jan 26, 2020 at 12:29 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> wrote:
+>
+> Support setting bclk ratio from machine drivers.
+>
+> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
 
-Note that with the current implementation, this patch is a no-op because
-both fields are set to the same value in 'ionic_lifs_size()' which
-is called before reaching 'ionic_lif_alloc()'.
-
-However, it is more future-proof.
-
-Fixes: 1a58e196467f ("ionic: Add basic lif support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Another alternative could be to use 'alloc_etherdev_mq()' if really using
-the same value for both fields is what is expected.
----
- drivers/net/ethernet/pensando/ionic/ionic_lif.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-index 60fd14df49d7..96d3b3e993ad 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -1663,7 +1663,7 @@ static struct ionic_lif *ionic_lif_alloc(struct ionic *ionic, unsigned int index
- 	int err;
- 
- 	netdev = alloc_etherdev_mqs(sizeof(*lif),
--				    ionic->ntxqs_per_lif, ionic->ntxqs_per_lif);
-+				    ionic->ntxqs_per_lif, ionic->nrxqs_per_lif);
- 	if (!netdev) {
- 		dev_err(dev, "Cannot allocate netdev, aborting\n");
- 		return ERR_PTR(-ENOMEM);
--- 
-2.20.1
-
+Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
