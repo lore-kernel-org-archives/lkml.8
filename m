@@ -2,134 +2,113 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BA9C35246
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680ADC35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 270F42071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:11:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="gNz5sfww";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p/LY0Th8"
+	by mail.kernel.org (Postfix) with ESMTP id 3AA732075D
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgAZELC (ORCPT
+        id S1729236AbgAZEOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 23:11:02 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:46327 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728842AbgAZELC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 23:11:02 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E73544128;
-        Sat, 25 Jan 2020 23:11:00 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Sat, 25 Jan 2020 23:11:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        content-transfer-encoding:content-type:in-reply-to:date:to:cc
-        :subject:from:message-id; s=fm2; bh=MgNAa/447vzoa3FkIs8Gfzp8Dpl/
-        CHPupsfPjijOvV4=; b=gNz5sfww5+UvF7/Rpwy6y/MuJVrI3o8dAv3UMJHTIZlz
-        prsCliZNgLl7elDb84S1NXPc3OcgbgfwcvFGMGQtGcPmvEIsjUTm2VeRdo+njmyq
-        Nb66POnu+mmP0n4eL4aq880/+cGwOOayMHrQ9lVH5FjHQ2bW3JyJ5n7AZxxrW17d
-        4j3kfJKR6CgZCM/6RgoxUOEhT9IKnJuLHjldb865szfMojiSpue/dGLhjKWwKLjH
-        hSOSqVU6y9QW24wMb+ypde+k/0GMEB6Wa+Bu1vnLhtjJMs/22lL//3Y1Y9uCOo4n
-        a/Xhzm0BZR+P0p26EJp9HAKl2jzHN30Bln1x8dsOzw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=MgNAa/
-        447vzoa3FkIs8Gfzp8Dpl/CHPupsfPjijOvV4=; b=p/LY0Th8Oqbo45jPfa2lRf
-        NtEN1vFEG2vXWoLvhAL7pOA21x1nAWlHQ8qUBGpwOMI+QrpEDKP4qaWqgoUSZdQe
-        S/yrmwkLzFRu8O/Og4ishQH+DcmIHpIhM8Wqeb9j6enzy8770Oz2bGVISDxBro7D
-        0ze+Hr3FXsGJsYCrrd6+pyXDIAYUfqD8WOW3eepVz6a0wDKDuaNRUM4Rktboz1Oy
-        sOxKjYz7vZ9hHGXQhF260rTONO9yrscFk4T2gu51hrHFCBbic4sQbNF6zmaqYX+w
-        GF542cdGlQQbyyNUV6TAUzyYXYbE+D4VpSV66+e/0NsSXqjIrOaC/qoDu/af8H+w
-        ==
-X-ME-Sender: <xms:VBEtXuGQ5jgFGpjnD5wUAlxgW-cpXIPXDw9IYXaCZpTYJFzCAjbEog>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrvdekgdelgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdefhedmnecujfgurhepgfgtjgffvffuhffksehtqhertddttdejnecu
-    hfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguhesugiguhhuuhdrgiihiieqnecuff
-    homhgrihhnpehlkhhmlhdrohhrghenucfkphepjeefrdduiedvrddvvddrudeltdenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugi
-    huuhhurdighiii
-X-ME-Proxy: <xmx:VBEtXtzmMmD2jFHci88Pij5lT_l9BZdbjDmpFYGJoENWGZzA3bqaqA>
-    <xmx:VBEtXvR6Ukvrpsm9Gq_A-UFAvWiZijjQCEraAxKNMlPRNPJJMU3Tdw>
-    <xmx:VBEtXrpGwM86STu-pbM1wqgnz3lYCTEDyVusQ2DiWX6QHhiBjB-P6g>
-    <xmx:VBEtXgEhFsh1JpJcEWmw4RR1zEPgcgMVWynb7oLJSSBdWDGyymUGPw>
-Received: from localhost (c-73-162-22-190.hsd1.ca.comcast.net [73.162.22.190])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4E02B3067181;
-        Sat, 25 Jan 2020 23:10:59 -0500 (EST)
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-In-Reply-To: <CAADnVQ+Gy_Ph+83TLJkqtLM_pC2g65NhpX2vOwBH
- =JM3To2Thw@mail.gmail.com>
-Originaldate: Sat Jan 25, 2020 at 6:53 PM
-Originalfrom: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-Original: =?utf-8?q?On_Sat,_Jan_25,_2020_at_2:32_PM_Daniel_Xu_<dxu@dxuuu.xyz>_wrote?=
- =?utf-8?q?:=0D=0A>_+_______attr.type_=3D_PERF=5FTYPE=5FHARDWARE;=0D=0A>_+?=
- =?utf-8?q?_______attr.config_=3D_PERF=5FCOUNT=5FHW=5FCPU=5FCYCLES;=0D=0A>?=
- =?utf-8?q?_+_______attr.freq_=3D_1;=0D=0A>_+_______attr.sample=5Ffreq_=3D?=
- =?utf-8?q?_4000;=0D=0A>_+_______attr.sample=5Ftype_=3D_PERF=5FSAMPLE=5FBR?=
- =?utf-8?q?ANCH=5FSTACK;=0D=0A>_+_______attr.branch=5Fsample=5Ftype_=3D_PE?=
- =?utf-8?q?RF=5FSAMPLE=5FBRANCH=5FUSER_|_PERF=5FSAMPLE=5FBRANCH=5FANY;=0D?=
- =?utf-8?q?=0A>_+_______pfd_=3D_syscall(=5F=5FNR=5Fperf=5Fevent=5Fopen,_&a?=
- =?utf-8?q?ttr,_-1,_0,_-1,_PERF=5FFLAG=5FFD=5FCLOEXEC);=0D=0A>_+_______if_?=
- =?utf-8?q?(CHECK(pfd_<_0,_"perf=5Fevent=5Fopen",_"err_%d\n",_pfd))=0D=0A>?=
- =?utf-8?q?_+_______________goto_out=5Fdestroy;=0D=0A=0D=0AIt's_failing_fo?=
- =?utf-8?q?r_me_in_kvm._Is_there_way_to_make_it_work=3F=0D=0ACIs_will_be_v?=
- =?utf-8?q?m_based_too._If_this_test_requires_physical_host=0D=0Asuch_test?=
- =?utf-8?q?_will_keep_failing_in_all_such_environments.=0D=0AFolks_will_be?=
- =?utf-8?q?_annoyed_and_eventually_will_disable_the_test.=0D=0ACan_we_figu?=
- =?utf-8?q?re_out_how_to_test_in_the_vm_from_the_start=3F=0D=0A?=
-Date:   Sat, 25 Jan 2020 20:10:57 -0800
-To:     "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-Cc:     "bpf" <bpf@vger.kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        "Song Liu" <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        "Andrii Nakryiko" <andriin@fb.com>,
-        "LKML" <linux-kernel@vger.kernel.org>,
-        "Kernel Team" <kernel-team@fb.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Subject: Re: [PATCH v5 bpf-next 2/2] selftests/bpf: add
- bpf_read_branch_records() selftest
-From:   "Daniel Xu" <dxu@dxuuu.xyz>
-Message-Id: <C05FGIY6DS21.3FOPNFKMT6EWK@dlxu-fedora-R90QNFJV>
+        Sat, 25 Jan 2020 23:14:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43448 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729112AbgAZEOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 23:14:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A41ACAC5C;
+        Sun, 26 Jan 2020 04:14:47 +0000 (UTC)
+Date:   Sun, 26 Jan 2020 15:14:39 +1100
+From:   Aleksa Sarai <asarai@suse.de>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, christian.brauner@ubuntu.com
+Subject: Re: [PATCH 3/4] seccomp: Add SECCOMP_USER_NOTIF_FLAG_PIDFD to get
+ pidfd on listener trap
+Message-ID: <20200126041439.liwfmb4h74zmhi76@yavin.dot.cyphar.com>
+References: <20200124091743.3357-1-sargun@sargun.me>
+ <20200124091743.3357-4-sargun@sargun.me>
+ <20200126040325.5eimmm7hli5qcqrr@yavin.dot.cyphar.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hqgjtbxoii2e4zog"
+Content-Disposition: inline
+In-Reply-To: <20200126040325.5eimmm7hli5qcqrr@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat Jan 25, 2020 at 6:53 PM, Alexei Starovoitov wrote:
-> On Sat, Jan 25, 2020 at 2:32 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
-> > +       attr.type =3D PERF_TYPE_HARDWARE;
-> > +       attr.config =3D PERF_COUNT_HW_CPU_CYCLES;
-> > +       attr.freq =3D 1;
-> > +       attr.sample_freq =3D 4000;
-> > +       attr.sample_type =3D PERF_SAMPLE_BRANCH_STACK;
-> > +       attr.branch_sample_type =3D PERF_SAMPLE_BRANCH_USER | PERF_SAMP=
-LE_BRANCH_ANY;
-> > +       pfd =3D syscall(__NR_perf_event_open, &attr, -1, 0, -1, PERF_FL=
-AG_FD_CLOEXEC);
-> > +       if (CHECK(pfd < 0, "perf_event_open", "err %d\n", pfd))
-> > +               goto out_destroy;
->
+
+--hqgjtbxoii2e4zog
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2020-01-26, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> On 2020-01-24, Sargun Dhillon <sargun@sargun.me> wrote:
+> >  static long seccomp_notify_recv(struct seccomp_filter *filter,
+> >  				void __user *buf)
+> >  {
+> >  	struct seccomp_knotif *knotif =3D NULL, *cur;
+> >  	struct seccomp_notif unotif;
+> > +	struct task_struct *group_leader;
+> > +	bool send_pidfd;
+> >  	ssize_t ret;
+> > =20
+> > +	if (copy_from_user(&unotif, buf, sizeof(unotif)))
+> > +		return -EFAULT;
+> >  	/* Verify that we're not given garbage to keep struct extensible. */
+> > -	ret =3D check_zeroed_user(buf, sizeof(unotif));
+> > -	if (ret < 0)
+> > -		return ret;
+> > -	if (!ret)
+> > +	if (unotif.id ||
+> > +	    unotif.pid ||
+> > +	    memchr_inv(&unotif.data, 0, sizeof(unotif.data)) ||
+> > +	    unotif.pidfd)
+> > +		return -EINVAL;
 >=20
-> It's failing for me in kvm. Is there way to make it work?
-> CIs will be vm based too. If this test requires physical host
-> such test will keep failing in all such environments.
-> Folks will be annoyed and eventually will disable the test.
-> Can we figure out how to test in the vm from the start?
+> IMHO this check is more confusing than the original check_zeroed_user().
+> Something like the following is simpler and less prone to forgetting to
+> add a new field in the future:
+>=20
+> 	if (memchr_inv(&unotif, 0, sizeof(unotif)))
+> 		return -EINVAL;
 
-It seems there's a patchset that's adding LBR support to guest hosts:
-https://lkml.org/lkml/2019/8/6/215 . However it seems to be stuck in
-review limbo. Is there anything we can do to help that set along?
+Also the check in the patch doesn't ensure that any unnamed padding is
+zeroed -- memchr_inv(&unotif, 0, sizeof(unotif)) does.
 
-As far as hacking it, nothing really comes to mind. Seems that patchset
-is our best hope.
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--hqgjtbxoii2e4zog
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl4tEiwACgkQnhiqJn3b
+jbTteQ/+JshgPkAMJKFvNtMDmJpL7P7c3yj6E3WmLPyOsxvBYndxxt2T8/NGEkps
+dyUtBVjqguB9yUDaHUw5K7Ac86pAlyjG+gQVO0tk3LKA649QJoa05hLw6ix0Eg4E
+W9CkIDesL5daNxCn5Qm6fhB8/KTK2ex4JAQEhLX6wyx2/q+5J0i+ZDdDVhMlQC4N
+XZ+s8p3O6j+sEtA7W1cO7Xq+GWqwOtH772Cy4BT1s6hIIpkBS05VXtN6rzwKj15D
+8QkXyfBhHk1p6C92tr/N0RHZ2k5Im2ySDGGg9G6BVOSoUAIPvUyjRlPIj6gSXsuN
+0HvC4olEAD/9ZQQIoPtfSGYpvG9y/tndpAGKMDZjfKmg/IGFHrfTLAUPPvOYCSox
+elV4e8mfwRu2oOZaYwBRasWc7NNUdYwetOkaRwnMiMoxSMHCBK1JBkhwjVoohAsM
+C84aTpwyJcqCx+HB8drVI28eZp1+ukA/aDdxSW4l6gUSkfwxrkIEMOEFSlwQfrH3
+5R3uYw6FTZL2Pcs6TN1W2oVawF7BYkQnvpvG8iHaflgkICajnMpWrcJT6l+IdkQq
+dmtwaJKc/ExzVmlNzwyVD4nKg00Du1am5Fithn6eRZWj9GY5pMhz6qh9xZJgA03J
+KOtokDIAmVO+C1CieF4aj394NbS4gYm0u9aXgyv0yG6060jcaXw=
+=TQFh
+-----END PGP SIGNATURE-----
+
+--hqgjtbxoii2e4zog--
