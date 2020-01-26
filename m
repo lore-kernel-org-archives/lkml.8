@@ -2,76 +2,82 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D29C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B61C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665EB214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:25:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="m1hG+/H3"
+	by mail.kernel.org (Postfix) with ESMTP id D35712071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgAZLZm (ORCPT
+        id S1729420AbgAZL0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 06:25:42 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:41006 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgAZLZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 06:25:42 -0500
-Received: from zn.tnic (p200300EC2F25DF008C8DC1F5EA2ED5CC.dip0.t-ipconnect.de [IPv6:2003:ec:2f25:df00:8c8d:c1f5:ea2e:d5cc])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DE4791EC0CAD;
-        Sun, 26 Jan 2020 12:25:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1580037941;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Wq7+mev89++1ohlJHiO+2xBlUXDLtwx077Nyk9oE8k8=;
-        b=m1hG+/H39UpK8PqKd1FMivec2Jh/4sLN8G8CZ08H9FFjFYuQzS15YTgaeghgTPQqJmmgPB
-        loJjkPWCNMvzByjIevktkGrdykB9KEw6FnZE7eKK1kZesAr2RGkphur6O8FV2ejVEIzaIH
-        h1hDNOVU1GClqHzftpohgT3fi0FXEyk=
-Date:   Sun, 26 Jan 2020 12:25:40 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        x86 <x86@kernel.org>
-Subject: Re: [tip: core/rcu] rcu: Enable tick for nohz_full CPUs slow to
- provide expedited QS
-Message-ID: <20200126112540.GA5714@zn.tnic>
-References: <157994897654.396.5667707782512768142.tip-bot2@tip-bot2>
- <20200125131425.GB16136@zn.tnic>
- <20200125161050.GE2935@paulmck-ThinkPad-P72>
- <20200125175442.GA4369@zn.tnic>
- <20200125194846.GF2935@paulmck-ThinkPad-P72>
- <20200126014318.GA5122@paulmck-ThinkPad-P72>
+        Sun, 26 Jan 2020 06:26:02 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:35364 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgAZL0B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 06:26:01 -0500
+Received: by mail-io1-f69.google.com with SMTP id x10so4325500iob.2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 03:26:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=JBFyGLFaRClD3Lq6gKSOhEwna1ahm2jFZCVvyRd5gTk=;
+        b=pbEgg04rPMxXM5wFjwkfMUE/Lm2RI2pCPes3TzdU9hL037gWSbGObJxIl+ZgXAsFZf
+         Foa0Idi6U/ywiijc8i5xxDqcyOuPNg0E9H52ukVNAF1OZ1yNCyqPsEZCPG5fUSiXT8h+
+         NjS43yFx9VA0u+h7/Gk1f7uKEBmGu9Rz+9CX0Y3GJdgFeDJb8Hcyi0nQ8CuIVvSnJ1Tr
+         daczPdPX4yNOOy1/jauh5hxkEyE/kue8HpG8LssRnR3RTpfTqSZjN20cWqvrRmEwzML+
+         U4xyJPmklyUUUJeBajdf61MB9UkezhONNW4y/q7vMCPHqlAxcGvOH/Bg4QfzaQgR+uUH
+         4GYA==
+X-Gm-Message-State: APjAAAVmDemE5DbpXvPgHfhSzm76s4/nqpzsvNG70jzHVaoqqkTKWt9M
+        DApelsKITCtlalIr2ZsAMxeBEQjxyQ7D0hrg3xrVp+8J9cHz
+X-Google-Smtp-Source: APXvYqyLaYc8gQfvUmEZVQhOZ0IYO/h52y/zmcO+U/WovieEJvKF5cOH25qr96Of+NGMIr4NK7EOiIp4DxSEObgLp7vhlByfHaDo
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200126014318.GA5122@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a92:8307:: with SMTP id f7mr10993148ild.73.1580037961001;
+ Sun, 26 Jan 2020 03:26:01 -0800 (PST)
+Date:   Sun, 26 Jan 2020 03:26:00 -0800
+In-Reply-To: <00000000000044bcb8059a0a577e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000065b384059d094190@google.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in vc_do_resize
+From:   syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, daniel.thompson@linaro.org,
+        daniel.vetter@ffwll.ch, daniel.vetter@intel.com, ghalat@redhat.com,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        nico@fluxnic.net, okash.khawaja@gmail.com, oleksandr@redhat.com,
+        sam@ravnborg.org, syzkaller-bugs@googlegroups.com,
+        textshell@uchuujin.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 05:43:18PM -0800, Paul E. McKenney wrote:
-> And it passes my rcutorture testing as well!  If it does fine with 0day
-> and -next, I will send a pull request Sunday evening, Pacific Time.
-> In the meantime, it is right here in -rcu:
-> 
-> 59d8cc6b2e37 ("rcu: Forgive slow expedited grace periods at boot time")
+syzbot has bisected this bug to:
 
-Yap, testing looks good here too.
+commit 9e1467002630065ed86c65ea28bfc9194fff6f0e
+Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Tue May 28 09:02:59 2019 +0000
 
-Thx Paul.
+    fbcon: replace FB_EVENT_MODE_CHANGE/_ALL with direct calls
 
--- 
-Regards/Gruss,
-    Boris.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=135a779ee00000
+start commit:   d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=10da779ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=175a779ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=83c00afca9cf5153
+dashboard link: https://syzkaller.appspot.com/bug?extid=c37a14770d51a085a520
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1659a721e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16aa59c9e00000
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Reported-by: syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com
+Fixes: 9e1467002630 ("fbcon: replace FB_EVENT_MODE_CHANGE/_ALL with direct calls")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
