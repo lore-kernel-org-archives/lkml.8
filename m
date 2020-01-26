@@ -2,165 +2,127 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 249E3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D757FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4AD9206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F155206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:35:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="XrwL1fQS";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="XrwL1fQS"
+	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="0ld6Ez34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgAZSay (ORCPT
+        id S1728890AbgAZSfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 13:30:54 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:60940 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727233AbgAZSax (ORCPT
+        Sun, 26 Jan 2020 13:35:06 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45858 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgAZSfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 13:30:53 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 2F9FC8EE10C;
-        Sun, 26 Jan 2020 10:30:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1580063453;
-        bh=Nkor5nw66uPQqiX5z4iOUItqu9cuju7UWep1S1p1JB4=;
-        h=Subject:From:To:Cc:Date:From;
-        b=XrwL1fQS5PehyYjrGJ3i5LMoVi6Vnw1KdWstZ481bSDxUQBPCTdspiNH4TwRf/q3w
-         ax7u6yurlYOvzKGisvLDzLGc9xhPlwVer/Qg3QQQhg28W+H41jqxsQbRTWgocceuvI
-         Tk0CIHkRa0g8V39S2ATSNI3v6iI2z+wIiXdlMJP4=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MgA5hM1b31zW; Sun, 26 Jan 2020 10:30:53 -0800 (PST)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B9F4E8EE0C9;
-        Sun, 26 Jan 2020 10:30:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1580063453;
-        bh=Nkor5nw66uPQqiX5z4iOUItqu9cuju7UWep1S1p1JB4=;
-        h=Subject:From:To:Cc:Date:From;
-        b=XrwL1fQS5PehyYjrGJ3i5LMoVi6Vnw1KdWstZ481bSDxUQBPCTdspiNH4TwRf/q3w
-         ax7u6yurlYOvzKGisvLDzLGc9xhPlwVer/Qg3QQQhg28W+H41jqxsQbRTWgocceuvI
-         Tk0CIHkRa0g8V39S2ATSNI3v6iI2z+wIiXdlMJP4=
-Message-ID: <1580063451.4964.17.camel@HansenPartnership.com>
-Subject: [GIT PULL] more SCSI fixes for 5.5-rc7
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Sun, 26 Jan 2020 10:30:51 -0800
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 26 Jan 2020 13:35:06 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 2so3819452pfg.12
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 10:35:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=buJqycnRJmE0klBvQ3jUgMDQeTjnHb0PShrMhrfuVB8=;
+        b=0ld6Ez34Qsy5L3zKymuv8E6s6kzPBTjfgjQExASj5271nr04uZjgejw/GxVmrYGSq3
+         bPaIDolal+2F38wWFPyNSQmA7WddKehD390EXrXeKt23g0Vh1LKITI+f3zlGcRDBgf9d
+         z0xAsaSsde/YRQdkq9D6PEzUdwsds0vDwWDZw2gj18W4zOXxpgSw74hC/Iij7np58XAQ
+         Sok2aEho84XWfHCmkvMfwsfF/CW7rAJOTq3ZyrrQVIwoWE5Ql0/8yBvmDhZ/sO3ia7ko
+         VoDvP1nyMu3y8PgBlt6d4xAuEXXSbWdoFX91Vj6H0/coJAZ0DKZsYL4/GsQdZp+We76Y
+         14qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=buJqycnRJmE0klBvQ3jUgMDQeTjnHb0PShrMhrfuVB8=;
+        b=ESvUHTjrm2nniXBKQE2/278KoghfuUwhsct3YwwJEWAIPYn/jLaZe97SVDe5sYZbf6
+         XEN7FURkG7gMGqnEWGFzafgMlg+vIBl3CmxqTguibEVCqcTuIuovrn6WpA2GHssQi/o3
+         jZ3/qYhQ7VFXamhzyz5pNDoBnLFZ6PNEIBYb07Ws0W/JS13llJ3a80DpP6Fa+ocdvhiv
+         7+e7BEXJSuK869c6qDueGa8dya8UDWUX3qQcU+mZ7+24MpWqRJAMQ7jdY7m6iyI3f2Yz
+         kOXcia0zlOmNv9aY3eirzMEPy5tZfofdpJExQHM+0i8sND0FajU/qa49p7zsNzIIf6U2
+         9gbg==
+X-Gm-Message-State: APjAAAWbhE6HmviADCqoP+Hik67iqeCgPVlFfWd8syvwgjvrOqHVyH0Q
+        aYM9RnO4eksvT/JHJkthUXXOpA==
+X-Google-Smtp-Source: APXvYqyhSoh0s6Ekkqi2sNDxODbKwJ831I0jnyBSCMndArKyHIgMKJixjEHLPA+aFoo/LdQTaooSYQ==
+X-Received: by 2002:aa7:9796:: with SMTP id o22mr12683626pfp.101.1580063705781;
+        Sun, 26 Jan 2020 10:35:05 -0800 (PST)
+Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
+        by smtp.gmail.com with ESMTPSA id s25sm12426540pfh.110.2020.01.26.10.35.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Jan 2020 10:35:05 -0800 (PST)
+Subject: Re: [PATCH] ionic: Fix rx queue allocation in 'ionic_lif_alloc()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        drivers@pensando.io, jakub.kicinski@netronome.com,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200126102540.14812-1-christophe.jaillet@wanadoo.fr>
+From:   Shannon Nelson <snelson@pensando.io>
+Message-ID: <0a90fbcb-430e-d059-cd1c-7960e7ec6806@pensando.io>
+Date:   Sun, 26 Jan 2020 10:36:00 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20200126102540.14812-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Two last minute fixes, both in drivers.  The fnic one is a highly
-unlikely condition, but the RDMA one is a recently introduced
-regression that causes a kernel warning to trigger in every RDMA logon,
-which would be unsightly if it got into the final release.
+On 1/26/20 2:25 AM, Christophe JAILLET wrote:
+> The 'struct ionic' has a 'nrxqs_per_lif' field. So use it instead of
+> using two times the value of 'ntxqs_per_lif'.
+>
+> Note that with the current implementation, this patch is a no-op because
+> both fields are set to the same value in 'ionic_lifs_size()' which
+> is called before reaching 'ionic_lif_alloc()'.
+>
+> However, it is more future-proof.
+>
+> Fixes: 1a58e196467f ("ionic: Add basic lif support")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Another alternative could be to use 'alloc_etherdev_mq()' if really using
+> the same value for both fields is what is expected.
+> ---
+>   drivers/net/ethernet/pensando/ionic/ionic_lif.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+> index 60fd14df49d7..96d3b3e993ad 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+> @@ -1663,7 +1663,7 @@ static struct ionic_lif *ionic_lif_alloc(struct ionic *ionic, unsigned int index
+>   	int err;
+>   
+>   	netdev = alloc_etherdev_mqs(sizeof(*lif),
+> -				    ionic->ntxqs_per_lif, ionic->ntxqs_per_lif);
+> +				    ionic->ntxqs_per_lif, ionic->nrxqs_per_lif);
+>   	if (!netdev) {
+>   		dev_err(dev, "Cannot allocate netdev, aborting\n");
+>   		return ERR_PTR(-ENOMEM);
 
-The patch is available here:
+NAK
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+Even though the NIC configuration seems to allow for different values, 
+the rest of the driver assumes that the values are equal and things will 
+likely break if they aren't.  This is why the ethtool service 
+ionic_set_channels() only allows the user to change the Combined value, 
+and not the individual rx or tx values.
 
-The short changelog is:
+If you really want to tweak this, a better change might be to use the 
+min of ntxqs and nrxqs, and maybe add a warning log message that they 
+are configured with different values.
 
-Bart Van Assche (1):
-      scsi: RDMA/isert: Fix a recently introduced regression related to logout
+sln
 
-Hannes Reinecke (1):
-      scsi: fnic: do not queue commands during fwreset
-
-And the diffstat:
-
- drivers/infiniband/ulp/isert/ib_isert.c | 12 ------------
- drivers/scsi/fnic/fnic_scsi.c           |  3 +++
- drivers/target/iscsi/iscsi_target.c     |  6 +++---
- 3 files changed, 6 insertions(+), 15 deletions(-)
-
-With full diff below.
-
-James
-
----
-
-diff --git a/drivers/infiniband/ulp/isert/ib_isert.c b/drivers/infiniband/ulp/isert/ib_isert.c
-index a1a035270cab..b273e421e910 100644
---- a/drivers/infiniband/ulp/isert/ib_isert.c
-+++ b/drivers/infiniband/ulp/isert/ib_isert.c
-@@ -2575,17 +2575,6 @@ isert_wait4logout(struct isert_conn *isert_conn)
- 	}
- }
- 
--static void
--isert_wait4cmds(struct iscsi_conn *conn)
--{
--	isert_info("iscsi_conn %p\n", conn);
--
--	if (conn->sess) {
--		target_sess_cmd_list_set_waiting(conn->sess->se_sess);
--		target_wait_for_sess_cmds(conn->sess->se_sess);
--	}
--}
--
- /**
-  * isert_put_unsol_pending_cmds() - Drop commands waiting for
-  *     unsolicitate dataout
-@@ -2633,7 +2622,6 @@ static void isert_wait_conn(struct iscsi_conn *conn)
- 
- 	ib_drain_qp(isert_conn->qp);
- 	isert_put_unsol_pending_cmds(conn);
--	isert_wait4cmds(conn);
- 	isert_wait4logout(isert_conn);
- 
- 	queue_work(isert_release_wq, &isert_conn->release_work);
-diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
-index 8ef150dfb6f7..b60795893994 100644
---- a/drivers/scsi/fnic/fnic_scsi.c
-+++ b/drivers/scsi/fnic/fnic_scsi.c
-@@ -439,6 +439,9 @@ static int fnic_queuecommand_lck(struct scsi_cmnd *sc, void (*done)(struct scsi_
- 	if (unlikely(fnic_chk_state_flags_locked(fnic, FNIC_FLAGS_IO_BLOCKED)))
- 		return SCSI_MLQUEUE_HOST_BUSY;
- 
-+	if (unlikely(fnic_chk_state_flags_locked(fnic, FNIC_FLAGS_FWRESET)))
-+		return SCSI_MLQUEUE_HOST_BUSY;
-+
- 	rport = starget_to_rport(scsi_target(sc->device));
- 	if (!rport) {
- 		FNIC_SCSI_DBG(KERN_DEBUG, fnic->lport->host,
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index 7251a87bb576..b94ed4e30770 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4149,9 +4149,6 @@ int iscsit_close_connection(
- 	iscsit_stop_nopin_response_timer(conn);
- 	iscsit_stop_nopin_timer(conn);
- 
--	if (conn->conn_transport->iscsit_wait_conn)
--		conn->conn_transport->iscsit_wait_conn(conn);
--
- 	/*
- 	 * During Connection recovery drop unacknowledged out of order
- 	 * commands for this connection, and prepare the other commands
-@@ -4237,6 +4234,9 @@ int iscsit_close_connection(
- 	target_sess_cmd_list_set_waiting(sess->se_sess);
- 	target_wait_for_sess_cmds(sess->se_sess);
- 
-+	if (conn->conn_transport->iscsit_wait_conn)
-+		conn->conn_transport->iscsit_wait_conn(conn);
-+
- 	ahash_request_free(conn->conn_tx_hash);
- 	if (conn->conn_rx_hash) {
- 		struct crypto_ahash *tfm;
