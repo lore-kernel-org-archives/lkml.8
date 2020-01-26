@@ -2,63 +2,89 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A68C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 21:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE3BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 21:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9215C206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 21:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E897C20716
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 21:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgAZV02 (ORCPT
+        id S1727307AbgAZV23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 16:26:28 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:60797 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726144AbgAZV02 (ORCPT
+        Sun, 26 Jan 2020 16:28:29 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60801 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgAZV22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 16:26:28 -0500
-Received: from callcc.thunk.org (rrcs-67-53-201-206.west.biz.rr.com [67.53.201.206])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00QLQKr6014139
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jan 2020 16:26:23 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id E98FE420324; Sun, 26 Jan 2020 16:26:19 -0500 (EST)
-Date:   Sun, 26 Jan 2020 16:26:19 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Toralf =?iso-8859-1?Q?F=F6rster?= <toralf.foerster@gmx.de>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: delayed "random: get_random_bytes" line in dmesg
-Message-ID: <20200126212619.GA13716@mit.edu>
-References: <a4d06aa4-30df-4333-6b94-46fa95e32129@gmx.de>
+        Sun, 26 Jan 2020 16:28:28 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ivpSD-0004z0-Kq; Sun, 26 Jan 2020 22:28:25 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ivpSB-0003RP-Ky; Sun, 26 Jan 2020 22:28:23 +0100
+Date:   Sun, 26 Jan 2020 22:28:23 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 177/639] rtc: ds1307: rx8130: Fix alarm handling
+Message-ID: <20200126212823.63nnwytrwup5uim6@pengutronix.de>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <20200124093109.349854130@linuxfoundation.org>
+ <20200125133036.GD14064@duo.ucw.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a4d06aa4-30df-4333-6b94-46fa95e32129@gmx.de>
+In-Reply-To: <20200125133036.GD14064@duo.ucw.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 03:41:24PM +0100, Toralf Förster wrote:
-> I do wonder a little bit about the timestamp of the "random: get_random_bytes" near the end b/c it is way delayed, or?
+On Sat, Jan 25, 2020 at 02:30:36PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > When the EXTENSION.WADA bit is set, register 0x19 contains a bitmap of
+> > week days, not a day of month. As Linux only handles a single alarm
+> > without repetition using day of month is more flexible, so clear this
+> > bit. (Otherwise a value depending on time.tm_wday would have to be
+> > written to register 0x19.)
+> 
+> So the comment explains why WADA bit needs to be clear.
+> 
+> > @@ -749,8 +749,8 @@ static int rx8130_set_alarm(struct device *dev, struct rtc_wkalrm *t)
+> >  	if (ret < 0)
+> >  		return ret;
+> >  
+> > -	ctl[0] &= ~RX8130_REG_EXTENSION_WADA;
+> > +	ctl[0] &= RX8130_REG_EXTENSION_WADA;
+> 
+> But then code is changed to preserve WADA bit while it was clearing it
+> before.
 
-The get_random_bytes call in setup_net is used to initialize value
-returned by net_hash_mix() for the root net namespace.  So if that's
-not super random, an attacker might be able to use that to leverage
-kernel level attacks.  It's at least not being used for a
-cryptographic purpose, though.
+This looks broken indeed. The new code clears all flags but WADA. Will
+take a look tomorrow.
+ 
+Best regards
+Uwe
 
-> Linux mr-fox 5.4.15 #6 SMP Sun Jan 26 10:07:17 CET 2020 x86_64 Intel(R) Xeon(R) CPU E5-1650 v3 @ 3.50GHz GenuineIntel GNU/Linux
 
-The E5-1650 is a (roughly) eight year old chip with the Sandy Bridge
-architecture, and that was the last architecture _not_ to support
-RDRAND.
 
-						- Ted
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
