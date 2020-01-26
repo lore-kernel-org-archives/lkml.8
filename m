@@ -2,93 +2,155 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0649DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 02:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DD9C35242
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 03:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD69420801
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 02:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B11320702
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 03:02:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKiKSmXv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJIXcxbg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgAZCxe (ORCPT
+        id S1729107AbgAZDCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 21:53:34 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38169 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728842AbgAZCxd (ORCPT
+        Sat, 25 Jan 2020 22:02:30 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:39789 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728842AbgAZDC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 21:53:33 -0500
-Received: by mail-lj1-f194.google.com with SMTP id w1so7066540ljh.5;
-        Sat, 25 Jan 2020 18:53:32 -0800 (PST)
+        Sat, 25 Jan 2020 22:02:29 -0500
+Received: by mail-yw1-f66.google.com with SMTP id h126so3053739ywc.6;
+        Sat, 25 Jan 2020 19:02:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OEnj2kiwYLznKlJVo3yvAhfsKhH1hw584iUR8u5OCkk=;
-        b=kKiKSmXvwzx5PTxC+jZ10pPoehY0tlvmMT65gnHMD7h5jCs5lDreLo/gRxv7VXTws1
-         SQ4i9cwJ/rsoABGcIK5igQMANBNFcyROocuG48TgAAZ9ApqaU5ExJ/Rssoc/hHi/sidh
-         HobaF0dDP05tPK6crZE1j1B5GY+sR6ENTP6JZFkkk/rKOy77M+1Xxpv77Pv02pB12VdU
-         YLxvKsLTWAZhKOVwLcqfyZis9RWR/T6gDc+1fEZFlOcMm4i8nbqFyk//gvAThpMHS3v0
-         apg4NHfIUmWISfHEbcoAEivL7acqec9Ok89vpDvO/Jwoy3HxHS1EbEu2D34QLydUx9VD
-         yS/Q==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tII4AVx3br1wrYA9rc56+ZdNuhnFX5KM9kteNOyiS3I=;
+        b=lJIXcxbgCpGMRp6Zhvk2vdNUDh4nIe7voMjfHZxQXifoDNtapG1wg1VPXaJ/D5W50V
+         q++Qs7815rrRcG1L7K91MxNz42/vCV917pKz+9tZLTxiAmjfYanj20HwdKQydpmE8KjY
+         tDlpYmVMQWyr6MwKAd9+zqXhUsPdYj3bwOgycRD9kcbZ7EYqcByFtvK6zRrCsz/VBjJ4
+         sLYwOcJ//TFJvb61wypLOyUvG/FePeJawpqNadA7y+xAnoGeTbtGKwBUIsWjy4E82OvC
+         duMEH8TkUvPKoMimw74utO6UXNSMWYG5NgjQfg1fKhnGS4Nb7D9RTS+nENdf6YceeAf7
+         20Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OEnj2kiwYLznKlJVo3yvAhfsKhH1hw584iUR8u5OCkk=;
-        b=EKRAYYvVxTct55HqnZ3KmHkOQoxgU7LsqsoiPzdXB3oc1Cykh5FCb0yVuJ/APkXEwE
-         XIYk5WxE55+DsTysUw3713hj24wsNGZ/ZBMqBMohrmnoQYzT4ZKUghvPoh3b9ZIc4s2I
-         Lstk7+hmfBdZISkc9Dq+29/Oe/8SDNJn0bFnm0pZOXLPFS/GCbWz+eamvR+Ow8D3/bZO
-         8gx4JZfkGYmmdBFcOoHRYuJgVCmJU7P0krmjrl8BhfG/XK2dctXJlfhisJhcctrsFBFL
-         5jJAMeCh+kjxdo2/25kldM65XN8NoNezXe57WuttBB8qOA4A4x1w9eom9u3WJ9eJWHY+
-         Vknw==
-X-Gm-Message-State: APjAAAX+/6r96ztEsK8eygWoZX1TkYVwOOjwLcEpXsDGPb0POVl0IZz5
-        ieh2p5ZmOka4CN2BvihJGDhHBNjBWNk8CO6FMmA=
-X-Google-Smtp-Source: APXvYqyVjL3DwCWegX0p4DFS0YHW+U1SX1R9URCafFx2E2s/SL4+vrjn3RI/LHVQbImg5heLf8Pj7+FwHzhitGGvM30=
-X-Received: by 2002:a05:651c:20f:: with SMTP id y15mr5952903ljn.7.1580007211478;
- Sat, 25 Jan 2020 18:53:31 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tII4AVx3br1wrYA9rc56+ZdNuhnFX5KM9kteNOyiS3I=;
+        b=nFs3ztBonP22UgjL/6bpK5IK+UQmQDL20BrN+rhxSZ0nD8nC8DY8XI5GEqzU7Ze7Jk
+         RLie6Kr+HD1jK/BGr380jmR0/S1UJyFCkRqWeGm84gBZgRj2D8ANx2q68uK41bLHzdub
+         uMzxD8BGWohht2h8YWc1Yeb6fd37N33ylyKVOgb4T1VDc55XmQzfBgRCr5XCNGvX41C7
+         MbdFcy+VFLeKuCOkeWfRV255y5Wgd2vnEzp4G07reMiSV7nIPmsjC8Z1qvGj3sK0qHi0
+         YMQf0nO0gXU28tRATaYdGn2hgNpLVD2eOWIop02+WK9nAdrbb7VJ7tZwCoROnp/wmso/
+         q0Mg==
+X-Gm-Message-State: APjAAAWuTudVSUJUL1ZSrFmY4oTFCyjDZ8EJ+l7VFKUMm7yfZU7xfjTG
+        vpUHZ3aXLgTQY7Yq/WmDV2I=
+X-Google-Smtp-Source: APXvYqxidmu1wxYikxWGAWqi1KWvgtfYYggyQy+ED7b5j1UZ0or2nxTKdnePwrdbB9N0a8F2AlDozg==
+X-Received: by 2002:a0d:d8c2:: with SMTP id a185mr7623650ywe.337.1580007748730;
+        Sat, 25 Jan 2020 19:02:28 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s3sm4845031ywf.22.2020.01.25.19.02.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 25 Jan 2020 19:02:28 -0800 (PST)
+Date:   Sat, 25 Jan 2020 19:02:26 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kurz <groug@kaod.org>
+Subject: Re: [PATCH v2 30/45] KVM: Move vcpu alloc and init invocation to
+ common code
+Message-ID: <20200126030226.GA7167@roeck-us.net>
+References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
+ <20191218215530.2280-31-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <20200125223117.20813-1-dxu@dxuuu.xyz> <20200125223117.20813-3-dxu@dxuuu.xyz>
-In-Reply-To: <20200125223117.20813-3-dxu@dxuuu.xyz>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Sat, 25 Jan 2020 18:53:19 -0800
-Message-ID: <CAADnVQ+Gy_Ph+83TLJkqtLM_pC2g65NhpX2vOwBH=JM3To2Thw@mail.gmail.com>
-Subject: Re: [PATCH v5 bpf-next 2/2] selftests/bpf: add bpf_read_branch_records()
- selftest
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218215530.2280-31-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 2:32 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
-> +       attr.type = PERF_TYPE_HARDWARE;
-> +       attr.config = PERF_COUNT_HW_CPU_CYCLES;
-> +       attr.freq = 1;
-> +       attr.sample_freq = 4000;
-> +       attr.sample_type = PERF_SAMPLE_BRANCH_STACK;
-> +       attr.branch_sample_type = PERF_SAMPLE_BRANCH_USER | PERF_SAMPLE_BRANCH_ANY;
-> +       pfd = syscall(__NR_perf_event_open, &attr, -1, 0, -1, PERF_FLAG_FD_CLOEXEC);
-> +       if (CHECK(pfd < 0, "perf_event_open", "err %d\n", pfd))
-> +               goto out_destroy;
+On Wed, Dec 18, 2019 at 01:55:15PM -0800, Sean Christopherson wrote:
+> Now that all architectures tightly couple vcpu allocation/free with the
+> mandatory calls to kvm_{un}init_vcpu(), move the sequences verbatim to
+> common KVM code.
+> 
+> Move both allocation and initialization in a single patch to eliminate
+> thrash in arch specific code.  The bisection benefits of moving the two
+> pieces in separate patches is marginal at best, whereas the odds of
+> introducing a transient arch specific bug are non-zero.
+> 
+> Acked-by: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-It's failing for me in kvm. Is there way to make it work?
-CIs will be vm based too. If this test requires physical host
-such test will keep failing in all such environments.
-Folks will be annoyed and eventually will disable the test.
-Can we figure out how to test in the vm from the start?
+[ ... ]
+
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 8543d338a06a..2ed76584ebd9 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+>  
+
+[ ... ]
+
+> -struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
+> -				      unsigned int id)
+                                      ^^^^^^^^^^^^^^^
+> +int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>  {
+> -	struct kvm_vcpu *vcpu;
+>  	struct sie_page *sie_page;
+>  	int rc;
+>  
+> -	rc = -ENOMEM;
+> -
+> -	vcpu = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL);
+> -	if (!vcpu)
+> -		goto out;
+> -
+> -	rc = kvm_vcpu_init(vcpu, kvm, id);
+> -	if (rc)
+> -		goto out_free_cpu;
+> -
+> -	rc = -ENOMEM;
+> -
+>  	BUILD_BUG_ON(sizeof(struct sie_page) != 4096);
+>  	sie_page = (struct sie_page *) get_zeroed_page(GFP_KERNEL);
+>  	if (!sie_page)
+> -		goto out_uninit_vcpu;
+> +		return -ENOMEM;
+>  
+>  	vcpu->arch.sie_block = &sie_page->sie_block;
+>  	vcpu->arch.sie_block->itdba = (unsigned long) &sie_page->itdb;
+> @@ -3087,15 +3070,11 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
+>  		 vcpu->arch.sie_block);
+>  	trace_kvm_s390_create_vcpu(id, vcpu, vcpu->arch.sie_block);
+                                   ^^^
+
+For extensive changes like this, wouldn't it be desirable to at least
+compile test it ?
+
+Guenter
