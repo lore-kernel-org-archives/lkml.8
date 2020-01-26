@@ -2,123 +2,93 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7064C35240
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 08:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AEFC35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 08:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3E582071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 08:31:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHwGpHp8"
+	by mail.kernel.org (Postfix) with ESMTP id 457222083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 08:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580028939;
+	bh=n2nIzaSKhRLa1kWmgJ3uBhJ4DhQVJLVuCuYtEtMl7ik=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zRr+tV/SUA48E0bIN1co6g0I3pGP3lAeT+gvdYQKg5VhoSJPwDfsnPcxPsgjmpLdW
+	 RqfrOqhdcHzrVSKc1q7i78kxalM8K83N9QExKrWfhqLhZW8aoTf6634YRcIOoViQ3W
+	 rdwvDPckC9CjMknOsTxm3LbRBR8ks658r8SdUkig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgAZIbj (ORCPT
+        id S1729163AbgAZIzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 03:31:39 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35800 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727773AbgAZIbj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 03:31:39 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so3568684pgk.2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 00:31:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=A/HVm3170PfNClVZmwRIPi9sbl79x5ttiRZ0PyXbaOs=;
-        b=HHwGpHp8EjYpAYINXZLEuharzk0X51UuHHpyTyfFiQjf99Ug+UeaH7b6oMx3WSSJ9n
-         75b3FsJrP9XMA2TDewW/ppYYDGPukuhvtVUIf+onMq/r1PID3jJEVzjaG5pA8hCjnTkw
-         y8Tq7T424WEJ3+RhbZFT3776kKXwaSkFkb1NMs5TGXikTm1tl/qmdxuwkZGwfDngmTlT
-         BTcs6t0/QyS3Cwk49wDsAk+J4ti3SBb3QwJgUoKEUTjZu0fB1+LnGndpGpKfTvTFiDJV
-         Dsc7hOCi10ikLC0OxuCrdpkcc7nn7yUkK34myAk6LJDsH4uM3LYtdY0+CSKK6IYnEirD
-         G/kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=A/HVm3170PfNClVZmwRIPi9sbl79x5ttiRZ0PyXbaOs=;
-        b=fLfEEeKN2gnYPlS6jK/Kt1nueLJSycXcvJBLmE4aQhBkUmH5LArQT46qa+zfZOnyKA
-         ciH88CbMvzdr+NQc2sdFV9F0W+/dSy3nk4wSNRX60Dpb2wa+oLk9KW6gCYpfOdN3GgsI
-         8+HAUBjg7YvbYOtepfYXHrrnPuYLNb/RYJlJ/ctQJhiHRBwCxuLhndUTyvw2nybDFpX5
-         ijhjgOiD6xjMv4gDOB8Sj3R0Ihu3wq3fkrirgruI3EH9SXdgJR9PDfaoZejTmR5yhqOM
-         taxMALP145PzAUJI83BushaeywGmrHDihCXO4s4UNwkGgp7pj8ujlkAsObhAO0pF0Yqe
-         nRgQ==
-X-Gm-Message-State: APjAAAUExupfOBfdaldVRfNhCBY9TMsKDMnYtyYNEoW7JAWKMmi80tho
-        D1T8+JWqOGtwYMML6msB3dg=
-X-Google-Smtp-Source: APXvYqz2446wQU1D2ewWSd1GC8zgFgAP1p3+ZdA0gpPBv7Ouie0P26ycGZPJYf/Z05ATp0/rZQWRBA==
-X-Received: by 2002:a65:5ccc:: with SMTP id b12mr13255457pgt.124.1580027498692;
-        Sun, 26 Jan 2020 00:31:38 -0800 (PST)
-Received: from google.com ([123.201.163.10])
-        by smtp.gmail.com with ESMTPSA id z64sm11988940pfz.23.2020.01.26.00.31.35
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sun, 26 Jan 2020 00:31:38 -0800 (PST)
-Date:   Sun, 26 Jan 2020 14:01:30 +0530
-From:   Saurav Girepunje <saurav.girepunje@gmail.com>
-To:     vireshk@kernel.org, johan@kernel.org, elder@kernel.org,
-        gregkh@linuxfoundation.org, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-Subject: [PATCH] staging: greybus: fix fw is NULL but dereferenced.
-Message-ID: <20200126083130.GA17725@google.com>
+        Sun, 26 Jan 2020 03:55:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbgAZIzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 03:55:38 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 102E32071A;
+        Sun, 26 Jan 2020 08:55:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580028937;
+        bh=n2nIzaSKhRLa1kWmgJ3uBhJ4DhQVJLVuCuYtEtMl7ik=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zrTfA3F4bkp7cB9QtVrBzAFPiesqw1fwFv7dkwpGgQSIMyD8XRU6JhMpbeZ13PZig
+         pwJvqvC+3U8/IKhEdZK9Nbx6MfciCWkyrUiy6AE04uYitUOoVrMxDxLYk2Jgiov6iy
+         87eMDtaAqLn1gmhdttbmT/KOcuu8DXhQ2NR6J4wk=
+Date:   Sun, 26 Jan 2020 09:55:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: binderfs interferes with syzkaller?
+Message-ID: <20200126085535.GA3533171@kroah.com>
+References: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.6.2-neo (NetBSD/sparc64)
+In-Reply-To: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the warning reported by cocci check.
+On Sat, Jan 25, 2020 at 06:49:49PM +0100, Dmitry Vyukov wrote:
+> Hi binder maintainers,
+> 
+> It seems that something has happened and now syzbot has 0 coverage in
+> drivers/android/binder.c:
+> https://storage.googleapis.com/syzkaller/cover/ci-upstream-kasan-gce-root.html
+> It covered at least something there before as it found some bugs in binder code.
+> I _suspect_ it may be related to introduction binderfs, but it's
+> purely based on the fact that binderfs changed lots of things there.
+> And I see it claims to be backward compatible.
 
-Changes:
+It is backwards compatible if you mount binderfs, right?
 
-In queue_work fw dereference before it actually get assigned.
-move queue_work before gb_bootrom_set_timeout.
+> syzkaller strategy to reach binder devices is to use
+> CONFIG_ANDROID_BINDER_DEVICES to create a bunch of binderN devices (to
+> give each test process a private one):
+> https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-kasan.config#L5671
+> 
+> Then it knows how to open these /dev/binderN devices:
+> https://github.com/google/syzkaller/blob/master/sys/linux/dev_binder.txt#L22
+> and do stuff with them.
+> 
+> Did these devices disappear or something?
 
-As gb_bootrom_get_firmware () return NEXT_REQ_READY_TO_BOOT
-only when there is no error and offset + size is actually equal
-to fw->size. So initialized next_request to NEXT_REQ_GET_FIRMWARE
-for return in other case.
+Try mounting binderfs and then you should be able to see them all.
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
----
-  drivers/staging/greybus/bootrom.c | 6 ++----
-  1 file changed, 2 insertions(+), 4 deletions(-)
+thanks,
 
-diff --git a/drivers/staging/greybus/bootrom.c b/drivers/staging/greybus/bootrom.c
-index a8efb86..f54514e 100644
---- a/drivers/staging/greybus/bootrom.c
-+++ b/drivers/staging/greybus/bootrom.c
-@@ -246,7 +246,7 @@ static int gb_bootrom_get_firmware(struct gb_operation *op)
-  	struct gb_bootrom_get_firmware_response *firmware_response;
-  	struct device *dev = &op->connection->bundle->dev;
-  	unsigned int offset, size;
--	enum next_request_type next_request;
-+	enum next_request_type next_request = NEXT_REQ_GET_FIRMWARE;
-  	int ret = 0;
-  
-  	/* Disable timeouts */
-@@ -296,13 +296,11 @@ static int gb_bootrom_get_firmware(struct gb_operation *op)
-  unlock:
-  	mutex_unlock(&bootrom->mutex);
-  
--queue_work:
-  	/* Refresh timeout */
-  	if (!ret && (offset + size == fw->size))
-  		next_request = NEXT_REQ_READY_TO_BOOT;
--	else
--		next_request = NEXT_REQ_GET_FIRMWARE;
-  
-+queue_work:
-  	gb_bootrom_set_timeout(bootrom, next_request, NEXT_REQ_TIMEOUT_MS);
-  
-  	return ret;
--- 
-1.9.1
-
+greg k-h
