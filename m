@@ -2,90 +2,124 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBC0C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C48DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64FD92071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC3F20708
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="X1AaiMlr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNRIG9gV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgAZPt6 (ORCPT
+        id S1728234AbgAZPwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 10:49:58 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:10390 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726339AbgAZPt6 (ORCPT
+        Sun, 26 Jan 2020 10:52:08 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:33483 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgAZPwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 10:49:58 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580053797; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=0ACMIx0vNvxE/ZpblsQ/pYyMZSg0rEuOGRCaibRFMx8=;
- b=X1AaiMlrCKB8tIBeoTgLbwd3XZEI1juBH7MMNO2u6PCVr3tIOBbL8HQQDDggD2GQjTZQ2HOv
- LCyRImP7HZ1mfScpq/VFGx6cRDfyQd6WsejMd24L/r0Rx7kEeMm3V9H7rg3azndjuQP4SP1T
- RMd+/aqmJKiE3D0KqDu7ObnWLJY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2db524.7f8eeb65c3e8-smtp-out-n02;
- Sun, 26 Jan 2020 15:49:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 019D1C433A2; Sun, 26 Jan 2020 15:49:55 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AD08EC433CB;
-        Sun, 26 Jan 2020 15:49:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AD08EC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Sun, 26 Jan 2020 10:52:08 -0500
+Received: by mail-yw1-f65.google.com with SMTP id 192so3579217ywy.0;
+        Sun, 26 Jan 2020 07:52:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xPQePlZh39eyKR7YsKEWuSikwFjI98oXqirYgx30KXE=;
+        b=HNRIG9gVkQ3HUI1aPRe0Ivt5iFSUUZFFylghPFPTkVk2EbRf19u2ShlE9/wu5pBwiN
+         nnLK9198pwYtX+EyZs4aN66WVjIgyvGGXcCa/DSAuUC4SrsnozONNhVL+vvCOv5BaE23
+         urdIWh7Ris7cyshQDk/G2CFEXaViQgIVHoWNLr6mnSjIDVraPpkNy0mnPVwvC+c9MeLY
+         VH6U2f6qn5522b0SbKQxxawcy15GO9rOnuyFVxebv/oELdanZErlbZlKgThLcSoabekU
+         +9/gaKn4ndfK9uTcww9m5dYeoG+Oy7NA2gFe6eCTOpXM7l4rYY7bt0AtgkycAxY/fKBp
+         XfUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xPQePlZh39eyKR7YsKEWuSikwFjI98oXqirYgx30KXE=;
+        b=SOwG2Qvuw6s/MOeqQW4wWeKVjDBVhRDgUSLoZ7FY++ZN6wloHdVtSaPCkLgfwkl+35
+         UsPHQHK5H25vdXKXd58Cp6QLI8V7lYVSCtk8YtLJjDGqqCYo2RaqW5KAUwrrAln6lXau
+         BjIk0a0f9RNJ0CPkZHAH+lX9rxyyxIg3QwcR9pYeuyqOR/0ncAjXa9Y0lB2Xj4qbU7bM
+         tl6mY+DhG2XZSmVLbfh2dI8uzumxsa4hx2TVmiDhR3epVCsI7eXJtATghdGTEGqOUrnF
+         rhAOks63VRcXDbrUU4jF2G0uZGvo4SIAsiQoJppHq1bEep6+xVCUWhCiVQsdmqFs+JYI
+         6/0g==
+X-Gm-Message-State: APjAAAWA83LpTPy3z+FSx0sgnbv0aG6wcPxuxdj86NP+7uOwCha+SfSY
+        IgfqKiiukNDUFtFLTXkgJYQ=
+X-Google-Smtp-Source: APXvYqzQYT+W6XCbUawf7R1JSNBQ+6MKFwmNzKeWZ41jpyb77P5GUPE3Qx4ZKz13C1trK05wq5bseA==
+X-Received: by 2002:a0d:c905:: with SMTP id l5mr8579692ywd.44.1580053927628;
+        Sun, 26 Jan 2020 07:52:07 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i17sm5364260ywg.66.2020.01.26.07.52.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 26 Jan 2020 07:52:07 -0800 (PST)
+Date:   Sun, 26 Jan 2020 07:52:05 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH mk-II 08/17] asm-generic/tlb: Provide
+ MMU_GATHER_TABLE_FREE
+Message-ID: <20200126155205.GA19169@roeck-us.net>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122956.112607298@infradead.org>
+ <20191212093205.GU2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtlwifi: fix spelling mistake
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200124043433.GA3024@google.com>
-References: <20200124043433.GA3024@google.com>
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>
-Cc:     pkshih@realtek.com, davem@davemloft.net, Larry.Finger@lwfinger.net,
-        saurav.girepunje@gmail.com, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        saurav.girepunje@hotmail.com
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200126154955.019D1C433A2@smtp.codeaurora.org>
-Date:   Sun, 26 Jan 2020 15:49:55 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212093205.GU2827@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Saurav Girepunje <saurav.girepunje@gmail.com> wrote:
-
-> fix spelling mistake reported by checkpatch in trx.c .
+On Thu, Dec 12, 2019 at 10:32:05AM +0100, Peter Zijlstra wrote:
+> As described in the comment, the correct order for freeing pages is:
 > 
-> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+>  1) unhook page
+>  2) TLB invalidate page
+>  3) free page
+> 
+> This order equally applies to page directories.
+> 
+> Currently there are two correct options:
+> 
+>  - use tlb_remove_page(), when all page directores are full pages and
+>    there are no futher contraints placed by things like software
+>    walkers (HAVE_FAST_GUP).
+> 
+>  - use MMU_GATHER_RCU_TABLE_FREE and tlb_remove_table() when the
+>    architecture does not do IPI based TLB invalidate and has
+>    HAVE_FAST_GUP (or software TLB fill).
+> 
+> This however leaves architectures that don't have page based
+> directories but don't need RCU in a bind. For those, provide
+> MMU_GATHER_TABLE_FREE, which provides the independent batching for
+> directories without the additional RCU freeing.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
 
-Failed to apply to wireless-drivers-next, please rebase and resend as
-v2.
+Various sparc64 builds (allnoconfig, tinyconfig, as well as builds
+with SMP disabled):
 
-error: patch failed: drivers/net/wireless/realtek/rtlwifi/rtl8192se/trx.c:276
-error: drivers/net/wireless/realtek/rtlwifi/rtl8192se/trx.c: patch does not apply
-error: Did you hand edit your patch?
-It does not apply to blobs recorded in its index.
-Applying: rtlwifi: fix spelling mistake
-Using index info to reconstruct a base tree...
-Patch failed at 0001 rtlwifi: fix spelling mistake
-The copy of the patch that failed is found in: .git/rebase-apply/patch
+mm/mmu_gather.c: In function '__tlb_remove_table_free':
+mm/mmu_gather.c:101:3: error: implicit declaration of function '__tlb_remove_table'; did you mean 'tlb_remove_table'?
 
-Patch set to Changes Requested.
-
--- 
-https://patchwork.kernel.org/patch/11349731/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Guenter
