@@ -2,85 +2,91 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB12C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5425CC35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7FC20842
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580030295;
-	bh=nEEdcHdiaxn0c3QjTCUa7y45tZSSnjihAh7JWpFqZlg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XyhVccqYXC+3kR0aHwDTeJzFnWbFTEIU0v44A6d2vPvEj3nHyy2C3H1h6Fx/dtoF4
-	 4WSUlxwb4ootnojIKTyL+4w8OL40NMVSVTz8Nya2ncMxv3FahMXleZQ4hOIccGp65h
-	 79lts2iikrMmzjoThs+dhv6g71IcIYvrm6rqyFLg=
+	by mail.kernel.org (Postfix) with ESMTP id 3257F2071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgAZJSO (ORCPT
+        id S1729174AbgAZJU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 04:18:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbgAZJSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 04:18:14 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C12D2071E;
-        Sun, 26 Jan 2020 09:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580030293;
-        bh=nEEdcHdiaxn0c3QjTCUa7y45tZSSnjihAh7JWpFqZlg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ssb4+wBX0Tda3Kh9rks3ybMyRqRFbKYV3MwiefXJU6uIxpSPn3GXUmKMIrDLvmdi4
-         fN2VmsdtueoC7Dg2ig5EcTiDbanv9+syKlD+b8WRUU8JJJAjBoP9CSzrJtORutcusU
-         mTjLglKi0873hqnQaKdYImiAvZoeNz0XwCbUii9o=
-Date:   Sun, 26 Jan 2020 10:18:11 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: Re: [PATCH 4.19 014/639] leds: tlc591xx: update the maximum
- brightness
-Message-ID: <20200126091811.GB3549630@kroah.com>
-References: <20200124093047.008739095@linuxfoundation.org>
- <20200124093048.912391801@linuxfoundation.org>
- <20200124231826.GA14064@duo.ucw.cz>
+        Sun, 26 Jan 2020 04:20:56 -0500
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:25021 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgAZJU4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 04:20:56 -0500
+Received: from localhost.localdomain ([93.23.15.185])
+        by mwinf5d07 with ME
+        id uxLl2100n3zZxD103xLmMA; Sun, 26 Jan 2020 10:20:54 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 26 Jan 2020 10:20:54 +0100
+X-ME-IP: 93.23.15.185
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     claudiu.manoil@nxp.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] gianfar: Allocate the correct number of rx queues in 'gfar_of_init()'
+Date:   Sun, 26 Jan 2020 10:20:28 +0100
+Message-Id: <20200126092028.14246-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124231826.GA14064@duo.ucw.cz>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 12:18:26AM +0100, Pavel Machek wrote:
-> On Fri 2020-01-24 10:23:04, Greg Kroah-Hartman wrote:
-> > From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> > 
-> > commit a2cafdfd8cf5ad8adda6c0ce44a59f46431edf02 upstream.
-> > 
-> > The TLC chips actually offer 257 levels:
-> > - 0: led OFF
-> > - 1-255: Led dimmed is using a PWM. The duty cycle range from 0.4% to 99.6%
-> > - 256: led fully ON
-> > 
-> > Fixes: e370d010a5fe ("leds: tlc591xx: Driver for the TI 8/16 Channel i2c LED driver")
-> > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> Its a new feature, really and quite unusual one: 257 brightness levels
-> is not usual. It is theoretically safe, but...
-> 
-> Lets not do that for -stable.
-> 
-> (I'm a LED maintainer).
+We can get values for rx and tx queues from "fsl,num_rx_queues" and
+"fsl,num_tx_queues". However, when 'alloc_etherdev_mq()' is called, the
+value for "tx" is used for both.
 
-Ok, now dropped from 4.19 and older, thanks!
+Use 'alloc_etherdev_mqs()' instead.
 
-greg k-h
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+WARNING: This patch is purely speculative!
+
+I don't fully understand the code, and tx and rx queues seem to be
+allocated by 'gfar_alloc_[rt]x_queues()' and handled with priv-> fields.
+I don't know the relationship between queues provided by the core, and the
+ones specificly handled in this driver.
+
+'netif_set_real_num_rx_queues()' a few lines below is also spurious to me.
+If "fsl,num_rx_queues" > "fsl,num_tx_queues" it will return an error and
+things then look out of synch (i.e. 'priv->num_rx_queues' is set to a value
+bigger than what is allocated by core, that is to say the one from
+'priv->num_tx_queues')
+
+If my assumptions are correct, I guess that the call to
+'netif_set_real_num_rx_queues()' is useless
+
+
+Sorry for the noise if I'm completly wrong.
+In such a case, some explanation would be appreciated.
+---
+ drivers/net/ethernet/freescale/gianfar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
+index 72868a28b621..5e934069682e 100644
+--- a/drivers/net/ethernet/freescale/gianfar.c
++++ b/drivers/net/ethernet/freescale/gianfar.c
+@@ -708,7 +708,7 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	*pdev = alloc_etherdev_mq(sizeof(*priv), num_tx_qs);
++	*pdev = alloc_etherdev_mqs(sizeof(*priv), num_tx_qs, num_rx_qs);
+ 	dev = *pdev;
+ 	if (NULL == dev)
+ 		return -ENOMEM;
+-- 
+2.20.1
+
