@@ -2,175 +2,107 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E08C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED864C35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 12:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5AC20842
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:54:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4FedAVy"
+	by mail.kernel.org (Postfix) with ESMTP id BB18A2083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 12:33:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580042004;
+	bh=jiPyg4xMYng3XTyef+gtnfbqk1VNKvF8MyDPzuNMtWU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sBNUUhk9/kV1l0o6SuLHLONj/lq6oJLCCoNLrc3f1FSMAR8WzWgTItBC6SYdJ5ddC
+	 0EXDxGozsvAVpANKEP3Cgwrpp9wAYy+OL3A4SEf63WYsbKe79i7BQYvduRugpdGoHK
+	 YRwe+Jd7MexFkfJiKLPkogepRQAHB1dXn6jRlblo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387444AbgAZLys (ORCPT
+        id S2387431AbgAZMdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 06:54:48 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44433 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgAZLys (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 06:54:48 -0500
-Received: by mail-ed1-f66.google.com with SMTP id g19so3610810eds.11;
-        Sun, 26 Jan 2020 03:54:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version:content-id;
-        bh=yebpCXrtZX8bx3fQb5NWjS3jPJJayF5dsD82yx4g9kY=;
-        b=K4FedAVyqeEd9VcH6t/5K1e9kdcf2VE+t2m/1s4BwLxfMMt9m0rxxr6+Epmbml5hyA
-         LQNwSP4yirgcbKJncp48HdkyeDhj9MWB10hFMbL6dJLe6zIWZW/r45gYOvewzXw8Qj4o
-         7jYfewofIYAKdsML3FSln6latL+kYWZWAKVCGUq1/UogAYv81LDoelceUltJFoxJlqB9
-         cMbMoZab6n24EzCPtLYvVe8SEIjrV7+wKTOd3v7yTrN12u6W0x89+/kGRhs4OcKPfoA/
-         UZHN+RD573fE+ieYwtq26Cc72LKe40rCH/ckaI/pT+OYpvgFMZgNOCjjLVSugUivkYsn
-         0Rig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version:content-id;
-        bh=yebpCXrtZX8bx3fQb5NWjS3jPJJayF5dsD82yx4g9kY=;
-        b=ukYTB5DLqxENQZMOelb9DgNuq9ljRLtUZrQETZpj1IAN41A8wEmCzN4Htd8VC1KOWZ
-         cKbOso/1VLRdO89eWzqILBr0+o0w0ds8KyhwBa4hdZqghT8IBiZfueNHdE8oTrxAs0hC
-         VBMFC38EcmB5Qy5RFezaJRBoXA98GdLaDyww53Demhz6v0UFoWLos0DSa+zk11/WM0P9
-         HubItPR00ruvMcEOc6esU6JJA2/6PtcL/wKNWrRScKTMZHS7X3dGouqIHWthFOUwIIiD
-         QF0SvUFMYUJ5BiFKvqsu8F0H8SCZNi76YVVxrbQixU/+2b1mokzp92WdNYAnmuUwqbAz
-         f9bA==
-X-Gm-Message-State: APjAAAVSdC2jFKcQJSICTRig5ApW/kGa8xmZFc1aIvJhmb0vpUHbErlk
-        1PVKDGDvqVokCkKA4p9u/eM=
-X-Google-Smtp-Source: APXvYqxfMz+LuhN79Em3ii/ilFnUf4Rw1aGe7WJUHbV187YP9KWdveWG1Oxgvj0kx/yc9rp+izn3pg==
-X-Received: by 2002:a17:906:5586:: with SMTP id y6mr9416414ejp.343.1580039684935;
-        Sun, 26 Jan 2020 03:54:44 -0800 (PST)
-Received: from felia ([2001:16b8:2da0:3900:15f5:151e:3025:d216])
-        by smtp.gmail.com with ESMTPSA id d19sm258868ejd.21.2020.01.26.03.54.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jan 2020 03:54:44 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Sun, 26 Jan 2020 12:54:42 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     =?ISO-8859-15?Q?Jouni_H=F6gander?= <jouni.hogander@unikie.com>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>, syzkaller@googlegroups.com
-Subject: Re: [PATCH 4.19 000/306] 4.19.87-stable review
-In-Reply-To: <87sgk8szhc.fsf@unikie.com>
-Message-ID: <alpine.DEB.2.21.2001261236430.4933@felia>
-References: <20191127203114.766709977@linuxfoundation.org> <CA+G9fYuAY+14aPiRVUcXLbsr5zJ-GLjULX=s9jcGWcw_vb5Kzw@mail.gmail.com> <20191128073623.GE3317872@kroah.com> <CAKXUXMy_=gVVw656AL5Rih_DJrdrFLoURS-et0+dpJ2cKaw6SQ@mail.gmail.com> <20191129085800.GF3584430@kroah.com>
- <87sgk8szhc.fsf@unikie.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 26 Jan 2020 07:33:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387403AbgAZMdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 07:33:23 -0500
+Received: from ziggy.de (unknown [95.169.235.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF5AA2071A;
+        Sun, 26 Jan 2020 12:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580042002;
+        bh=jiPyg4xMYng3XTyef+gtnfbqk1VNKvF8MyDPzuNMtWU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oY/V6N+Bk295aS5GBBQ4hYmTuZJaC2Ikx3wC+D4nFi0kXAvZTX1gTtF0TS0ljn4r0
+         Rhw8kURC/bEaPBnvaduzUuX751qYa/n9Dacm6ArLhMp+CYfDfnMbwZdqwmWbJoKqV3
+         BJgFkNHZb6mcfOsRROAYBekXYeC0mxv6U2x4NQmE=
+From:   matthias.bgg@kernel.org
+To:     gregkh@linuxfoundation.org, jslaby@suse.com, nsaenzjulienne@suse.de
+Cc:     linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, matthias.bgg@kernel.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH] serial: 8250_early: Add earlycon for BCM2835 aux uart
+Date:   Sun, 26 Jan 2020 13:33:14 +0100
+Message-Id: <20200126123314.3558-1-matthias.bgg@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-62265607-1580039587=:4933"
-Content-ID: <alpine.DEB.2.21.2001261254360.4933@felia>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Matthias Brugger <mbrugger@suse.com>
 
---8323329-62265607-1580039587=:4933
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <alpine.DEB.2.21.2001261254361.4933@felia>
+Define the OF early console for BCM2835 aux UART, which can be enabled
+by passing "earlycon" on the boot command line. This UART is found on
+BCM283x and BCM27xx SoCs, a.k.a. Raspberry Pi in its variants.
 
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 
-On Wed, 22 Jan 2020, Jouni Högander wrote:
+---
 
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> >> > Now queued up, I'll push out -rc2 versions with this fix.
-> >> >
-> >> > greg k-h
-> >> 
-> >> We have also been informed about another regression these two commits
-> >> are causing:
-> >> 
-> >> https://lore.kernel.org/lkml/ace19af4-7cae-babd-bac5-cd3505dcd874@I-love.SAKURA.ne.jp/
-> >> 
-> >> I suggest to drop these two patches from this queue, and give us a
-> >> week to shake out the regressions of the change, and once ready, we
-> >> can include the complete set of fixes to stable (probably in a week or
-> >> two).
-> >
-> > Ok, thanks for the information, I've now dropped them from all of the
-> > queues that had them in them.
-> >
-> > greg k-h
-> 
-> I have now run more extensive Syzkaller testing on following patches:
-> 
-> cb626bf566eb net-sysfs: Fix reference count leak
-> ddd9b5e3e765 net-sysfs: Call dev_hold always in rx_queue_add_kobject
-> e0b60903b434 net-sysfs: Call dev_hold always in netdev_queue_add_kobje
-> 48a322b6f996 net-sysfs: fix netdev_queue_add_kobject() breakage
-> b8eb718348b8 net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
-> 
-> These patches are fixing couple of memory leaks including this one found
-> by Syzbot: https://syzkaller.appspot.com/bug?extid=ad8ca40ecd77896d51e2
-> 
-> I can reproduce these memory leaks in following stable branches: 4.14,
-> 4.19, and 5.4.
-> 
-> These are all now merged into net/master tree and based on my testing
-> they are ready to be taken into stable branches as well.
->
+ drivers/tty/serial/8250/8250_bcm2835aux.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-+ syzkaller list
-Jouni et. al, please drop Linus in further responses; Linus, it was wrong 
-to add you to this thread in the first place (reason is explained below)
+diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
+index 8ce700c1a7fc..6769cea2964a 100644
+--- a/drivers/tty/serial/8250/8250_bcm2835aux.c
++++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
+@@ -135,6 +135,24 @@ static struct platform_driver bcm2835aux_serial_driver = {
+ };
+ module_platform_driver(bcm2835aux_serial_driver);
+ 
++#ifdef CONFIG_SERIAL_8250_CONSOLE
++
++static int __init early_bcm2835aux_setup(struct earlycon_device *device,
++					const char *options)
++{
++	if (!device->port.membase)
++		return -ENODEV;
++
++	device->port.iotype = UPIO_MEM32;
++	device->port.regshift = 2;
++
++	return early_serial8250_setup(device, NULL);
++}
++
++OF_EARLYCON_DECLARE(bcm2835aux, "brcm,bcm2835-aux-uart",
++		    early_bcm2835aux_setup);
++#endif
++
+ MODULE_DESCRIPTION("BCM2835 auxiliar UART driver");
+ MODULE_AUTHOR("Martin Sperl <kernel@martin.sperl.org>");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.24.1
 
-Jouni, thanks for investigating.
-
-It raises the following questions and comments:
-
-- Does the memory leak NOT appear on 4.9 and earlier LTS branches (or did 
-you not check that)? If it does not appear, can you bisect it with the 
-reproducer to the commit between 4.14 and 4.9?
-
-- Do the reproducers you found with your syzkaller testing show the same 
-behaviour (same bisection) as the reproducers from syzbot?
-
-- I fear syzbot's automatic bisection on is wrong, and Linus' commit 
-0e034f5c4bc4 ("iwlwifi: fix mis-merge that breaks the driver") is not to 
-blame here; that commit did not cause the memory leak, but fixed some 
-unrelated issue that simply confuses syzbot's automatic bisection.
-
-Just FYI: Dmitry Vyukov's evaluation of the syzbot bisection shows that 
-about 50% are wrong, e.g., due to multiple bugs being triggered with one 
-reproducer and the difficulty of automatically identifying them of being 
-different due to different root causes (despite the smart heuristics of 
-syzkaller & syzbot). So, to identify the actual commit on which the memory 
-leak first appeared, you need to bisect manually with your own judgement 
-if the reported bug stack trace fits to the issue you investigating. Or 
-you use syzbot's automatic bisection but then with a reduced kernel config 
-that cannot be confused by other issues. You might possibly also hit a 
-"beginning of time" in your bisection, where KASAN was simply not 
-supported, then the initially causing commit can simply not determined by 
-bisection with the reproducer and needs some code inspection and 
-archaeology with git. Can you go ahead try to identify the correct commit 
-for this issue?
-
-
-Lukas
---8323329-62265607-1580039587=:4933--
