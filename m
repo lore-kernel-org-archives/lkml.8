@@ -2,72 +2,155 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB03C35240
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48920C35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE62820700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:52:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XzLY/OX8"
+	by mail.kernel.org (Postfix) with ESMTP id 291B22071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgAZXwi (ORCPT
+        id S1727307AbgAZXxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 18:52:38 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:55040 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgAZXwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 18:52:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=1sMrnh3SigC44z/XmPsI9gIHq4VNk82ikUxOnQh0bFs=; b=XzLY/OX8zrdJNDja97v1DvWKUQ
-        /r74uzPRQjR4iXjU5wmvYvL7py+ti6UfezASwQExSkl4Pk3i/7haDTO0ziSVXvV/V9n5IHYPo4vm2
-        j2EedibUzATs0+w8s3nYRvSnQB88oLJyG0dInIik2oXryOPEbmLYhCBQgaf0v7/nJW6s=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ivrhf-0003b7-Fm; Mon, 27 Jan 2020 00:52:31 +0100
-Date:   Mon, 27 Jan 2020 00:52:31 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
+        Sun, 26 Jan 2020 18:53:40 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53862 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726382AbgAZXxk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 18:53:40 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00QNopWp160332
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 18:53:39 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrj70nc3x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 18:53:38 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 26 Jan 2020 23:53:36 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 26 Jan 2020 23:53:32 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00QNrWhA58720486
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 26 Jan 2020 23:53:32 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 000274C044;
+        Sun, 26 Jan 2020 23:53:31 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 315DE4C040;
+        Sun, 26 Jan 2020 23:53:31 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.132.204])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 26 Jan 2020 23:53:31 +0000 (GMT)
+Subject: Re: [PATCH] ima: fix calculating the boot_aggregate
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-integrity@vger.kernel.org
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 2/7] ethtool: provide message mask with
- DEBUG_GET request
-Message-ID: <20200126235231.GB12816@lunn.ch>
-References: <cover.1580075977.git.mkubecek@suse.cz>
- <9f81d98d866d538642696339d9ee5c08a399a384.1580075977.git.mkubecek@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f81d98d866d538642696339d9ee5c08a399a384.1580075977.git.mkubecek@suse.cz>
+Date:   Sun, 26 Jan 2020 18:53:30 -0500
+In-Reply-To: <1580060759.4964.12.camel@HansenPartnership.com>
+References: <1580044434-9132-1-git-send-email-zohar@linux.ibm.com>
+         <1580060759.4964.12.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012623-0008-0000-0000-0000034CE2C4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012623-0009-0000-0000-00004A6D5638
+Message-Id: <1580082810.5990.75.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-26_07:2020-01-24,2020-01-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ malwarescore=0 mlxlogscore=999 impostorscore=0 phishscore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001260208
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 11:11:04PM +0100, Michal Kubecek wrote:
-> Implement DEBUG_GET request to get debugging settings for a device. At the
-> moment, only message mask corresponding to message level as reported by
-> ETHTOOL_GMSGLVL ioctl request is provided. (It is called message level in
-> ioctl interface but almost all drivers interpret it as a bit mask.)
-> 
-> As part of the implementation, provide symbolic names for message mask bits
-> as ETH_SS_MSG_CLASSES string set.
-> 
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+Hi James,
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+On Sun, 2020-01-26 at 09:45 -0800, James Bottomley wrote:
+> On Sun, 2020-01-26 at 08:13 -0500, Mimi Zohar wrote:
+> > Calculating the boot_aggregate assumes that the TPM SHA1 bank is
+> > enabled.  Before trying to read the TPM SHA1 bank, ensure it is
+> > enabled. If it isn't enabled, calculate the boot_aggregate using the
+> > first bank enabled.
+> 
+> Isn't it about time we shifted IMA away from SHA1 as a NIST deprecated
+> algorithm especially as in this case if someone can manufacture a sha1
+> hash collision, they can fake the TCB?  I think we should always try
+> use SHA256 if we have a TPM2, then fall back to whatever bank0 is if
+> SHA256 can't be found (that will cope with DELLs that violate the TPM2
+> spec by disabling the sha256 bank if the bios setting is sha1).  This
+> should also cope with other ODMs who violate the spec in other ways,
+> like not updating the sha1 bank but still leaving it allocated.
+> 
+> Mechanically, also, you don't need the found variable, you can see if i
+> reaches the max value.
 
-    Andrew
+Agreed, in general we should be moving away from SHA1, but this change
+only addresses calculating the boot_aggregate hash, not the bigger
+issue of calculating multiple file hashes and extending the TPM banks
+with the appropriate file hash values.  The boot_aggregate is the hash
+of PCRs 0 - 7, which links the pre-boot event log with the IMA
+measurement list.  I would think manufacturing a SHA1 hash collision
+in this specific use case scenario would be more difficult.
+
+Assuming changing the boot_aggregate hash algorithm doesn't break
+userspace, instead of hard coding the algorithm, we probably should
+use the Kconfig IMA_DEFAULT_HASH algorithm.
+
+Mimi
+
+
+
+> 
+> ---
+> 
+> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+> index 73044fc6a952..f5f7a3aec826 100644
+> --- a/security/integrity/ima/ima_crypto.c
+> +++ b/security/integrity/ima/ima_crypto.c
+> @@ -665,12 +665,29 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
+>  	u32 i;
+>  	SHASH_DESC_ON_STACK(shash, tfm);
+>  
+> +	if (ima_tpm_chip->flags & TPM_CHIP_FLAG_TPM2)
+> +		/* TPM2 default should be sha256 */
+> +		d.alg_id = TPM_ALG_SHA256;
+> +
+>  	shash->tfm = tfm;
+>  
+>  	rc = crypto_shash_init(shash);
+>  	if (rc != 0)
+>  		return rc;
+>  
+> +	/*
+> +	 * Check the TPM default bank is allocated otherwise use the first one
+> +	 */
+> +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++)
+> +		if (ima_tpm_chip->allocated_banks[i].alg_id == d.alg_id)
+> +			break;
+> +
+> +	if (i == ima_tpm_chip->nr_allocated_banks) {
+> +		d.alg_id = ima_tpm_chip->allocated_banks[0].alg_id;
+> +		pr_info("Calculating the boot-aggregregate (TPM algorithm: %d)",
+> +			d.alg_id);
+> +	}
+> +
+>  	/* cumulative sha1 over tpm registers 0-7 */
+>  	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+>  		ima_pcrread(i, &d);
+
