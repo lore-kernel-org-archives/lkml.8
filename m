@@ -2,74 +2,107 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E22CC35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D9EC35246
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02662083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:39:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="nOuavmRo"
+	by mail.kernel.org (Postfix) with ESMTP id 03C732071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAZJjf (ORCPT
+        id S1729174AbgAZJvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 04:39:35 -0500
-Received: from mx3.wp.pl ([212.77.101.9]:45431 "EHLO mx3.wp.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727754AbgAZJjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 04:39:35 -0500
-Received: (wp-smtpd smtp.wp.pl 1467 invoked from network); 26 Jan 2020 10:39:33 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1580031573; bh=8l1rmL5X5Cv0Cj5XiywukSTYoIUEeUjYPldXFydWbC0=;
-          h=From:To:Cc:Subject;
-          b=nOuavmRoSp5RRbeyZdERhjGL6lBZfuXp1C1VmIyHyeBce9sOakGtCD5JYmxMVHj4p
-           jvLiTTi+ttVtC62AHQY30tVHldAx8qkFpPY4H4fzMzBBtG7g8PBn5G/1x8ilpdGDLi
-           on5uDFfGmaLAJd15pl1s+7iBsuBqrtzBsV+ikYR4=
-Received: from host-178.215.207.168-internet.zabrze.debacom.pl (HELO localhost) (stf_xl@wp.pl@[178.215.207.168])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <colin.king@canonical.com>; 26 Jan 2020 10:39:33 +0100
-Date:   Sun, 26 Jan 2020 10:39:32 +0100
-From:   Stanislaw Gruszka <stf_xl@wp.pl>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Meenakshi Venkataraman <meenakshi.venkataraman@intel.com>,
-        Wey-Yi Guy <wey-yi.w.guy@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] iwlegacy: ensure loop counter addr does not wrap
- and cause an infinite loop
-Message-ID: <20200126093932.GA605118@wp.pl>
-References: <20200126000954.22807-1-colin.king@canonical.com>
+        Sun, 26 Jan 2020 04:51:39 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:57130 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbgAZJvi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 04:51:38 -0500
+Received: from ip5f5bd665.dynamic.kabel-deutschland.de ([95.91.214.101] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iveZn-0000sp-Ii; Sun, 26 Jan 2020 09:51:31 +0000
+Date:   Sun, 26 Jan 2020 10:51:33 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: binderfs interferes with syzkaller?
+Message-ID: <20200126095132.bq33azq7paqvedzx@wittgenstein>
+References: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
+ <CACT4Y+bckC4k-EpWiCkD+BBo5ypmkcb2g8Axb62LnBbwJjcqdw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200126000954.22807-1-colin.king@canonical.com>
-X-WP-MailID: 5300318e69b08c0e5e0d2f8643f46dc7
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [oROH]                               
+In-Reply-To: <CACT4Y+bckC4k-EpWiCkD+BBo5ypmkcb2g8Axb62LnBbwJjcqdw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 12:09:54AM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Sat, Jan 25, 2020 at 07:13:03PM +0100, Dmitry Vyukov wrote:
+> On Sat, Jan 25, 2020 at 6:49 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > Hi binder maintainers,
+> >
+> > It seems that something has happened and now syzbot has 0 coverage in
+> > drivers/android/binder.c:
+> > https://storage.googleapis.com/syzkaller/cover/ci-upstream-kasan-gce-root.html
+> > It covered at least something there before as it found some bugs in binder code.
+> > I _suspect_ it may be related to introduction binderfs, but it's
+> > purely based on the fact that binderfs changed lots of things there.
+> > And I see it claims to be backward compatible.
+> >
+> > syzkaller strategy to reach binder devices is to use
+> > CONFIG_ANDROID_BINDER_DEVICES to create a bunch of binderN devices (to
+> > give each test process a private one):
+> > https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-kasan.config#L5671
+> >
+> > Then it knows how to open these /dev/binderN devices:
+> > https://github.com/google/syzkaller/blob/master/sys/linux/dev_binder.txt#L22
+> > and do stuff with them.
+> >
+> > Did these devices disappear or something?
 > 
-> The loop counter addr is a u16 where as the upper limit of the loop
-> is a an int. In the unlikely event that the il->cfg->eeprom_size is
-> greater than 64K then we end up with an infinite loop since addr will
-> wrap around an never reach upper loop limit. Fix this by making addr
-> an int.
-> 
-> Addresses-Coverity: ("Infinite loop")
-> Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Oh, I see, it's backwards compatible if it's not enabled, right?
 
-Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
+It's backwards compatible.
+Let me give a little more detail. The legacy binder interface would
+create all devices listed in the module parameter
+CONFIG_ANDROID_BINDER_DEVICES. These devices were created using 
+misc_register(&binder_device->miscdev);
+in the host's devtmpfs mount.
+If binderfs is enabled these devices are now created in the binderfs
+instance instead.
+For full backwards compatibility with old Android versions symlinks (or
+bind mounts) can be provided in the host's devtmpfs. This is what I
+recommended a few months ago.
+
+> And we enabled it because, well, enabling things generally gives more
+> coverage. I guess I will disable CONFIG_ANDROID_BINDERFS for now to
+
+I would at least try to test both somehow. It's likely that binderfs
+will replace legacy binder devices so if we could keep testing it
+somehow that would be great.
+
+> restore coverage in the binder itself.
+
+I'm not completely sure what you mean here. The binder IPC codepaths are
+nearly the same. The difference is mostly in how the device information
+is cast out before actual binder-ipc operations take place.
+In any case, testing both would obviously be preferred but binderfs
+strikes me as more worthy of testing.
+
+Christian
