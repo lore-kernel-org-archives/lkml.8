@@ -2,82 +2,131 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B61C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD38C35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35712071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F154206D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgAZL0C (ORCPT
+        id S2387414AbgAZLgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 06:26:02 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:35364 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgAZL0B (ORCPT
+        Sun, 26 Jan 2020 06:36:19 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52142 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728689AbgAZLgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 06:26:01 -0500
-Received: by mail-io1-f69.google.com with SMTP id x10so4325500iob.2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 03:26:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=JBFyGLFaRClD3Lq6gKSOhEwna1ahm2jFZCVvyRd5gTk=;
-        b=pbEgg04rPMxXM5wFjwkfMUE/Lm2RI2pCPes3TzdU9hL037gWSbGObJxIl+ZgXAsFZf
-         Foa0Idi6U/ywiijc8i5xxDqcyOuPNg0E9H52ukVNAF1OZ1yNCyqPsEZCPG5fUSiXT8h+
-         NjS43yFx9VA0u+h7/Gk1f7uKEBmGu9Rz+9CX0Y3GJdgFeDJb8Hcyi0nQ8CuIVvSnJ1Tr
-         daczPdPX4yNOOy1/jauh5hxkEyE/kue8HpG8LssRnR3RTpfTqSZjN20cWqvrRmEwzML+
-         U4xyJPmklyUUUJeBajdf61MB9UkezhONNW4y/q7vMCPHqlAxcGvOH/Bg4QfzaQgR+uUH
-         4GYA==
-X-Gm-Message-State: APjAAAVmDemE5DbpXvPgHfhSzm76s4/nqpzsvNG70jzHVaoqqkTKWt9M
-        DApelsKITCtlalIr2ZsAMxeBEQjxyQ7D0hrg3xrVp+8J9cHz
-X-Google-Smtp-Source: APXvYqyLaYc8gQfvUmEZVQhOZ0IYO/h52y/zmcO+U/WovieEJvKF5cOH25qr96Of+NGMIr4NK7EOiIp4DxSEObgLp7vhlByfHaDo
+        Sun, 26 Jan 2020 06:36:19 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 68FEA1C2103; Sun, 26 Jan 2020 12:36:17 +0100 (CET)
+Date:   Sun, 26 Jan 2020 12:36:16 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 540/639] wcn36xx: use dynamic allocation for large
+ variables
+Message-ID: <20200126113616.GB19082@duo.ucw.cz>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <20200124093156.657476612@linuxfoundation.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:8307:: with SMTP id f7mr10993148ild.73.1580037961001;
- Sun, 26 Jan 2020 03:26:01 -0800 (PST)
-Date:   Sun, 26 Jan 2020 03:26:00 -0800
-In-Reply-To: <00000000000044bcb8059a0a577e@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000065b384059d094190@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in vc_do_resize
-From:   syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, daniel.thompson@linaro.org,
-        daniel.vetter@ffwll.ch, daniel.vetter@intel.com, ghalat@redhat.com,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-        nico@fluxnic.net, okash.khawaja@gmail.com, oleksandr@redhat.com,
-        sam@ravnborg.org, syzkaller-bugs@googlegroups.com,
-        textshell@uchuujin.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
+Content-Disposition: inline
+In-Reply-To: <20200124093156.657476612@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
 
-commit 9e1467002630065ed86c65ea28bfc9194fff6f0e
-Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue May 28 09:02:59 2019 +0000
+--/NkBOFFp2J2Af1nK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    fbcon: replace FB_EVENT_MODE_CHANGE/_ALL with direct calls
+Hi!
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=135a779ee00000
-start commit:   d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=10da779ee00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=175a779ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=83c00afca9cf5153
-dashboard link: https://syzkaller.appspot.com/bug?extid=c37a14770d51a085a520
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1659a721e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16aa59c9e00000
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> [ Upstream commit 355cf31912014e6ff1bb1019ae4858cad12c68cf ]
+>=20
+> clang triggers a warning about oversized stack frames that gcc does not
+> notice because of slightly different inlining decisions:
+>=20
+> ath/wcn36xx/smd.c:1409:5: error: stack frame size of 1040 bytes in functi=
+on 'wcn36xx_smd_config_bss' [-Werror,-Wframe-larger-than=3D]
+> ath/wcn36xx/smd.c:640:5: error: stack frame size of 1032 bytes in functio=
+n 'wcn36xx_smd_start_hw_scan' [-Werror,-Wframe-larger-than=3D]
+>=20
+> Basically the wcn36xx_hal_start_scan_offload_req_msg,
+> wcn36xx_hal_config_bss_req_msg_v1, and wcn36xx_hal_config_bss_req_msg
+> structures are too large to be put on the kernel stack, but small
+> enough that gcc does not warn about them.
+>=20
+> Use kzalloc() to allocate them all. There are similar structures in other
+> parts of this driver, but they are all smaller, with the next largest
+> stack frame at 480 bytes for wcn36xx_smd_send_beacon.
 
-Reported-by: syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com
-Fixes: 9e1467002630 ("fbcon: replace FB_EVENT_MODE_CHANGE/_ALL with direct calls")
+>  	int ret, i;
+> =20
+>  	if (req->ie_len > WCN36XX_MAX_SCAN_IE_LEN)
+>  		return -EINVAL;
+> =20
+>  	mutex_lock(&wcn->hal_mutex);
+> -	INIT_HAL_MSG(msg_body, WCN36XX_HAL_START_SCAN_OFFLOAD_REQ);
+> +	msg_body =3D kzalloc(sizeof(*msg_body), GFP_KERNEL);
+> +	if (!msg_body) {
+> +		ret =3D -ENOMEM;
+> +		goto out;
+> +	}
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+The allocation can be done outside the lock.
+
+> @@ -1410,16 +1428,21 @@ int wcn36xx_smd_config_bss(struct wcn36xx *wcn, s=
+truct ieee80211_vif *vif,
+>  			   struct ieee80211_sta *sta, const u8 *bssid,
+>  			   bool update)
+>  {
+> -	struct wcn36xx_hal_config_bss_req_msg msg;
+> +	struct wcn36xx_hal_config_bss_req_msg *msg;
+>  	struct wcn36xx_hal_config_bss_params *bss;
+>  	struct wcn36xx_hal_config_sta_params *sta_params;
+>  	struct wcn36xx_vif *vif_priv =3D wcn36xx_vif_to_priv(vif);
+>  	int ret;
+> =20
+>  	mutex_lock(&wcn->hal_mutex);
+> -	INIT_HAL_MSG(msg, WCN36XX_HAL_CONFIG_BSS_REQ);
+> +	msg =3D kzalloc(sizeof(*msg), GFP_KERNEL);
+> +	if (!msg) {
+> +		ret =3D -ENOMEM;
+> +		goto out;
+> +	}
+> +	INIT_HAL_MSG((*msg), WCN36XX_HAL_CONFIG_BSS_REQ);
+
+Same here.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--/NkBOFFp2J2Af1nK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXi15sAAKCRAw5/Bqldv6
+8jrlAJ96jj/ngctVdO0FcxlO4LRn9I1GRwCgsrfJ9BdWXm1gqcF4PqOnk5kpq2U=
+=wSzG
+-----END PGP SIGNATURE-----
+
+--/NkBOFFp2J2Af1nK--
