@@ -2,169 +2,199 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FD2C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974FDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA9932070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=welchs.me.uk header.i=@welchs.me.uk header.b="ZJklnSWB"
+	by mail.kernel.org (Postfix) with ESMTP id 68B98206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgAZU2d (ORCPT
+        id S1727107AbgAZUkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 15:28:33 -0500
-Received: from ams-node6.websitehostserver.net ([107.6.163.66]:34645 "EHLO
-        ams-node6.websitehostserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726087AbgAZU2c (ORCPT
+        Sun, 26 Jan 2020 15:40:02 -0500
+Received: from smtprelay0186.hostedemail.com ([216.40.44.186]:44314 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726144AbgAZUkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 15:28:32 -0500
-X-Greylist: delayed 2590 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Jan 2020 15:28:31 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=welchs.me.uk; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1iuIIHLDXFgbIP0KUUM70+Fje7EhMg4VrZHvVRTSgKw=; b=ZJklnSWBRRBb4P0ApvH+OVF0qR
-        JZWS+MnOcYi+wMV7zD8butsJuYD9vddeRTCllH43d/P+FF3wecIvRBTM4sZ35bhjxPO6C8lP4uAjl
-        ugx/LrTAvB/bw09KERFl6I6q7tqiNbwkAE2fEUaLiskBS5DCPEnm0ZVZ6tZhjizWedh/ORvKXPu+H
-        vpjXPMkEu3TG1wiPyu4jRarnMTlH9qCkTIeAtZvF3Jsb4JMmUJNFN+filcljRo00q0yzkof1dH2WK
-        84j0qLaM/eqfB8poR30D9DdbXQWPVfVIjkYmCjhe9r721FEhONOInpAt5N5hqnXfSBIZeATV2o0zA
-        jVO9+j8A==;
-Received: from host86-133-53-79.range86-133.btcentralplus.com ([86.133.53.79]:37384 helo=hera.home)
-        by ams-node6.websitehostserver.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <martyn@welchs.me.uk>)
-        id 1ivnqR-0002ep-Ns; Sun, 26 Jan 2020 20:45:19 +0100
-From:   Martyn Welch <martyn@welchs.me.uk>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martyn Welch <martyn@welchs.me.uk>,
-        Conn O'Griofa <connogriofa@gmail.com>
-Subject: [PATCH] HID: Sony: Add support for Gasia controllers
-Date:   Sun, 26 Jan 2020 19:45:13 +0000
-Message-Id: <20200126194513.6359-1-martyn@welchs.me.uk>
-X-Mailer: git-send-email 2.20.1
+        Sun, 26 Jan 2020 15:40:02 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 872C818029128;
+        Sun, 26 Jan 2020 20:40:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sign60_1d0aeddd8281f
+X-Filterd-Recvd-Size: 6260
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 26 Jan 2020 20:39:59 +0000 (UTC)
+Message-ID: <e70ff75e9712478704fad44ac6b66c86a45df6a6.camel@perches.com>
+Subject: Re: [for-next][PATCH 7/7] tracing: Use pr_err() instead of WARN()
+ for memory failures
+From:   Joe Perches <joe@perches.com>
+To:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Date:   Sun, 26 Jan 2020 12:38:55 -0800
+In-Reply-To: <20200126192021.350763989@goodmis.org>
+References: <20200126191932.984391723@goodmis.org>
+         <20200126192021.350763989@goodmis.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - ams-node6.websitehostserver.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - welchs.me.uk
-X-Get-Message-Sender-Via: ams-node6.websitehostserver.net: authenticated_id: martyn@welchs.me.uk
-X-Authenticated-Sender: ams-node6.websitehostserver.net: martyn@welchs.me.uk
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There seems to be a number of subtly different firmwares for the
-Playstation controllers made by "Gasia Co.,Ltd". Whilst such controllers
-are easily detectable when attached via USB that is not always the case
-via Bluetooth. Some controllers are named "PLAYSTATION(R)3 Controller"
-where as the official Sony controllers are named
-"Sony PLAYSTATION(R)3 Controller", however some versions of firmware use
-the exact name used by the official controllers. The only way I've been
-able to distinguish these versions of the controller (when connected via
-Bluetooth) is that the Bluetooth Class of Device incorrectly reports the
-controller as a keyboard rather than a gamepad. I've so far failed to work
-out how to access this information from a HID driver.
+On Sun, 2020-01-26 at 14:19 -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> As warnings can trigger panics, especially when "panic_on_warn" is set,
+> memory failure warnings can cause panics and fail fuzz testers that are
+> stressing memory.
+> 
+> Create a MEM_FAIL() macro to use instead of WARN() in the tracing code
+> (perhaps this should be a kernel wide macro?), and use that for memory
+> failure issues. This should stop failing fuzz tests due to warnings.
 
-The Gasia controllers need output reports to be configured in the same way
-as the Shanwan controllers. In order to ensure both types of Gasia firmware
-will work, this patch adds a quirk for those devices it can detect and
-reworks `sixaxis_send_output_report()` to attempt `hid_hw_output_report()`
-should `hid_hw_raw_request()` be known to be the wrong option (as is the
-case with the Shanwan controllers) or fails.
+It looks as if most of these could just be removed instead
+as there is an existing dump_stack() on failure.
 
-This has got all the controllers I have working, with the slight
-anoyance that the Gasia controllers that don't currently get marked with
-a quirk require the call to `hid_hw_raw_request()` to fail before the
-controller finishes initialising (which adds a significant extra delay
-before the controller is ready).
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+[]
+> @@ -5459,7 +5459,7 @@ static void __init set_ftrace_early_graph(char *buf, int enable)
+>  	struct ftrace_hash *hash;
+>  
+>  	hash = alloc_ftrace_hash(FTRACE_HASH_DEFAULT_BITS);
+> -	if (WARN_ON(!hash))
+> +	if (MEM_FAIL(!hash, "Failed to allocate hash\n"))
+>  		return;
 
-This patch is based on the following patch by Conn O'Griofa:
-
-https://github.com/RetroPie/RetroPie-Setup/pull/2263/commits/017f00f6e15f04b3272ff1abae8742dc4c47b608
-
-Cc: Conn O'Griofa <connogriofa@gmail.com>
-Signed-off-by: Martyn Welch <martyn@welchs.me.uk>
----
- drivers/hid/hid-sony.c | 31 +++++++++++++++++++++++++------
- 1 file changed, 25 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/hid/hid-sony.c b/drivers/hid/hid-sony.c
-index 4c6ed6ef31f1..d1088a85cb59 100644
---- a/drivers/hid/hid-sony.c
-+++ b/drivers/hid/hid-sony.c
-@@ -56,6 +56,7 @@
- #define NSG_MR5U_REMOTE_BT        BIT(14)
- #define NSG_MR7U_REMOTE_BT        BIT(15)
- #define SHANWAN_GAMEPAD           BIT(16)
-+#define GASIA_GAMEPAD             BIT(17)
+has dump_stack()
  
- #define SIXAXIS_CONTROLLER (SIXAXIS_CONTROLLER_USB | SIXAXIS_CONTROLLER_BT)
- #define MOTION_CONTROLLER (MOTION_CONTROLLER_USB | MOTION_CONTROLLER_BT)
-@@ -2067,6 +2068,7 @@ static void sixaxis_send_output_report(struct sony_sc *sc)
- 	struct sixaxis_output_report *report =
- 		(struct sixaxis_output_report *)sc->output_report_dmabuf;
- 	int n;
-+	int ret = -1;
+>  	while (buf) {
+> @@ -6591,7 +6591,7 @@ static void add_to_clear_hash_list(struct list_head *clear_list,
+>  
+>  	func = kmalloc(sizeof(*func), GFP_KERNEL);
+>  	if (!func) {
+> -		WARN_ONCE(1, "alloc failure, ftrace filter could be stale\n");
+> +		MEM_FAIL(1, "alloc failure, ftrace filter could be stale\n");
+
+has dump_stack()
+
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+[]
+> @@ -3126,7 +3126,7 @@ static int alloc_percpu_trace_buffer(void)
+>  	struct trace_buffer_struct *buffers;
+>  
+>  	buffers = alloc_percpu(struct trace_buffer_struct);
+> -	if (WARN(!buffers, "Could not allocate percpu trace_printk buffer"))
+> +	if (MEM_FAIL(!buffers, "Could not allocate percpu trace_printk buffer"))
+>  		return -ENOMEM;
+
+has dump_stack()
+
+>  
+>  	trace_percpu_buffer = buffers;
+> @@ -7932,7 +7932,7 @@ static struct dentry *tracing_dentry_percpu(struct trace_array *tr, int cpu)
+>  
+>  	tr->percpu_dir = tracefs_create_dir("per_cpu", d_tracer);
+>  
+> -	WARN_ONCE(!tr->percpu_dir,
+> +	MEM_FAIL(!tr->percpu_dir,
+>  		  "Could not create tracefs directory 'per_cpu/%d'\n", cpu);
+
+keep?
  
- 	/* Initialize the report with default values */
- 	memcpy(report, &default_report, sizeof(struct sixaxis_output_report));
-@@ -2101,14 +2103,23 @@ static void sixaxis_send_output_report(struct sony_sc *sc)
- 		}
- 	}
- 
--	/* SHANWAN controllers require output reports via intr channel */
--	if (sc->quirks & SHANWAN_GAMEPAD)
--		hid_hw_output_report(sc->hdev, (u8 *)report,
--				sizeof(struct sixaxis_output_report));
--	else
--		hid_hw_raw_request(sc->hdev, report->report_id, (u8 *)report,
-+	/*
-+	 * SHANWAN & GASIA controllers require output reports via intr channel.
-+	 * Some of the Gasia controllers are basically indistinguishable from
-+	 * the official ones and thus try hid_hw_output_report() should
-+	 * hid_hw_raw_request() fail.
-+	 */
-+	if (!(sc->quirks & (SHANWAN_GAMEPAD | GASIA_GAMEPAD)))
-+		ret = hid_hw_raw_request(sc->hdev, report->report_id,
-+				(u8 *)report,
- 				sizeof(struct sixaxis_output_report),
- 				HID_OUTPUT_REPORT, HID_REQ_SET_REPORT);
-+
-+	if (ret >= 0)
-+		return;
-+
-+	hid_hw_output_report(sc->hdev, (u8 *)report,
-+			sizeof(struct sixaxis_output_report));
- }
- 
- static void dualshock4_send_output_report(struct sony_sc *sc)
-@@ -2833,6 +2844,14 @@ static int sony_probe(struct hid_device *hdev, const struct hid_device_id *id)
- 	if (!strcmp(hdev->name, "SHANWAN PS3 GamePad"))
- 		quirks |= SHANWAN_GAMEPAD;
- 
-+	/*
-+	 * Some Gasia controllers are named "PLAYSTATION(R)3 Controller"
-+	 * where as the official Sony controllers are named
-+	 * "Sony PLAYSTATION(R)3 Controller".
-+	 */
-+	if (!strcmp(hdev->name, "PLAYSTATION(R)3 Controller"))
-+		quirks |= GASIA_GAMEPAD;
-+
- 	sc = devm_kzalloc(&hdev->dev, sizeof(*sc), GFP_KERNEL);
- 	if (sc == NULL) {
- 		hid_err(hdev, "can't alloc sony descriptor\n");
--- 
-2.20.1
+>  	return tr->percpu_dir;
+> @@ -8253,7 +8253,7 @@ create_trace_option_files(struct trace_array *tr, struct tracer *tracer)
+>  	for (cnt = 0; opts[cnt].name; cnt++) {
+>  		create_trace_option_file(tr, &topts[cnt], flags,
+>  					 &opts[cnt]);
+> -		WARN_ONCE(topts[cnt].entry == NULL,
+> +		MEM_FAIL(topts[cnt].entry == NULL,
+>  			  "Failed to create trace option: %s",
+>  			  opts[cnt].name);
+>  	}
+> @@ -8437,7 +8437,7 @@ static int allocate_trace_buffers(struct trace_array *tr, int size)
+>  #ifdef CONFIG_TRACER_MAX_TRACE
+>  	ret = allocate_trace_buffer(tr, &tr->max_buffer,
+>  				    allocate_snapshot ? size : 1);
+> -	if (WARN_ON(ret)) {
+> +	if (MEM_FAIL(ret, "Failed to allocate trace buffer\n")) {
+>  		ring_buffer_free(tr->array_buffer.buffer);
+>  		tr->array_buffer.buffer = NULL;
+>  		free_percpu(tr->array_buffer.data);
+> @@ -8726,7 +8726,7 @@ static __init void create_trace_instances(struct dentry *d_tracer)
+>  	trace_instance_dir = tracefs_create_instance_dir("instances", d_tracer,
+>  							 instance_mkdir,
+>  							 instance_rmdir);
+> -	if (WARN_ON(!trace_instance_dir))
+> +	if (MEM_FAIL(!trace_instance_dir, "Failed to create instances directory\n"))
+>  		return;
+>  }
+>  
+> @@ -8796,7 +8796,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+>  #endif
+>  
+>  	if (ftrace_create_function_files(tr, d_tracer))
+> -		WARN(1, "Could not allocate function filter files");
+> +		MEM_FAIL(1, "Could not allocate function filter files");
+>  
+>  #ifdef CONFIG_TRACER_SNAPSHOT
+>  	trace_create_file("snapshot", 0644, d_tracer,
+> @@ -9348,8 +9348,7 @@ __init static int tracer_alloc_buffers(void)
+>  
+>  	/* TODO: make the number of buffers hot pluggable with CPUS */
+>  	if (allocate_trace_buffers(&global_trace, ring_buf_size) < 0) {
+> -		printk(KERN_ERR "tracer: failed to allocate ring buffer!\n");
+> -		WARN_ON(1);
+> +		MEM_FAIL(1, "tracer: failed to allocate ring buffer!\n");
+
+has dump_stack()
+
+>  		goto out_free_savedcmd;
+>  	}
+>  
+> @@ -9422,7 +9421,8 @@ void __init early_trace_init(void)
+>  	if (tracepoint_printk) {
+>  		tracepoint_print_iter =
+>  			kmalloc(sizeof(*tracepoint_print_iter), GFP_KERNEL);
+> -		if (WARN_ON(!tracepoint_print_iter))
+> +		if (MEM_FAIL(!tracepoint_print_iter,
+> +			     "Failed to allocate trace iterator\n"))
+
+has dump_stack()
+
+>  			tracepoint_printk = 0;
+>  		else
+>  			static_key_enable(&tracepoint_printk_key.key);
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index 4812a36affac..6bb64d89c321 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -94,6 +94,18 @@ enum trace_type {
+>  
+>  #include "trace_entries.h"
+>  
+> +/* Use this for memory failure errors */
+> +#define MEM_FAIL(condition, fmt, ...) ({			\
+> +	static bool __section(.data.once) __warned;		\
+> +	int __ret_warn_once = !!(condition);			\
+> +								\
+> +	if (unlikely(__ret_warn_once && !__warned)) {		\
+> +		__warned = true;				\
+> +		pr_err("ERROR: " fmt, ##__VA_ARGS__);		\
+> +	}							\
+> +	unlikely(__ret_warn_once);				\
+> +})
+> +
+>  /*
+>   * syscalls are special, and need special handling, this is why
+>   * they are not included in trace_entries.h
 
