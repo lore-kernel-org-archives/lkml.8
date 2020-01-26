@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51612C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 16:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A16C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 16:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D23920708
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 16:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8244320708
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 16:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgAZQF0 (ORCPT
+        id S1728668AbgAZQF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 11:05:26 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:46277 "EHLO
+        Sun, 26 Jan 2020 11:05:27 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:54491 "EHLO
         relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgAZQFZ (ORCPT
+        with ESMTP id S1725907AbgAZQFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 26 Jan 2020 11:05:25 -0500
 X-Originating-IP: 195.189.32.242
 Received: from pc.localdomain (unknown [195.189.32.242])
         (Authenticated sender: contact@artur-rojek.eu)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id D6A9E1BF20A;
-        Sun, 26 Jan 2020 16:05:21 +0000 (UTC)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 784CE1BF204;
+        Sun, 26 Jan 2020 16:05:19 +0000 (UTC)
 From:   Artur Rojek <contact@artur-rojek.eu>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -33,14 +33,11 @@ To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Paul Cercueil <paul@crapouillou.net>
 Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
         linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 2/5] dt-bindings: iio/adc: Add touchscreen idx for JZ47xx SoC ADC
-Date:   Sun, 26 Jan 2020 17:12:33 +0100
-Message-Id: <20200126161236.63631-2-contact@artur-rojek.eu>
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v2 1/5] IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
+Date:   Sun, 26 Jan 2020 17:12:32 +0100
+Message-Id: <20200126161236.63631-1-contact@artur-rojek.eu>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200126161236.63631-1-contact@artur-rojek.eu>
-References: <20200126161236.63631-1-contact@artur-rojek.eu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,32 +45,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce support for touchscreen channels found in JZ47xx SoCs.
+Provide an of_xlate callback in order to retrieve the correct channel
+specifier index from the IIO channels array.
 
 Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
 Tested-by: Paul Cercueil <paul@crapouillou.net>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
 
  Changes:
 
  v2: no change
 
- include/dt-bindings/iio/adc/ingenic,adc.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iio/adc/ingenic-adc.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/include/dt-bindings/iio/adc/ingenic,adc.h b/include/dt-bindings/iio/adc/ingenic,adc.h
-index 42f871ab3272..95e20a8d6dc8 100644
---- a/include/dt-bindings/iio/adc/ingenic,adc.h
-+++ b/include/dt-bindings/iio/adc/ingenic,adc.h
-@@ -7,5 +7,7 @@
- #define INGENIC_ADC_AUX		0
- #define INGENIC_ADC_BATTERY	1
- #define INGENIC_ADC_AUX2	2
-+#define INGENIC_ADC_TOUCH_XP	3
-+#define INGENIC_ADC_TOUCH_YP	4
+diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+index 39c0a609fc94..7a24bc1dabe1 100644
+--- a/drivers/iio/adc/ingenic-adc.c
++++ b/drivers/iio/adc/ingenic-adc.c
+@@ -383,6 +383,21 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
+ 	}
+ }
  
- #endif
++static int ingenic_adc_of_xlate(struct iio_dev *iio_dev,
++				const struct of_phandle_args *iiospec)
++{
++	int i;
++
++	if (!iiospec->args_count)
++		return -EINVAL;
++
++	for (i = 0; i < iio_dev->num_channels; ++i)
++		if (iio_dev->channels[i].channel == iiospec->args[0])
++			return i;
++
++	return -EINVAL;
++}
++
+ static void ingenic_adc_clk_cleanup(void *data)
+ {
+ 	clk_unprepare(data);
+@@ -392,6 +407,7 @@ static const struct iio_info ingenic_adc_info = {
+ 	.write_raw = ingenic_adc_write_raw,
+ 	.read_raw = ingenic_adc_read_raw,
+ 	.read_avail = ingenic_adc_read_avail,
++	.of_xlate = ingenic_adc_of_xlate,
+ };
+ 
+ static const struct iio_chan_spec ingenic_channels[] = {
 -- 
 2.25.0
 
