@@ -2,68 +2,82 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBEBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D019C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89212071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C656F2071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:43:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="S/ZpsuyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbgAZPnC (ORCPT
+        id S1728235AbgAZPnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 10:43:02 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33004 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgAZPnB (ORCPT
+        Sun, 26 Jan 2020 10:43:46 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19485 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727278AbgAZPnp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 10:43:01 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ivk3t-0000kU-Tf; Sun, 26 Jan 2020 15:42:57 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] i2c: xiic: fix indentation issue
-Date:   Sun, 26 Jan 2020 15:42:57 +0000
-Message-Id: <20200126154257.41336-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
+        Sun, 26 Jan 2020 10:43:45 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580053425; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=pejZ+l4byocUl4MO9Xh34Wf+bv32hnImIXB9SxfFKhw=;
+ b=S/ZpsuyI9pTYlbCJlV/z9byzgr+KAzgzVV8gzkzJ2Qr/+Fzhy64x0i0uq6GTl/tneN0HrjJY
+ 6ITBqBUEACNPa/LyUU9Iykzy00uspgi6iZRXBPbx+ETzGMPjXkHw/XcvIIImaA5CUG6hDZPw
+ FmGPuJ2dzgQgG4zjPE9Y1q+vkeQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2db3b0.7f8407011768-smtp-out-n03;
+ Sun, 26 Jan 2020 15:43:44 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BBC4EC433CB; Sun, 26 Jan 2020 15:43:44 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 043C8C43383;
+        Sun, 26 Jan 2020 15:43:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 043C8C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] brcmfmac: Remove always false 'idx < 0' statement
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200108135748.46096-1-yuehaibing@huawei.com>
+References: <20200108135748.46096-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <arend.vanspriel@broadcom.com>, <linux-wireless@vger.kernel.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        <brcm80211-dev-list@cypress.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, yuehaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200126154344.BBC4EC433CB@smtp.codeaurora.org>
+Date:   Sun, 26 Jan 2020 15:43:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-There is a statment that is indented one level too deeply, remove
-the extraneous tab.
+> From: yuehaibing <yuehaibing@huawei.com>
+> 
+> idx is declared as u32, it will never less than 0.
+> 
+> Signed-off-by: yuehaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/i2c/busses/i2c-xiic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patch applied to wireless-drivers-next.git, thanks.
 
-diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
-index b17d30c9ab40..90c1c362394d 100644
---- a/drivers/i2c/busses/i2c-xiic.c
-+++ b/drivers/i2c/busses/i2c-xiic.c
-@@ -261,7 +261,7 @@ static int xiic_clear_rx_fifo(struct xiic_i2c *i2c)
- 		xiic_getreg8(i2c, XIIC_DRR_REG_OFFSET);
- 		if (time_after(jiffies, timeout)) {
- 			dev_err(i2c->dev, "Failed to clear rx fifo\n");
--				return -ETIMEDOUT;
-+			return -ETIMEDOUT;
- 		}
- 	}
- 
+627b0d094240 brcmfmac: Remove always false 'idx < 0' statement
+
 -- 
-2.24.0
+https://patchwork.kernel.org/patch/11323743/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
