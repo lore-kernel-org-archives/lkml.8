@@ -2,356 +2,163 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37BCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 16:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E67DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 16:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8657520708
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 16:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E092071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 16:12:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiStINCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgAZQFe (ORCPT
+        id S1726565AbgAZQME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 11:05:34 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:41887 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729030AbgAZQFc (ORCPT
+        Sun, 26 Jan 2020 11:12:04 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40318 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgAZQMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 11:05:32 -0500
-X-Originating-IP: 195.189.32.242
-Received: from pc.localdomain (unknown [195.189.32.242])
-        (Authenticated sender: contact@artur-rojek.eu)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 493EC1BF20B;
-        Sun, 26 Jan 2020 16:05:28 +0000 (UTC)
-From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Paul Cercueil <paul@crapouillou.net>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v2 5/5] input: joystick: Add ADC attached joystick driver.
-Date:   Sun, 26 Jan 2020 17:12:36 +0100
-Message-Id: <20200126161236.63631-5-contact@artur-rojek.eu>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200126161236.63631-1-contact@artur-rojek.eu>
-References: <20200126161236.63631-1-contact@artur-rojek.eu>
+        Sun, 26 Jan 2020 11:12:03 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p12so2432469plr.7;
+        Sun, 26 Jan 2020 08:12:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=XwJ6zbJ/GSlSVPf4lzbzpyTBgRVNbLfcCsMPH563P88=;
+        b=BiStINCETi47ij8Ysmz/ZI6Xft7bnO7sX0KTqlynJ43w3wtDW3h8/vXHDpu1M4G1EI
+         Z7qILlsMhg6N3GCDjIivcJnYyNAmsbbJ5w7O9Y4e//ZPTwGHe8/vsirz2DJaeB9PM2FG
+         Rgj0FymK4Qj2uZ2KFXemJFoHrrXCK1kt12ln9pOPT+HoOC0ctxQnZ1YJRXurhM/FFh+B
+         B2quLBtZOsOjJpzuMc49HQSJMoE1sl4TrfwX8BnIFl+y8G71bMxDudxyOXPv3BpoJsmF
+         SlQbnLHou74cDjs7TWPSE+QDIHWqP7pF2a8gzn5EQE1XVf6rmyCIREu1WiHzDBNryPMB
+         ywXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XwJ6zbJ/GSlSVPf4lzbzpyTBgRVNbLfcCsMPH563P88=;
+        b=s4tbXhvT3kmIXE/nt9EO5WihO/oS68ITyfwH1MnZQYB0ff1QwiDRiy5J73UAsShCDy
+         eFkzcf+5qRDipSjg/HkRi4jGTHrPnMLMcI9s1lyVHHpsG1jCYLWedrotwXD+L/ayWGEQ
+         KH5ISczgAeL2GmYUXLUyM2CLv4cneriqZOHicBWETVwf55UeTxDQmUOHDOr9GcpHZ8Qg
+         vci5SofuCbCztGjywlmPSeTUFnydTocRqKIrQQdrQqwRQQjPPHnXbt4iST420uCWQdHC
+         gDXmnj0v6zc0FbmwUdGqU14i4EF8ARlIXmJSeqGPcnJiko4bwARGR1SaOxM01QlVMFZd
+         L7/Q==
+X-Gm-Message-State: APjAAAWT5LRdj/oo166+IZ7WoyQGQwSMhs97/n9hAS/DA8upN7qVV88P
+        X7Cy/hM6hBiGPNk0OyOcDVY=
+X-Google-Smtp-Source: APXvYqyTm+GQ8cYQOS3FgVtTBy17aXa0SG63dsPQsZ2G9M59rQvA3+6BjsIjLUOhSPBkaeFQkZRlaA==
+X-Received: by 2002:a17:90b:4396:: with SMTP id in22mr3009157pjb.83.1580055122957;
+        Sun, 26 Jan 2020 08:12:02 -0800 (PST)
+Received: from google.com ([123.201.105.2])
+        by smtp.gmail.com with ESMTPSA id g9sm13056717pfm.150.2020.01.26.08.12.00
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sun, 26 Jan 2020 08:12:02 -0800 (PST)
+Date:   Sun, 26 Jan 2020 21:41:56 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     b-liu@ti.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] usb: musb: Fix external abort on non-linefetch
+Message-ID: <20200126161156.GA20401@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+User-Agent: Mutt/1.6.2-neo (NetBSD/sparc64)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a driver for joystick devices connected to ADC controllers
-supporting the Industrial I/O subsystem.
+While accessing the usb mode/vbus from sysfs. Below error came on kernel
+version 4.19.
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-Tested-by: Paul Cercueil <paul@crapouillou.net>
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+On latest kernel vserion api name changed. Therefore API
+name and backtrace API names are different.
+
+     [  821.908066] Backtrace:
+     [  821.910695] [<bf078fc0>] (musb_default_readl [musb_hdrc]) from [<bf0af738>] (dsps_musb_set_mode+0x38/0x12c [musb_dsps])
+     [  821.922059] [<bf0af700>] (dsps_musb_set_mode [musb_dsps]) from [<bf07899c>] (musb_mode_store+0xc8/0x12c [musb_hdrc])
+     [  821.933105]  r7:a0010013 r6:0000000b r5:cd79d200 r4:cb634010
+     [  821.939096] [<bf0788d4>] (musb_mode_store [musb_hdrc]) from [<c0425184>] (dev_attr_store+0x20/0x2c)
+     [  821.948593]  r7:cd79d200 r6:c5abbf78 r5:00000000 r4:bf0788d4
+     [  821.954549] [<c0425164>] (dev_attr_store) from [<c0285b08>] (sysfs_kf_write+0x48/0x4c)
+     [  821.962859]  r5:00000000 r4:c0425164
+     [  821.966620] [<c0285ac0>] (sysfs_kf_write) from [<c0285274>] (kernfs_fop_write+0xfc/0x1fc)
+     [  821.975200]  r5:00000000 r4:cd79d080
+     [  821.978966] [<c0285178>] (kernfs_fop_write) from [<c020ec00>] (__vfs_write+0x34/0x120)
+     [  821.987280]  r10:00000000 r9:0000000b r8:00000000 r7:0000000b r6:c5abbf78 r5:c0285178
+     [  821.995493]  r4:cb67a3c0
+     [  821.998160] [<c020ebcc>] (__vfs_write) from [<c020fae8>] (vfs_write+0xa8/0x170)
+     [  822.005835]  r9:0000000b r8:00000000 r7:c5abbf78 r6:000def80 r5:cb67a3c0 r4:0000000b
+     [  822.013969] [<c020fa40>] (vfs_write) from [<c02108d0>] (SyS_write+0x44/0x98)
+     [  822.021371]  r9:0000000b r8:000def80 r7:00000000 r6:00000000 r5:cb67a3c0 r4:cb67a3c0
+     [  822.029517] [<c021088c>] (SyS_write) from [<c010d8a0>] (ret_fast_syscall+0x0/0x3c)
+     [  822.037467]  r9:c5aba000 r8:c010daa8 r7:00000004 r6:b6f0ad58 r5:000def80 r4:0000000b
+     [  822.045599] Code: e1a0c00d e92dd800 e24cb004 e0801001 (e5910000)
+
+Without pm_runtime_{get,put}_sync calls in place,
+Similar issue come on "mode_show" and "vbus_store" also.
+
+fix- call pm_runtime_{get,put}_sync before reading/writing
+usb mode/vbus from sysfs.
+
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
 ---
+  drivers/usb/musb/musb_core.c | 6 ++++++
+  1 file changed, 6 insertions(+)
 
- Changes:
-
- v2: - sanity check supported channel format on probe,
-     - rename adc_joystick_disable to a more sensible adc_joystick_cleanup, 
-     - enforce correct axis order by checking the `reg` property of
-       child nodes
-
- drivers/input/joystick/Kconfig        |  10 ++
- drivers/input/joystick/Makefile       |   1 +
- drivers/input/joystick/adc-joystick.c | 245 ++++++++++++++++++++++++++
- 3 files changed, 256 insertions(+)
- create mode 100644 drivers/input/joystick/adc-joystick.c
-
-diff --git a/drivers/input/joystick/Kconfig b/drivers/input/joystick/Kconfig
-index 940b744639c7..efbc20ec5099 100644
---- a/drivers/input/joystick/Kconfig
-+++ b/drivers/input/joystick/Kconfig
-@@ -42,6 +42,16 @@ config JOYSTICK_A3D
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called a3d.
- 
-+config JOYSTICK_ADC
-+	tristate "Simple joystick connected over ADC"
-+	depends on IIO
-+	select IIO_BUFFER_CB
-+	help
-+	  Say Y here if you have a simple joystick connected over ADC.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called adc-joystick.
-+
- config JOYSTICK_ADI
- 	tristate "Logitech ADI digital joysticks and gamepads"
- 	select GAMEPORT
-diff --git a/drivers/input/joystick/Makefile b/drivers/input/joystick/Makefile
-index 8656023f6ef5..58232b3057d3 100644
---- a/drivers/input/joystick/Makefile
-+++ b/drivers/input/joystick/Makefile
-@@ -6,6 +6,7 @@
- # Each configuration option enables a list of files.
- 
- obj-$(CONFIG_JOYSTICK_A3D)		+= a3d.o
-+obj-$(CONFIG_JOYSTICK_ADC)		+= adc-joystick.o
- obj-$(CONFIG_JOYSTICK_ADI)		+= adi.o
- obj-$(CONFIG_JOYSTICK_AMIGA)		+= amijoy.o
- obj-$(CONFIG_JOYSTICK_AS5011)		+= as5011.o
-diff --git a/drivers/input/joystick/adc-joystick.c b/drivers/input/joystick/adc-joystick.c
-new file mode 100644
-index 000000000000..9cb9896da26e
---- /dev/null
-+++ b/drivers/input/joystick/adc-joystick.c
-@@ -0,0 +1,245 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Input driver for joysticks connected over ADC.
-+ * Copyright (c) 2019-2020 Artur Rojek <contact@artur-rojek.eu>
-+ */
-+#include <linux/ctype.h>
-+#include <linux/input.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+
-+struct adc_joystick_axis {
-+	u32 code;
-+	s32 range[2];
-+	s32 fuzz;
-+	s32 flat;
-+};
-+
-+struct adc_joystick {
-+	struct input_dev *input;
-+	struct iio_cb_buffer *buffer;
-+	struct adc_joystick_axis *axes;
-+	struct iio_channel *chans;
-+	int num_chans;
-+};
-+
-+static int adc_joystick_handle(const void *data, void *private)
-+{
-+	struct adc_joystick *joy = private;
-+	enum iio_endian endianness;
-+	int bytes, msb, val, i;
-+	bool sign;
-+
-+	bytes = joy->chans[0].channel->scan_type.storagebits >> 3;
-+
-+	for (i = 0; i < joy->num_chans; ++i) {
-+		endianness = joy->chans[i].channel->scan_type.endianness;
-+		msb = joy->chans[i].channel->scan_type.realbits - 1;
-+		sign = (tolower(joy->chans[i].channel->scan_type.sign) == 's');
-+
-+		switch (bytes) {
-+		case 1:
-+			val = ((const u8 *)data)[i];
-+			break;
-+		case 2:
-+			val = ((const u16 *)data)[i];
-+			if (endianness == IIO_BE)
-+				val = be16_to_cpu(val);
-+			else if (endianness == IIO_LE)
-+				val = le16_to_cpu(val);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		val >>= joy->chans[i].channel->scan_type.shift;
-+		if (sign)
-+			val = sign_extend32(val, msb);
-+		else
-+			val &= GENMASK(msb, 0);
-+		input_report_abs(joy->input, joy->axes[i].code, val);
-+	}
-+
-+	input_sync(joy->input);
-+
-+	return 0;
-+}
-+
-+static int adc_joystick_open(struct input_dev *dev)
-+{
-+	struct adc_joystick *joy = input_get_drvdata(dev);
-+	int ret;
-+
-+	ret = iio_channel_start_all_cb(joy->buffer);
-+	if (ret)
-+		dev_err(dev->dev.parent, "Unable to start callback buffer");
-+
-+	return ret;
-+}
-+
-+static void adc_joystick_close(struct input_dev *dev)
-+{
-+	struct adc_joystick *joy = input_get_drvdata(dev);
-+
-+	iio_channel_stop_all_cb(joy->buffer);
-+}
-+
-+static void adc_joystick_cleanup(void *data)
-+{
-+	iio_channel_release_all_cb(data);
-+}
-+
-+static int adc_joystick_set_axes(struct device *dev, struct adc_joystick *joy)
-+{
-+	struct adc_joystick_axis *axes;
-+	struct fwnode_handle *child;
-+	int num_axes, ret, i;
-+
-+	num_axes = device_get_child_node_count(dev);
-+	if (!num_axes) {
-+		dev_err(dev, "Unable to find child nodes");
-+		return -EINVAL;
-+	}
-+
-+	if (num_axes != joy->num_chans) {
-+		dev_err(dev, "Got %d child nodes for %d channels",
-+			num_axes, joy->num_chans);
-+		return -EINVAL;
-+	}
-+
-+	axes = devm_kmalloc_array(dev, num_axes, sizeof(*axes), GFP_KERNEL);
-+	if (!axes)
-+		return -ENOMEM;
-+
-+	device_for_each_child_node(dev, child) {
-+		ret = fwnode_property_read_u32(child, "reg", &i);
-+		if (ret || i >= num_axes) {
-+			dev_err(dev, "reg invalid or missing");
-+			goto err;
-+		}
-+
-+		if (fwnode_property_read_u32(child, "linux,code",
-+					     &axes[i].code)) {
-+			dev_err(dev, "linux,code invalid or missing");
-+			goto err;
-+		}
-+
-+		if (fwnode_property_read_u32_array(child, "abs-range",
-+						   axes[i].range, 2)) {
-+			dev_err(dev, "abs-range invalid or missing");
-+			goto err;
-+		}
-+
-+		fwnode_property_read_u32(child, "abs-fuzz",
-+					 &axes[i].fuzz);
-+		fwnode_property_read_u32(child, "abs-flat",
-+					 &axes[i].flat);
-+
-+		input_set_abs_params(joy->input, axes[i].code,
-+				     axes[i].range[0], axes[i].range[1],
-+				     axes[i].fuzz,
-+				     axes[i].flat);
-+		input_set_capability(joy->input, EV_ABS, axes[i].code);
-+	}
-+
-+	joy->axes = axes;
-+
-+	return 0;
-+
-+err:
-+	fwnode_handle_put(child);
-+	return -EINVAL;
-+}
-+
-+static int adc_joystick_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct adc_joystick *joy;
-+	struct input_dev *input;
-+	int bits, ret, i;
-+
-+	joy = devm_kzalloc(dev, sizeof(*joy), GFP_KERNEL);
-+	if (!joy)
-+		return -ENOMEM;
-+
-+	joy->chans = devm_iio_channel_get_all(dev);
-+	if (IS_ERR(joy->chans)) {
-+		ret = PTR_ERR(joy->chans);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to get IIO channels");
-+		return ret;
-+	}
-+
-+	/* Count how many channels we got. NULL terminated. */
-+	while (joy->chans[joy->num_chans].indio_dev)
-+		joy->num_chans++;
-+
-+	bits = joy->chans[0].channel->scan_type.storagebits;
-+	if (!bits || (bits >> 3) > 2) {
-+		dev_err(dev, "Unsupported channel storage size");
-+		return -EINVAL;
-+	}
-+	for (i = 1; i < joy->num_chans; ++i)
-+		if (joy->chans[i].channel->scan_type.storagebits != bits) {
-+			dev_err(dev, "Channels must have equal storage size");
-+			return -EINVAL;
-+		}
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input) {
-+		dev_err(dev, "Unable to allocate input device");
-+		return -ENOMEM;
-+	}
-+
-+	joy->input = input;
-+	input->name = pdev->name;
-+	input->id.bustype = BUS_HOST;
-+	input->open = adc_joystick_open;
-+	input->close = adc_joystick_close;
-+
-+	ret = adc_joystick_set_axes(dev, joy);
-+	if (ret)
-+		return ret;
-+
-+	input_set_drvdata(input, joy);
-+	ret = input_register_device(input);
-+	if (ret) {
-+		dev_err(dev, "Unable to register input device: %d", ret);
-+		return ret;
-+	}
-+
-+	joy->buffer = iio_channel_get_all_cb(dev, adc_joystick_handle, joy);
-+	if (IS_ERR(joy->buffer)) {
-+		dev_err(dev, "Unable to allocate callback buffer");
-+		return PTR_ERR(joy->buffer);
-+	}
-+
-+	ret = devm_add_action_or_reset(dev, adc_joystick_cleanup, joy->buffer);
-+	if (ret)
-+		dev_err(dev, "Unable to add action");
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id adc_joystick_of_match[] = {
-+	{ .compatible = "adc-joystick", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
-+
-+static struct platform_driver adc_joystick_driver = {
-+	.driver = {
-+		.name = "adc-joystick",
-+		.of_match_table = of_match_ptr(adc_joystick_of_match),
-+	},
-+	.probe = adc_joystick_probe,
-+};
-+module_platform_driver(adc_joystick_driver);
-+
-+MODULE_DESCRIPTION("Input driver for joysticks connected over ADC");
-+MODULE_AUTHOR("Artur Rojek <contact@artur-rojek.eu>");
-+MODULE_LICENSE("GPL");
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 5ebf30b..a1ca8380 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -1723,9 +1723,11 @@ int musb_mailbox(enum musb_vbus_id_status status)
+  	unsigned long flags;
+  	int ret;
+  
++	pm_runtime_get_sync(dev);
+  	spin_lock_irqsave(&musb->lock, flags);
+  	ret = sprintf(buf, "%s\n", usb_otg_state_string(musb->xceiv->otg->state));
+  	spin_unlock_irqrestore(&musb->lock, flags);
++	pm_runtime_put_sync(dev);
+  
+  	return ret;
+  }
+@@ -1738,6 +1740,7 @@ int musb_mailbox(enum musb_vbus_id_status status)
+  	unsigned long	flags;
+  	int		status;
+  
++	pm_runtime_get_sync(dev);
+  	spin_lock_irqsave(&musb->lock, flags);
+  	if (sysfs_streq(buf, "host"))
+  		status = musb_platform_set_mode(musb, MUSB_HOST);
+@@ -1748,6 +1751,7 @@ int musb_mailbox(enum musb_vbus_id_status status)
+  	else
+  		status = -EINVAL;
+  	spin_unlock_irqrestore(&musb->lock, flags);
++	pm_runtime_put_sync(dev);
+  
+  	return (status == 0) ? n : status;
+  }
+@@ -1766,6 +1770,7 @@ int musb_mailbox(enum musb_vbus_id_status status)
+  		return -EINVAL;
+  	}
+  
++	pm_runtime_get_sync(dev);
+  	spin_lock_irqsave(&musb->lock, flags);
+  	/* force T(a_wait_bcon) to be zero/unlimited *OR* valid */
+  	musb->a_wait_bcon = val ? max_t(int, val, OTG_TIME_A_WAIT_BCON) : 0 ;
+@@ -1773,6 +1778,7 @@ int musb_mailbox(enum musb_vbus_id_status status)
+  		musb->is_active = 0;
+  	musb_platform_try_idle(musb, jiffies + msecs_to_jiffies(val));
+  	spin_unlock_irqrestore(&musb->lock, flags);
++	pm_runtime_put_sync(dev);
+  
+  	return n;
+  }
 -- 
-2.25.0
+1.9.1
 
