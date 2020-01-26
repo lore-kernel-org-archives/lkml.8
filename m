@@ -2,113 +2,74 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D56C35246
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6812C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E35520702
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C8020702
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:20:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WXhtVuCc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgAZRPI (ORCPT
+        id S1726670AbgAZRUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 12:15:08 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:45202 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgAZRPI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 12:15:08 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 46C341C036D; Sun, 26 Jan 2020 18:15:06 +0100 (CET)
-Date:   Sun, 26 Jan 2020 18:15:05 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 599/639] net: avoid possible false sharing in
- sk_leave_memory_pressure()
-Message-ID: <20200126171505.GD19082@duo.ucw.cz>
-References: <20200124093047.008739095@linuxfoundation.org>
- <20200124093204.391643194@linuxfoundation.org>
+        Sun, 26 Jan 2020 12:20:02 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:35196 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbgAZRUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 12:20:02 -0500
+Received: from zn.tnic (p200300EC2F25DF00BC613C117BE1B9E7.dip0.t-ipconnect.de [IPv6:2003:ec:2f25:df00:bc61:3c11:7be1:b9e7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DE8BB1EC0B86;
+        Sun, 26 Jan 2020 18:20:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1580059201;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=n7aSfQAjmPocxoYvQlfxhkiRM5ozfGvvTpJJo0eEO6M=;
+        b=WXhtVuCcheWjdviXuCfy4VcWr/pVU8bUs6GWnc8GXbZce4mAqsmFcfwE2Vgoko2HDiLzIW
+        h6ut3htAmXO6/t2XtASvLEV+avpuEuj0vK5EfMQVvPL53CiDD+kDWzdeUrLFSxN6Og7YfA
+        t+N6Ei92L0HCBNBPlds1gOIZFkyUd9o=
+Date:   Sun, 26 Jan 2020 18:19:56 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+        x86 <x86@kernel.org>
+Subject: Re: [tip: core/rcu] rcu: Enable tick for nohz_full CPUs slow to
+ provide expedited QS
+Message-ID: <20200126171956.GB5714@zn.tnic>
+References: <157994897654.396.5667707782512768142.tip-bot2@tip-bot2>
+ <20200125131425.GB16136@zn.tnic>
+ <20200125161050.GE2935@paulmck-ThinkPad-P72>
+ <20200125175442.GA4369@zn.tnic>
+ <20200125194846.GF2935@paulmck-ThinkPad-P72>
+ <20200126014318.GA5122@paulmck-ThinkPad-P72>
+ <20200126112540.GA5714@zn.tnic>
+ <20200126152831.GK2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="XvKFcGCOAo53UbWW"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200124093204.391643194@linuxfoundation.org>
+In-Reply-To: <20200126152831.GK2935@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jan 26, 2020 at 07:28:31AM -0800, Paul E. McKenney wrote:
+> And thank you for finding this and for the testing!
+> 
+> May I add your Tested-by?
 
---XvKFcGCOAo53UbWW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure, thx.
 
-On Fri 2020-01-24 10:32:49, Greg Kroah-Hartman wrote:
-> From: Eric Dumazet <edumazet@google.com>
->=20
-> [ Upstream commit 503978aca46124cd714703e180b9c8292ba50ba7 ]
->=20
-> As mentioned in https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_=
-ONCE#it-may-improve-performance
-> a C compiler can legally transform :
->=20
-> if (memory_pressure && *memory_pressure)
->         *memory_pressure =3D 0;
->=20
-> to :
->=20
-> if (memory_pressure)
->         *memory_pressure =3D 0;
+-- 
+Regards/Gruss,
+    Boris.
 
-Well, C compiler can do a lot of stuff, and we rely on C compiler
-being "sane" -- that is gcc.
-
-Even if compiler did the transformation, that will only result in
-slightly slower performance, right?
-
-Is there any evidence this is problem in practice? Should this be in
-stable?
-
-Best regards,
-								Pavel
-
-
-> +++ b/net/core/sock.c
-> @@ -2179,8 +2179,8 @@ static void sk_leave_memory_pressure(struct sock *s=
-k)
->  	} else {
->  		unsigned long *memory_pressure =3D sk->sk_prot->memory_pressure;
-> =20
-> -		if (memory_pressure && *memory_pressure)
-> -			*memory_pressure =3D 0;
-> +		if (memory_pressure && READ_ONCE(*memory_pressure))
-> +			WRITE_ONCE(*memory_pressure, 0);
->  	}
->  }
-
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---XvKFcGCOAo53UbWW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXi3JGQAKCRAw5/Bqldv6
-8tXqAJ9xRik6QC4lKIxZJnGR9pEUzJKgpwCgt5fiRlxg/KfBmn58c/mwksuZ8Ms=
-=ep4Y
------END PGP SIGNATURE-----
-
---XvKFcGCOAo53UbWW--
+https://people.kernel.org/tglx/notes-about-netiquette
