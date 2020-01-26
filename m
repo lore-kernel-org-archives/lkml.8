@@ -2,85 +2,99 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FC1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2235C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B212075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580052514;
-	bh=WRUUtesK4qd1zdh5jOh2P9Vyhrpx1MsrofV4bN3ZABI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Nlw1ARJDdhubroOLlEGxsaptFDDu62q+GA10aYmfrLYQojSG262yYnBkwGbdvsNY0
-	 6rRFj0LleuXgHCF8vGPoTFkIMxr667w5MIr3MDUMSjfvbTZvTzX8ZJaklMinVjTxIa
-	 8vMAtNKD2okRMnwFOfx2r7UXUyydl0aok334maDQ=
+	by mail.kernel.org (Postfix) with ESMTP id C922620720
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:31:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ouZuhw1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgAZP2c (ORCPT
+        id S1727212AbgAZPb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 10:28:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbgAZP2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 10:28:32 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        Sun, 26 Jan 2020 10:31:28 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:45510 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725907AbgAZPbZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 10:31:25 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580052685; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=bO52typVteT+dUc0mpKNPXbpFZmLnOhBYL05cpNAgdY=;
+ b=ouZuhw1jQ9rQ4LafFuoCAjyrAMClwnm4XZVJzwRHyQsQkfs0pWUBcAtpmOP6xAJ/p8ZSMkEN
+ hppLP3sNKNlYmMFeVXLPYgUGU0XVaKPRaa/IwsU72tokc7ixV2JO31WRi4oXjAxPYKiuqTy1
+ ZDh+SZa+tkM9yR+kmA0HLynMWho=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2db0c4.7f4b9dbef650-smtp-out-n02;
+ Sun, 26 Jan 2020 15:31:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A1C26C4479F; Sun, 26 Jan 2020 15:31:16 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA9D02071A;
-        Sun, 26 Jan 2020 15:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580052512;
-        bh=WRUUtesK4qd1zdh5jOh2P9Vyhrpx1MsrofV4bN3ZABI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=cNGyFWbpUyL9oSB6EG/ZVbFy1jFUtscaHF9QR69+eWe8WaK5CCxCY31msS6gKu8En
-         Koj0Igb7tMZTXl3+5FRu8hPRioABp1gvmL+O54qC9uo7k4MHd/YRb30aSKXMQFkBCp
-         TmW1nwgJiVcBLblu/RsxrJ+bKliJLgTDMJMgLFDY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C6772352277B; Sun, 26 Jan 2020 07:28:31 -0800 (PST)
-Date:   Sun, 26 Jan 2020 07:28:31 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        x86 <x86@kernel.org>
-Subject: Re: [tip: core/rcu] rcu: Enable tick for nohz_full CPUs slow to
- provide expedited QS
-Message-ID: <20200126152831.GK2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <157994897654.396.5667707782512768142.tip-bot2@tip-bot2>
- <20200125131425.GB16136@zn.tnic>
- <20200125161050.GE2935@paulmck-ThinkPad-P72>
- <20200125175442.GA4369@zn.tnic>
- <20200125194846.GF2935@paulmck-ThinkPad-P72>
- <20200126014318.GA5122@paulmck-ThinkPad-P72>
- <20200126112540.GA5714@zn.tnic>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96579C433CB;
+        Sun, 26 Jan 2020 15:31:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96579C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200126112540.GA5714@zn.tnic>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,
+ power-gpio as optional
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
+References: <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200126153116.A1C26C4479F@smtp.codeaurora.org>
+Date:   Sun, 26 Jan 2020 15:31:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 12:25:40PM +0100, Borislav Petkov wrote:
-> On Sat, Jan 25, 2020 at 05:43:18PM -0800, Paul E. McKenney wrote:
-> > And it passes my rcutorture testing as well!  If it does fine with 0day
-> > and -next, I will send a pull request Sunday evening, Pacific Time.
-> > In the meantime, it is right here in -rcu:
-> > 
-> > 59d8cc6b2e37 ("rcu: Forgive slow expedited grace periods at boot time")
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+
+> It is now only useful for SPI interface.
+> Power control of SDIO mode is done through mmc core.
 > 
-> Yap, testing looks good here too.
-> 
-> Thx Paul.
+> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-And thank you for finding this and for the testing!
+Failed to apply to wireless-drivers-next, please rebase and resend.
 
-May I add your Tested-by?
+fatal: sha1 information is lacking or useless (drivers/net/wireless/ti/wl1251/sdio.c).
+error: could not build fake ancestor
+Applying: wl1251: remove ti,power-gpio for SDIO mode
+Patch failed at 0001 wl1251: remove ti,power-gpio for SDIO mode
+The copy of the patch that failed is found in: .git/rebase-apply/patch
 
-							Thanx, Paul
+2 patches set to Changes Requested.
+
+11298403 [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,power-gpio as optional
+11298399 [v2,2/2] wl1251: remove ti,power-gpio for SDIO mode
+
+-- 
+https://patchwork.kernel.org/patch/11298403/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
