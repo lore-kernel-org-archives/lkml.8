@@ -2,261 +2,146 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11519C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927FFC35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC73D2071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:08:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBf/2kaS"
+	by mail.kernel.org (Postfix) with ESMTP id 588D0214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 23:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580081545;
+	bh=HLB3DylvqhRZUjuNAimZ9xQIJr3vfYsph79EU+v44AM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=yCoudHxhrpa3RVVoFyyzeomyYjj8Ll59ghXDfcvorFYsHnQYxSg4lJVwpNkL5bDNC
+	 ObuOIfjfNa3XcXsbvvP34GVkUC3TUb8/RxX00K4lsSI1cm2tSIsxbXbEGiRcsRqw+5
+	 YLG49yoqrZdbQxFVkEowHTZsuidQxAWqZEMcOde0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgAZXIo (ORCPT
+        id S1727166AbgAZXcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 18:08:44 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40931 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgAZXIn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 18:08:43 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c14so8823885wrn.7;
-        Sun, 26 Jan 2020 15:08:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ONPHmqBn7jTACElcMz3lQIxMf+h5257Mcx0XJbZ+bH4=;
-        b=qBf/2kaSm9xv9uaTVyGCcTc+PmnoQP52+kjJLiyEUhvghyXS/rNV/Bq9GCXokq3VUZ
-         CNs+SALIcEyk7OF1xK9y5ZXvFzmT9eWzCwajlZRNMJo1Jh7dMKltIgpeBPCLsxUFBu6f
-         t+u/IN4fhzPz4CGj8GlOsmUHGjFGOcS8Nb4JSg5jpOzrw2Jd2ti+cL3Cn3l+RuubHnMt
-         qAdevV1R9Z2DS32+YWr6jO5zuFBlIr1H+i9PzhO+tgXOuKgV5oRiCDWW/aedxxBWRY/X
-         rqUahBkcwYAemAzFLsrTjfPkCcEv0sVz8D2x9unJKGsQSkjmLrF4XY9k9K8qAzDz3+63
-         wcZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ONPHmqBn7jTACElcMz3lQIxMf+h5257Mcx0XJbZ+bH4=;
-        b=mqnQsNzVtkImHOLn+pDZ1/+6VWrwYS/GnFdbe2RUD/UVPZ9+Q6VKevP/8xV8lay32B
-         xHs4u3jxMjwzB7DZkw/qaVvV73OQXRu0ra+/SF3b6eOFsQPc6U4rcPXb2hlxa7DvvyrG
-         2ZOYGia3MwknQGYG7WtyOCkgZCLTki7BdTUxHnUAydTnqI7sH3qIwozH7TnO+uk0D+ov
-         K2F4Veop04un5lChU1jPbcCaOAHcVhoqc5naxKJ2bi/+P9MsuuK5r3KVBV7Ya0fZD87U
-         B1f9CTQnCbZyFAC19WM5gCgKrQD/6qCFnvrzVlmnSHUkbRdBy8OpeH42ZD0EQlq7DaAa
-         a41g==
-X-Gm-Message-State: APjAAAWmL0FoLphXxF62BpEimq6Mp4lJr4Qu0BhXFnZJDuuaAbVooPhM
-        Lfc4hTO2wgmIhfQrMsTHyAs=
-X-Google-Smtp-Source: APXvYqzgS0HN7GJub+d1AM42NXlTnL/NaqDEF3YHSFQXK0fSkV7fULkNDCZr3AK+vUYhi7ut3PCyCg==
-X-Received: by 2002:adf:ea42:: with SMTP id j2mr17032582wrn.270.1580080120790;
-        Sun, 26 Jan 2020 15:08:40 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id b10sm19452534wrt.90.2020.01.26.15.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jan 2020 15:08:39 -0800 (PST)
-Date:   Mon, 27 Jan 2020 00:08:38 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: vfat: Broken case-insensitive support for UTF-8
-Message-ID: <20200126230838.yhdkt4h5pcbftvvr@pali>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp>
- <20200120110438.ak7jpyy66clx5v6x@pali>
- <875zh6pc0f.fsf@mail.parknet.co.jp>
- <20200120214046.f6uq7rlih7diqahz@pali>
- <20200120224625.GE8904@ZenIV.linux.org.uk>
- <20200120235745.hzza3fkehlmw5s45@pali>
- <20200121000701.GG8904@ZenIV.linux.org.uk>
- <20200121203405.7g7gisb3q55u2y2f@pali>
+        Sun, 26 Jan 2020 18:32:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbgAZXcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 18:32:24 -0500
+Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C8172070A;
+        Sun, 26 Jan 2020 23:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580081543;
+        bh=HLB3DylvqhRZUjuNAimZ9xQIJr3vfYsph79EU+v44AM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=XBDbUIra8EdZU3tEIdgh9kjZX2vMcKornjr8VLP0zn2D7JJwzbSoEHbjVKZ9vIEt3
+         EEG8uBU/MRC7vnKBSO7cYcbAgFOyH/yPa18UDbEAPWa2KVsP2Ms1QPk3OgBNFV7oVO
+         dBJOQaAjjYYAiVP6gNKQgxHEZ1RoKtJk09snvne8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 09B95352279E; Sun, 26 Jan 2020 15:32:23 -0800 (PST)
+Date:   Sun, 26 Jan 2020 15:32:23 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com, dave.dice@oracle.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
+Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
+Message-ID: <20200126233222.GA4840@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <20200124222434.GA7196@paulmck-ThinkPad-P72>
+ <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
+ <20200125005713.GZ2935@paulmck-ThinkPad-P72>
+ <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
+ <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
+ <20200125045844.GC2935@paulmck-ThinkPad-P72>
+ <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
+ <20200126153535.GL2935@paulmck-ThinkPad-P72>
+ <20200126224245.GA22901@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="q2zzbxeaz7rnla6e"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121203405.7g7gisb3q55u2y2f@pali>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200126224245.GA22901@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jan 26, 2020 at 02:42:45PM -0800, Paul E. McKenney wrote:
+> On Sun, Jan 26, 2020 at 07:35:35AM -0800, Paul E. McKenney wrote:
+> > On Sat, Jan 25, 2020 at 02:41:39PM -0500, Waiman Long wrote:
+> > > On 1/24/20 11:58 PM, Paul E. McKenney wrote:
+> > > > On Fri, Jan 24, 2020 at 09:17:05PM -0500, Waiman Long wrote:
+> > > >> On 1/24/20 8:59 PM, Waiman Long wrote:
+> > > >>>> You called it!  I will play with QEMU's -numa argument to see if I can get
+> > > >>>> CNA to run for me.  Please accept my apologies for the false alarm.
+> > > >>>>
+> > > >>>> 							Thanx, Paul
+> > > >>>>
+> > > >>> CNA is not currently supported in a VM guest simply because the numa
+> > > >>> information is not reliable. You will have to run it on baremetal to
+> > > >>> test it. Sorry for that.
+> > > >> Correction. There is a command line option to force CNA lock to be used
+> > > >> in a VM. Use the "numa_spinlock=on" boot command line parameter.
+> > > > As I understand it, I need to use a series of -numa arguments to qemu
+> > > > combined with the numa_spinlock=on (or =1) on the kernel command line.
+> > > > If the kernel thinks that there is only one NUMA node, it appears to
+> > > > avoid doing CNA.
+> > > >
+> > > > Correct?
+> > > >
+> > > > 							Thanx, Paul
+> > > >
+> > > In auto-detection mode (the default), CNA will only be turned on when
+> > > paravirt qspinlock is not enabled first and there are at least 2 numa
+> > > nodes. The "numa_spinlock=on" option will force it on even when both of
+> > > the above conditions are false.
+> > 
+> > Hmmm...
+> > 
+> > Here is my kernel command line taken from the console log:
+> > 
+> > console=ttyS0 locktorture.onoff_interval=0 numa_spinlock=on locktorture.stat_interval=15 locktorture.shutdown_secs=1800 locktorture.verbose=1
+> > 
+> > Yet the string "Enabling CNA spinlock" does not appear.
+> > 
+> > Ah, idiot here needs to enable CONFIG_NUMA_AWARE_SPINLOCKS in his build.
+> > Trying again with "--kconfig "CONFIG_NUMA_AWARE_SPINLOCKS=y"...
+> 
+> And after fixing that, plus adding the other three Kconfig options required
+> to enable this, I really do see "Enabling CNA spinlock" in the console log.
+> Yay!
+> 
+> At the end of the 30-minute locktorture exclusive-lock run, I see this:
+> 
+> Writes:  Total: 572176565  Max/Min: 54167704/10878216 ???  Fail: 0
+> 
+> This is about a five-to-one ratio.  Is this expected behavior, given a
+> single NUMA node on a single-socket system with 12 hardware threads?
+> 
+> I will try reader-writer lock next.
+> 
+> Again, should I be using qemu's -numa command-line option to create nodes?
+> If so, what would be a sane configuration given 12 CPUs and 512MB of
+> memory for the VM?  If not, what is a good way to exercise CNA's NUMA
+> capabilities within a guest OS?
 
---q2zzbxeaz7rnla6e
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+And the reader-writer lock run also shows "Enabling CNA spinlock".  Same
+hardware and same 30-minute duration.
 
-On Tuesday 21 January 2020 21:34:05 Pali Roh=C3=A1r wrote:
-> On Tuesday 21 January 2020 00:07:01 Al Viro wrote:
-> > On Tue, Jan 21, 2020 at 12:57:45AM +0100, Pali Roh=C3=A1r wrote:
-> > > On Monday 20 January 2020 22:46:25 Al Viro wrote:
-> > > > On Mon, Jan 20, 2020 at 10:40:46PM +0100, Pali Roh=C3=A1r wrote:
-> > > >=20
-> > > > > Ok, I did some research. It took me it longer as I thought as lot=
- of
-> > > > > stuff is undocumented and hard to find all relevant information.
-> > > > >=20
-> > > > > So... fastfat.sys is using ntos function RtlUpcaseUnicodeString()=
- which
-> > > > > takes UTF-16 string and returns upper case UTF-16 string. There i=
-s no
-> > > > > mapping table in fastfat.sys driver itself.
-> > > >=20
-> > > > Er...  Surely it's OK to just tabulate that function on 65536 values
-> > > > and see how could that be packed into something more compact?
-> > >=20
-> > > It is OK, but too complicated. That function is in nt kernel. So you
-> > > need to build a new kernel module and also decide where to put output=
- of
-> > > that function. It is a long time since I did some nt kernel hacking a=
-nd
-> > > nowadays you need to download 10GB+ of Visual Studio code, then addons
-> > > for building kernel modules, figure out how to write and compile simp=
-le
-> > > kernel module via Visual Studio, write ini install file, try to load =
-it
-> > > and then you even fail as recent Windows kernels refuse to load kernel
-> > > modules which are not signed...
-> >=20
-> > Wait a sec...  From NT userland, on a mounted VFAT:
-> > 	for all s in single-codepoint strings
-> > 		open s for append
-> > 		if failed
-> > 			print s on stderr, along with error value
-> > 		write s to the opened file, adding to its tail
-> > 		close the file
-> > the for each equivalence class you'll get a single file, with all
-> > members of that class written to it.  In addition you'll get the
-> > list of prohibited codepoints.
-> >=20
-> > Why bother with any kind of kernel modules?  IDGI...
->=20
-> This is a great idea to get FAT equivalence classes. Thank you!
->=20
-> Now I quickly tried it... and it failed. FAT has restriction for number
-> of files in a directory, so I would have to do it in more clever way,
-> e.g prepare N directories and then try to create/open file for each
-> single-point string in every directory until it success or fail in every
-> one.
+Writes:  Total: 25556912  Max/Min: 3225161/1664621   Fail: 0
+Reads :  Total: 11530762  Max/Min: 1155679/794179   Fail: 0
 
-Now I have done test with more directories and finally it passed. I run
-it on WinXP with different configurations And results are interesting...
+These are both within a factor of two (1.9 and 1.5), hence no "???".
 
-First important thing: DOS OEM codepage is implicitly configured by
-option "Language for non-Unicode programs" found in "Regional and
-Language Options" at "Advanced" tab (run: intl.cpl). It is *not*
-affected by "Standards and formats" language and also *not* by
-"Location" language. Description for "Language for non-Unicode programs"
-says: "It does not affect Unicode programs" which is clearly non-truth
-as it affects all Unicode programs which stores data to FAT fs.
-
-Second thing: Equivalence classes depends on OEM codepage. And are
-different. Note that some languages shares one codepage.
-
-CP850 (languages: English UK, Afrikaans, ...) has 614 non-trivial (*)
-equivalence classes, CP852 (Slavic languages) has 619 and CP437 (English
-USA) has only 586.
-
-The biggest equivalence class is for 'U' and has following elements:
-
-CP437:
-0x0055 0x0075 0x00d9 0x00da 0x00db 0x00f9 0x00fa 0x00fb 0x0168 0x0169
-0x016a 0x016b 0x016c 0x016d 0x016e 0x016f 0x0170 0x0171 0x0172 0x0173
-0x01af 0x01b0 0x01d3 0x01d4 0x01d5 0x01d6 0x01d7 0x01d8 0x01d9 0x01da
-0x01db 0x01dc 0xff35 0xff55
-
-CP852:
-0x0055 0x0075 0x00b5 0x00d9 0x00db 0x00f9 0x00fb 0x0168 0x0169 0x016a
-0x016b 0x016c 0x016d 0x0172 0x0173 0x01af 0x01b0 0x01d3 0x01d4 0x01d5
-0x01d6 0x01d7 0x01d8 0x01d9 0x01da 0x01db 0x01dc 0x03bc 0xff35 0xff55
-
-CP850:
-0x0055 0x0075 0x0168 0x0169 0x016a 0x016b 0x016c 0x016d 0x016e 0x016f
-0x0170 0x0171 0x0172 0x0173 0x01af 0x01b0 0x01d3 0x01d4 0x01d5 0x01d6
-0x01d7 0x01d8 0x01d9 0x01da 0x01db 0x01dc 0xff35 0xff55
-
-Just to note that elements are Unicode code points.
-
-It is interesting that for English USA (CP437) are "U" and "=C3=99" in same
-equivalence class, but for English UK (CP850) are "U" and "=C3=99" in
-different classes. CP850 has "U" in two-member class: 0x00d9 0x00f9
-
-Are there any cultural, regional or linguistic reasons why English USA
-and English UK languages/regions should treat "=C3=99" differently?
-
-So third thing? How should be handle this complicated situation for our
-VFAT implementation in Linux kernel when using UTF-8 encoding for
-userspace?
-
-For fixing case-insensitivity for UTF-8 I see there following options:
-
-Option 1) Create intersect of equivalence classes from all codepages and
-use this for Linux VFAT uppercase function. This would ensure that
-whatever codepage/language windows uses, Linux VFAT does not create
-inaccessible files for Windows (see PPS).
-
-Option 2) As equivalence classes depends on codepage and VFAT already
-needs to know codepage when mounting/accessing shortnames, we can
-calculate "common" uppercase table (which would same for all codepages,
-ideally from option 1)) and then differences from "common" uppercase
-table to equivalence classes. Kernel already has uppercase tables for
-NLS codepages and so we can store these "differences" to them. In this
-case VFAT would know to uppercase function for specified codepage (which
-is already passed as mount param).
-
-Option 3) Ignores this MS shit nonsense (see PPS how it is broken) and
-define uppercase table from Unicode standard. This would be the most
-expected behavior for userspace, but incompatible with MS FAT32
-implementation.
-
-Option 4) Use uppercase table from Unicode standard (as in option 3),
-but adds also definitions from option 1). This would ensure that all
-files created by VFAT would be accessible on any Windows systems (see
-PPS), plus there would be uppercase definitions from Unicode standard
-(but only those which do not break definitions from 1) with respect to
-PPS).
-
-Option 5) Create API for kernel <---> userspace which would allow
-userspace to define mapping table (or equivalence classes) and throw
-away this problem from kernel to userspace. But as we already discussed
-this is hard, plus without proper configuration from userspace, kernel's
-VFAT driver could modify FS in way that MS would not be able to use it.
-
-Or do you have a better idea how to handle this problem?
-
-
-
-(*) - with more then one element
-
-PS: If somebody is interested I can share my whole results and source
-code of testing application.
-
-PPS: If you create two files "U" and "=C3=99" on English UK (you can do that
-as these codepoints are in different equivalence classes) and then
-connect this FAT32 fs on English USA, you would not be able to access
-"=C3=99" file. Windows English USA list both files "U" and "=C3=99", but wh=
-ichever
-you open, Windows get you always content of file "U". "=C3=99" is therefore
-inaccessible until you change language to English UK.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---q2zzbxeaz7rnla6e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXi4b8wAKCRCL8Mk9A+RD
-UpdYAKCjudvfOYMaVBM0FCusjItj85h9mACcCc3hi1HwwseaJS8OGS85XJ1vXWg=
-=VfdN
------END PGP SIGNATURE-----
-
---q2zzbxeaz7rnla6e--
+							Thanx, Paul
