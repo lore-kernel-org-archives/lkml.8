@@ -2,127 +2,135 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5A1C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC6BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4287D2075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:01:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZH5ARQbu"
+	by mail.kernel.org (Postfix) with ESMTP id DF43220708
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgAZNBN (ORCPT
+        id S2387450AbgAZNBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 08:01:13 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46089 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728689AbgAZNBN (ORCPT
+        Sun, 26 Jan 2020 08:01:16 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:19163 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728689AbgAZNBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 08:01:13 -0500
-Received: by mail-io1-f65.google.com with SMTP id t26so6963328ioi.13;
-        Sun, 26 Jan 2020 05:01:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Fe5qGJHJCsCWl/2D934wNBGowgZdtUVYwms1aiiozFs=;
-        b=ZH5ARQbuwphpaNvpY1SuKWAtvlC8o3UbaoAE44Le2OJ81OSV/Qq26Di8bqzNIwBBxE
-         Git7+VXnwWAkscpL67zZoKZPaasamLylqFNoDq3FDqNLnA5q/Towoczso2enBoycHCrX
-         QmOiKUpFOT6dIugN0CH+rfAbO9OCQRUcXLBo7w2nhcSLJEXCtTHIWVfIE4sKGRZPhw7w
-         VrkezRzvs2aErk7YilVcRp0mIF94Yws/arNip8htJPJfsdvpe0HoJ1serYvk71brxhIA
-         oWoys2RxWf0LSLUW4kZyqZutzLk5c5rQOfnxBcqyD9eD/DawnnJAD9q3kLPmQdRHo92Q
-         EaaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Fe5qGJHJCsCWl/2D934wNBGowgZdtUVYwms1aiiozFs=;
-        b=ZhFd/CB9WWKWbyscZHAlRbLlq6HNw7rlg2CZTbdHcDjwWyFIY1d++M5qWpjcgdDr0E
-         9/AYabDS9tbeejblW2fdJRW95b1m45T1odIJUvE86raOnvSm2hon0ginVCRraAAiaSPV
-         tQHzhIvpMbgs9uU2+KQpGT54ujaeDrkFOp8zh9L6M/+wyhxeOSHjrxEjvU0ZfLHaFIO/
-         RvNAfOyJ6fY/mTF3eLs9inHIsQHiQeaeAs6ZdjX1pH+xqmfiJy6XL38SVn9iQeCU+glC
-         OYnvM2/LUzBvkv7t67uEaGjeHFbUTu2oyIsm7kW0riOTAgUA9rgwH0CMsNlOOYfknbJA
-         ZzkA==
-X-Gm-Message-State: APjAAAWE8J5VTbZcwALhfEzC0nzLO7Xfw7p9QccwhK16DrrPfHhEIxXT
-        lYX3nvxm+dLIM/zIskHkTvQz3sO75hIHZuzsO24=
-X-Google-Smtp-Source: APXvYqyV82IjtOYASKBL3wF70Jmh/kknf2/qksjOk8uUTMPBEV9amI0E9t9oY9cHqJaM3MXS2O302LhyM7Mfn/lXjFc=
-X-Received: by 2002:a05:6638:538:: with SMTP id j24mr9294229jar.12.1580043672461;
- Sun, 26 Jan 2020 05:01:12 -0800 (PST)
+        Sun, 26 Jan 2020 08:01:15 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: yNCRfbb5cMs/w6zEcQdPDA6GeBmY+GKZJ5wCk1a4e0ElcxTwrjvSCEh4aY7OO3/Yf+PCymD+9y
+ 7iNAZVqxGAcwkU8B5v+UU8UyHxCoV0whApn/ab1bYQ9kUPqwI1OApR15ekPOFbm9UunnKlXbPF
+ DbMIJst1Vazz82Q8noRpkiLpQV1Zivy+jOSLnsAqJWAtMm08duUVXycpszJrC6Va/Wbse4+q0s
+ 7gnkZBAYgNCrtwYDKlqJjhAhEKtdzSt0AIYcNJ7ZyES4AdQDepmDnTfNeT6C6uC4PLNZ7VLYjd
+ 2fA=
+X-IronPort-AV: E=Sophos;i="5.70,365,1574146800"; 
+   d="scan'208";a="63134271"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Jan 2020 06:01:13 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 26 Jan 2020 06:01:12 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sun, 26 Jan 2020 06:01:12 -0700
+Date:   Sun, 26 Jan 2020 14:01:11 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
+        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v3 09/10] net: bridge: mrp: Integrate MRP into the
+ bridge
+Message-ID: <20200126130111.o75gskwe2fmfd4g5@soft-dev3.microsemi.net>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-10-horatiu.vultur@microchip.com>
+ <20200125161615.GD18311@lunn.ch>
 MIME-Version: 1.0
-References: <20200106174639.20862-1-tiny.windzz@gmail.com> <20200106174639.20862-2-tiny.windzz@gmail.com>
- <20200107075816.ly6exfd4qtvfxxua@gilmour.lan> <662e157a-603f-7423-0491-f26f0fc8d7b6@linaro.org>
- <20200109131343.mjyuj5ed2xwvmwd4@gilmour.lan> <af4bca3b-ba95-aa10-5601-753f1c5275b3@linaro.org>
-In-Reply-To: <af4bca3b-ba95-aa10-5601-753f1c5275b3@linaro.org>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Sun, 26 Jan 2020 21:01:01 +0800
-Message-ID: <CAEExFWtmUtzBje-DKt71W46rs3PTF_Di_x3YQCz+tg8+W1kyAA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i-r40: Add thermal sensor and
- thermal zones
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200125161615.GD18311@lunn.ch>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Chen-Yu and Maxime,
+The 01/25/2020 17:16, Andrew Lunn wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> >  br_netif_receive_skb(struct net *net, struct sock *sk, struct sk_buff *skb)
+> > @@ -338,6 +341,17 @@ rx_handler_result_t br_handle_frame(struct sk_buff **pskb)
+> >                       return RX_HANDLER_CONSUMED;
+> >               }
+> >       }
+> > +#ifdef CONFIG_BRIDGE_MRP
+> > +     /* If there is no MRP instance do normal forwarding */
+> > +     if (!p->mrp_aware)
+> > +             goto forward;
+> > +
+> > +     if (skb->protocol == htons(ETH_P_MRP))
+> > +             return RX_HANDLER_PASS;
+> 
+> What MAC address is used for these MRP frames? It would make sense to
+> use a L2 link local destination address, since i assume they are not
+> supposed to be forwarded by the bridge. If so, you could extend the
+> if (unlikely(is_link_local_ether_addr(dest))) condition.
 
-Can you pick this up again?
+The MAC addresses used by MRP frames are:
+0x1, 0x15, 0x4e, 0x0, 0x0, 0x1 - used by MRP_Test frames
+0x1, 0x15, 0x4e, 0x0, 0x0, 0x2 - used by the rest of MRP frames.
 
-Yangtao
+If we will add support also for MIM/MIC. These requires 2 more MAC
+addresses:
+0x1, 0x15, 0x4e, 0x0, 0x0, 0x3 - used by MRP_InTest frames.
+0x1, 0x15, 0x4e, 0x0, 0x0, 0x4 - used by the other MRP interconnect
+frames.
 
-On Fri, Jan 10, 2020 at 4:08 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 09/01/2020 14:13, Maxime Ripard wrote:
-> > Hi Daniel,
-> >
-> > On Thu, Jan 09, 2020 at 12:51:27PM +0100, Daniel Lezcano wrote:
-> >> On 07/01/2020 08:58, Maxime Ripard wrote:
-> >>> On Mon, Jan 06, 2020 at 05:46:39PM +0000, Yangtao Li wrote:
-> >>>> There are two sensors, sensor0 for CPU, sensor1 for GPU.
-> >>>>
-> >>>> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> >>>> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> >>>> Tested-on: sun8i-r40-bananapi-m2-ultra
-> >>>
-> >>> As far as I know, tested-on is not documented anywhere (and isn't
-> >>> really used either). I've removed it and applied, thanks!
-> >>
-> >> I think this patch should go through my tree as it refers to a commit =
-in
-> >> my branch.
-> >
-> > I'm not quite sure to get why. Even though that patch depends on the
-> > one affecting the driver to be functional, it doesn't break anything
-> > when merged through arm-soc, and similarly yours doesn't affect any
-> > other tree if it's merged through your tree, so there's no dependency?
->
-> Sorry, I puzzled myself, I thought you meant you applied patch 1/2
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+Then maybe I shoukd change the check to be something like:
+if (unlikely(skb->protocol == htons(ETH_P_MRP)))
+
+> 
+> > +
+> > +     if (p->state == BR_STATE_BLOCKING)
+> > +             goto drop;
+> > +#endif
+> 
+> Is this needed? The next block of code is a switch statement on
+> p->state. The default case, which BR_STATE_BLOCKING should hit, is
+> drop.
+
+Yes you are rigth, it is not needed anymore.
+
+> 
+> This function is on the hot path. So we should try to optimize it as
+> much as possible.
+> 
+>      Andrew
+
+-- 
+/Horatiu
