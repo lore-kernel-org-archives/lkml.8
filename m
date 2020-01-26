@@ -2,69 +2,67 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A4DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 21:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA48C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 21:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9219220716
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 21:32:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oo8PF+bc"
+	by mail.kernel.org (Postfix) with ESMTP id EFAC920716
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 21:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbgAZVcG (ORCPT
+        id S1726703AbgAZVkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 16:32:06 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:54930 "EHLO vps0.lunn.ch"
+        Sun, 26 Jan 2020 16:40:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbgAZVcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 16:32:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=1V/T5meEi3lp3z9WtoLHDUqZu/jNnEZKliaVuzu3WMM=; b=oo8PF+bcZDKwZUU4Gc3isibiH3
-        gruAkIn/CqkWJ3iGuW1cJfza2HSZcio2fNurZ2ggH/Y44++Cs7IJI9yH2UIsCBoQuC0jBCbXcR05H
-        k3xmztiD0K/w3+Q1leuVi2b3zWJpICSkQX2y2et9vuDfoTeuwPZNM7j7EL1NerCYrf5E=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ivpVd-00032o-7n; Sun, 26 Jan 2020 22:31:57 +0100
-Date:   Sun, 26 Jan 2020 22:31:57 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Paul Thomas <pthomas8589@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] GPIO, Fix bug where the wrong GPIO register is written to
-Message-ID: <20200126213157.GA9495@lunn.ch>
-References: <20200125221410.8022-1-pthomas8589@gmail.com>
+        id S1726144AbgAZVkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 16:40:35 -0500
+Received: from rorschach.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC83220702;
+        Sun, 26 Jan 2020 21:40:34 +0000 (UTC)
+Date:   Sun, 26 Jan 2020 16:40:32 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [for-next][PATCH 7/7] tracing: Use pr_err() instead of WARN()
+ for memory failures
+Message-ID: <20200126164032.7ac82cc0@rorschach.local.home>
+In-Reply-To: <5b221ac7e49666b76cd9ca368b37e721cfb4aa9c.camel@perches.com>
+References: <20200126191932.984391723@goodmis.org>
+        <20200126192021.350763989@goodmis.org>
+        <e70ff75e9712478704fad44ac6b66c86a45df6a6.camel@perches.com>
+        <20200126155013.5cfc23aa@rorschach.local.home>
+        <5b221ac7e49666b76cd9ca368b37e721cfb4aa9c.camel@perches.com>
+X-Mailer: Claws Mail 3.17.4git76 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200125221410.8022-1-pthomas8589@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 05:14:10PM -0500, Paul Thomas wrote:
-> Care is taken with "index", however with the current version
-> the actual xgpio_writereg is using index for data but
-> xgpio_regoffset(chip, i) for the offset. And since i is already
-> incremented it is incorrect. This patch fixes it so that index
-> is used for the offset too.
+On Sun, 26 Jan 2020 13:07:36 -0800
+Joe Perches <joe@perches.com> wrote:
+
+> > That sounds more generic. This is specific for my own tracing tests to
+> > look for. As the point is, it is *not* to dump_stack, and still report
+> > the error.  
 > 
-> Signed-off-by: Paul Thomas <pthomas8589@gmail.com>
+> __GFP_NOWARN is available too.
 
-Hi Paul
+I honestly don't care if there's a dump_stack or not. I just removed the
+WARN_ON. If the allocation causes a dump_stack() then that's fine, but
+I still like to have a bit more information at what failed to allocate,
+than just a offset into a function.
 
-Please put Xilinx into the subject line. I had to actually look at the
-patch to decide it was not relevant to me.
+The point of this patch was simply to remove WARN_ON() that caused
+fuzzers to fail.
 
-      Andrew
+-- Steve
