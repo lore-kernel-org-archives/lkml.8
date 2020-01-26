@@ -2,89 +2,73 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D980C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E77C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8492075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:14:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fhpIg5X5"
+	by mail.kernel.org (Postfix) with ESMTP id 3A8D02075D
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgAZPOy (ORCPT
+        id S1726758AbgAZPRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 10:14:54 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:31487 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726079AbgAZPOy (ORCPT
+        Sun, 26 Jan 2020 10:17:51 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:32834 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgAZPRv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 10:14:54 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580051693; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=Y+S8D8aDvc3709rvH/pShWk38I9cJw+rSMPM2E0L9S8=;
- b=fhpIg5X5ebJ5x/08bu6fjpa9X8OEXU1MmFZbrJR9kkFNaLi7HaMA5JfgLnacUcSrP0OZIdrz
- jJ4oufCAEo/GjLdHQKEbVQApVgFdizKJgbi3o1H2HX3wtKH+eJoHu06RKHDlPxj4XwgTnrix
- ovWpPJ+OWkzuRoLeX37aPPMJkGQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2dacec.7f4b9dbd7ab0-smtp-out-n02;
- Sun, 26 Jan 2020 15:14:52 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DB95CC433A2; Sun, 26 Jan 2020 15:14:52 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0BFB3C433CB;
-        Sun, 26 Jan 2020 15:14:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0BFB3C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Sun, 26 Jan 2020 10:17:51 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ivjfX-00088L-B9; Sun, 26 Jan 2020 15:17:47 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: mvsas: ensure loop counter phy_no  does not wrap and cause an infinite loop
+Date:   Sun, 26 Jan 2020 15:17:47 +0000
+Message-Id: <20200126151747.33320-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/2] libertas: don't exit from lbs_ibss_join_existing()
- with RCU read lock held
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200114103903.2336-2-nstange@suse.de>
-References: <20200114103903.2336-2-nstange@suse.de>
-To:     Nicolai Stange <nstange@suse.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Wen Huang <huangwenabc@gmail.com>,
-        Nicolai Stange <nstange@suse.de>,
-        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.de>, Miroslav Benes <mbenes@suse.cz>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200126151452.DB95CC433A2@smtp.codeaurora.org>
-Date:   Sun, 26 Jan 2020 15:14:52 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicolai Stange <nstange@suse.de> wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
-> Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
-> descriptor") introduced a bounds check on the number of supplied rates to
-> lbs_ibss_join_existing().
-> 
-> Unfortunately, it introduced a return path from within a RCU read side
-> critical section without a corresponding rcu_read_unlock(). Fix this.
-> 
-> Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
->                       descriptor")
-> Signed-off-by: Nicolai Stange <nstange@suse.de>
+The loop counter phy_no is a u8 where as the upper limit of the loop
+is a u32. In the event that upper limit is greater than 255 we end
+up with an infinite loop since phy_no will wrap around an never reach
+upper loop limit. Fix this by making phy_no a u32.
 
-I'll queue these to v5.5, unless Linus releases the final today and then they
-will go to v5.6.
+Addresses-Coverity: ("Infinite loop")
+Fixes: 20b09c2992fe ("[SCSI] mvsas: add support for 94xx; layout change; bug fixes")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/scsi/mvsas/mv_sas.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/scsi/mvsas/mv_sas.c b/drivers/scsi/mvsas/mv_sas.c
+index a920eced92ec..9c03f23bde54 100644
+--- a/drivers/scsi/mvsas/mv_sas.c
++++ b/drivers/scsi/mvsas/mv_sas.c
+@@ -1940,7 +1940,7 @@ static void mvs_sig_time_out(struct timer_list *t)
+ {
+ 	struct mvs_phy *phy = from_timer(phy, t, timer);
+ 	struct mvs_info *mvi = phy->mvi;
+-	u8 phy_no;
++	u32 phy_no;
+ 
+ 	for (phy_no = 0; phy_no < mvi->chip->n_phy; phy_no++) {
+ 		if (&mvi->phy[phy_no] == phy) {
 -- 
-https://patchwork.kernel.org/patch/11331869/
+2.24.0
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
