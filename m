@@ -2,167 +2,131 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F404C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA5AC35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494F9206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:13:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gdiTF4Hz"
+	by mail.kernel.org (Postfix) with ESMTP id 9DBD420702
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgAZRNA (ORCPT
+        id S1728575AbgAZRNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 12:13:00 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:54756 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgAZRNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 12:13:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=l5amRRhffN7SW+44mi2KiL5Riiwg1WKIl4fQH5PcALQ=; b=gdiTF4HzVAZqXHazDeHDojZQmF
-        OoDj01/uxiE5MDEfOJoqDGfqqBk/NKjf7bwsWcexlTw2IBQgFSGKBS4HPQBl+LmH4Bx4zD6IYfkuj
-        K3Y3naQ8t4KO3zeswScGgZXhuWMRYYkt7c97i9gObQzDMI78/Mfr8d6Kct4zoameC4ps=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ivlSt-0002M2-4A; Sun, 26 Jan 2020 18:12:51 +0100
-Date:   Sun, 26 Jan 2020 18:12:51 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bridge@lists.linux-foundation.org, jiri@resnulli.us,
-        ivecera@redhat.com, davem@davemloft.net, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com, anirudh.venkataramanan@intel.com,
-        olteanv@gmail.com, jeffrey.t.kirsher@intel.com,
-        UNGLinuxDriver@microchip.com
-Subject: Re: [RFC net-next v3 09/10] net: bridge: mrp: Integrate MRP into the
- bridge
-Message-ID: <20200126171251.GK18311@lunn.ch>
-References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
- <20200124161828.12206-10-horatiu.vultur@microchip.com>
- <20200125161615.GD18311@lunn.ch>
- <20200126130111.o75gskwe2fmfd4g5@soft-dev3.microsemi.net>
+        Sun, 26 Jan 2020 12:13:39 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52260 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725944AbgAZRNj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 12:13:39 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ivlTe-0007Wy-4e; Sun, 26 Jan 2020 17:13:38 +0000
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ivlTd-0012Yf-Ol; Sun, 26 Jan 2020 17:13:37 +0000
+Message-ID: <114b087b50c83cfa3cc9afc8e08641a0d1ab8ce4.camel@decadent.org.uk>
+Subject: Re: [PATCH] fix 3.16 unknown rela relocation 4 error
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Woody Suwalski <terraluna977@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     stable <stable@vger.kernel.org>
+Date:   Sun, 26 Jan 2020 17:13:32 +0000
+In-Reply-To: <48d562fd-f80a-69ae-56e5-d0bada0feeed@gmail.com>
+References: <48d562fd-f80a-69ae-56e5-d0bada0feeed@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-l/T8Jq/8x20HtJEtG9xW"
+User-Agent: Evolution 3.34.1-2+b1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200126130111.o75gskwe2fmfd4g5@soft-dev3.microsemi.net>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 02:01:11PM +0100, Horatiu Vultur wrote:
-> The 01/25/2020 17:16, Andrew Lunn wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > >  br_netif_receive_skb(struct net *net, struct sock *sk, struct sk_buff *skb)
-> > > @@ -338,6 +341,17 @@ rx_handler_result_t br_handle_frame(struct sk_buff **pskb)
-> > >                       return RX_HANDLER_CONSUMED;
-> > >               }
-> > >       }
-> > > +#ifdef CONFIG_BRIDGE_MRP
-> > > +     /* If there is no MRP instance do normal forwarding */
-> > > +     if (!p->mrp_aware)
-> > > +             goto forward;
-> > > +
-> > > +     if (skb->protocol == htons(ETH_P_MRP))
-> > > +             return RX_HANDLER_PASS;
-> > 
-> > What MAC address is used for these MRP frames? It would make sense to
-> > use a L2 link local destination address, since i assume they are not
-> > supposed to be forwarded by the bridge. If so, you could extend the
-> > if (unlikely(is_link_local_ether_addr(dest))) condition.
-> 
-> The MAC addresses used by MRP frames are:
-> 0x1, 0x15, 0x4e, 0x0, 0x0, 0x1 - used by MRP_Test frames
-> 0x1, 0x15, 0x4e, 0x0, 0x0, 0x2 - used by the rest of MRP frames.
-> 
-> If we will add support also for MIM/MIC. These requires 2 more MAC
-> addresses:
-> 0x1, 0x15, 0x4e, 0x0, 0x0, 0x3 - used by MRP_InTest frames.
-> 0x1, 0x15, 0x4e, 0x0, 0x0, 0x4 - used by the other MRP interconnect
-> frames.
 
-Hi Horatiu
+--=-l/T8Jq/8x20HtJEtG9xW
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I made the wrong guess about how this protocol worked when i said L2
-link local. These MAC addresses are L2 multicast.
+On Sat, 2020-01-25 at 22:16 -0500, Woody Suwalski wrote:
+> Trying to use an AMD64 3.16 kernel built on a new Debian system fails=20
+> because
+> most of the kernel modules can not be loaded.
 
-And you are using a raw socket to receive them into userspace when
-needed.
+I don't recommend using the latest toolchain for 3.16 (certainly gcc 9
+won't work).  But I will apply this since it's such a simple fix.=20
+Thanks for the backport.
 
-'Thinking allowed' here.
+Ben.
 
-    +------------------------------------------+
-    |                                          |
-    +-->|H1|<---------->|H2|<---------->|H3|<--+
-    eth0    eth1    eth0    eth1    eth0    eth1
-     ^
-     |
-  Blocked
+> This patch handles the PLT32 relocation errors for kernels modules built=
+=20
+> with binutils
+> newer then 2.31, similar to:
+> [    5.742485] module: autofs4: Unknown rela relocation: 4
+> [    5.742536] systemd[1]: Failed to insert module 'autofs4': Exec=20
+> format error
+>=20
+> This patch is based on a mainline kernel patch=20
+> b21ebf2fb4cde1618915a97cc773e287ff49173e
+> From: "H.J. Lu" <hjl.tools@gmail.com>
+> Date: Wed, 7 Feb 2018 14:20:09 -0800
+> Subject: x86: Treat R_X86_64_PLT32 as R_X86_64_PC32
+>=20
+> Signed-off-by: Woody Suwalski <terraluna977@gmail.com>
+>=20
+> --- a/arch/x86/tools/relocs.c    2020-01-24 18:48:09.477919152 -0500
+> +++ b/arch/x86/tools/relocs.c    2020-01-24 18:48:53.645612045 -0500
+> @@ -763,6 +763,7 @@ static int do_reloc64(struct section *se
+>       switch (r_type) {
+>       case R_X86_64_NONE:
+>       case R_X86_64_PC32:
+> +    case R_X86_64_PLT32:
+>           /*
+>            * NONE can be ignored and PC relative relocations don't
+>            * need to be adjusted.
+> --- a/arch/x86/kernel/module.c    2020-01-24 18:46:54.922670590 -0500
+> +++ b/arch/x86/kernel/module.c    2020-01-24 18:47:46.714112016 -0500
+> @@ -180,6 +180,7 @@ int apply_relocate_add(Elf64_Shdr *sechd
+>                   goto overflow;
+>               break;
+>           case R_X86_64_PC32:
+> +        case R_X86_64_PLT32:
+>               val -=3D (u64)loc;
+>               *(u32 *)loc =3D val;
+>   #if 0
+>=20
+--=20
+Ben Hutchings
+The program is absolutely right; therefore, the computer must be wrong.
 
 
-There are three major classes of user case here:
 
-1) Pure software solution
+--=-l/T8Jq/8x20HtJEtG9xW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-You need the software bridge in the client to forward these frames
-from the left side to the right side. (Does the standard give these
-two ports names)? In the master, the left port is blocked, so the
-bridge drops them anyway. You have a RAW socket open on both eth0 and
-eth1, so you get to see the frames, even if the bridge drops them.
+-----BEGIN PGP SIGNATURE-----
 
-2) Hardware offload to an MRP unaware switch.
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl4tyL0ACgkQ57/I7JWG
+EQnDABAAiq5hKPXIeNqducstec+5xobajzMwM13kj6uwspdGpvAkPiLIvysz+h+H
+K3bxP4Rb9GWtK1ONFDKBRYzYZtdvPHXjh0IwXCwegZi6tPdGbOvzWgpLZEVgkj4y
+5xYAww1VQn8aWm2qyZnAljkVbgqrk/QOypRTIfOmwQH+hzOGPk3UTe0/b1i1sv1Z
+SJ7Pfq2HFR0zg7pg14wTCi0SuFOdFlX0MZCD1yANOTRGKL5cnqwq714e4gCttBJN
+ZFL7b9FTepOJChxG6D5o3uwQJMUZDzqBvC4bq7rIn7Zcg8BJNNTghChtTYNQdH/8
+WeTTJ3OnOPgLKm2wZ2CYfzqJBpYTyQ5uQE4lv1FDUu1ctbhGK803Y4eWpNMNtShu
+urc68r7FPCdeT+JrK68hI8ARTkw6gMOdKXrdxWNtSZI4CSw3FY4gTULC7Ft3eR9P
+F0jbnF+3Hz1rjk7OjuDaX2LqCpY0oWVlukazr7Qmn5cMgY1EFgnNUzLO+z+ENBSK
+RL0w0RJjZnCuQpUmHFG26m+A6ZBH+u7mam/K6Ti+p1iuVNIrSReVyw7EqePH3Rhk
+tzQEWnaXdWni1lktM/2tqDItqN/1hL3glzkH/RCbC/sgkxP8kEsSaPnWqQDkB8yr
+ihpv5UJ42jzH4a1Phup2CffUJH+bR+4LLRh86Uni7CBie1ecWvA=
+=EvLl
+-----END PGP SIGNATURE-----
 
-I'm thinking about a plain switch supported by DSA, Marvell, Broadcom,
-etc. It has no special knowledge of MRP.
-
-Ideally, you want the switch to forward MRP_Test frames left to right
-for a client. In a master, i think you have a problem, since the port
-is blocked. The hardware is unlikely to recognise these frames as
-special, since they are not in the 01-80-C2-XX-XX-XX block, and let
-them through. So your raw socket is never going to see them, and you
-cannot detect open/closed ring.
-
-I don't know how realistic it is to support MRP in this case, and i
-also don't think you can fall back to a pure software solution,
-because the software bridge is going to offload the basic bridge
-operation to the hardware. It would be nice if you could detect this,
-and return -EOPNOTSUPP.
-
-3) Hardware offload to an MRP aware switch.
-
-For a client, you tell it which port is left, which is right, and
-assume it forwards the frames. For a master, you again tell it which
-is left, which is right, and ask it send MRP_Test frames out right,
-and report changes in open/closed on the right port. You don't need
-the CPU to see the MRP_Test frames, so the switch has no need to
-forward them to the CPU.
-
-We should think about the general case of a bridge with many ports,
-and many pairs of ports using MRP. This makes the forwarding of these
-frames interesting. Given that they are multicast, the default action
-of the software bridge is that it will flood them. Does the protocol
-handle seeing MRP_Test from some other loop? Do we need to avoid this?
-You could avoid this by adding MDB entries to the bridge. However,
-this does not scale to more then one ring. I don't think an MDB is
-associated to an ingress port. So you cannot say 
-
-0x1, 0x15, 0x4e, 0x0, 0x0, 0x1 ingress port1 egress port2
-0x1, 0x15, 0x4e, 0x0, 0x0, 0x1 ingress port3 egress port4
-
-The best you can say is
-
-0x1, 0x15, 0x4e, 0x0, 0x0, 0x1 egress port2, port4
-
-I'm sure there are other issues i'm missing, but it is interesting to
-think about all this.
-
-Andrew
+--=-l/T8Jq/8x20HtJEtG9xW--
