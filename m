@@ -4,90 +4,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AEFC35240
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 08:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A8CC35246
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457222083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 08:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABE021556
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580028939;
-	bh=n2nIzaSKhRLa1kWmgJ3uBhJ4DhQVJLVuCuYtEtMl7ik=;
+	s=default; t=1580030003;
+	bh=7O4rZrabfwe2Yk8BfYvwgH+qJH1yicMOq6Gs92zQMhc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zRr+tV/SUA48E0bIN1co6g0I3pGP3lAeT+gvdYQKg5VhoSJPwDfsnPcxPsgjmpLdW
-	 RqfrOqhdcHzrVSKc1q7i78kxalM8K83N9QExKrWfhqLhZW8aoTf6634YRcIOoViQ3W
-	 rdwvDPckC9CjMknOsTxm3LbRBR8ks658r8SdUkig=
+	b=pDoGz64OEYHNctsOM3T2QL/OSoYF4jgPVQWzdStiqOXn/exaanugFiBe+TQ6Hzrpl
+	 vHktqQf+9Cq4o4iDv4A4CBJpgLcMfMqdUC8VBUzul6UVnd1vYQ/AOhzFZdQ2bMrrVt
+	 zeRUZ2IKP3YOR9G/2ePkSzTJW9CDmozqmcUUtXcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgAZIzi (ORCPT
+        id S1728253AbgAZJNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 03:55:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39018 "EHLO mail.kernel.org"
+        Sun, 26 Jan 2020 04:13:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgAZIzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 03:55:38 -0500
+        id S1726240AbgAZJNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 04:13:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 102E32071A;
-        Sun, 26 Jan 2020 08:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2154E2071E;
+        Sun, 26 Jan 2020 09:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580028937;
-        bh=n2nIzaSKhRLa1kWmgJ3uBhJ4DhQVJLVuCuYtEtMl7ik=;
+        s=default; t=1580030001;
+        bh=7O4rZrabfwe2Yk8BfYvwgH+qJH1yicMOq6Gs92zQMhc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zrTfA3F4bkp7cB9QtVrBzAFPiesqw1fwFv7dkwpGgQSIMyD8XRU6JhMpbeZ13PZig
-         pwJvqvC+3U8/IKhEdZK9Nbx6MfciCWkyrUiy6AE04uYitUOoVrMxDxLYk2Jgiov6iy
-         87eMDtaAqLn1gmhdttbmT/KOcuu8DXhQ2NR6J4wk=
-Date:   Sun, 26 Jan 2020 09:55:35 +0100
+        b=LoG/pm1slnQ7cTk4cUOGZtlTS1D/KfZaqBVgjYP38n7Le/JePC429D1AiQ64at6Xw
+         RxY0orqoBRGglLa81silLd8APNaeSo4qwEhs+J5NeQT5Be5U17OUHHDhshGn9UmDCH
+         gRyQE0oHM/CnMrQZrNTfysRner/8j+HZStnj1erY=
+Date:   Sun, 26 Jan 2020 10:13:19 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Hridya Valsaraju <hridya@google.com>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: binderfs interferes with syzkaller?
-Message-ID: <20200126085535.GA3533171@kroah.com>
-References: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.19 000/639] 4.19.99-stable review
+Message-ID: <20200126091319.GA3549630@kroah.com>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <23f2a904-3351-4a75-aaaf-2623dc55d114@nvidia.com>
+ <20200124173659.GD3166016@kroah.com>
+ <8a782263-aca3-3846-12a0-4eb21f015894@nvidia.com>
+ <87fcb1f0-b1b8-a6e2-b8f6-b95a07f67919@nvidia.com>
+ <eadee1dd-fb6d-855d-935a-4bf93a9ad505@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
+In-Reply-To: <eadee1dd-fb6d-855d-935a-4bf93a9ad505@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 06:49:49PM +0100, Dmitry Vyukov wrote:
-> Hi binder maintainers,
-> 
-> It seems that something has happened and now syzbot has 0 coverage in
-> drivers/android/binder.c:
-> https://storage.googleapis.com/syzkaller/cover/ci-upstream-kasan-gce-root.html
-> It covered at least something there before as it found some bugs in binder code.
-> I _suspect_ it may be related to introduction binderfs, but it's
-> purely based on the fact that binderfs changed lots of things there.
-> And I see it claims to be backward compatible.
+On Sat, Jan 25, 2020 at 07:46:47AM -0800, Guenter Roeck wrote:
+> On 1/25/20 3:32 AM, Jon Hunter wrote:
+> > 
+> > On 24/01/2020 18:07, Jon Hunter wrote:
+> > > 
+> > > On 24/01/2020 17:36, Greg Kroah-Hartman wrote:
+> > > > On Fri, Jan 24, 2020 at 02:50:05PM +0000, Jon Hunter wrote:
+> > > > > Hi Greg,
+> > > > > 
+> > > > > On 24/01/2020 09:22, Greg Kroah-Hartman wrote:
+> > > > > > This is the start of the stable review cycle for the 4.19.99 release.
+> > > > > > There are 639 patches in this series, all will be posted as a response
+> > > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > > let me know.
+> > > > > > 
+> > > > > > Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
+> > > > > > Anything received after that time might be too late.
+> > > > > > 
+> > > > > > The whole patch series can be found in one patch at:
+> > > > > > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.99-rc1.gz
+> > > > > > or in the git tree and branch at:
+> > > > > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> > > > > > and the diffstat can be found below.
+> > > > > > 
+> > > > > > thanks,
+> > > > > > 
+> > > > > > greg k-h
+> > > > > > 
+> > > > > > -------------
+> > > > > > Pseudo-Shortlog of commits:
+> > > > > 
+> > > > > ...
+> > > > > 
+> > > > > > Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > >      PCI: PM: Skip devices in D0 for suspend-to-idle
+> > > > > 
+> > > > > The above commit is causing a suspend regression on Tegra124 Jetson-TK1.
+> > > > > Reverting this on top of v4.19.99-rc1 fixes the issue.
+> > > > 
+> > > > This is also in the 4.14 queue, so should I drop it there too?
+> > > 
+> > > I did not see any failures with the same board on that branch, so I
+> > > would say no, but odd that it only fails here. It was failing for me
+> > > 100% so I would have expected to see if there too if it was a problem.
+> > 
+> > Hmmm, rc2 still not working for me ...
+> > 
+> > Test results for stable-v4.19:
+> >      11 builds:	11 pass, 0 fail
+> >      22 boots:	22 pass, 0 fail
+> >      32 tests:	30 pass, 2 fail
+> > 
+> > Linux version:	4.19.99-rc2-g24832ad2c623
+> > Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+> >                  tegra194-p2972-0000, tegra20-ventana,
+> >                  tegra210-p2371-2180, tegra30-cardhu-a04
+> > 
+> > I still see the following commit in rc2 ...
+> > 
+> > commit bb52152abe85f971278a7a4f033b29483f64bfdb
+> > Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Date:   Thu Jun 13 23:59:45 2019 +0200
+> > 
+> >      PCI: PM: Skip devices in D0 for suspend-to-idle
 
-It is backwards compatible if you mount binderfs, right?
+Yes, I did not change anything in -rc2 for you, sorry.
 
-> syzkaller strategy to reach binder devices is to use
-> CONFIG_ANDROID_BINDER_DEVICES to create a bunch of binderN devices (to
-> give each test process a private one):
-> https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-kasan.config#L5671
+> > BTW, I checked the 4.14. queue and I do not see the above change in
+> > there, however, there is similar change ...
+> > 
+> > Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >      PCI: PM: Avoid possible suspend-to-idle issue
+> > 
+> bb52152abe85 fixes this one, which in turn fixes 33e4f80ee69b.
+> The above in 4.14 but not its fixes is spelling a bit of trouble.
 > 
-> Then it knows how to open these /dev/binderN devices:
-> https://github.com/google/syzkaller/blob/master/sys/linux/dev_binder.txt#L22
-> and do stuff with them.
-> 
-> Did these devices disappear or something?
+> Maybe commit 471a739a47aa7 ("PCI: PM: Avoid skipping bus-level
+> PM on platforms without ACPI") was added to -rc2, since it is
+> supposed to fix bb52152abe85.
 
-Try mounting binderfs and then you should be able to see them all.
+I have added that fix to 4.14 now, and will go push out a -rc3 for both
+4.19.y and 4.14.y to try to sync up on this and figure it out.
+
+Jon, if you could retest 4.14.y, that would be great, to see if it has
+the same issue that 4.19.y has.  And if so, that means I should probably
+just drop both patches from both trees, right?
 
 thanks,
 
