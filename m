@@ -2,124 +2,163 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9327C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0747FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF5720716
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19FA2071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:33:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="ai+SUiF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgAZN2q (ORCPT
+        id S1729012AbgAZNdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 08:28:46 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:10231 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgAZN2p (ORCPT
+        Sun, 26 Jan 2020 08:33:10 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:40255 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgAZNdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 08:28:45 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: VxDbpN+x7qnbLHzjRB0O+pdnR7Lau/oN5vajjMhaHegbtt9HensLX8N88e8XPl7jjF9iKVYMiB
- KMO//fyGniIJ8/rbyoYN26VJraCGPyTg1WsBk7aGIwzhoQwegUXXt6iNeb774uk90oOypxWvuC
- vHRWrVbHIGub6Dgf4Tw5QInTWYf2TORCv+JE5/99CCNjXfTUpUiDgn3kI1WkJmenFlbSazxHEy
- oEebIhAU9v3H+PdipGijV0lZm65sJeOa1z6IfGKpsGJrER43oOMv8cmUSNCl35M/r9O1dWHtI3
- 06o=
-X-IronPort-AV: E=Sophos;i="5.70,365,1574146800"; 
-   d="scan'208";a="66037731"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Jan 2020 06:28:44 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 26 Jan 2020 06:28:41 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sun, 26 Jan 2020 06:28:44 -0700
-Date:   Sun, 26 Jan 2020 14:28:43 +0100
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
-CC:     Andrew Lunn <andrew@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>,
-        <jiri@resnulli.us>, <ivecera@redhat.com>, <davem@davemloft.net>,
-        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
-        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
-        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next v3 03/10] net: bridge: mrp: Add MRP interface used
- by netlink
-Message-ID: <20200126132843.k4rzn7vfti7lqvos@soft-dev3.microsemi.net>
-References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
- <20200124161828.12206-4-horatiu.vultur@microchip.com>
- <20200124174315.GC13647@lunn.ch>
- <20200125113726.ousbmm4n3ab4xnqt@soft-dev3.microsemi.net>
- <20200125152023.GA18311@lunn.ch>
- <20200125191612.5dlzlvb7g2bucqna@lx-anielsen.microsemi.net>
+        Sun, 26 Jan 2020 08:33:09 -0500
+Received: by mail-vk1-f195.google.com with SMTP id c129so1854032vkh.7
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 05:33:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=emKfjakMK0JQ5BS5YCFkbZaOfKcUBqnq7Vw1qMXzarA=;
+        b=ai+SUiF/UB+ocFDZG4bWX3gairRXyO3KEZs3g3zkaG+2pYyYWK3fd9bt+E7Rar+SD4
+         EIwg+XvovGF4K2Odgt+HUesXodKNd95varMryoGJqOHTWZQOv6S1c9horPbB6zQHQUFj
+         z9zcOiYdUC0xWDGg/8FTElf80uvRJry+UUYvrQXpXo/t3fWys/BSnSQ76GW5zuNCsO1l
+         pZM6EFHBmDXPG3u5Ed5vydQglmNUzoQYPbUyeuzEM07UGxpDHAax8tnbup1DAOHP7Yde
+         /cxPg5ADJdZmZUlDdaVtddv2qRPpZENEBJutlRleqIojB4JNHjUkH8vvrlvOeC3MPHmZ
+         7vyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=emKfjakMK0JQ5BS5YCFkbZaOfKcUBqnq7Vw1qMXzarA=;
+        b=sPVFtsgP5lKPckq4vraMLiJVnmLJKifLDzKA+U6oWNU7K9oDhpxUtGh46rla3rZcsS
+         DDFZ97IzGdMmXmLA2BV+iKtEw/1sLFJDYgmuaTHa1mD5/fjH3ghEdJyzciJH8WCrBZje
+         T2C+AkxhZzyu+XQldfsykTPEtwF+n6gurfxzCGSsWkFf2LBBSOq9reNbcCjiPAL62hn0
+         vQFttPI9aBvBi8WqJzylcsIaTj02bvuumaHnYB8RymgQLawGpC69z3/dB6aIYfl6wVMK
+         mRGR4sJhvdnh+++QHPzceORLOOJpjeBvtIroysOCKpO08m8KjNWm8Pz0FI4T7laz9Mx4
+         XzLg==
+X-Gm-Message-State: APjAAAWIQJ+e3OLM93iZm9ZlPVVqcu+mP7fhh5INmfeeAqFrPbK/IjQk
+        FFhHo0ByDQyVhzCXC+R0frLaxdi68FwCzalC/Sp7MQ==
+X-Google-Smtp-Source: APXvYqwbEI5BxpWOjvqHw3OF1B1QFbz8m5/83C3fLpV6wDo9RxMYmlGUd3KSZPynqahIUdu2vYZLu7TpEP7jm7Xn4b4=
+X-Received: by 2002:ac5:cd8c:: with SMTP id i12mr5971417vka.100.1580045588469;
+ Sun, 26 Jan 2020 05:33:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200125191612.5dlzlvb7g2bucqna@lx-anielsen.microsemi.net>
-User-Agent: NeoMutt/20180716
+References: <20200124132957.15769-1-geert+renesas@glider.be> <20200124132957.15769-3-geert+renesas@glider.be>
+In-Reply-To: <20200124132957.15769-3-geert+renesas@glider.be>
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+Date:   Sun, 26 Jan 2020 15:32:50 +0200
+Message-ID: <CAOtvUMdA2aD9DJBmSpOJOFRw=1_9OcaG4Y915q5L7dgo7n7HTA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] crypto: ccree - fix debugfs register access while suspended
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Bin Liu <b-liu@ti.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 01/25/2020 20:16, Allan W. Nielsen wrote:
-> On 25.01.2020 16:20, Andrew Lunn wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > On Sat, Jan 25, 2020 at 12:37:26PM +0100, Horatiu Vultur wrote:
-> > > The 01/24/2020 18:43, Andrew Lunn wrote:
-> > > > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > > >
-> > > > > br_mrp_flush - will flush the FDB.
-> > > >
-> > > > How does this differ from a normal bridge flush? I assume there is a
-> > > > way for user space to flush the bridge FDB.
-> > > 
-> > > Hi,
-> > > 
-> > > If I seen corectly the normal bridge flush will clear the entire FDB for
-> > > all the ports of the bridge. In this case it is require to clear FDB
-> > > entries only for the ring ports.
-> > 
-> > Maybe it would be better to extend the current bridge netlink call to
-> > be able to pass an optional interface to be flushed?  I'm not sure it
-> > is a good idea to have two APIs doing very similar things.
-> I agree.
-I would look over this.
+On Fri, Jan 24, 2020 at 3:30 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> Reading the debugfs files under /sys/kernel/debug/ccree/ can be done by
+> the user at any time.  On R-Car SoCs, the CCREE device is power-managed
+> using a moduile clock, and if this clock is not running, bogus register
+> values may be read.
+>
+> Fix this by filling in the debugfs_regset32.dev field, so debugfs will
+> make sure the device is resumed while its registers are being read.
+>
+> This fixes the bogus values (0x00000260) in the register dumps on R-Car
+> H3 ES1.0:
+>
+>     -e6601000.crypto/regs:HOST_IRR =3D 0x00000260
+>     -e6601000.crypto/regs:HOST_POWER_DOWN_EN =3D 0x00000260
+>     +e6601000.crypto/regs:HOST_IRR =3D 0x00000038
+>     +e6601000.crypto/regs:HOST_POWER_DOWN_EN =3D 0x00000038
+>      e6601000.crypto/regs:AXIM_MON_ERR =3D 0x00000000
+>      e6601000.crypto/regs:DSCRPTR_QUEUE_CONTENT =3D 0x000002aa
+>     -e6601000.crypto/regs:HOST_IMR =3D 0x00000260
+>     +e6601000.crypto/regs:HOST_IMR =3D 0x017ffeff
+>      e6601000.crypto/regs:AXIM_CFG =3D 0x001f0007
+>      e6601000.crypto/regs:AXIM_CACHE_PARAMS =3D 0x00000000
+>     -e6601000.crypto/regs:GPR_HOST =3D 0x00000260
+>     +e6601000.crypto/regs:GPR_HOST =3D 0x017ffeff
+>      e6601000.crypto/regs:AXIM_MON_COMP =3D 0x00000000
+>     -e6601000.crypto/version:SIGNATURE =3D 0x00000260
+>     -e6601000.crypto/version:VERSION =3D 0x00000260
+>     +e6601000.crypto/version:SIGNATURE =3D 0xdcc63000
+>     +e6601000.crypto/version:VERSION =3D 0xaf400001
+>
+> Note that this behavior is system-dependent, and the issue does not show
+> up on all R-Car Gen3 SoCs and boards.  Even when the device is
+> suspended, the module clock may be left enabled, if configured by the
+> firmware for Secure Mode, or when controlled by the Real-Time Core.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/crypto/ccree/cc_debugfs.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/crypto/ccree/cc_debugfs.c b/drivers/crypto/ccree/cc_=
+debugfs.c
+> index 5669997386988055..35f3a2137502bd96 100644
+> --- a/drivers/crypto/ccree/cc_debugfs.c
+> +++ b/drivers/crypto/ccree/cc_debugfs.c
+> @@ -81,6 +81,7 @@ int cc_debugfs_init(struct cc_drvdata *drvdata)
+>         regset->regs =3D debug_regs;
+>         regset->nregs =3D ARRAY_SIZE(debug_regs);
+>         regset->base =3D drvdata->cc_base;
+> +       regset->dev =3D dev;
+>
+>         ctx->dir =3D debugfs_create_dir(drvdata->plat_dev->name, cc_debug=
+fs_dir);
+>
+> @@ -102,6 +103,7 @@ int cc_debugfs_init(struct cc_drvdata *drvdata)
+>                 verset->nregs =3D ARRAY_SIZE(pid_cid_regs);
+>         }
+>         verset->base =3D drvdata->cc_base;
+> +       verset->dev =3D dev;
+>
+>         debugfs_create_regset32("version", 0400, ctx->dir, verset);
+>
+> --
+> 2.17.1
+>
 
-> 
-> And when looking at this again, I start to think that we should have
-> extended the existing netlink interface with new commands, instead of
-> adding a generic netlink.
-We could do also that. The main reason why I have added a new generic
-netlink was that I thought it would be clearer what commands are for MRP
-configuration. But if you think that we should go forward by extending
-existing netlink interface, that is perfectly fine for me.
 
-> 
-> /Allan
-> 
+Acked-by: Gilad Ben-Yossef <gilad@benyossef.com>
 
--- 
-/Horatiu
+Thanks,
+Gilad
+--=20
+Gilad Ben-Yossef
+Chief Coffee Drinker
+
+values of =CE=B2 will give rise to dom!
