@@ -2,171 +2,134 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42411C35242
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 00:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE95FC35242
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 00:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F67F2071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 00:32:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WX0tMtcl"
+	by mail.kernel.org (Postfix) with ESMTP id 9BC012071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 00:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579998885;
+	bh=V2U6z9XSaNg2lFAobPZohWhVuiUiqMr2x6dsXgQhYNc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Of3TxercHf6opTN+Ja3/kJsbraoKbwgqX6w/v0Bmm/Tui7bPDppdiAyRLaraVb6U7
+	 xSI0UrygN4/ucPEkbj7Iy3C/fy9ZCcC3+igRGejnCX09PvHLU09SmEPFkKQ0BhDNYG
+	 q2rd8i+KLPltuDfAWlsRUJ4o7dw/CjV7e7UeGVDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgAZAck (ORCPT
+        id S1729014AbgAZAeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 19:32:40 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43438 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbgAZAcj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 19:32:39 -0500
-Received: by mail-lj1-f196.google.com with SMTP id a13so6873713ljm.10
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 16:32:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bwME4l4EJ6oZ8cjrQesmcLreWjxQta3M1Gv1X7S2+NY=;
-        b=WX0tMtclJs/LJDkjtQA30eyVDlONVFUD9AJSP870n9xXtNaiUQ9/w+NHTT/MrCxdn/
-         k+sGc3DDZc+YFnAMtWt10RFUxKXQNhzyjKmgAkzHHWGJLgkZMUqsVk51hr8nxgf92Exy
-         H3QZlOjccPfM+EkeIFx9hE25eEPLQaxeT20usw82uyuHd87IC+o2l9UkX3wLSIzLjG+2
-         NoTB6IggXHZDL1LK4Z9Lm0YYZS5ACZu5hw2ATihuzIdlNgXynL4u5UMSOo9VePOEploP
-         H+seCHqzlIYGxgTEJdNa72RSoBs2JQSkmbxuhuaRZCRCDtj8Iv/pHb7NbZrhkB+p2NEu
-         /rnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bwME4l4EJ6oZ8cjrQesmcLreWjxQta3M1Gv1X7S2+NY=;
-        b=CaJn1i3pOgXEHELp6eZp3fCDt8KbgM8b77tPa6sWIlJ82PuQS6o5rtOjag6IFs5cTq
-         rwv2/rB7Dm1ZIP1GBr+kTRhL06Awmv44biNUEtWVe8Yv0rgoXEGgx0+FWNtwDJO1W8P4
-         VFytV9fXFK84T8IKZPcepIfESdqGxWS0RGODtz77/TS81hN+Gxvo/+qeUjLEm5ajGlcK
-         9qsHKYLF3Rs9LH/o6unm3gwdZ0jfeET4HaG/r5ZsvbNtOfSB3+EMGAtr8lpV0pdqHtPh
-         +s2muFEdGyIzPJNd6FSwmSjyRfwJkxumZzUW53A4cjZAoqdUGyZx3adRIp3x4+LKcMSt
-         krcg==
-X-Gm-Message-State: APjAAAWa9vLBO0PtzjAy1SW1EtUlA5BkOGM76d/Fi8CdUjwjHLgJhzGR
-        u5gy8750xEYJ9HkDp+16FvPZ+dlWbmm3egygcTG8FQ==
-X-Google-Smtp-Source: APXvYqwdyZCQ+1g7pWUu8b3HV1fpGTluvmsD4O1UOCtJ24Bhz8zFImZoK7A4i7GNgyZ34ldyCjZyEe64BVBSE0ZO99Y=
-X-Received: by 2002:a2e:7009:: with SMTP id l9mr5996081ljc.96.1579998757482;
- Sat, 25 Jan 2020 16:32:37 -0800 (PST)
+        Sat, 25 Jan 2020 19:34:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728731AbgAZAeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 19:34:44 -0500
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70251214DB
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 00:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579998883;
+        bh=V2U6z9XSaNg2lFAobPZohWhVuiUiqMr2x6dsXgQhYNc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m/HSUuta8Mp4dTjgiD+vt7NJYwluvhu/mUmX/0w3vU2unNX99DJxUabSUgRPIEo6c
+         W7O0eGC2FMwlYXY7Pceyi9oIAfeEgGq5/ItFejl6WyX3dsUcvaWgWrhWrQV7WQb3Dy
+         uvXXujcS358labKpL9tKcJ4XBQrM8HCsfDQpgiXs=
+Received: by mail-wr1-f52.google.com with SMTP id g17so6710261wro.2
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jan 2020 16:34:43 -0800 (PST)
+X-Gm-Message-State: APjAAAW/9+PF4jSuTjFg1Z44WswrT7ZbXbhntMjqBzrN16q903r02AE5
+        tWP1cZcI1A8oPruYdBd5MpxcWcZ40RNJiS9Efz+0WA==
+X-Google-Smtp-Source: APXvYqzMByIDP1omF2wxhekdM1YUinGA+ZysjjYoFLEtfdsnvfhfIwTcyGWB0u913nRilErTtdaHwUexVWZh6aHWdU0=
+X-Received: by 2002:adf:8041:: with SMTP id 59mr12356956wrk.257.1579998881736;
+ Sat, 25 Jan 2020 16:34:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20200115035920.54451-1-alex.kogan@oracle.com> <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
- <4F71A184-42C0-4865-9AAA-79A636743C25@oracle.com>
-In-Reply-To: <4F71A184-42C0-4865-9AAA-79A636743C25@oracle.com>
-From:   Lihao Liang <lihaoliang@google.com>
-Date:   Sun, 26 Jan 2020 00:32:26 +0000
-Message-ID: <CAC4j=Y_SMHe4WNpaaS0kK1JYfnufM+AAiwwUMBx27L8U6bD8Yg@mail.gmail.com>
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        Will Deacon <will@kernel.org>
+References: <20200122185514.GA16010@agluck-desk2.amr.corp.intel.com>
+ <20200122224245.GA2331824@rani.riverdale.lan> <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
+ <20200123004507.GA2403906@rani.riverdale.lan> <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com>
+ <20200123044514.GA2453000@rani.riverdale.lan> <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
+ <87h80kmta4.fsf@nanos.tec.linutronix.de> <20200125024727.GA32483@agluck-desk2.amr.corp.intel.com>
+ <875zgzmz5e.fsf@nanos.tec.linutronix.de> <20200125220706.GA18290@agluck-desk2.amr.corp.intel.com>
+In-Reply-To: <20200125220706.GA18290@agluck-desk2.amr.corp.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 25 Jan 2020 16:34:29 -0800
+X-Gmail-Original-Message-ID: <CALCETrXT9zo2yFN+iz-1ijayOKNNz-717pEJggU1kC79ZVf34g@mail.gmail.com>
+Message-ID: <CALCETrXT9zo2yFN+iz-1ijayOKNNz-717pEJggU1kC79ZVf34g@mail.gmail.com>
+Subject: Re: [PATCH v16] x86/split_lock: Enable split lock detection by kernel
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Andrew Cooper <andrew.cooper3@citrix.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex and Waiman,
-
-Thanks a lot for your swift response and clarification.
-
-On Wed, Jan 22, 2020 at 7:30 PM Alex Kogan <alex.kogan@oracle.com> wrote:
+On Sat, Jan 25, 2020 at 2:07 PM Luck, Tony <tony.luck@intel.com> wrote:
 >
-> Hi, Lihao.
->
-> > On Jan 22, 2020, at 6:45 AM, Lihao Liang <lihaoliang@google.com> wrote:
-> >
-> > Hi Alex,
-> >
-> > On Wed, Jan 22, 2020 at 10:28 AM Alex Kogan <alex.kogan@oracle.com> wro=
-te:
-> >>
-> >> Summary
-> >> -------
-> >>
-> >> Lock throughput can be increased by handing a lock to a waiter on the
-> >> same NUMA node as the lock holder, provided care is taken to avoid
-> >> starvation of waiters on other NUMA nodes. This patch introduces CNA
-> >> (compact NUMA-aware lock) as the slow path for qspinlock. It is
-> >> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
-> >>
-> >
-> > Thanks for your patches. The experimental results look promising!
-> >
-> > I understand that the new CNA qspinlock uses randomization to achieve
-> > long-term fairness, and provides the numa_spinlock_threshold parameter
-> > for users to tune.
-> This has been the case in the first versions of the series, but is not tr=
-ue anymore.
-> That is, the long-term fairness is achieved deterministically (and you ar=
-e correct
-> that it is done through the numa_spinlock_threshold parameter).
->
-> > As Linux runs extremely diverse workloads, it is not
-> > clear how randomization affects its fairness, and how users with
-> > different requirements are supposed to tune this parameter.
-> >
-> > To this end, Will and I consider it beneficial to be able to answer the
-> > following question:
-> >
-> > With different values of numa_spinlock_threshold and
-> > SHUFFLE_REDUCTION_PROB_ARG, how long do threads running on different
-> > sockets have to wait to acquire the lock?
-> The SHUFFLE_REDUCTION_PROB_ARG parameter is intended for performance
-> optimization only, and *does not* affect the long-term fairness (or, at t=
-he
-> very least, does not make it any worse). As Longman correctly pointed out=
- in
-> his response to this email, the shuffle reduction optimization is relevan=
-t only
-> when the secondary queue is empty. In that case, CNA hands-off the lock
-> exactly as MCS does, i.e., in the FIFO order. Note that when the secondar=
-y
-> queue is not empty, we do not call probably().
->
-> > This is particularly relevant
-> > in high contention situations when new threads keep arriving on the sam=
-e
-> > socket as the lock holder.
-> In this case, the lock will stay on the same NUMA node/socket for
-> 2^numa_spinlock_threshold times, which is the worst case scenario if we
-> consider the long-term fairness. And if we have multiple nodes, it will t=
-ake
-> up to 2^numa_spinlock_threshold X (nr_nodes - 1) + nr_cpus_per_node
-> lock transitions until any given thread will acquire the lock
-> (assuming 2^numa_spinlock_threshold > nr_cpus_per_node).
+> From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 >
 
-You're right that the latest version of the patch handles long-term fairnes=
-s
-deterministically.
+> +void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
+> +{
+> +       u64 ia32_core_caps = 0;
+> +
+> +       if (c->x86_vendor != X86_VENDOR_INTEL)
+> +               return;
+> +       if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
+> +               /* Enumerate features reported in IA32_CORE_CAPABILITIES MSR. */
+> +               rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
+> +       } else if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+> +               /* Enumerate split lock detection by family and model. */
+> +               if (x86_match_cpu(split_lock_cpu_ids))
+> +                       ia32_core_caps |= MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
+> +       }
 
-As I understand it, the n-th thread in the main queue is guaranteed to
-acquire the lock after N lock handovers, where N is bounded by
+I was chatting with Andrew Cooper, and apparently there are a ton of
+hypervisors bugs in this space, and the bugs take two forms.  Some
+hypervisors might #GP the read, and some might allow the read but
+silently swallow writes.  This isn't *that* likely given that the
+hypervisor bit is the default, but we could improve this like (sorry
+for awful whitespace);
 
-n - 1 + 2^numa_spinlock_threshold * (nr_nodes - 1)
+static bool have_split_lock_detect(void) {
+      unsigned long tmp;
 
-I'm not sure what role the variable nr_cpus_per_node plays in your analysis=
-.
+      if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES) {
+              /* Enumerate features reported in IA32_CORE_CAPABILITIES MSR. */
+               rdmsrl(MSR_IA32_CORE_CAPS, tmp);
+               if (tmp & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT)
+                  return true;
+      }
 
-Do I miss anything?
+      if (cpu_has(c, X86_FEATURE_HYPERVISOR))
+            return false;
 
-Many thanks,
-Lihao.
+       if (rdmsrl_safe(MSR_TEST_CTRL, &tmp))
+               return false;
 
-> Hopefully, it addresses your concern. Let me know if you have any further
-> questions.
->
-> Best regards,
-> =E2=80=94 Alex
->
+      if (wrmsrl_safe(MSR_TEST_CTRL, tmp ^ MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
+              return false;
+
+      wrmsrl(MSR_TEST_CTRL, tmp);
+}
+
+Although I suppose the pile of wrmsrl_safes() in the existing patch
+might be sufficient.
+
+All this being said, the current code appears wrong if a CPU is in the
+list but does have X86_FEATURE_CORE_CAPABILITIES.  Are there such
+CPUs?  I think either the logic should be changed or a comment should
+be added.
