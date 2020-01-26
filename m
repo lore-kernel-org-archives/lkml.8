@@ -2,167 +2,129 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969D9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED263C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5936E20716
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C117A20716
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="mY94TaUP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SjOZLwAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgAZUYD (ORCPT
+        id S1726761AbgAZU0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 15:24:03 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:40104 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgAZUYD (ORCPT
+        Sun, 26 Jan 2020 15:26:13 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35910 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgAZU0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 15:24:03 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 72B64886BF;
-        Mon, 27 Jan 2020 09:23:59 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1580070239;
-        bh=/cei+1/aa/IpjR1z8VZ4jbo6uJmdsPklSqfncjybmzo=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=mY94TaUPAYVCO1VCqC0kwsDpANoJZAPW6IhI1zoPAO68gA+Tj6XRy3MPoNoHPKQAF
-         ODfJv9mBuQ9RycL4NUUUS5dbsLtUe2mdG2adVmQOXItFas+s7AoigHEVtItRe1sQpv
-         yw4aH9s1VRXxdsjDCWEYTrb8u+C/zjxsYoEZ2zfeZWacAU+Q5BcWdUhXv5t0OYEwcu
-         yLxlS3FJlSxvz5sIKjBhuvwpfN2tquDaslriIj9f5aQIGx0/83LpRY5UxOJHKvXMOU
-         AmHgAJ9y7FQcA+WJenuoJ4gHZ+SJCSLs0d/CqGt8AKMCFYqfZsJ3CwWVnAERneN1aG
-         qJUr4ItypMFcA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e2df5600001>; Mon, 27 Jan 2020 09:24:00 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan 2020 09:23:59 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1473.005; Mon, 27 Jan 2020 09:23:59 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Document binding for generic SPI
- multiplexer
-Thread-Topic: [PATCH v2 1/2] dt-bindings: spi: Document binding for generic
- SPI multiplexer
-Thread-Index: AQHV0YvN7EoaAxM04U2fxNX2TRV5jKf3a3CAgAUkngA=
-Date:   Sun, 26 Jan 2020 20:23:58 +0000
-Message-ID: <651803fbdea412ecde7cd352b080d41d9f0a2a33.camel@alliedtelesis.co.nz>
-References: <20200123012317.14808-1-chris.packham@alliedtelesis.co.nz>
-         <20200123012317.14808-2-chris.packham@alliedtelesis.co.nz>
-         <CAL_JsqLvM34WSBE29beBgJj0jLA6P_UwQUbTuEQcYJgrkg3v1A@mail.gmail.com>
-In-Reply-To: <CAL_JsqLvM34WSBE29beBgJj0jLA6P_UwQUbTuEQcYJgrkg3v1A@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:1597:7b21:1304:4303]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AB389E764116794CA5C5D03E7E553173@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 26 Jan 2020 15:26:12 -0500
+Received: by mail-ot1-f67.google.com with SMTP id g15so6545019otp.3;
+        Sun, 26 Jan 2020 12:26:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bHSNnUzcI55cuh2B6E1Lu8th6RkgDQpPE0JKT7s64CI=;
+        b=SjOZLwAZbMj9UZ80mbvMlTbZWgu9VEXGCNXF73NNrKlC5pJe1dgwGwpVlbtQ6e4A0O
+         +p58mKbvVkbe0ExlHVVEtj/Q7d5VEOqm9iGcs4OgI+cZ4vQ5MHhm+lxjjmYziQE9OCKz
+         IH3nWVHgHNXgo0zbBELkCJiE4nZvTmcaxE7AXUgLHYdMJKOdb/CiIQlPMIb4prusBn7l
+         hxM0qTUxRMj9nNHMn4q8CEH8/miT77FQhJq4UN2oWo70WwFe5ES3d7cn4TCGmqhHS8Dz
+         PorEzOAai4kS/p7lLw6+Vhyul/SurMTMQqtDCEY4igUfaQufmyaLB3sEEiE15CjIQupl
+         GwqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bHSNnUzcI55cuh2B6E1Lu8th6RkgDQpPE0JKT7s64CI=;
+        b=hgCRdnOAlp84S0avw4wiDxZFRPmdrLuCrzx9/ZZW609puOX2jX94ZzlW1cLa/mKcw6
+         KAPz7wTlaLgzLjPYjY56n2dQUoG+rgqxnhgEjiNhySU4wZ6BIHokwR+q9AbwXUIKyaXu
+         SAeRgb9/v8s8zk4X9Tts1xHZc/PLQThTAeGKehgm+bs1hyNw7sQ76QmeD7qu0doTmcVv
+         F71L2X0fIUiN7+Dp30pw1iWAWTub2MtI7FOHVmYss9Neu8FehQgCWMjCk3Q747mqASFA
+         1cE4m5p8mVn8/PLlV6kbnK7kT4uGdcgDMGrMalNKUqw5i6fxeKRXVtPqvNh1n2+nIPrP
+         isuA==
+X-Gm-Message-State: APjAAAVNumIeKjotGa64Cf5eTJ4/JZWhuhf/VejAuKsniGu1ziJNWMQi
+        XNzSqpUAHnS66Gs422DEJGRh04flgZzgw4LDKW23oJGk7b4=
+X-Google-Smtp-Source: APXvYqzL0w+vJsuf+cfw4JDQOlgcTdka5oHPmUBhgIEIV/e0YTz6uRTvOpg8UGxF45TpYqTrdppwFZL3t/WrL6vIxvc=
+X-Received: by 2002:a9d:da2:: with SMTP id 31mr9838115ots.319.1580070372012;
+ Sun, 26 Jan 2020 12:26:12 -0800 (PST)
 MIME-Version: 1.0
+References: <20200120222618.1456-1-xiyou.wangcong@gmail.com> <20200121190059.7ae9f7a9@gandalf.local.home>
+In-Reply-To: <20200121190059.7ae9f7a9@gandalf.local.home>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sun, 26 Jan 2020 12:26:00 -0800
+Message-ID: <CAM_iQpU_Z6CFZh2hBQLneqy6=EFSZCUGET+vh+d78YDrOgTj+w@mail.gmail.com>
+Subject: Re: [Patch v2] block: introduce block_rq_error tracepoint
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAxLTIzIGF0IDA3OjUxIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gV2VkLCBKYW4gMjIsIDIwMjAgYXQgNzoyNCBQTSBDaHJpcyBQYWNraGFtDQo+IDxjaHJpcy5w
-YWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPiA+IA0KPiA+IEFkZCBiaW5kaW5n
-IGRvY3VtZW50YXRpb24gZm9yIHRoZSBzcGktbXV4IGRyaXZlci4gVGhpcyBhbGxvd3MgYSBnZW5l
-cmljDQo+ID4gbXVsdGlwbGV4ZXIgdG8gYmUgdXNlZCB0byBwcm92aWRlIGFjY2VzcyB0byBtdWx0
-aXBsZSBTUEkgZGV2aWNlcy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYWNraGFt
-IDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+ID4gLS0tDQo+ID4gDQo+ID4g
-Tm90ZXM6DQo+ID4gICAgIENoYW5nZXMgaW4gdjI6DQo+ID4gICAgIC0gdXBkYXRlIGxpY2Vuc2UN
-Cj4gPiAgICAgLSBtYWtlIGR0X2JpbmRpbmdfY2hlY2sgY2xlYW4NCj4gDQo+IFN1cmUgYWJvdXQg
-dGhhdD8NCj4gDQoNCkkgd2FzIHdoZW4gSSB3cm90ZSB0aGF0LCBidXQgbm93IEkgdGhpbmsgSSBu
-ZWVkIHRvIGNvbnN1bHQgbXkgc3BlbGwNCmJvb2suDQoNCkl0IGFwcGVhcnMgdGhlIGluY2FudGF0
-aW9uIEkgc2hvdWxkIGJlIHVzaW5nIGlzDQoNCiAgbWFrZSBBUkNIPWFybSBkZWZjb25maWcNCiAg
-bWFrZSBBUkNIPWFybSBkdF9iaW5kaW5nX2NoZWNrIFwNCiAgICAgRFRfU0NIRU1BX0ZJTEVTPURv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLW11eC55YW1sDQoNCkkgY2Fu
-IHNlZSB0aGUgc2ltcGxlIGZhaWx1cmVzIChub3Qgc3VyZSBob3cgSSBtaXNzZWQgdGhlbSkuIEJ1
-dCBvbmUNCnRoYXQgcmVtYWlucyBpczoNCg0KV2FybmluZyAoc3BpX2J1c19icmlkZ2UpOiAvZXhh
-bXBsZS0wL3NwaS9zcGktbXV4QDA6IG5vZGUgbmFtZSBmb3IgU1BJDQpidXNlcyBzaG91bGQgYmUg
-J3NwaScNCg0KSSBjb3VsZCBmaXggdGhhdCBieSBoYXZpbmcNCg0KIHNwaSB7DQogICAgc3BpQDAg
-ew0KICAgICAgIGNvbXBhdGlibGUgPSAic3BpLW11eCI7DQogICAgfTsNCiB9Ow0KDQpJcyB0aGF0
-IHdoYXQgd2Ugd2FudD8gT3Igc2hvdWxkIEkgYmUgYWRkaW5nIGF3YXJlbmVzcyBvZiBzcGktbXV4
-ZXMgdG8NCmR0Yz8NCg0KPiA+IA0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3Bp
-LW11eC55YW1sICAgICAgfCA4NCArKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFu
-Z2VkLCA4NCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1tdXgueWFtbA0KPiA+IA0KPiA+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1tdXgueWFt
-bCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLW11eC55YW1sDQo+
-ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjRiZGIzMWUy
-MjU3ZQ0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3Mvc3BpL3NwaS1tdXgueWFtbA0KPiA+IEBAIC0wLDAgKzEsODQgQEANCj4gPiAr
-IyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAgT1IgQlNELTItQ2xhdXNlKQ0KPiA+
-ICslWUFNTCAxLjINCj4gPiArLS0tDQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3Nj
-aGVtYXMvc3BpL3NwaS1tdXgueWFtbCMNCj4gPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUu
-b3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ID4gKw0KPiA+ICt0aXRsZTogR2VuZXJpYyBT
-UEkgTXVsdGlwbGV4ZXINCj4gPiArDQo+ID4gK2Rlc2NyaXB0aW9uOiB8DQo+ID4gKyAgVGhpcyBi
-aW5kaW5nIGRlc2NyaWJlcyBhIFNQSSBidXMgbXVsdGlwbGV4ZXIgdG8gcm91dGUgdGhlIFNQSSBj
-aGlwIHNlbGVjdA0KPiA+ICsgIHNpZ25hbHMuIFRoaXMgY2FuIGJlIHVzZWQgd2hlbiB5b3UgbmVl
-ZCBtb3JlIGRldmljZXMgdGhhbiB0aGUgU1BJIGNvbnRyb2xsZXINCj4gPiArICBoYXMgY2hpcCBz
-ZWxlY3RzIGF2YWlsYWJsZS4gQW4gZXhhbXBsZSBzZXR1cCBpcyBzaG93biBpbiBBU0NJSSBhcnQ7
-IHRoZSBhY3R1YWwNCj4gPiArICBzZXR0aW5nIG9mIHRoZSBtdWx0aXBsZXhlciB0byBhIGNoYW5u
-ZWwgbmVlZHMgdG8gYmUgZG9uZSBieSBhIHNwZWNpZmljIFNQSSBtdXgNCj4gPiArICBkcml2ZXIu
-DQo+ID4gKw0KPiA+ICsgICAgICAgIE1PU0kgLy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tKy0tLS0tLS0tKy0tLS0tLS0tKy0tLS0tLS0tXA0KPiA+ICsgICAgICAgIE1JU08gfC8tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rfC0tLS0tLS0rfC0tLS0tLS0rfC0tLS0tLS1cfA0K
-PiA+ICsgICAgICAgICBTQ0wgfHwvLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSt8fC0tLS0t
-LSt8fC0tLS0tLSt8fC0tLS0tLVx8fA0KPiA+ICsgICAgICAgICAgICAgfHx8ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHx8fCAgICAgIHx8fCAgICAgIHx8fCAgICAgIHx8fA0KPiA+ICsgICAg
-ICArLS0tLS0tLS0tLS0tKyAgICAgICAgICAgICAgICAgICAgICAgIHx8fCAgICAgIHx8fCAgICAg
-IHx8fCAgICAgIHx8fA0KPiA+ICsgICAgICB8IFNvQyAgfHx8ICAgfCAgICAgICAgICAgICAgICAg
-ICAgICArLSsrKy0rICArLSsrKy0rICArLSsrKy0rICArLSsrKy0rDQo+ID4gKyAgICAgIHwgICAg
-ICB8fHwgICB8ICAgICAgICAgICAgICAgICAgICAgIHwgZGV2IHwgIHwgZGV2IHwgIHwgZGV2IHwg
-IHwgZGV2IHwNCj4gPiArICAgICAgfCAgICstLSsrKy0rIHwgQ1MtWCAgKy0tLS0tLStcICAgICAg
-Ky0tKy0tKyAgKy0tKy0tKyAgKy0tKy0tKyAgKy0tKy0tKw0KPiA+ICsgICAgICB8ICAgfCBTUEkg
-ICstfC0tLS0tLS0rIE11eCAgfFxcICAgQ1MtMCB8ICAgICAgICB8ICAgICAgICB8ICAgICAgICB8
-DQo+ID4gKyAgICAgIHwgICArLS0tLS0tKyB8ICAgICAgICstLSstLS0rXFxcLS0tLS0tLS8gICBD
-Uy0xIHwgICAgICAgIHwgICAgICAgIHwNCj4gPiArICAgICAgfCAgICAgICAgICAgIHwgICAgICAg
-ICAgfCAgICBcXFwtLS0tLS0tLS0tLS0tLS0tLyAgIENTLTIgfCAgICAgICAgfA0KPiA+ICsgICAg
-ICB8ICAgKy0tLS0tLSsgfCAgICAgICAgICB8ICAgICBcXC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0vICAgQ1MtMyB8DQo+ID4gKyAgICAgIHwgICB8ID8gICAgKy18LS0tLS0tLS0tLS8gICAgICBc
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS8NCj4gPiArICAgICAgfCAgICstLS0t
-LS0rIHwNCj4gPiArICAgICAgKy0tLS0tLS0tLS0tLSsNCj4gPiArDQo+ID4gK2FsbE9mOg0KPiA+
-ICsgIC0gJHJlZjogIi9zY2hlbWFzL3NwaS9zcGktY29udHJvbGxlci55YW1sIyINCj4gPiArDQo+
-ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBh
-bGxpZWR0ZWxlc2lzLmNvLm56Pg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4gPiArICBjb21w
-YXRpYmxlOg0KPiA+ICsgICAgY29uc3Q6IHNwaS1tdXgNCj4gPiArDQo+ID4gKyAgbXV4LWNvbnRy
-b2xzOg0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gK3JlcXVpcmVkOg0KPiA+ICsg
-ICAtIGNvbXBhdGlibGUNCj4gPiArICAgLSByZWcNCj4gPiArICAgLSBzcGktbWF4LWZyZXF1ZW5j
-eQ0KPiA+ICsgICAtIG11eC1jb250cm9scw0KPiA+ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAg
-IC0gfA0KPiA+ICsgICAgIG11eDogbXV4LWNvbnRyb2xsZXIgew0KPiA+ICsgICAgICAgY29tcGF0
-aWJsZSA9ICJncGlvLW11eCI7DQo+ID4gKyAgICAgICAjbXV4LWNvbnRyb2wtY2VsbHMgPSA8MD47
-DQo+ID4gKw0KPiA+ICsgICAgICAgbXV4LWdwaW9zID0gPCZncGlvMCAzIEdQSU9fQUNUSVZFX0hJ
-R0g+Ow0KPiA+ICsgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgIHNwaSB7DQo+ID4gKyAgICAgICBz
-cGktbXV4QDAgew0KPiA+ICsgICAgICAgICBjb21wYXRpYmxlID0gInNwaS1tdXgiOw0KPiA+ICsg
-ICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAgI3NpemUtY2VsbHMg
-PSA8MD47DQo+ID4gKyAgICAgICAgIHJlZyA9IDwwPjsNCj4gPiArICAgICAgICAgc3BpLW1heC1m
-cmVxdWVuY3kgPSA8MTAwMDAwMDAwPjsNCj4gPiArDQo+ID4gKyAgICAgICAgIG11eC1jb250cm9s
-cyA9IDwmbXV4Pg0KPiANCj4gTWlzc2luZyBzZW1pY29sb24uDQo+IA0KPiA+ICsNCj4gPiArICAg
-ICAgICAgc3BpLWZsYXNoQDAgew0KPiA+ICsgICAgICAgICAgIGNvbXBhdGlibGUgPSAiamVkZWMs
-c3BpLW5vciI7DQo+ID4gKyAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKyAg
-ICAgICAgICAgI3NpemUtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAgICAgICAgcmVnID0gPDA+Ow0K
-PiA+ICsgICAgICAgICAgIHNwaS1tYXgtZnJlcXVlbmN5ID0gPDQwMDAwMDAwPjsNCj4gPiArICAg
-ICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAgIHNwaS1kZXZpY2VAMSB7DQo+ID4gKyAgICAg
-ICAgICAgY29tcGF0aWJsZSA9ICJsaW5lYXJ0ZWNobm9sb2d5LGx0YzI0ODgiOw0KPiA+ICsgICAg
-ICAgICAgIHJlZyA9IDwxPjsNCj4gPiArICAgICAgICAgICBzcGktbWF4LWZyZXF1ZW5jeSA9IDwx
-MDAwMDAwMD47DQo+ID4gKyAgICAgICAgIH07DQo+ID4gKyAgICAgICB9Ow0KPiA+ICsgICAgIH07
-DQo+ID4gLS0NCj4gPiAyLjI1LjANCj4gPiANCg==
+On Tue, Jan 21, 2020 at 4:01 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Mon, 20 Jan 2020 14:26:18 -0800
+> Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> > +/**
+> > + * block_rq_error - block IO operation error reported by device driver
+> > + * @rq: block operations request
+> > + * @error: status code
+> > + * @nr_bytes: number of completed bytes
+> > + *
+> > + * The block_rq_error tracepoint event indicates that some portion
+> > + * of operation request has failed as reported by the device driver.
+> > + */
+> > +TRACE_EVENT(block_rq_error,
+> > +
+> > +     TP_PROTO(struct request *rq, int error, unsigned int nr_bytes),
+> > +
+> > +     TP_ARGS(rq, error, nr_bytes),
+> > +
+> > +     TP_STRUCT__entry(
+> > +             __field(  dev_t,        dev                     )
+> > +             __dynamic_array( char,  name,   DISK_NAME_LEN   )
+>
+> Hmm, looks like I need to go and do a clean up of the kernel, and
+> educate people on how to use dynamic arrays :-/
+
+Yeah.
+
+>
+> The "len" field of a __dynamic_array() is to be a function to determine
+> the length needed for each instance of an event. By having a constant
+> there, it will be the same for every events, plus the meta data to hold
+> the "dynamic" part of the array. This would be much better to simple
+> use __array() instead.
+>
+> But as you use "__assign_str()" below, then it's expected that name is
+> a nul terminated string. In which case, you want to define this as:
+>
+>                 __string( name, rq->rq_disk ? rq->rq_disk->disk_name : "?"  )
+
+Ah, I wanted to use string() but all the existing users initialize/assign
+them twice: once in TP_STRUCT__entry() and once in TP_fast_assign().
+
+
+>
+>
+> > +             __field(  sector_t,     sector                  )
+> > +             __field(  unsigned int, nr_sector               )
+> > +             __field(  int,          error                   )
+> > +             __array(  char,         rwbs,   RWBS_LEN        )
+> > +             __dynamic_array( char,  cmd,    1               )
+>
+> Not sure what you are doing with cmd. It appears to be always hard
+> coded as an empty string?
+
+It is supposed to be a string of one-char commands. This is a
+copy-n-paste from existing block_rq_requeue(). I don't know why
+its length is 1, but yeah it looks wrong to me too.
+
+Thanks!
