@@ -2,74 +2,84 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE16C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881DFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59782071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555F02071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 15:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HCH2nuzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgAZPsB (ORCPT
+        id S1729113AbgAZPs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 10:48:01 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33107 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgAZPsB (ORCPT
+        Sun, 26 Jan 2020 10:48:27 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:20597 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727349AbgAZPsZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 10:48:01 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ivk8j-00014y-8F; Sun, 26 Jan 2020 15:47:57 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] scsi: megaraid_sas: fix indentation issue
-Date:   Sun, 26 Jan 2020 15:47:57 +0000
-Message-Id: <20200126154757.42530-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
+        Sun, 26 Jan 2020 10:48:25 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580053705; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=mSC7z0jN2KfIlNDsfAnxYHnv4eoBgAgVAR0WZyHRDdw=;
+ b=HCH2nuzkO26Zg1dcRh8xMtDCT1J/1FO1+KvNwymSApcG2YS/gXigOIrYCQiAzhHqPodEn8T7
+ 6fPI+jNTSovV/oUFubcnnXix/vSOr63n1v+33DsVMjwUfVpBgShQIDMgzX3hGEkRm4ykvX93
+ IQXcgjIhweVvJZBQqO4kUQ/uJcw=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2db4c3.7f018acd3d88-smtp-out-n02;
+ Sun, 26 Jan 2020 15:48:19 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F08E5C4479C; Sun, 26 Jan 2020 15:48:17 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 12897C43383;
+        Sun, 26 Jan 2020 15:48:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 12897C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtlwifi: btcoex: fix spelling mistake "initilized" ->
+ "initialized"
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200122093340.2800226-1-colin.king@canonical.com>
+References: <20200122093340.2800226-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200126154817.F08E5C4479C@smtp.codeaurora.org>
+Date:   Sun, 26 Jan 2020 15:48:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Colin King <colin.king@canonical.com> wrote:
 
-There are two statments that are indented one level too deeply, remove
-the extraneous tabs.
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in one of the fields in the btc_coexist struct,
+> fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/scsi/megaraid/megaraid_sas_base.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Patch applied to wireless-drivers-next.git, thanks.
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index acb82181f70f..b0a413ee75d5 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -8226,8 +8226,8 @@ megasas_mgmt_fw_ioctl(struct megasas_instance *instance,
- 			"return -EBUSY from %s %d cmd 0x%x opcode 0x%x cmd->cmd_status_drv 0x%x\n",
- 			 __func__, __LINE__, cmd->frame->hdr.cmd, opcode,
- 			 cmd->cmd_status_drv);
--			error = -EBUSY;
--			goto out;
-+		error = -EBUSY;
-+		goto out;
- 	}
- 
- 	cmd->sync_cmd = 0;
+f76c34082b24 rtlwifi: btcoex: fix spelling mistake "initilized" -> "initialized"
+
 -- 
-2.24.0
+https://patchwork.kernel.org/patch/11345405/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
