@@ -2,129 +2,169 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED263C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FD2C35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C117A20716
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9932070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:28:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SjOZLwAZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=welchs.me.uk header.i=@welchs.me.uk header.b="ZJklnSWB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgAZU0N (ORCPT
+        id S1726858AbgAZU2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 15:26:13 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35910 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgAZU0M (ORCPT
+        Sun, 26 Jan 2020 15:28:33 -0500
+Received: from ams-node6.websitehostserver.net ([107.6.163.66]:34645 "EHLO
+        ams-node6.websitehostserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726087AbgAZU2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 15:26:12 -0500
-Received: by mail-ot1-f67.google.com with SMTP id g15so6545019otp.3;
-        Sun, 26 Jan 2020 12:26:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bHSNnUzcI55cuh2B6E1Lu8th6RkgDQpPE0JKT7s64CI=;
-        b=SjOZLwAZbMj9UZ80mbvMlTbZWgu9VEXGCNXF73NNrKlC5pJe1dgwGwpVlbtQ6e4A0O
-         +p58mKbvVkbe0ExlHVVEtj/Q7d5VEOqm9iGcs4OgI+cZ4vQ5MHhm+lxjjmYziQE9OCKz
-         IH3nWVHgHNXgo0zbBELkCJiE4nZvTmcaxE7AXUgLHYdMJKOdb/CiIQlPMIb4prusBn7l
-         hxM0qTUxRMj9nNHMn4q8CEH8/miT77FQhJq4UN2oWo70WwFe5ES3d7cn4TCGmqhHS8Dz
-         PorEzOAai4kS/p7lLw6+Vhyul/SurMTMQqtDCEY4igUfaQufmyaLB3sEEiE15CjIQupl
-         GwqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bHSNnUzcI55cuh2B6E1Lu8th6RkgDQpPE0JKT7s64CI=;
-        b=hgCRdnOAlp84S0avw4wiDxZFRPmdrLuCrzx9/ZZW609puOX2jX94ZzlW1cLa/mKcw6
-         KAPz7wTlaLgzLjPYjY56n2dQUoG+rgqxnhgEjiNhySU4wZ6BIHokwR+q9AbwXUIKyaXu
-         SAeRgb9/v8s8zk4X9Tts1xHZc/PLQThTAeGKehgm+bs1hyNw7sQ76QmeD7qu0doTmcVv
-         F71L2X0fIUiN7+Dp30pw1iWAWTub2MtI7FOHVmYss9Neu8FehQgCWMjCk3Q747mqASFA
-         1cE4m5p8mVn8/PLlV6kbnK7kT4uGdcgDMGrMalNKUqw5i6fxeKRXVtPqvNh1n2+nIPrP
-         isuA==
-X-Gm-Message-State: APjAAAVNumIeKjotGa64Cf5eTJ4/JZWhuhf/VejAuKsniGu1ziJNWMQi
-        XNzSqpUAHnS66Gs422DEJGRh04flgZzgw4LDKW23oJGk7b4=
-X-Google-Smtp-Source: APXvYqzL0w+vJsuf+cfw4JDQOlgcTdka5oHPmUBhgIEIV/e0YTz6uRTvOpg8UGxF45TpYqTrdppwFZL3t/WrL6vIxvc=
-X-Received: by 2002:a9d:da2:: with SMTP id 31mr9838115ots.319.1580070372012;
- Sun, 26 Jan 2020 12:26:12 -0800 (PST)
+        Sun, 26 Jan 2020 15:28:32 -0500
+X-Greylist: delayed 2590 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Jan 2020 15:28:31 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=welchs.me.uk; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1iuIIHLDXFgbIP0KUUM70+Fje7EhMg4VrZHvVRTSgKw=; b=ZJklnSWBRRBb4P0ApvH+OVF0qR
+        JZWS+MnOcYi+wMV7zD8butsJuYD9vddeRTCllH43d/P+FF3wecIvRBTM4sZ35bhjxPO6C8lP4uAjl
+        ugx/LrTAvB/bw09KERFl6I6q7tqiNbwkAE2fEUaLiskBS5DCPEnm0ZVZ6tZhjizWedh/ORvKXPu+H
+        vpjXPMkEu3TG1wiPyu4jRarnMTlH9qCkTIeAtZvF3Jsb4JMmUJNFN+filcljRo00q0yzkof1dH2WK
+        84j0qLaM/eqfB8poR30D9DdbXQWPVfVIjkYmCjhe9r721FEhONOInpAt5N5hqnXfSBIZeATV2o0zA
+        jVO9+j8A==;
+Received: from host86-133-53-79.range86-133.btcentralplus.com ([86.133.53.79]:37384 helo=hera.home)
+        by ams-node6.websitehostserver.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <martyn@welchs.me.uk>)
+        id 1ivnqR-0002ep-Ns; Sun, 26 Jan 2020 20:45:19 +0100
+From:   Martyn Welch <martyn@welchs.me.uk>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Conn O'Griofa <connogriofa@gmail.com>
+Subject: [PATCH] HID: Sony: Add support for Gasia controllers
+Date:   Sun, 26 Jan 2020 19:45:13 +0000
+Message-Id: <20200126194513.6359-1-martyn@welchs.me.uk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200120222618.1456-1-xiyou.wangcong@gmail.com> <20200121190059.7ae9f7a9@gandalf.local.home>
-In-Reply-To: <20200121190059.7ae9f7a9@gandalf.local.home>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Sun, 26 Jan 2020 12:26:00 -0800
-Message-ID: <CAM_iQpU_Z6CFZh2hBQLneqy6=EFSZCUGET+vh+d78YDrOgTj+w@mail.gmail.com>
-Subject: Re: [Patch v2] block: introduce block_rq_error tracepoint
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - ams-node6.websitehostserver.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - welchs.me.uk
+X-Get-Message-Sender-Via: ams-node6.websitehostserver.net: authenticated_id: martyn@welchs.me.uk
+X-Authenticated-Sender: ams-node6.websitehostserver.net: martyn@welchs.me.uk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 4:01 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Mon, 20 Jan 2020 14:26:18 -0800
-> Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> > +/**
-> > + * block_rq_error - block IO operation error reported by device driver
-> > + * @rq: block operations request
-> > + * @error: status code
-> > + * @nr_bytes: number of completed bytes
-> > + *
-> > + * The block_rq_error tracepoint event indicates that some portion
-> > + * of operation request has failed as reported by the device driver.
-> > + */
-> > +TRACE_EVENT(block_rq_error,
-> > +
-> > +     TP_PROTO(struct request *rq, int error, unsigned int nr_bytes),
-> > +
-> > +     TP_ARGS(rq, error, nr_bytes),
-> > +
-> > +     TP_STRUCT__entry(
-> > +             __field(  dev_t,        dev                     )
-> > +             __dynamic_array( char,  name,   DISK_NAME_LEN   )
->
-> Hmm, looks like I need to go and do a clean up of the kernel, and
-> educate people on how to use dynamic arrays :-/
+There seems to be a number of subtly different firmwares for the
+Playstation controllers made by "Gasia Co.,Ltd". Whilst such controllers
+are easily detectable when attached via USB that is not always the case
+via Bluetooth. Some controllers are named "PLAYSTATION(R)3 Controller"
+where as the official Sony controllers are named
+"Sony PLAYSTATION(R)3 Controller", however some versions of firmware use
+the exact name used by the official controllers. The only way I've been
+able to distinguish these versions of the controller (when connected via
+Bluetooth) is that the Bluetooth Class of Device incorrectly reports the
+controller as a keyboard rather than a gamepad. I've so far failed to work
+out how to access this information from a HID driver.
 
-Yeah.
+The Gasia controllers need output reports to be configured in the same way
+as the Shanwan controllers. In order to ensure both types of Gasia firmware
+will work, this patch adds a quirk for those devices it can detect and
+reworks `sixaxis_send_output_report()` to attempt `hid_hw_output_report()`
+should `hid_hw_raw_request()` be known to be the wrong option (as is the
+case with the Shanwan controllers) or fails.
 
->
-> The "len" field of a __dynamic_array() is to be a function to determine
-> the length needed for each instance of an event. By having a constant
-> there, it will be the same for every events, plus the meta data to hold
-> the "dynamic" part of the array. This would be much better to simple
-> use __array() instead.
->
-> But as you use "__assign_str()" below, then it's expected that name is
-> a nul terminated string. In which case, you want to define this as:
->
->                 __string( name, rq->rq_disk ? rq->rq_disk->disk_name : "?"  )
+This has got all the controllers I have working, with the slight
+anoyance that the Gasia controllers that don't currently get marked with
+a quirk require the call to `hid_hw_raw_request()` to fail before the
+controller finishes initialising (which adds a significant extra delay
+before the controller is ready).
 
-Ah, I wanted to use string() but all the existing users initialize/assign
-them twice: once in TP_STRUCT__entry() and once in TP_fast_assign().
+This patch is based on the following patch by Conn O'Griofa:
 
+https://github.com/RetroPie/RetroPie-Setup/pull/2263/commits/017f00f6e15f04b3272ff1abae8742dc4c47b608
 
->
->
-> > +             __field(  sector_t,     sector                  )
-> > +             __field(  unsigned int, nr_sector               )
-> > +             __field(  int,          error                   )
-> > +             __array(  char,         rwbs,   RWBS_LEN        )
-> > +             __dynamic_array( char,  cmd,    1               )
->
-> Not sure what you are doing with cmd. It appears to be always hard
-> coded as an empty string?
+Cc: Conn O'Griofa <connogriofa@gmail.com>
+Signed-off-by: Martyn Welch <martyn@welchs.me.uk>
+---
+ drivers/hid/hid-sony.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-It is supposed to be a string of one-char commands. This is a
-copy-n-paste from existing block_rq_requeue(). I don't know why
-its length is 1, but yeah it looks wrong to me too.
+diff --git a/drivers/hid/hid-sony.c b/drivers/hid/hid-sony.c
+index 4c6ed6ef31f1..d1088a85cb59 100644
+--- a/drivers/hid/hid-sony.c
++++ b/drivers/hid/hid-sony.c
+@@ -56,6 +56,7 @@
+ #define NSG_MR5U_REMOTE_BT        BIT(14)
+ #define NSG_MR7U_REMOTE_BT        BIT(15)
+ #define SHANWAN_GAMEPAD           BIT(16)
++#define GASIA_GAMEPAD             BIT(17)
+ 
+ #define SIXAXIS_CONTROLLER (SIXAXIS_CONTROLLER_USB | SIXAXIS_CONTROLLER_BT)
+ #define MOTION_CONTROLLER (MOTION_CONTROLLER_USB | MOTION_CONTROLLER_BT)
+@@ -2067,6 +2068,7 @@ static void sixaxis_send_output_report(struct sony_sc *sc)
+ 	struct sixaxis_output_report *report =
+ 		(struct sixaxis_output_report *)sc->output_report_dmabuf;
+ 	int n;
++	int ret = -1;
+ 
+ 	/* Initialize the report with default values */
+ 	memcpy(report, &default_report, sizeof(struct sixaxis_output_report));
+@@ -2101,14 +2103,23 @@ static void sixaxis_send_output_report(struct sony_sc *sc)
+ 		}
+ 	}
+ 
+-	/* SHANWAN controllers require output reports via intr channel */
+-	if (sc->quirks & SHANWAN_GAMEPAD)
+-		hid_hw_output_report(sc->hdev, (u8 *)report,
+-				sizeof(struct sixaxis_output_report));
+-	else
+-		hid_hw_raw_request(sc->hdev, report->report_id, (u8 *)report,
++	/*
++	 * SHANWAN & GASIA controllers require output reports via intr channel.
++	 * Some of the Gasia controllers are basically indistinguishable from
++	 * the official ones and thus try hid_hw_output_report() should
++	 * hid_hw_raw_request() fail.
++	 */
++	if (!(sc->quirks & (SHANWAN_GAMEPAD | GASIA_GAMEPAD)))
++		ret = hid_hw_raw_request(sc->hdev, report->report_id,
++				(u8 *)report,
+ 				sizeof(struct sixaxis_output_report),
+ 				HID_OUTPUT_REPORT, HID_REQ_SET_REPORT);
++
++	if (ret >= 0)
++		return;
++
++	hid_hw_output_report(sc->hdev, (u8 *)report,
++			sizeof(struct sixaxis_output_report));
+ }
+ 
+ static void dualshock4_send_output_report(struct sony_sc *sc)
+@@ -2833,6 +2844,14 @@ static int sony_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 	if (!strcmp(hdev->name, "SHANWAN PS3 GamePad"))
+ 		quirks |= SHANWAN_GAMEPAD;
+ 
++	/*
++	 * Some Gasia controllers are named "PLAYSTATION(R)3 Controller"
++	 * where as the official Sony controllers are named
++	 * "Sony PLAYSTATION(R)3 Controller".
++	 */
++	if (!strcmp(hdev->name, "PLAYSTATION(R)3 Controller"))
++		quirks |= GASIA_GAMEPAD;
++
+ 	sc = devm_kzalloc(&hdev->dev, sizeof(*sc), GFP_KERNEL);
+ 	if (sc == NULL) {
+ 		hid_err(hdev, "can't alloc sony descriptor\n");
+-- 
+2.20.1
 
-Thanks!
