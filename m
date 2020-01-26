@@ -2,91 +2,72 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5425CC35240
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86F9C35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3257F2071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDBD2075D
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgAZJU4 (ORCPT
+        id S1728899AbgAZJfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 04:20:56 -0500
-Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:25021 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgAZJU4 (ORCPT
+        Sun, 26 Jan 2020 04:35:11 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:56853 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbgAZJfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 04:20:56 -0500
-Received: from localhost.localdomain ([93.23.15.185])
-        by mwinf5d07 with ME
-        id uxLl2100n3zZxD103xLmMA; Sun, 26 Jan 2020 10:20:54 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 26 Jan 2020 10:20:54 +0100
-X-ME-IP: 93.23.15.185
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     claudiu.manoil@nxp.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] gianfar: Allocate the correct number of rx queues in 'gfar_of_init()'
-Date:   Sun, 26 Jan 2020 10:20:28 +0100
-Message-Id: <20200126092028.14246-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sun, 26 Jan 2020 04:35:10 -0500
+Received: from ip5f5bd665.dynamic.kabel-deutschland.de ([95.91.214.101] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iveJt-0008EY-VK; Sun, 26 Jan 2020 09:35:06 +0000
+Date:   Sun, 26 Jan 2020 10:35:07 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: binderfs interferes with syzkaller?
+Message-ID: <20200126093506.oa2ee5kbptur4zhz@wittgenstein>
+References: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
+ <20200126085535.GA3533171@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200126085535.GA3533171@kroah.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can get values for rx and tx queues from "fsl,num_rx_queues" and
-"fsl,num_tx_queues". However, when 'alloc_etherdev_mq()' is called, the
-value for "tx" is used for both.
+On Sun, Jan 26, 2020 at 09:55:35AM +0100, Greg Kroah-Hartman wrote:
+> On Sat, Jan 25, 2020 at 06:49:49PM +0100, Dmitry Vyukov wrote:
+> > Hi binder maintainers,
+> > 
+> > It seems that something has happened and now syzbot has 0 coverage in
+> > drivers/android/binder.c:
+> > https://storage.googleapis.com/syzkaller/cover/ci-upstream-kasan-gce-root.html
+> > It covered at least something there before as it found some bugs in binder code.
+> > I _suspect_ it may be related to introduction binderfs, but it's
+> > purely based on the fact that binderfs changed lots of things there.
+> > And I see it claims to be backward compatible.
+> 
+> It is backwards compatible if you mount binderfs, right?
 
-Use 'alloc_etherdev_mqs()' instead.
+Yes, it is backwards compatible. The devices that would usually be
+created in devtmpfs are now created in binderfs. The core
+binder-codepaths are the same.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-WARNING: This patch is purely speculative!
-
-I don't fully understand the code, and tx and rx queues seem to be
-allocated by 'gfar_alloc_[rt]x_queues()' and handled with priv-> fields.
-I don't know the relationship between queues provided by the core, and the
-ones specificly handled in this driver.
-
-'netif_set_real_num_rx_queues()' a few lines below is also spurious to me.
-If "fsl,num_rx_queues" > "fsl,num_tx_queues" it will return an error and
-things then look out of synch (i.e. 'priv->num_rx_queues' is set to a value
-bigger than what is allocated by core, that is to say the one from
-'priv->num_tx_queues')
-
-If my assumptions are correct, I guess that the call to
-'netif_set_real_num_rx_queues()' is useless
-
-
-Sorry for the noise if I'm completly wrong.
-In such a case, some explanation would be appreciated.
----
- drivers/net/ethernet/freescale/gianfar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index 72868a28b621..5e934069682e 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -708,7 +708,7 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
- 		return -EINVAL;
- 	}
- 
--	*pdev = alloc_etherdev_mq(sizeof(*priv), num_tx_qs);
-+	*pdev = alloc_etherdev_mqs(sizeof(*priv), num_tx_qs, num_rx_qs);
- 	dev = *pdev;
- 	if (NULL == dev)
- 		return -ENOMEM;
--- 
-2.20.1
-
+Christian
