@@ -2,152 +2,298 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D88CC35246
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 22:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3D8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 22:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD7620716
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 22:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E07CF206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 22:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgAZWLZ (ORCPT
+        id S1727872AbgAZWSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 17:11:25 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43770 "EHLO mx2.suse.de"
+        Sun, 26 Jan 2020 17:18:07 -0500
+Received: from mga02.intel.com ([134.134.136.20]:49489 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729159AbgAZWLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 17:11:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0415DAE2C;
-        Sun, 26 Jan 2020 22:11:19 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id A748EE06B1; Sun, 26 Jan 2020 23:11:19 +0100 (CET)
-Message-Id: <31ad6c1e5db5601cebf01a1f011cf39ea0ce9e4d.1580075977.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1580075977.git.mkubecek@suse.cz>
-References: <cover.1580075977.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next 7/7] ethtool: add WOL_NTF notification
-To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Date:   Sun, 26 Jan 2020 23:11:19 +0100 (CET)
+        id S1726144AbgAZWSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 17:18:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jan 2020 14:18:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,367,1574150400"; 
+   d="scan'208";a="308614370"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 26 Jan 2020 14:18:04 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1ivqEG-0005U0-5l; Mon, 27 Jan 2020 06:18:04 +0800
+Date:   Mon, 27 Jan 2020 06:17:36 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:timers/core] BUILD SUCCESS
+ fd928f3e32ba09381b287f8b732418434d932855
+Message-ID: <5e2e1000./T73q7ZvCkQ/igPt%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Send ETHTOOL_MSG_WOL_NTF notification whenever wake-on-lan settings of
-a device are modified using ETHTOOL_MSG_WOL_SET netlink message or
-ETHTOOL_SWOL ioctl request.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/core
+branch HEAD: fd928f3e32ba09381b287f8b732418434d932855  alarmtimer: Make alarmtimer_get_rtcdev() a stub when CONFIG_RTC_CLASS=n
 
-As notifications can be received by anyone, do not include SecureOn(tm)
-password in notification messages.
+elapsed time: 2882m
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+configs tested: 235
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+x86_64               randconfig-h001-20200125
+x86_64               randconfig-h002-20200125
+x86_64               randconfig-h003-20200125
+i386                 randconfig-h001-20200125
+i386                 randconfig-h002-20200125
+i386                 randconfig-h003-20200125
+x86_64               randconfig-f001-20200125
+x86_64               randconfig-f002-20200125
+x86_64               randconfig-f003-20200125
+i386                 randconfig-f001-20200125
+i386                 randconfig-f002-20200125
+i386                 randconfig-f003-20200125
+arc                  randconfig-a001-20200125
+arm                  randconfig-a001-20200125
+arm64                randconfig-a001-20200125
+ia64                 randconfig-a001-20200125
+powerpc              randconfig-a001-20200125
+sparc                randconfig-a001-20200125
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64               randconfig-g001-20200126
+x86_64               randconfig-g002-20200126
+x86_64               randconfig-g003-20200126
+i386                 randconfig-g001-20200126
+i386                 randconfig-g002-20200126
+i386                 randconfig-g003-20200126
+arm64                               defconfig
+x86_64               randconfig-h001-20200126
+x86_64               randconfig-h002-20200126
+x86_64               randconfig-h003-20200126
+i386                 randconfig-h001-20200126
+i386                 randconfig-h002-20200126
+i386                 randconfig-h003-20200126
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64               randconfig-a001-20200126
+x86_64               randconfig-a002-20200126
+x86_64               randconfig-a003-20200126
+i386                 randconfig-a001-20200126
+i386                 randconfig-a002-20200126
+i386                 randconfig-a003-20200126
+x86_64               randconfig-c001-20200126
+x86_64               randconfig-c002-20200126
+x86_64               randconfig-c003-20200126
+i386                 randconfig-c001-20200126
+i386                 randconfig-c002-20200126
+i386                 randconfig-c003-20200126
+arm                              allmodconfig
+arm64                            allmodconfig
+alpha                randconfig-a001-20200125
+m68k                 randconfig-a001-20200125
+mips                 randconfig-a001-20200125
+nds32                randconfig-a001-20200125
+parisc               randconfig-a001-20200125
+riscv                randconfig-a001-20200125
+x86_64               randconfig-f001-20200126
+x86_64               randconfig-f002-20200126
+x86_64               randconfig-f003-20200126
+i386                 randconfig-f001-20200126
+i386                 randconfig-f002-20200126
+i386                 randconfig-f003-20200126
+x86_64               randconfig-b001-20200125
+x86_64               randconfig-b002-20200125
+x86_64               randconfig-b003-20200125
+i386                 randconfig-b001-20200125
+i386                 randconfig-b002-20200125
+i386                 randconfig-b003-20200125
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+csky                 randconfig-a001-20200126
+openrisc             randconfig-a001-20200126
+s390                 randconfig-a001-20200126
+sh                   randconfig-a001-20200126
+xtensa               randconfig-a001-20200126
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+x86_64               randconfig-e001-20200125
+x86_64               randconfig-e002-20200125
+x86_64               randconfig-e003-20200125
+i386                 randconfig-e001-20200125
+i386                 randconfig-e002-20200125
+i386                 randconfig-e003-20200125
+x86_64               randconfig-b001-20200126
+x86_64               randconfig-b002-20200126
+x86_64               randconfig-b003-20200126
+i386                 randconfig-b001-20200126
+i386                 randconfig-b002-20200126
+i386                 randconfig-b003-20200126
+alpha                randconfig-a001-20200126
+m68k                 randconfig-a001-20200126
+mips                 randconfig-a001-20200126
+nds32                randconfig-a001-20200126
+parisc               randconfig-a001-20200126
+riscv                randconfig-a001-20200126
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+x86_64               randconfig-c001-20200125
+x86_64               randconfig-c002-20200125
+x86_64               randconfig-c003-20200125
+i386                 randconfig-c001-20200125
+i386                 randconfig-c002-20200125
+i386                 randconfig-c003-20200125
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+arc                  randconfig-a001-20200126
+arm                  randconfig-a001-20200126
+arm64                randconfig-a001-20200126
+ia64                 randconfig-a001-20200126
+powerpc              randconfig-a001-20200126
+sparc                randconfig-a001-20200126
+x86_64               randconfig-g001-20200125
+x86_64               randconfig-g002-20200125
+x86_64               randconfig-g003-20200125
+i386                 randconfig-g001-20200125
+i386                 randconfig-g002-20200125
+i386                 randconfig-g003-20200125
+csky                 randconfig-a001-20200125
+openrisc             randconfig-a001-20200125
+s390                 randconfig-a001-20200125
+xtensa               randconfig-a001-20200125
+x86_64               randconfig-d001-20200125
+x86_64               randconfig-d002-20200125
+x86_64               randconfig-d003-20200125
+i386                 randconfig-d001-20200125
+i386                 randconfig-d002-20200125
+i386                 randconfig-d003-20200125
+c6x                  randconfig-a001-20200126
+h8300                randconfig-a001-20200126
+microblaze           randconfig-a001-20200126
+nios2                randconfig-a001-20200126
+sparc64              randconfig-a001-20200126
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+x86_64               randconfig-a001-20200125
+x86_64               randconfig-a002-20200125
+x86_64               randconfig-a003-20200125
+i386                 randconfig-a001-20200125
+i386                 randconfig-a002-20200125
+i386                 randconfig-a003-20200125
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+x86_64               randconfig-e001-20200126
+x86_64               randconfig-e002-20200126
+x86_64               randconfig-e003-20200126
+i386                 randconfig-e001-20200126
+i386                 randconfig-e002-20200126
+i386                 randconfig-e003-20200126
+x86_64               randconfig-d001-20200126
+x86_64               randconfig-d002-20200126
+x86_64               randconfig-d003-20200126
+i386                 randconfig-d001-20200126
+i386                 randconfig-d002-20200126
+i386                 randconfig-d003-20200126
+c6x                  randconfig-a001-20200125
+h8300                randconfig-a001-20200125
+microblaze           randconfig-a001-20200125
+nios2                randconfig-a001-20200125
+sparc64              randconfig-a001-20200125
+sh                   randconfig-a001-20200125
+
 ---
- Documentation/networking/ethtool-netlink.rst | 5 +++--
- include/uapi/linux/ethtool_netlink.h         | 1 +
- net/ethtool/ioctl.c                          | 1 +
- net/ethtool/netlink.c                        | 2 ++
- net/ethtool/wol.c                            | 4 +++-
- 5 files changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index f16f74bbb546..f1f868479ceb 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -193,7 +193,7 @@ Userspace to kernel:
- 
- Kernel to userspace:
- 
--  ===================================== ================================
-+  ===================================== =================================
-   ``ETHTOOL_MSG_STRSET_GET_REPLY``      string set contents
-   ``ETHTOOL_MSG_LINKINFO_GET_REPLY``    link settings
-   ``ETHTOOL_MSG_LINKINFO_NTF``          link settings notification
-@@ -203,7 +203,8 @@ Kernel to userspace:
-   ``ETHTOOL_MSG_DEBUG_GET_REPLY``       debugging settings
-   ``ETHTOOL_MSG_DEBUG_NTF``             debugging settings notification
-   ``ETHTOOL_MSG_WOL_GET_REPLY``         wake-on-lan settings
--  ===================================== ================================
-+  ``ETHTOOL_MSG_WOL_NTF``               wake-on-lan settings notification
-+  ===================================== =================================
- 
- ``GET`` requests are sent by userspace applications to retrieve device
- information. They usually do not contain any message specific attributes.
-diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index 59de35695521..7e0b460f872c 100644
---- a/include/uapi/linux/ethtool_netlink.h
-+++ b/include/uapi/linux/ethtool_netlink.h
-@@ -42,6 +42,7 @@ enum {
- 	ETHTOOL_MSG_DEBUG_GET_REPLY,
- 	ETHTOOL_MSG_DEBUG_NTF,
- 	ETHTOOL_MSG_WOL_GET_REPLY,
-+	ETHTOOL_MSG_WOL_NTF,
- 
- 	/* add new constants above here */
- 	__ETHTOOL_MSG_KERNEL_CNT,
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 46e0b31782fc..b88dd14e41c6 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -1316,6 +1316,7 @@ static int ethtool_set_wol(struct net_device *dev, char __user *useraddr)
- 		return ret;
- 
- 	dev->wol_enabled = !!wol.wolopts;
-+	ethtool_notify(dev, ETHTOOL_MSG_WOL_NTF, NULL);
- 
- 	return 0;
- }
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index 2c375f9095fe..180c194fab07 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -526,6 +526,7 @@ ethnl_default_notify_ops[ETHTOOL_MSG_KERNEL_MAX + 1] = {
- 	[ETHTOOL_MSG_LINKINFO_NTF]	= &ethnl_linkinfo_request_ops,
- 	[ETHTOOL_MSG_LINKMODES_NTF]	= &ethnl_linkmodes_request_ops,
- 	[ETHTOOL_MSG_DEBUG_NTF]		= &ethnl_debug_request_ops,
-+	[ETHTOOL_MSG_WOL_NTF]		= &ethnl_wol_request_ops,
- };
- 
- /* default notification handler */
-@@ -610,6 +611,7 @@ static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
- 	[ETHTOOL_MSG_LINKINFO_NTF]	= ethnl_default_notify,
- 	[ETHTOOL_MSG_LINKMODES_NTF]	= ethnl_default_notify,
- 	[ETHTOOL_MSG_DEBUG_NTF]		= ethnl_default_notify,
-+	[ETHTOOL_MSG_WOL_NTF]		= ethnl_default_notify,
- };
- 
- void ethtool_notify(struct net_device *dev, unsigned int cmd, const void *data)
-diff --git a/net/ethtool/wol.c b/net/ethtool/wol.c
-index a2724378fac4..e1b8a65b64c4 100644
---- a/net/ethtool/wol.c
-+++ b/net/ethtool/wol.c
-@@ -41,7 +41,8 @@ static int wol_prepare_data(const struct ethnl_req_info *req_base,
- 		return ret;
- 	dev->ethtool_ops->get_wol(dev, &data->wol);
- 	ethnl_ops_complete(dev);
--	data->show_sopass = data->wol.supported & WAKE_MAGICSECURE;
-+	/* do not include password in notifications */
-+	data->show_sopass = info && (data->wol.supported & WAKE_MAGICSECURE);
- 
- 	return 0;
- }
-@@ -165,6 +166,7 @@ int ethnl_set_wol(struct sk_buff *skb, struct genl_info *info)
- 	if (ret)
- 		goto out_ops;
- 	dev->wol_enabled = !!wol.wolopts;
-+	ethtool_notify(dev, ETHTOOL_MSG_WOL_NTF, NULL);
- 
- out_ops:
- 	ethnl_ops_complete(dev);
--- 
-2.25.0
-
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
