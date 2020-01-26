@@ -2,126 +2,70 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0985C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB26C35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D088E2083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66EFF2083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbgAZK0i (ORCPT
+        id S2387410AbgAZK1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 05:26:38 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48588 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729213AbgAZK0i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 05:26:38 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id AEBE51C228F; Sun, 26 Jan 2020 11:26:35 +0100 (CET)
-Date:   Sun, 26 Jan 2020 11:26:35 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Bruno Thomsen <bruno.thomsen@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 521/639] rtc: pcf2127: bugfix: read rtc disables
- watchdog
-Message-ID: <20200126102634.GA19082@duo.ucw.cz>
-References: <20200124093047.008739095@linuxfoundation.org>
- <20200124093154.044998307@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Content-Disposition: inline
-In-Reply-To: <20200124093154.044998307@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 26 Jan 2020 05:27:18 -0500
+Received: from mga17.intel.com ([192.55.52.151]:7005 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729213AbgAZK1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 05:27:18 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jan 2020 02:27:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,365,1574150400"; 
+   d="scan'208";a="428720075"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Jan 2020 02:27:16 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@suse.com, yang.shi@linux.alibaba.com, rientjes@google.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [Patch v3 0/4] cleanup on do_pages_move()
+Date:   Sun, 26 Jan 2020 18:26:19 +0800
+Message-Id: <20200126102623.9616-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The logic in do_pages_move() is a little mess for audience to read and has
+some potential error on handling the return value. Especially there are
+three calls on do_move_pages_to_node() and store_status() with almost the
+same form.
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch set tries to make the code a little friendly for audience by
+consolidate the calls.
 
-On Fri 2020-01-24 10:31:31, Greg Kroah-Hartman wrote:
-> From: Bruno Thomsen <bruno.thomsen@gmail.com>
->=20
-> [ Upstream commit 7f43020e3bdb63d65661ed377682702f8b34d3ea ]
->=20
-> The previous fix listed bulk read of registers as root cause of
-> accendential disabling of watchdog, since the watchdog counter
-> register (WD_VAL) was zeroed.
->=20
-> Fixes: 3769a375ab83 rtc: pcf2127: bulk read only date and time registers.
->=20
-> Tested with the same PCF2127 chip as Sean reveled root cause
-> of WD_VAL register value zeroing was caused by reading CTRL2
-> register which is one of the watchdog feature control registers.
->=20
-> So the solution is to not read the first two control registers
-> (CTRL1 and CTRL2) in pcf2127_rtc_read_time as they are not
-> needed anyway. Size of local buf variable is kept to allow
-> easy usage of register defines to improve readability of code.
+v3:
+  * rebase on top of Yang Shi's fix "mm: move_pages: report the number of
+    non-attempted pages"
+v2:
+  * remove some unnecessary cleanup
 
-Should the array be zeroed before or something? This way, one array
-contains both undefined values and valid data...
 
-> Debug trace line was updated after CTRL1 and CTRL2 are no longer
-> read from the chip. Also replaced magic numbers in buf access
-> with register defines.
+Wei Yang (4):
+  mm/migrate.c: not necessary to check start and i
+  mm/migrate.c: wrap do_move_pages_to_node() and store_status()
+  mm/migrate.c: check pagelist in move_pages_and_store_status()
+  mm/migrate.c: handle same node and add failure in the same way
 
-That part is not an improvement. Previously the code was formatted so
-that you could parse what is being printed.
+ mm/migrate.c | 90 ++++++++++++++++++++++++----------------------------
+ 1 file changed, 42 insertions(+), 48 deletions(-)
 
-Best regards,							Pavel
+-- 
+2.17.1
 
-> @@ -91,14 +85,12 @@ static int pcf2127_rtc_read_time(struct device *dev, =
-struct rtc_time *tm)
->  	}
-> =20
->  	dev_dbg(dev,
-> -		"%s: raw data is cr1=3D%02x, cr2=3D%02x, cr3=3D%02x, "
-> -		"sec=3D%02x, min=3D%02x, hr=3D%02x, "
-> +		"%s: raw data is cr3=3D%02x, sec=3D%02x, min=3D%02x, hr=3D%02x, "
->  		"mday=3D%02x, wday=3D%02x, mon=3D%02x, year=3D%02x\n",
-> -		__func__,
-> -		buf[0], buf[1], buf[2],
-> -		buf[3], buf[4], buf[5],
-> -		buf[6], buf[7], buf[8], buf[9]);
-> -
-> +		__func__, buf[PCF2127_REG_CTRL3], buf[PCF2127_REG_SC],
-> +		buf[PCF2127_REG_MN], buf[PCF2127_REG_HR],
-> +		buf[PCF2127_REG_DM], buf[PCF2127_REG_DW],
-> +		buf[PCF2127_REG_MO], buf[PCF2127_REG_YR]);
-> =20
->  	tm->tm_sec =3D bcd2bin(buf[PCF2127_REG_SC] & 0x7F);
->  	tm->tm_min =3D bcd2bin(buf[PCF2127_REG_MN] & 0x7F);
-> --=20
-> 2.20.1
->=20
->=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXi1pWgAKCRAw5/Bqldv6
-8lXvAKCuBbJsd+Ad8O49Zkovk64+OagFnACfXDkYo06jdIlgrJvug0hvl1dpMuo=
-=GfFi
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
