@@ -2,122 +2,261 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7227BC35240
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 03:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5336BC35240
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E02214DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 03:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 275F620720
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 04:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAZDiL (ORCPT
+        id S1729239AbgAZEDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 22:38:11 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45152 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728842AbgAZDiL (ORCPT
+        Sat, 25 Jan 2020 23:03:40 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:45724 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728842AbgAZEDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 22:38:11 -0500
-Received: by mail-pl1-f194.google.com with SMTP id b22so2447313pls.12;
-        Sat, 25 Jan 2020 19:38:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=C6J2vyrfwsbzKsETG3LdMn6/JpdelGe+VlbRl2W8eUc=;
-        b=Xg7hh0RhCvIGfL2RmSH/tYrI7acX3PNOxbFCBJyuKKy4yualskEtJZdaqqmAuR/eSA
-         p65cxS9Wejh4tmxxdv7JGPYvc8ZGkMeJ8oqyBXZ79/fEogzeywuFxX5w4I/DnhlFp23u
-         /TqCXWXOve64MxPqJAlWa84NluwSxbOTt79gmP21TIZ+GmOTfD2Udeel8N2asfS5um46
-         QS5i+KGnFGjLF4r5mwANHzXN8sKc/ev41cLEYlRqUn21Iqdpt2xBBjyJ9kc1ph35sc69
-         0oC7U9T0KW5cuAcL0mNXU4NYtBvj3C43zg158Qu4uGXwkBs88ixNKYZQbBB/01EOMUkg
-         iYhQ==
-X-Gm-Message-State: APjAAAXJYCvEND9jhiZtLuUwyXkUGsreidGrW2nWtFV29FSkd6527OA7
-        izH03w/bwo0eOXJUAX6PMlEW2xcJtjE=
-X-Google-Smtp-Source: APXvYqxI6mkRQt/PbIcKWf14pVYB4bykJ7v6vJj2WBirNIJqdo0ruqI/t84mjnUzzLLppZGKEAWhUQ==
-X-Received: by 2002:a17:902:bb8d:: with SMTP id m13mr11340594pls.157.1580009890548;
-        Sat, 25 Jan 2020 19:38:10 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:d7:a876:9802:4659:f0bd? ([2601:647:4000:d7:a876:9802:4659:f0bd])
-        by smtp.gmail.com with ESMTPSA id b8sm11221149pff.114.2020.01.25.19.38.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Jan 2020 19:38:09 -0800 (PST)
-Subject: Re: [PATCH v4 8/8] scsi: ufs: Select INITIAL adapt for HS Gear4
-To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, hongwus@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
- <1579764349-15578-9-git-send-email-cang@codeaurora.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <0b782a25-a9a3-f6bc-6e2e-4ec0403b62a1@acm.org>
-Date:   Sat, 25 Jan 2020 19:38:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 25 Jan 2020 23:03:40 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 484zkw5BGZzKmmL;
+        Sun, 26 Jan 2020 05:03:36 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id 5GIkHq8nVH0q; Sun, 26 Jan 2020 05:03:32 +0100 (CET)
+Date:   Sun, 26 Jan 2020 15:03:25 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, christian.brauner@ubuntu.com
+Subject: Re: [PATCH 3/4] seccomp: Add SECCOMP_USER_NOTIF_FLAG_PIDFD to get
+ pidfd on listener trap
+Message-ID: <20200126040325.5eimmm7hli5qcqrr@yavin.dot.cyphar.com>
+References: <20200124091743.3357-1-sargun@sargun.me>
+ <20200124091743.3357-4-sargun@sargun.me>
 MIME-Version: 1.0
-In-Reply-To: <1579764349-15578-9-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="agr6povy326nigo3"
+Content-Disposition: inline
+In-Reply-To: <20200124091743.3357-4-sargun@sargun.me>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 23:25, Can Guo wrote:
-> @@ -8422,7 +8433,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
->  	if ((hba->ufs_version != UFSHCI_VERSION_10) &&
->  	    (hba->ufs_version != UFSHCI_VERSION_11) &&
->  	    (hba->ufs_version != UFSHCI_VERSION_20) &&
-> -	    (hba->ufs_version != UFSHCI_VERSION_21))
-> +	    (hba->ufs_version != UFSHCI_VERSION_21) &&
-> +	    (hba->ufs_version != UFSHCI_VERSION_30))
->  		dev_err(hba->dev, "invalid UFS version 0x%x\n",
->  			hba->ufs_version);
 
-Is the UFS specification backwards compatible? Or in other words, does
-the existing driver work fine for devices with a controller that
-supports a newer version of the spec? I'm asking this because in Linux
-kernel driver a version check that excludes newer controller versions is
-very unusual. Can the above version check be removed in its entirety?
+--agr6povy326nigo3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On 2020-01-24, Sargun Dhillon <sargun@sargun.me> wrote:
+> This introduces the capability for users of seccomp's listener behaviour
+> to be able to receive the pidfd of the process that triggered the event.
+> Currently, this just opens the group leader of the thread that triggere
+> the event, as pidfds (currently) are limited to group leaders.
+>=20
+> For actions which do not act on the process outside of the pidfd, there
+> is then no need to check the cookie to ensure validity of the request
+> throughout the listener's handling of it.
+>=20
+> This can be extended later on as well when pidfd capabilities are added
+> to be able to have the listener imbue the pidfd with certain capabilities
+> when it is delivered to userspace.
+>=20
+> It is the responsibility of the user to close the pidfd.
+>=20
+> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> ---
+>  include/uapi/linux/seccomp.h |  4 +++
+>  kernel/seccomp.c             | 68 ++++++++++++++++++++++++++++++++----
+>  2 files changed, 66 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+> index be84d87f1f46..64f6fc5c95f1 100644
+> --- a/include/uapi/linux/seccomp.h
+> +++ b/include/uapi/linux/seccomp.h
+> @@ -69,11 +69,15 @@ struct seccomp_notif_sizes {
+>  	__u16 seccomp_data;
+>  };
+> =20
+> +/* Valid flags for struct seccomp_notif */
+> +#define SECCOMP_USER_NOTIF_FLAG_PIDFD	(1UL << 0) /* populate pidfd */
+> +
+>  struct seccomp_notif {
+>  	__u64 id;
+>  	__u32 pid;
+>  	__u32 flags;
+>  	struct seccomp_data data;
+> +	__u32 pidfd;
+>  };
+> =20
+>  /*
+> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> index b6ea3dcb57bf..93f9cf45ce07 100644
+> --- a/kernel/seccomp.c
+> +++ b/kernel/seccomp.c
+> @@ -1019,21 +1019,61 @@ static int seccomp_notify_release(struct inode *i=
+node, struct file *file)
+>  	return 0;
+>  }
+> =20
+> +
+> +static long __seccomp_notify_recv_pidfd(void __user *buf,
+> +					struct seccomp_notif *unotif,
+> +					struct task_struct *group_leader)
+> +{
+> +	struct file *pidfd_file;
+> +	struct pid *pid;
+> +	int fd;
+> +
+> +	pid =3D get_task_pid(group_leader, PIDTYPE_PID);
+> +	pidfd_file =3D pidfd_create_file(pid);
+> +	put_pid(pid);
+> +	if (IS_ERR(pidfd_file))
+> +		return PTR_ERR(pidfd_file);
+> +
+> +	fd =3D get_unused_fd_flags(O_RDWR | O_CLOEXEC);
 
-Bart.
+You don't need to pass O_RDWR -- only O_CLOEXEC is checked by
+get_unused_fd_flags().
+
+> +	if (fd < 0) {
+> +		fput(pidfd_file);
+> +		return fd;
+> +	}
+> +
+> +	unotif->pidfd =3D fd;
+> +
+> +	if (copy_to_user(buf, unotif, sizeof(*unotif))) {
+> +		put_unused_fd(fd);
+> +		fput(pidfd_file);
+> +		return -EFAULT;
+> +	}
+> +
+> +	fd_install(fd, pidfd_file);
+> +
+> +	return 0;
+> +}
+> +
+>  static long seccomp_notify_recv(struct seccomp_filter *filter,
+>  				void __user *buf)
+>  {
+>  	struct seccomp_knotif *knotif =3D NULL, *cur;
+>  	struct seccomp_notif unotif;
+> +	struct task_struct *group_leader;
+> +	bool send_pidfd;
+>  	ssize_t ret;
+> =20
+> +	if (copy_from_user(&unotif, buf, sizeof(unotif)))
+> +		return -EFAULT;
+>  	/* Verify that we're not given garbage to keep struct extensible. */
+> -	ret =3D check_zeroed_user(buf, sizeof(unotif));
+> -	if (ret < 0)
+> -		return ret;
+> -	if (!ret)
+> +	if (unotif.id ||
+> +	    unotif.pid ||
+> +	    memchr_inv(&unotif.data, 0, sizeof(unotif.data)) ||
+> +	    unotif.pidfd)
+> +		return -EINVAL;
+
+IMHO this check is more confusing than the original check_zeroed_user().
+Something like the following is simpler and less prone to forgetting to
+add a new field in the future:
+
+	if (memchr_inv(&unotif, 0, sizeof(unotif)))
+		return -EINVAL;
+
+> +	if (unotif.flags & ~(SECCOMP_USER_NOTIF_FLAG_PIDFD))
+>  		return -EINVAL;
+> =20
+> -	memset(&unotif, 0, sizeof(unotif));
+> +	send_pidfd =3D unotif.flags & SECCOMP_USER_NOTIF_FLAG_PIDFD;
+> =20
+>  	ret =3D down_interruptible(&filter->notif->request);
+>  	if (ret < 0)
+> @@ -1057,9 +1097,13 @@ static long seccomp_notify_recv(struct seccomp_fil=
+ter *filter,
+>  		goto out;
+>  	}
+> =20
+> +	memset(&unotif, 0, sizeof(unotif));
+> +
+>  	unotif.id =3D knotif->id;
+>  	unotif.pid =3D task_pid_vnr(knotif->task);
+>  	unotif.data =3D *(knotif->data);
+> +	if (send_pidfd)
+> +		group_leader =3D get_task_struct(knotif->task->group_leader);
+> =20
+>  	knotif->state =3D SECCOMP_NOTIFY_SENT;
+>  	wake_up_poll(&filter->notif->wqh, EPOLLOUT | EPOLLWRNORM);
+> @@ -1067,9 +1111,21 @@ static long seccomp_notify_recv(struct seccomp_fil=
+ter *filter,
+>  out:
+>  	mutex_unlock(&filter->notify_lock);
+> =20
+> -	if (ret =3D=3D 0 && copy_to_user(buf, &unotif, sizeof(unotif))) {
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * We've successfully received a notification, let's try to copy it to
+> +	 * userspace.
+> +	 */
+> +	if (send_pidfd) {
+> +		ret =3D __seccomp_notify_recv_pidfd(buf, &unotif, group_leader);
+> +		put_task_struct(group_leader);
+> +	} else if (copy_to_user(buf, &unotif, sizeof(unotif))) {
+>  		ret =3D -EFAULT;
+> +	}
+
+To my eye, the way this helper is used is a bit ugly -- my first
+question when reading this was "why aren't we doing a copy_to_user() for
+pidfds?".
+
+Something like the following might be a bit cleaner I think:
+
+	struct file *pidfd_file =3D NULL;
+
+	if (send_pidfd) {
+		// helper allocates the pidfd_file and sets unotify->fd
+		ret =3D __seccomp_notify_recv_pidfd(&unotify, &pidfd_file)
+		if (ret)
+			goto err; // or whatever
+	}
+
+	if (copy_to_user(buf, &unotif, sizeof(unotif))) {
+		ret =3D -EFAULT;
+		goto err; // or whatever
+	}
+
+	if (send_pidfd)
+		fd_install(unotif.fd, pidfd_file)
+
+But to be fair, this is also somewhat ugly too.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--agr6povy326nigo3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXi0PigAKCRCdlLljIbnQ
+EomfAQDluboSG8nfIYj8GB8Y2ZpECxaq+0rPYsy1fBipnRcdIQD9F7MsqSvwf1oL
+IB6sETPcTLtpv1LXQe7sALgl4CnbKgE=
+=WWGx
+-----END PGP SIGNATURE-----
+
+--agr6povy326nigo3--
