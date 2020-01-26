@@ -2,500 +2,222 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16BFC35246
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 05:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61967C35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 05:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54522075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 05:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3791C2083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 05:55:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="j0cen+TV"
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="W4COqQvP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n3O9J+d2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgAZFue (ORCPT
+        id S1726670AbgAZFzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 00:50:34 -0500
-Received: from mail-mw2nam10on2112.outbound.protection.outlook.com ([40.107.94.112]:58464
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725944AbgAZFud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 00:50:33 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NymXXy24p/GPZUxqmoSPyCQlqdem9+nnFv6a9EkDpZCTY/3YhYHaX+pzhl6pSiUReXnw6/aPJhbvsz5jbU8/NeP+iMHxJ3JaW0FUOvhQvpMzMh6f9zbnYrMlFnyQr3N4/XRox/uLFxMnWtNKTTWcNx6cmNsLusNxXrJJol8y00DzCI/Gj/pX3SjSn3l8O6CiZcJFC5H8phFmkqTQpZR76WQxTlQ3DECgk0BsDEDtPeQFv6NlPhxe+Uc8Vw+PpidRQckA+N0s6tDM6rTtk3gNUBUdDVtL5iqFPEnZzZ/A/knBhFj6kFjqQpwWBbSVSCtZGY0mTCueOkUC4cVwUqzYHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r88FPq8ZERsENmOZdKqSotBRjH+QPBJWuohg8IFWGIY=;
- b=hSpaMSC9PPM+zEpQdaE6casS4zjEZK2w+O0o89MeV8RK+M85gwmzC+H0DK2FCNamHzYuUJtbxLXk1sFSLnHEahe3pmFcH90zK81YsaOdTDePAoix/sUcjDovHmPHzvgkMRdhLqDxlnJGs7d36AB3+yzOmMCJt017kY30UP0RiF9+9kWDjq77iUiiZeemg/2agpXqZ0DT8ERS6xz9IUqfSJCGjpx3wGhAh+7SNoZnkP8UuS6o0XnqbYmpSDFwn3u2OH4jf9jtf63Ug4XN+aZMHSIqX+pdf8L57WB8+Cd9o9HnmRLl4Z35bTNALTvgPDJgCYbGZU8TIsPmzj+4iLREew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r88FPq8ZERsENmOZdKqSotBRjH+QPBJWuohg8IFWGIY=;
- b=j0cen+TVUdZz5UYT6nrDijMfylcgD0Ze7vKmNsgnxWKbG7GrmGgjsFMB1sS5ISm0mO6TXDnp9FGozTQoYplCR9FKEIXcCrcuXBR2NaUoJ+SPTkWG6Hwz+7dRndiy4fdblpy9o5AwXbndEEL2Sz9qFqiJdwaKAFeOtSH6JTkH5MM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from BN8PR21MB1139.namprd21.prod.outlook.com (20.179.72.138) by
- BN8PR21MB1203.namprd21.prod.outlook.com (20.179.73.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.6; Sun, 26 Jan 2020 05:50:28 +0000
-Received: from BN8PR21MB1139.namprd21.prod.outlook.com
- ([fe80::b4cb:911c:ec4a:950e]) by BN8PR21MB1139.namprd21.prod.outlook.com
- ([fe80::b4cb:911c:ec4a:950e%7]) with mapi id 15.20.2686.019; Sun, 26 Jan 2020
- 05:50:28 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        vkuznets@redhat.com
-Cc:     Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v4 4/4] hv_utils: Add the support of hibernation
-Date:   Sat, 25 Jan 2020 21:49:44 -0800
-Message-Id: <1580017784-103557-5-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1580017784-103557-1-git-send-email-decui@microsoft.com>
-References: <1580017784-103557-1-git-send-email-decui@microsoft.com>
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR14CA0028.namprd14.prod.outlook.com
- (2603:10b6:300:12b::14) To BN8PR21MB1139.namprd21.prod.outlook.com
- (2603:10b6:408:72::10)
+        Sun, 26 Jan 2020 00:55:01 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:55213 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725908AbgAZFzB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 00:55:01 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id CBE3821B36;
+        Sun, 26 Jan 2020 00:54:59 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sun, 26 Jan 2020 00:54:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=cPpWLEadkT+BcihkEiCvYAYzJ+j
+        wJtzLs6bpTFaC+B8=; b=W4COqQvPUSLotjgEe29Tl4Uq6GAQhLJ8E9TUxxiRZFh
+        V6IvSpp4F23kbv/W818Q3W3++0MVZDLRyYoSDC1vAD07zCv3GXqBTVWunzsXhDEo
+        2LFwQY8j3HUCcD+e47ibhP/EaeUHJz4wNuZFtuBIw5jOmC9JaKJTWXv3d1/WSXpU
+        XC+QfBlenOEg9Y6Eb5ci/vYkhWP+4sDKgNyJKR25hxT0xA22TWeOpVpgbfilpsL1
+        tNqr7SBx6wHy0dZRdOqpLiYrMmvYFIFpO1vFrObbXAjHMWLeM+sQLYGqqOb8tXqM
+        KG8xyQQkP3WIBrIllW5AYls8lq+9y/CCZAzHJrS+HmA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=cPpWLE
+        adkT+BcihkEiCvYAYzJ+jwJtzLs6bpTFaC+B8=; b=n3O9J+d2G/ajeC3UPHhiFH
+        7uF4KQH/FlFBDui2NzB/KWgXo3vhB4/8PPVWiToksGRkGJ9Nzrt1hvM+Sl5B+Lbg
+        gTSIdjec0y5bytc6V8S6Ieuuu/u4H7Ot43hvuwgkuYsqScdER/1m+lMNCPb1GwxD
+        Wg0soTh0gsgC672q7kmLaFJX8EqP9AeaNoZZOvu4JA+BgWQSVhlzhXejR7rHkMFg
+        xEbpZ5JX1wcDdPDInu0uusI8foLc3+3OwHML0Fd54BIjwPAycvcsrngKot5cUGl5
+        ShvzpytP0aZhLnd+MIsrq5oPTuLJmBVJ0BzFeHe8UU8txudJHuyeVKiPr+NASiog
+        ==
+X-ME-Sender: <xms:syktXlSNl5WQg8-6jl_oPAACCAYYu63nD_N_TQN39epTsigdAdiVgA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrvdekgdduudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
+    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepie
+    ejrdduiedtrddvudejrddvhedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomheprghnughrvghssegrnhgrrhgriigvlhdruggv
+X-ME-Proxy: <xmx:syktXsJ8Dlhg0AWiPKasLNVce0ssmIMmibWZo_G9Yd_elfrveYo1Gw>
+    <xmx:syktXiLiG5pAKFnQqRL6GaD_IzOKdiM8dwvtNOYHFqqcpjXJxDU_zA>
+    <xmx:syktXng9IjJJhXqy23qvFp3l0oA3bVfICEITctJeg-BcS6wTA6A4wA>
+    <xmx:syktXkn1eXtkd444sdIfYPZe216QznZohEomT-nNXlP_oTa570XAOg>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id F37A3306738A;
+        Sun, 26 Jan 2020 00:54:58 -0500 (EST)
+Date:   Sat, 25 Jan 2020 21:54:57 -0800
+From:   Andres Freund <andres@anarazel.de>
+To:     Jens Axboe <axboe@kernel.dk>, Stefan Metzmacher <metze@samba.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        io-uring <io-uring@vger.kernel.org>
+Subject: Re: [PATCH 5.4 033/222] io_uring: only allow submit from owning task
+Message-ID: <20200126055457.5w4f5jyhkic7cixu@alap3.anarazel.de>
+References: <20200122092833.339495161@linuxfoundation.org>
+ <20200122092835.852416399@linuxfoundation.org>
+ <1b4a79c1-6cda-12a8-219b-0c1c146faeff@samba.org>
 MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR14CA0028.namprd14.prod.outlook.com (2603:10b6:300:12b::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.23 via Frontend Transport; Sun, 26 Jan 2020 05:50:27 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 675ffb3b-0f1c-4800-a295-08d7a223a5a6
-X-MS-TrafficTypeDiagnostic: BN8PR21MB1203:|BN8PR21MB1203:|BN8PR21MB1203:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN8PR21MB1203AE8A5D5DB185FB82ED14BF080@BN8PR21MB1203.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 02945962BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(376002)(39860400002)(366004)(396003)(199004)(189003)(316002)(2906002)(66556008)(6512007)(66946007)(66476007)(86362001)(107886003)(3450700001)(6486002)(36756003)(8936002)(26005)(5660300002)(4326008)(2616005)(956004)(478600001)(186003)(52116002)(6506007)(30864003)(6666004)(16526019)(81166006)(81156014)(8676002)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1203;H:BN8PR21MB1139.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 84u19kSVtqC8wj0NIJYYer3y0wBqyBHCmqoDg1yOVwq1b6UWGj23rQJ36ZVUCC98Pzmmv7Kl1J+wC0CLHBIUlzJ23UQ4vQ9NDRR2U9N84GRQb+UW3+ycfWLjcFN2xLW/j0VbXAwJPWkjPXaOZ5/ZIoDLtfN/qB34H72muQXRZqQQ/z5BBI63rIQT1XVpYdIrEIX01fLy1SSu/LRYIDJ0xEoKBUo3FVHf305VKkGasCLk2xgM9j7PVWPNEAec59feXSMG7w+Y3Ksai4l/7YcNUpRNJKXcZe2ClCTsKBkaPmUmtrDP+9mRwebVSsIYlwdeGvABFcPXnewXCpDLE7zSrtCArVaoBSzLVFIEXjjvzu4i+GoJFMwcP9Sxo4WHq6hnyKF92fJKFOKyz5FniQ3qUZ/Qv5EAabEgG4OLScwEqle6DCYNvnwKPzjDOcKA+0rS
-X-MS-Exchange-AntiSpam-MessageData: GaWlw9kRgVCucNOwO3lvwriffa3ASvFBB79+6+Fgd/oSFx7JkJPJxJHCytoFfjcSFPXRrSRk4xTo2S6NvdZ0R3l3hw40aBp25zIiQSQcAuf9KcBNDy7peRAbmulzlWhy/II4cMCPqDs4klhT4GSj9A==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 675ffb3b-0f1c-4800-a295-08d7a223a5a6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2020 05:50:28.5209
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mqNgk4KmHbGoCl/YvfgO/YjShkyG8kZdPcSNVOcAg2lqakYHrZoTdOxDxNkBuKxPrlTXz5J8kZqbQRJ3NM8ftQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1203
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1b4a79c1-6cda-12a8-219b-0c1c146faeff@samba.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add util_pre_suspend() and util_pre_resume() for some hv_utils devices
-(e.g. kvp/vss/fcopy), because they need special handling before
-util_suspend() calls vmbus_close().
+Hi,
 
-For kvp, all the possible pending work items should be cancelled.
+On 2020-01-24 11:38:02 +0100, Stefan Metzmacher wrote:
+> Am 22.01.20 um 10:26 schrieb Greg Kroah-Hartman:
+> > From: Jens Axboe <axboe@kernel.dk>
+> >
+> > commit 44d282796f81eb1debc1d7cb53245b4cb3214cb5 upstream.
+> >
+> > If the credentials or the mm doesn't match, don't allow the task to
+> > submit anything on behalf of this ring. The task that owns the ring can
+> > pass the file descriptor to another task, but we don't want to allow
+> > that task to submit an SQE that then assumes the ring mm and creds if
+> > it needs to go async.
+> >
+> > Cc: stable@vger.kernel.org
+> > Suggested-by: Stefan Metzmacher <metze@samba.org>
+> > Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> >
+> > ---
+> >  fs/io_uring.c |    6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > --- a/fs/io_uring.c
+> > +++ b/fs/io_uring.c
+> > @@ -3716,6 +3716,12 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned
+> >  			wake_up(&ctx->sqo_wait);
+> >  		submitted = to_submit;
+> >  	} else if (to_submit) {
+> > +		if (current->mm != ctx->sqo_mm ||
+> > +		    current_cred() != ctx->creds) {
+> > +			ret = -EPERM;
+> > +			goto out;
+> > +		}
+> > +
+>
+> I thought about this a bit more.
+>
+> I'm not sure if this is actually to restrictive,
+> because it means applications like Samba won't
+> be able to use io-uring at all.
 
-For vss and fcopy, some extra clean-up needs to be done, i.e. fake a
-THAW message for hv_vss_daemon and fake a CANCEL_FCOPY message for
-hv_fcopy_daemon, otherwise when the VM resums back, the daemons
-can end up in an inconsistent state (i.e. the file systems are
-frozen but will never be thawed; the file transmitted via fcopy
-may not be complete). Note: there is an extra patch for the daemons:
-"Tools: hv: Reopen the devices if read() or write() returns errors",
-because the hv_utils driver can not guarantee the whole transaction
-finishes completely once util_suspend() starts to run (at this time,
-all the userspace processes are frozen).
+Yea, I think it is too restrictive. In fact, it broke my WIP branch to
+make postgres use io_uring.
 
-util_probe() disables channel->callback_event to avoid the race with
-the channel callback.
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Postgres uses a forked process model, with all sub-processes forked off
+one parent process ("postmaster"), sharing MAP_ANONYMOUS|MAP_SHARED
+memory (buffer pool, locks, and lots of other IPC). My WIP branch so far
+has postmaster create a number of io_urings that then the different
+processes can use (with locking if necessary).
 
----
-Changes in v2:
-    Handles fcopy/vss specially to avoid possible inconsistent states.
+In plenty of the cases it's fairly important for performance to not
+require an additional context switch initiate IO, therefore we cannot
+delegate submitting to an io_uring to separate process. But it's not
+feasible to have one (or even two) urings for each process either: For
+one, that's just about guaranteed to bring us over the default
+RLIMIT_MEMLOCK limit, and requiring root only config changes is not an
+option for many (nor user friendly).
 
-Changes in v3 (I addressed Michael's comments):
-    Removed unneeded blank lines.
-    Simplified the error handling logic by allocating memory earlier.
-    Added a comment before util_suspend(): when we're in the function,
-      all the userspace processes have been frozen.
 
-Changes in v4:
-    Added Michael's Reviewed-by.
+Not sharing queues makes it basically impossible to rely on io_uring
+ordering properties when operation interlock is needed. E.g. to
+guarantee that the journal is flushed before some data buffer can be
+written back, being able to make use of links and drains is great - but
+there's one journal for all processes. To be able to guarantee anything,
+all the interlocked writes need to go through one io_uring. I've not yet
+implemented this, so I don't have numbers, but I expect pretty
+significant savings.
 
- drivers/hv/hv_fcopy.c     | 54 +++++++++++++++++++++++++++++++++-
- drivers/hv/hv_kvp.c       | 43 +++++++++++++++++++++++++--
- drivers/hv/hv_snapshot.c  | 55 ++++++++++++++++++++++++++++++++--
- drivers/hv/hv_util.c      | 62 ++++++++++++++++++++++++++++++++++++++-
- drivers/hv/hyperv_vmbus.h |  6 ++++
- include/linux/hyperv.h    |  2 ++
- 6 files changed, 216 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hv/hv_fcopy.c b/drivers/hv/hv_fcopy.c
-index 08fa4a5de644..bb9ba3f7c794 100644
---- a/drivers/hv/hv_fcopy.c
-+++ b/drivers/hv/hv_fcopy.c
-@@ -346,9 +346,61 @@ int hv_fcopy_init(struct hv_util_service *srv)
- 	return 0;
- }
- 
-+static void hv_fcopy_cancel_work(void)
-+{
-+	cancel_delayed_work_sync(&fcopy_timeout_work);
-+	cancel_work_sync(&fcopy_send_work);
-+}
-+
-+int hv_fcopy_pre_suspend(void)
-+{
-+	struct vmbus_channel *channel = fcopy_transaction.recv_channel;
-+	struct hv_fcopy_hdr *fcopy_msg;
-+
-+	/*
-+	 * Fake a CANCEL_FCOPY message for the user space daemon in case the
-+	 * daemon is in the middle of copying some file. It doesn't matter if
-+	 * there is already a message pending to be delivered to the user
-+	 * space since we force fcopy_transaction.state to be HVUTIL_READY, so
-+	 * the user space daemon's write() will fail with EINVAL (see
-+	 * fcopy_on_msg()), and the daemon will reset the device by closing
-+	 * and re-opening it.
-+	 */
-+	fcopy_msg = kzalloc(sizeof(*fcopy_msg), GFP_KERNEL);
-+	if (!fcopy_msg)
-+		return -ENOMEM;
-+
-+	tasklet_disable(&channel->callback_event);
-+
-+	fcopy_msg->operation = CANCEL_FCOPY;
-+
-+	hv_fcopy_cancel_work();
-+
-+	/* We don't care about the return value. */
-+	hvutil_transport_send(hvt, fcopy_msg, sizeof(*fcopy_msg), NULL);
-+
-+	kfree(fcopy_msg);
-+
-+	fcopy_transaction.state = HVUTIL_READY;
-+
-+	/* tasklet_enable() will be called in hv_fcopy_pre_resume(). */
-+	return 0;
-+}
-+
-+int hv_fcopy_pre_resume(void)
-+{
-+	struct vmbus_channel *channel = fcopy_transaction.recv_channel;
-+
-+	tasklet_enable(&channel->callback_event);
-+
-+	return 0;
-+}
-+
- void hv_fcopy_deinit(void)
- {
- 	fcopy_transaction.state = HVUTIL_DEVICE_DYING;
--	cancel_delayed_work_sync(&fcopy_timeout_work);
-+
-+	hv_fcopy_cancel_work();
-+
- 	hvutil_transport_destroy(hvt);
- }
-diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
-index ae7c028dc5a8..e74b144b8f3d 100644
---- a/drivers/hv/hv_kvp.c
-+++ b/drivers/hv/hv_kvp.c
-@@ -758,11 +758,50 @@ hv_kvp_init(struct hv_util_service *srv)
- 	return 0;
- }
- 
--void hv_kvp_deinit(void)
-+static void hv_kvp_cancel_work(void)
- {
--	kvp_transaction.state = HVUTIL_DEVICE_DYING;
- 	cancel_delayed_work_sync(&kvp_host_handshake_work);
- 	cancel_delayed_work_sync(&kvp_timeout_work);
- 	cancel_work_sync(&kvp_sendkey_work);
-+}
-+
-+int hv_kvp_pre_suspend(void)
-+{
-+	struct vmbus_channel *channel = kvp_transaction.recv_channel;
-+
-+	tasklet_disable(&channel->callback_event);
-+
-+	/*
-+	 * If there is a pending transtion, it's unnecessary to tell the host
-+	 * that the transaction will fail, because that is implied when
-+	 * util_suspend() calls vmbus_close() later.
-+	 */
-+	hv_kvp_cancel_work();
-+
-+	/*
-+	 * Forece the state to READY to handle the ICMSGTYPE_NEGOTIATE message
-+	 * later. The user space daemon may go out of order and its write()
-+	 * may fail with EINVAL: this doesn't matter since the daemon will
-+	 * reset the device by closing and re-opening it.
-+	 */
-+	kvp_transaction.state = HVUTIL_READY;
-+	return 0;
-+}
-+
-+int hv_kvp_pre_resume(void)
-+{
-+	struct vmbus_channel *channel = kvp_transaction.recv_channel;
-+
-+	tasklet_enable(&channel->callback_event);
-+
-+	return 0;
-+}
-+
-+void hv_kvp_deinit(void)
-+{
-+	kvp_transaction.state = HVUTIL_DEVICE_DYING;
-+
-+	hv_kvp_cancel_work();
-+
- 	hvutil_transport_destroy(hvt);
- }
-diff --git a/drivers/hv/hv_snapshot.c b/drivers/hv/hv_snapshot.c
-index 03b6454268b3..1c75b38f0d6d 100644
---- a/drivers/hv/hv_snapshot.c
-+++ b/drivers/hv/hv_snapshot.c
-@@ -379,10 +379,61 @@ hv_vss_init(struct hv_util_service *srv)
- 	return 0;
- }
- 
--void hv_vss_deinit(void)
-+static void hv_vss_cancel_work(void)
- {
--	vss_transaction.state = HVUTIL_DEVICE_DYING;
- 	cancel_delayed_work_sync(&vss_timeout_work);
- 	cancel_work_sync(&vss_handle_request_work);
-+}
-+
-+int hv_vss_pre_suspend(void)
-+{
-+	struct vmbus_channel *channel = vss_transaction.recv_channel;
-+	struct hv_vss_msg *vss_msg;
-+
-+	/*
-+	 * Fake a THAW message for the user space daemon in case the daemon
-+	 * has frozen the file systems. It doesn't matter if there is already
-+	 * a message pending to be delivered to the user space since we force
-+	 * vss_transaction.state to be HVUTIL_READY, so the user space daemon's
-+	 * write() will fail with EINVAL (see vss_on_msg()), and the daemon
-+	 * will reset the device by closing and re-opening it.
-+	 */
-+	vss_msg = kzalloc(sizeof(*vss_msg), GFP_KERNEL);
-+	if (!vss_msg)
-+		return -ENOMEM;
-+
-+	tasklet_disable(&channel->callback_event);
-+
-+	vss_msg->vss_hdr.operation = VSS_OP_THAW;
-+
-+	/* Cancel any possible pending work. */
-+	hv_vss_cancel_work();
-+
-+	/* We don't care about the return value. */
-+	hvutil_transport_send(hvt, vss_msg, sizeof(*vss_msg), NULL);
-+
-+	kfree(vss_msg);
-+
-+	vss_transaction.state = HVUTIL_READY;
-+
-+	/* tasklet_enable() will be called in hv_vss_pre_resume(). */
-+	return 0;
-+}
-+
-+int hv_vss_pre_resume(void)
-+{
-+	struct vmbus_channel *channel = vss_transaction.recv_channel;
-+
-+	tasklet_enable(&channel->callback_event);
-+
-+	return 0;
-+}
-+
-+void hv_vss_deinit(void)
-+{
-+	vss_transaction.state = HVUTIL_DEVICE_DYING;
-+
-+	hv_vss_cancel_work();
-+
- 	hvutil_transport_destroy(hvt);
- }
-diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
-index 64fbf4ac80f9..900b8a8af57c 100644
---- a/drivers/hv/hv_util.c
-+++ b/drivers/hv/hv_util.c
-@@ -123,12 +123,14 @@ static struct hv_util_service util_shutdown = {
- };
- 
- static int hv_timesync_init(struct hv_util_service *srv);
-+static int hv_timesync_pre_suspend(void);
- static void hv_timesync_deinit(void);
- 
- static void timesync_onchannelcallback(void *context);
- static struct hv_util_service util_timesynch = {
- 	.util_cb = timesync_onchannelcallback,
- 	.util_init = hv_timesync_init,
-+	.util_pre_suspend = hv_timesync_pre_suspend,
- 	.util_deinit = hv_timesync_deinit,
- };
- 
-@@ -140,18 +142,24 @@ static struct hv_util_service util_heartbeat = {
- static struct hv_util_service util_kvp = {
- 	.util_cb = hv_kvp_onchannelcallback,
- 	.util_init = hv_kvp_init,
-+	.util_pre_suspend = hv_kvp_pre_suspend,
-+	.util_pre_resume = hv_kvp_pre_resume,
- 	.util_deinit = hv_kvp_deinit,
- };
- 
- static struct hv_util_service util_vss = {
- 	.util_cb = hv_vss_onchannelcallback,
- 	.util_init = hv_vss_init,
-+	.util_pre_suspend = hv_vss_pre_suspend,
-+	.util_pre_resume = hv_vss_pre_resume,
- 	.util_deinit = hv_vss_deinit,
- };
- 
- static struct hv_util_service util_fcopy = {
- 	.util_cb = hv_fcopy_onchannelcallback,
- 	.util_init = hv_fcopy_init,
-+	.util_pre_suspend = hv_fcopy_pre_suspend,
-+	.util_pre_resume = hv_fcopy_pre_resume,
- 	.util_deinit = hv_fcopy_deinit,
- };
- 
-@@ -511,6 +519,44 @@ static int util_remove(struct hv_device *dev)
- 	return 0;
- }
- 
-+/*
-+ * When we're in util_suspend(), all the userspace processes have been frozen
-+ * (refer to hibernate() -> freeze_processes()). The userspace is thawed only
-+ * after the whole resume procedure, including util_resume(), finishes.
-+ */
-+static int util_suspend(struct hv_device *dev)
-+{
-+	struct hv_util_service *srv = hv_get_drvdata(dev);
-+	int ret = 0;
-+
-+	if (srv->util_pre_suspend) {
-+		ret = srv->util_pre_suspend();
-+		if (ret)
-+			return ret;
-+	}
-+
-+	vmbus_close(dev->channel);
-+
-+	return 0;
-+}
-+
-+static int util_resume(struct hv_device *dev)
-+{
-+	struct hv_util_service *srv = hv_get_drvdata(dev);
-+	int ret = 0;
-+
-+	if (srv->util_pre_resume) {
-+		ret = srv->util_pre_resume();
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = vmbus_open(dev->channel, 4 * HV_HYP_PAGE_SIZE,
-+			 4 * HV_HYP_PAGE_SIZE, NULL, 0, srv->util_cb,
-+			 dev->channel);
-+	return ret;
-+}
-+
- static const struct hv_vmbus_device_id id_table[] = {
- 	/* Shutdown guid */
- 	{ HV_SHUTDOWN_GUID,
-@@ -547,6 +593,8 @@ static  struct hv_driver util_drv = {
- 	.id_table = id_table,
- 	.probe =  util_probe,
- 	.remove =  util_remove,
-+	.suspend = util_suspend,
-+	.resume =  util_resume,
- 	.driver = {
- 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
-@@ -616,11 +664,23 @@ static int hv_timesync_init(struct hv_util_service *srv)
- 	return 0;
- }
- 
-+static void hv_timesync_cancel_work(void)
-+{
-+	cancel_work_sync(&adj_time_work);
-+}
-+
-+static int hv_timesync_pre_suspend(void)
-+{
-+	hv_timesync_cancel_work();
-+	return 0;
-+}
-+
- static void hv_timesync_deinit(void)
- {
- 	if (hv_ptp_clock)
- 		ptp_clock_unregister(hv_ptp_clock);
--	cancel_work_sync(&adj_time_work);
-+
-+	hv_timesync_cancel_work();
- }
- 
- static int __init init_hyperv_utils(void)
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 20edcfd3b96c..f5fa3b3c9baf 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -352,14 +352,20 @@ void vmbus_on_msg_dpc(unsigned long data);
- 
- int hv_kvp_init(struct hv_util_service *srv);
- void hv_kvp_deinit(void);
-+int hv_kvp_pre_suspend(void);
-+int hv_kvp_pre_resume(void);
- void hv_kvp_onchannelcallback(void *context);
- 
- int hv_vss_init(struct hv_util_service *srv);
- void hv_vss_deinit(void);
-+int hv_vss_pre_suspend(void);
-+int hv_vss_pre_resume(void);
- void hv_vss_onchannelcallback(void *context);
- 
- int hv_fcopy_init(struct hv_util_service *srv);
- void hv_fcopy_deinit(void);
-+int hv_fcopy_pre_suspend(void);
-+int hv_fcopy_pre_resume(void);
- void hv_fcopy_onchannelcallback(void *context);
- void vmbus_initiate_unload(bool crash);
- 
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 41c58011431e..692c89ccf5df 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1435,6 +1435,8 @@ struct hv_util_service {
- 	void (*util_cb)(void *);
- 	int (*util_init)(struct hv_util_service *);
- 	void (*util_deinit)(void);
-+	int (*util_pre_suspend)(void);
-+	int (*util_pre_resume)(void);
- };
- 
- struct vmbuspipe_hdr {
--- 
-2.19.1
+Not being able to share urings also makes it harder to resolve
+deadlocks:
 
+As we call into both library and user defined code, we cannot guarantee
+that a specific backend process will promptly (or at all, when waiting
+for some locks) process cqes. There's also sections where we don't want
+to constantly check for ready events, for performance reasons.  But
+operations initiated by a process might be blocking other connections:
+
+E.g. process #1 might have initiated transferring a number of blocks
+into postgres' buffer pool via io_uring , and now is busy processing the
+first block that completed. But now process #2 might need one of the
+buffers that had IO queued, but didn't complete in time for #1 to see
+the results.  The way I have it set up right now, #2 simply can process
+pending cqes in the relevant queue. Which, in this example, would mark
+the pg buffer pool entry as valid, allowing #2 to continue.
+
+Now, completions can still be read by all processes, so I could continue
+to do the above: But that'd require all potentially needed io_urings to
+be set up in postmaster, before the first fork, and all processes to
+keep all those FDs open (commonly several hundred). Not an attractive
+option either, imo.
+
+Obviously we could solve this by having a sqe result processing thread
+running within each process - but that'd be a very significant new
+overhead. And it'd require making some non-threadsafe code threadsafe,
+which I do not relish tackling as a side-effect of io_uring adoption.
+
+
+It also turns out to be nice from a performance / context-switch rate
+angle to be able to process cqes for submissions by other
+processes. Saves an expensive context switch, and often enough it really
+doesn't matter which process processes the completion (especially for
+readahead). And in other cases it's cheap to just schedule the
+subsequent work from the cqe processor, e.g. initiating readahead of a
+few more blocks into the pg buffer pool.  Similarly, there are a few
+cases where it's useful for several processes to submit IO into a uring
+primarily drained by one specific process, to offload the subsequent
+action, if that's expensive
+
+
+Now, I think there's a valid argument to be made that postgres should
+just use threads, and not be hampered by any of this. But a) that's not
+going to happen all that soon, it's a large change, b) it's far from
+free from problems either, especially scalability on larger machines,
+and robustness.
+
+
+> As even if current_cred() and ctx->creds describe the same
+> set of uid,gids the != won't ever match again and
+> makes the whole ring unuseable.
+
+Indeed.  It also seems weird that a sqpoll now basically has different
+semantics, allowing the io_uring to be used by multiple processes - a
+task with a different mm can still wake the sqpoll thread up, even.
+
+Since the different processes attached still can still write to the
+io_uring mmaped memory, they can still queue sqes, they just can't
+initiate the processing. But the next time the creator of the uring
+submits, they will still be - and thus it seems that the kernel needs to
+handle this safely. So I really don't get what this actually achieves?
+Am I missing something here?
+
+Greetings,
+
+Andres Freund
