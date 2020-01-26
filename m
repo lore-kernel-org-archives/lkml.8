@@ -2,129 +2,107 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B63EC35242
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 01:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E76C35242
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 01:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E22E920709
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 01:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kx1emkSQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5B39F20838
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 01:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgAZBDC (ORCPT
+        id S1729076AbgAZBKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jan 2020 20:03:02 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58774 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728792AbgAZBDB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jan 2020 20:03:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580000578;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=C4UL/sgONviDDd6p9omNf+B6AIXhtVKxNHoU71HLvJU=;
-        b=Kx1emkSQBFcDCRaAByEcQS67023zun9TDQWdZmt/ezxCd7ZTxv6C58ibCr47OsKdUY2tps
-        ii/RIex0ZJF72iSrktMYBey4NQshmKdhEb32NU5v6Ecd1jUG9NxTAfjtyNTqsWsSPbglWy
-        qnXqVQD0OSySfl6iWW/xsLKZaxb6Npw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-tWSNo41eO2W7Co1G0ej1EQ-1; Sat, 25 Jan 2020 20:02:56 -0500
-X-MC-Unique: tWSNo41eO2W7Co1G0ej1EQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A32613E1;
-        Sun, 26 Jan 2020 01:02:55 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-99.rdu2.redhat.com [10.10.120.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4AE1D60BEC;
-        Sun, 26 Jan 2020 01:02:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Fix characters allowed into cell names
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sun, 26 Jan 2020 01:02:53 +0000
-Message-ID: <158000057348.1293463.7255193286211009648.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.19
+        Sat, 25 Jan 2020 20:10:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:33808 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728792AbgAZBKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jan 2020 20:10:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2644328;
+        Sat, 25 Jan 2020 17:10:07 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C15573F68E;
+        Sat, 25 Jan 2020 17:10:05 -0800 (PST)
+Date:   Sun, 26 Jan 2020 01:10:03 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        Will Deacon <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH v2 00/10] Rework READ_ONCE() to improve codegen
+Message-ID: <20200126010959.vhq7mg4esoq5w26j@e107158-lin.cambridge.arm.com>
+References: <20200123153341.19947-1-will@kernel.org>
+ <26ad7a8a975c4e06b44a3184d7c86e5f@AcuMS.aculab.com>
+ <20200123171641.GC20126@willie-the-truck>
+ <2bfe2be6da484f15b0d229dd02d16ae6@AcuMS.aculab.com>
+ <CAKwvOdkFGTeVQPm8Z3Y7mQ-=6d5CFxmEJ+hBb8ns2r2H1cb0hQ@mail.gmail.com>
+ <20200123190125.GA2683468@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200123190125.GA2683468@rani.riverdale.lan>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The afs filesystem needs to prohibit certain characters from cell names,
-such as '/', as these are used to form filenames in procfs, leading to the
-following warning being generated:
+On 01/23/20 14:01, Arvind Sankar wrote:
+> On Thu, Jan 23, 2020 at 10:45:08AM -0800, Nick Desaulniers wrote:
+> > On Thu, Jan 23, 2020 at 9:32 AM David Laight <David.Laight@aculab.com> wrote:
+> > >
+> > > From: Will Deacon
+> > > > Sent: 23 January 2020 17:17
+> > > >
+> > > > I think it depends how much we care about those older compilers. My series
+> > > > first moves it to "Good luck mate, you're on your own" and then follows up
+> > 
+> > I wish the actual warning was worded that way. :P
+> > 
+> > > > with a "Let me take that off you it's sharp".
+> > 
+> > > Oh - and I need to find a newer compiler :-(
+> > 
+> > What distro are you using? Does it have a package for a newer
+> > compiler?  I'm honestly curious about what policies if any the kernel
+> > has for supporting developer's toolchains from their distributions.
+> > (ie. Arnd usually has pretty good stats what distro's use which
+> > version of GCC and are still supported; Do we strive to not break
+> > them? Is asking kernel devs to compile their own toolchain too much to
+> > ask?  Is it still if they're using really old distro's/toolchains that
+> > we don't want to support?  Do we survey kernel devs about what they're
+> > using?).  Apologies if this is already documented somewhere, but if
+> > not I'd eventually like to brainstorm and write it down somewhere in
+> > the tree.  Documentation/process/changes.rst doesn't really answer the
+> > above questions, I think.
+> > 
+> > -- 
+> > Thanks,
+> > ~Nick Desaulniers
+> 
+> Reposting Arnd's link
+> https://www.spinics.net/lists/linux-kbuild/msg23648.html
 
-	WARNING: CPU: 0 PID: 3489 at fs/proc/generic.c:178
+This list seems to be x86 centric? I remember when the switch to GCC 4.6
+happened a couple or more archs had to be dropped because they lacked a newer
+compiler.
 
-Fix afs_alloc_cell() to disallow nonprintable characters, '/', '@' and
-names that begin with a dot.
+So popular archs would probably have moved quickly, but 'niche' ones might
+still be catching up at a slower pace.
 
-Remove the check for "@cell" as that is then redundant.
-
-This can be tested by running:
-
-	echo add foo/.bar 1.2.3.4 >/proc/fs/afs/cells
-
-Note that we will also need to deal with:
-
- - Names ending in ".invalid" shouldn't be passed to the DNS.
-
- - Names that contain non-valid domainname chars shouldn't be passed to the
-   DNS.
-
- - DNS replies that say "your-dns-needs-immediate-attention.<gTLD>" and
-   replies containing A records that say 127.0.53.53 should be considered
-   invalid.
-   [https://www.icann.org/en/system/files/files/name-collision-mitigation-01aug14-en.pdf]
-
-but these need to be dealt with by the kafs-client DNS program rather than
-the kernel.
-
-Fixes: ^1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/afs/cell.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/fs/afs/cell.c b/fs/afs/cell.c
-index 1310893c1634..40491edefd69 100644
---- a/fs/afs/cell.c
-+++ b/fs/afs/cell.c
-@@ -134,8 +134,17 @@ static struct afs_cell *afs_alloc_cell(struct afs_net *net,
- 		_leave(" = -ENAMETOOLONG");
- 		return ERR_PTR(-ENAMETOOLONG);
- 	}
--	if (namelen == 5 && memcmp(name, "@cell", 5) == 0)
-+
-+	/* Prohibit cell names that contain unprintable chars, '/' and '@' or
-+	 * that begin with a dot.  This also precludes "@cell".
-+	 */
-+	if (name[0] == '.')
- 		return ERR_PTR(-EINVAL);
-+	for (i = 0; i < namelen; i++) {
-+		char ch = name[i];
-+		if (!isprint(ch) || ch == '/' || ch == '@')
-+			return ERR_PTR(-EINVAL);
-+	}
- 
- 	_enter("%*.*s,%s", namelen, namelen, name, addresses);
- 
-
-
+--
+Qais Yousef
