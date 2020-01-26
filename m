@@ -2,98 +2,123 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4CBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24399C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0D3206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF9E4206D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 17:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mybox7dB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dBdu5qS4";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dBdu5qS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgAZRiE (ORCPT
+        id S1726771AbgAZRqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 12:38:04 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33035 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgAZRiD (ORCPT
+        Sun, 26 Jan 2020 12:46:02 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:60318 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725838AbgAZRqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 12:38:03 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y6so8253233lji.0
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 09:38:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=uQCsuSWxUoS41fOaGTKbaWt4unoRSaSJnXlIAweW6F0=;
-        b=mybox7dBk7EcxeQzW5QQ5j0Iz6I5zw9PLg8XdqPwDymlsQUQv4DKPsIrRPFQpJ+ZCY
-         YxAWzb54kBSo6FiqgnOiVUgfCgWdDwXxRWCCpwiiVs396Kau+Lbs4VlTKzMz+j1GTBRC
-         AVH1Z1VQeFJ8/hRAaM6n+nfO68TOk9249PHkJhg4yCYlVo/HllETs4JxqFATGuXSqR9C
-         /r82gYC3rxmTmgyTSn+3+RNykp6kIuqdkd9HHct8Ti/qIEdhN7D204hSIbs50XIzcCdU
-         Xq7p0l4taeeFhhYjBbiNT5DBEr8/I470PdkiBsGoGpeL4kyRcWLA/F7mbjH/bFyNZERq
-         lXyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=uQCsuSWxUoS41fOaGTKbaWt4unoRSaSJnXlIAweW6F0=;
-        b=WpkiG2T5ThXlSyD6doGGk9KSMRX4dgcYMisbS4VW50Bf9v9fpYWCz00r3g8FGsOzk0
-         XztM9oK/TuhFfbaXDt/Voe6QyOrnZvX7AxOkX016879n8R+8UIqiMCsx6GSKQ3JB0nad
-         NMDt7CjAEu6Mc6+itFibRzkxYKzf/slk8d4kJsbWjA/vVo5dxxyDQtloxUzj8d/RAgXK
-         WPfXcPdoUWLK+JxWma+njUwSpU4fOFYMZLhGssax4h3kg98T92VtYaQYjY0PWVCRmTUP
-         5tkhxBnNpjPewcOeOMbUwUp463EMZWssvlVUTW5Azdij4f6tBwL/wXkjAb7HPfUVVqf6
-         Pxhw==
-X-Gm-Message-State: APjAAAXhqiTE5jPTuMUGZa2c3KNb66elW2jQJcFsAL9G1HALFUbIIafK
-        pcybV6poJo4JI22Tz3tUH60=
-X-Google-Smtp-Source: APXvYqzBLIDC8HJOqEe0fHf0HgYNEn8/pBcCz065lMMZ+ZACh8w85S5ZGRKDC9DCXGD1owsp75jugQ==
-X-Received: by 2002:a2e:a30b:: with SMTP id l11mr4852186lje.271.1580060281896;
-        Sun, 26 Jan 2020 09:38:01 -0800 (PST)
-Received: from home (109-252-7-246.nat.spd-mgts.ru. [109.252.7.246])
-        by smtp.gmail.com with ESMTPSA id p136sm6708868lfa.8.2020.01.26.09.38.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 Jan 2020 09:38:01 -0800 (PST)
-Date:   Sun, 26 Jan 2020 19:37:58 +0200
-From:   Valery Ivanov <ivalery111@gmail.com>
-To:     nsaenzjulienne@suse.de
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        Sun, 26 Jan 2020 12:46:01 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 52F7D8EE10C;
+        Sun, 26 Jan 2020 09:46:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1580060761;
+        bh=PSyNgnp+wKPmtMYF+fst2Z8osfxDBUxdp0Rur6KrZFw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=dBdu5qS4dEmHZ09LqBGouAo7m57m+Ru47YfmOxB/GAH7Og+45ph2HyCcXBBSxVVYD
+         DCIlo80ZDWRfWJT5PHL+tsAsM9BKynJ1Lkr3RO7LJRsWU7TE/Pf03nRuZ0bxAFOsM1
+         qjTUWAg10+4AtAQUKEHhQDMizwHMocc8hPG1SwnI=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id awewdFBBS5GL; Sun, 26 Jan 2020 09:46:01 -0800 (PST)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id CD2958EE0C9;
+        Sun, 26 Jan 2020 09:46:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1580060761;
+        bh=PSyNgnp+wKPmtMYF+fst2Z8osfxDBUxdp0Rur6KrZFw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=dBdu5qS4dEmHZ09LqBGouAo7m57m+Ru47YfmOxB/GAH7Og+45ph2HyCcXBBSxVVYD
+         DCIlo80ZDWRfWJT5PHL+tsAsM9BKynJ1Lkr3RO7LJRsWU7TE/Pf03nRuZ0bxAFOsM1
+         qjTUWAg10+4AtAQUKEHhQDMizwHMocc8hPG1SwnI=
+Message-ID: <1580060759.4964.12.camel@HansenPartnership.com>
+Subject: Re: [PATCH] ima: fix calculating the boot_aggregate
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: bcm2835-audio: fix warning of no space is necessary
-Message-ID: <20200126173758.GA28897@home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Date:   Sun, 26 Jan 2020 09:45:59 -0800
+In-Reply-To: <1580044434-9132-1-git-send-email-zohar@linux.ibm.com>
+References: <1580044434-9132-1-git-send-email-zohar@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes "No space is necessary after a cast".
-Issue found by checkpatch.pl
+On Sun, 2020-01-26 at 08:13 -0500, Mimi Zohar wrote:
+> Calculating the boot_aggregate assumes that the TPM SHA1 bank is
+> enabled.  Before trying to read the TPM SHA1 bank, ensure it is
+> enabled. If it isn't enabled, calculate the boot_aggregate using the
+> first bank enabled.
 
-Signed-off-by: Valery Ivanov <ivalery111@gmail.com>
+Isn't it about time we shifted IMA away from SHA1 as a NIST deprecated
+algorithm especially as in this case if someone can manufacture a sha1
+hash collision, they can fake the TCB?  I think we should always try
+use SHA256 if we have a TPM2, then fall back to whatever bank0 is if
+SHA256 can't be found (that will cope with DELLs that violate the TPM2
+spec by disabling the sha256 bank if the bios setting is sha1).  This
+should also cope with other ODMs who violate the spec in other ways,
+like not updating the sha1 bank but still leaving it allocated.
+
+Mechanically, also, you don't need the found variable, you can see if i
+reaches the max value.
+
+James
+
 ---
- drivers/staging/vc04_services/bcm2835-audio/bcm2835-pcm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-pcm.c b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-pcm.c
-index 33485184a98a..997ce88c67c4 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-pcm.c
-+++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-pcm.c
-@@ -237,7 +237,7 @@ static void snd_bcm2835_pcm_transfer(struct snd_pcm_substream *substream,
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct bcm2835_alsa_stream *alsa_stream = runtime->private_data;
--	void *src = (void *) (substream->runtime->dma_area + rec->sw_data);
-+	void *src = (void *)(substream->runtime->dma_area + rec->sw_data);
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index 73044fc6a952..f5f7a3aec826 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -665,12 +665,29 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
+ 	u32 i;
+ 	SHASH_DESC_ON_STACK(shash, tfm);
  
- 	bcm2835_audio_write(alsa_stream, bytes, src);
- }
--- 
-2.17.1
-
++	if (ima_tpm_chip->flags & TPM_CHIP_FLAG_TPM2)
++		/* TPM2 default should be sha256 */
++		d.alg_id = TPM_ALG_SHA256;
++
+ 	shash->tfm = tfm;
+ 
+ 	rc = crypto_shash_init(shash);
+ 	if (rc != 0)
+ 		return rc;
+ 
++	/*
++	 * Check the TPM default bank is allocated otherwise use the first one
++	 */
++	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++)
++		if (ima_tpm_chip->allocated_banks[i].alg_id == d.alg_id)
++			break;
++
++	if (i == ima_tpm_chip->nr_allocated_banks) {
++		d.alg_id = ima_tpm_chip->allocated_banks[0].alg_id;
++		pr_info("Calculating the boot-aggregregate (TPM algorithm: %d)",
++			d.alg_id);
++	}
++
+ 	/* cumulative sha1 over tpm registers 0-7 */
+ 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+ 		ima_pcrread(i, &d);
