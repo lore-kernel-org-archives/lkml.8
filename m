@@ -2,122 +2,147 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBECC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 12:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E7EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 12:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B589020716
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 12:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420C520716
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 12:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387432AbgAZMsi (ORCPT
+        id S2387450AbgAZMtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 07:48:38 -0500
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:54833 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387398AbgAZMsh (ORCPT
+        Sun, 26 Jan 2020 07:49:18 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:54874 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387398AbgAZMtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 07:48:37 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id A0D572800BB69;
-        Sun, 26 Jan 2020 13:48:34 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 6BC3042A3A; Sun, 26 Jan 2020 13:48:34 +0100 (CET)
-Date:   Sun, 26 Jan 2020 13:48:34 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Matthew Whitehead <tedheadster@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vt: Fix non-blinking cursor regression
-Message-ID: <20200126124834.ea7uxyprz2uaek5x@wunner.de>
-References: <575cb82102aa59a7a8e34248821b78e1dd844777.1579701673.git.lukas@wunner.de>
- <nycvar.YSQ.7.76.2001221032210.1655@knanqh.ubzr>
+        Sun, 26 Jan 2020 07:49:17 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: pSDVn3chmLQfhl0uygt7Pv6ND1lo09LprktTom4Xw4jam8/UUciMtrMe5cMlLKvmmhaiasrWiU
+ vUrtVuZrMnEJpmTBDPduve/PAZC7fzA9Meubjb/kWekJyP29CR8DvlYPHhmMcYglC7pk6bEwK5
+ hYCDnbFL/I+dk7AjfRGm5Y2tr9m+ZfsjtOLuDuHnFCiRQdxrrNLfdDaMDhazIUmTRWtTMXA9Iw
+ RErzsVpVFgzc1VEkJSoqur6Xib6LTge35ek9kCslUbS4rSI4H98jshEau6FVeR0nR/ImKNcUcz
+ D94=
+X-IronPort-AV: E=Sophos;i="5.70,365,1574146800"; 
+   d="scan'208";a="64538482"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Jan 2020 05:49:16 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 26 Jan 2020 05:49:14 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sun, 26 Jan 2020 05:49:13 -0700
+Date:   Sun, 26 Jan 2020 13:49:11 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
+        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v3 09/10] net: bridge: mrp: Integrate MRP into the
+ bridge
+Message-ID: <20200126124911.z5zh44agxbe6lwhh@soft-dev3.microsemi.net>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-10-horatiu.vultur@microchip.com>
+ <20200125154248.GC18311@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <nycvar.YSQ.7.76.2001221032210.1655@knanqh.ubzr>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200125154248.GC18311@lunn.ch>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 11:40:38AM -0500, Nicolas Pitre wrote:
-> On Wed, 22 Jan 2020, Lukas Wunner wrote:
-> > Since commit a6dbe4427559 ("vt: perform safe console erase in the right
-> > order"), when userspace clears both the scrollback buffer and the screen
-> > by writing "\e[3J" to an fbdev virtual console, the cursor stops blinking
-> > if that virtual console is not in the foreground.  I'm witnessing this
-> > on every boot of Raspbian since updating to v4.19.37+ because agetty
-> > writes the sequence to /dev/tty6 while the console is still switched to
-> > /dev/tty1.  Switching consoles once makes the cursor blink again.
-> > 
-> > The commit added an invocation of ->con_switch() to flush_scrollback().
-> > Normally this is only invoked from switch_screen() to switch consoles.
-> > switch_screen() updates *vc->vc_display_fg to the new console and
-> > fbcon_switch() updates ops->currcon.  Because the commit only invokes
-> > fbcon_switch() but doesn't update *vc->vc_display_fg, it performs an
-> > incomplete console switch.
-> > 
-> > When fb_flashcursor() subsequently blinks the cursor, it retrieves the
-> > foreground console from ops->currcon.  Because *vc->vc_display_fg wasn't
-> > updated, con_is_visible() incorrectly returns false and as a result,
-> > fb_flashcursor() bails out without blinking the cursor.
-> > 
-> > The invocation of ->con_switch() appears to have been erroneous.  After
-> > all, why should a console switch be performed when clearing the screen?
-> > The commit message doesn't provide a rationale either.  So delete it.
+The 01/25/2020 16:42, Andrew Lunn wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
 > 
-> The problem here is that only vgacon provides a con_flush_scrollback 
-> method. When not provided, the only way to flush the scrollback buffer 
-> is to invoke the switch method. If you remove it the scrollback buffer 
-> of the foreground console won't be flushed in the fb case and possibly 
-> others.
+> On Fri, Jan 24, 2020 at 05:18:27PM +0100, Horatiu Vultur wrote:
+> > To integrate MRP into the bridge, the bridge needs to do the following:
+> > - initialized and destroy the generic netlink used by MRP
+> > - detect if the MRP frame was received on a port that is part of a MRP ring. In
+> >   case it was not, then forward the frame as usual, otherwise redirect the frame
+> >   to the upper layer.
+> >
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  net/bridge/br.c         | 11 +++++++++++
+> >  net/bridge/br_device.c  |  3 +++
+> >  net/bridge/br_if.c      |  6 ++++++
+> >  net/bridge/br_input.c   | 14 ++++++++++++++
+> >  net/bridge/br_private.h | 14 ++++++++++++++
+> >  5 files changed, 48 insertions(+)
+> >
+> > diff --git a/net/bridge/br.c b/net/bridge/br.c
+> > index b6fe30e3768f..d5e556eed4ba 100644
+> > --- a/net/bridge/br.c
+> > +++ b/net/bridge/br.c
+> > @@ -344,6 +344,12 @@ static int __init br_init(void)
+> >       if (err)
+> >               goto err_out5;
+> >
+> > +#ifdef CONFIG_BRIDGE_MRP
+> > +     err = br_mrp_netlink_init();
+> > +     if (err)
+> > +             goto err_out6;
+> > +#endif
+> 
+> Please try to avoid #ifdef's like this in C code. Add a stub function
+> to br_private_mrp.h.
+> 
+> If you really cannot avoid #ifdef, please use #if IS_ENABLED(CONFIG_BRIDGE_MRP).
+> That expands to
+> 
+>         if (0) {
+> 
+>         }
+> 
+> So the compiler will compile it and then optimize it out. That gives
+> us added benefit of build testing, we don't suddenly find the code no
+> longer compiles when we enable the option.
+> 
+> > --- a/net/bridge/br_input.c
+> > +++ b/net/bridge/br_input.c
+> > @@ -21,6 +21,9 @@
+> >  #include <linux/rculist.h>
+> >  #include "br_private.h"
+> >  #include "br_private_tunnel.h"
+> > +#ifdef CONFIG_BRIDGE_MRP
+> > +#include "br_private_mrp.h"
+> > +#endif
+> 
+> It should always be safe to include a header file.
+> 
+>    Andrew
 
-Okay.  I guess it's somewhat counter-intuitive that ->con_switch()
-is called only because it has the side effect of flushing scrollback.
-In particular, this approach doesn't work for nonvisible consoles.
+Thanks for pointing out these mistakes. I will try to avoid all these
+#ifdef's in the next patch series.
 
-So the proper solution might be to amend the fb_con struct with a
-->con_flush_scrollback() hook.  Which portions of fbcon_switch()
-would have to be duplicated in that hook?  The softback code at the
-top of the function would seem like an obvious candidate.  What about
-the invocation of fb_set_var() (which in turn calls fb_pan_display())?
-Anything else?
-
-FWIW, even without any call to ->con_switch, writing "\e[3J" does
-flush scrollback.  Works both on the foreground console as well as
-nonvisible consoles.  I've tested this with bcm2708_fb which isn't
-upstream yet, it's in the Raspberry Pi Foundation's downstream tree:
-
-https://github.com/raspberrypi/linux/blob/rpi-4.19.y/drivers/video/fbdev/bcm2708_fb.c
-
-
-> @@ -936,10 +936,13 @@ static void flush_scrollback(struct vc_data *vc)
->  	WARN_CONSOLE_UNLOCKED();
->  
->  	set_origin(vc);
-> -	if (vc->vc_sw->con_flush_scrollback)
-> +	if (vc->vc_sw->con_flush_scrollback) {
->  		vc->vc_sw->con_flush_scrollback(vc);
-> -	else
-> +	} else if (con_is_visible(vc)) {
-> +		hide_cursor(vc);
->  		vc->vc_sw->con_switch(vc);
-> +		set_cursor(vc);
-> +	}
-
-A dumb question perhaps, but why is it necessary to hide the cursor?
-
-Thanks,
-
-Lukas
+-- 
+/Horatiu
