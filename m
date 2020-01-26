@@ -2,136 +2,141 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4D2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 22:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFE1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 22:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A4420720
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 22:42:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580078568;
-	bh=XMfKPd5GXkrw5+jrBxAKJBcVLbkHH3KxZoDRS8H0/tw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ranzkNCpzfEoNorjzc5vt/oBGVZ/qykB1Trk+MZENDgY5k0tRhL9SLoXTfuRTZduM
-	 wW9BafDPiq4TgzIxPbsP6WocYzwbpunAvDsOC9fuUw/PNTTI+bvwwdoIHEAacNJ8MR
-	 yrbswTWDR7mJ3J0JPucj1gH41fGF4CTkoKBaswsw=
+	by mail.kernel.org (Postfix) with ESMTP id CE67A2070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 22:44:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LiZhUOIe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgAZWmr (ORCPT
+        id S1727773AbgAZWoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 17:42:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgAZWmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 17:42:46 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C32F72070A;
-        Sun, 26 Jan 2020 22:42:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580078565;
-        bh=XMfKPd5GXkrw5+jrBxAKJBcVLbkHH3KxZoDRS8H0/tw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=CQ+uBEyqUEqPKxMMfVbp1UPlZHy3zTK2tzOYzmjoi24+o9VX43u31KuQulWQn+e2R
-         dRgBtsQ5HmolUh73G53VIe9B0DJIW37DKT0i+hdb8ZSnztGtS18uYqAAvG6CM7lXoR
-         0KeVbFop5BtjEUoT0qH93fdmEAp+PFbdRyNkWtL8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3CC5B352279E; Sun, 26 Jan 2020 14:42:45 -0800 (PST)
-Date:   Sun, 26 Jan 2020 14:42:45 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-Message-ID: <20200126224245.GA22901@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200124222434.GA7196@paulmck-ThinkPad-P72>
- <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
- <20200125005713.GZ2935@paulmck-ThinkPad-P72>
- <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
- <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
- <20200125045844.GC2935@paulmck-ThinkPad-P72>
- <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
- <20200126153535.GL2935@paulmck-ThinkPad-P72>
+        Sun, 26 Jan 2020 17:44:34 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44500 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgAZWod (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 17:44:33 -0500
+Received: by mail-pl1-f193.google.com with SMTP id d9so3043192plo.11
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 14:44:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=TjEZMOqVvMiaHfNHrbmYpQxyaSRI+vukKCsubEmmQJg=;
+        b=LiZhUOIecHLFKlKOf5LwM4AY0QJraXq2Eq6Cz5mZp25Tz4Ct5naIHG+lpYNxphSzKQ
+         75RjI+ggnHay5WPKmLtXxy05GkRnAgPzrxeM2eTYq6HFEjrjOWJu/m9x6pbkqD7fQOMW
+         cQ4RExcCIJA8/9chPkONZEGXG6KNC/8JxBPjt2Nyik+qLMoIZ4x6iaIjrjQ/0RxhUmnF
+         PTHQ8GqWkAQFZXiv8jLRjP7JQrjC6qXzIpz/Xon+MgyOPWF77OpSYfWjtd7tziFvfUjT
+         3mrkaCVOJTlsSI5o3TZucd+TGTlTesn54wOY08+xPnAD5ROcAHy39E7pNY63xQDZ490F
+         n8DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=TjEZMOqVvMiaHfNHrbmYpQxyaSRI+vukKCsubEmmQJg=;
+        b=iN3E+IsUwo+J+lBuZveP2siu/U/YP+dv2djJi75k1R3PTDqJAzQuF79CuIyzir20VZ
+         eFIMp2FPLYwCAQlMF446R/X6F+tKrsV2bMvVWj5WoCf2PXDvtRqOkNtZtZnnOgIe2SGo
+         YdBmoO35uF7F37kDueG06QRsA8UWxzKm6mQsr+C7zM0fHfH6dQBk/9dG3mB2ATEhUT5Y
+         iZ4SQYGDjig+7VGwmCo9YrsjHngURoRwT3qzewwdOelwTc/weBqU8FseWeLcJoLmg0gp
+         ygkhZBXeuMoZHu96uXYJdRYcLuRgxmTMRT+6jwSXHA7/z0o3/TG1iUncNGiiHFkUKDaK
+         jtkw==
+X-Gm-Message-State: APjAAAUYaMSt7bEk5uvMzW6G7zAUPDFl2nca6Z1cL5JcJJVoszYwLL6N
+        To/69HxpF9GygO4lGiXsa7XqSw==
+X-Google-Smtp-Source: APXvYqymcVkWc2j+nwHmc4kt3i9+hl/OwHr2T5KYyyAMvu+vzhgyFwQPyThZ4nxIELGcRxsX0v/QMg==
+X-Received: by 2002:a17:90a:e2d4:: with SMTP id fr20mr11737424pjb.85.1580078672716;
+        Sun, 26 Jan 2020 14:44:32 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id q6sm13303717pgt.47.2020.01.26.14.44.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jan 2020 14:44:31 -0800 (PST)
+Date:   Sun, 26 Jan 2020 14:44:31 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Wei Yang <richardw.yang@linux.intel.com>
+cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/vmscan.c: only adjust related kswapd cpu affinity
+ when online cpu
+In-Reply-To: <20200126132052.11921-1-richardw.yang@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.2001261443020.164983@chino.kir.corp.google.com>
+References: <20200126132052.11921-1-richardw.yang@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200126153535.GL2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 07:35:35AM -0800, Paul E. McKenney wrote:
-> On Sat, Jan 25, 2020 at 02:41:39PM -0500, Waiman Long wrote:
-> > On 1/24/20 11:58 PM, Paul E. McKenney wrote:
-> > > On Fri, Jan 24, 2020 at 09:17:05PM -0500, Waiman Long wrote:
-> > >> On 1/24/20 8:59 PM, Waiman Long wrote:
-> > >>>> You called it!  I will play with QEMU's -numa argument to see if I can get
-> > >>>> CNA to run for me.  Please accept my apologies for the false alarm.
-> > >>>>
-> > >>>> 							Thanx, Paul
-> > >>>>
-> > >>> CNA is not currently supported in a VM guest simply because the numa
-> > >>> information is not reliable. You will have to run it on baremetal to
-> > >>> test it. Sorry for that.
-> > >> Correction. There is a command line option to force CNA lock to be used
-> > >> in a VM. Use the "numa_spinlock=on" boot command line parameter.
-> > > As I understand it, I need to use a series of -numa arguments to qemu
-> > > combined with the numa_spinlock=on (or =1) on the kernel command line.
-> > > If the kernel thinks that there is only one NUMA node, it appears to
-> > > avoid doing CNA.
-> > >
-> > > Correct?
-> > >
-> > > 							Thanx, Paul
-> > >
-> > In auto-detection mode (the default), CNA will only be turned on when
-> > paravirt qspinlock is not enabled first and there are at least 2 numa
-> > nodes. The "numa_spinlock=on" option will force it on even when both of
-> > the above conditions are false.
+On Sun, 26 Jan 2020, Wei Yang wrote:
+
+> When onlining a cpu, kswapd_cpu_online() is called to adjust kswapd cpu
+> affinity.
 > 
-> Hmmm...
+> Current routine does like this:
 > 
-> Here is my kernel command line taken from the console log:
+>   * Iterate all the numa node
+>   * Adjust cpu affinity when node has an online cpu
 > 
-> console=ttyS0 locktorture.onoff_interval=0 numa_spinlock=on locktorture.stat_interval=15 locktorture.shutdown_secs=1800 locktorture.verbose=1
+> Actually we could improve this by:
 > 
-> Yet the string "Enabling CNA spinlock" does not appear.
+>   * Just adjust the numa node to which current online cpu belongs
 > 
-> Ah, idiot here needs to enable CONFIG_NUMA_AWARE_SPINLOCKS in his build.
-> Trying again with "--kconfig "CONFIG_NUMA_AWARE_SPINLOCKS=y"...
+> Because we know which numa node the cpu belongs to and this cpu would
+> not affect other node.
+> 
 
-And after fixing that, plus adding the other three Kconfig options required
-to enable this, I really do see "Enabling CNA spinlock" in the console log.
-Yay!
+Is there ever a situation where the cpu to be onlined would have appeared 
+in the cpumask of another node and so a different kswapd's cpumask would 
+now include an off-node cpu?
 
-At the end of the 30-minute locktorture exclusive-lock run, I see this:
-
-Writes:  Total: 572176565  Max/Min: 54167704/10878216 ???  Fail: 0
-
-This is about a five-to-one ratio.  Is this expected behavior, given a
-single NUMA node on a single-socket system with 12 hardware threads?
-
-I will try reader-writer lock next.
-
-Again, should I be using qemu's -numa command-line option to create nodes?
-If so, what would be a sane configuration given 12 CPUs and 512MB of
-memory for the VM?  If not, what is a good way to exercise CNA's NUMA
-capabilities within a guest OS?
-
-							Thanx, Paul
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> ---
+>  mm/vmscan.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 572fb17c6273..19c92d35045c 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -4049,18 +4049,19 @@ unsigned long shrink_all_memory(unsigned long nr_to_reclaim)
+>     restore their cpu bindings. */
+>  static int kswapd_cpu_online(unsigned int cpu)
+>  {
+> -	int nid;
+> +	int nid = cpu_to_node(cpu);
+> +	pg_data_t *pgdat;
+> +	const struct cpumask *mask;
+>  
+> -	for_each_node_state(nid, N_MEMORY) {
+> -		pg_data_t *pgdat = NODE_DATA(nid);
+> -		const struct cpumask *mask;
+> +	if (!node_state(nid, N_MEMORY))
+> +		return 0;
+>  
+> -		mask = cpumask_of_node(pgdat->node_id);
+> +	pgdat = NODE_DATA(nid);
+> +	mask = cpumask_of_node(nid);
+> +
+> +	/* One of our CPUs online: restore mask */
+> +	set_cpus_allowed_ptr(pgdat->kswapd, mask);
+>  
+> -		if (cpumask_any_and(cpu_online_mask, mask) < nr_cpu_ids)
+> -			/* One of our CPUs online: restore mask */
+> -			set_cpus_allowed_ptr(pgdat->kswapd, mask);
+> -	}
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.17.1
+> 
+> 
+> 
