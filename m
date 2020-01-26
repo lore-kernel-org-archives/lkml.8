@@ -2,85 +2,126 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44AFC35240
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0985C35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D972071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D27wrEu/"
+	by mail.kernel.org (Postfix) with ESMTP id D088E2083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgAZK0B (ORCPT
+        id S1729417AbgAZK0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 05:26:01 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43097 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729213AbgAZK0A (ORCPT
+        Sun, 26 Jan 2020 05:26:38 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48588 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729213AbgAZK0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 05:26:00 -0500
-Received: by mail-io1-f68.google.com with SMTP id n21so6752668ioo.10
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 02:26:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I5ss2A9PhpaPL+Y6/Eq0fV6rb1bJtLZPNb/zRGwXMTE=;
-        b=D27wrEu/CsAGY5dRH3TN2ZKuFTn5laOBjvVfcM1Dw80HaP/96lJhwPSpGcphnf4P7l
-         /97PsAfIHisHOsXwN6XAWK49wscMV82zk/6WTQJMSi3HOOyDuvpDnwUizm4xOs7VHGkc
-         wzP59SUoBy/ZHhg49zAgQOuOsoioFYRyhYMv8opfli6+HZNEJzif+rukPRgpIQNPkxQz
-         NhlSEf+RqIWizq16mTNkzS1FBqlGGpDQ89Yp34/v8jD6wRCPc/DVdPtFND8l5QtBnfqU
-         xqJ6LtQxlBCVej/KSCDIENnA47d2Md0Q5ZYTT7zHH9NQKejWY6VqqYtusjqeG8Y1zKGB
-         +i4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I5ss2A9PhpaPL+Y6/Eq0fV6rb1bJtLZPNb/zRGwXMTE=;
-        b=PxCU/GKDrLg9Xar43A79mOkGafRT+xI9oDJCI/U+EzvrJEXAmfkN8h0HaSEOl0iJ2i
-         kSew5WG4FMCY3nA8OGTi3vZjwA52SdGGMvhhrrUXc7Ea0vbKGxdplx4qh4iq+l9tELB0
-         8pahBbIX6WZMsusHkpsox1weosAwwEMA9d/1Zh7uv1idt1LD63PlHO2vqEG2UaToPsHK
-         HFpAid+0Atbd7L0zIJ784c7rt8yx13KWxms8RNi9TsH7CaXuKXELj6iu/lsiabPBbcpx
-         nUJ/gBgd3ogqyF9BUquU5BPAaddxa3N69MYoXRseY/s/QlpnJle7qmmagXjspiKkQplj
-         Fn5g==
-X-Gm-Message-State: APjAAAUMVY15xwJ6TwPmSYxYr/WFbxADg/LbIXCflPwGj4Vf68xOsjUI
-        QCX8OuZ5HMF7nWa9UR8N+9edKGhqNiIcziPNPI2VXw==
-X-Google-Smtp-Source: APXvYqy/OgLhH2YrMUUnwdGcownsvFIpuD+QssaiI+S932cX8vLLDRtGbVAw6t5Xz6uzY5DtwPKwinFv6tqzMMZmNhg=
-X-Received: by 2002:a02:b615:: with SMTP id h21mr9013386jam.109.1580034359905;
- Sun, 26 Jan 2020 02:25:59 -0800 (PST)
+        Sun, 26 Jan 2020 05:26:38 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id AEBE51C228F; Sun, 26 Jan 2020 11:26:35 +0100 (CET)
+Date:   Sun, 26 Jan 2020 11:26:35 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Bruno Thomsen <bruno.thomsen@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 521/639] rtc: pcf2127: bugfix: read rtc disables
+ watchdog
+Message-ID: <20200126102634.GA19082@duo.ucw.cz>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <20200124093154.044998307@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20200125162917.247485-1-yuhsuan@chromium.org>
-In-Reply-To: <20200125162917.247485-1-yuhsuan@chromium.org>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Sun, 26 Jan 2020 18:25:48 +0800
-Message-ID: <CA+Px+wU4kxGbZy7VpZ5hb==m7-BYPEOYd5EiWLpNvdD+h9vPOA@mail.gmail.com>
-Subject: Re: [PATCH v2] ASoC: cros_ec_codec: Support setting bclk ratio
-To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Benson Leung <bleung@chromium.org>,
-        ALSA development <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Content-Disposition: inline
+In-Reply-To: <20200124093154.044998307@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 12:29 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> wrote:
->
-> Support setting bclk ratio from machine drivers.
->
-> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
 
-Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri 2020-01-24 10:31:31, Greg Kroah-Hartman wrote:
+> From: Bruno Thomsen <bruno.thomsen@gmail.com>
+>=20
+> [ Upstream commit 7f43020e3bdb63d65661ed377682702f8b34d3ea ]
+>=20
+> The previous fix listed bulk read of registers as root cause of
+> accendential disabling of watchdog, since the watchdog counter
+> register (WD_VAL) was zeroed.
+>=20
+> Fixes: 3769a375ab83 rtc: pcf2127: bulk read only date and time registers.
+>=20
+> Tested with the same PCF2127 chip as Sean reveled root cause
+> of WD_VAL register value zeroing was caused by reading CTRL2
+> register which is one of the watchdog feature control registers.
+>=20
+> So the solution is to not read the first two control registers
+> (CTRL1 and CTRL2) in pcf2127_rtc_read_time as they are not
+> needed anyway. Size of local buf variable is kept to allow
+> easy usage of register defines to improve readability of code.
+
+Should the array be zeroed before or something? This way, one array
+contains both undefined values and valid data...
+
+> Debug trace line was updated after CTRL1 and CTRL2 are no longer
+> read from the chip. Also replaced magic numbers in buf access
+> with register defines.
+
+That part is not an improvement. Previously the code was formatted so
+that you could parse what is being printed.
+
+Best regards,							Pavel
+
+> @@ -91,14 +85,12 @@ static int pcf2127_rtc_read_time(struct device *dev, =
+struct rtc_time *tm)
+>  	}
+> =20
+>  	dev_dbg(dev,
+> -		"%s: raw data is cr1=3D%02x, cr2=3D%02x, cr3=3D%02x, "
+> -		"sec=3D%02x, min=3D%02x, hr=3D%02x, "
+> +		"%s: raw data is cr3=3D%02x, sec=3D%02x, min=3D%02x, hr=3D%02x, "
+>  		"mday=3D%02x, wday=3D%02x, mon=3D%02x, year=3D%02x\n",
+> -		__func__,
+> -		buf[0], buf[1], buf[2],
+> -		buf[3], buf[4], buf[5],
+> -		buf[6], buf[7], buf[8], buf[9]);
+> -
+> +		__func__, buf[PCF2127_REG_CTRL3], buf[PCF2127_REG_SC],
+> +		buf[PCF2127_REG_MN], buf[PCF2127_REG_HR],
+> +		buf[PCF2127_REG_DM], buf[PCF2127_REG_DW],
+> +		buf[PCF2127_REG_MO], buf[PCF2127_REG_YR]);
+> =20
+>  	tm->tm_sec =3D bcd2bin(buf[PCF2127_REG_SC] & 0x7F);
+>  	tm->tm_min =3D bcd2bin(buf[PCF2127_REG_MN] & 0x7F);
+> --=20
+> 2.20.1
+>=20
+>=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXi1pWgAKCRAw5/Bqldv6
+8lXvAKCuBbJsd+Ad8O49Zkovk64+OagFnACfXDkYo06jdIlgrJvug0hvl1dpMuo=
+=GfFi
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
