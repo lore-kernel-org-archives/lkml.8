@@ -2,123 +2,101 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA5AC35246
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE649C35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECC92071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4D02075D
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580044785;
+	bh=aKCKS9AL2z61/oGPTAaoZA+DHJSUB/HCGvtzayApHvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fV5cQLjA+3SAj9VYq44aR48VTXT8H23E9CpQr2UDQowzhqIQtGFnMLg5IRv8YUVaN
+	 lKoTAobdv03WEPfZz7bKf6aU52pv1M8Z4y9q3sUF2W4AcCzDvF6h1OiK3ydiVS0GIl
+	 8pItvlFJ4b6UX2nycKUkzuNqda5/+91YFtm6x1Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgAZNOE (ORCPT
+        id S1728234AbgAZNTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 08:14:04 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39704 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727322AbgAZNOE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 08:14:04 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00QDDuOh071813
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 08:14:03 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrjmstuqu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 08:14:02 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Sun, 26 Jan 2020 13:14:00 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 26 Jan 2020 13:13:59 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00QDDwgj37945524
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 26 Jan 2020 13:13:58 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8289011C04C;
-        Sun, 26 Jan 2020 13:13:58 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C257F11C04A;
-        Sun, 26 Jan 2020 13:13:57 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.205.7])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 26 Jan 2020 13:13:57 +0000 (GMT)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH] ima: fix calculating the boot_aggregate
-Date:   Sun, 26 Jan 2020 08:13:54 -0500
-X-Mailer: git-send-email 2.7.5
-X-TM-AS-GCONF: 00
-x-cbid: 20012613-0012-0000-0000-00000380C383
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012613-0013-0000-0000-000021BD10FC
-Message-Id: <1580044434-9132-1-git-send-email-zohar@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-26_01:2020-01-24,2020-01-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=1
- mlxscore=0 adultscore=0 clxscore=1015 impostorscore=0 malwarescore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001260116
+        Sun, 26 Jan 2020 08:19:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgAZNTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 08:19:44 -0500
+Received: from localhost (unknown [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 804712071A;
+        Sun, 26 Jan 2020 13:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580044784;
+        bh=aKCKS9AL2z61/oGPTAaoZA+DHJSUB/HCGvtzayApHvg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tYXOn2nYW7L/Twe2BbCfmZhNvhqNqIYSERxhsWHEnAGLrSbA8Xv04zy6zpgGU34Un
+         OlElIoryWml2HyfEdI2l65YlTXyguCBO8bM8PXY5hdHQC+xjx16j9KLMZjA5hOKpbC
+         CRbSEn0cB2cxbcNSnbo8JrDi1F2BgHoMeF58USB4=
+Date:   Sun, 26 Jan 2020 14:19:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Bruno Thomsen <bruno.thomsen@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 521/639] rtc: pcf2127: bugfix: read rtc disables
+ watchdog
+Message-ID: <20200126131935.GA4074691@kroah.com>
+References: <20200124093047.008739095@linuxfoundation.org>
+ <20200124093154.044998307@linuxfoundation.org>
+ <20200126102634.GA19082@duo.ucw.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200126102634.GA19082@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calculating the boot_aggregate assumes that the TPM SHA1 bank is
-enabled.  Before trying to read the TPM SHA1 bank, ensure it is enabled.
-If it isn't enabled, calculate the boot_aggregate using the first bank
-enabled.
+On Sun, Jan 26, 2020 at 11:26:35AM +0100, Pavel Machek wrote:
+> On Fri 2020-01-24 10:31:31, Greg Kroah-Hartman wrote:
+> > From: Bruno Thomsen <bruno.thomsen@gmail.com>
+> > 
+> > [ Upstream commit 7f43020e3bdb63d65661ed377682702f8b34d3ea ]
+> > 
+> > The previous fix listed bulk read of registers as root cause of
+> > accendential disabling of watchdog, since the watchdog counter
+> > register (WD_VAL) was zeroed.
+> > 
+> > Fixes: 3769a375ab83 rtc: pcf2127: bulk read only date and time registers.
+> > 
+> > Tested with the same PCF2127 chip as Sean reveled root cause
+> > of WD_VAL register value zeroing was caused by reading CTRL2
+> > register which is one of the watchdog feature control registers.
+> > 
+> > So the solution is to not read the first two control registers
+> > (CTRL1 and CTRL2) in pcf2127_rtc_read_time as they are not
+> > needed anyway. Size of local buf variable is kept to allow
+> > easy usage of register defines to improve readability of code.
+> 
+> Should the array be zeroed before or something? This way, one array
+> contains both undefined values and valid data...
+> 
+> > Debug trace line was updated after CTRL1 and CTRL2 are no longer
+> > read from the chip. Also replaced magic numbers in buf access
+> > with register defines.
+> 
+> That part is not an improvement. Previously the code was formatted so
+> that you could parse what is being printed.
 
-Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
----
- security/integrity/ima/ima_crypto.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Meta-comment: Making review comments on patches that are already in
+Linus's tree, is fine, but making them here seems a bit odd.  Please
+just go find the original patch and respond there, as there's not much
+you can do here _way_ after the fact, as the change is already
+committed.
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 7967a6904851..1253a2c187ef 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -663,6 +663,7 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
- 					      struct crypto_shash *tfm)
- {
- 	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
-+	int found = 0;
- 	int rc;
- 	u32 i;
- 	SHASH_DESC_ON_STACK(shash, tfm);
-@@ -673,6 +674,22 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
- 	if (rc != 0)
- 		return rc;
- 
-+	/*
-+	 * For backward's compatibility use TPM PCR SHA1 bank if allocated,
-+	 * otherwise use first enabled bank.
-+	 */
-+	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
-+		if (ima_tpm_chip->allocated_banks[i].alg_id == TPM_ALG_SHA1) {
-+			found = 1;
-+			break;
-+		}
-+	}
-+	if (!found) {
-+		d.alg_id = ima_tpm_chip->allocated_banks[0].alg_id;
-+		pr_info("Calculating the boot-aggregregate (TPM algorithm: %d)",
-+			d.alg_id);
-+	}
-+
- 	/* cumulative sha1 over tpm registers 0-7 */
- 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
- 		ima_pcrread(i, &d);
--- 
-2.7.5
+thanks,
 
+greg k-h
