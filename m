@@ -2,117 +2,134 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D21C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADB9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F6220720
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA51120708
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgAZNiY (ORCPT
+        id S1729273AbgAZNjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 08:38:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:36116 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgAZNiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 08:38:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFE5431B;
-        Sun, 26 Jan 2020 05:38:23 -0800 (PST)
-Received: from e110176-lin.benyossef.com (unknown [10.50.4.146])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 548F73F68E;
-        Sun, 26 Jan 2020 05:38:22 -0800 (PST)
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Ofir Drang <ofir.drang@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC] crypto: ccree - protect against short scatterlists
-Date:   Sun, 26 Jan 2020 15:38:05 +0200
-Message-Id: <20200126133805.20294-1-gilad@benyossef.com>
-X-Mailer: git-send-email 2.23.0
+        Sun, 26 Jan 2020 08:39:09 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:29526 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgAZNjI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 08:39:08 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 5+Q26d+J7PfCyMiRfduWDMvPl7C/kwKAfX9jzwehnmvTT5+2YJ8GnvkORj7N0JPGzTk4EE6SSf
+ jEGK7FICZo7/W6jMw9pBmrYP0E6zugnSGCFq7nHvW4wfS/m64gGuHAxnvVKVIzwLMZt6K19BQe
+ AeMyX57ErCOjLi9tt+/cIi9j7fuBOBG2K7eNJvL2dE0hMMBMDob1wGEQDlPdAEQB7ce8xGganC
+ pyVazYuEtgzQfkrUc6R2pdthq0tNtWcf9xritgXhvdLqODiBA4Og+wmICi49Nf8C7sXI0gZe0g
+ P3o=
+X-IronPort-AV: E=Sophos;i="5.70,365,1574146800"; 
+   d="scan'208";a="121477"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Jan 2020 06:39:06 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 26 Jan 2020 06:39:06 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Sun, 26 Jan 2020 06:39:06 -0700
+Date:   Sun, 26 Jan 2020 14:39:05 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+CC:     Andrew Lunn <andrew@lunn.ch>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>,
+        <jiri@resnulli.us>, <ivecera@redhat.com>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
+        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v3 04/10] net: bridge: mrp: Add generic netlink
+ interface to configure MRP
+Message-ID: <20200126133905.wzsvdsdvkc32dd4k@soft-dev3.microsemi.net>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-5-horatiu.vultur@microchip.com>
+ <20200125153403.GB18311@lunn.ch>
+ <20200125192854.yi544iu2atvbbwey@lx-anielsen.microsemi.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200125192854.yi544iu2atvbbwey@lx-anielsen.microsemi.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deal gracefully with the event of being handed a scatterlist
-which is shorter than expected.
+Hi,
+The 01/25/2020 20:28, Allan W. Nielsen wrote:
+> On 25.01.2020 16:34, Andrew Lunn wrote:
+> > On Fri, Jan 24, 2020 at 05:18:22PM +0100, Horatiu Vultur wrote:
+> > > Implement the generic netlink interface to configure MRP. The implementation
+> > > will do sanity checks over the attributes and then eventually call the MRP
+> > > interface which eventually will call the switchdev API.
+> > What was your thinking between adding a new generic netlink interface,
+> > and extending the current one?
+I thought is more clear to see which commands are used to configure MRP
+by adding a new generic netlink than extending the existing one.
 
-This mitigates a crash in some cases of crashes due to
-attempt to map empty (but not NULL) scatterlists with none
-zero lengths.
+> > 
+> > I've not looked at your user space code yet, but i assume it has to
+> > make use of both? It needs to create the bridge and add the
+> > interfaces. And then it needs to control the MRP state.
+Actually the userspace application doesn't create the bridge and add the
+interfaces. It expects that user does this using iproute2 or other
+commands.
+And once the bridge and interfaces are added then it would just
+configure the bridge.
 
-This is an interim patch, to help diagnoze the issue, not
-intended for mainline in its current form as of yet.
+> > 
+> > Allan mentioned you might get around to implementing 802.1CB? Would
+> > that be another generic netlink interface, or would you extend the MRP
+> > interface?
+> Horatiu, if you have given this any thoughts, then please share them.
+I have not look yet over this, I will try to have a look ASAP.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- drivers/crypto/ccree/cc_buffer_mgr.c | 30 +++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+> 
+> Here are my thoughts on 802.1CB: If we look at this with the traditional
+> NIC/host POW, then it would be natural to look at the HSR interface as
+> Vinicius suggested, and expose it as a new interface (HSR0). But when
+> looking at how 802.1CB say a bridge should act, and also what the
+> capabilities of the HW are, then it seem more natural to extend the TC
+> system. In HW it is a TCAM classifying the traffic, and it has some
+> actions to either replicate the matched frames, or eliminate the
+> additional copies.
+> 
+> The HW also supports CFM (see [1]), which we need (partly) to complete
+> the MRP implementation with MIM/MIC roles. This is also useful for none
+> MRP users (like ERPS).
+> 
+> This seems like an argument for moving this to the existing netlink
+> interfaces instead of having it as a generic netlink.
+> 
+> [1] https://en.wikipedia.org/wiki/IEEE_802.1ag
+> 
+> /Allan
 
-diff --git a/drivers/crypto/ccree/cc_buffer_mgr.c b/drivers/crypto/ccree/cc_buffer_mgr.c
-index a72586eccd81..9667a2630c66 100644
---- a/drivers/crypto/ccree/cc_buffer_mgr.c
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -286,10 +286,32 @@ static void cc_add_sg_entry(struct device *dev, struct buffer_array *sgl_data,
- 	sgl_data->num_of_buffers++;
- }
- 
-+static unsigned int cc_sg_trunc_len(struct scatterlist *sg, unsigned int len)
-+{
-+	unsigned int total;
-+
-+	if (!len)
-+		return 0;
-+
-+	for (total = 0; sg; sg = sg_next(sg)) {
-+		total += sg->length;
-+		if (total >= len) {
-+			total = len;
-+			break;
-+		}
-+	}
-+
-+	return total;
-+}
-+
- static int cc_map_sg(struct device *dev, struct scatterlist *sg,
- 		     unsigned int nbytes, int direction, u32 *nents,
- 		     u32 max_sg_nents, u32 *lbytes, u32 *mapped_nents)
- {
-+	int ret;
-+
-+	nbytes = cc_sg_trunc_len(sg, nbytes);
-+
- 	if (sg_is_last(sg)) {
- 		/* One entry only case -set to DLLI */
- 		if (dma_map_sg(dev, sg, 1, direction) != 1) {
-@@ -313,12 +335,14 @@ static int cc_map_sg(struct device *dev, struct scatterlist *sg,
- 		/* In case of mmu the number of mapped nents might
- 		 * be changed from the original sgl nents
- 		 */
--		*mapped_nents = dma_map_sg(dev, sg, *nents, direction);
--		if (*mapped_nents == 0) {
-+		ret = dma_map_sg(dev, sg, *nents, direction);
-+		if (dma_mapping_error(dev, ret)) {
- 			*nents = 0;
--			dev_err(dev, "dma_map_sg() sg buffer failed\n");
-+			dev_err(dev, "dma_map_sg() sg buffer failed %d\n", ret);
- 			return -ENOMEM;
- 		}
-+
-+		*mapped_nents = ret;
- 	}
- 
- 	return 0;
 -- 
-2.23.0
-
+/Horatiu
