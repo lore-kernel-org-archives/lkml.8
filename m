@@ -2,72 +2,74 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D86F9C35240
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E22CC35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDBD2075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02662083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:39:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="nOuavmRo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgAZJfL (ORCPT
+        id S1729154AbgAZJjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 04:35:11 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:56853 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgAZJfK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 04:35:10 -0500
-Received: from ip5f5bd665.dynamic.kabel-deutschland.de ([95.91.214.101] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iveJt-0008EY-VK; Sun, 26 Jan 2020 09:35:06 +0000
-Date:   Sun, 26 Jan 2020 10:35:07 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Hridya Valsaraju <hridya@google.com>,
-        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: binderfs interferes with syzkaller?
-Message-ID: <20200126093506.oa2ee5kbptur4zhz@wittgenstein>
-References: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
- <20200126085535.GA3533171@kroah.com>
+        Sun, 26 Jan 2020 04:39:35 -0500
+Received: from mx3.wp.pl ([212.77.101.9]:45431 "EHLO mx3.wp.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727754AbgAZJjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 04:39:35 -0500
+Received: (wp-smtpd smtp.wp.pl 1467 invoked from network); 26 Jan 2020 10:39:33 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1580031573; bh=8l1rmL5X5Cv0Cj5XiywukSTYoIUEeUjYPldXFydWbC0=;
+          h=From:To:Cc:Subject;
+          b=nOuavmRoSp5RRbeyZdERhjGL6lBZfuXp1C1VmIyHyeBce9sOakGtCD5JYmxMVHj4p
+           jvLiTTi+ttVtC62AHQY30tVHldAx8qkFpPY4H4fzMzBBtG7g8PBn5G/1x8ilpdGDLi
+           on5uDFfGmaLAJd15pl1s+7iBsuBqrtzBsV+ikYR4=
+Received: from host-178.215.207.168-internet.zabrze.debacom.pl (HELO localhost) (stf_xl@wp.pl@[178.215.207.168])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <colin.king@canonical.com>; 26 Jan 2020 10:39:33 +0100
+Date:   Sun, 26 Jan 2020 10:39:32 +0100
+From:   Stanislaw Gruszka <stf_xl@wp.pl>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Meenakshi Venkataraman <meenakshi.venkataraman@intel.com>,
+        Wey-Yi Guy <wey-yi.w.guy@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] iwlegacy: ensure loop counter addr does not wrap
+ and cause an infinite loop
+Message-ID: <20200126093932.GA605118@wp.pl>
+References: <20200126000954.22807-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200126085535.GA3533171@kroah.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200126000954.22807-1-colin.king@canonical.com>
+X-WP-MailID: 5300318e69b08c0e5e0d2f8643f46dc7
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [oROH]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 09:55:35AM +0100, Greg Kroah-Hartman wrote:
-> On Sat, Jan 25, 2020 at 06:49:49PM +0100, Dmitry Vyukov wrote:
-> > Hi binder maintainers,
-> > 
-> > It seems that something has happened and now syzbot has 0 coverage in
-> > drivers/android/binder.c:
-> > https://storage.googleapis.com/syzkaller/cover/ci-upstream-kasan-gce-root.html
-> > It covered at least something there before as it found some bugs in binder code.
-> > I _suspect_ it may be related to introduction binderfs, but it's
-> > purely based on the fact that binderfs changed lots of things there.
-> > And I see it claims to be backward compatible.
+On Sun, Jan 26, 2020 at 12:09:54AM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> It is backwards compatible if you mount binderfs, right?
+> The loop counter addr is a u16 where as the upper limit of the loop
+> is a an int. In the unlikely event that the il->cfg->eeprom_size is
+> greater than 64K then we end up with an infinite loop since addr will
+> wrap around an never reach upper loop limit. Fix this by making addr
+> an int.
+> 
+> Addresses-Coverity: ("Infinite loop")
+> Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Yes, it is backwards compatible. The devices that would usually be
-created in devtmpfs are now created in binderfs. The core
-binder-codepaths are the same.
-
-Christian
+Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
