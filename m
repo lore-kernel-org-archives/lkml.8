@@ -2,92 +2,123 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1358CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA5AC35246
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFAE2075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECC92071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgAZNMl (ORCPT
+        id S1728783AbgAZNOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 08:12:41 -0500
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:38231 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgAZNMl (ORCPT
+        Sun, 26 Jan 2020 08:14:04 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39704 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727322AbgAZNOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 08:12:41 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id D71B6100CF15C;
-        Sun, 26 Jan 2020 14:12:38 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 7C4D01D7C59; Sun, 26 Jan 2020 14:12:38 +0100 (CET)
-Date:   Sun, 26 Jan 2020 14:12:38 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     matthias.bgg@kernel.org
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH] serial: 8250_early: Add earlycon for BCM2835 aux uart
-Message-ID: <20200126131238.c65zj3wo3srafa7z@wunner.de>
-References: <20200126123314.3558-1-matthias.bgg@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200126123314.3558-1-matthias.bgg@kernel.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Sun, 26 Jan 2020 08:14:04 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00QDDuOh071813
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 08:14:03 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrjmstuqu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 08:14:02 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 26 Jan 2020 13:14:00 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 26 Jan 2020 13:13:59 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00QDDwgj37945524
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 26 Jan 2020 13:13:58 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8289011C04C;
+        Sun, 26 Jan 2020 13:13:58 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C257F11C04A;
+        Sun, 26 Jan 2020 13:13:57 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.205.7])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 26 Jan 2020 13:13:57 +0000 (GMT)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH] ima: fix calculating the boot_aggregate
+Date:   Sun, 26 Jan 2020 08:13:54 -0500
+X-Mailer: git-send-email 2.7.5
+X-TM-AS-GCONF: 00
+x-cbid: 20012613-0012-0000-0000-00000380C383
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012613-0013-0000-0000-000021BD10FC
+Message-Id: <1580044434-9132-1-git-send-email-zohar@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-26_01:2020-01-24,2020-01-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=1
+ mlxscore=0 adultscore=0 clxscore=1015 impostorscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001260116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 01:33:14PM +0100, matthias.bgg@kernel.org wrote:
-> +#ifdef CONFIG_SERIAL_8250_CONSOLE
-> +
-> +static int __init early_bcm2835aux_setup(struct earlycon_device *device,
-> +					const char *options)
-> +{
-> +	if (!device->port.membase)
-> +		return -ENODEV;
-> +
-> +	device->port.iotype = UPIO_MEM32;
-> +	device->port.regshift = 2;
-> +
-> +	return early_serial8250_setup(device, NULL);
-> +}
-> +
-> +OF_EARLYCON_DECLARE(bcm2835aux, "brcm,bcm2835-aux-uart",
-> +		    early_bcm2835aux_setup);
-> +#endif
+Calculating the boot_aggregate assumes that the TPM SHA1 bank is
+enabled.  Before trying to read the TPM SHA1 bank, ensure it is enabled.
+If it isn't enabled, calculate the boot_aggregate using the first bank
+enabled.
 
-Does this really work?  I also tried to get it working recently and
-the system just hung on boot.  Looking at it with a JTAG debugger
-showed that the bcm2835aux registers were inaccessible because
-the mini UART wasn't enabled in the AUXENB register.
+Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ security/integrity/ima/ima_crypto.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Maybe if you use OF_EARLYCON_DECLARE, the firmware recognizes that
-serial1 is set as stdout-path and performs enablement of the mini UART?
-Or are you using U-Boot which perhaps does the enablement?
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index 7967a6904851..1253a2c187ef 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -663,6 +663,7 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
+ 					      struct crypto_shash *tfm)
+ {
+ 	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
++	int found = 0;
+ 	int rc;
+ 	u32 i;
+ 	SHASH_DESC_ON_STACK(shash, tfm);
+@@ -673,6 +674,22 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
+ 	if (rc != 0)
+ 		return rc;
+ 
++	/*
++	 * For backward's compatibility use TPM PCR SHA1 bank if allocated,
++	 * otherwise use first enabled bank.
++	 */
++	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
++		if (ima_tpm_chip->allocated_banks[i].alg_id == TPM_ALG_SHA1) {
++			found = 1;
++			break;
++		}
++	}
++	if (!found) {
++		d.alg_id = ima_tpm_chip->allocated_banks[0].alg_id;
++		pr_info("Calculating the boot-aggregregate (TPM algorithm: %d)",
++			d.alg_id);
++	}
++
+ 	/* cumulative sha1 over tpm registers 0-7 */
+ 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+ 		ima_pcrread(i, &d);
+-- 
+2.7.5
 
-I also saw in the JTAG debugger that the uartclk member contained
-an incorrect value, so I'd expect that it has to be set as well in
-early_bcm2835aux_setup().
-
-I'll see to it that I give this patch a whirl when I return to the
-office next week.
-
-Thanks,
-
-Lukas
