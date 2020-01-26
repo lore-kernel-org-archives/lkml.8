@@ -2,127 +2,103 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D757FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD50C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F155206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A853520702
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 18:38:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="0ld6Ez34"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMfvEh8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgAZSfG (ORCPT
+        id S1728843AbgAZSix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 13:35:06 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45858 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgAZSfG (ORCPT
+        Sun, 26 Jan 2020 13:38:53 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:37416 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbgAZSix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 13:35:06 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so3819452pfg.12
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 10:35:06 -0800 (PST)
+        Sun, 26 Jan 2020 13:38:53 -0500
+Received: by mail-yw1-f67.google.com with SMTP id l5so3714118ywd.4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 10:38:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=buJqycnRJmE0klBvQ3jUgMDQeTjnHb0PShrMhrfuVB8=;
-        b=0ld6Ez34Qsy5L3zKymuv8E6s6kzPBTjfgjQExASj5271nr04uZjgejw/GxVmrYGSq3
-         bPaIDolal+2F38wWFPyNSQmA7WddKehD390EXrXeKt23g0Vh1LKITI+f3zlGcRDBgf9d
-         z0xAsaSsde/YRQdkq9D6PEzUdwsds0vDwWDZw2gj18W4zOXxpgSw74hC/Iij7np58XAQ
-         Sok2aEho84XWfHCmkvMfwsfF/CW7rAJOTq3ZyrrQVIwoWE5Ql0/8yBvmDhZ/sO3ia7ko
-         VoDvP1nyMu3y8PgBlt6d4xAuEXXSbWdoFX91Vj6H0/coJAZ0DKZsYL4/GsQdZp+We76Y
-         14qA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i69aVqNtUh0aH4/EUSRDvf/FER9Hz68ISkhaUxUzTl0=;
+        b=rMfvEh8T4b186lRHcWlnCCdlJg9db7RjBiyF5TCaQz1NcahGJQ7eCMmDE/JxwOTl7b
+         LHizr5TWq5uqwSzp8Xk0MsEgWlBAejc5L0ULiKQk/ZD9n2y0doi/z55xP00bj3yv3Ava
+         L1t7HDea0d8F2i15NqsG2tcjSbJpeFciT4k6Js5l0jnPrIJaQ1FOAirbv1uves9uyh2Z
+         o3144kE6biOVCtOgZVGZn6xIrQgN6laceEyhtJJnAEV5rVe9ujeKKBx7s3pYa1nxQgzf
+         K2Sjc9L5ypLwirkXI9cgkeeANEbDCpTBHHhXM+dSdh4vjzNWV6apbmPXhJ3d+idb2OX+
+         959g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=buJqycnRJmE0klBvQ3jUgMDQeTjnHb0PShrMhrfuVB8=;
-        b=ESvUHTjrm2nniXBKQE2/278KoghfuUwhsct3YwwJEWAIPYn/jLaZe97SVDe5sYZbf6
-         XEN7FURkG7gMGqnEWGFzafgMlg+vIBl3CmxqTguibEVCqcTuIuovrn6WpA2GHssQi/o3
-         jZ3/qYhQ7VFXamhzyz5pNDoBnLFZ6PNEIBYb07Ws0W/JS13llJ3a80DpP6Fa+ocdvhiv
-         7+e7BEXJSuK869c6qDueGa8dya8UDWUX3qQcU+mZ7+24MpWqRJAMQ7jdY7m6iyI3f2Yz
-         kOXcia0zlOmNv9aY3eirzMEPy5tZfofdpJExQHM+0i8sND0FajU/qa49p7zsNzIIf6U2
-         9gbg==
-X-Gm-Message-State: APjAAAWbhE6HmviADCqoP+Hik67iqeCgPVlFfWd8syvwgjvrOqHVyH0Q
-        aYM9RnO4eksvT/JHJkthUXXOpA==
-X-Google-Smtp-Source: APXvYqyhSoh0s6Ekkqi2sNDxODbKwJ831I0jnyBSCMndArKyHIgMKJixjEHLPA+aFoo/LdQTaooSYQ==
-X-Received: by 2002:aa7:9796:: with SMTP id o22mr12683626pfp.101.1580063705781;
-        Sun, 26 Jan 2020 10:35:05 -0800 (PST)
-Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
-        by smtp.gmail.com with ESMTPSA id s25sm12426540pfh.110.2020.01.26.10.35.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Jan 2020 10:35:05 -0800 (PST)
-Subject: Re: [PATCH] ionic: Fix rx queue allocation in 'ionic_lif_alloc()'
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        drivers@pensando.io, jakub.kicinski@netronome.com,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20200126102540.14812-1-christophe.jaillet@wanadoo.fr>
-From:   Shannon Nelson <snelson@pensando.io>
-Message-ID: <0a90fbcb-430e-d059-cd1c-7960e7ec6806@pensando.io>
-Date:   Sun, 26 Jan 2020 10:36:00 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i69aVqNtUh0aH4/EUSRDvf/FER9Hz68ISkhaUxUzTl0=;
+        b=Eat9MpAO0OhHL5csVs5A6j3x2BjsUFWQB1bJWkGp3nyV4d585dGr1aw4a0hkhe3ytY
+         /kBYJaTLKCHelKHc002SRQRkiiZk4/up1E3ZhqN2RUuKz1I5/xI1Q/1Si9O0U5KeL/vE
+         fqDFJXcdNnjElClg5RATdbt5x170OJGJoSh0YpV+mIrc3/HATdduQMtzNmPyF8uP827C
+         YPuI89b0KIii4gAcZOTFmcBZlMv3drgC8VSef26p6otz/wfEMgY862htIIjznz5MCto+
+         FhCo4jolVi+E9C2JpTsHNzcZTtR+myrW6YEvrSZjTGtlirZcZfUzY4EvnJEcPWeMKuV6
+         Gqlw==
+X-Gm-Message-State: APjAAAUWSUZFPypav6WJeoS92JOTGnm/hCPRQXOdm0VFbZ0TNPTsbew6
+        WgrBCNSgdC0X3kYcLScMZ0cfhU2ln+8jb24Chgd7Sejb
+X-Google-Smtp-Source: APXvYqyWhEZHHYbOhHnC3t0Y6vH6sqNyRu0S2xuvfX0uCPx5pSn6uW89RhMOwvFd1iBNaWGKbGJxIM0/hZDazU7SBIc=
+X-Received: by 2002:a81:53d7:: with SMTP id h206mr8970498ywb.92.1580063932400;
+ Sun, 26 Jan 2020 10:38:52 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200126102540.14812-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200124093047.008739095@linuxfoundation.org> <20200124093207.912523612@linuxfoundation.org>
+ <20200126182917.GA26911@amd>
+In-Reply-To: <20200126182917.GA26911@amd>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Sun, 26 Jan 2020 10:38:41 -0800
+Message-ID: <CANn89iKTYMT8T5tOPmk0j4emHt2gCbJD9Dpjf=5LR88zC1tu4A@mail.gmail.com>
+Subject: Re: [PATCH 4.19 625/639] packet: fix data-race in fanout_flow_is_huge()
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/26/20 2:25 AM, Christophe JAILLET wrote:
-> The 'struct ionic' has a 'nrxqs_per_lif' field. So use it instead of
-> using two times the value of 'ntxqs_per_lif'.
+On Sun, Jan 26, 2020 at 10:29 AM Pavel Machek <pavel@denx.de> wrote:
 >
-> Note that with the current implementation, this patch is a no-op because
-> both fields are set to the same value in 'ionic_lifs_size()' which
-> is called before reaching 'ionic_lif_alloc()'.
 >
-> However, it is more future-proof.
+> > -     po->rollover->history[prandom_u32() % ROLLOVER_HLEN] = rxhash;
+> > +     victim = prandom_u32() % ROLLOVER_HLEN;
+> > +
+> > +     /* Avoid dirtying the cache line if possible */
+> > +     if (READ_ONCE(history[victim]) != rxhash)
+> > +             WRITE_ONCE(history[victim], rxhash);
+> > +
 >
-> Fixes: 1a58e196467f ("ionic: Add basic lif support")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Another alternative could be to use 'alloc_etherdev_mq()' if really using
-> the same value for both fields is what is expected.
-> ---
->   drivers/net/ethernet/pensando/ionic/ionic_lif.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> Replacing simple asignment with if() is ... not nice and with all the
+> "volatile" magic in _ONCE macros may not be win for
+> everyone. [Actually, I don't think this is win here. This is not
+> exactly hot path, is it?
+
+
+This is a critical hot path, eg under DDOS attack.
+
 >
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-> index 60fd14df49d7..96d3b3e993ad 100644
-> --- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-> +++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-> @@ -1663,7 +1663,7 @@ static struct ionic_lif *ionic_lif_alloc(struct ionic *ionic, unsigned int index
->   	int err;
->   
->   	netdev = alloc_etherdev_mqs(sizeof(*lif),
-> -				    ionic->ntxqs_per_lif, ionic->ntxqs_per_lif);
-> +				    ionic->ntxqs_per_lif, ionic->nrxqs_per_lif);
->   	if (!netdev) {
->   		dev_err(dev, "Cannot allocate netdev, aborting\n");
->   		return ERR_PTR(-ENOMEM);
+> If this is going to get more common, should we get
+> WRITE_ONCE_NONDIRTY() macro hiding the uglyness?
+>
 
-NAK
+Sure, but we do not add macros for stable patches, usually.
 
-Even though the NIC configuration seems to allow for different values, 
-the rest of the driver assumes that the values are equal and things will 
-likely break if they aren't.  This is why the ethtool service 
-ionic_set_channels() only allows the user to change the Combined value, 
-and not the individual rx or tx values.
+Honestly, WRITE_ONCE_NONDIRTY() looks ugly to me.
 
-If you really want to tweak this, a better change might be to use the 
-min of ntxqs and nrxqs, and maybe add a warning log message that they 
-are configured with different values.
-
-sln
-
+Note that the KCSAN race might be solved in another way when
+data_race() is available.
