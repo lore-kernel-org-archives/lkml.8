@@ -2,107 +2,122 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED864C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 12:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBECC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 12:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB18A2083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 12:33:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580042004;
-	bh=jiPyg4xMYng3XTyef+gtnfbqk1VNKvF8MyDPzuNMtWU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=sBNUUhk9/kV1l0o6SuLHLONj/lq6oJLCCoNLrc3f1FSMAR8WzWgTItBC6SYdJ5ddC
-	 0EXDxGozsvAVpANKEP3Cgwrpp9wAYy+OL3A4SEf63WYsbKe79i7BQYvduRugpdGoHK
-	 YRwe+Jd7MexFkfJiKLPkogepRQAHB1dXn6jRlblo=
+	by mail.kernel.org (Postfix) with ESMTP id B589020716
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 12:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387431AbgAZMdY (ORCPT
+        id S2387432AbgAZMsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 07:33:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387403AbgAZMdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 07:33:23 -0500
-Received: from ziggy.de (unknown [95.169.235.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF5AA2071A;
-        Sun, 26 Jan 2020 12:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580042002;
-        bh=jiPyg4xMYng3XTyef+gtnfbqk1VNKvF8MyDPzuNMtWU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oY/V6N+Bk295aS5GBBQ4hYmTuZJaC2Ikx3wC+D4nFi0kXAvZTX1gTtF0TS0ljn4r0
-         Rhw8kURC/bEaPBnvaduzUuX751qYa/n9Dacm6ArLhMp+CYfDfnMbwZdqwmWbJoKqV3
-         BJgFkNHZb6mcfOsRROAYBekXYeC0mxv6U2x4NQmE=
-From:   matthias.bgg@kernel.org
-To:     gregkh@linuxfoundation.org, jslaby@suse.com, nsaenzjulienne@suse.de
-Cc:     linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, matthias.bgg@kernel.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH] serial: 8250_early: Add earlycon for BCM2835 aux uart
-Date:   Sun, 26 Jan 2020 13:33:14 +0100
-Message-Id: <20200126123314.3558-1-matthias.bgg@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Sun, 26 Jan 2020 07:48:38 -0500
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:54833 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387398AbgAZMsh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 07:48:37 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id A0D572800BB69;
+        Sun, 26 Jan 2020 13:48:34 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 6BC3042A3A; Sun, 26 Jan 2020 13:48:34 +0100 (CET)
+Date:   Sun, 26 Jan 2020 13:48:34 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Matthew Whitehead <tedheadster@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vt: Fix non-blinking cursor regression
+Message-ID: <20200126124834.ea7uxyprz2uaek5x@wunner.de>
+References: <575cb82102aa59a7a8e34248821b78e1dd844777.1579701673.git.lukas@wunner.de>
+ <nycvar.YSQ.7.76.2001221032210.1655@knanqh.ubzr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YSQ.7.76.2001221032210.1655@knanqh.ubzr>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <mbrugger@suse.com>
+On Wed, Jan 22, 2020 at 11:40:38AM -0500, Nicolas Pitre wrote:
+> On Wed, 22 Jan 2020, Lukas Wunner wrote:
+> > Since commit a6dbe4427559 ("vt: perform safe console erase in the right
+> > order"), when userspace clears both the scrollback buffer and the screen
+> > by writing "\e[3J" to an fbdev virtual console, the cursor stops blinking
+> > if that virtual console is not in the foreground.  I'm witnessing this
+> > on every boot of Raspbian since updating to v4.19.37+ because agetty
+> > writes the sequence to /dev/tty6 while the console is still switched to
+> > /dev/tty1.  Switching consoles once makes the cursor blink again.
+> > 
+> > The commit added an invocation of ->con_switch() to flush_scrollback().
+> > Normally this is only invoked from switch_screen() to switch consoles.
+> > switch_screen() updates *vc->vc_display_fg to the new console and
+> > fbcon_switch() updates ops->currcon.  Because the commit only invokes
+> > fbcon_switch() but doesn't update *vc->vc_display_fg, it performs an
+> > incomplete console switch.
+> > 
+> > When fb_flashcursor() subsequently blinks the cursor, it retrieves the
+> > foreground console from ops->currcon.  Because *vc->vc_display_fg wasn't
+> > updated, con_is_visible() incorrectly returns false and as a result,
+> > fb_flashcursor() bails out without blinking the cursor.
+> > 
+> > The invocation of ->con_switch() appears to have been erroneous.  After
+> > all, why should a console switch be performed when clearing the screen?
+> > The commit message doesn't provide a rationale either.  So delete it.
+> 
+> The problem here is that only vgacon provides a con_flush_scrollback 
+> method. When not provided, the only way to flush the scrollback buffer 
+> is to invoke the switch method. If you remove it the scrollback buffer 
+> of the foreground console won't be flushed in the fb case and possibly 
+> others.
 
-Define the OF early console for BCM2835 aux UART, which can be enabled
-by passing "earlycon" on the boot command line. This UART is found on
-BCM283x and BCM27xx SoCs, a.k.a. Raspberry Pi in its variants.
+Okay.  I guess it's somewhat counter-intuitive that ->con_switch()
+is called only because it has the side effect of flushing scrollback.
+In particular, this approach doesn't work for nonvisible consoles.
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+So the proper solution might be to amend the fb_con struct with a
+->con_flush_scrollback() hook.  Which portions of fbcon_switch()
+would have to be duplicated in that hook?  The softback code at the
+top of the function would seem like an obvious candidate.  What about
+the invocation of fb_set_var() (which in turn calls fb_pan_display())?
+Anything else?
 
----
+FWIW, even without any call to ->con_switch, writing "\e[3J" does
+flush scrollback.  Works both on the foreground console as well as
+nonvisible consoles.  I've tested this with bcm2708_fb which isn't
+upstream yet, it's in the Raspberry Pi Foundation's downstream tree:
 
- drivers/tty/serial/8250/8250_bcm2835aux.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+https://github.com/raspberrypi/linux/blob/rpi-4.19.y/drivers/video/fbdev/bcm2708_fb.c
 
-diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
-index 8ce700c1a7fc..6769cea2964a 100644
---- a/drivers/tty/serial/8250/8250_bcm2835aux.c
-+++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
-@@ -135,6 +135,24 @@ static struct platform_driver bcm2835aux_serial_driver = {
- };
- module_platform_driver(bcm2835aux_serial_driver);
- 
-+#ifdef CONFIG_SERIAL_8250_CONSOLE
-+
-+static int __init early_bcm2835aux_setup(struct earlycon_device *device,
-+					const char *options)
-+{
-+	if (!device->port.membase)
-+		return -ENODEV;
-+
-+	device->port.iotype = UPIO_MEM32;
-+	device->port.regshift = 2;
-+
-+	return early_serial8250_setup(device, NULL);
-+}
-+
-+OF_EARLYCON_DECLARE(bcm2835aux, "brcm,bcm2835-aux-uart",
-+		    early_bcm2835aux_setup);
-+#endif
-+
- MODULE_DESCRIPTION("BCM2835 auxiliar UART driver");
- MODULE_AUTHOR("Martin Sperl <kernel@martin.sperl.org>");
- MODULE_LICENSE("GPL v2");
--- 
-2.24.1
 
+> @@ -936,10 +936,13 @@ static void flush_scrollback(struct vc_data *vc)
+>  	WARN_CONSOLE_UNLOCKED();
+>  
+>  	set_origin(vc);
+> -	if (vc->vc_sw->con_flush_scrollback)
+> +	if (vc->vc_sw->con_flush_scrollback) {
+>  		vc->vc_sw->con_flush_scrollback(vc);
+> -	else
+> +	} else if (con_is_visible(vc)) {
+> +		hide_cursor(vc);
+>  		vc->vc_sw->con_switch(vc);
+> +		set_cursor(vc);
+> +	}
+
+A dumb question perhaps, but why is it necessary to hide the cursor?
+
+Thanks,
+
+Lukas
