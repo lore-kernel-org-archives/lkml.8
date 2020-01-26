@@ -2,131 +2,113 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD38C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAC5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F154206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AAE2071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 11:37:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="M0TbBDjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbgAZLgT (ORCPT
+        id S2387435AbgAZLh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 06:36:19 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52142 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728689AbgAZLgT (ORCPT
+        Sun, 26 Jan 2020 06:37:27 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:18543 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387416AbgAZLh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 06:36:19 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 68FEA1C2103; Sun, 26 Jan 2020 12:36:17 +0100 (CET)
-Date:   Sun, 26 Jan 2020 12:36:16 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 540/639] wcn36xx: use dynamic allocation for large
- variables
-Message-ID: <20200126113616.GB19082@duo.ucw.cz>
-References: <20200124093047.008739095@linuxfoundation.org>
- <20200124093156.657476612@linuxfoundation.org>
+        Sun, 26 Jan 2020 06:37:26 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580038646; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=o7Z67Njt6M7BftRiSC70I/zPhgR1uwAuSo7PHvYIVPM=;
+ b=M0TbBDjYrzp6Bgyz5HAuoJbmmoXWtogLQfpE5koYVeLV+xZnbl+p1KsFfYjXPAcGrwDws40R
+ B13nKZfP3h9geP/tKP2jPz1tQsR1oc3qIX0tWWXCGTlqx/byLthoajYQ4MArIOXSJfVmJVCJ
+ +7kszpEIsdH5YENMOZ9XwDvWyp0=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2d79f2.7f18535f7458-smtp-out-n03;
+ Sun, 26 Jan 2020 11:37:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D8991C4479C; Sun, 26 Jan 2020 11:37:22 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B869CC433CB;
+        Sun, 26 Jan 2020 11:37:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B869CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
-Content-Disposition: inline
-In-Reply-To: <20200124093156.657476612@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] mwifiex: drop most magic numbers from
+ mwifiex_process_tdls_action_frame()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191206194535.150179-1-briannorris@chromium.org>
+References: <20191206194535.150179-1-briannorris@chromium.org>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     linux-wireless@vger.kernel.org, <linux-kernel@vger.kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>, dan.carpenter@oracle.com,
+        solar@openwall.com, wangqize888888888@gmail.com,
+        Brian Norris <briannorris@chromium.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200126113722.D8991C4479C@smtp.codeaurora.org>
+Date:   Sun, 26 Jan 2020 11:37:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Brian Norris <briannorris@chromium.org> wrote:
 
---/NkBOFFp2J2Af1nK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Before commit 1e58252e334d ("mwifiex: Fix heap overflow in
+> mmwifiex_process_tdls_action_frame()"),
+> mwifiex_process_tdls_action_frame() already had too many magic numbers.
+> But this commit just added a ton more, in the name of checking for
+> buffer overflows. That seems like a really bad idea.
+> 
+> Let's make these magic numbers a little less magic, by
+> (a) factoring out 'pos[1]' as 'ie_len'
+> (b) using 'sizeof' on the appropriate source or destination fields where
+>     possible, instead of bare numbers
+> (c) dropping redundant checks, per below.
+> 
+> Regarding redundant checks: the beginning of the loop has this:
+> 
+>                 if (pos + 2 + pos[1] > end)
+>                         break;
+> 
+> but then individual 'case's include stuff like this:
+> 
+>  			if (pos > end - 3)
+>  				return;
+>  			if (pos[1] != 1)
+> 				return;
+> 
+> Note that the second 'return' (validating the length, pos[1]) combined
+> with the above condition (ensuring 'pos + 2 + length' doesn't exceed
+> 'end'), makes the first 'return' (whose 'if' can be reworded as 'pos >
+> end - pos[1] - 2') redundant. Rather than unwind the magic numbers
+> there, just drop those conditions.
+> 
+> Fixes: 1e58252e334d ("mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()")
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 
-Hi!
+Patch applied to wireless-drivers-next.git, thanks.
 
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> [ Upstream commit 355cf31912014e6ff1bb1019ae4858cad12c68cf ]
->=20
-> clang triggers a warning about oversized stack frames that gcc does not
-> notice because of slightly different inlining decisions:
->=20
-> ath/wcn36xx/smd.c:1409:5: error: stack frame size of 1040 bytes in functi=
-on 'wcn36xx_smd_config_bss' [-Werror,-Wframe-larger-than=3D]
-> ath/wcn36xx/smd.c:640:5: error: stack frame size of 1032 bytes in functio=
-n 'wcn36xx_smd_start_hw_scan' [-Werror,-Wframe-larger-than=3D]
->=20
-> Basically the wcn36xx_hal_start_scan_offload_req_msg,
-> wcn36xx_hal_config_bss_req_msg_v1, and wcn36xx_hal_config_bss_req_msg
-> structures are too large to be put on the kernel stack, but small
-> enough that gcc does not warn about them.
->=20
-> Use kzalloc() to allocate them all. There are similar structures in other
-> parts of this driver, but they are all smaller, with the next largest
-> stack frame at 480 bytes for wcn36xx_smd_send_beacon.
+70e5b8f445fd mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
 
->  	int ret, i;
-> =20
->  	if (req->ie_len > WCN36XX_MAX_SCAN_IE_LEN)
->  		return -EINVAL;
-> =20
->  	mutex_lock(&wcn->hal_mutex);
-> -	INIT_HAL_MSG(msg_body, WCN36XX_HAL_START_SCAN_OFFLOAD_REQ);
-> +	msg_body =3D kzalloc(sizeof(*msg_body), GFP_KERNEL);
-> +	if (!msg_body) {
-> +		ret =3D -ENOMEM;
-> +		goto out;
-> +	}
+-- 
+https://patchwork.kernel.org/patch/11277011/
 
-The allocation can be done outside the lock.
-
-> @@ -1410,16 +1428,21 @@ int wcn36xx_smd_config_bss(struct wcn36xx *wcn, s=
-truct ieee80211_vif *vif,
->  			   struct ieee80211_sta *sta, const u8 *bssid,
->  			   bool update)
->  {
-> -	struct wcn36xx_hal_config_bss_req_msg msg;
-> +	struct wcn36xx_hal_config_bss_req_msg *msg;
->  	struct wcn36xx_hal_config_bss_params *bss;
->  	struct wcn36xx_hal_config_sta_params *sta_params;
->  	struct wcn36xx_vif *vif_priv =3D wcn36xx_vif_to_priv(vif);
->  	int ret;
-> =20
->  	mutex_lock(&wcn->hal_mutex);
-> -	INIT_HAL_MSG(msg, WCN36XX_HAL_CONFIG_BSS_REQ);
-> +	msg =3D kzalloc(sizeof(*msg), GFP_KERNEL);
-> +	if (!msg) {
-> +		ret =3D -ENOMEM;
-> +		goto out;
-> +	}
-> +	INIT_HAL_MSG((*msg), WCN36XX_HAL_CONFIG_BSS_REQ);
-
-Same here.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---/NkBOFFp2J2Af1nK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXi15sAAKCRAw5/Bqldv6
-8jrlAJ96jj/ngctVdO0FcxlO4LRn9I1GRwCgsrfJ9BdWXm1gqcF4PqOnk5kpq2U=
-=wSzG
------END PGP SIGNATURE-----
-
---/NkBOFFp2J2Af1nK--
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
