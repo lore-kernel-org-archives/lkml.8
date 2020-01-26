@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D11C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 14:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6654CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 14:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3782075D
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 14:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319872071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 14:18:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=teoenmingcorp.onmicrosoft.com header.i=@teoenmingcorp.onmicrosoft.com header.b="EuiEFYME"
+	dkim=pass (1024-bit key) header.d=teoenmingcorp.onmicrosoft.com header.i=@teoenmingcorp.onmicrosoft.com header.b="TJkjW8Gm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgAZOKb (ORCPT
+        id S1729075AbgAZOSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 09:10:31 -0500
-Received: from mail-eopbgr1300051.outbound.protection.outlook.com ([40.107.130.51]:53856
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        Sun, 26 Jan 2020 09:18:22 -0500
+Received: from mail-eopbgr1310044.outbound.protection.outlook.com ([40.107.131.44]:9248
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726323AbgAZOKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 09:10:31 -0500
+        id S1726275AbgAZOSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 09:18:21 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iX4a4bQq2+CB+8Z9nmIOf6KEGt6rgqgvTzpNhVktLrUETAFkHJ0MSYBNHwGLKRaSWUyKvNpka1Id16Frg97s6v8I/diYHdQAti4ZPYRPAUUYF34ABM4DMbFhCtXA2F747BIO4JCZQrXmlhgwfMEO5IcUaWDXOGbLjQBDSzIangzbuQnI8esOAj0bo6qvwJZ6C2Z0vqaI50yEz37N/R8pubG/sdTm6/2pRSMycUYaqKQrEFzVdVXHblNShlfaDNM/LihN4yXyKAhO+lRsdbD6Cku5a2RFtubO6XdEtBELRw0SmiwRcHlOJRatu8SXQq7fBb7Ui4TRu1mcCkjcjd7rWQ==
+ b=OGwvmS4CSOq9yVl3hSpI2ZbYWfkgIFf93u0KHyvLSEs4+S6ED2IgGUrTw1w0nuxV1DLPGPQvVhj4qnYdYSbBkgnCBs/zrs23FE6+dTBYlQQfRa7I9Cw3HGHuzPUKbkRqd4YIhq+GK6QO26fMRexvvfzV4WIRd/c+IXqwwl+nZx77jyS7nUciIGFIjB4yU6qvA/k4fDmkPKYNs1+tkJukF2Fm7oTSKZPDTdgY76+T2+J0/AxI47WRQv1NpoIczB1S6aSrzxmHORqwZ/8K2aNuG3ec6wYIJJS0TCFoV7mx7SJiAlBAZb8qGIXcADz3gZ9BVuv0qrL3/m537lLAjTWZQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7OjBkN9ctKJkl0HO27rbMu2F5Q95oiRJEeJBMos8/+c=;
- b=JKxlliodQFMIzJ/ackQWeLV2p/Zm5UtncweCKAyyBxn6f/kSZxOdeiNz+1A3Nqs/7Oy+Tkolf9KjhTiT1Qzfm6AlX2zqjEZC4eiB9VQe1pychmDudbedDLah5ZlfFptoGDEn7qDE7EfAJk1jnb4SQtmxfMxDokAgbtZ5EWRNjDuvxOxycRiZVqr3N86Mz+659veExXl1wEb+3+A+srt7PavydcOepDWfjBrRKsh70ym3w/qs/fDyTZUnD9LjnpstAbPxY4K8ddpPKnn3qtMX9gjenYblhohP5nRtJEP4WNgihlBvV0kMzx60o9MGv6iGLhiH6trD66KNimJDYZOGJg==
+ bh=JrGalLvImBvf6t6Gsi60ec+Ta/Z4UEi6KuLM7GdK6AU=;
+ b=YecLn2e399S4B1annDvK2aYqGkjkvW1XMcm0M/Am5im+EHsy7Wf8efa4EPeqMG15dxEsW3p7ejh66cYqSCDtMO3T0htn2fNQOFp/MZsRnpy9NHnCepzWkbtU5vzcXQuhBnb0jUcA4OgKL1bmnd0x/apx83/7oSRbWeN84U98AO3xkrvK+Z1fUuYYLpVjpNcpirMZKVIqpY9reO/NKxFDcmtEkoyMbcprdbEcjZwufSc7ThtT6k+moH9RplR/BmYaqUPAnQv5Eo53qAkVwZnuRx3VnsMleQ8NeZkAug+MucV8noUKBUqpweYOUD8v3koXwJbGkA218pNsUOytB6ScTw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=teo-en-ming-corp.com; dmarc=pass action=none
  header.from=teo-en-ming-corp.com; dkim=pass header.d=teo-en-ming-corp.com;
@@ -36,26 +36,26 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=teoenmingcorp.onmicrosoft.com; s=selector2-teoenmingcorp-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7OjBkN9ctKJkl0HO27rbMu2F5Q95oiRJEeJBMos8/+c=;
- b=EuiEFYMEtOLy981jxnpS1dyYZ7rMXPN8eXY/g6DLtnLeyIqrlPlZVOYS9vH6nRnhg9nMPs/s+6WXTC3ETxBK8ZZGL5Ca50BG1jbWqpMi1nOs2RYEyALVzsGyP+TIiX56aGG3lR+SWq99NMWysal27HV7+1EvxhFiC6YrN4BxaV0=
+ bh=JrGalLvImBvf6t6Gsi60ec+Ta/Z4UEi6KuLM7GdK6AU=;
+ b=TJkjW8GmqJSq2QZWNbWF58M/W6874iD8fUAKrW3+XDQB2+tukvU9uYO8NP8HXrWlI12cqmVbU5hpKK3E4dDY+zfiz3jZVeXc+LE+jHe1VPk2BOrin0wwIoVsX/hDWgetB4x7RcvF5HdjdSR1Hc2atie5PX5kJN+niylgZ7KLcX4=
 Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com (10.170.143.19) by
- SG2PR01MB3318.apcprd01.prod.exchangelabs.com (20.178.152.80) with Microsoft
+ SG2PR01MB3453.apcprd01.prod.exchangelabs.com (52.132.235.83) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.24; Sun, 26 Jan 2020 14:10:25 +0000
+ 15.20.2665.24; Sun, 26 Jan 2020 14:18:16 +0000
 Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com
  ([fe80::81e9:67b1:74eb:2853]) by SG2PR01MB2141.apcprd01.prod.exchangelabs.com
  ([fe80::81e9:67b1:74eb:2853%3]) with mapi id 15.20.2665.017; Sun, 26 Jan 2020
- 14:10:24 +0000
+ 14:18:16 +0000
 From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
 To:     linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
-Subject: Teo En Ming's Setting Up Azure Active Directory Synchronization with
- Office 365 for Business PDF Manual
-Thread-Topic: Teo En Ming's Setting Up Azure Active Directory Synchronization
- with Office 365 for Business PDF Manual
-Thread-Index: AdXUUj0/JvA2GaTYRcKJjJpuUUuJuQ==
-Date:   Sun, 26 Jan 2020 14:10:24 +0000
-Message-ID: <SG2PR01MB214149C6D9D5F5768FB6D99B87080@SG2PR01MB2141.apcprd01.prod.exchangelabs.com>
+Subject: Teo En Ming's Setting Up Ubuntu 16.04.6 LTS Linux Server with Samba4
+ as an Active Directory Domain Controller PDF Manual
+Thread-Topic: Teo En Ming's Setting Up Ubuntu 16.04.6 LTS Linux Server with
+ Samba4 as an Active Directory Domain Controller PDF Manual
+Thread-Index: AdXUU2eEAIddTEWOT4SL8bSJm6z+kg==
+Date:   Sun, 26 Jan 2020 14:18:16 +0000
+Message-ID: <SG2PR01MB2141272CAB5BEC7980CBDE4F87080@SG2PR01MB2141.apcprd01.prod.exchangelabs.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -64,56 +64,60 @@ authentication-results: spf=none (sender IP is )
  smtp.mailfrom=ceo@teo-en-ming-corp.com; 
 x-originating-ip: [2401:7400:c802:de67:e40f:e55:fa61:178b]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 41cc21db-5010-4a42-34b0-08d7a2697d0f
-x-ms-traffictypediagnostic: SG2PR01MB3318:
+x-ms-office365-filtering-correlation-id: fca80416-e37a-44bf-d44e-08d7a26a964c
+x-ms-traffictypediagnostic: SG2PR01MB3453:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SG2PR01MB3318727DF957F11468ED97A287080@SG2PR01MB3318.apcprd01.prod.exchangelabs.com>
+x-microsoft-antispam-prvs: <SG2PR01MB345390566C60D2D6D57857A187080@SG2PR01MB3453.apcprd01.prod.exchangelabs.com>
 x-ms-oob-tlc-oobclassifiers: OLM:6108;
 x-forefront-prvs: 02945962BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(366004)(376002)(39830400003)(346002)(47610400004)(189003)(199004)(33656002)(5660300002)(86362001)(81166006)(81156014)(8676002)(8936002)(45080400002)(186003)(64756008)(66476007)(66556008)(66446008)(508600001)(55016002)(9686003)(966005)(7696005)(52536014)(6916009)(107886003)(66946007)(76116006)(6506007)(316002)(71200400001)(4326008)(52230400001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR01MB3318;H:SG2PR01MB2141.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39830400003)(346002)(366004)(376002)(136003)(189003)(199004)(316002)(6916009)(71200400001)(86362001)(6506007)(966005)(2906002)(33656002)(9686003)(55016002)(508600001)(8936002)(8676002)(81156014)(81166006)(4326008)(7696005)(66556008)(66476007)(66946007)(76116006)(186003)(52536014)(64756008)(5660300002)(66446008)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR01MB3453;H:SG2PR01MB2141.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:3;A:1;
 received-spf: None (protection.outlook.com: teo-en-ming-corp.com does not
  designate permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ixfa0V10JwUWJfEa2RTS4Zh8uqGE3W4CX8Npew8PXFonW/FmnzyXMI3ChAf6vTs46JRq8FnHSMjc5dUHq1RGu4jzxcmkoT6uigr1FjcNZlZ9Rqh4mrd0KLeD5n56pQFIc+EHChDqFkm5hcI4n99gWYahLEwbFB4XCV8RocRA6jvxvcw7uvG/paloxFDwQjOA6KzlJoLCbzXgudTLkMxOGFTku3vxjJikw71VBRw55VmNgsT1nxRKEmLbKp1wagoXRtCV8ybq/Uifjomf48tmVkpHSI8pmWXY9S830F8/1SGrUkaPaq6NXzjeV0s6lL7TzUzQ9urPAelbetvP/4kZBKN4kPJBNtSHetbuTu9KjE5WuPuSdn52uewHibMPiCLblyiKRP4o3F3ysr/hzDNtZh03whj2z3E0YnoMhh0Kr6tIJFmai99X6/K6g2cQfBE0QbN3Vg/GYH1mVDGlTvb+UGvjIpfQZSbszw6jq6FOsP50KtUHYrJiHBnKpgdA1jP94RevpN0EhP5M3TGgpHRHfQ==
-x-ms-exchange-antispam-messagedata: 97kKr0IHQNwbAcWKKbARb/WwLzcgnox4gLp4wxnFKv9msDnUNhKS9/iBeH5w15KLQCdPACaX4Q2fUuuGquIpLSNwaZr7vE995IN1dN5S0nM5t2wFlj3gCWoanVS3Su2s5gy+0DtDpiM5z/vjHEQOuDvfl37QylonAhD3gUBKca52cSNOES08OP8XAKI7VxsQEwVNuLpVgYNJVFG9pR1t8A==
+x-microsoft-antispam-message-info: k6mxvjxoVxyHWDr4LqqR1JVlSnnbGc4rQxqSeIuv2CSxYuE0EKnG/GEqFcjUpdK7BFqMnp6jbVx403t/29m8qULP+CbLBGdHoVVvoGreXac0kTb7QwAlZqCYZ7n1djhQN6Apt48Vf5JrKbQ+/7sy1CfXWG4x1X/mMOCTZg9iQEjDM9TMbE2ZEYt4bYN7dJ6vs4IKQhulQrJ6NmoYWBNd8Bl3aIqZBSl5unAfFiiihEl4gJYBckCrLpaAEykPJwe9S4QNGPKaKPiZI5mPkAG5E/UZmQlVC138bcePeiPX+FcEhk4sGDLeX6XPbeMDQezztcvnD7KDUkO69um72b4YnSSt7moUnACbz2hyB8geBQqunbrHpE1w24rGmQVBdN+CWZXYSSEMfZ76C86GJPSu+E6JPCJKrVLW08vXVemetbf1gzHXRMSI7KV+WL3sCIcgVKRfShEJyS40xKF9s24WpVqKTbPGWtQzK66CBnC4fpm8JGpx+Bx/QHzH3+KLyiw4rJ44l7thfKmRfci6C7AMNA==
+x-ms-exchange-antispam-messagedata: 0T5fLuxN45FuuWoNSkOdQwwjGVxZXg2ec/jmVd0OJ6ggX3i0ZUY5br0rCb/E/eG1SW0ro5IAgsLJBFvJw5Qy5bujV9cZy68SgYy2g5pN0O54eGpziTbbxtU6HcjF6apdl2kI045muKgwKVwAMK0EMxTT2bv/RVPLofx0AucEr1bJJfrD8hS+4vtjH2HKtjpxdXxLq9bp8fzcWZ3Ty4OvwQ==
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: teo-en-ming-corp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41cc21db-5010-4a42-34b0-08d7a2697d0f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jan 2020 14:10:24.6190
+X-MS-Exchange-CrossTenant-Network-Message-Id: fca80416-e37a-44bf-d44e-08d7a26a964c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jan 2020 14:18:16.4177
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 23b3f6ae-c453-4b93-aec9-f17508e5885c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cRYuxsBNAbZxxlllwI9BAYqRMb2gng/ojG8N28IG/iqBn/hU55tHjrNMdtnQ9zVfKGDaPGvKQAAEwZj5SRSPY51Kxnw3BeVftWfoyMscyVc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR01MB3318
+X-MS-Exchange-CrossTenant-userprincipalname: sajcI04blty7PY65uZV/qa16h+oFFH+G1qD8vNzxHBP3exrqav0CmcqOVEsc/mm32M+EibfBSRS8aWhDUvooxSVGrFCOpoheK+RtUFl9//U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR01MB3453
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject: Teo En Ming's Setting Up Azure Active Directory Synchronization wi=
-th Office 365 for Business PDF Manual
+Subject: Teo En Ming's Setting Up Ubuntu 16.04.6 LTS Linux Server with Samb=
+a4 as an Active Directory Domain Controller PDF Manual
 
-Teo En Ming's 233-page PDF manual.
+Teo En Ming's 115-page PDF manual.
 
-Blogger link: http://tdtemcerts.blogspot.com/2020/01/setting-up-azure-activ=
-e-directory.html
+Blogger link: http://tdtemcerts.blogspot.com/2020/01/setting-up-ubuntu-1604=
+6-lts-linux.html
 
-Wordpress link: https://tdtemcerts.wordpress.com/2020/01/25/setting-up-azur=
-e-active-directory-synchronization-with-office-365-pdf-manual/
+Wordpress link: https://tdtemcerts.wordpress.com/2020/01/25/setting-up-ubun=
+tu-16-04-6-lts-linux-server-with-samba4-as-an-active-directory-domain-contr=
+oller-pdf-manual/
 
 Redundant Google Drive Download links:
 
-[1] https://drive.google.com/open?id=3D1Dq3p3i5xVEo87pVF7SbxVdMmyAg-MMHL
+[1] https://drive.google.com/open?id=3D1WpzCAFh6AsoKOVzd1cjQAJwjAym3fz_R
 
-[2] https://drive.google.com/open?id=3D1cAook5_QKm4oi_FuGu__ZvJLUQ8Kqurk
+[2] https://drive.google.com/open?id=3D1FFZgoSp6QX09QtuIIgB6mRpaJwra7VpJ
 
-[3] https://drive.google.com/open?id=3D1A96J59cyzzbsJ-1TTjtcESWh4NQ6OpU0
+[3] https://drive.google.com/open?id=3D1gSzFqnYh1Q91RlWBlvkvcT0acafDJttp
 
-[4] https://drive.google.com/open?id=3D1yKgP8jL6awx3oW81Lomca42dHKHouNEl
+[4] https://drive.google.com/open?id=3D1jO96Jg93qEVftpQVTs8uXm1N4E5FaGKO
+
+
+
 
 
 
