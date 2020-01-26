@@ -2,107 +2,501 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D9EC35246
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FEFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C732071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 09:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508D320702
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 10:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580032855;
+	bh=9n70cgfGbxu0NuZOFA1YZIpt4Kph11GMkmqksnf7/Vw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=1SPi5M4Z53k7tArgcYrim9Gq/rGKlfaMYvPQEeGntdpK54Jvq1Qj7nHgEocYeV0fv
+	 bDEXrY9IZWPRJgLG5JCJwZlV1ekpmbGDVcheTA2iflmJJQqRDuj/uFvNpBfguyzc7S
+	 UEtU60i7YCbMgfufqE7r1PhsCp36K3TccQLiQd7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgAZJvj (ORCPT
+        id S1729224AbgAZKAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 04:51:39 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:57130 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbgAZJvi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 04:51:38 -0500
-Received: from ip5f5bd665.dynamic.kabel-deutschland.de ([95.91.214.101] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iveZn-0000sp-Ii; Sun, 26 Jan 2020 09:51:31 +0000
-Date:   Sun, 26 Jan 2020 10:51:33 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Hridya Valsaraju <hridya@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: binderfs interferes with syzkaller?
-Message-ID: <20200126095132.bq33azq7paqvedzx@wittgenstein>
-References: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
- <CACT4Y+bckC4k-EpWiCkD+BBo5ypmkcb2g8Axb62LnBbwJjcqdw@mail.gmail.com>
+        Sun, 26 Jan 2020 05:00:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49792 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728292AbgAZKAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 05:00:54 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE86A206F0;
+        Sun, 26 Jan 2020 10:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580032852;
+        bh=9n70cgfGbxu0NuZOFA1YZIpt4Kph11GMkmqksnf7/Vw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=sQEitoGdlFZoTCAWylLhSERsLhDkDJlEYC28VKU1NNh22jvWBSL374bcAOLQF0Zu+
+         ZUCiHkgCs5Wm64kB8ciJIZG+vUMmS4MvjidLj/Tn2W7nio0NKW+OY0kMD2AUQp4Ydj
+         KrL3pgfWalJGjQX8/AFJeAOjrbo8vQGnI50YeuFk=
+Date:   Sun, 26 Jan 2020 11:00:49 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.4.15
+Message-ID: <20200126100049.GA3803808@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+bckC4k-EpWiCkD+BBo5ypmkcb2g8Axb62LnBbwJjcqdw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 07:13:03PM +0100, Dmitry Vyukov wrote:
-> On Sat, Jan 25, 2020 at 6:49 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > Hi binder maintainers,
-> >
-> > It seems that something has happened and now syzbot has 0 coverage in
-> > drivers/android/binder.c:
-> > https://storage.googleapis.com/syzkaller/cover/ci-upstream-kasan-gce-root.html
-> > It covered at least something there before as it found some bugs in binder code.
-> > I _suspect_ it may be related to introduction binderfs, but it's
-> > purely based on the fact that binderfs changed lots of things there.
-> > And I see it claims to be backward compatible.
-> >
-> > syzkaller strategy to reach binder devices is to use
-> > CONFIG_ANDROID_BINDER_DEVICES to create a bunch of binderN devices (to
-> > give each test process a private one):
-> > https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-kasan.config#L5671
-> >
-> > Then it knows how to open these /dev/binderN devices:
-> > https://github.com/google/syzkaller/blob/master/sys/linux/dev_binder.txt#L22
-> > and do stuff with them.
-> >
-> > Did these devices disappear or something?
-> 
-> Oh, I see, it's backwards compatible if it's not enabled, right?
 
-It's backwards compatible.
-Let me give a little more detail. The legacy binder interface would
-create all devices listed in the module parameter
-CONFIG_ANDROID_BINDER_DEVICES. These devices were created using 
-misc_register(&binder_device->miscdev);
-in the host's devtmpfs mount.
-If binderfs is enabled these devices are now created in the binderfs
-instance instead.
-For full backwards compatibility with old Android versions symlinks (or
-bind mounts) can be provided in the host's devtmpfs. This is what I
-recommended a few months ago.
+--x+6KMIRAuhnl3hBn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> And we enabled it because, well, enabling things generally gives more
-> coverage. I guess I will disable CONFIG_ANDROID_BINDERFS for now to
+I'm announcing the release of the 5.4.15 kernel.
 
-I would at least try to test both somehow. It's likely that binderfs
-will replace legacy binder devices so if we could keep testing it
-somehow that would be great.
+All users of the 5.4 kernel series must upgrade.
 
-> restore coverage in the binder itself.
+The updated 5.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-5.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-I'm not completely sure what you mean here. The binder IPC codepaths are
-nearly the same. The difference is mostly in how the device information
-is cast out before actual binder-ipc operations take place.
-In any case, testing both would obviously be preferred but binderfs
-strikes me as more worthy of testing.
+thanks,
 
-Christian
+greg k-h
+
+------------
+
+ Documentation/devicetree/bindings/rng/omap3_rom_rng.txt |   27 +++
+ Makefile                                                |    2=20
+ arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts    |   20 --
+ arch/arm/boot/dts/omap3-n900.dts                        |    6=20
+ arch/arm/mach-omap2/display.c                           |    1=20
+ arch/arm/mach-omap2/pdata-quirks.c                      |   12 -
+ arch/powerpc/include/asm/archrandom.h                   |    2=20
+ arch/powerpc/include/asm/security_features.h            |    8 -
+ arch/powerpc/kernel/head_fsl_booke.S                    |    6=20
+ arch/powerpc/kernel/prom_init.c                         |    2=20
+ arch/powerpc/kernel/security.c                          |    4=20
+ block/bio-integrity.c                                   |    2=20
+ block/bio.c                                             |    3=20
+ block/blk.h                                             |    4=20
+ drivers/acpi/acpi_platform.c                            |   43 +++++
+ drivers/acpi/scan.c                                     |    1=20
+ drivers/base/swnode.c                                   |    5=20
+ drivers/char/hw_random/omap3-rom-rng.c                  |   17 ++
+ drivers/char/ipmi/ipmi_msghandler.c                     |    5=20
+ drivers/crypto/Kconfig                                  |    1=20
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c                 |   21 +-
+ drivers/dma/ti/edma.c                                   |    6=20
+ drivers/firmware/arm_scmi/perf.c                        |    2=20
+ drivers/firmware/imx/imx-dsp.c                          |    2=20
+ drivers/gpio/gpiolib-of.c                               |    5=20
+ drivers/gpio/gpiolib.c                                  |    3=20
+ drivers/gpio/sgpio-aspeed.c                             |    2=20
+ drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c                   |    2=20
+ drivers/gpu/drm/amd/powerplay/amd_powerplay.c           |    1=20
+ drivers/gpu/drm/i915/gem/i915_gem_context.c             |    3=20
+ drivers/gpu/drm/panel/panel-lvds.c                      |   21 --
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c             |    6=20
+ drivers/gpu/drm/radeon/cik.c                            |    4=20
+ drivers/gpu/drm/radeon/r600.c                           |    4=20
+ drivers/gpu/drm/radeon/si.c                             |    4=20
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                     |   28 ++-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c             |   37 ++++
+ drivers/i2c/busses/i2c-stm32.c                          |   16 +-
+ drivers/i2c/busses/i2c-stm32f7.c                        |   13 +
+ drivers/leds/leds-tlc591xx.c                            |    7=20
+ drivers/mfd/intel-lpss-pci.c                            |   28 ++-
+ drivers/mmc/core/quirks.h                               |    7=20
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c          |   47 +++---
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c    |    2=20
+ drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c        |    3=20
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c         |    7=20
+ drivers/net/ethernet/socionext/netsec.c                 |    4=20
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c       |    4=20
+ drivers/net/hyperv/netvsc_drv.c                         |    7=20
+ drivers/net/phy/broadcom.c                              |   11 -
+ drivers/net/wireless/mediatek/mt76/mt76.h               |    5=20
+ drivers/net/wireless/mediatek/mt76/mt76x0/usb.c         |    2=20
+ drivers/net/wireless/mediatek/mt76/mt76x2/usb.c         |    2=20
+ drivers/net/wireless/mediatek/mt76/usb.c                |   12 +
+ drivers/net/wireless/mediatek/mt7601u/phy.c             |    2=20
+ drivers/net/wireless/ralink/rt2x00/rt2800lib.c          |    5=20
+ drivers/net/wireless/realtek/rtw88/fw.c                 |   52 +++++-
+ drivers/net/wireless/realtek/rtw88/main.c               |   11 -
+ drivers/pci/controller/pcie-mobiveil.c                  |  119 ++++++++---=
+-----
+ drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c             |    3=20
+ drivers/phy/rockchip/phy-rockchip-inno-hdmi.c           |    4=20
+ drivers/phy/ti/phy-gmii-sel.c                           |    2=20
+ drivers/platform/chrome/wilco_ec/telemetry.c            |    2=20
+ drivers/power/supply/bd70528-charger.c                  |    1=20
+ drivers/pwm/pwm-sun4i.c                                 |    4=20
+ drivers/regulator/bd70528-regulator.c                   |    1=20
+ drivers/rtc/rtc-bd70528.c                               |    2=20
+ drivers/s390/crypto/pkey_api.c                          |    4=20
+ drivers/s390/net/qeth_core.h                            |    3=20
+ drivers/s390/net/qeth_core_main.c                       |   71 ++++++---
+ drivers/s390/net/qeth_core_mpc.h                        |   14 -
+ drivers/s390/net/qeth_l2_main.c                         |   12 -
+ drivers/s390/net/qeth_l3_main.c                         |   13 -
+ drivers/scsi/ufs/ufshcd.c                               |   15 --
+ drivers/soc/aspeed/aspeed-lpc-snoop.c                   |    4=20
+ drivers/soc/qcom/llcc-slice.c                           |    3=20
+ drivers/soc/renesas/renesas-soc.c                       |    2=20
+ drivers/soc/tegra/pmc.c                                 |   28 +++
+ drivers/tee/optee/call.c                                |    7=20
+ drivers/tee/optee/core.c                                |   20 +-
+ drivers/tee/optee/shm_pool.c                            |   25 +++
+ drivers/watchdog/sprd_wdt.c                             |    6=20
+ fs/afs/dir_edit.c                                       |   12 -
+ fs/nfsd/Kconfig                                         |    1=20
+ fs/xfs/xfs_quotaops.c                                   |    3=20
+ include/linux/mmc/sdio_ids.h                            |    2=20
+ kernel/bpf/devmap.c                                     |   74 ++++++---
+ kernel/dma/direct.c                                     |    2=20
+ kernel/rcu/tree_plugin.h                                |    2=20
+ kernel/sched/deadline.c                                 |    7=20
+ kernel/sched/fair.c                                     |  113 ++++++++---=
+----
+ kernel/sched/idle.c                                     |    4=20
+ kernel/sched/rt.c                                       |    7=20
+ kernel/sched/sched.h                                    |    4=20
+ kernel/sched/stop_task.c                                |    4=20
+ kernel/workqueue.c                                      |    3=20
+ net/core/neighbour.c                                    |    4=20
+ net/core/net-sysfs.c                                    |    7=20
+ net/openvswitch/datapath.c                              |    2=20
+ net/packet/af_packet.c                                  |   12 +
+ net/sunrpc/auth_gss/svcauth_gss.c                       |   84 ++++++++---
+ net/sunrpc/xdr.c                                        |   11 -
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c              |    1=20
+ net/sunrpc/xprtsock.c                                   |    3=20
+ net/tipc/link.c                                         |    2=20
+ net/tipc/monitor.c                                      |   15 ++
+ net/tipc/monitor.h                                      |    1=20
+ net/tipc/net.c                                          |    2=20
+ net/tipc/socket.c                                       |    7=20
+ samples/bpf/sockex1_kern.c                              |   12 -
+ samples/bpf/sockex2_kern.c                              |   12 -
+ samples/bpf/xdp1_kern.c                                 |   12 -
+ samples/bpf/xdp2_kern.c                                 |   12 -
+ samples/bpf/xdp_adjust_tail_kern.c                      |   12 -
+ samples/bpf/xdp_fwd_kern.c                              |   13 -
+ samples/bpf/xdp_redirect_cpu_kern.c                     |  108 +++++++----=
+---
+ samples/bpf/xdp_redirect_kern.c                         |   24 +--
+ samples/bpf/xdp_redirect_map_kern.c                     |   24 +--
+ samples/bpf/xdp_router_ipv4_kern.c                      |   64 ++++----
+ samples/bpf/xdp_rxq_info_kern.c                         |   37 ++--
+ samples/bpf/xdp_rxq_info_user.c                         |    6=20
+ samples/bpf/xdp_tx_iptunnel_kern.c                      |   26 +--
+ scripts/link-vmlinux.sh                                 |    5=20
+ tools/lib/bpf/bpf.c                                     |    2=20
+ tools/lib/bpf/bpf_prog_linfo.c                          |   14 -
+ tools/lib/bpf/btf.c                                     |    3=20
+ tools/lib/bpf/libbpf.c                                  |    2=20
+ tools/lib/bpf/xsk.c                                     |   83 +++++++++--
+ tools/perf/util/machine.c                               |   27 ---
+ tools/testing/selftests/cgroup/test_freezer.c           |    1=20
+ tools/testing/selftests/gen_kselftest_tar.sh            |   21 +-
+ tools/testing/selftests/kselftest_install.sh            |   24 +--
+ 132 files changed, 1137 insertions(+), 730 deletions(-)
+
+Adam Ford (1):
+      ARM: dts: logicpd-torpedo-37xx-devkit-28: Reference new DRM panel
+
+Alain Volmat (3):
+      i2c: stm32f7: rework slave_id allocation
+      i2c: i2c-stm32f7: fix 10-bits check in slave free id search loop
+      i2c: stm32f7: report dma error during probe
+
+Andrii Nakryiko (5):
+      libbpf: Fix memory leak/double free issue
+      libbpf: Fix potential overflow issue
+      libbpf: Fix another potential overflow issue in bpf_prog_linfo
+      libbpf: Make btf__resolve_size logic always check size error condition
+      libbpf: Don't use kernel-side u32 type in xsk.c
+
+Andy Shevchenko (2):
+      gpiolib: No need to call gpiochip_remove_pin_ranges() twice
+      ACPI: platform: Unregister stale platform devices
+
+Ard Biesheuvel (1):
+      powerpc/archrandom: fix arch_get_random_seed_int()
+
+Arnaldo Carvalho de Melo (1):
+      perf map: No need to adjust the long name of modules
+
+Arnd Bergmann (1):
+      gpio: aspeed: avoid return type warning
+
+Bean Huo (1):
+      scsi: ufs: delete redundant function ufshcd_def_desc_sizes()
+
+Christian Lamparter (1):
+      crypto: amcc - restore CRYPTO_AES dependency
+
+Christoph Hellwig (1):
+      dma-direct: don't check swiotlb=3Dforce in dma_direct_map_resource
+
+Christophe Leroy (1):
+      powerpc/kasan: Fix boot failure with RELOCATABLE && FSL_BOOKE
+
+Chuck Lever (3):
+      SUNRPC: Fix svcauth_gss_proxy_init()
+      SUNRPC: Fix backchannel latency metrics
+      SUNRPC: Fix another issue with MIC buffer space
+
+Chuhong Yuan (1):
+      dmaengine: ti: edma: fix missed failure handling
+
+Colin Ian King (1):
+      rtc: bd70528: fix module alias to autoload module
+
+Corentin Labbe (1):
+      crypto: sun4i-ss - fix big endian issues
+
+Dan Carpenter (3):
+      drm: panel-lvds: Potential Oops in probe error handling
+      drm/amdgpu/vi: silence an uninitialized variable warning
+      rcu: Fix uninitialized variable in nocb_gp_wait()
+
+Daniel Baluta (1):
+      firmware: imx: Remove call to devm_of_platform_populate
+
+Daniel Golle (1):
+      rt2800: remove errornous duplicate condition
+
+Daniel T. Lee (1):
+      samples: bpf: update map definition to new syntax BTF-defined map
+
+Douglas Anderson (1):
+      drm/rockchip: Round up _before_ giving to the clock framework
+
+Eric Dumazet (2):
+      net: neigh: use long type to store jiffies delta
+      packet: fix data-race in fanout_flow_is_huge()
+
+Florian Fainelli (1):
+      net: phy: broadcom: Fix RGMII delays configuration for BCM54210E
+
+Geert Uytterhoeven (3):
+      powerpc/security: Fix debugfs data leak on 32-bit
+      soc: renesas: Add missing check for non-zero product register address
+      drm: rcar_lvds: Fix color mismatches on R-Car H2 ES2.0 and later
+
+Greg Kroah-Hartman (1):
+      Linux 5.4.15
+
+Grygorii Strashko (1):
+      phy: ti: gmii-sel: fix mac tx internal delay for rgmii-rxid
+
+H. Nikolaus Schaller (2):
+      mmc: sdio: fix wl1251 vendor id
+      mmc: core: fix wl1251 sdio quirks
+
+Heiko Carstens (1):
+      s390/pkey: fix memory leak within _copy_apqns_from_user()
+
+Hewenliang (1):
+      kselftests: cgroup: Avoid the reuse of fd after it is deallocated
+
+Hoang Le (2):
+      tipc: reduce sensitive to retransmit failures
+      tipc: update mon's self addr when node addr generated
+
+Ilias Apalodimas (1):
+      net: netsec: Correct dma sync for XDP_TX frames
+
+Ioana Radulescu (1):
+      dpaa2-eth: Fix minor bug in ethtool stats reporting
+
+Jan Kara (1):
+      xfs: Sanity check flags of Q_XQUOTARM call
+
+Jarkko Nikula (1):
+      mfd: intel-lpss: Add default I2C device properties for Gemini Lake
+
+Jean-Jacques Hiblot (1):
+      leds: tlc591xx: update the maximum brightness
+
+Jens Wiklander (1):
+      tee: optee: fix device enumeration error handling
+
+Jesper Dangaard Brouer (1):
+      samples/bpf: Fix broken xdp_rxq_info due to map order assumptions
+
+Jesse Brandeburg (1):
+      ice: fix stack leakage
+
+Jonas Karlman (1):
+      phy/rockchip: inno-hdmi: round clock rate down to closest 1000 Hz
+
+Jouni Hogander (1):
+      net-sysfs: Call dev_hold always in netdev_queue_add_kobject
+
+Julian Wiedmann (1):
+      s390/qeth: fix dangling IO buffers after halt/clear
+
+Justin Tee (1):
+      block: fix memleak of bio integrity data
+
+Kees Cook (1):
+      selftests: gen_kselftest_tar.sh: Do not clobber kselftest/
+
+Kefeng Wang (1):
+      PCI: mobiveil: Fix csr_read()/write() build issue
+
+Lorenzo Bianconi (3):
+      mt76: mt76u: fix endpoint definition order
+      mt7601u: fix bbp version check in mt7601u_wait_bbp_ready
+      mt76: mt76u: rely on usb_interface instead of usb_dev
+
+Luc Van Oostenryck (1):
+      soc: aspeed: Fix snoop_file_poll()'s return type
+
+Madalin Bucur (2):
+      dpaa_eth: perform DMA unmapping before read
+      dpaa_eth: avoid timestamp read on error paths
+
+Magnus Karlsson (1):
+      libbpf: Fix compatibility for kernels without need_wakeup
+
+Markus Elfring (1):
+      ARM: OMAP2+: Add missing put_device() call in omapdss_init_of()
+
+Matti Vaittinen (2):
+      regulator: bd70528: Add MODULE_ALIAS to allow module auto loading
+      power: supply: bd70528: Add MODULE_ALIAS to allow module auto loading
+
+Navid Emamdoost (1):
+      ipmi: Fix memory leak in __ipmi_bmc_register
+
+Ondrej Jirman (1):
+      pwm: sun4i: Fix incorrect calculation of duty_cycle/period
+
+Patrick Steinhardt (1):
+      nfsd: depend on CRYPTO_MD5 for legacy client tracking
+
+Peter Zijlstra (1):
+      sched/core: Further clarify sched_class::set_next_task()
+
+Ping-Ke Shih (1):
+      rtw88: fix error handling when setup efuse info
+
+Roi Dayan (1):
+      net/mlx5e: Fix free peer_flow when refcount is 0
+
+Sakari Ailus (1):
+      software node: Get reference to parent swnode in get_parent op
+
+Sam Bobroff (1):
+      drm/radeon: fix bad DMA from INTERRUPT_CNTL2
+
+Sebastian Andrzej Siewior (1):
+      workqueue: Add RCU annotation for pwq list walk
+
+Shuiqing Li (1):
+      watchdog: sprd: Fix the incorrect pointer getting from driver data
+
+Stanislav Fomichev (1):
+      bpf: Force .BTF section start to zero when dumping from vmlinux
+
+Stephen Boyd (1):
+      soc: qcom: llcc: Name regmaps to avoid collisions
+
+Stephen Hemminger (1):
+      hv_netvsc: flag software created hash value
+
+Steven Price (1):
+      drm/panfrost: Add missing check for pfdev->regulator
+
+Sudeep Holla (1):
+      firmware: arm_scmi: Fix doorbell ring logic for !CONFIG_64BIT
+
+Sumit Garg (2):
+      tee: optee: Fix dynamic shm pool allocations
+      optee: Fix multi page dynamic shm pool alloc
+
+Thierry Reding (1):
+      soc/tegra: pmc: Fix crashes for hierarchical interrupts
+
+Toke H=F8iland-J=F8rgensen (1):
+      xdp: Fix cleanup on map free for devmap_hash map type
+
+Tonghao Zhang (1):
+      net: openvswitch: don't unlock mutex when changing the user_features =
+fails
+
+Tony Lindgren (1):
+      hwrng: omap3-rom - Fix missing clock by probing with device tree
+
+Tung Nguyen (3):
+      tipc: fix potential memory leak in __tipc_sendmsg()
+      tipc: fix wrong socket reference counter after tipc_sk_timeout() retu=
+rns
+      tipc: fix wrong timeout input for tipc_wait_for_cond()
+
+Tvrtko Ursulin (1):
+      drm/i915: Fix pid leak with banned clients
+
+Tyrel Datwyler (1):
+      powerpc/pseries: Enable support for ibm,drc-info property
+
+Vincent Guittot (1):
+      sched/cpufreq: Move the cfs_rq_util_change() call to cpufreq_update_u=
+til()
+
+Wei Yongjun (2):
+      phy: lantiq: vrx200-pcie: fix error return code in ltq_vrx200_pcie_ph=
+y_power_on()
+      net: axienet: Fix error return code in axienet_probe()
+
+Wen Yang (1):
+      platform/chrome: wilco_ec: fix use after free issue
+
+Yan-Hsuan Chuang (1):
+      rtw88: fix beaconing mode rsvd_page memory violation issue
+
+yu kuai (1):
+      drm/amdgpu: remove excess function parameter description
+
+zhengbin (1):
+      afs: Remove set but not used variables 'before', 'after'
+
+
+--x+6KMIRAuhnl3hBn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl4tY04ACgkQONu9yGCS
+aT4P0Q//VQh9SqqNQENZZtAaOUzjILrvesuKZkts1ihu/senqQ2r8F3sSFt4ng0k
+hD055Nj8dY4mmhYdjyJNhadib4EES4XRHqIqOy5VECYYS1Bjl6sm6XqX3I1XpWC/
+QDu8uxpd9bUL/L8vBcdpRqtALG7YqZRUoyHZ35a4WAmcIF1DxhH89eemi+OmAU5z
+yr3kDWJghFZs/1Xe99fl+CCgfDqZB8bJlw6dIWDfDyjycvILUIO+02vGwk8GfJ8Q
+OmrzF5gByIBEzHvF/rDdxNaCjGwJvwW7LP/cI91plppER7qkN5x7qL459SOzpuP+
+M8xla7jOiZ6KGR4oxjD+rvZ84B3arAozu5Xf03CuS7X/rSmu1IAoOTo4EQzBTtJQ
+zIEAaq6OVNlkfgCCoPa1YxKxACdfxi/OQCfPq1eqVZbLcDKVr2HA5C7itBBA9bZs
+MPthOjioUC7Udm3nzZl1KSJyinoIRgBnEB8QtwLQUZu48UUOpySp1yr/r6soIHFi
+/KkyD0GvwqBtMQHaPV8gbfHmXM4LmJLt6BRBf+bJqSpKJJ9y4KYqMUETPXojmNB1
+jbDrjwZxlsadJBOlkUUtLMSqTLiGvM0g7od9ClKaIPRgsB750EI7GGp72NX/JOGD
+NYVrEMXYDbZVMgMY0SfdTrsqZ2HXEiZu/MxjTUPogkJ4vL8p98M=
+=kIxT
+-----END PGP SIGNATURE-----
+
+--x+6KMIRAuhnl3hBn--
