@@ -2,69 +2,69 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBD2C35246
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E9BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C01206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580071506;
-	bh=e5whKQo48EZzSeDWtoewc73WrrEoPDPKZ4wqprbir9I=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=i7LY+pJl3pkGK0+chi2x4YmCwCtYMxCf0/AjecMVNEctQuZlyHgsHRiAio+09l4tz
-	 0+RkEQH8cq+fXBBCUpq3lQiCW43UkQazWi8BV3iqEVKobU6szncLzjcHBullKww51f
-	 mQk3fVzF7gOa46LRN8bljKDeJizCnI2s158N10ZU=
+	by mail.kernel.org (Postfix) with ESMTP id 32C7A20716
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 20:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbgAZUpF (ORCPT
+        id S1727295AbgAZUuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 15:45:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43960 "EHLO mail.kernel.org"
+        Sun, 26 Jan 2020 15:50:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgAZUpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 15:45:04 -0500
-Subject: Re: [GIT PULL] io_uring fixes for 5.5-final
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580071504;
-        bh=e5whKQo48EZzSeDWtoewc73WrrEoPDPKZ4wqprbir9I=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=vTnvFR4rYfikTzAo+4tv7qhHZS6w8MW6W0kiF7pRWMSNS6J5Jf1S+WDYdDy+a4L0D
-         iord24zGDnNCd/lAseMuWVP1rtapH5PhD+frYoZIglBSbPdnmrr1Uui1hH+MTm5wyC
-         6WnugUON0prkwhQRA0gusrhrKMDSrew2QrCuFBDI=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <97fc142a-5f87-57f5-67fd-a146996a7ff1@kernel.dk>
-References: <97fc142a-5f87-57f5-67fd-a146996a7ff1@kernel.dk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <97fc142a-5f87-57f5-67fd-a146996a7ff1@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
- tags/io_uring-5.5-2020-01-26
-X-PR-Tracked-Commit-Id: ebe10026210f9ea740b9a050ee84a166690fddde
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5cf9ad0e6b164a90581a59609dbf5bda3f5a089c
-Message-Id: <158007150415.2238.15200000410316601662.pr-tracker-bot@kernel.org>
-Date:   Sun, 26 Jan 2020 20:45:04 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        id S1726144AbgAZUuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 15:50:15 -0500
+Received: from rorschach.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB9BD206F0;
+        Sun, 26 Jan 2020 20:50:14 +0000 (UTC)
+Date:   Sun, 26 Jan 2020 15:50:13 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [for-next][PATCH 7/7] tracing: Use pr_err() instead of WARN()
+ for memory failures
+Message-ID: <20200126155013.5cfc23aa@rorschach.local.home>
+In-Reply-To: <e70ff75e9712478704fad44ac6b66c86a45df6a6.camel@perches.com>
+References: <20200126191932.984391723@goodmis.org>
+        <20200126192021.350763989@goodmis.org>
+        <e70ff75e9712478704fad44ac6b66c86a45df6a6.camel@perches.com>
+X-Mailer: Claws Mail 3.17.4git76 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 26 Jan 2020 13:02:16 -0700:
+On Sun, 26 Jan 2020 12:38:55 -0800
+Joe Perches <joe@perches.com> wrote:
 
-> git://git.kernel.dk/linux-block.git tags/io_uring-5.5-2020-01-26
+> On Sun, 2020-01-26 at 14:19 -0500, Steven Rostedt wrote:
+> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> > 
+> > As warnings can trigger panics, especially when "panic_on_warn" is set,
+> > memory failure warnings can cause panics and fail fuzz testers that are
+> > stressing memory.
+> > 
+> > Create a MEM_FAIL() macro to use instead of WARN() in the tracing code
+> > (perhaps this should be a kernel wide macro?), and use that for memory
+> > failure issues. This should stop failing fuzz tests due to warnings.  
+> 
+> It looks as if most of these could just be removed instead
+> as there is an existing dump_stack() on failure.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5cf9ad0e6b164a90581a59609dbf5bda3f5a089c
+That sounds more generic. This is specific for my own tracing tests to
+look for. As the point is, it is *not* to dump_stack, and still report
+the error.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+-- Steve
