@@ -2,134 +2,131 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADB9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C52C35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 14:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA51120708
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 13:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C4622071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 14:09:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mk4oCwNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgAZNjJ (ORCPT
+        id S1729273AbgAZOJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 08:39:09 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:29526 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgAZNjI (ORCPT
+        Sun, 26 Jan 2020 09:09:32 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:43333 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgAZOJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 08:39:08 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 5+Q26d+J7PfCyMiRfduWDMvPl7C/kwKAfX9jzwehnmvTT5+2YJ8GnvkORj7N0JPGzTk4EE6SSf
- jEGK7FICZo7/W6jMw9pBmrYP0E6zugnSGCFq7nHvW4wfS/m64gGuHAxnvVKVIzwLMZt6K19BQe
- AeMyX57ErCOjLi9tt+/cIi9j7fuBOBG2K7eNJvL2dE0hMMBMDob1wGEQDlPdAEQB7ce8xGganC
- pyVazYuEtgzQfkrUc6R2pdthq0tNtWcf9xritgXhvdLqODiBA4Og+wmICi49Nf8C7sXI0gZe0g
- P3o=
-X-IronPort-AV: E=Sophos;i="5.70,365,1574146800"; 
-   d="scan'208";a="121477"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Jan 2020 06:39:06 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 26 Jan 2020 06:39:06 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Sun, 26 Jan 2020 06:39:06 -0700
-Date:   Sun, 26 Jan 2020 14:39:05 +0100
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
-CC:     Andrew Lunn <andrew@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>,
-        <jiri@resnulli.us>, <ivecera@redhat.com>, <davem@davemloft.net>,
-        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
-        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
-        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next v3 04/10] net: bridge: mrp: Add generic netlink
- interface to configure MRP
-Message-ID: <20200126133905.wzsvdsdvkc32dd4k@soft-dev3.microsemi.net>
-References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
- <20200124161828.12206-5-horatiu.vultur@microchip.com>
- <20200125153403.GB18311@lunn.ch>
- <20200125192854.yi544iu2atvbbwey@lx-anielsen.microsemi.net>
+        Sun, 26 Jan 2020 09:09:32 -0500
+Received: by mail-yw1-f67.google.com with SMTP id v126so3469747ywc.10;
+        Sun, 26 Jan 2020 06:09:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AIBXGruVtXLWGDKFA1TCcvHJQqqB8GBIh9kNTOb/fuk=;
+        b=Mk4oCwNGg6HxZOtQSZFkfJHL9c2GyiV2XZSrCjIZLjVPjFswi+0SA3YyY735R1464d
+         GdbjNQpbIy74Y7/IXA+Zxf1q761kzZujmIa9tQOA9zWjNBXcXlp4aoTi2RjczfRToK7j
+         g7xN+PI9jYpjf27CWaDNgToDXfzJ0/fTnu0wC8ZjWfvaX5pl6isPQ+xlQz18JttWgltn
+         15X8obeoJYk10blNGh+jlccabPGO06rOfqIXQdieCaOmLN3RfczNKpsSYOE2S+Q0oopx
+         Hi/OOdbuNjJCajIGkP9AF1xHcjRZ2yB8MrN/WWwDf+7q3pTM54XQf89HTIufhSiYPRkU
+         o4UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AIBXGruVtXLWGDKFA1TCcvHJQqqB8GBIh9kNTOb/fuk=;
+        b=PcqR3A+wfO3lYb/pN15qqYHTBEJTLBL77Tm50YFhLUp4LdUS41UJJHame7JVN7oiNQ
+         wZ49DgvCmejQcQky9WYgNP0H9hRkifZvUNah9CZGOPVCVeh+FrC3Z6Km1paN6IQ96lOZ
+         kiwnomg+MVUOcWs8hRfdCNL1OZa/q+c9HO7UCBJElMmKTcWnjipUcfawU6Lw+tb8L0a2
+         vQxTcwxc+4nHVNVoOcOZgFnLBUoAZAxq6mh8FFRNb+CXFvu9We4+ayN8Qemzm/Vx4/0m
+         53citMoSo+1bl4HYz+7mxNG83NSrxyCBsDzl2Y6nubGPfUeSiwqOt3fZUg1BJ5Er7Erd
+         HmTw==
+X-Gm-Message-State: APjAAAVYlimlLmZWf6++sOjE01Ut9DGhxtk+K4XVums5RLQLWHjtwHMO
+        gTeW4GoXq4TH7vjuLurIfbfmpfI4JkY=
+X-Google-Smtp-Source: APXvYqzDzxEFyqha9UjT6YyU/ysiOH2LW1TWq1QPbgfRd5yEbDaYb4T5n+BpcGks0XD8Em3+6O8+YQ==
+X-Received: by 2002:a0d:ccd2:: with SMTP id o201mr8773523ywd.492.1580047770669;
+        Sun, 26 Jan 2020 06:09:30 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id a12sm5237214ywa.95.2020.01.26.06.09.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jan 2020 06:09:30 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-spi@vger.kernel.org
+Cc:     han.xu@nxp.com, Adam Ford <aford173@gmail.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/5] spi: fspi: enable fspi on imx8qxp and imx8mm
+Date:   Sun, 26 Jan 2020 08:09:08 -0600
+Message-Id: <20200126140913.2139260-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200125192854.yi544iu2atvbbwey@lx-anielsen.microsemi.net>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-The 01/25/2020 20:28, Allan W. Nielsen wrote:
-> On 25.01.2020 16:34, Andrew Lunn wrote:
-> > On Fri, Jan 24, 2020 at 05:18:22PM +0100, Horatiu Vultur wrote:
-> > > Implement the generic netlink interface to configure MRP. The implementation
-> > > will do sanity checks over the attributes and then eventually call the MRP
-> > > interface which eventually will call the switchdev API.
-> > What was your thinking between adding a new generic netlink interface,
-> > and extending the current one?
-I thought is more clear to see which commands are used to configure MRP
-by adding a new generic netlink than extending the existing one.
+From: Han Xu <han.xu@nxp.com>
 
-> > 
-> > I've not looked at your user space code yet, but i assume it has to
-> > make use of both? It needs to create the bridge and add the
-> > interfaces. And then it needs to control the MRP state.
-Actually the userspace application doesn't create the bridge and add the
-interfaces. It expects that user does this using iproute2 or other
-commands.
-And once the bridge and interfaces are added then it would just
-configure the bridge.
+Pull in this patch from NXP's upstream repo to
+enable fspi on imx8qxp and imx8mm
 
-> > 
-> > Allan mentioned you might get around to implementing 802.1CB? Would
-> > that be another generic netlink interface, or would you extend the MRP
-> > interface?
-> Horatiu, if you have given this any thoughts, then please share them.
-I have not look yet over this, I will try to have a look ASAP.
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Han Xu <han.xu@nxp.com>
 
-> 
-> Here are my thoughts on 802.1CB: If we look at this with the traditional
-> NIC/host POW, then it would be natural to look at the HSR interface as
-> Vinicius suggested, and expose it as a new interface (HSR0). But when
-> looking at how 802.1CB say a bridge should act, and also what the
-> capabilities of the HW are, then it seem more natural to extend the TC
-> system. In HW it is a TCAM classifying the traffic, and it has some
-> actions to either replicate the matched frames, or eliminate the
-> additional copies.
-> 
-> The HW also supports CFM (see [1]), which we need (partly) to complete
-> the MRP implementation with MIM/MIC roles. This is also useful for none
-> MRP users (like ERPS).
-> 
-> This seems like an argument for moving this to the existing netlink
-> interfaces instead of having it as a generic netlink.
-> 
-> [1] https://en.wikipedia.org/wiki/IEEE_802.1ag
-> 
-> /Allan
-
+diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+index 8c5084a3a617..00c7899428a1 100644
+--- a/drivers/spi/spi-nxp-fspi.c
++++ b/drivers/spi/spi-nxp-fspi.c
+@@ -324,6 +324,22 @@ static const struct nxp_fspi_devtype_data lx2160a_data = {
+ 	.little_endian = true,  /* little-endian    */
+ };
+ 
++static const struct nxp_fspi_devtype_data imx8mm_data = {
++	.rxfifo = SZ_512,       /* (64  * 64 bits)  */
++	.txfifo = SZ_1K,        /* (128 * 64 bits)  */
++	.ahb_buf_size = SZ_2K,  /* (256 * 64 bits)  */
++	.quirks = 0,
++	.little_endian = true,  /* little-endian    */
++};
++
++static const struct nxp_fspi_devtype_data imx8qxp_data = {
++	.rxfifo = SZ_512,       /* (64  * 64 bits)  */
++	.txfifo = SZ_1K,        /* (128 * 64 bits)  */
++	.ahb_buf_size = SZ_2K,  /* (256 * 64 bits)  */
++	.quirks = 0,
++	.little_endian = true,  /* little-endian    */
++};
++
+ struct nxp_fspi {
+ 	void __iomem *iobase;
+ 	void __iomem *ahb_addr;
+@@ -1076,6 +1092,8 @@ static int nxp_fspi_resume(struct device *dev)
+ 
+ static const struct of_device_id nxp_fspi_dt_ids[] = {
+ 	{ .compatible = "nxp,lx2160a-fspi", .data = (void *)&lx2160a_data, },
++	{ .compatible = "nxp,imx8mm-fspi", .data = (void *)&imx8mm_data, },
++	{ .compatible = "nxp,imx8qxp-fspi", .data = (void *)&imx8qxp_data, },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, nxp_fspi_dt_ids);
 -- 
-/Horatiu
+2.24.0
+
