@@ -2,222 +2,162 @@ Return-Path: <SRS0=fzvl=3P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61967C35247
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 05:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D130EC35247
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 06:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3791C2083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 05:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2272071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jan 2020 06:02:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="W4COqQvP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n3O9J+d2"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="MDAFgsJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgAZFzB (ORCPT
+        id S1726426AbgAZGCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 00:55:01 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:55213 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725908AbgAZFzB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 00:55:01 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id CBE3821B36;
-        Sun, 26 Jan 2020 00:54:59 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sun, 26 Jan 2020 00:54:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=cPpWLEadkT+BcihkEiCvYAYzJ+j
-        wJtzLs6bpTFaC+B8=; b=W4COqQvPUSLotjgEe29Tl4Uq6GAQhLJ8E9TUxxiRZFh
-        V6IvSpp4F23kbv/W818Q3W3++0MVZDLRyYoSDC1vAD07zCv3GXqBTVWunzsXhDEo
-        2LFwQY8j3HUCcD+e47ibhP/EaeUHJz4wNuZFtuBIw5jOmC9JaKJTWXv3d1/WSXpU
-        XC+QfBlenOEg9Y6Eb5ci/vYkhWP+4sDKgNyJKR25hxT0xA22TWeOpVpgbfilpsL1
-        tNqr7SBx6wHy0dZRdOqpLiYrMmvYFIFpO1vFrObbXAjHMWLeM+sQLYGqqOb8tXqM
-        KG8xyQQkP3WIBrIllW5AYls8lq+9y/CCZAzHJrS+HmA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=cPpWLE
-        adkT+BcihkEiCvYAYzJ+jwJtzLs6bpTFaC+B8=; b=n3O9J+d2G/ajeC3UPHhiFH
-        7uF4KQH/FlFBDui2NzB/KWgXo3vhB4/8PPVWiToksGRkGJ9Nzrt1hvM+Sl5B+Lbg
-        gTSIdjec0y5bytc6V8S6Ieuuu/u4H7Ot43hvuwgkuYsqScdER/1m+lMNCPb1GwxD
-        Wg0soTh0gsgC672q7kmLaFJX8EqP9AeaNoZZOvu4JA+BgWQSVhlzhXejR7rHkMFg
-        xEbpZ5JX1wcDdPDInu0uusI8foLc3+3OwHML0Fd54BIjwPAycvcsrngKot5cUGl5
-        ShvzpytP0aZhLnd+MIsrq5oPTuLJmBVJ0BzFeHe8UU8txudJHuyeVKiPr+NASiog
-        ==
-X-ME-Sender: <xms:syktXlSNl5WQg8-6jl_oPAACCAYYu63nD_N_TQN39epTsigdAdiVgA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrvdekgdduudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
-    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepie
-    ejrdduiedtrddvudejrddvhedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
-    pehmrghilhhfrhhomheprghnughrvghssegrnhgrrhgriigvlhdruggv
-X-ME-Proxy: <xmx:syktXsJ8Dlhg0AWiPKasLNVce0ssmIMmibWZo_G9Yd_elfrveYo1Gw>
-    <xmx:syktXiLiG5pAKFnQqRL6GaD_IzOKdiM8dwvtNOYHFqqcpjXJxDU_zA>
-    <xmx:syktXng9IjJJhXqy23qvFp3l0oA3bVfICEITctJeg-BcS6wTA6A4wA>
-    <xmx:syktXkn1eXtkd444sdIfYPZe216QznZohEomT-nNXlP_oTa570XAOg>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F37A3306738A;
-        Sun, 26 Jan 2020 00:54:58 -0500 (EST)
-Date:   Sat, 25 Jan 2020 21:54:57 -0800
-From:   Andres Freund <andres@anarazel.de>
-To:     Jens Axboe <axboe@kernel.dk>, Stefan Metzmacher <metze@samba.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        io-uring <io-uring@vger.kernel.org>
-Subject: Re: [PATCH 5.4 033/222] io_uring: only allow submit from owning task
-Message-ID: <20200126055457.5w4f5jyhkic7cixu@alap3.anarazel.de>
-References: <20200122092833.339495161@linuxfoundation.org>
- <20200122092835.852416399@linuxfoundation.org>
- <1b4a79c1-6cda-12a8-219b-0c1c146faeff@samba.org>
+        Sun, 26 Jan 2020 01:02:47 -0500
+Received: from mail-eopbgr700114.outbound.protection.outlook.com ([40.107.70.114]:47841
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725773AbgAZGCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 01:02:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R20/8gLpqt88SUKNXCukBYR7nuLnEqKFY2r9tNasGc7aXHQnVG175YKhY1FEehFyv7Nwr/zExrT/nla/MPlIre6M0570RZ87FFlEBsgPN0TDKYPx+6rPHaYBV+ZZcbnK+39g7SMDkuqsqmI4XoI4k87Xp2sFyg1FReibGhNjAnLRasnCotCDukC3udGrTIYagnE2yAbGRhYyQkWXrd1XE2dSmLZdBO5eukkAGms1PZa+8wHKwFGjFPpb0/qu9Ow7sN3axLEeaCrkG4Fm6MihhHWUDAjQwZihNl3UP+7xtW6/KNHFSo4IQVxVhXxK4ltUDOI5qmARhUh2LpkXFKrEUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zb9tK1iHG7SrMRYmm07IEQMrqkWXJCaq5KoonFvUoXs=;
+ b=TRzqwOPpj0H0Xesg673aBUOrS2UiqDMyuAeUYb6FrcmHrPYFZuuFxZqckJwvoCU60VQiqTod45URaBs9hPq8l6Ek0U1eALQy36mQ+tZ/OtoxVsvjYRX92pYuCDGfRJty6krS6gV7c5PBXmhaF+MbUJmUVCGTILTxKaGDG3rFgKxWXw4nfTCZE46EhSQR8ei36ofuj7Z/nVq1UdlUL97Bf26DHV4Mq/8MxykOeeLvA0Vyeo/uE28YKCx+HCuLP/tdINchY277eVpcSJjU/68gIsA6GIwkYiskiJvpo4AwB9CQIZOvuV6WFMBdoArLzdqW1rJwnzCXtygLlDVAB0miCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zb9tK1iHG7SrMRYmm07IEQMrqkWXJCaq5KoonFvUoXs=;
+ b=MDAFgsJJQppiVNe0Cwl0oKzNRxXK8kWBYZfrbVlRZp6CWJxkQHMJ5+M5TTGD/DXXqHihK27Y5vubEVMtIfdqai7XNZtYx6Ka4ytQxV+K0ImqquS4K+SUmfmAPdkWFysj7kVGaYgj8kZibXIpuCt6KbPJrv6srJpkeIRayQk6VA0=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (52.132.149.16) by
+ MW2PR2101MB0939.namprd21.prod.outlook.com (52.132.146.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.9; Sun, 26 Jan 2020 06:02:43 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::d561:cbc4:f1a:e5fe]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::d561:cbc4:f1a:e5fe%9]) with mapi id 15.20.2686.013; Sun, 26 Jan 2020
+ 06:02:43 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>
+Subject: RE: [PATCH v4 1/4] Tools: hv: Reopen the devices if read() or write()
+ returns errors
+Thread-Topic: [PATCH v4 1/4] Tools: hv: Reopen the devices if read() or
+ write() returns errors
+Thread-Index: AQHV1AyBZGdsPoqaQUKCyJamBEgKJqf8dBgw
+Date:   Sun, 26 Jan 2020 06:02:43 +0000
+Message-ID: <MW2PR2101MB1052BEF9583E7F0C927A028ED7080@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <1580017784-103557-1-git-send-email-decui@microsoft.com>
+ <1580017784-103557-2-git-send-email-decui@microsoft.com>
+In-Reply-To: <1580017784-103557-2-git-send-email-decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-26T06:02:41.4829438Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f4407dfe-7103-4be4-91bd-4410eeba6419;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 01fd0e7f-2aca-4fa1-4758-08d7a2255c10
+x-ms-traffictypediagnostic: MW2PR2101MB0939:|MW2PR2101MB0939:|MW2PR2101MB0939:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB09393076D7C36BDD46289CD8D7080@MW2PR2101MB0939.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 02945962BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(136003)(346002)(396003)(366004)(199004)(189003)(6506007)(8990500004)(66946007)(8676002)(66476007)(66556008)(76116006)(64756008)(66446008)(71200400001)(33656002)(2906002)(8936002)(478600001)(86362001)(10290500003)(316002)(81166006)(81156014)(110136005)(7696005)(55016002)(9686003)(26005)(5660300002)(52536014)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0939;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HkaV9Uj8YptYJXJd82aWnciDMfMkr3KCM2m7RWq/hauyVnNpdgBZIM06hzJG7faK6gyPiagwf6YtJoeazcObCelK+42RCjAKwf/B8NWpmrlamtIIpNKBZGq4QDE1mhmAG9yzILIB30vCk1VFebWwwhygN31oZ+zkZSWo0BtyKM14BHhVHT26vkxsuSwsAP4TGan1A9lxlblIatdxx25UNHJFFlgcUvdrh11B+JI+7DoGOUSO7MqaGnM0Nas69OqD1a84Nkrg6j3mvmROx/gdzdAuoQUoSpex1Djug2tJbx+Z8kgRy047StIRtH9DRPKZYb6iND1d6RRm08Ft3npoKmO8E2yUrQrpGyY0SO23O1piEIID1l/EEQ23WTYDliJXZlmlb23EBi0G22oybR6NuWBMpZcowlIWnAgbtFCLxGu2c+YyzNbvfgXlnqVvDDok
+x-ms-exchange-antispam-messagedata: mBVTyUOjCLmzCxfghi9QObYmseCJHkPKlGJQsfkQM8M8HDUVMAjNHFCvMfYyJiIxBhe7tFanEhuOEJdxu+5BQjU+9crdEWiSqli3fOOfE4tIkv99KuYT2FzfCc008pdZGCcHXYcxO0ZCtLvp7SA2kg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b4a79c1-6cda-12a8-219b-0c1c146faeff@samba.org>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01fd0e7f-2aca-4fa1-4758-08d7a2255c10
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jan 2020 06:02:43.6825
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fVS3h/HK5NITnfUQfp4yX7/qYiRFltWf7z3a5zdSSJbIZl0dtGJ66otdGn00EQqVXilk92ubmCtlh9GLH8vGLYrgGLq1DD3lDUWCmkWsLhw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0939
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Dexuan Cui <decui@microsoft.com> Sent: Saturday, January 25, 2020 9:5=
+0 PM
+>=20
+> The state machine in the hv_utils driver can run out of order in some
+> corner cases, e.g. if the kvp daemon doesn't call write() fast enough
+> due to some reason, kvp_timeout_func() can run first and move the state
+> to HVUTIL_READY; next, when kvp_on_msg() is called it returns -EINVAL
+> since kvp_transaction.state is smaller than HVUTIL_USERSPACE_REQ; later,
+> the daemon's write() gets an error -EINVAL, and the daemon will exit().
+>=20
+> We can reproduce the issue by sending a SIGSTOP signal to the daemon, wai=
+t
+> for 1 minute, and send a SIGCONT signal to the daemon: the daemon will
+> exit() quickly.
+>=20
+> We can fix the issue by forcing a reset of the device (which means the
+> daemon can close() and open() the device again) and doing extra necessary
+> clean-up.
+>=20
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>=20
+> ---
+> Changes in v2:
+>     This is actually a new patch that makes the daemons more robust.
+>=20
+> Changes in v3 (I addressed Michael's comments):
+>     Don't reset target_fd, since that's unnecessary.
+>     Reset target_fname by: target_fname[0] =3D '\0';
+>     Added the missing "fs_frozen =3D true;" in vss_operate().
+>     Just after reopen_vss_fd: if vss_operate(VSS_OP_THAW) can not clear
+>         fs_frozen due to an error, we just exit().
+>     Added comments.
+>=20
+> Changes in v4 (Thanks to Michael!):
+>     Added the omitted "int fcopy_fd =3D -1" and
+>     "
+>      if (fcopy_fd !=3D -1)
+>                close(fcopy_fd);
+>     "
+>=20
+>  tools/hv/hv_fcopy_daemon.c | 37 ++++++++++++++++++++++++----
+>  tools/hv/hv_kvp_daemon.c   | 36 ++++++++++++++++------------
+>  tools/hv/hv_vss_daemon.c   | 49 +++++++++++++++++++++++++++++---------
+>  3 files changed, 91 insertions(+), 31 deletions(-)
+>=20
 
-On 2020-01-24 11:38:02 +0100, Stefan Metzmacher wrote:
-> Am 22.01.20 um 10:26 schrieb Greg Kroah-Hartman:
-> > From: Jens Axboe <axboe@kernel.dk>
-> >
-> > commit 44d282796f81eb1debc1d7cb53245b4cb3214cb5 upstream.
-> >
-> > If the credentials or the mm doesn't match, don't allow the task to
-> > submit anything on behalf of this ring. The task that owns the ring can
-> > pass the file descriptor to another task, but we don't want to allow
-> > that task to submit an SQE that then assumes the ring mm and creds if
-> > it needs to go async.
-> >
-> > Cc: stable@vger.kernel.org
-> > Suggested-by: Stefan Metzmacher <metze@samba.org>
-> > Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> >
-> > ---
-> >  fs/io_uring.c |    6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > --- a/fs/io_uring.c
-> > +++ b/fs/io_uring.c
-> > @@ -3716,6 +3716,12 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned
-> >  			wake_up(&ctx->sqo_wait);
-> >  		submitted = to_submit;
-> >  	} else if (to_submit) {
-> > +		if (current->mm != ctx->sqo_mm ||
-> > +		    current_cred() != ctx->creds) {
-> > +			ret = -EPERM;
-> > +			goto out;
-> > +		}
-> > +
->
-> I thought about this a bit more.
->
-> I'm not sure if this is actually to restrictive,
-> because it means applications like Samba won't
-> be able to use io-uring at all.
-
-Yea, I think it is too restrictive. In fact, it broke my WIP branch to
-make postgres use io_uring.
-
-
-Postgres uses a forked process model, with all sub-processes forked off
-one parent process ("postmaster"), sharing MAP_ANONYMOUS|MAP_SHARED
-memory (buffer pool, locks, and lots of other IPC). My WIP branch so far
-has postmaster create a number of io_urings that then the different
-processes can use (with locking if necessary).
-
-In plenty of the cases it's fairly important for performance to not
-require an additional context switch initiate IO, therefore we cannot
-delegate submitting to an io_uring to separate process. But it's not
-feasible to have one (or even two) urings for each process either: For
-one, that's just about guaranteed to bring us over the default
-RLIMIT_MEMLOCK limit, and requiring root only config changes is not an
-option for many (nor user friendly).
-
-
-Not sharing queues makes it basically impossible to rely on io_uring
-ordering properties when operation interlock is needed. E.g. to
-guarantee that the journal is flushed before some data buffer can be
-written back, being able to make use of links and drains is great - but
-there's one journal for all processes. To be able to guarantee anything,
-all the interlocked writes need to go through one io_uring. I've not yet
-implemented this, so I don't have numbers, but I expect pretty
-significant savings.
-
-
-Not being able to share urings also makes it harder to resolve
-deadlocks:
-
-As we call into both library and user defined code, we cannot guarantee
-that a specific backend process will promptly (or at all, when waiting
-for some locks) process cqes. There's also sections where we don't want
-to constantly check for ready events, for performance reasons.  But
-operations initiated by a process might be blocking other connections:
-
-E.g. process #1 might have initiated transferring a number of blocks
-into postgres' buffer pool via io_uring , and now is busy processing the
-first block that completed. But now process #2 might need one of the
-buffers that had IO queued, but didn't complete in time for #1 to see
-the results.  The way I have it set up right now, #2 simply can process
-pending cqes in the relevant queue. Which, in this example, would mark
-the pg buffer pool entry as valid, allowing #2 to continue.
-
-Now, completions can still be read by all processes, so I could continue
-to do the above: But that'd require all potentially needed io_urings to
-be set up in postmaster, before the first fork, and all processes to
-keep all those FDs open (commonly several hundred). Not an attractive
-option either, imo.
-
-Obviously we could solve this by having a sqe result processing thread
-running within each process - but that'd be a very significant new
-overhead. And it'd require making some non-threadsafe code threadsafe,
-which I do not relish tackling as a side-effect of io_uring adoption.
-
-
-It also turns out to be nice from a performance / context-switch rate
-angle to be able to process cqes for submissions by other
-processes. Saves an expensive context switch, and often enough it really
-doesn't matter which process processes the completion (especially for
-readahead). And in other cases it's cheap to just schedule the
-subsequent work from the cqe processor, e.g. initiating readahead of a
-few more blocks into the pg buffer pool.  Similarly, there are a few
-cases where it's useful for several processes to submit IO into a uring
-primarily drained by one specific process, to offload the subsequent
-action, if that's expensive
-
-
-Now, I think there's a valid argument to be made that postgres should
-just use threads, and not be hampered by any of this. But a) that's not
-going to happen all that soon, it's a large change, b) it's far from
-free from problems either, especially scalability on larger machines,
-and robustness.
-
-
-> As even if current_cred() and ctx->creds describe the same
-> set of uid,gids the != won't ever match again and
-> makes the whole ring unuseable.
-
-Indeed.  It also seems weird that a sqpoll now basically has different
-semantics, allowing the io_uring to be used by multiple processes - a
-task with a different mm can still wake the sqpoll thread up, even.
-
-Since the different processes attached still can still write to the
-io_uring mmaped memory, they can still queue sqes, they just can't
-initiate the processing. But the next time the creator of the uring
-submits, they will still be - and thus it seems that the kernel needs to
-handle this safely. So I really don't get what this actually achieves?
-Am I missing something here?
-
-Greetings,
-
-Andres Freund
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
