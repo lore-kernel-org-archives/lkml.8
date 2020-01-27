@@ -2,160 +2,110 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BADC35247
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960A7C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8912071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5302168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kSO/uE+4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JPi1l1pq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgA0Hzs (ORCPT
+        id S1727093AbgA0IC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 02:55:48 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35146 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgA0Hzr (ORCPT
+        Mon, 27 Jan 2020 03:02:58 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:56154 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgA0IC6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 02:55:47 -0500
-Received: by mail-vs1-f67.google.com with SMTP id x123so5061688vsc.2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 23:55:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JisW5FdHqDfpueRuACrKxki3mS2+DqkIGJ6tqvYKBYg=;
-        b=kSO/uE+41usEvH7ebSjUhk6e1/GR1kdSgxZbiRxsCAhlZoPKgznwup/h/2aiurqXba
-         seFxgj3oUfrgEWcKa+G614+LeCAaTNBjCdbjJPXw0HZTQ7jIJIx56MVRyj5idy2Njihw
-         1lvg7u/sCsRI9lQAUgiE+1pj3eYt3mM8RKqpvOqGY4GoQ8WpnDC8loBTB3RIAdXpJd1t
-         uvhGn77x1mkhssxugQBP4QZX/BGJNtXHXbfds528PcECqhauXzE+uRrC+XgHw3VmoWxm
-         cfiAWEvIJOhatU7LA2qPT3/WwEw8MlcDjWSC/qZE6TC9IgUl8qSgQSK+hpv1LKGzU+vi
-         04YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JisW5FdHqDfpueRuACrKxki3mS2+DqkIGJ6tqvYKBYg=;
-        b=axOr7iTBNwHRDj8UvCUOJ2ZWGKrShxhWgYtmnewNCxJ1cq2EA0IT6G9Spcr1wLybA1
-         FNLLIqiX/gLstI9njChU0Ro8xzlWDaXgzCaYACd0pIWh3cKjMg9smEqyMFq2Kt9CykS1
-         yhYeOS+v+74djA/+gLY9FS3tJpB0RegylWNNCKDFd4G0HkH7fq9f+zZVqHQ0kWAu1xR3
-         Lg7ibWVOjrMwM/B1es+tzN754R4tW3fXN0kZ5ogFdnydrN0uSHn3Kt0ArkqQRm0FCxnU
-         Y3XsFQHyl3KLxdRIMzNUJorla7uCusB7fr0jeCcYdMSvRMEKwLOvQCEs4X5NdlJz7G2G
-         eGSw==
-X-Gm-Message-State: APjAAAXD8x1egdcQJDNfgBe9eWDSXU4MXtg/QCQFaWeBc6VF37fHCeZ0
-        uXQ+9qp2gTxrzHvsuVhSb5h5IK6wOkowpWCCUPeCTA==
-X-Google-Smtp-Source: APXvYqyL1TCg49AaeGX4CVUErd9kezem7knF5p9I+JWV1m4AIpmUm9yBXdiHxcp8rC0t9W4QBLYziKJLuXWuYii+iQs=
-X-Received: by 2002:a67:ee02:: with SMTP id f2mr584267vsp.165.1580111746386;
- Sun, 26 Jan 2020 23:55:46 -0800 (PST)
+        Mon, 27 Jan 2020 03:02:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mIQWVe4j0g0isMeVhXPkyslgBaKiJV5p9lnH2xW19GQ=; b=JPi1l1pqzmiUP6pxS7Nas9JSF
+        ewfE+drGMIZmSS6Pc0Kh7NcajaI0byJZ5dudxGHp6138pz9R8Oa5/lx9GIlvB/BYiEieTregF+ZAp
+        w42WRDhz2xagoHXQpX2crbtAV4NVghhUpYJ1DUsQVO9nThuBSQRLogoDTTsH05BsQmLbgde7BCY9B
+        JKDA/0cDy6pR70v3CigxhgMRMEpcTgGILveAtrjSLuCrWsLiGS/+KlLXWsqTPDXlvZn0IUYhVEPjI
+        vixe6dzDKGN4dsjZFaX7g+04tp4h1nlIlBCzGZAsjLNE923EK5ame4jN+LEZiwoyKd8zHK/6ojKN2
+        fhA7Cjmdw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ivzLy-0004PF-Ui; Mon, 27 Jan 2020 08:02:39 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0C948300739;
+        Mon, 27 Jan 2020 09:00:50 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B3858203CF5D4; Mon, 27 Jan 2020 09:02:32 +0100 (CET)
+Date:   Mon, 27 Jan 2020 09:02:32 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v15] x86/split_lock: Enable split lock detection by kernel
+Message-ID: <20200127080232.GF14914@hirez.programming.kicks-ass.net>
+References: <20200122185514.GA16010@agluck-desk2.amr.corp.intel.com>
+ <20200122224245.GA2331824@rani.riverdale.lan>
+ <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
+ <20200123004507.GA2403906@rani.riverdale.lan>
+ <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com>
+ <20200123044514.GA2453000@rani.riverdale.lan>
+ <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
+ <87h80kmta4.fsf@nanos.tec.linutronix.de>
+ <20200125024727.GA32483@agluck-desk2.amr.corp.intel.com>
+ <20200125212524.GA538225@rani.riverdale.lan>
 MIME-Version: 1.0
-References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-6-drinkcat@chromium.org>
- <b58a8cf9-3275-cf89-6dff-596aceeb8000@arm.com> <CANMq1KBcNr=1_poBHrA_SDo_h-5i3e5TMqASEVaDj5LevsRcOQ@mail.gmail.com>
-In-Reply-To: <CANMq1KBcNr=1_poBHrA_SDo_h-5i3e5TMqASEVaDj5LevsRcOQ@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 27 Jan 2020 08:55:10 +0100
-Message-ID: <CAPDyKFr4Vz1ihuFQNnhDLEnOs=BZ1n2wzw3CATgPcDXs9g54uA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] drm/panfrost: Add support for multiple power
- domain support
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Steven Price <steven.price@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Mark Brown <broonie@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200125212524.GA538225@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 at 02:53, Nicolas Boichat <drinkcat@chromium.org> wrote=
-:
->
-> +Ulf to keep me honest on the power domains
->
-> On Thu, Jan 9, 2020 at 10:08 PM Steven Price <steven.price@arm.com> wrote=
-:
-> >
-> > On 08/01/2020 05:23, Nicolas Boichat wrote:
-> > > When there is a single power domain per device, the core will
-> > > ensure the power domains are all switched on.
-> > >
-> > > However, when there are multiple ones, as in MT8183 Bifrost GPU,
-> > > we need to handle them in driver code.
-> > >
-> > >
-> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > ---
-> > >
-> > > The downstream driver we use on chromeos-4.19 currently uses 2
-> > > additional devices in device tree to accomodate for this [1], but
-> > > I believe this solution is cleaner.
-> >
-> > I'm not sure what is best, but it seems odd to encode this into the Pan=
-frost driver itself - it doesn't have any knowledge of what to do with thes=
-e power domains. The naming of the domains looks suspiciously like someone =
-thought that e.g. only half of the cores could be powered, but it doesn't l=
-ook like that was implemented in the chromeos driver linked and anyway that=
- is *meant* to be automatic in the hardware! (I.e. if you only power up one=
- cores in one core stack then the PDC should only enable the power domain f=
-or that set of cores).
->
-> This is actually implemented in the Chrome OS driver [1]. IMHO power
-> domains are a bit confusing [2]:
->  i. If there's only 1 power domain in the device, then the core takes
-> care of power on the domain (based on pm_runtime)
->  ii. If there's more than 1 power domain, then the device needs to
-> link the domains manually.
->
-> So the Chrome OS [1] driver takes approach (i), by creating 3 devices,
-> each with 1 power domain that is switched on/off automatically using
-> pm_runtime.
->
-> This patch takes approach (ii) with device links to handle the extra doma=
-ins.
->
-> I believe the latter is more upstream-friendly, but, as always,
-> suggestions welcome.
+On Sat, Jan 25, 2020 at 04:25:25PM -0500, Arvind Sankar wrote:
+> On Fri, Jan 24, 2020 at 06:47:27PM -0800, Luck, Tony wrote:
+> > I did find something with a new test. Applications that hit a
+> > split lock warn as expected. But if they sleep before they hit
+> > a new split lock, we get another warning. This is may be because
+> > I messed up when fixing a PeterZ typo in the untested patch.
+> > But I think there may have been bigger problems.
+> > 
+> > Context switch in V14 code did: 
+> > 
+> >        if (tifp & _TIF_SLD)
+> >                switch_to_sld(prev_p);
+> > 
+> > void switch_to_sld(struct task_struct *prev)
+> > {
+> >        __sld_msr_set(true);
+> >        clear_tsk_thread_flag(prev, TIF_SLD);
+> > }
+> > 
+> > Which re-enables split lock checking for the next process to run. But
+> > mysteriously clears the TIF_SLD bit on the previous task.
+> 
+> Did Peter mean to disable it only for the current timeslice and
+> re-enable it for the next time its scheduled?
 
-Apologies for the late reply. A few comments below.
+That was the initial approach, yes. I was thinking it might help find
+multiple spots in bad programs.
 
-If the device is partitioned across multiple PM domains (it may need
-several power rails), then that should be described with the "multi PM
-domain" approach in the DTS. As in (ii).
-
-Using "device links" is however optional, as it may depend on the use
-case. If all multiple PM domains needs to be powered on/off together,
-then it's certainly recommended to use device links.
-
-However, if the PM domains can be powered on/off independently (one
-can be on while another is off), then it's probably easier to operate
-directly with runtime PM, on the returned struct *device from
-dev_pm_domain_attach_by_id().
-
-Also note, there is dev_pm_domain_attach_by_name(), which allows us to
-specify a name for the PM domain in the DTS, rather than using an
-index. This may be more future proof to use.
-
-[...]
-
-Hope this helps.
-
-Kind regards
-Uffe
+And as I said; I used perf on my desktop and couldn't find a single bad
+program, so I'm not actually expecting this to trigger much.
