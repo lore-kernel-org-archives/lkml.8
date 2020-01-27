@@ -2,142 +2,126 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF66C35247
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B36C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D1321569
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2E0214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:43:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IQ8rtfCm"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="YuM3SuKZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fGXN3cXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbgA0Jmf (ORCPT
+        id S1729759AbgA0JnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 04:42:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22284 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727295AbgA0Jmf (ORCPT
+        Mon, 27 Jan 2020 04:43:08 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:57469 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727295AbgA0JnI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 04:42:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580118153;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=Q6YN4hW4JTvSsXGjrvs6v5fpmdU5j7t9SYzgLeHUpT8=;
-        b=IQ8rtfCmcOzyRy0Ajvy5h7z4zuU82Q9F0NLRM8hJEVTRb2sJEZ25r85XE6igHsWbrZ4bpG
-        drw8nSEAq3e8IikKVbxA/AFeDIIpGLucssgZSa7wV9acOSKCPj+HCdAYN4LC/kc1QZfD9v
-        C/aYqR1byqldr/ky+5PMd4Yr3W/gjFI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-oLDz0EByPDyQNbm6YkINZg-1; Mon, 27 Jan 2020 04:42:31 -0500
-X-MC-Unique: oLDz0EByPDyQNbm6YkINZg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA607800D41;
-        Mon, 27 Jan 2020 09:42:29 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-117-94.ams2.redhat.com [10.36.117.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EC83F87025;
-        Mon, 27 Jan 2020 09:42:24 +0000 (UTC)
-Subject: Re: [PATCH v4 10/10] KVM: selftests: Move memslot 0 above KVM
- internal memslots
-To:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-References: <20200123180436.99487-1-bgardon@google.com>
- <20200123180436.99487-11-bgardon@google.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <f6aa338c-3942-b09f-863b-3725483de909@redhat.com>
-Date:   Mon, 27 Jan 2020 10:42:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 27 Jan 2020 04:43:08 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id CB9F221AEF;
+        Mon, 27 Jan 2020 04:43:06 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 27 Jan 2020 04:43:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=bshoA8LerED0wuEUEdmFMI+f7iF
+        /vCx4mlFcm2okIV8=; b=YuM3SuKZ/qWIx8fc8/D8qwqXAozgbrwbsYJja2Zlv81
+        XT9jImVbxwhcyHbuMkLglRtXIsEs1/zR+7npMRtE7MGNM+XvQ/8TEKgRJ82evN76
+        bjwOzzxn+slwAJ+Obeb4eZlfD+6BmVqhknaxcPsZejPBvZiRMUo3eZ+Ycggkf/cG
+        x8hjHaqKo44nSxBUSRFJXCEzBbwER9PxLBj1Hw5MQjfyAamM8hqU3xCKHe4kMA4p
+        Cvy4lP5DzOdbs1dvcoFFS2pgH1qViYY3/zfqTYBsk8uMepkvTsqutsNKdlEpKfCi
+        1uittLHkkwgPkxAbLi/5zd0eteGQSi4yavd6J55bNSQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=bshoA8
+        LerED0wuEUEdmFMI+f7iF/vCx4mlFcm2okIV8=; b=fGXN3cXWrg4TI5NwQ4ptJR
+        URUsqufC1EDh4HOHPzKq+2n4IcAPnXy9VcfdUIWK+ILio7WLonJd5tsPVZXmaQyz
+        Azw4eipA4fsjtj/5yJnXutrB9VAr2HUt8EltWzdDhV+Z2uhfJ5qoX1yi5e5p/JmQ
+        nkIFQ/KeFzxAhIEhsSfNDCabF90rJfJWXcZEFxhzyA52+8KdCmSOd6heJ7I/f+zK
+        /FcbhfQaTLljF3E3lVDNOS4PdfQNKcZyg/umMdwLmiXNxFryeYEm0wFVqjc45SJj
+        OlHNA7AEJiMZxfpItC5IV1Ibt99ufUVpceC6I8D3Zb4/TTlFHU71vOKCWLZzQD0g
+        ==
+X-ME-Sender: <xms:qbAuXpK-tYARlgxTRiGmjozSSUkbqvQpPgQ3TsXNSnVo88QF9j3ZUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfedvgddtjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:qbAuXpZFVgKhv7lEooWFM4AOLgUnAkZpuCYz2B2UqnPNJvMmlHCrjQ>
+    <xmx:qbAuXstRM30ZETJDUrA59elu9e8sy4kMimPKym8pjTw_0KeldMIDzg>
+    <xmx:qbAuXus-eeriZAQJtHU6el6vhyDBpY-hV6U_3G7HPWG1MDb4WRZjFQ>
+    <xmx:qrAuXp7tpbVK-vUDA1DnLpw5htIQ-MKHYeYWnIhmxTWI9TmLWT1zDQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E78D4328005A;
+        Mon, 27 Jan 2020 04:43:04 -0500 (EST)
+Date:   Mon, 27 Jan 2020 10:43:02 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>, wens@csie.org,
+        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "drm/sun4i: drv: Allow framebuffer modifiers in
+ mode config"
+Message-ID: <20200127094302.f3s4caona5is7gd5@gilmour.lan>
+References: <20200126065937.9564-1-jernej.skrabec@siol.net>
+ <20200127081419.GA25668@aptenodytes>
 MIME-Version: 1.0
-In-Reply-To: <20200123180436.99487-11-bgardon@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dboxkgv3c732tn6y"
+Content-Disposition: inline
+In-Reply-To: <20200127081419.GA25668@aptenodytes>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/01/2020 19.04, Ben Gardon wrote:
-> KVM creates internal memslots between 3 and 4 GiB paddrs on the first
-> vCPU creation. If memslot 0 is large enough it collides with these
-> memslots an causes vCPU creation to fail. Instead of creating memslot 0
-> at paddr 0, start it 4G into the guest physical address space.
-> 
-> Signed-off-by: Ben Gardon <bgardon@google.com>
-> ---
->  tools/testing/selftests/kvm/lib/kvm_util.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 5b971c04f1643..427c88d32e988 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -130,9 +130,11 @@ _Static_assert(sizeof(vm_guest_mode_string)/sizeof(char *) == NUM_VM_MODES,
->   *
->   * Creates a VM with the mode specified by mode (e.g. VM_MODE_P52V48_4K).
->   * When phy_pages is non-zero, a memory region of phy_pages physical pages
-> - * is created and mapped starting at guest physical address 0.  The file
-> - * descriptor to control the created VM is created with the permissions
-> - * given by perm (e.g. O_RDWR).
-> + * is created, starting at 4G into the guest physical address space to avoid
-> + * KVM internal memslots which map the region between 3G and 4G. If tests need
-> + * to use the physical region between 0 and 3G, they can allocate another
-> + * memslot for that region. The file descriptor to control the created VM is
-> + * created with the permissions given by perm (e.g. O_RDWR).
->   */
->  struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
->  {
-> @@ -231,7 +233,8 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
->  	vm->vpages_mapped = sparsebit_alloc();
->  	if (phy_pages != 0)
->  		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
-> -					    0, 0, phy_pages, 0);
-> +					    KVM_INTERNAL_MEMSLOTS_END_PADDR,
-> +					    0, phy_pages, 0);
->  
->  	return vm;
->  }
 
-This patch causes *all* tests on s390x to fail like this:
+--dboxkgv3c732tn6y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-# selftests: kvm: sync_regs_test
-# Testing guest mode: PA-bits:52,  VA-bits:48,  4K pages
-# ==== Test Assertion Failure ====
-#   lib/kvm_util.c:1059: false
-#   pid=248244 tid=248244 - Success
-#      1	0x0000000001002f3d: addr_gpa2hva at kvm_util.c:1059
-#      2	 (inlined by) addr_gpa2hva at kvm_util.c:1047
-#      3	0x0000000001006edf: addr_gva2gpa at processor.c:144
-#      4	0x0000000001004345: addr_gva2hva at kvm_util.c:1636
-#      5	0x00000000010077c1: kvm_vm_elf_load at elf.c:192
-#      6	0x00000000010070c3: vm_create_default at processor.c:228
-#      7	0x0000000001001347: main at sync_regs_test.c:87
-#      8	0x000003ffba7a3461: ?? ??:0
-#      9	0x0000000001001965: .annobin_init.c.hot at crt1.o:?
-#     10	0xffffffffffffffff: ?? ??:0
-#   No vm physical memory at 0x0
-not ok 2 selftests: kvm: sync_regs_test # exit=254
+On Mon, Jan 27, 2020 at 09:14:19AM +0100, Paul Kocialkowski wrote:
+> Hi Jernej,
+>
+> On Sun 26 Jan 20, 07:59, Jernej Skrabec wrote:
+> > This reverts commit 9db9c0cf5895e4ddde2814360cae7bea9282edd2.
+> >
+> > Setting mode_config.allow_fb_modifiers manually is completely
+> > unnecessary. It is set automatically by drm_universal_plane_init() based
+> > on the fact if modifier list is provided or not. Even more, it breaks
+> > DE2 and DE3 as they don't support any modifiers beside linear. Modifiers
+> > aware applications can be confused by provided empty modifier list - at
+> > least linear modifier should be included, but it's not for DE2 and DE3.
+>
+> Makes sense and it's apparently the norm to not report any modifier blob
+> when only linear is supported, so let's stick to that.
+>
+> Note that when the reverted patch was applied, the core didn't set
+> allow_fb_modifiers on its own yet. But it does now so let's rely on it instead.
+>
+> Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-AFAIK the ELF binaries on s390x are linked to addresses below 4G, so
-generally removing the memslot here seems to be a bad idea on s390x.
+Applied, thanks!
+Maxime
 
- Thomas
+--dboxkgv3c732tn6y
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXi6wpgAKCRDj7w1vZxhR
+xavxAP4+7B2OvLts72lO+MlX4gW/ovZVA2uVk36MX4C/iIDjEwEA5luy/xFLJESN
+/5djBA1bCYNq8JOCyHu+M8HYXgQ0DQE=
+=qG/B
+-----END PGP SIGNATURE-----
+
+--dboxkgv3c732tn6y--
