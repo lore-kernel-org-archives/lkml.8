@@ -2,97 +2,111 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0BDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4002AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36465214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580144704;
-	bh=Ya/WRnQH2u3rLockj93TPKOSkCdFP07bsj3EgPDYbHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UZti3GaM8bgKQe+RcFLvJSlRx6W0tvGkS3loG44J+VUoQ+kAXeD8nFDYbOXikyN3c
-	 mByRC2/USto2j4Izs3MraDmUtMQhT/fhvwgPmGjZTUydUukaHrptS0nWOPUOd2eWz+
-	 63th8LlrMRqdSFqOBGg9oAtQDoRuITm4ozPnvMQg=
+	by mail.kernel.org (Postfix) with ESMTP id 1F234214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgA0RFD (ORCPT
+        id S1726173AbgA0RGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:05:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgA0RFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:05:02 -0500
-Received: from localhost (unknown [122.181.201.159])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE8B6214AF;
-        Mon, 27 Jan 2020 17:05:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580144701;
-        bh=Ya/WRnQH2u3rLockj93TPKOSkCdFP07bsj3EgPDYbHE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wXEesJl+Vy0HGnw/LDcKNUbWVJh1JS7CrjMWazZYB+Ux9ikTAmZBbBl3GyFJJnUwK
-         IbdOVcf3VQNaUWdWUbNaqYKuOX3a/vr1yp85xj/T1Lrs4eZufdqCaPiWxpKxuDD0Uj
-         wCp8xcn7kGIxEKAfgmM0aBID+fahQibKwKJ0FFEQ=
-Date:   Mon, 27 Jan 2020 22:34:57 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>, mka@chromium.org,
-        vbadigan@codeaurora.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Fix sdhci compat string
-Message-ID: <20200127170457.GK2841@vkoul-mobl>
-References: <20200127082331.1.I402470e4a162d69fde47ee2ea708b15bde9751f9@changeid>
+        Mon, 27 Jan 2020 12:06:06 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2300 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725845AbgA0RGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 12:06:06 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 5EF55959F844E6E4E5B7;
+        Mon, 27 Jan 2020 17:06:03 +0000 (GMT)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
+ by smtpsuk.huawei.com (10.201.108.33) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 27 Jan 2020 17:05:34 +0000
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <jarkko.sakkinen@linux.intel.com>,
+        <james.bottomley@hansenpartnership.com>,
+        <linux-integrity@vger.kernel.org>
+CC:     <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH 0/8] ima: support stronger algorithms for attestation
+Date:   Mon, 27 Jan 2020 18:04:35 +0100
+Message-ID: <20200127170443.21538-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127082331.1.I402470e4a162d69fde47ee2ea708b15bde9751f9@changeid>
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.160]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-01-20, 08:23, Douglas Anderson wrote:
-> As per the bindings, the SDHCI controller should have a SoC-specific
-> compatible string in addition to the generic version-based one.  Add
-> it.
+IMA extends Platform Configuration Registers (PCRs) of the TPM to give a
+proof to a remote verifier that the measurement list contains all
+measurements done by the kernel and that the list was not maliciously
+modified by an attacker.
 
-Thanks for spotting it Doug, Btw did some script catch it or manual
-inspection?
+IMA was originally designed to extend PCRs with a SHA1 digest, provided
+with the measurement list, and was subsequently updated to extend all PCR
+banks in case a TPM 2.0 is used. Non-SHA1 PCR banks are not supposed to be
+used for remote attestation, as they are extended with a SHA1 digest padded
+with zeros, which does not increase the strength.
 
+This patch set addresses this issue by extending PCRs with the digest of
+the measurement entry calculated with the crypto subsystem. The list of
+algorithms used to calculate the digest are taken from
+ima_tpm_chip->allocated_banks, returned by the TPM driver. The SHA1 digest
+is always calculated, as SHA1 still remains the default algorithm for the
+template digest in the measurement list.
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+This patch set also makes two additional modifications related to the usage
+of hash algorithms. First, since now the template digest for the default
+IMA algorithm is always calculated, this is used for hash collision
+detection, to check if there are duplicate measurement entries.
 
-> Fixes: 7241ab944da3 ("arm64: dts: qcom: qcs404: Add sdcc1 node")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index 4ee1e3d5f123..1eea06435779 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -685,7 +685,7 @@ pcie_phy: phy@7786000 {
->  		};
->  
->  		sdcc1: sdcc@7804000 {
-> -			compatible = "qcom,sdhci-msm-v5";
-> +			compatible = "qcom,qcs404-sdhci", "qcom,sdhci-msm-v5";
->  			reg = <0x07804000 0x1000>, <0x7805000 0x1000>;
->  			reg-names = "hc_mem", "cmdq_mem";
->  
-> -- 
-> 2.25.0.341.g760bfbb309-goog
+Second, it uses the default IMA hash algorithm to calculate the boot
+aggregate, assuming that the corresponding PCR bank is currently allocated.
+Otherwise, it finds the first PCR bank for which the crypto ID is known.
+IMA initialization fails only if no algorithm known to the crypto subsystem
+is found.
+
+This patch set does not yet modify the format of the measurement list to
+provide the digests passed to the TPM. However, reconstructing the value of
+the quoted PCR is still possible for the verifier by calculating the digest
+on measurement data found in binary_runtime_measurements.
+
+The attest-tools library [1] has been updated to verify non-SHA1 PCR
+banks [2] and to handle non-SHA1 boot aggregate [3].
+
+[1] https://github.com/euleros/attest-tools/tree/0.2-devel
+[2] https://github.com/euleros/attest-tools/commit/282a0b1a5e6d9c87adf21561018528d7bbdc7f38
+[3] https://github.com/euleros/attest-tools/commit/3a4c8e250fde7661257aba022d677bf0af5399da
+
+Roberto Sassu (8):
+  tpm: initialize crypto_id of allocated_banks to HASH_ALGO__LAST
+  ima: evaluate error in init_ima()
+  ima: store template digest directly in ima_template_entry
+  ima: switch to dynamically allocated buffer for template digests
+  ima: allocate and initialize tfm for each PCR bank
+  ima: calculate and extend PCR with digests in ima_template_entry
+  ima: use ima_hash_algo for collision detection in the measurement list
+  ima: switch to ima_hash_algo for boot aggregate
+
+ drivers/char/tpm/tpm2-cmd.c           |   2 +
+ security/integrity/ima/ima.h          |   7 +-
+ security/integrity/ima/ima_api.c      |  20 ++-
+ security/integrity/ima/ima_crypto.c   | 219 ++++++++++++++++++++------
+ security/integrity/ima/ima_fs.c       |   4 +-
+ security/integrity/ima/ima_init.c     |   6 +-
+ security/integrity/ima/ima_main.c     |   6 +
+ security/integrity/ima/ima_queue.c    |  36 +++--
+ security/integrity/ima/ima_template.c |  22 ++-
+ 9 files changed, 241 insertions(+), 81 deletions(-)
 
 -- 
-~Vinod
+2.17.1
+
