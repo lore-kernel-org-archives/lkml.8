@@ -2,159 +2,86 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB1BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B1AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC24021739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:17:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cz3mZG09"
+	by mail.kernel.org (Postfix) with ESMTP id 45D9F21739
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgA0RRz (ORCPT
+        id S1726049AbgA0RTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:17:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37300 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725897AbgA0RRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:17:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580145473;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wHplmyQRy7+LrHerh/x7+cY34rWWSm7Q4DovTktG328=;
-        b=cz3mZG09DO4DVKhAGj7pfMM2gH0sGOl68hLVMa1IKRt/rFCBOEQ622t8MLTXbtSO8iWL7V
-        PckeRsoQX40JjaTmNwUu27+VcGbVtrsQjncV+EhKFf8DHhZ85wf3LkL2rKwPHrEKwOFI9z
-        0UJlM//U0uAYkun7CBqAA2Z7ulKZ1gw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-164-uZKIM-65NSmb3BwCR2rEag-1; Mon, 27 Jan 2020 12:17:49 -0500
-X-MC-Unique: uZKIM-65NSmb3BwCR2rEag-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20698477;
-        Mon, 27 Jan 2020 17:17:47 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E92578702A;
-        Mon, 27 Jan 2020 17:17:44 +0000 (UTC)
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-From:   Waiman Long <longman@redhat.com>
-To:     paulmck@kernel.org
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
-References: <20200124222434.GA7196@paulmck-ThinkPad-P72>
- <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
- <20200125005713.GZ2935@paulmck-ThinkPad-P72>
- <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
- <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
- <20200125045844.GC2935@paulmck-ThinkPad-P72>
- <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
- <20200126153535.GL2935@paulmck-ThinkPad-P72>
- <20200126224245.GA22901@paulmck-ThinkPad-P72>
- <2e552fad-79c0-ec06-3b8c-d13f1b67f57d@redhat.com>
- <20200127150902.GN2935@paulmck-ThinkPad-P72>
- <9b3a3f16-5405-b6d1-d023-b85f4aab46dd@redhat.com>
-Organization: Red Hat
-Message-ID: <0c2f17ab-7f03-c8b8-168f-2152bb65ca48@redhat.com>
-Date:   Mon, 27 Jan 2020 12:17:44 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 27 Jan 2020 12:19:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57736 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbgA0RTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 12:19:38 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 41ED7AC54;
+        Mon, 27 Jan 2020 17:19:36 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 42268DA730; Mon, 27 Jan 2020 18:19:18 +0100 (CET)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+Subject: [GIT PULL] fs: Deduplication ioctl fix
+Date:   Mon, 27 Jan 2020 18:19:15 +0100
+Message-Id: <cover.1580142827.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <9b3a3f16-5405-b6d1-d023-b85f4aab46dd@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/27/20 12:12 PM, Waiman Long wrote:
-> On 1/27/20 10:09 AM, Paul E. McKenney wrote:
->>> Do you mean within the VM, lscpu showed that the system has one node and
->>> 12 threads per node? If that is the case, it should behave like regular
->>> qspinlock and be fair.
->> I mean that I saw this in dmesg, which I believe to be telling me the
->> same thing as lscpu saying that there is one node, but you tell me!
->>
->> [    0.007106] No NUMA configuration found
->> [    0.007107] Faking a node at [mem 0x0000000000000000-0x000000001ffdefff]
->> [    0.007111] NODE_DATA(0) allocated [mem 0x1ffdb000-0x1ffdefff]
->> [    0.007126] Zone ranges:
->> [    0.007127]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
->> [    0.007128]   DMA32    [mem 0x0000000001000000-0x000000001ffdefff]
->> [    0.007128]   Normal   empty
->> [    0.007129] Movable zone start for each node
->> [    0.007129] Early memory node ranges
->> [    0.007130]   node   0: [mem 0x0000000000001000-0x000000000009efff]
->> [    0.007132]   node   0: [mem 0x0000000000100000-0x000000001ffdefff]
->> [    0.007227] Zeroed struct page in unavailable ranges: 98 pages
->> [    0.007227] Initmem setup node 0 [mem 0x0000000000001000-0x000000001ffdefff]
->> [    0.007228] On node 0 totalpages: 130941
->> [    0.007231]   DMA zone: 64 pages used for memmap
->> [    0.007231]   DMA zone: 21 pages reserved
->> [    0.007232]   DMA zone: 3998 pages, LIFO batch:0
->> [    0.007266]   DMA32 zone: 1984 pages used for memmap
->> [    0.007267]   DMA32 zone: 126943 pages, LIFO batch:31
->>
-> That does look like just one node.
->>>> I will try reader-writer lock next.
->>>>
->>>> Again, should I be using qemu's -numa command-line option to create nodes?
->>>> If so, what would be a sane configuration given 12 CPUs and 512MB of
->>>> memory for the VM?  If not, what is a good way to exercise CNA's NUMA
->>>> capabilities within a guest OS?
->>> You can certainly play around with CNA in a VM. However, it is generally
->>> not recommended to use CNA in a VM unless the VM cpu topology matches
->>> the host with 1-to-1 vcpu pinning and there is no vcpu overcommit. In
->>> this case, one may see some performance improvement using CNA by using
->>> the "numa_spinlock=on" option to explicitly turn it on.
->> Sorry, but I will not be booting this on bare metal on the systems that
->> I currently have access to.  No more than I run rcutorture on bare metal
->> on them, especially not with newly modified variants of RCU.  ;-)
->>
->>> Because of the shuffling of queue entries, CNA is inherently less fair
->>> than the regular qspinlock. However, a ratio of 5 seems excessive to me.
->>> vcpu preemption may be a factor in contributing to this large variation.
->>> My testing on bare metal only showed a throughput variation within
->>> 10-20% at most.
->> OK.  Any guidance on qemu's -numa, or should I just experiment with it?
->> The latter will take me some time, as I must focus on other things
->> this week.
-> To really test it, you should have multiple numa nodes, 2 or 4.
->> Alternatively, would it make sense for you to give it a spin in a VM?
->> After all, it is entirely possible that I still have some configuration
->> or another messed up.
->
-> It all depends on what you want to test. If you want just to make sure
-> that it won't fail any locking test. Yes, you can certainly do that in
-> a VM. If you want to test for performance or fairness of CNA versus
-> regular qspinlock, using a VM is not a proper platform. Even with a
-> single node, you see 5x difference in locking count. I suspect that
-> maybe one or a few vcpus got preempted pretty frequently to perform
-> host activities that it screw up the data.
->
-BTW, in a VM, the queued_spin_unlock function pointer will still be
-pointing to the paravirt version even if CNA is used for the slowpath.
-That shouldn't impact correctness, but is not optimal for performance.
+Hi,
 
-Cheers,
-Longman
+this is a fix for deduplication bug, the last block of two files is
+allowed to deduplicated. This got broken in 5.1 by lifting some generic
+checks to VFS layer. The affected filesystems are btrfs and xfs.
 
+As the report came from btrfs users, the patches go through my git repo.
+The xfs maintainer is aware of the fix, I don't have ack from VFS
+maintainers but given the scope of the fix I believe it's not strictly
+necessary.
+
+The branch was in linux-next only for a short time as I was not sure how
+exactly it's going to be merged, nevertheless enough testing was done
+on both filesystems.  The patches are marked for stable as the bug
+decreases deduplication effectivity.
+
+If there's something wrong about the pull request, please let me know. I
+did what I felt was best to get the fix merged, patches that touch files
+in fs/ but are not pure VFS are bit fuzzy regarding the process.
+
+There are no merge conflicts (btrfs, vfs). Please pull, thanks.
+
+----------------------------------------------------------------
+The following changes since commit def9d2780727cec3313ed3522d0123158d87224d:
+
+  Linux 5.5-rc7 (2020-01-19 16:02:49 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git fs-dedupe-last-block-tag
+
+for you to fetch changes up to 831d2fa25ab8e27592b1b0268dae6f2dfaf7cc43:
+
+  Btrfs: make deduplication with range including the last block work (2020-01-23 18:24:07 +0100)
+
+----------------------------------------------------------------
+Filipe Manana (2):
+      fs: allow deduplication of eof block into the end of the destination file
+      Btrfs: make deduplication with range including the last block work
+
+ fs/btrfs/ioctl.c |  3 ++-
+ fs/read_write.c  | 10 ++++------
+ 2 files changed, 6 insertions(+), 7 deletions(-)
