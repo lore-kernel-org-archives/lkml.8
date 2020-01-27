@@ -2,203 +2,187 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B2EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4CBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D98E20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF7A24654
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580137745;
+	bh=LneyVWiMa0REJZFBSVOC8VBfEgVQakydJNAdr2Lnekk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=yHU8WCko+C+If6JNa4sVMinBcN93XIJZFI5BINH7VmHFf4FHudHeBIAFmqElspGTm
+	 D+yHXBnaCvYPa0i3Mre14pm38uwPTPfPd6kXDXVTIF+pnnq8BKH0rG0q1ogt6Mn9JA
+	 EOUM2zu4dc7MKWc1aZtkg1yLgMNoBEcH8uWHgohM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgA0PIy (ORCPT
+        id S1729505AbgA0PJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:08:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:45864 "EHLO foss.arm.com"
+        Mon, 27 Jan 2020 10:09:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729213AbgA0PIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:08:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CADD31B;
-        Mon, 27 Jan 2020 07:08:53 -0800 (PST)
-Received: from e110176-lin.kfn.arm.com (unknown [10.50.4.146])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 316B33F67D;
-        Mon, 27 Jan 2020 07:08:52 -0800 (PST)
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Ofir Drang <ofir.drang@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC v3] crypto: ccree - protect against short scatterlists
-Date:   Mon, 27 Jan 2020 17:08:21 +0200
-Message-Id: <20200127150822.12126-1-gilad@benyossef.com>
-X-Mailer: git-send-email 2.23.0
+        id S1729152AbgA0PJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 10:09:04 -0500
+Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6895520702;
+        Mon, 27 Jan 2020 15:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580137743;
+        bh=LneyVWiMa0REJZFBSVOC8VBfEgVQakydJNAdr2Lnekk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=pNrhYElv6xTheDCjXktEOImu6bsIU9tRvoXN96pANqkFzcFkQMZ1I+dYuoCmC0JRu
+         6d/2P9PLeT9AJ9Y9WwM1oNxUHft49dzNLbkS6Va+Ig/mWrrGsVR6gdRS44EXVJZh3t
+         3xg1uhtQVrzLCDg5L2GFvbqE+VxoruZq+8YbkGQo=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B631A352279E; Mon, 27 Jan 2020 07:09:02 -0800 (PST)
+Date:   Mon, 27 Jan 2020 07:09:02 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com, dave.dice@oracle.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
+Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
+Message-ID: <20200127150902.GN2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200124222434.GA7196@paulmck-ThinkPad-P72>
+ <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
+ <20200125005713.GZ2935@paulmck-ThinkPad-P72>
+ <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
+ <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
+ <20200125045844.GC2935@paulmck-ThinkPad-P72>
+ <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
+ <20200126153535.GL2935@paulmck-ThinkPad-P72>
+ <20200126224245.GA22901@paulmck-ThinkPad-P72>
+ <2e552fad-79c0-ec06-3b8c-d13f1b67f57d@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2e552fad-79c0-ec06-3b8c-d13f1b67f57d@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deal gracefully with the event of being handed a scatterlist
-which is shorter than expected.
+On Mon, Jan 27, 2020 at 09:11:43AM -0500, Waiman Long wrote:
+> On 1/26/20 5:42 PM, Paul E. McKenney wrote:
+> > On Sun, Jan 26, 2020 at 07:35:35AM -0800, Paul E. McKenney wrote:
+> >> On Sat, Jan 25, 2020 at 02:41:39PM -0500, Waiman Long wrote:
+> >>> On 1/24/20 11:58 PM, Paul E. McKenney wrote:
+> >>>> On Fri, Jan 24, 2020 at 09:17:05PM -0500, Waiman Long wrote:
+> >>>>> On 1/24/20 8:59 PM, Waiman Long wrote:
+> >>>>>>> You called it!  I will play with QEMU's -numa argument to see if I can get
+> >>>>>>> CNA to run for me.  Please accept my apologies for the false alarm.
+> >>>>>>>
+> >>>>>>> 							Thanx, Paul
+> >>>>>>>
+> >>>>>> CNA is not currently supported in a VM guest simply because the numa
+> >>>>>> information is not reliable. You will have to run it on baremetal to
+> >>>>>> test it. Sorry for that.
+> >>>>> Correction. There is a command line option to force CNA lock to be used
+> >>>>> in a VM. Use the "numa_spinlock=on" boot command line parameter.
+> >>>> As I understand it, I need to use a series of -numa arguments to qemu
+> >>>> combined with the numa_spinlock=on (or =1) on the kernel command line.
+> >>>> If the kernel thinks that there is only one NUMA node, it appears to
+> >>>> avoid doing CNA.
+> >>>>
+> >>>> Correct?
+> >>>>
+> >>>> 							Thanx, Paul
+> >>>>
+> >>> In auto-detection mode (the default), CNA will only be turned on when
+> >>> paravirt qspinlock is not enabled first and there are at least 2 numa
+> >>> nodes. The "numa_spinlock=on" option will force it on even when both of
+> >>> the above conditions are false.
+> >> Hmmm...
+> >>
+> >> Here is my kernel command line taken from the console log:
+> >>
+> >> console=ttyS0 locktorture.onoff_interval=0 numa_spinlock=on locktorture.stat_interval=15 locktorture.shutdown_secs=1800 locktorture.verbose=1
+> >>
+> >> Yet the string "Enabling CNA spinlock" does not appear.
+> >>
+> >> Ah, idiot here needs to enable CONFIG_NUMA_AWARE_SPINLOCKS in his build.
+> >> Trying again with "--kconfig "CONFIG_NUMA_AWARE_SPINLOCKS=y"...
+> > And after fixing that, plus adding the other three Kconfig options required
+> > to enable this, I really do see "Enabling CNA spinlock" in the console log.
+> > Yay!
+> >
+> > At the end of the 30-minute locktorture exclusive-lock run, I see this:
+> >
+> > Writes:  Total: 572176565  Max/Min: 54167704/10878216 ???  Fail: 0
+> >
+> > This is about a five-to-one ratio.  Is this expected behavior, given a
+> > single NUMA node on a single-socket system with 12 hardware threads?
+> Do you mean within the VM, lscpu showed that the system has one node and
+> 12 threads per node? If that is the case, it should behave like regular
+> qspinlock and be fair.
 
-This mitigates a crash in some cases due to
-attempt to map empty (but not NULL) scatterlists with none
-zero lengths.
+I mean that I saw this in dmesg, which I believe to be telling me the
+same thing as lscpu saying that there is one node, but you tell me!
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- drivers/crypto/ccree/cc_buffer_mgr.c | 65 +++++++++++++---------------
- drivers/crypto/ccree/cc_buffer_mgr.h |  1 +
- 2 files changed, 31 insertions(+), 35 deletions(-)
+[    0.007106] No NUMA configuration found
+[    0.007107] Faking a node at [mem 0x0000000000000000-0x000000001ffdefff]
+[    0.007111] NODE_DATA(0) allocated [mem 0x1ffdb000-0x1ffdefff]
+[    0.007126] Zone ranges:
+[    0.007127]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.007128]   DMA32    [mem 0x0000000001000000-0x000000001ffdefff]
+[    0.007128]   Normal   empty
+[    0.007129] Movable zone start for each node
+[    0.007129] Early memory node ranges
+[    0.007130]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.007132]   node   0: [mem 0x0000000000100000-0x000000001ffdefff]
+[    0.007227] Zeroed struct page in unavailable ranges: 98 pages
+[    0.007227] Initmem setup node 0 [mem 0x0000000000001000-0x000000001ffdefff]
+[    0.007228] On node 0 totalpages: 130941
+[    0.007231]   DMA zone: 64 pages used for memmap
+[    0.007231]   DMA zone: 21 pages reserved
+[    0.007232]   DMA zone: 3998 pages, LIFO batch:0
+[    0.007266]   DMA32 zone: 1984 pages used for memmap
+[    0.007267]   DMA32 zone: 126943 pages, LIFO batch:31
 
-diff --git a/drivers/crypto/ccree/cc_buffer_mgr.c b/drivers/crypto/ccree/cc_buffer_mgr.c
-index a72586eccd81..c5d58becb66d 100644
---- a/drivers/crypto/ccree/cc_buffer_mgr.c
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -87,6 +87,11 @@ static unsigned int cc_get_sgl_nents(struct device *dev,
- {
- 	unsigned int nents = 0;
- 
-+	*lbytes = 0;
-+
-+	if (!sg_list || !sg_list->length)
-+		goto out;
-+
- 	while (nbytes && sg_list) {
- 		nents++;
- 		/* get the number of bytes in the last entry */
-@@ -95,6 +100,8 @@ static unsigned int cc_get_sgl_nents(struct device *dev,
- 				nbytes : sg_list->length;
- 		sg_list = sg_next(sg_list);
- 	}
-+
-+out:
- 	dev_dbg(dev, "nents %d last bytes %d\n", nents, *lbytes);
- 	return nents;
- }
-@@ -290,37 +297,25 @@ static int cc_map_sg(struct device *dev, struct scatterlist *sg,
- 		     unsigned int nbytes, int direction, u32 *nents,
- 		     u32 max_sg_nents, u32 *lbytes, u32 *mapped_nents)
- {
--	if (sg_is_last(sg)) {
--		/* One entry only case -set to DLLI */
--		if (dma_map_sg(dev, sg, 1, direction) != 1) {
--			dev_err(dev, "dma_map_sg() single buffer failed\n");
--			return -ENOMEM;
--		}
--		dev_dbg(dev, "Mapped sg: dma_address=%pad page=%p addr=%pK offset=%u length=%u\n",
--			&sg_dma_address(sg), sg_page(sg), sg_virt(sg),
--			sg->offset, sg->length);
--		*lbytes = nbytes;
--		*nents = 1;
--		*mapped_nents = 1;
--	} else {  /*sg_is_last*/
--		*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
--		if (*nents > max_sg_nents) {
--			*nents = 0;
--			dev_err(dev, "Too many fragments. current %d max %d\n",
--				*nents, max_sg_nents);
--			return -ENOMEM;
--		}
--		/* In case of mmu the number of mapped nents might
--		 * be changed from the original sgl nents
--		 */
--		*mapped_nents = dma_map_sg(dev, sg, *nents, direction);
--		if (*mapped_nents == 0) {
--			*nents = 0;
--			dev_err(dev, "dma_map_sg() sg buffer failed\n");
--			return -ENOMEM;
--		}
-+	int ret = 0;
-+
-+	*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
-+	if (*nents > max_sg_nents) {
-+		*nents = 0;
-+		dev_err(dev, "Too many fragments. current %d max %d\n",
-+			*nents, max_sg_nents);
-+		return -ENOMEM;
- 	}
- 
-+	ret = dma_map_sg(dev, sg, *nents, direction);
-+	if (dma_mapping_error(dev, ret)) {
-+		*nents = 0;
-+		dev_err(dev, "dma_map_sg() sg buffer failed %d\n", ret);
-+		return -ENOMEM;
-+	}
-+
-+	*mapped_nents = ret;
-+
- 	return 0;
- }
- 
-@@ -555,11 +550,11 @@ void cc_unmap_aead_request(struct device *dev, struct aead_request *req)
- 		sg_virt(req->src), areq_ctx->src.nents, areq_ctx->assoc.nents,
- 		areq_ctx->assoclen, req->cryptlen);
- 
--	dma_unmap_sg(dev, req->src, sg_nents(req->src), DMA_BIDIRECTIONAL);
-+	dma_unmap_sg(dev, req->src, areq_ctx->src.mapped_nents, DMA_BIDIRECTIONAL);
- 	if (req->src != req->dst) {
- 		dev_dbg(dev, "Unmapping dst sgl: req->dst=%pK\n",
- 			sg_virt(req->dst));
--		dma_unmap_sg(dev, req->dst, sg_nents(req->dst),
-+		dma_unmap_sg(dev, req->dst, areq_ctx->dst.mapped_nents,
- 			     DMA_BIDIRECTIONAL);
- 	}
- 	if (drvdata->coherent &&
-@@ -881,7 +876,7 @@ static int cc_aead_chain_data(struct cc_drvdata *drvdata,
- 					    &src_last_bytes);
- 	sg_index = areq_ctx->src_sgl->length;
- 	//check where the data starts
--	while (sg_index <= size_to_skip) {
-+	while (src_mapped_nents && (sg_index <= size_to_skip)) {
- 		src_mapped_nents--;
- 		offset -= areq_ctx->src_sgl->length;
- 		sgl = sg_next(areq_ctx->src_sgl);
-@@ -908,7 +903,7 @@ static int cc_aead_chain_data(struct cc_drvdata *drvdata,
- 			size_for_map += crypto_aead_ivsize(tfm);
- 
- 		rc = cc_map_sg(dev, req->dst, size_for_map, DMA_BIDIRECTIONAL,
--			       &areq_ctx->dst.nents,
-+			       &areq_ctx->dst.mapped_nents,
- 			       LLI_MAX_NUM_OF_DATA_ENTRIES, &dst_last_bytes,
- 			       &dst_mapped_nents);
- 		if (rc)
-@@ -921,7 +916,7 @@ static int cc_aead_chain_data(struct cc_drvdata *drvdata,
- 	offset = size_to_skip;
- 
- 	//check where the data starts
--	while (sg_index <= size_to_skip) {
-+	while (dst_mapped_nents && sg_index <= size_to_skip) {
- 		dst_mapped_nents--;
- 		offset -= areq_ctx->dst_sgl->length;
- 		sgl = sg_next(areq_ctx->dst_sgl);
-@@ -1123,7 +1118,7 @@ int cc_map_aead_request(struct cc_drvdata *drvdata, struct aead_request *req)
- 	if (is_gcm4543)
- 		size_to_map += crypto_aead_ivsize(tfm);
- 	rc = cc_map_sg(dev, req->src, size_to_map, DMA_BIDIRECTIONAL,
--		       &areq_ctx->src.nents,
-+		       &areq_ctx->src.mapped_nents,
- 		       (LLI_MAX_NUM_OF_ASSOC_DATA_ENTRIES +
- 			LLI_MAX_NUM_OF_DATA_ENTRIES),
- 		       &dummy, &mapped_nents);
-diff --git a/drivers/crypto/ccree/cc_buffer_mgr.h b/drivers/crypto/ccree/cc_buffer_mgr.h
-index af434872c6ff..827b6cb1236e 100644
---- a/drivers/crypto/ccree/cc_buffer_mgr.h
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.h
-@@ -25,6 +25,7 @@ enum cc_sg_cpy_direct {
- 
- struct cc_mlli {
- 	cc_sram_addr_t sram_addr;
-+	unsigned int mapped_nents;
- 	unsigned int nents; //sg nents
- 	unsigned int mlli_nents; //mlli nents might be different than the above
- };
--- 
-2.23.0
+> > I will try reader-writer lock next.
+> >
+> > Again, should I be using qemu's -numa command-line option to create nodes?
+> > If so, what would be a sane configuration given 12 CPUs and 512MB of
+> > memory for the VM?  If not, what is a good way to exercise CNA's NUMA
+> > capabilities within a guest OS?
+> 
+> You can certainly play around with CNA in a VM. However, it is generally
+> not recommended to use CNA in a VM unless the VM cpu topology matches
+> the host with 1-to-1 vcpu pinning and there is no vcpu overcommit. In
+> this case, one may see some performance improvement using CNA by using
+> the "numa_spinlock=on" option to explicitly turn it on.
 
+Sorry, but I will not be booting this on bare metal on the systems that
+I currently have access to.  No more than I run rcutorture on bare metal
+on them, especially not with newly modified variants of RCU.  ;-)
+
+> Because of the shuffling of queue entries, CNA is inherently less fair
+> than the regular qspinlock. However, a ratio of 5 seems excessive to me.
+> vcpu preemption may be a factor in contributing to this large variation.
+> My testing on bare metal only showed a throughput variation within
+> 10-20% at most.
+
+OK.  Any guidance on qemu's -numa, or should I just experiment with it?
+The latter will take me some time, as I must focus on other things
+this week.
+
+Alternatively, would it make sense for you to give it a spin in a VM?
+After all, it is entirely possible that I still have some configuration
+or another messed up.
+
+							Thanx, Paul
