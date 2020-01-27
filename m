@@ -2,139 +2,131 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186DEC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E1DC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DECBB20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0345E20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:23:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FchA0Pz8"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="XeUZAgkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730122AbgA0LVM (ORCPT
+        id S1729501AbgA0LXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:21:12 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:34594 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgA0LVL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:21:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oN9jrHITT8NXPApGR5IdI2zdZsOhyn/YSoMnNfuDNDA=; b=FchA0Pz8WrdNQTx9TZOkxLvOV
-        /1bPeZn17gBYrAnfgHxUyFM+fIwkwlPcSETRQsHKFtGdf/R6kuK/uS9C0sWK6/kqPwDWSqgyX0iRr
-        ei5VsfhNvh19TG4oOweCY0FW4J8QLNV8hggyiAw8kUz43sr89Jf/eVHUJb1YW5O33vmcu/FMTeAEl
-        kRgTZBW/EiOuHnEkSLpSeQQsafpyaWFF/bVML1fC39Md6ZZtWx1LZEBJxH6VhTjuelj9dYus0xoAX
-        jCAux7AN6nGMMTeyciG2N+Wvc5oMPbtvuthIHCiN8AwnUisyPlZZpm1shEZLxINlYAM+s634ybDDO
-        byc/CulpA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60526)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iw2S1-0000u0-5S; Mon, 27 Jan 2020 11:21:05 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iw2Ry-0001M9-7w; Mon, 27 Jan 2020 11:21:02 +0000
-Date:   Mon, 27 Jan 2020 11:21:02 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200127112102.GT25745@shell.armlinux.org.uk>
-References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
- <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+        Mon, 27 Jan 2020 06:23:40 -0500
+Received: from mout.web.de ([217.72.192.78]:34141 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbgA0LXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 06:23:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1580124208;
+        bh=pFg0c4+RDKrHq6rIi7g2NieDtv74mqOryv/2SEQrOTE=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=XeUZAgkgW2PTQWJEuoGtV/bh5CxZPDU6rBOJP0UMBqaVc/Ua26rVSMEDIkJGsXDAF
+         B7XNRDNJ41h5TXuECGlGKfVOJ8+sS/zzlnj7G9I3MwuGbN75FPwVmV9PRTHdfYEhS6
+         gupzMJGucXg9jb2IcbT5ZqKt9zWH0TK/rWDY7pvg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.115.58]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LoYX0-1jWlDO1ODS-00gZGm; Mon, 27
+ Jan 2020 12:23:28 +0100
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_00/22=5d_staging=3a_exfat=3a_Fix_checkpatc?=
+ =?UTF-8?B?aCB3YXJuaW5nOiDigKY=?=
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Pragat Pandya <pragat.pandya@gmail.com>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Message-ID: <130232ad-ec3c-daae-4bcc-a0b896a1a96d@web.de>
+Date:   Mon, 27 Jan 2020 12:23:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:45vEwlej7txwJqTTx+4IWdY3AElXwnlYrbkfl6XuOE1HF1piSZK
+ 5Bq2GCsA9jhMSjRsJxuQ6HcJhIPQL6zgBUywiXa+HPHy0STEPy1E4OtYdDlwWivEDpVu235
+ P8qm5FNhL50gBPrJ0YTWviHWMY43xBfnMAEH53dA5mHsc05dWIWV/p6jBrchRY87Lniu7ow
+ +UwJbSYSEPYKDCZWPkCoA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wZkkJULRNEA=:AsRVyepb81tjoqfnVw1XJd
+ +u4R3mpUWyj0U/ardyhtWwp6VQVHdiCZzHKYuBg9RySUvpz0nV1aVUEovqWTbWP+PNdhBUNaO
+ MXf3KhSGaEenVLIwyejmCNQDUX4UbTN1COS+viS9g8ze7TUl/ep9A4zUVGc4hSQ857c2g4FbD
+ YT7Sz9YlEdx0UFrJz6r7VF+b8P02W4PiCiFD78Oi3/I3paOtVM+R3SQPBfFF2/KqCKt3mRMW9
+ bWRWr09wpTbtx1qHvP1auxb3/KzcRtuKK3z+Av4NmiT8o7NETX/VGryOD+tSuN0Hs7N6ATi7p
+ uq6ncSWTiCwizU6XouO5raVx2zatwMUvT4SECIZRniIxUzQOTce1hMtwTPEzKQRHP0Ivi/tOx
+ bn11sX75XR3Guib1yjpvcIPy9wRDlGiOQPQ7Yf5Hq98MXPNB46crZRQZIQ/ttwgq4Ok/pEuIU
+ haRRxtAc+rIWvGCxujJhLigw7feDu7RZ4jv/mtkTmru40fnJjpLKsL9qwC7nP1X/ALKn1dlyW
+ 6Lc8K83gwZb0hEjch/0YMLuU4Rqsp0ayJgV35LToiNNjnIfWH9yBAMIYRPGeBc3Z2+Y+Z21uS
+ xWVXr6dvaG5OZ2ZQu+jV2X28mlMyiRTqXOo+liOOXDdNTw90GmhYLaUt2ydGwEVshQr8weqz0
+ NlWlgLlAt2FfvK+17VOC02jRa15BnDFySpmSmwk/6+ydfkpNpv8/PXB4M8KBYiG09MoUK8Vr2
+ t6vVDMNqj0DoRndRNN7lpKaG212sd7VJRgwCKvDUTizJ7hv6KuHrck69umq207YR8F9zkQIPi
+ LycFjCgqsT/lA7Ve5Eu89fD3E8S2g5ZGLN5NMR4Extc3sEukEGlOJNKThGt4LtcndiVfN4hcC
+ /lVfI7oAbexc/toJoYIn0eZsDoawgQxb7W+lti17e5u6krQ6iJr00ToQbfU1Ry+58Ih7Iutei
+ 1N5HJTTjljgFxUaeS+YKHnU3mXO9LEHbDM15S10VPGJYOvO0y991zth6RQ9ut+HLlXZkekEWW
+ XLhuob3ojeiTSLBpPHOK7FxnfvhLExoWNIRmENv0wNSnctO6qyeLl99zQN5O1lzBcAPi5Ijw5
+ 116oqWeOcOHbxeSh3M61uXdermKQWH/cl2s1AoDY/qh9bmVknyMrj5/yCRSFwY3v621Th7e2f
+ xV5B8JAVOwUTgK7ZxOiUzYD+MmkIg+0wGic7Nb0sxnzsS9COlBepVGRtd3LbXZJ620SpXExQk
+ 4ljeI1QcLy0FmvVph
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 12:09:11PM +0100, Jose Abreu wrote:
-> When we don't have any real PHY driver connected and we get link up from
-> PCS we shall configure MAC and PCS for the desired speed and also
-> resolve the flow control settings from MAC side.
+> This patchset renames following twenty-two variables declared in exfat.h
 
-This is certainly the wrong place for it.  Please hold off on this patch
-for the time being.  Thanks.
+Would a subject like =E2=80=9Cstaging: exfat: Renaming of some identifiers=
+=E2=80=9D
+be more appropriate (than an incomplete one) for this cover letter?
 
-> 
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-> 
-> ---
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Jose Abreu <joabreu@synopsys.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/net/phy/phylink.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> index 4174d874b1f7..75dbaf80d7a5 100644
-> --- a/drivers/net/phy/phylink.c
-> +++ b/drivers/net/phy/phylink.c
-> @@ -533,10 +533,20 @@ static void phylink_resolve(struct work_struct *w)
->  
->  	if (link_changed) {
->  		pl->old_link_state = link_state.link;
-> -		if (!link_state.link)
-> +		if (!link_state.link) {
->  			phylink_mac_link_down(pl);
-> -		else
-> +		} else {
-> +			/* If no PHY is connected, we still need to configure
-> +			 * MAC/PCS for flow control and speed.
-> +			 */
-> +			if (!pl->phydev) {
-> +				phylink_resolve_flow(pl, &link_state);
-> +				phylink_mac_config(pl, &link_state);
-> +			}
-> +
->  			phylink_mac_link_up(pl, link_state);
-> +		}
-> +
->  	}
->  	if (!link_state.link && pl->mac_link_dropped) {
->  		pl->mac_link_dropped = false;
-> -- 
-> 2.7.4
-> 
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Regards,
+Markus
