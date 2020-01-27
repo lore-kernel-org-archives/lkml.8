@@ -2,110 +2,84 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD17C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81284C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCBB24654
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408CD214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:17:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="VmkxZx7r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgA0SQY (ORCPT
+        id S1726444AbgA0SRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 13:16:24 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25914 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725828AbgA0SQY (ORCPT
+        Mon, 27 Jan 2020 13:17:21 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35916 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0SRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 13:16:24 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RIFEWT046661
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:16:22 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xrjr4je58-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:16:21 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 27 Jan 2020 18:16:20 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 27 Jan 2020 18:16:17 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00RIGGeB60948548
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 18:16:16 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C7F89A4040;
-        Mon, 27 Jan 2020 18:16:16 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0442AA4055;
-        Mon, 27 Jan 2020 18:16:16 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.185.238])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jan 2020 18:16:15 +0000 (GMT)
-Subject: Re: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
- the boot aggregate
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Mon, 27 Jan 2020 13:16:15 -0500
-In-Reply-To: <ca189378a5f841d0ba111c6405079569@huawei.com>
-References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
-         <ca189378a5f841d0ba111c6405079569@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012718-0012-0000-0000-000003812734
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012718-0013-0000-0000-000021BD7810
-Message-Id: <1580148975.5088.38.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-27_06:2020-01-24,2020-01-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- phishscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
- bulkscore=0 suspectscore=0 spamscore=0 adultscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001270146
+        Mon, 27 Jan 2020 13:17:21 -0500
+Received: by mail-qt1-f193.google.com with SMTP id t13so7722858qto.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 10:17:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=H0vXK67+oGRk9o9l8RLmztHaP5aIkeAR8XI0InnlAdw=;
+        b=VmkxZx7rR4jyhk3oNN0A4XJ3rXz9icpoNz5NRQqSunNYTLzjySAkZditLPRjzsNx/z
+         0QtE+umERJcVZZv7JdGx3Ucx9aDG5kZAtt7csozqHZBjKkqMbUiCxSCMpmPqGuYWdGXP
+         6rA8e5L09NP2PjkfzBtDcbx3sVG+KwS3yw6FsWaRrIQ43qYFJLyy+kv2dWYkJlxzTiKG
+         Q9/QfRAfLEAwbMvdLoc+dFrgrw+wX7snqTkF81Qa56TR2XVa69b3FZcyyly9aw0pZg+H
+         GlrV4CRld2aR5IfXD6T2uKNgTQACWerD6ldeSPHYEC2fGcESHImD89zLpzGUbtfst2mc
+         qWoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=H0vXK67+oGRk9o9l8RLmztHaP5aIkeAR8XI0InnlAdw=;
+        b=KFPZBVWCJtjdz6GIncNUhF+1iCXzRx5G8T+QXHUbHib/gSyDr4R74fiXiRaKvnhovC
+         FXfVGrPfhtw2TcAFwmbnb5E1/luzC19iCK2YAvH56dPCLybehWR0Kv3Yqh5cZGrietl6
+         03bywJTFIUFZ3JD4f9JlubPWuYafdgVxX0j4RpO6oBVoVmj+UIAVehA2oHwXbsVm/P9w
+         8/Pum5KYpmK00lCL4CykLDl+iQQJIEt3/rtCwd6fp4DKmihTNqaRQk+UkMXP6Fl0llBP
+         oonh0uMVIyAqEcvLeyOlq6vaT1PeFwXEz/16dkZp7pEM9RzgEzm5edVb2A8xPllgumw6
+         KV8g==
+X-Gm-Message-State: APjAAAUhbpEJLui0PUAAU6Ksqx1BWcyRAcPp2JGYqnEp1m5Jl871FOd1
+        ZTQJMtMHBw+tNslEFG2sBnv5k5ZlqwtZbg==
+X-Google-Smtp-Source: APXvYqwefJtTiBmdzBaof1Ae/agBKz2BgRCUSBP1dePt3x+Aq3NQY7KIeICOMGBb6HN28GdJ1MvWLA==
+X-Received: by 2002:aed:3e53:: with SMTP id m19mr17288476qtf.387.1580149040133;
+        Mon, 27 Jan 2020 10:17:20 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id o6sm9945160qkk.53.2020.01.27.10.17.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 10:17:19 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm: mempolicy: use VM_BUG_ON_VMA in queue_pages_test_walk()
+Date:   Mon, 27 Jan 2020 13:17:18 -0500
+Message-Id: <1221B3C6-6A3B-4427-92DD-25AD54FF6BB5@lca.pw>
+References: <1579068565-110432-1-git-send-email-yang.shi@linux.alibaba.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1579068565-110432-1-git-send-email-yang.shi@linux.alibaba.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-01-27 at 17:38 +0000, Roberto Sassu wrote:
-> > -----Original Message-----
-> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
-> > owner@vger.kernel.org] On Behalf Of Mimi Zohar
-> > Sent: Monday, January 27, 2020 5:02 PM
-> > To: linux-integrity@vger.kernel.org
-> > Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
-> > <James.Bottomley@HansenPartnership.com>; linux-
-> > kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
-> > Subject: [PATCH 1/2] ima: use the IMA configured hash algo to calculate the
-> > boot aggregate
-> 
-> Hi Mimi
-> 
-> I did a similar change (patch 8/8) in the patch set I just sent. The patch is simpler,
-> as it reuses the data structures I introduced in the previous patches. Let me know
-> if I can keep this part in my patch set or I should remove it.
 
-Only 2/2 "ima: support calculating the boot_aggregate based on
-different TPM banks" is really needed to address Jerry's bug report.
- Let's review your patch set before making any decisions about 1/2
-"ima: use the IMA configured hash algo to calculate the boot
-aggregate".
 
-thanks,
+> On Jan 15, 2020, at 1:09 AM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>=20
+> The VM_BUG_ON() is already used by queue_pages_test_walk(), it sounds
+> better to dump more debug information by using VM_BUG_ON_VMA() to help
+> debugging.
 
-Mimi
-
+What=E2=80=99s the problem this is trying to resolve? Was there an existing b=
+ug would trigger this?=
