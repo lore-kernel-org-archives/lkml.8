@@ -2,74 +2,124 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB09C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF60C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3B3214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB6C214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbgA0LaN (ORCPT
+        id S1730154AbgA0Lbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:30:13 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:51995 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgA0LaN (ORCPT
+        Mon, 27 Jan 2020 06:31:33 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:22091 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgA0Lbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:30:13 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iw2Kn-0000lf-4X; Mon, 27 Jan 2020 11:13:37 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Michal Simek <michal.simek@xilinx.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next][V3] i2c: xiic: fix indentation issue
-Date:   Mon, 27 Jan 2020 11:13:36 +0000
-Message-Id: <20200127111336.114501-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 27 Jan 2020 06:31:32 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: CHJf1jjbC+hNXjcALXRPG34+geA7/A0vihzr4yW4wdZ4shNAyUBnNGMpFS+3gJUo1GmhjrEcN5
+ 1ayIJgz/ZWq+Y6giZQradd5Kb3HdZ0Wj1az65D7HU91WJu5HvixdXl3+aTU5S2k6cQuY8QYZcm
+ q+yUeb4C+SZGu0zXaR+aYe5NKT1vfPTv8UfKnlDmWEG7CHA9/rDBx/Kma8JmhAgTgCSxufVU77
+ YFpSAo6/7kw6EIr68WpHCd2V9lmKu9HKGAroxpZsXiNTh7yzohuh5mV6U4G5FRKRhGzjEhzuIy
+ IgY=
+X-IronPort-AV: E=Sophos;i="5.70,369,1574146800"; 
+   d="scan'208";a="189991"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jan 2020 04:04:24 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 27 Jan 2020 04:04:19 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 27 Jan 2020 04:04:19 -0700
+Date:   Mon, 27 Jan 2020 12:04:18 +0100
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
+        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v3 06/10] net: bridge: mrp: switchdev: Extend
+ switchdev API to offload MRP
+Message-ID: <20200127110418.f7443ecls6ih2fwt@lx-anielsen.microsemi.net>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-7-horatiu.vultur@microchip.com>
+ <20200125163504.GF18311@lunn.ch>
+ <20200126132213.fmxl5mgol5qauwym@soft-dev3.microsemi.net>
+ <20200126155911.GJ18311@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200126155911.GJ18311@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 26.01.2020 16:59, Andrew Lunn wrote:
+>EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>
+>On Sun, Jan 26, 2020 at 02:22:13PM +0100, Horatiu Vultur wrote:
+>> The 01/25/2020 17:35, Andrew Lunn wrote:
+>> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>> >
+>> > > SWITCHDEV_OBJ_ID_RING_TEST_MRP: This is used when to start/stop sending
+>> > >   MRP_Test frames on the mrp ring ports. This is called only on nodes that have
+>> > >   the role Media Redundancy Manager.
+>> >
+>> > How do you handle the 'headless chicken' scenario? User space tells
+>> > the port to start sending MRP_Test frames. It then dies. The hardware
+>> > continues sending these messages, and the neighbours thinks everything
+>> > is O.K, but in reality the state machine is dead, and when the ring
+>> > breaks, the daemon is not there to fix it?
+I agree, we need to find a solution to this issue.
 
-There is a statement that is indented one level too deeply, remove
-the extraneous tab.
+>> > And it is not just the daemon that could die. The kernel could opps or
+>> > deadlock, etc.
+>> >
+>> > For a robust design, it seems like SWITCHDEV_OBJ_ID_RING_TEST_MRP
+>> > should mean: start sending MRP_Test frames for the next X seconds, and
+>> > then stop. And the request is repeated every X-1 seconds.
+Sounds like a good idea to me.
 
-Fixes: b4c119dbc300 ("i2c: xiic: Add timeout to the rx fifo wait loop")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
-V2: fix type in commit message
-V3: add fixes tag
----
- drivers/i2c/busses/i2c-xiic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> I totally missed this case, I will update this as you suggest.
+>
+>What does your hardware actually provide?
+>
+>Given the design of the protocol, if the hardware decides the OS etc
+>is dead, it should stop sending MRP_TEST frames and unblock the ports.
+>If then becomes a 'dumb switch', and for a short time there will be a
+>broadcast storm. Hopefully one of the other nodes will then take over
+>the role and block a port.
+As far as I know, the only feature HW has to prevent this is a
+watch-dog timer. Which will reset the entire system (not a bad idea if
+the kernel has dead-locked).
 
-diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
-index b17d30c9ab40..90c1c362394d 100644
---- a/drivers/i2c/busses/i2c-xiic.c
-+++ b/drivers/i2c/busses/i2c-xiic.c
-@@ -261,7 +261,7 @@ static int xiic_clear_rx_fifo(struct xiic_i2c *i2c)
- 		xiic_getreg8(i2c, XIIC_DRR_REG_OFFSET);
- 		if (time_after(jiffies, timeout)) {
- 			dev_err(i2c->dev, "Failed to clear rx fifo\n");
--				return -ETIMEDOUT;
-+			return -ETIMEDOUT;
- 		}
- 	}
- 
--- 
-2.24.0
+/Allan
 
