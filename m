@@ -2,96 +2,118 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557D8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79CAC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB2D20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580148173;
-	bh=aU7bq7tHS8DrZJ/UqArC5Ljm2qkSPLu4ckj/D9FrwLA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iVwkiEvGJOlRoUscKnfbCjiU74kr8+VIDzSD0tc70njHA72z7+f4akhG2RIjO7iPs
-	 mDh9yaN0k/3EUo3Jixd+NhxW9aCCsRodzSAc8hyM3OPvBbji1JgxuOzcq2hzjMvmTF
-	 I5nlSmMHwjaKoVYqXCoAVTRjyHKAQP8LUH9a+Idc=
+	by mail.kernel.org (Postfix) with ESMTP id 910E72087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:07:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="w8Jx4wy0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgA0SCw (ORCPT
+        id S1726099AbgA0SHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 13:02:52 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42381 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0SCv (ORCPT
+        Mon, 27 Jan 2020 13:07:45 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40197 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgA0SHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 13:02:51 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y4so11773063ljj.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 10:02:50 -0800 (PST)
+        Mon, 27 Jan 2020 13:07:44 -0500
+Received: by mail-pj1-f65.google.com with SMTP id 12so2021416pjb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 10:07:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DkK3beecWgJffCRmCf7yN7KAuYuZ7llM5zWyPle+yQs=;
-        b=ZTIBUpp76jI7maRuvE9I8HDZA+IBuv4mho3BoUw0sWBm6K6GljVyIJntNBzW4NTMU+
-         cB3CE1H1efE1KVLC4Xk47K+Zth4Tip2rQlJYfX7KVHNQHLIhNYsA5L+Y/D39MU3KQrmZ
-         p4vWpk8id1cMjxKFc7BJW0EU5yP7rvTVTRyFU=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vyLjNX65TqvX4+HTsrUYbj8jYzvexX51y2g4R+mvQ7g=;
+        b=w8Jx4wy0f2LkHXyMBqznF1wu63frSCsE+E82q59WmC5F0Fmj4XRoj68pI1xrStwbro
+         ZWJayNGwIeg+mim18qXfSOZzie1w9UtdRhtyv2bf/3E2DFi4qcME7Md84yo5Be5Nmn3S
+         ggP3CIoUI7qvu0aDFcAt7Dd1hkBZWwQXPULaCnQTNt6exKfDxPo0MfVQmp1xxqegOmLP
+         TnKfOG1MhGow0yh5v1i6qOWmfJaGcnHrhVCHxuN/D9CK+N9SpDsv6SS6S3yJJDYgmOCR
+         iRBptjhguyj1cQZzA1gBO9b1kWl8UUfnS5mt9Sq5dZyLB7FEKu2hA92ekgoohUQTfGxy
+         kf8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DkK3beecWgJffCRmCf7yN7KAuYuZ7llM5zWyPle+yQs=;
-        b=I80nyQlz5BeWoeLzTUzFfNSqwV9xobmWxBafihX0l3ASlY7eCPn/gtA6AcUIXybwnJ
-         jJF8wSatEcnOq1TtVMX88qVHiQjPp4nqBuaElbwvKLS81uKj5QiHtbg2fvi6WoKpeoUo
-         H7GyAjtHB6d6VjkBLO4AxB+QDFElrz2lSFMtgTJutsqN3g8X7SCX1A93i2Zv9DQ2Jv5p
-         UKgrFnnNUWGA7FAqHWDUxrI3RYXmWWb1fS8lgMysq+e8R7d5HXDbfeXSL/XCBaW/pBq6
-         pgsBXTPbztUoHJ+S0yvCVGeVJ8b6gp8cOSOasQeA/srzybG8cZqn7b1+hBpfZi+27ppI
-         hLMg==
-X-Gm-Message-State: APjAAAW/O/n9964HNNmivhNuEmpmBpRM9kqS/8ce0bsgwoZBWebwkg2D
-        rdrdlQohxEo72bxDBsbOpt4a4nG1YHg=
-X-Google-Smtp-Source: APXvYqxH4UVCc3loud4wGDXKnE4VOF7w6GKF21DSV4G2dxDPgK6vp2tuRPkwvJxBaSKiz8JysFazcA==
-X-Received: by 2002:a05:651c:204f:: with SMTP id t15mr10380137ljo.240.1580148168903;
-        Mon, 27 Jan 2020 10:02:48 -0800 (PST)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id h10sm8433537ljc.39.2020.01.27.10.02.47
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vyLjNX65TqvX4+HTsrUYbj8jYzvexX51y2g4R+mvQ7g=;
+        b=jolKbUiTx3CLlpYdPPx0DKE2Cke9fLkbi1OTieLLaSMJVOe2UokYldnh/tNtw5BB++
+         1Z6hD2EJCwP2FZVIPpUd/SIRBI/21xlHpF0hPRN+/mh/vC1GOJ9cOS1DB+e+iV4lkAAW
+         vG3xsXeNL/ehze2Fpmkf6c0cy0cc5gdnfd6YX3KAd47AWSAAo+ljDHHS3YUj4I4M1oOf
+         Ko3RzW78jWCj8ZmvbbaBNsCuoFIfK3Km/qxaQ7NntzUsNRLTRxpciWErMnho1H1hx/3k
+         PeY3kQNsNFjz1SaYY1d2Lakhp+Jtmb2FW5ZWbTwVsJ3y/3HyL8YAdekBpmJgjXKt5j7h
+         WDqw==
+X-Gm-Message-State: APjAAAWx9iQwaxf5bmxUNFVln7yvKyN2cq1HydC/kFzwMimFOkhIDCzY
+        Zg89vbEZilNjdQKsIjS9EZcI+nRGgiU=
+X-Google-Smtp-Source: APXvYqwe/oxWeLbduB8OLf0irC9A5pKjfq5do/KkPqFf4AT7Mm4ybCCstGD0k7+lLYNZx/XfCVf6fQ==
+X-Received: by 2002:a17:902:b193:: with SMTP id s19mr10337731plr.205.1580148463685;
+        Mon, 27 Jan 2020 10:07:43 -0800 (PST)
+Received: from ?IPv6:2620:10d:c081:1133::11c2? ([2620:10d:c090:180::dec1])
+        by smtp.gmail.com with ESMTPSA id 199sm15837913pfv.81.2020.01.27.10.07.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 10:02:48 -0800 (PST)
-Received: by mail-lf1-f41.google.com with SMTP id f24so6896781lfh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 10:02:47 -0800 (PST)
-X-Received: by 2002:a19:4849:: with SMTP id v70mr8809322lfa.30.1580148167476;
- Mon, 27 Jan 2020 10:02:47 -0800 (PST)
+        Mon, 27 Jan 2020 10:07:42 -0800 (PST)
+Subject: Re: [PATCH liburing 0/1] test: add epoll test case
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200127161701.153625-1-sgarzare@redhat.com>
+ <d409ad33-2122-9500-51f4-37e9748f1d73@kernel.dk>
+ <20200127180028.f7s5xhhizii3dsnr@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <52df8d77-1cb4-b8d5-d03d-5a8cabaeddb6@kernel.dk>
+Date:   Mon, 27 Jan 2020 11:07:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200127113903.GD24228@zn.tnic> <CAHk-=wgedtBiFok8twm499FmNCJ6icWdG7Deb7f4jcDYS4Y_Lg@mail.gmail.com>
- <20200127173852.GF24228@zn.tnic>
-In-Reply-To: <20200127173852.GF24228@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 27 Jan 2020 10:02:31 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiOQhFckQftz_bLC9qsntdm5n_TbC02=sfWy2nM+bmrFQ@mail.gmail.com>
-Message-ID: <CAHk-=wiOQhFckQftz_bLC9qsntdm5n_TbC02=sfWy2nM+bmrFQ@mail.gmail.com>
-Subject: Re: [GIT PULL] x86/microcode for 5.6
-To:     Borislav Petkov <bp@suse.de>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200127180028.f7s5xhhizii3dsnr@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 9:39 AM Borislav Petkov <bp@suse.de> wrote:
->
-> Yap, you asked that the last time too:
+On 1/27/20 11:00 AM, Stefano Garzarella wrote:
+> On Mon, Jan 27, 2020 at 09:26:41AM -0700, Jens Axboe wrote:
+>> On 1/27/20 9:17 AM, Stefano Garzarella wrote:
+>>> Hi Jens,
+>>> I wrote the test case for epoll.
+>>>
+>>> Since it fails also without sqpoll (Linux 5.4.13-201.fc31.x86_64),
+>>> can you take a look to understand if the test is wrong?
+>>>
+>>> Tomorrow I'll travel, but on Wednesday I'll try this test with the patch
+>>> that I sent and also with the upstream kernel.
+>>
+>> I'll take a look, but your patches are coming through garbled and don't
+>> apply.
+> 
+> Weird, I'm using git-publish as usual. I tried to download the patch
+> received from the ML, and I tried to reapply and it seams to work here.
+> 
+> Which kind of issue do you have? (just to fix my setup)
 
-Early-onset something or other..
+First I grabbed it from email, and I get the usual =3D (instead of =)
+and =20 instead of a space. Longer lines also broken up, with an = at
+the end.
 
-> So I can stop signing the EDAC pull or I can start signing them all -
-> I'm fine with whatever you prefer.
+Then I grabbed it from the lore io-uring archive, but it was the exact
+same thing.
 
-No, it's fine. I'll figure it out and maybe remember next time.
+> Anyway I pushed my tree here:
+>     https://github.com/stefano-garzarella/liburing.git epoll
 
-I do prefer signed tags even from kernel.org, and maybe you can
-encourage the other tip people to sign things too one day ...
+As per other email, I think you're having some coordination issues
+with the reaping and submitting side being separated. If the reaper
+isn't keeping up, you'll get the -EBUSY problem I saw. I'm assuming
+that's the failure case you are also seeing, you didn't actually
+mention how it fails for you?
 
-               Linus
+-- 
+Jens Axboe
+
