@@ -2,117 +2,118 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C31C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E06CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9909B206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232E1214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:22:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NLiYYjHN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C/lcKBBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbgA0QWd (ORCPT
+        id S1729849AbgA0QWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:22:33 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40969 "EHLO
+        Mon, 27 Jan 2020 11:22:41 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30948 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729600AbgA0QWc (ORCPT
+        by vger.kernel.org with ESMTP id S1729470AbgA0QWk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:22:32 -0500
+        Mon, 27 Jan 2020 11:22:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580142151;
+        s=mimecast20190719; t=1580142159;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mCzUCbQMTrl/R+TaZnwQIFhM18cIX5gVoFVl9+pfdZA=;
-        b=NLiYYjHNqh8nA0bxjyIsbtlZ4hnAzmV3SFM53RpnDOFHZblG7c/Mv8I3Z79RLwnIW63FDa
-        fxv2dA0T9yixcVgls1lk6u/JGeNXrprYosxi0MI4L/ZPHHjmKOmkVnVpspSCvF/poJg75j
-        aQBkFiN2W4+Fwxb0c4nQ1VbqGEMX/k0=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ss4U9Wn3tTKAPoAuitiVMbAeV2gmkSw/nR7X4tYbbRo=;
+        b=C/lcKBBv3Doyy4D0kyfwLo4ITnIEYbx0Ly1EyepKG8zn45m8xX2bx2ULLS9W/3COLgqBSc
+        li0skAqxzlzBMgkyY5BXud5NaknaUSYuw/9a2xf7nMZ10Dd7NeVe6Lv0AoqfmEY/lBtxaN
+        z02o8kWVR1SlxLUG2oBmgqs6bBU7oy8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-377-xQLkrrrcPjyLUUe_xoCY8Q-1; Mon, 27 Jan 2020 11:22:27 -0500
-X-MC-Unique: xQLkrrrcPjyLUUe_xoCY8Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-99--McmlvubMJuUbI4LSOqcZA-1; Mon, 27 Jan 2020 11:22:37 -0500
+X-MC-Unique: -McmlvubMJuUbI4LSOqcZA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8BF318C0E04;
-        Mon, 27 Jan 2020 16:22:26 +0000 (UTC)
-Received: from krava (ovpn-205-125.brq.redhat.com [10.40.205.125])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 605F98702F;
-        Mon, 27 Jan 2020 16:22:25 +0000 (UTC)
-Date:   Mon, 27 Jan 2020 17:22:22 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH] tools lib api fs: Move cgroupsfs_find_mountpoint()
-Message-ID: <20200127162222.GG1114818@krava>
-References: <20200127100031.1368732-1-namhyung@kernel.org>
- <20200127111234.GA1114818@krava>
- <CAM9d7cimJi8V0PtWy=jLSdPrX0na5rLE2NfXTZtW56PdX=fj3Q@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7EE70801FA5;
+        Mon, 27 Jan 2020 16:22:36 +0000 (UTC)
+Received: from steredhat.redhat.com (unknown [10.43.2.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA0332AF99;
+        Mon, 27 Jan 2020 16:22:35 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Subject: [PATCH liburing] .gitignore: add missing tests to ignore
+Date:   Mon, 27 Jan 2020 17:22:34 +0100
+Message-Id: <20200127162234.156353-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cimJi8V0PtWy=jLSdPrX0na5rLE2NfXTZtW56PdX=fj3Q@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 11:58:27PM +0900, Namhyung Kim wrote:
-> Hi Jiri,
-> 
-> On Mon, Jan 27, 2020 at 8:12 PM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Mon, Jan 27, 2020 at 07:00:31PM +0900, Namhyung Kim wrote:
-> >
-> > SNIP
-> >
-> > > -
-> > > -     if (strlen(path) < maxlen) {
-> > > -             strcpy(buf, path);
-> > > -             return 0;
-> > > -     }
-> > > -     return -1;
-> > > -}
-> > > -
-> > >  static int open_cgroup(const char *name)
-> > >  {
-> > >       char path[PATH_MAX + 1];
-> > > @@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
-> > >       int fd;
-> > >
-> > >
-> > > -     if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
-> > > +     if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
-> >
-> > nice, but could you please follow fs API names and change the
-> > name to cgroupfs__mountpoint
-> >
-> > I think we don't need to define the rest of the functions now,
-> > if they are not used
-> >
-> >         #define FS(name)                                \
-> >                 const char *name##__mountpoint(void);   \
-> >                 const char *name##__mount(void);        \
-> >                 bool name##__configured(void);          \
-> >
-> > just follow the function name
-> 
-> I thought about it too, but still it has different arguments.
-> So I left it as is... Do you really want to rename?
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ .gitignore | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-yea I think we should keep the same name, Arnaldo?
-
-jirka
-
-> 
-> Thanks
-> Namhyung
-> 
+diff --git a/.gitignore b/.gitignore
+index fdb4b32..acbd30b 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -24,6 +24,7 @@
+ /test/a4c0b3decb33-test
+ /test/accept
+ /test/accept-link
++/test/accept-reuse
+ /test/accept-test
+ /test/b19062a56726-test
+ /test/b5837bd5311d-test
+@@ -36,8 +37,11 @@
+ /test/d77a67ed5f27-test
+ /test/defer
+ /test/eeed8b54e0df-test
++/test/fadvise
++/test/fallocate
+ /test/fc2a85cb02ef-test
+ /test/file-register
++/test/file-update
+ /test/fixed-link
+ /test/fsync
+ /test/io_uring_enter
+@@ -47,18 +51,26 @@
+ /test/link
+ /test/link-timeout
+ /test/link_drain
++/test/madvise
+ /test/nop
++/test/open-close
++/test/openat2
+ /test/poll
+ /test/poll-cancel
+ /test/poll-cancel-ton
+ /test/poll-link
+ /test/poll-many
++/test/poll-v-poll
++/test/probe
+ /test/read-write
+ /test/ring-leak
+ /test/send_recvmsg
++/test/shared-wq
++/test/short-read
+ /test/socket-rw
+ /test/sq-full
+ /test/sq-space_left
++/test/statx
+ /test/stdout
+ /test/submit-reuse
+ /test/teardowns
+--=20
+2.24.1
 
