@@ -2,107 +2,124 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB836C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825CAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCEA2465B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:08:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YrB//b92"
+	by mail.kernel.org (Postfix) with ESMTP id 5FE6724125
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgA0RIE (ORCPT
+        id S1726080AbgA0RJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:08:04 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:37548 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0RIE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:08:04 -0500
-Received: by mail-ua1-f65.google.com with SMTP id h32so3718232uah.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:08:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bOiV8nj2HZ+JtKcIVA5xQdznkVK/jM8PnqE9J+mRXqQ=;
-        b=YrB//b92fTsHkMw3bXM25KI/RYWOU7ymbAeVsjo+vGfk3HbEiKFvFYtASMzcTT0lUM
-         dyv2seW78v0VKay+qVrhTS3Jpn7Y7unPJ29rR2HvbrOOrPCQzDq7qdIqyFckjEDe7+Ap
-         aFRB4NmCvhUk0h4tMLr2fD0rmlmi8+LY4yxVs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bOiV8nj2HZ+JtKcIVA5xQdznkVK/jM8PnqE9J+mRXqQ=;
-        b=PE2WevuOSSoo8Dp7SB/eX83rHaUg7SgwWllLI3egBV4GGXJxxQHGbqoPj+pm5GDJWx
-         OGt8SW8AYlRTl2bVQ62WcKihUa7s+JNgFhWQ/XoXFdnGV8Qf2DrX97uoLCA+FcVvjLpC
-         BFJ/pgNyM5gCWYJqNd2kjQqNCTcf3tO+xLVAMO+n16igqynfSXDhdbgV0FvAX40bEigv
-         gUDovByK7aswg7ZLM4SUJJ+UvkVwtCL4kC88e0PvHRN0ZxO+mBTExaTppfa9JKqRDv/t
-         RChFMaraYJ+9/7HMt1KcSVX6D9vvWL5FrKdbyS+Lx33amlEVeHrAIbhKCu21JYWK6UqQ
-         n7NA==
-X-Gm-Message-State: APjAAAW+asWrjZZmJozqi3t1LqvO6+I2Gs1Ur3xZrZQwf/uWlmD4Jt2Q
-        oN+ti4MVfD/B8bs9z7z2NyhtOTz6K4I=
-X-Google-Smtp-Source: APXvYqzJ31qmrxLu31kjsWps9lm2BUxcgJvdvyovqEV7Sn8c9+J1cy8HfhqRdn+FZvSJU0PE+pFhNw==
-X-Received: by 2002:ab0:e16:: with SMTP id g22mr9927051uak.129.1580144883063;
-        Mon, 27 Jan 2020 09:08:03 -0800 (PST)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id w28sm4758064vkm.36.2020.01.27.09.08.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 09:08:02 -0800 (PST)
-Received: by mail-vs1-f54.google.com with SMTP id f26so6116989vsk.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:08:02 -0800 (PST)
-X-Received: by 2002:a67:1ec5:: with SMTP id e188mr4925367vse.169.1580144881597;
- Mon, 27 Jan 2020 09:08:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20200127082331.1.I402470e4a162d69fde47ee2ea708b15bde9751f9@changeid>
- <20200127170457.GK2841@vkoul-mobl>
-In-Reply-To: <20200127170457.GK2841@vkoul-mobl>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 27 Jan 2020 09:07:49 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XKHy6FmkeyCNB+vb7Ws=uZWOQ-QpYOKPJZg9PhFcJf5A@mail.gmail.com>
-Message-ID: <CAD=FV=XKHy6FmkeyCNB+vb7Ws=uZWOQ-QpYOKPJZg9PhFcJf5A@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Fix sdhci compat string
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jan 2020 12:09:29 -0500
+Received: from mga07.intel.com ([134.134.136.100]:48043 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbgA0RJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 12:09:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 08:54:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,370,1574150400"; 
+   d="scan'208";a="308813152"
+Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
+  by orsmga001.jf.intel.com with ESMTP; 27 Jan 2020 08:54:55 -0800
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, eranian@google.com, acme@redhat.com,
+        mingo@kernel.org, mpe@ellerman.id.au, linux-kernel@vger.kernel.org
+Cc:     jolsa@kernel.org, namhyung@kernel.org, vitaly.slobodskoy@intel.com,
+        pavel.gerasimov@intel.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V6 0/2] Stitch LBR call stack (kernel)
+Date:   Mon, 27 Jan 2020 08:53:53 -0800
+Message-Id: <20200127165355.27495-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Kan Liang <kan.liang@linux.intel.com>
 
-On Mon, Jan 27, 2020 at 9:05 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 27-01-20, 08:23, Douglas Anderson wrote:
-> > As per the bindings, the SDHCI controller should have a SoC-specific
-> > compatible string in addition to the generic version-based one.  Add
-> > it.
->
-> Thanks for spotting it Doug, Btw did some script catch it or manual
-> inspection?
->
->
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Changes since V5
+- Modify the changelog and comments
+- To match the struct perf_branch_stack order, output hw_idx before
+  entries[nr].
 
-It probably would have been spotted by "make dtbs_check", but I wasn't
-running that in this case.  I just happened to notice it while
-chatting with someone at Qualcomm about whether
-<https://crrev.com/c/2022985> was correct (still waiting for a
-response on that).
+Changes since V4
+- Only include the kernel patches
+- Abstract TOS to HW index, which can be used across hw platforms.
+  If we don't know the order of raw branch records, the hw_idx should be
+  -1ULL. Set hw_idx to -1ULL for IBM Power for now.
+- Move the new branch sample type back to bit 17
 
--Doug
+Changes since V3
+- Add the new branch sample type at the end of enum
+  perf_branch_sample_type.
+- Rebase the user space patch on top of acme's perf/core branch
+
+Changes since V2
+- Move tos into struct perf_branch_stack
+
+Changes since V1
+- Add a new branch sample type for LBR TOS. Drop the sample type in V1.
+- Add check in perf header to detect unknown input bits in event attr
+- Save and use the LBR cursor nodes from previous sample to avoid
+  duplicate calculation of cursor nodes.
+- Add fast path for duplicate entries check. It benefits all call stack
+  parsing, not just for stitch LBR call stack. It can be merged
+  independetely.
+
+Start from Haswell, Linux perf can utilize the existing Last Branch
+Record (LBR) facility to record call stack. However, the depth of the
+reconstructed LBR call stack limits to the number of LBR registers.
+E.g. on skylake, the depth of reconstructed LBR call stack is <= 32
+That's because HW will overwrite the oldest LBR registers when it's
+full.
+
+However, the overwritten LBRs may still be retrieved from previous
+sample. At that moment, HW hasn't overwritten the LBR registers yet.
+Perf tools can stitch those overwritten LBRs on current call stacks to
+get a more complete call stack.
+
+To determine if LBRs can be stitched, the physical index of LBR
+registers is required. A new branch sample type is introduced to
+dump the LBR Top-of-Stack (TOS) information for perf tools.
+
+The stitching approach base on LBR call stack technology. The known
+limitations of LBR call stack technology still apply to the approach,
+e.g. Exception handing such as setjmp/longjmp will have calls/returns
+not match.
+This approach is not full proof. There can be cases where it creates
+incorrect call stacks from incorrect matches. There is no attempt
+to validate any matches in another way. So it is not enabled by default.
+However in many common cases with call stack overflows it can recreate
+better call stacks than the default lbr call stack output. So if there
+are problems with LBR overflows this is a possible workaround.
+
+Regression:
+Users may collect LBR call stack on a machine with new perf tool and
+new kernel (support LBR TOS). However, they may parse the perf.data with
+old perf tool (not support LBR TOS). The old tool doesn't check
+attr.branch_sample_type. Users probably get incorrect information
+without any warning.
+
+Kan Liang (2):
+  perf/core: Add new branch sample type for HW index of raw branch
+    records
+  perf/x86/intel: Output LBR TOS information
+
+ arch/powerpc/perf/core-book3s.c |  1 +
+ arch/x86/events/intel/lbr.c     |  9 +++++++++
+ include/linux/perf_event.h      | 12 ++++++++++++
+ include/uapi/linux/perf_event.h |  8 +++++++-
+ kernel/events/core.c            | 10 ++++++++++
+ 5 files changed, 39 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
+
