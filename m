@@ -2,187 +2,106 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4CBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58868C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF7A24654
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580137745;
-	bh=LneyVWiMa0REJZFBSVOC8VBfEgVQakydJNAdr2Lnekk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=yHU8WCko+C+If6JNa4sVMinBcN93XIJZFI5BINH7VmHFf4FHudHeBIAFmqElspGTm
-	 D+yHXBnaCvYPa0i3Mre14pm38uwPTPfPd6kXDXVTIF+pnnq8BKH0rG0q1ogt6Mn9JA
-	 EOUM2zu4dc7MKWc1aZtkg1yLgMNoBEcH8uWHgohM=
+	by mail.kernel.org (Postfix) with ESMTP id 2F30021739
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:10:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="gB8aH9bX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbgA0PJE (ORCPT
+        id S1729401AbgA0PKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:09:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729152AbgA0PJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:09:04 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6895520702;
-        Mon, 27 Jan 2020 15:09:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580137743;
-        bh=LneyVWiMa0REJZFBSVOC8VBfEgVQakydJNAdr2Lnekk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=pNrhYElv6xTheDCjXktEOImu6bsIU9tRvoXN96pANqkFzcFkQMZ1I+dYuoCmC0JRu
-         6d/2P9PLeT9AJ9Y9WwM1oNxUHft49dzNLbkS6Va+Ig/mWrrGsVR6gdRS44EXVJZh3t
-         3xg1uhtQVrzLCDg5L2GFvbqE+VxoruZq+8YbkGQo=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B631A352279E; Mon, 27 Jan 2020 07:09:02 -0800 (PST)
-Date:   Mon, 27 Jan 2020 07:09:02 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-Message-ID: <20200127150902.GN2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200124222434.GA7196@paulmck-ThinkPad-P72>
- <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
- <20200125005713.GZ2935@paulmck-ThinkPad-P72>
- <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
- <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
- <20200125045844.GC2935@paulmck-ThinkPad-P72>
- <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
- <20200126153535.GL2935@paulmck-ThinkPad-P72>
- <20200126224245.GA22901@paulmck-ThinkPad-P72>
- <2e552fad-79c0-ec06-3b8c-d13f1b67f57d@redhat.com>
+        Mon, 27 Jan 2020 10:10:04 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:45462 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbgA0PKE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 10:10:04 -0500
+Received: by mail-vs1-f65.google.com with SMTP id v141so2178103vsv.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 07:10:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NkoAUVzWFZjHMMtEdPmvHpOHaSeOlTobo/dhUR4U2mI=;
+        b=gB8aH9bXLODaT5xi6+YHilW7T0QWwBAAdJXLkkbJnINh/xj60xu3s2hA6DzCwXv+DS
+         3aQFGUF9eIk05QAu4EhBap3BxPNU4qG6au51QwFeTW6qPx1AckH1AbWL8k1K0WsC5wu5
+         vHie2JLP6hSf9W+59v383Hpr35ojnQNblt8gf+ozgUyd/GQzPax1JGQbCOCSA1sbpmxe
+         x2bjcvOhEjsaSKEZ25/CkFgazKBSIvHnyz1d+6VQBFH8EKS4Kj7vHhlyZAZJPYd2084W
+         UeUtrhvCVukGhxtzatJIyWhVYMlrdc0lzhy8m5b9p8BUVYRi/aH2dGrsABVOrOYg3PeH
+         dilA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NkoAUVzWFZjHMMtEdPmvHpOHaSeOlTobo/dhUR4U2mI=;
+        b=NNb0paFXcxQARqJFlnE04uli62lAC4d1XHCB67OcMgHXNFz1jTN00s8fsMsnakOJVP
+         xfHWFiFW6Sj3NruWB+gVFKb/9GXFpl4C4u+xLjd+xTt1ChqJG+9xCN8+ISjBtHCOUnni
+         U6qd01qYEN4/zSZMM+AmREdR6TJZTS6tErd0FW3l+cuBJKEtF4Q0976y8p5abXWVqYvF
+         4CVXa0wAUHmUmUeB1y4AhGgDRtzl2VnyT2J0GKE1QDwRJ6FQDDCq0G+Ac8X2wA6M4zgr
+         p8IfTPKrSE4GuvsDnU8NdgDwKwZG0d7gSRvzHCW1oNVZtZYMIdGQceT+ZvhW3dKZ5EyM
+         p0KQ==
+X-Gm-Message-State: APjAAAVbGOq7fGvpIKthye7wrs1q08IdcTglKKQt9sbTf+S0DxLNGzsH
+        nbWrLUCNz3VU7Gjxpyt75XH9I+GkyI4kRLha5GbByg==
+X-Google-Smtp-Source: APXvYqwXtEK+nyeYN+ImrtWqCwzLW1sUUPSn17lF3dhK2jYXgmqlEoxWUYBw5LsFIOvXnu7JeeiZnw8mTYQ34xHNQug=
+X-Received: by 2002:a67:fb14:: with SMTP id d20mr9765471vsr.136.1580137803056;
+ Mon, 27 Jan 2020 07:10:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e552fad-79c0-ec06-3b8c-d13f1b67f57d@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200127122939.6952-1-gilad@benyossef.com> <CAMuHMdVrQh-1cEncfWoAjhd6SjJRHZPg9Qt7yVyw5Qrdo+-nrQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVrQh-1cEncfWoAjhd6SjJRHZPg9Qt7yVyw5Qrdo+-nrQ@mail.gmail.com>
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+Date:   Mon, 27 Jan 2020 17:09:51 +0200
+Message-ID: <CAOtvUMcmw_W-WVMGusCnkKBg71540c8Bo7LCMhz+t+dOsPUG3Q@mail.gmail.com>
+Subject: Re: [RFC] crypto: ccree - protect against short scatterlists
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ofir Drang <ofir.drang@arm.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 09:11:43AM -0500, Waiman Long wrote:
-> On 1/26/20 5:42 PM, Paul E. McKenney wrote:
-> > On Sun, Jan 26, 2020 at 07:35:35AM -0800, Paul E. McKenney wrote:
-> >> On Sat, Jan 25, 2020 at 02:41:39PM -0500, Waiman Long wrote:
-> >>> On 1/24/20 11:58 PM, Paul E. McKenney wrote:
-> >>>> On Fri, Jan 24, 2020 at 09:17:05PM -0500, Waiman Long wrote:
-> >>>>> On 1/24/20 8:59 PM, Waiman Long wrote:
-> >>>>>>> You called it!  I will play with QEMU's -numa argument to see if I can get
-> >>>>>>> CNA to run for me.  Please accept my apologies for the false alarm.
-> >>>>>>>
-> >>>>>>> 							Thanx, Paul
-> >>>>>>>
-> >>>>>> CNA is not currently supported in a VM guest simply because the numa
-> >>>>>> information is not reliable. You will have to run it on baremetal to
-> >>>>>> test it. Sorry for that.
-> >>>>> Correction. There is a command line option to force CNA lock to be used
-> >>>>> in a VM. Use the "numa_spinlock=on" boot command line parameter.
-> >>>> As I understand it, I need to use a series of -numa arguments to qemu
-> >>>> combined with the numa_spinlock=on (or =1) on the kernel command line.
-> >>>> If the kernel thinks that there is only one NUMA node, it appears to
-> >>>> avoid doing CNA.
-> >>>>
-> >>>> Correct?
-> >>>>
-> >>>> 							Thanx, Paul
-> >>>>
-> >>> In auto-detection mode (the default), CNA will only be turned on when
-> >>> paravirt qspinlock is not enabled first and there are at least 2 numa
-> >>> nodes. The "numa_spinlock=on" option will force it on even when both of
-> >>> the above conditions are false.
-> >> Hmmm...
-> >>
-> >> Here is my kernel command line taken from the console log:
-> >>
-> >> console=ttyS0 locktorture.onoff_interval=0 numa_spinlock=on locktorture.stat_interval=15 locktorture.shutdown_secs=1800 locktorture.verbose=1
-> >>
-> >> Yet the string "Enabling CNA spinlock" does not appear.
-> >>
-> >> Ah, idiot here needs to enable CONFIG_NUMA_AWARE_SPINLOCKS in his build.
-> >> Trying again with "--kconfig "CONFIG_NUMA_AWARE_SPINLOCKS=y"...
-> > And after fixing that, plus adding the other three Kconfig options required
-> > to enable this, I really do see "Enabling CNA spinlock" in the console log.
-> > Yay!
+On Mon, Jan 27, 2020 at 2:52 PM Geert Uytterhoeven <geert@linux-m68k.org> w=
+rote:
+>
+> Hi Gilad,
+>
+> On Mon, Jan 27, 2020 at 1:29 PM Gilad Ben-Yossef <gilad@benyossef.com> wr=
+ote:
+> > Deal gracefully with the event of being handed a scatterlist
+> > which is shorter than expected.
 > >
-> > At the end of the 30-minute locktorture exclusive-lock run, I see this:
+> > This mitigates a crash in some cases of Crypto API calls due with
+> > scatterlists with a NULL first buffer, despite the aead.h
+> > forbidding doing so.
 > >
-> > Writes:  Total: 572176565  Max/Min: 54167704/10878216 ???  Fail: 0
-> >
-> > This is about a five-to-one ratio.  Is this expected behavior, given a
-> > single NUMA node on a single-socket system with 12 hardware threads?
-> Do you mean within the VM, lscpu showed that the system has one node and
-> 12 threads per node? If that is the case, it should behave like regular
-> qspinlock and be fair.
+> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>
+> Thanks for your patch!
+>
+> Unable to handle kernel paging request at virtual address fffeffffc000000=
+0
 
-I mean that I saw this in dmesg, which I believe to be telling me the
-same thing as lscpu saying that there is one node, but you tell me!
+OK, this is a progress of a sort.
+We now crash during unmap, not map.
 
-[    0.007106] No NUMA configuration found
-[    0.007107] Faking a node at [mem 0x0000000000000000-0x000000001ffdefff]
-[    0.007111] NODE_DATA(0) allocated [mem 0x1ffdb000-0x1ffdefff]
-[    0.007126] Zone ranges:
-[    0.007127]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
-[    0.007128]   DMA32    [mem 0x0000000001000000-0x000000001ffdefff]
-[    0.007128]   Normal   empty
-[    0.007129] Movable zone start for each node
-[    0.007129] Early memory node ranges
-[    0.007130]   node   0: [mem 0x0000000000001000-0x000000000009efff]
-[    0.007132]   node   0: [mem 0x0000000000100000-0x000000001ffdefff]
-[    0.007227] Zeroed struct page in unavailable ranges: 98 pages
-[    0.007227] Initmem setup node 0 [mem 0x0000000000001000-0x000000001ffdefff]
-[    0.007228] On node 0 totalpages: 130941
-[    0.007231]   DMA zone: 64 pages used for memmap
-[    0.007231]   DMA zone: 21 pages reserved
-[    0.007232]   DMA zone: 3998 pages, LIFO batch:0
-[    0.007266]   DMA32 zone: 1984 pages used for memmap
-[    0.007267]   DMA32 zone: 126943 pages, LIFO batch:31
+Sent another go. If this doesn't work I'll wait till I reunite with the boa=
+rd.
+Blind debugging is hard...
 
-> > I will try reader-writer lock next.
-> >
-> > Again, should I be using qemu's -numa command-line option to create nodes?
-> > If so, what would be a sane configuration given 12 CPUs and 512MB of
-> > memory for the VM?  If not, what is a good way to exercise CNA's NUMA
-> > capabilities within a guest OS?
-> 
-> You can certainly play around with CNA in a VM. However, it is generally
-> not recommended to use CNA in a VM unless the VM cpu topology matches
-> the host with 1-to-1 vcpu pinning and there is no vcpu overcommit. In
-> this case, one may see some performance improvement using CNA by using
-> the "numa_spinlock=on" option to explicitly turn it on.
+Thanks again!
+Gilad
 
-Sorry, but I will not be booting this on bare metal on the systems that
-I currently have access to.  No more than I run rcutorture on bare metal
-on them, especially not with newly modified variants of RCU.  ;-)
 
-> Because of the shuffling of queue entries, CNA is inherently less fair
-> than the regular qspinlock. However, a ratio of 5 seems excessive to me.
-> vcpu preemption may be a factor in contributing to this large variation.
-> My testing on bare metal only showed a throughput variation within
-> 10-20% at most.
-
-OK.  Any guidance on qemu's -numa, or should I just experiment with it?
-The latter will take me some time, as I must focus on other things
-this week.
-
-Alternatively, would it make sense for you to give it a spin in a VM?
-After all, it is entirely possible that I still have some configuration
-or another messed up.
-
-							Thanx, Paul
+values of =CE=B2 will give rise to dom!
