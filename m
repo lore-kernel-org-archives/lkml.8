@@ -2,140 +2,150 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FE1C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044C8C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EAA20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7AAE20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rpRfr6Dn"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="CR0MHc9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgA0K57 (ORCPT
+        id S1730209AbgA0LDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 05:57:59 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46276 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727326AbgA0K57 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 05:57:59 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RAqVVc027061;
-        Mon, 27 Jan 2020 11:57:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=q3IUqnq8uZOdoSYHGb0y6kLnvH+Tx0j/V7+lgKc4Nzo=;
- b=rpRfr6Dn/ZCXCve9TZDosVDdDszaMeVTTOoOJYbAPp/PZv4DEMWyjyNU9gDF+6fmIL9z
- mAxF7enBIwaeI2O8kbzEpnebCqQ32gFUXMIBrDre5X7ALOTnD7UB3TJQmAtAxt/RkuCk
- kzUCqVthoVzIjkPbRsw8t7LrRZ6Nicr2+iwtX/lm++8cB/KNL86BbGQrykT3LZNIAGeo
- AcohO9zoPTJ+GTIJfvHZeT/ZfwFptKWjp5EzPqka9nPlUJPxfvoj2vI+VLCkW2nd6jvO
- HG5j2MKCEwClLfKew0nb0D3g9iWTz8LX1osKBlil9o/3BgodOMmMi48x/IWvuEQ0vpHu Ew== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrdek8c0m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jan 2020 11:57:44 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5903B10002A;
-        Mon, 27 Jan 2020 11:57:40 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4846B2A5B8E;
-        Mon, 27 Jan 2020 11:57:40 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.51) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan
- 2020 11:57:39 +0100
-Subject: Re: [PATCH 3/9] mmc: mmci: add a reference at mmc_host_ops in mmci
- struct
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200110134823.14882-1-ludovic.barre@st.com>
- <20200110134823.14882-4-ludovic.barre@st.com>
- <CAPDyKFpBgRGbRjOKHygknUMvGt9AKke+svoSG+So4B7hdZ8AMw@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <075935e7-6c26-9baa-72a5-8dbdecef1e8e@st.com>
-Date:   Mon, 27 Jan 2020 11:57:39 +0100
+        Mon, 27 Jan 2020 06:03:18 -0500
+Received: from mail-mw2nam12on2087.outbound.protection.outlook.com ([40.107.244.87]:10081
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729154AbgA0LDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 06:03:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JFGcpbJcJ88abxxedtjrYOBrA9uajU3/K7SICe1H9asyGgzk6DyH83QgJV5djZ/wQWr/2cu4lMwsOzlhbBwhlwVqxQhDZCQOLNCfOZYiQH/evJrnBTCbgdDN1SKDJWJrj6tXqTUvs0TSq0OJjQr/1SYGd/FJXoEjssN4jUOV0qUkyrzBX6KJh3CKB0aNjJpZh0D57eNn6PhHVr599V8vsvGKuUFXrlfot4Iz9b8TKH+w47CToahiSwH9H2rPahGDMZt4qjxuUNLrlrBojOamvGP+SFRqVloqj9C/UDMP3S+Wn6sCcJWvB0jyPyYtAYIcIdqhZxTnfPGW4sXfXV8y/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0yqPztloZmppVt9Hi6ktff4iJeI6Sd5afmyTsEES3P8=;
+ b=SFFxMrLSZn+l1aARj0TiDgx2Ma3AazB/yARG5SIc8S51x39Ea/2h6MCqIRPjRgWTBygkBVQcK/ARMiFcdo2YnyXx9Ej5gVvniZZg4iN5C2BbZiMQ+8FctgJVAJWIQrwtvHe8VUOtM6zjWcCfu9bKW4Yl6djqgnRs9juv4iaX1W39qrc26elUFoHk825L8pZ6LEeMxK/Azr2tHFIHkCZ9gQRIKLGVAKyOejLRyVGqzVzYAuxh1jTg5BZ59gQ31X8QYox8TOwfmTaZwhRhanq8Xo0xDfe+tmY4L33+D7FZ8hj04+0Ag/Gx+6Wi7T5oDEhHKoPc8KF5Qcc8sRNozenxFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0yqPztloZmppVt9Hi6ktff4iJeI6Sd5afmyTsEES3P8=;
+ b=CR0MHc9uRgHFCGgL4kZKlEfr44L0IMW72Dz5YfXP5BzzXC9uKPPC1ZM4Vh9Tfj7p05BlByU3xtbRGhlRvvfgk3sMBegt8lWNmzYFbgKHkzGLrGrtOpQLNnQflc6+HhLSmL1aGnygc2FWZMTgH31fJfMk/sm79LX7FSf9QgPE8aI=
+Received: from MWHPR02CA0024.namprd02.prod.outlook.com (2603:10b6:300:4b::34)
+ by BYAPR02MB5430.namprd02.prod.outlook.com (2603:10b6:a03:a4::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.22; Mon, 27 Jan
+ 2020 11:03:14 +0000
+Received: from SN1NAM02FT023.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::204) by MWHPR02CA0024.outlook.office365.com
+ (2603:10b6:300:4b::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.22 via Frontend
+ Transport; Mon, 27 Jan 2020 11:03:14 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT023.mail.protection.outlook.com (10.152.72.156) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2665.18
+ via Frontend Transport; Mon, 27 Jan 2020 11:03:13 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iw2Aj-0000cJ-H5; Mon, 27 Jan 2020 03:03:13 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iw2Ae-0002VD-DQ; Mon, 27 Jan 2020 03:03:08 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1iw2Aa-0002UC-GI; Mon, 27 Jan 2020 03:03:04 -0800
+Subject: Re: [PATCH][next][V2] i2c: xiic: fix indentation issue
+To:     Colin King <colin.king@canonical.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200127102303.44133-1-colin.king@canonical.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <2dd84ab2-a7a3-fdd8-6bd6-07f1b3d5cd00@xilinx.com>
+Date:   Mon, 27 Jan 2020 12:03:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFpBgRGbRjOKHygknUMvGt9AKke+svoSG+So4B7hdZ8AMw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
+In-Reply-To: <20200127102303.44133-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(396003)(39850400004)(189003)(199004)(426003)(26005)(186003)(336012)(44832011)(2616005)(36756003)(31696002)(2906002)(70206006)(70586007)(31686004)(478600001)(356004)(81156014)(4326008)(110136005)(8676002)(316002)(81166006)(5660300002)(8936002)(9786002)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5430;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 34c96d88-7001-4ed7-d3f7-08d7a3188156
+X-MS-TrafficTypeDiagnostic: BYAPR02MB5430:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB5430C90234407F056070FC08C60B0@BYAPR02MB5430.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:425;
+X-Forefront-PRVS: 02951C14DC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: A6mf5Fsl5b0gjZvcCwaI8XRDHtt3IA28RldYB+/d609QkvhXZDFCcBIuJn7s7AT+x1BsuHEDyLf8qtcP3mwHUmWNolxXrTcJlnS+QnGWJtaz76iofuU5g9+9EfXNXVgBGu1z1fh5oKFbmXkLegxOiZ2idFT46DxIXoSOn4SkbmduvmFxZL7cdKs1rPKE44rDgChmRgRK7/0j8fW4GqC5qzmP/LdpVpryRvR1MtK2m1Lp+1kzZlc+oSIQqon6YS8p7B7IEuVJqTrwnYGBOKaPaQwTDuRQ4RZ6WikorPurAv13onkLjy8EliOeCNMj5YygEtz7dWpYmgejVmUehXFjh2OFgGdspFJR6sOp1WfLdY5yMILiRb3zMAakKkM2+ywg0KbHDBEvBo1jKmOJGYiNtMBgKuAgdwkP44wRRgKeAAkq8XgUWkVyNfezW2Ft44eX
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2020 11:03:13.9337
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34c96d88-7001-4ed7-d3f7-08d7a3188156
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5430
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 27. 01. 20 11:23, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a statement that is indented one level too deeply, remove
+> the extraneous tab.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+> V2: fix type in commit message
+> ---
+>  drivers/i2c/busses/i2c-xiic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
+> index b17d30c9ab40..90c1c362394d 100644
+> --- a/drivers/i2c/busses/i2c-xiic.c
+> +++ b/drivers/i2c/busses/i2c-xiic.c
+> @@ -261,7 +261,7 @@ static int xiic_clear_rx_fifo(struct xiic_i2c *i2c)
+>  		xiic_getreg8(i2c, XIIC_DRR_REG_OFFSET);
+>  		if (time_after(jiffies, timeout)) {
+>  			dev_err(i2c->dev, "Failed to clear rx fifo\n");
+> -				return -ETIMEDOUT;
+> +			return -ETIMEDOUT;
+>  		}
+>  	}
+>  
+> 
 
+As was suggested by Peter you should also add Fixes: <sha1> ("patch
+subject")
 
-Le 1/24/20 à 2:09 PM, Ulf Hansson a écrit :
-> On Fri, 10 Jan 2020 at 14:49, Ludovic Barre <ludovic.barre@st.com> wrote:
->>
->> This patch adds mmc_host_ops pointer in mmci struct.
->> The variant init function may need to add a mmc_host_ops,
->> for example to add the execute_tuning support if this feature
->> is available.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   drivers/mmc/host/mmci.c | 1 +
->>   drivers/mmc/host/mmci.h | 1 +
->>   2 files changed, 2 insertions(+)
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index 7b13d66cbb21..00b473f57047 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -1923,6 +1923,7 @@ static int mmci_probe(struct amba_device *dev,
->>
->>          host = mmc_priv(mmc);
->>          host->mmc = mmc;
->> +       host->mmc_ops = &mmci_ops;
-> 
-> Nitpick:
-> 
-> Can you please also move the assignment "mmc->ops = &mmci_ops;" to
-> this place as well, as I think these belongs together.
-
-OK
-
-> 
->>
->>          /*
->>           * Some variant (STM32) doesn't have opendrain bit, nevertheless
->> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
->> index ea6a0b5779d4..55acc0971a44 100644
->> --- a/drivers/mmc/host/mmci.h
->> +++ b/drivers/mmc/host/mmci.h
->> @@ -407,6 +407,7 @@ struct mmci_host {
->>          u32                     mask1_reg;
->>          u8                      vqmmc_enabled:1;
->>          struct mmci_platform_data *plat;
->> +       struct mmc_host_ops     *mmc_ops;
->>          struct mmci_host_ops    *ops;
->>          struct variant_data     *variant;
->>          struct pinctrl          *pinctrl;
->> --
->> 2.17.1
->>
-> 
-> Kind regards
-> Uffe
-> 
+Thanks,
+Michal
