@@ -2,142 +2,108 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AABFC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0830C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDFDB206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C9A214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbgA0LSE (ORCPT
+        id S1729636AbgA0LSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 27 Jan 2020 06:18:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:43024 "EHLO foss.arm.com"
+Received: from mx2.suse.de ([195.135.220.15]:38440 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbgA0LSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:18:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A2BC30E;
-        Mon, 27 Jan 2020 03:12:12 -0800 (PST)
-Received: from [10.1.196.63] (e123195-lin.cambridge.arm.com [10.1.196.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C52A3F52E;
-        Mon, 27 Jan 2020 03:12:11 -0800 (PST)
-Subject: Re: [PATCH] KVM: arm64: Treat emulated TVAL TimerValue as a signed
- 32-bit integer
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-References: <20200127103652.2326-1-alexandru.elisei@arm.com>
- <5f633dfb2abe63059d75c0da58c69241@kernel.org>
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-Message-ID: <de0621e2-3920-3897-bde4-fecf36c9c348@arm.com>
-Date:   Mon, 27 Jan 2020 11:12:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726079AbgA0LSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 06:18:03 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E36B6AAB8;
+        Mon, 27 Jan 2020 11:18:01 +0000 (UTC)
+Date:   Mon, 27 Jan 2020 12:17:55 +0100
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     x86-ml <x86@kernel.org>, linux-edac <linux-edac@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] RAS pile for 5.6
+Message-ID: <20200127111755.GC24228@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <5f633dfb2abe63059d75c0da58c69241@kernel.org>
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Linus,
 
-On 1/27/20 11:07 AM, Marc Zyngier wrote:
-> Hi Alexandru,
->
-> On 2020-01-27 10:36, Alexandru Elisei wrote:
->> According to the ARM ARM, registers CNT{P,V}_TVAL_EL0 have bits [63:32]
->> RES0 [1]. When reading the register, the value is truncated to the least
->> significant 32 bits [2], and on writes, TimerValue is treated as a signed
->> 32-bit integer [1, 2].
->>
->> When the guest behaves correctly and writes 32-bit values, treating TVAL
->> as an unsigned 64 bit register works as expected. However, things start
->> to break down when the guest writes larger values, because
->> (u64)0x1_ffff_ffff = 8589934591. but (s32)0x1_ffff_ffff = -1, and the
->> former will cause the timer interrupt to be asserted in the future, but
->> the latter will cause it to be asserted now.  Let's treat TVAL as a
->> signed 32-bit register on writes, to match the behaviour described in
->> the architecture, and the behaviour experimentally exhibited by the
->> virtual timer on a non-vhe host.
->>
->> [1] Arm DDI 0487E.a, section D13.8.18
->> [2] Arm DDI 0487E.a, section D11.2.4
->>
->> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
->
-> Huhuh... Nice catch!
->
-> Fixes: 8fa761624871 ("KVM: arm/arm64: arch_timer: Fix CNTP_TVAL calculation")
->
-> (how many times are we doing to fix this???)
->
->> ---
->>  include/kvm/arm_arch_timer.h | 2 ++
->>  virt/kvm/arm/arch_timer.c    | 3 ++-
->>  2 files changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/kvm/arm_arch_timer.h b/include/kvm/arm_arch_timer.h
->> index d120e6c323e7..be912176b7a3 100644
->> --- a/include/kvm/arm_arch_timer.h
->> +++ b/include/kvm/arm_arch_timer.h
->> @@ -10,6 +10,8 @@
->>  #include <linux/clocksource.h>
->>  #include <linux/hrtimer.h>
->>
->> +#define ARCH_TIMER_TVAL_MASK    ((1ULL << 32) - 1)
->> +
->>  enum kvm_arch_timers {
->>      TIMER_PTIMER,
->>      TIMER_VTIMER,
->> diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
->> index f182b2380345..5d40f17f7024 100644
->> --- a/virt/kvm/arm/arch_timer.c
->> +++ b/virt/kvm/arm/arch_timer.c
->> @@ -805,6 +805,7 @@ static u64 kvm_arm_timer_read(struct kvm_vcpu *vcpu,
->>      switch (treg) {
->>      case TIMER_REG_TVAL:
->>          val = timer->cnt_cval - kvm_phys_timer_read() + timer->cntvoff;
->> +        val &= ARCH_TIMER_TVAL_MASK;
->
-> nit: Do we really need this mask? I'd rather see it written as
->
->                 val = lower_32_bits(val);
+please pull the below branch to receive the following RAS updates:
 
-I didn't really like using the mask either, but I couldn't think of anything
-better. This looks very good.
+* Misc fixes to the MCA code all over the place, by Jan H. Schönherr.
 
->
->
->>          break;
->>
->>      case TIMER_REG_CTL:
->> @@ -850,7 +851,7 @@ static void kvm_arm_timer_write(struct kvm_vcpu *vcpu,
->>  {
->>      switch (treg) {
->>      case TIMER_REG_TVAL:
->> -        timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + val;
->> +        timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + (s32)val;
->>          break;
->>
->>      case TIMER_REG_CTL:
->
-> Otherwise, looks good to me. If you're OK with the above change, I'll
-> take it as a fix.
+* Initial support for AMD F19h and other cleanups to amd64_edac, by Yazen
+Ghannam.
 
-Yes, I'm very much OK with the change.
+* Other small cleanups.
 
-Thanks,
-Alex
->
-> Thanks,
->
->         M.
+Thx.
+
+---
+
+The following changes since commit 7de7de7ca0ae0fc70515ee3154af33af75edae2c:
+
+  Fix root mounting with no mount options (2019-12-16 08:42:39 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
+
+for you to fetch changes up to 86e9f9d60eb5e0c5d99ddf6b79f4d308d6453bd0:
+
+  EDAC/mce_amd: Make fam_ops static global (2020-01-16 21:52:48 +0100)
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      x86/mce/therm_throt: Mark throttle_active_work() as __maybe_unused
+
+Borislav Petkov (1):
+      EDAC/mce_amd: Make fam_ops static global
+
+Jan H. Schönherr (5):
+      x86/mce: Pass MCE message to mce_panic() on failed kernel recovery
+      x86/mce: Remove mce_inject_log() in favor of mce_log()
+      x86/mce: Take action on UCNA/Deferred errors again
+      x86/mce: Fix mce=nobootlog
+      x86/mce: Fix use of uninitialized MCE message string
+
+Yazen Ghannam (5):
+      x86/MCE/AMD, EDAC/mce_amd: Add new Load Store unit McaType
+      EDAC/mce_amd: Always load on SMCA systems
+      x86/amd_nb: Add Family 19h PCI IDs
+      EDAC/amd64: Add family ops for Family 19h Models 00h-0Fh
+      EDAC/amd64: Drop some family checks for newer systems
+
+ arch/x86/include/asm/mce.h            |   3 +-
+ arch/x86/kernel/amd_nb.c              |   3 +
+ arch/x86/kernel/cpu/mce/amd.c         |   2 +
+ arch/x86/kernel/cpu/mce/core.c        |  70 ++++++++++-------------
+ arch/x86/kernel/cpu/mce/inject.c      |   2 +-
+ arch/x86/kernel/cpu/mce/internal.h    |   2 -
+ arch/x86/kernel/cpu/mce/therm_throt.c |   2 +-
+ drivers/edac/amd64_edac.c             |  62 +++++++++++---------
+ drivers/edac/amd64_edac.h             |   3 +
+ drivers/edac/mce_amd.c                | 105 ++++++++++++++++++++--------------
+ include/linux/pci_ids.h               |   1 +
+ 11 files changed, 141 insertions(+), 114 deletions(-)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
