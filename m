@@ -2,214 +2,195 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4191FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2184AC35248
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF0722527
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:11:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HliaSyrT"
+	by mail.kernel.org (Postfix) with ESMTP id E654922527
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580145302;
+	bh=MNDC3L72xdbz+DHTkFAqJDB2KEZTvOLexRz8u1AgfNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GTWAiTeAQ+Gn5Q7STQ5tnwpu21XdjNxGVKh/NlxUmvOZpgJoTrZcOcqMzXKQyRY9j
+	 uJ7KLC0R6EPKbAJhK2EqhgvT39SkPBivs1uKm9ahhEbwOYIye6dB4GM1TR/ZBuL/N6
+	 ptEQ5LK4gh+jvYCMbmD73nsYiP8A1aEmgMLFhANo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgA0RLw (ORCPT
+        id S1726004AbgA0RPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:11:52 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46747 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0RLv (ORCPT
+        Mon, 27 Jan 2020 12:15:01 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35956 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgA0RPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:11:51 -0500
-Received: by mail-qk1-f196.google.com with SMTP id g195so10300000qke.13
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:11:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S1WlWU0/0mAGozdKMMszMQsPNvJD5JxxqRdPlFvg8YI=;
-        b=HliaSyrTi1mEs7RJIOyREqc6GfovxcHJDRwdHVDsLt6M1BbPEGZS6me7xzIxoaIH6+
-         LRhiSVFhh8DZeh/xECM51h6jpYf2k53TDdjlLlL2V4yFXM4O1BZVGsO55cyN8Cph7/pj
-         ITj/iFDZiNtdo0SC+YNsTPtsj7qQlExirbsCc=
+        Mon, 27 Jan 2020 12:15:00 -0500
+Received: by mail-oi1-f196.google.com with SMTP id c16so7381599oic.3;
+        Mon, 27 Jan 2020 09:15:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S1WlWU0/0mAGozdKMMszMQsPNvJD5JxxqRdPlFvg8YI=;
-        b=GJ195kdLp6cyzJOfJ4In/aE1HcVPuFlfkxPc1p5in3pPWTSEWCDmve80OmR1GLT3Cc
-         c7IPauvnPtCf6KLq/+Oql+QFKSa9qKSl7mlsJkBp06iRSqfF0nNK4o1Fdt0RC52iahcD
-         nwVH4PS6kcvF314WdM8xl5LTNIEIaco/0YBdj6gSsnlY3mcb1PVkYjw0fVeDhO0gDdlM
-         frYkqc3XxTAqaUUCJcDe9iyEicq4fgEeRxPo3oqXBoR/Aq4GXYAJVVRFY6kPEkoOB/r8
-         CLazyK2zXR/sx10TIsdhVs2xUqSkPXzAFzSvKjVjhPKxUFROU7glJ9JDP4ijZYaaCh95
-         tThg==
-X-Gm-Message-State: APjAAAXdV8RPElYWtXrRUn/MV8Sq4I5maMrHN9HnUdRI5QsHR4LPAkDq
-        xNiqdcCg0+PnVyPNMhplx9tp1G9XHTka52NiZzpnBY0C
-X-Google-Smtp-Source: APXvYqzmZBcDn+yybd09PYPu0USGydA5dOAJYTRhiyF2lqYF03Dy6NEXa81ASSZRQ7RKN7ezaLkO0A6CEn7L2jw9cCA=
-X-Received: by 2002:a37:9186:: with SMTP id t128mr16882009qkd.180.1580145110288;
- Mon, 27 Jan 2020 09:11:50 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k4ey/v184CvKWYOReTk6RsIuynmUBFRFgYAqJjPcrR4=;
+        b=oYnTFROH3KjFqanxyA3baGhgecDF3aTA3wCli2AB/MUVgHrzZOxgXk3QQuiuE5ZJmK
+         FHCewuj3718BTJ1ieQbEz8pNVO4YpMdkm2JSO007FMosQCc2ikeGiQfQajxA+8FTlnvk
+         8KEpSyDGGDbUOHeNsIVHqR2TIxH6tblYUKYwz611UgzWmIXiHVfp5dwJPVhZwXRtsfn3
+         YX7bJgN9n3v5XwUAzTD7BGQVV4xwsAjgryhjE1c1HVmqX08y6IlGkyZv1VDI6v8UF9Fp
+         U8hE3fb3Cfi8uaV3sZp9PWJoR1VMlk3j1cwibwtSeIYCTD9AYSA2gKz1kLaJwl0PwU2i
+         U40w==
+X-Gm-Message-State: APjAAAWW4Q9XTRnpFzO2yizhc5Bfs9jiCV0PIKz5jdbhHnJWUREXyqeQ
+        uf2M3tIAgkpc9S0yhN8aej6s0c4=
+X-Google-Smtp-Source: APXvYqziCDKOQq2CX3TlOi7pNha+sxl3OTQ8qLhFGhkhv0aU4a8izXXCeClJ1npkU1amNVWiRslj3Q==
+X-Received: by 2002:aca:e146:: with SMTP id y67mr39769oig.93.1580145299818;
+        Mon, 27 Jan 2020 09:14:59 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 6sm4930858oil.43.2020.01.27.09.14.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 09:14:59 -0800 (PST)
+Received: (nullmailer pid 8334 invoked by uid 1000);
+        Mon, 27 Jan 2020 17:14:57 -0000
+Date:   Mon, 27 Jan 2020 11:14:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yuti Amonkar <yamonkar@cadence.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, maxime@cerno.tech, airlied@linux.ie,
+        daniel@ffwll.ch, mark.rutland@arm.com, a.hajda@samsung.com,
+        narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net, praneeth@ti.com,
+        jsarha@ti.com, tomi.valkeinen@ti.com, mparab@cadence.com,
+        sjakhade@cadence.com
+Subject: Re: [PATCH v3 1/3] dt-bindings: drm/bridge: Document Cadence MHDP
+ bridge bindings in yaml format
+Message-ID: <20200127171457.GA32507@bogus>
+References: <1579690501-10698-1-git-send-email-yamonkar@cadence.com>
+ <1579690501-10698-2-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-References: <20200125012105.59903-1-pmalani@chromium.org> <20200125012105.59903-2-pmalani@chromium.org>
- <feb0ef4d-0f03-9bbc-807e-c385c03ffa71@collabora.com>
-In-Reply-To: <feb0ef4d-0f03-9bbc-807e-c385c03ffa71@collabora.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 27 Jan 2020 09:11:39 -0800
-Message-ID: <CACeCKae4O+MKx3COh=u=28tk21rb4BrzFZgYpnc=tRkigqSP5Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] platform/chrome: Add EC command msg wrapper
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579690501-10698-2-git-send-email-yamonkar@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric,
+On Wed, Jan 22, 2020 at 11:54:59AM +0100, Yuti Amonkar wrote:
+> Document the bindings used for the Cadence MHDP DPI/DP bridge in
+> yaml format.
+> 
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> ---
+>  .../bindings/display/bridge/cdns,mhdp.yaml         | 131 +++++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+> new file mode 100644
+> index 0000000..696418a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+> @@ -0,0 +1,131 @@
 
-On Mon, Jan 27, 2020 at 7:29 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Prashant,
->
-> Many thanks for this patch.
->
-> On 25/1/20 2:21, Prashant Malani wrote:
-> > Many callers of cros_ec_cmd_xfer_status() use a similar set up of
-> > allocating and filling a message buffer and then copying any received
-> > data to a target buffer.
-> >
->
-> cros_ec_cmd_xfer_status is already a wrapper, I dislike the idea of having three
-> ways to do the same (cros_ec_cmd_xfer, cros_ec_cmd_xfer_status and this new
-> one). I like the idea of have a wrapper that embeds the message allocation but
-> we should not confuse users with different calls that does the same.
-Yes, my intention was to eventually replace all the xfer_status()
-call-sites to use the new wrapper, and then get rid of xfer_status
-completely.
->
-> So, I am for a change like this but I'd like to have all the users calling the
-> same wrapper (unless there is a good reason to not use it). A proposed roadmap
-> (to be discussed) for this would be.
->
-> 1. Replace all the remaining "cros_ec_cmd_xfer" calls with
-> "cros_ec_cmd_xfer_status".
-> 2. Modify cros_ec_cmd_xfer_status to embed the message allocation.
+Missing SPDX tag. Dual license please.
 
-How about the following alteration the the roadmap:
-- Introducing the new wrapper.
-- Replacing all remaining cros_ec_cmd_xfer/cros_ec_cmd_xfer_status to
-use the new wrapper.
-- Deleting cros_ec_cmd_xfer and cros_ec_cmd_xfer_status ?
-My thinking is that this would mean fewer changes at the call-sites
-compared to the original roadmap (in the original roadmap, one would
-first have to modify calls to use cros_ec_cmd_xfer_status(), and then
-modify them again when cros_ec_cmd_xfer_status() itself is modified to
-include message allocation).
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence MHDP bridge
+> +
+> +maintainers:
+> +  - Swapnil Jakhade <sjakhade@cadence.com>
+> +  - Yuti Amonkar <yamonkar@cadence.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - cdns,mhdp8546
+> +      - ti,j721e-mhdp8546
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description:
+> +          Register block of mhdptx apb registers upto PHY mapped area(AUX_CONFIG_P).
+> +          The AUX and PMA registers are mapped to associated phy driver.
+> +      - description:
+> +          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
+> +
+> +  reg-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: mhdptx
+> +      - const: j721e-intg
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      DP bridge clock, it's used by the IP to know how to translate a number of
+> +      clock cycles into a time (which is used to comply with DP standard timings
+> +      and delays).
+> +
+> +  phys:
+> +    description: Phandle to the DisplyPort phy.
+> +
+> +  phy-names:
+> +    const: dpphy
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      Ports as described in Documentation/devicetree/bindings/graph.txt
+> +
+> +    properties:
+> +       '#address-cells':
 
-That said I don't have any strong preference, so either would work.
+Wrong indentation.
 
-Best regards,
->
-> Thanks,
->  Enric
->
->
-> > Create a utility function that performs this setup so that callers can
-> > use this function instead.
-> >
-> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> > ---
-> >  drivers/platform/chrome/cros_ec_proto.c     | 53 +++++++++++++++++++++
-> >  include/linux/platform_data/cros_ec_proto.h |  5 ++
-> >  2 files changed, 58 insertions(+)
-> >
-> > diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> > index da1b1c4504333..8ef3b7d27d260 100644
-> > --- a/drivers/platform/chrome/cros_ec_proto.c
-> > +++ b/drivers/platform/chrome/cros_ec_proto.c
-> > @@ -5,6 +5,7 @@
-> >
-> >  #include <linux/delay.h>
-> >  #include <linux/device.h>
-> > +#include <linux/mfd/cros_ec.h>
-> >  #include <linux/module.h>
-> >  #include <linux/platform_data/cros_ec_commands.h>
-> >  #include <linux/platform_data/cros_ec_proto.h>
-> > @@ -570,6 +571,58 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> >  }
-> >  EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
-> >
-> > +/**
-> > + * cros_ec_send_cmd_msg() - Utility function to send commands to ChromeOS EC.
-> > + * @ec: EC device struct.
-> > + * @version: Command version number (often 0).
-> > + * @command: Command ID including offset.
-> > + * @outdata: Data to be sent to the EC.
-> > + * @outsize: Size of the &outdata buffer.
-> > + * @indata: Data to be received from the EC.
-> > + * @insize: Size of the &indata buffer.
-> > + *
-> > + * This function is a wrapper around &cros_ec_cmd_xfer_status, and performs
-> > + * some of the common work involved with sending a command to the EC. This
-> > + * includes allocating and filling up a &struct cros_ec_command message buffer,
-> > + * and copying the received data to another buffer.
-> > + *
-> > + * Return: The number of bytes transferred on success or negative error code.
-> > + */
-> > +int cros_ec_send_cmd_msg(struct cros_ec_device *ec, unsigned int version,
-> > +                      unsigned int command, void *outdata,
-> > +                      unsigned int outsize, void *indata,
-> > +                      unsigned int insize)
-> > +{
-> > +     struct cros_ec_command *msg;
-> > +     int ret;
-> > +
-> > +     msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-> > +     if (!msg)
-> > +             return -ENOMEM;
-> > +
-> > +     msg->version = version;
-> > +     msg->command = command;
-> > +     msg->outsize = outsize;
-> > +     msg->insize = insize;
-> > +
-> > +     if (outdata && outsize > 0)
-> > +             memcpy(msg->data, outdata, outsize);
-> > +
-> > +     ret = cros_ec_cmd_xfer_status(ec, msg);
-> > +     if (ret < 0) {
-> > +             dev_warn(ec->dev, "Command failed: %d\n", msg->result);
-> > +             goto cleanup;
-> > +     }
-> > +
-> > +     if (insize)
-> > +             memcpy(indata, msg->data, insize);
-> > +
-> > +cleanup:
-> > +     kfree(msg);
-> > +     return ret;
-> > +}
-> > +EXPORT_SYMBOL(cros_ec_send_cmd_msg);
-> > +
-> >  static int get_next_event_xfer(struct cros_ec_device *ec_dev,
-> >                              struct cros_ec_command *msg,
-> >                              struct ec_response_get_next_event_v1 *event,
-> > diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-> > index 30098a5515231..166ce26bdd79e 100644
-> > --- a/include/linux/platform_data/cros_ec_proto.h
-> > +++ b/include/linux/platform_data/cros_ec_proto.h
-> > @@ -201,6 +201,11 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
-> >  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> >                           struct cros_ec_command *msg);
-> >
-> > +int cros_ec_send_cmd_msg(struct cros_ec_device *ec_dev, unsigned int version,
-> > +                      unsigned int command, void *outdata,
-> > +                      unsigned int outsize, void *indata,
-> > +                      unsigned int insize);
-> > +
-> >  int cros_ec_register(struct cros_ec_device *ec_dev);
-> >
-> >  int cros_ec_unregister(struct cros_ec_device *ec_dev);
-> >
+> +         const: 1
+> +
+> +       '#size-cells':
+> +         const: 0
+> +
+> +       port@0:
+> +         type: object
+> +         description:
+> +           input port representing the DP bridge input
+> +
+> +       port@1:
+> +         type: object
+> +         description:
+> +           output port representing the DP bridge output.
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +      - '#address-cells'
+> +      - '#size-cells'
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: ti,j721e-mhdp8546
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 2
+> +          maxItems: 2
+> +        reg-names:
+> +          minItems: 2
+> +          maxItems: 2
+
+As we've already defined the max, you can drop maxItems on these 2.
+
+With those 2 changes,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
