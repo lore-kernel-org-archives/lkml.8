@@ -2,105 +2,101 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D7AC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9E8C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308B322464
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5E020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:51:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="V8y4z9fu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgA0Ou2 (ORCPT
+        id S1729321AbgA0Ova (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:50:28 -0500
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:61426 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726635AbgA0Ou2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:50:28 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=guoren@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Toc6Kte_1580136614;
-Received: from localhost(mailfrom:guoren@linux.alibaba.com fp:SMTPD_---0Toc6Kte_1580136614)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 Jan 2020 22:50:14 +0800
-From:   Guo Ren <guoren@linux.alibaba.com>
-To:     paul.walmsley@sifive.com, andrew@sifive.com, palmer@dabbelt.com
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH V2] riscv: Use flush_icache_mm for flush_icache_user_range
-Date:   Mon, 27 Jan 2020 22:50:08 +0800
-Message-Id: <20200127145008.2850-1-guoren@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.0
+        Mon, 27 Jan 2020 09:51:30 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:56078 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726635AbgA0Ov3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 09:51:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=XhfMsVONMq1GlEnz3UKz8jb69fs6RfdWw5Dn3X7mvYg=; b=V8y4z9fuelY302DWTQ8dgVLBP+
+        +6LshB1sn4p1pGZGhzUxn6Kw+ALaFQtc5mxbKTVZq7wUMJFhvW3MsO4BrzIYdUrgjXbINKTUWpqJN
+        qi/yy8k8Mu1YDoNxtu9q20+xuKFTG7sqQebXPbIeDt/r0daRnnCNVwt78r36jtiVYOC4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iw5jH-0006nz-Gd; Mon, 27 Jan 2020 15:51:07 +0100
+Date:   Mon, 27 Jan 2020 15:51:07 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
+ up without PHY
+Message-ID: <20200127145107.GE13647@lunn.ch>
+References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+ <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+ <20200127112102.GT25745@shell.armlinux.org.uk>
+ <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20200127114600.GU25745@shell.armlinux.org.uk>
+ <20200127140038.GD13647@lunn.ch>
+ <20200127140834.GW25745@shell.armlinux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127140834.GW25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch is the fixup for the commit 08f051eda33b by Andrew.
+> Can you give a hint which platform this is and how to reproduce it
+> please?
 
-For copy_to_user_page, the only call path is:
-__access_remote_vm -> copy_to_user_page -> flush_icache_user_range
+Hi Russell
 
-Seems it's ok to use flush_icache_mm instead of flush_icache_all and
-it could reduce flush_icache_all called on other harts.
+Devel C has issues with its fibre ports. I tend to test with
+sff2/port9 not sff3/port3, because i also have the copper port plugged
+in. If the copper gets link before the fibre, copper is used.
 
-Add (vma->vm_flags & VM_EXEC) condition to flush icache only for
-executable vma area.
+What i see is that after the SERDES syncs, its registers indicate a 1G
+link, full duplex, etc. But the MAC is using 10/Half. And hence no
+packets go through. If i set the MAC to the same as the PCS, i can at
+least transmit. Receive does not work, but i think that is something
+else. The statistics counters indicate the SERDES is receiving frames,
+but the MAC statistic counters suggests the MAC never sees them.
 
-ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE is used in a lot of fs/block codes.
-We need it to make their pages dirty and defer sync i/dcache in
-update_mmu_cache().
+I've also had issues with the DSA links, also being configured to
+10/Half. That seems to be related to having a phy-mode property in
+device tree. I need to add a fixed-link property to set the correct
+speed. Something is broken here, previously the fixed-link was only
+needed if the speed needed to be lower than the ports maximum. I think
+that is a separate issue i need to dig into, not part of the PCS to
+MAC transfer.
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Andrew Waterman <andrew@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
+Heiner has another device which has an Aquantia PHY running in an odd
+mode so that it does 1G over a T2 link. It uses SGMII for this, and
+that is where we first noticed the issue of the MAC and PCS having
+different configurations.
 
----
-Changelog V2:
- - Add VM_EXEC condition.
- - Remove flush_icache_user_range definition.
- - define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
----
- arch/riscv/include/asm/cacheflush.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
-index b69aecbb36d3..ae57d6ce63a9 100644
---- a/arch/riscv/include/asm/cacheflush.h
-+++ b/arch/riscv/include/asm/cacheflush.h
-@@ -8,7 +8,7 @@
- 
- #include <linux/mm.h>
- 
--#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
-+#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
- 
- /*
-  * The cache doesn't need to be flushed when TLB entries change when
-@@ -62,7 +62,8 @@ static inline void flush_cache_vunmap(unsigned long start, unsigned long end)
- #define copy_to_user_page(vma, page, vaddr, dst, src, len) \
- 	do { \
- 		memcpy(dst, src, len); \
--		flush_icache_user_range(vma, page, vaddr, len); \
-+		if (vma->vm_flags & VM_EXEC) \
-+			flush_icache_mm(vma->vm_mm, 0); \
- 	} while (0)
- #define copy_from_user_page(vma, page, vaddr, dst, src, len) \
- 	memcpy(dst, src, len)
-@@ -85,7 +86,6 @@ static inline void flush_dcache_page(struct page *page)
-  * so instead we just flush the whole thing.
-  */
- #define flush_icache_range(start, end) flush_icache_all()
--#define flush_icache_user_range(vma, pg, addr, len) flush_icache_all()
- 
- void dma_wbinv_range(unsigned long start, unsigned long end);
- void dma_wb_range(unsigned long start, unsigned long end);
--- 
-2.17.0
-
+      Andrew
