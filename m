@@ -2,130 +2,172 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA5DC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648AEC35247
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9462F2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3122D20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:42:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="N5r3x4HV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgA0Hfq (ORCPT
+        id S1726485AbgA0Hmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 02:35:46 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8402 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725765AbgA0Hfq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 02:35:46 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00R7ZWij021084
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 02:35:45 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrk3b6s1s-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 02:35:44 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Mon, 27 Jan 2020 07:34:28 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 27 Jan 2020 07:34:26 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00R7YOaf45678828
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 07:34:24 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D99F4C046;
-        Mon, 27 Jan 2020 07:34:24 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A85D4C044;
-        Mon, 27 Jan 2020 07:34:24 +0000 (GMT)
-Received: from oc3784624756.ibm.com (unknown [9.152.212.201])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jan 2020 07:34:24 +0000 (GMT)
-Subject: Re: [PATCH] perf test: Test case 66 broken on s390 (lib/traceevent
- issue)
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, borntraeger@de.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
-References: <20200124073941.39119-1-tmricht@linux.ibm.com>
- <20200124100742.4050c15e@gandalf.local.home>
- <20200125013153.46f05fc1f617fcd341e7060b@kernel.org>
- <20200124113610.662f4afb@gandalf.local.home>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-Date:   Mon, 27 Jan 2020 08:34:23 +0100
+        Mon, 27 Jan 2020 02:42:32 -0500
+Received: from mail-bn7nam10on2088.outbound.protection.outlook.com ([40.107.92.88]:10304
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725938AbgA0Hmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 02:42:32 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J6hITAKUUsBqQS098KefpFlAD1NoEfvUnPeF2QHJpu1Q4H7EWbwm0zxRaRtZQLvZel1c2+ApwCf1kfAFXpcnGLPjTvzF22fs8aXewRiMoR+dnRyo2ZkulY3rJGN6Kwy6U8TvntwPR1T7+aLLxNAHmUNC/dH8MD4RlHB+/ibzF56c+c0DXfNCuFfeaZfmIsy2Q5pLTSB7OI6d2eRUCIYbToFHASir3KfyMHsat50PsEfp+WvYcEyvDSGuJTHRQYItytJwvp3Ex4UZKrYCRLU5PMhexRVuFrhG6EZAXN52Bomi0ib94O2kkExz+aulDQSj9sXfpkCIVHBjOS8NYV0IIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v0h6EwkwnvKEpVsgL9NU7atbPPBUbH7oBhccScLZvy4=;
+ b=jkriWrkxIILOr9B8mTP5Xn3QVjsN1Qdz4Xi1b9ZTDmlLTctqg4ITNgoCHT2UqAjJKIdHQvOoRZXX+Z4Y/07cJCDLzfhMmsnR41VJhnxLGfsOlXOtnO+2/tVQb23wWqOKHdJHZRoQ4erH7NdqvgtK+nyrPYtsiVJIMIKoStffkhz+uj/Ob6FfJBM7RV39el6emvbtTObcThpPfmBjnbfbioBKAlgKjcndz1+He+dU/5PLsO2ktMo3VMKMg2kqUe+6ewf32SwHKwDWGHl0eMwZxSpQQutJzzzMtUgWhXAXSGiKtQnxolVoZlzodfK3SYJ/gyqG2j+9mzd1QlicQ+HGxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v0h6EwkwnvKEpVsgL9NU7atbPPBUbH7oBhccScLZvy4=;
+ b=N5r3x4HVYjhi+iErkHEsYuG4WqeXGb6B5ScBFRKW63XSzM9pGCLtng8JL8eKMX+lgE4OXUBvm5HVCZ+yfyZ0boUt8Gw9KlgMv+pifpz7RlqW7e7gdNQFn31xKe9rn3Wirow8aCb22wBTqDJn4wpOJ7a2lXTwsMwM3DVmo2SeY18=
+Received: from BL0PR02CA0026.namprd02.prod.outlook.com (2603:10b6:207:3c::39)
+ by BN8PR02MB5985.namprd02.prod.outlook.com (2603:10b6:408:bc::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.23; Mon, 27 Jan
+ 2020 07:42:28 +0000
+Received: from SN1NAM02FT042.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::202) by BL0PR02CA0026.outlook.office365.com
+ (2603:10b6:207:3c::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend
+ Transport; Mon, 27 Jan 2020 07:42:27 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT042.mail.protection.outlook.com (10.152.73.149) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2665.18
+ via Frontend Transport; Mon, 27 Jan 2020 07:42:27 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1ivz2R-0007h7-05; Sun, 26 Jan 2020 23:42:27 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1ivz2L-0002aO-SY; Sun, 26 Jan 2020 23:42:21 -0800
+Received: from xsj-pvapsmtp01 (xsj-smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00R7gKZ7011384;
+        Sun, 26 Jan 2020 23:42:20 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1ivz2J-0002aG-RH; Sun, 26 Jan 2020 23:42:20 -0800
+Subject: Re: [PATCH] GPIO, Fix bug where the wrong GPIO register is written to
+To:     Paul Thomas <pthomas8589@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>
+References: <20200125221410.8022-1-pthomas8589@gmail.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <68610131-32f9-6ebb-705a-7d9303f21d3a@xilinx.com>
+Date:   Mon, 27 Jan 2020 08:42:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200124113610.662f4afb@gandalf.local.home>
+In-Reply-To: <20200125221410.8022-1-pthomas8589@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012707-0016-0000-0000-000002E0F511
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012707-0017-0000-0000-00003343AFEF
-Message-Id: <659928a1-95b3-ed0d-7988-745d92b495d6@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 suspectscore=0 phishscore=0 priorityscore=1501 mlxscore=0
- adultscore=0 spamscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001270064
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(396003)(39850400004)(199004)(189003)(5660300002)(44832011)(426003)(336012)(110136005)(2616005)(6636002)(478600001)(186003)(8936002)(26005)(316002)(81156014)(8676002)(9786002)(36756003)(81166006)(70586007)(70206006)(6666004)(2906002)(31696002)(31686004)(356004);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR02MB5985;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bb00c5cc-3415-4113-f7e5-08d7a2fc750c
+X-MS-TrafficTypeDiagnostic: BN8PR02MB5985:
+X-Microsoft-Antispam-PRVS: <BN8PR02MB598548BD7E9CC41F842306BDC60B0@BN8PR02MB5985.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 02951C14DC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TIKiu5aQ6PU9Ewkz+5UorUOp/i8yECCRuSrAM1AgFffYHjVdk+La215foUC+OkJgju1if4W4+BLVUMJ9hKQBc4TUVlDxDDfw5tPe+Z0b469Ecu0FKQiorLcPJcw05nGAyL3E7PW7h/GyoHoDp1bDxWDD96ESBJyZFP+VRy1TmFZxvE38LxwR798uFIkBW6AUJgZlOezNbUDHBG14vZ/sW8qlHQh8UPUykheq1HG8gpolK3HK5Iz+OvLrqCqXl0tbIy6lc3bn8BpKinmW2S5PJkutgiz+VSVq8bXzHpbrQdEU3t8fxXM7c6u2LW+Bd16y89DSP0QGEG0N8RGp1s4DfA32vn4qiU3UPpZvO0tmHZM77c+tXHxUWxbhYCL0G/szq9+mbY7eVWtDN8U4KP+Gc+I4dh4j+gJVEJpc9cizS89Gli6YF0VST5Yl8LEMdNjE
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2020 07:42:27.4326
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb00c5cc-3415-4113-f7e5-08d7a2fc750c
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR02MB5985
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/20 5:36 PM, Steven Rostedt wrote:
-> On Sat, 25 Jan 2020 01:31:53 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+On 25. 01. 20 23:14, Paul Thomas wrote:
+> Care is taken with "index", however with the current version
+> the actual xgpio_writereg is using index for data but
+> xgpio_regoffset(chip, i) for the offset. And since i is already
+> incremented it is incorrect. This patch fixes it so that index
+> is used for the offset too.
 > 
->> Hi Steven and Thomas,
->>
->> On Fri, 24 Jan 2020 10:07:42 -0500
->> Steven Rostedt <rostedt@goodmis.org> wrote:
->>
->>> This looks like a kernel bug, not a libtraceevent parsing bug.  
->>
->> Totally agreed. It was my fault to update the print format.
->> Even if still there is a problem on s390, this patch must be
->> applied.
+> Signed-off-by: Paul Thomas <pthomas8589@gmail.com>
+> ---
+>  There are many different ways to correct this, I'd just like it to get
+>  fixed. I've tested this with a 5.2 kernel, but this patch is against
+>  5.5rc7.
 > 
-> Thanks Masami for looking into it.
+>  drivers/gpio/gpio-xilinx.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> Thomas,
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index a9748b5198e6..67f9f82e0db0 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -147,9 +147,10 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+>  	for (i = 0; i < gc->ngpio; i++) {
+>  		if (*mask == 0)
+>  			break;
+> +		/* Once finished with an index write it out to the register */
+>  		if (index !=  xgpio_index(chip, i)) {
+>  			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> -				       xgpio_regoffset(chip, i),
+> +				       index * XGPIO_CHANNEL_OFFSET,
+>  				       chip->gpio_state[index]);
+>  			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+>  			index =  xgpio_index(chip, i);
+> @@ -165,7 +166,7 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+>  	}
+>  
+>  	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> -		       xgpio_regoffset(chip, i), chip->gpio_state[index]);
+> +		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
+>  
+>  	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+>  }
 > 
-> Please still test this patch. If it works, I'd like to add a
-> Reported-by and Tested-by tag from you.
-> 
-> -- Steve
-> 
->>
->> Fixes: 88903c464321 ("tracing/probe: Add ustring type for user-space string")
->> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
->>
 
-Steven and Masami,
+Shubhrajyoti: Please take a look.
 
-thanks for the patch, it fixes this issue!
-
-PS: I should have sent this description earlier, would have saved a week of debugging
-on my side....
-
--- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Thanks,
+Michal
 
