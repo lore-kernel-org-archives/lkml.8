@@ -2,119 +2,113 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8613DC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BE6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4B724679
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9372467B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MExhXoMf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wbmiqAwK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgA0XLt (ORCPT
+        id S1726612AbgA0XNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 18:11:49 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:42602 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgA0XLt (ORCPT
+        Mon, 27 Jan 2020 18:13:18 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42686 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbgA0XNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 18:11:49 -0500
-Received: by mail-vk1-f196.google.com with SMTP id c8so1905516vkn.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 15:11:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DFyx78bNfJdYMQzj2ScVwGzqFx4mrb1379eblt0uZNc=;
-        b=MExhXoMfg02P9/yakWtP+xXn+J78PWEh1A07lSTu8IFkOejgP+WOYPIyheYzf6eLtu
-         J5w7nBlZfZxOCI3mxIChwse1+GITAFMvG477NTCPRAtYItZNJPE/8YIQu60aTd4kzXzQ
-         3/X5Fge0czKgktZJYTIKeA4OhcprssE8bc1Sg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DFyx78bNfJdYMQzj2ScVwGzqFx4mrb1379eblt0uZNc=;
-        b=cMbQrqFOTlshrDa/3JWAcx2s0G6EGcqk0U///CZQh8xGV1dt0K83igCZ0GKTxd/SHT
-         B0cYzlnYiFCSSPwteJBi2O3oijMmLbwLRLa5zKjdBuNCQ64Ib4Egs+jmoCqnbOpFikGd
-         CDVc48kx1oAEkrM70O7h9GNV7+YJFx3HfzsX6uFXyezK2bXv8/gK1QKKgOFzfniSuzEA
-         Z8juimUhQQzRTa0BrH5eFI7P4Wkt8flbMnB/E8C/8VXc/oKn2cPHrVCSg1XH1NaIN66x
-         ockIDqo588NQFgyIQqwpneT3jlw3wcdZSuj4zlxiDYj9E905ESU2edAf3udOE3Q/a3fV
-         gpfQ==
-X-Gm-Message-State: APjAAAWvrVk4GV0uG9hi9FneHrKt7MEgHbo+DYP7gJLWHFzIB2CBAI9q
-        0KHQBiemdjWcQixjXHT8oQS0wz8o/1o=
-X-Google-Smtp-Source: APXvYqzKt6MJPDgEisIIk7wm6SsCw3np3iLs1fhi0rSrrjrfxZtE4GZwCVfQNj20wyfM6rMBwUmH8w==
-X-Received: by 2002:a1f:fe45:: with SMTP id l66mr11938401vki.9.1580166706865;
-        Mon, 27 Jan 2020 15:11:46 -0800 (PST)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
-        by smtp.gmail.com with ESMTPSA id v68sm4789779vkf.20.2020.01.27.15.11.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 15:11:46 -0800 (PST)
-Received: by mail-vk1-f173.google.com with SMTP id i78so3197667vke.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 15:11:45 -0800 (PST)
-X-Received: by 2002:ac5:c807:: with SMTP id y7mr5333526vkl.92.1580166704728;
- Mon, 27 Jan 2020 15:11:44 -0800 (PST)
+        Mon, 27 Jan 2020 18:13:17 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00RNCMVA097212;
+        Mon, 27 Jan 2020 17:12:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580166742;
+        bh=bKQSCmNpSLcE+a5C2ZLhKG/0UmrBoP1GypsxyYXuj6o=;
+        h=From:To:CC:Subject:Date;
+        b=wbmiqAwK/RYRFGbmeyGO2i6ZipRj4UABdpPRWkv98e5q4wSzSSmjFox3hMVM7roM2
+         wghxQBV+MwUT6h3Rb2qu1p82nMLxxdaF3uELj05R+UciqXilxMgNUZzz6aUbmZm6vG
+         f1ubK0U/Yw8okG0unma1/WIxcy6WJo0skGqocAMo=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00RNCMI3046211
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jan 2020 17:12:22 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 27
+ Jan 2020 17:12:21 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 27 Jan 2020 17:12:21 -0600
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RNCGJu042332;
+        Mon, 27 Jan 2020 17:12:16 -0600
+Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id 00RNCE302972;
+        Mon, 27 Jan 2020 17:12:15 -0600 (CST)
+From:   Suman Anna <s-anna@ti.com>
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        David Lechner <david@lechnology.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Roger Quadros <rogerq@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH v2] mfd: syscon: Use a unique name with regmap_config
+Date:   Mon, 27 Jan 2020 17:12:08 -0600
+Message-ID: <20200127231208.1443-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <1577435867-32254-1-git-send-email-tdas@codeaurora.org> <CAD=FV=X4gW3cpFPTL7KmocP1z7fK1fSRjg7BYjA7D_Uu7p5gnQ@mail.gmail.com>
-In-Reply-To: <CAD=FV=X4gW3cpFPTL7KmocP1z7fK1fSRjg7BYjA7D_Uu7p5gnQ@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 27 Jan 2020 15:11:33 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UGSN8YRtbEsbHOF6DRvi5=hUTeV+Aam4QKKVL99L4uBA@mail.gmail.com>
-Message-ID: <CAD=FV=UGSN8YRtbEsbHOF6DRvi5=hUTeV+Aam4QKKVL99L4uBA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: sc7180: Add clock controller nodes
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The DT node full name is currently being used in regmap_config
+which in turn is used to create the regmap debugfs directories.
+This name however is not guaranteed to be unique and the regmap
+debugfs registration can fail in the cases where the syscon nodes
+have the same unit-address but are present in different DT node
+hierarchies. Replace this logic using the syscon reg resource
+address instead (inspired from logic used while creating platform
+devices) to ensure a unique name is given for each syscon.
 
-On Wed, Jan 22, 2020 at 4:46 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Fri, Dec 27, 2019 at 12:38 AM Taniya Das <tdas@codeaurora.org> wrote:
-> >
-> > Add the display, video & graphics clock controller nodes supported on
-> > SC7180.
-> >
-> > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 33 +++++++++++++++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
->
-> Can you add these to your patch?
->
-> #include <dt-bindings/clock/qcom,dispcc-sc7180.h>
-> #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
->
-> ...otherwise the first user of each of the clocks will need to add the
-> #include and depending on what order patches landed things can get
-> weird.  I think it's cleaner to assume that there will soon be a user
-> and proactively add the #includes.
->
-> NOTE: at least one user of your patch can be found at
-> <https://lore.kernel.org/r/1579621928-18619-1-git-send-email-harigovi@codeaurora.org>.
-> They don't add the #includes which means they don't compile atop your
-> patch.
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+v2: Fix build warning reported by kbuild test bot
+v1: https://patchwork.kernel.org/patch/11346363/
 
-Breadcrumbs that I addressed my own feedback because I wanted to
-include Taniya's patch atop my series.  See:
+ drivers/mfd/syscon.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index e22197c832e8..f0815d8e6e95 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -101,12 +101,14 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
+ 		}
+ 	}
+ 
+-	syscon_config.name = of_node_full_name(np);
++	syscon_config.name = kasprintf(GFP_KERNEL, "%pOFn@%llx", np,
++				       (u64)res.start);
+ 	syscon_config.reg_stride = reg_io_width;
+ 	syscon_config.val_bits = reg_io_width * 8;
+ 	syscon_config.max_register = resource_size(&res) - reg_io_width;
+ 
+ 	regmap = regmap_init_mmio(NULL, base, &syscon_config);
++	kfree(syscon_config.name);
+ 	if (IS_ERR(regmap)) {
+ 		pr_err("regmap init failed\n");
+ 		ret = PTR_ERR(regmap);
+-- 
+2.23.0
 
--Doug
