@@ -2,255 +2,116 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C804C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BF5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28FE92087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:55:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tmgGe7xc"
+	by mail.kernel.org (Postfix) with ESMTP id 62F52214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580129781;
+	bh=hyktVviQ+zJWRj4vZ5MSqIil5XhHzERacVomvJTG+qo=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=I+EPILwIv4YXkvSuatJMaftkBtDuzCoJQ4QqyuhxJzcABeNiuhkeN6ZDrFiw2AfSC
+	 9BaYYLvRVw+sei3ki/932k+L83b7oziftT/SQ8agQ47Al6SNqV0eJDzllJ2RHUo0DP
+	 rBwQmrXl4kmoB3DZwjiiLojCphJYoROPWP+bEzwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbgA0Mz0 (ORCPT
+        id S1729017AbgA0M4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:55:26 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1924 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726210AbgA0Mz0 (ORCPT
+        Mon, 27 Jan 2020 07:56:20 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:63555 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgA0M4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:55:26 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RCrMMq032677;
-        Mon, 27 Jan 2020 13:54:29 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=BQqFihzOu6OsZNMVZCsZXlFqbDZYuOBiwOANKZ7+MbA=;
- b=tmgGe7xcCO1B+kOEgBvUyuPew3fEovjC9Ghjj7iKB+1Oc4eJbOM5TPGivLKppyoawE6R
- 2Uu73m8iEKK3P5Dce3Xf00Rf4UH43avHkhvbuLS8Gf3NccxHLtnWjT4Zrtp9bkzRv2qJ
- +g7yOvjh6jQNmngcoqOV08QpoeAFHGuPc+HgigdRI+hUuMN4XrKONape3YDVGMdT5e7i
- QGMc/sf05LHykqBPzlLBlQHw31zBzNOZUulYTQmXd1Ff/wCg3kKXnOfHSN41Tt5wj15r
- IvANcas2/S7SZ+w7PPuoy+oIb3NwJXCT22ZlpMBE9CRgX40G74aLo5UHfm6LZhfMNCuc dg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrbpas3p3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jan 2020 13:54:29 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5CEA0100034;
-        Mon, 27 Jan 2020 13:54:28 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 14E542AD147;
-        Mon, 27 Jan 2020 13:54:27 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 Jan 2020 13:54:26
- +0100
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <robh@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
-Subject: [PATCH] ASoC: dt-bindings: stm32: convert i2s to json-schema
-Date:   Mon, 27 Jan 2020 13:54:20 +0100
-Message-ID: <20200127125420.29827-1-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 27 Jan 2020 07:56:20 -0500
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 00RCu2N0019710
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 21:56:03 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 00RCu2N0019710
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1580129763;
+        bh=dGCJAhJbUqKnSgxJYoXM3jsc9acDTx2CkDjtkeQlhGU=;
+        h=From:Date:Subject:To:Cc:From;
+        b=GLhdlobXtHz2mq06vtVXyy12ZSIMD3eIAwNIuHFhH7mp/cJ4wepYqbAJCF8H8onWN
+         yVv0pogud67uu92EzzHEyHit4h0uPDsa3inLCSM27aCnRBQXNa/z9JO9cOnpFkgGmb
+         5PxdB+d1UFdUMN4b2jJWuOS3GJjN1gWhRRgXnG85SrJzOjW44/nozwNLFvpqjmvMud
+         3FrbLNJpkUVijQIst1JnbfYWYSX/oG6roeRiHv+y4TGtTImIiU7fVO0MdgQNiw9Sac
+         96AIRBm5mhpEUGZ8quPTgS9U1ToKHWUhX5bAziM5XxWxHUgSoh0zDx4W1fTNEX/sU8
+         57FZU4zO3grZw==
+X-Nifty-SrcIP: [209.85.221.173]
+Received: by mail-vk1-f173.google.com with SMTP id c129so2508529vkh.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 04:56:03 -0800 (PST)
+X-Gm-Message-State: APjAAAXh3snJuHySQglzihaO1GEIVyLclLMWkieqMaEl/Xb0Ng+JTkC/
+        J2AB9M9Z3aSDgeIbpj2hcRG59cJsxBUAKNHLsuY=
+X-Google-Smtp-Source: APXvYqwvFOtz0RrJXzHK0X5fA15DZBprq5KVq/jc9f0H9xTNVNDkQwuKFzXCjMZmCjtSJC5i1PziAy9UPHv6VzZxTwE=
+X-Received: by 2002:a1f:1bc3:: with SMTP id b186mr8870779vkb.96.1580129761632;
+ Mon, 27 Jan 2020 04:56:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 27 Jan 2020 21:55:25 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR0FemABUg5uN5fhy5LRsOm7n5GhmFVVHE8T57knDM9Ug@mail.gmail.com>
+Message-ID: <CAK7LNAR0FemABUg5uN5fhy5LRsOm7n5GhmFVVHE8T57knDM9Ug@mail.gmail.com>
+Subject: How to handle write-protect pin of NAND device ?
+To:     linux-mtd <linux-mtd@lists.infradead.org>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 I2S bindings to DT schema format using json-schema.
+Hi.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
-The items for dma-names and clock-names properties are all
-mandatory, but may be provided in any order.
-The syntax used for these properties allows to avoid order constraint.
----
- .../bindings/sound/st,stm32-i2s.txt           | 62 -------------
- .../bindings/sound/st,stm32-i2s.yaml          | 91 +++++++++++++++++++
- 2 files changed, 91 insertions(+), 62 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
- create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
+I have a question about the
+WP_n pin of a NAND chip.
 
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
-deleted file mode 100644
-index cbf24bcd1b8d..000000000000
---- a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
-+++ /dev/null
-@@ -1,62 +0,0 @@
--STMicroelectronics STM32 SPI/I2S Controller
--
--The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
--Only some SPI instances support I2S.
--
--Required properties:
--  - compatible: Must be "st,stm32h7-i2s"
--  - reg: Offset and length of the device's register set.
--  - interrupts: Must contain the interrupt line id.
--  - clocks: Must contain phandle and clock specifier pairs for each entry
--	in clock-names.
--  - clock-names: Must contain "i2sclk", "pclk", "x8k" and "x11k".
--	"i2sclk": clock which feeds the internal clock generator
--	"pclk": clock which feeds the peripheral bus interface
--	"x8k": I2S parent clock for sampling rates multiple of 8kHz.
--	"x11k": I2S parent clock for sampling rates multiple of 11.025kHz.
--  - dmas: DMA specifiers for tx and rx dma.
--    See Documentation/devicetree/bindings/dma/stm32-dma.txt.
--  - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
--  - pinctrl-names: should contain only value "default"
--  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
--
--Optional properties:
--  - resets: Reference to a reset controller asserting the reset controller
--
--The device node should contain one 'port' child node with one child 'endpoint'
--node, according to the bindings defined in Documentation/devicetree/bindings/
--graph.txt.
--
--Example:
--sound_card {
--	compatible = "audio-graph-card";
--	dais = <&i2s2_port>;
--};
--
--i2s2: audio-controller@40003800 {
--	compatible = "st,stm32h7-i2s";
--	reg = <0x40003800 0x400>;
--	interrupts = <36>;
--	clocks = <&rcc PCLK1>, <&rcc SPI2_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
--	clock-names = "pclk", "i2sclk",  "x8k", "x11k";
--	dmas = <&dmamux2 2 39 0x400 0x1>,
--           <&dmamux2 3 40 0x400 0x1>;
--	dma-names = "rx", "tx";
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_i2s2>;
--
--	i2s2_port: port@0 {
--		cpu_endpoint: endpoint {
--			remote-endpoint = <&codec_endpoint>;
--			format = "i2s";
--		};
--	};
--};
--
--audio-codec {
--	codec_port: port@0 {
--		codec_endpoint: endpoint {
--			remote-endpoint = <&cpu_endpoint>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
-new file mode 100644
-index 000000000000..cdfb375c7a14
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/st,stm32-i2s.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 SPI/I2S Controller
-+
-+maintainers:
-+  - Olivier Moysan <olivier.moysan@st.com>
-+
-+description:
-+  The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
-+  Only some SPI instances support I2S.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32h7-i2s
-+
-+  "#sound-dai-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: clock feeding the peripheral bus interface.
-+      - description: clock feeding the internal clock generator.
-+      - description: I2S parent clock for sampling rates multiple of 8kHz.
-+      - description: I2S parent clock for sampling rates multiple of 11.025kHz.
-+
-+  clock-names:
-+    items:
-+      - enum: [ pclk, i2sclk, x8k, x11k ]
-+      - enum: [ pclk, i2sclk, x8k, x11k ]
-+      - enum: [ pclk, i2sclk, x8k, x11k ]
-+      - enum: [ pclk, i2sclk, x8k, x11k ]
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/string-array
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    items:
-+      - description: audio capture DMA.
-+      - description: audio playback DMA.
-+
-+  dma-names:
-+    items:
-+      - enum: [ rx, tx ]
-+      - enum: [ rx, tx ]
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/string-array
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - "#sound-dai-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    i2s2: audio-controller@4000b000 {
-+        compatible = "st,stm32h7-i2s";
-+        #sound-dai-cells = <0>;
-+        reg = <0x4000b000 0x400>;
-+        clocks = <&rcc SPI2>, <&rcc SPI2_K>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
-+        clock-names = "pclk", "i2sclk", "x8k", "x11k";
-+        interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+        dmas = <&dmamux1 39 0x400 0x01>,
-+               <&dmamux1 40 0x400 0x01>;
-+        dma-names = "rx", "tx";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&i2s2_pins_a>;
-+    };
-+
-+...
--- 
-2.17.1
 
+As far as I see, the NAND framework does not
+handle it.
+
+Instead, it is handled in a driver level.
+I see some DT-bindings that handle the WP_n pin.
+
+$ git grep wp -- Documentation/devicetree/bindings/mtd/
+Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt:-
+brcm,nand-has-wp          : Some versions of this IP include a
+write-protect
+Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:-
+wp-gpios: GPIO specifier for the write protect pin.
+Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:
+         wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
+Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:-
+wp-gpios: GPIO specifier for the write protect pin.
+Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:
+         wp-gpios = <&gpio TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;
+
+
+
+I wrote a patch to avoid read-only issue in some cases:
+http://patchwork.ozlabs.org/patch/1229749/
+
+Generally speaking, we expect NAND devices
+are writable in Linux. So, I think my patch is OK.
+
+
+However, I asked this myself:
+Is there a useful case to assert the write protect
+pin in order to make the NAND chip really read-only?
+For example, the system recovery image is stored in
+a read-only device, and the write-protect pin is
+kept asserted to assure nobody accidentally corrupts it.
+
+But, I am not sure if it should be handled in the
+framework level with a more generic DT-binding.
+
+
+Comments are appreciated.
+
+--
+Best Regards
+Masahiro Yamada
