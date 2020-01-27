@@ -2,73 +2,124 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EA1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F05EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63A524658
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B3A206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgA0Pz4 (ORCPT
+        id S1729705AbgA0QCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:55:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729203AbgA0Pzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:55:55 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C0292067C;
-        Mon, 27 Jan 2020 15:55:54 +0000 (UTC)
-Date:   Mon, 27 Jan 2020 10:55:53 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, borntraeger@de.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
-Subject: Re: [PATCH] perf test: Test case 66 broken on s390 (lib/traceevent
- issue)
-Message-ID: <20200127105553.3cd92ef8@gandalf.local.home>
-In-Reply-To: <659928a1-95b3-ed0d-7988-745d92b495d6@linux.ibm.com>
-References: <20200124073941.39119-1-tmricht@linux.ibm.com>
-        <20200124100742.4050c15e@gandalf.local.home>
-        <20200125013153.46f05fc1f617fcd341e7060b@kernel.org>
-        <20200124113610.662f4afb@gandalf.local.home>
-        <659928a1-95b3-ed0d-7988-745d92b495d6@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 27 Jan 2020 11:02:18 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36448 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729203AbgA0QCS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 11:02:18 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RFsbNP118667
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 11:02:17 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrk3bt52e-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 11:02:16 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 27 Jan 2020 16:02:14 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 27 Jan 2020 16:02:11 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00RG2AKr38928892
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 16:02:10 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61F32A405B;
+        Mon, 27 Jan 2020 16:02:10 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A03BDA4040;
+        Mon, 27 Jan 2020 16:02:09 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.185.238])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jan 2020 16:02:09 +0000 (GMT)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 1/2] ima: use the IMA configured hash algo to calculate the boot aggregate
+Date:   Mon, 27 Jan 2020 11:01:58 -0500
+X-Mailer: git-send-email 2.7.5
+X-TM-AS-GCONF: 00
+x-cbid: 20012716-0020-0000-0000-000003A46F40
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012716-0021-0000-0000-000021FC1588
+Message-Id: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_05:2020-01-24,2020-01-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=1 phishscore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 spamscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001270134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020 08:34:23 +0100
-Thomas Richter <tmricht@linux.ibm.com> wrote:
+The boot aggregate is a cumulative SHA1 hash over TPM registers 0 - 7.
+NIST has depreciated the usage of SHA1 in most instances.  Instead of
+continuing to use SHA1 to calculate the boot_aggregate, use the
+configured IMA default hash algorithm.
 
-> Steven and Masami,
-> 
-> thanks for the patch, it fixes this issue!
+Although the IMA measurement list boot_aggregate template data contains
+the hash algorithm followed by the digest, allowing verifiers (e.g.
+attesttaion servers) to calculate and verify the boot_aggregate, the
+verifiers might not have the knowledge of what constitutes a good value
+based on a different hash algorithm.
 
-Thanks for letting me know. I'll add a:
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ security/integrity/ima/ima_init.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-  Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index 195cb4079b2b..b1b334fe0db5 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -27,7 +27,7 @@ struct tpm_chip *ima_tpm_chip;
+ /* Add the boot aggregate to the IMA measurement list and extend
+  * the PCR register.
+  *
+- * Calculate the boot aggregate, a SHA1 over tpm registers 0-7,
++ * Calculate the boot aggregate, a hash over tpm registers 0-7,
+  * assuming a TPM chip exists, and zeroes if the TPM chip does not
+  * exist.  Add the boot aggregate measurement to the measurement
+  * list and extend the PCR register.
+@@ -51,14 +51,14 @@ static int __init ima_add_boot_aggregate(void)
+ 	int violation = 0;
+ 	struct {
+ 		struct ima_digest_data hdr;
+-		char digest[TPM_DIGEST_SIZE];
++		char digest[TPM_MAX_DIGEST_SIZE];
+ 	} hash;
+ 
+ 	memset(iint, 0, sizeof(*iint));
+ 	memset(&hash, 0, sizeof(hash));
+ 	iint->ima_hash = &hash.hdr;
+-	iint->ima_hash->algo = HASH_ALGO_SHA1;
+-	iint->ima_hash->length = SHA1_DIGEST_SIZE;
++	iint->ima_hash->algo = ima_hash_algo;
++	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
+ 
+ 	if (ima_tpm_chip) {
+ 		result = ima_calc_boot_aggregate(&hash.hdr);
+-- 
+2.7.5
 
-to the commit.
-
-> 
-> PS: I should have sent this description earlier, would have saved a week of debugging
-> on my side....
-
-Heh, I do things like this ofter after triggering bugs in others
-code, and will spend a few days debugging it, then finding out that
-there's already a fix to the bug I find (or presenting the problem
-gives a proper fix). I just calk it up as a learning experience ;-)
-
--- Steve
