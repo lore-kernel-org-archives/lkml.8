@@ -2,147 +2,240 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A102C35247
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BEBC35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3184B21569
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B027521569
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YLgySwWp"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Jn/dx63p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbgA0JSZ (ORCPT
+        id S1729506AbgA0JTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 04:18:25 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38753 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729367AbgA0JSY (ORCPT
+        Mon, 27 Jan 2020 04:19:13 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:55816 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727464AbgA0JTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 04:18:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580116703;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=SjQY1L2fP4IHF3cwKrrTmP56dRMYwDzmyVOLtNg1Xnk=;
-        b=YLgySwWprN36Roet6nZhAHQVXWaObMxy4AkiQQmdP++NW05ssEXhD2hV8mKu5wjf0A6VNa
-        d+SDAaRsRqjx7S91yRZhpkz/bGiZx9ASwsdTgMWPqsHRiz4KDnqHQ7+cGq0myesYh10/4l
-        cyO+uOyczxz4XiAhZVn/LGymp6guDms=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-88-nSXuy8P3Pyi4ku4_4B1-Bg-1; Mon, 27 Jan 2020 04:18:22 -0500
-X-MC-Unique: nSXuy8P3Pyi4ku4_4B1-Bg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C6571084437;
-        Mon, 27 Jan 2020 09:18:20 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-117-94.ams2.redhat.com [10.36.117.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C91A88888B;
-        Mon, 27 Jan 2020 09:18:12 +0000 (UTC)
-Subject: Re: [PATCH v4 01/10] KVM: selftests: Create a demand paging test
-To:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>
-References: <20200123180436.99487-1-bgardon@google.com>
- <20200123180436.99487-2-bgardon@google.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <2655bc5d-eac1-7cbe-d3b2-5dc9ad3ffa5e@redhat.com>
-Date:   Mon, 27 Jan 2020 10:18:11 +0100
+        Mon, 27 Jan 2020 04:19:12 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00R9E0br024940;
+        Mon, 27 Jan 2020 10:18:58 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=qw5jXI9Fj+OOUBfj/yMYXXwP3AGDOIZ6klKp/MtIpko=;
+ b=Jn/dx63prKcdtPhA443Cc2Nai1atA+WRk4SSE/5LqiXM0HTdMMmO2M4sc2bsokcwcYtf
+ aQceA7WE8ExobVwGf/blYQsJIYN9QVQINzdYmlvgLNBqHa83D77pyzY99U09QwqJxDBe
+ uVWDq+Foib7j7I5zHbWqUGysFvvoTBh6yI7Gl0H34D66LUadzB5vy6m2pJYJvdUiF455
+ Le63EtkeeOMeAfCthOFC4J1g+3CjcpqZ+dLbn48G5EBZznEXLSEotxUsai2twkdHfJL1
+ c49DvZAqBW8/AH2bP+mBvsfLq9ZhTwbg+eK9wiQ5IXOXBJu0acC0it7AXd4NxYKvFmNp Lw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrc1303ev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jan 2020 10:18:58 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 616EC100034;
+        Mon, 27 Jan 2020 10:18:58 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4B80221E5E7;
+        Mon, 27 Jan 2020 10:18:58 +0100 (CET)
+Received: from [10.48.1.171] (10.75.127.49) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan
+ 2020 10:18:57 +0100
+Subject: Re: [PATCH 1/5] i2c: i2c-stm32f7: disable/restore Fast Mode Plus bits
+ in low power modes
+To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>,
+        <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+References: <1579795970-22319-1-git-send-email-alain.volmat@st.com>
+ <1579795970-22319-2-git-send-email-alain.volmat@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <4e92ad2d-d373-f009-7c79-63d7caafac45@st.com>
+Date:   Mon, 27 Jan 2020 10:18:57 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200123180436.99487-2-bgardon@google.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1579795970-22319-2-git-send-email-alain.volmat@st.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/01/2020 19.04, Ben Gardon wrote:
-> While userfaultfd, KVM's demand paging implementation, is not specific
-> to KVM, having a benchmark for its performance will be useful for
-> guiding performance improvements to KVM. As a first step towards creating
-> a userfaultfd demand paging test, create a simple memory access test,
-> based on dirty_log_test.
+Hello
+
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+
+Thanks
+
+On 1/23/20 5:12 PM, Alain Volmat wrote:
+> Defer the initial enabling of the Fast Mode Plus bits after the
+> stm32f7_i2c_setup_timing call in probe function in order to avoid
+> enabling them if speed is downgraded.
+> Clear & restore the Fast Mode Plus bits in the suspend/resume
+> handlers of the driver.
 > 
-> Reviewed-by: Oliver Upton <oupton@google.com>
-> Signed-off-by: Ben Gardon <bgardon@google.com>
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 > ---
->  tools/testing/selftests/kvm/.gitignore        |   1 +
->  tools/testing/selftests/kvm/Makefile          |   3 +
->  .../selftests/kvm/demand_paging_test.c        | 286 ++++++++++++++++++
->  3 files changed, 290 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/demand_paging_test.c
+>  drivers/i2c/busses/i2c-stm32f7.c | 48 +++++++++++++++++++++++++++++++++-------
+>  1 file changed, 40 insertions(+), 8 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
-> index 30072c3f52fbe..9619d96e15c41 100644
-> --- a/tools/testing/selftests/kvm/.gitignore
-> +++ b/tools/testing/selftests/kvm/.gitignore
-> @@ -17,3 +17,4 @@
->  /clear_dirty_log_test
->  /dirty_log_test
->  /kvm_create_max_vcpus
-> +/demand_paging_test
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index 3138a916574a9..e2e1b92faee3b 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -28,15 +28,18 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
->  TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
->  TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
->  TEST_GEN_PROGS_x86_64 += dirty_log_test
-> +TEST_GEN_PROGS_x86_64 += demand_paging_test
->  TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index 844a22d64aa8..1a3b3fa582ff 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -303,6 +303,8 @@ struct stm32f7_i2c_msg {
+>   * @dma: dma data
+>   * @use_dma: boolean to know if dma is used in the current transfer
+>   * @regmap: holds SYSCFG phandle for Fast Mode Plus bits
+> + * @regmap_reg: register address for setting Fast Mode Plus bits
+> + * @regmap_mask: mask for Fast Mode Plus bits in set register
+>   * @wakeup_src: boolean to know if the device is a wakeup source
+>   */
+>  struct stm32f7_i2c_dev {
+> @@ -326,6 +328,8 @@ struct stm32f7_i2c_dev {
+>  	struct stm32_i2c_dma *dma;
+>  	bool use_dma;
+>  	struct regmap *regmap;
+> +	u32 regmap_reg;
+> +	u32 regmap_mask;
+>  	bool wakeup_src;
+>  };
 >  
->  TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
->  TEST_GEN_PROGS_aarch64 += dirty_log_test
-> +TEST_GEN_PROGS_aarch64 += demand_paging_test
->  TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
+> @@ -1815,12 +1819,25 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
+>  	return 0;
+>  }
 >  
->  TEST_GEN_PROGS_s390x = s390x/memop
->  TEST_GEN_PROGS_s390x += s390x/sync_regs_test
->  TEST_GEN_PROGS_s390x += dirty_log_test
-> +TEST_GEN_PROGS_s390x += demand_paging_test
->  TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
-
-I gave your series a quick try on s390x (without patch 10/10 since that
-is causing more trouble), but the test does not work there yet:
-
-# selftests: kvm: demand_paging_test
-# ==== Test Assertion Failure ====
-#   lib/kvm_util.c:700: ret == 0
-#   pid=247240 tid=247240 - Invalid argument
-#      1	0x0000000001004085: vm_userspace_mem_region_add at kvm_util.c:695
-#      2	0x00000000010042dd: _vm_create at kvm_util.c:233
-#      3	0x0000000001001b07: create_vm at demand_paging_test.c:185
-#      4	 (inlined by) run_test at demand_paging_test.c:387
-#      5	 (inlined by) main at demand_paging_test.c:676
-#      6	0x000003ffb5323461: ?? ??:0
-#      7	0x000000000100259d: .annobin_init.c.hot at crt1.o:?
-#      8	0xffffffffffffffff: ?? ??:0
-#   KVM_SET_USER_MEMORY_REGION IOCTL failed,
-#   rc: -1 errno: 22
-#   slot: 0 flags: 0x0
-#   guest_phys_addr: 0x0 size: 0x607000
-# Testing guest mode: PA-bits:40,  VA-bits:48,  4K pages
-not ok 4 selftests: kvm: demand_paging_test # exit=254
-
-I'd suggest to leave it disabled on s390x until the issue has been debugged.
-
- Thomas
-
+> +static int stm32f7_i2c_write_fm_plus_bits(struct stm32f7_i2c_dev *i2c_dev,
+> +					  bool enable)
+> +{
+> +	if (i2c_dev->speed != STM32_I2C_SPEED_FAST_PLUS ||
+> +	    IS_ERR_OR_NULL(i2c_dev->regmap)) {
+> +		/* Optional */
+> +		return 0;
+> +	}
+> +
+> +	return regmap_update_bits(i2c_dev->regmap, i2c_dev->regmap_reg,
+> +				  i2c_dev->regmap_mask,
+> +				  enable ? i2c_dev->regmap_mask : 0);
+> +}
+> +
+>  static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
+>  					  struct stm32f7_i2c_dev *i2c_dev)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+>  	int ret;
+> -	u32 reg, mask;
+>  
+>  	i2c_dev->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg-fmp");
+>  	if (IS_ERR(i2c_dev->regmap)) {
+> @@ -1828,15 +1845,17 @@ static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
+>  		return 0;
+>  	}
+>  
+> -	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 1, &reg);
+> +	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 1,
+> +					 &i2c_dev->regmap_reg);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 2, &mask);
+> +	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 2,
+> +					 &i2c_dev->regmap_mask);
+>  	if (ret)
+>  		return ret;
+>  
+> -	return regmap_update_bits(i2c_dev->regmap, reg, mask, mask);
+> +	return 0;
+>  }
+>  
+>  static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
+> @@ -1914,9 +1933,6 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+>  				       &clk_rate);
+>  	if (!ret && clk_rate >= 1000000) {
+>  		i2c_dev->speed = STM32_I2C_SPEED_FAST_PLUS;
+> -		ret = stm32f7_i2c_setup_fm_plus_bits(pdev, i2c_dev);
+> -		if (ret)
+> -			goto clk_free;
+>  	} else if (!ret && clk_rate >= 400000) {
+>  		i2c_dev->speed = STM32_I2C_SPEED_FAST;
+>  	} else if (!ret && clk_rate >= 100000) {
+> @@ -1976,6 +1992,15 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto clk_free;
+>  
+> +	if (i2c_dev->speed == STM32_I2C_SPEED_FAST_PLUS) {
+> +		ret = stm32f7_i2c_setup_fm_plus_bits(pdev, i2c_dev);
+> +		if (ret)
+> +			goto clk_free;
+> +		ret = stm32f7_i2c_write_fm_plus_bits(i2c_dev, 1);
+> +		if (ret)
+> +			goto clk_free;
+> +	}
+> +
+>  	adap = &i2c_dev->adap;
+>  	i2c_set_adapdata(adap, i2c_dev);
+>  	snprintf(adap->name, sizeof(adap->name), "STM32F7 I2C(%pa)",
+> @@ -2000,7 +2025,7 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+>  		if (ret != -EPROBE_DEFER)
+>  			dev_err(&pdev->dev,
+>  				"Failed to request dma error %i\n", ret);
+> -		goto clk_free;
+> +		goto fmp_clear;
+>  	}
+>  
+>  	if (i2c_dev->wakeup_src) {
+> @@ -2054,6 +2079,9 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+>  		i2c_dev->dma = NULL;
+>  	}
+>  
+> +fmp_clear:
+> +	stm32f7_i2c_write_fm_plus_bits(i2c_dev, 0);
+> +
+>  clk_free:
+>  	clk_disable_unprepare(i2c_dev->clk);
+>  
+> @@ -2086,6 +2114,8 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
+>  		i2c_dev->dma = NULL;
+>  	}
+>  
+> +	stm32f7_i2c_write_fm_plus_bits(i2c_dev, 0);
+> +
+>  	clk_disable_unprepare(i2c_dev->clk);
+>  
+>  	return 0;
+> @@ -2133,6 +2163,7 @@ stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
+>  	backup_regs->oar2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR2);
+>  	backup_regs->pecr = readl_relaxed(i2c_dev->base + STM32F7_I2C_PECR);
+>  	backup_regs->tmgr = readl_relaxed(i2c_dev->base + STM32F7_I2C_TIMINGR);
+> +	stm32f7_i2c_write_fm_plus_bits(i2c_dev, 0);
+>  
+>  	pm_runtime_put_sync(i2c_dev->dev);
+>  
+> @@ -2165,6 +2196,7 @@ stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
+>  	writel_relaxed(backup_regs->oar1, i2c_dev->base + STM32F7_I2C_OAR1);
+>  	writel_relaxed(backup_regs->oar2, i2c_dev->base + STM32F7_I2C_OAR2);
+>  	writel_relaxed(backup_regs->pecr, i2c_dev->base + STM32F7_I2C_PECR);
+> +	stm32f7_i2c_write_fm_plus_bits(i2c_dev, 1);
+>  
+>  	pm_runtime_put_sync(i2c_dev->dev);
+>  
+> 
