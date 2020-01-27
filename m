@@ -2,247 +2,117 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEAAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74DDC33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194F321739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B5322527
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrtXl6vi"
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="TXTPO4/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgA0RkJ (ORCPT
+        id S1726101AbgA0Rlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:40:09 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:35965 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgA0RkJ (ORCPT
+        Mon, 27 Jan 2020 12:41:32 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36318 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgA0Rlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:40:09 -0500
-Received: by mail-yb1-f194.google.com with SMTP id w9so5322147ybs.3;
-        Mon, 27 Jan 2020 09:40:08 -0800 (PST)
+        Mon, 27 Jan 2020 12:41:31 -0500
+Received: by mail-lj1-f196.google.com with SMTP id r19so11716913ljg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:41:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j9dC9atddjwhmNiTvc6WPJRfCurkBqs6BV53aCM4Bwc=;
-        b=OrtXl6vij+Mbbk4wgtpwcJXca/uvZU7TKn+2pkoyMcKjgxpuh2k1xmdOgMDcDz6Xzn
-         r5+GCjwi0ZAcryu0kzX/sXeiysftIbg+7bO25SXytmKDYr+YC7Sp5CD/dZdCGTcIVzM9
-         8w5+OYfBgXbuhvP4tkeZZ1AAWStIu4kMlJc61MsCDGoX6zALzdZvK+dxVCuxbFl3N/o8
-         7efinvTJn+63gLV07aybHUXkRVdVEyTMuGHEhNPASKHMJEQnqRIUY1Cx8QWLOj6qvQRi
-         ozEuuFUkidSXE4/1QLJiDTjg48GhIvC1brJO18GLHSFi9pzZ3aNxoVm9oTAzAbz/Hf44
-         sGeA==
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=d/e8y4uiSV+KJr5xZhvuBNksYgdKpUBthuu13GVS8Rc=;
+        b=TXTPO4/ygyXFUVi5KYjjQIVFBeetXn5ekF14IfKi6Me0HdfuuYhBDCTjc3te94mQII
+         jQtM3W6Z8VRgNjUKFgYmylS02aeuEkz8IsvRKCnfGCUfVECRgPO16TicYrxPdef3BCXo
+         2S5UN2uP1QjR3uoZ3GWEcLdRJhIaI7FkiQaCsu097H78zuLPH6Uy8zL9fo3nm3n4led6
+         Vhhv4Wx5d7IzwzbITCcc78cpcS4HLyDILpN6pXhbdTWeUdR30bBKUdYgzVwhHsWPGEGV
+         QrbXold8sOKgRytJ6MDuUhZsBanHUTyhpIm+v49y7OHzZqvpsaLdq5O5aVKV07420d3C
+         zIrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j9dC9atddjwhmNiTvc6WPJRfCurkBqs6BV53aCM4Bwc=;
-        b=OprO+3Qy8Mco+NS0IrgOI+G5oIyZRJBXBAYkMWpsvKUnuXuBmamg/0TshEecWdKYta
-         psul44/mFfQ4Gz0aiqFHws5o3DghL4cS/V6hXr5dIQ+09qGvtkKU5PYUGb9XfwHxJoJh
-         +YU5nXnxryM+UrAG70g/LKBfqnSZP9SDTrG4YNOUPk2gCw+kC7wkMLz/Pgc6tH2lncxm
-         +phYDCGWow4/yLeQjfsfUP9s9STpH2+jKwC1MSXopxUvTHPziXrNURmCv4lsImNSjwwX
-         Jtrvfy+BUqiqJmVfgBMwhw5IutgddnrZCp7xpwr4ikEemEaCVT3yHglmorBLGifEAE7l
-         pZ6A==
-X-Gm-Message-State: APjAAAUWLtzKGBcofrvvKtl5ReEVdPLTOfFp+Z8xxnnK1q/Xg53oMY5o
-        oYuZ8P3G1MTgYVuVDwZ1XVg=
-X-Google-Smtp-Source: APXvYqy9464eXN+V1ydj3j8IcHLXt6BT+/2InNbiB1P1ib719zO2q2+7fx+heaO7zSVOWbuO4nBJnA==
-X-Received: by 2002:a25:cec6:: with SMTP id x189mr12435848ybe.64.1580146807848;
-        Mon, 27 Jan 2020 09:40:07 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id 63sm2445716ywg.96.2020.01.27.09.40.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Jan 2020 09:40:07 -0800 (PST)
-Subject: Re: [RFC v1 0/6] kunit: create a centralized executor to dispatch all
- KUnit tests
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191216220555.245089-1-brendanhiggins@google.com>
- <20200106224022.GX11244@42.do-not-panic.com>
- <CAFd5g456c2Zs7rCvRPgio83G=SrtPGi25zbqAUyTBHspHwtu4w@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <594b7815-0611-34ea-beb5-0642114b5d82@gmail.com>
-Date:   Mon, 27 Jan 2020 11:40:06 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAFd5g456c2Zs7rCvRPgio83G=SrtPGi25zbqAUyTBHspHwtu4w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=d/e8y4uiSV+KJr5xZhvuBNksYgdKpUBthuu13GVS8Rc=;
+        b=YH4N3VGiRY9dUjYsg2kb9rY1qsi57NmtC0pQtjL0gWiq6WWPTJgaTz1nVDlGYXDA7z
+         qn4ATRO+ahWaQgtesX2K+JgSylmKSgSqx6MxaDZQsF5cjQcfjxDLmOZY/HABkEnotHsD
+         kwBg3zy5Mi7qOvWqqalxOWG1ZcD+wm0FhU/11elC/R6v9IPoHd2t7xp7qrlZns2yGhvG
+         ajmDLm4QjxNm169Zc86NmdTaz0V7Vz1U9tcKW2R00i6Rmb+DQ0EnG/bVzWvF1jZ1J85I
+         oqCU8B6IhlddG6t1sZ72JM5zVtIKZ6UsrCoY9Ybc6sw7X7FS3x/iHqpOzwDL6EjL3sR2
+         gX4g==
+X-Gm-Message-State: APjAAAVz90L0EJaAwASPGlL5Gb2DGkwZ5gXQSe8os6kUlA6ZMB03X9l6
+        p2bhmXp7L4iI3K17iFP8mRLGQg==
+X-Google-Smtp-Source: APXvYqznaHVydBDCzDtMLOSrJP3WY8kclLy7+J44rPfBTMUbtMv7hBJAFNlTyEyiuWnUs8UCOxX5sA==
+X-Received: by 2002:a2e:9090:: with SMTP id l16mr11241095ljg.281.1580146889834;
+        Mon, 27 Jan 2020 09:41:29 -0800 (PST)
+Received: from bsz-kubuntu.semihalf.local (31-172-191-173.noc.fibertech.net.pl. [31.172.191.173])
+        by smtp.gmail.com with ESMTPSA id h81sm8532054lfd.83.2020.01.27.09.41.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 09:41:29 -0800 (PST)
+From:   Bartosz Szczepanek <bsz@semihalf.com>
+To:     nick.dyer@itdev.co.uk, jiada_wang@mentor.com
+Cc:     Andrew_Gabbasov@mentor.com, benjamin.tissoires@redhat.com,
+        dmitry.torokhov@gmail.com, erosca@de.adit-jv.com, jikos@kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nick@shmanahar.org, rydberg@bitmath.org, levinale@google.com,
+        rad@semihalf.com
+Subject: [PATCH v6 24/48] Input: atmel_mxt_ts - make bootloader interrupt driven
+Date:   Mon, 27 Jan 2020 18:41:27 +0100
+Message-Id: <20200127174127.25522-1-bsz@semihalf.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191122082402.18173-25-jiada_wang@mentor.com>
+References: <20191122082402.18173-25-jiada_wang@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 4:40 PM, Brendan Higgins wrote:
-> Sorry for the late reply. I am still catching up from being on vacation.
-> 
-> On Mon, Jan 6, 2020 at 2:40 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
->>
->> On Mon, Dec 16, 2019 at 02:05:49PM -0800, Brendan Higgins wrote:
->>> ## TL;DR
->>>
->>> This patchset adds a centralized executor to dispatch tests rather than
->>> relying on late_initcall to schedule each test suite separately along
->>> with a couple of new features that depend on it.
->>>
->>> ## What am I trying to do?
->>>
->>> Conceptually, I am trying to provide a mechanism by which test suites
->>> can be grouped together so that they can be reasoned about collectively.
->>> The last two patches in this series add features which depend on this:
->>>
->>> RFC 5/6 Prints out a test plan right before KUnit tests are run[1]; this
->>>         is valuable because it makes it possible for a test harness to
->>>         detect whether the number of tests run matches the number of
->>>         tests expected to be run, ensuring that no tests silently
->>>         failed.
->>>
->>> RFC 6/6 Add a new kernel command-line option which allows the user to
->>>         specify that the kernel poweroff, halt, or reboot after
->>>         completing all KUnit tests; this is very handy for running KUnit
->>>         tests on UML or a VM so that the UML/VM process exits cleanly
->>>         immediately after running all tests without needing a special
->>>         initramfs.
->>
->> The approach seems sensible to me given that it separates from a
->> semantics perspective kernel subsystem init work from *testing*, and
->> so we are sure we'd run the *test* stuff *after* all subsystem init
->> stuff.
-> 
-> Cool, I thought you would find this interesting.
-> 
->> Dispatching, however is still immediate, and with a bit of work, this
->> dispatcher could be configurable to run at an arbirary time after boot.
->> If there are not immediate use cases for that though, then I suppose
->> this is not a requirement for the dispatcher. But since there exists
->> another modular test framework with its own dispatcher and it seems the
->> goal is to merge the work long term, this might preempt the requirement
->> to define how and when we can dispatch tests post boot.
->>
->> And, if we're going to do that, I can suggest that a data structure
->> instead of just a function init call be used to describe tests to be
->> placed into an ELF section. With my linker table work this would be
->> easy, I define section ranges for code describing only executable
->> routines, but it defines linker tables for when a component in the
->> kernel would define a data structure, part of which can be a callback.
->> Such data structure stuffed into an ELF section could allow dynamic
->> configuration of the dipsatching, even post boot.
-> 
-> The linker table work does sound interesting. Do you have a link?
-> 
-> I was thinking about dynamic dispatching, actually. I thought it would
-> be handy to be able to build all tests into a single kernel and then
-> run different tests on different invocations.
-> 
-> Also, for post boot dynamic dispatching, you should check out Alan's
-> debugfs patches:
-> 
-> https://lore.kernel.org/linux-kselftest/CAFd5g46657gZ36PaP8Pi999hPPgBU2Kz94nrMspS-AzGwdBF+g@mail.gmail.com/T/#m210cadbeee267e5c5a9253d83b7b7ca723d1f871
-> 
-> They look pretty handy!
-> 
->> I think this is a good stepping stone forward then, and to allow
->> dynamic configuration of the dispatcher could mean eventual extensions
->> to kunit's init stuff to stuff init calls into a data structure which
->> can then allow configuration of the dispatching. One benefit that the
->> linker table work *may* be able to help here with is that it allows
->> an easy way to create kunit specific ordering, at linker time.
->> There is also an example of addressing / generalizing dynamic / run time
->> changes of ordering, by using the x86 IOMMU initialization as an
->> example case. We don't have an easy way to do this today, but if kunit
->> could benefit from such framework, it'd be another use case for
->> the linker table work. That is, the ability to easilly allow
->> dynamically modifying run time ordering of code through ELF sections.
->>
->>> In addition, by dispatching tests from a single location, we can
->>> guarantee that all KUnit tests run after late_init is complete, which
->>> was a concern during the initial KUnit patchset review (this has not
->>> been a problem in practice, but resolving with certainty is nevertheless
->>> desirable).
->>
->> Indeed, the concern is just a real semantics limitations. With the tests
->> *always* running after all subsystem init stuff, we know we'd have a
->> real full kernel ready.
-> 
-> Yep.
-> 
->> It does beg the question if this means kunit is happy to not be a tool
->> to test pre basic setup stuff (terminology used in init.c, meaning prior
->> to running all init levels). I suspect this is the case.
-> 
-> Not sure. I still haven't seen any cases where this is necessary, so I
-> am not super worried about it. Regardless, I don't think this patchset
-> really changes anything in that regard, we are moving from late_init
-> to after late_init, so it isn't that big of a change for most use
-> cases.
-> 
-> Please share if you can think of some things that need to be tested in
-> early init.
+Hi,
 
-I don't have a specific need for this right now.  I had not thought about
-how the current kunit implementation forces all kunit tests to run at a
-specific initcall level before reading this email thread.
+I've been testing this patchset on Chromebook equipped with Atmel touchscreen &
+touchpad. In my setup, this particular patch seems to introduce a regression
+on firmware update:
 
-I can see the value of being able to have some tests run at different
-initcall levels to verify what functionality is available and working
-at different points in the boot sequence.
+> localhost /sys/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-6/i2c-ATML0001:00 # echo maxtouch-ts.fw > update_fw
+> bash: echo: write error: Remote I/O error
 
-But more important than early initcall levels, I do not want the
-framework to prevent using or testing code and data that are marked
-as '__init'.  So it is important to retain a way to invoke the tests
-while __init code and data are available, if there is also a change
-to generally invoke the tests later.
+Kernel logs show that the reason is failed I2C transfer:
 
--Frank
+> [ 111.632131] atmel_mxt_ts i2c-ATML0001:00: Found bootloader addr:27 ID:21 version:4
+> [ 111.637711] atmel_mxt_ts i2c-ATML0001:00: Unlocking bootloader
+> [ 129.155091] atmel_mxt_ts i2c-ATML0001:00: Sent 1356 frames, 212224 bytes
+> [ 129.263269] atmel_mxt_ts i2c-ATML0001:00: The firmware update succeeded
+> [ 129.263952] atmel_mxt_ts i2c-ATML0001:00: __mxt_read_chunk: i2c transfer failed (-121)
+> [ 129.265072] atmel_mxt_ts i2c-ATML0001:00: mxt_bootloader_read: i2c recv failed (-121)
+> [ 129.265588] atmel_mxt_ts i2c-ATML0001:00: Trying alternate bootloader address
+> [ 129.266375] atmel_mxt_ts i2c-ATML0001:00: mxt_bootloader_read: i2c recv failed (-121)
 
-> 
->>> Other use cases for this exist, but the above features should provide an
->>> idea of the value that this could provide.
->>>
->>> ## What work remains to be done?
->>>
->>> These patches were based on patches in our non-upstream branch[2], so we
->>> have a pretty good idea that they are useable as presented;
->>> nevertheless, some of the changes done in this patchset could
->>> *definitely* use some review by subsystem experts (linker scripts, init,
->>> etc), and will likely change a lot after getting feedback.
->>>
->>> The biggest thing that I know will require additional attention is
->>> integrating this patchset with the KUnit module support patchset[3]. I
->>> have not even attempted to build these patches on top of the module
->>> support patches as I would like to get people's initial thoughts first
->>> (especially Alan's :-) ). I think that making these patches work with
->>> module support should be fairly straight forward, nevertheless.
->>
->> Modules just have their own sections too. That's all. So it'd be a
->> matter of extending the linker script for modules too. But a module's
->> init is different than the core kernel's for vmlinux.
-> 
-> Truth. It seems as though Alan has already fixed this for me, however.
-> 
+Surprisingly, only touchscreen device is affected. When I checked out to
+119e1b7e8481 ("Input: atmel_mxt_ts - refactor code to enter bootloader into
+separate func") all worked fine. In between these commits I got some mixed
+results, including timeout while waiting for completion:
 
+> [ 190.006174] atmel_mxt_ts i2c-ATML0001:00: Found bootloader addr:27 ID:21 version:4
+> [ 190.317819] atmel_mxt_ts i2c-ATML0001:00: Wait for completion timed out.
+> [ 190.318267] atmel_mxt_ts i2c-ATML0001:00: Update wait error -110
+> [ 190.319310] atmel_mxt_ts i2c-ATML0001:00: Unlocking bootloader
+> [ 208.369825] atmel_mxt_ts i2c-ATML0001:00: Sent 1356 frames, 212224 bytes
+> [ 208.536942] atmel_mxt_ts i2c-ATML0001:00: The firmware update succeeded
+> [ 208.544835] atmel_mxt_ts i2c-ATML0001:00: Family: 164 Variant: 14 Firmware V2.3.AA Objects: 40
+> [ 208.547623] atmel_mxt_ts i2c-ATML0001:00: Touchscreen size X4095Y2729
+
+Some more details - the touchscreen device reports itself as:
+
+> atmel_mxt_ts i2c-ATML0001:00: Family: 164 Variant: 14 Firmware V2.3.AA Objects: 40
+
+Due to Chromebook limitations on kernel version, I'm running 4.19 kernel
+with patches backported from master (so that atmel_mxt_ts is aligned between
+master and 4.19). The platform is Samsung Chromebook Pro.
+
+Best regards,
+Bartosz
