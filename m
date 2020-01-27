@@ -2,149 +2,318 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B39C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C57C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7771F2465B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:32:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jH/aWVkD"
+	by mail.kernel.org (Postfix) with ESMTP id C84F52465B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580160914;
+	bh=oGLB9JQjS1WmUxqH+1vP+gGZa5DyCcxL4BUyNwxgqR4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xT4TO1XhttZVkPdy5XTIArFLj8DTYBRSk2ISgcDTEjVaOCkmf6GbgL2SqgdhuP83c
+	 kPu6G1EfWkl7y8plrwPEErUhxAIh8NSxD8a3wHjCCti6lMwusuutw8cXTQMlvbtYP4
+	 K/51aIbq+UmX6bYJ30GDNvS/mJX7hWDyzbYygSQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgA0VcP (ORCPT
+        id S1726303AbgA0VfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 16:32:15 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3437 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgA0VcO (ORCPT
+        Mon, 27 Jan 2020 16:35:14 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44971 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgA0VfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 16:32:14 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2f56ce0000>; Mon, 27 Jan 2020 13:31:58 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 27 Jan 2020 13:32:13 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 27 Jan 2020 13:32:13 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan
- 2020 21:32:12 +0000
-Subject: Re: [PATCH 2/3] mm/gup_benchmark: support pin_user_pages() and
- related calls
-To:     Nathan Chancellor <natechancellor@gmail.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>
-References: <20200125021115.731629-1-jhubbard@nvidia.com>
- <20200125021115.731629-3-jhubbard@nvidia.com>
- <20200127205247.GA578@Ryzen-7-3700X.localdomain>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <f81fab20-5d01-e782-d45e-c65f3e51beec@nvidia.com>
-Date:   Mon, 27 Jan 2020 13:32:12 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 27 Jan 2020 16:35:13 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so9927418otj.11;
+        Mon, 27 Jan 2020 13:35:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DS9rBnPhlHanLaFTLViZKZChByFqRQj8L2SSOh5cpGQ=;
+        b=PUOgrTMleoLX9WO3bxJ+Ns/MdBhO1n+kQvAUCNJIemhqfvzQW49oduuc6dl1BWwmRr
+         fbASTIxj+bVOz2FDx3jYb7elPytnhDb5FDScqFxaxATfueejb9y4QnXryofMExMCu1UU
+         C6EJr5l0ldVx/6BQtefyQFWgqw0iMfHx4yqV+LHgkquTphqzUfBC0yiRfVTfQpaZSKIr
+         Y268Ia6tF8PbWrwe/Fw+314D5iNBGtsy80OE1ETFBaoJc/DgWqtQaV7om70urZBiOApP
+         Oakz3uOvdUUbsPKtTayq7y5W3+P4l1R+ecFDXvNDndxsqLshAp1DuAGm7LrwHEMXz84t
+         HMrQ==
+X-Gm-Message-State: APjAAAUPnapq0H7m47ver8hQfbpH6ZaV8g4BwL3LhASZuiRcp22xGxZ3
+        46drBPBWfnAIXMOvbr+BK0tlo1M=
+X-Google-Smtp-Source: APXvYqxazihpH6AOjBHM0TSoXXhx43x+o2cRWFEu2KNLM8CmEUGKyThuZmvXYfpz59hEMyDo5GWqlQ==
+X-Received: by 2002:a9d:da2:: with SMTP id 31mr13507583ots.319.1580160912219;
+        Mon, 27 Jan 2020 13:35:12 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p65sm5192804oif.47.2020.01.27.13.35.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 13:35:11 -0800 (PST)
+Received: (nullmailer pid 17422 invoked by uid 1000);
+        Mon, 27 Jan 2020 21:35:10 -0000
+Date:   Mon, 27 Jan 2020 15:35:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ekigwana@gmail.com, jic23@kernel.org,
+        lars@metafoo.de
+Subject: Re: [PATCH v2 2/3] dt-bindings: iio: frequency: Add docs for ADF4360
+ PLL
+Message-ID: <20200127213510.GA698@bogus>
+References: <20200122132004.4621-1-alexandru.ardelean@analog.com>
+ <20200122132004.4621-2-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20200127205247.GA578@Ryzen-7-3700X.localdomain>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580160719; bh=LhTJ1/tn6kZiofE+Kr6/Zk0ukPrusIeEJQXQNfI3D4E=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=jH/aWVkDdLxaqW2OoiDKS+BWcTzIf6yve3rYKFXwVO1AZhn0Nwy2JTWjicRhjZuY1
-         Pi+hqOq3waR9VenG24erVlsmk7iQeYRgu1pP7ltts7/OQPMIA+rvbeeTUagL2saVaE
-         FBnndluKMcXFzDAFQky/RxazS2q9KA3wBbIybB+Kfhz3tbRIuyfADdixquzqbS3/ht
-         QZfl17htJL+rpegeOpiLipRXjnoNuHjgUP9Ca/X1nMjNXf3tSK7aH/iP6Rl7FoPiAu
-         msS9jWktPmaSnhFZgoUJpbqgbu0+9u2hZHo9iNoF23i2ahh7AfJza6/gl7ruiMf2Y6
-         U6eqDh1wCGNIQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122132004.4621-2-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/27/20 12:52 PM, Nathan Chancellor wrote:
-...
->> --- a/mm/gup_benchmark.c
->> +++ b/mm/gup_benchmark.c
->> @@ -8,6 +8,8 @@
->>  #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
->>  #define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
->>  #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
->> +#define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
->> +#define PIN_BENCHMARK		_IOWR('g', 5, struct gup_benchmark)
->>  
->>  struct gup_benchmark {
->>  	__u64 get_delta_usec;
->> @@ -19,6 +21,47 @@ struct gup_benchmark {
->>  	__u64 expansion[10];	/* For future use */
->>  };
->>  
->> +static void put_back_pages(int cmd, struct page **pages, unsigned long nr_pages)
+On Wed, Jan 22, 2020 at 03:20:03PM +0200, Alexandru Ardelean wrote:
+> From: Edward Kigwana <ekigwana@gmail.com>
 > 
-> We received a Clang build report on this patch because the use of
-> PIN_FAST_BENCHMARK and PIN_BENCHMARK in the switch statement below will
-> overflow int; this should be unsigned int to match the cmd parameter in
-> the ioctls.
+> This change adds the device-tree bindings documentation for the ADF4360
+> family of PLLs.
+> 
+> Signed-off-by: Edward Kigwana <ekigwana@gmail.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  .../bindings/iio/frequency/adf4371.yaml       |  24 +--
+>  .../bindings/iio/frequency/adi,adf4360.yaml   | 158 ++++++++++++++++++
+>  2 files changed, 170 insertions(+), 12 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> index 7ec3ec94356b..6edb68e8febf 100644
+> --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> @@ -48,16 +48,16 @@ required:
+>  
+>  examples:
+>    - |
+> -    spi0 {
+> -        #address-cells = <1>;
+> -        #size-cells = <0>;
+> -
+> -        frequency@0 {
+> -                compatible = "adi,adf4371";
+> -                reg = <0>;
+> -                spi-max-frequency = <1000000>;
+> -                clocks = <&adf4371_clkin>;
+> -                clock-names = "clkin";
+> -        };
+> -    };
+> +      spi0 {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          frequency@0 {
+> +                  compatible = "adi,adf4371";
+> +                  reg = <0>;
+> +                  spi-max-frequency = <1000000>;
+> +                  clocks = <&adf4371_clkin>;
+> +                  clock-names = "clkin";
+> +          };
+> +      };
+
+What's this change for?
+
+>  ...
+> diff --git a/Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml b/Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
+> new file mode 100644
+> index 000000000000..1a7f166d2a3f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
+> @@ -0,0 +1,158 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright 2019-2020 Edward Kigwana
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/frequency/adi,adf4360.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADF4360 PLL device driver
+> +
+> +maintainers:
+> +  - Lars-Peter Clausen <lars@metafoo.de>
+> +  - Edward Kigwana <ekigwana@gmail.com>
+> +
+> +description: |
+> +  Bindings for the Analog Devices ADF4360 family of clock generator phase-locked
+> +  loop (PLL) devices with an integrated voltage-controlled oscillator (VCO).
+> +  Each of the parts in the family supports a specific frequency range.
+> +  Datasheets can be found here:
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-0.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-1.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-2.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-3.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-4.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-5.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-6.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-7.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-8.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-9.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adf4360-0
+> +      - adi,adf4360-1
+> +      - adi,adf4360-2
+> +      - adi,adf4360-3
+> +      - adi,adf4360-4
+> +      - adi,adf4360-5
+> +      - adi,adf4360-6
+> +      - adi,adf4360-7
+> +      - adi,adf4360-8
+> +      - adi,adf4360-9
+
+The enum can be just:
+
+pattern: '^adi,adf4360-[0-9]$'
 
 
-Thanks for the report! Yes, that should have been "unsigned int cmd", to match the
-one in the ioctls, just as you said.
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: phandle to external reference clock.
 
-I'll apply this diff, for the next version of the series:
+Not all that specific to this define, so drop.
 
-diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-index 3d5fb765e4e6..7d5573083ab3 100644
---- a/mm/gup_benchmark.c
-+++ b/mm/gup_benchmark.c
-@@ -21,7 +21,8 @@ struct gup_benchmark {
-        __u64 expansion[10];    /* For future use */
- };
- 
--static void put_back_pages(int cmd, struct page **pages, unsigned long nr_pages)
-+static void put_back_pages(unsigned int cmd, struct page **pages,
-+                          unsigned long nr_pages)
- {
-        int i;
- 
-@@ -40,7 +41,7 @@ static void put_back_pages(int cmd, struct page **pages, unsigned long nr_pages)
-        }
- }
- 
--static void verify_dma_pinned(int cmd, struct page **pages,
-+static void verify_dma_pinned(unsigned int cmd, struct page **pages,
-                              unsigned long nr_pages)
- {
-        int i;
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: clkin
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  adi,loop-filter-pfd-frequency-hz:
+> +    description: |
+> +      The phase-frequency-detector frequency that the external loop filter was
+> +      designed for.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
 
+Standard type suffixes have a type already, so you can drop this.
 
+> +    maxItems: 1
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+Any constraints in the value?
+
+> +
+> +  adi,loop-filter-charger-pump-current-microamp:
+> +    description: |
+> +      The charge pump current that the external loop filter was designed for.
+> +      The provided value is clamped to the closest enumerated value.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+
+Can be dropped. Same goes for the rest.
+
+> +      - enum: [310, 620, 930, 1250, 1560, 1870, 2180, 2500]
+> +    maxItems: 1
+> +
+> +  adi,vco-minimum-frequency-hz:
+> +    description: |
+> +      Required for ADF4360-7, ADF4360-8 and ADF4360-9. Minimum VCO frequency
+> +      that can be supported by the tuning range set by the external inductor.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    maxItems: 1
+> +
+> +  adi,vco-maximum-frequency-hz:
+> +    description: |
+> +      Required for ADF4360-7, ADF4360-8 and ADF4360-9. Maximum VCO frequency
+> +      that can be supported by the tuning range set by the external inductor.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    maxItems: 1
+> +
+> +  adi,loop-filter-inverting:
+> +    description: Indicates that the external loop filter is an inverting filter.
+> +    type: boolean
+> +
+> +  adi,power-up-frequency-hz:
+> +    description: |
+> +      PLL tunes to the set frequency on probe or defaults to either the minimum
+> +      for the part or value set using adi,vco-minimum-frequency-hz.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    maxItems: 1
+> +
+> +  adi,vdd-supply:
+> +    description: |
+> +      vdd supply is used to enable or disable chip when regulator power down
+> +      mode is set. Other power down modes are used to mitigate the case of a
+> +      shared regulator.
+> +    maxItems: 1
+
+-supply is always 1 item, so drop.
+
+> +
+> +  adi,enable-gpios:
+
+enable-gpios is a standard name, so drop the vendor prefix.
+
+> +    description: |
+> +      Chip enable gpio is used to enable or disable chip when chip enable power
+> +      down mode is set.
+> +    maxItems: 1
+> +
+> +  adi,muxout-gpios:
+> +    description: |
+> +      MUX out gpio is used to detect chip and test pll lock state on read when
+> +      muxout control is set to lock detect.
+> +    maxItems: 1
+> +
+> +  adi,power-out-level-microamp:
+> +    description: |
+> +      Chip support setting of output power level. This property is optional.
+> +      If it is not provided by default 11000 uA will be set.
+> +    allOf:
+> +      - enum: [3500, 5000, 7500, 11000]
+
+Don't need the 'allOf'.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - adi,loop-filter-charge-pump-current
+> +  - adi,loop-filter-pfd-frequency-hz
+> +
+> +examples:
+> +  - |
+> +      spi0 {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          pll@0 {
+> +                  compatible = "adi,adf4360-7";
+> +                  reg = <0>;
+> +                  spi-max-frequency = <2000000>;
+> +                  clocks = <&ref_clock>;
+> +                  #clock-cells = <0>;
+> +                  clock-names = "clkin";
+> +                  clock-output-names = "adf4360-7";
+> +
+> +                  adi,loop-filter-charge-pump-current = <5>;
+> +                  adi,loop-filter-pfd-frequency-hz = <2500000>;
+> +                  adi,vco-minimum-frequency-hz = <700000000>;
+> +                  adi,vco-maximum-frequency-hz = <840000000>;
+> +          };
+> +      };
+> +...
+> -- 
+> 2.20.1
+> 
