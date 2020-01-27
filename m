@@ -2,94 +2,511 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF89C35240
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 00:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF985C35240
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 00:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC1820702
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 00:22:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5tv7xVan"
+	by mail.kernel.org (Postfix) with ESMTP id 6746620720
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 00:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580085564;
+	bh=fzEhF6k1vo68f4pS4l/94u7pEVqXf9Vo7RhsZ1RAFIA=;
+	h=From:Date:Subject:To:List-ID:From;
+	b=BY9qJEonvAgQy1oUbMRKwHP040M3jmuP04P14uzc+XprrvIIz/N8lNUfP/xdH6TqQ
+	 I36ngeS/Wwep/5ZHA8iDmOW7P876WhQTgVNh8J60iG027FftFgHPSR086mBkmLpHIX
+	 H81LNEociJD+KD/a4pxk5kIYzE0FrP3FOmyujnVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbgA0AWN (ORCPT
+        id S1727066AbgA0AjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 19:22:13 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:55080 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbgA0AWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 19:22:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=9rUQVlLvGqFvHyfWHm2VLMp3C2XF+wuO1ILfr9Iv0Ik=; b=5tv7xVanXELUILmtsCOvn3L0k1
-        2qVv+kH/AXtaitKkf7TaQdRBckW/G7TsVwwJWewduTVp81qsE9e9ITzzoUrQ0JwDPsFp8BVC1IFFK
-        xRkEzKc9ecFFqT7sshZHdgu8wXXbOjlT4Vwv+5QNLuI567HqrN3saNsZAB3n6BSlXZzI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ivsAI-0003gt-64; Mon, 27 Jan 2020 01:22:06 +0100
-Date:   Mon, 27 Jan 2020 01:22:06 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 3/7] ethtool: set message mask with DEBUG_SET
- request
-Message-ID: <20200127002206.GC12816@lunn.ch>
-References: <cover.1580075977.git.mkubecek@suse.cz>
- <844bf6bf518640fbfc67b5dd7976d9e8683c2d2d.1580075977.git.mkubecek@suse.cz>
+        Sun, 26 Jan 2020 19:39:23 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42948 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgA0AjX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 19:39:23 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y19so5020725lfl.9
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 16:39:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=1TEgjOWfrn5m9hniwlZYiCcQePtvYVtcA2bo3pVqmrY=;
+        b=V9qDVFfjmisGBh8rqFVHwho7ujuOcHZ+9eTHN8r7PzsNk2jvdw4n1E0+Uj7/Ohu5vt
+         Aas9TsnE6+cMVGxC7scZR+9/T1GBFOJiB/MVRJ909eEZg7EP113kE5lbc8oVBPrxtIP3
+         muJEsjuPjRT/mSqrQEAwBrKe0iutVWZ74aae0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=1TEgjOWfrn5m9hniwlZYiCcQePtvYVtcA2bo3pVqmrY=;
+        b=VFrq9drZAfFF0w/oYtpiiZW3FDUklt3axEqqM0/ipwlew8t2YjEYU0oD25WZ5O6U/W
+         Q1ouicMVQ9C3sYyYi7+a/wyF5qaxQ7iIlpGEtYFkWs8O+LNAiDigCuZDdmk88/xdrHhH
+         JbPHJ8Nw2M6BA8cfX/CYannZo1A708azSxyMi5aheTOb4qU2iGIpJz/RrRreJhPMdFUO
+         wkxeHu99ldfazHjzKPJr+1ZUjjQoaKuMaYxbUG+685ouuWBO+NYuI2eCPFDG8+iNWgJ6
+         VQdO8M5u8vwPCgO9pdPQHsWtpiYkvTSPzqIR9b7ukB6hSl9U5Z/Jz/LNTYGgTnyqyGFG
+         bSyQ==
+X-Gm-Message-State: APjAAAVfn5q3F18XsRn6n8so2uKDGYonH41vTovXNI6V4g/ujugFHImV
+        bdB50LmShXKR1pOZqMXkOA9lXaoUMUI=
+X-Google-Smtp-Source: APXvYqzzC4PxLujLmu8xTzg3rvokWAkjNEeuagTPdVvTWFK2CO+ybm1LgdDVzSkV4zqmQm9YFm/LhQ==
+X-Received: by 2002:ac2:52a5:: with SMTP id r5mr6615742lfm.19.1580085558932;
+        Sun, 26 Jan 2020 16:39:18 -0800 (PST)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id n30sm8827993lfi.54.2020.01.26.16.39.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Jan 2020 16:39:18 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id t23so5025344lfk.6
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 16:39:18 -0800 (PST)
+X-Received: by 2002:ac2:43a7:: with SMTP id t7mr6610125lfl.125.1580085557670;
+ Sun, 26 Jan 2020 16:39:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <844bf6bf518640fbfc67b5dd7976d9e8683c2d2d.1580075977.git.mkubecek@suse.cz>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 26 Jan 2020 16:39:01 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wigRZ6TSJU09bMk3Df2DiOw83B7TrQUq+iXroQCK5EVAQ@mail.gmail.com>
+Message-ID: <CAHk-=wigRZ6TSJU09bMk3Df2DiOw83B7TrQUq+iXroQCK5EVAQ@mail.gmail.com>
+Subject: Linux 5.5
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 11:11:07PM +0100, Michal Kubecek wrote:
-> Implement DEBUG_SET netlink request to set debugging settings for a device.
-> At the moment, only message mask corresponding to message level as set by
-> ETHTOOL_SMSGLVL ioctl request can be set. (It is called message level in
-> ioctl interface but almost all drivers interpret it as a bit mask.)
-> 
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-> +int ethnl_set_debug(struct sk_buff *skb, struct genl_info *info)
-> +{
-> +	struct nlattr *tb[ETHTOOL_A_DEBUG_MAX + 1];
-> +	struct ethnl_req_info req_info = {};
-> +	struct net_device *dev;
-> +	bool mod = false;
-> +	u32 msg_mask;
-> +	int ret;
-> +
-> +	ret = nlmsg_parse(info->nlhdr, GENL_HDRLEN, tb,
-> +			  ETHTOOL_A_DEBUG_MAX, debug_set_policy,
-> +			  info->extack);
-> +	if (ret < 0)
-> +		return ret;
-> +	ret = ethnl_parse_header(&req_info, tb[ETHTOOL_A_DEBUG_HEADER],
-> +				 genl_info_net(info), info->extack, true);
-> +	if (ret < 0)
-> +		return ret;
-> +	dev = req_info.dev;
-> +	if (!dev->ethtool_ops->get_msglevel || !dev->ethtool_ops->set_msglevel)
-> +		return -EOPNOTSUPP;
+So this last week was pretty quiet, and while we had a late network
+update with some (mainly iwl wireless) network driver and netfilter
+module loading fixes, David didn't think that warranted another -rc.
+And outside of that, it's really been very quiet indeed - there's a
+panfrost driver update too, but again it didn't really seem to make
+sense to delay the final release by another week.
 
-This seems like a new requirement, that both get and set callbacks are
-implemented. However, A quick look thought the code suggests all
-drivers already do have both get and set. So i think this is safe.
+Outside of those, it's all really tiny, even if some of those tiny
+changes touched some core files.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+So despite the slight worry that the holidays might have affected the
+schedule, 5.5 ended up with the regular rc cadence and is out now.
 
-    Andrew
+That means that the merge window for 5.6 will open tomorrow, and I
+already have a couple of pull requests pending. The timing for this
+next merge window isn't optimal for me - I have some travel and other
+things going on during the same two weeks, but hopefully it won't be
+all that noticeable.  But there might be random timezones, odd hours,
+and random delays because of that. I try to avoid scheduling things
+during the merge window, but hey, it doesn't always work out, and I'd
+have to delay things by two weeks to avoid the conflicts, which just
+doesn't seem worth it.
+
+Particularly since it's not necessarily going to be a problem to begin
+with. We'll see.
+
+Anyway. Go out and test 5.5, and start sending me those pull requests
+for all the new development that is ready,
+
+                    Linus
+
+---
+
+Ajay Gupta (1):
+      net: stmmac: platform: fix probe for ACPI devices
+
+Al Viro (1):
+      do_last(): fetch directory ->i_mode and ->i_uid before it's too late
+
+Alex Deucher (2):
+      PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken
+      drm/amdgpu: remove the experimental flag for renoir
+
+Alex Sverdlin (1):
+      ARM: 8950/1: ftrace/recordmcount: filter relocation types
+
+Alexander Potapenko (1):
+      PM: hibernate: fix crashes with init_on_free=3D1
+
+Andrew Lunn (1):
+      MAINTAINERS: Make Russell King designated reviewer of phylib
+
+Aneesh Kumar K.V (1):
+      powerpc/mm/hash: Fix sharing context ids between kernel & userspace
+
+Arnd Bergmann (1):
+      mt76: fix LED link time failure
+
+Bart Van Assche (1):
+      scsi: RDMA/isert: Fix a recently introduced regression related to log=
+out
+
+Bartosz Golaszewski (2):
+      Input: max77650-onkey - add of_match table
+      led: max77650: add of_match table
+
+Bharata B Rao (1):
+      powerpc: Ultravisor: Fix the dependencies for CONFIG_PPC_UV
+
+Boris Brezillon (1):
+      drm/panfrost: Add the panfrost_gem_mapping concept
+
+Boyan Ding (1):
+      pinctrl: sunrisepoint: Add missing Interrupt Status register offset
+
+Changbin Du (1):
+      tracing: xen: Ordered comparison of function pointers
+
+Christoph Hellwig (1):
+      block: allow partitions on host aware zone devices
+
+Christophe Leroy (1):
+      lib: Reduce user_access_begin() boundaries in
+strncpy_from_user() and strnlen_user()
+
+Chuhong Yuan (1):
+      Input: sun4i-ts - add a check for devm_thermal_zone_of_sensor_registe=
+r
+
+Colin Ian King (4):
+      i40e: fix spelling mistake "to" -> "too"
+      ipvs: fix spelling mistake "to" -> "too"
+      caif_usb: fix spelling mistake "to" -> "too"
+      net/rose: fix spelling mistake "to" -> "too"
+
+Cong Wang (1):
+      net_sched: fix datalen for ematch
+
+Dan Carpenter (1):
+      mt76: Off by one in mt76_calc_rx_airtime()
+
+David Howells (1):
+      afs: Fix characters allowed into cell names
+
+David S. Miller (1):
+      net: Add Jakub to MAINTAINERS for networking general.
+
+David Sterba (1):
+      btrfs: dev-replace: remove warning for unknown return codes when fini=
+shed
+
+Dmytro Linkin (1):
+      net/mlx5e: Clear VF config when switching modes
+
+Eli Cohen (1):
+      net/mlx5: E-Switch, Prevent ingress rate configuration of uplink rep
+
+Emmanuel Grumbach (1):
+      iwlwifi: mvm: don't send the IWL_MVM_RXQ_NSSN_SYNC notif to Rx queues
+
+Erez Shitrit (2):
+      net/mlx5: DR, Enable counter on non-fwd-dest objects
+      net/mlx5: DR, use non preemptible call to get the current cpu number
+
+Eric Dumazet (5):
+      net_sched: use validated TCA_KIND attribute in tc_new_tfilter()
+      net: rtnetlink: validate IFLA_MTU attribute in rtnl_create_link()
+      gtp: make sure only SOCK_DGRAM UDP sockets are accepted
+      tun: add mutex_unlock() call and napi.skb clearing in tun_get_user()
+      tcp: do not leave dangling pointers in tp->highest_sack
+
+Eugene Syromiatnikov (1):
+      io_uring: fix compat for IORING_REGISTER_FILES_UPDATE
+
+Faiz Abbas (3):
+      mmc: sdhci_am654: Remove Inverted Write Protect flag
+      mmc: sdhci_am654: Reset Command and Data line after tuning
+      mmc: sdhci_am654: Fix Command Queuing in AM65x
+
+Finn Thain (12):
+      net/sonic: Add mutual exclusion for accessing shared state
+      net/sonic: Clear interrupt flags immediately
+      net/sonic: Use MMIO accessors
+      net/sonic: Fix interface error stats collection
+      net/sonic: Fix receive buffer handling
+      net/sonic: Avoid needless receive descriptor EOL flag updates
+      net/sonic: Improve receive descriptor status flag check
+      net/sonic: Fix receive buffer replenishment
+      net/sonic: Quiesce SONIC before re-initializing descriptor memory
+      net/sonic: Fix command register usage
+      net/sonic: Fix CAM initialization
+      net/sonic: Prevent tx watchdog timeout
+
+Florian Fainelli (1):
+      net: bcmgenet: Use netif_tx_napi_add() for TX NAPI
+
+Florian Westphal (1):
+      netfilter: nft_osf: add missing check for DREG attribute
+
+Frederic Barrat (1):
+      powerpc/xive: Discard ESB load value when interrupt is invalid
+
+Gil Adam (1):
+      iwlwifi: don't send PPAG command if disabled
+
+Gilles Buloz (2):
+      hwmon: (nct7802) Fix voltage limits to wrong registers
+      hwmon: (nct7802) Fix non-working alarm on voltages
+
+Guenter Roeck (1):
+      hwmon: (core) Do not use device managed functions for memory allocati=
+ons
+
+Haim Dreyfuss (1):
+      iwlwifi: Don't ignore the cap field upon mcc update
+
+Hannes Reinecke (1):
+      scsi: fnic: do not queue commands during fwreset
+
+Hans Verkuil (2):
+      Revert "Input: synaptics-rmi4 - don't increment rmiaddr for
+SMBus transfers"
+      Input: rmi_f54 - read from FIFO in 32 byte blocks
+
+Hayes Wang (9):
+      r8152: fix runtime resume for linking change
+      r8152: reset flow control patch when linking on for RTL8153B
+      r8152: get default setting of WOL before initializing
+      r8152: disable U2P3 for RTL8153B
+      r8152: Disable PLA MCU clock speed down
+      r8152: disable test IO for RTL8153B
+      r8152: don't enable U1U2 with USB_SPEED_HIGH for RTL8153B
+      r8152: avoid the MCU to clear the lanwake
+      r8152: disable DelayPhyPwrChg
+
+Ido Schimmel (1):
+      mlxsw: spectrum_acl: Fix use-after-free during reload
+
+Jacek Anaszewski (1):
+      leds: gpio: Fix uninitialized gpio label for fwnode based probe
+
+Jakub Sitnicki (1):
+      net, sk_msg: Don't check if sock is locked when tearing down psock
+
+James Hughes (1):
+      net: usb: lan78xx: Add .ndo_features_check
+
+Jeff Layton (1):
+      ceph: hold extra reference to r_parent over life of request
+
+Jeff Mahoney (1):
+      reiserfs: fix handling of -EOPNOTSUPP in reiserfs_for_each_xattr
+
+Jens Axboe (2):
+      Revert "io_uring: only allow submit from owning task"
+      io_uring: don't cancel all work on process exit
+
+Jerry Snitselaar (1):
+      iommu/vt-d: Call __dmar_remove_one_dev_info with valid pointer
+
+Jiri Wiesner (1):
+      netfilter: conntrack: sctp: use distinct states for new SCTP connecti=
+ons
+
+Johan Hovold (8):
+      Input: pegasus_notetaker - fix endpoint sanity check
+      Input: aiptek - fix endpoint sanity check
+      Input: aiptek - use descriptors of current altsetting
+      Input: gtco - fix endpoint sanity check
+      Input: gtco - fix extra-descriptor debug message
+      Input: gtco - drop redundant variable reinit
+      Input: sur40 - fix interface sanity checks
+      Input: keyspan-remote - fix control-message timeouts
+
+Johannes Berg (8):
+      iwlwifi: pcie: move page tracking into get_page_hdr()
+      iwlwifi: pcie: work around DMA hardware bug
+      iwlwifi: pcie: detect the DMA bug and warn if it happens
+      iwlwifi: pcie: allocate smaller dev_cmd for TX headers
+      iwlwifi: mvm: report TX rate to mac80211 directly for RS offload
+      iwlwifi: pcie: extend hardware workaround to context-info
+      iwlwifi: mvm: fix SKB leak on invalid queue
+      iwlwifi: mvm: fix potential SKB leak on TXQ TX
+
+Jon Maloy (1):
+      tipc: change maintainer email address
+
+Jouni Hogander (1):
+      net-sysfs: Fix reference count leak
+
+Kadlecsik J=C3=B3zsef (1):
+      netfilter: ipset: use bitmap infrastructure completely
+
+Kristian Evensen (1):
+      fou: Fix IPv6 netlink policy
+
+Linus Torvalds (3):
+      readdir: be more conservative with directory entry names
+      readdir: make user_access_begin() use the real access range
+      Linux 5.5
+
+Luca Coelho (6):
+      iwlwifi: fix TLV fragment allocation loop
+      iwlwifi: mvm: fix NVM check for 3168 devices
+      iwlwifi: pcie: rename L0S_ENABLED bit to L0S_DISABLED
+      iwlwifi: pcie: always disable L0S states
+      iwlwifi: remove lar_disable module parameter
+      iwlwifi: fw: make pos static in iwl_sar_get_ewrd_table() loop
+
+Luuk Paulussen (1):
+      hwmon: (adt7475) Make volt2reg return same reg as reg2volt input
+
+Madalin Bucur (4):
+      dt-bindings: net: add fsl,erratum-a011043
+      powerpc/fsl/dts: add fsl,erratum-a011043
+      net/fsl: treat fsl,erratum-a011043
+      net: fsl/fman: rename IF_MODE_XGMII to IF_MODE_10G
+
+Manish Chopra (1):
+      qlcnic: Fix CPU soft lockup while collecting firmware dump
+
+Masami Hiramatsu (3):
+      tracing/uprobe: Fix double perf_event linking on multiprobe uprobe
+      tracing: trigger: Replace unneeded RCU-list traversals
+      tracing/uprobe: Fix to make trace_uprobe_filter alignment safe
+
+Masami Ichikawa (1):
+      tracing: Do not set trace clock if tracefs lockdown is in effect
+
+Matthew Auld (1):
+      drm/i915/userptr: fix size calculation
+
+Matthew Wilcox (Oracle) (7):
+      XArray: Fix xas_pause at ULONG_MAX
+      XArray: Improve documentation of search marks
+      XArray: Add wrappers for nested spinlocks
+      XArray: Fix infinite loop with entry at ULONG_MAX
+      XArray: Fix xa_find_after with multi-index entries
+      XArray: Fix xas_find returning too many entries
+      XArray: Add xa_for_each_range
+
+Matwey V. Kornilov (1):
+      ARM: dts: am335x-boneblack-common: fix memory size
+
+Maxim Mikityanskiy (1):
+      net: Fix packet reordering caused by GRO and listified RX cooperation
+
+Mehmet Akif Tasova (1):
+      Revert "iwlwifi: mvm: fix scan config command size"
+
+Meir Lichtinger (1):
+      net/mlx5: Update the list of the PCI supported devices
+
+Michael Ellerman (3):
+      airo: Fix possible info leak in AIROOLDIOCTL/SIOCDEVPRIVATE
+      airo: Add missing CAP_NET_ADMIN check in AIROOLDIOCTL/SIOCDEVPRIVATE
+      net: cxgb3_main: Add CAP_NET_ADMIN check to CHELSIO_GET_MEM
+
+Micha=C5=82 Miros=C5=82aw (2):
+      mmc: tegra: fix SDR50 tuning override
+      mmc: sdhci: fix minimum clock rate for v3 controller
+
+Miles Chen (1):
+      Input: evdev - convert kzalloc()/vzalloc() to kvzalloc()
+
+Nicolas Dichtel (2):
+      vti[6]: fix packet tx through bpf_redirect()
+      xfrm interface: fix packet tx through bpf_redirect()
+
+Niko Kortstrom (1):
+      net: ip6_gre: fix moving ip6gre between namespaces
+
+Pablo Neira Ayuso (2):
+      netfilter: nf_tables: add __nft_chain_type_get()
+      netfilter: nf_tables: autoload modules from the abort path
+
+Paolo Abeni (1):
+      Revert "udp: do rmem bulk free even if the rx sk queue is empty"
+
+Paul Blakey (1):
+      net/mlx5: Fix lowest FDB pool size
+
+Pavel (1):
+      leds: lm3532: add pointer to documentation and fix typo
+
+Pavel Machek (2):
+      ledtrig-pattern: fix email address quoting in MODULE_AUTHOR()
+      leds: rb532: cleanup whitespace
+
+Praveen Chaudhary (1):
+      net: Fix skb->csum update in inet_proto_csum_replace16().
+
+Qu Wenruo (1):
+      btrfs: scrub: Require mandatory block group RO for dev-replace
+
+Raag Jadav (1):
+      ARM: dts: am43x-epos-evm: set data pin directions for spi0 and spi1
+
+Richard Palethorpe (1):
+      can, slip: Protect tty->disc_data in write_wakeup and close with RCU
+
+Sakari Ailus (1):
+      leds-as3645a: Drop fwnode reference on ignored node
+
+Shahar S Matityahu (1):
+      iwlwifi: dbg: force stop the debug monitor HW
+
+Shuah Khan (1):
+      iommu/amd: Fix IOMMU perf counter clobbering during init
+
+Stanislaw Gruszka (1):
+      MAINTAINERS: change Gruszka's email address
+
+Stephan Gerhold (1):
+      Input: pm8xxx-vib - fix handling of separate enable register
+
+Steven Rostedt (VMware) (1):
+      tracing: Fix histogram code when expression has same var as value
+
+Tariq Toukan (3):
+      net/mlx5e: kTLS, Fix corner-case checks in TX resync flow
+      net/mlx5e: kTLS, Remove redundant posts in TX resync flow
+      net/mlx5e: kTLS, Do not send decrypted-marked SKBs via non-accel path
+
+Theodore Dubois (1):
+      tcp: remove redundant assigment to snd_cwnd
+
+Tvrtko Ursulin (1):
+      drm/i915: Align engine->uabi_class/instance with i915_drm.h
+
+Ulrich Weber (1):
+      xfrm: support output_mark for offload ESP packets
+
+Vasily Averin (6):
+      seq_tab_next() should increase position index
+      l2t_seq_next should increase position index
+      vcc_seq_next should increase position index
+      neigh_stat_seq_next() should increase position index
+      rt_cpu_seq_next should increase position index
+      ipv6_route_seq_next should increase position index
+
+Vincenzo Frascino (1):
+      tee: optee: Fix compilation issue with nommu
+
+Vladimir Murzin (1):
+      ARM: 8955/1: virt: Relax arch timer version check during early boot
+
+Wayne Lin (1):
+      drm/dp_mst: Handle SST-only branch device case
+
+Wen Huang (1):
+      libertas: Fix two buffer overflows at parsing bss descriptor
+
+Wen Yang (1):
+      tcp_bbr: improve arithmetic division in bbr_update_bw()
+
+Wenwen Wang (1):
+      firestream: fix memory leaks
+
+William Dauchy (2):
+      net, ip_tunnel: fix namespaces move
+      net, ip6_tunnel: fix namespaces move
+
+Xu Wang (1):
+      xfrm: interface: do not confirm neighbor when do pmtu update
+
+Yuki Taguchi (1):
+      ipv6: sr: remove SKB_GSO_IPXIP6 on End.D* actions
+
+wenxu (1):
+      netfilter: nf_tables_offload: fix check the chain offload flag
+
+xiaofeng.yan (1):
+      hsr: Fix a compilation error
