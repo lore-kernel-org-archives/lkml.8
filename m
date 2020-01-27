@@ -2,205 +2,114 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E59CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D57C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163B020CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580147618;
-	bh=JfR7Lv/JrxeMJWae3NrBaXTX31m23SXkho2CItW4d5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W+xXHlWJSMzH7GOC3Kwmn4eqCxQ7YUjGyFmJ9MrnPudNZur+t7G++CshH6NlbSbzD
-	 rh9jCk7O8Hswdu6E7WE26cpkjCtMZHWpwo5hvbubN9X6DpxIcln7EwGawPQXhCKM98
-	 EdI1Y1xPXbGDKbMEtA3FCr12/jgv5iomVO6JIwBg=
+	by mail.kernel.org (Postfix) with ESMTP id 2475D20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:53:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OnGjfEK2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgA0Rxh (ORCPT
+        id S1726296AbgA0Rxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:53:37 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46964 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgA0Rxg (ORCPT
+        Mon, 27 Jan 2020 12:53:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20005 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726026AbgA0Rxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:53:36 -0500
-Received: by mail-ot1-f66.google.com with SMTP id g64so9228083otb.13;
-        Mon, 27 Jan 2020 09:53:36 -0800 (PST)
+        Mon, 27 Jan 2020 12:53:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580147627;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9Eyp+gBd/lJZeZthsn+gHU0ABezhEFbHfNSRAsM4Qa4=;
+        b=OnGjfEK2LPoZCE9r2c6+9hBhj/GMLesyb3Jsh05q/CMuCOQQbPieHLal8AAZxIfZt0b+PZ
+        eXA/jAIUS0+cSh8ZoAGBZD1LUVAAGElquexisT5mF2rwb9MTYeEwNHlDARuj6WmMTD7ZSp
+        G9Mh3HkVo0E01orjQi11RlJlzQW80Q8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-229-Gkn7p7rnORu97vHeNnt4pQ-1; Mon, 27 Jan 2020 12:53:45 -0500
+X-MC-Unique: Gkn7p7rnORu97vHeNnt4pQ-1
+Received: by mail-wr1-f69.google.com with SMTP id w6so6516462wrm.16
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:53:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZwdeJdNohgFWX1mFD2UjbBw/HXmaaN29rT20q0J8HBI=;
-        b=o7j6tNstDjVdxALJYsnH829D1SY/1ZujhSjShSls0By67cFDORF72V233vGpe0KGnc
-         1dS1EM+OdQJ0v2dG1AGYAZcfFdJbsvaLGTagtCoBGmTMvr/CmRsezXuEAywfckMRcjZ8
-         yhkwkWiIPRS6qmu0pFb4nXSxMZkh5of+HCIXBfY+pKb2vMjMgES+/y9xHukxI2ADOM7R
-         BwvE85tbvy6KoFn74oPf3u9CSPVTZrYeNK1rA3PF2yHH43zyPmyKzVymlJfqd4gVfRPT
-         8PJfw1SI5eQptPK+KQO02v4eq6/3O5UfYsuN6kieOA5vWXzAac0FcnX61Ev6adFoHVWR
-         g4mw==
-X-Gm-Message-State: APjAAAWErxZASChI2BlTdkuLPtz3kxihB/7j3VyXuPKq507h83vy3PNo
-        nfK7XHvoRz1qhv9Ao736PBoaCns=
-X-Google-Smtp-Source: APXvYqwdUCJv6mpkyNlq5MZ9t+xypOOB3E8o5xFdi8iB2ko7UaxiRDFXUY5FgcV40zfXH9dcLvJ12Q==
-X-Received: by 2002:a9d:53c2:: with SMTP id i2mr12346342oth.43.1580147616069;
-        Mon, 27 Jan 2020 09:53:36 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n64sm4379460otn.35.2020.01.27.09.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 09:53:35 -0800 (PST)
-Received: (nullmailer pid 30258 invoked by uid 1000);
-        Mon, 27 Jan 2020 17:53:34 -0000
-Date:   Mon, 27 Jan 2020 11:53:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        Sriharsha Allenki <sallenki@codeaurora.org>,
-        Anu Ramanathan <anur@codeaurora.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 02/19] dt-bindings: phy: Add Qualcomm Synopsys
- Hi-Speed USB PHY binding
-Message-ID: <20200127175334.GA12315@bogus>
-References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
- <20200122185610.131930-3-bryan.odonoghue@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9Eyp+gBd/lJZeZthsn+gHU0ABezhEFbHfNSRAsM4Qa4=;
+        b=LiHULJMUi23o4fpiOu5ekIK5FUfXE579Z+zUerfAKal6F4nAJfMYBgVesTQdXkdX+l
+         m0NbArpVQq36+pEBZIIf4Wzt3vU1tOeFJSWlMZSiSb4eWWzlyrrzMIwADnhxQFdZuVRn
+         tlSjz9AJZYKkg6hjL276rh8McIGww7Btvx1TtavfpDo0wlCx2wDAMYbOMRoEUC/57wRS
+         ap4xuxcDh9DudMq2DSTgGI0BmG58zfgOr3lGiDP+0sTYNyyUJ/gpLEVjBmZBqdlr3Es6
+         3a5H/SPs24MFD2yQmV6nbywgHeOaASK+q6L4J9NzSXqTIHLvHwcOoGGMZLRFDxsa0Lew
+         o3wg==
+X-Gm-Message-State: APjAAAXkqk/h7OWKA1SvrFrIMVLajcdTXEEvaKJ0MB85RrwlTQWXZg6f
+        Krduan3tBiAe7AJLX80E+4FPAgeZVpnvK23fEn48hXrtBnYcYgHimwaNpEGaiZo78nnShAs31hl
+        pizcwSBc5d4euUKTGTeCNpQ4z
+X-Received: by 2002:adf:ed83:: with SMTP id c3mr22504371wro.51.1580147624560;
+        Mon, 27 Jan 2020 09:53:44 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwDyZu7O8Ip0GFjqb+I/zY1VyXtXAX7/ZMPbRpU5lebbCj5fe1qEWUjUyaXZ4uCY/QW8VLlRA==
+X-Received: by 2002:adf:ed83:: with SMTP id c3mr22504354wro.51.1580147624305;
+        Mon, 27 Jan 2020 09:53:44 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
+        by smtp.gmail.com with ESMTPSA id o4sm22140756wrx.25.2020.01.27.09.53.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 09:53:43 -0800 (PST)
+Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization
+ out of nested_enable_evmcs()
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Roman Kagan <rkagan@virtuozzo.com>
+References: <20200115171014.56405-3-vkuznets@redhat.com>
+ <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com>
+ <20200122054724.GD18513@linux.intel.com>
+ <9c126d75-225b-3b1b-d97a-bcec1f189e02@redhat.com>
+ <87eevrsf3s.fsf@vitty.brq.redhat.com> <20200122155108.GA7201@linux.intel.com>
+ <87blqvsbcy.fsf@vitty.brq.redhat.com>
+ <f15d9e98-25e9-2031-2db5-6aaa6c78c0eb@redhat.com>
+ <87zheer0si.fsf@vitty.brq.redhat.com> <87lfpyq9bk.fsf@vitty.brq.redhat.com>
+ <20200124172512.GJ2109@linux.intel.com> <875zgwnc3w.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <437c2710-7148-a675-8945-71dc7a90f7dd@redhat.com>
+Date:   Mon, 27 Jan 2020 18:53:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122185610.131930-3-bryan.odonoghue@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <875zgwnc3w.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 06:55:53PM +0000, Bryan O'Donoghue wrote:
-> From: Sriharsha Allenki <sallenki@codeaurora.org>
+On 27/01/20 16:38, Vitaly Kuznetsov wrote:
+>>> If there are no objections and if we still think it would be beneficial
+>>> to minimize the list of controls we filter out (and not go with the full
+>>> set like my RFC suggests), I'll prepare v2. (v1, actually, this was RFC).
+>> One last idea, can we keep the MSR filtering as is and add the hack in
+>> vmx_restore_control_msr()?  That way the (userspace) host and guest see
+>> the same values when reading the affected MSRs, and eVMCS wouldn't need
+>> it's own hook to do consistency checks.
+> Yes but (if I'm not mistaken) we'll have then to keep the filtering we
+> currently do in nested_enable_evmcs(): if userspace doesn't do
+> KVM_SET_MSR for VMX MSRs (QEMU<4.2) then the filtering in
+> vmx_restore_control_msr() won't happen and the guest will see the
+> unfiltered set of controls...
 > 
-> Adds bindings for QCS404 USB PHY supporting Low-Speed, Full-Speed and
-> Hi-Speed USB connectivity on Qualcomm chipsets.
-> 
-> [bod: Converted to YAML. Changed name dropping snps, 28nm components]
-> 
-> Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-> Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  .../bindings/phy/qcom,qcs404-usb-hs.yaml      | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
-> new file mode 100644
-> index 000000000000..d71beb822ae2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/qcom,qcs404-usb-hs.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm Synopsys QCS-404 High-Speed PHY
-> +
-> +maintainers:
-> +  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> +
-> +description: |
-> +  Qualcomm QCS-404 Low-Speed, Full-Speed, Hi-Speed USB PHY
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,qcs404-usb-hsphy
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: USB PHY base address and length of the register map.
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +    description: Should be 0. See phy/phy-bindings.txt for details.
-> +
-> +  clocks:
-> +    minItems: 3
-> +    maxItems: 3
-> +    description: phandles to rpmcc ref clock, PHY AHB clock, rentention clock.
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ref
-> +      - const: phy
-> +      - const: sleep
-> +
-> +  resets:
-> +    items:
-> +      - description: PHY core reset
-> +      - description: POR reset
-> +
-> +  reset-names:
-> +    items:
-> +      - const: phy
-> +      - const: por
-> +
-> +  vdd-supply:
-> +    maxItems: 1
 
-Supplies are always 1 entry, so drop this.
+Indeed.  The place you used in the RFC is the best we can do, I am afraid.
 
-> +    description: phandle to the regulator VDD supply node.
-> +
-> +  vdda1p8-supply:
-> +    maxItems: 1
-> +    description: phandle to the regulator 1.8V supply node.
-> +
-> +  vdda3p3-supply:
-> +    maxItems: 1
-> +    description: phandle to the regulator 3.3V supply node.
+Paolo
 
-No required properties?
-
-Add:
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
-> +    #include <dt-bindings/clock/qcom,rpmcc.h>
-> +    usb2_phy_prim: phy@7a000 {
-> +        compatible = "qcom,qcs404-usb-hsphy";
-> +        reg = <0x0007a000 0x200>;
-> +        #phy-cells = <0>;
-> +        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
-> +                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
-> +                 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
-> +        clock-names = "ref", "phy", "sleep";
-> +        resets = <&gcc GCC_USB_HS_PHY_CFG_AHB_BCR>,
-> +                 <&gcc GCC_USB2A_PHY_BCR>;
-> +        reset-names = "phy", "por";
-> +    };
-> +...
-> -- 
-> 2.25.0
-> 
