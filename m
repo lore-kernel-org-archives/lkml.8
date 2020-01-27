@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50CEC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AF5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9596A24681
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16EEC2467B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:04:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tq4I55F0"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BPlyFhIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgA0UEv (ORCPT
+        id S1727817AbgA0UE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 15:04:51 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:25529 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725975AbgA0UEv (ORCPT
+        Mon, 27 Jan 2020 15:04:58 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:31898 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725975AbgA0UE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 15:04:51 -0500
+        Mon, 27 Jan 2020 15:04:56 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580155490; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1580155495; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=zKV6cJDC7D9lZtbet0fncNoNw3SzF9fxJt5jaczV1pg=; b=tq4I55F0Od0nSjXGn8XOP+o02bTqj43XmQuGjyGOVoedS8w+83cg+d233CKVEP3RZu/fSijG
- uI1p5s0PRc3omBa3VCyz0nC2KS7cPkYZqPXSWHP7nmM0RaPC2EYnrlYGveYD/6J242iXJ30o
- MiLpFuJEZWh0qK3p9tnCIz0ggV4=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ Sender; bh=1/OCv/YWi9A5ql/vJL6uSomFHcmrXg+3BhQMo7h7H4I=; b=BPlyFhIs/t9F/o/R6L5u2faoEtmDUG8wH3MnBchf+u05qiys6f61cuZSLlMYvUSnNK5OFIYZ
+ jikpoWDTVF8O6CExXHaqCO4GuMbEsetOKCZO1wnYy/OFDKIgJyx3nRPYkHt6Tt0CusQhYxGI
+ DnRerU1xe1KjUKIhNUNesybIDsg=
+X-Mailgun-Sending-Ip: 104.130.122.25
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2f4259.7f06fc9765a8-smtp-out-n01;
- Mon, 27 Jan 2020 20:04:41 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e2f4266.7fd3cd82a9d0-smtp-out-n03;
+ Mon, 27 Jan 2020 20:04:54 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DCDE9C447AA; Mon, 27 Jan 2020 20:04:39 +0000 (UTC)
+        id 249EBC447A4; Mon, 27 Jan 2020 20:04:53 +0000 (UTC)
 Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5C7C5C447A1;
-        Mon, 27 Jan 2020 20:04:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5C7C5C447A1
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 409D1C447A1;
+        Mon, 27 Jan 2020 20:04:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 409D1C447A1
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -55,9 +55,9 @@ Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
         linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
         vincent.guittot@linaro.org, amit.kucheria@linaro.org,
         ulf.hansson@linaro.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [RFC v3 05/10] opp: of: export _opp_of_get_opp_desc_node
-Date:   Tue, 28 Jan 2020 01:33:45 +0530
-Message-Id: <20200127200350.24465-6-sibis@codeaurora.org>
+Subject: [RFC v3 07/10] opp: Remove multiple attached opp tables from a device
+Date:   Tue, 28 Jan 2020 01:33:47 +0530
+Message-Id: <20200127200350.24465-8-sibis@codeaurora.org>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20200127200350.24465-1-sibis@codeaurora.org>
 References: <20200127200350.24465-1-sibis@codeaurora.org>
@@ -68,48 +68,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export _opp_of_get_opp_desc_node in preparation for attaching multiple
-opp_table per device.
+Introduce _dev_pm_opp_find_and_remove_table_indexed to remove
+all the linked opp tables from a device.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- drivers/opp/of.c  | 3 +--
- drivers/opp/opp.h | 2 ++
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/opp/core.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 43acf54934be7..015ee9ab09485 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -25,8 +25,7 @@
-  * Returns opp descriptor node for a device node, caller must
-  * do of_node_put().
-  */
--static struct device_node *_opp_of_get_opp_desc_node(struct device_node *np,
--						     int index)
-+struct device_node *_opp_of_get_opp_desc_node(struct device_node *np, int index)
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index e9d633c9e40b1..cc2f156db7fda 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -2632,12 +2632,13 @@ int dev_pm_opp_unregister_notifier(struct device *dev,
+ }
+ EXPORT_SYMBOL(dev_pm_opp_unregister_notifier);
+ 
+-void _dev_pm_opp_find_and_remove_table(struct device *dev)
++static void _dev_pm_opp_find_and_remove_table_indexed(struct device *dev,
++						      int index)
  {
- 	/* "operating-points-v2" can be an array for power domain providers */
- 	return of_parse_phandle(np, "operating-points-v2", index);
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index 9e021f819acca..6f56ff6038605 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -226,12 +226,14 @@ void _put_opp_list_kref(struct opp_table *opp_table);
- void _of_init_opp_table(struct opp_table *opp_table, struct device *dev, int index);
- void _of_clear_opp_table(struct opp_table *opp_table);
- struct opp_table *_managed_opp(struct device *dev, int index);
-+struct device_node *_opp_of_get_opp_desc_node(struct device_node *np, int index);
- void _of_opp_free_required_opps(struct opp_table *opp_table,
- 				struct dev_pm_opp *opp);
- #else
- static inline void _of_init_opp_table(struct opp_table *opp_table, struct device *dev, int index) {}
- static inline void _of_clear_opp_table(struct opp_table *opp_table) {}
- static inline struct opp_table *_managed_opp(struct device *dev, int index) { return NULL; }
-+static inline struct device_node *_opp_of_get_opp_desc_node(struct device_node *np, int index) { return NULL; }
- static inline void _of_opp_free_required_opps(struct opp_table *opp_table,
- 					      struct dev_pm_opp *opp) {}
- #endif
+ 	struct opp_table *opp_table;
+ 
+ 	/* Check for existing table for 'dev' */
+-	opp_table = _find_opp_table_indexed(dev, 0);
++	opp_table = _find_opp_table_indexed(dev, index);
+ 	if (IS_ERR(opp_table)) {
+ 		int error = PTR_ERR(opp_table);
+ 
+@@ -2658,6 +2659,18 @@ void _dev_pm_opp_find_and_remove_table(struct device *dev)
+ 	dev_pm_opp_put_opp_table(opp_table);
+ }
+ 
++void _dev_pm_opp_find_and_remove_table(struct device *dev)
++{
++	int count, i;
++
++	count = of_count_phandle_with_args(dev->of_node,
++					   "operating-points-v2", NULL);
++	count = max(count, 1);
++
++	for (i = 0; i < count; i++)
++		_dev_pm_opp_find_and_remove_table_indexed(dev, i);
++}
++
+ /**
+  * dev_pm_opp_remove_table() - Free all OPPs associated with the device
+  * @dev:	device pointer used to lookup OPP table.
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
