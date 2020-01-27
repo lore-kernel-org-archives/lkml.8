@@ -2,149 +2,184 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039D9C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 04:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9023BC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 04:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE250214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 04:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEEA21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 04:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Sjkv/xVd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="E1CBD7MN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgA0EVT (ORCPT
+        id S1727233AbgA0ErD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 23:21:19 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44488 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgA0EVS (ORCPT
+        Sun, 26 Jan 2020 23:47:03 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:52330 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbgA0ErD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 23:21:18 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00R4L47e048559;
-        Sun, 26 Jan 2020 22:21:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580098864;
-        bh=0wPXLjmKNP//bAx84i37NKL7d7tEzpelNwIa2cKvRW4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Sjkv/xVdIUqxLoa5NBZcWHdu8LPqsjUgpUyeUvevxcehSgzDIjtK5ITQk8NiDUIA4
-         ax5OC/VxdKobTQt0Fb+HpnHVR2/BwVZS2tQ1BDBm+e8NMF9oEA2JcH9IvD6Bp0eHNc
-         8pkk/WZlke/4NbRhiSm9TmlY2C3agjatsX7zs8Wk=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00R4L4ck001425;
-        Sun, 26 Jan 2020 22:21:04 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 26
- Jan 2020 22:21:04 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 26 Jan 2020 22:21:03 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00R4L0oJ074810;
-        Sun, 26 Jan 2020 22:21:01 -0600
-Subject: Re: [EXT] Re: [PATCH v6 0/2] spi: cadence-quadpsi: Add support for
- the Cadence QSPI controller
-To:     Kuldeep Singh <kuldeep.singh@nxp.com>,
-        "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
-        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
-References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <860aecbc-22d3-c9ce-3570-44115d6e81b2@ti.com>
- <AM0PR0402MB355668F205AD711D2059CDB5E00F0@AM0PR0402MB3556.eurprd04.prod.outlook.com>
- <40ee10f1-0b30-155c-c165-1baa57a22109@ti.com>
- <AM6PR0402MB35573B2313C7FB81D747ABA6E00F0@AM6PR0402MB3557.eurprd04.prod.outlook.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <3afe0dde-02f7-8f75-4410-efbdb5f91499@ti.com>
-Date:   Mon, 27 Jan 2020 09:51:28 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 26 Jan 2020 23:47:03 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R4hTO1095313;
+        Mon, 27 Jan 2020 04:46:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2019-08-05; bh=q+PUOqA16JD2tgWG90vYnwpvpwRRBkx2ddqWrELG7xo=;
+ b=E1CBD7MNu1CceWb96a6teh+XzUrg5En1pzfIXil/N2GCLgFbU+rdLq+6DToPfEYMDoLR
+ WyvyMnrhLDm4l61oDR0ljVHdzjrTty4xN1wJdvabHRTsc1BzAjGMvecMysmGpxKq73yX
+ 8edH2sPo+9sDZ8QShQRawGRBDCulohgtgZDyzCXpk6GM7bfWKC0wMkz5wrlYwup7soD5
+ g2OXwx+bBvzuJ+fFNAIKuHQwJjQEh0Z2ScKtCN5KMZw5bM2ctV4HFdH6jaFoUvfwp9mt
+ 2srPASrgVNIRKQzONDN4cXvtqvvT4mcoh04oN/BaW0lahEWe6Rq85AMqodLPwG2gq/Zh KQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xrd3tw2hh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 04:46:45 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R4hVkS120927;
+        Mon, 27 Jan 2020 04:46:45 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2xrytp6exj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 04:46:45 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00R4kcxI025620;
+        Mon, 27 Jan 2020 04:46:38 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 26 Jan 2020 20:46:36 -0800
+Date:   Mon, 27 Jan 2020 07:46:25 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org, Brian Geffon <bgeffon@google.com>
+Cc:     kbuild-all@lists.01.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Brian Geffon <bgeffon@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Yu Zhao <yuzhao@google.com>, Jesse Barnes <jsbarnes@google.com>
+Subject: Re: [PATCH] mm: Add MREMAP_DONTUNMAP to mremap().
+Message-ID: <20200127044625.GI1870@kadam>
 MIME-Version: 1.0
-In-Reply-To: <AM6PR0402MB35573B2313C7FB81D747ABA6E00F0@AM6PR0402MB3557.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123014627.71720-1-bgeffon@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001270040
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001270040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Brian,
 
-On 23/01/20 5:07 pm, Kuldeep Singh wrote:
-> Hi Vignesh,
-> 
-[...]
->> I did test with s25fl512s with UBIFS and did not see any issue. 
-> 
-> Thanks Vignesh for this confirmation.
-> 
->> Could you try with latest linux master or linux next? There were couple of fixes in the last -rc
->> related to spansion flashes?
-> 
-> Yes, I have already applied those patches and still facing this issue.
-> I am testing with s25fs512s and only able to make it work on 1bit mode and that too by skipping SFDP.
+url:    https://github.com/0day-ci/linux/commits/Brian-Geffon/mm-Add-MREMAP_DONTUNMAP-to-mremap/20200125-013342
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 4703d9119972bf586d2cca76ec6438f819ffa30e
 
-Hmm, why would you need to skip SFDP parsing in 1 bit mode? What
-actually fails when SFDP is parsed? Read/write/erase? BTW, did s25fs512s
-flash ever with you controller before (i.e is this a regression)?
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-> Basic read/write works on other modes but not FS utilities.
-> Could you please share any pointer to look into which direction. Thanks in advance.
-> 
+smatch warnings:
+mm/mremap.c:561 mremap_to() error: potentially dereferencing uninitialized 'vma'.
 
-If 1 bit mode works fine, then probably flash FS in 1 bit mode and they
-try read only mount in quad mode. Thus try and narrow down if the issue
-is in read path vs write path.
+# https://github.com/0day-ci/linux/commit/98663ca05501623c3da7f0f30be8ba7d632cf010
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 98663ca05501623c3da7f0f30be8ba7d632cf010
+vim +/vma +561 mm/mremap.c
 
-Regards
-Vignesh
+81909b842107ef Michel Lespinasse  2013-02-22  506  static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+72f87654c69690 Pavel Emelyanov    2017-02-22  507  		unsigned long new_addr, unsigned long new_len, bool *locked,
+98663ca0550162 Brian Geffon       2020-01-22  508  		unsigned long flags, struct vm_userfaultfd_ctx *uf,
+b22823719302e8 Mike Rapoport      2017-08-02  509  		struct list_head *uf_unmap_early,
+897ab3e0c49e24 Mike Rapoport      2017-02-24  510  		struct list_head *uf_unmap)
+ecc1a8993751de Al Viro            2009-11-24  511  {
+ecc1a8993751de Al Viro            2009-11-24  512  	struct mm_struct *mm = current->mm;
+ecc1a8993751de Al Viro            2009-11-24  513  	struct vm_area_struct *vma;
+ecc1a8993751de Al Viro            2009-11-24  514  	unsigned long ret = -EINVAL;
+ecc1a8993751de Al Viro            2009-11-24  515  	unsigned long charged = 0;
+097eed103862f9 Al Viro            2009-11-24  516  	unsigned long map_flags;
+ecc1a8993751de Al Viro            2009-11-24  517  
+f19cb115a25f3f Alexander Kuleshov 2015-11-05  518  	if (offset_in_page(new_addr))
+ecc1a8993751de Al Viro            2009-11-24  519  		goto out;
+ecc1a8993751de Al Viro            2009-11-24  520  
+ecc1a8993751de Al Viro            2009-11-24  521  	if (new_len > TASK_SIZE || new_addr > TASK_SIZE - new_len)
+ecc1a8993751de Al Viro            2009-11-24  522  		goto out;
+ecc1a8993751de Al Viro            2009-11-24  523  
+9943242ca46814 Oleg Nesterov      2015-09-04  524  	/* Ensure the old/new locations do not overlap */
+9943242ca46814 Oleg Nesterov      2015-09-04  525  	if (addr + old_len > new_addr && new_addr + new_len > addr)
+ecc1a8993751de Al Viro            2009-11-24  526  		goto out;
+ecc1a8993751de Al Viro            2009-11-24  527  
+ea2c3f6f554561 Oscar Salvador     2019-03-05  528  	/*
+ea2c3f6f554561 Oscar Salvador     2019-03-05  529  	 * move_vma() need us to stay 4 maps below the threshold, otherwise
+ea2c3f6f554561 Oscar Salvador     2019-03-05  530  	 * it will bail out at the very beginning.
+ea2c3f6f554561 Oscar Salvador     2019-03-05  531  	 * That is a problem if we have already unmaped the regions here
+ea2c3f6f554561 Oscar Salvador     2019-03-05  532  	 * (new_addr, and old_addr), because userspace will not know the
+ea2c3f6f554561 Oscar Salvador     2019-03-05  533  	 * state of the vma's after it gets -ENOMEM.
+ea2c3f6f554561 Oscar Salvador     2019-03-05  534  	 * So, to avoid such scenario we can pre-compute if the whole
+ea2c3f6f554561 Oscar Salvador     2019-03-05  535  	 * operation has high chances to success map-wise.
+ea2c3f6f554561 Oscar Salvador     2019-03-05  536  	 * Worst-scenario case is when both vma's (new_addr and old_addr) get
+ea2c3f6f554561 Oscar Salvador     2019-03-05  537  	 * split in 3 before unmaping it.
+ea2c3f6f554561 Oscar Salvador     2019-03-05  538  	 * That means 2 more maps (1 for each) to the ones we already hold.
+ea2c3f6f554561 Oscar Salvador     2019-03-05  539  	 * Check whether current map count plus 2 still leads us to 4 maps below
+ea2c3f6f554561 Oscar Salvador     2019-03-05  540  	 * the threshold, otherwise return -ENOMEM here to be more safe.
+ea2c3f6f554561 Oscar Salvador     2019-03-05  541  	 */
+ea2c3f6f554561 Oscar Salvador     2019-03-05  542  	if ((mm->map_count + 2) >= sysctl_max_map_count - 3)
+ea2c3f6f554561 Oscar Salvador     2019-03-05  543  		return -ENOMEM;
+ea2c3f6f554561 Oscar Salvador     2019-03-05  544  
+b22823719302e8 Mike Rapoport      2017-08-02  545  	ret = do_munmap(mm, new_addr, new_len, uf_unmap_early);
+ecc1a8993751de Al Viro            2009-11-24  546  	if (ret)
+ecc1a8993751de Al Viro            2009-11-24  547  		goto out;
+ecc1a8993751de Al Viro            2009-11-24  548  
+ecc1a8993751de Al Viro            2009-11-24  549  	if (old_len >= new_len) {
+897ab3e0c49e24 Mike Rapoport      2017-02-24  550  		ret = do_munmap(mm, addr+new_len, old_len - new_len, uf_unmap);
+ecc1a8993751de Al Viro            2009-11-24  551  		if (ret && old_len != new_len)
+ecc1a8993751de Al Viro            2009-11-24  552  			goto out;
+ecc1a8993751de Al Viro            2009-11-24  553  		old_len = new_len;
+ecc1a8993751de Al Viro            2009-11-24  554  	}
+ecc1a8993751de Al Viro            2009-11-24  555  
+98663ca0550162 Brian Geffon       2020-01-22  556  	/*
+98663ca0550162 Brian Geffon       2020-01-22  557  	 * MREMAP_DONTUNMAP expands by old_len + (new_len - old_len), we will
+98663ca0550162 Brian Geffon       2020-01-22  558  	 * check that we can expand by old_len and vma_to_resize will handle
+98663ca0550162 Brian Geffon       2020-01-22  559  	 * the vma growing.
+98663ca0550162 Brian Geffon       2020-01-22  560  	 */
+98663ca0550162 Brian Geffon       2020-01-22 @561  	if (unlikely(flags & MREMAP_DONTUNMAP && !may_expand_vm(mm,
+98663ca0550162 Brian Geffon       2020-01-22  562  				vma->vm_flags, old_len >> PAGE_SHIFT))) {
+                                                                                ^^^^^^^^^^^^^
 
-> Thanks
-> Kuldeep
-> 
->>
->> [1]
->> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kerne
->> l.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fmtd%2Flinux.git%2Fcommit
->> %2F%3Fh%3Dmtd%2Ffixes%26id%3D440b6d50254bdbd84c2a665c7f53ec69dd
->> 741a4f&amp;data=02%7C01%7Ckuldeep.singh%40nxp.com%7Cee345bdf9f654
->> 4ac9f4508d79fd863d9%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7
->> C637153624041330774&amp;sdata=OyKGl2jn5JDq5KCaVrxAnUh4qSynmAhS%
->> 2FeFiOxJSKtU%3D&amp;reserved=0
->> [2]https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.ker
->> nel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fmtd%2Flinux.git%2Fcomm
->> it%2F%3Fh%3Dmtd%2Ffixes%26id%3Dda2ef8124f20b4ce18d1d3d24fc7b88e68
->> 7e10bb&amp;data=02%7C01%7Ckuldeep.singh%40nxp.com%7Cee345bdf9f65
->> 44ac9f4508d79fd863d9%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%
->> 7C637153624041330774&amp;sdata=BTRzWWY2z6nZncyktDDIdJFwYTp41S%2
->> Buh99QaJ60e1M%3D&amp;reserved=0
->>
->>> Thanks
->>> Kuldeep
->>>
->>>>
->>>> Regards
->>>> Vignesh
->>>>
->>>>
->>>
->>
->> --
->> Regards
->> Vignesh
+98663ca0550162 Brian Geffon       2020-01-22  563  		ret = -ENOMEM;
+98663ca0550162 Brian Geffon       2020-01-22  564  		goto out;
+98663ca0550162 Brian Geffon       2020-01-22  565  	}
+98663ca0550162 Brian Geffon       2020-01-22  566  
+ecc1a8993751de Al Viro            2009-11-24  567  	vma = vma_to_resize(addr, old_len, new_len, &charged);
+                                                        ^^^^^^^^^^^^^^^^^^^^
 
--- 
-Regards
-Vignesh
+ecc1a8993751de Al Viro            2009-11-24  568  	if (IS_ERR(vma)) {
+ecc1a8993751de Al Viro            2009-11-24  569  		ret = PTR_ERR(vma);
+ecc1a8993751de Al Viro            2009-11-24  570  		goto out;
+ecc1a8993751de Al Viro            2009-11-24  571  	}
+ecc1a8993751de Al Viro            2009-11-24  572  
+097eed103862f9 Al Viro            2009-11-24  573  	map_flags = MAP_FIXED;
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
