@@ -2,96 +2,79 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F74C35247
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047EBC35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51152071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:29:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FehyzrEO"
+	by mail.kernel.org (Postfix) with ESMTP id D0FFE2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbgA0J3n (ORCPT
+        id S1729593AbgA0J3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 04:29:43 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:34940 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727872AbgA0J3n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 04:29:43 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R9DDEP054968;
-        Mon, 27 Jan 2020 09:29:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=dqtak0Ip1v1fu40eyS07aEJt+TSWkVxnjJJIK8PU5JU=;
- b=FehyzrEO2zhzN5U4IqRc/54MG6VUkpCZQxx5DJKM2lyXsufyEqZHzUOS7Q7JH7IcXeZp
- hP5NIOXHbi9UoNufThTJ5/vt3vRAd5OlBpFe3/86+dv0y4Y64hOCBZyGdPRfTRBfRuut
- Ds7nY0xZFvYbA13ZT5rBbuANyxTZFKyNhJIwLtw4Db+zYF0IvQTmyT09C27V/eOSG6Ke
- 3YjWgfxu4NRmImfF5D4UptRorAZO0dDaqOvqi9knfYpaZO5MfUDFCHb6cRKjm1r4Zgey
- uUeJ9PSAFRQTNHz972N8q2UNshZ8jzvdB9BzpPcleSuOuzaNrFINkaDWYzHNMJBPk2Jf 5Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xrdmq61kc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 09:29:06 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R9Dev7147737;
-        Mon, 27 Jan 2020 09:29:05 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xry6rrt2a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 09:29:05 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00R9T3fq014947;
-        Mon, 27 Jan 2020 09:29:03 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Jan 2020 01:29:02 -0800
-Date:   Mon, 27 Jan 2020 12:28:50 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+106b378813251e52fc5e@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in hiddev_disconnect
-Message-ID: <20200127092850.GX1847@kadam>
-References: <0000000000004dbaf2059c193a36@google.com>
- <20200126024957.11392-1-hdanton@sina.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200126024957.11392-1-hdanton@sina.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=309
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001270081
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=388 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001270081
+        Mon, 27 Jan 2020 04:29:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:41462 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727872AbgA0J3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 04:29:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5B3231B;
+        Mon, 27 Jan 2020 01:29:47 -0800 (PST)
+Received: from ssg-dev-vb.kfn.arm.com (E111385.Arm.com [10.50.4.77])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DDCA3F67D;
+        Mon, 27 Jan 2020 01:29:43 -0800 (PST)
+From:   Hadar Gat <hadar.gat@arm.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Weili Qian <qianweili@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
+Subject: [PATCH 0/3] hw_random: introduce Arm CryptoCell TRNG driver
+Date:   Mon, 27 Jan 2020 11:28:21 +0200
+Message-Id: <1580117304-12682-1-git-send-email-hadar.gat@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I already fixed this bug in an earlier thread.
+The Arm CryptoCell is a hardware security engine.
+This patch introduces driver for its TRNG (True Random Number Generator)
+engine.
 
-Syzbot always reports a use after free as two separate bugs, a read
-after free and a write after free.  It's too much hassle to mark all
-the duplicates.
+Hadar Gat (3):
+  dt-bindings: add device tree binding for Arm CryptoCell trng engine
+  hw_random: cctrng: introduce Arm CryptoCell driver
+  MAINTAINERS: add HG as cctrng maintainer
 
-regards,
-dan carpenter
+ .../devicetree/bindings/rng/arm-cctrng.yaml        |  49 ++
+ MAINTAINERS                                        |   9 +
+ drivers/char/hw_random/Kconfig                     |  12 +
+ drivers/char/hw_random/Makefile                    |   1 +
+ drivers/char/hw_random/cctrng.c                    | 789 +++++++++++++++++++++
+ drivers/char/hw_random/cctrng.h                    |  69 ++
+ 6 files changed, 929 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+ create mode 100644 drivers/char/hw_random/cctrng.c
+ create mode 100644 drivers/char/hw_random/cctrng.h
 
+-- 
+2.7.4
 
