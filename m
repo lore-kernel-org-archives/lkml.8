@@ -2,209 +2,110 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47341C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA08C33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278EC206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E45214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:26:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="R/Z2JAzO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbgA0M0O (ORCPT
+        id S1730582AbgA0M0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:26:14 -0500
-Received: from www62.your-server.de ([213.133.104.62]:58812 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729465AbgA0M0N (ORCPT
+        Mon, 27 Jan 2020 07:26:24 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:33303 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729465AbgA0M0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:26:13 -0500
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iw3T0-0000NM-IP; Mon, 27 Jan 2020 13:26:10 +0100
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iw3T0-000ROo-62; Mon, 27 Jan 2020 13:26:10 +0100
-Subject: Re: [PATCH v6 bpf-next 1/2] bpf: Add bpf_read_branch_records() helper
-To:     Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org, ast@kernel.org,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org
-References: <20200126233554.20061-1-dxu@dxuuu.xyz>
- <20200126233554.20061-2-dxu@dxuuu.xyz>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <a026ad0c-7d24-09cc-9742-c241d37fbdb0@iogearbox.net>
-Date:   Mon, 27 Jan 2020 13:26:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20200126233554.20061-2-dxu@dxuuu.xyz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25707/Sun Jan 26 12:40:28 2020)
+        Mon, 27 Jan 2020 07:26:24 -0500
+Received: by mail-qv1-f65.google.com with SMTP id z3so4356466qvn.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 04:26:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=dxtnBJy7TtO0FNdFepHqKbYItxPWi4rmxJBvGTynpb4=;
+        b=R/Z2JAzOMlgEEe5LRPotTkZCgaKhVqLH5vuYs7i236aqhbRA8JogpS0hx8OfRD7TSV
+         rHpzPOJYIhFVVN5xSbaezZ56PMNZ6tyPauoi3YAmWrcNysQLkte2p6PDP3W1QQh1ygyX
+         6G/GhNh9VpH0cgd/u8iPUswlQnA0TlkWDFKG0mH+DqkiTReloJ27oKg4HAU3q+aQ5UWT
+         qTdjVhdnlpUGRduwxQeQO8/5EUeorqbl3SGpIIBwWiB75PrdvF3e5jR9wqLXTrBdZjkq
+         fq/vH6Va7HxfYv6qSx5Z6/IHy9/g7kQttsjEUhFlUn7Tr06DjN7/mdBXRsDVpJPIS5HX
+         xMrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=dxtnBJy7TtO0FNdFepHqKbYItxPWi4rmxJBvGTynpb4=;
+        b=ltAz0vcdXHL3Xn3taarSrlobwCPpx+DOFtKeiZUBaRMZdyhpCeNbiYY0mko4hvYfa7
+         OJaeDBlyammZNKFbLgHwHyQwwCtYofzeejn2s6QD80/wNGp5qL9rq2ktvUZPw4CXqBvv
+         MeA9R+kIhpnsEH+MP+80u6E2PVF9isX/a19ocprn+C6Q/aYdGIBI1V+Z1pXBHa3Tlmyl
+         VG291hpoLCUUkwHD6d4Fkd0SZrqkWyqigbVLXeMN7Bmasklphwaf2StbD7W6fZN23Mqn
+         nuKSOfjUAhI6Hh6cKkr1G4HTykeiBHTp0+7m6N49vCceShZcjfCxrqLCNI6QEiyU74C6
+         fsHQ==
+X-Gm-Message-State: APjAAAXnuZ2Kfr9CN7ttT8hCRyJriVp5ZjkWSj8HLbvZFt2Z7OBE1LCg
+        3JUy0XtX6MoZMlxrs9NClD5IxQ==
+X-Google-Smtp-Source: APXvYqz/dWEk/aq3G1gMzh/LBHy2U0Gfx5zkulfbrjNAfHknxwhydqbp8IYmYKr8NyTj9BDw1851cQ==
+X-Received: by 2002:a0c:aacb:: with SMTP id g11mr16585575qvb.108.1580127983134;
+        Mon, 27 Jan 2020 04:26:23 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id u13sm8615806qta.30.2020.01.27.04.26.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 04:26:22 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 1/1] mm: sysctl: add panic_on_mm_error sysctl
+Date:   Mon, 27 Jan 2020 07:26:21 -0500
+Message-Id: <F352EA1C-7E7C-4C0C-8F23-EC33080EBB9E@lca.pw>
+References: <20200127101100.92588-1-ghalat@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        ssaner@redhat.com, atomlin@redhat.com, oleksandr@redhat.com,
+        vbendel@redhat.com, kirill@shutemov.name,
+        khlebnikov@yandex-team.ru, borntraeger@de.ibm.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+In-Reply-To: <20200127101100.92588-1-ghalat@redhat.com>
+To:     Grzegorz Halat <ghalat@redhat.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/27/20 12:35 AM, Daniel Xu wrote:
-> Branch records are a CPU feature that can be configured to record
-> certain branches that are taken during code execution. This data is
-> particularly interesting for profile guided optimizations. perf has had
-> branch record support for a while but the data collection can be a bit
-> coarse grained.
-> 
-> We (Facebook) have seen in experiments that associating metadata with
-> branch records can improve results (after postprocessing). We generally
-> use bpf_probe_read_*() to get metadata out of userspace. That's why bpf
-> support for branch records is useful.
-> 
-> Aside from this particular use case, having branch data available to bpf
-> progs can be useful to get stack traces out of userspace applications
-> that omit frame pointers.
-> 
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> ---
->   include/uapi/linux/bpf.h | 25 +++++++++++++++++++++++-
->   kernel/trace/bpf_trace.c | 41 ++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 65 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index f1d74a2bd234..332aa433d045 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -2892,6 +2892,25 @@ union bpf_attr {
->    *		Obtain the 64bit jiffies
->    *	Return
->    *		The 64 bit jiffies
-> + *
-> + * int bpf_read_branch_records(struct bpf_perf_event_data *ctx, void *buf, u32 buf_size, u64 flags)
 
-Small nit: s/buf_size/size/, so that it matches with your BPF_CALL below.
 
-  +BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
-  +	   void *, buf, u32, size, u64, flags)
+> On Jan 27, 2020, at 5:11 AM, Grzegorz Halat <ghalat@redhat.com> wrote:
+>=20
+> Memory management subsystem performs various checks at runtime,
+> if an inconsistency is detected then such event is being logged and kernel=
 
-> + *	Description
-> + *		For an eBPF program attached to a perf event, retrieve the
-> + *		branch records (struct perf_branch_entry) associated to *ctx*
-> + *		and store it in	the buffer pointed by *buf* up to size
-> + *		*buf_size* bytes.
-> + *
-> + *		The *flags* can be set to **BPF_F_GET_BRANCH_RECORDS_SIZE** to
-> + *		instead	return the number of bytes required to store all the
-> + *		branch entries. If this flag is set, *buf* may be NULL.
-> + *	Return
-> + *		On success, number of bytes written to *buf*. On error, a
-> + *		negative value.
+> continues to run. While debugging such problems it is helpful to collect
+> memory dump as early as possible. Currently, there is no easy way to panic=
 
-Maybe pull the 2nd paragraph from above in here so that it reflects the description
-of the return value when flag is used also for this case in the 'Return' description.
+> kernel when such error is detected.
+>=20
+> It was proposed[1] to panic the kernel if panic_on_oops is set but this
+> approach was not accepted. One of alternative proposals was introduction o=
+f
+> a new sysctl.
+>=20
+> The patch adds panic_on_mm_error sysctl. If the sysctl is set then the
+> kernel will be crashed when an inconsistency is detected by memory
+> management. This currently means panic when bad page or bad PTE
+> is detected(this may be extended to other places in MM).
+>=20
+> Another use case of this sysctl may be in security-wise environments,
+> it may be more desired to crash machine than continue to run with
+> potentially damaged data structures.
 
-> + *		**-EINVAL** if arguments invalid or **buf_size** not a multiple
-> + *		of sizeof(struct perf_branch_entry).
-> + *
-> + *		**-ENOENT** if architecture does not support branch records.
->    */
->   #define __BPF_FUNC_MAPPER(FN)		\
->   	FN(unspec),			\
-> @@ -3012,7 +3031,8 @@ union bpf_attr {
->   	FN(probe_read_kernel_str),	\
->   	FN(tcp_send_ack),		\
->   	FN(send_signal_thread),		\
-> -	FN(jiffies64),
-> +	FN(jiffies64),			\
-> +	FN(read_branch_records),
->   
->   /* integer value in 'imm' field of BPF_CALL instruction selects which helper
->    * function eBPF program intends to call
-> @@ -3091,6 +3111,9 @@ enum bpf_func_id {
->   /* BPF_FUNC_sk_storage_get flags */
->   #define BPF_SK_STORAGE_GET_F_CREATE	(1ULL << 0)
->   
-> +/* BPF_FUNC_read_branch_records flags. */
-> +#define BPF_F_GET_BRANCH_RECORDS_SIZE	(1ULL << 0)
-> +
->   /* Mode for BPF_FUNC_skb_adjust_room helper. */
->   enum bpf_adj_room_mode {
->   	BPF_ADJ_ROOM_NET,
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 19e793aa441a..efd119de95b8 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1028,6 +1028,45 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
->            .arg3_type      = ARG_CONST_SIZE,
->   };
->   
-> +BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
-> +	   void *, buf, u32, size, u64, flags)
-> +{
-> +#ifndef CONFIG_X86
-> +	return -ENOENT;
-> +#else
-> +	struct perf_branch_stack *br_stack = ctx->data->br_stack;
-> +	u32 br_entry_size = sizeof(struct perf_branch_entry);
-
-'static const u32 br_entry_size' if we use it as such below.
-
-> +	u32 to_copy;
-> +
-> +	if (unlikely(flags & ~BPF_F_GET_BRANCH_RECORDS_SIZE))
-> +		return -EINVAL;
-> +
-> +	if (unlikely(!br_stack))
-> +		return -EINVAL;
-
-Why the ifdef X86? In previous thread I meant to change it into since it's
-implicit:
-
-         if (unlikely(!br_stack))
-                 return -ENOENT;
-
-Or is there any other additional rationale?
-
-> +	if (flags & BPF_F_GET_BRANCH_RECORDS_SIZE)
-> +		return br_stack->nr * br_entry_size;
-> +
-> +	if (!buf || (size % br_entry_size != 0))
-> +		return -EINVAL;
-> +
-> +	to_copy = min_t(u32, br_stack->nr * br_entry_size, size);
-> +	memcpy(buf, br_stack->entries, to_copy);
-> +
-> +	return to_copy;
-> +#endif
-> +}
-> +
-> +static const struct bpf_func_proto bpf_read_branch_records_proto = {
-> +	.func           = bpf_read_branch_records,
-> +	.gpl_only       = true,
-> +	.ret_type       = RET_INTEGER,
-> +	.arg1_type      = ARG_PTR_TO_CTX,
-> +	.arg2_type      = ARG_PTR_TO_MEM_OR_NULL,
-> +	.arg3_type      = ARG_CONST_SIZE_OR_ZERO,
-> +	.arg4_type      = ARG_ANYTHING,
-> +};
-> +
->   static const struct bpf_func_proto *
->   pe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
->   {
-> @@ -1040,6 +1079,8 @@ pe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
->   		return &bpf_get_stack_proto_tp;
->   	case BPF_FUNC_perf_prog_read_value:
->   		return &bpf_perf_prog_read_value_proto;
-> +	case BPF_FUNC_read_branch_records:
-> +		return &bpf_read_branch_records_proto;
->   	default:
->   		return tracing_func_proto(func_id, prog);
->   	}
-> 
-
+Well, on the other hand, this will allow a normal user to more easily crash t=
+he system due to a recoverable bug which could result in local DoS.=
