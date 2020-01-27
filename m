@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD4AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CD5C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D95206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87122206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TfOTD3c6"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Qdpr2Gi5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730320AbgA0LPz (ORCPT
+        id S1730340AbgA0LP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:15:55 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:44522 "EHLO
+        Mon, 27 Jan 2020 06:15:58 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:44516 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730215AbgA0LPw (ORCPT
+        by vger.kernel.org with ESMTP id S1726771AbgA0LPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jan 2020 06:15:52 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 30CF8407A1;
-        Mon, 27 Jan 2020 11:09:30 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1C2714067C;
+        Mon, 27 Jan 2020 11:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1580123375; bh=NixIYL9DJLQ1EjTICLfMWuieQcujDdoMHw59TKyyS8M=;
+        t=1580123371; bh=PJxQQe6LRMVQ+GUC/YIJKHseFjn16R2owaP2nQ3enlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=TfOTD3c61jySU590rkw/WFPmnX4b3Yp1lziig60p8MtXl/WVBNxXo6Eesngx+eomY
-         QwzQcFIQEBQT5yFCCWbIYUgPd/Gf6bquxFUnrJzgLahK/AMKBrYhn8TK8iXfLEXQBE
-         1uWntPc45cgt/P611nE6So2fe0aScGXMFPM9bvqOQK+xi9p5SBRa9J6PnCYtBUNmbb
-         B+kXNx8qSeg2RXFaVHbaPzhvqv6jX8y9HInABcF+DsAvrx3OX/rpSknvCBn4nMkS57
-         R129Qv3KRyueOvdsntraQascjwgfEXhYZJco/6HdkiKXUdmHHeyx6SIr0d9ysgYuFa
-         sZWoAJcRwq+Bg==
+        b=Qdpr2Gi5s0uO+ZwqvE+R8q1qOVFfkM7ge2D/ymd6F+mCKwI7QpDDT5TRocLwkxVGJ
+         L0Fs6xdCTz1mlZ/SMe1yEKgXhZ86HoYLYBTPcOo+HPn649Me1WD3g90R/tPNFVovvI
+         8pq+OjywGFrUiX0oGdQ2xWw8Zsz2Xp71i/kQ3jl+mtON5NjeF8GrFkQUPhJgS9uM7S
+         JIB5HTeRQRH5XUcqAZT6P8eWR1ZjTJxKWG+L+giI+MdTGIZLN2Yz5hCSwnmAVgcdkN
+         51Qx4Ame0LIUbJ/bVRRYJzaf+FASIJY+dztnT571qQNfDtVfwFlxAXSirQT5CFWxDA
+         qUlpWlYlxB4yQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id BD0F3A009B;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 84564A005E;
         Mon, 27 Jan 2020 11:09:28 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -57,9 +57,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is up without PHY
-Date:   Mon, 27 Jan 2020 12:09:11 +0100
-Message-Id: <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+Subject: [RFC net-next 1/8] net: stmmac: selftests: Do not fail if PHY is not attached
+Date:   Mon, 27 Jan 2020 12:09:06 +0100
+Message-Id: <9634df6d4cfe28e3f4ca06791c3488e687bb249e.1580122909.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1580122909.git.Jose.Abreu@synopsys.com>
 References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
@@ -70,9 +70,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we don't have any real PHY driver connected and we get link up from
-PCS we shall configure MAC and PCS for the desired speed and also
-resolve the flow control settings from MAC side.
+If a PHY is not attached, we can still run the tests with MAC loopback
+mode. Return -EOPNOTSUPP error code in PHY loopback test so that global
+status is not a failure.
 
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
@@ -92,36 +92,22 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/phy/phylink.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 4174d874b1f7..75dbaf80d7a5 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -533,10 +533,20 @@ static void phylink_resolve(struct work_struct *w)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index 2aba2673d6c3..586a657be984 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -380,7 +380,7 @@ static int stmmac_test_phy_loopback(struct stmmac_priv *priv)
+ 	int ret;
  
- 	if (link_changed) {
- 		pl->old_link_state = link_state.link;
--		if (!link_state.link)
-+		if (!link_state.link) {
- 			phylink_mac_link_down(pl);
--		else
-+		} else {
-+			/* If no PHY is connected, we still need to configure
-+			 * MAC/PCS for flow control and speed.
-+			 */
-+			if (!pl->phydev) {
-+				phylink_resolve_flow(pl, &link_state);
-+				phylink_mac_config(pl, &link_state);
-+			}
-+
- 			phylink_mac_link_up(pl, link_state);
-+		}
-+
- 	}
- 	if (!link_state.link && pl->mac_link_dropped) {
- 		pl->mac_link_dropped = false;
+ 	if (!priv->dev->phydev)
+-		return -EBUSY;
++		return -EOPNOTSUPP;
+ 
+ 	ret = phy_loopback(priv->dev->phydev, true);
+ 	if (ret)
 -- 
 2.7.4
 
