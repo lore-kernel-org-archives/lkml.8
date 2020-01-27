@@ -2,148 +2,214 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6C7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4191FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5E522527
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF0722527
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="me+nHO+R"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HliaSyrT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgA0RLQ (ORCPT
+        id S1726294AbgA0RLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:11:16 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46294 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0RLQ (ORCPT
+        Mon, 27 Jan 2020 12:11:52 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46747 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgA0RLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:11:16 -0500
-Received: by mail-qt1-f195.google.com with SMTP id e25so7907860qtr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:11:15 -0800 (PST)
+        Mon, 27 Jan 2020 12:11:51 -0500
+Received: by mail-qk1-f196.google.com with SMTP id g195so10300000qke.13
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:11:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XsWyww+QgbXklC8MxgHKR4SlweUpSlsMS025zYGjX0o=;
-        b=me+nHO+RJJ9pwknvGMxNKY4E+IIq2rfX81uDSJep64/JNvaqDYDa7kfwa5++7pg6Qc
-         9qBxYeCKnArlG4B9+YtIuqZL8vsEJ5u1Ve8INj+sdQMjZ986c8lrmZafuE4Lg5h/H5oS
-         tL1QvrBbFhgf9wPlM7BniGAn/nU7M9lQ70hdnBieA257ntb2JE3szZlI1EHsp6GoaV48
-         3w0ns7UQ+ky4syC0xGMztwp786ZkcVq6GNGSU7pqOEreCBgzFqIBxlqhZXZCHeaZjg72
-         A8cQzmR0i0cncpMm+ifTbo4l/ZMmlVWdFpgkrcBi/ceyOOx2NCTkZoGZbOvB4eSlgc/h
-         E7Qw==
+        bh=S1WlWU0/0mAGozdKMMszMQsPNvJD5JxxqRdPlFvg8YI=;
+        b=HliaSyrTi1mEs7RJIOyREqc6GfovxcHJDRwdHVDsLt6M1BbPEGZS6me7xzIxoaIH6+
+         LRhiSVFhh8DZeh/xECM51h6jpYf2k53TDdjlLlL2V4yFXM4O1BZVGsO55cyN8Cph7/pj
+         ITj/iFDZiNtdo0SC+YNsTPtsj7qQlExirbsCc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XsWyww+QgbXklC8MxgHKR4SlweUpSlsMS025zYGjX0o=;
-        b=NIVr1o+aRhh79MNI4g6M1pNlaEdBeeqqtBubfg09wTRT6xUQRvG6jHfTdb4Wk4AcYs
-         OUKdQYgVIkwd7jIYKElryZzWsl+r5Wk6Jgs3Y+PacoZMkcX7ZV3sBdmlR6URHHCLc92z
-         SqLzmMsMR38CjkIUSCNtmSgXcrCO2DwIENq+S3rROl5vQs/CHIM5eJIqKwoyW7cME5fm
-         eWxmQ+MelCb+rv/H59n/dZ+veNrzAGTf6ax2SEe7z3x2W1vjF2KTH08YGTUFLLNQ8XM3
-         bFViqvhw/JGmedLa+p8BuJH+4paRcK0Y+vSTlUcPGcn91hxZ6ofZBAL8yQxx10YsWUOA
-         Cuxg==
-X-Gm-Message-State: APjAAAUESAWxtKbDDU6Bh4/PL/iqoZhh0OdawJdBXFaIgu7QOBKQU8OH
-        MMzxIeZz0+uZBaf2TqaIjCwEN14o9RDUIcbAEurW8A==
-X-Google-Smtp-Source: APXvYqy5VT6LPP1sTcdJXPvGsFwol8OQElSUlAhWZheS+bJq22dM6OyWwO3nO6ssFpbLCp4wFxPtJv7ZkLGtKtOiTvg=
-X-Received: by 2002:ac8:340c:: with SMTP id u12mr16371700qtb.257.1580145074290;
- Mon, 27 Jan 2020 09:11:14 -0800 (PST)
+        bh=S1WlWU0/0mAGozdKMMszMQsPNvJD5JxxqRdPlFvg8YI=;
+        b=GJ195kdLp6cyzJOfJ4In/aE1HcVPuFlfkxPc1p5in3pPWTSEWCDmve80OmR1GLT3Cc
+         c7IPauvnPtCf6KLq/+Oql+QFKSa9qKSl7mlsJkBp06iRSqfF0nNK4o1Fdt0RC52iahcD
+         nwVH4PS6kcvF314WdM8xl5LTNIEIaco/0YBdj6gSsnlY3mcb1PVkYjw0fVeDhO0gDdlM
+         frYkqc3XxTAqaUUCJcDe9iyEicq4fgEeRxPo3oqXBoR/Aq4GXYAJVVRFY6kPEkoOB/r8
+         CLazyK2zXR/sx10TIsdhVs2xUqSkPXzAFzSvKjVjhPKxUFROU7glJ9JDP4ijZYaaCh95
+         tThg==
+X-Gm-Message-State: APjAAAXdV8RPElYWtXrRUn/MV8Sq4I5maMrHN9HnUdRI5QsHR4LPAkDq
+        xNiqdcCg0+PnVyPNMhplx9tp1G9XHTka52NiZzpnBY0C
+X-Google-Smtp-Source: APXvYqzmZBcDn+yybd09PYPu0USGydA5dOAJYTRhiyF2lqYF03Dy6NEXa81ASSZRQ7RKN7ezaLkO0A6CEn7L2jw9cCA=
+X-Received: by 2002:a37:9186:: with SMTP id t128mr16882009qkd.180.1580145110288;
+ Mon, 27 Jan 2020 09:11:50 -0800 (PST)
 MIME-Version: 1.0
-References: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
- <CACT4Y+bckC4k-EpWiCkD+BBo5ypmkcb2g8Axb62LnBbwJjcqdw@mail.gmail.com> <20200126095132.bq33azq7paqvedzx@wittgenstein>
-In-Reply-To: <20200126095132.bq33azq7paqvedzx@wittgenstein>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 27 Jan 2020 18:11:02 +0100
-Message-ID: <CACT4Y+ZNJY9D3xmk21M7qaBjbD+1_GeigA1Z1FGHwC+3MNT-gw@mail.gmail.com>
-Subject: Re: binderfs interferes with syzkaller?
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Hridya Valsaraju <hridya@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
+References: <20200125012105.59903-1-pmalani@chromium.org> <20200125012105.59903-2-pmalani@chromium.org>
+ <feb0ef4d-0f03-9bbc-807e-c385c03ffa71@collabora.com>
+In-Reply-To: <feb0ef4d-0f03-9bbc-807e-c385c03ffa71@collabora.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Mon, 27 Jan 2020 09:11:39 -0800
+Message-ID: <CACeCKae4O+MKx3COh=u=28tk21rb4BrzFZgYpnc=tRkigqSP5Q@mail.gmail.com>
+Subject: Re: [PATCH 1/4] platform/chrome: Add EC command msg wrapper
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 10:51 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
+Hi Enric,
+
+On Mon, Jan 27, 2020 at 7:29 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
 >
-> On Sat, Jan 25, 2020 at 07:13:03PM +0100, Dmitry Vyukov wrote:
-> > On Sat, Jan 25, 2020 at 6:49 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > >
-> > > Hi binder maintainers,
-> > >
-> > > It seems that something has happened and now syzbot has 0 coverage in
-> > > drivers/android/binder.c:
-> > > https://storage.googleapis.com/syzkaller/cover/ci-upstream-kasan-gce-root.html
-> > > It covered at least something there before as it found some bugs in binder code.
-> > > I _suspect_ it may be related to introduction binderfs, but it's
-> > > purely based on the fact that binderfs changed lots of things there.
-> > > And I see it claims to be backward compatible.
-> > >
-> > > syzkaller strategy to reach binder devices is to use
-> > > CONFIG_ANDROID_BINDER_DEVICES to create a bunch of binderN devices (to
-> > > give each test process a private one):
-> > > https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-kasan.config#L5671
-> > >
-> > > Then it knows how to open these /dev/binderN devices:
-> > > https://github.com/google/syzkaller/blob/master/sys/linux/dev_binder.txt#L22
-> > > and do stuff with them.
-> > >
-> > > Did these devices disappear or something?
+> Hi Prashant,
+>
+> Many thanks for this patch.
+>
+> On 25/1/20 2:21, Prashant Malani wrote:
+> > Many callers of cros_ec_cmd_xfer_status() use a similar set up of
+> > allocating and filling a message buffer and then copying any received
+> > data to a target buffer.
 > >
-> > Oh, I see, it's backwards compatible if it's not enabled, right?
 >
-> It's backwards compatible.
-> Let me give a little more detail. The legacy binder interface would
-> create all devices listed in the module parameter
-> CONFIG_ANDROID_BINDER_DEVICES. These devices were created using
-> misc_register(&binder_device->miscdev);
-> in the host's devtmpfs mount.
-> If binderfs is enabled these devices are now created in the binderfs
-> instance instead.
-> For full backwards compatibility with old Android versions symlinks (or
-> bind mounts) can be provided in the host's devtmpfs. This is what I
-> recommended a few months ago.
+> cros_ec_cmd_xfer_status is already a wrapper, I dislike the idea of having three
+> ways to do the same (cros_ec_cmd_xfer, cros_ec_cmd_xfer_status and this new
+> one). I like the idea of have a wrapper that embeds the message allocation but
+> we should not confuse users with different calls that does the same.
+Yes, my intention was to eventually replace all the xfer_status()
+call-sites to use the new wrapper, and then get rid of xfer_status
+completely.
 >
-> > And we enabled it because, well, enabling things generally gives more
-> > coverage. I guess I will disable CONFIG_ANDROID_BINDERFS for now to
+> So, I am for a change like this but I'd like to have all the users calling the
+> same wrapper (unless there is a good reason to not use it). A proposed roadmap
+> (to be discussed) for this would be.
 >
-> I would at least try to test both somehow. It's likely that binderfs
-> will replace legacy binder devices so if we could keep testing it
-> somehow that would be great.
->
-> > restore coverage in the binder itself.
->
-> I'm not completely sure what you mean here. The binder IPC codepaths are
-> nearly the same. The difference is mostly in how the device information
-> is cast out before actual binder-ipc operations take place.
-> In any case, testing both would obviously be preferred but binderfs
-> strikes me as more worthy of testing.
+> 1. Replace all the remaining "cros_ec_cmd_xfer" calls with
+> "cros_ec_cmd_xfer_status".
+> 2. Modify cros_ec_cmd_xfer_status to embed the message allocation.
 
-I've reverted CONFIG_ANDROID_BINDERFS to "is not set" for now as the
-easiest option. We've got 35% coverage of binder.c again.
+How about the following alteration the the roadmap:
+- Introducing the new wrapper.
+- Replacing all remaining cros_ec_cmd_xfer/cros_ec_cmd_xfer_status to
+use the new wrapper.
+- Deleting cros_ec_cmd_xfer and cros_ec_cmd_xfer_status ?
+My thinking is that this would mean fewer changes at the call-sites
+compared to the original roadmap (in the original roadmap, one would
+first have to modify calls to use cros_ec_cmd_xfer_status(), and then
+modify them again when cros_ec_cmd_xfer_status() itself is modified to
+include message allocation).
 
-By "restore coverage" I meant that even if the IPC codepaths are
-nearly the same tests knew to open /dev/binderN and these disappeared,
-so no test could open any binder device and get any coverage in binder
-code.
+That said I don't have any strong preference, so either would work.
 
-If anybody wants to try to test both, you are very welcome ;)
-If you are hinting that I should do it, a single person can't test all
-2000 subsystems in kernel, and testing each of them requires quite
-some domain expertise. This really requires involvement of developers
-of the code. I am sure there is lots to improve in the IPC codepaths
-as well.
+Best regards,
+>
+> Thanks,
+>  Enric
+>
+>
+> > Create a utility function that performs this setup so that callers can
+> > use this function instead.
+> >
+> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> > ---
+> >  drivers/platform/chrome/cros_ec_proto.c     | 53 +++++++++++++++++++++
+> >  include/linux/platform_data/cros_ec_proto.h |  5 ++
+> >  2 files changed, 58 insertions(+)
+> >
+> > diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> > index da1b1c4504333..8ef3b7d27d260 100644
+> > --- a/drivers/platform/chrome/cros_ec_proto.c
+> > +++ b/drivers/platform/chrome/cros_ec_proto.c
+> > @@ -5,6 +5,7 @@
+> >
+> >  #include <linux/delay.h>
+> >  #include <linux/device.h>
+> > +#include <linux/mfd/cros_ec.h>
+> >  #include <linux/module.h>
+> >  #include <linux/platform_data/cros_ec_commands.h>
+> >  #include <linux/platform_data/cros_ec_proto.h>
+> > @@ -570,6 +571,58 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> >  }
+> >  EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
+> >
+> > +/**
+> > + * cros_ec_send_cmd_msg() - Utility function to send commands to ChromeOS EC.
+> > + * @ec: EC device struct.
+> > + * @version: Command version number (often 0).
+> > + * @command: Command ID including offset.
+> > + * @outdata: Data to be sent to the EC.
+> > + * @outsize: Size of the &outdata buffer.
+> > + * @indata: Data to be received from the EC.
+> > + * @insize: Size of the &indata buffer.
+> > + *
+> > + * This function is a wrapper around &cros_ec_cmd_xfer_status, and performs
+> > + * some of the common work involved with sending a command to the EC. This
+> > + * includes allocating and filling up a &struct cros_ec_command message buffer,
+> > + * and copying the received data to another buffer.
+> > + *
+> > + * Return: The number of bytes transferred on success or negative error code.
+> > + */
+> > +int cros_ec_send_cmd_msg(struct cros_ec_device *ec, unsigned int version,
+> > +                      unsigned int command, void *outdata,
+> > +                      unsigned int outsize, void *indata,
+> > +                      unsigned int insize)
+> > +{
+> > +     struct cros_ec_command *msg;
+> > +     int ret;
+> > +
+> > +     msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
+> > +     if (!msg)
+> > +             return -ENOMEM;
+> > +
+> > +     msg->version = version;
+> > +     msg->command = command;
+> > +     msg->outsize = outsize;
+> > +     msg->insize = insize;
+> > +
+> > +     if (outdata && outsize > 0)
+> > +             memcpy(msg->data, outdata, outsize);
+> > +
+> > +     ret = cros_ec_cmd_xfer_status(ec, msg);
+> > +     if (ret < 0) {
+> > +             dev_warn(ec->dev, "Command failed: %d\n", msg->result);
+> > +             goto cleanup;
+> > +     }
+> > +
+> > +     if (insize)
+> > +             memcpy(indata, msg->data, insize);
+> > +
+> > +cleanup:
+> > +     kfree(msg);
+> > +     return ret;
+> > +}
+> > +EXPORT_SYMBOL(cros_ec_send_cmd_msg);
+> > +
+> >  static int get_next_event_xfer(struct cros_ec_device *ec_dev,
+> >                              struct cros_ec_command *msg,
+> >                              struct ec_response_get_next_event_v1 *event,
+> > diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> > index 30098a5515231..166ce26bdd79e 100644
+> > --- a/include/linux/platform_data/cros_ec_proto.h
+> > +++ b/include/linux/platform_data/cros_ec_proto.h
+> > @@ -201,6 +201,11 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+> >  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> >                           struct cros_ec_command *msg);
+> >
+> > +int cros_ec_send_cmd_msg(struct cros_ec_device *ec_dev, unsigned int version,
+> > +                      unsigned int command, void *outdata,
+> > +                      unsigned int outsize, void *indata,
+> > +                      unsigned int insize);
+> > +
+> >  int cros_ec_register(struct cros_ec_device *ec_dev);
+> >
+> >  int cros_ec_unregister(struct cros_ec_device *ec_dev);
+> >
