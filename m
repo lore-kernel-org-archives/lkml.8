@@ -2,121 +2,124 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BF7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F24C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C075214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:19:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ssqAzss3"
+	by mail.kernel.org (Postfix) with ESMTP id 9AE2620716
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:26:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580135185;
+	bh=V+RtYx4rDRwVt97bmBt6XB44quPwdv8d3Z9dwT7Tjb0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qb09yKgCpLck6Z0q5MdJgsm+3G4L5fNqP/rqdefghYecyXdjxxCBDgLw040jzmL4T
+	 ByEgUXH+oMFjD7H71LhpRxW/LR5j7BtxfYElgbjeCAvzD02S6+vnCFI7qAugNaVxSz
+	 GkgSe7zXu9ybkGxfEy7T+oQVSdpNp8ClIrCwNGL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgA0OTh (ORCPT
+        id S1729064AbgA0O0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:19:37 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38219 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbgA0OTh (ORCPT
+        Mon, 27 Jan 2020 09:26:25 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41721 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0O0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:19:37 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a9so2284662wmj.3;
-        Mon, 27 Jan 2020 06:19:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uCAdJLVoj2sUq92e/C8T9Kl39r5x3+zdQIfnr0K+8yA=;
-        b=ssqAzss3O9NyAFx6NTF8QNCuJrNS/W0OasPeu4LwLXZyw1FDiZsMn1EAckIqWT+2bn
-         E8R8XGLdSjZsirJf89WdkUazx+Gb4i5K82rv2neIpwL9eGom2wDoMmsGwjEB4ELsOQXv
-         J0IlvcG2rd/PTM3G4h0+CVEHbweJVZPVYdnND/4BAQoYKOHE+jRNEpWnBJteYnbnXFly
-         YFUN+ZZSw23XHAq/TpQZfLCuCwH2zbHZfU7egpSLCLU85J1v9z5cvSuPu2kdbBIdtJeO
-         u9vpRS89nnp+0ie2j+N4d73CCx2viKC/SGFquW12trAgUtfK3c8R3AF5vsdwrZr7EZVU
-         VxyQ==
+        Mon, 27 Jan 2020 09:26:24 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r27so8481740otc.8;
+        Mon, 27 Jan 2020 06:26:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uCAdJLVoj2sUq92e/C8T9Kl39r5x3+zdQIfnr0K+8yA=;
-        b=ZlatLrrfxZceoy0lrQS1tIx57QTO31d+6jNxtG8nMvGClIgxXgkxtJrp13lh41ZCeP
-         I+HnIwvNWg8coAGJMEVlKqz66rHng78hgatbA5zR+nVgtXUR4dMdyF2cZUt7VrakIkJZ
-         Uo635e2EQJPWsWTMAGYriyy7NCZF34Cy7xltHY1mzKlSt9Eni91fS1JHqNeQmmhzevN/
-         SGwXGuH+Mtj5U4tnoTGzrhC5xjxXhPgzU/qgg94Ux2vv74cVoXH7v5BoYv0Bm6d+/sAC
-         6ncrjglxcFXZ9JxvLlnYcF9xpK4Tq8PuzTnGI9TOUn0mCluKmUqePyV27/ULQfUf6GrO
-         c8Tg==
-X-Gm-Message-State: APjAAAWIrvwXANiT38XKSh7p7wJGA11eBIgbnPkrgxk266obZVL7uZGN
-        UMv0IlimnKkn4obzlRtoR8Y=
-X-Google-Smtp-Source: APXvYqxZYDhx+pQPoRugT+5txziPdge9/7sxEo3a0e0ANlKSdRIEc6rJbMNCuJQwbQnAIF9h0P+L2A==
-X-Received: by 2002:a1c:a952:: with SMTP id s79mr14757024wme.83.1580134774786;
-        Mon, 27 Jan 2020 06:19:34 -0800 (PST)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id g25sm28908061wmh.3.2020.01.27.06.19.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 06:19:34 -0800 (PST)
-Subject: Re: [PATCHv8 03/34] ns: Introduce Time Namespace
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Dmitry Safonov <dima@arista.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrei Vagin <avagin@openvz.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        Linux API <linux-api@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>
-References: <20191112012724.250792-1-dima@arista.com>
- <20191112012724.250792-4-dima@arista.com>
- <CACT4Y+b70bRRS2XD3yxhBoy4E-LFy_K3wMrjeuPmiEvaPe_c2Q@mail.gmail.com>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <c0a13024-5f56-133a-61f1-c4185f5ac210@gmail.com>
-Date:   Mon, 27 Jan 2020 14:19:27 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Nxt//FHypijseal0ghIbraBsi2lnDnz+2r9nMCuOYJI=;
+        b=eZAPI5FnyZz44CPp9IGSQEvBWwCn4DXi/Guo5baZ6bhVjt3fMCNXuA0yI4ATjE3iOF
+         3JHzBL1/mRiXV167pLJR7kcRza4t3Kga6EOUX7lygX3pqtpzmcVDUXpTyRyPij/U6wgl
+         nofLvaxUBmmpHNLerroiPVg+6gka9k/87YklZ1HJ35zSZL3zf84mSwCJzeu9Z4Cd25oD
+         fRFfj/JsO9CGTL59ZlYE1noNwg+/8OfSokTfah+Nez4wV0sk9p/swDNIaZuzuL1yUGlz
+         9gJ5MVy5EvrZe9QcoQqFDzEFmJJOgoh7MXQuBfcNv/bfX/t1IvMDzvReTkVlkvipE4z+
+         CPDA==
+X-Gm-Message-State: APjAAAVQf7mrKRbOgOROMG32VePv32vgJ7BmvnFlv7Re/q4oPR+kS0Gm
+        YRJF2wsT0n9gmPUsYY+MdQ==
+X-Google-Smtp-Source: APXvYqyBPH3RWTQHiqmN/lkBJBZUFhrE+9jZVDWpGBXqHJYibAu4HcUdQ/ttp2aqxhjJ+ejTuvj9gg==
+X-Received: by 2002:a9d:2028:: with SMTP id n37mr13077692ota.127.1580135183616;
+        Mon, 27 Jan 2020 06:26:23 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t7sm2606437oth.79.2020.01.27.06.26.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 06:26:22 -0800 (PST)
+Received: (nullmailer pid 29798 invoked by uid 1000);
+        Mon, 27 Jan 2020 14:26:20 -0000
+Date:   Mon, 27 Jan 2020 08:26:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        tglx@linutronix.de, daniel.lezcano@linaro.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        miquel.raynal@bootlin.com, keescook@chromium.org,
+        ebiederm@xmission.com, krzk@kernel.org, geert+renesas@glider.be,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        mturquette@baylibre.com, sboyd@kernel.org, chenhc@lemote.com,
+        jiaxun.yang@flygoat.com, paul@boddie.org.uk, hns@goldelico.com,
+        mips-creator-ci20-dev@googlegroups.com, rick.tyliu@ingenic.com
+Subject: Re: [PATCH v3 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Message-ID: <20200127142620.GA29108@bogus>
+References: <1579867508-81499-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1579867508-81499-5-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+b70bRRS2XD3yxhBoy4E-LFy_K3wMrjeuPmiEvaPe_c2Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1579867508-81499-5-git-send-email-zhouyanjie@wanyeetech.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-On 1/27/20 2:12 PM, Dmitry Vyukov wrote:
-> On Tue, Nov 12, 2019 at 2:30 AM Dmitry Safonov <dima@arista.com> wrote:
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 3f7f8cdbc471..037abc28c414 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -13172,6 +13172,8 @@ T:      git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
->>  S:     Maintained
->>  F:     fs/timerfd.c
->>  F:     include/linux/timer*
->> +F:     include/linux/time_namespace.h
->> +F:     kernel/time_namespace.c
+On Fri, 24 Jan 2020 20:05:05 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= wrote:
+> Document the available properties for the SoC root node and the
+> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
 > 
-> Is it supposed to be kernel/time/namespace.c?
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Tested-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
+> 
+> Notes:
+>     v1->v2:
+>     Change the two Document from txt to yaml.
+>     
+>     v2->v3:
+>     Fix formatting errors.
+> 
+>  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 53 ++++++++++++++++++++++
+>  .../bindings/mips/ingenic/ingenic,soc,yaml         | 35 ++++++++++++++
+>  2 files changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml
+> 
 
-Yes, thanks for catching this.
-I'll send a fixup shortly.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Thanks,
-          Dmitry
+warning: no schema found in file: Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: ignoring, error in schema: properties: compatible: oneOf: 0
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: properties:compatible:oneOf:0: 'ingenic,xburst' is not of type 'object', 'boolean'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: properties:compatible:oneOf:1: 'ingenic,xburst2' is not of type 'object', 'boolean'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: Additional properties are not allowed ('Example' was unexpected)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: Additional properties are not allowed ('Example' was unexpected)
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1228796
+Please check and re-submit.
