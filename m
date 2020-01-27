@@ -2,89 +2,266 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127FFC35240
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F91C35240
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1DE20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C542083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3eLgOqDQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ozlGC/HS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgA0CLl (ORCPT
+        id S1727177AbgA0CWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 21:11:41 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:55158 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbgA0CLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 21:11:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=y7YuVKCXqFUYF08PynV1zLsYzbNxNQ3jNx/XdrnhwM8=; b=3eLgOqDQ92tcKjx7fglJfBqCAT
-        BBS/OC4CDGd/+El84Ouvrof2JgBV+0d2Ni84XolBXFyNtXqHWdVXPxtehEOKHRygOHQ/e9sVsrpX6
-        jrpiPKMNhTWKN8wF8CIHGIGtfoNKA9yuR4bRYzZ/o0SeMtEoWFfu58JC7sqMBpPx7WjE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ivts4-0003xj-2k; Mon, 27 Jan 2020 03:11:24 +0100
-Date:   Mon, 27 Jan 2020 03:11:24 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 5/7] ethtool: provide WoL settings with WOL_GET
- request
-Message-ID: <20200127021124.GF12816@lunn.ch>
-References: <cover.1580075977.git.mkubecek@suse.cz>
- <a52977208338f48ef1383a5cd7288dd916245669.1580075977.git.mkubecek@suse.cz>
+        Sun, 26 Jan 2020 21:22:09 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36485 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgA0CWJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 21:22:09 -0500
+Received: by mail-ed1-f66.google.com with SMTP id j17so9266318edp.3
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 18:22:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PMhK4J394I4THgHDoNXNmbP45YIW934mob295GzVs5g=;
+        b=ozlGC/HS7K+HkHkIA72jJOY8IVJTyGW5SLczYWrMnbnENa3t6exj9PFqpHonGHynAx
+         YAh6M8Di1IrCJ46N7jlGuTJ1yfBFtlrzC2eD4z3N+XDU5UPBm2ZsMhN+Stvu3ODCZOeR
+         wuAyEsV4RW8lIUlIb8AiLtEcvH25BY/EQ7BUGbzAZnMZXsm0cupeftYrZOvQjIb4toVX
+         ZG8mnKE1wvnHEqP//XiTLkMOwpceBYmM6TlbOjo2KbpstqZkfl1nY91TKNZVtiuFvEAo
+         f38kRLdzqYvtxrI1YhdhJ96LMc1yPRt2sdqAtItY19azKzB6RyguxR/r1w+jLRkrKiAE
+         Eq0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PMhK4J394I4THgHDoNXNmbP45YIW934mob295GzVs5g=;
+        b=NceeDa3K244IfxOzKn6aHaNxTvUn5KGSDx3XTN7AdT6n1IJxVeYWDCl7cKlSmK1uhV
+         2WJLb8kMJrr/dlPHuNQ3TeNpDUpXiY6ueQ6xhJTDZEOx9x4XY9qk+y76w175bF1mkLzN
+         JSwwrr85vdAwJMt8W1TFW70+mReohZfG+03tmousYtAszNisOgSPEupv1Atn4AdxOjeg
+         PJ8pjmRUyAXtNbypKvZfGwUdsPypRTfVT33BcZ/f2jjKW5xqBD0QqyF4KL2IPBlFI4Mi
+         VDFKzpsN5Uor9lrlzk++5sUnuf19Pck4STsjDOCte+lfw+t1ogcWWWq2IHNjMB58myOE
+         IuJw==
+X-Gm-Message-State: APjAAAVMUAscgOJd+Io7SPWl7fHHy2q08JoYn+uq4N2A3s+RmkX+4E7F
+        1y3yI4EO+Emob97TvIUM6U3FTYKPpMgcdwSZKTqStA==
+X-Google-Smtp-Source: APXvYqyNuIkPhMYj87kZFVXeXb4dR4SCJT66BFCr55zNQ1yXKkY3P25mqDS8i1KFhP/juHC/tf7ke7L0pZBA85MKQz0=
+X-Received: by 2002:a17:906:b208:: with SMTP id p8mr11966398ejz.191.1580091726432;
+ Sun, 26 Jan 2020 18:22:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a52977208338f48ef1383a5cd7288dd916245669.1580075977.git.mkubecek@suse.cz>
+References: <20200123014627.71720-1-bgeffon@google.com> <20200124190625.257659-1-bgeffon@google.com>
+ <20200126051642.GA39508@ubuntu-x2-xlarge-x86>
+In-Reply-To: <20200126051642.GA39508@ubuntu-x2-xlarge-x86>
+From:   Brian Geffon <bgeffon@google.com>
+Date:   Sun, 26 Jan 2020 18:21:39 -0800
+Message-ID: <CADyq12wfLfnbRFt3nRjwc=3BcTi8BbUatyxc58r592NLbD04pQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: Add MREMAP_DONTUNMAP to mremap().
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 11:11:13PM +0100, Michal Kubecek wrote:
-> Implement WOL_GET request to get wake-on-lan settings for a device,
-> traditionally available via ETHTOOL_GWOL ioctl request.
-> 
-> As part of the implementation, provide symbolic names for wake-on-line
+Hi Nathan,
+Thank you! That was an oversight on my part. I'll address it in the next patch.
 
-Hi Michal
+Brian
 
-LAN, not line.
 
-> modes as ETH_SS_WOL_MODES string set.
-
-I think it would also be good to repeat here what you have in the
-cover note, that unlike the ioctl version, CAP_NET_ADMIN is required.
-The cover note does get committed to the git history, but it is a lot
-less likely to be seen than this patches commit message.
-
-> +WOL_GET
-> +=======
-> +
-> +Query device wake-on-lan settings. Unlike most "GET" type requests,
-> +``ETHTOOL_MSG_WOL_GET`` requires (netns) ``CAP_NET_ADMIN`` privileges as it
-> +(potentially) provides SecureOn(tm) password which is confidential.
-
-provides _the_ SecureOn(tm)
-
-Apart from that:
-
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+On Sat, Jan 25, 2020 at 9:16 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Hi Brian,
+>
+> On Fri, Jan 24, 2020 at 11:06:25AM -0800, Brian Geffon wrote:
+> > When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+> > set, the source mapping will not be removed. Instead it will be
+> > cleared as if a brand new anonymous, private mapping had been created
+> > atomically as part of the mremap() call.  If a userfaultfd was watching
+> > the source, it will continue to watch the new mapping.  For a mapping
+> > that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
+> > mremap() call to fail. MREMAP_DONTUNMAP implies that MREMAP_FIXED is
+> > also used. The final result is two equally sized VMAs where the
+> > destination contains the PTEs of the source.
+> >
+> > We hope to use this in Chrome OS where with userfaultfd we could write
+> > an anonymous mapping to disk without having to STOP the process or worry
+> > about VMA permission changes.
+> >
+> > This feature also has a use case in Android, Lokesh Gidra has said
+> > that "As part of using userfaultfd for GC, We'll have to move the physical
+> > pages of the java heap to a separate location. For this purpose mremap
+> > will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+> > heap, its virtual mapping will be removed as well. Therefore, we'll
+> > require performing mmap immediately after. This is not only time consuming
+> > but also opens a time window where a native thread may call mmap and
+> > reserve the java heap's address range for its own usage. This flag
+> > solves the problem."
+> >
+> > Signed-off-by: Brian Geffon <bgeffon@google.com>
+> > ---
+> >  include/uapi/linux/mman.h |  5 +++--
+> >  mm/mremap.c               | 37 ++++++++++++++++++++++++++++++-------
+> >  2 files changed, 33 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
+> > index fc1a64c3447b..923cc162609c 100644
+> > --- a/include/uapi/linux/mman.h
+> > +++ b/include/uapi/linux/mman.h
+> > @@ -5,8 +5,9 @@
+> >  #include <asm/mman.h>
+> >  #include <asm-generic/hugetlb_encode.h>
+> >
+> > -#define MREMAP_MAYMOVE       1
+> > -#define MREMAP_FIXED 2
+> > +#define MREMAP_MAYMOVE               1
+> > +#define MREMAP_FIXED         2
+> > +#define MREMAP_DONTUNMAP     4
+> >
+> >  #define OVERCOMMIT_GUESS             0
+> >  #define OVERCOMMIT_ALWAYS            1
+> > diff --git a/mm/mremap.c b/mm/mremap.c
+> > index 122938dcec15..bf97c3eb538b 100644
+> > --- a/mm/mremap.c
+> > +++ b/mm/mremap.c
+> > @@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+> >  static unsigned long move_vma(struct vm_area_struct *vma,
+> >               unsigned long old_addr, unsigned long old_len,
+> >               unsigned long new_len, unsigned long new_addr,
+> > -             bool *locked, struct vm_userfaultfd_ctx *uf,
+> > -             struct list_head *uf_unmap)
+> > +             bool *locked, unsigned long flags,
+> > +             struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
+> >  {
+> >       struct mm_struct *mm = vma->vm_mm;
+> >       struct vm_area_struct *new_vma;
+> > @@ -408,6 +408,13 @@ static unsigned long move_vma(struct vm_area_struct *vma,
+> >       if (unlikely(vma->vm_flags & VM_PFNMAP))
+> >               untrack_pfn_moved(vma);
+> >
+> > +     if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
+> > +             if (vm_flags & VM_ACCOUNT)
+> > +                     vma->vm_flags |= VM_ACCOUNT;
+> > +
+> > +             goto out;
+> > +     }
+> > +
+> >       if (do_munmap(mm, old_addr, old_len, uf_unmap) < 0) {
+> >               /* OOM: unable to split vma, just get accounts right */
+> >               vm_unacct_memory(excess >> PAGE_SHIFT);
+> > @@ -422,6 +429,7 @@ static unsigned long move_vma(struct vm_area_struct *vma,
+> >                       vma->vm_next->vm_flags |= VM_ACCOUNT;
+> >       }
+> >
+> > +out:
+> >       if (vm_flags & VM_LOCKED) {
+> >               mm->locked_vm += new_len >> PAGE_SHIFT;
+> >               *locked = true;
+> > @@ -497,7 +505,7 @@ static struct vm_area_struct *vma_to_resize(unsigned long addr,
+> >
+> >  static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+> >               unsigned long new_addr, unsigned long new_len, bool *locked,
+> > -             struct vm_userfaultfd_ctx *uf,
+> > +             unsigned long flags, struct vm_userfaultfd_ctx *uf,
+> >               struct list_head *uf_unmap_early,
+> >               struct list_head *uf_unmap)
+> >  {
+> > @@ -545,6 +553,17 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+> >               old_len = new_len;
+> >       }
+> >
+> > +     /*
+> > +      * MREMAP_DONTUNMAP expands by old_len + (new_len - old_len), we will
+> > +      * check that we can expand by old_len and vma_to_resize will handle
+> > +      * the vma growing.
+> > +      */
+> > +     if (unlikely(flags & MREMAP_DONTUNMAP && !may_expand_vm(mm,
+> > +                             vma->vm_flags, old_len >> PAGE_SHIFT))) {
+>
+> We received a Clang build report that vma is used uninitialized here
+> (they aren't being publicly sent to LKML due to GCC vs Clang
+> warning/error overlap):
+>
+> https://groups.google.com/d/msg/clang-built-linux/gE5wRaeHdSI/xVA0MBQVEgAJ
+>
+> Sure enough, vma is initialized first in the next block. Not sure if
+> this section should be moved below that initialization or if something
+> else should be done to resolve it but that dereference will obviously be
+> fatal.
+>
+> Cheers,
+> Nathan
+>
+> > +             ret = -ENOMEM;
+> > +             goto out;
+> > +     }
+> > +
+> >       vma = vma_to_resize(addr, old_len, new_len, &charged);
+> >       if (IS_ERR(vma)) {
+> >               ret = PTR_ERR(vma);
+> > @@ -561,7 +580,7 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+> >       if (IS_ERR_VALUE(ret))
+> >               goto out1;
+> >
+> > -     ret = move_vma(vma, addr, old_len, new_len, new_addr, locked, uf,
+> > +     ret = move_vma(vma, addr, old_len, new_len, new_addr, locked, flags, uf,
+> >                      uf_unmap);
+> >       if (!(offset_in_page(ret)))
+> >               goto out;
+> > @@ -609,12 +628,15 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+> >       addr = untagged_addr(addr);
+> >       new_addr = untagged_addr(new_addr);
+> >
+> > -     if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
+> > +     if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE | MREMAP_DONTUNMAP))
+> >               return ret;
+> >
+> >       if (flags & MREMAP_FIXED && !(flags & MREMAP_MAYMOVE))
+> >               return ret;
+> >
+> > +     if (flags & MREMAP_DONTUNMAP && !(flags & MREMAP_FIXED))
+> > +             return ret;
+> > +
+> >       if (offset_in_page(addr))
+> >               return ret;
+> >
+> > @@ -634,7 +656,8 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+> >
+> >       if (flags & MREMAP_FIXED) {
+> >               ret = mremap_to(addr, old_len, new_addr, new_len,
+> > -                             &locked, &uf, &uf_unmap_early, &uf_unmap);
+> > +                             &locked, flags, &uf, &uf_unmap_early,
+> > +                             &uf_unmap);
+> >               goto out;
+> >       }
+> >
+> > @@ -712,7 +735,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+> >               }
+> >
+> >               ret = move_vma(vma, addr, old_len, new_len, new_addr,
+> > -                            &locked, &uf, &uf_unmap);
+> > +                            &locked, flags, &uf, &uf_unmap);
+> >       }
+> >  out:
+> >       if (offset_in_page(ret)) {
+> > --
+> > 2.25.0.341.g760bfbb309-goog
+> >
