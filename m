@@ -2,137 +2,125 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541CBC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A1DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13AF02087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:08:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="FRyn74VX"
+	by mail.kernel.org (Postfix) with ESMTP id E48C12071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:10:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgA0KIh (ORCPT
+        id S1729331AbgA0KKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 05:08:37 -0500
-Received: from mail-eopbgr70125.outbound.protection.outlook.com ([40.107.7.125]:57038
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726179AbgA0KIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 05:08:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S8o7ZdSYN3EEGG8yUBJoIzVJ0i5/1ZtZtk8G02+oxZSAb9YVPccDI9hh0TRSlcsIftSKdL+8NtBu5TShg6tmungIKsI0dWRfEkgh4H3vwOSqhqO/3gw3sJjBz3Ez+U/GQwD5tnfbGi6+iMfw7zPn73sxp1eVEo40m9QtTiM8DuRL8KRkDvxFipBzHcJvv4dcjLK7xw0m/5kEG80Zsv9qFlkeW8W3NNe5adKq4Dk1NNlQ5GdZrRUBJK1S6MijGlF4UelvYqpHStX8ajOjQakmlsGa/b3aTvlw7gJvQKyiAoyUQPvzjgkfP1xVP8UzEpFcUaY53v92tbncbjbnKCCSAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DP0visv+1QQ5bROCjSnALyf+03E81AE1jRd+Qoncw9I=;
- b=Xzz825vIFblXtFEa9ERXFgAcO9iirCtCPc0x9fDcHUEhHWsv6f0oJHMUnSoeSx9jkDMJ+TQxbp6JncW5aukQp9ML1GZyEkE+k5iEhsJvsJqaXQy0kxfq5vWjGeqrubg6JhXa6rsFTZ91zJ/SOYjBNGrNPFdzuX6hg1sw6AOlMNffyPiwXb0ujQI20oiiiTYF4mI6dHs+/Aka4E1u1UeUuH6OmXNmFycrEDmcwvAuxbq7nyIIRPHYAs6zt7jo8evvyoXJTmihdixz7T7kjTZyyIhNDzigp0HW2tGT8W3J6Z1RWR6L055QBKWAdo80jgzKoxEVpNH48+JRSHBoiKeUKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DP0visv+1QQ5bROCjSnALyf+03E81AE1jRd+Qoncw9I=;
- b=FRyn74VXwmahYqgllGoNfXytT2z7/s0wRReA25ZjcZS+XPtMuiUA4jyCs9T7Vpvr6yilYXJPwKIdycoPaO4PuBrhCtNNSTFS2WxGIAoEAR0Qnhp9Q70v5TQ7dXX6ou73miwOqjIljvNOx7qaMuaB7WkE8O++l3C3Cx+nRYYbw/s=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3385.eurprd02.prod.outlook.com (52.134.73.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.24; Mon, 27 Jan 2020 10:08:27 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2665.017; Mon, 27 Jan 2020
- 10:08:27 +0000
-Received: from [192.168.13.3] (213.112.138.4) by HE1PR0502CA0009.eurprd05.prod.outlook.com (2603:10a6:3:e3::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.21 via Frontend Transport; Mon, 27 Jan 2020 10:08:26 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Colin Ian King <colin.king@canonical.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] i2c: xiic: fix indentation issue
-Thread-Topic: [PATCH][next] i2c: xiic: fix indentation issue
-Thread-Index: AQHV1F9MXsnBtPvzREO9EfvLgEq5Laf+IjwAgAAcsYCAAAvAAA==
-Date:   Mon, 27 Jan 2020 10:08:27 +0000
-Message-ID: <a49786b8-bf71-727b-0785-62bd606a159b@axentia.se>
-References: <20200126154257.41336-1-colin.king@canonical.com>
- <e20558ec-bf4e-9348-f6cb-a37c5dbbb2de@xilinx.com>
- <6558ccbc-56f7-b30d-df02-1eaf07072c4d@canonical.com>
-In-Reply-To: <6558ccbc-56f7-b30d-df02-1eaf07072c4d@canonical.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-originating-ip: [213.112.138.4]
-x-clientproxiedby: HE1PR0502CA0009.eurprd05.prod.outlook.com
- (2603:10a6:3:e3::19) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04a5fcc8-d9ec-4e3b-f6fd-08d7a310da38
-x-ms-traffictypediagnostic: DB3PR0202MB3385:
-x-microsoft-antispam-prvs: <DB3PR0202MB3385DCFE13C48A008737D6D6BC0B0@DB3PR0202MB3385.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02951C14DC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(396003)(366004)(346002)(376002)(136003)(189003)(199004)(31686004)(86362001)(31696002)(71200400001)(316002)(53546011)(16576012)(110136005)(54906003)(2906002)(508600001)(6486002)(81156014)(4326008)(81166006)(8676002)(36756003)(52116002)(8936002)(16526019)(956004)(5660300002)(186003)(66946007)(26005)(2616005)(66446008)(66556008)(66476007)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3385;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nTmqrX7L85eAPXLwoqtrSiB0Ww9Obmah/st+/PPDzESY20UE2IFLAee8GsGBHzjPtKfDhaMWHiuB9HId/VEWu70E4RDO+XvB2JbzGJ8mg92EoQ6RX4C1pojFwHkmRLaSCkZPAENXwwd3qSNhz3288Aqb8ltEIZaBPz1NBBFDWdk59Wgi7OWLpKcMnG5ZQJWMAKBRp2l28gmXYSFf7cDZ6mjTl4Paoo1kYNreE0vfv4TYrXX6uaq5uZc7RSlZ7AKxX6xv9MZRA7ZqAOw4LPZx1gpOF+aqG9/yYKSv1UQPNyBekuyHIdXSzNQ3c0TlGhaYsCyduxUUKOtEO0wX0Zf5b65Sr0gdEEDm+Blx7+m2ChhXg06Bb936ZRCoRhWqD/dYY1idGb+jT1Q+V/bxcpj980V9tjaB02uTxfz1SQMMcPkQqss/UM3IEBvoSHkzDi38
-x-ms-exchange-antispam-messagedata: hJ2Y9a8/a632aDFErlh72/weW8YqCwbyiOTlioeq0+51itwbB/j3dqPaQXwCjpk/x2ZH1Mjm0TdSHSXm/QdNvazx98etRddBqiqsgdpTLl5/6FrehOg6vbkd4Iu/BAVQb+j6bIlMgphuHxI60gXLcw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9D4CE742CE73534BAB68505071BDB30E@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 27 Jan 2020 05:10:01 -0500
+Received: from relay.sw.ru ([185.231.240.75]:54034 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgA0KKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 05:10:00 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1iw1KG-0000ID-Aj; Mon, 27 Jan 2020 13:09:00 +0300
+Subject: Re: [PATCH v5 2/6] block: Pass op_flags into
+ blk_queue_get_max_sectors()
+To:     Bob Liu <bob.liu@oracle.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
+        axboe@kernel.dk, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, song@kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, Chaitanya.Kulkarni@wdc.com,
+        darrick.wong@oracle.com, ming.lei@redhat.com, osandov@fb.com,
+        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
+References: <157968992539.174869.7490844754165043549.stgit@localhost.localdomain>
+ <157969068296.174869.13461609442947913096.stgit@localhost.localdomain>
+ <8b77117b-1cc0-a379-2cdf-554a8060206c@oracle.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <b0e1cd11-da05-3a84-9c64-14375f61515d@virtuozzo.com>
+Date:   Mon, 27 Jan 2020 13:08:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04a5fcc8-d9ec-4e3b-f6fd-08d7a310da38
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2020 10:08:27.4743
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X09dddJvbhKD2KKSdpp3wwyFKPDPOCchtlXTAa6CYqtN04ZseZ64P5ghd1lxlJHy
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3385
+In-Reply-To: <8b77117b-1cc0-a379-2cdf-554a8060206c@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAyMC0wMS0yNyAxMDoyNiwgQ29saW4gSWFuIEtpbmcgd3JvdGU6DQo+IE9uIDI3LzAxLzIw
-MjAgMDc6NDMsIE1pY2hhbCBTaW1layB3cm90ZToNCj4+IE9uIDI2LiAwMS4gMjAgMTY6NDIsIENv
-bGluIEtpbmcgd3JvdGU6DQo+Pj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fu
-b25pY2FsLmNvbT4NCj4+Pg0KPj4+IFRoZXJlIGlzIGEgc3RhdG1lbnQgdGhhdCBpcyBpbmRlbnRl
-ZCBvbmUgbGV2ZWwgdG9vIGRlZXBseSwgcmVtb3ZlDQo+Pg0KPj4gdHlwbyAgICAgICAgICAgICBe
-DQo+IA0KPiBDYW4gdGhpcyBiZSBmaXhlZCB3aGVuIHRoZSBwYXRjaCBpcyBhcHBsaWVkIHJhdGhl
-ciB0aGFuIHNlbmRpbmcgYSBWMj8NCg0KSXQgY2FuLCBidXQgSSB0aGluayB5b3Ugd2lsbCBtYWtl
-IGl0IGVhc2llciBmb3IgV29sZnJhbSBpZiB5b3Ugc2VuZCBhIHYyLg0KV2hpY2ggaXMgdGhlIHJp
-Z2h0IHRoaW5nIHRvIGRvIGFueXdheSBzaW5jZSB5b3UgYXJlIG1pc3NpbmcgYSBGaXhlcyB0YWcu
-DQpJIHRoaW5rIHlvdSBzaG91bGQgaGF2ZSBvbmUsIHNpbmNlIGl0IGlzIGJvcmRlcmxpbmUgaWYg
-dGhpcyBwYXRjaCBpcyBnb2luZw0KdG8gbWFrZSBpdCBiZWZvcmUgNS42Lg0KDQpDaGVlcnMsDQpQ
-ZXRlcg0KDQo+IENvbGluDQo+IA0KPj4NCj4+PiB0aGUgZXh0cmFuZW91cyB0YWIuDQo+Pj4NCj4+
-PiBTaWduZWQtb2ZmLWJ5OiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29t
-Pg0KPj4+IC0tLQ0KPj4+ICBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLXhpaWMuYyB8IDIgKy0NCj4+
-PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+Pj4NCj4+
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy14aWljLmMgYi9kcml2ZXJzL2ky
-Yy9idXNzZXMvaTJjLXhpaWMuYw0KPj4+IGluZGV4IGIxN2QzMGM5YWI0MC4uOTBjMWMzNjIzOTRk
-IDEwMDY0NA0KPj4+IC0tLSBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMteGlpYy5jDQo+Pj4gKysr
-IGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy14aWljLmMNCj4+PiBAQCAtMjYxLDcgKzI2MSw3IEBA
-IHN0YXRpYyBpbnQgeGlpY19jbGVhcl9yeF9maWZvKHN0cnVjdCB4aWljX2kyYyAqaTJjKQ0KPj4+
-ICAJCXhpaWNfZ2V0cmVnOChpMmMsIFhJSUNfRFJSX1JFR19PRkZTRVQpOw0KPj4+ICAJCWlmICh0
-aW1lX2FmdGVyKGppZmZpZXMsIHRpbWVvdXQpKSB7DQo+Pj4gIAkJCWRldl9lcnIoaTJjLT5kZXYs
-ICJGYWlsZWQgdG8gY2xlYXIgcnggZmlmb1xuIik7DQo+Pj4gLQkJCQlyZXR1cm4gLUVUSU1FRE9V
-VDsNCj4+PiArCQkJcmV0dXJuIC1FVElNRURPVVQ7DQo+Pj4gIAkJfQ0KPj4+ICAJfQ0KPj4NCj4+
-IFdoZW4gZml4ZWQuDQo+Pg0KPj4gQWNrZWQtYnk6IE1pY2hhbCBTaW1layA8bWljaGFsLnNpbWVr
-QHhpbGlueC5jb20+DQo+Pg0KPj4gVGhhbmtzLA0KPj4gTWljaGFsDQo+Pg0KPj4NCj4+DQo+Pg0K
-Pj4NCj4+DQo+IA0KDQo=
+On 25.01.2020 05:37, Bob Liu wrote:
+> On 1/22/20 6:58 PM, Kirill Tkhai wrote:
+>> This preparation patch changes argument type, and now
+>> the function takes full op_flags instead of just op code.
+>>
+>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>> ---
+>>  block/blk-core.c       |    4 ++--
+>>  include/linux/blkdev.h |    8 +++++---
+>>  2 files changed, 7 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/block/blk-core.c b/block/blk-core.c
+>> index 50a5de025d5e..ac2634bcda1f 100644
+>> --- a/block/blk-core.c
+>> +++ b/block/blk-core.c
+>> @@ -1250,10 +1250,10 @@ EXPORT_SYMBOL(submit_bio);
+>>  static int blk_cloned_rq_check_limits(struct request_queue *q,
+>>  				      struct request *rq)
+>>  {
+>> -	if (blk_rq_sectors(rq) > blk_queue_get_max_sectors(q, req_op(rq))) {
+>> +	if (blk_rq_sectors(rq) > blk_queue_get_max_sectors(q, rq->cmd_flags)) {
+>>  		printk(KERN_ERR "%s: over max size limit. (%u > %u)\n",
+>>  			__func__, blk_rq_sectors(rq),
+>> -			blk_queue_get_max_sectors(q, req_op(rq)));
+>> +			blk_queue_get_max_sectors(q, rq->cmd_flags));
+>>  		return -EIO;
+>>  	}
+>>  
+>> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+>> index 0f1127d0b043..23a5850f35f6 100644
+>> --- a/include/linux/blkdev.h
+>> +++ b/include/linux/blkdev.h
+>> @@ -989,8 +989,10 @@ static inline struct bio_vec req_bvec(struct request *rq)
+>>  }
+>>  
+>>  static inline unsigned int blk_queue_get_max_sectors(struct request_queue *q,
+>> -						     int op)
+>> +						     unsigned int op_flags)
+>>  {
+>> +	int op = op_flags & REQ_OP_MASK;
+>> +
+> 
+> Nitpick. int op = req_op(rq);
+> 
+> Anyway, looks good to me.
+> Reviewed-by: Bob Liu <bob.liu@oracle.com>
+
+Thanks, Bob. I'll merge this nitpick and your "Reviewed-by" at next resend.
+It will be after merge window is closed, and new patches are welcomed.
+
+>>  	if (unlikely(op == REQ_OP_DISCARD || op == REQ_OP_SECURE_ERASE))
+>>  		return min(q->limits.max_discard_sectors,
+>>  			   UINT_MAX >> SECTOR_SHIFT);
+>> @@ -1029,10 +1031,10 @@ static inline unsigned int blk_rq_get_max_sectors(struct request *rq,
+>>  	if (!q->limits.chunk_sectors ||
+>>  	    req_op(rq) == REQ_OP_DISCARD ||
+>>  	    req_op(rq) == REQ_OP_SECURE_ERASE)
+>> -		return blk_queue_get_max_sectors(q, req_op(rq));
+>> +		return blk_queue_get_max_sectors(q, rq->cmd_flags);
+>>  
+>>  	return min(blk_max_size_offset(q, offset),
+>> -			blk_queue_get_max_sectors(q, req_op(rq)));
+>> +			blk_queue_get_max_sectors(q, rq->cmd_flags));
+>>  }
+>>  
+>>  static inline unsigned int blk_rq_count_bios(struct request *rq)
+>>
+>>
+> 
+
