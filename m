@@ -2,165 +2,110 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F92C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD17C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD94214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oP2hJQjx"
+	by mail.kernel.org (Postfix) with ESMTP id 8CCBB24654
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgA0SQK (ORCPT
+        id S1726428AbgA0SQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 13:16:10 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45089 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgA0SQK (ORCPT
+        Mon, 27 Jan 2020 13:16:24 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25914 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725828AbgA0SQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 13:16:10 -0500
-Received: by mail-io1-f68.google.com with SMTP id i11so11066652ioi.12;
-        Mon, 27 Jan 2020 10:16:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6d8iK1MnMs1MUcRP0ixKsozU/LQP2hJZIf8aV/HUojg=;
-        b=oP2hJQjxqq25nVhwP7jAi6G/Pg6hv00lTpQ1Qod1Zpwzk2ZBr6lHHdsdIGlNxeT6pK
-         dkqT4uuUIb/qDfC3JKfi9FHontYPZwz22geG3dCTW8p1KronfgB+1USRWps4p6i5EPwf
-         eOnpD8BD8pISAAxJvlqkKvPVfHT9hN97cu31Kzp5NTTQg2ZExfG03f0uJASJfAMZPSH2
-         nKzXKJ7C76R6d0CFB0b/twhY7jH6U2XONx8+IaG6oPY3h+Gh+18t/DSutxc9uwTv0CDN
-         zMUgf8uu0C7UKj1RRLk/R4hHD9mynN7acUifqTbqBgcE1C0q3UlxtidmyFvZQLcXmIWU
-         YMuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6d8iK1MnMs1MUcRP0ixKsozU/LQP2hJZIf8aV/HUojg=;
-        b=QwkRD+16tYnB3OAYWlpMr02O5q4CEotpkDlyx6e3cS0ntt7k6/u0WYA3szsQzIV7ao
-         hb8AC4L1V8P/hzzHGf5gVffwVQ7DtEyBU0jgiBPeHFfEFqsIWQXxakCNObd6hW2XvDj1
-         jrcbQzVDt/+GOHZJeYxWvS7XMGU5WCuFy4g/uLpbmqRohBuDGAJSw4llrNqDNnMhFfrf
-         jA5N/9rG/8gMXau4+BLvAZCvjSZLaWwWTOTNfyFm4NVBxKtSb/hZwWMetl5DaYR1HPtX
-         w98VXj7fLERRHnCLfVNEiEqrYh0bkETDi1GKQf0PtM9I+Nqvy7QfGfgEao9be2NgwhGO
-         +dbw==
-X-Gm-Message-State: APjAAAUzmfdV7lmIK1jZgLWZjX6Ws1hLNuBlxpg/JORLFV9Jbq52lVSq
-        z7THyauX425lhT91xC/usXymPDOd8PURseD8/Kw=
-X-Google-Smtp-Source: APXvYqylFbd3WaXxHx8TO06JVlUQjPqQj3vZq4mBStIup0QsMIklaBbFCanSiIP9IUcQaOr9iXwiJ5+zPgnIkwPAVhY=
-X-Received: by 2002:a6b:7215:: with SMTP id n21mr13908236ioc.131.1580148969772;
- Mon, 27 Jan 2020 10:16:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20200127164321.17468-1-lhenriques@suse.com>
-In-Reply-To: <20200127164321.17468-1-lhenriques@suse.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Mon, 27 Jan 2020 19:16:17 +0100
-Message-ID: <CAOi1vP9RBBX9RtnZExk_9JX9-H-8B_2R6TQ6-iR3sRw047PfoQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] parallel 'copy-from' Ops in copy_file_range
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Mon, 27 Jan 2020 13:16:24 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RIFEWT046661
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:16:22 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xrjr4je58-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:16:21 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 27 Jan 2020 18:16:20 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 27 Jan 2020 18:16:17 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00RIGGeB60948548
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 18:16:16 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C7F89A4040;
+        Mon, 27 Jan 2020 18:16:16 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0442AA4055;
+        Mon, 27 Jan 2020 18:16:16 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.185.238])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jan 2020 18:16:15 +0000 (GMT)
+Subject: Re: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
+ the boot aggregate
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Mon, 27 Jan 2020 13:16:15 -0500
+In-Reply-To: <ca189378a5f841d0ba111c6405079569@huawei.com>
+References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+         <ca189378a5f841d0ba111c6405079569@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012718-0012-0000-0000-000003812734
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012718-0013-0000-0000-000021BD7810
+Message-Id: <1580148975.5088.38.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_06:2020-01-24,2020-01-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ phishscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ bulkscore=0 suspectscore=0 spamscore=0 adultscore=0 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001270146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 5:43 PM Luis Henriques <lhenriques@suse.com> wrote:
->
-> Hi,
->
-> As discussed here[1] I'm sending an RFC patchset that does the
-> parallelization of the requests sent to the OSDs during a copy_file_range
-> syscall in CephFS.
->
->   [1] https://lore.kernel.org/lkml/20200108100353.23770-1-lhenriques@suse.com/
->
-> I've also some performance numbers that I wanted to share. Here's a
-> description of the very simple tests I've run:
->
->  - create a file with 200 objects in it
->    * i.e. tests with different object sizes mean different file sizes
->  - drop all caches and umount the filesystem
->  - Measure:
->    * mount filesystem
->    * full file copy (with copy_file_range)
->    * umount filesystem
->
-> Tests were repeated several times and the average value was used for
-> comparison.
->
->   DISCLAIMER:
->   These numbers are only indicative, and different clusters and client
->   configs will for sure show different performance!  More rigorous tests
->   would be require to validate these results.
->
-> Having as baseline a full read+write (basically, a copy_file_range
-> operation within a filesystem mounted without the 'copyfrom' option),
-> here's some values for different object sizes:
->
->                           8M      4M      1M      65k
-> read+write              100%    100%    100%     100%
-> sequential               51%     52%     83%    >100%
-> parallel (throttle=1)    51%     52%     83%    >100%
-> parallel (throttle=0)    17%     17%     83%    >100%
->
-> Notes:
->
-> - 'parallel (throttle=0)' was a test where *all* the requests (i.e. 200
->   requests to copy the 200 objects in the file) were sent to the OSDs and
->   the wait for requests completion is done at the end only.
->
-> - 'parallel (throttle=1)' was just a control test, where the wait for
->   completion is done immediately after a request is sent.  It was expected
->   to be very similar to the non-optimized ('sequential') tests.
->
-> - These tests were executed on a cluster with 40 OSDs, spread across 5
->   (bare-metal) nodes.
->
-> - The tests with object size of 65k show that copy_file_range definitely
->   doesn't scale to files with small object sizes.  '> 100%' actually means
->   more than 10x slower.
->
-> Measuring the mount+copy+umount masks the actual difference between
-> different throttle values due to the time spent in mount+umount.  Thus,
-> there was no real difference between throttle=0 (send all and wait) and
-> throttle=20 (send 20, wait, send 20, ...).  But here's what I observed
-> when measuring only the copy operation (4M object size):
->
-> read+write              100%
-> parallel (throttle=1)    56%
-> parallel (throttle=5)    23%
-> parallel (throttle=10)   14%
-> parallel (throttle=20)    9%
-> parallel (throttle=5)     5%
+On Mon, 2020-01-27 at 17:38 +0000, Roberto Sassu wrote:
+> > -----Original Message-----
+> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
+> > owner@vger.kernel.org] On Behalf Of Mimi Zohar
+> > Sent: Monday, January 27, 2020 5:02 PM
+> > To: linux-integrity@vger.kernel.org
+> > Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
+> > <James.Bottomley@HansenPartnership.com>; linux-
+> > kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
+> > Subject: [PATCH 1/2] ima: use the IMA configured hash algo to calculate the
+> > boot aggregate
+> 
+> Hi Mimi
+> 
+> I did a similar change (patch 8/8) in the patch set I just sent. The patch is simpler,
+> as it reuses the data structures I introduced in the previous patches. Let me know
+> if I can keep this part in my patch set or I should remove it.
 
-Was this supposed to be throttle=50?
+Only 2/2 "ima: support calculating the boot_aggregate based on
+different TPM banks" is really needed to address Jerry's bug report.
+ Let's review your patch set before making any decisions about 1/2
+"ima: use the IMA configured hash algo to calculate the boot
+aggregate".
 
->
-> Anyway, I'll still need to revisit patch 0003 as it doesn't follow the
-> suggestion done by Jeff to *not* add another knob to fine-tune the
-> throttle value -- this patch adds a kernel parameter for a knob that I
-> wanted to use in my testing to observe different values of this throttle
-> limit.
->
-> The goal is to probably to drop this patch and do the throttling in patch
-> 0002.  I just need to come up with a decent heuristic.  Jeff's suggestion
-> was to use rsize/wsize, which are set to 64M by default IIRC.  Somehow I
-> feel that it should be related to the number of OSDs in the cluster
-> instead, but I'm not sure how.  And testing these sort of heuristics would
-> require different clusters, which isn't particularly easy to get.  Anyway,
-> comments are welcome!
+thanks,
 
-I agree with Jeff, this throttle is certainly not worth a module
-parameter (or a mount option).  I would start with something like
-C * (wsize / object size) and pick C between 1 and 4.
+Mimi
 
-Thanks,
-
-                Ilya
