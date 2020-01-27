@@ -2,227 +2,122 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1187CC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33177C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD736207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A693207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580132933;
-	bh=nHi/YUzGUCuratHwiOmc3Q8G3EswlHxPtofNzsOAzkM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=M+LKxrLug6lkXy5Y6DWI1Il73LfCfJ5AQLb8Ez4qEGn9wT8e2+9ejT9vdo+Tl2st8
-	 5XkJNRrHW39AIvOX0IXclQDMtvSwgui6wYgiXWxnScHYchQSqQdScpekp081LRuF4s
-	 5Eo0B/ATNiBUZs7KNqflrC/5QsobIy+BiJJNDIoU=
+	s=default; t=1580133022;
+	bh=atKi/hig5oa208QWZFD8TZszOxZ5B4cSJZX4YGxigSY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=EFHepwTcuFcV7aTFSL531NqLHDU6RyRsMTPX/JAObSP1iRBtig1GmfCYniY7JB81F
+	 u8cJ3I0gowkPJUeU7UaipS+fnWKwYzutsyCtml3yJEi/B5WPBfws5a0trr2/zqYgIP
+	 iOvelqpKuTH0b+F+DX1bweyBoX+GLqbrBHQ6bTqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgA0Nsx (ORCPT
+        id S1728292AbgA0NuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:48:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48648 "EHLO mail.kernel.org"
+        Mon, 27 Jan 2020 08:50:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726164AbgA0Nsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:48:53 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1726179AbgA0NuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 08:50:21 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA6E420716;
-        Mon, 27 Jan 2020 13:48:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAFAB20716;
+        Mon, 27 Jan 2020 13:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580132932;
-        bh=nHi/YUzGUCuratHwiOmc3Q8G3EswlHxPtofNzsOAzkM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kbf9uxSb48wx/B5aCcBDNhei3Zk8UP2/ICpM/fNVWC73DCZJILSFYXnijddbVVVqC
-         V+OU7zF4kRLrr6Cf5Mr07yojkH8Z1r919KJpJm6JoFx/8AAA2bRwxVlM9iH9yZlrZ1
-         hMnENtPQCYxKHNRs9Ged4naxHPlihhSgBhWnvSAw=
-Date:   Mon, 27 Jan 2020 22:48:47 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
-        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org, ndesaulniers@google.com
-Subject: Re: [PATCH v3 00/12] tracing: Add support for in-kernel dynamic
- event API
-Message-Id: <20200127224847.54ad704c08785b85a63c18a5@kernel.org>
-In-Reply-To: <cover.1579904761.git.zanussi@kernel.org>
-References: <cover.1579904761.git.zanussi@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1580133020;
+        bh=atKi/hig5oa208QWZFD8TZszOxZ5B4cSJZX4YGxigSY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Ppwnn+C0bHwhyX5YuUuKPtr8x6i/aljl9+E29gLmAB9RItz+McXL26DzXO9ILhWqG
+         hVG7tz8x3mV1sD90WcZUsdkvKcpVvnCCe66twlpkOXYlW3DuI7sh2afv1MmnVEL8H/
+         OtaGynkdEJq1v9t/S5y7gZyKiQYz1X+eNG3/2bTM=
+Date:   Mon, 27 Jan 2020 07:50:17 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>,
+        Huong Nguyen <huong.nguyen@dell.com>,
+        Austin Bolen <Austin.Bolen@dell.com>
+Subject: Re: [PATCH v13 4/8] PCI/DPC: Add Error Disconnect Recover (EDR)
+ support
+Message-ID: <20200127135017.GA260782@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200125232500.GA112031@skuppusw-desk.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+On Sat, Jan 25, 2020 at 03:25:00PM -0800, Kuppuswamy Sathyanarayanan wrote:
+> On Fri, Jan 24, 2020 at 09:04:50AM -0600, Bjorn Helgaas wrote:
+> > On Sat, Jan 18, 2020 at 08:00:33PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > 
+> > > As per ACPI specification r6.3, sec 5.6.6, when firmware owns Downstream
+> > > Port Containment (DPC), its expected to use the "Error Disconnect
+> > > Recover" (EDR) notification to alert OSPM of a DPC event and if OS
+> > > supports EDR, its expected to handle the software state invalidation and
+> > > port recovery in OS, and also let firmware know the recovery status via
+> > > _OST ACPI call. Related _OST status codes can be found in ACPI
+> > > specification r6.3, sec 6.3.5.2.
+> > > 
+> > > Also, as per PCI firmware specification r3.2 Downstream Port Containment
+> > > Related Enhancements ECN, sec 4.5.1, table 4-6, If DPC is controlled by
+> > > firmware (firmware first mode), firmware is responsible for
+> > > configuring the DPC and OS is responsible for error recovery. Also, OS
+> > > is allowed to modify DPC registers only during the EDR notification
+> > > window. So with EDR support, OS should provide DPC port services even in
+> > > firmware first mode.
+> ...
 
-On Fri, 24 Jan 2020 16:56:11 -0600
-Tom Zanussi <zanussi@kernel.org> wrote:
+> > > +		acpi_status astatus;
+> > > +
+> > > +		dpc->adev = adev;
+> > > +
+> > > +		astatus = acpi_install_notify_handler(adev->handle,
+> > > +						      ACPI_SYSTEM_NOTIFY,
+> > > +						      edr_handle_event,
+> > > +						      dpc);
+> > 
+> > I think there are a couple issues with the ECN here:
+> > 
+> >   - The ECN allows EDR notifications on host bridges (sec 4.5.1, table
+> >     4-4), but it does not allow the "Locate" _DSM under host bridges
+> >     (sec 4.6.13).
+> > 
+> >   - The ECN allows EDR notifications on root ports or switch ports
+> >     that do not support DPC (sec 4.5.1), but it does not allow the
+> >     "Locate" _DSM on those ports (sec 4.6.13).
+> 
+> Can you please give more details on where its mentioned? Following is
+> the copy of "Locate" _DSM location related specification. All it says is,
+> this object can be placed under any object representing root port or
+> switch port. It does not seem to add any restrictions. Please let me  know
+> your comments.
+> 
+> Location:
+> This object can be placed under any object representing a DPC capable
+> PCI Express Root Port or Switch Downstream Port. If a port implements
+> this DSM, its child devices cannot instantiate this DSM function
 
-> Hi,
-> 
-> This is v3 of 'tracing: Add support for in-kernel dynamic event API',
-> incorporating changes based on suggestions from Masami and Steven.
-> 
->   - Rebased to trace/for-next
-> 
->   - Regularized the entire API to use synth_event_*, kprobe_event_*,
->     dynevent_*, and added some new macros and functions to make things
->     more consistent
-> 
->   - Introduced trace_array_find_get() and used it in
->     trace_array_get_file() as suggested
->   
->   - Removed exports from dynevent_cmd functions that didn't need to be
->     exported
-> 
->   - Switched the param order of __kprobe_event_gen_cmd_start() to fix
->     a problem found building with clang.  Apparently varargs and
->     implicit promotion of types like bool don't mix.  Thanks to Nick
->     Desaulniers for pointing that out.
-> 
->   - Updated the documentation for all of the above
-> 
-> Text from the v2 posting:
-> 
-> This is v2 of the previous 'tracing: Add support for in-kernel
-> synthetic event API', and is largely a rewrite based on suggestions
-> from Masami to expand the scope to include other types of dynamic
-> events such as kprobe events, in addition to the original sythetic
-> event focus.
+You quoted it: "This object [the 'Locate' _DSM] can be placed under
+any object representing a *DPC capable* PCI Express Root Port or Switch
+Downstream Port."
 
-Yeah, v3 basically looks good to me now :)
-Please see my comment on [4/12]. Others are good. You can put my
-Acked-by to those patches. 
+If the intention was to allow the Locate _DSM for *any* root ports or
+switch downstream ports, the spec should not include the "DPC capable"
+restriction.
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-except for [04/12].
-
-Thank you!
-
-> 
-> The functionality of the original API remains available, though it's
-> in a slightly different form due to the use of the new dynevent_cmd
-> API it's now based on.  The dynevent_cmd API provides a common dynamic
-> event command generation capability that both the synthetic event API
-> and the kprobe event API are now based on, and there are now test
-> modules demonstrating both the synthetic event and kprobes APIs.
-> 
-> A couple of the patches are snippets from Masami's 'tracing:
-> bootconfig: Boot-time tracing and Extra boot config' series, and the
-> patch implementing the dynevent_cmd API includes some of the
-> spnprintf() generating code from that patchset.
-> 
-> Because I used Masami's gen_*_cmd() naming suggestion for generating
-> the commands, the previous patchset's generate_*() functions were
-> renamed to trace_*() to avoid confusion, and probably is better naming
-> anyway.
-> 
-> An overview of the user-visible changes in comparison to v1:
-> 
->   - create_synth_event() using an array of synth_desc_fields remains
->     unchanged and works the same way as previously
-> 
->   - gen_synth_cmd() takes a variable-length number of args which
->     represent 'type field;' pairs.  Using this with no field args
->     basically replaces the previous 'create_empty_synth_event()'
-> 
->   - The 'add_synth_field()' and 'add_synth_fields()' function from v1
->     are essentially the same except that they now take a dynevent_cmd
->     instead of a synth_event pointer
-> 
->   - The finalize_synth_event() from v1 is replaced by
->     create_dynevent() in the new version.
->   
->   - The new v2 API includes some additional functions to initialize
->     the dynevent_cmd - synth_dynevent_cmd() is used to do that.  While
->     it's an extra step, it makes it easier to do error handling.
-> 
->   - There's a new trace_synth_event() function that traces a synthetic
->     event using a variable-arg list of values.
-> 
->   - The original generate_synth_event() using an array of values is
->     now called trace_synth_event_array().
-> 
->   - For piecewise event tracing, the original
->     generate_synth_event_start() and generate_synth_event_end() have
->     now been renamed to trace_synth_event_end().
-> 
->   - add_next_synth_val() and add_synth_val() remain the same.
-> 
->   - A similar API and test module demonstrating the API has been added
->     for kprobe events
-> 
->   - Both the synthetic events and kprobe events API is based on the
->     dynevent_cmd API, newly added
-> 
->   - The Documentation for all of the above has been updated
-> 
-> Text from the orginal v1 posting:
-> 
-> I've recently had several requests and suggestions from users to add
-> support for the creation and generation of synthetic events from
-> kernel code such as modules, and not just from the available command
-> line commands.
-> 
-> This patchset adds support for that.  The first three patches add some
-> minor preliminary setup, followed by the two main patches that add the
-> ability to create and generate synthetic events from the kernel.  The
-> next patch adds a test module that demonstrates actual use of the API
-> and verifies that it works as intended, followed by Documentation.
-> 
-> Special thanks to Artem Bityutskiy, who worked with me over several
-> iterations of the API, and who had many great suggestions on the
-> details of the interface, and pointed out several problems with the
-> code itself.
-> 
-> The following changes since commit 659ded30272d67a04b3692f0bfa12263be20d790:
-> 
->   trace/kprobe: Remove unused MAX_KPROBE_CMDLINE_SIZE (2020-01-22 07:07:38 -0500)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/synth-event-gen-v3
-> 
-> Tom Zanussi (12):
->   tracing: Add trace_array_find/_get() to find instance trace arrays
->   tracing: Add trace_get/put_event_file()
->   tracing: Add synth_event_delete()
->   tracing: Add dynamic event command creation interface
->   tracing: Add synthetic event command generation functions
->   tracing: Change trace_boot to use synth_event interface
->   tracing: Add synth_event_trace() and related functions
->   tracing: Add synth event generation test module
->   tracing: Add kprobe event command generation functions
->   tracing: Change trace_boot to use kprobe_event interface
->   tracing: Add kprobe event command generation test module
->   tracing: Documentation for in-kernel synthetic event API
-> 
->  Documentation/trace/events.rst       | 515 ++++++++++++++++++++
->  include/linux/trace_events.h         | 124 +++++
->  kernel/trace/Kconfig                 |  25 +
->  kernel/trace/Makefile                |   2 +
->  kernel/trace/kprobe_event_gen_test.c | 225 +++++++++
->  kernel/trace/synth_event_gen_test.c  | 523 ++++++++++++++++++++
->  kernel/trace/trace.c                 |  43 +-
->  kernel/trace/trace.h                 |  36 ++
->  kernel/trace/trace_boot.c            |  66 ++-
->  kernel/trace/trace_events.c          | 325 +++++++++++++
->  kernel/trace/trace_events_hist.c     | 896 ++++++++++++++++++++++++++++++++++-
->  kernel/trace/trace_kprobe.c          | 160 ++++++-
->  12 files changed, 2868 insertions(+), 72 deletions(-)
->  create mode 100644 kernel/trace/kprobe_event_gen_test.c
->  create mode 100644 kernel/trace/synth_event_gen_test.c
-> 
-> -- 
-> 2.14.1
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Bjorn
