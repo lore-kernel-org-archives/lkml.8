@@ -2,96 +2,98 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB6EC35240
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 00:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1B5C35247
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 00:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C24C20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 00:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA6820842
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 00:42:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WpLmCC3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgA0Al1 (ORCPT
+        id S1728901AbgA0Aml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 19:41:27 -0500
-Received: from mga09.intel.com ([134.134.136.24]:63120 "EHLO mga09.intel.com"
+        Sun, 26 Jan 2020 19:42:41 -0500
+Received: from ozlabs.org ([203.11.71.1]:50209 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgA0AlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 19:41:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jan 2020 16:41:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,367,1574150400"; 
-   d="scan'208";a="223116777"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Jan 2020 16:41:15 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] KVM: x86: Gracefully handle __vmalloc() failure during VM allocation
-Date:   Sun, 26 Jan 2020 16:41:11 -0800
-Message-Id: <20200127004113.25615-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200127004113.25615-1-sean.j.christopherson@intel.com>
-References: <20200127004113.25615-1-sean.j.christopherson@intel.com>
+        id S1726654AbgA0Amk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 19:42:40 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 485WDZ09G6z9sR1;
+        Mon, 27 Jan 2020 11:42:37 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580085758;
+        bh=wO0ypkROhkUr4z3gWxp0SqLXy6Npy/RkH51sLbfQp8c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WpLmCC3wzrlNW+RqVdz2rWmXgDFPOwW+2KMkDrt35TlPUm3B6p8wzDyNidi3JmMdV
+         6MdbGSQl1aQDdsi6nppQ4Z0aIV8zyvFtG4P4ryd0NPX9DHhyOh1/sMw2HYdwUb23iv
+         kc1A6A7fkKW9Xfk7L+ADwblpVLN88p+Q7T3YcBLz+vWEIAW6CP7FatMIDOasYcQzt4
+         5QaLLe/b6p77txwV4slUoZuGkm/UI6+LdZ1oLPCIiKCS8YRbbYJ2cyswvdK/aBp12H
+         JOq4jRuo4U19IaUJCAe3RdOLnnSIww/I2hZz45S3r7PfQF+bD+kPe51gyzz7UjI13K
+         2Dl6IEHHvJpJA==
+Date:   Mon, 27 Jan 2020 11:42:21 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: linux-next: Fixes tag needs some work in the wireless-drivers-next
+ tree
+Message-ID: <20200127114221.52ba6027@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/qyN85kgIZux/DvSwoHyT/kD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check the result of __vmalloc() to avoid dereferencing a NULL pointer in
-the event that allocation failres.
+--Sig_/qyN85kgIZux/DvSwoHyT/kD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 40bbb9d03f05d ("KVM: VMX: add struct kvm_vmx to hold VMX specific KVM vars")
-Fixes: 81811c162d4da ("KVM: SVM: add struct kvm_svm to hold SVM specific KVM vars")
-Fixes: d1e5b0e98ea27 ("kvm: Make VM ioctl do valloc for some archs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/svm.c     | 4 ++++
- arch/x86/kvm/vmx/vmx.c | 4 ++++
- 2 files changed, 8 insertions(+)
+Hi all,
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index bf0556588ad0..6565257dea39 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1951,6 +1951,10 @@ static struct kvm *svm_vm_alloc(void)
- 	struct kvm_svm *kvm_svm = __vmalloc(sizeof(struct kvm_svm),
- 					    GFP_KERNEL_ACCOUNT | __GFP_ZERO,
- 					    PAGE_KERNEL);
-+
-+	if (!kvm_svm)
-+		return NULL;
-+
- 	return &kvm_svm->kvm;
- }
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 1419c53aed16..45f3f215e9df 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6662,6 +6662,10 @@ static struct kvm *vmx_vm_alloc(void)
- 	struct kvm_vmx *kvm_vmx = __vmalloc(sizeof(struct kvm_vmx),
- 					    GFP_KERNEL_ACCOUNT | __GFP_ZERO,
- 					    PAGE_KERNEL);
-+
-+	if (!kvm_vmx)
-+		return NULL;
-+
- 	return &kvm_vmx->kvm;
- }
- 
--- 
-2.24.1
+n commit
 
+  6ba8b3b6bd77 ("ath10k: Correct the DMA direction for management tx buffer=
+s")
+
+Fixes tag
+
+  Fixes: dc405152bb6 ("ath10k: handle mgmt tx completion event")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qyN85kgIZux/DvSwoHyT/kD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4uMe0ACgkQAVBC80lX
+0GwIvgf/bmddk0hzqop3e1BFKbeq+Gf8UHsKmVdjUQyxY93Tf3w/quahjL+6oK9c
+ht+QTLIlpJm7XjauCqP2d5zkysJ/07+x4pU7T7X1aB13MqyvjLVmUTTH6utzY6Ap
+0f/KuaVja5pQcBqfZS5aSUN+WkoaUVeAMLxe6/2x+xxWKIgSbN25dHRf7apwEd/j
+GYKRIoP5ECpapTYR4Ey9QA/rCLF+Ch32ECqhhFY4SmwBmxWtaH1LB3tbw5pEVw3t
+AecgI9DoWVUkf+joztQDznLxdx31GQMsRlsTQBYbGoj9dOu4gGl4TtzhQe7wx0gK
+uZ31CtU5+J0z+ibhGA7rgHDTVS6f6Q==
+=jnjF
+-----END PGP SIGNATURE-----
+
+--Sig_/qyN85kgIZux/DvSwoHyT/kD--
