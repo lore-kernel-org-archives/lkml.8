@@ -2,97 +2,122 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D5DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FF7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E79207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161AB215A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:06:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dQW1ulFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730435AbgA0MEn (ORCPT
+        id S1730448AbgA0MGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:04:43 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:34645 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728981AbgA0MEn (ORCPT
+        Mon, 27 Jan 2020 07:06:39 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:45922 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728981AbgA0MGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:04:43 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-175-cI8p4gP0PemWy24hRGo9mw-1; Mon, 27 Jan 2020 12:04:38 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 27 Jan 2020 12:04:37 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 27 Jan 2020 12:04:37 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Nick Desaulniers' <ndesaulniers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "Jozsef Kadlecsik" <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: RE: [PATCH v2 02/10] netfilter: Avoid assigning 'const' pointer to
- non-const pointer
-Thread-Topic: [PATCH v2 02/10] netfilter: Avoid assigning 'const' pointer to
- non-const pointer
-Thread-Index: AQHV0tqUeGprpqPzdU6UR5YgZTE5fKf+a3qA
-Date:   Mon, 27 Jan 2020 12:04:37 +0000
-Message-ID: <ae9e908f4cfd4908a24a0e542731d31b@AcuMS.aculab.com>
-References: <20200123153341.19947-1-will@kernel.org>
- <20200123153341.19947-3-will@kernel.org>
- <CAKwvOdm2snorniFunMF=0nDH8-RFwm7wtjYK_Tcwkd+JZinYPg@mail.gmail.com>
- <20200124082443.GY14914@hirez.programming.kicks-ass.net>
- <CAKwvOdmTOoTXCGN9NaO5_+sqDsK364=oCiVO_D5=btj1GsJrnw@mail.gmail.com>
-In-Reply-To: <CAKwvOdmTOoTXCGN9NaO5_+sqDsK364=oCiVO_D5=btj1GsJrnw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 27 Jan 2020 07:06:39 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00RBwWka035440;
+        Mon, 27 Jan 2020 12:06:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=aCpiRvcuT1SWusCh3YSBSKuWGL7xUj4sNNEyF3C+GSc=;
+ b=dQW1ulFpPNxI1R48GdMIaGJz6BAQRc71iwu4zWxezUnY6OsrBJuxWxNnZQW0KejlXfkg
+ ucwB3oon3CYcBcd9ML8VbSfHDSZwe643lqZh3nYYzKmUqy0rTHhiCdOUWZ1Q6q8v721z
+ lntBkuupp0ajIMZ/ws6rU89g0CiwQokRaSwpIDp5ZZIM6q1QSZj4tUuPHIEQCCTTgG5/
+ 5OhKxQ/CTd6WxsugkdJyQghKRdUGlTI/rwoc6VM9uKS/kHOtwmT+sIuSzvu2t1UNiCJh
+ BWAdNo7m9f8f5O3qL8rPXm5GBdabd32crjNib/v/cqHjjHtQRl13WJ+zN3mtK/8qArCN 2g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xrd3txxck-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 12:06:27 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00RBwIqV098559;
+        Mon, 27 Jan 2020 12:06:27 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2xry4u7p22-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 12:06:26 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00RC6Pmt000832;
+        Mon, 27 Jan 2020 12:06:25 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jan 2020 04:06:24 -0800
+Date:   Mon, 27 Jan 2020 15:05:35 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next][V2] i2c: xiic: fix indentation issue
+Message-ID: <20200127120535.GC1847@kadam>
+References: <20200127102303.44133-1-colin.king@canonical.com>
+ <2dd84ab2-a7a3-fdd8-6bd6-07f1b3d5cd00@xilinx.com>
 MIME-Version: 1.0
-X-MC-Unique: cI8p4gP0PemWy24hRGo9mw-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2dd84ab2-a7a3-fdd8-6bd6-07f1b3d5cd00@xilinx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001270103
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001270103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTmljayBEZXNhdWxuaWVycw0KPiBTZW50OiAyNCBKYW51YXJ5IDIwMjAgMTc6MjANCi4u
-Lg0KPiA+ID4gR29vZCB0aGluZyBpdCdzIHRoZSB2YXJpYWJsZSBiZWluZyBtb2RpZmllZCB3YXMg
-bm90IGRlY2xhcmVkIGNvbnN0OyBJDQo+ID4gPiBnZXQgc3Bvb2tlZCB3aGVuIEkgc2VlIC1XZGlz
-Y2FyZGVkLXF1YWxpZmllcnMgYmVjYXVzZSBvZiBTZWN0aW9uDQo+ID4gPiA2LjcuMy42IG9mIHRo
-ZSBJU08gQzExIGRyYWZ0IHNwZWM6DQo+ID4gPg0KPiA+ID4gYGBgDQo+ID4gPiBJZiBhbiBhdHRl
-bXB0IGlzIG1hZGUgdG8gbW9kaWZ5IGFuIG9iamVjdCBkZWZpbmVkIHdpdGggYSBjb25zdC1xdWFs
-aWZpZWQNCj4gPiA+IHR5cGUgdGhyb3VnaCB1c2Ugb2YgYW4gbHZhbHVlIHdpdGggbm9uLWNvbnN0
-LXF1YWxpZmllZCB0eXBlLA0KPiA+ID4gdGhlIGJlaGF2aW9yIGlzIHVuZGVmaW5lZC4NCg0KV2Vs
-bCBzb21lIG9sZCBzeXN0ZW1zIGhhZCBzbWFsbCBpbnRlZ2VyIGNvbnN0YW50cyBhdCBmaXhlcyBh
-ZGRyZXNzZXMuDQpTbyAnY29uc3QgaW50IG9uZSA9IDE7JyAgd291bGQgYmUgYSByZWZlcmVuY2Ug
-dG8gdGhlIGdsb2JhbCBjb25zdGFudC4NCkFuIGFzc2lnbm1lbnQgbGlrZSAnKihpbnQgKikmb25l
-ID0gMjsnIHdvdWxkIGNoYW5nZSB0aGUgdmFsdWUgb2YgdGhlDQpzeXN0ZW0td2lkZSAnb25lJyBj
-b25zdGFudCcuDQoNClByZXR0eSBtdWNoICd1bmRlZmluZWQnLg0KDQpCdXQgbm8gZXhjdXNlIGZv
-ciB0aGUgY29tcGlsZXIganVzdCBkaXNjYXJkaW5nIHRoZSBjb2RlLg0KDQpJIHN1c3BlY3QgdGhh
-dCB0aGUgY29kZSB0byByZW1vdmUgJ2NvbnN0JyBuZWVkcyB0byAnbGF1bmRlcicgdGhlIHZhbHVl
-DQp0aHJvdWdoIGEgc3VpdGFibGUgaW50ZWdlciB0eXBlLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0
-ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBL
-ZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On Mon, Jan 27, 2020 at 12:03:02PM +0100, Michal Simek wrote:
+> On 27. 01. 20 11:23, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> > 
+> > There is a statement that is indented one level too deeply, remove
+> > the extraneous tab.
+> > 
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > ---
+> > V2: fix type in commit message
+> > ---
+> >  drivers/i2c/busses/i2c-xiic.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
+> > index b17d30c9ab40..90c1c362394d 100644
+> > --- a/drivers/i2c/busses/i2c-xiic.c
+> > +++ b/drivers/i2c/busses/i2c-xiic.c
+> > @@ -261,7 +261,7 @@ static int xiic_clear_rx_fifo(struct xiic_i2c *i2c)
+> >  		xiic_getreg8(i2c, XIIC_DRR_REG_OFFSET);
+> >  		if (time_after(jiffies, timeout)) {
+> >  			dev_err(i2c->dev, "Failed to clear rx fifo\n");
+> > -				return -ETIMEDOUT;
+> > +			return -ETIMEDOUT;
+> >  		}
+> >  	}
+> >  
+> > 
+> 
+> As was suggested by Peter you should also add Fixes: <sha1> ("patch
+> subject")
+> 
+
+It's not really a bugfix, it's just a cleanup.
+
+regards,
+dan carpenter
 
