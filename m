@@ -2,141 +2,90 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A181C33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62691C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67E720716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hJnxUJNV"
+	by mail.kernel.org (Postfix) with ESMTP id 35D8924658
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:22:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580145728;
+	bh=RVZ2l3lpsRgpxdvGkybC0vCIdsPp3qw5HxU7do98MqY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lSPjsyCKSSA0BOtxzOHh/Fa/5iyviFoWZfMFWWs0LhQGc8tI28vdb5ExaDwylJ57s
+	 AqsDM01NfR9mxf28Xz15gQNXOoRfs7uNfMhmirg06QebVIL1D4ZDAiC9th5FJJ4+fb
+	 krx0nayN0lmA3QHh37kar4rJttwMNY0SHKwm3zLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgA0RVj (ORCPT
+        id S1726210AbgA0RWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:21:39 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42109 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0RVi (ORCPT
+        Mon, 27 Jan 2020 12:22:07 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41561 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0RWG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:21:38 -0500
-Received: by mail-il1-f196.google.com with SMTP id x2so4428849ila.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:21:38 -0800 (PST)
+        Mon, 27 Jan 2020 12:22:06 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so11605233ljc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:22:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FlVv3OiGshIByx4bdZlL96riWYmzI3zF0LMlVGex22I=;
-        b=hJnxUJNVX5ujJFbvBapdFCAEPbl+jm/DXbMzBPzjb1o5n3mHiupGbT11C+eTMrk/eb
-         aIaF/wk5AEY5Gy6TQOgc0YHh39SYb3mqFxK9xAEyoCVMJ3tm4yl/OgCF54m7tg379ad8
-         +EThVtfC4feIY2LUh2aTTCP+tMXfZe4bEpZjbi7zZDTc6S3mk3g00zF2JMnZW0XJIK7I
-         DkV2rFDwhCKCdlX7DKJMgAMifhHjJR6YXNNGI/0vvuF8nc/lFKZu7Eh3uLW0ao+lETWW
-         dNHxipd1PAaPeR1Mb5Zrt+22E9dcyC3udphRNJTQNJ92svPoEjN1g0E9jNCHgusMtRvk
-         xj9w==
+        bh=fZe1yZ3PHNUYD2UiPBWxtrrKJaJtr9K8bpkbKE3JKOM=;
+        b=B+ZZlChxyvMPwtZpmxxua0yGz4gt2aSlLbEHvlg83J/3+F80bQmLxN4vKD93rhEGCn
+         PAfHcDMXISyxcb0SurwqyqZ6aTt1ZOVF0Q+mOL6aVGAPVMaAIuXQniyANoLPE80cS+dB
+         2O4kSYhWApV8XCrf/ewej3KkKHmjVHQXmk2rA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FlVv3OiGshIByx4bdZlL96riWYmzI3zF0LMlVGex22I=;
-        b=cT/55wnIqEZThhpKiyTKK+TFbHbbtI0Sk0wW+L3ZUH3llA7CCahjNUCyFdT8ujvPL7
-         v8rLH2qfqieIrWMLQJ1KBpSpBv1iV5fDnmsHZMaA89svydbvTliZa+pyEDNs3K1DaaSz
-         sPVxiKb7BAYC+pmomx1rIxj6FqpdJpW6T16G/sIQzqb8sXmbmwhNgoutDclOBdPDXpSo
-         Ef/un63E2b0uT7zP5my8rDrwO/PEe1hP3hgflQf/IcZw2KPntrPMQfE7S8ABPKS+qmlj
-         zbWcOUKwzlG6mOD4h//lfIvWvS0RXqArsGuga4wwTPdHfTier/dn4NNo6zSLvuA6r/XW
-         vnOw==
-X-Gm-Message-State: APjAAAW4OJ7yf+0qkKn5iSOSbuAFOWh4Bo7AAcel0flQ0xRmNZI8aXbt
-        958rb15UwjKXnDYVDfRix5ZIue2uE46EQXG1yrCVyw==
-X-Google-Smtp-Source: APXvYqyLTGq5aOlxrG7MkaZqmL6uBRSlRlJwQsi2obu0iJ2cN7wGMd3Jj1iPrdrlgmXvYTf5rfI6vBhi5oLzEXMHUS4=
-X-Received: by 2002:a92:d642:: with SMTP id x2mr15910283ilp.169.1580145697386;
- Mon, 27 Jan 2020 09:21:37 -0800 (PST)
+        bh=fZe1yZ3PHNUYD2UiPBWxtrrKJaJtr9K8bpkbKE3JKOM=;
+        b=PLinELf6csGZFZiM/Jmof8Yir35DEFREKYoyriiSGNWHxYeQm53vcGltJBJUPyuRAN
+         kqzhbEfvl6bpC81xuBWLugpOeErAflmDdXEksLcqg9m2iGtpg3nr3xdsygNnB8vGHId3
+         PdlcizRwAjvUs8HR6vMCaHHbMycte1Rq0hgzHPV1xCBi//cRBuhln4Lq+3dy0jTGqtgJ
+         KlH4byl8Yvm6whInGNhuTgoSEuNJVQ4K2c19nVpXx7QUDPCBEgODwaTDPiFttDEKUEwi
+         1uqpz+NkVkkC99nN1u484gLluTZ7WmlSTTPtQjhGjFjEe5DiBTrr3plI4ftMwdFwd9eI
+         X8Og==
+X-Gm-Message-State: APjAAAXo6WZ92WtzynJuq9mXTXz5e36cV6QD3TDEacLv7H81qn+CO01C
+        kiFL3iywHTC29KOgP6BNyFauGDRe/aM=
+X-Google-Smtp-Source: APXvYqxQbbw0dDqBqmDbmIh6gnZSFubcHDVBtjoTWsg4oRdd5NhwV2sqQtzHDqJdbzAUsRhiZ3uQ+g==
+X-Received: by 2002:a2e:9842:: with SMTP id e2mr10810592ljj.293.1580145723649;
+        Mon, 27 Jan 2020 09:22:03 -0800 (PST)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id z22sm8494819ljm.24.2020.01.27.09.22.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 09:22:02 -0800 (PST)
+Received: by mail-lf1-f44.google.com with SMTP id b15so6781346lfc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:22:01 -0800 (PST)
+X-Received: by 2002:a19:c82:: with SMTP id 124mr8658523lfm.152.1580145721226;
+ Mon, 27 Jan 2020 09:22:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20191226220205.128664-1-semenzato@google.com> <20191226220205.128664-2-semenzato@google.com>
- <20200106125352.GB9198@dhcp22.suse.cz> <CAA25o9S7EzQ0xcoxuWtYr2dd0WB4KSQNP4OxPb2gAeaz0EgomA@mail.gmail.com>
- <20200108114952.GR32178@dhcp22.suse.cz> <CAA25o9Q4XP8weCNcTr1ZT9N7Y3V=B90mK8mykLOyy=-4RJ_uHQ@mail.gmail.com>
- <20200127141637.GL1183@dhcp22.suse.cz> <CAA25o9QuA_9EoivWo-DuJsWoHCdBm2wio3G8JYxuTfQErT42kg@mail.gmail.com>
- <CAJZ5v0iDtk+WWHV8F2C+9EdeMSx_JKYDEiarProoE55kiBOjkg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iDtk+WWHV8F2C+9EdeMSx_JKYDEiarProoE55kiBOjkg@mail.gmail.com>
-From:   Luigi Semenzato <semenzato@google.com>
-Date:   Mon, 27 Jan 2020 09:21:25 -0800
-Message-ID: <CAA25o9RHKerPJNW6h5d6W48q1qA3wYJAmhOBU3XiBHwMcEChhA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Documentation: clarify limitations of hibernation
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geoff Pike <gpike@google.com>
+References: <20200127113903.GD24228@zn.tnic>
+In-Reply-To: <20200127113903.GD24228@zn.tnic>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 27 Jan 2020 09:21:45 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgedtBiFok8twm499FmNCJ6icWdG7Deb7f4jcDYS4Y_Lg@mail.gmail.com>
+Message-ID: <CAHk-=wgedtBiFok8twm499FmNCJ6icWdG7Deb7f4jcDYS4Y_Lg@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/microcode for 5.6
+To:     Borislav Petkov <bp@suse.de>
+Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 8:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Mon, Jan 27, 2020 at 3:39 AM Borislav Petkov <bp@suse.de> wrote:
 >
-> On Mon, Jan 27, 2020 at 5:13 PM Luigi Semenzato <semenzato@google.com> wrote:
-> >
-> > On Mon, Jan 27, 2020 at 6:16 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Fri 24-01-20 08:37:12, Luigi Semenzato wrote:
-> > > [...]
-> > > > The purpose of my documentation patch was to make it clearer that
-> > > > hibernation may fail in situations in which suspend-to-RAM works; for
-> > > > instance, when there is no swap, and anonymous pages are over 50% of
-> > > > total RAM.  I will send a new version of the patch which hopefully
-> > > > makes this clearer.
-> > >
-> > > I was under impression that s2disk is pretty much impossible without any
-> > > swap.
-> >
-> > I am not sure what you mean by "swap" here.  S2disk needs a swap
-> > partition for storing the image, but that partition is not used for
-> > regular swap.
->
-> That's not correct.
->
-> The swap partition (or file) used by s2disk needs to be made active
-> before it can use it and the mm subsystem is also able to use it for
-> regular swap then.
+> please pull another boring branch this time around:
 
-OK---I had this wrong, thanks.
+No problem with boring, but I'm trying to figure out why one of your
+three pulls had a signed tag, and the other two didn't?
 
-> >  If there is no swap, but more than 50% of RAM is free
-> > or reclaimable, s2disk works fine.  If anonymous is more than 50%,
-> > hibernation can still work, but swap needs to be set up (in addition
-> > to the space for the hibernation image).  The setup is not obvious and
-> > I don't think that the documentation is clear on this.
->
-> Well, the entire contents of RAM must be preserved, this way or
-> another, during hibernation.  That should be totally obvious to anyone
-> using it really.
+Is it just that the shared tip tree doesn't use tags, or what?
 
-Yes, that's obvious.
-
-> Some of the RAM contents is copies of data already there in the
-> filesystems on persistent storage and that does not need to be saved
-> again.  Everything else must be saved and s2disk (and Linux
-> hibernation in general) uses active swap space to save these things.
-> This implies that in order to hibernate the system, you generally need
-> the amount of swap space equal to the size of RAM minus the size of
-> files mapped into memory.
->
-> So, to be on the safe side, the total amount of swap space to be used
-> for hibernation needs to match the size of RAM (even though
-> realistically it may be smaller than that in the majority of cases).
-
-This all makes sense, but we do this:
-
--- add resume=/dev/sdc to the command line
--- attach a disk (/dev/sdc) with size equal to RAM
--- mkswap /dev/sdc
--- swapon /dev/sdc
--- echo disk > /sys/power/state
-
-and the last operation fails with ENOMEM.  Are we doing something
-wrong?  Are we hitting some other mm bug?
-
-Thanks!
+             Linus
