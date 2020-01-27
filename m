@@ -2,122 +2,292 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA24C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48E9C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36CD206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAF124680
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:01:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o5HfwAsq"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="fPUOyYdr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ybuAWR74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgA0TAq (ORCPT
+        id S1726443AbgA0TBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 14:00:46 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39777 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0TAp (ORCPT
+        Mon, 27 Jan 2020 14:01:13 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:39613 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725908AbgA0TBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 14:00:45 -0500
-Received: by mail-pj1-f67.google.com with SMTP id e9so569203pjr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 11:00:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AB0PKGPgk+OAWxGRQvMX+/paMO/D7dA9y2T7+EixdKE=;
-        b=o5HfwAsqGXTSjB5v2j0w44xMU45J5gCPHpXhNHVbF77cDX0u/ojB8kcOccXNFHkIJH
-         wETo1GSrgJv+RrfiQoug7qs2j2JUSIl8msE3H4tUvnBdu4YSLMD6eT///yfwxVam4bi0
-         N87IaLB9n5zpJ5vBtfm0Zhd3TV2iNvmHg8D+uAQbh1Zt/iiUTznQrwxH74Liep4wj+QB
-         VBnzDEQRc6aBQ6eG/70zfcrgeR8cZyljTRR5shkTqaR+buB/7MrHiIGnVfL+qOsVvrP3
-         QGs8cbD4AN4eLC1Vlxo7EPK+cWTZxgvckIzL5czhbCTJeCaHAoGaStTy4Bw0xTduuHWU
-         8N5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AB0PKGPgk+OAWxGRQvMX+/paMO/D7dA9y2T7+EixdKE=;
-        b=KrHh1wu3dUpQAiD1UeofPhwdy2A0zyM+hgwC9x/qfPRJMz+PkJt5JbBowcmOymJTqO
-         fpSAyQZ1xwI9aGy7xPCRZVk7S32v21qNNVmUZ3lRDfb5RW8KkQ8J8hkULPs3e8Xyzuwi
-         0lwQHoZ+0XBXFqqYNOj38Ca0u7dIyNB6YxgnnPvdma+n7HdWmNurj7PBBuVBY4NYbthW
-         79sNdCIdTqJn5qB5+hwuv/ujsPhXQ25rKr6hL+F54F24EDyXGxYNqvTObF/EOtrLDMy/
-         kOPrsqMUZ09MGIpUqV/kks7KfhhQfUKZ6v82pw0wMvRH6vthM1NuIzUsewVci9RhCGte
-         RiqQ==
-X-Gm-Message-State: APjAAAUYZNh6/oOzdrO/2mfFrA+xzNbJoPzjXCeV0KU7tOj63JRyAP5c
-        /cjfSs+reiUEAVwCv+Y3fm++PWpVXb+7/9jzeuw94w==
-X-Google-Smtp-Source: APXvYqzqcSpnQLS4YBrBxX+5WnYA0mCqhKkRwurmQsEvW/gmHzac5uy/I5+nlg5nXNCcbRA/naDWHt4t2Hoq8N9Dnbo=
-X-Received: by 2002:a17:90a:858a:: with SMTP id m10mr54935pjn.117.1580151644562;
- Mon, 27 Jan 2020 11:00:44 -0800 (PST)
-MIME-Version: 1.0
-References: <20191211192742.95699-1-brendanhiggins@google.com>
- <20191211192742.95699-3-brendanhiggins@google.com> <20200109162303.35f4f0a3@xps13>
- <CAFd5g47VLB6zOJsSySAYrJie8hj-OkvOC89-z2b9xMBZ2bxvYA@mail.gmail.com> <20200125162803.5a2375d7@xps13>
-In-Reply-To: <20200125162803.5a2375d7@xps13>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 27 Jan 2020 11:00:33 -0800
-Message-ID: <CAFd5g46=wDEMVHqQ-iq31qCxoH_X+4g=+MMx_vA=ujWrF2mfEw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/7] mtd: rawnand: add unspecified HAS_IOMEM dependency
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Piotr Sroka <piotrs@cadence.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>, linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jan 2020 14:01:12 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6AA482A91;
+        Mon, 27 Jan 2020 14:01:10 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 27 Jan 2020 14:01:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        content-transfer-encoding:content-type:in-reply-to:date:from:to
+        :cc:subject:message-id; s=fm2; bh=MQp9NLIcyS2oDz1qM49q0G+vgy3iux
+        KktMJGEMfic70=; b=fPUOyYdrnlUE3Yfw0OvHN9RRMiLLtTUL+iGbBwZ2JHuoWe
+        k0wKUI1AUsm1eIevbr+ixDfJp6unJfQ4Vu5NclsvW2Z0vLa+9IjAFGE53t2gDxcD
+        lPALPPmZzIcRgfiaU9+dmhE8B81ne/xZk9Bm4SLcemurwjDDEcauWDSJCP2aEXk+
+        PYuzDqEJttwbaMC5BqHoif/cZAAkoPTLpXsDhYpQM7PJLr4ULPxI9f3nEXxr+PWI
+        NEosy3mxO8b2Nn/5FHH00aaIs+pWfYE7MC40a5+nf/ZolP9ABntfrsS1ewlOeQh3
+        teRxXveoXTIdLCDsx38oYnOOSMcMO2YxGCDY2tXg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=MQp9NL
+        IcyS2oDz1qM49q0G+vgy3iuxKktMJGEMfic70=; b=ybuAWR74URAm2o6GnlJLFX
+        9LZrweC3aF/6l0mDR6k6MxouGy1cvbP3xKchsFyeWP5RY4pEGO7h0iVoouW5Ckyv
+        YSd4vXftrn4qKnp1Dp9P25hUU+TzBT6xGgrrYOjD4mqXnlqmotRDersiUzTDTFxl
+        JmjFimUJ1cYZrPLmHk5P/RVROB+XSryePo3J0iVJJUaN5F4oCSJcp4ABlyYWOeZG
+        hQU3p0k+/KXnbB4Gm0PtFBlcEJv9SK3erCm7nPL53mNxz7nXe5ZwCgsHvpGvZZd4
+        vej1SDmCmqEpH7I3JcuCfTqPzoUwPzO7gLYVxxCCnUNBocJvxJhyKJeFkJU+IdMQ
+        ==
+X-ME-Sender: <xms:dTMvXsXdL9WIP02AHxrSWnhDWFmWuop8GTl_tGJRPR2xFVw1UbAzJg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfedvgdduudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdljedtmdenucfjughrpefgtggjfffhvffukfesthhqredttddtjeen
+    ucfhrhhomhepfdffrghnihgvlhcuighufdcuoegugihusegugihuuhhurdighiiiqeenuc
+    fkphepudelledrvddtuddrieegrddufeelnecuvehluhhsthgvrhfuihiivgeptdenucfr
+    rghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdrgiihii
+X-ME-Proxy: <xmx:djMvXmiMLIsC3RQb-nunLkBpI_Td312HVbQqlYZHfPg7-vlMOBan7g>
+    <xmx:djMvXtjXak1mgFYZVItsKfU_y-Mu_g559R8Z1jiokB8b-cQUTcSYYw>
+    <xmx:djMvXsEBdNgfpN0pjb6HP_QKgQKbNHwUZcexa66es1UVPd-bBSHGYw>
+    <xmx:djMvXjXHayB0l4eDLQegNEruNkIVKAK2MZ7IxTPDRLlT7xauj32ziA>
+Received: from localhost (unknown [199.201.64.139])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D983D328005D;
+        Mon, 27 Jan 2020 14:01:08 -0500 (EST)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Originaldate: Mon Jan 27, 2020 at 1:26 PM
+Originalfrom: "Daniel Borkmann" <daniel@iogearbox.net>
+Original: =?utf-8?q?On_1/27/20_12:35_AM,_Daniel_Xu_wrote:
+ =0D=0A>_Branch_records_are?=
+ =?utf-8?q?_a_CPU_feature_that_can_be_configured_to_record=0D=0A>_certain_?=
+ =?utf-8?q?branches_that_are_taken_during_code_execution._This_data_is=0D?=
+ =?utf-8?q?=0A>_particularly_interesting_for_profile_guided_optimizations.?=
+ =?utf-8?q?_perf_has_had=0D=0A>_branch_record_support_for_a_while_but_the_?=
+ =?utf-8?q?data_collection_can_be_a_bit=0D=0A>_coarse_grained.=0D=0A>_=0D?=
+ =?utf-8?q?=0A>_We_(Facebook)_have_seen_in_experiments_that_associating_me?=
+ =?utf-8?q?tadata_with=0D=0A>_branch_records_can_improve_results_(after_po?=
+ =?utf-8?q?stprocessing)._We_generally=0D=0A>_use_bpf=5Fprobe=5Fread=5F*()?=
+ =?utf-8?q?_to_get_metadata_out_of_userspace._That's_why_bpf=0D=0A>_suppor?=
+ =?utf-8?q?t_for_branch_records_is_useful.=0D=0A>_=0D=0A>_Aside_from_this_?=
+ =?utf-8?q?particular_use_case,_having_branch_data_available_to_bpf=0D=0A>?=
+ =?utf-8?q?_progs_can_be_useful_to_get_stack_traces_out_of_userspace_appli?=
+ =?utf-8?q?cations=0D=0A>_that_omit_frame_pointers.=0D=0A>_=0D=0A>_Signed-?=
+ =?utf-8?q?off-by:_Daniel_Xu_<dxu@dxuuu.xyz>=0D=0A>_---=0D=0A>___include/u?=
+ =?utf-8?q?api/linux/bpf.h_|_25_+++++++++++++++++++++++-=0D=0A>___kernel/t?=
+ =?utf-8?q?race/bpf=5Ftrace.c_|_41_+++++++++++++++++++++++++++++++++++++++?=
+ =?utf-8?q?+=0D=0A>___2_files_changed,_65_insertions(+),_1_deletion(-)=0D?=
+ =?utf-8?q?=0A>_=0D=0A>_diff_--git_a/include/uapi/linux/bpf.h_b/include/ua?=
+ =?utf-8?q?pi/linux/bpf.h=0D=0A>_index_f1d74a2bd234..332aa433d045_100644?=
+ =?utf-8?q?=0D=0A>_---_a/include/uapi/linux/bpf.h=0D=0A>_+++_b/include/uap?=
+ =?utf-8?q?i/linux/bpf.h=0D=0A>_@@_-2892,6_+2892,25_@@_union_bpf=5Fattr_{?=
+ =?utf-8?q?=0D=0A>____*=09=09Obtain_the_64bit_jiffies=0D=0A>____*=09Return?=
+ =?utf-8?q?=0D=0A>____*=09=09The_64_bit_jiffies=0D=0A>_+_*=0D=0A>_+_*_int_?=
+ =?utf-8?q?bpf=5Fread=5Fbranch=5Frecords(struct_bpf=5Fperf=5Fevent=5Fdata_?=
+ =?utf-8?q?*ctx,_void_*buf,_u32_buf=5Fsize,_u64_flags)=0D=0A=0D=0ASmall_ni?=
+ =?utf-8?q?t:_s/buf=5Fsize/size/,_so_that_it_matches_with_your_BPF=5FCALL_?=
+ =?utf-8?q?below.=0D=0A=0D=0A__+BPF=5FCALL=5F4(bpf=5Fread=5Fbranch=5Frecor?=
+ =?utf-8?q?ds,_struct_bpf=5Fperf=5Fevent=5Fdata=5Fkern_*,_ctx,=0D=0A__+=09?=
+ =?utf-8?q?___void_*,_buf,_u32,_size,_u64,_flags)=0D=0A=0D=0A>_+_*=09Descr?=
+ =?utf-8?q?iption=0D=0A>_+_*=09=09For_an_eBPF_program_attached_to_a_perf_e?=
+ =?utf-8?q?vent,_retrieve_the=0D=0A>_+_*=09=09branch_records_(struct_perf?=
+ =?utf-8?q?=5Fbranch=5Fentry)_associated_to_*ctx*=0D=0A>_+_*=09=09and_stor?=
+ =?utf-8?q?e_it_in=09the_buffer_pointed_by_*buf*_up_to_size=0D=0A>_+_*=09?=
+ =?utf-8?q?=09*buf=5Fsize*_bytes.=0D=0A>_+_*=0D=0A>_+_*=09=09The_*flags*_c?=
+ =?utf-8?q?an_be_set_to_**BPF=5FF=5FGET=5FBRANCH=5FRECORDS=5FSIZE**_to=0D?=
+ =?utf-8?q?=0A>_+_*=09=09instead=09return_the_number_of_bytes_required_to_?=
+ =?utf-8?q?store_all_the=0D=0A>_+_*=09=09branch_entries._If_this_flag_is_s?=
+ =?utf-8?q?et,_*buf*_may_be_NULL.=0D=0A>_+_*=09Return=0D=0A>_+_*=09=09On_s?=
+ =?utf-8?q?uccess,_number_of_bytes_written_to_*buf*._On_error,_a=0D=0A>_+_?=
+ =?utf-8?q?*=09=09negative_value.=0D=0A=0D=0AMaybe_pull_the_2nd_paragraph_?=
+ =?utf-8?q?from_above_in_here_so_that_it_reflects_the_description=0D=0Aof_?=
+ =?utf-8?q?the_return_value_when_flag_is_used_also_for_this_case_in_the_'R?=
+ =?utf-8?q?eturn'_description.=0D=0A=0D=0A>_+_*=09=09**-EINVAL**_if_argume?=
+ =?utf-8?q?nts_invalid_or_**buf=5Fsize**_not_a_multiple=0D=0A>_+_*=09=09of?=
+ =?utf-8?q?_sizeof(struct_perf=5Fbranch=5Fentry).=0D=0A>_+_*=0D=0A>_+_*=09?=
+ =?utf-8?q?=09**-ENOENT**_if_architecture_does_not_support_branch_records.?=
+ =?utf-8?q?=0D=0A>____*/=0D=0A>___#define_=5F=5FBPF=5FFUNC=5FMAPPER(FN)=09?=
+ =?utf-8?q?=09\=0D=0A>___=09FN(unspec),=09=09=09\=0D=0A>_@@_-3012,7_+3031,?=
+ =?utf-8?q?8_@@_union_bpf=5Fattr_{=0D=0A>___=09FN(probe=5Fread=5Fkernel=5F?=
+ =?utf-8?q?str),=09\=0D=0A>___=09FN(tcp=5Fsend=5Fack),=09=09\=0D=0A>___=09?=
+ =?utf-8?q?FN(send=5Fsignal=5Fthread),=09=09\=0D=0A>_-=09FN(jiffies64),=0D?=
+ =?utf-8?q?=0A>_+=09FN(jiffies64),=09=09=09\=0D=0A>_+=09FN(read=5Fbranch?=
+ =?utf-8?q?=5Frecords),=0D=0A>___=0D=0A>___/*_integer_value_in_'imm'_field?=
+ =?utf-8?q?_of_BPF=5FCALL_instruction_selects_which_helper=0D=0A>____*_fun?=
+ =?utf-8?q?ction_eBPF_program_intends_to_call=0D=0A>_@@_-3091,6_+3111,9_@@?=
+ =?utf-8?q?_enum_bpf=5Ffunc=5Fid_{=0D=0A>___/*_BPF=5FFUNC=5Fsk=5Fstorage?=
+ =?utf-8?q?=5Fget_flags_*/=0D=0A>___#define_BPF=5FSK=5FSTORAGE=5FGET=5FF?=
+ =?utf-8?q?=5FCREATE=09(1ULL_<<_0)=0D=0A>___=0D=0A>_+/*_BPF=5FFUNC=5Fread?=
+ =?utf-8?q?=5Fbranch=5Frecords_flags._*/=0D=0A>_+#define_BPF=5FF=5FGET=5FB?=
+ =?utf-8?q?RANCH=5FRECORDS=5FSIZE=09(1ULL_<<_0)=0D=0A>_+=0D=0A>___/*_Mode_?=
+ =?utf-8?q?for_BPF=5FFUNC=5Fskb=5Fadjust=5Froom_helper._*/=0D=0A>___enum_b?=
+ =?utf-8?q?pf=5Fadj=5Froom=5Fmode_{=0D=0A>___=09BPF=5FADJ=5FROOM=5FNET,=0D?=
+ =?utf-8?q?=0A>_diff_--git_a/kernel/trace/bpf=5Ftrace.c_b/kernel/trace/bpf?=
+ =?utf-8?q?=5Ftrace.c=0D=0A>_index_19e793aa441a..efd119de95b8_100644=0D=0A?=
+ =?utf-8?q?>_---_a/kernel/trace/bpf=5Ftrace.c=0D=0A>_+++_b/kernel/trace/bp?=
+ =?utf-8?q?f=5Ftrace.c=0D=0A>_@@_-1028,6_+1028,45_@@_static_const_struct_b?=
+ =?utf-8?q?pf=5Ffunc=5Fproto_bpf=5Fperf=5Fprog=5Fread=5Fvalue=5Fproto_=3D_?=
+ =?utf-8?q?{=0D=0A>____________.arg3=5Ftype______=3D_ARG=5FCONST=5FSIZE,?=
+ =?utf-8?q?=0D=0A>___};=0D=0A>___=0D=0A>_+BPF=5FCALL=5F4(bpf=5Fread=5Fbran?=
+ =?utf-8?q?ch=5Frecords,_struct_bpf=5Fperf=5Fevent=5Fdata=5Fkern_*,_ctx,?=
+ =?utf-8?q?=0D=0A>_+=09___void_*,_buf,_u32,_size,_u64,_flags)=0D=0A>_+{=0D?=
+ =?utf-8?q?=0A>_+#ifndef_CONFIG=5FX86=0D=0A>_+=09return_-ENOENT;=0D=0A>_+#?=
+ =?utf-8?q?else=0D=0A>_+=09struct_perf=5Fbranch=5Fstack_*br=5Fstack_=3D_ct?=
+ =?utf-8?q?x->data->br=5Fstack;=0D=0A>_+=09u32_br=5Fentry=5Fsize_=3D_sizeo?=
+ =?utf-8?q?f(struct_perf=5Fbranch=5Fentry);=0D=0A=0D=0A'static_const_u32_b?=
+ =?utf-8?q?r=5Fentry=5Fsize'_if_we_use_it_as_such_below.=0D=0A=0D=0A>_+=09?=
+ =?utf-8?q?u32_to=5Fcopy;=0D=0A>_+=0D=0A>_+=09if_(unlikely(flags_&_~BPF=5F?=
+ =?utf-8?q?F=5FGET=5FBRANCH=5FRECORDS=5FSIZE))=0D=0A>_+=09=09return_-EINVA?=
+ =?utf-8?q?L;=0D=0A>_+=0D=0A>_+=09if_(unlikely(!br=5Fstack))=0D=0A>_+=09?=
+ =?utf-8?q?=09return_-EINVAL;=0D=0A=0D=0AWhy_the_ifdef_X86=3F_In_previous_?=
+ =?utf-8?q?thread_I_meant_to_change_it_into_since_it's=0D=0Aimplicit:=0D?=
+ =?utf-8?q?=0A=0D=0A_________if_(unlikely(!br=5Fstack))=0D=0A_____________?=
+ =?utf-8?q?____return_-ENOENT;=0D=0A=0D=0AOr_is_there_any_other_additional?=
+ =?utf-8?q?_rationale=3F=0D=0A=0D=0A>_+=09if_(flags_&_BPF=5FF=5FGET=5FBRAN?=
+ =?utf-8?q?CH=5FRECORDS=5FSIZE)=0D=0A>_+=09=09return_br=5Fstack->nr_*_br?=
+ =?utf-8?q?=5Fentry=5Fsize;=0D=0A>_+=0D=0A>_+=09if_(!buf_||_(size_%_br=5Fe?=
+ =?utf-8?q?ntry=5Fsize_!=3D_0))=0D=0A>_+=09=09return_-EINVAL;=0D=0A>_+=0D?=
+ =?utf-8?q?=0A>_+=09to=5Fcopy_=3D_min=5Ft(u32,_br=5Fstack->nr_*_br=5Fentry?=
+ =?utf-8?q?=5Fsize,_size);=0D=0A>_+=09memcpy(buf,_br=5Fstack->entries,_to?=
+ =?utf-8?q?=5Fcopy);=0D=0A>_+=0D=0A>_+=09return_to=5Fcopy;=0D=0A>_+#endif?=
+ =?utf-8?q?=0D=0A>_+}=0D=0A>_+=0D=0A>_+static_const_struct_bpf=5Ffunc=5Fpr?=
+ =?utf-8?q?oto_bpf=5Fread=5Fbranch=5Frecords=5Fproto_=3D_{=0D=0A>_+=09.fun?=
+ =?utf-8?q?c___________=3D_bpf=5Fread=5Fbranch=5Frecords,=0D=0A>_+=09.gpl?=
+ =?utf-8?q?=5Fonly_______=3D_true,=0D=0A>_+=09.ret=5Ftype_______=3D_RET=5F?=
+ =?utf-8?q?INTEGER,=0D=0A>_+=09.arg1=5Ftype______=3D_ARG=5FPTR=5FTO=5FCTX,?=
+ =?utf-8?q?=0D=0A>_+=09.arg2=5Ftype______=3D_ARG=5FPTR=5FTO=5FMEM=5FOR=5FN?=
+ =?utf-8?q?ULL,=0D=0A>_+=09.arg3=5Ftype______=3D_ARG=5FCONST=5FSIZE=5FOR?=
+ =?utf-8?q?=5FZERO,=0D=0A>_+=09.arg4=5Ftype______=3D_ARG=5FANYTHING,=0D=0A?=
+ =?utf-8?q?>_+};=0D=0A>_+=0D=0A>___static_const_struct_bpf=5Ffunc=5Fproto_?=
+ =?utf-8?q?*=0D=0A>___pe=5Fprog=5Ffunc=5Fproto(enum_bpf=5Ffunc=5Fid_func?=
+ =?utf-8?q?=5Fid,_const_struct_bpf=5Fprog_*prog)=0D=0A>___{=0D=0A>_@@_-104?=
+ =?utf-8?q?0,6_+1079,8_@@_pe=5Fprog=5Ffunc=5Fproto(enum_bpf=5Ffunc=5Fid_fu?=
+ =?utf-8?q?nc=5Fid,_const_struct_bpf=5Fprog_*prog)=0D=0A>___=09=09return_&?=
+ =?utf-8?q?bpf=5Fget=5Fstack=5Fproto=5Ftp;=0D=0A>___=09case_BPF=5FFUNC=5Fp?=
+ =?utf-8?q?erf=5Fprog=5Fread=5Fvalue:=0D=0A>___=09=09return_&bpf=5Fperf=5F?=
+ =?utf-8?q?prog=5Fread=5Fvalue=5Fproto;=0D=0A>_+=09case_BPF=5FFUNC=5Fread?=
+ =?utf-8?q?=5Fbranch=5Frecords:=0D=0A>_+=09=09return_&bpf=5Fread=5Fbranch?=
+ =?utf-8?q?=5Frecords=5Fproto;=0D=0A>___=09default:=0D=0A>___=09=09return_?=
+ =?utf-8?q?tracing=5Ffunc=5Fproto(func=5Fid,_prog);=0D=0A>___=09}=0D=0A>_?=
+ =?utf-8?q?=0D=0A=0D=0A?=
+In-Reply-To: <a026ad0c-7d24-09cc-9742-c241d37fbdb0@iogearbox.net>
+Date:   Mon, 27 Jan 2020 11:01:08 -0800
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+To:     "Daniel Borkmann" <daniel@iogearbox.net>, <bpf@vger.kernel.org>,
+        <ast@kernel.org>, <songliubraving@fb.com>, <yhs@fb.com>,
+        <andriin@fb.com>
+Cc:     <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>
+Subject: Re: [PATCH v6 bpf-next 1/2] bpf: Add bpf_read_branch_records()
+ helper
+Message-Id: <C06T0N0N8TD7.1MBJSGUZDFW0A@dlxu-fedora-R90QNFJV>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 7:28 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On Mon Jan 27, 2020 at 1:26 PM, Daniel Borkmann wrote:
+[...]
+> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> > index f1d74a2bd234..332aa433d045 100644
+> > --- a/include/uapi/linux/bpf.h
+> > +++ b/include/uapi/linux/bpf.h
+> > @@ -2892,6 +2892,25 @@ union bpf_attr {
+> >    *		Obtain the 64bit jiffies
+> >    *	Return
+> >    *		The 64 bit jiffies
+> > + *
+> > + * int bpf_read_branch_records(struct bpf_perf_event_data *ctx, void *=
+buf, u32 buf_size, u64 flags)
 >
-> Hi Brendan,
->
-> Brendan Higgins <brendanhiggins@google.com> wrote on Fri, 24 Jan 2020
-> 18:12:12 -0800:
->
-> > On Thu, Jan 9, 2020 at 7:23 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > >
-> > > Hi Brendan,
-> > >
-> > > Brendan Higgins <brendanhiggins@google.com> wrote on Wed, 11 Dec 2019
-> > > 11:27:37 -0800:
-> > >
-> > > > Currently CONFIG_MTD_NAND_CADENCE implicitly depends on
-> > > > CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
-> > > > the following build error:
-> > > >
-> > > > ld: drivers/mtd/nand/raw/cadence-nand-controller.o: in function `cadence_nand_dt_probe.cold.31':
-> > > > drivers/mtd/nand/raw/cadence-nand-controller.c:2969: undefined reference to `devm_platform_ioremap_resource'
-> > > > ld: drivers/mtd/nand/raw/cadence-nand-controller.c:2977: undefined reference to `devm_ioremap_resource'
-> > > >
-> > > > Fix the build error by adding the unspecified dependency.
-> > > >
-> > > > Reported-by: Brendan Higgins <brendanhiggins@google.com>
-> > > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > > > ---
-> > >
-> > > Sorry for the delay.
-> > >
-> > > Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> >
-> > It looks like my change has not been applied to nand/next; is this the
-> > branch it should be applied to? I have also verified that this patch
-> > isn't in linux-next as of Jan 24th.
-> >
-> > Is mtd/linux the correct tree for this? Or do I need to reach out to
-> > someone else?
->
-> When I sent my Acked-by I supposed someone else would pick the patch,
-> but there is actually no dependency with all the other patches so I
-> don't know why I did it... Sorry about that. I'll take it anyway in my
-> PR for 5.6.
+>=20
+> Small nit: s/buf_size/size/, so that it matches with your BPF_CALL
+> below.
 
-No worries, thanks!
+Ok
+
+>=20
+> +BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *,
+> ctx,
+> + void *, buf, u32, size, u64, flags)
+>
+>=20
+> > + *	Description
+> > + *		For an eBPF program attached to a perf event, retrieve the
+> > + *		branch records (struct perf_branch_entry) associated to *ctx*
+> > + *		and store it in	the buffer pointed by *buf* up to size
+> > + *		*buf_size* bytes.
+> > + *
+> > + *		The *flags* can be set to **BPF_F_GET_BRANCH_RECORDS_SIZE** to
+> > + *		instead	return the number of bytes required to store all the
+> > + *		branch entries. If this flag is set, *buf* may be NULL.
+> > + *	Return
+> > + *		On success, number of bytes written to *buf*. On error, a
+> > + *		negative value.
+>
+>=20
+> Maybe pull the 2nd paragraph from above in here so that it reflects the
+> description
+> of the return value when flag is used also for this case in the 'Return'
+> description.
+
+Ok.
+
+[...]
+> >  =20
+> > +BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *,=
+ ctx,
+> > +	   void *, buf, u32, size, u64, flags)
+> > +{
+> > +#ifndef CONFIG_X86
+> > +	return -ENOENT;
+> > +#else
+> > +	struct perf_branch_stack *br_stack =3D ctx->data->br_stack;
+> > +	u32 br_entry_size =3D sizeof(struct perf_branch_entry);
+>
+>=20
+> 'static const u32 br_entry_size' if we use it as such below.
+
+Ok
+
+>
+>=20
+> > +	u32 to_copy;
+> > +
+> > +	if (unlikely(flags & ~BPF_F_GET_BRANCH_RECORDS_SIZE))
+> > +		return -EINVAL;
+> > +
+> > +	if (unlikely(!br_stack))
+> > +		return -EINVAL;
+>
+>=20
+> Why the ifdef X86? In previous thread I meant to change it into since
+> it's
+> implicit:
+>
+>=20
+> if (unlikely(!br_stack))
+> return -ENOENT;
+>
+>=20
+> Or is there any other additional rationale?
+
+Yeah, so br_stack can be null if the perf_event is misconfigured (branch
+record not enabled). So we need to differentiate that from arch not
+supporting it.
+
+[...]
+
+
+Thanks,
+Daniel
