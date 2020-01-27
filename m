@@ -2,147 +2,134 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E05AC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B386FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8332467F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E33D24687
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:52:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jd5pRzRZ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FUXj16rV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgA0Utu (ORCPT
+        id S1726293AbgA0UwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 15:49:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24236 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726275AbgA0Utu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 15:49:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580158189;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=eOdBLphukmJU4mzfUFyXShD49tL7waQ2ooxqyy/1xSY=;
-        b=Jd5pRzRZD7ZUsRWwP3K1eSJR2cHnziqJ18yEn0Ic8xyYmsZ2x1pLStoYQ3ZYyeWb1MT3iI
-        jqsgjGKQNTxFlUDk121qnYFMpLUctPlRfxH2Yb14571enCmvP+qan3PlJuf8HlC6zbwA7l
-        oIOqILsc5E86jHNdPVYmHvql3hEja00=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-287-Guxeq_eQPjWD9sqwd2bU9g-1; Mon, 27 Jan 2020 15:49:44 -0500
-X-MC-Unique: Guxeq_eQPjWD9sqwd2bU9g-1
-Received: by mail-yb1-f198.google.com with SMTP id o82so8558629ybc.18
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 12:49:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=eOdBLphukmJU4mzfUFyXShD49tL7waQ2ooxqyy/1xSY=;
-        b=Ht4cAvg3lexnrBLSOB91ta5g6lNjlhH18G1VrVaZq6x60HSBTGr4sP83hh3N+BUJxL
-         RyZ76K2ILBGLgirC8bdN+vMShvetcU/hs758U7OflTAq4blN8tjt7rRJpfQX2Laytt4A
-         zI8ApalksG4m7QmZTEsfhhcc4H1PbPro+HvjoKAEhTBVHAblJXT/0lvdgb2yGd0uaSsq
-         RHljMqELlQqJcCJoaB0PQCwkKbwWgCy7DxWgN6MwMHh1vNBDlK85IY+cd/mt2FxdhQBT
-         C2nfqRy3yqv41tOCbKSbJ3OnCWwI5PKRw6UVfGJaeKvVrLkBZBpTJ5Yu0XnCcZL6Tm9o
-         sTPA==
-X-Gm-Message-State: APjAAAXEHxp1I0bskVr/HFrLvKa4iz+h7Y8Pc8Ri6oLyV5wzTcelQrJQ
-        q3AjcUuYZ615wV7pvLqyv2m1ulzkPJn8oVV/ty6cVB197jYgMwHGnvPUb+YyUhJuhBylXmAF2sk
-        xunLujCvfHP5xnOCfcZu+vEQd
-X-Received: by 2002:a81:6d13:: with SMTP id i19mr13118083ywc.461.1580158184072;
-        Mon, 27 Jan 2020 12:49:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzIxgvudpxq5FJW0DOdzpF/weeH63baE9/zI41VqoRhfH8WAhIODUXGb9+7F2QnEZEwxlEdeQ==
-X-Received: by 2002:a81:6d13:: with SMTP id i19mr13118074ywc.461.1580158183807;
-        Mon, 27 Jan 2020 12:49:43 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id n1sm7173736ywe.78.2020.01.27.12.49.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 12:49:43 -0800 (PST)
-Date:   Mon, 27 Jan 2020 13:49:41 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
- the boot aggregate
-Message-ID: <20200127204941.2ewman4y5nzvkjqe@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-kernel@vger.kernel.org
-References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+        Mon, 27 Jan 2020 15:52:18 -0500
+Received: from ozlabs.org ([203.11.71.1]:37645 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbgA0UwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 15:52:17 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48624H42Gkz9sP6;
+        Tue, 28 Jan 2020 07:52:15 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580158335;
+        bh=5IAWXzKEP5eil4lytI4r0Q4DbY73zSR6CMbbN1GRfNY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FUXj16rVdcACorjfQjUDTr6SL8JrYQPsULHFEDmiQESJBRAnqGSRtD8bmsytOrXj4
+         8uJJEjamKiFf09GgrepOYAl6866rwZsEAmjZC4h99flM/2vh+CHYNJCqmEsz/QGa3e
+         RvLzltQuVQIC6qJ/eFMnJ4qjkQ03dI+FJ5meQ73ekRDECTZn421fiSf5IaoT+rZ3Rl
+         bbcXQWO0B9hJOsLGul14oLldGJcuDIRmpZKifJ2lvlbpSvd7tQRp2yEICxr48ShtnL
+         I+EyWS2b5BIRs3p5RTnXdsF8y9BzHuLyWqv4GRrHjTVCxzIgb+wItfT1giD8Yq5yEn
+         SRCgQ0sZH4sXA==
+Date:   Tue, 28 Jan 2020 07:52:14 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kars de Jong <jongk@linux-m68k.org>
+Subject: Re: linux-next: manual merge of the keys tree with the m86k tree
+Message-ID: <20200128075214.2177dcae@canb.auug.org.au>
+In-Reply-To: <20200113123700.66678b59@canb.auug.org.au>
+References: <20200113123603.33c957e1@canb.auug.org.au>
+        <20200113123700.66678b59@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+Content-Type: multipart/signed; boundary="Sig_/G.3uctNI+1673TIdUQiqCIo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon Jan 27 20, Mimi Zohar wrote:
->The boot aggregate is a cumulative SHA1 hash over TPM registers 0 - 7.
->NIST has depreciated the usage of SHA1 in most instances.  Instead of
->continuing to use SHA1 to calculate the boot_aggregate, use the
->configured IMA default hash algorithm.
->
->Although the IMA measurement list boot_aggregate template data contains
->the hash algorithm followed by the digest, allowing verifiers (e.g.
->attesttaion servers) to calculate and verify the boot_aggregate, the
->verifiers might not have the knowledge of what constitutes a good value
->based on a different hash algorithm.
->
->Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
->---
-> security/integrity/ima/ima_init.c | 8 ++++----
-> 1 file changed, 4 insertions(+), 4 deletions(-)
->
->diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
->index 195cb4079b2b..b1b334fe0db5 100644
->--- a/security/integrity/ima/ima_init.c
->+++ b/security/integrity/ima/ima_init.c
->@@ -27,7 +27,7 @@ struct tpm_chip *ima_tpm_chip;
-> /* Add the boot aggregate to the IMA measurement list and extend
->  * the PCR register.
->  *
->- * Calculate the boot aggregate, a SHA1 over tpm registers 0-7,
->+ * Calculate the boot aggregate, a hash over tpm registers 0-7,
->  * assuming a TPM chip exists, and zeroes if the TPM chip does not
->  * exist.  Add the boot aggregate measurement to the measurement
->  * list and extend the PCR register.
->@@ -51,14 +51,14 @@ static int __init ima_add_boot_aggregate(void)
-> 	int violation = 0;
-> 	struct {
-> 		struct ima_digest_data hdr;
->-		char digest[TPM_DIGEST_SIZE];
->+		char digest[TPM_MAX_DIGEST_SIZE];
-> 	} hash;
->
-> 	memset(iint, 0, sizeof(*iint));
-> 	memset(&hash, 0, sizeof(hash));
-> 	iint->ima_hash = &hash.hdr;
->-	iint->ima_hash->algo = HASH_ALGO_SHA1;
->-	iint->ima_hash->length = SHA1_DIGEST_SIZE;
->+	iint->ima_hash->algo = ima_hash_algo;
->+	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
->
-> 	if (ima_tpm_chip) {
-> 		result = ima_calc_boot_aggregate(&hash.hdr);
->-- 
->2.7.5
->
+--Sig_/G.3uctNI+1673TIdUQiqCIo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Tested the patches on the Dell and no longer spits out the error messages on boot.
-/sys/kernel/security/ima/ascii_runtime_measurements shows the boot aggregate.
+Hi all,
 
-Is there something else I should look at to verify it is functioning properly?
+On Mon, 13 Jan 2020 12:37:00 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Mon, 13 Jan 2020 12:36:03 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > Today's linux-next merge of the keys tree got a conflict in:
+> >=20
+> >   arch/m68k/kernel/syscalls/syscall.tbl
+> >=20
+> > between commit:
+> >=20
+> >   e8bb2a2a1d51 ("m68k: Wire up clone3() syscall")
+> >=20
+> > from the m86k tree and commit:
+> >=20
+> >   519c484a997a ("Add a general, global device notification watch list")
+> >=20
+> > from the keys tree.
+> >=20
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts. =20
+>=20
+> Sorry, forgot the diff ...
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc arch/m68k/kernel/syscalls/syscall.tbl
+> index b911e0f50a71,83e4e8784b88..000000000000
+> --- a/arch/m68k/kernel/syscalls/syscall.tbl
+> +++ b/arch/m68k/kernel/syscalls/syscall.tbl
+> @@@ -434,5 -434,5 +434,6 @@@
+>   432	common	fsmount				sys_fsmount
+>   433	common	fspick				sys_fspick
+>   434	common	pidfd_open			sys_pidfd_open
+>  -# 435 reserved for clone3
+>  +435	common	clone3				__sys_clone3
+> + 436	common	watch_devices			sys_watch_devices
+>  +437	common	openat2				sys_openat2
 
-Regards,
-Jerry
+This is now a conflict between the keys tree and Linus' tree - just a
+reminder for pull requests.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/G.3uctNI+1673TIdUQiqCIo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4vTX4ACgkQAVBC80lX
+0GwXIQf/Z+1iag3JLhrU8jy8fK1Uvj5xMNrnkU+x10030B+os9vjGSSmtAn+dor1
+yYMOu60+Gsr7+l3Smz2oBmTcxaYUKcZvhmnRfnURe2LEsKvdEcH+BHXhT2Sqwxbr
+cOuMg1o+FA9MP4XGS47ZEF8xCkEkR0ay8+yKyv4SvJda8Yx9mb9qKuUTyyrxCFXL
+xh/aGH99dJsqc7iNsMR3kn2Sq47lbqDvZYsy9GwInFd9V4xxd3skl6JBNKVMoZEn
+7esS6JooLVNKQD/N5ye6ayD3S9Taky2fMgGBwbYl1NXbHW/aXwwrkF3C51qSopZj
+ViFFvjBcHJ1veODnafrQyHylNUUAog==
+=nYK4
+-----END PGP SIGNATURE-----
+
+--Sig_/G.3uctNI+1673TIdUQiqCIo--
