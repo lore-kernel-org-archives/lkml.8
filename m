@@ -2,89 +2,111 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E83C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B8BC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E01021739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB70214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="n2LAN2Q8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="FYZZT5KI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgA0OAs (ORCPT
+        id S1728760AbgA0OCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:00:48 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:55974 "EHLO vps0.lunn.ch"
+        Mon, 27 Jan 2020 09:02:08 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:35176 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727430AbgA0OAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:00:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=S0oCkFJi5GJ0pOrckJdOjtGxi2RubX2p/f+d/hw//6w=; b=n2LAN2Q86IiwsDYj1Zwq6Buh2K
-        7Wdygzr06W4xlwMGl6JzgXacepLqP93mvOxqsiXfLRolQU4hNcWcrT7KwJqKlTKGbrWmD2i/SfxvO
-        4//Xmnt1oqXftdLBbd08Jh6YZRzfyzzrX7iNXHa8kUt00SR6ph1jvqsvblSHDoCPSYvQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iw4wQ-0006YJ-LN; Mon, 27 Jan 2020 15:00:38 +0100
-Date:   Mon, 27 Jan 2020 15:00:38 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200127140038.GD13647@lunn.ch>
-References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
- <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
- <20200127112102.GT25745@shell.armlinux.org.uk>
- <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200127114600.GU25745@shell.armlinux.org.uk>
+        id S1727177AbgA0OCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 09:02:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LQaQHhSfH+sdElaYG2t4bwuZkno397hqKjUJr+Nywhc=; b=FYZZT5KIWLuwe4lfQSfO73bGe
+        hvlKQKtQk3udLJjRRhOELpAITa8OIkXy5c/hXlYC8c9suhPUnSJ4AEnUVZMsatemtSvzI7iyf2NYt
+        tW+4H990JTXdA8gspRMYjRUgqwToHu04XYeDx5yhO/tfzDPSNOEkDAqc+XoBerBhkN7WU=;
+Received: from [2a02:790:ff:1019:7ee9:d3ff:fe1f:a246] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iw4xg-0000LB-0N; Mon, 27 Jan 2020 15:01:57 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iw2MQ-0007E3-54; Mon, 27 Jan 2020 12:15:18 +0100
+Date:   Mon, 27 Jan 2020 12:15:11 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, b.galvani@gmail.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org
+Subject: Re: [PATCH 2/5] mfd: rn5t618: add ADC subdevice for RC5T619
+Message-ID: <20200127121422.66f4f3e8@kemnade.info>
+In-Reply-To: <20200127092815.GA3548@dell>
+References: <20200117215926.15194-1-andreas@kemnade.info>
+        <20200117215926.15194-3-andreas@kemnade.info>
+        <20200120084934.GZ15507@dell>
+        <20200124162818.0697f551@kemnade.info>
+        <20200127092815.GA3548@dell>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127114600.GU25745@shell.armlinux.org.uk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/AnyB9TPe_XHn_KVZv1oPKe_"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Yes, I realise that, but it comes with the expense of potentially
-> breaking mvneta and mvpp2, where the settings are automatically
-> passed between the PCS and MAC in hardware. I also believe DSA
-> works around this, and I need to look at that.
+--Sig_/AnyB9TPe_XHn_KVZv1oPKe_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Russell
+On Mon, 27 Jan 2020 09:28:15 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
 
-The mv88e6xxx driver has code for when SGMII is used. It transfers the
-negotiated speed from the PCS to the MAC.
+> On Fri, 24 Jan 2020, Andreas Kemnade wrote:
+> > hmm, I cannot find this in any branch/repo I know of and not in linux-n=
+ext,
+> > just wondering...
+> > I guess the iio part is something to go towards 5.7 unless 5.5
+> > is delayed mucch. =20
+>=20
+> Oh, it looks like there was a conflict.  Could you collect any Acks
+> (including mine) rebase and resend please?
+>=20
+on what? It is based on top of my RTC v5 patch series. The ADC series
+as a whole depends on that build-time and runtime as documented in
+the cover letter. Maybe I should have put it into the patches itself.
+I have hopefully addressed every comment in the v5 series.
 
-But it recently turned out something like this is also needed for
-other link modes involving the SERDES. It used to work, i think
-because Phylink would initially configure the MAC approximately right,
-or the mv88e6xxx driver was looking at phylink state it should not.
-But it no longer works.
+Regards,
+Andreas
 
-I would like to see a generic solution, and would be happy to remove
-the current SGMII code when you have something to replace it.
+--Sig_/AnyB9TPe_XHn_KVZv1oPKe_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-    Andrew
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl4uxj8ACgkQl4jFM1s/
+ye9Trg/8DZtbTzYhniGrVYebXsC7fhf62BAwRTbAFR/7TnyrgurRe2CZT01DFIYJ
+gO0ZlaH0A+ouoxen85wdKyNIZfEvRJjZFjg3XNfXCQ1xk7oz0Zn7abzTDsoJFNFC
+iOnSYVSmBehBsRtza0vodN4KadAFqLKiPYca/3/TnzCBdnWJukOzYgmSRvjHKqqo
+h99XAKlr6Sw1oYjxUwyTt4Gl0ynvf7CaLSJoHcKsVaAeSONAcsyq/hQjDGf5Fygy
+Fm1RNTvUtf1jXnYiskLgKreHulRy7b303N6CW8KdWbe/NF1UTULloaudmneCcsrJ
+PvtNQW5U6JxOHNARJe+6J5X+VaT13hnVjxwzSUYA/l7qF30y94b5YrUkV6AVkgGn
+Qxhhk9bnY8/S1d25KQqBzQRur++d6sdr3yB7WA0jF7zB+u0CU7xY+Z5wtKHHbvBU
+UUBkC7HfCRLIh6WH3PuU1XR6zQA+IFDH2RScYr9fYWgQHzHbGHaGTycs2xjj304j
+mjHgn+06tB40lE8Ixw9aNMURU+wdNJPYSJLKTHsoI2HZHxMAAODSgZk1czYV/xkz
+WpkBoQ6AzmxptY61PhMgR1YB/Hu2tNJyR9I5Z9NuJro7exYeVEU77T5qUCSgHY8D
+FWmJA4LmlWNZ1lqhZUbQVE+w7UZQjHqDVOlyjdbh889RhrcWUZE=
+=Ssrt
+-----END PGP SIGNATURE-----
+
+--Sig_/AnyB9TPe_XHn_KVZv1oPKe_--
