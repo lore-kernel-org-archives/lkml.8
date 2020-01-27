@@ -2,184 +2,171 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2388C33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6211C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893EA206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1292087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:11:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="lSrHYImJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ul6LkH0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbgA0QFU (ORCPT
+        id S1729710AbgA0QLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:05:20 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43877 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729707AbgA0QFU (ORCPT
+        Mon, 27 Jan 2020 11:11:50 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38174 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729470AbgA0QLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:05:20 -0500
-Received: by mail-wr1-f65.google.com with SMTP id d16so11985936wre.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 08:05:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m6H46utUXqWdcEAdVv2FVcUX2Nzt6oOZWEwm5mopEtQ=;
-        b=lSrHYImJgrXOI9Xb9HdwFOlIhHOT7WlPCAHlGon94ANIEMufexCuQtRYNTeJQq6hWK
-         s9U7i+AvdS+wc7zSyt5W7VUxd/xD/Dn/aeVhcB2724gCMmkx0x/STt+zS71QDnLPfrO8
-         o0Vqb3iOw8/E7E4x8DYjqJTtTQhCYOLoA5uupr7ew2KNOrlNzkCOQfZe/Nha+VlXwxIB
-         LaN41dV3GyfgAWf2o8hNMTaZOU2oGe7UWOcTgWvgMsih1y7Awd/OM/XhzmyhcKI4pMrv
-         2otBaIHeLbmWPw1yiRKoJUXjjDBk5hLbuLiTDu9palf6il16C854zU9SD9VoMaJTJFjU
-         TImA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m6H46utUXqWdcEAdVv2FVcUX2Nzt6oOZWEwm5mopEtQ=;
-        b=aDTj59YffvdUdunK+E1UROq8Ak1Ls7I1/vOvIzedlPAjcyTZYzYlFJOlDTkG2KV+Au
-         x7M3/toh5cGPxwL69/zKcaXflgNn9i0TW7mogHj+ADhzNDAJRQyYiumku2OdVQus+80z
-         tfhJOV2qH/O7B/PhoNfnHXr+PpYsbOx7xLay75qhGjIoREpUvLylR5QUa8WUcXNHC1ls
-         vxWPhaXyTUVS2ID7Ab1/G7gYng85ut2VfFnhG1WChU+bbhXtdKfDW2RnBogyVeQ3F9xW
-         ceBHmsCMNIHjzLdUc6RHih0xs83/WTGjGK+6q3l22ogB9UY3MiP69TBG0WnKvr5IsWfM
-         y6Ww==
-X-Gm-Message-State: APjAAAX2m1VJnrXvuFdWJWrPYtES9rh5ZqVy0/TypIVpWyKAfokarPJJ
-        lYeupa+dhZMVg8u1siIJUAKq6A==
-X-Google-Smtp-Source: APXvYqwpYQz0VV1m6hgiBAcj+79gFn95NBwTzxj50XN2aw3gaqLikpXVbctrQJK2nyss4LiIc0hpFA==
-X-Received: by 2002:adf:d0c1:: with SMTP id z1mr24177891wrh.371.1580141117057;
-        Mon, 27 Jan 2020 08:05:17 -0800 (PST)
-Received: from tsr-lap-08.nix.tessares.net (hag0-main.tessares.net. [87.98.252.165])
-        by smtp.gmail.com with ESMTPSA id 16sm18938279wmi.0.2020.01.27.08.05.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 08:05:16 -0800 (PST)
-Subject: Re: [PATCH] selftests: settings: tests can be in subsubdirs
-To:     Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mptcp <mptcp@lists.01.org>
-References: <20191022171223.27934-1-matthieu.baerts@tessares.net>
- <c9ce5016-9e83-67c0-ae22-2d3c46427b25@tessares.net>
- <201911211018.D6CD68AC5@keescook>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <602ab319-dcb9-4ac7-b2b8-f7b6072ddc03@tessares.net>
-Date:   Mon, 27 Jan 2020 17:05:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Jan 2020 11:11:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gEl6tSo6zZ7fDJ2My+QHjzpT/cnxKFaOYeklSZ0cvYE=; b=ul6LkH0cilXWVwQ+Ixv2rqWTE
+        sBu0kntPb7nVSZT+OAF5OG0rQZ7OKnxVWLHPOEBYgcRxOeKJ1Cvq/8zQGjEe7t87FQSly+RKzpMvC
+        WwyofFvrDFCUkDc8Tk5ChmaGRQhZdivcjzOzMNv6Dr7gw0KKrCO2hDLXQfTkqWKGAzI7VACqxNltE
+        fur5lbEKHc3R7tpVF5phn4V9yoAHFU+B5KPcmP+1hmRMXAGcP5pavf3WyxhgoGi1Z//l9qY7a2kXo
+        WzBkbDBGPl0BVDF/zmh7gbJbcbiv0cX/CKSN05m7wIH5R+jF1SgEon7Re/Xe0lI65uiy/eFRM8XX2
+        kkyJHe9FQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44044)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iw6zB-0002LM-Ik; Mon, 27 Jan 2020 16:11:37 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iw6z6-0001Xp-TY; Mon, 27 Jan 2020 16:11:32 +0000
+Date:   Mon, 27 Jan 2020 16:11:32 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
+ up without PHY
+Message-ID: <20200127161132.GX25745@shell.armlinux.org.uk>
+References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+ <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+ <20200127112102.GT25745@shell.armlinux.org.uk>
+ <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20200127114600.GU25745@shell.armlinux.org.uk>
+ <20200127140038.GD13647@lunn.ch>
+ <20200127140834.GW25745@shell.armlinux.org.uk>
+ <20200127145107.GE13647@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <201911211018.D6CD68AC5@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127145107.GE13647@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah, Kees,
-
-On 21/11/2019 19:52, Kees Cook wrote:
-> On Thu, Nov 21, 2019 at 05:32:42PM +0100, Matthieu Baerts wrote:
->> Hi Shuah,
->>
->> First, thank you for maintaining the Kernel Selftest framework!
->>
->> On 22/10/2019 19:12, Matthieu Baerts wrote:
->>> Commit 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second
->>> timeout per test) adds support for a new per-test-directory "settings"
->>> file. But this only works for tests not in a sub-subdirectories, e.g.
->>>
->>>    - tools/testing/selftests/rtc (rtc) is OK,
->>>    - tools/testing/selftests/net/mptcp (net/mptcp) is not.
->>>
->>> We have to increase the timeout for net/mptcp tests which are not
->>> upstreamed yet but this fix is valid for other tests if they need to add
->>> a "settings" file, see the full list with:
->>>
->>>     tools/testing/selftests/*/*/**/Makefile
->>>
->>> Note that this patch changes the text header message printed at the end
->>> of the execution but this text is modified only for the tests that are
->>> in sub-subdirectories, e.g.
->>>
->>>     ok 1 selftests: net/mptcp: mptcp_connect.sh
->>>
->>> Before we had:
->>>
->>>     ok 1 selftests: mptcp: mptcp_connect.sh
->>>
->>> But showing the full target name is probably better, just in case a
->>> subsubdir has the same name as another one in another subdirectory.
->>>
->>> Fixes: 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second timeout per test)
->>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->> Sorry to bother you again with this but by chance, did you have a look at
->> the patch below? :)
->>
->> It doesn't only fix an issue with MPTCP, not in the kernel yet. But it also
->> fixes the issue of taking the right "settings" file (if available) for any
->> other tests in a sub-directory, e.g.:
->>
->>    drivers/dma-buf
->>    filesystems/binderfs
->>    net/forwarding
->>    networking/timestamping
->>
->> But I guess all tests in powerpc/* dirs and others.
+On Mon, Jan 27, 2020 at 03:51:07PM +0100, Andrew Lunn wrote:
+> > Can you give a hint which platform this is and how to reproduce it
+> > please?
 > 
-> Thanks for the ping! I missed this patch when you originally sent it.
-> Yes, this make sense to me:
+> Hi Russell
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-
-Kees, Thank you for this review!
-
-Shuah, I am sorry to send you this new request. It is just to inform you 
-that the first selftests for MPTCP are now in "net-next" repo, ready for 
-the future Linux 5.6.
-We would then be very happy to see this patch here below for the 
-kselftest framework accepted to avoid timeouts. Locally we apply this 
-patch before running the selftests but we cannot ask everybody running 
-MPTCP' selftests to do the same :)
-
-> As an improvement on this, I wonder if we need to walk all directories
-> between $BASEDIR and $DIR? Actually, let me write this and send it...
-
-Thank you, Kees, for this improvement!
-
-Cheers,
-Matt
-
+> Devel C has issues with its fibre ports. I tend to test with
+> sff2/port9 not sff3/port3, because i also have the copper port plugged
+> in. If the copper gets link before the fibre, copper is used.
 > 
-> -Kees
+> What i see is that after the SERDES syncs, its registers indicate a 1G
+> link, full duplex, etc. But the MAC is using 10/Half. And hence no
+> packets go through. If i set the MAC to the same as the PCS, i can at
+> least transmit. Receive does not work, but i think that is something
+> else. The statistics counters indicate the SERDES is receiving frames,
+> but the MAC statistic counters suggests the MAC never sees them.
 > 
->>
->> Cheers,
->> Matt
->>
->>> ---
->>>    tools/testing/selftests/kselftest/runner.sh | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
->>> index 84de7bc74f2c..0d7a89901ef7 100644
->>> --- a/tools/testing/selftests/kselftest/runner.sh
->>> +++ b/tools/testing/selftests/kselftest/runner.sh
->>> @@ -90,7 +90,7 @@ run_one()
->>>    run_many()
->>>    {
->>>    	echo "TAP version 13"
->>> -	DIR=$(basename "$PWD")
->>> +	DIR="${PWD#${BASE_DIR}/}"
->>>    	test_num=0
->>>    	total=$(echo "$@" | wc -w)
->>>    	echo "1..$total"
->>> -- 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts@tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> I've also had issues with the DSA links, also being configured to
+> 10/Half. That seems to be related to having a phy-mode property in
+> device tree. I need to add a fixed-link property to set the correct
+> speed. Something is broken here, previously the fixed-link was only
+> needed if the speed needed to be lower than the ports maximum. I think
+> that is a separate issue i need to dig into, not part of the PCS to
+> MAC transfer.
+
+Presumably, all these should be visible on the ZII rev B as well?
+I've not noticed any issues there, and I have 5.4 built from my
+tree on December 22nd which would've included most of what is in
+5.5, and quite a bit of what's queued in net-next.
+
+There, I see:
+
+mv88e6xxx.0/regs:    GLOBAL GLOBAL2 SERDES     0    1    2    3    4    5    6
+mv88e6xxx.0/regs: 1:     2    8007     149     3    3    3    3    3 403e   3d
+mv88e6xxx.1/regs:    GLOBAL GLOBAL2 SERDES     0    1    2    3    4    5    6
+mv88e6xxx.1/regs: 1:     2    8807     14d     3    3    3    3    3 403e 403e
+mv88e6xxx.2/regs:    GLOBAL GLOBAL2 SERDES     0    1    2    3    4    5    6    7    8    9
+regs: 1:  7209       0    ffff  c503 c503 c503 2403 2403 2403 2403 2403 2403 c13e
+
+which looks fine to me:
+- switch 0
+   - port 5 is the DSA port, which is forced to 1G.
+   - port 6 is the CPU port, which is forced to 100M.
+- switch 1
+   - ports 5 and 6 are DSA ports, forced to 1G
+- switch 2
+   - port 9 is the DSA port, forced to 1G.
+
+Booting 5.5 is more noisy than 5.4 - there's loads of complaints about
+"already a member of VLAN 1".  As far as the port MAC settings go, it
+looks just the same as the 5.4 settings I quoted above.
+
+Now, I do have some differences between what is in mainline and my tree
+and one of them involves adding a whole bunch of "phylink_mac_config"
+and "phylink_link_force" methods to the mv88e6xxx_ops for Marvell DSA
+switches.  Without these, dsa_port_phylink_mac_config() will ignore
+phylink's attempts to configure the MAC.
+
+Quite why this is, I don't know; these are patches I've carried for
+ages, since trying to get the SFF modules working on these platforms,
+before mainline gained phylink support for DSA.  I seem to remember
+that mainline's work was based on what I'd done, or was very similar,
+but I never really understood why bits such as this were left out.
+Since this work has been published online in my git tree since day 1,
+I find it really strange that people go off and do what seems to be a
+half-hearted implementation.  See the "zii" branch.
+
+Mainline did diverge on the issue of how the SFF modules should be
+driven; whether to drive them with the SFP code or whether to use
+a fixed-link instead.  I've kept my original approach, which is less
+than perfect since we don't have a link interrupt to trigger the call
+to phylink_mac_change().  However, I'm suspecting that once we solve
+the PCS/MAC split issue, and use the clause 37 phylink PCS helpers
+I've proposed in the last few weeks, this will be resolvable.
+
+> Heiner has another device which has an Aquantia PHY running in an odd
+> mode so that it does 1G over a T2 link. It uses SGMII for this, and
+> that is where we first noticed the issue of the MAC and PCS having
+> different configurations.
+
+Do you know when the issue appeared?
+
+It sounds like this regression has been known for some time, yet this
+is the first I've heard about it.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
