@@ -2,153 +2,112 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EC2C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76E7C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A6A214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C79020720
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580142887;
+	bh=38YTrA5qMUT5cOWBp54nPKi6D+TAGY0nPORC1+PxR6Y=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=lTYdvbp4gbjDMY36H+I6Js9/kiLTqYfzlLxq6D5bf+vuTzwsm4Ns6alyNZuyg9Ijh
+	 RTSsftLvlDDTmQZE1gG9tLJZcZcu3dPgK9FPZlulu/KeRvo01L0kih7xFoKTfsOlCQ
+	 ubibajUFPM905TYuVJs+Wxc1SgwNJMegiyavzRrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgA0Qef (ORCPT
+        id S1726339AbgA0Qeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:34:35 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:43478 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725828AbgA0Qef (ORCPT
+        Mon, 27 Jan 2020 11:34:46 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38922 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0Qeq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:34:35 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TocDDoG_1580142868;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TocDDoG_1580142868)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 28 Jan 2020 00:34:30 +0800
-Subject: Re: [v2 PATCH] mm: move_pages: report the number of non-attempted
- pages
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     richardw.yang@linux.intel.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <1579736331-85494-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200127095533.GD1183@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <0190d084-5295-83c3-98e7-eceae1b45c89@linux.alibaba.com>
-Date:   Mon, 27 Jan 2020 08:34:23 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 27 Jan 2020 11:34:46 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so8955605oty.6;
+        Mon, 27 Jan 2020 08:34:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=u4FSG6+6VmEelxLx4zfzFapuKSQOLzv8NzD+BfIiP0E=;
+        b=Zs5iYBmG+dtWLLhFdGvcsPT2EwLhy5t7Y/tsG2f1vL54ximb6InSgWBpwMV4kew51N
+         tHESZogyH5WuX3pN7WvSubfLA+zlIw0bdiI0PwDCgWsbmtKA3rk/7b2AoazpkF+yPLhV
+         ecIviJukNjcHHckBVymQ8u713hgy2VFfzyvx6o/xq6if4F/ILHjpjq32Uq3MXm4SKL7q
+         qWua8K4V27fLnAaniExNvJHMJsc/7ghG1bFT8DA2x7k/VA1ZDJ+nihGu9MEzMjJ62sOL
+         PipEbJFhcTBvi36uzYEH25Rir7W3jERuZmANCwWpI40qduUwpo0i8iUus/GMWY83j5kz
+         /6vA==
+X-Gm-Message-State: APjAAAUHS5LDQlwW7qngtrNj03xulSljD+7EdJMfBj+vU+iORES05pn1
+        59ZRXEK9qAUhDckk0nuy2wc4spiHvyQxf1O69LGi+zA/
+X-Google-Smtp-Source: APXvYqz6E365gr1xN6liK0FWDMW1TW6v/bSyEt+zWKc/ONA1wMpuMHHRWFNolBlEaZ428RfoiIA7b11guMvKrxkSouo=
+X-Received: by 2002:a9d:62c7:: with SMTP id z7mr12733646otk.189.1580142885473;
+ Mon, 27 Jan 2020 08:34:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200127095533.GD1183@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 27 Jan 2020 17:34:34 +0100
+Message-ID: <CAJZ5v0jcOmamFM6AU4eDJx_ULZfV63P_+o5BoxOmyDHuFKRHOA@mail.gmail.com>
+Subject: [GIT PULL] Device properties framework updates for v5.6-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
+
+Please pull from the tag
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ devprop-5.6-rc1
+
+with top-most commit aa811e3cececac2f65f7fa7e17ab46c73d778b2b
+
+ software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST
+
+on top of commit 67b8ed29e0d472bda2f3afe48d6ff99e127eff0c
+
+ Merge tag 'platform-drivers-x86-v5.5-1' of
+git://git.infradead.org/linux-platform-drivers-x86
+
+to receive device properties framework updates for 5.6-rc1.
+
+These add support for reference properties in sofrware nodes (Dmitry
+Torokhov) and a basic test for property entries along with fixes on
+top of it (Dmitry Torokhov, Qian Cai, Alan Maguire).
+
+Thanks!
 
 
-On 1/27/20 1:55 AM, Michal Hocko wrote:
-> On Thu 23-01-20 07:38:51, Yang Shi wrote:
->> Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
->> the semantic of move_pages() was changed to return the number of
->> non-migrated pages (failed to migration) and the call would be aborted
->> immediately if migrate_pages() returns positive value.  But it didn't
->> report the number of pages that we even haven't attempted to migrate.
->> So, fix it by including non-attempted pages in the return value.
-> I would rephrased the changelog like this
-> "
-> Since commit 49bd4d71637 ("mm, numa: rework do_pages_move"),
-> the semantic of move_pages() has changed to return the number of
-> non-migrated pages if they were result of a non-fatal reasons (usually a
-> busy page). This was an unintentional change that hasn't been noticed
-> except for LTP tests which checked for the documented behavior.
->
-> There are two ways to go around this change. We can even get back to the
-> original behavior and return -EAGAIN whenever migrate_pages is not able
-> to migrate pages due to non-fatal reasons. Another option would be to
-> simply continue with the changed semantic and extend move_pages
-> documentation to clarify that -errno is returned on an invalid input or
-> when migration simply cannot succeed (e.g. -ENOMEM, -EBUSY) or the
-> number of pages that couldn't have been migrated due to ephemeral
-> reasons (e.g. page is pinned or locked for other reasons).
->
-> This patch implements the second option because this behavior is in
-> place for some time without anybody complaining and possibly new users
-> depending on it. Also it allows to have a slightly easier error handling
-> as the caller knows that it is worth to retry when err > 0.
-> "
->
->> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
->> Suggested-by: Michal Hocko <mhocko@suse.com>
->> Cc: Wei Yang <richardw.yang@linux.intel.com>
->> Cc: <stable@vger.kernel.org>    [4.17+]
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> With a more clarification, feel free to add
-> Acked-by: Michal Hocko <mhocko@suse.com>
+---------------
 
-Thanks. Will post v3 with the rephrased commit log.
+Alan Maguire (1):
+      software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST
 
->
->> ---
->> v2: Rebased on top of the latest mainline kernel per Andrew
->>
->>   mm/migrate.c | 24 ++++++++++++++++++++++--
->>   1 file changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/migrate.c b/mm/migrate.c
->> index 86873b6..9b8eb5d 100644
->> --- a/mm/migrate.c
->> +++ b/mm/migrate.c
->> @@ -1627,8 +1627,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->>   			start = i;
->>   		} else if (node != current_node) {
->>   			err = do_move_pages_to_node(mm, &pagelist, current_node);
->> -			if (err)
->> +			if (err) {
->> +				/*
->> +				 * Positive err means the number of failed
->> +				 * pages to migrate.  Since we are going to
->> +				 * abort and return the number of non-migrated
->> +				 * pages, so need incude the rest of the
->> +				 * nr_pages that have not attempted as well.
->> +				 */
->> +				if (err > 0)
->> +					err += nr_pages - i - 1;
->>   				goto out;
->> +			}
->>   			err = store_status(status, start, current_node, i - start);
->>   			if (err)
->>   				goto out;
->> @@ -1659,8 +1669,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->>   			goto out_flush;
->>   
->>   		err = do_move_pages_to_node(mm, &pagelist, current_node);
->> -		if (err)
->> +		if (err) {
->> +			if (err > 0)
->> +				err += nr_pages - i - 1;
->>   			goto out;
->> +		}
->>   		if (i > start) {
->>   			err = store_status(status, start, current_node, i - start);
->>   			if (err)
->> @@ -1674,6 +1687,13 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->>   
->>   	/* Make sure we do not overwrite the existing error */
->>   	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
->> +	/*
->> +	 * Don't have to report non-attempted pages here since:
->> +	 *     - If the above loop is done gracefully there is not non-attempted
->> +	 *       page.
->> +	 *     - If the above loop is aborted to it means more fatal error
->> +	 *       happened, should return err.
->> +	 */
->>   	if (!err1)
->>   		err1 = store_status(status, start, current_node, i - start);
->>   	if (!err)
->> -- 
->> 1.8.3.1
+Dmitry Torokhov (7):
+      software node: replace is_array with is_inline
+      software node: allow embedding of small arrays into property_entry
+      software node: implement reference properties
+      platform/x86: intel_cht_int33fe: use inline reference properties
+      software node: remove separate handling of references
+      software node: add basic tests for property entries
+      usb: dwc3: use proper initializers for property entries
 
+Qian Cai (1):
+      drivers/base/test: fix global-out-of-bounds error
+
+---------------
+
+ drivers/base/swnode.c                          | 154 ++++----
+ drivers/base/test/Kconfig                      |   3 +
+ drivers/base/test/Makefile                     |   2 +
+ drivers/base/test/property-entry-test.c        | 475 +++++++++++++++++++++++++
+ drivers/platform/x86/intel_cht_int33fe_typec.c |  81 ++---
+ drivers/usb/dwc3/host.c                        |   6 +-
+ include/linux/property.h                       |  96 ++---
+ 7 files changed, 662 insertions(+), 155 deletions(-)
