@@ -2,278 +2,170 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A282EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EDBC35248
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D32920716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1D421739
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LhuNXPF3"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Oa8/ux9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgA0NUq (ORCPT
+        id S1728236AbgA0NV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:20:46 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40024 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgA0NUo (ORCPT
+        Mon, 27 Jan 2020 08:21:29 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:32028 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725972AbgA0NV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:20:44 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00RDKgT4022253;
-        Mon, 27 Jan 2020 07:20:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580131242;
-        bh=9HVWCPU2xE0B3O6Indfhx0OQYVbHUJfuMYDi/jTeREs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LhuNXPF3obU+4SxGqZ21Q44xisRCsbjVYTstkxh5EBa4gZbHaEp2WyMFeoSW1IG1t
-         ydO2kCxEMvvC3dLQoR3cz9bEp+Y4mCtRzOOnr9f+X3t8+g/rK1oN8SxByv1V5ftTMY
-         cUrJmmzPBoqGflTNTzpgWCx+FiY++GlM3Axb9cS0=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00RDKfUa085338
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jan 2020 07:20:41 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 27
- Jan 2020 07:20:34 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 27 Jan 2020 07:20:34 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RDKPa6020427;
-        Mon, 27 Jan 2020 07:20:33 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>,
-        <vigneshr@ti.com>
-Subject: [PATCH for-next 4/4] dmaengine: ti: k3-udma: Use the TR counter helper for slave_sg and cyclic
-Date:   Mon, 27 Jan 2020 15:21:11 +0200
-Message-ID: <20200127132111.20464-5-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200127132111.20464-1-peter.ujfalusi@ti.com>
-References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
+        Mon, 27 Jan 2020 08:21:29 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RDHIgu030114;
+        Mon, 27 Jan 2020 14:21:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=Ynyg3l3bCZvEHYJP9ooaKE6qoJny3AOLT9lZG+35P+Y=;
+ b=Oa8/ux9a8wVQREI/DQEGek7/L3+KZ11oy/8M8Wqb4ntcZzz9NkaGBk5eii18tdyUP/2l
+ o48/s6ku5LYMkcHRk6Lgt0qo3vx5GKdMVv6/T6QRdFjo5anu80ZlWhDz655ISyMDzeFz
+ 0LYci8ICQasSli1cJBR6qOx4SNXgOR5WZHkb+EbpYTDPSchmJszbbgMoowblruWO5uih
+ UQdNCd7/Ejq20XtRXAJaWWNILoj9IV65o3cnL+SAx29HZi+2dYVwaO3aeaOF9KKgDKUQ
+ P7S41DkRid9Omm/WBjysgy/UEsDxuDAjBMKVCJ34qprTLZ9utI6nffWfUnBNQZtWU88Y +A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrbpas72t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jan 2020 14:21:20 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0DA4D10002A;
+        Mon, 27 Jan 2020 14:21:20 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ECEE62B1871;
+        Mon, 27 Jan 2020 14:21:19 +0100 (CET)
+Received: from lmecxl0923.lme.st.com (10.75.127.49) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan
+ 2020 14:21:18 +0100
+Subject: Re: [PATCH 7/9] mmc: mmci: add volt_switch callbacks
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20200110134823.14882-1-ludovic.barre@st.com>
+ <20200110134823.14882-8-ludovic.barre@st.com>
+ <CAPDyKFqt6SuQh8V1_2-2HzBixR2HTKM+1FKgYuNA1zytc22W7g@mail.gmail.com>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <1b8e1428-c1b6-86e4-8d21-4257bcc16a90@st.com>
+Date:   Mon, 27 Jan 2020 14:21:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
+In-Reply-To: <CAPDyKFqt6SuQh8V1_2-2HzBixR2HTKM+1FKgYuNA1zytc22W7g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the generic TR setup function to get the TR counters for both cyclic
-and slave_sg transfers.
-This way the period_size for cyclic and sg_dma_len() for slave_sg can be
-as large as (SZ_64K - 1) * (SZ_64K - 1) and we can handle cases when the
-length is >SZ_64K and a prime number.
+hi Ulf
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/ti/k3-udma.c | 130 ++++++++++++++++++++++++++-------------
- 1 file changed, 88 insertions(+), 42 deletions(-)
+Le 1/24/20 à 2:12 PM, Ulf Hansson a écrit :
+> On Fri, 10 Jan 2020 at 14:49, Ludovic Barre <ludovic.barre@st.com> wrote:
+>>
+>> This patch adds 2 voltage switch callbacks in mmci_host_ops:
+>> -prep_volt_switch allows to prepare voltage switch before to
+>>   sent the SD_SWITCH_VOLTAGE command (cmd11).
+>> -volt_switch callback allows to define specific action after
+>>   regulator set voltage.
+> 
+> I am fine with adding these callbacks, however I strongly suggest to
+> have a reference to "signal voltage" in the name of the callbacks. As
+> to avoid confusion for what there are used for.
+> 
+> Perhaps ->post_sig_volt_switch() and ->pre_sig_volt_switch() can work?
+> 
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 9b00013d6f63..1dba47c662c4 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -2079,31 +2079,31 @@ udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
- 		      unsigned int sglen, enum dma_transfer_direction dir,
- 		      unsigned long tx_flags, void *context)
- {
--	enum dma_slave_buswidth dev_width;
- 	struct scatterlist *sgent;
- 	struct udma_desc *d;
--	size_t tr_size;
- 	struct cppi5_tr_type1_t *tr_req = NULL;
-+	u16 tr0_cnt0, tr0_cnt1, tr1_cnt0;
- 	unsigned int i;
--	u32 burst;
-+	size_t tr_size;
-+	int num_tr = 0;
-+	int tr_idx = 0;
- 
--	if (dir == DMA_DEV_TO_MEM) {
--		dev_width = uc->cfg.src_addr_width;
--		burst = uc->cfg.src_maxburst;
--	} else if (dir == DMA_MEM_TO_DEV) {
--		dev_width = uc->cfg.dst_addr_width;
--		burst = uc->cfg.dst_maxburst;
--	} else {
--		dev_err(uc->ud->dev, "%s: bad direction?\n", __func__);
-+	if (!is_slave_direction(dir)) {
-+		dev_err(uc->ud->dev, "Only slave cyclic is supported\n");
- 		return NULL;
- 	}
- 
--	if (!burst)
--		burst = 1;
-+	/* estimate the number of TRs we will need */
-+	for_each_sg(sgl, sgent, sglen, i) {
-+		if (sg_dma_len(sgent) < SZ_64K)
-+			num_tr++;
-+		else
-+			num_tr += 2;
-+	}
- 
- 	/* Now allocate and setup the descriptor. */
- 	tr_size = sizeof(struct cppi5_tr_type1_t);
--	d = udma_alloc_tr_desc(uc, tr_size, sglen, dir);
-+	d = udma_alloc_tr_desc(uc, tr_size, num_tr, dir);
- 	if (!d)
- 		return NULL;
- 
-@@ -2111,19 +2111,46 @@ udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
- 
- 	tr_req = d->hwdesc[0].tr_req_base;
- 	for_each_sg(sgl, sgent, sglen, i) {
--		d->residue += sg_dma_len(sgent);
-+		dma_addr_t sg_addr = sg_dma_address(sgent);
-+
-+		num_tr = udma_get_tr_counters(sg_dma_len(sgent), __ffs(sg_addr),
-+					      &tr0_cnt0, &tr0_cnt1, &tr1_cnt0);
-+		if (num_tr < 0) {
-+			dev_err(uc->ud->dev, "size %u is not supported\n",
-+				sg_dma_len(sgent));
-+			udma_free_hwdesc(uc, d);
-+			kfree(d);
-+			return NULL;
-+		}
- 
- 		cppi5_tr_init(&tr_req[i].flags, CPPI5_TR_TYPE1, false, false,
- 			      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
- 		cppi5_tr_csf_set(&tr_req[i].flags, CPPI5_TR_CSF_SUPR_EVT);
- 
--		tr_req[i].addr = sg_dma_address(sgent);
--		tr_req[i].icnt0 = burst * dev_width;
--		tr_req[i].dim1 = burst * dev_width;
--		tr_req[i].icnt1 = sg_dma_len(sgent) / tr_req[i].icnt0;
-+		tr_req[tr_idx].addr = sg_addr;
-+		tr_req[tr_idx].icnt0 = tr0_cnt0;
-+		tr_req[tr_idx].icnt1 = tr0_cnt1;
-+		tr_req[tr_idx].dim1 = tr0_cnt0;
-+		tr_idx++;
-+
-+		if (num_tr == 2) {
-+			cppi5_tr_init(&tr_req[tr_idx].flags, CPPI5_TR_TYPE1,
-+				      false, false,
-+				      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
-+			cppi5_tr_csf_set(&tr_req[tr_idx].flags,
-+					 CPPI5_TR_CSF_SUPR_EVT);
-+
-+			tr_req[tr_idx].addr = sg_addr + tr0_cnt1 * tr0_cnt0;
-+			tr_req[tr_idx].icnt0 = tr1_cnt0;
-+			tr_req[tr_idx].icnt1 = 1;
-+			tr_req[tr_idx].dim1 = tr1_cnt0;
-+			tr_idx++;
-+		}
-+
-+		d->residue += sg_dma_len(sgent);
- 	}
- 
--	cppi5_tr_csf_set(&tr_req[i - 1].flags, CPPI5_TR_CSF_EOP);
-+	cppi5_tr_csf_set(&tr_req[tr_idx - 1].flags, CPPI5_TR_CSF_EOP);
- 
- 	return d;
- }
-@@ -2428,47 +2455,66 @@ udma_prep_dma_cyclic_tr(struct udma_chan *uc, dma_addr_t buf_addr,
- 			size_t buf_len, size_t period_len,
- 			enum dma_transfer_direction dir, unsigned long flags)
- {
--	enum dma_slave_buswidth dev_width;
- 	struct udma_desc *d;
--	size_t tr_size;
-+	size_t tr_size, period_addr;
- 	struct cppi5_tr_type1_t *tr_req;
--	unsigned int i;
- 	unsigned int periods = buf_len / period_len;
--	u32 burst;
-+	u16 tr0_cnt0, tr0_cnt1, tr1_cnt0;
-+	unsigned int i;
-+	int num_tr;
- 
--	if (dir == DMA_DEV_TO_MEM) {
--		dev_width = uc->cfg.src_addr_width;
--		burst = uc->cfg.src_maxburst;
--	} else if (dir == DMA_MEM_TO_DEV) {
--		dev_width = uc->cfg.dst_addr_width;
--		burst = uc->cfg.dst_maxburst;
--	} else {
--		dev_err(uc->ud->dev, "%s: bad direction?\n", __func__);
-+	if (!is_slave_direction(dir)) {
-+		dev_err(uc->ud->dev, "Only slave cyclic is supported\n");
- 		return NULL;
- 	}
- 
--	if (!burst)
--		burst = 1;
-+	num_tr = udma_get_tr_counters(period_len, __ffs(buf_addr), &tr0_cnt0,
-+				      &tr0_cnt1, &tr1_cnt0);
-+	if (num_tr < 0) {
-+		dev_err(uc->ud->dev, "size %zu is not supported\n",
-+			period_len);
-+		return NULL;
-+	}
- 
- 	/* Now allocate and setup the descriptor. */
- 	tr_size = sizeof(struct cppi5_tr_type1_t);
--	d = udma_alloc_tr_desc(uc, tr_size, periods, dir);
-+	d = udma_alloc_tr_desc(uc, tr_size, periods * num_tr, dir);
- 	if (!d)
- 		return NULL;
- 
- 	tr_req = d->hwdesc[0].tr_req_base;
-+	period_addr = buf_addr;
- 	for (i = 0; i < periods; i++) {
--		cppi5_tr_init(&tr_req[i].flags, CPPI5_TR_TYPE1, false, false,
--			      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
-+		int tr_idx = i * num_tr;
- 
--		tr_req[i].addr = buf_addr + period_len * i;
--		tr_req[i].icnt0 = dev_width;
--		tr_req[i].icnt1 = period_len / dev_width;
--		tr_req[i].dim1 = dev_width;
-+		cppi5_tr_init(&tr_req[tr_idx].flags, CPPI5_TR_TYPE1, false,
-+			      false, CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
-+
-+		tr_req[tr_idx].addr = period_addr;
-+		tr_req[tr_idx].icnt0 = tr0_cnt0;
-+		tr_req[tr_idx].icnt1 = tr0_cnt1;
-+		tr_req[tr_idx].dim1 = tr0_cnt0;
-+
-+		if (num_tr == 2) {
-+			cppi5_tr_csf_set(&tr_req[tr_idx].flags,
-+					 CPPI5_TR_CSF_SUPR_EVT);
-+			tr_idx++;
-+
-+			cppi5_tr_init(&tr_req[tr_idx].flags, CPPI5_TR_TYPE1,
-+				      false, false,
-+				      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
-+
-+			tr_req[tr_idx].addr = period_addr + tr0_cnt1 * tr0_cnt0;
-+			tr_req[tr_idx].icnt0 = tr1_cnt0;
-+			tr_req[tr_idx].icnt1 = 1;
-+			tr_req[tr_idx].dim1 = tr1_cnt0;
-+		}
- 
- 		if (!(flags & DMA_PREP_INTERRUPT))
--			cppi5_tr_csf_set(&tr_req[i].flags,
-+			cppi5_tr_csf_set(&tr_req[tr_idx].flags,
- 					 CPPI5_TR_CSF_SUPR_EVT);
-+
-+		period_addr += period_len;
- 	}
- 
- 	return d;
--- 
-Peter
+sure, I change to post_sig_volt_switch and pre_sig_volt_switch.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/mmc/host/mmci.c | 8 ++++++++
+>>   drivers/mmc/host/mmci.h | 2 ++
+>>   2 files changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>> index 00b473f57047..d76a59c06cb0 100644
+>> --- a/drivers/mmc/host/mmci.c
+>> +++ b/drivers/mmc/host/mmci.c
+>> @@ -22,6 +22,7 @@
+>>   #include <linux/mmc/pm.h>
+>>   #include <linux/mmc/host.h>
+>>   #include <linux/mmc/card.h>
+>> +#include <linux/mmc/sd.h>
+>>   #include <linux/mmc/slot-gpio.h>
+>>   #include <linux/amba/bus.h>
+>>   #include <linux/clk.h>
+>> @@ -1207,6 +1208,9 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+>>                  writel_relaxed(clks, host->base + MMCIDATATIMER);
+>>          }
+>>
+>> +       if (host->ops->prep_volt_switch && cmd->opcode == SD_SWITCH_VOLTAGE)
+>> +               host->ops->prep_volt_switch(host);
+>> +
+>>          if (/*interrupt*/0)
+>>                  c |= MCI_CPSM_INTERRUPT;
+>>
+>> @@ -1820,6 +1824,7 @@ static int mmci_get_cd(struct mmc_host *mmc)
+>>
+>>   static int mmci_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
+>>   {
+>> +       struct mmci_host *host = mmc_priv(mmc);
+>>          int ret = 0;
+>>
+>>          if (!IS_ERR(mmc->supply.vqmmc)) {
+>> @@ -1839,6 +1844,9 @@ static int mmci_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
+>>                          break;
+>>                  }
+>>
+>> +               if (!ret && host->ops && host->ops->volt_switch)
+>> +                       ret = host->ops->volt_switch(host, ios);
+>> +
+>>                  if (ret)
+>>                          dev_warn(mmc_dev(mmc), "Voltage switch failed\n");
+>>          }
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index ddcdfb827996..c04a144259a2 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -377,6 +377,8 @@ struct mmci_host_ops {
+>>          void (*set_clkreg)(struct mmci_host *host, unsigned int desired);
+>>          void (*set_pwrreg)(struct mmci_host *host, unsigned int pwr);
+>>          bool (*busy_complete)(struct mmci_host *host, u32 status, u32 err_msk);
+>> +       void (*prep_volt_switch)(struct mmci_host *host);
+>> +       int (*volt_switch)(struct mmci_host *host, struct mmc_ios *ios);
+>>   };
+>>
+>>   struct mmci_host {
+>> --
+>> 2.17.1
+>>
+> 
+> Kind regards
+> Uffe
+> 
