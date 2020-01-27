@@ -2,311 +2,169 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4EAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C5CC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0814A2467C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368B324681
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:30:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NUqqrs7H"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RXYubqq5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgA0WaK (ORCPT
+        id S1726571AbgA0Wav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 17:30:10 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:39794 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgA0WaK (ORCPT
+        Mon, 27 Jan 2020 17:30:51 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42867 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgA0Wav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 17:30:10 -0500
-Received: by mail-vk1-f196.google.com with SMTP id t129so3075104vkg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 14:30:07 -0800 (PST)
+        Mon, 27 Jan 2020 17:30:51 -0500
+Received: by mail-qk1-f196.google.com with SMTP id q15so11382037qke.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 14:30:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OkNUIHe+JYKTBEW9K2q9Taed66d4fQFMxRvOrRh8Cd0=;
-        b=NUqqrs7HXhFSJFsiNrXJm0ONYmionCm3iYaOyFIe4L6NBxV8KGLwKqmdNsdd1bizOG
-         oXerz+XKVLKfxf0zbLskquZlA3QPICBEPW1gib9XIsd2nFErH3ZKV4v19aqguZuFqxH7
-         8IHt1s2WYt5gtQA/uZLlFZcgGA+g8HyMRwbfo=
+        bh=/xn6Inxb6zuojs0iU7vTmsWoRmbZmQqG7zN5KkIu1iw=;
+        b=RXYubqq5Vbt9/Yqh8rRc3gW77GBTJ9ktqMwX5BzBMFzzOT2bfEFFer+ZATdml4q/L8
+         yeUOXdIXzpuY6tZZqtw3VnhfsjSheZCS0/Gla/Xdu7BNRdS4IpGlq4doJ5Bkrzt4xX6A
+         szH+cb+WI7yNz8moAdV/Kr2o5h5MW7f9s8NyngUeHka78W+CdMlAM41W/l19UsOM96tl
+         XdWQ0NvsVIuflJlp87Lsp8b5jFxwqtmUOaizejZb+TkDnH1G1uVVvhWbqDycJoI1H35g
+         WyAdOfAKKVRFvXixsNa5QQkHdeIC085SjF1Ebd1YCifclqVFWwV3CSQkl/gYtzNQtvlJ
+         ll/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OkNUIHe+JYKTBEW9K2q9Taed66d4fQFMxRvOrRh8Cd0=;
-        b=d2nXTHjBbshI4xhPsNVTGfMFBcPpF5NInWRiaqMLleed1VUJg7fzMfwHUC3LkNd5sy
-         oX0pnCMUEaAcln6u2RhMTrzInSCodvnwAukO+RAqWqYgSlsFhkBnFGLURtERbeQVUpFo
-         +KcQs8KC+1i5jEdIVU3jkTHBzMGrYNJpDaVbsIgj8NCsO2A47aBHyvAVPuNxbIWlAn94
-         oszO/oWuW6PdKzc0fnfc02T2i561dop6O6+TBfEFp9dm5spglGR7ENLCNe2Ua2t/ZLHa
-         LpTJVyHGeudBz4sD1ioU5HPTpHlUvXosDbeh864dKsGjPoiOBqSE6E17QUWUgKKuklo5
-         9MLw==
-X-Gm-Message-State: APjAAAUGH3mkdo8D6oF6hmXu4Wq+unvM+Ab5sfB/VlCFjfC7jCPxDkSH
-        FWI8LUOQiVSD8Ma7C2VHkwIRNIq9MQY=
-X-Google-Smtp-Source: APXvYqwa+kpjlXVjRZ2uOc7rEuDIoHZuwuyXMfCZuJW2FHX1QmjVQZ11r9lBjkSNTtBMoiRWGW3nnA==
-X-Received: by 2002:a1f:f283:: with SMTP id q125mr11278327vkh.69.1580164206225;
-        Mon, 27 Jan 2020 14:30:06 -0800 (PST)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id g22sm4205848vsr.24.2020.01.27.14.30.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 14:30:05 -0800 (PST)
-Received: by mail-vs1-f44.google.com with SMTP id f26so6812381vsk.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 14:30:04 -0800 (PST)
-X-Received: by 2002:a67:1ec5:: with SMTP id e188mr5904944vse.169.1580164204376;
- Mon, 27 Jan 2020 14:30:04 -0800 (PST)
+        bh=/xn6Inxb6zuojs0iU7vTmsWoRmbZmQqG7zN5KkIu1iw=;
+        b=e+0yDySEpNdwoQhDhoftAn1noIt+2MupII4uJo6Kds42+hikxpbvcOExZ/FtMoJHut
+         xDMPXqlPwGW0tQ8bU83q5VX72OEGtQNJ064mRR5I7S2GvSaF1ewBT1wm3ahJgx+8i0Ka
+         aQuTCsK2zdOKX0UA3O6CQ17uXMKrFcV9D5kx6bPDppVoHfhitykmh/hzxmukA3VM5enw
+         nlqSG0FCzWOtmyqzfSWa+IYUKLdJIudrKdjWB2PN9NBp3b5PJHNvNvNPW6OEZ6L0GFTl
+         W0505XYizXjkRL6+iBN7qKlwKvSEn6KOzU0U/0wIOXqcMo8uObPjUSIw/BuC1g0kzb7/
+         iCqw==
+X-Gm-Message-State: APjAAAVtbRKUCF0/8jX1KszJ8JI43ZLfhnHXdLdHCU0GgJk5wvwmI4m1
+        8MqNGZVYExTGteNtXzkQNp14GiqDc0CDRfpKydm7YA==
+X-Google-Smtp-Source: APXvYqxCSQrirUnN+FZ82T0KdKjdeTod7OErds5KLF8UmezscEdKL2MJ9VbnHcnHl/RVaw2STHVzvy/g3A5rXPztxxQ=
+X-Received: by 2002:a37:6794:: with SMTP id b142mr19240197qkc.216.1580164248519;
+ Mon, 27 Jan 2020 14:30:48 -0800 (PST)
 MIME-Version: 1.0
-References: <1580117390-6057-1-git-send-email-smasetty@codeaurora.org>
-In-Reply-To: <1580117390-6057-1-git-send-email-smasetty@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 27 Jan 2020 14:29:53 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VFVC6XJ=OXJCSd2_oij5vggKnTedGP0Gj4KHC50QH0SQ@mail.gmail.com>
-Message-ID: <CAD=FV=VFVC6XJ=OXJCSd2_oij5vggKnTedGP0Gj4KHC50QH0SQ@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+References: <20200127210014.5207-1-tkjos@google.com>
+In-Reply-To: <20200127210014.5207-1-tkjos@google.com>
+From:   Joel Fernandes <joelaf@google.com>
+Date:   Mon, 27 Jan 2020 14:30:36 -0800
+Message-ID: <CAJWu+orT-A5HVi97ccKwMvs9MvXWV0MZhsKcZDNS8r-gqRmcDA@mail.gmail.com>
+Subject: Re: [PATCH] staging: android: ashmem: Disallow ashmem memory from
+ being remapped
+To:     Todd Kjos <tkjos@google.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve Hjonnevag <arve@android.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Clark <robdclark@chromium.org>
+        Martijn Coenen <maco@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Jann Horn <jannh@google.com>, stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Jan 27, 2020 at 1:00 PM 'Todd Kjos' via kernel-team
+<kernel-team@android.com> wrote:
+>
+> From: Suren Baghdasaryan <surenb@google.com>
+>
+> When ashmem file is being mmapped the resulting vma->vm_file points to the
+> backing shmem file with the generic fops that do not check ashmem
+> permissions like fops of ashmem do. Fix that by disallowing mapping
+> operation for backing shmem file.
 
-On Mon, Jan 27, 2020 at 1:30 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+Looks good, but I think the commit message is confusing. I had to read
+the code a couple times to understand what's going on since there are
+no links to a PoC for the security issue, in the commit message. I
+think a better message could have been:
+
+ When ashmem file is mmapped, the resulting vma->vm_file points to the
+ backing shmem file with the generic fops that do not check ashmem
+ permissions like fops of ashmem do. If an mremap is done on the ashmem
+ region, then the permission checks will be skipped. Fix that by disallowing
+ mapping operation on the backing shmem file.
+
+Or did I miss something?
+
+thanks!
+
+- Joel
+
+
+
 >
-> This patch adds the required dt nodes and properties
-> to enabled A618 GPU.
->
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> Reported-by: Jann Horn <jannh@google.com>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> Cc: stable <stable@vger.kernel.org> # 4.4,4.9,4.14,4.18,5.4
+> Signed-off-by: Todd Kjos <tkjos@google.com>
 > ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 103 +++++++++++++++++++++++++++++++++++
->  1 file changed, 103 insertions(+)
-
-Note that +Matthias Kaehlcke commented on v1 your patch:
-
-https://lore.kernel.org/r/20191204220033.GH228856@google.com/
-
-...so he should have been CCed on v2.  I would also note that some of
-the comments below are echos of what Matthias already said in the
-previous version but just weren't addressed.
-
-
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index b859431..277d84d 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -7,6 +7,7 @@
+>  drivers/staging/android/ashmem.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 >
->  #include <dt-bindings/clock/qcom,gcc-sc7180.h>
->  #include <dt-bindings/clock/qcom,rpmh.h>
-> +#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
-
-Header files should be sorted alphabetically.  ...or, even better,
-base your patch atop mine:
-
-https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid/
-
-...which adds the gpucc header file so you don't have to.  ...and when
-you do so, email out a Reviewed-by and/or Tested-by for my patch.  ;-)
-
-
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/interconnect/qcom,sc7180.h>
->  #include <dt-bindings/phy/phy-qcom-qusb2.h>
-> @@ -1619,6 +1620,108 @@
->                         #interconnect-cells = <1>;
->                         qcom,bcm-voters = <&apps_bcm_voter>;
->                 };
-> +
-> +               gpu: gpu@5000000 {
-> +                       compatible = "qcom,adreno-618.0", "qcom,adreno";
-
-Though it's not controversial, please send a patch to:
-
-Documentation/devicetree/bindings/display/msm/gmu.txt
-
-...to add 'qcom,adreno-618.0', like:
-
-    for example:
-      "qcom,adreno-gmu-618.0", "qcom,adreno-gmu"
-      "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
-
-Probably as part of this you will be asked to convert this file to
-yaml.  IMO we don't need to block landing this patch on the effort to
-convert it to yaml, but you should still work on it.  ...or maybe
-Jordan wants to work on it?
-
-
-> +                       #stream-id-cells = <16>;
-> +                       reg = <0 0x05000000 0 0x40000>, <0 0x0509e000 0 0x1000>,
-> +                               <0 0x05061000 0 0x800>;
-> +                       reg-names = "kgsl_3d0_reg_memory", "cx_mem", "cx_dbgc";
-> +                       interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
-> +                       iommus = <&adreno_smmu 0>;
-> +                       operating-points-v2 = <&gpu_opp_table>;
-> +                       interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
-
-Running:
-$ git fetch git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git
-for-next
-$ git grep gem_noc FETCH_HEAD
-$ git fetch git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git
-arm64-for-5.7-to-be-rebased
-$ git grep gem_noc FETCH_HEAD
-
-...shows no hits.  That's because the interconnect patches haven't
-landed in the tree that you're targeting.  In the very least you
-should mention somewhere in your email that your patch depends on the
-interconnect patches landing, perhaps pointing at:
-
-https://lore.kernel.org/r/1577782737-32068-4-git-send-email-okukatla@codeaurora.org
-
-...but even better would be to split your patch into two parts.  The
-first patch would be exactly like your patch except without the
-"interconnects" line.  The 2nd patch would add the interconnects line.
-This would allow Bjorn/Andy to land the first patch now and then land
-the second patch when the interconnect series is ready.  I can confirm
-that you can still get basic GPU functionality even without the
-interconnects bit so it would be worth landing earlier.
-
-
-I will also note that by basing on a tree that has private patches to
-the same file you're touching you make it very hard for a maintainer
-to apply.  When I try this:
-
-$ curl https://patchwork.kernel.org/patch/11352261/mbox/ | git am -3
-
-I get:
-
-error: sha1 information is lacking or useless
-(arch/arm64/boot/dts/qcom/sc7180.dtsi).
-error: could not build fake ancestor
-Patch failed at 0001 arm64: dts: qcom: sc7180: Add A618 gpu dt blob
-
-...yes, I can apply it with 'git am --show-current-patch | patch -p1'
-but it's ugly (and it ends up making things sort in the wrong order).
-
-
-> +               adreno_smmu: iommu@5040000 {
-> +                       compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
-
-Please send a patch to:
-
-Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-
-...adding 'qcom,sc7180-smmu-v2'.  If you do this it will point out
-that you've added a new clock: "mem_iface_clk".  Is this truly a new
-clock in sc7180 compared to previous IOMMUs?  ...or is it not really
-needed?
-
-
-> +                       reg = <0 0x05040000 0 0x10000>;
-> +                       #iommu-cells = <1>;
-> +                       #global-interrupts = <2>;
-> +                       interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <GIC_SPI 364 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 365 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 366 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 367 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 368 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 369 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 370 IRQ_TYPE_EDGE_RISING>,
-> +                                       <GIC_SPI 371 IRQ_TYPE_EDGE_RISING>;
-> +                       clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-> +                               <&gcc GCC_GPU_CFG_AHB_CLK>,
-> +                               <&gcc GCC_DDRSS_GPU_AXI_CLK>;
-> +
-> +                       clock-names = "bus", "iface", "mem_iface_clk";
-
-nit: keep clocks and clock-names next to each other (no blank line).
-If you really feel like it needs more space add it between the
-clock-names and power-domains.
-
-> +                       power-domains = <&gpucc CX_GDSC>;
-
-Similar to interconnects, gpucc hasn't landed yet.  Somewhere you
-should point out this fact and ideally point to:
-
-https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid/
-
-...unlike interconnects, your patch can't land without gpucc, so you
-should point this out as a hard dependency.
-
-
-> +               };
-> +
-> +               gmu: gmu@506a000 {
-> +                       compatible="qcom,adreno-gmu-618", "qcom,adreno-gmu";
-
-As per the bindings, "qcom,adreno-gmu-618" should be
-"qcom,adreno-gmu-618.0", right?
-
-...and I bet you'd never have guessed that I'll request that you add
-"qcom,adreno-gmu-618" to:
-
-Documentation/devicetree/bindings/display/msm/gmu.txt
-
-...and that you'll probably be asked to convert to yaml.  Again, maybe
-Jordan wants to attempt this?
-
-
-> +                       reg = <0 0x0506a000 0 0x31000>, <0 0x0b290000 0 0x10000>,
-> +                               <0 0x0b490000 0 0x10000>;
-> +                       reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-> +                       interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-> +                                  <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "hfi", "gmu";
-> +                       clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-> +                              <&gpucc GPU_CC_CXO_CLK>,
-> +                              <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-> +                              <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-> +                       clock-names = "gmu", "cxo", "axi", "memnoc";
-> +                       power-domains = <&gpucc CX_GDSC>;
-
-Bindings claim that you need both CX and GC.  Is sc7180 somehow
-different?  Bindings also claim that you should be providing
-power-domain-names.
-
-
-
-> +                       iommus = <&adreno_smmu 5>;
-> +                       operating-points-v2 = <&gmu_opp_table>;
-> +
-> +                       gmu_opp_table: opp-table {
-> +                               compatible = "operating-points-v2";
-> +
-> +                               opp-200000000 {
-> +                                       opp-hz = /bits/ 64 <200000000>;
-> +                                       opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +                               };
-> +                       };
-> +               };
->         };
+> diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
+> index 74d497d39c5a..c6695354b123 100644
+> --- a/drivers/staging/android/ashmem.c
+> +++ b/drivers/staging/android/ashmem.c
+> @@ -351,8 +351,23 @@ static inline vm_flags_t calc_vm_may_flags(unsigned long prot)
+>                _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
+>  }
 >
->         thermal-zones {
-
-Using the "thermal-zones" as context, it looks as if you're asserting
-that your new nodes belong at the very end of the pile of nodes with
-addresses.  This is not true.  Looking at the branch
-'arm64-for-5.7-to-be-rebased' on the Qualcomm tree, I see:
-
-cpufreq_hw: cpufreq@18323000
-
-...which has a larger address than your 0x0506a000.  Please sort your
-nodes numerically.
-
-
--Doug
+> +static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
+> +{
+> +       /* do not allow to mmap ashmem backing shmem file directly */
+> +       return -EPERM;
+> +}
+> +
+> +static unsigned long
+> +ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
+> +                               unsigned long len, unsigned long pgoff,
+> +                               unsigned long flags)
+> +{
+> +       return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
+> +}
+> +
+>  static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+>  {
+> +       static struct file_operations vmfile_fops;
+>         struct ashmem_area *asma = file->private_data;
+>         int ret = 0;
+>
+> @@ -393,6 +408,19 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+>                 }
+>                 vmfile->f_mode |= FMODE_LSEEK;
+>                 asma->file = vmfile;
+> +               /*
+> +                * override mmap operation of the vmfile so that it can't be
+> +                * remapped which would lead to creation of a new vma with no
+> +                * asma permission checks. Have to override get_unmapped_area
+> +                * as well to prevent VM_BUG_ON check for f_ops modification.
+> +                */
+> +               if (!vmfile_fops.mmap) {
+> +                       vmfile_fops = *vmfile->f_op;
+> +                       vmfile_fops.mmap = ashmem_vmfile_mmap;
+> +                       vmfile_fops.get_unmapped_area =
+> +                                       ashmem_vmfile_get_unmapped_area;
+> +               }
+> +               vmfile->f_op = &vmfile_fops;
+>         }
+>         get_file(asma->file);
+>
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>
