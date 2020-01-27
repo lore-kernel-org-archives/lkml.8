@@ -2,68 +2,115 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E24C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF52C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F662467E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580153111;
-	bh=Z6iVP1EIeNMdYFjfv6EZ71Peb8Q02cGFOMUNoyliHk8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=kySpuFoc9sPM2R+05Qy0rE3KNd1j1h9YZ0MoLs6RxqLvJJQmyurhvx7kb4sbbbw5b
-	 8VZY86sUIUnYmJJE9q8o6x+Kl4BEpjEHFHemO0SssKiBW24pWcURm28/sjYrwFXEOK
-	 9757T1E807nbmn47rFdxySImuQ2xEjtTJ8RBBByc=
+	by mail.kernel.org (Postfix) with ESMTP id A01462467E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgA0TZK (ORCPT
+        id S1728057AbgA0T1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 14:25:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgA0TZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 14:25:05 -0500
-Subject: Re: [GIT PULL] regulator updates for v5.6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580153104;
-        bh=Z6iVP1EIeNMdYFjfv6EZ71Peb8Q02cGFOMUNoyliHk8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=x/NWUc3dCuMRb6WSl4ZYcHFLdKc9dUhtDLo5Fm1AGMHyH6C/+RDzeggwlTH7RIZdi
-         zcsy2ETw8YeyZ7Xn2ijgNrg3nsqmQ/C6yxjFLLw6sttVNa5IOq+DCpq82UBZ2Rv2Ft
-         PUvgsC6VnQi6Y5XBc/AV3l9OTE4weBVEdg5NjfV4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200127173859.GD3763@sirena.org.uk>
-References: <20200127173859.GD3763@sirena.org.uk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200127173859.GD3763@sirena.org.uk>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
- tags/regulator-v5.6
-X-PR-Tracked-Commit-Id: e4e4c2ff78edd2f9c7d2d3e588ca68ffa1dd8dc8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: aae1464f46a2403565f75717438118691d31ccf1
-Message-Id: <158015310462.9462.2453864679200933923.pr-tracker-bot@kernel.org>
-Date:   Mon, 27 Jan 2020 19:25:04 +0000
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+        Mon, 27 Jan 2020 14:27:10 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:33914 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgA0T1J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 14:27:09 -0500
+Received: by mail-il1-f197.google.com with SMTP id l13so8476593ils.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 11:27:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Ht06EFTCAqiZgMddO3KkSOA8HJxQ0XCFgZ86CB8ciyI=;
+        b=gXY4yr2k2aFuhv/WH3MNul1mRO0//x7qW7qtWMRZ9ZZnlAi2RbdNiNsq5iSOlzoGVc
+         qkR0XCC7FatcH0BABvTiEfeaBn+VBTI7iNE/f2EU+lCIYzT/vFEGMqhYCt9GCTEcab1Y
+         2SckR6H+SNqTRQt1PhxUQxDl6xYd751B7soR1wznlJE3fVKLS6t9ag14n+R98XVGry7X
+         W72S08sNaBg8Q1OPFiGPa58zI3VztlJQm5ppya9J4xhvT+N1vBCacN/SKb4nwV6518fR
+         /w7NomoSKMZxYbo0BUOlE7AJspGTadmzYKzUvhct1U6hF7Emnjsm2pjVjNGrgmINc3JJ
+         HQOQ==
+X-Gm-Message-State: APjAAAV68B0F2o4CYV6125I9UQGQwD8PbpegqT1uW/HjDbE0tNEqf8ck
+        QyZSQ7EPu27NR6WQYBcScm7ihC9B/OX0QjpJcwFGnhXwYyKF
+X-Google-Smtp-Source: APXvYqyvvyEfcV6G/0Ud00/pVELKfYR0HIbxKlWKGloKVNLcYJDxFp3Pb9UNq7ptNUdNJkeHBpUUQc2UP70WZ5RMBvbCkErRCdFC
+MIME-Version: 1.0
+X-Received: by 2002:a6b:6e18:: with SMTP id d24mr14110973ioh.301.1580153228897;
+ Mon, 27 Jan 2020 11:27:08 -0800 (PST)
+Date:   Mon, 27 Jan 2020 11:27:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e63046059d2417e8@google.com>
+Subject: memory leak in garp_request_join
+From:   syzbot <syzbot+13ad608e190b5f8ad8a8@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, davem@davemloft.net,
+        gregkh@linuxfoundation.org, info@metux.net,
+        kstewart@linuxfoundation.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 27 Jan 2020 17:38:59 +0000:
+Hello,
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-v5.6
+syzbot found the following crash on:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aae1464f46a2403565f75717438118691d31ccf1
+HEAD commit:    d5226fa6 Linux 5.5
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=176b440de00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=698d5ad38dda6cb6
+dashboard link: https://syzkaller.appspot.com/bug?extid=13ad608e190b5f8ad8a8
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d86b35e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1043d769e00000
 
-Thank you!
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+13ad608e190b5f8ad8a8@syzkaller.appspotmail.com
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+BUG: memory leak
+unreferenced object 0xffff888114008dc0 (size 64):
+  comm "syz-executor967", pid 7318, jiffies 4294943348 (age 13.580s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 08 00 00 00 01 02 00 08  ................
+  backtrace:
+    [<0000000067139221>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<0000000067139221>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<0000000067139221>] slab_alloc mm/slab.c:3320 [inline]
+    [<0000000067139221>] __do_kmalloc mm/slab.c:3654 [inline]
+    [<0000000067139221>] __kmalloc+0x169/0x300 mm/slab.c:3665
+    [<0000000093813bfa>] kmalloc include/linux/slab.h:561 [inline]
+    [<0000000093813bfa>] garp_attr_create net/802/garp.c:187 [inline]
+    [<0000000093813bfa>] garp_request_join+0x132/0x1f0 net/802/garp.c:350
+    [<0000000078a2be7e>] vlan_gvrp_request_join+0x86/0x90 net/8021q/vlan_gvrp.c:34
+    [<0000000092861d25>] vlan_dev_open+0x173/0x290 net/8021q/vlan_dev.c:290
+    [<00000000451be632>] __dev_open+0x109/0x1b0 net/core/dev.c:1431
+    [<00000000fa297b7f>] __dev_change_flags+0x246/0x2c0 net/core/dev.c:8105
+    [<0000000065bc5439>] rtnl_configure_link+0x57/0x100 net/core/rtnetlink.c:2996
+    [<000000005ed66308>] __rtnl_newlink+0x8b9/0xb80 net/core/rtnetlink.c:3332
+    [<00000000d6be140e>] rtnl_newlink+0x4e/0x80 net/core/rtnetlink.c:3372
+    [<0000000030786841>] rtnetlink_rcv_msg+0x178/0x4b0 net/core/rtnetlink.c:5433
+    [<00000000cb252134>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
+    [<000000002c0f0d61>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5451
+    [<00000000e09dee2f>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+    [<00000000e09dee2f>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
+    [<0000000036f4d1c5>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
+    [<0000000064dc927c>] sock_sendmsg_nosec net/socket.c:639 [inline]
+    [<0000000064dc927c>] sock_sendmsg+0x54/0x70 net/socket.c:659
+    [<00000000cd57f12f>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
+
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
