@@ -2,120 +2,266 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB04BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459A2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2482087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D711214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580138891;
+	bh=h6yAbeEDNj4aGtXwTWN9LfzdYUqPaLGTyleEb//S984=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=SbK6OGNBuib2JZNYa3lZgXDTcS0PalMqoWmBxy43JrA74GKgPxKyapi44jrUcE1WI
+	 bgBwnP7v2Js3uDsLD+24c6/HicO2eIN6iDElFOJ55RRlxboG1WNjxcqpFeHDInKVDS
+	 E3U8YPKO/AxfTVwUlGSY8Acl7F2x5dUL0a+DFSY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbgA0P0N (ORCPT
+        id S1729505AbgA0P2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:26:13 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:36216 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729146AbgA0P0M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:26:12 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=guoren@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TociXAZ_1580138757;
-Received: from localhost(mailfrom:guoren@linux.alibaba.com fp:SMTPD_---0TociXAZ_1580138757)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 Jan 2020 23:25:57 +0800
-Date:   Mon, 27 Jan 2020 23:25:57 +0800
-From:   Guo Ren <guoren@linux.alibaba.com>
-To:     paul.walmsley@sifive.com, andrew@sifive.com, palmer@dabbelt.com
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH V2] riscv: Use flush_icache_mm for flush_icache_user_range
-Message-ID: <20200127152557.GA8980@parallels-Parallels-Virtual-Platform>
-References: <20200127145008.2850-1-guoren@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127145008.2850-1-guoren@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 27 Jan 2020 10:28:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729146AbgA0P2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 10:28:09 -0500
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8A902087F;
+        Mon, 27 Jan 2020 15:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580138888;
+        bh=h6yAbeEDNj4aGtXwTWN9LfzdYUqPaLGTyleEb//S984=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=hJuXuJ05pfh4XAJiE8Cu9zTiGDFKZRkBkT6XHeP72jACJYYPt9/eMsNfp82Scm+WL
+         kq5aDjVCktm/h4wWZmccfUL8IRkAJX0VkedfgDnz8JthfYdQj4HKkXguzaYJ/L5ubi
+         kiT46V6Vsk3JTCNTkhxJSMObppU6md/VdY6i+D2A=
+Message-ID: <1580138886.23679.6.camel@kernel.org>
+Subject: Re: [PATCH v3 00/12] tracing: Add support for in-kernel dynamic
+ event API
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        ndesaulniers@google.com
+Date:   Mon, 27 Jan 2020 09:28:06 -0600
+In-Reply-To: <20200127224847.54ad704c08785b85a63c18a5@kernel.org>
+References: <cover.1579904761.git.zanussi@kernel.org>
+         <20200127224847.54ad704c08785b85a63c18a5@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Hi Masami,
 
-No ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1 in this patch, I'll remove it
-in V3.
+On Mon, 2020-01-27 at 22:48 +0900, Masami Hiramatsu wrote:
+> Hi Tom,
+> 
+> On Fri, 24 Jan 2020 16:56:11 -0600
+> Tom Zanussi <zanussi@kernel.org> wrote:
+> 
+> > Hi,
+> > 
+> > This is v3 of 'tracing: Add support for in-kernel dynamic event
+> > API',
+> > incorporating changes based on suggestions from Masami and Steven.
+> > 
+> >   - Rebased to trace/for-next
+> > 
+> >   - Regularized the entire API to use synth_event_*,
+> > kprobe_event_*,
+> >     dynevent_*, and added some new macros and functions to make
+> > things
+> >     more consistent
+> > 
+> >   - Introduced trace_array_find_get() and used it in
+> >     trace_array_get_file() as suggested
+> >   
+> >   - Removed exports from dynevent_cmd functions that didn't need to
+> > be
+> >     exported
+> > 
+> >   - Switched the param order of __kprobe_event_gen_cmd_start() to
+> > fix
+> >     a problem found building with clang.  Apparently varargs and
+> >     implicit promotion of types like bool don't mix.  Thanks to
+> > Nick
+> >     Desaulniers for pointing that out.
+> > 
+> >   - Updated the documentation for all of the above
+> > 
+> > Text from the v2 posting:
+> > 
+> > This is v2 of the previous 'tracing: Add support for in-kernel
+> > synthetic event API', and is largely a rewrite based on suggestions
+> > from Masami to expand the scope to include other types of dynamic
+> > events such as kprobe events, in addition to the original sythetic
+> > event focus.
+> 
+> Yeah, v3 basically looks good to me now :)
+> Please see my comment on [4/12]. Others are good. You can put my
+> Acked-by to those patches. 
+> 
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> except for [04/12].
+> 
+> Thank you!
+> 
 
-The update_mmu_cache() is wrong with sfence.vma and I'll give another
-patch to fixup it with ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1.
+OK, I'll add your acks for those.
 
-Best Regards
- Guo Ren
+Thanks for all your comments!
 
-On Mon, Jan 27, 2020 at 10:50:08PM +0800, Guo Ren wrote:
-> The patch is the fixup for the commit 08f051eda33b by Andrew.
+Tom
+
+> > 
+> > The functionality of the original API remains available, though
+> > it's
+> > in a slightly different form due to the use of the new dynevent_cmd
+> > API it's now based on.  The dynevent_cmd API provides a common
+> > dynamic
+> > event command generation capability that both the synthetic event
+> > API
+> > and the kprobe event API are now based on, and there are now test
+> > modules demonstrating both the synthetic event and kprobes APIs.
+> > 
+> > A couple of the patches are snippets from Masami's 'tracing:
+> > bootconfig: Boot-time tracing and Extra boot config' series, and
+> > the
+> > patch implementing the dynevent_cmd API includes some of the
+> > spnprintf() generating code from that patchset.
+> > 
+> > Because I used Masami's gen_*_cmd() naming suggestion for
+> > generating
+> > the commands, the previous patchset's generate_*() functions were
+> > renamed to trace_*() to avoid confusion, and probably is better
+> > naming
+> > anyway.
+> > 
+> > An overview of the user-visible changes in comparison to v1:
+> > 
+> >   - create_synth_event() using an array of synth_desc_fields
+> > remains
+> >     unchanged and works the same way as previously
+> > 
+> >   - gen_synth_cmd() takes a variable-length number of args which
+> >     represent 'type field;' pairs.  Using this with no field args
+> >     basically replaces the previous 'create_empty_synth_event()'
+> > 
+> >   - The 'add_synth_field()' and 'add_synth_fields()' function from
+> > v1
+> >     are essentially the same except that they now take a
+> > dynevent_cmd
+> >     instead of a synth_event pointer
+> > 
+> >   - The finalize_synth_event() from v1 is replaced by
+> >     create_dynevent() in the new version.
+> >   
+> >   - The new v2 API includes some additional functions to initialize
+> >     the dynevent_cmd - synth_dynevent_cmd() is used to do
+> > that.  While
+> >     it's an extra step, it makes it easier to do error handling.
+> > 
+> >   - There's a new trace_synth_event() function that traces a
+> > synthetic
+> >     event using a variable-arg list of values.
+> > 
+> >   - The original generate_synth_event() using an array of values is
+> >     now called trace_synth_event_array().
+> > 
+> >   - For piecewise event tracing, the original
+> >     generate_synth_event_start() and generate_synth_event_end()
+> > have
+> >     now been renamed to trace_synth_event_end().
+> > 
+> >   - add_next_synth_val() and add_synth_val() remain the same.
+> > 
+> >   - A similar API and test module demonstrating the API has been
+> > added
+> >     for kprobe events
+> > 
+> >   - Both the synthetic events and kprobe events API is based on the
+> >     dynevent_cmd API, newly added
+> > 
+> >   - The Documentation for all of the above has been updated
+> > 
+> > Text from the orginal v1 posting:
+> > 
+> > I've recently had several requests and suggestions from users to
+> > add
+> > support for the creation and generation of synthetic events from
+> > kernel code such as modules, and not just from the available
+> > command
+> > line commands.
+> > 
+> > This patchset adds support for that.  The first three patches add
+> > some
+> > minor preliminary setup, followed by the two main patches that add
+> > the
+> > ability to create and generate synthetic events from the
+> > kernel.  The
+> > next patch adds a test module that demonstrates actual use of the
+> > API
+> > and verifies that it works as intended, followed by Documentation.
+> > 
+> > Special thanks to Artem Bityutskiy, who worked with me over several
+> > iterations of the API, and who had many great suggestions on the
+> > details of the interface, and pointed out several problems with the
+> > code itself.
+> > 
+> > The following changes since commit
+> > 659ded30272d67a04b3692f0bfa12263be20d790:
+> > 
+> >   trace/kprobe: Remove unused MAX_KPROBE_CMDLINE_SIZE (2020-01-22
+> > 07:07:38 -0500)
+> > 
+> > are available in the git repository at:
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-
+> > trace.git ftrace/synth-event-gen-v3
+> > 
+> > Tom Zanussi (12):
+> >   tracing: Add trace_array_find/_get() to find instance trace
+> > arrays
+> >   tracing: Add trace_get/put_event_file()
+> >   tracing: Add synth_event_delete()
+> >   tracing: Add dynamic event command creation interface
+> >   tracing: Add synthetic event command generation functions
+> >   tracing: Change trace_boot to use synth_event interface
+> >   tracing: Add synth_event_trace() and related functions
+> >   tracing: Add synth event generation test module
+> >   tracing: Add kprobe event command generation functions
+> >   tracing: Change trace_boot to use kprobe_event interface
+> >   tracing: Add kprobe event command generation test module
+> >   tracing: Documentation for in-kernel synthetic event API
+> > 
+> >  Documentation/trace/events.rst       | 515 ++++++++++++++++++++
+> >  include/linux/trace_events.h         | 124 +++++
+> >  kernel/trace/Kconfig                 |  25 +
+> >  kernel/trace/Makefile                |   2 +
+> >  kernel/trace/kprobe_event_gen_test.c | 225 +++++++++
+> >  kernel/trace/synth_event_gen_test.c  | 523 ++++++++++++++++++++
+> >  kernel/trace/trace.c                 |  43 +-
+> >  kernel/trace/trace.h                 |  36 ++
+> >  kernel/trace/trace_boot.c            |  66 ++-
+> >  kernel/trace/trace_events.c          | 325 +++++++++++++
+> >  kernel/trace/trace_events_hist.c     | 896
+> > ++++++++++++++++++++++++++++++++++-
+> >  kernel/trace/trace_kprobe.c          | 160 ++++++-
+> >  12 files changed, 2868 insertions(+), 72 deletions(-)
+> >  create mode 100644 kernel/trace/kprobe_event_gen_test.c
+> >  create mode 100644 kernel/trace/synth_event_gen_test.c
+> > 
+> > -- 
+> > 2.14.1
+> > 
 > 
-> For copy_to_user_page, the only call path is:
-> __access_remote_vm -> copy_to_user_page -> flush_icache_user_range
 > 
-> Seems it's ok to use flush_icache_mm instead of flush_icache_all and
-> it could reduce flush_icache_all called on other harts.
-> 
-> Add (vma->vm_flags & VM_EXEC) condition to flush icache only for
-> executable vma area.
-> 
-> ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE is used in a lot of fs/block codes.
-> We need it to make their pages dirty and defer sync i/dcache in
-> update_mmu_cache().
-> 
-> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Andrew Waterman <andrew@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> 
-> ---
-> Changelog V2:
->  - Add VM_EXEC condition.
->  - Remove flush_icache_user_range definition.
->  - define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
-> ---
->  arch/riscv/include/asm/cacheflush.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
-> index b69aecbb36d3..ae57d6ce63a9 100644
-> --- a/arch/riscv/include/asm/cacheflush.h
-> +++ b/arch/riscv/include/asm/cacheflush.h
-> @@ -8,7 +8,7 @@
->  
->  #include <linux/mm.h>
->  
-> -#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
-> +#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
->  
->  /*
->   * The cache doesn't need to be flushed when TLB entries change when
-> @@ -62,7 +62,8 @@ static inline void flush_cache_vunmap(unsigned long start, unsigned long end)
->  #define copy_to_user_page(vma, page, vaddr, dst, src, len) \
->  	do { \
->  		memcpy(dst, src, len); \
-> -		flush_icache_user_range(vma, page, vaddr, len); \
-> +		if (vma->vm_flags & VM_EXEC) \
-> +			flush_icache_mm(vma->vm_mm, 0); \
->  	} while (0)
->  #define copy_from_user_page(vma, page, vaddr, dst, src, len) \
->  	memcpy(dst, src, len)
-> @@ -85,7 +86,6 @@ static inline void flush_dcache_page(struct page *page)
->   * so instead we just flush the whole thing.
->   */
->  #define flush_icache_range(start, end) flush_icache_all()
-> -#define flush_icache_user_range(vma, pg, addr, len) flush_icache_all()
->  
->  void dma_wbinv_range(unsigned long start, unsigned long end);
->  void dma_wb_range(unsigned long start, unsigned long end);
-> -- 
-> 2.17.0
