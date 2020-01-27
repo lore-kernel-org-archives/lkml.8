@@ -2,116 +2,132 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548EEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783ACC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2721220702
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JfbsiiPN"
+	by mail.kernel.org (Postfix) with ESMTP id 5901C20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbgA0Mbd (ORCPT
+        id S1730695AbgA0Mbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:31:33 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42144 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729081AbgA0Mbd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:31:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580128292;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1hhEdcDWCEgGN0YrQx/xF84TmWOWm/XDVRZuqvlPeOI=;
-        b=JfbsiiPNDqlc02HG5vHt43/sRsb7/cCU59wRNbHZaLbcYEAlaM58nb+dagt9LeSvNEy11i
-        6l76cqnODbwJeA0IL95uUGW7kd6vrjrTc2/42ia4WhDe4VfyeBzt83UrrnKvbM+n/OLfBi
-        PlNfQtTBgElSCMi6DGT1b5C8uLPfWaQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-270-XumPK1NYNvKbzopPmVyKfg-1; Mon, 27 Jan 2020 07:31:28 -0500
-X-MC-Unique: XumPK1NYNvKbzopPmVyKfg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 001F31005510;
-        Mon, 27 Jan 2020 12:31:25 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7EBA98E60E;
-        Mon, 27 Jan 2020 12:31:22 +0000 (UTC)
-Date:   Mon, 27 Jan 2020 13:31:20 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        suzuki.poulose@arm.com, gengdongjiu@huawei.com,
-        wxf.wang@hisilicon.com, liwei391@huawei.com,
-        liuqi115@hisilicon.com, huawei.libin@huawei.com, nd@arm.com,
-        linux-perf-users@vger.kernel.org,
-        Tan Xiaojun <tanxiaojun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Al Grant <al.grant@arm.com>, Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v2 4/7] perf tools: Support "branch-misses:pp" on arm64
-Message-ID: <20200127123120.GD1114818@krava>
-References: <20200123160734.3775-1-james.clark@arm.com>
- <20200123160734.3775-5-james.clark@arm.com>
+        Mon, 27 Jan 2020 07:31:36 -0500
+Received: from mga06.intel.com ([134.134.136.31]:41805 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729801AbgA0Mbf (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 07:31:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 04:31:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,369,1574150400"; 
+   d="scan'208";a="305421363"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.213.218]) ([10.254.213.218])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Jan 2020 04:31:24 -0800
+Subject: Re: [PATCH v4 3/4] perf util: Flexible to set block info output
+ formats
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200115192904.16798-1-yao.jin@linux.intel.com>
+ <20200115192904.16798-3-yao.jin@linux.intel.com>
+ <20200120094737.GF608405@krava>
+ <6c35864b-e396-6865-12a9-2fd001b0f567@linux.intel.com>
+Message-ID: <23bec83b-b55d-8e9f-5b74-f58f0cd4a618@linux.intel.com>
+Date:   Mon, 27 Jan 2020 20:31:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123160734.3775-5-james.clark@arm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <6c35864b-e396-6865-12a9-2fd001b0f567@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 04:07:31PM +0000, James Clark wrote:
 
-SNIP
 
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 1548237b6558..b9c7e5271611 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -9,6 +9,7 @@
->  #include <errno.h>
->  #include <inttypes.h>
->  #include <poll.h>
-> +#include "arm-spe.h"
->  #include "cpumap.h"
->  #include "util/mmap.h"
->  #include "thread_map.h"
-> @@ -179,6 +180,7 @@ void perf_evlist__splice_list_tail(struct evlist *evlist,
->  	struct evsel *evsel, *temp;
->  
->  	__evlist__for_each_entry_safe(list, temp, evsel) {
-> +		arm_spe_precise_ip_support(evlist, evsel);
-
-this is 'splice' function, you can't configure precise in here
-
-do you need this 'config thing' to be executed on arm only?
-
-if yes, please add something like arch_evsel__config, make it
-weak for generic code and define it for arm
-
-if no, just add the call at the end perf_evsel__config I guess
-
-thanks,
-jirka
-
->  		list_del_init(&evsel->core.node);
->  		evlist__add(evlist, evsel);
->  	}
-> -- 
-> 2.25.0
+On 1/20/2020 11:00 PM, Jin, Yao wrote:
 > 
+> 
+> On 1/20/2020 5:47 PM, Jiri Olsa wrote:
+>> On Thu, Jan 16, 2020 at 03:29:03AM +0800, Jin Yao wrote:
+>>
+>> SNIP
+>>
+>>> +                   block_hpps, nr_hpps);
+>>> -    perf_hpp_list__register_sort_field(&bh->block_list,
+>>> -        &block_fmts[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT].fmt);
+>>> +    /* Sort by the first fmt */
+>>> +    perf_hpp_list__register_sort_field(&bh->block_list, 
+>>> &block_fmts[0].fmt);
+>>>   }
+>>> -static void process_block_report(struct hists *hists,
+>>> -                 struct block_report *block_report,
+>>> -                 u64 total_cycles)
+>>> +static int process_block_report(struct hists *hists,
+>>> +                struct block_report *block_report,
+>>> +                u64 total_cycles, int *block_hpps,
+>>> +                int nr_hpps)
+>>>   {
+>>>       struct rb_node *next = rb_first_cached(&hists->entries);
+>>>       struct block_hist *bh = &block_report->hist;
+>>>       struct hist_entry *he;
+>>> -    init_block_hist(bh, block_report->fmts);
+>>> +    if (nr_hpps > PERF_HPP_REPORT__BLOCK_MAX_INDEX)
+>>
+>> hum, should be '>=' above.. ?
+>>
+>> jirka
+>>
+> 
+> '=' should be OK.
+> 
+> enum {
+>      PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
+>      PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
+>      PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
+>      PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+>      PERF_HPP_REPORT__BLOCK_RANGE,
+>      PERF_HPP_REPORT__BLOCK_DSO,
+>      PERF_HPP_REPORT__BLOCK_MAX_INDEX
+> };
+> 
+> PERF_HPP_REPORT__BLOCK_MAX_INDEX is 6.
+> 
+> If nr_hpps is 6, for example, block_hpps[] is,
+> 
+>          int block_hpps[6] = {
+>              PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
+>              PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
+>              PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
+>              PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+>              PERF_HPP_REPORT__BLOCK_RANGE,
+>              PERF_HPP_REPORT__BLOCK_DSO,
+>          };
+> 
+>          block_info__create_report(session->evlist,
+>                        rep->total_cycles,
+>                                            block_hpps, 6,
+>                                            &rep->nr_block_reports);
+> 
+> That should be legal.
+> 
+> Thanks
+> Jin Yao
 
+Hi Jiri,
+
+Does this explanation make sense?
+
+Thanks
+Jin Yao
