@@ -2,90 +2,138 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62691C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8636C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D8924658
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580145728;
-	bh=RVZ2l3lpsRgpxdvGkybC0vCIdsPp3qw5HxU7do98MqY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lSPjsyCKSSA0BOtxzOHh/Fa/5iyviFoWZfMFWWs0LhQGc8tI28vdb5ExaDwylJ57s
-	 AqsDM01NfR9mxf28Xz15gQNXOoRfs7uNfMhmirg06QebVIL1D4ZDAiC9th5FJJ4+fb
-	 krx0nayN0lmA3QHh37kar4rJttwMNY0SHKwm3zLs=
+	by mail.kernel.org (Postfix) with ESMTP id 826A422522
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:26:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5cRyYfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgA0RWH (ORCPT
+        id S1726036AbgA0R03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:22:07 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41561 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgA0RWG (ORCPT
+        Mon, 27 Jan 2020 12:26:29 -0500
+Received: from mail-qk1-f177.google.com ([209.85.222.177]:41138 "EHLO
+        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0R03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:22:06 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so11605233ljc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:22:05 -0800 (PST)
+        Mon, 27 Jan 2020 12:26:29 -0500
+Received: by mail-qk1-f177.google.com with SMTP id s187so10396159qke.8;
+        Mon, 27 Jan 2020 09:26:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fZe1yZ3PHNUYD2UiPBWxtrrKJaJtr9K8bpkbKE3JKOM=;
-        b=B+ZZlChxyvMPwtZpmxxua0yGz4gt2aSlLbEHvlg83J/3+F80bQmLxN4vKD93rhEGCn
-         PAfHcDMXISyxcb0SurwqyqZ6aTt1ZOVF0Q+mOL6aVGAPVMaAIuXQniyANoLPE80cS+dB
-         2O4kSYhWApV8XCrf/ewej3KkKHmjVHQXmk2rA=
+        bh=kf2FDJGFABsa8dMfNJh+lTWVV7yYf0R3wgfeAqnShMc=;
+        b=K5cRyYfAGJg49+k4NPcUlUtuPQo2ckeAhTzgYeX+0cOluS/SHNz7C++gaNn06jOaC7
+         dh2q8dcz16E2AB7zc+/cntD0ETNl8qxZZWF4YZqnlgUU+VySOZ6R5yp6lXLQmOoMWM5L
+         /n4cNa4DQAMcqbFzjtr1EigbhqHtWUwI34hLInhTIu3v1zjVFvQKIisS8B22c8Lxd5A8
+         ubgzLIl1HLm6alyMWpdqJKTK40k5ZxUvFJfdGVhKHNeLdZYSRt1UbnLjzGYXsYFEDe19
+         H80gYbhCRYdhD+KEwEUVdb0Qu84sV6GXmnl0hGg6vQ9CAN2piOebNgSGRgsvs50mAksU
+         QITQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fZe1yZ3PHNUYD2UiPBWxtrrKJaJtr9K8bpkbKE3JKOM=;
-        b=PLinELf6csGZFZiM/Jmof8Yir35DEFREKYoyriiSGNWHxYeQm53vcGltJBJUPyuRAN
-         kqzhbEfvl6bpC81xuBWLugpOeErAflmDdXEksLcqg9m2iGtpg3nr3xdsygNnB8vGHId3
-         PdlcizRwAjvUs8HR6vMCaHHbMycte1Rq0hgzHPV1xCBi//cRBuhln4Lq+3dy0jTGqtgJ
-         KlH4byl8Yvm6whInGNhuTgoSEuNJVQ4K2c19nVpXx7QUDPCBEgODwaTDPiFttDEKUEwi
-         1uqpz+NkVkkC99nN1u484gLluTZ7WmlSTTPtQjhGjFjEe5DiBTrr3plI4ftMwdFwd9eI
-         X8Og==
-X-Gm-Message-State: APjAAAXo6WZ92WtzynJuq9mXTXz5e36cV6QD3TDEacLv7H81qn+CO01C
-        kiFL3iywHTC29KOgP6BNyFauGDRe/aM=
-X-Google-Smtp-Source: APXvYqxQbbw0dDqBqmDbmIh6gnZSFubcHDVBtjoTWsg4oRdd5NhwV2sqQtzHDqJdbzAUsRhiZ3uQ+g==
-X-Received: by 2002:a2e:9842:: with SMTP id e2mr10810592ljj.293.1580145723649;
-        Mon, 27 Jan 2020 09:22:03 -0800 (PST)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id z22sm8494819ljm.24.2020.01.27.09.22.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 09:22:02 -0800 (PST)
-Received: by mail-lf1-f44.google.com with SMTP id b15so6781346lfc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:22:01 -0800 (PST)
-X-Received: by 2002:a19:c82:: with SMTP id 124mr8658523lfm.152.1580145721226;
- Mon, 27 Jan 2020 09:22:01 -0800 (PST)
+        bh=kf2FDJGFABsa8dMfNJh+lTWVV7yYf0R3wgfeAqnShMc=;
+        b=DYVtDXPTg29QEW1gFwTCoBRw/AxeiP4aAR94Sf7bbOBf9eMVlWXCiWQ126TRtNLy5K
+         2d7wIWCjfSmI2RQzBWRDP0OUUtXw2nJVZxNaiiQ1CHKSfL5FMgT7iBZnOeUMczrLQ5op
+         pVN4XGywpjpGCIxPzW/E2xtmYwI7e8jY9v862bKdVhCLuta1ysuzojFYNTAd3qRs+C2u
+         8c+4vVf3xGPAUFXjY4WLGHEU8BkVrzPifD+Drpk8EfObg8Fw2u75EhksYlORP0WyppmF
+         MdM1r6ignayWZ72/ziCx34AJMaF8Itut0Gdi7a9kfii0Zjy05hAgGnMPPIu3t8yRmC1s
+         DhYQ==
+X-Gm-Message-State: APjAAAUg0CO5mZg74UovlEOSaW1fZ43SGW1vqZX0ORH9ayg9Z35V6M+u
+        1kvQqGujyBBxzkqLN5ci3iGgt/DNZcdINjxw1+Y=
+X-Google-Smtp-Source: APXvYqy0XhigD/SKPQ3G9sFERZqGihKttc4IFVvnazIK9f9RlMbKcNwXPBZgTwa7qrr1/4wXy5hX5IaYFYwU7foDN/M=
+X-Received: by 2002:a37:4047:: with SMTP id n68mr17831482qka.258.1580145988471;
+ Mon, 27 Jan 2020 09:26:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20200127113903.GD24228@zn.tnic>
-In-Reply-To: <20200127113903.GD24228@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 27 Jan 2020 09:21:45 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgedtBiFok8twm499FmNCJ6icWdG7Deb7f4jcDYS4Y_Lg@mail.gmail.com>
-Message-ID: <CAHk-=wgedtBiFok8twm499FmNCJ6icWdG7Deb7f4jcDYS4Y_Lg@mail.gmail.com>
-Subject: Re: [GIT PULL] x86/microcode for 5.6
-To:     Borislav Petkov <bp@suse.de>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+References: <025801d5bf24$aa242100$fe6c6300$@gmail.com> <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
+ <084f01d5cfba$bc5c4d10$3514e730$@gmail.com> <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
+ <a62e45ba968fe845fa757174efc0cab93c490d54.camel@hammerspace.com>
+ <CALbTx=GxuUmWu9Og_pv8TPbB0ZnOCA3vMqtyG4e18-4+zkY8=A@mail.gmail.com> <197269d91db31284dce51b831bfbe2231ac870d4.camel@hammerspace.com>
+In-Reply-To: <197269d91db31284dce51b831bfbe2231ac870d4.camel@hammerspace.com>
+From:   Robert Milkowski <rmilkowski@gmail.com>
+Date:   Mon, 27 Jan 2020 17:26:16 +0000
+Message-ID: <CALbTx=E7Hk4bVtSehjo4TPykTZsP+fSR0zeHFWyqd4XtHDyL4g@mail.gmail.com>
+Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 3:39 AM Borislav Petkov <bp@suse.de> wrote:
+> >
+> > > All that needs to be done here is to move the setting of clp-
+> > > > cl_last_renewal _out_ of nfs4_set_lease_period(), and just have
+> > > nfs4_proc_setclientid_confirm() and nfs4_update_session() call
+> > > do_renew_lease().
+> > >
+> >
+> > This would also require nfs4_setup_state_renewal() to call
+> > do_renew_lease() I think - at least it currently calls
+> > nfs4_set_lease_period().
 >
-> please pull another boring branch this time around:
+> This is the mechanism we're replacing. There is no need for a call to
+> do_renew_lease() in nfs4_setup_state_renewal().
 
-No problem with boring, but I'm trying to figure out why one of your
-three pulls had a signed tag, and the other two didn't?
+ok
 
-Is it just that the shared tip tree doesn't use tags, or what?
+>
+> > Also, iirc fsinfo() not setting cl_last_renewal leads to
+> > cl_last_renewal initialization issues under some circumstances.
+> >
+> > Then the RFC 7530 in section 16.34.5 states:
+> > "SETCLIENTID_CONFIRM does not establish or renew a lease.", so
+> > calling
+> > do_renew_lease() from nfs4_setclientid_confirm() doesn't seem to be
+> > ok.
+>
+> So just move the do_renew_lease() to nfs4_proc_setclientid(). The
+> successful combination SETCLIENTID+SETCLIENTID_CONFIRM definitely
+> _does_ establish a lease.
+>
 
-             Linus
+ok
+
+> > I'm not sure if is is valid to do implicit lease renewal in
+> > nfs4_update_session() either...
+>
+> Ditto. Move to the exchange_id call.
+>
+
+ok
+
+> >
+> > Anyway, the patch would be something like (haven't tested it yet):
+> >
+...
+> > @@ -6146,6 +6143,10 @@ int nfs4_proc_setclientid_confirm(struct
+> > nfs_client *clp,
+> >                 clp->cl_clientid);
+> >         status = rpc_call_sync(clp->cl_rpcclient, &msg,
+> >                                RPC_TASK_TIMEOUT |
+> > RPC_TASK_NO_ROUND_ROBIN);
+> > +       if(status == 0) {
+> > +               unsigned long now = jiffies;
+>
+> The variable 'now' needs to be set before the RPC call in order to
+> avoid overestimating the remaining lease period.
+>
+
+yes, thx.
+
+I will get a new patch tested and submitted here this week.
+
+-- 
+Robert Milkowski
