@@ -2,146 +2,190 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A33CC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A186C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D3421569
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:56:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aIwQFKqz"
+	by mail.kernel.org (Postfix) with ESMTP id 7B29F214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgA0I4f (ORCPT
+        id S1729261AbgA0I5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 03:56:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42426 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726769AbgA0I4e (ORCPT
+        Mon, 27 Jan 2020 03:57:25 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:28365 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgA0I5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 03:56:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580115393;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9tIpoiGmCkuvevXLPoa3fIc79sIzbVYkocp+dAFtMA4=;
-        b=aIwQFKqzTGeuQb7sPVe9E7oRdkvkF9pN+9rKLtAu5oKgYO2cKpDlPayKGlezWCrlmUuVnO
-        7xRsqNbkcxlNIuznnsx0n1T0phYLoPOB2CqRj/P+ke1Ybr2ioJ4bCyYIWsudvlzO5sqt6V
-        M5v3qCZmCt5PNN35ukdtSAaVkGi2Fbk=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-434-SW6rgk7UNeCMCkiHFWeW_A-1; Mon, 27 Jan 2020 03:56:26 -0500
-X-MC-Unique: SW6rgk7UNeCMCkiHFWeW_A-1
-Received: by mail-wm1-f72.google.com with SMTP id p2so1237176wma.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 00:56:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=9tIpoiGmCkuvevXLPoa3fIc79sIzbVYkocp+dAFtMA4=;
-        b=T9PChhvXcJrRr3wskrIWWboZ9EajCrofMUlrE2Tr7i0yL0InewN9ltCb8yilXh6LtM
-         /nhrR+EiNjmfTN355A58XTQu8V6Uet4/qtsyBFrCHg3c/DH8B8l2W/VpeRqQbeOw4spC
-         WdlymvTakAaMOydkTETpTHsUQL5NTyJ3/2P4YqYjE0dBYeNBXsqorhGy5xNLXWfM8RfY
-         yLv5kUK/W2sbl+gbeRKiaNd0KDheOygh4fAaHmD4nw/GPAVfm2TuxZx+2785gONFqod7
-         Vs3ZVlbaWiP3vxJdQaXIphFF/mIit9zD2DqVYx6VMV7gAgEeAThub+0a31lQUbID9l5r
-         Avzw==
-X-Gm-Message-State: APjAAAV5st8Aazbv1JBcugippHuurjsw86II9nfb9E5Qyu2lnzAR/JcW
-        xsVmgWjvnoSnHklRUxZqZckBiqKpGudWgqdYs0w5T76e6BJM982M2uJiZqmqGCm7ztYVRsc6/PS
-        QfYlO8yqMBV4p87ei86RY4Nky
-X-Received: by 2002:adf:fa43:: with SMTP id y3mr20078535wrr.65.1580115385279;
-        Mon, 27 Jan 2020 00:56:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwfWD3Za+5pEhMEVE+56LYHlHrEfSASb+WVAzjII+6SiMZWRYf0Md6ZspcLfH9Q2OmwQN3gXA==
-X-Received: by 2002:adf:fa43:: with SMTP id y3mr20078506wrr.65.1580115384981;
-        Mon, 27 Jan 2020 00:56:24 -0800 (PST)
-Received: from vitty.brq.redhat.com ([195.39.4.224])
-        by smtp.gmail.com with ESMTPSA id d23sm19860017wra.30.2020.01.27.00.56.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 00:56:24 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Nick Desaulniers <nick.desaulniers@gmail.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, pbonzini@redhat.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Subject: Re: [PATCH] dynamically allocate struct cpumask
-In-Reply-To: <20200127071602.11460-1-nick.desaulniers@gmail.com>
-References: <20200127071602.11460-1-nick.desaulniers@gmail.com>
-Date:   Mon, 27 Jan 2020 09:56:26 +0100
-Message-ID: <871rrlnupx.fsf@vitty.brq.redhat.com>
+        Mon, 27 Jan 2020 03:57:25 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: knmfp9i9d32Y5m0bMmBtAw7qKRS754dzi65RXDHkWEisriHQq4BHgN15BF2IYk+brVw6dK0lWl
+ dwGkGhcZUNASATXnpJc2YBOu3SwSt1cqj02mzSykaqtrus/t856axiw5S1m/l9/yB5nYpAKuSO
+ LsmlErU9fzj4r7EyWysWO2Ho2mh8TlyJ/COEDaVPzWMQvAqMJXlxh+EVDgexKmNv04Fj6NtDRw
+ Ut09R77N/7H3UGitQd4AqLhWuAnIhW9nka1SJMzhTaX3ub9Us5NUTfffwC4LDiPe6I4VupEwxu
+ 6sA=
+X-IronPort-AV: E=Sophos;i="5.70,369,1574146800"; 
+   d="scan'208";a="64593811"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jan 2020 01:57:23 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 27 Jan 2020 01:57:22 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 27 Jan 2020 01:57:23 -0700
+Date:   Mon, 27 Jan 2020 09:56:57 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kamel.bouhara@bootlin.com>,
+        <wsa@the-dreams.de>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <robh@kernel.org>,
+        <peda@axentia.se>, <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 5/6] ARM: at91/dt: sama5d4: add i2c gpio pinctrl
+Message-ID: <20200127085657.wt4isv6f3v76jcr3@M43218.corp.atmel.com>
+Mail-Followup-To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kamel.bouhara@bootlin.com, wsa@the-dreams.de,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        robh@kernel.org, peda@axentia.se, linux@armlinux.org.uk
+References: <20200115115422.17097-1-codrin.ciubotariu@microchip.com>
+ <20200115115422.17097-6-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200115115422.17097-6-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nick Desaulniers <nick.desaulniers@gmail.com> writes:
+On Wed, Jan 15, 2020 at 01:54:21PM +0200, Codrin Ciubotariu wrote:
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> 
+> Add the i2c gpio pinctrls so the i2c bus recovery option can be enabled
+> 
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> [codrin.ciubotariu@microchip.com: removed gpio pull-ups]
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-> This helps avoid avoid a potentially large stack allocation.
->
-> When building with:
-> $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
-> The following warning is observed:
-> arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
-> function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
-> static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
-> vector)
->             ^
-> Debugging with:
-> https://github.com/ClangBuiltLinux/frame-larger-than
-> via:
-> $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
->   kvm_send_ipi_mask_allbutself
-> points to the stack allocated `struct cpumask newmask` in
-> `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
-> potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
-> the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
-> 8192, making a single instance of a `struct cpumask` 1024 B.
->
-> Signed-off-by: Nick Desaulniers <nick.desaulniers@gmail.com>
 > ---
->  arch/x86/kernel/kvm.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 32ef1ee733b7..d41c0a0d62a2 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -494,13 +494,15 @@ static void kvm_send_ipi_mask(const struct cpumask *mask, int vector)
->  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
->  {
->  	unsigned int this_cpu = smp_processor_id();
-> -	struct cpumask new_mask;
-> +	struct cpumask *new_mask;
->  	const struct cpumask *local_mask;
+> 
+> Changes in v3:
+>  - removed gpio pull-ups;
+> 
+> Changes in v2:
+>  - none;
+> 
+>  arch/arm/boot/dts/sama5d4.dtsi | 33 ++++++++++++++++++++++++++++++---
+>  1 file changed, 30 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+> index 6ab27a7b388d..26ce868096c2 100644
+> --- a/arch/arm/boot/dts/sama5d4.dtsi
+> +++ b/arch/arm/boot/dts/sama5d4.dtsi
+> @@ -458,8 +458,11 @@
+>  					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+>  					| AT91_XDMAC_DT_PERID(3))>;
+>  				dma-names = "tx", "rx";
+> -				pinctrl-names = "default";
+> +				pinctrl-names = "default", "gpio";
+>  				pinctrl-0 = <&pinctrl_i2c0>;
+> +				pinctrl-1 = <&pinctrl_i2c0_gpio>;
+> +				sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
+> +				scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  				clocks = <&pmc PMC_TYPE_PERIPHERAL 32>;
+> @@ -477,8 +480,11 @@
+>  					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+>  					| AT91_XDMAC_DT_PERID(5))>;
+>  				dma-names = "tx", "rx";
+> -				pinctrl-names = "default";
+> +				pinctrl-names = "default", "gpio";
+>  				pinctrl-0 = <&pinctrl_i2c1>;
+> +				pinctrl-1 = <&pinctrl_i2c1_gpio>;
+> +				sda-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
+> +				scl-gpios = <&pioE 30 GPIO_ACTIVE_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  				clocks = <&pmc PMC_TYPE_PERIPHERAL 33>;
+> @@ -519,8 +525,11 @@
+>  					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+>  					| AT91_XDMAC_DT_PERID(7))>;
+>  				dma-names = "tx", "rx";
+> -				pinctrl-names = "default";
+> +				pinctrl-names = "default", "gpio";
+>  				pinctrl-0 = <&pinctrl_i2c2>;
+> +				pinctrl-1 = <&pinctrl_i2c2_gpio>;
+> +				sda-gpios = <&pioB 29 GPIO_ACTIVE_HIGH>;
+> +				scl-gpios = <&pioB 30 GPIO_ACTIVE_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  				clocks = <&pmc PMC_TYPE_PERIPHERAL 34>;
+> @@ -1122,6 +1131,12 @@
+>  							<AT91_PIOA 30 AT91_PERIPH_A AT91_PINCTRL_NONE
+>  							 AT91_PIOA 31 AT91_PERIPH_A AT91_PINCTRL_NONE>;
+>  					};
+> +
+> +					pinctrl_i2c0_gpio: i2c0-gpio {
+> +						atmel,pins =
+> +							<AT91_PIOA 30 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+> +							 AT91_PIOA 31 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+> +					};
+>  				};
 >  
-> -	cpumask_copy(&new_mask, mask);
-> -	cpumask_clear_cpu(this_cpu, &new_mask);
-> -	local_mask = &new_mask;
-> +	new_mask = kmalloc(sizeof(*new_mask), GFP_KERNEL);
-
-You could've used alloc_cpumask_var() instead, however, I think that
-memory allocation on this path is undesireable. We can always
-pre-allocate 1 cpumask variable per cpu and use it every time, e.g. we
-do this for Hyper-V.
-
-> +	cpumask_copy(new_mask, mask);
-> +	cpumask_clear_cpu(this_cpu, new_mask);
-> +	local_mask = new_mask;
->  	__send_ipi_mask(local_mask, vector);
-> +	kfree(new_mask);
->  }
+>  				i2c1 {
+> @@ -1130,6 +1145,12 @@
+>  							<AT91_PIOE 29 AT91_PERIPH_C AT91_PINCTRL_NONE	/* TWD1, conflicts with UART0 RX and DIBP */
+>  							 AT91_PIOE 30 AT91_PERIPH_C AT91_PINCTRL_NONE>;	/* TWCK1, conflicts with UART0 TX and DIBN */
+>  					};
+> +
+> +					pinctrl_i2c1_gpio: i2c1-gpio {
+> +						atmel,pins =
+> +							<AT91_PIOE 29 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+> +							 AT91_PIOE 30 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+> +					};
+>  				};
 >  
->  /*
-
--- 
-Vitaly
-
+>  				i2c2 {
+> @@ -1138,6 +1159,12 @@
+>  							<AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE	/* TWD2, conflicts with RD0 and PWML1 */
+>  							 AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE>; /* TWCK2, conflicts with RF0 */
+>  					};
+> +
+> +					pinctrl_i2c2_gpio: i2c2-gpio {
+> +						atmel,pins =
+> +							<AT91_PIOB 29 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+> +							 AT91_PIOB 30 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+> +					};
+>  				};
+>  
+>  				isi {
+> -- 
+> 2.20.1
+> 
