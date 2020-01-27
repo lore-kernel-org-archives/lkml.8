@@ -2,45 +2,44 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CD5C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BE1C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87122206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688F9206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:16:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Qdpr2Gi5"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fX7CEUyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgA0LP6 (ORCPT
+        id S1730328AbgA0LP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:15:58 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:44516 "EHLO
+        Mon, 27 Jan 2020 06:15:57 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:44530 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726771AbgA0LPw (ORCPT
+        by vger.kernel.org with ESMTP id S1729463AbgA0LPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jan 2020 06:15:52 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1C2714067C;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2E0D540693;
         Mon, 27 Jan 2020 11:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1580123371; bh=PJxQQe6LRMVQ+GUC/YIJKHseFjn16R2owaP2nQ3enlM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=Qdpr2Gi5s0uO+ZwqvE+R8q1qOVFfkM7ge2D/ymd6F+mCKwI7QpDDT5TRocLwkxVGJ
-         L0Fs6xdCTz1mlZ/SMe1yEKgXhZ86HoYLYBTPcOo+HPn649Me1WD3g90R/tPNFVovvI
-         8pq+OjywGFrUiX0oGdQ2xWw8Zsz2Xp71i/kQ3jl+mtON5NjeF8GrFkQUPhJgS9uM7S
-         JIB5HTeRQRH5XUcqAZT6P8eWR1ZjTJxKWG+L+giI+MdTGIZLN2Yz5hCSwnmAVgcdkN
-         51Qx4Ame0LIUbJ/bVRRYJzaf+FASIJY+dztnT571qQNfDtVfwFlxAXSirQT5CFWxDA
-         qUlpWlYlxB4yQ==
+        t=1580123375; bh=IjWRnmaSPsNrSVZrLeGmi4hFsW9Xwf+qeBSJQHYUGvA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fX7CEUyoF7CatZ79YNwGoqdE2qM/bUjWcAeah10Eq4KX5LVkmopVInSGhyD73fC9r
+         WYe9MBlnrasoeabTiXz1wZ5isM1aR0mdZ6qS7gkgitdiwi4qdQw1cTO0UCiZian0KI
+         eWJaePzX1r7yxtg9YoAkko5hX1+7COlItx9lU5mNR2id/MOotuaFQZdUGYyZrsQUu5
+         ySEMPtFJNsX5wlGt4WFeF/kvZjMtBr2k1N1rC3j63j+i2THjBU1qC+7Am4ovQ+7pjm
+         rXsnMDPGm+j76Mbi4HKxps7pfYM2kFleH+k80qvdSrgHHVSnh+8trNJUDuK480AJqw
+         9ukmxI/h70sow==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 84564A005E;
-        Mon, 27 Jan 2020 11:09:28 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 2D4B0A005C;
+        Mon, 27 Jan 2020 11:09:23 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -57,24 +56,34 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC net-next 1/8] net: stmmac: selftests: Do not fail if PHY is not attached
-Date:   Mon, 27 Jan 2020 12:09:06 +0100
-Message-Id: <9634df6d4cfe28e3f4ca06791c3488e687bb249e.1580122909.git.Jose.Abreu@synopsys.com>
+Subject: [RFC net-next 0/8] net: Add support for Synopsys DesignWare XPCS
+Date:   Mon, 27 Jan 2020 12:09:05 +0100
+Message-Id: <cover.1580122909.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1580122909.git.Jose.Abreu@synopsys.com>
-References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1580122909.git.Jose.Abreu@synopsys.com>
-References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a PHY is not attached, we can still run the tests with MAC loopback
-mode. Return -EOPNOTSUPP error code in PHY loopback test so that global
-status is not a failure.
+This adds support for Synopsys DesignWare XPCS in net subsystem and
+integrates it into stmmac.
 
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+At 1/8, we start by removing the limitation of stmmac selftests that needed
+a PHY to pass all the tests.
+
+Then at 2/8 and 3/8 we add and use some new helpers in PHYLINK so that we
+can simplify some code in stmmac and possible other drivers.
+
+At 4/8, we fallback to dev_fwnode() so that PCI based setups wich may
+not have CONFIG_OF can still use FW node.
+
+We proceed by doing changes in PHYLINK in order to support XPCS: At 5/8 we
+add some missing speeds that USXGMII supports and at 6/8 we do the most
+important change to support XPCS that allows to configure MAC and PCS
+withouht having any PHY neither SFP attached.
+
+Support for XPCS is finally introduced at 7/8, along with the usage of it
+in stmmac driver at 8/8.
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -92,22 +101,35 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index 2aba2673d6c3..586a657be984 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -380,7 +380,7 @@ static int stmmac_test_phy_loopback(struct stmmac_priv *priv)
- 	int ret;
- 
- 	if (!priv->dev->phydev)
--		return -EBUSY;
-+		return -EOPNOTSUPP;
- 
- 	ret = phy_loopback(priv->dev->phydev, true);
- 	if (ret)
+Jose Abreu (8):
+  net: stmmac: selftests: Do not fail if PHY is not attached
+  net: phylink: Add phylink_and and phylink_andnot Helpers
+  net: stmmac: Switch to phylink_and()/phylink_andnot()
+  net: stmmac: Fallback to dev_fwnode() if needed
+  net: phylink: Add missing Backplane speeds
+  net: phylink: Configure MAC/PCS when link is up without PHY
+  net: phy: Add Synopsys DesignWare XPCS MDIO module
+  net: stmmac: Integrate it with DesignWare XPCS
+
+ MAINTAINERS                                        |   7 +
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |   1 +
+ drivers/net/ethernet/stmicro/stmmac/common.h       |   3 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  12 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  32 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  |  27 +
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c |   2 +-
+ drivers/net/phy/Kconfig                            |   6 +
+ drivers/net/phy/Makefile                           |   1 +
+ drivers/net/phy/mdio-xpcs.c                        | 567 +++++++++++++++++++++
+ drivers/net/phy/phylink.c                          |  16 +-
+ include/linux/mdio-xpcs.h                          |  41 ++
+ include/linux/phylink.h                            |   4 +
+ include/linux/stmmac.h                             |   1 +
+ 14 files changed, 708 insertions(+), 12 deletions(-)
+ create mode 100644 drivers/net/phy/mdio-xpcs.c
+ create mode 100644 include/linux/mdio-xpcs.h
+
 -- 
 2.7.4
 
