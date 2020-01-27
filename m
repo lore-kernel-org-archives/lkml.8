@@ -2,209 +2,70 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5212C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69769C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 701A0214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:38:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TWYS4cP/"
+	by mail.kernel.org (Postfix) with ESMTP id 4896A214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:39:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgA0Iiu (ORCPT
+        id S1729211AbgA0IjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 03:38:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21545 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728668AbgA0Iiu (ORCPT
+        Mon, 27 Jan 2020 03:39:19 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:46082 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbgA0IjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 03:38:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580114329;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6xHjqcGoKCBGKlL3qdqNz6iPbD1SCDfAlhNTZTWBwQI=;
-        b=TWYS4cP/nS2v41+Adw261lU6Vbh7Q790VDcyYD3Vbpfnw/QrGTCSue+yYXJEBo4OY3BhmN
-        BD4XM00U+KpHLftRthcU1h+eFODahZ90w/5DGNJPq6fYap3P9TElz19gSj2ZVmEgmfTiR7
-        HnfMona5hDWkiQ1aknpHeQuXXO2ACqM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-16-7JGMZ4wYPHaLPIBsHxr0GA-1; Mon, 27 Jan 2020 03:38:47 -0500
-X-MC-Unique: 7JGMZ4wYPHaLPIBsHxr0GA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AFC6D1800D41;
-        Mon, 27 Jan 2020 08:38:45 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8CEA4863C5;
-        Mon, 27 Jan 2020 08:38:41 +0000 (UTC)
-Date:   Mon, 27 Jan 2020 09:38:38 +0100
-From:   Andrew Jones <drjones@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>
-Subject: Re: [PATCH v4 06/10] KVM: selftests: Add support for vcpu_args_set
- to aarch64 and s390x
-Message-ID: <20200127083838.u32bylca2n4om6zx@kamzik.brq.redhat.com>
-References: <20200123180436.99487-1-bgardon@google.com>
- <20200123180436.99487-7-bgardon@google.com>
- <6061cd22-59bb-c191-bd98-f14d7cd274ae@redhat.com>
+        Mon, 27 Jan 2020 03:39:19 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1ivzvQ-0007LH-L4; Mon, 27 Jan 2020 09:39:16 +0100
+Date:   Mon, 27 Jan 2020 09:39:15 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>
+Subject: [PATCH] smp: Remove superfluous cond_func check in
+ smp_call_function_many_cond()
+Message-ID: <20200127083915.434tdkztorkklpdu@linutronix.de>
+References: <20200117090137.1205765-3-bigeasy@linutronix.de>
+ <157989512234.396.13725764794800050132.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6061cd22-59bb-c191-bd98-f14d7cd274ae@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <157989512234.396.13725764794800050132.tip-bot2@tip-bot2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 10:34:16AM +0100, Paolo Bonzini wrote:
-> On 23/01/20 19:04, Ben Gardon wrote:
-> > Currently vcpu_args_set is only implemented for x86. This makes writing
-> > tests with multiple vCPUs difficult as each guest vCPU must either a.)
-> > do the same thing or b.) derive some kind of unique token from it's
-> > registers or the architecture. To simplify the process of writing tests
-> > with multiple vCPUs for s390 and aarch64, add set args functions for
-> > those architectures.
-> > 
-> > Signed-off-by: Ben Gardon <bgardon@google.com>
-> > ---
-> >  .../selftests/kvm/lib/aarch64/processor.c     | 33 +++++++++++++++++
-> >  .../selftests/kvm/lib/s390x/processor.c       | 35 +++++++++++++++++++
-> >  2 files changed, 68 insertions(+)
-> > 
-> > diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> > index 86036a59a668e..a2ff90a75f326 100644
-> > --- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> > +++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> > @@ -333,3 +333,36 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
-> >  {
-> >  	aarch64_vcpu_add_default(vm, vcpuid, NULL, guest_code);
-> >  }
-> > +
-> > +/* VM VCPU Args Set
-> > + *
-> > + * Input Args:
-> > + *   vm - Virtual Machine
-> > + *   vcpuid - VCPU ID
-> > + *   num - number of arguments
-> > + *   ... - arguments, each of type uint64_t
-> > + *
-> > + * Output Args: None
-> > + *
-> > + * Return: None
-> > + *
-> > + * Sets the first num function input arguments to the values
-> > + * given as variable args.  Each of the variable args is expected to
-> > + * be of type uint64_t. The registers set by this function are r0-r7.
-> > + */
-> > +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
-> > +{
-> > +	va_list ap;
-> > +
-> > +	TEST_ASSERT(num >= 1 && num <= 8, "Unsupported number of args,\n"
-> > +		    "  num: %u\n",
-> > +		    num);
-> > +
-> > +	va_start(ap, num);
-> > +
-> > +	for (i = 0; i < num; i++)
-> > +		set_reg(vm, vcpuid, ARM64_CORE_REG(regs.regs[num]),
+It was requested to remove the cond_func check but the follow up patch
+was overlooked. Here is an incremental update.
 
-For AArch64 you also need to squash s/num/i/ for this line.
+Link: https://lore.kernel.org/lkml/20200117131510.GA14914@hirez.programming.kicks-ass.net/
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-(Plus I'm still not that pleased with adding this big header to this
-file for this function, or the weird line breaks in the assert.)
-
-> > +			va_arg(ap, uint64_t));
-> > +
-> > +	va_end(ap);
-> > +}
-> > diff --git a/tools/testing/selftests/kvm/lib/s390x/processor.c b/tools/testing/selftests/kvm/lib/s390x/processor.c
-> > index 32a02360b1eb0..680f37be9dbc9 100644
-> > --- a/tools/testing/selftests/kvm/lib/s390x/processor.c
-> > +++ b/tools/testing/selftests/kvm/lib/s390x/processor.c
-> > @@ -269,6 +269,41 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
-> >  	run->psw_addr = (uintptr_t)guest_code;
-> >  }
-> >  
-> > +/* VM VCPU Args Set
-> > + *
-> > + * Input Args:
-> > + *   vm - Virtual Machine
-> > + *   vcpuid - VCPU ID
-> > + *   num - number of arguments
-> > + *   ... - arguments, each of type uint64_t
-> > + *
-> > + * Output Args: None
-> > + *
-> > + * Return: None
-> > + *
-> > + * Sets the first num function input arguments to the values
-> > + * given as variable args.  Each of the variable args is expected to
-> > + * be of type uint64_t. The registers set by this function are r2-r6.
-> > + */
-> > +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
-> > +{
-> > +	va_list ap;
-> > +	struct kvm_regs regs;
-> > +
-> > +	TEST_ASSERT(num >= 1 && num <= 5, "Unsupported number of args,\n"
-> > +		    "  num: %u\n",
-> > +		    num);
-> > +
-> > +	va_start(ap, num);
-> > +	vcpu_regs_get(vm, vcpuid, &regs);
-> > +
-> > +	for (i = 0; i < num; i++)
-> > +		regs.gprs[i + 2] = va_arg(ap, uint64_t);
-> > +
-> > +	vcpu_regs_set(vm, vcpuid, &regs);
-> > +	va_end(ap);
-> > +}
-> > +
-> >  void vcpu_dump(FILE *stream, struct kvm_vm *vm, uint32_t vcpuid, uint8_t indent)
-> >  {
-> >  	struct vcpu *vcpu = vm->vcpu_head;
-> > 
-> 
-> Squashing this:
-> 
-> diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> index a2ff90a75f32..839a76c96f01 100644
-> --- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> +++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-> @@ -353,6 +353,7 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
->  void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
->  {
->  	va_list ap;
-> +	int i;
->  
->  	TEST_ASSERT(num >= 1 && num <= 8, "Unsupported number of args,\n"
->  		    "  num: %u\n",
-> diff --git a/tools/testing/selftests/kvm/lib/s390x/processor.c b/tools/testing/selftests/kvm/lib/s390x/processor.c
-> index 680f37be9dbc..a0b84235c848 100644
-> --- a/tools/testing/selftests/kvm/lib/s390x/processor.c
-> +++ b/tools/testing/selftests/kvm/lib/s390x/processor.c
-> @@ -289,6 +289,7 @@ void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
->  {
->  	va_list ap;
->  	struct kvm_regs regs;
-> +	int i;
->  
->  	TEST_ASSERT(num >= 1 && num <= 5, "Unsupported number of args,\n"
->  		    "  num: %u\n",
-> 
-> Paolo
-> 
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 3b7bedc97af38..d0ada39eb4d41 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -435,7 +435,7 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 
+ 	/* Fastpath: do that cpu by itself. */
+ 	if (next_cpu >= nr_cpu_ids) {
+-		if (!cond_func || (cond_func && cond_func(cpu, info)))
++		if (!cond_func || cond_func(cpu, info))
+ 			smp_call_function_single(cpu, func, info, wait);
+ 		return;
+ 	}
+-- 
+2.25.0
 
