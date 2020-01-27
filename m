@@ -7,106 +7,96 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353CAC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF72C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051DA206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD15206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QJWVurVz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iKJYkAu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgA0Xyq (ORCPT
+        id S1727278AbgA0Xy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 18:54:46 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:52781 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgA0Xyp (ORCPT
+        Mon, 27 Jan 2020 18:54:58 -0500
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:38883 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgA0Xy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 18:54:45 -0500
-Received: by mail-pg1-f201.google.com with SMTP id w21so7496480pgf.19
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 15:54:45 -0800 (PST)
+        Mon, 27 Jan 2020 18:54:57 -0500
+Received: by mail-pj1-f73.google.com with SMTP id 14so299176pjo.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 15:54:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=LtaIREjg0GbBNJyJVnqCp3W9hRUEU+wNigeViXWJb/o=;
-        b=QJWVurVz83htEHzzAukWZOjRvkslLJAt6RkcCPRQgUwcrrqnp2W42ISvpNSlJqhLYI
-         HDzfPU81B/8MhLW3/BOHOTSm3GJr/tMW4jJ1uZjzTbJHZI7r00deF2uuiZE1jDlE3Ujn
-         MIMSuULUgAiE5dl8Nrbk0b8EeQoezOApOBHVkrgqe0dU+IightjL6OUCro+mwIxTLbFb
-         t2pFhrqSSkm11dR+u1q94/yUiey4cwHOn48bYfK20V0lZ9Glrn/woVo38KYoMyo6/pXm
-         Ki9LI1z6JOEkTJvqF9Ngr3gnj3PxZwspaCM9AexVBTeEbEa6NoLses4XF2PhfQahE7g1
-         UGtQ==
+        bh=gntUp+SDXttnQBr/sc5cO3EsNHTPBbbt8uIYn4TJA2s=;
+        b=iKJYkAu/HQnaxOEoyoyVHO60MC+U5XKfW9fiWKbMH70o4IcKZqg/8wyv+3aRvbFbvu
+         nULy26QTeKImnh/3jyjjyYs/EPa9695yYzvs6D2R97xcgvFB/m02Nh0Qe7lFrxOH5ZtU
+         4fU5CLktqtCjUssNKlMRRaYVPTRsBIDCcTCdz6oYayiFu1UZ80YSWAKmySUXR4O8yS3V
+         aTAd+K39cMTFRSPHSzVNRc8ES+rcQ/wAaJQsp2uQB00t2UvRv1oI0HcHRyOhAcYZQUrc
+         IwpZtUoIbUXJNkHGFQHVn1MvW+S3+Os8iMZC/xAFseXj20h60mNHgUwP1hBfyiUGX4QO
+         QBVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=LtaIREjg0GbBNJyJVnqCp3W9hRUEU+wNigeViXWJb/o=;
-        b=RF8YO1e1srQFRdxA4pa95PwUeaq/DPHAO3ohyMR76fyrVybWqit8ChhwJEhR8VIp+j
-         IJVsjnBF/QAgd1BGjKfGtfiCgCGlBOGWzs+WnoyACEQPW2Rta2LElJuWjERlBg9OxDRy
-         qOgqgKuvS3INkUkPYLVW82lr3l4aO8cMgaTtgpaKGqTJ4A39OcqbeO3rAHuuGoSfz+iX
-         cBVDynUygoYnHyDwOx3YYXwi/ArPtzAovxdJsX5V+Zaj0DwO30ddh+Gd3agzNfoxtW53
-         45iphsF2i/0CwcLYxj6+UDx1RCtoZg9j2pK8h/cPkuVNwvvu54MgDx1pOeuzJl77tQJG
-         kLEw==
-X-Gm-Message-State: APjAAAUaxGi37ioOaLBam7q883vOdvtJKorB5VKRd01xLLOnHJwpK8gG
-        xRl3gj4xLy8aWyI5YPAs7cMlI4NjrDxP3G6D2LNYYg==
-X-Google-Smtp-Source: APXvYqweRQ8m5hhu1HXuRMedVPc2bAFe5tdPFCvhiapDMmB+s6KJgSZdl7ge+tHS5zEbJYelkAeAJQhRjXaIFteOOxWnoQ==
-X-Received: by 2002:a63:234f:: with SMTP id u15mr21895366pgm.88.1580169284558;
- Mon, 27 Jan 2020 15:54:44 -0800 (PST)
-Date:   Mon, 27 Jan 2020 15:53:52 -0800
+        bh=gntUp+SDXttnQBr/sc5cO3EsNHTPBbbt8uIYn4TJA2s=;
+        b=plKIY4bi5JINVXvI3C0kk5Mny+ogTa9ZpkunFDoVZVc4goVORHobygSbxUwYZsfFK7
+         nAWhg1+qZ/cZ0dq61TH6+ud/6JHFgy6LfZodynkHTjb3DaUmU3m1L8KxvmHfdM7e9g7s
+         0cWxtcFeZQxtPF+A/7rAk5FFrVZVhNsheDbHJpI2Jl6hvinbJ+9aCKjUMjElM5UfAy7K
+         cBrw6G8+ux10RlYXVz+r8H/a3Xd+wqTsUHBhOgbrfV0Uw/p1H4bxj0rrpptmkfgN8rnq
+         pQS6hYMuonr/NR002IAsM7hdiue9n+Og0SpumS6s0k0QEtC+3A4iM8mU4TDqccsQoBbe
+         Iy+Q==
+X-Gm-Message-State: APjAAAVrglpG31ysTI87pIzOxSCpDPy3WNqy14lA3Y3bEv4liYrqu31e
+        ZT/AsfZ5NqWzaJpfJa7Mb1MMJp4igPs4JBKO7Ub9Rg==
+X-Google-Smtp-Source: APXvYqz5lz8Bx5r+hOfkxT89taKmjq4XVEOcglFFrUjs0O7WjK+Y+IZCN7vcLSVeAwBbcJ6semWNObbc7RcHxrlyYdCb3A==
+X-Received: by 2002:a63:9548:: with SMTP id t8mr21223163pgn.205.1580169297243;
+ Mon, 27 Jan 2020 15:54:57 -0800 (PST)
+Date:   Mon, 27 Jan 2020 15:53:53 -0800
 In-Reply-To: <20200127235356.122031-1-brendanhiggins@google.com>
-Message-Id: <20200127235356.122031-2-brendanhiggins@google.com>
+Message-Id: <20200127235356.122031-3-brendanhiggins@google.com>
 Mime-Version: 1.0
 References: <20200127235356.122031-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v1 1/5] net: axienet: add unspecified HAS_IOMEM dependency
+Subject: [PATCH v1 2/5] reset: brcmstb-rescal: add unspecified HAS_IOMEM dependency
 From:   Brendan Higgins <brendanhiggins@google.com>
 To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        "David S . Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Robert Hancock <hancock@sedsystems.ca>,
-        Esben Haabendal <esben@geanix.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+        Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
         davidgow@google.com, heidifahim@google.com,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+        Brendan Higgins <brendanhiggins@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently CONFIG_XILINX_AXI_EMAC=y implicitly depends on
+Currently CONFIG_RESET_BRCMSTB_RESCAL=y implicitly depends on
 CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
 the following build error:
 
-/usr/bin/ld: drivers/net/ethernet/xilinx/xilinx_axienet_main.o: in function `axienet_probe':
-drivers/net/ethernet/xilinx/xilinx_axienet_main.c:1680: undefined reference to `devm_ioremap_resource'
-/usr/bin/ld: drivers/net/ethernet/xilinx/xilinx_axienet_main.c:1779: undefined reference to `devm_ioremap_resource'
-/usr/bin/ld: drivers/net/ethernet/xilinx/xilinx_axienet_main.c:1789: undefined reference to `devm_ioremap_resource'
+/usr/bin/ld: drivers/reset/reset-brcmstb-rescal.o: in function `brcm_rescal_reset_probe':
+drivers/reset/reset-brcmstb-rescal.c:76: undefined reference to `devm_ioremap_resource'
 
 Fix the build error by adding the unspecified dependency.
 
 Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 ---
- drivers/net/ethernet/xilinx/Kconfig | 1 +
+ drivers/reset/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/xilinx/Kconfig b/drivers/net/ethernet/xilinx/Kconfig
-index 6304ebd8b5c69..b1a285e693756 100644
---- a/drivers/net/ethernet/xilinx/Kconfig
-+++ b/drivers/net/ethernet/xilinx/Kconfig
-@@ -25,6 +25,7 @@ config XILINX_EMACLITE
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 461b0e506a26f..a19bd303f31a9 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -51,6 +51,7 @@ config RESET_BRCMSTB
  
- config XILINX_AXI_EMAC
- 	tristate "Xilinx 10/100/1000 AXI Ethernet support"
+ config RESET_BRCMSTB_RESCAL
+ 	bool "Broadcom STB RESCAL reset controller"
 +	depends on HAS_IOMEM
- 	select PHYLINK
- 	---help---
- 	  This driver supports the 10/100/1000 Ethernet from Xilinx for the
+ 	default ARCH_BRCMSTB || COMPILE_TEST
+ 	help
+ 	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
 -- 
 2.25.0.341.g760bfbb309-goog
 
