@@ -2,251 +2,193 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6882FC35247
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 05:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE015C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354E520842
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 05:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B649214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pI71r8dS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kOc4+jOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgA0FbJ (ORCPT
+        id S1727067AbgA0GGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 00:31:09 -0500
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:41796 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgA0FbJ (ORCPT
+        Mon, 27 Jan 2020 01:06:22 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:46458 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgA0GGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 00:31:09 -0500
-Received: by mail-vk1-f202.google.com with SMTP id i123so4008094vkg.8
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 21:31:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=DI0Lh6q9irgWn+IO9tpXRLACEMIkrMuflR08fFBz6r4=;
-        b=pI71r8dSdD44XMVUvUhi7UqeZJ/7Mpi/EmVb+iICB+EryfZn+dv7YyWzZfd8B4/OoI
-         K85VRP2TqR3qk4Xgqmv0mvqGYPhzU4lOdDVESqkbWTF4xI6NnTQciyO7zEBiOpK8139q
-         8GI82lSq/qYWaE2TexNDH99hLcSvrySrOhxfgMXt80JsvY1M04jx8LgiZiHpK0DOqUFI
-         CuBsrbfM6mnTiTR7vG998LXps6/wSgF4Z7d5KLpD9j1GAuvCTVN3xCzO5UzDsgYCOOPE
-         DtBU5qvgERwToxxUHyck+25YtCV5hxrbEAAZttfpyKgvD9GshDGx+rIuwEGR4ZBsz3+4
-         m0Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=DI0Lh6q9irgWn+IO9tpXRLACEMIkrMuflR08fFBz6r4=;
-        b=UKnFhIaUPVdtMX6rv3cTKd4NvKQe0G2zmq5E+kzMIr/FKET/eHxlGkVwj+VrMTprCf
-         mfudOAegJLsrZOmHP5ZL5JC8Nw9haPySbtW6u+CLigdolNVrn0P1GG2scui//oXzI8G7
-         Xkd/FO75eeF/58zPZ71rocMdXBlYrVmWwZZYU7/a/rrrgEDsnOAtpmAudXduigG59ivh
-         ICrkadyWz9klWgYcQ7pmQvaP9encw7ZUN+zJekqkSNZk6O2obtENFxRbHopGX0bsmO7M
-         6YNYjey92OLaAdYRXrt0HvHMbmVzUrOhDmfrceh8o4Eiluj8h5KuZmm4hCfazl1oY8Gu
-         K8Mg==
-X-Gm-Message-State: APjAAAWyYeS+i1fwUsMMehoefusNI2QYlu2vbz471ASWVxLZ0A2sOwz2
-        71EV8izUWo+DUMiYN2UPt5NRKuw+GXbx
-X-Google-Smtp-Source: APXvYqxatu41pGjPUZtHzfqsdCcxTqfDNWthU11S26MvvQEtN6JcGExq0ge+WiPsE9O4XFLqZJSqf2dYjSpM
-X-Received: by 2002:ab0:6509:: with SMTP id w9mr8912067uam.121.1580103067944;
- Sun, 26 Jan 2020 21:31:07 -0800 (PST)
-Date:   Sun, 26 Jan 2020 21:30:56 -0800
-In-Reply-To: <20200123014627.71720-1-bgeffon@google.com>
-Message-Id: <20200127053056.213679-1-bgeffon@google.com>
-Mime-Version: 1.0
-References: <20200123014627.71720-1-bgeffon@google.com>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v3] mm: Add MREMAP_DONTUNMAP to mremap().
-From:   Brian Geffon <bgeffon@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-api@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jan 2020 01:06:21 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R6365q111317;
+        Mon, 27 Jan 2020 06:05:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=JHl3pxKyojAGqGYtfwPFlNCopLmnuaTKzY6k8aSGSUo=;
+ b=kOc4+jOX6atn7j9uyuG/XIuhfbNoYv9V/Dg/jICNfYgMbvDP/yAaoCHG++BO5OUH3zYq
+ mo5r6N01ZydHh6+tMXhEHlxTQFqjRHYSpbcZ4tIE9/S4VTpDzvbvU3mhqMADQbRRgABw
+ +YIYu3w3uPDpYILjOHtqshx0KrdyZUgfNUSmtHTIQzhcZGrcfsVxRNFoIW9nB2nf4Wa+
+ 6qhUqTsj+MVBVhKz3l9eVAWOlHbZJNx5k9pXedlkaqEfKcSNWIdTODvy6kAGztxCD5JQ
+ hcdUuyxHJ2rHmC2OLmqVDWR/vD5NJaAS5mTlPyrFn97iTc628nlMbA/OBc/yIkSOR1yS rg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xrdmq58bc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 06:05:01 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R643Vq184794;
+        Mon, 27 Jan 2020 06:05:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xry4tm010-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 06:05:00 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00R64i3x020066;
+        Mon, 27 Jan 2020 06:04:47 GMT
+Received: from [10.39.241.133] (/10.39.241.133)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 26 Jan 2020 22:04:43 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
+From:   Alex Kogan <alex.kogan@oracle.com>
+In-Reply-To: <20200126224245.GA22901@paulmck-ThinkPad-P72>
+Date:   Mon, 27 Jan 2020 01:04:45 -0500
+Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com, dave.dice@oracle.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <FB96E148-C72B-4D00-95F0-C4B69A3EE454@oracle.com>
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <20200124222434.GA7196@paulmck-ThinkPad-P72>
+ <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
+ <20200125005713.GZ2935@paulmck-ThinkPad-P72>
+ <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
+ <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
+ <20200125045844.GC2935@paulmck-ThinkPad-P72>
+ <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
+ <20200126153535.GL2935@paulmck-ThinkPad-P72>
+ <20200126224245.GA22901@paulmck-ThinkPad-P72>
+To:     paulmck@kernel.org
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001270052
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001270052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
-set, the source mapping will not be removed. Instead it will be
-cleared as if a brand new anonymous, private mapping had been created
-atomically as part of the mremap() call. =C2=A0If a userfaultfd was watchin=
-g
-the source, it will continue to watch the new mapping. =C2=A0For a mapping
-that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
-mremap() call to fail. MREMAP_DONTUNMAP requires that MREMAP_FIXED is
-also used. The final result is two equally sized VMAs where the
-destination contains the PTEs of the source.
-=C2=A0 =C2=A0
-We hope to use this in Chrome OS where with userfaultfd we could write
-an anonymous mapping to disk without having to STOP the process or worry
-about VMA permission changes.
-=C2=A0 =C2=A0
-This feature also has a use case in Android, Lokesh Gidra has said
-that "As part of using userfaultfd for GC, We'll have to move the physical
-pages of the java heap to a separate location. For this purpose mremap
-will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
-heap, its virtual mapping will be removed as well. Therefore, we'll
-require performing mmap immediately after. This is not only time consuming
-but also opens a time window where a native thread may call mmap and
-reserve the java heap's address range for its own usage. This flag
-solves the problem."
-=C2=A0 =C2=A0
-Signed-off-by: Brian Geffon <bgeffon@google.com>
----
- include/uapi/linux/mman.h |  5 +++--
- mm/mremap.c               | 38 +++++++++++++++++++++++++++++++-------
- 2 files changed, 34 insertions(+), 9 deletions(-)
 
-diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
-index fc1a64c3447b..923cc162609c 100644
---- a/include/uapi/linux/mman.h
-+++ b/include/uapi/linux/mman.h
-@@ -5,8 +5,9 @@
- #include <asm/mman.h>
- #include <asm-generic/hugetlb_encode.h>
-=20
--#define MREMAP_MAYMOVE	1
--#define MREMAP_FIXED	2
-+#define MREMAP_MAYMOVE		1
-+#define MREMAP_FIXED		2
-+#define MREMAP_DONTUNMAP	4
-=20
- #define OVERCOMMIT_GUESS		0
- #define OVERCOMMIT_ALWAYS		1
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 122938dcec15..1d164e5fdff0 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *v=
-ma,
- static unsigned long move_vma(struct vm_area_struct *vma,
- 		unsigned long old_addr, unsigned long old_len,
- 		unsigned long new_len, unsigned long new_addr,
--		bool *locked, struct vm_userfaultfd_ctx *uf,
--		struct list_head *uf_unmap)
-+		bool *locked, unsigned long flags,
-+		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
- {
- 	struct mm_struct *mm =3D vma->vm_mm;
- 	struct vm_area_struct *new_vma;
-@@ -408,6 +408,13 @@ static unsigned long move_vma(struct vm_area_struct *v=
-ma,
- 	if (unlikely(vma->vm_flags & VM_PFNMAP))
- 		untrack_pfn_moved(vma);
-=20
-+	if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
-+		if (vm_flags & VM_ACCOUNT)
-+			vma->vm_flags |=3D VM_ACCOUNT;
-+
-+		goto out;
-+	}
-+
- 	if (do_munmap(mm, old_addr, old_len, uf_unmap) < 0) {
- 		/* OOM: unable to split vma, just get accounts right */
- 		vm_unacct_memory(excess >> PAGE_SHIFT);
-@@ -422,6 +429,7 @@ static unsigned long move_vma(struct vm_area_struct *vm=
-a,
- 			vma->vm_next->vm_flags |=3D VM_ACCOUNT;
- 	}
-=20
-+out:
- 	if (vm_flags & VM_LOCKED) {
- 		mm->locked_vm +=3D new_len >> PAGE_SHIFT;
- 		*locked =3D true;
-@@ -497,7 +505,7 @@ static struct vm_area_struct *vma_to_resize(unsigned lo=
-ng addr,
-=20
- static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
- 		unsigned long new_addr, unsigned long new_len, bool *locked,
--		struct vm_userfaultfd_ctx *uf,
-+		unsigned long flags, struct vm_userfaultfd_ctx *uf,
- 		struct list_head *uf_unmap_early,
- 		struct list_head *uf_unmap)
- {
-@@ -551,6 +559,17 @@ static unsigned long mremap_to(unsigned long addr, uns=
-igned long old_len,
- 		goto out;
- 	}
-=20
-+	/*
-+	 * MREMAP_DONTUNMAP expands by old_len + (new_len - old_len), we will
-+	 * check that we can expand by old_len and vma_to_resize will handle
-+	 * the vma growing.
-+	 */
-+	if (unlikely(flags & MREMAP_DONTUNMAP && !may_expand_vm(mm,
-+				vma->vm_flags, old_len >> PAGE_SHIFT))) {
-+		ret =3D -ENOMEM;
-+		goto out;
-+        }
-+
- 	map_flags =3D MAP_FIXED;
- 	if (vma->vm_flags & VM_MAYSHARE)
- 		map_flags |=3D MAP_SHARED;
-@@ -561,7 +580,7 @@ static unsigned long mremap_to(unsigned long addr, unsi=
-gned long old_len,
- 	if (IS_ERR_VALUE(ret))
- 		goto out1;
-=20
--	ret =3D move_vma(vma, addr, old_len, new_len, new_addr, locked, uf,
-+	ret =3D move_vma(vma, addr, old_len, new_len, new_addr, locked, flags, uf=
-,
- 		       uf_unmap);
- 	if (!(offset_in_page(ret)))
- 		goto out;
-@@ -609,12 +628,16 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned=
- long, old_len,
- 	addr =3D untagged_addr(addr);
- 	new_addr =3D untagged_addr(new_addr);
-=20
--	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
-+	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE | MREMAP_DONTUNMAP)) {
- 		return ret;
-+	}
-=20
- 	if (flags & MREMAP_FIXED && !(flags & MREMAP_MAYMOVE))
- 		return ret;
-=20
-+	if (flags & MREMAP_DONTUNMAP && !(flags & MREMAP_FIXED))
-+		return ret;
-+
- 	if (offset_in_page(addr))
- 		return ret;
-=20
-@@ -634,7 +657,8 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned l=
-ong, old_len,
-=20
- 	if (flags & MREMAP_FIXED) {
- 		ret =3D mremap_to(addr, old_len, new_addr, new_len,
--				&locked, &uf, &uf_unmap_early, &uf_unmap);
-+				&locked, flags, &uf, &uf_unmap_early,
-+				&uf_unmap);
- 		goto out;
- 	}
-=20
-@@ -712,7 +736,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned l=
-ong, old_len,
- 		}
-=20
- 		ret =3D move_vma(vma, addr, old_len, new_len, new_addr,
--			       &locked, &uf, &uf_unmap);
-+			       &locked, flags, &uf, &uf_unmap);
- 	}
- out:
- 	if (offset_in_page(ret)) {
---=20
-2.25.0.341.g760bfbb309-goog
 
+> On Jan 26, 2020, at 5:42 PM, Paul E. McKenney <paulmck@kernel.org> =
+wrote:
+>=20
+> On Sun, Jan 26, 2020 at 07:35:35AM -0800, Paul E. McKenney wrote:
+>> On Sat, Jan 25, 2020 at 02:41:39PM -0500, Waiman Long wrote:
+>>> On 1/24/20 11:58 PM, Paul E. McKenney wrote:
+>>>> On Fri, Jan 24, 2020 at 09:17:05PM -0500, Waiman Long wrote:
+>>>>> On 1/24/20 8:59 PM, Waiman Long wrote:
+>>>>>>> You called it!  I will play with QEMU's -numa argument to see if =
+I can get
+>>>>>>> CNA to run for me.  Please accept my apologies for the false =
+alarm.
+>>>>>>>=20
+>>>>>>> 							Thanx, =
+Paul
+>>>>>>>=20
+>>>>>> CNA is not currently supported in a VM guest simply because the =
+numa
+>>>>>> information is not reliable. You will have to run it on baremetal =
+to
+>>>>>> test it. Sorry for that.
+>>>>> Correction. There is a command line option to force CNA lock to be =
+used
+>>>>> in a VM. Use the "numa_spinlock=3Don" boot command line parameter.
+>>>> As I understand it, I need to use a series of -numa arguments to =
+qemu
+>>>> combined with the numa_spinlock=3Don (or =3D1) on the kernel =
+command line.
+>>>> If the kernel thinks that there is only one NUMA node, it appears =
+to
+>>>> avoid doing CNA.
+>>>>=20
+>>>> Correct?
+>>>>=20
+>>>> 							Thanx, Paul
+>>>>=20
+>>> In auto-detection mode (the default), CNA will only be turned on =
+when
+>>> paravirt qspinlock is not enabled first and there are at least 2 =
+numa
+>>> nodes. The "numa_spinlock=3Don" option will force it on even when =
+both of
+>>> the above conditions are false.
+>>=20
+>> Hmmm...
+>>=20
+>> Here is my kernel command line taken from the console log:
+>>=20
+>> console=3DttyS0 locktorture.onoff_interval=3D0 numa_spinlock=3Don =
+locktorture.stat_interval=3D15 locktorture.shutdown_secs=3D1800 =
+locktorture.verbose=3D1
+>>=20
+>> Yet the string "Enabling CNA spinlock" does not appear.
+>>=20
+>> Ah, idiot here needs to enable CONFIG_NUMA_AWARE_SPINLOCKS in his =
+build.
+>> Trying again with "--kconfig "CONFIG_NUMA_AWARE_SPINLOCKS=3Dy"...
+>=20
+> And after fixing that, plus adding the other three Kconfig options =
+required
+> to enable this, I really do see "Enabling CNA spinlock" in the console =
+log.
+> Yay!
+Great! Your persistence paid off :)
+
+Yet, CNA does not do much interesting here, as it sees only one numa =
+node.
+
+>=20
+> At the end of the 30-minute locktorture exclusive-lock run, I see =
+this:
+>=20
+> Writes:  Total: 572176565  Max/Min: 54167704/10878216 ???  Fail: 0
+>=20
+> This is about a five-to-one ratio.  Is this expected behavior, given a
+> single NUMA node on a single-socket system with 12 hardware threads?
+I=E2=80=99m not sure what is expected here.
+I=E2=80=99m guessing that if you boot your guest with the default=20
+(non-CNA/non-paravirt) qspinlock, you will get a similar result.
+
+>=20
+> I will try reader-writer lock next.
+>=20
+> Again, should I be using qemu's -numa command-line option to create =
+nodes?
+> If so, what would be a sane configuration given 12 CPUs and 512MB of
+> memory for the VM?  If not, what is a good way to exercise CNA's NUMA
+> capabilities within a guest OS?
+That=E2=80=99s a good question. Perhaps Longman knows the answer?
+
+Regards,
+=E2=80=94 Alex=
