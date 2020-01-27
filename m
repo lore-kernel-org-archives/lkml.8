@@ -2,217 +2,101 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA08C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FF7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B29124672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7658F22527
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgA0Rcf (ORCPT
+        id S1726099AbgA0Rdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:32:35 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2311 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727296AbgA0Rcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:32:35 -0500
-Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id D55F8CCDE192AD8B62A3;
-        Mon, 27 Jan 2020 17:32:33 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml706-cah.china.huawei.com (10.201.108.47) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 27 Jan 2020 17:32:33 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 27 Jan
- 2020 17:32:33 +0000
-Date:   Mon, 27 Jan 2020 17:32:32 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <james.quinlan@broadcom.com>, <lukasz.luba@arm.com>,
-        <sudeep.holla@arm.com>
-Subject: Re: [RFC PATCH 03/11] firmware: arm_scmi: Add support for
- notifications message processing
-Message-ID: <20200127173232.000045ac@Huawei.com>
-In-Reply-To: <20200120122333.46217-4-cristian.marussi@arm.com>
-References: <20200120122333.46217-1-cristian.marussi@arm.com>
-        <20200120122333.46217-4-cristian.marussi@arm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 27 Jan 2020 12:33:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34674 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbgA0Rdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 12:33:40 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 50032AC53;
+        Mon, 27 Jan 2020 17:33:38 +0000 (UTC)
+Date:   Mon, 27 Jan 2020 18:33:36 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christopher Lameter <cl@linux.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
+Message-ID: <20200127173336.GB17425@blackbody.suse.cz>
+References: <alpine.DEB.2.21.1912041524290.18825@www.lameter.com>
+ <20191204153225.GM25242@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1912041652410.29709@www.lameter.com>
+ <20191204173224.GN25242@dhcp22.suse.cz>
+ <20200106115733.GH12699@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2001061550270.23163@www.lameter.com>
+ <20200109145236.GS4951@dhcp22.suse.cz>
+ <20200109114415.cf01bd3ad30c5c4aec981653@linux-foundation.org>
+ <20200117171331.GA17179@blackbody.suse.cz>
+ <20200118161528.94dc18c074aeaa384200486b@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XF85m9dhOBO43t/C"
+Content-Disposition: inline
+In-Reply-To: <20200118161528.94dc18c074aeaa384200486b@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 12:23:25 +0000
-Cristian Marussi <cristian.marussi@arm.com> wrote:
 
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> Add the mechanisms to distinguish notifications from delayed responses and
-> to properly fetch notification messages upon reception: notifications
-> processing does not continue further after the fetch phase.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+--XF85m9dhOBO43t/C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Couple of bits that seem more interesting than expected inline...
+On Sat, Jan 18, 2020 at 04:15:28PM -0800, Andrew Morton <akpm@linux-foundation.org> wrote:
+> > situations, the udev events seem to cause useless tickling of udevd.
+> > [...]
+> > and I drew the following ballpark conclusion:
+> > 1.7% CPU time at 1 event/s -> 60 event/s 100% cpu
+> Thanks.  What effect does this patch have upon these numbers?
+When I rerun the script with patched kernel, udev sit mostly idle (there
+were no other udev event sources). So the number can be said to drop to
+0% CPU time / event/s.
 
-> ---
->  drivers/firmware/arm_scmi/driver.c | 92 +++++++++++++++++++++---------
->  1 file changed, 65 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index 9611e8037d77..28ed1f0cb417 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -212,6 +212,15 @@ static void scmi_fetch_response(struct scmi_xfer *xfer,
->  	memcpy_fromio(xfer->rx.buf, mem->msg_payload + 4, xfer->rx.len);
->  }
->  
-> +static void scmi_fetch_notification(struct scmi_xfer *xfer, size_t max_len,
-> +				    struct scmi_shared_mem __iomem *mem)
-> +{
-> +	/* Skip only length of header in payload area i.e 4 bytes */
-> +	xfer->rx.len = min_t(size_t, max_len, ioread32(&mem->length) - 4);
-> +
-> +	memcpy_fromio(xfer->rx.buf, mem->msg_payload, xfer->rx.len);
-> +}
-> +
->  /**
->   * pack_scmi_header() - packs and returns 32-bit header
->   *
-> @@ -339,6 +348,58 @@ __scmi_xfer_put(struct scmi_xfers_info *minfo, struct scmi_xfer *xfer)
->  	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
->  }
->  
-> +static void scmi_handle_notification(struct scmi_chan_info *cinfo, u32 msg_hdr)
-> +{
-> +	struct scmi_xfer *xfer;
-> +	struct device *dev = cinfo->dev;
-> +	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
-> +	struct scmi_xfers_info *minfo = &info->rx_minfo;
-> +	struct scmi_shared_mem __iomem *mem = cinfo->payload;
-> +
-> +	xfer = scmi_xfer_get(cinfo->handle, minfo);
-> +	if (IS_ERR(xfer)) {
-> +		dev_err(dev, "failed to get free message slot (%ld)\n",
-> +			PTR_ERR(xfer));
-> +		iowrite32(SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE,
-> +			  &mem->channel_status);
-> +		return;
-> +	}
-> +
-> +	unpack_scmi_header(msg_hdr, &xfer->hdr);
-> +	scmi_dump_header_dbg(dev, &xfer->hdr);
-> +	scmi_fetch_notification(xfer, info->desc->max_msg_size, mem);
-> +	__scmi_xfer_put(minfo, xfer);
-> +
-> +	iowrite32(SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE, &mem->channel_status);
-> +}
-> +
-> +static void scmi_handle_xfer_delayed_resp(struct scmi_chan_info *cinfo,
-> +					  u16 xfer_id, bool delayed_resp)
-
-Hmm. A function called *_delayed_resp that takes a boolean to say if
-it is a delayed_resp is in the category of non obvious....  Needs a rename
-at the very least.
-
-> +{
-> +	struct scmi_xfer *xfer;
-> +	struct device *dev = cinfo->dev;
-> +	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
-> +	struct scmi_xfers_info *minfo = &info->tx_minfo;
-> +	struct scmi_shared_mem __iomem *mem = cinfo->payload;
-> +
-> +	/* Are we even expecting this? */
-> +	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
-> +		dev_err(dev, "message for %d is not expected!\n", xfer_id);
-> +		return;
-> +	}
-> +
-> +	xfer = &minfo->xfer_block[xfer_id];
-> +
-> +	scmi_dump_header_dbg(dev, &xfer->hdr);
-> +
-> +	scmi_fetch_response(xfer, mem);
-> +
-> +	if (delayed_resp)
-> +		complete(xfer->async_done);
-> +	else
-> +		complete(&xfer->done);
-> +}
-> +
->  /**
->   * scmi_rx_callback() - mailbox client callback for receive messages
->   *
-> @@ -355,41 +416,18 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
->  {
->  	u8 msg_type;
->  	u32 msg_hdr;
-> -	u16 xfer_id;
-> -	struct scmi_xfer *xfer;
->  	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
-> -	struct device *dev = cinfo->dev;
-> -	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
-> -	struct scmi_xfers_info *minfo = &info->tx_minfo;
->  	struct scmi_shared_mem __iomem *mem = cinfo->payload;
->  
->  	msg_hdr = ioread32(&mem->msg_header);
->  	msg_type = MSG_XTRACT_TYPE(msg_hdr);
-> -	xfer_id = MSG_XTRACT_TOKEN(msg_hdr);
->  
->  	if (msg_type == MSG_TYPE_NOTIFICATION)
-> -		return; /* Notifications not yet supported */
-> -
-> -	/* Are we even expecting this? */
-> -	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
-> -		dev_err(dev, "message for %d is not expected!\n", xfer_id);
-> -		return;
-> -	}
-> -
-> -	xfer = &minfo->xfer_block[xfer_id];
-> -
-> -	scmi_dump_header_dbg(dev, &xfer->hdr);
-> -
-> -	scmi_fetch_response(xfer, mem);
-> -
-> -	trace_scmi_rx_done(xfer->transfer_id, xfer->hdr.id,
-> -			   xfer->hdr.protocol_id, xfer->hdr.seq,
-> -			   msg_type);
-> -
-> -	if (msg_type == MSG_TYPE_DELAYED_RESP)
-> -		complete(xfer->async_done);
-> +		scmi_handle_notification(cinfo, msg_hdr);
->  	else
-> -		complete(&xfer->done);
-> +		scmi_handle_xfer_delayed_resp(cinfo, MSG_XTRACT_TOKEN(msg_hdr),
-> +					      msg_type);
-First I wondered why this wasn't a switch which would make a clear distinction
-between notification path and delayed response... 
-
-However, it seems delayed_resp path also handles other values of msg_type,
-though only 0 which is a command I think...
-
-Passing a enum that I think can take 4 values, only 3 of which are defined
-into a function as a boolean is 'interesting'. Don't do that.
+> Typically the author, but not always.  If someone else is particularly
+> motivated to get a patch merged up they can take it over.
+Christopher, do you consider resending your patch? (I second that it
+exposes the internal details (wrt cgroup caches) and I can observe the
+just reading the events by udevd wastes CPU time.)
 
 
-> +
->  }
->  
->  /**
+Thanks,
+Michal
 
+--XF85m9dhOBO43t/C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl4vHuoACgkQia1+riC5
+qSglHw/+OsFYcoJy3FzkbfwtOd2tJfVaDTpasyXswReAFnBRnJmkYbcuaZbFBn6e
+C98PumV6RYN+Etv7n1RTqxcgj6QCki4kMqNYD758IJqIExsXue9ftCTfwF9iG3CQ
+DUgppdSbCXdE04oprliEQs7EhY+d6X/Ln5ENZaNTVgXXOjVcAvH5vaiRFfMFyhno
++0CsE77seYzs2LjgaS4zcb5FhjhOd3QJ7E0ZdKadnsRpLQ7NqqEsItAOiWBPoqXU
+118kbFzjjf84nA7IyH+G34K0XSslmBUzOb3wkjSpTOd6ZuQ3FhPw3Q705PRHrYKM
+rY8qet8C9/hfHs9Qq/Io/RwZv+2M3J7+DN4o/F4lyZgRb1FNaixZMe4lbGGr6TT3
+c9ck2izlt42kT9MqMnHov7qvhI9nkERaCbJ+Xv7BPRRtF/aMH2KYiSucXHRjQh8L
+45YOPArLRLzbPYcq/KmDYbCT36yFWrfphOk8iTu2XjjcdXvpcZauAAGJVOyUxDK7
+0KL4C9AkkQEhrVs8AI5u6u08jeajbu71R7zopg+2CI34qGco4d63v7hLKxO8CopS
+N0VUmr+zv6VfPbeGPMPJfsTuZmE6g+14CbKl1DWSdNshlohuyyws5DjruNYEGKvF
+59XBuK0JzZ0txSzj5srtLUBtzUwOGdaNS5dJqRXIryV1UpeYPaM=
+=CZSY
+-----END PGP SIGNATURE-----
+
+--XF85m9dhOBO43t/C--
