@@ -2,149 +2,93 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFC5C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057D3C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678ED2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6C42071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5fy0ysL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Mhroejlr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbgA0GkM (ORCPT
+        id S1727673AbgA0Gnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 01:40:12 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39094 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgA0GkL (ORCPT
+        Mon, 27 Jan 2020 01:43:43 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:54194 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgA0Gnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 01:40:11 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so5744217wme.4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 22:40:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=1tyNXZnWhuKKfdLpziwLlgtEEQ38chs7QgWhMTIIMxo=;
-        b=K5fy0ysLQv78fv8yhna7SHiSvLP/KCLZdQi3RAL1GtXEScncngW1GXqv05lQVq21s8
-         MdQFZquFhRil+oL2do78LD53QLEs5IKgAAn57A7yCHrQ02DSpWyMZJE0S7bvjhbrYG1n
-         npu9sq2R5vRKl3KEdeeEyEqZtmDtSiVwpF+hyUC456Daap4psnoWOnE+NWX30fj5RkiZ
-         o1/FOB3JRW/cNEXb7Bbwr5vIQBNu7xfxEeexr8aag9CqHZHj4HxCRUEBYxxRU2GbVdfH
-         NMhOFlYEv9yLge8X8FBYKY3FNw9vkIdgdlfhFER4AVF+hytQdBV2KPVCguzHjZGZxlzM
-         X9nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=1tyNXZnWhuKKfdLpziwLlgtEEQ38chs7QgWhMTIIMxo=;
-        b=fV+QgtkRCJvq25cfXOMmnoQGJD19rsK3lY5BbFOq/0sqnut6YY703yPlnog3QrCYPw
-         kz2Un2UixuZ6Zi4v15LzkJ7/G8Sl9TrSsw8gVigvyiBWUdNlTAI0tBoZKmKFZsHv/QLh
-         ACIjNiy4q8XZ8GZ6Vvb6RnLWwG3G3lizmHohME2Frs30K1G7BM/guDvKGbtudj/0X/gz
-         /asL05PwfMSc0IKmudsTZQwuiNLnWlM2FzT5qwkjgNEm4dyjVF5Ehm3TR5m9JWc5ZOeK
-         VhaRkxG6eMXhk5xvwwD6hnI9otbDS69sktIdfAddc+m1hQpKhDThzAQAov+LGwZ5xsUK
-         34uQ==
-X-Gm-Message-State: APjAAAX+WSAEcvvFwFR65jp8uE4tK529H3KZNbykmP2fc6+AKYnn4iAR
-        dVB4KSSny+cNzWOiiVNEBzu++oaZY7w=
-X-Google-Smtp-Source: APXvYqzJpwtGrFQ+kQjl+fqMQ5YG71h3qxR0k9EB840BXnp2/x1n9RT7T4GBMRB16rxYitsKAaLdnw==
-X-Received: by 2002:a1c:20d6:: with SMTP id g205mr12442357wmg.38.1580107210206;
-        Sun, 26 Jan 2020 22:40:10 -0800 (PST)
-Received: from ogabbay-VM ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id o129sm18066885wmb.1.2020.01.26.22.40.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 Jan 2020 22:40:09 -0800 (PST)
-Date:   Mon, 27 Jan 2020 08:40:07 +0200
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [git pull] habanalabs pull request for kernel 5.6
-Message-ID: <20200127064007.GA12713@ogabbay-VM>
+        Mon, 27 Jan 2020 01:43:42 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R6hEek178135;
+        Mon, 27 Jan 2020 06:43:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=vMrJ91GMO1CD+aMStdBznA5LKGeM9s5PCFnZKiLM6Zg=;
+ b=MhroejlrkNIdtbIljVPw48Nka8wHrP2QJ09hldcb801d86I4e7O1TnDb/zx8cWcwF+4Y
+ 7aice71dKEwOa9SXGFjP5suwwh4smAfH51Bn0QTcja3BVk0t1g5PndBSCvaNNCWEWeN5
+ rxAcOHxGvGXZX39QdT8pWx3QtjguzGIEtySLaKIlB6hHOMepigQPorYeuaKfoNVzo1Ch
+ 4DFA0USJKORo8jJSQkbSiiNPYI8z/sMcpT37ihqFdsMzHi5VYDCyGx083EynRCA0m2rw
+ eH3D7qYJ+iQ3lesNFj1pNzsdd1qo4LzDheFTEe9iHPpLlG2d2VoUmYS4h8ew/K0jkVjn hg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xrd3twe5a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 06:43:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R6hVuu039799;
+        Mon, 27 Jan 2020 06:43:36 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2xryu8qh09-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 06:43:36 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00R6gsKO003420;
+        Mon, 27 Jan 2020 06:42:54 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 26 Jan 2020 22:42:54 -0800
+Date:   Mon, 27 Jan 2020 09:42:46 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp
+Subject: Re: [PATCH v3] staging: exfat: remove fs_func struct.
+Message-ID: <20200127064246.GO1847@kadam>
+References: <20200123102445.123033-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200123102445.123033-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=980
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001270057
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001270057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Greg,
+Looks good to me.
 
-This is the pull request for habanalabs driver for kernel 5.6.
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-It's a small one this time and mainly contains improvements to MMU and
-reset code. Hopefully I will have time to work on upstreaming the Gaudi
-support code for the next kernel, but it may be postponed to 5.8.
+regards,
+dan carpenter
 
-Please see the tag message for more details on what this pull request
-contains.
-
-In addition, I got my pgp key signed by Olof.J. I would appreciate it if
-you could verify it.
-
-Thanks,
-Oded
-
-The following changes since commit 0db4a15d4c2787b1112001790d4f95bd2c5fed6f:
-
-  mei: me: add jasper point DID (2020-01-24 09:33:58 +0100)
-
-are available in the Git repository at:
-
-  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2020-01-27
-
-for you to fetch changes up to 31579364e1478eda9556adc90168c11dc6bac150:
-
-  habanalabs: patched cb equals user cb in device memset (2020-01-27 08:23:39 +0200)
-
-----------------------------------------------------------------
-This tag contains the following changes for kernel 5.6:
-
-- MMU code improvements that includes:
-  - Flush MMU TLB cache only once, at the end of mapping/unmapping
-    function, instead of flushing after mapping of every page.
-  - Add future ASIC support by splitting properties of ASIC capabilities
-    regarding mapping of host memory to regular and huge pages.
-
-- Fix bug where the driver didn't halt the internal ASIC's engines before
-  doing hard-reset to the ASIC
-
-- Minimize writes to H/W during hard-reset by skipping coresight disable
-  code (no point as device is going to be hard-reset).
-
-- Fix bug where we did an extra refcnt put in the memset device memory
-  function.
-
-- Small bug fixes and minor improvements to code.
-
-----------------------------------------------------------------
-Oded Gabbay (3):
-      habanalabs: halt the engines before hard-reset
-      habanalabs: removing extra ;
-      habanalabs: patched cb equals user cb in device memset
-
-Omer Shpigelman (3):
-      habanalabs: use the user CB size as a default job size
-      habanalabs: split the host MMU properties
-      habanalabs: do not halt CoreSight during hard reset
-
-Pawel Piskorski (1):
-      habanalabs: flush only at the end of the map/unmap
-
-Tomer Tayar (2):
-      habanalabs: Modify CS jobs counter to u16
-      habanalabs: Avoid running restore chunks if no execute chunks
-
- drivers/misc/habanalabs/command_submission.c  |  47 +++---
- drivers/misc/habanalabs/debugfs.c             |  21 ++-
- drivers/misc/habanalabs/device.c              |   7 +-
- drivers/misc/habanalabs/goya/goya.c           |  89 ++++++++---
- drivers/misc/habanalabs/goya/goya_coresight.c |   4 +-
- drivers/misc/habanalabs/habanalabs.h          |  39 ++---
- drivers/misc/habanalabs/memory.c              | 222 +++++++++++++++++---------
- drivers/misc/habanalabs/mmu.c                 | 110 ++++++++-----
- 8 files changed, 346 insertions(+), 193 deletions(-)
