@@ -2,114 +2,230 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834A6C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013B6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57BF024684
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DCA24679
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="CwZ1wF/k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GA1c4pct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgA0Uej (ORCPT
+        id S1726303AbgA0UgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 15:34:39 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43094 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgA0Uej (ORCPT
+        Mon, 27 Jan 2020 15:36:09 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43534 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgA0UgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 15:34:39 -0500
-Received: by mail-wr1-f67.google.com with SMTP id d16so13205546wre.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 12:34:37 -0800 (PST)
+        Mon, 27 Jan 2020 15:36:09 -0500
+Received: by mail-qk1-f196.google.com with SMTP id j20so11020491qka.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 12:36:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DPa0PjKTZtNUp0zt2H3olFTtXXWAHB5OFSk99SyqalU=;
-        b=CwZ1wF/kNjTbPxARQgUyyuvCrxwVKw1FRPcPOGsITxxMGHRcMx/pfUGKW/B78AIdkM
-         x6pDc+McoBi1xYs4Gqx8CZ5QHTj9vfNI4L3Lf/ezuR2iXaJcZqHhYTIJ0pH7Eg1XFPue
-         N/m3P2t2f1cxC5aeou66WWRNnXbtjcIFMBw6hDUZ1124P+QzrFZt6oEEsbD/qT/vlrGQ
-         JdyURIXx0U38BX7xUprWwAxDKYDlAYDodwl61HN1fl8F6sj7gmx0KQdVuD2qHqBpkK1N
-         eRKqPhyDhw7E1NOlj5i2zdKhia5DfmZhU8+l8/4q0jUjY3fC4w1yXWNs1kMymxFLb0oY
-         mLnw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jeIUpeh4Yswut4pRuWFrQhyeR8XRgwbORCyDxrSirrg=;
+        b=GA1c4pctZziuKzjHaqUbZw8CZ7cznKcz/Djo1odwjZqRlUv50//rv8QeQKG8mm85vV
+         xLDbdnsvXQxjrFOiz8GonJ6dTlUE/ONpuLmoD4K4CE5a18hHoAfAj2S/HkbCHhdRGjqU
+         FDtLmECGn9MFWyLbsl1Xebva5+jFkZZRl+6zG7z3JECsHa0OenDd1tyW6fEH/+OUh0DI
+         nqborKFlY4OJFFEgaQNOQbIVs1/yerR7ldDPBx9l2GQuzG9FRa2GDGJTjPcQD0AEnfig
+         wOBWMpaCe0iRVlFMn61KkmVottLUe/ctdEbcl0RFjwoIe6fLsK2KZWvBVbAjKmsOtaUo
+         XfnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DPa0PjKTZtNUp0zt2H3olFTtXXWAHB5OFSk99SyqalU=;
-        b=RfPar/zUrMibB88zyZkhSbShOV7Zw8xzVTcly/8beq5Uvkbo3UQy5pmDgXYcM6848F
-         7TUQxLvg8DacD6/OmM9f6w3RmFH8MK/DpfdCZGVV27Ou6Hv5l83OqnAnpwto7ZaUYIB/
-         av3v0D1y/l6oJ84MpuGYA+CjhSlOrJbIQgbrLFU+4PQpLWMQdm+fmiEkPtKVjvk89d1v
-         DzkPQ8vl9Arku7G3lnHJnvQJvebTTvmM9oxvpHclR6kntqLCetTNHHNTaVstBLBr2D2u
-         /fYJ9bm2N1qqPp/wy8iQedN0dHA3l9LXZbcjMyXZvkvUKF8RrHA88rtqQAp/TeZdkB95
-         tvRA==
-X-Gm-Message-State: APjAAAX5zjK8g/ZdQ0TlJ/biPYAS3wPUlQ6WG+6HbYVc8+Fmc3/WfoXA
-        UAXhhKySBqMi57clh1NZbzxlww==
-X-Google-Smtp-Source: APXvYqzrQJt7qCQBkTdZWFibEn09J1oSTcAz90o21elCX0FYPMZm0ixzwULecEwJi/gjllScGCx2HA==
-X-Received: by 2002:a5d:49c3:: with SMTP id t3mr23503394wrs.113.1580157276790;
-        Mon, 27 Jan 2020 12:34:36 -0800 (PST)
-Received: from tsr-lap-08.nix.tessares.net (19.234-201-80.adsl-dyn.isp.belgacom.be. [80.201.234.19])
-        by smtp.gmail.com with ESMTPSA id o4sm22107974wrw.97.2020.01.27.12.34.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 12:34:35 -0800 (PST)
-Subject: Re: [PATCH] selftests: settings: tests can be in subsubdirs
-To:     shuah <shuah@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mptcp <mptcp@lists.01.org>
-References: <20191022171223.27934-1-matthieu.baerts@tessares.net>
- <c9ce5016-9e83-67c0-ae22-2d3c46427b25@tessares.net>
- <201911211018.D6CD68AC5@keescook>
- <602ab319-dcb9-4ac7-b2b8-f7b6072ddc03@tessares.net>
- <bcce12e4-f122-10ae-dbc7-cc199d9716b6@kernel.org>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <9bb525e5-12a1-9e27-81cd-cf7bc3d5dc2d@tessares.net>
-Date:   Mon, 27 Jan 2020 21:34:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jeIUpeh4Yswut4pRuWFrQhyeR8XRgwbORCyDxrSirrg=;
+        b=NAY32eR7dEFeYiWChvjUxzd8Cg0RK987Tvl+JvYyrcQIhpDUDs/5XV14x8xRAL3jr3
+         0t4iK+OEl0B7sluk0eQZjVu5JWbUZpE+tuMxeB0sPbjckC5M8zbOu48PoVG+5fRwBst/
+         bgpqFqFWYwoidzcJYQE9XWbsaeRHeNty7Egk9T/Nb2IIvygw3PjK/okzMGsrSYBDJ62Y
+         q5Ptr2LSUMfOYO4CZwlLW1jHO6IbiDxunvYmyGgknP8nnlADh9qSpXssWL+aBVjCmDRE
+         Kp+s9bDJm8+7oX84cCvrqHtwNmEWFMp6Oys609iKVi80cPrhznrRavGT8FO3wcj0sa6h
+         Iw/g==
+X-Gm-Message-State: APjAAAUL8crR7PhzqHjVnwuFkaAj6A3XSHy6nuIaYPUJ7mhX6lqlk8Vs
+        6kP29ESXr2Qr36vjDl6t+YaoLFYSxD/boV4m/51SObur
+X-Google-Smtp-Source: APXvYqw7ABIomcTod01LEWiv36/B+eHKp6E58DE3Jyq2CkSUUGJl+Hodd9V6tK4HbI4brmheCQJUKcjUmPLs8Sgo0tM=
+X-Received: by 2002:ae9:ef06:: with SMTP id d6mr18010698qkg.402.1580157368184;
+ Mon, 27 Jan 2020 12:36:08 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <bcce12e4-f122-10ae-dbc7-cc199d9716b6@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200125012105.59903-1-pmalani@chromium.org> <20200125012105.59903-2-pmalani@chromium.org>
+ <feb0ef4d-0f03-9bbc-807e-c385c03ffa71@collabora.com> <CACeCKae4O+MKx3COh=u=28tk21rb4BrzFZgYpnc=tRkigqSP5Q@mail.gmail.com>
+In-Reply-To: <CACeCKae4O+MKx3COh=u=28tk21rb4BrzFZgYpnc=tRkigqSP5Q@mail.gmail.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Mon, 27 Jan 2020 21:35:56 +0100
+Message-ID: <CAFqH_51agDMFV0xBU_63176TYq0Es0FkCBzBZFoyoCUjwHMSxg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] platform/chrome: Add EC command msg wrapper
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+Hi Prashant,
 
-On 27/01/2020 18:16, shuah wrote:
-> On 1/27/20 9:05 AM, Matthieu Baerts wrote:
+Missatge de Prashant Malani <pmalani@chromium.org> del dia dl., 27 de
+gen. 2020 a les 18:13:
+>
+> Hi Enric,
+>
+> On Mon, Jan 27, 2020 at 7:29 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+> >
+> > Hi Prashant,
+> >
+> > Many thanks for this patch.
+> >
+> > On 25/1/20 2:21, Prashant Malani wrote:
+> > > Many callers of cros_ec_cmd_xfer_status() use a similar set up of
+> > > allocating and filling a message buffer and then copying any received
+> > > data to a target buffer.
+> > >
+> >
+> > cros_ec_cmd_xfer_status is already a wrapper, I dislike the idea of having three
+> > ways to do the same (cros_ec_cmd_xfer, cros_ec_cmd_xfer_status and this new
+> > one). I like the idea of have a wrapper that embeds the message allocation but
+> > we should not confuse users with different calls that does the same.
+> Yes, my intention was to eventually replace all the xfer_status()
+> call-sites to use the new wrapper, and then get rid of xfer_status
+> completely.
+> >
+> > So, I am for a change like this but I'd like to have all the users calling the
+> > same wrapper (unless there is a good reason to not use it). A proposed roadmap
+> > (to be discussed) for this would be.
+> >
+> > 1. Replace all the remaining "cros_ec_cmd_xfer" calls with
+> > "cros_ec_cmd_xfer_status".
+> > 2. Modify cros_ec_cmd_xfer_status to embed the message allocation.
+>
+> How about the following alteration the the roadmap:
+> - Introducing the new wrapper.
+> - Replacing all remaining cros_ec_cmd_xfer/cros_ec_cmd_xfer_status to
+> use the new wrapper.
+> - Deleting cros_ec_cmd_xfer and cros_ec_cmd_xfer_status ?
+> My thinking is that this would mean fewer changes at the call-sites
+> compared to the original roadmap (in the original roadmap, one would
+> first have to modify calls to use cros_ec_cmd_xfer_status(), and then
+> modify them again when cros_ec_cmd_xfer_status() itself is modified to
+> include message allocation).
+>
 
-[...]
-
->> Kees, Thank you for this review!
->>
->> Shuah, I am sorry to send you this new request. It is just to inform 
->> you that the first selftests for MPTCP are now in "net-next" repo, 
->> ready for the future Linux 5.6.
->> We would then be very happy to see this patch here below for the 
->> kselftest framework accepted to avoid timeouts. Locally we apply this 
->> patch before running the selftests but we cannot ask everybody running 
->> MPTCP' selftests to do the same :)
->>
->>
-> 
-> I am sorry for the delay. My bad. Looks like I just missed it. I will
-> make sure it gets into 5.6-rc1
-
-That's alright, thank you for having applied this patch in your "next" 
-branch!
+Sounds like we have a plan, looks good to me.
 
 Cheers,
-Matt
--- 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts@tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+ Enric
+
+> That said I don't have any strong preference, so either would work.
+>
+> Best regards,
+> >
+> > Thanks,
+> >  Enric
+> >
+> >
+> > > Create a utility function that performs this setup so that callers can
+> > > use this function instead.
+> > >
+> > > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> > > ---
+> > >  drivers/platform/chrome/cros_ec_proto.c     | 53 +++++++++++++++++++++
+> > >  include/linux/platform_data/cros_ec_proto.h |  5 ++
+> > >  2 files changed, 58 insertions(+)
+> > >
+> > > diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> > > index da1b1c4504333..8ef3b7d27d260 100644
+> > > --- a/drivers/platform/chrome/cros_ec_proto.c
+> > > +++ b/drivers/platform/chrome/cros_ec_proto.c
+> > > @@ -5,6 +5,7 @@
+> > >
+> > >  #include <linux/delay.h>
+> > >  #include <linux/device.h>
+> > > +#include <linux/mfd/cros_ec.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/platform_data/cros_ec_commands.h>
+> > >  #include <linux/platform_data/cros_ec_proto.h>
+> > > @@ -570,6 +571,58 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> > >  }
+> > >  EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
+> > >
+> > > +/**
+> > > + * cros_ec_send_cmd_msg() - Utility function to send commands to ChromeOS EC.
+> > > + * @ec: EC device struct.
+> > > + * @version: Command version number (often 0).
+> > > + * @command: Command ID including offset.
+> > > + * @outdata: Data to be sent to the EC.
+> > > + * @outsize: Size of the &outdata buffer.
+> > > + * @indata: Data to be received from the EC.
+> > > + * @insize: Size of the &indata buffer.
+> > > + *
+> > > + * This function is a wrapper around &cros_ec_cmd_xfer_status, and performs
+> > > + * some of the common work involved with sending a command to the EC. This
+> > > + * includes allocating and filling up a &struct cros_ec_command message buffer,
+> > > + * and copying the received data to another buffer.
+> > > + *
+> > > + * Return: The number of bytes transferred on success or negative error code.
+> > > + */
+> > > +int cros_ec_send_cmd_msg(struct cros_ec_device *ec, unsigned int version,
+> > > +                      unsigned int command, void *outdata,
+> > > +                      unsigned int outsize, void *indata,
+> > > +                      unsigned int insize)
+> > > +{
+> > > +     struct cros_ec_command *msg;
+> > > +     int ret;
+> > > +
+> > > +     msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
+> > > +     if (!msg)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     msg->version = version;
+> > > +     msg->command = command;
+> > > +     msg->outsize = outsize;
+> > > +     msg->insize = insize;
+> > > +
+> > > +     if (outdata && outsize > 0)
+> > > +             memcpy(msg->data, outdata, outsize);
+> > > +
+> > > +     ret = cros_ec_cmd_xfer_status(ec, msg);
+> > > +     if (ret < 0) {
+> > > +             dev_warn(ec->dev, "Command failed: %d\n", msg->result);
+> > > +             goto cleanup;
+> > > +     }
+> > > +
+> > > +     if (insize)
+> > > +             memcpy(indata, msg->data, insize);
+> > > +
+> > > +cleanup:
+> > > +     kfree(msg);
+> > > +     return ret;
+> > > +}
+> > > +EXPORT_SYMBOL(cros_ec_send_cmd_msg);
+> > > +
+> > >  static int get_next_event_xfer(struct cros_ec_device *ec_dev,
+> > >                              struct cros_ec_command *msg,
+> > >                              struct ec_response_get_next_event_v1 *event,
+> > > diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> > > index 30098a5515231..166ce26bdd79e 100644
+> > > --- a/include/linux/platform_data/cros_ec_proto.h
+> > > +++ b/include/linux/platform_data/cros_ec_proto.h
+> > > @@ -201,6 +201,11 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+> > >  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> > >                           struct cros_ec_command *msg);
+> > >
+> > > +int cros_ec_send_cmd_msg(struct cros_ec_device *ec_dev, unsigned int version,
+> > > +                      unsigned int command, void *outdata,
+> > > +                      unsigned int outsize, void *indata,
+> > > +                      unsigned int insize);
+> > > +
+> > >  int cros_ec_register(struct cros_ec_device *ec_dev);
+> > >
+> > >  int cros_ec_unregister(struct cros_ec_device *ec_dev);
+> > >
