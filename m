@@ -2,135 +2,141 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20791C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C74C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8FD82071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C522071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MAfCmObL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ByRNG2Pd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgA0OJV (ORCPT
+        id S1729076AbgA0OJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:09:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53718 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726029AbgA0OJU (ORCPT
+        Mon, 27 Jan 2020 09:09:58 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41734 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgA0OJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:09:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580134159;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J0tWyHYw98UjELXx0eG2rBwfSBPRrMQ58+BFQIrIctE=;
-        b=MAfCmObLREFeUWQ58a7yHZ2t1RnNL9DcZAWrDHMCe8NCJbWM3P2p9raSXgVSIp7rCyfEcs
-        Jtp7RKZ0dkaHXzrRLLz/BbbK4TXdgsxruKUXnmpCTI8EEuZtGgeDuqWiFzykL1XNe6x0VC
-        /kFdsRYAuf/R4UU7N5wy8MiUoFWVI8E=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-168-XxCQfPQ_Pbi78YV_NY45Ig-1; Mon, 27 Jan 2020 09:09:17 -0500
-X-MC-Unique: XxCQfPQ_Pbi78YV_NY45Ig-1
-Received: by mail-wr1-f71.google.com with SMTP id z15so6171858wrw.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 06:09:17 -0800 (PST)
+        Mon, 27 Jan 2020 09:09:57 -0500
+Received: by mail-io1-f67.google.com with SMTP id m25so10081537ioo.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 06:09:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Yv5KqLnXONaOGib3wLrqYVmgcYdGx8e/GR+T9YQ6OPw=;
+        b=ByRNG2PdKmvLoHFH+r6YBsiQVwQvGfPqOLCTKtZXeGnRDkXeqe4WbV6kXkbNl/gFVx
+         xhqzm8Ejka3wS6SFHv9GTZ/Sa+tNB487+zOZd122FH1vQyjnlJjzXjrLzwe2SO/GJTOr
+         n7QI75dEomWEe5MYamK39fh1b4VQHTQM8JQi0oESKZM1zcjeoUvwPrMQYkq+p3N3uccb
+         D7uSPLgW02q0GY9gJJMRwjQn4IRmGV+hMYZeeJUDrbzGTZ2WbNQpJ1uNh0cL9h1WDYED
+         PXrI69PC/iTPWzmAgeMZuFoR2wRXLtGn+ySWAidJOy62cU/vcO3XSCg6LpLktAz9cVHm
+         IYUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=J0tWyHYw98UjELXx0eG2rBwfSBPRrMQ58+BFQIrIctE=;
-        b=rdLr36tNOCRmIN6P8XVFa0rUAZQcXg/9HvRiQPyBC6TGbG2GcAOD6QjrMDu0jquz2S
-         GbJla+hP4h1T6Slv8s6opX6XcxhirF+AYys3psLd1zpzHy0b3RvQ27b8VUvD9oiLicJi
-         gU6y9ApwnLaclX7uGbmdJiMmrqhUV2kBGQMuH+dJM5Qq4lQVNqwH74shW3V0E96EGJPM
-         ug6tk0CRGoNLAPcTExttw/rItmtI+yz3TLdj04vD0gD2gulWwxvAtt0/G1593QEW2AXU
-         0frNoX3HttN8555m3fnYAi0ivB/TG0vKloPATIeh6QQbMdix2w/L9/aDl7bmBLbF7K3J
-         0Lpg==
-X-Gm-Message-State: APjAAAXFw+8+vfW0p3ezbrIko2iaCD+7lWlwQ3UA/uNs6MouGey5l92m
-        Sds0nBkTYOQXwZUCCAdBZWySW5Fjp4kRGHYO9zX0gqqbMhLrHH3LUUMUl9bdv4tS81cAmYaE15n
-        1gPUu7BJo7TWWLxf41l5ncUpb
-X-Received: by 2002:a1c:9d08:: with SMTP id g8mr13430013wme.141.1580134155794;
-        Mon, 27 Jan 2020 06:09:15 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxL1mkRTXScdallzJa6atatfMWFPsRST+u2+CId8f49QKDBROlfW8LGzAMTi5X6FzaKHo4AVQ==
-X-Received: by 2002:a1c:9d08:: with SMTP id g8mr13430001wme.141.1580134155613;
-        Mon, 27 Jan 2020 06:09:15 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id x11sm19143881wmg.46.2020.01.27.06.09.14
+        bh=Yv5KqLnXONaOGib3wLrqYVmgcYdGx8e/GR+T9YQ6OPw=;
+        b=FT/7d8yGbb1GjxoG8qum0N7oxqk2rT7fS3E8BvccX7CdiKDW6GGF/37pEggzqs7ZGP
+         XM0zkHGcB0lquJUTCxifMuJr8nN6eUTSMoqDv0MEV0dg+92QLUN/uHOkKZTVgNP1eLhQ
+         KQI/jkm8gxtvz42lfz206aLFwqhwMy7qR0oUJJy8+AWA3RsqhJrqPyICd2YdvE2xKO2a
+         3fk6oWRCLmACsogfHzeEtNNx++k7qcPU9VZOpNhum0WzHrJd5gLxIbn2EYnS5YT6rh/O
+         25m28/cVhMxiFkFE8oox7wL+z9YzGY8uGgY222TN0xmWGB/CmfXCAZUV+dn0x7qgA+sH
+         relg==
+X-Gm-Message-State: APjAAAW0PaLOtdPg6Q6SxTymypmlkIGoFngH4dY5l6N1QX3Z36bkmYvF
+        YjxHQXtykF1j0V7WJaPcCJWxyZLSJT2AjQ==
+X-Google-Smtp-Source: APXvYqwtVgEtLekwn8fG1L9sK07okuROrJ9qxmXeVCwPLq/j16zWaXdybm2To8GVQ2l04vYEu9xWwQ==
+X-Received: by 2002:a02:cc59:: with SMTP id i25mr8166924jaq.78.1580134197214;
+        Mon, 27 Jan 2020 06:09:57 -0800 (PST)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id g12sm3532484iom.5.2020.01.27.06.09.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 06:09:15 -0800 (PST)
-Subject: Re: [PATCH] staging: rtl8723bs: fix copy of overlapping memory
-To:     Colin King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200126220549.9849-1-colin.king@canonical.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <32254b45-be59-a83b-0036-6a6d9fe86379@redhat.com>
-Date:   Mon, 27 Jan 2020 15:09:14 +0100
+        Mon, 27 Jan 2020 06:09:56 -0800 (PST)
+Subject: Re: [greybus-dev] [PATCH] staging: greybus: bootrom: fix
+ uninitialized variables
+To:     SAURAV GIREPUNJE <saurav.girepunje@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Cc:     devel@driverdev.osuosl.org, elder@kernel.org, vireshk@kernel.org,
+        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org
+References: <20200125084403.GA3386@google.com>
+ <20200125100011.GK8375@localhost> <20200125121459.GA2792@google.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <275d6509-ebd2-f00e-176d-abf97ae834da@linaro.org>
+Date:   Mon, 27 Jan 2020 08:10:02 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200126220549.9849-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200125121459.GA2792@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI,
+On 1/25/20 6:14 AM, SAURAV GIREPUNJE wrote:
+> On 25/01/20 11:00 +0100, Johan Hovold wrote:
+>> On Sat, Jan 25, 2020 at 02:14:03PM +0530, Saurav Girepunje wrote:
+>>> fix uninitialized variables issue found using static code analysis tool
+>>
+>> Which tool is that?
+>>
+>>> (error) Uninitialized variable: offset
+>>> (error) Uninitialized variable: size
+>>>
+>>> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+>>> ---
+>>>   drivers/staging/greybus/bootrom.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/staging/greybus/bootrom.c b/drivers/staging/greybus/bootrom.c
+>>> index a8efb86..9eabeb3 100644
+>>> --- a/drivers/staging/greybus/bootrom.c
+>>> +++ b/drivers/staging/greybus/bootrom.c
+>>> @@ -245,7 +245,7 @@ static int gb_bootrom_get_firmware(struct gb_operation *op)
+>>>       struct gb_bootrom_get_firmware_request *firmware_request;
+>>>       struct gb_bootrom_get_firmware_response *firmware_response;
+>>>       struct device *dev = &op->connection->bundle->dev;
+>>> -    unsigned int offset, size;
+>>> +    unsigned int offset = 0, size = 0;
+>>>       enum next_request_type next_request;
+>>>       int ret = 0;
+>>
+>> I think this has come up in the past, and while the code in question is
+>> overly complicated and confuses static checkers as well as humans, it
+>> looks correct to me.
+>>
+>> Please make sure to verify the output of any tools before posting
+>> patches based on them.
+>>
+>> Johan
+> I used cppcheck tool .
 
-On 26-01-2020 23:05, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently the rtw_sprintf prints the contents of thread_name
-> onto thread_name and this can lead to a potential copy of a
-> string over itself. Avoid this by printing the literal string RTWHALXT
-> instread of the contents of thread_name.
-> 
-> Addresses-Coverity: ("copy of overlapping memory")
-> Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Implied in Johan's question is a suggestion.
 
-Patch looks good to me:
+When you propose a patch that addresses something flagged by a
+tool of some kind, it is good practice to identify the tool in
+the patch description, and even better, give an example of how
+the tool was invoked when reported the problem you're fixing.
+Sometimes people even include the output of the tool, though
+I think that can sometimes be a bit much.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+And as you have now heard several times, do not blindly trust
+the output of these tools.  They're intended to call attention
+to things for you to examine; they are no match for a human,
+and things they tell you about are not guaranteed to be real
+problems.
 
-Regards,
+					-Alex
 
-Hans
-
-
-> ---
->   drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
-> index b44e902ed338..890e0ecbeb2e 100644
-> --- a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
-> +++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
-> @@ -476,14 +476,13 @@ int rtl8723bs_xmit_thread(void *context)
->   	s32 ret;
->   	struct adapter *padapter;
->   	struct xmit_priv *pxmitpriv;
-> -	u8 thread_name[20] = "RTWHALXT";
-> -
-> +	u8 thread_name[20];
->   
->   	ret = _SUCCESS;
->   	padapter = context;
->   	pxmitpriv = &padapter->xmitpriv;
->   
-> -	rtw_sprintf(thread_name, 20, "%s-"ADPT_FMT, thread_name, ADPT_ARG(padapter));
-> +	rtw_sprintf(thread_name, 20, "RTWHALXT-" ADPT_FMT, ADPT_ARG(padapter));
->   	thread_enter(thread_name);
->   
->   	DBG_871X("start "FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
-> 
+> _______________________________________________ 
+> greybus-dev mailing list
+> greybus-dev@lists.linaro.org
+> https://lists.linaro.org/mailman/listinfo/greybus-dev
 
