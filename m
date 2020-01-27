@@ -2,99 +2,96 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDDAC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F74C35247
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7212071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51152071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:29:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FehyzrEO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgA0J2w (ORCPT
+        id S1729575AbgA0J3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 04:28:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:41436 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729378AbgA0J2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 04:28:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7515A31B;
-        Mon, 27 Jan 2020 01:28:51 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 837493F67D;
-        Mon, 27 Jan 2020 01:28:49 -0800 (PST)
-Subject: Re: [Patch v8 1/7] sched/pelt: Add support to track thermal pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        qperret@google.com, daniel.lezcano@linaro.org,
-        viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
-        amit.kachhap@gmail.com, javi.merino@kernel.org,
-        amit.kucheria@verdurent.com
-References: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
- <1579031859-18692-2-git-send-email-thara.gopinath@linaro.org>
- <20200116151724.GR2827@hirez.programming.kicks-ass.net>
- <e5ecad29-11d8-e7ff-27ff-b63ca44fdcd3@arm.com> <5E2B405A.7040405@linaro.org>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <6232d91d-2603-06ca-0e7c-66ec2a137759@arm.com>
-Date:   Mon, 27 Jan 2020 10:28:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Jan 2020 04:29:43 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:34940 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727872AbgA0J3n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 04:29:43 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R9DDEP054968;
+        Mon, 27 Jan 2020 09:29:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=dqtak0Ip1v1fu40eyS07aEJt+TSWkVxnjJJIK8PU5JU=;
+ b=FehyzrEO2zhzN5U4IqRc/54MG6VUkpCZQxx5DJKM2lyXsufyEqZHzUOS7Q7JH7IcXeZp
+ hP5NIOXHbi9UoNufThTJ5/vt3vRAd5OlBpFe3/86+dv0y4Y64hOCBZyGdPRfTRBfRuut
+ Ds7nY0xZFvYbA13ZT5rBbuANyxTZFKyNhJIwLtw4Db+zYF0IvQTmyT09C27V/eOSG6Ke
+ 3YjWgfxu4NRmImfF5D4UptRorAZO0dDaqOvqi9knfYpaZO5MfUDFCHb6cRKjm1r4Zgey
+ uUeJ9PSAFRQTNHz972N8q2UNshZ8jzvdB9BzpPcleSuOuzaNrFINkaDWYzHNMJBPk2Jf 5Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2xrdmq61kc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 09:29:06 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R9Dev7147737;
+        Mon, 27 Jan 2020 09:29:05 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2xry6rrt2a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 09:29:05 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00R9T3fq014947;
+        Mon, 27 Jan 2020 09:29:03 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jan 2020 01:29:02 -0800
+Date:   Mon, 27 Jan 2020 12:28:50 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+106b378813251e52fc5e@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in hiddev_disconnect
+Message-ID: <20200127092850.GX1847@kadam>
+References: <0000000000004dbaf2059c193a36@google.com>
+ <20200126024957.11392-1-hdanton@sina.com>
 MIME-Version: 1.0
-In-Reply-To: <5E2B405A.7040405@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200126024957.11392-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=309
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001270081
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=388 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001270081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/01/2020 20:07, Thara Gopinath wrote:
-> On 01/23/2020 02:15 PM, Dietmar Eggemann wrote:
->> On 16/01/2020 16:17, Peter Zijlstra wrote:
->>> On Tue, Jan 14, 2020 at 02:57:33PM -0500, Thara Gopinath wrote:
+I already fixed this bug in an earlier thread.
 
-[...]
+Syzbot always reports a use after free as two separate bugs, a read
+after free and a write after free.  It's too much hassle to mark all
+the duplicates.
 
->>>> +#ifdef CONFIG_HAVE_SCHED_THERMAL_PRESSURE
->>
->> I assume your plan is to enable this for Arm and Arm64? Otherwise the
->> code in 3/7 should also be guarded by this.
-> 
-> Yes. I think it should be enabled for arm and arm64. I can submit a
-> patch after this series is accepted to enable it.
-> Nevertheless , I don't understand why is patch 3/7 tied with this.
-> This portion is the averaging of thermal pressure. Patch 3/7 is to store
-> and retrieve the instantaneous value.
+regards,
+dan carpenter
 
-3/7 is the code which overwrites the scheduler default
-arch_cpu_thermal_pressure() [include/linux/sched/topology.h]. I see it
-more of the engine to drive  thermal pressure tracking in the scheduler.
 
-So all the code in 3/7 only makes sense if HAVE_SCHED_THERMAL_PRESSURE
-is selected by the arch. IMHO, 3/7 and enabling it for Arm/Arm64 should
-go in together.
-
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index e688dfad0b72..9eb414b2c8b9 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -164,6 +164,7 @@ config ARM64
->>         select HAVE_FUNCTION_ARG_ACCESS_API
->>         select HAVE_RCU_TABLE_FREE
->>         select HAVE_RSEQ
->> +       select HAVE_SCHED_THERMAL_PRESSURE
->>         select HAVE_STACKPROTECTOR
->>         select HAVE_SYSCALL_TRACEPOINTS
->>
->> Currently it lives in the 'CPU/Task time and stats accounting' of
->> .config which doesn't feel right to me.
-> 
-> It is cpu statistics if you think about it. It is also the same .config
-> where CONFIG_HAVE_SCHED_AVG_IRQ is defined.
-
-OK, makes sense.
