@@ -2,161 +2,126 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB64C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD4AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1F0206A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580123752;
-	bh=XtPA8Ig4ryv+n4XTiVr/+miOFcjAr3IBN5e8V49V0oc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hJvA1vjGurCY6cwY4gjlXQeDiGehJMRRI3TU/zVB2+057jsRyGGoBsnp3emVgchV6
-	 CFV7+41H3ziRqfZu2Li5gHspjAOCyo0fMC17k2Hv+ku2EZG+94iKikRBGkc6wYlm8A
-	 igpZufuX63yZZBEbCq7ixm8Fd4lRYfoUanrtVrvA=
+	by mail.kernel.org (Postfix) with ESMTP id 76D95206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TfOTD3c6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbgA0LPr (ORCPT
+        id S1730320AbgA0LPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:15:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbgA0LPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:15:46 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 27 Jan 2020 06:15:55 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:44522 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730215AbgA0LPw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 06:15:52 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B98C206A2;
-        Mon, 27 Jan 2020 11:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580123274;
-        bh=XtPA8Ig4ryv+n4XTiVr/+miOFcjAr3IBN5e8V49V0oc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oyjsE4Tia2Xnz3WM35PVEk56sRpDCe/euovB/pw+uefePlv5393JZDREcGK5b36Oj
-         0zG68m2ZlSJU21o80OQgWbdzZlBN8L34HkpKrWL3ic1O1TqX+yJbtg6+gV7YfKI/8g
-         b4agbuXpEZQGiSCylixAVF/Xfvith77Aw4v70OJ4=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1iw2FE-001arU-EI; Mon, 27 Jan 2020 11:07:52 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 27 Jan 2020 11:07:52 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alexandru Elisei <alexandru.elisei@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-Subject: Re: [PATCH] KVM: arm64: Treat emulated TVAL TimerValue as a signed
- 32-bit integer
-In-Reply-To: <20200127103652.2326-1-alexandru.elisei@arm.com>
-References: <20200127103652.2326-1-alexandru.elisei@arm.com>
-Message-ID: <5f633dfb2abe63059d75c0da58c69241@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: alexandru.elisei@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 30CF8407A1;
+        Mon, 27 Jan 2020 11:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1580123375; bh=NixIYL9DJLQ1EjTICLfMWuieQcujDdoMHw59TKyyS8M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=TfOTD3c61jySU590rkw/WFPmnX4b3Yp1lziig60p8MtXl/WVBNxXo6Eesngx+eomY
+         QwzQcFIQEBQT5yFCCWbIYUgPd/Gf6bquxFUnrJzgLahK/AMKBrYhn8TK8iXfLEXQBE
+         1uWntPc45cgt/P611nE6So2fe0aScGXMFPM9bvqOQK+xi9p5SBRa9J6PnCYtBUNmbb
+         B+kXNx8qSeg2RXFaVHbaPzhvqv6jX8y9HInABcF+DsAvrx3OX/rpSknvCBn4nMkS57
+         R129Qv3KRyueOvdsntraQascjwgfEXhYZJco/6HdkiKXUdmHHeyx6SIr0d9ysgYuFa
+         sZWoAJcRwq+Bg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id BD0F3A009B;
+        Mon, 27 Jan 2020 11:09:28 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is up without PHY
+Date:   Mon, 27 Jan 2020 12:09:11 +0100
+Message-Id: <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandru,
+When we don't have any real PHY driver connected and we get link up from
+PCS we shall configure MAC and PCS for the desired speed and also
+resolve the flow control settings from MAC side.
 
-On 2020-01-27 10:36, Alexandru Elisei wrote:
-> According to the ARM ARM, registers CNT{P,V}_TVAL_EL0 have bits [63:32]
-> RES0 [1]. When reading the register, the value is truncated to the 
-> least
-> significant 32 bits [2], and on writes, TimerValue is treated as a 
-> signed
-> 32-bit integer [1, 2].
-> 
-> When the guest behaves correctly and writes 32-bit values, treating 
-> TVAL
-> as an unsigned 64 bit register works as expected. However, things start
-> to break down when the guest writes larger values, because
-> (u64)0x1_ffff_ffff = 8589934591. but (s32)0x1_ffff_ffff = -1, and the
-> former will cause the timer interrupt to be asserted in the future, but
-> the latter will cause it to be asserted now.  Let's treat TVAL as a
-> signed 32-bit register on writes, to match the behaviour described in
-> the architecture, and the behaviour experimentally exhibited by the
-> virtual timer on a non-vhe host.
-> 
-> [1] Arm DDI 0487E.a, section D13.8.18
-> [2] Arm DDI 0487E.a, section D11.2.4
-> 
-> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-Huhuh... Nice catch!
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/phy/phylink.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-Fixes: 8fa761624871 ("KVM: arm/arm64: arch_timer: Fix CNTP_TVAL 
-calculation")
-
-(how many times are we doing to fix this???)
-
-> ---
->  include/kvm/arm_arch_timer.h | 2 ++
->  virt/kvm/arm/arch_timer.c    | 3 ++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/kvm/arm_arch_timer.h 
-> b/include/kvm/arm_arch_timer.h
-> index d120e6c323e7..be912176b7a3 100644
-> --- a/include/kvm/arm_arch_timer.h
-> +++ b/include/kvm/arm_arch_timer.h
-> @@ -10,6 +10,8 @@
->  #include <linux/clocksource.h>
->  #include <linux/hrtimer.h>
-> 
-> +#define ARCH_TIMER_TVAL_MASK	((1ULL << 32) - 1)
-> +
->  enum kvm_arch_timers {
->  	TIMER_PTIMER,
->  	TIMER_VTIMER,
-> diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
-> index f182b2380345..5d40f17f7024 100644
-> --- a/virt/kvm/arm/arch_timer.c
-> +++ b/virt/kvm/arm/arch_timer.c
-> @@ -805,6 +805,7 @@ static u64 kvm_arm_timer_read(struct kvm_vcpu 
-> *vcpu,
->  	switch (treg) {
->  	case TIMER_REG_TVAL:
->  		val = timer->cnt_cval - kvm_phys_timer_read() + timer->cntvoff;
-> +		val &= ARCH_TIMER_TVAL_MASK;
-
-nit: Do we really need this mask? I'd rather see it written as
-
-                 val = lower_32_bits(val);
-
-
->  		break;
-> 
->  	case TIMER_REG_CTL:
-> @@ -850,7 +851,7 @@ static void kvm_arm_timer_write(struct kvm_vcpu 
-> *vcpu,
->  {
->  	switch (treg) {
->  	case TIMER_REG_TVAL:
-> -		timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + val;
-> +		timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + (s32)val;
->  		break;
-> 
->  	case TIMER_REG_CTL:
-
-Otherwise, looks good to me. If you're OK with the above change, I'll
-take it as a fix.
-
-Thanks,
-
-         M.
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index 4174d874b1f7..75dbaf80d7a5 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -533,10 +533,20 @@ static void phylink_resolve(struct work_struct *w)
+ 
+ 	if (link_changed) {
+ 		pl->old_link_state = link_state.link;
+-		if (!link_state.link)
++		if (!link_state.link) {
+ 			phylink_mac_link_down(pl);
+-		else
++		} else {
++			/* If no PHY is connected, we still need to configure
++			 * MAC/PCS for flow control and speed.
++			 */
++			if (!pl->phydev) {
++				phylink_resolve_flow(pl, &link_state);
++				phylink_mac_config(pl, &link_state);
++			}
++
+ 			phylink_mac_link_up(pl, link_state);
++		}
++
+ 	}
+ 	if (!link_state.link && pl->mac_link_dropped) {
+ 		pl->mac_link_dropped = false;
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
+
