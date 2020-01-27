@@ -2,165 +2,158 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC9DC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DF7C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBF8214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TeflSVeC"
+	by mail.kernel.org (Postfix) with ESMTP id B09AB20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730379AbgA0LQw (ORCPT
+        id S1730385AbgA0LRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:16:52 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35157 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729235AbgA0LQw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:16:52 -0500
-Received: by mail-io1-f67.google.com with SMTP id h8so9512724iob.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 03:16:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B2jn7Up2+cD+eD0D5ROwEvtEdti9pDs97jpRUZiU808=;
-        b=TeflSVeClgOmybuUdraDwRDq9IBddwlPu0A697aG3aE5gp2/aIDp2vvWgEWA/XhPU5
-         DKrgrbvlYYAdAEyYGSHlCA3Lyu+tHHlgxKD4D17+p9Ty0j+YOIKzJpDWzCaU11xjS2ga
-         tAECbeUjD+qPWCI4YH854OjSrAxIK+z8wE4kY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B2jn7Up2+cD+eD0D5ROwEvtEdti9pDs97jpRUZiU808=;
-        b=IykOX0byjB07Stl/ndz90pBkblcpN6z52Ym6MhrQfobJDX/Dwn0vWbBB9JxOCTF0BS
-         4KOH/Yud2jPkzaLhm6tJ2tQykyPU7/STi37hN9k5rqNjuaBYyBJLLH03tA+VtzO1CbMM
-         bP4ULv59bkECk90G9/rqkM7bGMxHAR6PWdMqIZDCKan+4nFz4Np59vbs4sSxHelZwiaR
-         MMEAjm7e8E40MiVksoFRVQYq7ShnMcWebN1VjCQbUduKitJI5DZqyHr2tQ0whMda+Vbf
-         sxElG9voNZDFJVVkqDQ/fIPvGcrjqrf84UZp9RQjbnEoWILO2axgjvMOuHBLzn+PQOfL
-         C+2g==
-X-Gm-Message-State: APjAAAWr3AxjwjpLQN2VEJdO/Gu1S8tY8+ZI4X51t0xsHK9KQLjjmNJX
-        GuAaq3fzZy6S9Oezc8I5ZkwjSTDAhYTSjQbsMg76G22j6aM=
-X-Google-Smtp-Source: APXvYqxi9Al6EhVp6Fzs3kt7WGSSwQJ9MM7X9p2Zw11dLwUwgYfH+Qk893fJYujMv7QyZvGWxu7R2xASBb1OJ8GmRss=
-X-Received: by 2002:a92:bb08:: with SMTP id w8mr13902051ili.27.1580123446775;
- Mon, 27 Jan 2020 03:10:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20200123130816.24815-1-kalimuthu.velappan@broadcom.com> <a7d6f51f-8c5c-9242-97a1-8fdea9fdbb7b@iogearbox.net>
-In-Reply-To: <a7d6f51f-8c5c-9242-97a1-8fdea9fdbb7b@iogearbox.net>
-From:   Kalimuthu Velappan <kalimuthu.velappan@broadcom.com>
-Date:   Mon, 27 Jan 2020 16:40:09 +0530
-Message-ID: <CAKA8wj0nLH7UV=Pnk6kbHbyx2sxbL+fOd7JC=o2KryZKRgPFYQ@mail.gmail.com>
-Subject: Re: [PATCH] Support for nlattr and nested_nlattr attribute search in
- EBPF filter
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jan 2020 06:17:00 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:34574 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgA0LRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 06:17:00 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 02C5D1B6B0D;
+        Mon, 27 Jan 2020 12:16:58 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E9BCA1B6B02;
+        Mon, 27 Jan 2020 12:16:57 +0100 (CET)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9BC92205C6;
+        Mon, 27 Jan 2020 12:16:57 +0100 (CET)
+From:   Andrei Botila <andrei.botila@nxp.com>
+To:     Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org,
+        Andrei Botila <andrei.botila@nxp.com>
+Subject: [PATCH] bus: fsl-mc: add api to retrieve mc version
+Date:   Mon, 27 Jan 2020 13:16:01 +0200
+Message-Id: <1580123761-19536-1-git-send-email-andrei.botila@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Add a new api that returns Management Complex firmware version
+and make the required structure public. The api's first user will be
+the caam driver for setting prediction resistance bits.
 
-There are few network applications relying on Netlink subsystem to get
-notifications for net-device attribute changes like MTU, Speed,
-Oper-Status, Name, slave, slave info, etc. The Netlink subsystem
-notifies the application on every attribute change regardless of what
-is being needed for the application. The attribute search support in
-EBPF filter helps to filter the Netlink packets based on the specific
-set of attributes that are needed for the application.
+Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
+---
+ drivers/bus/fsl-mc/fsl-mc-bus.c | 33 +++++++++++++++++----------------
+ include/linux/fsl/mc.h          | 16 ++++++++++++++++
+ 2 files changed, 33 insertions(+), 16 deletions(-)
 
-The classical BPF supports attribute search but that doesn't support
-MAPS. The extended BPF supports MAPS, but the attribute search is not
-enabled. Hence this patch enables the support for attribute search in
-EBPF.
-
-Thanks
-Kals
-
-
-On Thu, Jan 23, 2020 at 9:27 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
->
-> On 1/23/20 2:08 PM, Kalimuthu Velappan wrote:
-> > Added attribute search and nested attribute support in EBPF filter
-> > functionality.
->
-> Your commit describes what the code does, but not the rationale why it's needed
-> resp. the use-case you're trying to solve with this.
->
-> Also, why it cannot be resolved in native BPF?
->
-> > Signed-off-by: Kalimuthu Velappan <kalimuthu.velappan@broadcom.com>
-> > ---
-> >   include/uapi/linux/bpf.h       |  5 ++++-
-> >   net/core/filter.c              | 22 ++++++++++++++++++++++
-> >   tools/include/uapi/linux/bpf.h |  4 +++-
-> >   3 files changed, 29 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > index dbbcf0b..ac9794c 100644
-> > --- a/include/uapi/linux/bpf.h
-> > +++ b/include/uapi/linux/bpf.h
-> > @@ -2938,7 +2938,10 @@ union bpf_attr {
-> >       FN(probe_read_user),            \
-> >       FN(probe_read_kernel),          \
-> >       FN(probe_read_user_str),        \
-> > -     FN(probe_read_kernel_str),
-> > +     FN(probe_read_kernel_str),  \
-> > +     FN(skb_get_nlattr),     \
-> > +     FN(skb_get_nlattr_nest),
-> > +
->
-> This is not on latest bpf-next tree.
->
-> >   /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-> >    * function eBPF program intends to call
-> > diff --git a/net/core/filter.c b/net/core/filter.c
-> > index 538f6a7..56a87e1 100644
-> > --- a/net/core/filter.c
-> > +++ b/net/core/filter.c
-> > @@ -2699,6 +2699,24 @@ static const struct bpf_func_proto bpf_set_hash_invalid_proto = {
-> >       .arg1_type      = ARG_PTR_TO_CTX,
-> >   };
-> >
-> > +static const struct bpf_func_proto bpf_skb_get_nlattr_proto = {
-> > +     .func           = bpf_skb_get_nlattr,
-> > +     .gpl_only       = false,
-> > +     .ret_type       = RET_INTEGER,
-> > +     .arg1_type      = ARG_PTR_TO_CTX,
-> > +     .arg2_type  = ARG_ANYTHING,
-> > +     .arg3_type  = ARG_ANYTHING,
-> > +};
-> > +
-> > +static const struct bpf_func_proto skb_get_nlattr_nest_proto = {
-> > +     .func           = bpf_skb_get_nlattr_nest,
-> > +     .gpl_only       = false,
-> > +     .ret_type       = RET_INTEGER,
-> > +     .arg1_type      = ARG_PTR_TO_CTX,
-> > +     .arg2_type  = ARG_ANYTHING,
-> > +     .arg3_type  = ARG_ANYTHING,
-> > +};
-> > +
-> >   BPF_CALL_2(bpf_set_hash, struct sk_buff *, skb, u32, hash)
-
-
-
+diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+index a07cc19becdb..330c76181604 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-bus.c
++++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+@@ -26,6 +26,8 @@
+  */
+ #define FSL_MC_DEFAULT_DMA_MASK	(~0ULL)
+ 
++static struct fsl_mc_version mc_version;
++
+ /**
+  * struct fsl_mc - Private data of a "fsl,qoriq-mc" platform device
+  * @root_mc_bus_dev: fsl-mc device representing the root DPRC
+@@ -54,20 +56,6 @@ struct fsl_mc_addr_translation_range {
+ 	phys_addr_t start_phys_addr;
+ };
+ 
+-/**
+- * struct mc_version
+- * @major: Major version number: incremented on API compatibility changes
+- * @minor: Minor version number: incremented on API additions (that are
+- *		backward compatible); reset when major version is incremented
+- * @revision: Internal revision number: incremented on implementation changes
+- *		and/or bug fixes that have no impact on API
+- */
+-struct mc_version {
+-	u32 major;
+-	u32 minor;
+-	u32 revision;
+-};
+-
+ /**
+  * fsl_mc_bus_match - device to driver matching callback
+  * @dev: the fsl-mc device to match against
+@@ -338,7 +326,7 @@ EXPORT_SYMBOL_GPL(fsl_mc_driver_unregister);
+  */
+ static int mc_get_version(struct fsl_mc_io *mc_io,
+ 			  u32 cmd_flags,
+-			  struct mc_version *mc_ver_info)
++			  struct fsl_mc_version *mc_ver_info)
+ {
+ 	struct fsl_mc_command cmd = { 0 };
+ 	struct dpmng_rsp_get_version *rsp_params;
+@@ -363,6 +351,20 @@ static int mc_get_version(struct fsl_mc_io *mc_io,
+ 	return 0;
+ }
+ 
++/**
++ * fsl_mc_get_version - function to retrieve the MC f/w version information
++ *
++ * Return:	mc version when called after fsl-mc-bus probe; NULL otherwise.
++ */
++struct fsl_mc_version *fsl_mc_get_version(void)
++{
++	if (mc_version.major)
++		return &mc_version;
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(fsl_mc_get_version);
++
+ /**
+  * fsl_mc_get_root_dprc - function to traverse to the root dprc
+  */
+@@ -862,7 +864,6 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+ 	int container_id;
+ 	phys_addr_t mc_portal_phys_addr;
+ 	u32 mc_portal_size;
+-	struct mc_version mc_version;
+ 	struct resource res;
+ 
+ 	mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
+diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
+index 54d9436600c7..2b5f8366dbe1 100644
+--- a/include/linux/fsl/mc.h
++++ b/include/linux/fsl/mc.h
+@@ -381,6 +381,22 @@ int __must_check __fsl_mc_driver_register(struct fsl_mc_driver *fsl_mc_driver,
+ 
+ void fsl_mc_driver_unregister(struct fsl_mc_driver *driver);
+ 
++/**
++ * struct fsl_mc_version
++ * @major: Major version number: incremented on API compatibility changes
++ * @minor: Minor version number: incremented on API additions (that are
++ *		backward compatible); reset when major version is incremented
++ * @revision: Internal revision number: incremented on implementation changes
++ *		and/or bug fixes that have no impact on API
++ */
++struct fsl_mc_version {
++	u32 major;
++	u32 minor;
++	u32 revision;
++};
++
++struct fsl_mc_version *fsl_mc_get_version(void);
++
+ int __must_check fsl_mc_portal_allocate(struct fsl_mc_device *mc_dev,
+ 					u16 mc_io_flags,
+ 					struct fsl_mc_io **new_mc_io);
 -- 
-Thanks
-- Kals
+2.17.1
+
