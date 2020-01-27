@@ -2,130 +2,142 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19A3C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDC7C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90CB20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F52214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gh+1zvdl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PTz6LzDX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbgA0I6M (ORCPT
+        id S1729143AbgA0JB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 03:58:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23533 "EHLO
+        Mon, 27 Jan 2020 04:01:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22916 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727464AbgA0I6L (ORCPT
+        with ESMTP id S1726769AbgA0JB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 03:58:11 -0500
+        Mon, 27 Jan 2020 04:01:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580115490;
+        s=mimecast20190719; t=1580115716;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uyk72xarWIQ4qzz+XnzCWWPRYXQDBN3Q30Mw1xKhGyI=;
-        b=Gh+1zvdl4ZS21QmLJsEb5l99yBGvArauPxQVqWk/cUGo6EtCk27oP5MU06GBhGnghRTAeL
-        Rb+B5k5SWXjVX/c7aY67m8h6EqqZLoJKW7rFtYX+chgP3s+/fLZNw9yepP8RT7fDPa9x9t
-        WfcZkmepeKOQ64Uu+/rQqtREGrXr670=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-deRh1HPQP96Wuy6NTVL_3Q-1; Mon, 27 Jan 2020 03:58:09 -0500
-X-MC-Unique: deRh1HPQP96Wuy6NTVL_3Q-1
-Received: by mail-wr1-f71.google.com with SMTP id f10so5783905wro.14
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 00:58:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=uyk72xarWIQ4qzz+XnzCWWPRYXQDBN3Q30Mw1xKhGyI=;
-        b=c4R1+/QXN5ABEcXJ8OgsmfTK6kxXDoI/JqxS0C9O5FIhIPIENg6ozs+JsqfDccuQGP
-         OsdIiwg937HVumPnjeWfGaEn4urBXmdB0BV0htA6xPCRYDbaqf8dmvha1NmjLNIVJquz
-         yJ/DKsyoqZjBCj8tSqbBrlPi4F8xQWx21seqvaz8JMutlBopCnChHuMpaU9lI6FvuqEa
-         we2trONFX/aItF/CdYUCew+I2brr0sVOQoEpJNg+EEzY6Qr5nauj69o3nQ+hNS8K2Cn5
-         88uAseztjXY15FA6qd49iPLWPmdpEhdoubWwdJQFwgEU3Pij1dNChOJUjUT0x5Xn0ZZs
-         7gOg==
-X-Gm-Message-State: APjAAAXY9wS784DTWbi0B3VRV7XPSWKUJ40HTH2CpZiecJCEH0M1ORsw
-        wTLxroTYuznPnw9cY3ovY9dfcUfbXLim4i9JzUd5cpmYK7iH1ihrCz5HZVqWuUgs3sNV9RbRoMs
-        j3WklOLdV2aT4kALtcKcxThqH
-X-Received: by 2002:a1c:a1c1:: with SMTP id k184mr4893813wme.129.1580115488044;
-        Mon, 27 Jan 2020 00:58:08 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyt3OinQkUFAunpsKkT8TapyHOFDsD/NNKXyGWTg+FyCZ9rvS5eldqDIqHjZvmiWmLD4IcS9A==
-X-Received: by 2002:a1c:a1c1:: with SMTP id k184mr4893785wme.129.1580115487728;
-        Mon, 27 Jan 2020 00:58:07 -0800 (PST)
-Received: from vitty.brq.redhat.com ([195.39.4.224])
-        by smtp.gmail.com with ESMTPSA id b21sm18855343wmd.37.2020.01.27.00.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 00:58:07 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH] KVM: x86: Unexport x86_fpu_cache and make it static
-In-Reply-To: <20200127001330.27741-1-sean.j.christopherson@intel.com>
-References: <20200127001330.27741-1-sean.j.christopherson@intel.com>
-Date:   Mon, 27 Jan 2020 09:58:09 +0100
-Message-ID: <87y2ttmg2m.fsf@vitty.brq.redhat.com>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=gy0Q6xsJnf+50EzHAO2CLej3bx+BVRRke049WRf3JWc=;
+        b=PTz6LzDXIoUEIInzy2rsPN0ysB3QtSpwAaiHljlxtR82FKUxzLTeUuooBwHtJKeubLUZuJ
+        6L4T+7l1iAWOy09nuPcCWdie/0NCN6Y9LJJrCnMAPsyd3XcVX1WUYx394Llqz5TmQswas4
+        b34Dt12UB055EQ5P4/Xu44gIHXGyP0c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-268-F2ne4R_INUiIDPbS0Eexfw-1; Mon, 27 Jan 2020 04:01:51 -0500
+X-MC-Unique: F2ne4R_INUiIDPbS0Eexfw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96CC61005512;
+        Mon, 27 Jan 2020 09:01:49 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-117-94.ams2.redhat.com [10.36.117.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D28E2863A3;
+        Mon, 27 Jan 2020 09:01:44 +0000 (UTC)
+Subject: Re: [PATCH v4 06/10] KVM: selftests: Add support for vcpu_args_set to
+ aarch64 and s390x
+To:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>
+References: <20200123180436.99487-1-bgardon@google.com>
+ <20200123180436.99487-7-bgardon@google.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <c4c48878-767a-e70c-1242-2efa7eac9938@redhat.com>
+Date:   Mon, 27 Jan 2020 10:01:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200123180436.99487-7-bgardon@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
-
-> Make x86_fpu_cache static now that FPU allocation and destruction is
-> handled entirely by common x86 code.
->
-
-git grep on kvm/next agrees :-)
-
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
+On 23/01/2020 19.04, Ben Gardon wrote:
+> Currently vcpu_args_set is only implemented for x86. This makes writing
+> tests with multiple vCPUs difficult as each guest vCPU must either a.)
+> do the same thing or b.) derive some kind of unique token from it's
+> registers or the architecture. To simplify the process of writing tests
+> with multiple vCPUs for s390 and aarch64, add set args functions for
+> those architectures.
+> 
+> Signed-off-by: Ben Gardon <bgardon@google.com>
 > ---
->
-> Pretty sure I meant to include this in the vCPU creation cleanup, but
-> completely forgot about it.
->
->  arch/x86/include/asm/kvm_host.h | 1 -
->  arch/x86/kvm/x86.c              | 3 +--
->  2 files changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 77d206a93658..f300a250ab51 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1266,7 +1266,6 @@ struct kvm_arch_async_pf {
->  };
+>  .../selftests/kvm/lib/aarch64/processor.c     | 33 +++++++++++++++++
+>  .../selftests/kvm/lib/s390x/processor.c       | 35 +++++++++++++++++++
+>  2 files changed, 68 insertions(+)
+[...]
+> diff --git a/tools/testing/selftests/kvm/lib/s390x/processor.c b/tools/testing/selftests/kvm/lib/s390x/processor.c
+> index 32a02360b1eb0..680f37be9dbc9 100644
+> --- a/tools/testing/selftests/kvm/lib/s390x/processor.c
+> +++ b/tools/testing/selftests/kvm/lib/s390x/processor.c
+> @@ -269,6 +269,41 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
+>  	run->psw_addr = (uintptr_t)guest_code;
+>  }
 >  
->  extern struct kvm_x86_ops *kvm_x86_ops;
-> -extern struct kmem_cache *x86_fpu_cache;
->  
->  #define __KVM_HAVE_ARCH_VM_ALLOC
->  static inline struct kvm *kvm_arch_alloc_vm(void)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 7e3f1d937224..78b7e1f08845 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -227,8 +227,7 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
->  
->  u64 __read_mostly host_xcr0;
->  
-> -struct kmem_cache *x86_fpu_cache;
-> -EXPORT_SYMBOL_GPL(x86_fpu_cache);
-> +static struct kmem_cache *x86_fpu_cache;
->  
->  static int emulator_fix_hypercall(struct x86_emulate_ctxt *ctxt);
+> +/* VM VCPU Args Set
+> + *
+> + * Input Args:
+> + *   vm - Virtual Machine
+> + *   vcpuid - VCPU ID
+> + *   num - number of arguments
+> + *   ... - arguments, each of type uint64_t
+> + *
+> + * Output Args: None
+> + *
+> + * Return: None
+> + *
+> + * Sets the first num function input arguments to the values
+> + * given as variable args.  Each of the variable args is expected to
+> + * be of type uint64_t. The registers set by this function are r2-r6.
+> + */
+> +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
+> +{
+> +	va_list ap;
+> +	struct kvm_regs regs;
 
--- 
-Vitaly
+You need an "int i;" here to make it compile.
+
+> +	TEST_ASSERT(num >= 1 && num <= 5, "Unsupported number of args,\n"
+
+why the "\n" right in the middle of the string? Could you please make it
+one-line only?
+
+> +		    "  num: %u\n",
+> +		    num);
+> +
+> +	va_start(ap, num);
+> +	vcpu_regs_get(vm, vcpuid, &regs);
+> +
+> +	for (i = 0; i < num; i++)
+> +		regs.gprs[i + 2] = va_arg(ap, uint64_t);
+> +
+> +	vcpu_regs_set(vm, vcpuid, &regs);
+> +	va_end(ap);
+> +}
+
+... but apart from the nits, this looks basically sane to me.
+
+ Thomas
 
