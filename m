@@ -2,200 +2,101 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A341DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155F1C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71FD422527
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E278E20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SzA1wa1Y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RQRS9wEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgA0R6l (ORCPT
+        id S1726079AbgA0SAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:58:41 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44374 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0R6k (ORCPT
+        Mon, 27 Jan 2020 13:00:37 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31458 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725845AbgA0SAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:58:40 -0500
-Received: by mail-il1-f194.google.com with SMTP id f16so8208468ilk.11;
-        Mon, 27 Jan 2020 09:58:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p34WepIUAC+vVryS2npy0LwKKNXZ/pNTKpuvngEBmQ4=;
-        b=SzA1wa1YxhJrtJr0T5aFQUQL5QmF+ihyQ750kHstlHEv/VUitV23FBeCZlvxxR/eiK
-         WN9NHJ1ngZ73mmQTN/Xs+K7xksPSzzACs/tk3U+BzJtSbMdmsD4oSH/rL/DxoHSyM34z
-         w85pKqf6LYp3X5YbqXN8nq2TFcfbs613P8hWJ1bkuwqL3E5ZAhHiCtDtgRXgF919Oyub
-         EPQezKZ+T1DBapOeBNy+YhOpf6iSUcxQ6NbAbTRhXD2MCiarbWvt94vJC80vh8PEscBu
-         6Pj0UxpKTdUkacbdyCFGbz0E/u0lvcILtfffHxu8uyjw3stlFclMBNN9WTZmCTVSIwjP
-         c8Vw==
+        Mon, 27 Jan 2020 13:00:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580148035;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LISUUc5mSbwq4OOhAuP2n+5DZiLWcPcw5gQzbhBN3r0=;
+        b=RQRS9wEUxc+4pyuat24bvH+M62RR1bvIeqphh0phXj1dtjfaU1GOD0bnY/HEZYPyrfWkz8
+        dwMpTTNIUDx30haOWICziJmTVjXV8SWJZsBxX3hd4rlx988PPqkueZXHYMTU9Bm/JueFHG
+        jC7IkOqVBHjra3liav6s3TmwROii1Ok=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-nvOQnH2RPY-jpmcll3XMfA-1; Mon, 27 Jan 2020 13:00:33 -0500
+X-MC-Unique: nvOQnH2RPY-jpmcll3XMfA-1
+Received: by mail-wr1-f72.google.com with SMTP id c6so6482078wrm.18
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 10:00:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p34WepIUAC+vVryS2npy0LwKKNXZ/pNTKpuvngEBmQ4=;
-        b=ihOaQLC5SuYXuVXWXcI5bzD5m9DnW5CE8PloaqNCLYKXhQd9Q+X7SjwfURN1s9WWbf
-         /uRCLC+ebYP0bsV6FHaUPEUTtaxa6pxcmzF4Ib0zJVJmgS5tnkuzLYtibGrCfCRTS/ln
-         bKRWefXVRuVHbhBNfh+3HDdpm6UNhlI4RWZIx7O3g35Qtxqupz83STqwks1BjZJsK+Ya
-         9e2WCT/NIdv9vzrCNsm0vN3ivU0NDNL7J5FJZyLVYhOP3rjaudjhOttZesDalZfJvkyV
-         +VwyDrd8bw8OiBkyTmJKWVDgzgVIpranF26pBKpTgfT+BtZGv6O2dl6apa5ml6NBg3fT
-         qHUg==
-X-Gm-Message-State: APjAAAW0LyWDY/0nuLDGbl7H7JcLlH2uJv7VtmaOIuMBSW5hQn8VsICx
-        fhWBxANIsPCJTqdBNOAmxJINjPK1I7YNXr8bdpk=
-X-Google-Smtp-Source: APXvYqwOXJzX04ADWOS/heOjpPEeIGyDlSuV2xCkSmtAiKGFObKQbkQaiM/U80Y0J7a6CgumlMFl67BmhWr9pohUG8o=
-X-Received: by 2002:a92:ccd0:: with SMTP id u16mr14871734ilq.215.1580147919006;
- Mon, 27 Jan 2020 09:58:39 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LISUUc5mSbwq4OOhAuP2n+5DZiLWcPcw5gQzbhBN3r0=;
+        b=rKWp+5VPNho7JAeECwAuU6AZcR38dUh4UtgTtXzgZJaH5MXqWVjQFCAJv6K6F55pgc
+         gJwgvU42j8qT6C3UdaTuyiCVXqWPNsLYI47RAr/6XaTlAyxHuoMbzNvZLvoLaNwgA9Ru
+         gduSsZvsAF6/AcpKl9WTAnC77P1/ALlmN40YnWJU6JSar0945TLd4I4AYYlElyzmz4lK
+         W1FZ3LGPLkoNV676Za2sf2nTIMnX8OLK0fWK5L5JBJHz2TnC7ykSVk/hzluRjg6nh5Mf
+         3NaavpTqZLHmRRuyXBER4lJlVdMqMy42VqLTmilkSq66D6iDRR+dFA3nFChDZQmIekZS
+         +1FQ==
+X-Gm-Message-State: APjAAAUsg36AvELD/lAAEWNL7gc732T37/t3pHnCZ8LuheQiJSR0etEU
+        KJwysK0xJ2jNWtHvq3Gj+ZfQiIxWyUZfaxX4ACk4ntuxT4AauRM8573tWKj8FZWL4Qj6bjh3Pr4
+        BzGNyEjJ1NUbD0uj4wdMPS4gx
+X-Received: by 2002:a05:6000:11c6:: with SMTP id i6mr24247855wrx.178.1580148032217;
+        Mon, 27 Jan 2020 10:00:32 -0800 (PST)
+X-Google-Smtp-Source: APXvYqydXL8Hy6hmc2+0FfdGyYbjp+tHmBYor3OXZuBag9Hl+JQXNDQY2Irhah3wQr6DKLU4A9G9yQ==
+X-Received: by 2002:a05:6000:11c6:: with SMTP id i6mr24247828wrx.178.1580148031996;
+        Mon, 27 Jan 2020 10:00:31 -0800 (PST)
+Received: from steredhat ([80.188.125.198])
+        by smtp.gmail.com with ESMTPSA id u7sm19732499wmj.3.2020.01.27.10.00.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 10:00:31 -0800 (PST)
+Date:   Mon, 27 Jan 2020 19:00:28 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH liburing 0/1] test: add epoll test case
+Message-ID: <20200127180028.f7s5xhhizii3dsnr@steredhat>
+References: <20200127161701.153625-1-sgarzare@redhat.com>
+ <d409ad33-2122-9500-51f4-37e9748f1d73@kernel.dk>
 MIME-Version: 1.0
-References: <20200127164321.17468-1-lhenriques@suse.com> <20200127164321.17468-3-lhenriques@suse.com>
-In-Reply-To: <20200127164321.17468-3-lhenriques@suse.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Mon, 27 Jan 2020 18:58:46 +0100
-Message-ID: <CAOi1vP9HB4dPTHrgn2bTZ3nM2HSpLkwRvjZ8za0KE4NNnHmmtw@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] ceph: parallelize all copy-from requests in copy_file_range
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d409ad33-2122-9500-51f4-37e9748f1d73@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 5:43 PM Luis Henriques <lhenriques@suse.com> wrote:
->
-> Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
-> operations, waiting for each request to complete before sending the next
-> one.  This patch modifies copy_file_range so that all the 'copy-from'
-> operations are sent in bulk and waits for its completion at the end.  This
-> will allow significant speed-ups, specially when sending requests for
-> different target OSDs.
->
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
->  fs/ceph/file.c                  | 38 +++++++++++++++++++++++++++++++--
->  include/linux/ceph/osd_client.h |  2 ++
->  net/ceph/osd_client.c           |  1 +
->  3 files changed, 39 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> index 1e6cdf2dfe90..5d8f0ba11719 100644
-> --- a/fs/ceph/file.c
-> +++ b/fs/ceph/file.c
-> @@ -1931,6 +1931,28 @@ static int is_file_size_ok(struct inode *src_inode, struct inode *dst_inode,
->         return 0;
->  }
->
-> +static int wait_copy_from_reqs(struct list_head *osd_reqs)
-> +{
-> +       struct ceph_osd_request *req;
-> +       int ret = 0, err;
-> +
-> +       while (!list_empty(osd_reqs)) {
-> +               req = list_first_entry(osd_reqs,
-> +                                      struct ceph_osd_request,
-> +                                      r_copy_item);
-> +               list_del_init(&req->r_copy_item);
-> +               err = ceph_osdc_wait_request(req->r_osdc, req);
-> +               if (err) {
-> +                       if (!ret)
-> +                               ret = err;
-> +                       dout("copy request failed (err=%d)\n", err);
-> +               }
-> +               ceph_osdc_put_request(req);
-> +       }
-> +
-> +       return ret;
-> +}
+On Mon, Jan 27, 2020 at 09:26:41AM -0700, Jens Axboe wrote:
+> On 1/27/20 9:17 AM, Stefano Garzarella wrote:
+> > Hi Jens,
+> > I wrote the test case for epoll.
+> > 
+> > Since it fails also without sqpoll (Linux 5.4.13-201.fc31.x86_64),
+> > can you take a look to understand if the test is wrong?
+> > 
+> > Tomorrow I'll travel, but on Wednesday I'll try this test with the patch
+> > that I sent and also with the upstream kernel.
+> 
+> I'll take a look, but your patches are coming through garbled and don't
+> apply.
 
-This should probably go into libceph, as ceph_osdc_wait_requests().
+Weird, I'm using git-publish as usual. I tried to download the patch
+received from the ML, and I tried to reapply and it seams to work here.
 
-> +
->  static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->                                       struct file *dst_file, loff_t dst_off,
->                                       size_t len, unsigned int flags)
-> @@ -1943,12 +1965,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->         struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
->         struct ceph_object_locator src_oloc, dst_oloc;
->         struct ceph_object_id src_oid, dst_oid;
-> +       struct ceph_osd_request *req;
->         loff_t endoff = 0, size;
->         ssize_t ret = -EIO;
->         u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
->         u32 src_objlen, dst_objlen, object_size;
->         int src_got = 0, dst_got = 0, err, dirty;
->         bool do_final_copy = false;
-> +       LIST_HEAD(osd_reqs);
->
->         if (src_inode->i_sb != dst_inode->i_sb) {
->                 struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-> @@ -2097,7 +2121,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->                 ceph_oid_printf(&dst_oid, "%llx.%08llx",
->                                 dst_ci->i_vino.ino, dst_objnum);
->                 /* Do an object remote copy */
-> -               err = ceph_osdc_copy_from(
-> +               req = ceph_osdc_copy_from_nowait(
->                         &src_fsc->client->osdc,
->                         src_ci->i_vino.snap, 0,
->                         &src_oid, &src_oloc,
-> @@ -2108,7 +2132,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
->                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
->                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> -               if (err) {
-> +               if (IS_ERR(req)) {
-> +                       err = PTR_ERR(req);
->                         if (err == -EOPNOTSUPP) {
->                                 src_fsc->have_copy_from2 = false;
->                                 pr_notice("OSDs don't support 'copy-from2'; "
-> @@ -2117,14 +2142,23 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
->                         dout("ceph_osdc_copy_from returned %d\n", err);
->                         if (!ret)
->                                 ret = err;
-> +                       /* wait for all queued requests */
-> +                       wait_copy_from_reqs(&osd_reqs);
->                         goto out_caps;
->                 }
-> +               list_add(&req->r_copy_item, &osd_reqs);
->                 len -= object_size;
->                 src_off += object_size;
->                 dst_off += object_size;
->                 ret += object_size;
->         }
->
-> +       err = wait_copy_from_reqs(&osd_reqs);
-> +       if (err) {
-> +               if (!ret)
-> +                       ret = err;
-> +               goto out_caps;
-> +       }
->         if (len)
->                 /* We still need one final local copy */
->                 do_final_copy = true;
-> diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-> index 7916a178d137..2b4a14bc6154 100644
-> --- a/include/linux/ceph/osd_client.h
-> +++ b/include/linux/ceph/osd_client.h
-> @@ -210,6 +210,8 @@ struct ceph_osd_request {
->         u64 r_data_offset;                    /* ditto */
->         bool r_linger;                        /* don't resend on failure */
->
-> +       struct list_head r_copy_item;         /* used for copy-from operations */
-> +
+Which kind of issue do you have? (just to fix my setup)
 
-We have r_private_item for exactly this kind of ad-hoc lists, already
-used in rbd and ceph_direct_read_write().
+Anyway I pushed my tree here:
+    https://github.com/stefano-garzarella/liburing.git epoll
 
-Thanks,
-
-                Ilya
