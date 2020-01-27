@@ -2,101 +2,58 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AA1C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3882AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73B422527
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:48:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jx7+zkfq"
+	by mail.kernel.org (Postfix) with ESMTP id 1742D24672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgA0Psl (ORCPT
+        id S1729667AbgA0Ptv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:48:41 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45780 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728783AbgA0Psl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:48:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580140120;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ev2DavOVeAfQ+Vr264Gj58ZrieELq0AxbNA2pCfvoOE=;
-        b=Jx7+zkfquGh/wEaZ4o+i5CUhE86A8hRwTmM3Cul0EyVkRZBe+3RXUYg2s9/NHatNminO2L
-        TOJYJ6JgQZrOcvAN7EwY/1oM6Co/dHXs7ES+2iUNd+2eDxl0QIcO4RxOpkgJyYFzCuuWlj
-        52SAP4/F8aDOswdi/ha0UbAtFxBMt9M=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-kTswgzqbMlKUPSXggGUvxQ-1; Mon, 27 Jan 2020 10:48:36 -0500
-X-MC-Unique: kTswgzqbMlKUPSXggGUvxQ-1
-Received: by mail-wm1-f71.google.com with SMTP id o193so1138362wme.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 07:48:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ev2DavOVeAfQ+Vr264Gj58ZrieELq0AxbNA2pCfvoOE=;
-        b=hY5eFcJroUA+7KI+g49I/ijB/+zbuq3lYBEpB8c8WDpW8OxZ0V+TTQFCXY8VBimr2M
-         6wGDmX/ocWwgwFTpz3GfMycL9Sk0dI/hUaGidddjvy4G9SjEU3u08R0cG1tWGs6sVxBU
-         LhEcLGtP38pJiDWDZ4zOJ3iJKNO+nx/F5vO1mwwtIhp5OfNbWn13Qnv2FrJ5Heh6jkw8
-         /5g118c+k6VmUjRZh3Q6TFeVh4fnFJjuRA+OJobiwgGykSdNk5PQgliFLFdh2WD36sYM
-         Hrh6d1mD1Vfsve9DmQkLBcrQsHTMgwk0v20FhoWyAVTkb0r3efl6LxQhcl/OpsvSKTZs
-         Vlug==
-X-Gm-Message-State: APjAAAUu9VzmEnyB7JGF4d1lJkmArzGjuM4KaaFB7lNiAcB2ZVtAzRHA
-        MC836ZRTNrtDgjXiIg7udMTVCPnGFb9cv5EDUI7vYYvNjAHSoWFIG+6boTYeRZ+ahz5OUBdZb5d
-        ouk/nkkQXqmIfvYGarynz4MVR
-X-Received: by 2002:a7b:c19a:: with SMTP id y26mr15306294wmi.152.1580140115578;
-        Mon, 27 Jan 2020 07:48:35 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyz7Ff2a08B/s8P5i+xjyQx3D2QYf/6C1n6kzVc+oMGzILnnFPXnRX3sq5VnGumfLVmxX4BYQ==
-X-Received: by 2002:a7b:c19a:: with SMTP id y26mr15306280wmi.152.1580140115405;
-        Mon, 27 Jan 2020 07:48:35 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id w13sm21846893wru.38.2020.01.27.07.48.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 07:48:34 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 0/3] KVM: x86: VM alloc bug fix and cleanup
-In-Reply-To: <20200127004113.25615-1-sean.j.christopherson@intel.com>
-References: <20200127004113.25615-1-sean.j.christopherson@intel.com>
-Date:   Mon, 27 Jan 2020 16:48:34 +0100
-Message-ID: <87zhe8lx2l.fsf@vitty.brq.redhat.com>
+        Mon, 27 Jan 2020 10:49:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728783AbgA0Ptv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 10:49:51 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E84F22527;
+        Mon, 27 Jan 2020 15:49:50 +0000 (UTC)
+Date:   Mon, 27 Jan 2020 10:49:48 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'linux-kernel' <linux-kernel@vger.kernel.org>
+Subject: Re: sched/fair: Long delays starting RT processes on idle cpu.
+Message-ID: <20200127104948.59eac75a@gandalf.local.home>
+In-Reply-To: <13797bbe87b64f34877b89a5bbdb6d03@AcuMS.aculab.com>
+References: <13797bbe87b64f34877b89a5bbdb6d03@AcuMS.aculab.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Mon, 27 Jan 2020 15:39:24 +0000
+David Laight <David.Laight@ACULAB.COM> wrote:
 
-> Fix a (fairly) long standing NULL pointer dereference if VM allocation
-> fails, and do a bit of clean up on top.
->
-> I would have preferred to omit patch 01, i.e. fix the bug via patch 02,
-> but unfortunately (long term support) kernel 4.19 doesn't have the
-> accounting changes, which would make backporting the fix extra annoying
-> for no real benefit.
->
-> Sean Christopherson (3):
->   KVM: x86: Gracefully handle __vmalloc() failure during VM allocation
->   KVM: x86: Directly return __vmalloc() result in ->vm_alloc()
->   KVM: x86: Consolidate VM allocation and free for VMX and SVM
->
+> I'd have thought that the processor should wake up much faster than that.
+> I can't see the memory write that is paired with the monitor/mwait.
+> Does it need a strong barrier?
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+You may want to prevent the CPU from going into a deep C state. 90us is
+something I would expect if the CPU is in a deep C state (I've seen
+much longer wake up times due to deep C state).
 
--- 
-Vitaly
+Boot the kernel with idle=poll and see if you can trigger the same
+latency. If not, then you know it's the CPU going into a deep C state
+that is causing your latency.
 
+-- Steve
