@@ -2,138 +2,112 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB614C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71991C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A31AB2467B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:27:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P7/Ol9VF"
+	by mail.kernel.org (Postfix) with ESMTP id 535EF2465B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgA0X1g (ORCPT
+        id S1726323AbgA0Xa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 18:27:36 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39961 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgA0X1f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 18:27:35 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k25so5948167pgt.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 15:27:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hwrToBDFY4HIyFLVjgz55WQA/wuDwI/+ZrtWoDNgqy8=;
-        b=P7/Ol9VFJBuzQj3BmDZ7XheRs5xTuuwbS3UWi5CNkSUsTkwKfcix4/o2R+Uqg5Z+S7
-         bgnUa/54hKHdlkuF9qEt8rIwaLxRSrCEDlNlgmuGNNmsaZgbmaHRHhCCy7vdag57HgjB
-         cw4veg02KHYv1G0VjBjblOt60y/D7hKBbXeNw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hwrToBDFY4HIyFLVjgz55WQA/wuDwI/+ZrtWoDNgqy8=;
-        b=hb4ViS67lQLQ4zE4NgdCQ0QiNWh20UY96vcFL+uLUbUkufTR+oJmMOHDe61sTyGHHF
-         kiiS95KYy+lhNnnwN2hyPXMDLgadXO4oeOGnY1NlJY1112de4A2GpcSfFD8kBbI/XpUG
-         a9iB9jAvqzqcymom6ylgsT1HfyOpljHWdpEpRlnkIi5Lj7IIXv+96RdMGCunhq819pVY
-         /m1vLXXl1vKGBV3LapTQBTq0JG7KiTbDOGDfDgJhtY2DERqdrBpI3vSHfv4GGl882u8z
-         tAW7OWbSfnub9kzhm9YDuqyqmCqYlRfSjFTvlvlzVq9iTRv6yF5bLk8/nbqa8RRaGYgA
-         12Yg==
-X-Gm-Message-State: APjAAAW3upP7PogFlovuK0a+eyfn2M0lVP7hTo8oJIgo4RAsypFVgPhc
-        1+n+11iEN5oY63a2kKv2BJCkGA==
-X-Google-Smtp-Source: APXvYqzBa+ZBcDQ+dqyhCzSfqudbD6GhoALp9yymRH4pSJpi2ADb/wQQOBTsiGcGP/atIwo/qfxDjQ==
-X-Received: by 2002:a62:cd86:: with SMTP id o128mr1017346pfg.187.1580167655327;
-        Mon, 27 Jan 2020 15:27:35 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r2sm17236619pgv.16.2020.01.27.15.27.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 15:27:34 -0800 (PST)
-Date:   Mon, 27 Jan 2020 15:27:33 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] pstore: Fix printing of duplicate boot messages to
- console
-Message-ID: <202001271525.E6EB4FDD6@keescook>
-References: <20200123160031.9853-1-saiprakash.ranjan@codeaurora.org>
+        Mon, 27 Jan 2020 18:30:58 -0500
+Received: from mga11.intel.com ([192.55.52.93]:55696 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbgA0Xa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 18:30:58 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 15:30:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,371,1574150400"; 
+   d="scan'208";a="308922734"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 27 Jan 2020 15:30:55 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iwDqJ-0007LT-6q; Tue, 28 Jan 2020 07:30:55 +0800
+Date:   Tue, 28 Jan 2020 07:29:52 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     kbuild-all@lists.01.org, ardb@kernel.org, mingo@redhat.com,
+        kasan-dev@googlegroups.com, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH -next] x86/efi_64: fix a user-memory-access in runtime
+Message-ID: <202001280700.tCtD1cvl%lkp@intel.com>
+References: <20200118063022.21743-1-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200123160031.9853-1-saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20200118063022.21743-1-cai@lca.pw>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 09:30:31PM +0530, Sai Prakash Ranjan wrote:
-> Since commit f92b070f2dc8 ("printk: Do not miss new messages
-> when replaying the log"), CON_PRINTBUFFER flag causes the
-> duplicate boot messages to be printed on the console when
-> PSTORE_CONSOLE and earlycon (boot console) is enabled.
-> Pstore console registers to boot console when earlycon is
-> enabled during pstore_register_console as a part of ramoops
-> initialization in postcore_initcall and the printk core
-> checks for CON_PRINTBUFFER flag and replays the log buffer
-> to registered console (in this case pstore console which
-> just registered to boot console) causing duplicate messages
-> to be printed. Remove the CON_PRINTBUFFER flag from pstore
-> console since pstore is not concerned with the printing of
-> buffer to console but with writing of the buffer to the
-> backend.
+Hi Qian,
 
-I agree this patch isn't the solution, but I'm trying to understand
-where better logic could be added. Is the issue that printk sees both
-earlycon and CON_PRINTBUFFER active? Can we add a new CON_* flag that
-means "not actually printing anything"? (Or maybe a new flag for
-non-printing to replace CON_PRINTBUFFER that lets pstore still work?)
+Thank you for the patch! Perhaps something to improve:
 
--Kees
+[auto build test WARNING on next-20200117]
+[cannot apply to efi/next v5.5]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-> 
-> Console log with earlycon and pstore console enabled:
-> 
-> [    0.008342] Console: colour dummy device 80x25
-> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51df805e]
-> ...
-> [    1.244049] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
-> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51df805e]
-> 
-> Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
-> Reported-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  fs/pstore/platform.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-> index d896457e7c11..271b00db0973 100644
-> --- a/fs/pstore/platform.c
-> +++ b/fs/pstore/platform.c
-> @@ -505,7 +505,7 @@ static void pstore_console_write(struct console *con, const char *s, unsigned c)
->  static struct console pstore_console = {
->  	.name	= "pstore",
->  	.write	= pstore_console_write,
-> -	.flags	= CON_PRINTBUFFER | CON_ENABLED | CON_ANYTIME,
-> +	.flags	= CON_ENABLED | CON_ANYTIME,
->  	.index	= -1,
->  };
->  
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+url:    https://github.com/0day-ci/linux/commits/Qian-Cai/x86-efi_64-fix-a-user-memory-access-in-runtime/20200118-171142
+base:    de970dffa7d19eae1d703c3534825308ef8d5dec
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-153-g47b6dfef-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
--- 
-Kees Cook
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> arch/x86/platform/efi/efi_64.c:1045:48: sparse: sparse: incorrect type in argument 2 (different address spaces)
+>> arch/x86/platform/efi/efi_64.c:1045:48: sparse:    expected void const [noderef] <asn:1> *from
+>> arch/x86/platform/efi/efi_64.c:1045:48: sparse:    got union efi_runtime_services_t [usertype] *[usertype] runtime
+
+vim +1045 arch/x86/platform/efi/efi_64.c
+
+  1020	
+  1021	efi_status_t __init efi_set_virtual_address_map(unsigned long memory_map_size,
+  1022							unsigned long descriptor_size,
+  1023							u32 descriptor_version,
+  1024							efi_memory_desc_t *virtual_map)
+  1025	{
+  1026		efi_runtime_services_t runtime;
+  1027		efi_status_t status;
+  1028		unsigned long flags;
+  1029		pgd_t *save_pgd = NULL;
+  1030	
+  1031		if (efi_is_mixed())
+  1032			return efi_thunk_set_virtual_address_map(memory_map_size,
+  1033								 descriptor_size,
+  1034								 descriptor_version,
+  1035								 virtual_map);
+  1036	
+  1037		if (efi_enabled(EFI_OLD_MEMMAP)) {
+  1038			save_pgd = efi_old_memmap_phys_prolog();
+  1039			if (!save_pgd)
+  1040				return EFI_ABORTED;
+  1041		} else {
+  1042			efi_switch_mm(&efi_mm);
+  1043		}
+  1044	
+> 1045		if (copy_from_user(&runtime, efi.systab->runtime, sizeof(runtime)))
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
