@@ -2,100 +2,107 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB13C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB99EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F66F214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A45BA214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:25:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I6wIgOsg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QXEi5bs5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgA0SSi (ORCPT
+        id S1726080AbgA0SZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 13:18:38 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7100 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgA0SSh (ORCPT
+        Mon, 27 Jan 2020 13:25:43 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32416 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725893AbgA0SZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 13:18:37 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2f296e0000>; Mon, 27 Jan 2020 10:18:22 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 27 Jan 2020 10:18:36 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 27 Jan 2020 10:18:36 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan
- 2020 18:18:36 +0000
-Subject: Re: [PATCH 1/3] mm/gup: track FOLL_PIN pages
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200125021115.731629-1-jhubbard@nvidia.com>
- <20200125021115.731629-2-jhubbard@nvidia.com>
- <20200127130020.4p56lh32twui5563@box>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <c6fc7d3a-48a8-c8a7-fe39-be7a45cb292a@nvidia.com>
-Date:   Mon, 27 Jan 2020 10:18:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 27 Jan 2020 13:25:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580149542;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BFX8a4sKZH8kQ5L4CHJJx/4RB7a0Z7xmq0iIUpWzSgw=;
+        b=QXEi5bs5FoWhXc6GkufJC3vLNKSGxe8hKiTLlC86EmIXHWppj0FFAkDVqFs+r4QnTym7Jv
+        PmSdo/8YarQ/WzNVT3TMsZSIhOxEGqMF/zLhVIzJhAYOmD/Oi5Gg5itmwMgFhr6N3X1Gac
+        fnGV9AKZKo5mB8h4vjbVChBXLjbfHNs=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-AUr9arhGMYieUYN6Gi8Yng-1; Mon, 27 Jan 2020 13:25:38 -0500
+X-MC-Unique: AUr9arhGMYieUYN6Gi8Yng-1
+Received: by mail-wr1-f71.google.com with SMTP id f10so6600550wro.14
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 10:25:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BFX8a4sKZH8kQ5L4CHJJx/4RB7a0Z7xmq0iIUpWzSgw=;
+        b=gH4fHDbbhlMkI6xdR35wDY/PIS3olKnYI6QFGOTmhcFkIm3VZPaUjSMJv2hWrB5PAW
+         JHNbb/YJPtnYVPau0Sy37bHb0j8k9Mpb+knnknC7em9d6wFaqiXIZrwdl6r/PMTfQilJ
+         5858PKyYJg+Q873ptsXHGYZb9J8lkgWwD3LHP7O1+1USVWfHIhtxmStMopL1V2NL0UPq
+         RSPxzPMKdA0I3j7fOU6nHPmsbDXPHIDM84oINTXBd4Rb7o4NgSCiKTixftfM6Azk3aiu
+         Ph8JM6rnrK8m0v1FH54fzcMozDc6yjgB3ZZvFIZ0MRahhekHJPRaO3xhFqK5MLkS1pgs
+         GtNw==
+X-Gm-Message-State: APjAAAV46By8oQkB7fHGK/MP37eS7rLZfTFlXyYZL1+pTl/Z0DrdRGQ/
+        qNTZaQf8lj9+vziYzSRW6jw0oOMQNJGaLZ5BvVPKGF6RiMux8qV5EeYWe484MhwhBMcMuf/BkI/
+        yxAnqUvTTwZVfMz02lajEGJt0
+X-Received: by 2002:a1c:9ac6:: with SMTP id c189mr23259wme.59.1580149537060;
+        Mon, 27 Jan 2020 10:25:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyDrE5ynqU3V8zhMZJssfW8GCZe6nB1OYfPuUC0PRWyZEmUR9pW1XXezbAKi6dGcOgvbIoxHA==
+X-Received: by 2002:a1c:9ac6:: with SMTP id c189mr23244wme.59.1580149536832;
+        Mon, 27 Jan 2020 10:25:36 -0800 (PST)
+Received: from steredhat ([80.188.125.198])
+        by smtp.gmail.com with ESMTPSA id w8sm21405151wmm.0.2020.01.27.10.25.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 10:25:36 -0800 (PST)
+Date:   Mon, 27 Jan 2020 19:25:34 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH liburing 1/1] test: add epoll test case
+Message-ID: <20200127182534.5ljsj53vzpj6kkru@steredhat>
+References: <20200127161701.153625-1-sgarzare@redhat.com>
+ <20200127161701.153625-2-sgarzare@redhat.com>
+ <b1b26e79-507a-b339-2850-d2686661e669@kernel.dk>
 MIME-Version: 1.0
-In-Reply-To: <20200127130020.4p56lh32twui5563@box>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580149102; bh=5eonkyJqWEmrIE7dpZRdx62cpfiZscrBXWaEjD3sZTo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=I6wIgOsgRDFtKKhI3bODVhfF0GXc0gG+t2XGSjEBKhDoxolKPIdDGcknU1jZRIC3k
-         KvhPzWceTRxxrWNYszZc+EPPwsRs1zg8q8ZFlvCvbIp1c+O8bHsWpZkIsV8EU1CCuX
-         TN5gCJhMB5hI9/v+NZFHARPLXgWvJtFzXygKSYSohS1t7NkV6ahnMsrf7Xg2EhY+z+
-         uGUJb4u88rwZBbQvrl7MZqB3H5N+0p/gKWusE27Mh66vlVnC76v8RuJLpRIVDpClfQ
-         /5yjt3tpAI2KxmS2i+D5kFN3F+rzxXd3/AI8EJmgh12Wm/Zw9EpWZXhpZHOAAJMujo
-         UmCiF1/qGbnoA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1b26e79-507a-b339-2850-d2686661e669@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/27/20 5:00 AM, Kirill A. Shutemov wrote:
-> On Fri, Jan 24, 2020 at 06:11:13PM -0800, John Hubbard wrote:
->>  12 files changed, 577 insertions(+), 171 deletions(-)
+On Mon, Jan 27, 2020 at 09:32:43AM -0700, Jens Axboe wrote:
+> On 1/27/20 9:17 AM, Stefano Garzarella wrote:
+> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 > 
-> Can we get it split? There's too much going on to give meaningful review.
-> 
+> You're not reaping CQ events, and hence you overflow the ring. Once
+> overflown, an attempt to submit new IO will returns in a -16/-EBUSY
+> return value. This is io_uring telling you that it won't submit more
+> IO until you've emptied the completion ring so io_uring can flush
+> the overflown entries to the ring.
 
-Sure, I'll split it up, it has gotten quite large for one patch.
+How can I reaping CQ events? (I was hoping the epoll would help me with that)
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+What I'm seeing is that the producer (EPOLLOUT) can fill the SQ without issues,
+the consumer (read()) is receiving all the buffers produced, but the thread
+that frees the buffers (EPOLLIN) is not woken up.
+
+I tried to set a timeout to the epoll_wait(), but the io_uring_peek_cqe()
+returns -EAGAIN.
+
+If I'm using a ring with 16 entries, it seems to work better, but
+sometimes I lose events and the thread that frees the buffer doesn't wake up.
+
+Maybe I'm missing something...
+
+Thanks,
+Stefano
+
