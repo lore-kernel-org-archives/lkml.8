@@ -2,99 +2,97 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CD1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D5DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8F920716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:04:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI98Ast4"
+	by mail.kernel.org (Postfix) with ESMTP id F1E79207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbgA0MEP (ORCPT
+        id S1730435AbgA0MEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:04:15 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43122 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728981AbgA0MEP (ORCPT
+        Mon, 27 Jan 2020 07:04:43 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:34645 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728981AbgA0MEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:04:15 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p23so3668752plq.10;
-        Mon, 27 Jan 2020 04:04:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=mbGosBGsyuv+lmcdBTGzW/Sctu3s1c7RllqCHsUWLtE=;
-        b=cI98Ast4BM6oCG197UHLAKlLPa9AATMLdDvUczPi3/aWkMZF2BfUS0YsZ9ozStgo/I
-         fgrOhvWGI8TlHnjph9PJeW/+pWB7CaFc1arfq1QGYCH3/quq9OLulT+LDw9mY96trTIV
-         H5YEhUQZKETi2Ix8DvB8kqDhr88SRRH+9PSpXCgfXeSgeGSQ/ijIZicENUfsO0dEfi3d
-         48VLE2MiBmVDj9T1lUtBeiy0ecpAQhIKiLI/rXJ9zr34PEWGiJcmTVBW6uMGZvdCgQXj
-         oDbmdGXbElHUFivlXivkWENlA5+q7jaCLD8cNUOLXfYe75/iYi5K53cnQp7dTIW+8Ufk
-         qGvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mbGosBGsyuv+lmcdBTGzW/Sctu3s1c7RllqCHsUWLtE=;
-        b=PB+dpwVY0W1tzK3MAv1+eeA84MGJ/MkKG3cbjAnSsx4pOm9eD6JvQF5wbIXDXkvRun
-         POj757h+3EjQ/7wkAElnH6EKHsjag6H1Ol2wLPXO1Yp+fWhI6GQ1P/8p6F26l7ftLJl3
-         8erP5L0BCq3H8qc2xBSoZ6f0K+Xi70E5bB9K3qsivjgsxmoYd4GXKA99NkIZKJcod4vQ
-         8XhXd72lBpWdxSTZW/4RkAPKmFMr0VVPd+2HJnalP5jQhzPXG56mveicr5TdK57ZcgEC
-         ZgIOxOFpB/7nlVY3RcD8mL/GtHGg+1P1EMnPQTVYrWfrwzm6Jb8Dp/00/IAa/In6iCzl
-         FV6w==
-X-Gm-Message-State: APjAAAWXtlAVlqq+v1HecRw6SpdBKiqwv+jVdJL3z2WnlilUTkmoGk2k
-        D7t25q/c5UtebJU2T+OudcJyNJhI6xA=
-X-Google-Smtp-Source: APXvYqyH5yGQA4JteZYp6k8qa92vWNERBII0FVJ57uJbXRMeoj9ODohNngv0VvCFWgwHKM38I26C9w==
-X-Received: by 2002:a17:902:d918:: with SMTP id c24mr17574054plz.167.1580126654908;
-        Mon, 27 Jan 2020 04:04:14 -0800 (PST)
-Received: from localhost.localdomain ([116.126.226.81])
-        by smtp.googlemail.com with ESMTPSA id u18sm16857352pgn.9.2020.01.27.04.04.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 04:04:14 -0800 (PST)
-From:   JieunKim <jieun.kim4758@gmail.com>
-To:     lorenzo.bianconi83@gmail.com
-Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        JieunKim <jieun.kim4758@gmail.com>
-Subject: [PATCH] iio: imu: st_lsm6dsx: Fix mismatched comments
-Date:   Mon, 27 Jan 2020 21:03:59 +0900
-Message-Id: <20200127120359.3955-1-jieun.kim4758@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 27 Jan 2020 07:04:43 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-175-cI8p4gP0PemWy24hRGo9mw-1; Mon, 27 Jan 2020 12:04:38 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 27 Jan 2020 12:04:37 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 27 Jan 2020 12:04:37 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Nick Desaulniers' <ndesaulniers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        "Jozsef Kadlecsik" <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: [PATCH v2 02/10] netfilter: Avoid assigning 'const' pointer to
+ non-const pointer
+Thread-Topic: [PATCH v2 02/10] netfilter: Avoid assigning 'const' pointer to
+ non-const pointer
+Thread-Index: AQHV0tqUeGprpqPzdU6UR5YgZTE5fKf+a3qA
+Date:   Mon, 27 Jan 2020 12:04:37 +0000
+Message-ID: <ae9e908f4cfd4908a24a0e542731d31b@AcuMS.aculab.com>
+References: <20200123153341.19947-1-will@kernel.org>
+ <20200123153341.19947-3-will@kernel.org>
+ <CAKwvOdm2snorniFunMF=0nDH8-RFwm7wtjYK_Tcwkd+JZinYPg@mail.gmail.com>
+ <20200124082443.GY14914@hirez.programming.kicks-ass.net>
+ <CAKwvOdmTOoTXCGN9NaO5_+sqDsK364=oCiVO_D5=btj1GsJrnw@mail.gmail.com>
+In-Reply-To: <CAKwvOdmTOoTXCGN9NaO5_+sqDsK364=oCiVO_D5=btj1GsJrnw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: cI8p4gP0PemWy24hRGo9mw-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-odr to odr_table
-gain to fs_table
-
-'gain' is actually in 'st_lsm6dsx_fs' structure of 'fs_table'
-
-Signed-off-by: JieunKim <jieun.kim4758@gmail.com>
----
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index 9c3486a8134f..f2113a63721a 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -230,8 +230,8 @@ enum st_lsm6dsx_ext_sensor_id {
-  * @i2c_addr: I2c slave address list.
-  * @wai: Wai address info.
-  * @id: external sensor id.
-- * @odr: Output data rate of the sensor [Hz].
-- * @gain: Configured sensor sensitivity.
-+ * @odr_table: Output data rate of the sensor [Hz].
-+ * @fs_table: Configured sensor sensitivity table depending on full scale.
-  * @temp_comp: Temperature compensation register info (addr + mask).
-  * @pwr_table: Power on register info (addr + mask).
-  * @off_canc: Offset cancellation register info (addr + mask).
--- 
-2.17.1
+RnJvbTogTmljayBEZXNhdWxuaWVycw0KPiBTZW50OiAyNCBKYW51YXJ5IDIwMjAgMTc6MjANCi4u
+Lg0KPiA+ID4gR29vZCB0aGluZyBpdCdzIHRoZSB2YXJpYWJsZSBiZWluZyBtb2RpZmllZCB3YXMg
+bm90IGRlY2xhcmVkIGNvbnN0OyBJDQo+ID4gPiBnZXQgc3Bvb2tlZCB3aGVuIEkgc2VlIC1XZGlz
+Y2FyZGVkLXF1YWxpZmllcnMgYmVjYXVzZSBvZiBTZWN0aW9uDQo+ID4gPiA2LjcuMy42IG9mIHRo
+ZSBJU08gQzExIGRyYWZ0IHNwZWM6DQo+ID4gPg0KPiA+ID4gYGBgDQo+ID4gPiBJZiBhbiBhdHRl
+bXB0IGlzIG1hZGUgdG8gbW9kaWZ5IGFuIG9iamVjdCBkZWZpbmVkIHdpdGggYSBjb25zdC1xdWFs
+aWZpZWQNCj4gPiA+IHR5cGUgdGhyb3VnaCB1c2Ugb2YgYW4gbHZhbHVlIHdpdGggbm9uLWNvbnN0
+LXF1YWxpZmllZCB0eXBlLA0KPiA+ID4gdGhlIGJlaGF2aW9yIGlzIHVuZGVmaW5lZC4NCg0KV2Vs
+bCBzb21lIG9sZCBzeXN0ZW1zIGhhZCBzbWFsbCBpbnRlZ2VyIGNvbnN0YW50cyBhdCBmaXhlcyBh
+ZGRyZXNzZXMuDQpTbyAnY29uc3QgaW50IG9uZSA9IDE7JyAgd291bGQgYmUgYSByZWZlcmVuY2Ug
+dG8gdGhlIGdsb2JhbCBjb25zdGFudC4NCkFuIGFzc2lnbm1lbnQgbGlrZSAnKihpbnQgKikmb25l
+ID0gMjsnIHdvdWxkIGNoYW5nZSB0aGUgdmFsdWUgb2YgdGhlDQpzeXN0ZW0td2lkZSAnb25lJyBj
+b25zdGFudCcuDQoNClByZXR0eSBtdWNoICd1bmRlZmluZWQnLg0KDQpCdXQgbm8gZXhjdXNlIGZv
+ciB0aGUgY29tcGlsZXIganVzdCBkaXNjYXJkaW5nIHRoZSBjb2RlLg0KDQpJIHN1c3BlY3QgdGhh
+dCB0aGUgY29kZSB0byByZW1vdmUgJ2NvbnN0JyBuZWVkcyB0byAnbGF1bmRlcicgdGhlIHZhbHVl
+DQp0aHJvdWdoIGEgc3VpdGFibGUgaW50ZWdlciB0eXBlLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0
+ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBL
+ZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
