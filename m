@@ -2,103 +2,100 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDC9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F38C33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A1921739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE06622522
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580139677;
+	bh=aCVSdoa3+eJc6HvLzy31vDS61hBgZ1rz55uMI+NoCmo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BcSqtSYmfqa9Fjl22Vdw7z9G/xHSz/WzBs70ffq6HZIaRAJUgVi63VutfK0p21/hl
+	 9ojxJLPokXk4hsdoIblzGpOLD6WG+NAfU9b4VMmOJE6CWroA8sjQj3o6MYQaYA6OgS
+	 jbppfS1KP2DSdxOBqUxCI8Jic6X44nLszmsa/+Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbgA0Pj2 convert rfc822-to-8bit (ORCPT
+        id S1729611AbgA0PlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:39:28 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:26169 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729146AbgA0Pj2 (ORCPT
+        Mon, 27 Jan 2020 10:41:16 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36436 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729133AbgA0PlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:39:28 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-150-8MnTs0AvPaqL8Lj0TxP4uA-1; Mon, 27 Jan 2020 15:39:24 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 27 Jan 2020 15:39:24 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 27 Jan 2020 15:39:24 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Steven Rostedt' <rostedt@goodmis.org>
-CC:     'linux-kernel' <linux-kernel@vger.kernel.org>
-Subject: sched/fair: Long delays starting RT processes on idle cpu.
-Thread-Topic: sched/fair: Long delays starting RT processes on idle cpu.
-Thread-Index: AdXVJQ5JxcyiG/NbTmiWGSKnntaALg==
-Date:   Mon, 27 Jan 2020 15:39:24 +0000
-Message-ID: <13797bbe87b64f34877b89a5bbdb6d03@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 27 Jan 2020 10:41:16 -0500
+Received: by mail-ot1-f65.google.com with SMTP id g15so8795436otp.3;
+        Mon, 27 Jan 2020 07:41:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SSAka/+unOWdID+dlGzjX+fU3/o5RpQNSVZW5gnH3WE=;
+        b=UlpyH7xThF7e1EYysadA9L2V2vXr1nkFatKIQ1TjP1FT7lrVkoQECL2VLMmtvuUyqo
+         /BP3SYJtFyM1F7siuTvj0ObQJvpQOv0REFnWioXRqT3LmfAnnzj75RDKpvWw2Sgt61Uv
+         0pL84X3+nLckUa3XUxiTdAs78pBmaZUs9puqxwO6NLiwkrWp3tl3iGAY4OMiKUcDprCH
+         wJAQri32q/ZlrEQJ/55TsOwlXfn/E71LE1i4egik3xto7O8AQ3obrNNQgw8yJBG81Ql4
+         V7MrQYqIz7jR2Tpy8202RYjwt1Gjk0n/HIbeORciom35cemdbTxZAviF04SD0FiceZxA
+         cbPA==
+X-Gm-Message-State: APjAAAVS6urqASPpWWr7gDyz2cXmCIV2neyciQpo1jbTo93AIZ2Mj8vJ
+        er3GwspdAzwM1xRG7ZCtqg==
+X-Google-Smtp-Source: APXvYqyFSBoR7e0fQ95loR0phVN8/LbKEX99IjMFvGvg6Ft5a0R3Rhk1dKI6rdHuGUXnQJKSH+UUPA==
+X-Received: by 2002:a9d:68d1:: with SMTP id i17mr12360581oto.367.1580139675043;
+        Mon, 27 Jan 2020 07:41:15 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l207sm247662oih.25.2020.01.27.07.41.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 07:41:14 -0800 (PST)
+Received: (nullmailer pid 6960 invoked by uid 1000);
+        Mon, 27 Jan 2020 15:41:13 -0000
+Date:   Mon, 27 Jan 2020 09:41:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sricharan R <sricharan@codeaurora.org>
+Cc:     agross@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
+        robh+dt@kernel.org, sivaprak@codeaurora.org,
+        sricharan@codeaurora.org,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: Re: [PATCH V6 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+Message-ID: <20200127154113.GA6904@bogus>
+References: <1579439601-14810-1-git-send-email-sricharan@codeaurora.org>
+ <1579439601-14810-2-git-send-email-sricharan@codeaurora.org>
 MIME-Version: 1.0
-X-MC-Unique: 8MnTs0AvPaqL8Lj0TxP4uA-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579439601-14810-2-git-send-email-sricharan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm seeing long delays (eg up to 90us) between a process being scheduled on an idle cpu
-and the process actually executing.
+On Sun, 19 Jan 2020 18:43:17 +0530, Sricharan R wrote:
+> Add device tree binding Documentation details for ipq6018
+> pinctrl driver.
+> 
+> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+> [V6] 
+>   * Addressed review comments form Rob.
+>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 153 +++++++++++++++++++++
+>  1 file changed, 153 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+> 
 
-This is an ivy bridge cpu:
-model name      : Intel(R) Core(TM) i7-3770 CPU @ 3.40GHz
-
-[    0.583178] intel_idle: MWAIT substates: 0x1120
-[    0.583178] intel_idle: v0.4.1 model 0x3A
-[    0.583293] intel_idle: lapic_timer_reliable_states 0xffffffff
-
-I picked one wakeup out of some ftrace data.
-A short extract:
-Process 10318 (the one that is woken) goes to sleep.
-...
-          <idle>-0     [003] d... 945687.207448: sched_idle_set_state <-cpuidle_enter_state
-          <idle>-0     [003] d... 945687.207449: intel_idle <-cpuidle_enter_state
-          <idle>-0     [003] d... 945687.207449: leave_mm <-intel_idle
-          <idle>-0     [003] d... 945687.207449: switch_mm <-intel_idle
-          <idle>-0     [003] d... 945687.207449: switch_mm_irqs_off <-switch_mm
-
-I think cpu-3 is now executing the MWAIT from mwait_idle_with_hints()
-called from intel_idle() in drivers/idle/intel_idle.c.
-
-Not much happens on any of the cpu for 10ms until a process wakes up from a timed delay
-and then tries to wake up the other threads.
-
-    ProsodySServ-10319 [000] d... 945687.217414: sched_wakeup: comm=ProsodySServ pid=10318 prio=3 target_cpu=003
-    ProsodySServ-10319 [000] d... 945687.217414: task_woken_rt <-ttwu_do_wakeup
-    ProsodySServ-10319 [000] d... 945687.217414: _raw_spin_unlock_irqrestore <-try_to_wake_up
-    ProsodySServ-10319 [000] .... 945687.217414: drop_futex_key_refs.isra.14 <-futex_wake
-
-I presume the above is supposed to have done a memory write that wakes the MWAIT.
-
-There is now a long delay (26us here) before anything happens.
-          <idle>-0     [003] dN.. 945687.217440: sched_idle_set_state <-cpuidle_enter_state
-...
-          <idle>-0     [003] d... 945687.217447: sched_switch: prev_comm=swapper/3 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=ProsodySServ next_pid=10318 next_prio=3
-
-I'd have thought that the processor should wake up much faster than that.
-I can't see the memory write that is paired with the monitor/mwait.
-Does it need a strong barrier?
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Reviewed-by: Rob Herring <robh@kernel.org>
