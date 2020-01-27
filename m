@@ -2,266 +2,169 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459A2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204EFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D711214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580138891;
-	bh=h6yAbeEDNj4aGtXwTWN9LfzdYUqPaLGTyleEb//S984=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=SbK6OGNBuib2JZNYa3lZgXDTcS0PalMqoWmBxy43JrA74GKgPxKyapi44jrUcE1WI
-	 bgBwnP7v2Js3uDsLD+24c6/HicO2eIN6iDElFOJ55RRlxboG1WNjxcqpFeHDInKVDS
-	 E3U8YPKO/AxfTVwUlGSY8Acl7F2x5dUL0a+DFSY8=
+	by mail.kernel.org (Postfix) with ESMTP id F06522087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbgA0P2K (ORCPT
+        id S1729509AbgA0P3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:28:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729146AbgA0P2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:28:09 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8A902087F;
-        Mon, 27 Jan 2020 15:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580138888;
-        bh=h6yAbeEDNj4aGtXwTWN9LfzdYUqPaLGTyleEb//S984=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hJuXuJ05pfh4XAJiE8Cu9zTiGDFKZRkBkT6XHeP72jACJYYPt9/eMsNfp82Scm+WL
-         kq5aDjVCktm/h4wWZmccfUL8IRkAJX0VkedfgDnz8JthfYdQj4HKkXguzaYJ/L5ubi
-         kiT46V6Vsk3JTCNTkhxJSMObppU6md/VdY6i+D2A=
-Message-ID: <1580138886.23679.6.camel@kernel.org>
-Subject: Re: [PATCH v3 00/12] tracing: Add support for in-kernel dynamic
- event API
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        ndesaulniers@google.com
-Date:   Mon, 27 Jan 2020 09:28:06 -0600
-In-Reply-To: <20200127224847.54ad704c08785b85a63c18a5@kernel.org>
-References: <cover.1579904761.git.zanussi@kernel.org>
-         <20200127224847.54ad704c08785b85a63c18a5@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
+        Mon, 27 Jan 2020 10:29:43 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33012 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729146AbgA0P3n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 10:29:43 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 2F431293C86
+Subject: Re: [PATCH 1/4] platform/chrome: Add EC command msg wrapper
+To:     Prashant Malani <pmalani@chromium.org>, bleung@chromium.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200125012105.59903-1-pmalani@chromium.org>
+ <20200125012105.59903-2-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <feb0ef4d-0f03-9bbc-807e-c385c03ffa71@collabora.com>
+Date:   Mon, 27 Jan 2020 16:29:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20200125012105.59903-2-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
+Hi Prashant,
 
-On Mon, 2020-01-27 at 22:48 +0900, Masami Hiramatsu wrote:
-> Hi Tom,
-> 
-> On Fri, 24 Jan 2020 16:56:11 -0600
-> Tom Zanussi <zanussi@kernel.org> wrote:
-> 
-> > Hi,
-> > 
-> > This is v3 of 'tracing: Add support for in-kernel dynamic event
-> > API',
-> > incorporating changes based on suggestions from Masami and Steven.
-> > 
-> >   - Rebased to trace/for-next
-> > 
-> >   - Regularized the entire API to use synth_event_*,
-> > kprobe_event_*,
-> >     dynevent_*, and added some new macros and functions to make
-> > things
-> >     more consistent
-> > 
-> >   - Introduced trace_array_find_get() and used it in
-> >     trace_array_get_file() as suggested
-> >   
-> >   - Removed exports from dynevent_cmd functions that didn't need to
-> > be
-> >     exported
-> > 
-> >   - Switched the param order of __kprobe_event_gen_cmd_start() to
-> > fix
-> >     a problem found building with clang.  Apparently varargs and
-> >     implicit promotion of types like bool don't mix.  Thanks to
-> > Nick
-> >     Desaulniers for pointing that out.
-> > 
-> >   - Updated the documentation for all of the above
-> > 
-> > Text from the v2 posting:
-> > 
-> > This is v2 of the previous 'tracing: Add support for in-kernel
-> > synthetic event API', and is largely a rewrite based on suggestions
-> > from Masami to expand the scope to include other types of dynamic
-> > events such as kprobe events, in addition to the original sythetic
-> > event focus.
-> 
-> Yeah, v3 basically looks good to me now :)
-> Please see my comment on [4/12]. Others are good. You can put my
-> Acked-by to those patches. 
-> 
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> except for [04/12].
-> 
-> Thank you!
+Many thanks for this patch.
+
+On 25/1/20 2:21, Prashant Malani wrote:
+> Many callers of cros_ec_cmd_xfer_status() use a similar set up of
+> allocating and filling a message buffer and then copying any received
+> data to a target buffer.
 > 
 
-OK, I'll add your acks for those.
+cros_ec_cmd_xfer_status is already a wrapper, I dislike the idea of having three
+ways to do the same (cros_ec_cmd_xfer, cros_ec_cmd_xfer_status and this new
+one). I like the idea of have a wrapper that embeds the message allocation but
+we should not confuse users with different calls that does the same.
 
-Thanks for all your comments!
+So, I am for a change like this but I'd like to have all the users calling the
+same wrapper (unless there is a good reason to not use it). A proposed roadmap
+(to be discussed) for this would be.
 
-Tom
+1. Replace all the remaining "cros_ec_cmd_xfer" calls with
+"cros_ec_cmd_xfer_status".
+2. Modify cros_ec_cmd_xfer_status to embed the message allocation.
 
-> > 
-> > The functionality of the original API remains available, though
-> > it's
-> > in a slightly different form due to the use of the new dynevent_cmd
-> > API it's now based on.  The dynevent_cmd API provides a common
-> > dynamic
-> > event command generation capability that both the synthetic event
-> > API
-> > and the kprobe event API are now based on, and there are now test
-> > modules demonstrating both the synthetic event and kprobes APIs.
-> > 
-> > A couple of the patches are snippets from Masami's 'tracing:
-> > bootconfig: Boot-time tracing and Extra boot config' series, and
-> > the
-> > patch implementing the dynevent_cmd API includes some of the
-> > spnprintf() generating code from that patchset.
-> > 
-> > Because I used Masami's gen_*_cmd() naming suggestion for
-> > generating
-> > the commands, the previous patchset's generate_*() functions were
-> > renamed to trace_*() to avoid confusion, and probably is better
-> > naming
-> > anyway.
-> > 
-> > An overview of the user-visible changes in comparison to v1:
-> > 
-> >   - create_synth_event() using an array of synth_desc_fields
-> > remains
-> >     unchanged and works the same way as previously
-> > 
-> >   - gen_synth_cmd() takes a variable-length number of args which
-> >     represent 'type field;' pairs.  Using this with no field args
-> >     basically replaces the previous 'create_empty_synth_event()'
-> > 
-> >   - The 'add_synth_field()' and 'add_synth_fields()' function from
-> > v1
-> >     are essentially the same except that they now take a
-> > dynevent_cmd
-> >     instead of a synth_event pointer
-> > 
-> >   - The finalize_synth_event() from v1 is replaced by
-> >     create_dynevent() in the new version.
-> >   
-> >   - The new v2 API includes some additional functions to initialize
-> >     the dynevent_cmd - synth_dynevent_cmd() is used to do
-> > that.  While
-> >     it's an extra step, it makes it easier to do error handling.
-> > 
-> >   - There's a new trace_synth_event() function that traces a
-> > synthetic
-> >     event using a variable-arg list of values.
-> > 
-> >   - The original generate_synth_event() using an array of values is
-> >     now called trace_synth_event_array().
-> > 
-> >   - For piecewise event tracing, the original
-> >     generate_synth_event_start() and generate_synth_event_end()
-> > have
-> >     now been renamed to trace_synth_event_end().
-> > 
-> >   - add_next_synth_val() and add_synth_val() remain the same.
-> > 
-> >   - A similar API and test module demonstrating the API has been
-> > added
-> >     for kprobe events
-> > 
-> >   - Both the synthetic events and kprobe events API is based on the
-> >     dynevent_cmd API, newly added
-> > 
-> >   - The Documentation for all of the above has been updated
-> > 
-> > Text from the orginal v1 posting:
-> > 
-> > I've recently had several requests and suggestions from users to
-> > add
-> > support for the creation and generation of synthetic events from
-> > kernel code such as modules, and not just from the available
-> > command
-> > line commands.
-> > 
-> > This patchset adds support for that.  The first three patches add
-> > some
-> > minor preliminary setup, followed by the two main patches that add
-> > the
-> > ability to create and generate synthetic events from the
-> > kernel.  The
-> > next patch adds a test module that demonstrates actual use of the
-> > API
-> > and verifies that it works as intended, followed by Documentation.
-> > 
-> > Special thanks to Artem Bityutskiy, who worked with me over several
-> > iterations of the API, and who had many great suggestions on the
-> > details of the interface, and pointed out several problems with the
-> > code itself.
-> > 
-> > The following changes since commit
-> > 659ded30272d67a04b3692f0bfa12263be20d790:
-> > 
-> >   trace/kprobe: Remove unused MAX_KPROBE_CMDLINE_SIZE (2020-01-22
-> > 07:07:38 -0500)
-> > 
-> > are available in the git repository at:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-
-> > trace.git ftrace/synth-event-gen-v3
-> > 
-> > Tom Zanussi (12):
-> >   tracing: Add trace_array_find/_get() to find instance trace
-> > arrays
-> >   tracing: Add trace_get/put_event_file()
-> >   tracing: Add synth_event_delete()
-> >   tracing: Add dynamic event command creation interface
-> >   tracing: Add synthetic event command generation functions
-> >   tracing: Change trace_boot to use synth_event interface
-> >   tracing: Add synth_event_trace() and related functions
-> >   tracing: Add synth event generation test module
-> >   tracing: Add kprobe event command generation functions
-> >   tracing: Change trace_boot to use kprobe_event interface
-> >   tracing: Add kprobe event command generation test module
-> >   tracing: Documentation for in-kernel synthetic event API
-> > 
-> >  Documentation/trace/events.rst       | 515 ++++++++++++++++++++
-> >  include/linux/trace_events.h         | 124 +++++
-> >  kernel/trace/Kconfig                 |  25 +
-> >  kernel/trace/Makefile                |   2 +
-> >  kernel/trace/kprobe_event_gen_test.c | 225 +++++++++
-> >  kernel/trace/synth_event_gen_test.c  | 523 ++++++++++++++++++++
-> >  kernel/trace/trace.c                 |  43 +-
-> >  kernel/trace/trace.h                 |  36 ++
-> >  kernel/trace/trace_boot.c            |  66 ++-
-> >  kernel/trace/trace_events.c          | 325 +++++++++++++
-> >  kernel/trace/trace_events_hist.c     | 896
-> > ++++++++++++++++++++++++++++++++++-
-> >  kernel/trace/trace_kprobe.c          | 160 ++++++-
-> >  12 files changed, 2868 insertions(+), 72 deletions(-)
-> >  create mode 100644 kernel/trace/kprobe_event_gen_test.c
-> >  create mode 100644 kernel/trace/synth_event_gen_test.c
-> > 
-> > -- 
-> > 2.14.1
-> > 
+Thanks,
+ Enric
+
+
+> Create a utility function that performs this setup so that callers can
+> use this function instead.
 > 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>  drivers/platform/chrome/cros_ec_proto.c     | 53 +++++++++++++++++++++
+>  include/linux/platform_data/cros_ec_proto.h |  5 ++
+>  2 files changed, 58 insertions(+)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> index da1b1c4504333..8ef3b7d27d260 100644
+> --- a/drivers/platform/chrome/cros_ec_proto.c
+> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> @@ -5,6 +5,7 @@
+>  
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+> +#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+> @@ -570,6 +571,58 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>  }
+>  EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
+>  
+> +/**
+> + * cros_ec_send_cmd_msg() - Utility function to send commands to ChromeOS EC.
+> + * @ec: EC device struct.
+> + * @version: Command version number (often 0).
+> + * @command: Command ID including offset.
+> + * @outdata: Data to be sent to the EC.
+> + * @outsize: Size of the &outdata buffer.
+> + * @indata: Data to be received from the EC.
+> + * @insize: Size of the &indata buffer.
+> + *
+> + * This function is a wrapper around &cros_ec_cmd_xfer_status, and performs
+> + * some of the common work involved with sending a command to the EC. This
+> + * includes allocating and filling up a &struct cros_ec_command message buffer,
+> + * and copying the received data to another buffer.
+> + *
+> + * Return: The number of bytes transferred on success or negative error code.
+> + */
+> +int cros_ec_send_cmd_msg(struct cros_ec_device *ec, unsigned int version,
+> +			 unsigned int command, void *outdata,
+> +			 unsigned int outsize, void *indata,
+> +			 unsigned int insize)
+> +{
+> +	struct cros_ec_command *msg;
+> +	int ret;
+> +
+> +	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	msg->version = version;
+> +	msg->command = command;
+> +	msg->outsize = outsize;
+> +	msg->insize = insize;
+> +
+> +	if (outdata && outsize > 0)
+> +		memcpy(msg->data, outdata, outsize);
+> +
+> +	ret = cros_ec_cmd_xfer_status(ec, msg);
+> +	if (ret < 0) {
+> +		dev_warn(ec->dev, "Command failed: %d\n", msg->result);
+> +		goto cleanup;
+> +	}
+> +
+> +	if (insize)
+> +		memcpy(indata, msg->data, insize);
+> +
+> +cleanup:
+> +	kfree(msg);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(cros_ec_send_cmd_msg);
+> +
+>  static int get_next_event_xfer(struct cros_ec_device *ec_dev,
+>  			       struct cros_ec_command *msg,
+>  			       struct ec_response_get_next_event_v1 *event,
+> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> index 30098a5515231..166ce26bdd79e 100644
+> --- a/include/linux/platform_data/cros_ec_proto.h
+> +++ b/include/linux/platform_data/cros_ec_proto.h
+> @@ -201,6 +201,11 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+>  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>  			    struct cros_ec_command *msg);
+>  
+> +int cros_ec_send_cmd_msg(struct cros_ec_device *ec_dev, unsigned int version,
+> +			 unsigned int command, void *outdata,
+> +			 unsigned int outsize, void *indata,
+> +			 unsigned int insize);
+> +
+>  int cros_ec_register(struct cros_ec_device *ec_dev);
+>  
+>  int cros_ec_unregister(struct cros_ec_device *ec_dev);
 > 
