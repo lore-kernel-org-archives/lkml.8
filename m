@@ -2,145 +2,148 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AD1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562F4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119142467F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2773924679
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="QyHY+Vts";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="czzgxx2r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GS4Cs8/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgA0Tk5 (ORCPT
+        id S1726205AbgA0Trl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 14:40:57 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33695 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725845AbgA0Tku (ORCPT
+        Mon, 27 Jan 2020 14:47:41 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36129 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgA0Trl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 14:40:50 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BC3C46750;
-        Mon, 27 Jan 2020 14:40:49 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 27 Jan 2020 14:40:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=QijxjuOhiTJlpH+pSCqyCrQ0Dt
-        b85t6Huy4YLag+b5U=; b=QyHY+VtsOk5d3H4o6QrENWrA9kO/2fDYmItOSiwWbX
-        1euLK9y8B5DLSZX6Vnq96oB6lrYxI5LJaZ9vdNFBO825FDDFTmj0FlTqQ3J1pihM
-        8k1c1PIVRCDGM2gBGDzC024AbmTB5Y4k2MVf73CdE7WvHGCjdaLBNxv/B0/1fokr
-        cPMU/pRniwL4P/bEqF/LhOg0TYxARxeJtoMXmAr8biyNBRz4VMDD37dqLekSbyzp
-        zCCAA5puAq8oL2+Y0CC5p7JM5QRf51vmmAEvBwX0H8tiLMwNXaNm/FAa0R0hdI7b
-        tjTmH7Tmv5dQYbghjcbTMU7c93SubVMpHIblTqcrcJFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=QijxjuOhiTJlpH+pS
-        CqyCrQ0Dtb85t6Huy4YLag+b5U=; b=czzgxx2rJXWQ35zpQUkx5M+4kXepV6mVO
-        FhHD74cj9NNdzCH3dQYwlw0zlKDpRAihfBtqpfSOQZGqVTjaErXk+1Xt83nXupJu
-        oy097xaOYJVaz5THLPp1EI7rtzK1LeIESZIH0Ny5RYL7jfn9QG3M0QwFEplJTMNO
-        FZh64Rkt4ZFnYfHUYBN3xoEnTvo8kZhl8J9/rdYS7G7X9D9erxXDWZl9/G4LYSCK
-        bTn9imS3c4vY1XZDzCjkLwsFAtq1vXqC2+oWTkPu5fA6bzta/wyHqxwjDBDGDIx/
-        Wu0u36wFVQwLapOaE9RLpc7wAFQw81kfvg3bYJX4JjzRyVrO7EM6w==
-X-ME-Sender: <xms:wDwvXgujWrg_ae7r2f7ix1eXiGNnwGFix0bT004xqXbMTQGY2CFLcQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfedvgdduvdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdljedtmdenucfjughrpefhvf
-    fufffkofgggfestdekredtredttdenucfhrhhomhepffgrnhhivghlucgiuhcuoegugihu
-    segugihuuhhurdighiiiqeenucfkphepudelledrvddtuddrieegrddufeelnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhu
-    uhdrgiihii
-X-ME-Proxy: <xmx:wDwvXnjAkcSOD4YnlJ7d4fOtVFHNRgQR97_jwgCEGokEBAX2oiFRxA>
-    <xmx:wDwvXq3e1odTVfrBgm0YASMiY9c025wHWyau72u68LylKWggcJEmDw>
-    <xmx:wDwvXrWwc-VuqLhCwx-X2y6HxzPCq-tbJUSbUJA2G2R6k3yt0OLtRw>
-    <xmx:wTwvXhycLQZvFMs7FOwkMT9uZPN4ZbI41LyA8sA4Bl_LpjJdB_2F8g>
-Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [199.201.64.139])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2AF9D328005A;
-        Mon, 27 Jan 2020 14:40:47 -0500 (EST)
-From:   Daniel Xu <dxu@dxuuu.xyz>
-To:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org
-Subject: [PATCH v7 bpf-next 0/2] Add bpf_read_branch_records() helper
-Date:   Mon, 27 Jan 2020 11:40:29 -0800
-Message-Id: <20200127194031.19122-1-dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.21.1
+        Mon, 27 Jan 2020 14:47:41 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f24so7171705lfh.3;
+        Mon, 27 Jan 2020 11:47:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8N56+uwNzL4BtEV3m9/SZahhJM7vJj2lXnrPv331uNA=;
+        b=GS4Cs8/z2H+nsAyIfkIssh2nPOu2dPROaVu1LjaSkVN2FxE7AIdvTaBysC+gP+WeNU
+         HFRwweqZeek8jHre2PRJRpwWpbpB4YIKr1FzOyJx00TnlMGabzvp+Z9n1BO+J3r7KYrC
+         6zkYmGPdizAJxly9h7WwK+a7iP46YWU6LqmRHT2Cpi+/KZbLyrT/FctCi0x8KfjV3J4R
+         tDRj9xS93hifbwrIwrJYZE+YGYlQ6DhkBkRLQwKw/e2pKQEhw8PzqXMkwtBNjfps1QNL
+         oppuNRJXVaDWjteTPI+ZNbKpVqL73icMsK3xJbO5JOmY0xyY7q3hND70yR2NSTqOhOXs
+         G4+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8N56+uwNzL4BtEV3m9/SZahhJM7vJj2lXnrPv331uNA=;
+        b=cqwu60apsbe6rUqhUqTwJFryJ1+RZh8ICToT8SwKtE9AqApm1nh+Vsw8QRtgVWyTj3
+         P405IPVPEA/w2L3wCUNJubqZ0ns4HvpvWsEwXSHFmTYggPLD/cxywlpMsKbIdUKe45xt
+         sCRvq2NBt+pSQ+SIPstUJQS5HeG1EaEyJ7qOmXtZ6O9SnK7A0yHB6gs45dgpIHSDr0GE
+         CSP1H7qMKIVNxfmCzPeF1Ol4gVYJzPOgiCP/IKmi9+cjrNrsad6R7luGNQrfUdiJhcN0
+         9KrHzR6CjViy2ULBqswwhqiwhrEyNaJYwSEi/hfEUNMSWAFpFbMjjVuKn2JSX8lP5YM8
+         YTYA==
+X-Gm-Message-State: APjAAAUu2JPxgcSZlKDYfsWH8M0IhPudAjv2oDP+kYNG2JPYZpOBFg7x
+        +8s5TY8wS8fdP0ttvSUBlxrjjGAF
+X-Google-Smtp-Source: APXvYqw7ijbIubuYLfC7tAZAuVvjYs89FTtBLA619TrkVJ+yACKs6MXi5U9K1mv44MDLYMLGftXRdw==
+X-Received: by 2002:ac2:4c84:: with SMTP id d4mr159657lfl.64.1580154458315;
+        Mon, 27 Jan 2020 11:47:38 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id w19sm8581143lfl.55.2020.01.27.11.47.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 11:47:37 -0800 (PST)
+Subject: Re: [PATCH] usb: phy: tegra: make the code simple by
+ devm_platform_ioremap_resource()
+To:     Dejin Zheng <zhengdejin5@gmail.com>, gregkh@linuxfoundation.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc:     linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200127135841.17935-1-zhengdejin5@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ebb395ec-89ef-12e9-b3a9-2fc35f764ee2@gmail.com>
+Date:   Mon, 27 Jan 2020 22:47:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <20200127135841.17935-1-zhengdejin5@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Branch records are a CPU feature that can be configured to record
-certain branches that are taken during code execution. This data is
-particularly interesting for profile guided optimizations. perf has had
-branch record support for a while but the data collection can be a bit
-coarse grained.
+27.01.2020 16:58, Dejin Zheng пишет:
+> make the code simple by use devm_platform_ioremap_resource() function
+> to replace platform_get_resource() and devm_ioremap().
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+>  drivers/usb/phy/phy-tegra-usb.c | 20 ++------------------
+>  1 file changed, 2 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
+> index ea7ef1dc0b42..8220bb4ce1ed 100644
+> --- a/drivers/usb/phy/phy-tegra-usb.c
+> +++ b/drivers/usb/phy/phy-tegra-usb.c
+> @@ -944,20 +944,12 @@ static int read_utmi_param(struct platform_device *pdev, const char *param,
+>  static int utmi_phy_probe(struct tegra_usb_phy *tegra_phy,
+>  			  struct platform_device *pdev)
+>  {
+> -	struct resource *res;
+>  	int err;
+>  	struct tegra_utmip_config *config;
+>  
+>  	tegra_phy->is_ulpi_phy = false;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get UTMI pad regs\n");
+> -		return  -ENXIO;
+> -	}
+> -
+> -	tegra_phy->pad_regs = devm_ioremap(&pdev->dev, res->start,
+> -		resource_size(res));
+> +	tegra_phy->pad_regs = devm_platform_ioremap_resource(pdev, 1);
+>  	if (!tegra_phy->pad_regs) {
+>  		dev_err(&pdev->dev, "Failed to remap UTMI pad regs\n");
+>  		return -ENOMEM;
+> @@ -1054,7 +1046,6 @@ MODULE_DEVICE_TABLE(of, tegra_usb_phy_id_table);
+>  static int tegra_usb_phy_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_device_id *match;
+> -	struct resource *res;
+>  	struct tegra_usb_phy *tegra_phy = NULL;
+>  	struct device_node *np = pdev->dev.of_node;
+>  	enum usb_phy_interface phy_type;
+> @@ -1071,14 +1062,7 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
+>  	}
+>  	tegra_phy->soc_config = match->data;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get I/O memory\n");
+> -		return  -ENXIO;
+> -	}
+> -
+> -	tegra_phy->regs = devm_ioremap(&pdev->dev, res->start,
+> -		resource_size(res));
+> +	tegra_phy->regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (!tegra_phy->regs) {
+>  		dev_err(&pdev->dev, "Failed to remap I/O memory\n");
+>  		return -ENOMEM;
+> 
 
-We (Facebook) have seen in experiments that associating metadata with
-branch records can improve results (after postprocessing). We generally
-use bpf_probe_read_*() to get metadata out of userspace. That's why bpf
-support for branch records is useful.
+Hello Dejin,
 
-Aside from this particular use case, having branch data available to bpf
-progs can be useful to get stack traces out of userspace applications
-that omit frame pointers.
-
-Changes in v7:
-- Const-ify and static-ify local var
-- Documentation formatting
-
-Changes in v6:
-- Move #ifdef a little to avoid unused variable warnings on !x86
-- Test negative condition in selftest (-EINVAL on improperly configured
-  perf event)
-- Skip positive condition selftest on setups that don't support branch
-  records
-
-Changes in v5:
-- Rename bpf_perf_prog_read_branches() -> bpf_read_branch_records()
-- Rename BPF_F_GET_BR_SIZE -> BPF_F_GET_BRANCH_RECORDS_SIZE
-- Squash tools/ bpf.h sync into selftest commit
-
-Changes in v4:
-- Add BPF_F_GET_BR_SIZE flag
-- Return -ENOENT on unsupported architectures
-- Only accept initialized memory in helper
-- Check buffer size is multiple of sizeof(struct perf_branch_entry)
-- Use bpf skeleton in selftest
-- Add commit messages
-- Spelling and formatting
-
-Changes in v3:
-- Document filling unused buffer with zero
-- Formatting fixes
-- Rebase
-
-Changes in v2:
-- Change to a bpf helper instead of context access
-- Avoid mentioning Intel specific things
-
-Daniel Xu (2):
-  bpf: Add bpf_read_branch_records() helper
-  selftests/bpf: add bpf_read_branch_records() selftest
-
- include/uapi/linux/bpf.h                      |  25 ++-
- kernel/trace/bpf_trace.c                      |  41 ++++
- tools/include/uapi/linux/bpf.h                |  25 ++-
- .../selftests/bpf/prog_tests/perf_branches.c  | 182 ++++++++++++++++++
- .../selftests/bpf/progs/test_perf_branches.c  |  74 +++++++
- 5 files changed, 345 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_branches.c
- create mode 100644 tools/testing/selftests/bpf/progs/test_perf_branches.c
-
--- 
-2.21.1
-
+Unfortunately this is not a correct change because registers are shared
+by both PHY and USB controllers on Tegra SoCs. The
+devm_platform_ioremap_resource() can't be used here because it makes the
+mapping exclusive for a single driver, while it should be shared.
