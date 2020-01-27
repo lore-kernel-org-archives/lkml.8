@@ -2,74 +2,75 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC02C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDE3C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5692A207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580119240;
-	bh=/vTowjDIUnwjl81wFtl/OQM+koWRAV7kT/DB0wH+CJw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mrUh8lFkPCdRUD5EknaETB+7CUZXX8+O1rX++COkBDqnj/TQM3GyBXCy3iSGFrj74
-	 OobCSeZIXN/sPxgyEUO9o4n3wNQ7xMCN1OMtOgVPwONJ57sHROs3AqRxx+6VkGs4ST
-	 LFCVkOS2yzPCm9VwmabfjYcCo2W1Mb4DWTZW28m4=
+	by mail.kernel.org (Postfix) with ESMTP id 62638207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:05:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HZF2gJMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgA0KAj (ORCPT
+        id S1726571AbgA0KFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 05:00:39 -0500
-Received: from mail-pj1-f54.google.com ([209.85.216.54]:34864 "EHLO
-        mail-pj1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgA0KAj (ORCPT
+        Mon, 27 Jan 2020 05:05:24 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:51835 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgA0KFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 05:00:39 -0500
-Received: by mail-pj1-f54.google.com with SMTP id q39so2911381pjc.0;
-        Mon, 27 Jan 2020 02:00:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mckNNp9UKxn7W2DnL8nnDaXbQehqA1+WXvXBkFoXeuc=;
-        b=RBv6hdOOhhfk1QrJz7mI7SjMFmFgUM3RbEDIe391LQnb5vCxGPsbiwlSNhphe1gv8O
-         X08vMAsJ7rWRDC/VZ0Fr6p+/raaTgFk6vsG1ovDmO0Y3c1QL1VNo4xdbt8pEUnDGK+sN
-         bUQEJGHsDxUzm2ZI8XTBKpPU+qVfg6Bgk45sFgc805RYm4Ki3ezC0zNlOdrJd9SYVLlv
-         rAnWzNEcvlqq7BlIjVDC3FNUb0dwY0TxPcrjlXL69egPXmh3tk9UQ/B85PO1WpwaRSJu
-         SjY2WscqnNeJiKC5WDlPIHh0PS7AFyfCwWlvAy7/uJdlwumbXMw6LzS9CRlPQwDbglgE
-         hZjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=mckNNp9UKxn7W2DnL8nnDaXbQehqA1+WXvXBkFoXeuc=;
-        b=CpBzgRlGzHNpR8vLJEs8sYq1hgbHlZY/8E98kB9EhufOv7qJcTWSzwdgq8O3mZ4dyQ
-         4j4Zioe93mTRF/BdBTYtpdXYcQEUNGtGU78A+6Ez2zif98j1u9UvVzV9+niQro65Uz1F
-         /ffBIdOVOmXwm84SsZNdeg0NloskSrXmhUfg1ba/zy0Ii8yZPaNNzEas/CHyYqnLJSHa
-         TpX0WIkGKTeE3PVn5fSWGTSOvCwSjAKHh0hLjAlGs3HxMYMhx2wdF5eq7KwWVcf9SKDn
-         4r/C1JBIzIoj6nu7Zm0qjlzZBMxYu+J3WYHKmXdmDlAjNF6MjuLRHHBBYoLqLloVk0NU
-         L1ng==
-X-Gm-Message-State: APjAAAWPnAG7hTlo5lDQeLBGO2uQkrILCbRf0kZZA1cAIzg3StYsMeu2
-        ob0hHlKpigTl9pNX862+zVL+UoN8
-X-Google-Smtp-Source: APXvYqyEZXf/qpC3z+cjP4kg9QoMak2TCNYMdkPHJYzLUUOHOsiEXIREklX7KvRgxxOue5EilOZvDw==
-X-Received: by 2002:a17:902:bd87:: with SMTP id q7mr16877875pls.239.1580119238437;
-        Mon, 27 Jan 2020 02:00:38 -0800 (PST)
-Received: from gaurie.seo.corp.google.com ([2401:fa00:d:1:4eb0:a5ef:3975:7440])
-        by smtp.gmail.com with ESMTPSA id v9sm15497872pja.26.2020.01.27.02.00.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 02:00:37 -0800 (PST)
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] tools lib api fs: Move cgroupsfs_find_mountpoint()
-Date:   Mon, 27 Jan 2020 19:00:31 +0900
-Message-Id: <20200127100031.1368732-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+        Mon, 27 Jan 2020 05:05:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1580119524; x=1611655524;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pEiBy0/1gxtwKsVjJCWqnNuQe23b5IP2jxA7ZCDT+Z4=;
+  b=HZF2gJMo7WQUNNh92a+FWB/48ngcp3yhRbBa2t50itqNzKcMjB738nsO
+   Q4KW5/rPPFKWgnRUuKqllN5QjzYUMf1rVBcK03Jzw5EL0xa+FYF2kfAbd
+   PzsuC+vzkW2nuq11YsN8ssTTvQKqJHrzDA2EUG0Mum89Z2a4yXVRzIRZp
+   2U0BS1NpCsoRuNyP3cZZMn338XLEQCAM8/f3Mm/fWtuGd7zXqPLBglsAf
+   CEVmXAeiELLh98Ym0ySWozSJ6gPdQYPVuUISCDs5uUvNe1EMzNu/gIfXO
+   M0UeoNwfPjYKz/SLIpgbzgrGKRCPU7gL7pRmwwQ1J62PcYpv/APHGwsLm
+   A==;
+IronPort-SDR: 86VdYkwchWFRCVhc5pYZP0F7x+ESzaVYp4vrGSSDOKu3S6xZC24igmdZIiHPlln4YZXh0c/QKy
+ nAAKxDwi3TNYUDbWpyj6LBUFMm+z1lEVjKJSF5KeDXCVWietRPUFYA0agW+o2Hqu532tGBZR46
+ HQE/+12XjI5gE1tARyTmqBNwfhVDreF41GPZTa2G0hTFWMpB7sSr3xFtBZiIKqPOaXZUVhw56O
+ Hnxk/iGeHCoOhH4GVcf0vo/7aHyY2nbkhyEzJ4ELAPGUzxVQ91fShiH9tzj+4LUeqkjnD1HXRM
+ uMA=
+X-IronPort-AV: E=Sophos;i="5.70,369,1574092800"; 
+   d="scan'208";a="236370278"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Jan 2020 18:05:23 +0800
+IronPort-SDR: F+I4MwcEstzyjXXCAAbm4mg0aze0UeF9AwQwYHQqW4Qbch9V3FEwbXyvOZtat0z46BG1wQBQv1
+ D7kCe/aG+7hhTW+3iuUyJapACA/shBaZqFJ3Q1h2JC4CB9ODcezgW+loDZTDWZeKCOKgPXWeFb
+ R8Q7b4+Rmjrhs9gZGDnY6C9o7zDE/XLZltO0JniTKoIXw5Hbf6wGobuKpS0nbCBrzuV1EmZQfB
+ poFFDNia3gyrTsMvgaqXi5Xf6e2+6jjxzP/s6e5YrhClOyPXFvdOlSIoYIe0wXIrBlwbT2N0A/
+ aSA1svQt/xHF5lia8t7FFGb6
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 01:58:39 -0800
+IronPort-SDR: nSL08Pnm1XKeZY4BMmzJQ8RhxMi7j0wi7gACcOOCZWMcMxDr8Ggv8z1Xt2yR9TSTbA2CLJtOT5
+ VrkDXeJ58OIyNpJJpIAt29bUPaZl4WLnNm8T4TbiPt4WixoiOdz6uS+V9pt0xao6RVKThbrGV0
+ PtUWJ7gAvuWQXLGo3mGpYDf8Nluj9PTAjKqGRugHnyXKtSeR1mj7jWTykCJQB/nggKdaKEeSW/
+ zI89dHpgtGyFMa4zjZqsIg7HFTfd9xFdLPZzld5d8kgF5U13nroq/nF0YCwMLmtuS+d9j0pGAW
+ 8GQ=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 27 Jan 2020 02:05:22 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH v9 0/2] New zonefs file system
+Date:   Mon, 27 Jan 2020 19:05:19 +0900
+Message-Id: <20200127100521.53899-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,207 +78,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move it from tools/perf/util/cgroup.c as it can be used by other places.
-Note that cgroup filesystem is different from others since it's usually
-mounted separately (in v1) for each subsystem.
+zonefs is a very simple file system exposing each zone of a zoned block
+device as a file. Unlike a regular file system with zoned block device
+support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
+the sequential write constraint of zoned block devices to the user.
+Files representing sequential write zones of the device must be written
+sequentially starting from the end of the file (append only writes).
 
-I just copied the code with a little modification to pass a name of
-subsystem.
+zonefs is not a POSIX compliant file system. It's goal is to simplify
+the implementation of zoned block devices support in applications by
+replacing raw block device file accesses with a richer file based API,
+avoiding relying on direct block device file ioctls which may
+be more obscure to developers. One example of this approach is the
+implementation of LSM (log-structured merge) tree structures (such as
+used in RocksDB and LevelDB) on zoned block devices by allowing SSTables
+to be stored in a zone file similarly to a regular file system rather
+than as a range of sectors of a zoned device. The introduction of the
+higher level construct "one file is one zone" can help reducing the
+amount of changes needed in the application while at the same time
+allowing the use of zoned block devices with various programming
+languages other than C.
 
-Suggested-by: Jiri Olsa <jolsa@redhat.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/lib/api/fs/Build    |  1 +
- tools/lib/api/fs/cgroup.c | 67 +++++++++++++++++++++++++++++++++++++++
- tools/lib/api/fs/fs.h     |  2 ++
- tools/perf/util/cgroup.c  | 63 ++----------------------------------
- 4 files changed, 72 insertions(+), 61 deletions(-)
- create mode 100644 tools/lib/api/fs/cgroup.c
+zonefs IO management implementation uses the new iomap generic code.
 
-diff --git a/tools/lib/api/fs/Build b/tools/lib/api/fs/Build
-index f4ed9629ae85..0f75b28654de 100644
---- a/tools/lib/api/fs/Build
-+++ b/tools/lib/api/fs/Build
-@@ -1,2 +1,3 @@
- libapi-y += fs.o
- libapi-y += tracing_path.o
-+libapi-y += cgroup.o
-diff --git a/tools/lib/api/fs/cgroup.c b/tools/lib/api/fs/cgroup.c
-new file mode 100644
-index 000000000000..889a6eb4aaca
---- /dev/null
-+++ b/tools/lib/api/fs/cgroup.c
-@@ -0,0 +1,67 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/stringify.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include "fs.h"
-+
-+int cgroupfs_find_mountpoint(char *buf, size_t maxlen, const char *subsys)
-+{
-+	FILE *fp;
-+	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
-+	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
-+	char *token, *saved_ptr = NULL;
-+
-+	fp = fopen("/proc/mounts", "r");
-+	if (!fp)
-+		return -1;
-+
-+	/*
-+	 * in order to handle split hierarchy, we need to scan /proc/mounts
-+	 * and inspect every cgroupfs mount point to find one that has
-+	 * perf_event subsystem
-+	 */
-+	path_v1[0] = '\0';
-+	path_v2[0] = '\0';
-+
-+	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
-+				__stringify(PATH_MAX)"s %*d %*d\n",
-+				mountpoint, type, tokens) == 3) {
-+
-+		if (!path_v1[0] && !strcmp(type, "cgroup")) {
-+
-+			token = strtok_r(tokens, ",", &saved_ptr);
-+
-+			while (token != NULL) {
-+				if (subsys && !strcmp(token, subsys)) {
-+					strcpy(path_v1, mountpoint);
-+					break;
-+				}
-+				token = strtok_r(NULL, ",", &saved_ptr);
-+			}
-+		}
-+
-+		if (!path_v2[0] && !strcmp(type, "cgroup2"))
-+			strcpy(path_v2, mountpoint);
-+
-+		if (path_v1[0] && path_v2[0])
-+			break;
-+	}
-+	fclose(fp);
-+
-+	if (path_v1[0])
-+		path = path_v1;
-+	else if (path_v2[0])
-+		path = path_v2;
-+	else
-+		return -1;
-+
-+	if (strlen(path) < maxlen) {
-+		strcpy(buf, path);
-+		return 0;
-+	}
-+	return -1;
-+}
-diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-index 92d03b8396b1..936edb95e1f3 100644
---- a/tools/lib/api/fs/fs.h
-+++ b/tools/lib/api/fs/fs.h
-@@ -28,6 +28,8 @@ FS(bpf_fs)
- #undef FS
- 
- 
-+int cgroupfs_find_mountpoint(char *buf, size_t maxlen, const char *subsys);
-+
- int filename__read_int(const char *filename, int *value);
- int filename__read_ull(const char *filename, unsigned long long *value);
- int filename__read_xll(const char *filename, unsigned long long *value);
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index 4881d4af3381..5bc9d3b01bd9 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -3,75 +3,16 @@
- #include "evsel.h"
- #include "cgroup.h"
- #include "evlist.h"
--#include <linux/stringify.h>
- #include <linux/zalloc.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <api/fs/fs.h>
- 
- int nr_cgroups;
- 
--static int
--cgroupfs_find_mountpoint(char *buf, size_t maxlen)
--{
--	FILE *fp;
--	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
--	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
--	char *token, *saved_ptr = NULL;
--
--	fp = fopen("/proc/mounts", "r");
--	if (!fp)
--		return -1;
--
--	/*
--	 * in order to handle split hierarchy, we need to scan /proc/mounts
--	 * and inspect every cgroupfs mount point to find one that has
--	 * perf_event subsystem
--	 */
--	path_v1[0] = '\0';
--	path_v2[0] = '\0';
--
--	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
--				__stringify(PATH_MAX)"s %*d %*d\n",
--				mountpoint, type, tokens) == 3) {
--
--		if (!path_v1[0] && !strcmp(type, "cgroup")) {
--
--			token = strtok_r(tokens, ",", &saved_ptr);
--
--			while (token != NULL) {
--				if (!strcmp(token, "perf_event")) {
--					strcpy(path_v1, mountpoint);
--					break;
--				}
--				token = strtok_r(NULL, ",", &saved_ptr);
--			}
--		}
--
--		if (!path_v2[0] && !strcmp(type, "cgroup2"))
--			strcpy(path_v2, mountpoint);
--
--		if (path_v1[0] && path_v2[0])
--			break;
--	}
--	fclose(fp);
--
--	if (path_v1[0])
--		path = path_v1;
--	else if (path_v2[0])
--		path = path_v2;
--	else
--		return -1;
--
--	if (strlen(path) < maxlen) {
--		strcpy(buf, path);
--		return 0;
--	}
--	return -1;
--}
--
- static int open_cgroup(const char *name)
- {
- 	char path[PATH_MAX + 1];
-@@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
- 	int fd;
- 
- 
--	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
-+	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
- 		return -1;
- 
- 	scnprintf(path, PATH_MAX, "%s/%s", mnt, name);
+Changes from v8:
+* Comments typos fixes and improvements as suggested by Darrick and
+  Dave.
+* Improved IO error handling:
+  - Better sequential file write pointer checks on write IO error
+  - Extended zone condition checks on IO error to all types of IOs
+  - Added mount options for controlling the FS behavior when a zone
+    write pointer corruption is detected.
+* Cleanup zonefs_iomap_begin() and its use in zonefs_map_blocks()
+* Ignore RWF_NOWAIT to avoid out of order writes on sequential zone
+  files.
+* Improved documentation file
+
+Changes from v7:
+* Fixed static checker warnings:
+  - Set-but-not-used variable in zonefs_file_buffered_write()
+  - Use S_ISDIR() in zonefs_inode_setattr()
+
+Changes from v6:
+* Fixed documentation as suggested by Randy.
+
+Changes from v5:
+* Added simple description of zoned block devices to the documentation,
+  as suggested by Johannes.
+* Added a 64-char max label field to the super block to allow label
+  based identification of volumes using libblkid (checked with a patch
+  to libblkid).
+
+Changes from v4:
+* Use octal values for file and directory permissions
+* Set initial directory permissions to 0555 (no write permission)
+* Prevent setting write permissions for directories
+
+Changes from v3:
+* Fixed many typos in the documentation
+* Use symbolic file permission macros instead of octal values
+  (checkpatch.pl complains about this)
+
+Changes from v2:
+* Address comments and suggestions from Darrick:
+  - Make the inode of OFFLINE and READONLY zones immutable when
+    mounting. Also do this during zone information check after an IO
+    error.
+  - Change super block CRC seed to ~0.
+  - Avoid potential compiler warning in zonefs_create_zgroup().
+* Fixed endianness related compilation warning detected by kbuild bot.
+
+Changes from v1:
+* Fixed comment typo
+* Improved documentation as suggested by Hannes
+
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
+
+ Documentation/filesystems/zonefs.txt |  258 +++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1366 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  187 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 1837 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
+
 -- 
-2.25.0.341.g760bfbb309-goog
+2.24.1
 
