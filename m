@@ -2,169 +2,270 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C5CC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E34C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368B324681
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:30:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RXYubqq5"
+	by mail.kernel.org (Postfix) with ESMTP id 263DE20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgA0Wav (ORCPT
+        id S1726670AbgA0WdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 17:30:51 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42867 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgA0Wav (ORCPT
+        Mon, 27 Jan 2020 17:33:04 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:42698 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726101AbgA0WdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 17:30:51 -0500
-Received: by mail-qk1-f196.google.com with SMTP id q15so11382037qke.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 14:30:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/xn6Inxb6zuojs0iU7vTmsWoRmbZmQqG7zN5KkIu1iw=;
-        b=RXYubqq5Vbt9/Yqh8rRc3gW77GBTJ9ktqMwX5BzBMFzzOT2bfEFFer+ZATdml4q/L8
-         yeUOXdIXzpuY6tZZqtw3VnhfsjSheZCS0/Gla/Xdu7BNRdS4IpGlq4doJ5Bkrzt4xX6A
-         szH+cb+WI7yNz8moAdV/Kr2o5h5MW7f9s8NyngUeHka78W+CdMlAM41W/l19UsOM96tl
-         XdWQ0NvsVIuflJlp87Lsp8b5jFxwqtmUOaizejZb+TkDnH1G1uVVvhWbqDycJoI1H35g
-         WyAdOfAKKVRFvXixsNa5QQkHdeIC085SjF1Ebd1YCifclqVFWwV3CSQkl/gYtzNQtvlJ
-         ll/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/xn6Inxb6zuojs0iU7vTmsWoRmbZmQqG7zN5KkIu1iw=;
-        b=e+0yDySEpNdwoQhDhoftAn1noIt+2MupII4uJo6Kds42+hikxpbvcOExZ/FtMoJHut
-         xDMPXqlPwGW0tQ8bU83q5VX72OEGtQNJ064mRR5I7S2GvSaF1ewBT1wm3ahJgx+8i0Ka
-         aQuTCsK2zdOKX0UA3O6CQ17uXMKrFcV9D5kx6bPDppVoHfhitykmh/hzxmukA3VM5enw
-         nlqSG0FCzWOtmyqzfSWa+IYUKLdJIudrKdjWB2PN9NBp3b5PJHNvNvNPW6OEZ6L0GFTl
-         W0505XYizXjkRL6+iBN7qKlwKvSEn6KOzU0U/0wIOXqcMo8uObPjUSIw/BuC1g0kzb7/
-         iCqw==
-X-Gm-Message-State: APjAAAVtbRKUCF0/8jX1KszJ8JI43ZLfhnHXdLdHCU0GgJk5wvwmI4m1
-        8MqNGZVYExTGteNtXzkQNp14GiqDc0CDRfpKydm7YA==
-X-Google-Smtp-Source: APXvYqxCSQrirUnN+FZ82T0KdKjdeTod7OErds5KLF8UmezscEdKL2MJ9VbnHcnHl/RVaw2STHVzvy/g3A5rXPztxxQ=
-X-Received: by 2002:a37:6794:: with SMTP id b142mr19240197qkc.216.1580164248519;
- Mon, 27 Jan 2020 14:30:48 -0800 (PST)
+        Mon, 27 Jan 2020 17:33:04 -0500
+Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E64C13A18D0;
+        Tue, 28 Jan 2020 09:32:57 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iwCwC-000595-Pp; Tue, 28 Jan 2020 09:32:56 +1100
+Date:   Tue, 28 Jan 2020 09:32:56 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
+ stack on the same CPU
+Message-ID: <20200127223256.GA18610@dread.disaster.area>
+References: <20200127143608.GX3466@techsingularity.net>
 MIME-Version: 1.0
-References: <20200127210014.5207-1-tkjos@google.com>
-In-Reply-To: <20200127210014.5207-1-tkjos@google.com>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Mon, 27 Jan 2020 14:30:36 -0800
-Message-ID: <CAJWu+orT-A5HVi97ccKwMvs9MvXWV0MZhsKcZDNS8r-gqRmcDA@mail.gmail.com>
-Subject: Re: [PATCH] staging: android: ashmem: Disallow ashmem memory from
- being remapped
-To:     Todd Kjos <tkjos@google.com>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve Hjonnevag <arve@android.com>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martijn Coenen <maco@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Jann Horn <jannh@google.com>, stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127143608.GX3466@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=0d4712DzcxtLHTL675QA:9
+        a=7Xq_qdO54CbiHfrq:21 a=_PJthSLu79-rBWCo:21 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 1:00 PM 'Todd Kjos' via kernel-team
-<kernel-team@android.com> wrote:
->
-> From: Suren Baghdasaryan <surenb@google.com>
->
-> When ashmem file is being mmapped the resulting vma->vm_file points to the
-> backing shmem file with the generic fops that do not check ashmem
-> permissions like fops of ashmem do. Fix that by disallowing mapping
-> operation for backing shmem file.
+On Mon, Jan 27, 2020 at 02:36:08PM +0000, Mel Gorman wrote:
+> Commit 8ab39f11d974 ("xfs: prevent CIL push holdoff in log
+> recovery") changed from using bound workqueues to using unbound
+> workqueues. Functionally this makes sense but it was observed at the time
+> that the dbench performance dropped quite a lot and CPU migrations were
+> excessively high even when there are plenty of idle CPUs.
 
-Looks good, but I think the commit message is confusing. I had to read
-the code a couple times to understand what's going on since there are
-no links to a PoC for the security issue, in the commit message. I
-think a better message could have been:
+Hmmm - that just made the CIL workqueue WQ_UNBOUND. Not a complex
+change...
 
- When ashmem file is mmapped, the resulting vma->vm_file points to the
- backing shmem file with the generic fops that do not check ashmem
- permissions like fops of ashmem do. If an mremap is done on the ashmem
- region, then the permission checks will be skipped. Fix that by disallowing
- mapping operation on the backing shmem file.
+> The pattern of the task migration is straight-forward. With XFS, an IO
+> issuer may delegate work to a kworker which wakes on the same CPU. On
+> completion of the work, it wakes the task, finds that the previous CPU
+> is busy (because the kworker is still running on it) and migrates the
+> task to the next idle CPU. The task ends up migrating around all CPUs
+> sharing a LLC at high frequency. This has negative implications both in
+> commication costs and power management.  mpstat confirmed that at low
+> thread counts that all CPUs sharing an LLC has low level of activity.
 
-Or did I miss something?
+Very interesting, Mel. :)
 
-thanks!
+I suspect this appears is a very similar issue that is discussed in
+this thread about workqueues and AIO completion latencies:
 
-- Joel
+https://lore.kernel.org/lkml/20191114113153.GB4213@ming.t460p/
 
+The problem is described here, along with comments about how
+fundamental this behaviour is to the correct functioning of
+filesystems:
 
+https://lore.kernel.org/lkml/20191121221051.GG4614@dread.disaster.area/
 
->
-> Reported-by: Jann Horn <jannh@google.com>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> Cc: stable <stable@vger.kernel.org> # 4.4,4.9,4.14,4.18,5.4
-> Signed-off-by: Todd Kjos <tkjos@google.com>
-> ---
->  drivers/staging/android/ashmem.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->
-> diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
-> index 74d497d39c5a..c6695354b123 100644
-> --- a/drivers/staging/android/ashmem.c
-> +++ b/drivers/staging/android/ashmem.c
-> @@ -351,8 +351,23 @@ static inline vm_flags_t calc_vm_may_flags(unsigned long prot)
->                _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
->  }
->
-> +static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
-> +{
-> +       /* do not allow to mmap ashmem backing shmem file directly */
-> +       return -EPERM;
-> +}
-> +
-> +static unsigned long
-> +ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
-> +                               unsigned long len, unsigned long pgoff,
-> +                               unsigned long flags)
-> +{
-> +       return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
-> +}
-> +
->  static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+There are several patches thrown about during the discussion,
+initially focussed on wakeup pre-emption to run the work immediately
+until I pointed out that was the wrong thing to do for work being
+deferred to workqueues.  After a some more proposed patches the
+discussion on the scheduler side of things largely ground to a halt
+and so has not been fixed.
+
+So I'm initially wondering if this solves that problem, too, or
+whether you are seeing a slightly different manifestation of that
+same scheduler issue....
+
+> The impact of this problem is related to the number of CPUs sharing an LLC.
+> 
+> This patch special cases the pattern and allows a kworker waker and a
+> task wakee to stack on the same CPU if there is a strong chance they are
+> directly related. The expectation is that the kworker is likely going
+> back to sleep shortly. This is not guaranteed as the IO could be queued
+> asynchronously but there is a very strong relationship between the task and
+> kworker in this case that would justify stacking on the same CPU instead
+> of migrating. There should be few concerns about kworker starvation given
+> that the special casing is only when the kworker is the waker.
+> DBench on XFS
+
+[snip positive dbench results]
+
+Yeah, dbench does lots of synchronous operations that end up waiting
+on journal flushes (data integrity operations) so it would trip over
+kworker scheduling latency issues.
+
+FWIW, I didn't see any perf degradation on my machines from the
+commit you quoted, but I also had a real hard time replication the
+aio completion latency problem on them as well. Hence I don't think
+they are particularly susceptible to bad migration decisions, so I'm
+not surprised I didn't see this.
+
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index fe4e0d775375..76df439aff76 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5912,6 +5912,19 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+>  	    (available_idle_cpu(prev) || sched_idle_cpu(prev)))
+>  		return prev;
+>  
+> +	/*
+> +	 * Allow a per-cpu kthread to stack with the wakee if the
+> +	 * kworker thread and the tasks previous CPU are the same.
+> +	 * The assumption is that the wakee queued work for the
+> +	 * per-cpu kthread that is now complete and the wakeup is
+> +	 * essentially a sync wakeup.
+> +	 */
+> +	if (is_per_cpu_kthread(current) &&
+> +	    prev == smp_processor_id() &&
+> +	    this_rq()->nr_running <= 1) {
+> +		return prev;
+> +	}
+
+Ok, so if I've read this correctly, this special case only triggers
+when scheduling from the per-cpu kworker thread context, and only if
+there is one other runnable task on the queue? So it special cases
+the ping-pong case so that the non-bound task that scheduled the
+kworker also remains scheduled this CPU?
+
+Hmmmm.
+
+When we set up a workqueue as WQ_UNBOUND on a numa system, isn't the
+worker pool set up as a node-bound task? i.e. it's not a per-cpu
+kthread anymore, but a task limited by the cpumask of that node?
+That isn't a per-CPU kthread anymore, is it? That is:
+
+> @@ -2479,3 +2479,16 @@ static inline void membarrier_switch_mm(struct rq *rq,
 >  {
-> +       static struct file_operations vmfile_fops;
->         struct ashmem_area *asma = file->private_data;
->         int ret = 0;
->
-> @@ -393,6 +408,19 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
->                 }
->                 vmfile->f_mode |= FMODE_LSEEK;
->                 asma->file = vmfile;
-> +               /*
-> +                * override mmap operation of the vmfile so that it can't be
-> +                * remapped which would lead to creation of a new vma with no
-> +                * asma permission checks. Have to override get_unmapped_area
-> +                * as well to prevent VM_BUG_ON check for f_ops modification.
-> +                */
-> +               if (!vmfile_fops.mmap) {
-> +                       vmfile_fops = *vmfile->f_op;
-> +                       vmfile_fops.mmap = ashmem_vmfile_mmap;
-> +                       vmfile_fops.get_unmapped_area =
-> +                                       ashmem_vmfile_get_unmapped_area;
-> +               }
-> +               vmfile->f_op = &vmfile_fops;
->         }
->         get_file(asma->file);
->
-> --
-> 2.25.0.341.g760bfbb309-goog
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
->
+>  }
+>  #endif
+> +
+> +#ifdef CONFIG_SMP
+> +static inline bool is_per_cpu_kthread(struct task_struct *p)
+> +{
+> +	if (!(p->flags & PF_KTHREAD))
+> +		return false;
+> +
+> +	if (p->nr_cpus_allowed != 1)
+> +		return false;
+
+p->nr_cpus_allowed is no longer 1 but the number of CPUs in the
+per-node cpu mask it is allowed to run on?
+
+And so if that is the case, then the change in commit 8ab39f11d974
+which set WQ_UNBOUND on the XFS CIL workqueue would mean the above
+logic change should not be triggering for the CIL worker because it
+is no longer a CPU bound kthread....
+
+What am I missing here?
+
+<light bulb illumination>
+
+Is this actually ping-ponging the CIL flush and journal IO
+completion because xlog_bio_end_io() always punts journal IO
+completion to the log workqueue, which is:
+
+	log->l_ioend_workqueue = alloc_workqueue("xfs-log/%s",
+			WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_HIGHPRI, 0,
+			mp->m_super->s_id);
+
+i.e. it uses per-cpu kthreads for processing journal IO completion
+similar to DIO io completion and thereby provides a vector for
+the same issue?
+
+A typical fsync is processed like this:
+
+user task		CIL kworker		IO completion kworker
+   xfs_trans_commit()
+    pushes on log
+    <blocks waiting on flush completion>
+
+			<wake>
+			formats vectors
+			loop {
+			   wait for iclog space
+			   <block waiting on write completion>
+
+						<wake>
+						journal IO completion
+						frees up iclog space
+						wakes write waiter
+						<done>
+
+			   <wake>
+			   write vectors into iclog
+			   submit iclog IO
+			}
+			<done>
+
+						<wake>
+						journal IO completion
+						frees up iclog space
+						wakes flush waiter
+						<done>
+   <wakes>
+   <transaction commit done>
+
+i.e. before commit 8ab39f11d974 we have:
+
+user task = unbound
+XFS CIL commit worker = CPU bound kthread
+XFS journal IO completion = CPU bound kthread
+
+And because the the CIL kworker and IO completion kworker are bound
+to the same CPU they don't trigger migrations as they can't be moved
+anywhere else.  And so it doesn't matter how many times we switch
+between them to complete a CIL flush because they will not trigger
+migrations.
+
+However, after commit 8ab39f11d974 we have:
+
+user task = unbound
+XFS CIL commit worker = unbound kthread
+XFS journal IO completion = CPU bound kthread
+
+IOWs, I think we now have exactly the same situation as discussed in
+the thread I pointed you to above, where an unbound task work (the
+CIL kworker) is trying to run on the same CPU as the CPU bound IO
+completion kworker, and that causes the CIL kworker to be migrated
+to a different CPU on each bounced throught the "wait for iclog
+space" loop. Hence your new logic is actually triggering on the
+journal IO completion kworker threads, not the CIL kworker threads.
+
+After all this, I have two questions that would help me understand
+if this is what you are seeing:
+
+1. to confirm: does removing just the WQ_UNBOUND from the CIL push
+workqueue (as added in 8ab39f11d974) make the regression go away?
+
+2. when the problem shows up, which tasks are actually being
+migrated excessively - is it the user task, the CIL kworker task
+or something else?
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
