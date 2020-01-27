@@ -2,110 +2,139 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA08C33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D8DC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E45214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:26:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="R/Z2JAzO"
+	by mail.kernel.org (Postfix) with ESMTP id 6482A24654
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbgA0M0Y (ORCPT
+        id S1730592AbgA0M1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:26:24 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:33303 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729465AbgA0M0Y (ORCPT
+        Mon, 27 Jan 2020 07:27:55 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:38937 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729465AbgA0M1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:26:24 -0500
-Received: by mail-qv1-f65.google.com with SMTP id z3so4356466qvn.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 04:26:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=dxtnBJy7TtO0FNdFepHqKbYItxPWi4rmxJBvGTynpb4=;
-        b=R/Z2JAzOMlgEEe5LRPotTkZCgaKhVqLH5vuYs7i236aqhbRA8JogpS0hx8OfRD7TSV
-         rHpzPOJYIhFVVN5xSbaezZ56PMNZ6tyPauoi3YAmWrcNysQLkte2p6PDP3W1QQh1ygyX
-         6G/GhNh9VpH0cgd/u8iPUswlQnA0TlkWDFKG0mH+DqkiTReloJ27oKg4HAU3q+aQ5UWT
-         qTdjVhdnlpUGRduwxQeQO8/5EUeorqbl3SGpIIBwWiB75PrdvF3e5jR9wqLXTrBdZjkq
-         fq/vH6Va7HxfYv6qSx5Z6/IHy9/g7kQttsjEUhFlUn7Tr06DjN7/mdBXRsDVpJPIS5HX
-         xMrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=dxtnBJy7TtO0FNdFepHqKbYItxPWi4rmxJBvGTynpb4=;
-        b=ltAz0vcdXHL3Xn3taarSrlobwCPpx+DOFtKeiZUBaRMZdyhpCeNbiYY0mko4hvYfa7
-         OJaeDBlyammZNKFbLgHwHyQwwCtYofzeejn2s6QD80/wNGp5qL9rq2ktvUZPw4CXqBvv
-         MeA9R+kIhpnsEH+MP+80u6E2PVF9isX/a19ocprn+C6Q/aYdGIBI1V+Z1pXBHa3Tlmyl
-         VG291hpoLCUUkwHD6d4Fkd0SZrqkWyqigbVLXeMN7Bmasklphwaf2StbD7W6fZN23Mqn
-         nuKSOfjUAhI6Hh6cKkr1G4HTykeiBHTp0+7m6N49vCceShZcjfCxrqLCNI6QEiyU74C6
-         fsHQ==
-X-Gm-Message-State: APjAAAXnuZ2Kfr9CN7ttT8hCRyJriVp5ZjkWSj8HLbvZFt2Z7OBE1LCg
-        3JUy0XtX6MoZMlxrs9NClD5IxQ==
-X-Google-Smtp-Source: APXvYqz/dWEk/aq3G1gMzh/LBHy2U0Gfx5zkulfbrjNAfHknxwhydqbp8IYmYKr8NyTj9BDw1851cQ==
-X-Received: by 2002:a0c:aacb:: with SMTP id g11mr16585575qvb.108.1580127983134;
-        Mon, 27 Jan 2020 04:26:23 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id u13sm8615806qta.30.2020.01.27.04.26.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 04:26:22 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 1/1] mm: sysctl: add panic_on_mm_error sysctl
-Date:   Mon, 27 Jan 2020 07:26:21 -0500
-Message-Id: <F352EA1C-7E7C-4C0C-8F23-EC33080EBB9E@lca.pw>
-References: <20200127101100.92588-1-ghalat@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        ssaner@redhat.com, atomlin@redhat.com, oleksandr@redhat.com,
-        vbendel@redhat.com, kirill@shutemov.name,
-        khlebnikov@yandex-team.ru, borntraeger@de.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-In-Reply-To: <20200127101100.92588-1-ghalat@redhat.com>
-To:     Grzegorz Halat <ghalat@redhat.com>
-X-Mailer: iPhone Mail (17C54)
+        Mon, 27 Jan 2020 07:27:55 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 4B1hpSLMfQHQjW00Ezbg18zveEZR30AOexDBQTrvB5wcXMHTG6JUGKbbqK2VG4B7aMcln5BDRQ
+ z1zCIT/7uj1LVIBNUhkf0uBt3gky8JPa9uPCcukI7pc+lrO06vOtRimVWYvfK6ePOtn8PWb7c0
+ ttssy+xiG10Ydg7BxvYodU6M1Up+ygaHgjln3TZeKeVUlnpusHukiODAS5P9qJO6O9aFRrI+Ko
+ 6Ng3J6g0aPCnuL1a110EZX46N2OoLQWB1KeaUzXXGVbym1SIPqUbknJqNKe+QhDLoA9V8RcvvC
+ QUA=
+X-IronPort-AV: E=Sophos;i="5.70,369,1574146800"; 
+   d="scan'208";a="63842471"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jan 2020 05:27:53 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 27 Jan 2020 05:27:53 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 27 Jan 2020 05:27:52 -0700
+Date:   Mon, 27 Jan 2020 13:27:52 +0100
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     =?utf-8?Q?J=C3=BCrgen?= Lambrecht <j.lambrecht@televic.com>
+CC:     Andrew Lunn <andrew@lunn.ch>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
+        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v3 06/10] net: bridge: mrp: switchdev: Extend
+ switchdev API to offload MRP
+Message-ID: <20200127122752.g4eanjl2naazyfh3@lx-anielsen.microsemi.net>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-7-horatiu.vultur@microchip.com>
+ <20200125163504.GF18311@lunn.ch>
+ <20200126132213.fmxl5mgol5qauwym@soft-dev3.microsemi.net>
+ <20200126155911.GJ18311@lunn.ch>
+ <13ac391c-61f5-cb77-69a0-416b0390f50d@televic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <13ac391c-61f5-cb77-69a0-416b0390f50d@televic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jürgen,
 
+On 27.01.2020 12:29, Jürgen Lambrecht wrote:
+>EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>
+>On 1/26/20 4:59 PM, Andrew Lunn wrote:
+>> Given the design of the protocol, if the hardware decides the OS etc
+>> is dead, it should stop sending MRP_TEST frames and unblock the ports.
+>> If then becomes a 'dumb switch', and for a short time there will be a
+>> broadcast storm. Hopefully one of the other nodes will then take over
+>> the role and block a port.
 
-> On Jan 27, 2020, at 5:11 AM, Grzegorz Halat <ghalat@redhat.com> wrote:
->=20
-> Memory management subsystem performs various checks at runtime,
-> if an inconsistency is detected then such event is being logged and kernel=
+>In my experience a closed loop should never happen. It can make
+>software crash and give other problems.  An other node should first
+>take over before unblocking the ring ports. (If this is possible - I
+>only follow this discussion halfly)
+>
+>What is your opinion?
+Having loops in the network is never a good thing - but to be honest, I
+think it is more important that we ensure the design can survive and
+recover from loops.
 
-> continues to run. While debugging such problems it is helpful to collect
-> memory dump as early as possible. Currently, there is no easy way to panic=
+With the current design, it will be really hard to void loops when the
+network boot. MRP will actually start with the ports blocked, but they
+will be unblocked in the period from when the bridge is created and
+until MRP is enabled. If we want to change this (which I'm not too keen
+on), then we need to be able to block the ports while the bridge is
+down.
 
-> kernel when such error is detected.
->=20
-> It was proposed[1] to panic the kernel if panic_on_oops is set but this
-> approach was not accepted. One of alternative proposals was introduction o=
-f
-> a new sysctl.
->=20
-> The patch adds panic_on_mm_error sysctl. If the sysctl is set then the
-> kernel will be crashed when an inconsistency is detected by memory
-> management. This currently means panic when bad page or bad PTE
-> is detected(this may be extended to other places in MM).
->=20
-> Another use case of this sysctl may be in security-wise environments,
-> it may be more desired to crash machine than continue to run with
-> potentially damaged data structures.
+And even if we do this, then we can not guarantee to avoid loops. Lets
+assume we have a small ring with just 2 nodes: a MRM and a MRC. Lets
+assume the MRM boots first. It will unblock both ports as the ring is
+open. Now the MRC boots, and make the ring closed, and create a loop.
+This will take some time (milliseconds) before the MRM notice this and
+block one of the ports.
 
-Well, on the other hand, this will allow a normal user to more easily crash t=
-he system due to a recoverable bug which could result in local DoS.=
+But while we are at this topic, we need to add some functionality to
+the user-space application such that it can set the priority of the MRP
+frames. We will get that fixed.
+
+>(FYI: I made that mistake once doing a proof-of-concept ring design:
+>during testing, when a "broken" Ethernet cable was "fixed" I had for a
+>short time a loop, and then it happened often that that port of the
+>(Marvell 88E6063) switch was blocked.  (To unblock, only solution was
+>to bring that port down and up again, and then all "lost" packets came
+>out in a burst.) That problem was caused by flow control (with pause
+>frames), and disabling flow control fixed it, but flow-control is
+>default on as far as I know.)
+I see. It could be fun to see if what we have proposed so far will with
+with such a switch.
+
+/Allan
+
