@@ -2,173 +2,317 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB671C33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260BCC35248
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0B121739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:29:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580131794;
-	bh=ai/dj2YFPgI/Sl1U6CLzSQboFkc0rAe++51s5B+lTWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OUZ9ZxZlxGvezlH3agisKCOFk9xRKHyXLK/0/vKhfmBHX1iC8VCVZvu8mMYJzGKFf
-	 rTUYLqfAK7uP6mGryUVCczcVyDS9ggAHJoGT+haWeQdBK0qQpR/1lD6OUL+Lq/GVw8
-	 5CRus7/fezkq3WrPN2NVhuqqkvmCiYRspIOT4IJE=
+	by mail.kernel.org (Postfix) with ESMTP id D86E221739
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:31:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CnnQjZ6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgA0N3y (ORCPT
+        id S1726605AbgA0Nba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:29:54 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40883 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgA0N3x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:29:53 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so11295686wrn.7;
-        Mon, 27 Jan 2020 05:29:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=U0eQycVZcE3O8afEj675IsnFK3PsSZu1C9KgNaCL9Xo=;
-        b=dwLGeVGCUHAawz/1VAH7jLVpXGmTu2GY8fPsMyvAykeeL/SVIhm7QjpuVIQIFJjB3w
-         OtT4YD0AfZr7iI0CU/dBpcuf/70IX/ZsBF+Wz86naJHGWgNzIOPMegoWdUWxRA6A0nFC
-         8hh6RWyiFB2XchQ+YnZhVuCs1sZYFX/3ZpNjpxX6xjBHlEVn7X/ArmaZAiS8zJff7dAw
-         gQrB3UeH34y+KGr1WN7fgtAGNunN9C9G4Flj7vlEcnAV3uiUQPEV2QQC1EyIqH9vaPRi
-         6L5xkYQ+vjRGuInrlvtuy+QySOvXF8RrSWt0qETOm0Avh6K+ze74cIgwQaG4uCmVt73k
-         aQpg==
-X-Gm-Message-State: APjAAAUczFYTcstv7ptgqRJBf07Mk2KXIPj8aMAZJyX0HhVSqREudXOL
-        IW2YxO6LgSATB/fs7PQ/D3A=
-X-Google-Smtp-Source: APXvYqyVFRZyGR6ELFEgDXR5Vlxa3HsmlnZMCI92BdfDk38nRTyMVa5dEynNWcKUUuYcFaxqVD+IkA==
-X-Received: by 2002:a5d:4a91:: with SMTP id o17mr20770480wrq.232.1580131791360;
-        Mon, 27 Jan 2020 05:29:51 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id y20sm18183543wmi.25.2020.01.27.05.29.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 05:29:50 -0800 (PST)
-Date:   Mon, 27 Jan 2020 14:29:50 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        powerpc-utils-devel@googlegroups.com, util-linux@vger.kernel.org,
-        Badari Pulavarty <pbadari@us.ibm.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Robert Jennings <rcj@linux.vnet.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Karel Zak <kzak@redhat.com>
-Subject: Re: [PATCH RFC] drivers/base/memory.c: indicate all memory blocks as
- removable
-Message-ID: <20200127132950.GH1183@dhcp22.suse.cz>
-References: <20200124155336.17126-1-david@redhat.com>
+        Mon, 27 Jan 2020 08:31:30 -0500
+Received: from mail-dm6nam11on2052.outbound.protection.outlook.com ([40.107.223.52]:6101
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725828AbgA0Nb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 08:31:29 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d4LsM8XzbWVveTZ67ikcEFR6niWlG9KRlN6jJNGw7h/ftSLoi6McL7bInOAAcNzecS/5cyKb8WwlZdFepztLegkzQkrtkZZQRgO9lsmC8bo3vFE1Gl0M1nS4R1joguHCf6USwv9Bl0WnksszvvmUmcOpXn2Z+pDCUQBD0hXVv08fE4ZpEvqTKdHIE7Iy0KJJguX3hGmQYYf14bFyic2IZemYTmFbVKsVmdvqgMkRjPbklsCGwG+1piDzDXzLAE8nYjO6j41bhu2yuBYNG0eDNBVPu+hzTh8bi8ALSnMjSDUBsVNGK4BII33ahwIh9MvdGNuyZ2yTTlwi23EHhn+E6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n9yaCZ1uqPKIM7TeZr9En5WvrRenSxrNKM0avCZ/Ke0=;
+ b=fhsARtwWjsE0V38UKkg4LJEOSwjv3kcFpyqSg+wv9i1HiixhJ5qxGGjg2hJVm/Pj2m3NXAATkXk6lckgJZ40uDeChUscRaBG9yzDeNPJ1pcq5tSd1EOCzw/uDuKHn4BjpGrLUNHuNJbwCS/M6tvHzMDSJ8KE6eJoFStJhF/hzbNd1cjkdWNytAwDnERn8hrO4DennOM/5QWWE/vwrxqdRMWNDkbplbN2PLQTD587J1ch0NoZ266Y/V/LkHqfXSkUCYAqv4OOKUhDTZPi83zq0C0SE1O1LO+0bGjlQfaIIQoXscR/oL/p6gGpaXKR00vfuODaygluq0R0j88dc6VpJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n9yaCZ1uqPKIM7TeZr9En5WvrRenSxrNKM0avCZ/Ke0=;
+ b=CnnQjZ6Il+wh8xxaSbQdbgIFbzqH6sAn2lCR5dAXOVljDIKgAaP49hm7oQrla47hGrvnFGfndeDfirmS+eiuxhiI6SA/ugq7uf/ioqEplECyUeVl3KUeuWTFsdkkIQsHlFfwZuAkZAvG6MazqObjeOwVkHBYeMcgDPKfBoX/x8s=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mikita.Lipski@amd.com; 
+Received: from DM6PR12MB2906.namprd12.prod.outlook.com (20.179.71.212) by
+ DM6PR12MB3563.namprd12.prod.outlook.com (20.178.30.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.25; Mon, 27 Jan 2020 13:31:21 +0000
+Received: from DM6PR12MB2906.namprd12.prod.outlook.com
+ ([fe80::c4f1:5ec7:7314:75bf]) by DM6PR12MB2906.namprd12.prod.outlook.com
+ ([fe80::c4f1:5ec7:7314:75bf%7]) with mapi id 15.20.2665.026; Mon, 27 Jan 2020
+ 13:31:20 +0000
+Subject: Re: [PATCH v2] drm/amd/dm/mst: Ignore payload update failures
+To:     Lyude Paul <lyude@redhat.com>, amd-gfx@lists.freedesktop.org
+Cc:     Harry Wentland <harry.wentland@amd.com>, stable@vger.kernel.org,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Martin Tsai <martin.tsai@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Alvin Lee <alvin.lee2@amd.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200124000643.99859-1-lyude@redhat.com>
+ <20200124191047.120064-1-lyude@redhat.com>
+ <abc8346d-2b27-7f8f-a54d-9f22cba82b84@amd.com>
+ <8189d38480b6457efe2af94020c27e03c1f2de0a.camel@redhat.com>
+ <b0de278c822cadd94dda121c7e3ef1370191f6d5.camel@redhat.com>
+From:   Mikita Lipski <mlipski@amd.com>
+Organization: AMD
+Message-ID: <4fefdf5d-28d8-3abf-1495-320e6f275c8e@amd.com>
+Date:   Mon, 27 Jan 2020 08:31:18 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <b0de278c822cadd94dda121c7e3ef1370191f6d5.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YTXPR0101CA0062.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:1::39) To DM6PR12MB2906.namprd12.prod.outlook.com
+ (2603:10b6:5:15f::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124155336.17126-1-david@redhat.com>
+Received: from [172.29.224.72] (165.204.55.250) by YTXPR0101CA0062.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:1::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend Transport; Mon, 27 Jan 2020 13:31:19 +0000
+X-Originating-IP: [165.204.55.250]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: f8abcb29-fe70-4fa7-9e1f-08d7a32d31a0
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3563:|DM6PR12MB3563:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB356345C92AFF18D5A4FEE8F0E40B0@DM6PR12MB3563.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-Forefront-PRVS: 02951C14DC
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(366004)(346002)(376002)(199004)(189003)(66476007)(26005)(53546011)(66556008)(54906003)(16526019)(52116002)(36916002)(186003)(31686004)(81156014)(16576012)(81166006)(66946007)(8676002)(5660300002)(478600001)(316002)(45080400002)(15650500001)(8936002)(31696002)(4326008)(36756003)(2906002)(6486002)(956004)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3563;H:DM6PR12MB2906.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QSZwti8n/9aFjMVbTzZmoHcCwhdbQpt8A0kulUmI9IZpPjXZBeXGoo6Kdal1azLqPXyKYWieMD9UF/mksXx5bFPulODCoa2RU5iVtCCebC2mKvSiZVtpoddt9++wHfza4e7HbBu1fecuPOom68EU31tIgHNsX5iC7Nd7bin8Ww0UqaHJoH8tqQFqZJL1fWpeARuBC4GpuwoCLj6DTiGM740xqCU+idJ53/cIvw20+oNq/96cKxdT9zeMiERNAK2sasE1uYZKQFnRQz7YfWz3Vku+Q9iOqQjqx58C2h8kVQ6Qg6Nk01pLDr+VjqyK3r2i2uZS2G6qzRe0a4mFkV2SGbrN0AbA4eWjJ5nlpny8i5S1C98P/v16UoD319HBvBpHL72kfbtdSxobTueG7pgbhIrgiKrfx8ir1IhZm3vmBbj43GShtu7nf8HqXU1A3YbA
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8abcb29-fe70-4fa7-9e1f-08d7a32d31a0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2020 13:31:20.1647
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: c2iqEf4lAmavT+iuSyLzUCuDlkC3v/nPUdCrSMu7endCRbt/WrgAH8jDkM33oDST
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3563
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 24-01-20 16:53:36, David Hildenbrand wrote:
-> We see multiple issues with the implementation/interface to compute
-> whether a memory block can be offlined (exposed via
-> /sys/devices/system/memory/memoryX/removable) and would like to simplify
-> it (remove the implementation).
-> 
-> 1. It runs basically lockless. While this might be good for performance,
->    we see possible races with memory offlining/unplug that will require
->    at least some sort of locking to fix.
-> 
-> 2. Nowadays, more false positives are possible. No arch-specific checks
->    are performed that validate if memory offlining will not be denied
->    right away (and such check will require locking). For example, arm64
->    won't allow to offline any memory block that was added during boot -
->    which will imply a very high error rate. Other archs have other
->    constraints.
-> 
-> 3. The interface is inherently racy. E.g., if a memory block is
->    detected to be removable (and was not a false positive at that time),
->    there is still no guarantee that offlining will actually succeed. So
->    any caller already has to deal with false positives.
-> 
-> 4. It is unclear which performance benefit this interface actually
->    provides. The introducing commit 5c755e9fd813 ("memory-hotplug: add
->    sysfs removable attribute for hotplug memory remove") mentioned
-> 	"A user-level agent must be able to identify which sections of
-> 	 memory are likely to be removable before attempting the
-> 	 potentially expensive operation."
->    However, no actual performance comparison was included.
-> 
-> Known users:
-> - lsmem: Will group memory blocks based on the "removable" property. [1]
-> - chmem: Indirect user. It has a RANGE mode where one can specify
-> 	 removable ranges identified via lsmem to be offlined. However, it
-> 	 also has a "SIZE" mode, which allows a sysadmin to skip the manual
-> 	 "identify removable blocks" step. [2]
-> - powerpc-utils: Uses the "removable" attribute to skip some memory
-> 		 blocks right away when trying to find some to
-> 		 offline+remove. However, with ballooning enabled, it
-> 		 already skips this information completely (because it
-> 		 once resulted in many false negatives). Therefore, the
-> 		 implementation can deal with false positives properly
-> 		 already. [3]
-> 
-> With CONFIG_MEMORY_HOTREMOVE, always indicating "removable" should not
-> break any user space tool. We implement a very bad heuristic now. (in
-> contrast: always returning "not removable" would at least affect
-> powerpc-utils)
-> 
-> Without CONFIG_MEMORY_HOTREMOVE we cannot offline anything, so report
-> "not removable" as before.
-> 
-> Original discussion can be found in [4] ("[PATCH RFC v1] mm:
-> is_mem_section_removable() overhaul").
-> 
-> Other users of is_mem_section_removable() will be removed next, so that
-> we can remove is_mem_section_removable() completely.
-> 
-> [1] http://man7.org/linux/man-pages/man1/lsmem.1.html
-> [2] http://man7.org/linux/man-pages/man8/chmem.8.html
-> [3] https://github.com/ibm-power-utilities/powerpc-utils
-> [4] https://lkml.kernel.org/r/20200117105759.27905-1-david@redhat.com
-> 
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: powerpc-utils-devel@googlegroups.com
-> Cc: util-linux@vger.kernel.org
-> Cc: Badari Pulavarty <pbadari@us.ibm.com>
-> Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-> Cc: Robert Jennings <rcj@linux.vnet.ibm.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Karel Zak <kzak@redhat.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Please add information provided by Nathan.
-Acked-by: Michal Hocko <mhocko@suse.com>
 
-Minor nit below.
+On 1/24/20 5:01 PM, Lyude Paul wrote:
+> On Fri, 2020-01-24 at 16:46 -0500, Lyude Paul wrote:
+>> On Fri, 2020-01-24 at 14:20 -0500, Mikita Lipski wrote:
+>>> On 1/24/20 2:10 PM, Lyude Paul wrote:
+>>>> Disabling a display on MST can potentially happen after the entire MST
+>>>> topology has been removed, which means that we can't communicate with
+>>>> the topology at all in this scenario. Likewise, this also means that we
+>>>> can't properly update payloads on the topology and as such, it's a good
+>>>> idea to ignore payload update failures when disabling displays.
+>>>> Currently, amdgpu makes the mistake of halting the payload update
+>>>> process when any payload update failures occur, resulting in leaving
+>>>> DC's local copies of the payload tables out of date.
+>>>>
+>>>> This ends up causing problems with hotplugging MST topologies, and
+>>>> causes modesets on the second hotplug to fail like so:
+>>>>
+>>>> [drm] Failed to updateMST allocation table forpipe idx:1
+>>>> ------------[ cut here ]------------
+>>>> WARNING: CPU: 5 PID: 1511 at
+>>>> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2677
+>>>> update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+>>>> Modules linked in: cdc_ether usbnet fuse xt_conntrack nf_conntrack
+>>>> nf_defrag_ipv6 libcrc32c nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4
+>>>> nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc sunrpc
+>>>> vfat fat wmi_bmof uvcvideo snd_hda_codec_realtek snd_hda_codec_generic
+>>>> snd_hda_codec_hdmi videobuf2_vmalloc snd_hda_intel videobuf2_memops
+>>>> videobuf2_v4l2 snd_intel_dspcfg videobuf2_common crct10dif_pclmul
+>>>> snd_hda_codec videodev crc32_pclmul snd_hwdep snd_hda_core
+>>>> ghash_clmulni_intel snd_seq mc joydev pcspkr snd_seq_device snd_pcm
+>>>> sp5100_tco k10temp i2c_piix4 snd_timer thinkpad_acpi ledtrig_audio snd
+>>>> wmi soundcore video i2c_scmi acpi_cpufreq ip_tables amdgpu(O)
+>>>> rtsx_pci_sdmmc amd_iommu_v2 gpu_sched mmc_core i2c_algo_bit ttm
+>>>> drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec drm
+>>>> crc32c_intel serio_raw hid_multitouch r8152 mii nvme r8169 nvme_core
+>>>> rtsx_pci pinctrl_amd
+>>>> CPU: 5 PID: 1511 Comm: gnome-shell Tainted: G           O      5.5.0-
+>>>> rc7Lyude-Test+ #4
+>>>> Hardware name: LENOVO FA495SIT26/FA495SIT26, BIOS R12ET22W(0.22 )
+>>>> 01/31/2019
+>>>> RIP: 0010:update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+>>>> Code: 28 00 00 00 75 2b 48 8d 65 e0 5b 41 5c 41 5d 41 5e 5d c3 0f b6 06
+>>>> 49 89 1c 24 41 88 44 24 08 0f b6 46 01 41 88 44 24 09 eb 93 <0f> 0b e9
+>>>> 2f ff ff ff e8 a6 82 a3 c2 66 0f 1f 44 00 00 0f 1f 44 00
+>>>> RSP: 0018:ffffac428127f5b0 EFLAGS: 00010202
+>>>> RAX: 0000000000000002 RBX: ffff8d1e166eee80 RCX: 0000000000000000
+>>>> RDX: ffffac428127f668 RSI: ffff8d1e166eee80 RDI: ffffac428127f610
+>>>> RBP: ffffac428127f640 R08: ffffffffc03d94a8 R09: 0000000000000000
+>>>> R10: ffff8d1e24b02000 R11: ffffac428127f5b0 R12: ffff8d1e1b83d000
+>>>> R13: ffff8d1e1bea0b08 R14: 0000000000000002 R15: 0000000000000002
+>>>> FS:  00007fab23ffcd80(0000) GS:ffff8d1e28b40000(0000)
+>>>> knlGS:0000000000000000
+>>>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>> CR2: 00007f151f1711e8 CR3: 00000005997c0000 CR4: 00000000003406e0
+>>>> Call Trace:
+>>>>    ? mutex_lock+0xe/0x30
+>>>>    dc_link_allocate_mst_payload+0x9a/0x210 [amdgpu]
+>>>>    ? dm_read_reg_func+0x39/0xb0 [amdgpu]
+>>>>    ? core_link_enable_stream+0x656/0x730 [amdgpu]
+>>>>    core_link_enable_stream+0x656/0x730 [amdgpu]
+>>>>    dce110_apply_ctx_to_hw+0x58e/0x5d0 [amdgpu]
+>>>>    ? dcn10_verify_allow_pstate_change_high+0x1d/0x280 [amdgpu]
+>>>>    ? dcn10_wait_for_mpcc_disconnect+0x3c/0x130 [amdgpu]
+>>>>    dc_commit_state+0x292/0x770 [amdgpu]
+>>>>    ? add_timer+0x101/0x1f0
+>>>>    ? ttm_bo_put+0x1a1/0x2f0 [ttm]
+>>>>    amdgpu_dm_atomic_commit_tail+0xb59/0x1ff0 [amdgpu]
+>>>>    ? amdgpu_move_blit.constprop.0+0xb8/0x1f0 [amdgpu]
+>>>>    ? amdgpu_bo_move+0x16d/0x2b0 [amdgpu]
+>>>>    ? ttm_bo_handle_move_mem+0x118/0x570 [ttm]
+>>>>    ? ttm_bo_validate+0x134/0x150 [ttm]
+>>>>    ? dm_plane_helper_prepare_fb+0x1b9/0x2a0 [amdgpu]
+>>>>    ? _cond_resched+0x15/0x30
+>>>>    ? wait_for_completion_timeout+0x38/0x160
+>>>>    ? _cond_resched+0x15/0x30
+>>>>    ? wait_for_completion_interruptible+0x33/0x190
+>>>>    commit_tail+0x94/0x130 [drm_kms_helper]
+>>>>    drm_atomic_helper_commit+0x113/0x140 [drm_kms_helper]
+>>>>    drm_atomic_helper_set_config+0x70/0xb0 [drm_kms_helper]
+>>>>    drm_mode_setcrtc+0x194/0x6a0 [drm]
+>>>>    ? _cond_resched+0x15/0x30
+>>>>    ? mutex_lock+0xe/0x30
+>>>>    ? drm_mode_getcrtc+0x180/0x180 [drm]
+>>>>    drm_ioctl_kernel+0xaa/0xf0 [drm]
+>>>>    drm_ioctl+0x208/0x390 [drm]
+>>>>    ? drm_mode_getcrtc+0x180/0x180 [drm]
+>>>>    amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+>>>>    do_vfs_ioctl+0x458/0x6d0
+>>>>    ksys_ioctl+0x5e/0x90
+>>>>    __x64_sys_ioctl+0x16/0x20
+>>>>    do_syscall_64+0x55/0x1b0
+>>>>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>>> RIP: 0033:0x7fab2121f87b
+>>>> Code: 0f 1e fa 48 8b 05 0d 96 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
+>>>> ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
+>>>> f0 ff ff 73 01 c3 48 8b 0d dd 95 2c 00 f7 d8 64 89 01 48
+>>>> RSP: 002b:00007ffd045f9068 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>>>> RAX: ffffffffffffffda RBX: 00007ffd045f90a0 RCX: 00007fab2121f87b
+>>>> RDX: 00007ffd045f90a0 RSI: 00000000c06864a2 RDI: 000000000000000b
+>>>> RBP: 00007ffd045f90a0 R08: 0000000000000000 R09: 000055dbd2985d10
+>>>> R10: 000055dbd2196280 R11: 0000000000000246 R12: 00000000c06864a2
+>>>> R13: 000000000000000b R14: 0000000000000000 R15: 000055dbd2196280
+>>>> ---[ end trace 6ea888c24d2059cd ]---
+>>>>
+>>>> Note as well, I have only been able to reproduce this on setups with 2
+>>>> MST displays.
+>>>>
+>>>> Changes since v1:
+>>>> * Don't return false when part 1 or part 2 of updating the payloads
+>>>>     fails, we don't want to abort at any step of the process even if
+>>>>     things fail
+>>>>
+>>>> Signed-off-by: Lyude Paul <lyude@redhat.com>
+>>>> Acked-by: Harry Wentland <harry.wentland@amd.com>
+>>>> Cc: stable@vger.kernel.org
+>>>> ---
+>>>>    .../drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c   | 13 ++++---------
+>>>>    1 file changed, 4 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+>>>> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+>>>> index 069b7a6f5597..318b474ff20e 100644
+>>>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+>>>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+>>>> @@ -216,7 +216,8 @@ bool
+>>>> dm_helpers_dp_mst_write_payload_allocation_table(
+>>>>    		drm_dp_mst_reset_vcpi_slots(mst_mgr, mst_port);
+>>>>    	}
+>>>>    
+>>>> -	ret = drm_dp_update_payload_part1(mst_mgr);
+>>>> +	/* It's OK for this to fail */
+>>>> +	drm_dp_update_payload_part1(mst_mgr);
+>>>>    
+>>>>    	/* mst_mgr->->payloads are VC payload notify MST branch using
+>>>> DPCD or
+>>>>    	 * AUX message. The sequence is slot 1-63 allocated sequence
+>>>> for each
+>>>> @@ -225,9 +226,6 @@ bool
+>>>> dm_helpers_dp_mst_write_payload_allocation_table(
+>>>>    
+>>>>    	get_payload_table(aconnector, proposed_table);
+>>>>    
+>>>> -	if (ret)
+>>>> -		return false;
+>>>> -
+>>>
+>>> Sorry for being picky, but I think this might cause compilation error on
+>>> some systems for having unused variable (int ret). Its better just to
+>>> strip out both ret integer declarations.
+>>
+>> No problem! It wouldn't be fair if I was the only one who got to be picky
+>> anyway ;)
+> 
+> Actually, I think you might have made a mistake here - ret is still used in
+> this function, mind double checking?
+> 
+Sorry, yes you are correct, I only meant 
+dm_helpers_dp_mst_send_payload_allocation function.
 
-> +#ifdef CONFIG_MEMORY_HOTREMOVE
-> +	return sprintf(buf, "1\n");
-> +#else
-> +	return sprintf(buf, "0\n");
-> +#endif
-	int ret = IS_ENABLED(CONFIG_MEMORY_HOTREMOVE);
+The ret variable is still used in 
+dm_helpers_dp_mst_write_payload_allocation_table.
 
-	return sprintf(buf, "%d\n", ret)
+>>
+>>> Otherwise the patch is good. Thanks again!
+>>>
+>>> Reviewed-by: Mikita Lipski <Mikita.Lipski@amd.com>
+>>>
+>>> Mikita
+>>>
+>>>>    	return true;
+>>>>    }
+>>>>    
+>>>> @@ -285,7 +283,6 @@ bool dm_helpers_dp_mst_send_payload_allocation(
+>>>>    	struct amdgpu_dm_connector *aconnector;
+>>>>    	struct drm_dp_mst_topology_mgr *mst_mgr;
+>>>>    	struct drm_dp_mst_port *mst_port;
+>>>> -	int ret;
+>>>>    
+>>>>    	aconnector = (struct amdgpu_dm_connector *)stream-
+>>>>> dm_stream_context;
+>>>>    
+>>>> @@ -299,10 +296,8 @@ bool dm_helpers_dp_mst_send_payload_allocation(
+>>>>    	if (!mst_mgr->mst_state)
+>>>>    		return false;
+>>>>    
+>>>> -	ret = drm_dp_update_payload_part2(mst_mgr);
+>>>> -
+>>>> -	if (ret)
+>>>> -		return false;
+>>>> +	/* It's OK for this to fail */
+>>>> +	drm_dp_update_payload_part2(mst_mgr);
+>>>>    
+>>>>    	if (!enable)
+>>>>    		drm_dp_mst_deallocate_vcpi(mst_mgr, mst_port);
+>>>>
 
-would be slightly nicer than explicit ifdefs.
 -- 
-Michal Hocko
-SUSE Labs
+Thanks,
+Mikita Lipski
+Software Engineer, AMD
+mikita.lipski@amd.com
