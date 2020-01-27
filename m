@@ -2,67 +2,83 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7E0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3798CC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6924F214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F56C20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729488AbgA0PG2 (ORCPT
+        id S1729467AbgA0PHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:06:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46915 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729112AbgA0PG1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:06:27 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iw5y0-0004xP-Vl; Mon, 27 Jan 2020 16:06:21 +0100
-Date:   Mon, 27 Jan 2020 16:06:20 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Mon, 27 Jan 2020 10:07:20 -0500
+Received: from mga09.intel.com ([134.134.136.24]:25102 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729146AbgA0PHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 10:07:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 07:02:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,370,1574150400"; 
+   d="scan'208";a="305900030"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Jan 2020 07:02:54 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iw5ug-000Cov-16; Mon, 27 Jan 2020 23:02:54 +0800
+Date:   Mon, 27 Jan 2020 23:02:43 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     kbuild-all@lists.01.org, Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@kernel.org>, mhiramat@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [RFC] per-CPU usage in perf core-book3s
-Message-ID: <20200127150620.taio2txyqreg4kn6@linutronix.de>
+        "David S . Miller" <davem@davemloft.net>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Subject: [RFC PATCH] tracing/kprobe: trace_kprobe_disabled_finished can be
+ static
+Message-ID: <20200127150243.bllddfobxryxagwd@f53c9c00458a>
+References: <157918590192.29301.6909688694265698678.stgit@devnote2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <157918590192.29301.6909688694265698678.stgit@devnote2>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've been looking at usage of per-CPU variable cpu_hw_events in
-arch/powerpc/perf/core-book3s.c.
 
-power_pmu_enable() and power_pmu_disable() (pmu::pmu_enable() and
-pmu::pmu_disable()) are accessing the variable and the callbacks are
-invoked always with disabled interrupts.
+Fixes: 3c794bf25a2b ("tracing/kprobe: Use call_rcu to defer freeing event_file_link")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ trace_kprobe.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-power_pmu_event_init() (pmu::event_init()) is invoked from preemptible
-context and uses get_cpu_var() to obtain a stable pointer (by disabling
-preemption).
-
-pmu::pmu_enable() and pmu::pmu_disable() can be invoked via a hrtimer
-(perf_mux_hrtimer_handler()) and it invokes pmu::pmu_enable() and
-pmu::pmu_disable() as part of the callback.
-
-Is there anything that prevents the timer callback to interrupt
-pmu::event_init() while it is accessing per-CPU data?
-
-Sebastian
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 1a5882bb77471..fba738aa458af 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -328,7 +328,7 @@ static inline int __enable_trace_kprobe(struct trace_kprobe *tk)
+ 	return ret;
+ }
+ 
+-atomic_t trace_kprobe_disabled_finished;
++static atomic_t trace_kprobe_disabled_finished;
+ 
+ static void trace_kprobe_disabled_handlers_finish(void)
+ {
