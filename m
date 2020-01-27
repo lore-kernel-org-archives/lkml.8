@@ -2,180 +2,217 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8C2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B2AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61AB20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C3C2087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DZsm73Ov";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="BeD61Bt5"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="za+d3Q3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbgA0MvA (ORCPT
+        id S1730486AbgA0Mvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:51:00 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:47240 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726145AbgA0Mu7 (ORCPT
+        Mon, 27 Jan 2020 07:51:44 -0500
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:50126 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726145AbgA0Mvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:50:59 -0500
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        Mon, 27 Jan 2020 07:51:43 -0500
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 4E5BE2E0DBD;
+        Mon, 27 Jan 2020 15:51:39 +0300 (MSK)
+Received: from sas2-3e4aeb094591.qloud-c.yandex.net (sas2-3e4aeb094591.qloud-c.yandex.net [2a02:6b8:c08:7192:0:640:3e4a:eb09])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id eB2c93SM0d-pbmSUpmb;
+        Mon, 27 Jan 2020 15:51:39 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1580129499; bh=L7X1k4eDAf2P7uN6axSXlVdpMKiQS7N+GE/E26wcBNA=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=za+d3Q3ddLp2bCGEeG0c8t8kr4cMsda8ABQqy2IgPO1/REOg6oFUg0BfzdhXnuT9U
+         I5SJvFpLCPPY9SPTAg1YL/0ArT/bkIKqDqPVUVwXP3bBhVC3aAklSGPE2d63q7XEG0
+         gnhicVcgLZA9UCNGWlLp2zpKMGrfshFA90J71yR4=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
+        by sas2-3e4aeb094591.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 4ycFeB9RGg-pbYaAS3o;
+        Mon, 27 Jan 2020 15:51:37 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8C6FC40686;
-        Mon, 27 Jan 2020 12:50:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1580129458; bh=yD8bGTDRn2KQdx9mjml6eNaQvDpGuafLl7fe3izDByk=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=DZsm73OvyTLDwpbd/atRe6k8aeiD3A8Rbv3nbujZ5joTowPmpdK01TTx5tvTEyCVG
-         mzQgoQsZcUuodxPaorxITPaXZEI5l1IhQBtomPtpV2lWgqCq05Pq8PGxy8G53XFC0C
-         XIvl47wyx2v+G6yZ6ONbHxGl1UvIYsiYi1m01e7zz1aPFf9WdrhDjSqGxw7S87TzAm
-         Qxbnhw9l1FpzMLhuSS0EkKaGLh/OoFTzeaBcAkGJhVPeZgji3j6xEx1FMj/hAQSkzn
-         cKlbv0VIboZlV/bRsIL9GyZiFKxxfoX3QC1zlnLG4Toow1fndCR80UzN+9BbWjoXvp
-         M1NCwUYIaLkVg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id C7313A0083;
-        Mon, 27 Jan 2020 12:50:56 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 27 Jan 2020 04:50:56 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 27 Jan 2020 04:50:55 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TXSbUJnEYJUFW1xrzq0Ms1vGc9c7o01Bb/zm3GVCW028vhI3ejAMNWwDUx/bHzBOTdt1HaCKOiCQpFkHtpW02SSsdpNZdIDbhf+05nkJSK6fDbN8C2DWQm7vTBGhkaeSfq5nTwKP+meDdSpTW3KpmZ3l1Kv/x95034qMue6XF/5at6s5y3zS+WxUQuJ+1eSHelzEz43yubIfmPq35lyyGTr6va69sR64j2klt4VlDsvzbW0vlgbkyoA69JiWYATSI90w3g6YvTvmFY1F7eEOZjEU9zAZA14iAuZaDSyXsaPSJml6UNZNY9Z9ExOg729PpREV8NgFCbm1u9w4Qu+Ppg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VUxZbgOVKlZEoSoqyu6Wj5egb/s5vPoLAN/v20jCgDA=;
- b=mEFNFy4o1/82fX0GKV3HI2L+ENSHADMf5nRyK9fWHgYflhkYbkFFtwd92j/reV5E81vbcB38SQaF829nKUcBLrOTJfwXOII/pXD2FEJqeT3t4kIKPWKUTzGZQB1q4tfS6cyl1YT9nEw0BFb4ciiqZXUsZxcqjgk7PHfYZFaRwg8rWmqtRkF3SRuOJsFwP0tyyeYaK5+WflX7t66Nr7B1pwNkZmdzvkYF1PGMG2Lx2qzILOYiY9o/O8LPXzgTtEp6sWbHBOa/x+oI04MWmyLcdNqWzyoho6MLLMDBumQp6ds6qq+WcEnTMK0psKWJ6a1pDAjFxWo21O5ncmAKFMe9xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VUxZbgOVKlZEoSoqyu6Wj5egb/s5vPoLAN/v20jCgDA=;
- b=BeD61Bt5Hw25FObOv4+cIBuKn6i5ALtwGEiL07MFf07GlPweRVTFK65PzfLXqAU3AVGOkgiMqmUV/5w6UC0qTZcTYRBT5/UjhgDXdaVUcMjE1d05/GSj5YjjsnjIY76vDDvYy1IsFxqx3XpP/QMyxKQH6JpNeidROxlkm8fClpg=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
- BN8PR12MB3491.namprd12.prod.outlook.com (20.178.210.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.26; Mon, 27 Jan 2020 12:50:54 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2665.017; Mon, 27 Jan 2020
- 12:50:54 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Thread-Topic: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Thread-Index: AQHV1QJR/2IdLzxcIUOq2qgDmVwJ/6f+XbIAgAAEH1CAAALaAIAADuww
-Date:   Mon, 27 Jan 2020 12:50:54 +0000
-Message-ID: <BN8PR12MB3266A7C976B4E63466B5FA35D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
- <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
- <20200127112102.GT25745@shell.armlinux.org.uk>
- <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200127114600.GU25745@shell.armlinux.org.uk>
-In-Reply-To: <20200127114600.GU25745@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 601a0064-bec8-492f-1b27-08d7a3278c1d
-x-ms-traffictypediagnostic: BN8PR12MB3491:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR12MB34913A2EC9B72F9C9537C778D30B0@BN8PR12MB3491.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02951C14DC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(366004)(136003)(346002)(396003)(199004)(189003)(33656002)(26005)(6916009)(478600001)(54906003)(316002)(8936002)(2906002)(186003)(86362001)(6506007)(71200400001)(8676002)(81166006)(4326008)(55016002)(9686003)(81156014)(76116006)(66946007)(7416002)(5660300002)(52536014)(66446008)(66476007)(7696005)(66556008)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3491;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5HGYGna8QVzM4CE60UoRA7YrBtu14dryKevKO13QwTYnH4nLiuy/CJ2JEOgzzacKemRhZhy56TxMh3TlKRuZQ/UL1+3Rca2rc7+klc1HbIdH3DwUbcIbjAb6OPBYVmxdFu5JPFEp4GeduUsrmOkeZRke/VdedtDm6UToKgeE3fqpBhg1aoTWSbRZzrI8wIkGtUH/hmUroYITP9NyxQ6tOc5pd63whaNTZCz/mJmCCyX7cqfsgree3pO6BX8Z0IG6VrHtKY184WvmL3xFVvG66g9HOQDgOIfshyz+fyiVGidYp69D+yS++DYKjoUTYZMUx6+fZ9cQ5mg3rlzqu7q0MwsrXwUNef63GtngF1JF8OyqYEE7FYg9/GZEz24FShdc0tXRaDP/olvlbCoSUSbH+quMfz9ktonevoYXyiZLTsAyxEIycM7eo4Aq1Y2yxMB1
-x-ms-exchange-antispam-messagedata: 4A7/fXeQvAhgzBmlXoaqQflCsZqHg7rP6xPmvoQWQLFx8t15DlTCfsldt+1FYQ8THjLC8SNdUAx50A2qZd/itPR+WFriUQC3MrKUmacFbszri8oDSQnphIOHLZ0FP0oadnarJkbZ2iKZOnt7Q+aaPw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        (Client certificate not present)
+Subject: Re: [PATCH 1/1] mm: sysctl: add panic_on_mm_error sysctl
+To:     Grzegorz Halat <ghalat@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org, ssaner@redhat.com, atomlin@redhat.com,
+        oleksandr@redhat.com, vbendel@redhat.com, kirill@shutemov.name,
+        borntraeger@de.ibm.com, Andrew Morton <akpm@linux-foundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20200127101100.92588-1-ghalat@redhat.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <d58ef38a-a6a1-e0e1-bf00-462b4feeb182@yandex-team.ru>
+Date:   Mon, 27 Jan 2020 15:51:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 601a0064-bec8-492f-1b27-08d7a3278c1d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2020 12:50:54.4255
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AE9OmnPymAvgFrxYqZQloVNXYG14KvB5p19BvGKtvRJU/AW0K5w4mQohBgdGrmrou8XogrXh7ZQDt5D69nKFJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3491
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <20200127101100.92588-1-ghalat@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Date: Jan/27/2020, 11:46:00 (UTC+00:00)
+On 27/01/2020 13.11, Grzegorz Halat wrote:
+> Memory management subsystem performs various checks at runtime,
+> if an inconsistency is detected then such event is being logged and kernel
+> continues to run. While debugging such problems it is helpful to collect
+> memory dump as early as possible. Currently, there is no easy way to panic
+> kernel when such error is detected.
+> 
+> It was proposed[1] to panic the kernel if panic_on_oops is set but this
+> approach was not accepted. One of alternative proposals was introduction of
+> a new sysctl.
+> 
+> The patch adds panic_on_mm_error sysctl. If the sysctl is set then the
+> kernel will be crashed when an inconsistency is detected by memory
+> management. This currently means panic when bad page or bad PTE
+> is detected(this may be extended to other places in MM).
+> 
+> Another use case of this sysctl may be in security-wise environments,
+> it may be more desired to crash machine than continue to run with
+> potentially damaged data structures.
+> 
+> [1] https://marc.info/?l=linux-mm&m=142649500728327&w=2
+> 
+> Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
+> ---
+>   Documentation/admin-guide/sysctl/kernel.rst | 12 ++++++++++++
+>   include/linux/kernel.h                      |  1 +
+>   kernel/sysctl.c                             |  9 +++++++++
+>   mm/memory.c                                 |  7 +++++++
+>   mm/page_alloc.c                             |  4 +++-
+>   5 files changed, 32 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index def074807cee..2fecd6b2547e 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -61,6 +61,7 @@ show up in /proc/sys/kernel:
+>   - overflowgid
+>   - overflowuid
+>   - panic
+> +- panic_on_mm_error
+>   - panic_on_oops
+>   - panic_on_stackoverflow
+>   - panic_on_unrecovered_nmi
+> @@ -611,6 +612,17 @@ an IO error.
+>      and you can use this option to take a crash dump.
+>   
+>   
+> +panic_on_mm_error:
+> +==============
+> +
+> +Controls the kernel's behaviour when inconsistency is detected
+> +by memory management code, for example bad page state or bad PTE.
+> +
+> +0: try to continue operation.
+> +
+> +1: panic immediately.
+> +
+> +
+>   panic_on_oops:
+>   ==============
+>   
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 0d9db2a14f44..5f9d408512ff 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -518,6 +518,7 @@ extern int oops_in_progress;		/* If set, an oops, panic(), BUG() or die() is in
+>   extern int panic_timeout;
+>   extern unsigned long panic_print;
+>   extern int panic_on_oops;
+> +extern int panic_on_mm_error;
+>   extern int panic_on_unrecovered_nmi;
+>   extern int panic_on_io_nmi;
+>   extern int panic_on_warn;
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 70665934d53e..6477e1cce28b 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -1238,6 +1238,15 @@ static struct ctl_table kern_table[] = {
+>   		.extra1		= SYSCTL_ZERO,
+>   		.extra2		= SYSCTL_ONE,
+>   	},
+> +	{
+> +		.procname	= "panic_on_mm_error",
+> +		.data		= &panic_on_mm_error,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+>   #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
+>   	{
+>   		.procname	= "timer_migration",
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 45442d9a4f52..cce74ff39447 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -71,6 +71,7 @@
+>   #include <linux/dax.h>
+>   #include <linux/oom.h>
+>   #include <linux/numa.h>
+> +#include <linux/module.h>
+>   
+>   #include <trace/events/kmem.h>
+>   
+> @@ -88,6 +89,8 @@
+>   #warning Unfortunate NUMA and NUMA Balancing config, growing page-frame for last_cpupid.
+>   #endif
+>   
+> +int panic_on_mm_error __read_mostly;
+> +
+>   #ifndef CONFIG_NEED_MULTIPLE_NODES
+>   /* use the per-pgdat data instead for discontigmem - mbligh */
+>   unsigned long max_mapnr;
+> @@ -543,6 +546,10 @@ static void print_bad_pte(struct vm_area_struct *vma, unsigned long addr,
+>   		 vma->vm_ops ? vma->vm_ops->fault : NULL,
+>   		 vma->vm_file ? vma->vm_file->f_op->mmap : NULL,
+>   		 mapping ? mapping->a_ops->readpage : NULL);
+> +
+> +	print_modules();
 
-> On Mon, Jan 27, 2020 at 11:38:05AM +0000, Jose Abreu wrote:
-> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Date: Jan/27/2020, 11:21:02 (UTC+00:00)
-> >=20
-> > > On Mon, Jan 27, 2020 at 12:09:11PM +0100, Jose Abreu wrote:
-> > > > When we don't have any real PHY driver connected and we get link up=
- from
-> > > > PCS we shall configure MAC and PCS for the desired speed and also
-> > > > resolve the flow control settings from MAC side.
-> > >=20
-> > > This is certainly the wrong place for it.  Please hold off on this pa=
-tch
-> > > for the time being.  Thanks.
-> >=20
-> > This is actually the change that makes everything work ...
-> >=20
-> > I need to configure PCS before Aneg is complete and then I need to=20
-> > configure MAC once Aneg is done and link is up with the outcome speed a=
-nd=20
-> > flow control.
->=20
-> Yes, I realise that, but it comes with the expense of potentially
-> breaking mvneta and mvpp2, where the settings are automatically
-> passed between the PCS and MAC in hardware. I also believe DSA
-> works around this, and I need to look at that.
+I'm not sure that printing all modules for each bad pte is a good idea.
+It already prints 'readpage' which is enough to guess filesystem or driver.
 
-OK so there is one alternative solution for this that's just saving the=20
-last link status on stmmac internal structure (if applicable ofc,=20
-something like an_complete is true and link is true) and then just use=20
-that info in mac_link_up() callback to configure the MAC when PCS is in=20
-use.
+Maybe print modules under if (panic...) below?
 
-This patch could then be dropped.
-
----
-Thanks,
-Jose Miguel Abreu
+> +	if (panic_on_mm_error)
+> +		panic("Bad page map detected");
+>   	dump_stack();
+>   	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+>   }
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d047bf7d8fd4..2ea6a65ba011 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -643,9 +643,11 @@ static void bad_page(struct page *page, const char *reason,
+>   	if (bad_flags)
+>   		pr_alert("bad because of flags: %#lx(%pGp)\n",
+>   						bad_flags, &bad_flags);
+> -	dump_page_owner(page);
+>   
+> +	dump_page_owner(page);
+>   	print_modules();
+> +	if (panic_on_mm_error)
+> +		panic("Bad page state detected");
+>   	dump_stack();
+>   out:
+>   	/* Leave bad fields for debug, except PageBuddy could make trouble */
+> 
