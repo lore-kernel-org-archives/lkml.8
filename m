@@ -2,372 +2,122 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C48C35240
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102BBC35240
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9768B2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:45:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vSGO2+Rg"
+	by mail.kernel.org (Postfix) with ESMTP id D13B320842
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580093994;
+	bh=Xxe6e1RbtGn4/jUYrlDkK2iVd7wbKVCAUBJPGAeGEvk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GErZHlq9siHyKrwjYbvqERcvciLME7/IyWU8KlEuuPw8C+XhhSWEkCHxTPriccABr
+	 UlvHrclQQvUzulQRmnG2AjrRyinrpTaS0y/RPSB2g055nDXqHF87YKRNCVcdqQXkEs
+	 cyiWtlEEHoLRl4CcMBCGfbYk82xVVqPF2/e8o5gQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgA0Cpx (ORCPT
+        id S1727754AbgA0C7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 21:45:53 -0500
-Received: from mail-qk1-f171.google.com ([209.85.222.171]:37101 "EHLO
-        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgA0Cpx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 21:45:53 -0500
-Received: by mail-qk1-f171.google.com with SMTP id 21so8294384qky.4;
-        Sun, 26 Jan 2020 18:45:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JHx4gcRlC1UzIsD5o65xFwW8PkRe4Nc60Ki5EvZDHZc=;
-        b=vSGO2+Rgs3KK/3OBBFScTnP4fI0StO8a4Zp9XwuUaP7ENQ8B6kALlVW+HMPsmmJ7c8
-         CP1eSL2eMkHKStmw5ZRlvzvts1kPDLxPfE+m+bT0lAQNgrrardKlyFbPNNdNIrFxAljb
-         1eAtqljcULExg/oASTx35K7qi2yJdkO/CDuTC+CP57lduQbUCUJ80DNik1liq6OeINJ0
-         BBsPZ+s0LTDWmgk5AfKEEbnV1CQ55RAfnvnC+uYMQ30jOfNuYh6oo/2KgXBTkVJwpZNT
-         Fhzx+d29Bc7pgYQL9AVH1GspxxwkWAZVfd9obqe4x3otnPWW62kSu8ewkurZ7Y25BfDP
-         KzpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JHx4gcRlC1UzIsD5o65xFwW8PkRe4Nc60Ki5EvZDHZc=;
-        b=gbOUUkCjzHjk+ZBoWxFyYbMimY8ATdQulJ9IXUtT6Kj08xI+foPF+jCrT0IgiOdMwc
-         E5pM15ifjp1hA761M12eF1DFc0ZrDiJETjqWkHjcWxKJk1unc8WclyjcX78ltzLIkjMA
-         o8w7MVpriXqmZNMZ6IItxGmxs6/ruRqjVXuWONziPizeE8rldcaxQB5aOt4/b+cz5Xg8
-         b7eXVihNis1Re/2XTzoGgXnXufumx3dFX9J1qD9Ph65ym7gLR8A5KKcTy2DOWz4cTtrG
-         Y8EOosFHx5/e4zW93jIMcX6vsTiaSAcj2fb8I1I7hygwZ8vdQfm3gJoRTqG870j034eS
-         vO7g==
-X-Gm-Message-State: APjAAAXtVNkQd3VJuQolzvq/CM03Y1u97uZTT51w2DN0fFMq5wzitwc3
-        V0OIpAd24eQq8xMcb2DRw22GMoZz
-X-Google-Smtp-Source: APXvYqw/GjIJqzyFcO4j9RstlOUCQdR7vpEfs5faY1DXE4p2dwNQCkQ+BuJAdn9PcbNa6IjR0uFIFg==
-X-Received: by 2002:a37:354:: with SMTP id 81mr14851869qkd.276.1580093151127;
-        Sun, 26 Jan 2020 18:45:51 -0800 (PST)
-Received: from localhost.localdomain (200.146.53.109.dynamic.dialup.gvt.net.br. [200.146.53.109])
-        by smtp.gmail.com with ESMTPSA id x3sm9166552qts.35.2020.01.26.18.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jan 2020 18:45:50 -0800 (PST)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     dsterba@suse.com, josef@toxicpanda.com,
-        linux-btrfs@vger.kernel.org,
-        Marcos Paulo de Souza <mpdesouza@suse.com>
-Subject: [PATCHv2] btrfs: Introduce new BTRFS_IOC_SNAP_DESTROY_V2 ioctl
-Date:   Sun, 26 Jan 2020 23:48:17 -0300
-Message-Id: <20200127024817.15587-1-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
+        Sun, 26 Jan 2020 21:59:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbgA0C7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 21:59:53 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6934F20720;
+        Mon, 27 Jan 2020 02:59:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580093992;
+        bh=Xxe6e1RbtGn4/jUYrlDkK2iVd7wbKVCAUBJPGAeGEvk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pkR1ldAGILY7ByaZeZKE51wQBHl8Rev9VIgD1Rt2qUp2zzEeiDsmpCWuBmo3k3K/K
+         zT01gJcoa9jeN+LW5t1rUwsYtJ8ULwZKlofyZvEhLrdRV9bcfQ3ZSiC39VrgC+r3vt
+         SzwnOuNGl0WXlnG1/ar5Gqf5ncnnydrUK59NBVg4=
+Date:   Sun, 26 Jan 2020 18:59:51 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>, dan.j.williams@intel.com,
+        aneesh.kumar@linux.ibm.com, kirill@shutemov.name,
+        yang.shi@linux.alibaba.com, thellstrom@vmware.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
+ move_page_tables()
+Message-Id: <20200126185951.c9246349befcccce210a4ab8@linux-foundation.org>
+In-Reply-To: <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
+References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
+        <20200117232254.2792-4-richardw.yang@linux.intel.com>
+        <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
+On Sun, 26 Jan 2020 17:47:57 +0300 Dmitry Osipenko <digetx@gmail.com> wrote:
 
-This ioctl will be responsible for deleting a subvolume using it's id.
-This can be used when a system has a file system mounted from a
-subvolume, rather than the root file system, like below:
+> 18.01.2020 02:22, Wei Yang пишет:
+> > Use the general helper instead of do it by hand.
+> > 
+> > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> > ---
+> >  mm/mremap.c | 7 ++-----
+> >  1 file changed, 2 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/mm/mremap.c b/mm/mremap.c
+> > index c2af8ba4ba43..a258914f3ee1 100644
+> > --- a/mm/mremap.c
+> > +++ b/mm/mremap.c
+> > @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+> >  
+> >  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
+> >  		cond_resched();
+> > -		next = (old_addr + PMD_SIZE) & PMD_MASK;
+> > -		/* even if next overflowed, extent below will be ok */
+> > +		next = pmd_addr_end(old_addr, old_end);
+> >  		extent = next - old_addr;
+> > -		if (extent > old_end - old_addr)
+> > -			extent = old_end - old_addr;
+> >  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
+> >  		if (!old_pmd)
+> >  			continue;
+> > @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+> >  
+> >  		if (pte_alloc(new_vma->vm_mm, new_pmd))
+> >  			break;
+> > -		next = (new_addr + PMD_SIZE) & PMD_MASK;
+> > +		next = pmd_addr_end(new_addr, new_addr + len);
+> >  		if (extent > next - new_addr)
+> >  			extent = next - new_addr;
+> >  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
+> > 
+> 
+> Hello Wei,
+> 
+> Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
+> Tegra (ARM32):
+> 
+>   BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
+> 
+> and eventually kernel hangs.
+> 
+> Git's bisection points to this patch and reverting it helps. Please fix,
+> thanks in advance.
 
-/
-|- @subvol1
-|- @subvol2
-\- @subvol_default
-If only @subvol_default is mounted, we have no path to reach
-@subvol1 and @subvol2, thus no way to delete them.
-This patch introduces a new flag to allow BTRFS_IOC_SNAP_DESTORY_V2
-to delete subvolume using subvolid.
-
-Also in this patch, export some functions, add BTRFS_SUBVOL_BY_ID flag
-and add subvolid as a union member of name in struct btrfs_ioctl_vol_args_v2.
-
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
----
- Changes from v1:
- * make btrfs_ioctl_snap_destroy handle both SNAP_DESTROY and SNAP_DESTROY_V2
-   (suggested by Josef)
- * Change BTRFS_SUBVOL_DELETE_BY_ID to BTRFS_SUBVOL_BY_ID (David)
- * Send patches for btrfs-progs and xfstests along this change
-
- fs/btrfs/ctree.h           |  2 +
- fs/btrfs/export.c          |  4 +-
- fs/btrfs/export.h          |  5 ++
- fs/btrfs/ioctl.c           | 97 +++++++++++++++++++++++++++++++-------
- fs/btrfs/super.c           |  4 +-
- include/uapi/linux/btrfs.h | 12 ++++-
- 6 files changed, 101 insertions(+), 23 deletions(-)
-
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index f90b82050d2d..5847a34b5146 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -3010,6 +3010,8 @@ int btrfs_defrag_leaves(struct btrfs_trans_handle *trans,
- int btrfs_parse_options(struct btrfs_fs_info *info, char *options,
- 			unsigned long new_flags);
- int btrfs_sync_fs(struct super_block *sb, int wait);
-+char *btrfs_get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
-+					   u64 subvol_objectid);
- 
- static inline __printf(2, 3) __cold
- void btrfs_no_printk(const struct btrfs_fs_info *fs_info, const char *fmt, ...)
-diff --git a/fs/btrfs/export.c b/fs/btrfs/export.c
-index 72e312cae69d..027411cdbae7 100644
---- a/fs/btrfs/export.c
-+++ b/fs/btrfs/export.c
-@@ -57,7 +57,7 @@ static int btrfs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
- 	return type;
- }
- 
--static struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
-+struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
- 				       u64 root_objectid, u32 generation,
- 				       int check_generation)
- {
-@@ -152,7 +152,7 @@ static struct dentry *btrfs_fh_to_dentry(struct super_block *sb, struct fid *fh,
- 	return btrfs_get_dentry(sb, objectid, root_objectid, generation, 1);
- }
- 
--static struct dentry *btrfs_get_parent(struct dentry *child)
-+struct dentry *btrfs_get_parent(struct dentry *child)
- {
- 	struct inode *dir = d_inode(child);
- 	struct btrfs_fs_info *fs_info = btrfs_sb(dir->i_sb);
-diff --git a/fs/btrfs/export.h b/fs/btrfs/export.h
-index 57488ecd7d4e..f981e8103d64 100644
---- a/fs/btrfs/export.h
-+++ b/fs/btrfs/export.h
-@@ -18,4 +18,9 @@ struct btrfs_fid {
- 	u64 parent_root_objectid;
- } __attribute__ ((packed));
- 
-+struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
-+				       u64 root_objectid, u32 generation,
-+				       int check_generation);
-+struct dentry *btrfs_get_parent(struct dentry *child);
-+
- #endif
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index 1b1b6ff855aa..889cb43149f9 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -28,6 +28,7 @@
- #include <linux/iversion.h>
- #include "ctree.h"
- #include "disk-io.h"
-+#include "export.h"
- #include "transaction.h"
- #include "btrfs_inode.h"
- #include "print-tree.h"
-@@ -2836,7 +2837,8 @@ static int btrfs_ioctl_get_subvol_rootref(struct file *file, void __user *argp)
- }
- 
- static noinline int btrfs_ioctl_snap_destroy(struct file *file,
--					     void __user *arg)
-+					     void __user *arg,
-+					     bool destroy_v2)
- {
- 	struct dentry *parent = file->f_path.dentry;
- 	struct btrfs_fs_info *fs_info = btrfs_sb(parent->d_sb);
-@@ -2845,34 +2847,87 @@ static noinline int btrfs_ioctl_snap_destroy(struct file *file,
- 	struct inode *inode;
- 	struct btrfs_root *root = BTRFS_I(dir)->root;
- 	struct btrfs_root *dest = NULL;
--	struct btrfs_ioctl_vol_args *vol_args;
-+	struct btrfs_ioctl_vol_args *vol_args = NULL;
-+	struct btrfs_ioctl_vol_args_v2 *vol_args2 = NULL;
-+	char *name, *name_ptr = NULL;
- 	int namelen;
- 	int err = 0;
- 
--	if (!S_ISDIR(dir->i_mode))
--		return -ENOTDIR;
-+	if (destroy_v2) {
-+		vol_args2 = memdup_user(arg, sizeof(*vol_args2));
-+		if (IS_ERR(vol_args2))
-+			return PTR_ERR(vol_args2);
- 
--	vol_args = memdup_user(arg, sizeof(*vol_args));
--	if (IS_ERR(vol_args))
--		return PTR_ERR(vol_args);
-+		if (vol_args2->subvolid == 0) {
-+			err = -EINVAL;
-+			goto out;
-+		}
- 
--	vol_args->name[BTRFS_PATH_NAME_MAX] = '\0';
--	namelen = strlen(vol_args->name);
--	if (strchr(vol_args->name, '/') ||
--	    strncmp(vol_args->name, "..", namelen) == 0) {
--		err = -EINVAL;
--		goto out;
-+		if (!(vol_args2->flags & BTRFS_SUBVOL_BY_ID)) {
-+			err = -EINVAL;
-+			goto out;
-+		}
-+
-+		dentry = btrfs_get_dentry(fs_info->sb, BTRFS_FIRST_FREE_OBJECTID,
-+					vol_args2->subvolid, 0, 0);
-+		if (IS_ERR(dentry)) {
-+			err = PTR_ERR(dentry);
-+			goto out;
-+		}
-+
-+		/* 
-+		 * change the default parent since the subvolume being deleted
-+		 * can be outside of the current mount point
-+		 */
-+		parent = btrfs_get_parent(dentry);
-+
-+		/* 
-+		 * the only use of dentry was to get the parent, so we can
-+		 * release it now. Later on the dentry will be queried again to
-+		 * make sure the dentry will reside in the dentry cache
-+		 */
-+		dput(dentry);
-+		if (IS_ERR(parent)) {
-+			err = PTR_ERR(parent);
-+			goto out;
-+		}
-+		dir = d_inode(parent);
-+
-+		name_ptr = btrfs_get_subvol_name_from_objectid(fs_info, vol_args2->subvolid);
-+		if (IS_ERR(name_ptr)) {
-+			err = PTR_ERR(name_ptr);
-+			goto free_parent;
-+		}
-+		name = (char *)kbasename(name_ptr);
-+		namelen = strlen(name);
-+	} else {
-+		vol_args = memdup_user(arg, sizeof(*vol_args));
-+		if (IS_ERR(vol_args))
-+			return PTR_ERR(vol_args);
-+
-+		vol_args->name[BTRFS_PATH_NAME_MAX] = '\0';
-+		namelen = strlen(vol_args->name);
-+		if (strchr(vol_args->name, '/') ||
-+		    strncmp(vol_args->name, "..", namelen) == 0) {
-+			err = -EINVAL;
-+			goto out;
-+		}
-+		name = vol_args->name;
-+	}
-+
-+	if (!S_ISDIR(dir->i_mode)) {
-+		err = -ENOTDIR;
-+		goto free_subvol_name;
- 	}
- 
- 	err = mnt_want_write_file(file);
- 	if (err)
--		goto out;
--
-+		goto free_subvol_name;
- 
- 	err = down_write_killable_nested(&dir->i_rwsem, I_MUTEX_PARENT);
- 	if (err == -EINTR)
- 		goto out_drop_write;
--	dentry = lookup_one_len(vol_args->name, parent, namelen);
-+	dentry = lookup_one_len(name, parent, namelen);
- 	if (IS_ERR(dentry)) {
- 		err = PTR_ERR(dentry);
- 		goto out_unlock_dir;
-@@ -2943,7 +2998,13 @@ static noinline int btrfs_ioctl_snap_destroy(struct file *file,
- 	inode_unlock(dir);
- out_drop_write:
- 	mnt_drop_write_file(file);
-+free_subvol_name:
-+	kfree(name_ptr);
-+free_parent:
-+	if (destroy_v2)
-+		dput(parent);
- out:
-+	kfree(vol_args2);
- 	kfree(vol_args);
- 	return err;
- }
-@@ -5464,7 +5525,9 @@ long btrfs_ioctl(struct file *file, unsigned int
- 	case BTRFS_IOC_SUBVOL_CREATE_V2:
- 		return btrfs_ioctl_snap_create_v2(file, argp, 1);
- 	case BTRFS_IOC_SNAP_DESTROY:
--		return btrfs_ioctl_snap_destroy(file, argp);
-+		return btrfs_ioctl_snap_destroy(file, argp, false);
-+	case BTRFS_IOC_SNAP_DESTROY_V2:
-+		return btrfs_ioctl_snap_destroy(file, argp, true);
- 	case BTRFS_IOC_SUBVOL_GETFLAGS:
- 		return btrfs_ioctl_subvol_getflags(file, argp);
- 	case BTRFS_IOC_SUBVOL_SETFLAGS:
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index a906315efd19..4a8ce475d906 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1024,7 +1024,7 @@ static int btrfs_parse_subvol_options(const char *options, char **subvol_name,
- 	return error;
- }
- 
--static char *get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
-+char *btrfs_get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
- 					   u64 subvol_objectid)
- {
- 	struct btrfs_root *root = fs_info->tree_root;
-@@ -1438,7 +1438,7 @@ static struct dentry *mount_subvol(const char *subvol_name, u64 subvol_objectid,
- 				goto out;
- 			}
- 		}
--		subvol_name = get_subvol_name_from_objectid(btrfs_sb(mnt->mnt_sb),
-+		subvol_name = btrfs_get_subvol_name_from_objectid(btrfs_sb(mnt->mnt_sb),
- 							    subvol_objectid);
- 		if (IS_ERR(subvol_name)) {
- 			root = ERR_CAST(subvol_name);
-diff --git a/include/uapi/linux/btrfs.h b/include/uapi/linux/btrfs.h
-index 7a8bc8b920f5..d8619245f0dc 100644
---- a/include/uapi/linux/btrfs.h
-+++ b/include/uapi/linux/btrfs.h
-@@ -42,11 +42,14 @@ struct btrfs_ioctl_vol_args {
- 
- #define BTRFS_DEVICE_SPEC_BY_ID		(1ULL << 3)
- 
-+#define BTRFS_SUBVOL_BY_ID	(1ULL << 4)
-+
- #define BTRFS_VOL_ARG_V2_FLAGS_SUPPORTED		\
- 			(BTRFS_SUBVOL_CREATE_ASYNC |	\
- 			BTRFS_SUBVOL_RDONLY |		\
- 			BTRFS_SUBVOL_QGROUP_INHERIT |	\
--			BTRFS_DEVICE_SPEC_BY_ID)
-+			BTRFS_DEVICE_SPEC_BY_ID |	\
-+			BTRFS_SUBVOL_BY_ID)
- 
- #define BTRFS_FSID_SIZE 16
- #define BTRFS_UUID_SIZE 16
-@@ -119,7 +122,10 @@ struct btrfs_ioctl_vol_args_v2 {
- 		__u64 unused[4];
- 	};
- 	union {
--		char name[BTRFS_SUBVOL_NAME_MAX + 1];
-+		union {
-+			char name[BTRFS_SUBVOL_NAME_MAX + 1];
-+			__u64 subvolid;
-+		};
- 		__u64 devid;
- 	};
- };
-@@ -949,5 +955,7 @@ enum btrfs_err_code {
- 				struct btrfs_ioctl_get_subvol_rootref_args)
- #define BTRFS_IOC_INO_LOOKUP_USER _IOWR(BTRFS_IOCTL_MAGIC, 62, \
- 				struct btrfs_ioctl_ino_lookup_user_args)
-+#define BTRFS_IOC_SNAP_DESTROY_V2 _IOW(BTRFS_IOCTL_MAGIC, 63, \
-+				struct btrfs_ioctl_vol_args_v2)
- 
- #endif /* _UAPI_LINUX_BTRFS_H */
--- 
-2.24.0
+Thanks.  I had these tagged for 5.7-rc1 anyway, so I'll drop all five
+patches.
 
