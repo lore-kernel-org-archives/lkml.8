@@ -2,259 +2,546 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E123AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC45C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1FD020716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1752420716
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Rl3dDNhm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IdcTlZOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgA0NG6 (ORCPT
+        id S1726179AbgA0NIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:06:58 -0500
-Received: from mail-mw2nam10on2080.outbound.protection.outlook.com ([40.107.94.80]:12993
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725975AbgA0NG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:06:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S67M+VAl25SRgexUdSy74KtRNQguYsFe0lPPCaK4mE/Vy8wndpUCg92h1tjdA+ArxogPDWa5qwlMSAaEfp3HSaFkuEZrLeM8MH8Xi0BQLpJp+h2D/Rrh9QY2cNSmC4ZYeV0Eql+tQqfjx7m3Q6L42nMRQ0Wq8ESrLP/bHmY/ogQg62AXj+J2cEMgb1MsLkl/OnwWt8uHCY95FeWWLGjkmLdSIn1tjpw9evBlgOVVy/Q33RNFkF8nKlYAVqmAmwkRd+wPiIEevHID4oWuIbhy4AQg3JJ5uLwfKQfgN0XiF9TN6MjhxChnwcvgvh3Wj4TALA6B7inFbnE14NeaxxCfrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3i2T9wcL7OdNfyKayF3jFjPODLYRsmX0nuTos4TqKGE=;
- b=jNYyTje9t6aWx0zn3o/apFFTZnU/Zs4mhzcBhz8eHLE1d2Bx6/HObkhcL+rtpgZQGHWkV/jiZC+Oq37eA62rMSeFijz1VjwtDupklauhXSNEq9x25Fj8U7cGYAHdI4ApnzVxjdC9r8DExBXDDDVrfMxUfn+fQ75BiZRyJBdHbz9yDYdATwKRaqVl5fyd1zF0Ds8lEfs0F6vxyGoOZJIgPDKUPfXCJQcAGnQcG+Y3/NWylfMRtdNNjWq7qWOnN4vM+cE/vdNNSXuz2RxffY90lSGY82XbizVQ64ysg2CxlTlg22cK8Bz0Svmc8sKkhwsJVkA7UNzk3ajQe3ZyT4TVeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        Mon, 27 Jan 2020 08:08:46 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33300 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgA0NIq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 08:08:46 -0500
+Received: by mail-qk1-f194.google.com with SMTP id h23so9507665qkh.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 05:08:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3i2T9wcL7OdNfyKayF3jFjPODLYRsmX0nuTos4TqKGE=;
- b=Rl3dDNhmW8KnNSLiirLhv7eiDEX38/ohnYfSSvBZJIAOIR/T663kcwoY3cMYO30D3OtBDUSMow9V3wK0ip1V3rEH/Vk2FwwyCK7Pl+SRJNTAN+QjkM9WD9LcdZpwreTj1Q0zhE5rtukCxGCqZRxutyVLaGb2WVsmqBJDz8eIFtI=
-Received: from MN2PR02MB6336.namprd02.prod.outlook.com (52.132.172.222) by
- MN2PR02MB6671.namprd02.prod.outlook.com (52.135.49.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.22; Mon, 27 Jan 2020 13:06:54 +0000
-Received: from MN2PR02MB6336.namprd02.prod.outlook.com
- ([fe80::a181:b33f:2097:82d5]) by MN2PR02MB6336.namprd02.prod.outlook.com
- ([fe80::a181:b33f:2097:82d5%6]) with mapi id 15.20.2644.028; Mon, 27 Jan 2020
- 13:06:54 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>
-Subject: RE: [PATCH v3 2/2] PCI: Versal CPM: Add support for Versal CPM Root
- Port driver
-Thread-Topic: [PATCH v3 2/2] PCI: Versal CPM: Add support for Versal CPM Root
- Port driver
-Thread-Index: AQHVyfjOYP1OKhHeMUCSmomtiUQ5I6fpL1IAgBVd0IA=
-Date:   Mon, 27 Jan 2020 13:06:54 +0000
-Message-ID: <MN2PR02MB633624087571F37F95F1D915A50B0@MN2PR02MB6336.namprd02.prod.outlook.com>
-References: <1578909821-10604-3-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20200113223436.GA128724@google.com>
-In-Reply-To: <20200113223436.GA128724@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=bharatku@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 51931b81-d1d9-40a9-2342-08d7a329c838
-x-ms-traffictypediagnostic: MN2PR02MB6671:|MN2PR02MB6671:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR02MB66718B8F686B46531BA177BEA50B0@MN2PR02MB6671.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:854;
-x-forefront-prvs: 02951C14DC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(376002)(396003)(366004)(189003)(199004)(107886003)(5660300002)(2906002)(54906003)(52536014)(478600001)(86362001)(4326008)(7696005)(33656002)(9686003)(55016002)(81156014)(8676002)(81166006)(8936002)(6506007)(71200400001)(76116006)(66946007)(66556008)(66476007)(66446008)(186003)(26005)(6916009)(64756008)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6671;H:MN2PR02MB6336.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: d+fqPf6biE19yUZzPpemlS+4x0tkF6Z4BwUT1WgvnN3klMi4hkPyi/81VgdSK4EkvwkM5Ss45jmsxvYZ8ENCoiiXil2iSzHRka/mJ2+dV5DeL7zCsdUlCdyBPMwm0Cv5US25JMzrgRfFf0yk7n++0A65CQ8Ou0xlDnXRyq7lDALenU5D2boTTkStr1CQTiFdJkCk+mz29iNoD4tMwagjB0ZgOlNoxorez6JXtf0wCv4ts+Cyiat9dnzijcCwHYuRF/RTTVbkNsOtzaAqIhgkcZVPg1eHi7eHGoMabLb1NNn/u+vAvCoRWQaJSL2P0VMj+2CTBLjxzN+LL91+VzabbVFXJsk4UO7xD4uFx7tCcG5pfTX1QrJ6OBaTAbXmHZLU+UyyimhmiTdPhMeiZuHZIWCUYycIu6m3P89fngfUPjQttoQR7QLtNUbK+Z8nI8a6
-x-ms-exchange-antispam-messagedata: IQh0CiFRBMVccy3C37RC0FbJ60sPu+wFMBac9KhldjvsjgVx0suDVcCw9dVNLEItcTXwv+dAxaM1ekdcWFOMoEhfQlXmgvrm21YUP7GW8Y5LTcGLW7CaMFNUeYsiD2SaEWsHyB8taBoJrdE0ffJUOQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=V+Tnkhj8Bj5ujrN5xcRs8s0tgFS3FaAIs2HtkFNGK+U=;
+        b=IdcTlZOXkq89g298hFl1C4bmaOCnjWHm8nFM90yVJDahRDcwvaB4WFzZnJqB7oasdj
+         EKAPkBHUgIyvFfnGbvBeuGNTbPeu1i7FWpUjlmqTKzrVZkxMoPD42VpLiTHtQd3c1+XB
+         Ces6tNS7C2uLexcHwHNsrdHsIGvhNpDwGceunI/VCQF8hPtzstWHcvmWY27OsMwbie74
+         LTeV9DPewMrh31Dbo2PtegPPbWnosbNVJpcT1dp21LQSGed5JynOHrWjjOkdqZkQEWV+
+         Gunkut8vruxL+zRECqvs1KRNRIgBEGMNo5Mc0KolzNsMoMb3h3EHoyaERxObpHLcPNgc
+         hwPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=V+Tnkhj8Bj5ujrN5xcRs8s0tgFS3FaAIs2HtkFNGK+U=;
+        b=VgkZZ+DoymmSXi8ImEAhwmSPA5Q058JV3+Lgm/JkdTw5lIcTJr/OH2oPOn+wX636/S
+         NanKKAVkU0VlbBWQuYf2WFjwuqP4p/h4UOZTK8aEF7X+D7Yf4dvE1jeKurxms8ctBkJT
+         HeJo8lm+tbF/L6VOv/0BiqySOY8UXhNmcQAPQszbC6mzt9NDG3sjtcje78hmjyg9bhvu
+         TimC/KnNVayPIeQH1fRu1SYozLwPFuahyMiA7rMeuTe6KTXZAUTYntehAAXfBrZaKrnR
+         6kUYEUa9S5bc3ccxwWdskzGqDV3GNOZeTCkZSJbO946S9qL8u5wFb14DyxrZsXpLlfDC
+         3wrw==
+X-Gm-Message-State: APjAAAWywFKdaMBzl8ali4n7PxZvFCHwKFo3twj4Qluc4nfvzv16oIVi
+        1pAgL7z09JXv9w9ltm7NZA/tIJ2awFe0mFPxLNXKwQ==
+X-Google-Smtp-Source: APXvYqxgsmbp8gpy8/Et+ypWffgCjb0hkOUhf3l9I6FB9S1E80L4jVJQwzhPz6BJOQOyGOMY2BKmtVZawzLrxVJDERo=
+X-Received: by 2002:a05:620a:16d3:: with SMTP id a19mr4814154qkn.427.1580130524567;
+ Mon, 27 Jan 2020 05:08:44 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51931b81-d1d9-40a9-2342-08d7a329c838
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2020 13:06:54.2954
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Y9sOwI/DU18iHzcwNWf2IFpymFEmhf6d8r27dab6QyPkXxAh8GQsr+gDZNvhIep9eCq4U3g1cw2+QgqOGoUwgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6671
+References: <20191128135057.20020-1-benjamin.gaignard@st.com>
+ <878snsvxzu.fsf@intel.com> <CA+M3ks5WvYoDLSrbvaGBbJg9+nnkX=xyCiD389QD8tSCdNqB+g@mail.gmail.com>
+ <CA+M3ks4Y4LemFh=dQds91Z-LGJPK3vHKv=GeUNYHjNhdwz_m2g@mail.gmail.com>
+ <CA+M3ks4yEBejzMoXPw_OK_LNP7ag5SNXZjvHqNeuZ8+9r2X-qw@mail.gmail.com> <b273036b10d8c2882800d01dcda7392e93b731fa.camel@redhat.com>
+In-Reply-To: <b273036b10d8c2882800d01dcda7392e93b731fa.camel@redhat.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Mon, 27 Jan 2020 14:08:33 +0100
+Message-ID: <CA+M3ks5cuC5yJ-e0DCUiY1HtyyeU=mM9z56y4e_UduKaxcbw-A@mail.gmail.com>
+Subject: Re: [PATCH v3] drm/dp_mst: Fix W=1 warnings
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH v3 2/2] PCI: Versal CPM: Add support for Versal CPM R=
-oot
-> Port driver
->=20
-> s/PCI: Versal CPM: .../PCI: xilinx-cpm: Add Versal CPM Root Port driver/
->=20
-Thanks Bjorn, sorry for late response.=20
-> Format is "PCI: <driver-name>: Subject"
-Accepted will change the subject.
->=20
-> On Mon, Jan 13, 2020 at 03:33:41PM +0530, Bharat Kumar Gogada wrote:
-> > - Adding support for Versal CPM as Root Port.
->=20
-> s/- Adding/Add/
->=20
-> > - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrate=
-d
-> >   block for CPM along with the integrated bridge can function
-> >   as PCIe Root Port.
-> > - CPM Versal uses GICv3 ITS feature for acheiving assigning MSI/MSI-X
-> >   vectors and handling MSI/MSI-X interrupts.
->=20
-> s/acheiving//
->=20
-> > - Bridge error and legacy interrupts in Versal CPM are handled using
-> >   Versal CPM specific MISC interrupt line.
+Le ven. 24 janv. 2020 =C3=A0 23:08, Lyude Paul <lyude@redhat.com> a =C3=A9c=
+rit :
+>
+> On Tue, 2020-01-07 at 14:11 +0100, Benjamin Gaignard wrote:
+> > Le ven. 20 d=C3=A9c. 2019 =C3=A0 15:03, Benjamin Gaignard
+> > <benjamin.gaignard@linaro.org> a =C3=A9crit :
+> > > Le lun. 16 d=C3=A9c. 2019 =C3=A0 09:28, Benjamin Gaignard
+> > > <benjamin.gaignard@linaro.org> a =C3=A9crit :
+> > > > Le mer. 4 d=C3=A9c. 2019 =C3=A0 17:47, Jani Nikula <jani.nikula@lin=
+ux.intel.com> a
+> > > > =C3=A9crit :
+> > > > > On Thu, 28 Nov 2019, Benjamin Gaignard <benjamin.gaignard@st.com>
+> > > > > wrote:
+> > > > > > Fix the warnings that show up with W=3D1.
+> > > > > > They are all about unused but set variables.
+> > > > > > If functions returns are not used anymore make them void.
+> > > > > >
+> > > > > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > > > > > ---
+> > > > > > CC: Jani Nikula <jani.nikula@linux.intel.com>
+> > > > > >
+> > > > > > changes in version 3:
+> > > > > > - remove the hunk that may conflict with c485e2c97dae
+> > > > > >   ("drm/dp_mst: Refactor pdt setup/teardown, add more locking")
+> > > > > >
+> > > > > > changes in version 2:
+> > > > > > - fix indentations
+> > > > > > - when possible change functions prototype to void
+> > > > > >
+> > > > > > drivers/gpu/drm/drm_dp_mst_topology.c | 83 +++++++++++++-------=
+---
+> > > > > > ------------
+> > > > > >  1 file changed, 31 insertions(+), 52 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > > b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > > index 1437bc46368b..d5cb5688b5dd 100644
+> > > > > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > > @@ -674,7 +674,6 @@ static bool drm_dp_sideband_msg_build(struc=
+t
+> > > > > > drm_dp_sideband_msg_rx *msg,
+> > > > > >                                     u8 *replybuf, u8 replybufle=
+n,
+> > > > > > bool hdr)
+> > > > > >  {
+> > > > > >       int ret;
+> > > > > > -     u8 crc4;
+> > > > > >
+> > > > > >       if (hdr) {
+> > > > > >               u8 hdrlen;
+> > > > > > @@ -716,8 +715,6 @@ static bool drm_dp_sideband_msg_build(struc=
+t
+> > > > > > drm_dp_sideband_msg_rx *msg,
+> > > > > >       }
+> > > > > >
+> > > > > >       if (msg->curchunk_idx >=3D msg->curchunk_len) {
+> > > > > > -             /* do CRC */
+> > > > > > -             crc4 =3D drm_dp_msg_data_crc4(msg->chunk, msg-
+> > > > > > >curchunk_len - 1);
+> > > > >
+> > > > > Again, someone needs to check if crc4 should be *used* instead of
+> > > > > thrown
+> > > > > away. Blindly throwing stuff out is not the way to go.
+> > > >
+> > > > Hi Dave,
+> > > >
+> > >
+> > > + Lyude who has been hacking in this code recently
 > >
-> > Changes v3:
-> > Fix warnings reported.
+> > gentle ping for the reviewers,
 > >
-> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->=20
-> "Reported-by" is for bug reports.  This makes it look like the lack of th=
-e driver is
-> the bug, but it's not.  Personally, I'd thank Dan and the kbuild robot, b=
-ut not add
-> "Reported-by" here.  It's like patch reviews; I don't expect you to menti=
-on my
-> feedback in the commit log.
-Accepted above comments will fix these in next patch.
->=20
-> > +config PCIE_XILINX_CPM
-> > +	bool "Xilinx Versal CPM host bridge support"
-> > +	depends on ARCH_ZYNQMP || COMPILE_TEST
-> > +	help
-> > +	  Say 'Y' here if you want kernel to enable support the
-> > +	  Xilinx Versal CPM host Bridge driver.The driver supports
-> > +	  MSI/MSI-X interrupts using GICv3 ITS feature.
->=20
-> s/kernel to enable support the/kernel support for the/ s/host Bridge driv=
-er./host
-> bridge. /  (note space after period)
-Accepted , will fix these in next patch.
->=20
-> > + * xilinx_cpm_pcie_valid_device - Check if a valid device is present
-> > + on bus
->=20
-> Technically this does not check if the device is present on the bus.
-> It checks whether it's *possible* for a device to be at this address.
-> For non-root bus devices in particular, it always returns true, and you h=
-ave to do
-> a config read to see whether a device responds.
-Accepted, will change the comments.
->=20
-> > + * @bus: PCI Bus structure
-> > + * @devfn: device/function
-> > + *
-> > + * Return: 'true' on success and 'false' if invalid device is found
-> > +*/ static bool xilinx_cpm_pcie_valid_device(struct pci_bus *bus,
-> > +					 unsigned int devfn)
-> > +{
-> > +	struct xilinx_cpm_pcie_port *port =3D bus->sysdata;
-> > +
-> > +	/* Only one device down on each root port */
-> > +	if (bus->number =3D=3D port->root_busno && devfn > 0)
-> > +		return false;
-> > +
-> > +	return true;
-> > +}
->=20
-> > +static irqreturn_t xilinx_cpm_pcie_intr_handler(int irq, void *data)
-> > +{
-> > +	struct xilinx_cpm_pcie_port *port =3D
-> > +				(struct xilinx_cpm_pcie_port *)data;
->=20
-> No cast needed.
-Accepted, will fix these in next patch.
->=20
-> > +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port
-> > +*port) {
-> > +	if (cpm_pcie_link_up(port))
-> > +		dev_info(port->dev, "PCIe Link is UP\n");
-> > +	else
-> > +		dev_info(port->dev, "PCIe Link is DOWN\n");
-> > +
-> > +	/* Disable all interrupts */
-> > +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-> > +		   XILINX_CPM_PCIE_REG_IMR);
-> > +
-> > +	/* Clear pending interrupts */
-> > +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-> > +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
-> > +		   XILINX_CPM_PCIE_REG_IDR);
-> > +
-> > +	/* Enable all interrupts */
-> > +	pcie_write(port, XILINX_CPM_PCIE_IMR_ALL_MASK,
-> > +		   XILINX_CPM_PCIE_REG_IMR);
-> > +	pcie_write(port, XILINX_CPM_PCIE_IDRN_MASK,
-> > +		   XILINX_CPM_PCIE_REG_IDRN_MASK);
-> > +
-> > +	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
-> > +	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
->=20
-> This lonely writel() in the middle of all the pcie_write() and
-> pcie_read() calls *looks* like a mistake.
->=20
-> I see that the writel() uses port->cpm_base, while pcie_write() uses
-> port->reg_base, so I don't think it *is* a mistake, but it's sure not
-> obvious.  A blank line after it and a comment at the _MISC_IR definitions=
- about
-> them being in a different register set would be nice hints.
-Accepted, will add comments.
->=20
-> > +	/* Enable the Bridge enable bit */
-> > +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
-> > +		   XILINX_CPM_PCIE_REG_RPSC_BEN,
-> > +		   XILINX_CPM_PCIE_REG_RPSC);
-> > +}
->=20
-> > +static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port
-> > +*port) {
-> > +	struct device *dev =3D port->dev;
-> > +	struct resource *res;
-> > +	int err;
-> > +	struct platform_device *pdev =3D to_platform_device(dev);
->=20
-> The "struct platform_device ..." line really should be first in the list.=
-  Not because
-> of "reverse Christmas tree", but because "pdev" is the first variable use=
-d in the
-> code below.
-Accepted, will fix these in next patch.
->=20
-> > +	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-> > +	port->reg_base =3D devm_ioremap_resource(dev, res);
-> > +	if (IS_ERR(port->reg_base))
-> > +		return PTR_ERR(port->reg_base);
-> > +
-> > +	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > +					   "cpm_slcr");
-> > +	port->cpm_base =3D devm_ioremap_resource(dev, res);
-> > +	if (IS_ERR(port->cpm_base))
-> > +		return PTR_ERR(port->cpm_base);
->=20
-Regards,
-Bharat
+> hi-actually yes, we should probably be using this instead of just droppin=
+g
+> this. Also, I didn't write this code originally I just refactored a bunch=
+ of
+> it - Dave Airlied is the original author, but the original version of thi=
+s
+> code was written ages ago. tbh, I think it's a safe bet to say that they
+> probably did mean to use this but forgot to and no one noticed until now.
+
+Hi,
+
+Any clue about how to use crc value ? Does it have to be checked
+against something else ?
+If crc are not matching what should we do of the data copied just before ?
+
+Benjamin
+
+>
+> > Thanks,
+> > Benjamin
+> > > > Your are the original writer of this code, could you tell us if we =
+can
+> > > > drop crc4
+> > > > ao if there is something else that I have misunderstood ?
+> > > >
+> > > > Thanks,
+> > > > Benjamin
+> > > >
+> > > > > BR,
+> > > > > Jani.
+> > > > >
+> > > > > >               /* copy chunk into bigger msg */
+> > > > > >               memcpy(&msg->msg[msg->curlen], msg->chunk, msg-
+> > > > > > >curchunk_len - 1);
+> > > > > >               msg->curlen +=3D msg->curchunk_len - 1;
+> > > > > > @@ -1014,7 +1011,7 @@ static bool drm_dp_sideband_parse_req(str=
+uct
+> > > > > > drm_dp_sideband_msg_rx *raw,
+> > > > > >       }
+> > > > > >  }
+> > > > > >
+> > > > > > -static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg=
+, u8
+> > > > > > port_num, u32 offset, u8 num_bytes, u8 *bytes)
+> > > > > > +static void build_dpcd_write(struct drm_dp_sideband_msg_tx *ms=
+g, u8
+> > > > > > port_num, u32 offset, u8 num_bytes, u8 *bytes)
+> > > > > >  {
+> > > > > >       struct drm_dp_sideband_msg_req_body req;
+> > > > > >
+> > > > > > @@ -1024,17 +1021,14 @@ static int build_dpcd_write(struct
+> > > > > > drm_dp_sideband_msg_tx *msg, u8 port_num, u32
+> > > > > >       req.u.dpcd_write.num_bytes =3D num_bytes;
+> > > > > >       req.u.dpcd_write.bytes =3D bytes;
+> > > > > >       drm_dp_encode_sideband_req(&req, msg);
+> > > > > > -
+> > > > > > -     return 0;
+> > > > > >  }
+> > > > > >
+> > > > > > -static int build_link_address(struct drm_dp_sideband_msg_tx *m=
+sg)
+> > > > > > +static void build_link_address(struct drm_dp_sideband_msg_tx *=
+msg)
+> > > > > >  {
+> > > > > >       struct drm_dp_sideband_msg_req_body req;
+> > > > > >
+> > > > > >       req.req_type =3D DP_LINK_ADDRESS;
+> > > > > >       drm_dp_encode_sideband_req(&req, msg);
+> > > > > > -     return 0;
+> > > > > >  }
+> > > > > >
+> > > > > >  static int build_enum_path_resources(struct drm_dp_sideband_ms=
+g_tx
+> > > > > > *msg, int port_num)
+> > > > > > @@ -1048,7 +1042,7 @@ static int build_enum_path_resources(stru=
+ct
+> > > > > > drm_dp_sideband_msg_tx *msg, int por
+> > > > > >       return 0;
+> > > > > >  }
+> > > > > >
+> > > > > > -static int build_allocate_payload(struct drm_dp_sideband_msg_t=
+x
+> > > > > > *msg, int port_num,
+> > > > > > +static void build_allocate_payload(struct drm_dp_sideband_msg_=
+tx
+> > > > > > *msg, int port_num,
+> > > > > >                                 u8 vcpi, uint16_t pbn,
+> > > > > >                                 u8 number_sdp_streams,
+> > > > > >                                 u8 *sdp_stream_sink)
+> > > > > > @@ -1064,10 +1058,9 @@ static int build_allocate_payload(struct
+> > > > > > drm_dp_sideband_msg_tx *msg, int port_n
+> > > > > >                  number_sdp_streams);
+> > > > > >       drm_dp_encode_sideband_req(&req, msg);
+> > > > > >       msg->path_msg =3D true;
+> > > > > > -     return 0;
+> > > > > >  }
+> > > > > >
+> > > > > > -static int build_power_updown_phy(struct drm_dp_sideband_msg_t=
+x
+> > > > > > *msg,
+> > > > > > +static void build_power_updown_phy(struct drm_dp_sideband_msg_=
+tx
+> > > > > > *msg,
+> > > > > >                                 int port_num, bool power_up)
+> > > > > >  {
+> > > > > >       struct drm_dp_sideband_msg_req_body req;
+> > > > > > @@ -1080,7 +1073,6 @@ static int build_power_updown_phy(struct
+> > > > > > drm_dp_sideband_msg_tx *msg,
+> > > > > >       req.u.port_num.port_number =3D port_num;
+> > > > > >       drm_dp_encode_sideband_req(&req, msg);
+> > > > > >       msg->path_msg =3D true;
+> > > > > > -     return 0;
+> > > > > >  }
+> > > > > >
+> > > > > >  static int drm_dp_mst_assign_payload_id(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > > @@ -1746,14 +1738,13 @@ static u8 drm_dp_calculate_rad(struct
+> > > > > > drm_dp_mst_port *port,
+> > > > > >   */
+> > > > > >  static bool drm_dp_port_setup_pdt(struct drm_dp_mst_port *port=
+)
+> > > > > >  {
+> > > > > > -     int ret;
+> > > > > >       u8 rad[6], lct;
+> > > > > >       bool send_link =3D false;
+> > > > > >       switch (port->pdt) {
+> > > > > >       case DP_PEER_DEVICE_DP_LEGACY_CONV:
+> > > > > >       case DP_PEER_DEVICE_SST_SINK:
+> > > > > >               /* add i2c over sideband */
+> > > > > > -             ret =3D drm_dp_mst_register_i2c_bus(&port->aux);
+> > > > > > +             drm_dp_mst_register_i2c_bus(&port->aux);
+> > > > > >               break;
+> > > > > >       case DP_PEER_DEVICE_MST_BRANCHING:
+> > > > > >               lct =3D drm_dp_calculate_rad(port, rad);
+> > > > > > @@ -1823,25 +1814,20 @@ ssize_t drm_dp_mst_dpcd_write(struct
+> > > > > > drm_dp_aux *aux,
+> > > > > >
+> > > > > >  static void drm_dp_check_mstb_guid(struct drm_dp_mst_branch *m=
+stb,
+> > > > > > u8 *guid)
+> > > > > >  {
+> > > > > > -     int ret;
+> > > > > > -
+> > > > > >       memcpy(mstb->guid, guid, 16);
+> > > > > >
+> > > > > >       if (!drm_dp_validate_guid(mstb->mgr, mstb->guid)) {
+> > > > > >               if (mstb->port_parent) {
+> > > > > > -                     ret =3D drm_dp_send_dpcd_write(
+> > > > > > -                                     mstb->mgr,
+> > > > > > -                                     mstb->port_parent,
+> > > > > > -                                     DP_GUID,
+> > > > > > -                                     16,
+> > > > > > -                                     mstb->guid);
+> > > > > > +                     drm_dp_send_dpcd_write(mstb->mgr,
+> > > > > > +                                            mstb->port_parent,
+> > > > > > +                                            DP_GUID,
+> > > > > > +                                            16,
+> > > > > > +                                            mstb->guid);
+> > > > > >               } else {
+> > > > > > -
+> > > > > > -                     ret =3D drm_dp_dpcd_write(
+> > > > > > -                                     mstb->mgr->aux,
+> > > > > > -                                     DP_GUID,
+> > > > > > -                                     mstb->guid,
+> > > > > > -                                     16);
+> > > > > > +                     drm_dp_dpcd_write(mstb->mgr->aux,
+> > > > > > +                                       DP_GUID,
+> > > > > > +                                       mstb->guid,
+> > > > > > +                                       16);
+> > > > > >               }
+> > > > > >       }
+> > > > > >  }
+> > > > > > @@ -2197,7 +2183,7 @@ static bool drm_dp_validate_guid(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >       return false;
+> > > > > >  }
+> > > > > >
+> > > > > > -static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg,=
+ u8
+> > > > > > port_num, u32 offset, u8 num_bytes)
+> > > > > > +static void build_dpcd_read(struct drm_dp_sideband_msg_tx *msg=
+, u8
+> > > > > > port_num, u32 offset, u8 num_bytes)
+> > > > > >  {
+> > > > > >       struct drm_dp_sideband_msg_req_body req;
+> > > > > >
+> > > > > > @@ -2206,8 +2192,6 @@ static int build_dpcd_read(struct
+> > > > > > drm_dp_sideband_msg_tx *msg, u8 port_num, u32
+> > > > > >       req.u.dpcd_read.dpcd_address =3D offset;
+> > > > > >       req.u.dpcd_read.num_bytes =3D num_bytes;
+> > > > > >       drm_dp_encode_sideband_req(&req, msg);
+> > > > > > -
+> > > > > > -     return 0;
+> > > > > >  }
+> > > > > >
+> > > > > >  static int drm_dp_send_sideband_msg(struct drm_dp_mst_topology=
+_mgr
+> > > > > > *mgr,
+> > > > > > @@ -2429,14 +2413,14 @@ static void drm_dp_send_link_address(st=
+ruct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >  {
+> > > > > >       struct drm_dp_sideband_msg_tx *txmsg;
+> > > > > >       struct drm_dp_link_address_ack_reply *reply;
+> > > > > > -     int i, len, ret;
+> > > > > > +     int i, ret;
+> > > > > >
+> > > > > >       txmsg =3D kzalloc(sizeof(*txmsg), GFP_KERNEL);
+> > > > > >       if (!txmsg)
+> > > > > >               return;
+> > > > > >
+> > > > > >       txmsg->dst =3D mstb;
+> > > > > > -     len =3D build_link_address(txmsg);
+> > > > > > +     build_link_address(txmsg);
+> > > > > >
+> > > > > >       mstb->link_address_sent =3D true;
+> > > > > >       drm_dp_queue_down_tx(mgr, txmsg);
+> > > > > > @@ -2478,7 +2462,6 @@ drm_dp_send_enum_path_resources(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >  {
+> > > > > >       struct drm_dp_enum_path_resources_ack_reply *path_res;
+> > > > > >       struct drm_dp_sideband_msg_tx *txmsg;
+> > > > > > -     int len;
+> > > > > >       int ret;
+> > > > > >
+> > > > > >       txmsg =3D kzalloc(sizeof(*txmsg), GFP_KERNEL);
+> > > > > > @@ -2486,7 +2469,7 @@ drm_dp_send_enum_path_resources(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >               return -ENOMEM;
+> > > > > >
+> > > > > >       txmsg->dst =3D mstb;
+> > > > > > -     len =3D build_enum_path_resources(txmsg, port->port_num);
+> > > > > > +     build_enum_path_resources(txmsg, port->port_num);
+> > > > > >
+> > > > > >       drm_dp_queue_down_tx(mgr, txmsg);
+> > > > > >
+> > > > > > @@ -2569,7 +2552,7 @@ static int drm_dp_payload_send_msg(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >  {
+> > > > > >       struct drm_dp_sideband_msg_tx *txmsg;
+> > > > > >       struct drm_dp_mst_branch *mstb;
+> > > > > > -     int len, ret, port_num;
+> > > > > > +     int ret, port_num;
+> > > > > >       u8 sinks[DRM_DP_MAX_SDP_STREAMS];
+> > > > > >       int i;
+> > > > > >
+> > > > > > @@ -2594,9 +2577,9 @@ static int drm_dp_payload_send_msg(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >               sinks[i] =3D i;
+> > > > > >
+> > > > > >       txmsg->dst =3D mstb;
+> > > > > > -     len =3D build_allocate_payload(txmsg, port_num,
+> > > > > > -                                  id,
+> > > > > > -                                  pbn, port->num_sdp_streams,
+> > > > > > sinks);
+> > > > > > +     build_allocate_payload(txmsg, port_num,
+> > > > > > +                            id,
+> > > > > > +                            pbn, port->num_sdp_streams, sinks)=
+;
+> > > > > >
+> > > > > >       drm_dp_queue_down_tx(mgr, txmsg);
+> > > > > >
+> > > > > > @@ -2625,7 +2608,7 @@ int drm_dp_send_power_updown_phy(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >                                struct drm_dp_mst_port *port, bo=
+ol
+> > > > > > power_up)
+> > > > > >  {
+> > > > > >       struct drm_dp_sideband_msg_tx *txmsg;
+> > > > > > -     int len, ret;
+> > > > > > +     int ret;
+> > > > > >
+> > > > > >       port =3D drm_dp_mst_topology_get_port_validated(mgr, port=
+);
+> > > > > >       if (!port)
+> > > > > > @@ -2638,7 +2621,7 @@ int drm_dp_send_power_updown_phy(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >       }
+> > > > > >
+> > > > > >       txmsg->dst =3D port->parent;
+> > > > > > -     len =3D build_power_updown_phy(txmsg, port->port_num, pow=
+er_up);
+> > > > > > +     build_power_updown_phy(txmsg, port->port_num, power_up);
+> > > > > >       drm_dp_queue_down_tx(mgr, txmsg);
+> > > > > >
+> > > > > >       ret =3D drm_dp_mst_wait_tx_reply(port->parent, txmsg);
+> > > > > > @@ -2858,7 +2841,6 @@ static int drm_dp_send_dpcd_read(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >                                struct drm_dp_mst_port *port,
+> > > > > >                                int offset, int size, u8 *bytes)
+> > > > > >  {
+> > > > > > -     int len;
+> > > > > >       int ret =3D 0;
+> > > > > >       struct drm_dp_sideband_msg_tx *txmsg;
+> > > > > >       struct drm_dp_mst_branch *mstb;
+> > > > > > @@ -2873,7 +2855,7 @@ static int drm_dp_send_dpcd_read(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >               goto fail_put;
+> > > > > >       }
+> > > > > >
+> > > > > > -     len =3D build_dpcd_read(txmsg, port->port_num, offset, si=
+ze);
+> > > > > > +     build_dpcd_read(txmsg, port->port_num, offset, size);
+> > > > > >       txmsg->dst =3D port->parent;
+> > > > > >
+> > > > > >       drm_dp_queue_down_tx(mgr, txmsg);
+> > > > > > @@ -2911,7 +2893,6 @@ static int drm_dp_send_dpcd_write(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >                                 struct drm_dp_mst_port *port,
+> > > > > >                                 int offset, int size, u8 *bytes=
+)
+> > > > > >  {
+> > > > > > -     int len;
+> > > > > >       int ret;
+> > > > > >       struct drm_dp_sideband_msg_tx *txmsg;
+> > > > > >       struct drm_dp_mst_branch *mstb;
+> > > > > > @@ -2926,7 +2907,7 @@ static int drm_dp_send_dpcd_write(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr,
+> > > > > >               goto fail_put;
+> > > > > >       }
+> > > > > >
+> > > > > > -     len =3D build_dpcd_write(txmsg, port->port_num, offset, s=
+ize,
+> > > > > > bytes);
+> > > > > > +     build_dpcd_write(txmsg, port->port_num, offset, size, byt=
+es);
+> > > > > >       txmsg->dst =3D mstb;
+> > > > > >
+> > > > > >       drm_dp_queue_down_tx(mgr, txmsg);
+> > > > > > @@ -3149,7 +3130,7 @@ static bool drm_dp_get_one_sb_msg(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr, bool up)
+> > > > > >  {
+> > > > > >       int len;
+> > > > > >       u8 replyblock[32];
+> > > > > > -     int replylen, origlen, curreply;
+> > > > > > +     int replylen, curreply;
+> > > > > >       int ret;
+> > > > > >       struct drm_dp_sideband_msg_rx *msg;
+> > > > > >       int basereg =3D up ? DP_SIDEBAND_MSG_UP_REQ_BASE :
+> > > > > > DP_SIDEBAND_MSG_DOWN_REP_BASE;
+> > > > > > @@ -3169,7 +3150,6 @@ static bool drm_dp_get_one_sb_msg(struct
+> > > > > > drm_dp_mst_topology_mgr *mgr, bool up)
+> > > > > >       }
+> > > > > >       replylen =3D msg->curchunk_len + msg->curchunk_hdrlen;
+> > > > > >
+> > > > > > -     origlen =3D replylen;
+> > > > > >       replylen -=3D len;
+> > > > > >       curreply =3D len;
+> > > > > >       while (replylen > 0) {
+> > > > > > @@ -3961,17 +3941,16 @@ void drm_dp_mst_dump_topology(struct
+> > > > > > seq_file *m,
+> > > > > >       mutex_lock(&mgr->lock);
+> > > > > >       if (mgr->mst_primary) {
+> > > > > >               u8 buf[DP_PAYLOAD_TABLE_SIZE];
+> > > > > > -             int ret;
+> > > > > >
+> > > > > > -             ret =3D drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, b=
+uf,
+> > > > > > DP_RECEIVER_CAP_SIZE);
+> > > > > > +             drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf,
+> > > > > > DP_RECEIVER_CAP_SIZE);
+> > > > > >               seq_printf(m, "dpcd: %*ph\n", DP_RECEIVER_CAP_SIZ=
+E,
+> > > > > > buf);
+> > > > > > -             ret =3D drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, b=
+uf, 2);
+> > > > > > +             drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
+> > > > > >               seq_printf(m, "faux/mst: %*ph\n", 2, buf);
+> > > > > > -             ret =3D drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, =
+buf,
+> > > > > > 1);
+> > > > > > +             drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
+> > > > > >               seq_printf(m, "mst ctrl: %*ph\n", 1, buf);
+> > > > > >
+> > > > > >               /* dump the standard OUI branch header */
+> > > > > > -             ret =3D drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI,=
+ buf,
+> > > > > > DP_BRANCH_OUI_HEADER_SIZE);
+> > > > > > +             drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf,
+> > > > > > DP_BRANCH_OUI_HEADER_SIZE);
+> > > > > >               seq_printf(m, "branch oui: %*phN devid: ", 3, buf=
+);
+> > > > > >               for (i =3D 0x3; i < 0x8 && buf[i]; i++)
+> > > > > >                       seq_printf(m, "%c", buf[i]);
+> > > > >
+> > > > > --
+> > > > > Jani Nikula, Intel Open Source Graphics Center
+> > > > > _______________________________________________
+> > > > > dri-devel mailing list
+> > > > > dri-devel@lists.freedesktop.org
+> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> --
+> Cheers,
+>         Lyude Paul
+>
