@@ -2,139 +2,131 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D8DC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C88AC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6482A24654
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F84206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:28:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EV78N2ya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbgA0M1z (ORCPT
+        id S1730607AbgA0M2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:27:55 -0500
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:38937 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729465AbgA0M1z (ORCPT
+        Mon, 27 Jan 2020 07:28:10 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42801 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727642AbgA0M2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:27:55 -0500
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 4B1hpSLMfQHQjW00Ezbg18zveEZR30AOexDBQTrvB5wcXMHTG6JUGKbbqK2VG4B7aMcln5BDRQ
- z1zCIT/7uj1LVIBNUhkf0uBt3gky8JPa9uPCcukI7pc+lrO06vOtRimVWYvfK6ePOtn8PWb7c0
- ttssy+xiG10Ydg7BxvYodU6M1Up+ygaHgjln3TZeKeVUlnpusHukiODAS5P9qJO6O9aFRrI+Ko
- 6Ng3J6g0aPCnuL1a110EZX46N2OoLQWB1KeaUzXXGVbym1SIPqUbknJqNKe+QhDLoA9V8RcvvC
- QUA=
-X-IronPort-AV: E=Sophos;i="5.70,369,1574146800"; 
-   d="scan'208";a="63842471"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jan 2020 05:27:53 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 27 Jan 2020 05:27:53 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 27 Jan 2020 05:27:52 -0700
-Date:   Mon, 27 Jan 2020 13:27:52 +0100
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     =?utf-8?Q?J=C3=BCrgen?= Lambrecht <j.lambrecht@televic.com>
-CC:     Andrew Lunn <andrew@lunn.ch>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <davem@davemloft.net>,
-        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
-        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
-        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next v3 06/10] net: bridge: mrp: switchdev: Extend
- switchdev API to offload MRP
-Message-ID: <20200127122752.g4eanjl2naazyfh3@lx-anielsen.microsemi.net>
-References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
- <20200124161828.12206-7-horatiu.vultur@microchip.com>
- <20200125163504.GF18311@lunn.ch>
- <20200126132213.fmxl5mgol5qauwym@soft-dev3.microsemi.net>
- <20200126155911.GJ18311@lunn.ch>
- <13ac391c-61f5-cb77-69a0-416b0390f50d@televic.com>
+        Mon, 27 Jan 2020 07:28:09 -0500
+Received: by mail-pg1-f193.google.com with SMTP id s64so5075509pgb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 04:28:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cyKi2C2E/DAzDkpv5Bc8WYZz4cP/WF80nTy9kORAPME=;
+        b=EV78N2yaNyur/ZLKrvmzkt7S1u7530+tYPA0SV6rAJ/bY8UyEqtU3oIx8TPXiWAh4+
+         v6FLzakE+serof6o+wNI48WjZPub3p1OyfcskqfxSfi3G86L/FXJrnkjp0pmyTumxm3A
+         YLmRWV6tnK5PKcjYpkj/nXnYwCZpi0w5f+VYcqIFeHdqAG9XjTQxF5l59hNuw1HtQrai
+         nk7h0JXSKpL0emDeQC95VYwa0kjVvUjv8sS6w+mzAL9aSyJhCGjqw3tCz8qJdumcLAEC
+         SKCeALbMGNadYxApuDHLkB1ax3fJKDjvlAojAsLRwVcOPOYZtWQ43NlXPNONAtI/6wSR
+         pmaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cyKi2C2E/DAzDkpv5Bc8WYZz4cP/WF80nTy9kORAPME=;
+        b=L7sflkMvOcEo5h4jRK79wRBHQwlCl1bKwKhmz80uQIFFHaKN8Y2kilxFgU2jsSqiNj
+         XFGYy5VQwcCp5hrkalXxOyKV5XXCWBFukGfGx5xRS/svvn1HvLwzUh3GXTLPWjV8qMts
+         U/Iw/aTwpcpvNyFhFh0fVoGU9+vwAtaBsnyDK4abccoe49fY1N879TujdwShD/YURw4M
+         1dJqI2HXvMW9gLr/+69dq6FnlwRBFVXSh4dR90niYnaVfq2+ug5mX/p12GQRzyzUAcgt
+         zXMSbGRYXAyM5s2wlGKML4pkBtfGrlU8k+6c5DRwJ2cSsOxiG9NkbwcJL+v8oHJ0oO1U
+         l2VA==
+X-Gm-Message-State: APjAAAVKLQ8RdMw2oDOddxK0/K9xSNJXFX2K1telju6X7N/w6bqxrlI8
+        ZomqesGM7iGmkzVVFl4P6xA2F02TvQOMSH0POSfN+w==
+X-Google-Smtp-Source: APXvYqzkc5LvBv1czBSlpohSy32KHfPPbYvVuxg1l19yqW3ryxB3bm5KIKRPhPdwTOrRZKiUXYCREAAmPkPBw8w+WcI=
+X-Received: by 2002:a63:d906:: with SMTP id r6mr19362630pgg.440.1580128088829;
+ Mon, 27 Jan 2020 04:28:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <13ac391c-61f5-cb77-69a0-416b0390f50d@televic.com>
+References: <cover.1579007786.git.andreyknvl@google.com> <461a787e63a9a01d83edc563575b8585bc138e8d.1579007786.git.andreyknvl@google.com>
+ <CAAeHK+wGijhTaCdoD+xcUY=PRWLUOv5uwg7OjD=uMrU8nqqrdw@mail.gmail.com> <20200122145012.GB59473@kroah.com>
+In-Reply-To: <20200122145012.GB59473@kroah.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 27 Jan 2020 13:27:57 +0100
+Message-ID: <CAAeHK+xJ_Xhy96vVXQLk2G_DqVtjh+3ivNM=yFVXFPBjZ6P3iA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/1] usb: gadget: add raw-gadget interface
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jürgen,
-
-On 27.01.2020 12:29, Jürgen Lambrecht wrote:
->EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+On Wed, Jan 22, 2020 at 3:50 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
->On 1/26/20 4:59 PM, Andrew Lunn wrote:
->> Given the design of the protocol, if the hardware decides the OS etc
->> is dead, it should stop sending MRP_TEST frames and unblock the ports.
->> If then becomes a 'dumb switch', and for a short time there will be a
->> broadcast storm. Hopefully one of the other nodes will then take over
->> the role and block a port.
-
->In my experience a closed loop should never happen. It can make
->software crash and give other problems.  An other node should first
->take over before unblocking the ring ports. (If this is possible - I
->only follow this discussion halfly)
+> On Wed, Jan 22, 2020 at 03:37:46PM +0100, Andrey Konovalov wrote:
+> > On Tue, Jan 14, 2020 at 2:24 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> > >
+> > > USB Raw Gadget is a kernel module that provides a userspace interface for
+> > > the USB Gadget subsystem. Essentially it allows to emulate USB devices
+> > > from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
+> > > currently a strictly debugging feature and shouldn't be used in
+> > > production.
+> > >
+> > > Raw Gadget is similar to GadgetFS, but provides a more low-level and
+> > > direct access to the USB Gadget layer for the userspace. The key
+> > > differences are:
+> > >
+> > > 1. Every USB request is passed to the userspace to get a response, while
+> > >    GadgetFS responds to some USB requests internally based on the provided
+> > >    descriptors. However note, that the UDC driver might respond to some
+> > >    requests on its own and never forward them to the Gadget layer.
+> > >
+> > > 2. GadgetFS performs some sanity checks on the provided USB descriptors,
+> > >    while Raw Gadget allows you to provide arbitrary data as responses to
+> > >    USB requests.
+> > >
+> > > 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
+> > >    while GadgetFS currently binds to the first available UDC.
+> > >
+> > > 4. Raw Gadget uses predictable endpoint names (handles) across different
+> > >    UDCs (as long as UDCs have enough endpoints of each required transfer
+> > >    type).
+> > >
+> > > 5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
+> > >
+> > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > > ---
+> > >
+> > > Greg, I've assumed your LGTM meant that I can add a Reviewed-by from you.
+> > >
+> > > Felipe, looking forward to your review, thanks!
+> >
+> > Hi Greg and Felipe,
+> >
+> > I was wondering if it's feasible to get this reviewed and merged
+> > during the upcoming merge window? This patch is the only piece missing
+> > to enable USB fuzzing for Android common kernels on syzbot.
 >
->What is your opinion?
-Having loops in the network is never a good thing - but to be honest, I
-think it is more important that we ensure the design can survive and
-recover from loops.
+> No objection from me, if Felipe acks it I can take it...
 
-With the current design, it will be really hard to void loops when the
-network boot. MRP will actually start with the ports blocked, but they
-will be unblocked in the period from when the bridge is created and
-until MRP is enabled. If we want to change this (which I'm not too keen
-on), then we need to be able to block the ports while the bridge is
-down.
+Hi Felipe,
 
-And even if we do this, then we can not guarantee to avoid loops. Lets
-assume we have a small ring with just 2 nodes: a MRM and a MRC. Lets
-assume the MRM boots first. It will unblock both ports as the ring is
-open. Now the MRC boots, and make the ring closed, and create a loop.
-This will take some time (milliseconds) before the MRM notice this and
-block one of the ports.
+Any idea if you'll be able to look at this?
 
-But while we are at this topic, we need to add some functionality to
-the user-space application such that it can set the priority of the MRP
-frames. We will get that fixed.
-
->(FYI: I made that mistake once doing a proof-of-concept ring design:
->during testing, when a "broken" Ethernet cable was "fixed" I had for a
->short time a loop, and then it happened often that that port of the
->(Marvell 88E6063) switch was blocked.  (To unblock, only solution was
->to bring that port down and up again, and then all "lost" packets came
->out in a burst.) That problem was caused by flow control (with pause
->frames), and disabling flow control fixed it, but flow-control is
->default on as far as I know.)
-I see. It could be fun to see if what we have proposed so far will with
-with such a switch.
-
-/Allan
-
+Thanks!
