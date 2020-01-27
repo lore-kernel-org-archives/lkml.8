@@ -2,130 +2,106 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C568C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF4AC35247
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD685214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:16:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tsfuDBGT"
+	by mail.kernel.org (Postfix) with ESMTP id EE4AE21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580109692;
+	bh=zyx7MlovBaHqREoEGe7StehB9D36LjrQuxtgzD7rRPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dX0bK8RDXPGnBRtui6O0zqyNSHppFxHcWN4cBeGP0ZOIIAFnE+kUflsEABXtE9rle
+	 OE6+mJpSOZXShQWpkf8662eT2PdTulgEFcT8JtiCuniz4p7I9zOBsVlpmCP8TMhS5/
+	 SLgcO2jzY/Wf42teBtZrDJrYGYk//PnLCqo+f/lQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbgA0HQT (ORCPT
+        id S1725991AbgA0HVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 02:16:19 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44622 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgA0HQS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 02:16:18 -0500
-Received: by mail-ot1-f66.google.com with SMTP id h9so7404093otj.11;
-        Sun, 26 Jan 2020 23:16:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZTshCe94WzSsfXve6ziu+qTyps0fLQU+BDDkCbT6Bso=;
-        b=tsfuDBGTQVhy70maJJPR3yaIKX8BjW23nAIzNWcWsDqNiB/oBXDoWDJ1whQefG8H5T
-         qA+zgESqYPhbL05359SxdqjN7XPsc4ZCVcF60/E3vAaWD8dyjnpXX28Bw5HW44X/bShJ
-         IspH7PC33TbNJdg9v4cXf5eQGf0WRNIbH5gI0DPlFwQAM2ZU/+tQtoN+KcJK15Uw4zgj
-         AX5NwHYvM2nrcqgjzy2uOE8dE1NndLkC3lfJU+MUH4T9vVKIR5yoBQYrclHpQuUBjq5A
-         MMAZ4I80FDACK65hhPDSWN3aS18HSk1chsTDXMUCsJy4Dh/Ppk5sCK+P9WP6kjloGkb6
-         Lu+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZTshCe94WzSsfXve6ziu+qTyps0fLQU+BDDkCbT6Bso=;
-        b=oE35V4duXWT75m32qjpdodBvoe5fnRW5N+jSjPEmxTV8U1U2LQmzbWUMVJE1Kwb7vA
-         Thc4hvMFWlaITAwG0KwPdEqVmXvuCcVJFOlrU+JiwAhJ6ny3KKbL1e7e4WnCIC1oBM0/
-         mL8L+Hyb4GNO+dMi5571Z+tOchCy+Ehv//R/cuk+rfVLpjspUWsAjxZsMmpgIhhytvsR
-         198qC9qmrOBhhREaCthwP2tElnn+myfv7uZQQanKdBEA+qST+l54uGSPo/SnlcO5Phfk
-         QyHqC4UC9mDn5Hej9lsJHFZ8Z/blrzHD2VGJl/fLpGZcvzX9FtnUSzK1NSMSkREn62oi
-         h8qA==
-X-Gm-Message-State: APjAAAVqM5TAOgHE3z7rJpqmHcIqs0kKlAiz0hCIEyABkolwCylB0EUN
-        p0TO5upCK9q6IgseX5jB8UI=
-X-Google-Smtp-Source: APXvYqyBvsPV5HUfCbEOF6ZmFCmj7SSgxfXyaKHBatxbogtKM0leCRK+ExTQvjrYuSeo/zgeV0umsQ==
-X-Received: by 2002:a9d:729c:: with SMTP id t28mr8584637otj.66.1580109377176;
-        Sun, 26 Jan 2020 23:16:17 -0800 (PST)
-Received: from nick-Blade-Stealth.attlocal.net (23-121-157-107.lightspeed.sntcca.sbcglobal.net. [23.121.157.107])
-        by smtp.googlemail.com with ESMTPSA id n25sm4500248oic.6.2020.01.26.23.16.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jan 2020 23:16:16 -0800 (PST)
-From:   Nick Desaulniers <nick.desaulniers@gmail.com>
-To:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de
-Cc:     Nick Desaulniers <nick.desaulniers@gmail.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] dynamically allocate struct cpumask
-Date:   Sun, 26 Jan 2020 23:16:02 -0800
-Message-Id: <20200127071602.11460-1-nick.desaulniers@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 27 Jan 2020 02:21:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725765AbgA0HVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 02:21:30 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96DDD20702;
+        Mon, 27 Jan 2020 07:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580109690;
+        bh=zyx7MlovBaHqREoEGe7StehB9D36LjrQuxtgzD7rRPQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xydVaDx8hefBeGTESOELkVmsgxqE3J6pdwmidoET0PXJShUFdUdhUXy4hnNC0Bxqm
+         Fhu1FGEZN3GRB2RgPR+i/5jgWtkoYefIMC12NXonw+2dxmKbx2FIXT2c7L4MwERvKf
+         vg3FF4WUxF1angQsK56VwR8a94/crfRbynhPvLnY=
+Date:   Mon, 27 Jan 2020 08:21:27 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>, arnd@arndb.de,
+        smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/16] bus: mhi: core: Add support for ringing
+ channel/event ring doorbells
+Message-ID: <20200127072127.GA281402@kroah.com>
+References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
+ <20200123111836.7414-6-manivannan.sadhasivam@linaro.org>
+ <beadf428-82db-c89f-22bc-983d7b907bb3@codeaurora.org>
+ <20200125134631.GA3518689@kroah.com>
+ <20200127071052.GB4768@mani>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127071052.GB4768@mani>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This helps avoid avoid a potentially large stack allocation.
+On Mon, Jan 27, 2020 at 12:40:52PM +0530, Manivannan Sadhasivam wrote:
+> On Sat, Jan 25, 2020 at 02:46:31PM +0100, Greg KH wrote:
+> > On Fri, Jan 24, 2020 at 03:51:12PM -0700, Jeffrey Hugo wrote:
+> > > > +struct mhi_event_ctxt {
+> > > > +	u32 reserved : 8;
+> > > > +	u32 intmodc : 8;
+> > > > +	u32 intmodt : 16;
+> > > > +	u32 ertype;
+> > > > +	u32 msivec;
+> > > > +
+> > > > +	u64 rbase __packed __aligned(4);
+> > > > +	u64 rlen __packed __aligned(4);
+> > > > +	u64 rp __packed __aligned(4);
+> > > > +	u64 wp __packed __aligned(4);
+> > > > +};
+> > > 
+> > > This is the struct that is shared with the device, correct?  Surely it needs
+> > > to be packed then?  Seems like you'd expect some padding between msivec and
+> > > rbase on a 64-bit system otherwise, which is probably not intended.
+> > > 
+> > > Also I strongly dislike bitfields in structures which are shared with
+> > > another system since the C specification doesn't define how they are
+> > > implemented, therefore you can run into issues where different compilers
+> > > decide to implement the actual backing memory differently.  I know its less
+> > > convinent, but I would prefer the use of bitmasks for these fields.
+> > 
+> > You have to use bitmasks in order for all endian cpus to work properly
+> > here, so that needs to be fixed.
+> > 
+> 
+> Okay.
+> 
+> > Oh, and if these values are in hardware, then the correct types also
+> > need to be used (i.e. __u32 and __u64).
+> > 
+> 
+> I thought the __* prefix types are only for sharing with userspace...
+> Could you please clarify why it is needed here?
 
-When building with:
-$ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
-The following warning is observed:
-arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
-function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
-static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
-vector)
-            ^
-Debugging with:
-https://github.com/ClangBuiltLinux/frame-larger-than
-via:
-$ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
-  kvm_send_ipi_mask_allbutself
-points to the stack allocated `struct cpumask newmask` in
-`kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
-potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
-the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
-8192, making a single instance of a `struct cpumask` 1024 B.
+It crosses the kernel boundry, so it needs to use those types.  This is
+not a new requirement, has been there for decades.
 
-Signed-off-by: Nick Desaulniers <nick.desaulniers@gmail.com>
----
- arch/x86/kernel/kvm.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 32ef1ee733b7..d41c0a0d62a2 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -494,13 +494,15 @@ static void kvm_send_ipi_mask(const struct cpumask *mask, int vector)
- static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
- {
- 	unsigned int this_cpu = smp_processor_id();
--	struct cpumask new_mask;
-+	struct cpumask *new_mask;
- 	const struct cpumask *local_mask;
- 
--	cpumask_copy(&new_mask, mask);
--	cpumask_clear_cpu(this_cpu, &new_mask);
--	local_mask = &new_mask;
-+	new_mask = kmalloc(sizeof(*new_mask), GFP_KERNEL);
-+	cpumask_copy(new_mask, mask);
-+	cpumask_clear_cpu(this_cpu, new_mask);
-+	local_mask = new_mask;
- 	__send_ipi_mask(local_mask, vector);
-+	kfree(new_mask);
- }
- 
- /*
--- 
-2.17.1
-
+greg k-h
