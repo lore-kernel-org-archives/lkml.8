@@ -2,117 +2,111 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74DDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E405FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B5322527
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE702071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:46:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="TXTPO4/y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/o0KiyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgA0Rlc (ORCPT
+        id S1726079AbgA0RqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:41:32 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36318 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgA0Rlb (ORCPT
+        Mon, 27 Jan 2020 12:46:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59056 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725893AbgA0Rp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:41:31 -0500
-Received: by mail-lj1-f196.google.com with SMTP id r19so11716913ljg.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:41:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=d/e8y4uiSV+KJr5xZhvuBNksYgdKpUBthuu13GVS8Rc=;
-        b=TXTPO4/ygyXFUVi5KYjjQIVFBeetXn5ekF14IfKi6Me0HdfuuYhBDCTjc3te94mQII
-         jQtM3W6Z8VRgNjUKFgYmylS02aeuEkz8IsvRKCnfGCUfVECRgPO16TicYrxPdef3BCXo
-         2S5UN2uP1QjR3uoZ3GWEcLdRJhIaI7FkiQaCsu097H78zuLPH6Uy8zL9fo3nm3n4led6
-         Vhhv4Wx5d7IzwzbITCcc78cpcS4HLyDILpN6pXhbdTWeUdR30bBKUdYgzVwhHsWPGEGV
-         QrbXold8sOKgRytJ6MDuUhZsBanHUTyhpIm+v49y7OHzZqvpsaLdq5O5aVKV07420d3C
-         zIrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=d/e8y4uiSV+KJr5xZhvuBNksYgdKpUBthuu13GVS8Rc=;
-        b=YH4N3VGiRY9dUjYsg2kb9rY1qsi57NmtC0pQtjL0gWiq6WWPTJgaTz1nVDlGYXDA7z
-         qn4ATRO+ahWaQgtesX2K+JgSylmKSgSqx6MxaDZQsF5cjQcfjxDLmOZY/HABkEnotHsD
-         kwBg3zy5Mi7qOvWqqalxOWG1ZcD+wm0FhU/11elC/R6v9IPoHd2t7xp7qrlZns2yGhvG
-         ajmDLm4QjxNm169Zc86NmdTaz0V7Vz1U9tcKW2R00i6Rmb+DQ0EnG/bVzWvF1jZ1J85I
-         oqCU8B6IhlddG6t1sZ72JM5zVtIKZ6UsrCoY9Ybc6sw7X7FS3x/iHqpOzwDL6EjL3sR2
-         gX4g==
-X-Gm-Message-State: APjAAAVz90L0EJaAwASPGlL5Gb2DGkwZ5gXQSe8os6kUlA6ZMB03X9l6
-        p2bhmXp7L4iI3K17iFP8mRLGQg==
-X-Google-Smtp-Source: APXvYqznaHVydBDCzDtMLOSrJP3WY8kclLy7+J44rPfBTMUbtMv7hBJAFNlTyEyiuWnUs8UCOxX5sA==
-X-Received: by 2002:a2e:9090:: with SMTP id l16mr11241095ljg.281.1580146889834;
-        Mon, 27 Jan 2020 09:41:29 -0800 (PST)
-Received: from bsz-kubuntu.semihalf.local (31-172-191-173.noc.fibertech.net.pl. [31.172.191.173])
-        by smtp.gmail.com with ESMTPSA id h81sm8532054lfd.83.2020.01.27.09.41.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 09:41:29 -0800 (PST)
-From:   Bartosz Szczepanek <bsz@semihalf.com>
-To:     nick.dyer@itdev.co.uk, jiada_wang@mentor.com
-Cc:     Andrew_Gabbasov@mentor.com, benjamin.tissoires@redhat.com,
-        dmitry.torokhov@gmail.com, erosca@de.adit-jv.com, jikos@kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nick@shmanahar.org, rydberg@bitmath.org, levinale@google.com,
-        rad@semihalf.com
-Subject: [PATCH v6 24/48] Input: atmel_mxt_ts - make bootloader interrupt driven
-Date:   Mon, 27 Jan 2020 18:41:27 +0100
-Message-Id: <20200127174127.25522-1-bsz@semihalf.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191122082402.18173-25-jiada_wang@mentor.com>
-References: <20191122082402.18173-25-jiada_wang@mentor.com>
+        Mon, 27 Jan 2020 12:45:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580147158;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FX8kD0L9qov6JUPvvdbzynW/esn7R+NY8dv4X6oArXY=;
+        b=Q/o0KiyIN7fYR0KPmLApw9mvtgE867GKrH88VxNP3wx5pCEA1xas6oL2qitUqNN4HJqp8O
+        u/nXw1XsQrtDMoDj1Lu3fEpOBWK+LUXBmOOPs3wVp1Gbnc/DG0Ys0vpJVIPKSOPcxFq+8d
+        yN9x4hGHGPnWSUuq4dNacfIy1SsVwd4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-3bUITg18Mj61EUVl44xXQg-1; Mon, 27 Jan 2020 12:45:53 -0500
+X-MC-Unique: 3bUITg18Mj61EUVl44xXQg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BF828017CC;
+        Mon, 27 Jan 2020 17:45:52 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C4BA19C58;
+        Mon, 27 Jan 2020 17:45:51 +0000 (UTC)
+Date:   Mon, 27 Jan 2020 12:45:49 -0500
+From:   Phil Auld <pauld@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Juri Lelli <juri.lelli@gmail.com>, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3]sched/rt: Stop for_each_process_thread() iterations in
+ tg_has_rt_tasks()
+Message-ID: <20200127174549.GD1295@pauld.bos.csb>
+References: <152415882713.2054.8734093066910722403.stgit@localhost.localdomain>
+ <20180420092540.GG24599@localhost.localdomain>
+ <0d7fbdab-b972-7f86-4090-b49f9315c868@virtuozzo.com>
+ <854a5fb1-a9c1-023f-55ec-17fa14ad07d5@virtuozzo.com>
+ <20180425194915.GH4064@hirez.programming.kicks-ass.net>
+ <9f76872b-85e6-63bd-e503-fcaec69e28e3@virtuozzo.com>
+ <20200123215616.GA14789@pauld.bos.csb>
+ <20200127164315.GJ14879@hirez.programming.kicks-ass.net>
+ <20200127165638.GC1295@pauld.bos.csb>
+ <20200127170010.GK14879@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127170010.GK14879@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Jan 27, 2020 at 06:00:10PM +0100 Peter Zijlstra wrote:
+> On Mon, Jan 27, 2020 at 11:56:38AM -0500, Phil Auld wrote:
+> > On Mon, Jan 27, 2020 at 05:43:15PM +0100 Peter Zijlstra wrote:
+> > > On Thu, Jan 23, 2020 at 04:56:19PM -0500, Phil Auld wrote:
+> > > > Peter, is there any chance of taking something like this?
+> > > 
+> > > Whoopsy, looks like this fell on the floor. Can do I suppose.
+> > > 
+> > > Thanks!
+> > > 
+> > 
+> > Thanks. Probably make sense at this point to use Konstantin's new version?
+> > But they both do the trick.
+> 
+> Care to send it along?
+> 
 
-I've been testing this patchset on Chromebook equipped with Atmel touchscreen &
-touchpad. In my setup, this particular patch seems to introduce a regression
-on firmware update:
+I think you were on the CC, but here's a link:
 
-> localhost /sys/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-6/i2c-ATML0001:00 # echo maxtouch-ts.fw > update_fw
-> bash: echo: write error: Remote I/O error
+https://lkml.org/lkml/2020/1/25/167
 
-Kernel logs show that the reason is failed I2C transfer:
+It's called: 
 
-> [ 111.632131] atmel_mxt_ts i2c-ATML0001:00: Found bootloader addr:27 ID:21 version:4
-> [ 111.637711] atmel_mxt_ts i2c-ATML0001:00: Unlocking bootloader
-> [ 129.155091] atmel_mxt_ts i2c-ATML0001:00: Sent 1356 frames, 212224 bytes
-> [ 129.263269] atmel_mxt_ts i2c-ATML0001:00: The firmware update succeeded
-> [ 129.263952] atmel_mxt_ts i2c-ATML0001:00: __mxt_read_chunk: i2c transfer failed (-121)
-> [ 129.265072] atmel_mxt_ts i2c-ATML0001:00: mxt_bootloader_read: i2c recv failed (-121)
-> [ 129.265588] atmel_mxt_ts i2c-ATML0001:00: Trying alternate bootloader address
-> [ 129.266375] atmel_mxt_ts i2c-ATML0001:00: mxt_bootloader_read: i2c recv failed (-121)
+[PATCH] sched/rt: optimize checking group rt scheduler constraints
 
-Surprisingly, only touchscreen device is affected. When I checked out to
-119e1b7e8481 ("Input: atmel_mxt_ts - refactor code to enter bootloader into
-separate func") all worked fine. In between these commits I got some mixed
-results, including timeout while waiting for completion:
+It does a little bit more and needs an "|=" changed to "=". And actually
+looking at it again, it should probably just have a break in the loop.
 
-> [ 190.006174] atmel_mxt_ts i2c-ATML0001:00: Found bootloader addr:27 ID:21 version:4
-> [ 190.317819] atmel_mxt_ts i2c-ATML0001:00: Wait for completion timed out.
-> [ 190.318267] atmel_mxt_ts i2c-ATML0001:00: Update wait error -110
-> [ 190.319310] atmel_mxt_ts i2c-ATML0001:00: Unlocking bootloader
-> [ 208.369825] atmel_mxt_ts i2c-ATML0001:00: Sent 1356 frames, 212224 bytes
-> [ 208.536942] atmel_mxt_ts i2c-ATML0001:00: The firmware update succeeded
-> [ 208.544835] atmel_mxt_ts i2c-ATML0001:00: Family: 164 Variant: 14 Firmware V2.3.AA Objects: 40
-> [ 208.547623] atmel_mxt_ts i2c-ATML0001:00: Touchscreen size X4095Y2729
+I'll make that comment in the thread for it.
 
-Some more details - the touchscreen device reports itself as:
 
-> atmel_mxt_ts i2c-ATML0001:00: Family: 164 Variant: 14 Firmware V2.3.AA Objects: 40
+Thanks,
+Phil
 
-Due to Chromebook limitations on kernel version, I'm running 4.19 kernel
-with patches backported from master (so that atmel_mxt_ts is aligned between
-master and 4.19). The platform is Samsung Chromebook Pro.
+-- 
 
-Best regards,
-Bartosz
