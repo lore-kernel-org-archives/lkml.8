@@ -2,106 +2,110 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58868C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E36C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F30021739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7FE20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:12:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="gB8aH9bX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TxBbi15s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgA0PKE (ORCPT
+        id S1729377AbgA0PMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:10:04 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:45462 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgA0PKE (ORCPT
+        Mon, 27 Jan 2020 10:12:42 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:47210 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729146AbgA0PMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:10:04 -0500
-Received: by mail-vs1-f65.google.com with SMTP id v141so2178103vsv.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 07:10:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NkoAUVzWFZjHMMtEdPmvHpOHaSeOlTobo/dhUR4U2mI=;
-        b=gB8aH9bXLODaT5xi6+YHilW7T0QWwBAAdJXLkkbJnINh/xj60xu3s2hA6DzCwXv+DS
-         3aQFGUF9eIk05QAu4EhBap3BxPNU4qG6au51QwFeTW6qPx1AckH1AbWL8k1K0WsC5wu5
-         vHie2JLP6hSf9W+59v383Hpr35ojnQNblt8gf+ozgUyd/GQzPax1JGQbCOCSA1sbpmxe
-         x2bjcvOhEjsaSKEZ25/CkFgazKBSIvHnyz1d+6VQBFH8EKS4Kj7vHhlyZAZJPYd2084W
-         UeUtrhvCVukGhxtzatJIyWhVYMlrdc0lzhy8m5b9p8BUVYRi/aH2dGrsABVOrOYg3PeH
-         dilA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NkoAUVzWFZjHMMtEdPmvHpOHaSeOlTobo/dhUR4U2mI=;
-        b=NNb0paFXcxQARqJFlnE04uli62lAC4d1XHCB67OcMgHXNFz1jTN00s8fsMsnakOJVP
-         xfHWFiFW6Sj3NruWB+gVFKb/9GXFpl4C4u+xLjd+xTt1ChqJG+9xCN8+ISjBtHCOUnni
-         U6qd01qYEN4/zSZMM+AmREdR6TJZTS6tErd0FW3l+cuBJKEtF4Q0976y8p5abXWVqYvF
-         4CVXa0wAUHmUmUeB1y4AhGgDRtzl2VnyT2J0GKE1QDwRJ6FQDDCq0G+Ac8X2wA6M4zgr
-         p8IfTPKrSE4GuvsDnU8NdgDwKwZG0d7gSRvzHCW1oNVZtZYMIdGQceT+ZvhW3dKZ5EyM
-         p0KQ==
-X-Gm-Message-State: APjAAAVbGOq7fGvpIKthye7wrs1q08IdcTglKKQt9sbTf+S0DxLNGzsH
-        nbWrLUCNz3VU7Gjxpyt75XH9I+GkyI4kRLha5GbByg==
-X-Google-Smtp-Source: APXvYqwXtEK+nyeYN+ImrtWqCwzLW1sUUPSn17lF3dhK2jYXgmqlEoxWUYBw5LsFIOvXnu7JeeiZnw8mTYQ34xHNQug=
-X-Received: by 2002:a67:fb14:: with SMTP id d20mr9765471vsr.136.1580137803056;
- Mon, 27 Jan 2020 07:10:03 -0800 (PST)
+        Mon, 27 Jan 2020 10:12:42 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00RF9eHL000915;
+        Mon, 27 Jan 2020 15:12:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=fHfyRYxqrv2GKnEybOSy0pNXaorqVF+m3LA7NpU4Y+A=;
+ b=TxBbi15sPi/V6nRfn13IAtcIKgCb0WeWBlfmPsoGYlIHQ4pw6eVE7EJsopSxiO4H8WjH
+ tX1XpwmJgGqmH+88IZ/Amkc4UTW3e2HEFN3HtsBjJBrwvJfnCHkH1TTCyatnMspBQRn2
+ SHrufJwDShOtNuC3ARyrhNftW7TudNhQbre0gkCZyC+5TV7LtdaSi69UuKvcmWYHeflP
+ rpJJKoQV0TiVJdIhjDRLmxeacksq+pC4HDtqIixtNcXYM0EZevENMX+2mCai65OFz0k8
+ hvkUbdfYvYRIJgnB/pQhKX1kxHPiyWajR/5TfV+DXBmIZGZVcHSuHAdNjo2GDHgcDKR1 TA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xrd3tyxqr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 15:12:05 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00RFBfPG131063;
+        Mon, 27 Jan 2020 15:12:04 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2xrytq7aym-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 15:12:03 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00RFBi2v003902;
+        Mon, 27 Jan 2020 15:11:44 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jan 2020 07:11:43 -0800
+Date:   Mon, 27 Jan 2020 18:11:35 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzkaller <syzkaller@googlegroups.com>,
+        Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+106b378813251e52fc5e@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in hiddev_disconnect
+Message-ID: <20200127151135.GM1870@kadam>
+References: <0000000000004dbaf2059c193a36@google.com>
+ <20200126024957.11392-1-hdanton@sina.com>
+ <20200127092850.GX1847@kadam>
+ <CACT4Y+ag59G4p=DO3Dg7jnFt3wQb=dtjzBujADtGHKn-97O8_g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200127122939.6952-1-gilad@benyossef.com> <CAMuHMdVrQh-1cEncfWoAjhd6SjJRHZPg9Qt7yVyw5Qrdo+-nrQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdVrQh-1cEncfWoAjhd6SjJRHZPg9Qt7yVyw5Qrdo+-nrQ@mail.gmail.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Mon, 27 Jan 2020 17:09:51 +0200
-Message-ID: <CAOtvUMcmw_W-WVMGusCnkKBg71540c8Bo7LCMhz+t+dOsPUG3Q@mail.gmail.com>
-Subject: Re: [RFC] crypto: ccree - protect against short scatterlists
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ag59G4p=DO3Dg7jnFt3wQb=dtjzBujADtGHKn-97O8_g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9513 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=612
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001270127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9513 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=675 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001270127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 2:52 PM Geert Uytterhoeven <geert@linux-m68k.org> w=
-rote:
->
-> Hi Gilad,
->
-> On Mon, Jan 27, 2020 at 1:29 PM Gilad Ben-Yossef <gilad@benyossef.com> wr=
-ote:
-> > Deal gracefully with the event of being handed a scatterlist
-> > which is shorter than expected.
-> >
-> > This mitigates a crash in some cases of Crypto API calls due with
-> > scatterlists with a NULL first buffer, despite the aead.h
-> > forbidding doing so.
-> >
-> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
->
-> Thanks for your patch!
->
-> Unable to handle kernel paging request at virtual address fffeffffc000000=
-0
+One possible option would be to list the similar bugs at the start of
+the bug report.
 
-OK, this is a progress of a sort.
-We now crash during unmap, not map.
+See also:
 
-Sent another go. If this doesn't work I'll wait till I reunite with the boa=
-rd.
-Blind debugging is hard...
+	KASAN: use-after-free Write in hiddev_disconnect
+	https://syzkaller.appspot.com/bug?extid=784ccb935f9900cc7c9e
 
-Thanks again!
-Gilad
+Then we could just copy and paste to the "#syz dup:" command.  The
+bitmap_port_list() stuff was reported something like 15 times so it was
+really complicated to track.  Hopefully if it were easier to mark things
+as duplicate that would help.
+
+regards,
+dan carpenter
 
 
-values of =CE=B2 will give rise to dom!
