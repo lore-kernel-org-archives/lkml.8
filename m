@@ -2,161 +2,200 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11742C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A341DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA43124682
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FD422527
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:58:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="aYWMN1o2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SzA1wa1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgA0R6j (ORCPT
+        id S1726485AbgA0R6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:58:39 -0500
-Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:63089 "EHLO
-        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0R6h (ORCPT
+        Mon, 27 Jan 2020 12:58:41 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44374 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgA0R6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:58:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1580147917;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FwbLXdWY0RyMSAi5xQvRzB4aT15grkDm1I/a0Bt/5Gc=;
-  b=aYWMN1o2jGuejnxbbSn3EfzlzX09bNFYQj0mgJjb6BNckz7uOtibTreT
-   8dx2uizlALAaQYz9w7faNbLtSOhi4tKo/bJtB0XFCyAZU9+dXPC/hOLnd
-   g2WQtM6I4k4Q/WdT1/7CJsbwB7u7pmepYTKVAtT4FDoGnaFDFCBJoiFHF
-   M=;
-Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: uj+4RS1hKmLfjuk11faSeJrrZbKwuImFcTkMqwRk2cqoTlT3UO6vXVtLg0Ifd5MFXNqMOpakYB
- STgPzpd4zv6EDT+FzK0C6KmFYz7WtD+4oltpwo9LFSsUuSA4Qc9rWe8f15Xpc13nT7aUxYocFc
- m+y9laS86rYv0HWp/wqG0AffOZaBZYFFseBtxWj26jNkf0Pej9VeSu0nI3uJ4JlZqUhpd1fw30
- nDTfadenMgEjdgAkdamwLhjFIyBx3H7UHYGyVrypxT26Lvp7B5gd85C1bCUNZ06MGYsWJMM7mS
- roo=
-X-SBRS: 2.7
-X-MesageID: 11875374
-X-Ironport-Server: esa5.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,370,1574139600"; 
-   d="scan'208";a="11875374"
-From:   Roger Pau Monne <roger.pau@citrix.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Roger Pau Monne <roger.pau@citrix.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Jan Beulich <jbeulich@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH] x86/apic: simplify disconnect_bsp_APIC setup of LVT{0/1}
-Date:   Mon, 27 Jan 2020 18:57:58 +0100
-Message-ID: <20200127175758.82410-1-roger.pau@citrix.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 27 Jan 2020 12:58:40 -0500
+Received: by mail-il1-f194.google.com with SMTP id f16so8208468ilk.11;
+        Mon, 27 Jan 2020 09:58:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p34WepIUAC+vVryS2npy0LwKKNXZ/pNTKpuvngEBmQ4=;
+        b=SzA1wa1YxhJrtJr0T5aFQUQL5QmF+ihyQ750kHstlHEv/VUitV23FBeCZlvxxR/eiK
+         WN9NHJ1ngZ73mmQTN/Xs+K7xksPSzzACs/tk3U+BzJtSbMdmsD4oSH/rL/DxoHSyM34z
+         w85pKqf6LYp3X5YbqXN8nq2TFcfbs613P8hWJ1bkuwqL3E5ZAhHiCtDtgRXgF919Oyub
+         EPQezKZ+T1DBapOeBNy+YhOpf6iSUcxQ6NbAbTRhXD2MCiarbWvt94vJC80vh8PEscBu
+         6Pj0UxpKTdUkacbdyCFGbz0E/u0lvcILtfffHxu8uyjw3stlFclMBNN9WTZmCTVSIwjP
+         c8Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p34WepIUAC+vVryS2npy0LwKKNXZ/pNTKpuvngEBmQ4=;
+        b=ihOaQLC5SuYXuVXWXcI5bzD5m9DnW5CE8PloaqNCLYKXhQd9Q+X7SjwfURN1s9WWbf
+         /uRCLC+ebYP0bsV6FHaUPEUTtaxa6pxcmzF4Ib0zJVJmgS5tnkuzLYtibGrCfCRTS/ln
+         bKRWefXVRuVHbhBNfh+3HDdpm6UNhlI4RWZIx7O3g35Qtxqupz83STqwks1BjZJsK+Ya
+         9e2WCT/NIdv9vzrCNsm0vN3ivU0NDNL7J5FJZyLVYhOP3rjaudjhOttZesDalZfJvkyV
+         +VwyDrd8bw8OiBkyTmJKWVDgzgVIpranF26pBKpTgfT+BtZGv6O2dl6apa5ml6NBg3fT
+         qHUg==
+X-Gm-Message-State: APjAAAW0LyWDY/0nuLDGbl7H7JcLlH2uJv7VtmaOIuMBSW5hQn8VsICx
+        fhWBxANIsPCJTqdBNOAmxJINjPK1I7YNXr8bdpk=
+X-Google-Smtp-Source: APXvYqwOXJzX04ADWOS/heOjpPEeIGyDlSuV2xCkSmtAiKGFObKQbkQaiM/U80Y0J7a6CgumlMFl67BmhWr9pohUG8o=
+X-Received: by 2002:a92:ccd0:: with SMTP id u16mr14871734ilq.215.1580147919006;
+ Mon, 27 Jan 2020 09:58:39 -0800 (PST)
 MIME-Version: 1.0
+References: <20200127164321.17468-1-lhenriques@suse.com> <20200127164321.17468-3-lhenriques@suse.com>
+In-Reply-To: <20200127164321.17468-3-lhenriques@suse.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Mon, 27 Jan 2020 18:58:46 +0100
+Message-ID: <CAOi1vP9HB4dPTHrgn2bTZ3nM2HSpLkwRvjZ8za0KE4NNnHmmtw@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/3] ceph: parallelize all copy-from requests in copy_file_range
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no need to read the current values of LVT{0/1} for the
-purposes of the function, which seem to be to save the currently
-selected vector: in the destination modes used (ExtINT and NMI) the
-vector field is ignored and hence can be set to 0.
+On Mon, Jan 27, 2020 at 5:43 PM Luis Henriques <lhenriques@suse.com> wrote:
+>
+> Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
+> operations, waiting for each request to complete before sending the next
+> one.  This patch modifies copy_file_range so that all the 'copy-from'
+> operations are sent in bulk and waits for its completion at the end.  This
+> will allow significant speed-ups, specially when sending requests for
+> different target OSDs.
+>
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+>  fs/ceph/file.c                  | 38 +++++++++++++++++++++++++++++++--
+>  include/linux/ceph/osd_client.h |  2 ++
+>  net/ceph/osd_client.c           |  1 +
+>  3 files changed, 39 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index 1e6cdf2dfe90..5d8f0ba11719 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -1931,6 +1931,28 @@ static int is_file_size_ok(struct inode *src_inode, struct inode *dst_inode,
+>         return 0;
+>  }
+>
+> +static int wait_copy_from_reqs(struct list_head *osd_reqs)
+> +{
+> +       struct ceph_osd_request *req;
+> +       int ret = 0, err;
+> +
+> +       while (!list_empty(osd_reqs)) {
+> +               req = list_first_entry(osd_reqs,
+> +                                      struct ceph_osd_request,
+> +                                      r_copy_item);
+> +               list_del_init(&req->r_copy_item);
+> +               err = ceph_osdc_wait_request(req->r_osdc, req);
+> +               if (err) {
+> +                       if (!ret)
+> +                               ret = err;
+> +                       dout("copy request failed (err=%d)\n", err);
+> +               }
+> +               ceph_osdc_put_request(req);
+> +       }
+> +
+> +       return ret;
+> +}
 
-Note that clear_local_APIC as called by init_bsp_APIC would have
-already wiped those registers by writing APIC_LVT_MASKED, and hence
-there's nothing useful to preserve if that was the intent. Also note
-that there are other places where LVT{0/1} is written to without doing
-a read-modify-write (init_bsp_APIC and clear_local_APIC), so if
-writing 0s to the reserved parts would cause issues they would be also
-triggered by writes elsewhere.
+This should probably go into libceph, as ceph_osdc_wait_requests().
 
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
----
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Jan Beulich <jbeulich@suse.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kernel/apic/apic.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+> +
+>  static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>                                       struct file *dst_file, loff_t dst_off,
+>                                       size_t len, unsigned int flags)
+> @@ -1943,12 +1965,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>         struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+>         struct ceph_object_locator src_oloc, dst_oloc;
+>         struct ceph_object_id src_oid, dst_oid;
+> +       struct ceph_osd_request *req;
+>         loff_t endoff = 0, size;
+>         ssize_t ret = -EIO;
+>         u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
+>         u32 src_objlen, dst_objlen, object_size;
+>         int src_got = 0, dst_got = 0, err, dirty;
+>         bool do_final_copy = false;
+> +       LIST_HEAD(osd_reqs);
+>
+>         if (src_inode->i_sb != dst_inode->i_sb) {
+>                 struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+> @@ -2097,7 +2121,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>                 ceph_oid_printf(&dst_oid, "%llx.%08llx",
+>                                 dst_ci->i_vino.ino, dst_objnum);
+>                 /* Do an object remote copy */
+> -               err = ceph_osdc_copy_from(
+> +               req = ceph_osdc_copy_from_nowait(
+>                         &src_fsc->client->osdc,
+>                         src_ci->i_vino.snap, 0,
+>                         &src_oid, &src_oloc,
+> @@ -2108,7 +2132,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+>                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+>                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> -               if (err) {
+> +               if (IS_ERR(req)) {
+> +                       err = PTR_ERR(req);
+>                         if (err == -EOPNOTSUPP) {
+>                                 src_fsc->have_copy_from2 = false;
+>                                 pr_notice("OSDs don't support 'copy-from2'; "
+> @@ -2117,14 +2142,23 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>                         dout("ceph_osdc_copy_from returned %d\n", err);
+>                         if (!ret)
+>                                 ret = err;
+> +                       /* wait for all queued requests */
+> +                       wait_copy_from_reqs(&osd_reqs);
+>                         goto out_caps;
+>                 }
+> +               list_add(&req->r_copy_item, &osd_reqs);
+>                 len -= object_size;
+>                 src_off += object_size;
+>                 dst_off += object_size;
+>                 ret += object_size;
+>         }
+>
+> +       err = wait_copy_from_reqs(&osd_reqs);
+> +       if (err) {
+> +               if (!ret)
+> +                       ret = err;
+> +               goto out_caps;
+> +       }
+>         if (len)
+>                 /* We still need one final local copy */
+>                 do_final_copy = true;
+> diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
+> index 7916a178d137..2b4a14bc6154 100644
+> --- a/include/linux/ceph/osd_client.h
+> +++ b/include/linux/ceph/osd_client.h
+> @@ -210,6 +210,8 @@ struct ceph_osd_request {
+>         u64 r_data_offset;                    /* ditto */
+>         bool r_linger;                        /* don't resend on failure */
+>
+> +       struct list_head r_copy_item;         /* used for copy-from operations */
+> +
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 28446fa6bf18..ce0c65340b4c 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2292,12 +2292,7 @@ void disconnect_bsp_APIC(int virt_wire_setup)
- 		 * For LVT0 make it edge triggered, active high,
- 		 * external and enabled
- 		 */
--		value = apic_read(APIC_LVT0);
--		value &= ~(APIC_MODE_MASK | APIC_SEND_PENDING |
--			APIC_INPUT_POLARITY | APIC_LVT_REMOTE_IRR |
--			APIC_LVT_LEVEL_TRIGGER | APIC_LVT_MASKED);
--		value |= APIC_LVT_REMOTE_IRR | APIC_SEND_PENDING;
--		value = SET_APIC_DELIVERY_MODE(value, APIC_MODE_EXTINT);
-+		value = APIC_LVT_REMOTE_IRR | APIC_SEND_PENDING | APIC_DM_EXTINT;
- 		apic_write(APIC_LVT0, value);
- 	} else {
- 		/* Disable LVT0 */
-@@ -2308,12 +2303,7 @@ void disconnect_bsp_APIC(int virt_wire_setup)
- 	 * For LVT1 make it edge triggered, active high,
- 	 * nmi and enabled
- 	 */
--	value = apic_read(APIC_LVT1);
--	value &= ~(APIC_MODE_MASK | APIC_SEND_PENDING |
--			APIC_INPUT_POLARITY | APIC_LVT_REMOTE_IRR |
--			APIC_LVT_LEVEL_TRIGGER | APIC_LVT_MASKED);
--	value |= APIC_LVT_REMOTE_IRR | APIC_SEND_PENDING;
--	value = SET_APIC_DELIVERY_MODE(value, APIC_MODE_NMI);
-+	value = APIC_LVT_REMOTE_IRR | APIC_SEND_PENDING | APIC_DM_NMI;
- 	apic_write(APIC_LVT1, value);
- }
- 
--- 
-2.25.0
+We have r_private_item for exactly this kind of ad-hoc lists, already
+used in rbd and ceph_direct_read_write().
 
+Thanks,
+
+                Ilya
