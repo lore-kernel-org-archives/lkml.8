@@ -2,97 +2,116 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED9BC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70601C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC708214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432A2214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:36:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="atdE9krN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgA0Ies (ORCPT
+        id S1729037AbgA0Igp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 03:34:48 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56204 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgA0Ieq (ORCPT
+        Mon, 27 Jan 2020 03:36:45 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42752 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA0Igo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 03:34:46 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        Mon, 27 Jan 2020 03:36:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=INV8lW4jOqrKHZ5smg8wZ5jkIja+5SUyErQCdgM0jI4=; b=atdE9krN/VqGTwvG06EQuVuXW
+        IAHsjU8r+SDvZCmRtrw6Ys+bnMS+z3DXz8P4phw1VJrzfA9u4l9oGQBPBEmNPoQJUeBity8u6kUJ9
+        n5e+ZQjPq1yoAuNwuo2T8Tkju/4l4NH1OEuWVIfYu+TFq0QllZYHySDPKUpWMOZzD90OdddHgcci6
+        7MlXMoIr26/4qDl3CkzxwUkmSeDwMthtymZmm64XUCN478UG48DaoeMzlFG34KS8ga7ReZI93NPCy
+        23oWsYd4Xl3ptnyBSvjhqeWF9xIuE4RjC5GafiSYTvga9LpzduMM8mz4Cx8T5d5pycQ3LcKG8C1FP
+        zsI1Lcj9Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ivzso-0003gK-3g; Mon, 27 Jan 2020 08:36:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A5524292E13;
-        Mon, 27 Jan 2020 08:34:45 +0000 (GMT)
-Date:   Mon, 27 Jan 2020 09:34:43 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-i3c <linux-i3c@lists.infradead.org>
-Subject: [GIT PULL] i3c: Changes for 5.6
-Message-ID: <20200127093443.0f52c6b3@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 625D2302C0F;
+        Mon, 27 Jan 2020 09:34:50 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 327532019658B; Mon, 27 Jan 2020 09:36:32 +0100 (CET)
+Date:   Mon, 27 Jan 2020 09:36:32 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v15] x86/split_lock: Enable split lock detection by kernel
+Message-ID: <20200127083632.GI14946@hirez.programming.kicks-ass.net>
+References: <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
+ <20200123004507.GA2403906@rani.riverdale.lan>
+ <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com>
+ <20200123044514.GA2453000@rani.riverdale.lan>
+ <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
+ <87h80kmta4.fsf@nanos.tec.linutronix.de>
+ <20200125024727.GA32483@agluck-desk2.amr.corp.intel.com>
+ <20200125212524.GA538225@rani.riverdale.lan>
+ <20200125215003.GB17914@agluck-desk2.amr.corp.intel.com>
+ <20200127080419.GG14914@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127080419.GG14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+On Mon, Jan 27, 2020 at 09:04:19AM +0100, Peter Zijlstra wrote:
+> On Sat, Jan 25, 2020 at 01:50:03PM -0800, Luck, Tony wrote:
+> > On Sat, Jan 25, 2020 at 04:25:25PM -0500, Arvind Sankar wrote:
+> > > On Fri, Jan 24, 2020 at 06:47:27PM -0800, Luck, Tony wrote:
+> > > > I did find something with a new test. Applications that hit a
+> > > > split lock warn as expected. But if they sleep before they hit
+> > > > a new split lock, we get another warning. This is may be because
+> > > > I messed up when fixing a PeterZ typo in the untested patch.
+> > > > But I think there may have been bigger problems.
+> > > > 
+> > > > Context switch in V14 code did: 
+> > > > 
+> > > >        if (tifp & _TIF_SLD)
+> > > >                switch_to_sld(prev_p);
+> > > > 
+> > > > void switch_to_sld(struct task_struct *prev)
+> > > > {
+> > > >        __sld_msr_set(true);
+> > > >        clear_tsk_thread_flag(prev, TIF_SLD);
+> > > > }
+> > > > 
+> > > > Which re-enables split lock checking for the next process to run. But
+> > > > mysteriously clears the TIF_SLD bit on the previous task.
+> > > 
+> > > Did Peter mean to disable it only for the current timeslice and
+> > > re-enable it for the next time its scheduled?
+> > 
+> > He's seen and commented on this thread since I made this comment. So
+> 
+> Yeah, I sorta don't care either way :-)
 
-Here is the I3C PR for 5.6.
+Part of the reason I did that was to get the MSR back to enabled ASAP,
+to limit the blind spot on the sibling.
 
-Best Regards,
-
-Boris
-
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git i3c/for-5.6
-
-for you to fetch changes up to 3952cf8ff2f7751ee2f9d6cc6140df4667853250:
-
-  i3c: master: dw: reattach device on first available location of address table (2020-01-13 10:00:05 +0100)
-
-----------------------------------------------------------------
-* Core changes:
-  - Make i3c_bus_set_mode() static
-
-* Driver changes:
-  - Add a per-SoC data_hold_delay property to the Cadence driver
-  - Fix formatting issues in the 'CADENCE I3C MASTER IP' MAINTAINERS entry
-  - Use devm_platform_ioremap_resource() where appropriate
-  - Adjust DesignWare reattach logic
-
-----------------------------------------------------------------
-Benjamin Gaignard (1):
-      i3c: master: make i3c_bus_set_mode static
-
-Lukas Bulwahn (1):
-      MAINTAINERS: fix style in CADENCE I3C MASTER IP entry
-
-Przemyslaw Gaj (1):
-      i3c: master: cdns: add data hold delay support
-
-Vitor Soares (1):
-      i3c: master: dw: reattach device on first available location of address table
-
-Yangtao Li (2):
-      i3c: master: dw: convert to devm_platform_ioremap_resource
-      i3c: master: cdns: convert to devm_platform_ioremap_resource
-
- MAINTAINERS                          |  8 ++++----
- drivers/i3c/master.c                 |  4 ++--
- drivers/i3c/master/dw-i3c-master.c   | 20 +++++++++++++++++---
- drivers/i3c/master/i3c-master-cdns.c | 53 +++++++++++++++++++++++++++++++++++++++++++++--------
- 4 files changed, 68 insertions(+), 17 deletions(-)
+By leaving the TIF_SLD cleared for a task, and using the XOR logic used
+for other TIF flags, the blind spots will be much larger.
