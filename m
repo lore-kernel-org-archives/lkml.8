@@ -2,159 +2,98 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68756C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32327C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF0420CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C4320CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hrmN0Jqo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nq9XQhmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgA0R4c (ORCPT
+        id S1726099AbgA0R6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:56:32 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:39428 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0R4c (ORCPT
+        Mon, 27 Jan 2020 12:58:34 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38732 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgA0R6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:56:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+pgM004QYnoz29dLdl6cQI6MAMztJHbXMIE6Mk2wd9E=; b=hrmN0Jqo5RN46j8mJrWc0QFxt
-        i0o1dz1saSXn0aEOLYzyy+sxzAZT8OkIzKZoPM+U/9IVSJ/Gibx6ztmXNulZyzder7F16lY6y88vm
-        j2fOgw0H+uYYgnl7sNvtMaMB1x6KHI1QXguengDBwkTLETebOvpt5xb4r3qGezpJb3jsT1Ptafy6K
-        hc2GF9Fz9geX+wrFTzLQtEktiC+US7EHLFWmhCMFHyD77kBWCNXig6IhSXLlnu6XVDeXQ0WpKjUJC
-        9FPM+8xe5L6RkT3i8IlRznv/IpRnpdoUST+t5R/SYZ2uTU7IPd/25n1J6gIpnBG8msYo2t6uGx7Ia
-        dOsUXx+qw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60650)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iw8cW-0002lu-E0; Mon, 27 Jan 2020 17:56:20 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iw8cS-0001bc-5y; Mon, 27 Jan 2020 17:56:16 +0000
-Date:   Mon, 27 Jan 2020 17:56:16 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200127175616.GZ25745@shell.armlinux.org.uk>
-References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
- <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
- <20200127112102.GT25745@shell.armlinux.org.uk>
- <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200127114600.GU25745@shell.armlinux.org.uk>
- <20200127140038.GD13647@lunn.ch>
- <20200127140834.GW25745@shell.armlinux.org.uk>
- <20200127145107.GE13647@lunn.ch>
- <20200127161132.GX25745@shell.armlinux.org.uk>
- <20200127163241.GK13647@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127163241.GK13647@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 27 Jan 2020 12:58:33 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m4so3411851pjv.3;
+        Mon, 27 Jan 2020 09:58:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Qg7kiRaR41z6aa68lIG2PQR4oukAllwNZH6einOS8mI=;
+        b=Nq9XQhmUJms+NO7UG2IViWd5kF7jDA+JS49Yr/3QjX8BWU4h2w4ZW2jF+Yc9amkOxX
+         udNY1Q3IIgy23BA6cG1up1SZcCXryo5xHMROf7o/W3534hsBYQLrGVCrh2Q4JYDsXIut
+         MbPWA0RVUFL7K7h3yu198EGM4yE8tPX02HLL9tSQOsE4hBSNoqr3xvzHdZhgz7tbWeuE
+         s2cP+ue78lRB4FHk9rDAb+DqVg0fak80fK0KSeA11364Gteb1np3YXXNwQagB0YRho8H
+         3ATqOu3VR0W7B6z4h1V4JcXuhpKic1ra/ALBC56LZTTAOaRmE8GfiV1+120Ww8cG6cui
+         4RvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Qg7kiRaR41z6aa68lIG2PQR4oukAllwNZH6einOS8mI=;
+        b=g8K90iUKUBAhGNddk0CtHpV6hIqHh+JuMR4rAAgH8DQHi+9I4B4B4TfACM9Z0t1WPf
+         HMz0JPpL9tJtsbH+2glVrO92iL16cd5oTwOB4E3DuDAc7jO9ZhVuoPos+Th/1ZjjEpEL
+         fUBzEJkcRLRMNQT+d/oPpIe7xyHSxYpsxtGLeEd77IqthSCQ1o/g83XKCGf+tCWjg1Js
+         FnNTm76qFWf0uZq++koSCYgRBRg1hYmST4DtG7+RpyC9vcd3sIumWxdKaXUuUDeJqFlT
+         tf3LK/KCDGKj6PYmAmIj4CWW/VRsTKXAcAhwEwXdeQ6hYe2v3Ye0HMXcb+tQfgcbu5cU
+         AQTA==
+X-Gm-Message-State: APjAAAX7UnhMswviByR7R1Dw1QPrdxoUrmeuVEnarRu/FWEwVZK7N3+6
+        VC6KWIPaGYMbG0ue1GZ5tg==
+X-Google-Smtp-Source: APXvYqwRk+gJc6ZgAm0UuUsbki66uSc9J7Ha+2lH2Q77Sj0VanqIaf3H/pXZ1Rr49zf2F2rs3M0hMg==
+X-Received: by 2002:a17:90a:c389:: with SMTP id h9mr253929pjt.128.1580147913366;
+        Mon, 27 Jan 2020 09:58:33 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:1ee2:faa0:c576:b7c8:dab8:85b])
+        by smtp.gmail.com with ESMTPSA id q25sm16482430pfg.41.2020.01.27.09.58.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 09:58:32 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     oleg@redhat.com, christian.brauner@ubuntu.com, mingo@kernel.org
+Cc:     linux-kernel@vger.kernel.org, paulmck@kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com, rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] fork.c: Use RCU_INIT_POINTER() instead of rcu_access_pointer()
+Date:   Mon, 27 Jan 2020 23:28:21 +0530
+Message-Id: <20200127175821.10833-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 05:32:41PM +0100, Andrew Lunn wrote:
-> > Presumably, all these should be visible on the ZII rev B as well?
-> 
-> Maybe. The two SFF mounted on most rev B are connected to ports which
-> only do SGMII, not 1000Base X. They tend to work by chance, and as
-> such, i've never taken them seriously.
-> 
-> If i remember correctly, you modified your board, moved the SFF over
-> to the normally unpopulated slots, and removed a resistor. That setup
-> then has the SFF connected to the 6352, which can do both SGMII and
-> 1000BaseX.
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Yes, I modified the board to fix a design mistake - removing R412.
-The SFF are where they are when they were delivered:
+Use RCU_INIT_POINTER() instead of rcu_access_pointer() in
+copy_sighand().
 
-OPT P1 - no module fitted, and the serdes signals are not routed.
-	 This might as well not exist.
+Suggested-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ kernel/fork.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-OPT P2 - Cotsworks SFBG53DRAP.
-	 This is connected to port 4 of switch 0, one of the 88E6352.
-
-The 88E6352 can have the serdes block associated with either port 4 or
-port 5 depending on the state of the S_SEL signal.  The serdes will be
-associated with port 4 if S_SEL is low at reset, and with port 5 if
-S_SEL is high at reset.
-
-88E6352 Port 4 RGMII signals are not used.  Port 5 RGMII is used to
-connect to the next 88E6352 switch.  So, if the serdes is associated
-with port 5, and if RGMII is used, it prevents the use of the serdes.
-
-With R412 fitted, S_SEL is pulled high, and assocates the serdes with
-port 5, and hence is unusable.  When R412 is removed, the serdes is
-associated with port 4, and can be configured for either SGMII or
-1000baseX mode via the PHY detect bit.
-
-So, the ZII rev B, OPT P2 only becomes useful if R412 is removed.
-
-OPT P3 - Cotsworks SFBG53DRAP
-	 This is connected to port 3 of switch 2, one of the 88E6185.
-OPT P4 - AVAGO AFBR-59R5ALZ
-	 This is connected to port 4 of switch 2, one of the 88E6185.
-
-The 88E6185 can only have ports 7, 8 or 9 configured for 1000BASE-X
-mode.  These two ports end up configured for cross-chip serdes mode
-which is 1000BASE-X but with manually controlled link status, as
-this mode is designed to link two 88E6185 to each other (hence
-"cross-chip").  There appears to be no accessible serdes block on this
-device to give us any interrupts.
-
-With my suggestion for a polling mode in phylink, it may be possible
-to get OPT P3 and OPT P4 working.
-
-> It could also be that the 6352 does have pass through from the PCS to
-> the MAC, where as the 6390 does not? The 6390 is much more capable,
-> having 2.5G and 10G support. The SERDES registers are very different,
-> C45 vs C22 of the 6352.
-
-My feeling is that the issues you're seeing with the ZII rev C come
-down to the phylink implementation for MV88E6xxx lacking some of the
-necessary support, and this has probably been broken ever since
-phylink was introduced into the mainline MV88E6xxx driver.
-
-Try
-
-http://git.armlinux.org.uk/cgit/linux-arm.git/patch/?id=eb717ca455b1ae425a4d4b60615ba3e4d0ba35d4
-
-which will be 5.4 based; I haven't pushed out my 5.5 based tree yet
-as I'm busy writing emails rather than testing it, and running out
-of time to do so before tomorrow!
-
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 2508a4f238a3..42b71d4a50cb 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1508,7 +1508,7 @@ static int copy_sighand(unsigned long clone_flags, struct task_struct *tsk)
+ 		return 0;
+ 	}
+ 	sig = kmem_cache_alloc(sighand_cachep, GFP_KERNEL);
+-	rcu_assign_pointer(tsk->sighand, sig);
++	RCU_INIT_POINTER(tsk->sighand, sig);
+ 	if (!sig)
+ 		return -ENOMEM;
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.17.1
+
