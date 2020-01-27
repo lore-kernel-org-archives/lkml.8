@@ -2,230 +2,311 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6818AC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4EAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F71E22527
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0814A2467C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Lgl9X7Kh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NUqqrs7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgA0W0e (ORCPT
+        id S1726444AbgA0WaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 17:26:34 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40202 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgA0W0e (ORCPT
+        Mon, 27 Jan 2020 17:30:10 -0500
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:39794 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgA0WaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 17:26:34 -0500
-Received: by mail-ed1-f67.google.com with SMTP id p3so10747555edx.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 14:26:30 -0800 (PST)
+        Mon, 27 Jan 2020 17:30:10 -0500
+Received: by mail-vk1-f196.google.com with SMTP id t129so3075104vkg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 14:30:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=ImJurKyjDdBFqXnGp8NsllsDY2CX8cUxhNCfpbNIn+A=;
-        b=Lgl9X7KhlV051rZwpS9tg/Oe1lRzwP4rip1ENWeFFsgeVPdRRDLrJVgmIdPE1Aeteu
-         AE+2iy/3mNv9pePcXK7NySRC4llED37VmpRAtqzB5K8vNNWAnHcek0A9SmQYGumAyWEc
-         XaVB7uBJMwrDtP8C/HfHRveeguPFjuKCudWzjd6XxWWHGmnZeTW3h9fy8MPCxLPz5LFN
-         BuPCfXF7My2mQTiTJ/kGqAnrr/idPyYzWngwl2EY0RpV/aHJBiJAMewP44mLEHa2fC/B
-         we468W/esPC/FWkvJ5m47GCNqQ29vl4ILakKge/2WaLKX3mbFjphlFQ9fsd0XIHzIvSs
-         wB3Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OkNUIHe+JYKTBEW9K2q9Taed66d4fQFMxRvOrRh8Cd0=;
+        b=NUqqrs7HXhFSJFsiNrXJm0ONYmionCm3iYaOyFIe4L6NBxV8KGLwKqmdNsdd1bizOG
+         oXerz+XKVLKfxf0zbLskquZlA3QPICBEPW1gib9XIsd2nFErH3ZKV4v19aqguZuFqxH7
+         8IHt1s2WYt5gtQA/uZLlFZcgGA+g8HyMRwbfo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=ImJurKyjDdBFqXnGp8NsllsDY2CX8cUxhNCfpbNIn+A=;
-        b=ToQkAfWDj51A9aXCnK4NVuOnn2aUf41UOOL4N9ljuR8Ajk7c4XaZ+8KLPb0EiRN+Go
-         B/qkE1+HetHFILX2e+F9iN8gCQF3EnqFdqDBZx/jpNxfIIOLZwyGw942npvauu0Xjfvw
-         Ogs+66Xf4eEyD46GJRrZSDZVVVxSHZQizigQXgCyVo/Tn5KTAP93rNjp638KZ9GC58zr
-         TlwdNcY6cWCXov1tRZ70otYuYwl/R2/zmmaLt0+PG7pR1UZGmLAeuk3O2pt/0jMCQgh+
-         ARv42FyEgzWcQXOvIOwAtMB47FjOJR3ozln/syQca2P/MKdESO1KNjeSKSapQNoWi+6M
-         ff4Q==
-X-Gm-Message-State: APjAAAWBmNdiciAK7wWNTeaZ1geEySdWrmNvM1le+qsqBZzyQqGI5mQO
-        h/DN7m1NTjdknImXHI3aB8QiMrL3tVUf563AO1jh
-X-Google-Smtp-Source: APXvYqwRgMacKHVgEJejATnw9fXYyY2GDwe9WDz8PNsuWYZaE/MUvELQwyVKYMZaGgjusDPbsnKlOLRDu0Az2bjH4DQ=
-X-Received: by 2002:a17:906:7c47:: with SMTP id g7mr662588ejp.281.1580163989574;
- Mon, 27 Jan 2020 14:26:29 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OkNUIHe+JYKTBEW9K2q9Taed66d4fQFMxRvOrRh8Cd0=;
+        b=d2nXTHjBbshI4xhPsNVTGfMFBcPpF5NInWRiaqMLleed1VUJg7fzMfwHUC3LkNd5sy
+         oX0pnCMUEaAcln6u2RhMTrzInSCodvnwAukO+RAqWqYgSlsFhkBnFGLURtERbeQVUpFo
+         +KcQs8KC+1i5jEdIVU3jkTHBzMGrYNJpDaVbsIgj8NCsO2A47aBHyvAVPuNxbIWlAn94
+         oszO/oWuW6PdKzc0fnfc02T2i561dop6O6+TBfEFp9dm5spglGR7ENLCNe2Ua2t/ZLHa
+         LpTJVyHGeudBz4sD1ioU5HPTpHlUvXosDbeh864dKsGjPoiOBqSE6E17QUWUgKKuklo5
+         9MLw==
+X-Gm-Message-State: APjAAAUGH3mkdo8D6oF6hmXu4Wq+unvM+Ab5sfB/VlCFjfC7jCPxDkSH
+        FWI8LUOQiVSD8Ma7C2VHkwIRNIq9MQY=
+X-Google-Smtp-Source: APXvYqwa+kpjlXVjRZ2uOc7rEuDIoHZuwuyXMfCZuJW2FHX1QmjVQZ11r9lBjkSNTtBMoiRWGW3nnA==
+X-Received: by 2002:a1f:f283:: with SMTP id q125mr11278327vkh.69.1580164206225;
+        Mon, 27 Jan 2020 14:30:06 -0800 (PST)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id g22sm4205848vsr.24.2020.01.27.14.30.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 14:30:05 -0800 (PST)
+Received: by mail-vs1-f44.google.com with SMTP id f26so6812381vsk.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 14:30:04 -0800 (PST)
+X-Received: by 2002:a67:1ec5:: with SMTP id e188mr5904944vse.169.1580164204376;
+ Mon, 27 Jan 2020 14:30:04 -0800 (PST)
 MIME-Version: 1.0
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 27 Jan 2020 17:26:18 -0500
-Message-ID: <CAHC9VhR_5564up7u1V-PRXOz_RRfTLj16m508qgNvdWC8gcRTA@mail.gmail.com>
-Subject: [GIT PULL] SELinux patches for v5.6
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <1580117390-6057-1-git-send-email-smasetty@codeaurora.org>
+In-Reply-To: <1580117390-6057-1-git-send-email-smasetty@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 27 Jan 2020 14:29:53 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VFVC6XJ=OXJCSd2_oij5vggKnTedGP0Gj4KHC50QH0SQ@mail.gmail.com>
+Message-ID: <CAD=FV=VFVC6XJ=OXJCSd2_oij5vggKnTedGP0Gj4KHC50QH0SQ@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Clark <robdclark@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi,
 
-This is one of the bigger SELinux pull requests in recent years with
-28 patches.  Everything is passing our test suite and the highlights
-are listed below, please merge them for v5.6.
+On Mon, Jan 27, 2020 at 1:30 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>
+> This patch adds the required dt nodes and properties
+> to enabled A618 GPU.
+>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 103 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 103 insertions(+)
 
-- Mark CONFIG_SECURITY_SELINUX_DISABLE as deprecated.  We're some time
-away from actually attempting to remove this in the kernel, but the
-only distro we know that still uses it (Fedora) is working on moving
-away from this so we want to at least let people know we are planning
-to remove it.
+Note that +Matthias Kaehlcke commented on v1 your patch:
 
-- Reorder the SELinux hooks to help prevent bad things when SELinux is
-disabled at runtime.  The proper fix is to remove the
-CONFIG_SECURITY_SELINUX_DISABLE functionality (see above) and just
-take care of it at boot time (e.g. "selinux=0").
+https://lore.kernel.org/r/20191204220033.GH228856@google.com/
 
-- Add SELinux controls for the kernel lockdown functionality,
-introducing a new SELinux class/permissions: "lockdown { integrity
-confidentiality }".
+...so he should have been CCed on v2.  I would also note that some of
+the comments below are echos of what Matthias already said in the
+previous version but just weren't addressed.
 
-- Add a SELinux control for move_mount(2) that reuses the "file {
-mounton }" permission.
 
-- Improvements to the SELinux security label data store lookup
-functions to speed up translations between our internal label
-representations and the visible string labels (both directions).
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index b859431..277d84d 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -7,6 +7,7 @@
+>
+>  #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+> +#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
 
-- Revisit a previous fix related to SELinux inode auditing and
-permission caching and do it correctly this time.
+Header files should be sorted alphabetically.  ...or, even better,
+base your patch atop mine:
 
-- Fix the SELinux access decision cache to cleanup properly on error.
-In some extreme cases this could limit the cache size and result in a
-decrease in performance.
+https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid/
 
-- Enable SELinux per-file labeling for binderfs.
+...which adds the gpucc header file so you don't have to.  ...and when
+you do so, email out a Reviewed-by and/or Tested-by for my patch.  ;-)
 
-- The SELinux initialized and disabled flags were wrapped with
-accessors to ensure they are accessed correctly.
 
-- Mark several key SELinux structures with __randomize_layout.
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/interconnect/qcom,sc7180.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+> @@ -1619,6 +1620,108 @@
+>                         #interconnect-cells = <1>;
+>                         qcom,bcm-voters = <&apps_bcm_voter>;
+>                 };
+> +
+> +               gpu: gpu@5000000 {
+> +                       compatible = "qcom,adreno-618.0", "qcom,adreno";
 
-- Changes to the LSM build configuration to only build
-security/lsm_audit.c when needed.
+Though it's not controversial, please send a patch to:
 
-- Changes to the SELinux build configuration to only build the IB
-object cache when CONFIG_SECURITY_INFINIBAND is enabled.
+Documentation/devicetree/bindings/display/msm/gmu.txt
 
-- Move a number of single-caller functions into their callers.
+...to add 'qcom,adreno-618.0', like:
 
-- Documentation fixes (/selinux -> /sys/fs/selinux).
+    for example:
+      "qcom,adreno-gmu-618.0", "qcom,adreno-gmu"
+      "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
 
-- A handful of cleanup patches that aren't worth mentioning on their
-own, the individual descriptions have plenty of detail.
+Probably as part of this you will be asked to convert this file to
+yaml.  IMO we don't need to block landing this patch on the effort to
+convert it to yaml, but you should still work on it.  ...or maybe
+Jordan wants to work on it?
 
-Thanks,
--Paul
 
---
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+> +                       #stream-id-cells = <16>;
+> +                       reg = <0 0x05000000 0 0x40000>, <0 0x0509e000 0 0x1000>,
+> +                               <0 0x05061000 0 0x800>;
+> +                       reg-names = "kgsl_3d0_reg_memory", "cx_mem", "cx_dbgc";
+> +                       interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
+> +                       iommus = <&adreno_smmu 0>;
+> +                       operating-points-v2 = <&gpu_opp_table>;
+> +                       interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
 
- Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+Running:
+$ git fetch git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git
+for-next
+$ git grep gem_noc FETCH_HEAD
+$ git fetch git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git
+arm64-for-5.7-to-be-rebased
+$ git grep gem_noc FETCH_HEAD
 
-are available in the Git repository at:
+...shows no hits.  That's because the interconnect patches haven't
+landed in the tree that you're targeting.  In the very least you
+should mention somewhere in your email that your patch depends on the
+interconnect patches landing, perhaps pointing at:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
-   tags/selinux-pr-20200127
+https://lore.kernel.org/r/1577782737-32068-4-git-send-email-okukatla@codeaurora.org
 
-for you to fetch changes up to 98aa00345de54b8340dc2ddcd87f446d33387b5e:
+...but even better would be to split your patch into two parts.  The
+first patch would be exactly like your patch except without the
+"interconnects" line.  The 2nd patch would add the interconnects line.
+This would allow Bjorn/Andy to land the first patch now and then land
+the second patch when the interconnect series is ready.  I can confirm
+that you can still get basic GPU functionality even without the
+interconnects bit so it would be worth landing earlier.
 
- selinux: fix regression introduced by move_mount(2) syscall
-   (2020-01-20 07:42:37 -0500)
 
-----------------------------------------------------------------
-selinux/stable-5.6 PR 20200127
+I will also note that by basing on a tree that has private patches to
+the same file you're touching you make it very hard for a maintainer
+to apply.  When I try this:
 
-----------------------------------------------------------------
-Hridya Valsaraju (1):
-     selinux: allow per-file labelling for binderfs
+$ curl https://patchwork.kernel.org/patch/11352261/mbox/ | git am -3
 
-Huaisheng Ye (2):
-     selinux: remove redundant msg_msg_alloc_security
-     selinux: remove redundant selinux_nlmsg_perm
+I get:
 
-Jaihind Yadav (1):
-     selinux: ensure we cleanup the internal AVC counters on error in
-              avc_update()
+error: sha1 information is lacking or useless
+(arch/arm64/boot/dts/qcom/sc7180.dtsi).
+error: could not build fake ancestor
+Patch failed at 0001 arm64: dts: qcom: sc7180: Add A618 gpu dt blob
 
-Jeff Vander Stoep (1):
-     selinux: sidtab reverse lookup hash table
+...yes, I can apply it with 'git am --show-current-patch | patch -p1'
+but it's ugly (and it ends up making things sort in the wrong order).
 
-Ondrej Mosnacek (5):
-     selinux: cache the SID -> context string translation
-     selinux: treat atomic flags more carefully
-     selinux: reorder hooks to make runtime disable less broken
-     selinux: fix wrong buffer types in policydb.c
-     selinux: do not allocate ancillary buffer on first load
 
-Paul Moore (4):
-     selinux: ensure we cleanup the internal AVC counters on error in
-              avc_insert()
-     selinux: ensure the policy has been loaded before reading the sidtab stats
-     selinux: deprecate disabling SELinux and runtime
-     selinux: remove redundant allocation and helper functions
+> +               adreno_smmu: iommu@5040000 {
+> +                       compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
 
-Ravi Kumar Siddojigari (1):
-     selinux: move ibpkeys code under CONFIG_SECURITY_INFINIBAND.
+Please send a patch to:
 
-Stephen Smalley (10):
-     security,lockdown,selinux: implement SELinux lockdown
-     selinux: revert "stop passing MAY_NOT_BLOCK to the AVC upon follow_link"
-     selinux: fall back to ref-walk if audit is required
-     selinux: clean up selinux_inode_permission MAY_NOT_BLOCK tests
-     security: only build lsm_audit if CONFIG_SECURITY=y
-     selinux: clean up selinux_enabled/disabled/enforcing_boot
-     selinux: randomize layout of key structures
-     Documentation,selinux: fix references to old selinuxfs mount point
-     selinux: make default_noexec read-only after init
-     selinux: fix regression introduced by move_mount(2) syscall
+Documentation/devicetree/bindings/iommu/arm,smmu.yaml
 
-Yang Guo (1):
-     selinux: remove unnecessary selinux cred request
+...adding 'qcom,sc7180-smmu-v2'.  If you do this it will point out
+that you've added a new clock: "mem_iface_clk".  Is this truly a new
+clock in sc7180 compared to previous IOMMUs?  ...or is it not really
+needed?
 
-YueHaibing (1):
-     selinux: remove set but not used variable 'sidtab'
 
-liuyang34 (1):
-     selinuxfs: use scnprintf to get real length for inode
+> +                       reg = <0 0x05040000 0 0x10000>;
+> +                       #iommu-cells = <1>;
+> +                       #global-interrupts = <2>;
+> +                       interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
+> +                                       <GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>,
+> +                                       <GIC_SPI 364 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 365 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 366 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 367 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 368 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 369 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 370 IRQ_TYPE_EDGE_RISING>,
+> +                                       <GIC_SPI 371 IRQ_TYPE_EDGE_RISING>;
+> +                       clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
+> +                               <&gcc GCC_GPU_CFG_AHB_CLK>,
+> +                               <&gcc GCC_DDRSS_GPU_AXI_CLK>;
+> +
+> +                       clock-names = "bus", "iface", "mem_iface_clk";
 
-Documentation/ABI/obsolete/sysfs-selinux-disable |  26 ++
-Documentation/admin-guide/kernel-parameters.txt  |   9 +-
-MAINTAINERS                                      |   1 +
-include/linux/lsm_audit.h                        |   2 +
-include/linux/security.h                         |   2 +
-security/Makefile                                |   2 +-
-security/lockdown/lockdown.c                     |  27 --
-security/lsm_audit.c                             |   5 +
-security/security.c                              |  33 ++
-security/selinux/Kconfig                         |  33 +-
-security/selinux/Makefile                        |   4 +-
-security/selinux/avc.c                           |  95 +++---
-security/selinux/hooks.c                         | 388 ++++++++++--------
-security/selinux/ibpkey.c                        |   2 +-
-security/selinux/include/avc.h                   |  13 +-
-security/selinux/include/classmap.h              |   2 +
-security/selinux/include/ibpkey.h                |  13 +-
-security/selinux/include/objsec.h                |   2 +-
-security/selinux/include/security.h              |  40 ++-
-security/selinux/netif.c                         |   2 +-
-security/selinux/netnode.c                       |   2 +-
-security/selinux/netport.c                       |   2 +-
-security/selinux/selinuxfs.c                     |  87 ++++-
-security/selinux/ss/context.h                    |  11 +-
-security/selinux/ss/policydb.c                   |   9 +-
-security/selinux/ss/policydb.h                   |   2 +-
-security/selinux/ss/services.c                   | 312 +++++++++++-------
-security/selinux/ss/services.h                   |   6 +-
-security/selinux/ss/sidtab.c                     | 402 ++++++++++++-------
-security/selinux/ss/sidtab.h                     |  70 +++-
-30 files changed, 1045 insertions(+), 559 deletions(-)
-create mode 100644 Documentation/ABI/obsolete/sysfs-selinux-disable
+nit: keep clocks and clock-names next to each other (no blank line).
+If you really feel like it needs more space add it between the
+clock-names and power-domains.
 
--- 
-paul moore
-www.paul-moore.com
+> +                       power-domains = <&gpucc CX_GDSC>;
+
+Similar to interconnects, gpucc hasn't landed yet.  Somewhere you
+should point out this fact and ideally point to:
+
+https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid/
+
+...unlike interconnects, your patch can't land without gpucc, so you
+should point this out as a hard dependency.
+
+
+> +               };
+> +
+> +               gmu: gmu@506a000 {
+> +                       compatible="qcom,adreno-gmu-618", "qcom,adreno-gmu";
+
+As per the bindings, "qcom,adreno-gmu-618" should be
+"qcom,adreno-gmu-618.0", right?
+
+...and I bet you'd never have guessed that I'll request that you add
+"qcom,adreno-gmu-618" to:
+
+Documentation/devicetree/bindings/display/msm/gmu.txt
+
+...and that you'll probably be asked to convert to yaml.  Again, maybe
+Jordan wants to attempt this?
+
+
+> +                       reg = <0 0x0506a000 0 0x31000>, <0 0x0b290000 0 0x10000>,
+> +                               <0 0x0b490000 0 0x10000>;
+> +                       reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
+> +                       interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
+> +                                  <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names = "hfi", "gmu";
+> +                       clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
+> +                              <&gpucc GPU_CC_CXO_CLK>,
+> +                              <&gcc GCC_DDRSS_GPU_AXI_CLK>,
+> +                              <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
+> +                       clock-names = "gmu", "cxo", "axi", "memnoc";
+> +                       power-domains = <&gpucc CX_GDSC>;
+
+Bindings claim that you need both CX and GC.  Is sc7180 somehow
+different?  Bindings also claim that you should be providing
+power-domain-names.
+
+
+
+> +                       iommus = <&adreno_smmu 5>;
+> +                       operating-points-v2 = <&gmu_opp_table>;
+> +
+> +                       gmu_opp_table: opp-table {
+> +                               compatible = "operating-points-v2";
+> +
+> +                               opp-200000000 {
+> +                                       opp-hz = /bits/ 64 <200000000>;
+> +                                       opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
+> +                               };
+> +                       };
+> +               };
+>         };
+>
+>         thermal-zones {
+
+Using the "thermal-zones" as context, it looks as if you're asserting
+that your new nodes belong at the very end of the pile of nodes with
+addresses.  This is not true.  Looking at the branch
+'arm64-for-5.7-to-be-rebased' on the Qualcomm tree, I see:
+
+cpufreq_hw: cpufreq@18323000
+
+...which has a larger address than your 0x0506a000.  Please sort your
+nodes numerically.
+
+
+-Doug
