@@ -2,221 +2,123 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA8C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C935C33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212F9206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53DCB206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:54:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OPgCi7kp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B0D4GdH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgA0XyS (ORCPT
+        id S1726871AbgA0Xyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 18:54:18 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:41127 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbgA0XyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 18:54:17 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48666H4GYqz9txnT;
-        Tue, 28 Jan 2020 00:54:15 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=OPgCi7kp; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id FsgsCSgZrIeg; Tue, 28 Jan 2020 00:54:15 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48666H30Wpz9txnS;
-        Tue, 28 Jan 2020 00:54:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580169255; bh=GaF6BMTDYLJfhtPCBvJGmPxvVbR+JO1sY9aMHhS6Jn8=;
-        h=From:Subject:To:Cc:Date:From;
-        b=OPgCi7kpbtFTJgDu3rwgix/pE+in79yrLjbeEcSUJjjKczK52CUV2eXZCCx4zRLiw
-         VELTSiMT9zOltzMdWUGxwJWip1eEQRsL08O+CVi4CYvndr3eB19521DY2iX1Ca+gmH
-         zktC/nq5dDe7MuWC203N07AmfZJlzlpaUQn9CTpQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AC3348B7C0;
-        Tue, 28 Jan 2020 00:54:15 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xYtc0qLSCPF0; Tue, 28 Jan 2020 00:54:15 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6ADBC8B7BB;
-        Tue, 28 Jan 2020 00:54:15 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id DFF4D651CA; Mon, 27 Jan 2020 23:54:14 +0000 (UTC)
-Message-Id: <3942daf7fb274fa89f30a7f44cdb26cc38951778.1580169247.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2] powerpc/32s: reorder Linux PTE bits to better match Hash
- PTE bits.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 27 Jan 2020 23:54:14 +0000 (UTC)
+        Mon, 27 Jan 2020 18:54:39 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:41196 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgA0Xyj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 18:54:39 -0500
+Received: by mail-pf1-f201.google.com with SMTP id b62so6971042pfb.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 15:54:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=0WVlBZ9h/3UAmHAjFKk1i1lby5ArQALhCHp8vRDwf6s=;
+        b=B0D4GdH37zFLkAB6DLlyqBHlLmNEXHfnkYgFffeTOmOr475hSOENtNB8TIo3G4sGe0
+         FGQeW1LRFZFwEwZe0xYBNGSrbzuvSB/n522fs6/iqw0svGmiqpGIgfsGVIAnWpo0xe6b
+         BoM87ucGn23bNOQFBFwtOThLn+0+3twkPtHYFFqqNHT27mvPiaZYPxgu4N/l/e8eaXcg
+         7jQiGP//cNxEUu+McL7virtX6XQNY1Tl0esKP2c/WrVvCyn1rDqO+BVfbr+AnTAAodm8
+         8eaZUZJdgvoPLStiKNbl0DHxWBNzGU98A6D6t+uV4+grA51Z1w5tPzJYd+kP7DcwXnGr
+         FQyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=0WVlBZ9h/3UAmHAjFKk1i1lby5ArQALhCHp8vRDwf6s=;
+        b=ArpQXaP10DjuSoDWYsmUKnDYFIGa+Fmym906r2hHKxXFMzKY59vyn1T+Srx4njsnTS
+         A7LwTWqXepbesXJJ1gdHV3uVY45YE+o2fv+/x2/R5ADoo8PlNz4vf0ix33PbExPMIdGi
+         a7tM41UdvuCPmQ4+Io1eHCADYoLqaVx/mfrnf9a8P7jhi1Wd3SVJuzUQIVm8VMBKxl3F
+         LzLxULHiSzZ1xkd4f6sru978SqpKToPrUhh+OONmeN5lVBpP2vA1Q1DGzjA4+FMUWJD/
+         h5AXi35CWgpLPsCLVBbY2LzcHt8AA2KnF0KKAp0FWyP7JYejxsCYDOnZ9OXFCuvieKIe
+         3oIg==
+X-Gm-Message-State: APjAAAUZ04FBwgl1Uiwg02fbNCvROiFCc59BMK1peisD0qqmYuWcN2jD
+        lEKhKDz5+U+egJeYfXmO60DXpHyTrAkUBiUBodj67Q==
+X-Google-Smtp-Source: APXvYqxuHlif8YoC09sMp36DADFxZKUEjmOezwoOELE8SswXmvcrc2Cpl4SiqOBpXxHMb1qSYM81/g2GJjm81WrtmsBS6w==
+X-Received: by 2002:a63:ea4c:: with SMTP id l12mr20867620pgk.29.1580169278383;
+ Mon, 27 Jan 2020 15:54:38 -0800 (PST)
+Date:   Mon, 27 Jan 2020 15:53:51 -0800
+Message-Id: <20200127235356.122031-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH v1 0/5] uml: add more unspecified HAS_IOMEM dependencies
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Robert Hancock <hancock@sedsystems.ca>,
+        Esben Haabendal <esben@geanix.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        davidgow@google.com, heidifahim@google.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reorder Linux PTE bits to (almost) match Hash PTE bits.
+# TL;DR
 
-RW Kernel : PP = 00
-RO Kernel : PP = 00
-RW User   : PP = 01
-RO User   : PP = 11
+This patchset adds a missing HAS_IOMEM dependency to several drivers in
+an attempt to get allyesconfig closer to working for ARCH=um. Although I
+had caught all the broken ones in early 5.5[1], some new ones have
+broken since then.
 
-So naturally, we should have
-_PAGE_USER = 0x001
-_PAGE_RW   = 0x002
+# What am I trying to do?
 
-Today 0x001 and 0x002 and _PAGE_PRESENT and _PAGE_HASHPTE which
-both are software only bits.
+This patchset is part of my attempt to get `make ARCH=um allyesconfig`
+to produce a config that will build *and* boot to init, so that I can
+use it as a mechanism to run tests[2].
 
-Switch _PAGE_USER and _PAGE_PRESET
-Switch _PAGE_RW and _PAGE_HASHPTE
+# Why won't allyesconfig break again after this series of fixes?
 
-This allows to remove a few insns.
+Well, in short, it will break again; however, as I mentioned above, I am
+using UML for testing the kernel, and I am currently working on getting
+my tests to run on KernelCI. As part of our testing procedure for
+KernelCI, we are planning on building a UML kernel using allyesconfig
+and running our tests on it. Thus, we will find out very quickly once
+someone breaks allyesconfig again once we get this all working. So this
+will keep breaking until we have a build test on KernelCI running, but
+we will need to send out these fixes anyway.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-v2: rebased on today's powerpc/merge
----
- arch/powerpc/include/asm/book3s/32/hash.h |  8 ++++----
- arch/powerpc/kernel/head_32.S             |  9 +++------
- arch/powerpc/mm/book3s32/hash_low.S       | 14 ++++++--------
- 3 files changed, 13 insertions(+), 18 deletions(-)
+Brendan Higgins (5):
+  net: axienet: add unspecified HAS_IOMEM dependency
+  reset: brcmstb-rescal: add unspecified HAS_IOMEM dependency
+  reset: intel: add unspecified HAS_IOMEM dependency
+  ptp: 1588_clock_ines: add unspecified HAS_IOMEM dependency
+  power: avs: qcom-cpr: add unspecified HAS_IOMEM dependency
 
-diff --git a/arch/powerpc/include/asm/book3s/32/hash.h b/arch/powerpc/include/asm/book3s/32/hash.h
-index 2a0a467d2985..34a7215ae81e 100644
---- a/arch/powerpc/include/asm/book3s/32/hash.h
-+++ b/arch/powerpc/include/asm/book3s/32/hash.h
-@@ -17,9 +17,9 @@
-  * updating the accessed and modified bits in the page table tree.
-  */
- 
--#define _PAGE_PRESENT	0x001	/* software: pte contains a translation */
--#define _PAGE_HASHPTE	0x002	/* hash_page has made an HPTE for this pte */
--#define _PAGE_USER	0x004	/* usermode access allowed */
-+#define _PAGE_USER	0x001	/* usermode access allowed */
-+#define _PAGE_RW	0x002	/* software: user write access allowed */
-+#define _PAGE_PRESENT	0x004	/* software: pte contains a translation */
- #define _PAGE_GUARDED	0x008	/* G: prohibit speculative access */
- #define _PAGE_COHERENT	0x010	/* M: enforce memory coherence (SMP systems) */
- #define _PAGE_NO_CACHE	0x020	/* I: cache inhibit */
-@@ -27,7 +27,7 @@
- #define _PAGE_DIRTY	0x080	/* C: page changed */
- #define _PAGE_ACCESSED	0x100	/* R: page referenced */
- #define _PAGE_EXEC	0x200	/* software: exec allowed */
--#define _PAGE_RW	0x400	/* software: user write access allowed */
-+#define _PAGE_HASHPTE	0x400	/* hash_page has made an HPTE for this pte */
- #define _PAGE_SPECIAL	0x800	/* software: Special page */
- 
- #ifdef CONFIG_PTE_64BIT
-diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
-index 0493fcac6409..1587a754f061 100644
---- a/arch/powerpc/kernel/head_32.S
-+++ b/arch/powerpc/kernel/head_32.S
-@@ -310,7 +310,7 @@ BEGIN_MMU_FTR_SECTION
- 	andis.	r0, r5, (DSISR_BAD_FAULT_32S | DSISR_DABRMATCH)@h
- #endif
- 	bne	handle_page_fault_tramp_2	/* if not, try to put a PTE */
--	rlwinm	r3, r5, 32 - 15, 21, 21		/* DSISR_STORE -> _PAGE_RW */
-+	rlwinm	r3, r5, 32 - 24, 30, 30		/* DSISR_STORE -> _PAGE_RW */
- 	bl	hash_page
- 	b	handle_page_fault_tramp_1
- FTR_SECTION_ELSE
-@@ -437,7 +437,6 @@ InstructionTLBMiss:
- 	andc.	r1,r1,r0		/* check access & ~permission */
- 	bne-	InstructionAddressInvalid /* return if access not permitted */
- 	/* Convert linux-style PTE to low word of PPC-style PTE */
--	rlwimi	r0,r0,32-2,31,31	/* _PAGE_USER -> PP lsb */
- 	ori	r1, r1, 0xe06		/* clear out reserved bits */
- 	andc	r1, r0, r1		/* PP = user? 1 : 0 */
- BEGIN_FTR_SECTION
-@@ -505,9 +504,8 @@ DataLoadTLBMiss:
- 	 * we would need to update the pte atomically with lwarx/stwcx.
- 	 */
- 	/* Convert linux-style PTE to low word of PPC-style PTE */
--	rlwinm	r1,r0,32-9,30,30	/* _PAGE_RW -> PP msb */
--	rlwimi	r0,r0,32-1,30,30	/* _PAGE_USER -> PP msb */
--	rlwimi	r0,r0,32-1,31,31	/* _PAGE_USER -> PP lsb */
-+	rlwinm	r1,r0,0,30,30		/* _PAGE_RW -> PP msb */
-+	rlwimi	r0,r0,1,30,30		/* _PAGE_USER -> PP msb */
- 	ori	r1,r1,0xe04		/* clear out reserved bits */
- 	andc	r1,r0,r1		/* PP = user? rw? 1: 3: 0 */
- BEGIN_FTR_SECTION
-@@ -585,7 +583,6 @@ DataStoreTLBMiss:
- 	 * we would need to update the pte atomically with lwarx/stwcx.
- 	 */
- 	/* Convert linux-style PTE to low word of PPC-style PTE */
--	rlwimi	r0,r0,32-2,31,31	/* _PAGE_USER -> PP lsb */
- 	li	r1,0xe06		/* clear out reserved bits & PP msb */
- 	andc	r1,r0,r1		/* PP = user? 1: 0 */
- BEGIN_FTR_SECTION
-diff --git a/arch/powerpc/mm/book3s32/hash_low.S b/arch/powerpc/mm/book3s32/hash_low.S
-index c11b0a005196..18fdabde5007 100644
---- a/arch/powerpc/mm/book3s32/hash_low.S
-+++ b/arch/powerpc/mm/book3s32/hash_low.S
-@@ -41,7 +41,7 @@ mmu_hash_lock:
- /*
-  * Load a PTE into the hash table, if possible.
-  * The address is in r4, and r3 contains an access flag:
-- * _PAGE_RW (0x400) if a write.
-+ * _PAGE_RW (0x002) if a write.
-  * r9 contains the SRR1 value, from which we use the MSR_PR bit.
-  * SPRG_THREAD contains the physical address of the current task's thread.
-  *
-@@ -78,7 +78,7 @@ _GLOBAL(hash_page)
- 	blt+	112f			/* assume user more likely */
- 	lis	r5, (swapper_pg_dir - ADDR_OFFSET)@ha	/* if kernel address, use */
- 	addi	r5 ,r5 ,(swapper_pg_dir - ADDR_OFFSET)@l	/* kernel page table */
--	rlwimi	r3,r9,32-12,29,29	/* MSR_PR -> _PAGE_USER */
-+	rlwimi	r3,r9,32-14,31,31	/* MSR_PR -> _PAGE_USER */
- 112:
- #ifndef CONFIG_PTE_64BIT
- 	rlwimi	r5,r4,12,20,29		/* insert top 10 bits of address */
-@@ -106,7 +106,7 @@ _GLOBAL(hash_page)
- #else
- 	rlwimi	r8,r4,23,20,28		/* compute pte address */
- #endif
--	rlwinm	r0,r3,32-3,24,24	/* _PAGE_RW access -> _PAGE_DIRTY */
-+	rlwinm	r0,r3,6,24,24		/* _PAGE_RW access -> _PAGE_DIRTY */
- 	ori	r0,r0,_PAGE_ACCESSED|_PAGE_HASHPTE
- 
- 	/*
-@@ -316,11 +316,9 @@ Hash_msk = (((1 << Hash_bits) - 1) * 64)
- 
- _GLOBAL(create_hpte)
- 	/* Convert linux-style PTE (r5) to low word of PPC-style PTE (r8) */
--	rlwinm	r8,r5,32-9,30,30	/* _PAGE_RW -> PP msb */
- 	rlwinm	r0,r5,32-6,30,30	/* _PAGE_DIRTY -> PP msb */
--	and	r8,r8,r0		/* writable if _RW & _DIRTY */
--	rlwimi	r5,r5,32-1,30,30	/* _PAGE_USER -> PP msb */
--	rlwimi	r5,r5,32-2,31,31	/* _PAGE_USER -> PP lsb */
-+	and	r8,r5,r0		/* writable if _RW & _DIRTY */
-+	rlwimi	r5,r5,1,30,30		/* _PAGE_USER -> PP msb */
- 	ori	r8,r8,0xe04		/* clear out reserved bits */
- 	andc	r8,r5,r8		/* PP = user? (rw&dirty? 1: 3): 0 */
- BEGIN_FTR_SECTION
-@@ -572,7 +570,7 @@ _GLOBAL(flush_hash_pages)
- 33:	lwarx	r8,0,r5			/* fetch the pte flags word */
- 	andi.	r0,r8,_PAGE_HASHPTE
- 	beq	8f			/* done if HASHPTE is already clear */
--	rlwinm	r8,r8,0,31,29		/* clear HASHPTE bit */
-+	rlwinm	r8,r8,0,~_PAGE_HASHPTE	/* clear HASHPTE bit */
- 	stwcx.	r8,0,r5			/* update the pte */
- 	bne-	33b
- 
+ drivers/net/ethernet/xilinx/Kconfig | 1 +
+ drivers/power/avs/Kconfig           | 2 +-
+ drivers/ptp/Kconfig                 | 1 +
+ drivers/reset/Kconfig               | 3 ++-
+ 4 files changed, 5 insertions(+), 2 deletions(-)
+
+[1] https://lore.kernel.org/lkml/20191211192742.95699-1-brendanhiggins@google.com/
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=205223
+
 -- 
-2.25.0
+2.25.0.341.g760bfbb309-goog
 
