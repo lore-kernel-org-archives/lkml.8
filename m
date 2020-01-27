@@ -2,106 +2,160 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD6FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED72BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0208222527
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:43:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580161429;
-	bh=/J5HvjZvtVETpb0WRJuuNiAFRr3/QMUvz10LmsBegsM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=G1XAOGo2HTfc5a1ZL4P4z3ht1V4olQ9eP8bHrtAQ2VMsoyH3oaT4VRZW5PaG+wjhi
-	 LhbtTGCru8J397Ip4cXNf/DpS8cmQtbDX+H6s8Kpgj3Mu90/ZpX6JY5nvD/HAvamRY
-	 SpfljUq2si7zy9iZlHz6qGeEWFkbWTiM1HpFSy5Q=
+	by mail.kernel.org (Postfix) with ESMTP id B8D5822527
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:44:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="tQGNABCD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgA0Vns (ORCPT
+        id S1726442AbgA0Vo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 16:43:48 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46173 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgA0Vns (ORCPT
+        Mon, 27 Jan 2020 16:44:28 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37393 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgA0Vo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 16:43:48 -0500
-Received: by mail-qk1-f194.google.com with SMTP id g195so11213874qke.13
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:43:47 -0800 (PST)
+        Mon, 27 Jan 2020 16:44:28 -0500
+Received: by mail-pj1-f66.google.com with SMTP id m13so61543pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:44:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=NzXG/7+t4gU9Sf61zMQ5YpD603YCkykS7cDqssBMxGY=;
-        b=AI87KH1fVC8eU4sMwpBbVdNJCOcTKRKvR3Wvd8Y5h21oyWcMkviHKVZU0DVCra35l2
-         2Z2lcMM+VtRi6I7k74FGzqzcr7jz9iHuSeMMdKtsaUXrvSAYVsjZpKjM41yKoQ3cCjpV
-         vFoj1q4B1zhGA4u7lMHLNzOyHNtxE/uXVEENIFkr/hswVYGD1rDis6sc6gjrZFdsBAl3
-         zBABE8rbeXtYxegxuWIFjELCzFdiGJBrT04ZB8V1RB++8KwR5lQtrJXpXePBkaC68yg/
-         y0d+cyjENukTnTpHPYPUHDeBRLbdBtZK+xiFwNoLwiwJqjtQZ8lqJyrJklR52FRTehtd
-         IfIA==
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=NIYktGbQFRRrHfXcPb/QZqRl6NaKxGUuwfJVRc0d2vQ=;
+        b=tQGNABCDpTdcpSb7COIrfXy3SP1WvpdXNEm5qNIYkV3FwkNcM5uGSjbWdlZLyWLvId
+         4LkQFP3wal+Bw5WmqBbeqPD9wj+82xFrp9qzry0ClG8G23oSbPmYVUyqwwgWpN4uAH3w
+         wSC5TObiadfadsW9V3ty9Aaxggymj/AMwRNXM+NJgNeRoQCLdb0/jyi3V6W6BX4ej3f8
+         R9RLdo5knl0WNBtwUCJvtVkaEdb6ur2q44Xw2TSPoYpPWbcuzk2E09wQBTiOmoUd0IWH
+         elUJeZYhwi/dUhwHmq3HXrS9KjYKqYIrbrRZiKX+/E5kNdVIzKpjnvbTRt7/yqjYSktk
+         5+jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=NzXG/7+t4gU9Sf61zMQ5YpD603YCkykS7cDqssBMxGY=;
-        b=E9bvkNutc/+cA/1V/Vo6ZTBRgzRHsD2uH+kQuih5yMW5cNFwda30H5eT5BrDc6l0u9
-         c6IUKtbWBjnyoBcd9xktPDNGIhh/EFuZaKVKUK5+FiNpjIdN/jJ01Ol8K25cakChZkX8
-         GfgPk1ANE+tsRDdcyTVERQHt28gojbrzShV6v2tvD7X9CT/s0mgy8mB+vugXaARs0peR
-         bwMYDipf0FjefiJo3EL/nSNwVlRiTCcyEeqwb0r7atX1PHlEzlv3pACK17aq+rqIYEB2
-         vn3S7sIP1YiAQjUG7lKt8n120a/mKhpHptB+0vXgxACQBnjwI15sRFMb4yVxE1jUXske
-         s4kA==
-X-Gm-Message-State: APjAAAVZBUem7031b+RO5DFwLS84bvX6cets2R7NxRh9QP8edlse7gG4
-        e6GbEkrNHw6EV1FaSVDbPMM=
-X-Google-Smtp-Source: APXvYqwX1s9+uT86YADD+arAvKSWs/ixLP18yeAECd1XZxMBaYXLJoLNsgYCiCuxp2i2pi16dXzaPQ==
-X-Received: by 2002:a05:620a:a10:: with SMTP id i16mr18361361qka.205.1580161426874;
-        Mon, 27 Jan 2020 13:43:46 -0800 (PST)
-Received: from localhost ([2620:10d:c091:480::19d])
-        by smtp.gmail.com with ESMTPSA id v2sm11229378qto.73.2020.01.27.13.43.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 13:43:46 -0800 (PST)
-Date:   Mon, 27 Jan 2020 16:43:45 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [GIT PULL] workqueue changes for v5.6-rc1
-Message-ID: <20200127214345.GB180576@mtj.thefacebook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=NIYktGbQFRRrHfXcPb/QZqRl6NaKxGUuwfJVRc0d2vQ=;
+        b=n1FY7hzMwN4K3Kkn86U66Flf1VEjZfk+40INi/zFKEKViwxsrtARPBt+M+DjSNce3l
+         cYPdNwiSe2iOsO4tqofLrwXrbhG1/WfG/8Un2VFdgNgq40Me+aSWl2nSEx4T2TyKBBfk
+         vzuRpKqgRHPbg1VTV6IyLQLtdmBCAzb/w6sMYtJVMkrPxDqEnujOYF60o5rhPM7zmFUY
+         t1Y6P96ZlGjcOjnAH9G39SU7Y8pCdWsQ+vLcybM3h/BCRovvAgiY93qWXvvPCvpvW+H/
+         Hp4Fn1WitW1rrnOU4PguLr5WbtxR8CnsUZ9og69oVMLvPVf7gKPgUT4IMlQ4a40WepUn
+         mZfg==
+X-Gm-Message-State: APjAAAXUHJpHk6iFI2pqZnUSGVoLpmvzmxj+pWjWkgPnAcquAIdrifEE
+        X3+uGHanPC7lhwbxS4Akg7ojXA==
+X-Google-Smtp-Source: APXvYqxPuBJV+fnhH+Z7hF6Rdg5We8tYNhEYi7c5NDIFGOliwTO1m2tdEiM/En0yIJVBjFW3eJQ9gw==
+X-Received: by 2002:a17:902:b116:: with SMTP id q22mr12135698plr.255.1580161467716;
+        Mon, 27 Jan 2020 13:44:27 -0800 (PST)
+Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id c188sm17449401pga.83.2020.01.27.13.44.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Jan 2020 13:44:26 -0800 (PST)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <6A331F39-D25C-4970-9A6D-229B24E25D37@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_FC8648D5-C226-47DD-B87E-B1954A66C291";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [RFC PATCH] ext4: remove code that does not perform much
+ optimization in find_group_orlov
+Date:   Mon, 27 Jan 2020 14:44:24 -0700
+In-Reply-To: <20200127101352.35170-1-fishland@aliyun.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        liu.song11@zte.com.cn
+To:     Liu Song <fishland@aliyun.com>
+References: <20200127101352.35170-1-fishland@aliyun.com>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Linus.
 
-Just a couple tracepoint patches.
+--Apple-Mail=_FC8648D5-C226-47DD-B87E-B1954A66C291
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Thanks.
+On Jan 27, 2020, at 3:13 AM, Liu Song <fishland@aliyun.com> wrote:
+>=20
+> From: Liu Song <liu.song11@zte.com.cn>
+>=20
+> Even if "best_ndir" has already taken the final value, it still
+> needs to traverse all the block groups. It is better to simplify
+> the code and increase readability.
+>=20
+> Signed-off-by: Liu Song <liu.song11@zte.com.cn>
+> ---
+> fs/ext4/ialloc.c | 15 +++------------
+> 1 file changed, 3 insertions(+), 12 deletions(-)
+>=20
+> @@ -447,17 +447,8 @@ static int find_group_orlov(struct super_block =
+*sb, struct inode *parent,
+> 		int best_ndir =3D inodes_per_group;
+> 		int ret =3D -1;
+>=20
+> -		if (qstr) {
+> -			hinfo.hash_version =3D DX_HASH_HALF_MD4;
+> -			hinfo.seed =3D sbi->s_hash_seed;
+> -			ext4fs_dirhash(parent, qstr->name, qstr->len, =
+&hinfo);
+> -			grp =3D hinfo.hash;
+> -		} else
+> -			grp =3D prandom_u32();
+> -		parent_group =3D (unsigned)grp % ngroups;
+> 		for (i =3D 0; i < ngroups; i++) {
+> -			g =3D (parent_group + i) % ngroups;
+> -			get_orlov_stats(sb, g, flex_size, &stats);
+> +			get_orlov_stats(sb, i, flex_size, &stats);
 
-The following changes since commit 95e20af9fb9ce572129b930967dcb762a318c588:
+It isn't clear to me that this is an improvement?  This means that *all*
+new group allocations will start searching at group =3D 0, which will
+increase contention on the early block groups.  With the current code,
+the starting block group is distributed across the filesystem, as it
+is possible that there are multiple groups that have the same score.
 
-  Merge tag 'nfs-for-5.5-2' of git://git.linux-nfs.org/projects/anna/linux-nfs (2020-01-14 13:33:14 -0800)
+We might consider to improve the group selection for non-rotational =
+storage,
+since we don't care as much about groups on the inner vs. outer tracks.
 
-are available in the Git repository at:
+Cheers, Andreas
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-5.6
 
-for you to fetch changes up to e8ab20d9bcb3e98b3e205396a56799b276951b64:
 
-  workqueue: remove workqueue_work event class (2020-01-15 08:02:59 -0800)
 
-----------------------------------------------------------------
-Daniel Jordan (2):
-      workqueue: add worker function to workqueue_execute_end tracepoint
-      workqueue: remove workqueue_work event class
 
- include/trace/events/workqueue.h | 50 ++++++++++++++++++++++------------------
- kernel/workqueue.c               |  2 +-
- 2 files changed, 29 insertions(+), 23 deletions(-)
 
--- 
-tejun
+--Apple-Mail=_FC8648D5-C226-47DD-B87E-B1954A66C291
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl4vWbkACgkQcqXauRfM
+H+A93w/9HGfjLVk3r96fB42sDfdXa3phtxxvdhGJmAECpeSI8mOkakpEfa5QDuww
+fqcduAtfmgZianO5uKBtsOgkC9TVlZyTmv0/wHAcf2spw52Mgo7Bh+U955KhU089
+wNReXH8JvaFRTE/9/+iAKP4FZ5JV7ZKwAHyeLI+aUCf/MK02LvbpqxYZ6CkVt+Io
+96k5C3iHO+yNAT2g6wHISUyOsp0EZ7NNHqdH42Ry1lJG3RugmAcYYxJCPIShBwoq
+BRhUcdpXquCFRxXLkg6D3VrcKKdhd0qY59sRSIF9xgNDXo2AgGbKnDGEEz4QgSmw
+6LDlTEHh+PKf5zRsk186Irq275uY1VeXqMm+as985123n+ZH8WdXmSWnFyG8+k8c
+db3IOxR54Amjxe8vTh5xnEwEOGyxaxqN7Ggwy451KKW8tpUt8PnNhGVEcYwe5yqi
+PZI/I69xfjJ+IpQgtuBD/AoaagVmT5cDm9fVfDY3BDjwKPYGHkWu95Uh5rN55+o+
+1ABBktj6+oNuLYNh8t2hoLIXNTTq0xbumGV6nmcqcQ99zqGKHXMtfKPKa3MPQw/R
+6fFRR/LN5ltO9XsfHFEBCgXcX3RfC+CecyPC6vOXslkOisoY94XUdgqQPOlBEdpc
+mslgaYu015tvt04iYqa+NqTwv0YGxbfwgIQCzWliXT6RZJs9884=
+=FPmG
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_FC8648D5-C226-47DD-B87E-B1954A66C291--
