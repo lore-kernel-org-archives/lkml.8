@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36719C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28170C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D32E214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02F1214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:57:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/0JK8rL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkeYz8H9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgA0Q5K (ORCPT
+        id S1726758AbgA0Q5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:57:10 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35700 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0Q5H (ORCPT
+        Mon, 27 Jan 2020 11:57:13 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:56073 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgA0Q5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:57:07 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i23so5180010pfo.2;
-        Mon, 27 Jan 2020 08:57:06 -0800 (PST)
+        Mon, 27 Jan 2020 11:57:10 -0500
+Received: by mail-pj1-f65.google.com with SMTP id d5so3172128pjz.5;
+        Mon, 27 Jan 2020 08:57:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PRvyPinTl56WwRZm2jsRHtlpDEBNkMeEQKYla1GuCIw=;
-        b=b/0JK8rLW0meh5MIeuVFHvWBBpCn1O29dxZ03qSEmxyll1+Gc6RA5Me90MYDUBFVsc
-         VbETHo0zOMkTQzUUI22zwbKXZiXcAcZ0vsao/8V98Ykai6kvARj/JsS3DXgIKRXQH9ic
-         YjHPPkk1Ga6FKSq0bJI2jIqQkXifeoG32YQjLrRmEzmy3XCElhKbTk3monR/QRQr+KdY
-         IB9dqWNadIYPxFQ3KCmPEIGs+W+NQJezHgDeUeyOLcOsIh/oDDNJJLdYKbmY6dF8lkQs
-         /6obPj6nAREV1wkRCf0mRQble+phLko1xBy5t2O4qzPwHxImIuEKUjxCRPgpXkVdiv0N
-         dVUA==
+        bh=y820Lp2M/a5OhA2vLH1uw/txeBMDoNX2HSIoVGLcKRY=;
+        b=rkeYz8H9ByzmIZ/+BUIIXj3MuldJXN0xDafK/yD7IaJlWrNmw0ax8iEbv/d7yHS3UU
+         JULrp1Z27UYjL0LlrPm3XT5fgVmhwrAwu4C0GPHWBIsF8rlBpjB+2xVF6A3U3YzZwdhf
+         yqLNmDBWFdcrZOMZH6yZkbkiFziA5X5n542IlkcVPZJV7sj0zWaQh/6hDugDPT6Ifv0e
+         6jWh6LaH1A4hQhRtQmVbgvoyYobC4/3Krd0Fmy9pUBMKZ+nWax+caO4dRo3zHAoQS2dz
+         ai+7XRy34bgJGTc92nIgANvToQ40RTuQZXnfEwk4ulg8SD26gRL3li0Z1V5ataFLtd2A
+         TfCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PRvyPinTl56WwRZm2jsRHtlpDEBNkMeEQKYla1GuCIw=;
-        b=AbjqNJrzx+iKkIH90TM1Y/Al5DVyLhqkx8kkp29+WoWomDEaQTJ5/8CHE5ZPUw2NDj
-         CDo+MyXouX5mdJscz0UhMfk/oO7mv0UcWuqzKpN/OKIjv7pKrB0RyLMSgJkTvQxHicE8
-         otExeLie9IeAsKKF5EL+sr9iYK/iBPCDPZJqlb4kGV5slre41340G2Zsvs1RWHCrr3Aa
-         ApdJ8luUxmxyuRL7NWQygfHI43XxSCDLIlsgLLicFHsAA4QhdY+mJgQwCTKaD4unQYpP
-         1ashDhAX25MtQFqTV76M8qxPFcpEtt1fCp2jfFmIi3qM3cMnkNye/ORLX4OV9OBw6keg
-         wP/w==
-X-Gm-Message-State: APjAAAVwV5aiIYDTPOn7ybZrw6XVzpR8y3r8+FwrPy+5tkDoRkWbTYKq
-        Hl7dLV5IQY7OjZipHyIleoXc3rPm
-X-Google-Smtp-Source: APXvYqyXsf4V2K/sgqhMu7zKf/lgK1gLTBOUt2bvgQzvui+PFHJq4tiRWQR+BilWnYd0eETdexVbew==
-X-Received: by 2002:a63:3487:: with SMTP id b129mr20431160pga.320.1580144226195;
-        Mon, 27 Jan 2020 08:57:06 -0800 (PST)
+        bh=y820Lp2M/a5OhA2vLH1uw/txeBMDoNX2HSIoVGLcKRY=;
+        b=gpVu61cxb7vpNIi9rByLkVsj8wthAc3wq6glpmG7bhDyHxvHGEp/SxOvcUvtHC0enj
+         YZPqEOcfiwM5b8iXCpVOgMtfqBPeIqqbuGPItWL3PGqkgA038gmr4trjMAFnJyeB62O+
+         cYN41mtSNB6BFcfZzpp3Alg7eE+/fyw6lCTLNq8faValagBpmXp2ZaiC9E3sR6IBRYUW
+         CKCL8F6qoupda51aETUvNgotx8hMEhCrTqv1e2U8ht2A2QAT6IOqden2kqbtD9i5SXER
+         Yf4jCUAlb5QctgaiHV0rbHoDLw3tcUaLSUoECne2HbuZPRdu/DEPOOKDA2N/ugBsFP5s
+         3TOg==
+X-Gm-Message-State: APjAAAW7rEClKK45DIkz1PMpGhY5RUub/GHXv1TK47XlxXbKK1gom5sh
+        xGPXZomrOBvhqVV/2oU8uZiDnf/U
+X-Google-Smtp-Source: APXvYqxTj85P9NypyXFitpnioyZBt5er1aZDrGKs3oXQUgNJpVopnFxNW3w1k7b7yxVZxIpqhzKxZQ==
+X-Received: by 2002:a17:902:8341:: with SMTP id z1mr18050363pln.178.1580144229226;
+        Mon, 27 Jan 2020 08:57:09 -0800 (PST)
 Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
-        by smtp.gmail.com with ESMTPSA id u23sm16368642pfm.29.2020.01.27.08.57.04
+        by smtp.gmail.com with ESMTPSA id u23sm16368642pfm.29.2020.01.27.08.57.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 08:57:05 -0800 (PST)
+        Mon, 27 Jan 2020 08:57:08 -0800 (PST)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-crypto@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -64,11 +64,11 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 1/9] crypto: caam - allocate RNG instantiation descriptor with GFP_DMA
-Date:   Mon, 27 Jan 2020 08:56:38 -0800
-Message-Id: <20200127165646.19806-2-andrew.smirnov@gmail.com>
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Subject: [PATCH v7 3/9] crypto: caam - use devm_kzalloc to allocate JR data
+Date:   Mon, 27 Jan 2020 08:56:40 -0800
+Message-Id: <20200127165646.19806-4-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200127165646.19806-1-andrew.smirnov@gmail.com>
 References: <20200127165646.19806-1-andrew.smirnov@gmail.com>
@@ -80,8 +80,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Be consistent with the rest of the codebase and use GFP_DMA when
-allocating memory for a CAAM JR descriptor.
+Use devm_kzalloc() to allocate JR data in order to make sure that it
+is initialized consistently every time.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Healy <cphealy@gmail.com>
@@ -89,33 +89,24 @@ Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: Horia Geantă <horia.geanta@nxp.com>
 Cc: Herbert Xu <herbert@gondor.apana.org.au>
 Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc: linux-imx@nxp.com
 Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
+Cc: linux-imx@nxp.com
 ---
- drivers/crypto/caam/ctrl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/caam/jr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 6659c8d9672e..a11c13a89ef8 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -194,7 +194,7 @@ static int deinstantiate_rng(struct device *ctrldev, int state_handle_mask)
- 	u32 *desc, status;
- 	int sh_idx, ret = 0;
+diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
+index fc97cde27059..a627de959b1e 100644
+--- a/drivers/crypto/caam/jr.c
++++ b/drivers/crypto/caam/jr.c
+@@ -505,7 +505,7 @@ static int caam_jr_probe(struct platform_device *pdev)
+ 	int error;
  
--	desc = kmalloc(CAAM_CMD_SZ * 3, GFP_KERNEL);
-+	desc = kmalloc(CAAM_CMD_SZ * 3, GFP_KERNEL | GFP_DMA);
- 	if (!desc)
- 		return -ENOMEM;
- 
-@@ -271,7 +271,7 @@ static int instantiate_rng(struct device *ctrldev, int state_handle_mask,
- 	int ret = 0, sh_idx;
- 
- 	ctrl = (struct caam_ctrl __iomem *)ctrlpriv->ctrl;
--	desc = kmalloc(CAAM_CMD_SZ * 7, GFP_KERNEL);
-+	desc = kmalloc(CAAM_CMD_SZ * 7, GFP_KERNEL | GFP_DMA);
- 	if (!desc)
+ 	jrdev = &pdev->dev;
+-	jrpriv = devm_kmalloc(jrdev, sizeof(*jrpriv), GFP_KERNEL);
++	jrpriv = devm_kzalloc(jrdev, sizeof(*jrpriv), GFP_KERNEL);
+ 	if (!jrpriv)
  		return -ENOMEM;
  
 -- 
