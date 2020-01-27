@@ -2,108 +2,94 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52FFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80612C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A85622087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:46:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GOimjhJ6"
+	by mail.kernel.org (Postfix) with ESMTP id 52AEA206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbgA0LqN (ORCPT
+        id S1730352AbgA0LrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:46:13 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:34930 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729724AbgA0LqN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:46:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=py0/AUeA9tDP937GDApbDIhhJ7mPRllvuk6jqlAolLw=; b=GOimjhJ60sQTWMTcrsW+8/RXc
-        I/aWpmkEN1wmeFYPsQY7wYMww/awb5QDQvVADkiDJ8Kkq8Php4f3d88i2W9V47tt++YlKWm9XXY1W
-        WF5JpCLsAOk26UM8d6w4yKz+u2VydMbhoIV/8rlUAxiJzHFEt0EL9fuYggga9AAAgbMlT3aI2iR3b
-        NXnUV9CoULdc5yTeNdth7mWTKstGISo1EUfc/a7tX1Fka7NruUDvVsnhWBAJ1FzbLutTDXGyXzQo4
-        Ont9UQf1UtnTB+ofsYzuMZTTWFeev5RFoAtVlW3yhao9YTXbDBcJbzTolNMYK8CICjggq8hEM1G8j
-        T+tWanbag==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60536)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iw2qC-00011S-Lg; Mon, 27 Jan 2020 11:46:04 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iw2q8-0001NE-Ro; Mon, 27 Jan 2020 11:46:00 +0000
-Date:   Mon, 27 Jan 2020 11:46:00 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200127114600.GU25745@shell.armlinux.org.uk>
-References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
- <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
- <20200127112102.GT25745@shell.armlinux.org.uk>
- <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
+        Mon, 27 Jan 2020 06:47:23 -0500
+Received: from mga12.intel.com ([192.55.52.136]:12783 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbgA0LrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 06:47:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 03:47:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,369,1574150400"; 
+   d="scan'208";a="221709913"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 27 Jan 2020 03:47:20 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id DF8B1286; Mon, 27 Jan 2020 13:47:19 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 3/5] console: Use for_each_console() helper in unregister_console()
+Date:   Mon, 27 Jan 2020 13:47:17 +0200
+Message-Id: <20200127114719.69114-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
+References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 11:38:05AM +0000, Jose Abreu wrote:
-> From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> Date: Jan/27/2020, 11:21:02 (UTC+00:00)
-> 
-> > On Mon, Jan 27, 2020 at 12:09:11PM +0100, Jose Abreu wrote:
-> > > When we don't have any real PHY driver connected and we get link up from
-> > > PCS we shall configure MAC and PCS for the desired speed and also
-> > > resolve the flow control settings from MAC side.
-> > 
-> > This is certainly the wrong place for it.  Please hold off on this patch
-> > for the time being.  Thanks.
-> 
-> This is actually the change that makes everything work ...
-> 
-> I need to configure PCS before Aneg is complete and then I need to 
-> configure MAC once Aneg is done and link is up with the outcome speed and 
-> flow control.
+We have rather open coded single linked list manipulations where we may
+simple use for_each_console() helper with properly set exit conditions.
 
-Yes, I realise that, but it comes with the expense of potentially
-breaking mvneta and mvpp2, where the settings are automatically
-passed between the PCS and MAC in hardware. I also believe DSA
-works around this, and I need to look at that.
+Replace open coded single-linked list handling with for_each_console()
+helper in use.
 
-However, right now I'm in the middle of rebasing my git tree on
-top of v5.5 and can't say much more until I've finished that.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v3: no changes
+ kernel/printk/printk.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 51337ed426e0..d40a316908da 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2809,7 +2809,7 @@ EXPORT_SYMBOL(register_console);
+ 
+ int unregister_console(struct console *console)
+ {
+-        struct console *a, *b;
++	struct console *con;
+ 	int res;
+ 
+ 	pr_info("%sconsole [%s%d] disabled\n",
+@@ -2825,11 +2825,10 @@ int unregister_console(struct console *console)
+ 	if (console_drivers == console) {
+ 		console_drivers=console->next;
+ 		res = 0;
+-	} else if (console_drivers) {
+-		for (a=console_drivers->next, b=console_drivers ;
+-		     a; b=a, a=b->next) {
+-			if (a == console) {
+-				b->next = a->next;
++	} else {
++		for_each_console(con) {
++			if (con->next == console) {
++				con->next = console->next;
+ 				res = 0;
+ 				break;
+ 			}
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.24.1
+
