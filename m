@@ -2,148 +2,110 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0DDC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042D3C33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF22B20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC77C20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:45:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRL0v/bF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgA0Nps (ORCPT
+        id S1728981AbgA0Np4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:45:48 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:36180 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgA0Npr (ORCPT
+        Mon, 27 Jan 2020 08:45:56 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41481 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0Np4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:45:47 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id C153C3C00C5;
-        Mon, 27 Jan 2020 14:45:43 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 736QoBKuGmnG; Mon, 27 Jan 2020 14:45:38 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 862CA3C009E;
-        Mon, 27 Jan 2020 14:45:38 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 27 Jan
- 2020 14:45:38 +0100
-Date:   Mon, 27 Jan 2020 14:45:35 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Petr Mladek <pmladek@suse.com>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Dean Jenkins <dean_jenkins@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-Message-ID: <20200127134535.GA4439@lxhi-065.adit-jv.com>
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
- <20200120230522.GA23636@lxhi-065.adit-jv.com>
- <87v9p4mkhr.fsf@linutronix.de>
- <20200122023422.GA926@lxhi-065.adit-jv.com>
- <CAMuHMdXT9USuHw15nA1mLXsh7RKK68eN0phevC_Jauaa7FnW0Q@mail.gmail.com>
- <20200122165855.GA3485@lxhi-065.adit-jv.com>
- <CAMuHMdWzapJ+5Jtf5fPQGP5edzCUfMeQA7v3GVWbKKvR=aXSsg@mail.gmail.com>
- <20200124160929.GA10863@lxhi-065.adit-jv.com>
- <20200127123249.t7agkht3ddgetfhf@pathway.suse.cz>
+        Mon, 27 Jan 2020 08:45:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c9so11351490wrw.8;
+        Mon, 27 Jan 2020 05:45:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z8wEogbygRvbp++ia3Wid/2+2KW6gEIuAoacWgq7qzc=;
+        b=cRL0v/bFbFZAZhiad103inFwPBpqos0ja22iRbW+dOrWsh74BdcetI5WcSEMSIEinN
+         KRB2F9FP/e13dq+bJQOy8yLRxlAxblXwQqV5mFUfJjqOFbU7/JluNgf1+7LCN3efoQF7
+         dYSFNXoV8vA3I5e2vgVtt2uoYTFqTs+14rfvZX2JnD3KE/s6Am2NCl8E+HoUWheX+2WT
+         zILZAJz7ve7m06cyTDMfzUgPY5x/NOUYZWnJx+JHRRa69Du994Hkyje/Fti4dGaulGTY
+         7UedkXMUiNgdJSWFCW6aq4xzq+/Vh2uZcqXvBU4KaW2sXgRTaG7HHNqq20zMGwDQrr+2
+         iddg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z8wEogbygRvbp++ia3Wid/2+2KW6gEIuAoacWgq7qzc=;
+        b=aYTOwWsyzqgAAiZrxUPiXXl+3oofxiZEpUu4S8TaVKgUlX3+z+c9YqzuXjeI6zXGd4
+         tAkxmbsecjtI89Nbk/LR6lvtQarxpuR9onymqkd3G46e26uibcJHURlfVC3Rr9MyGux4
+         MeFH5k/P89KhyGUpBrdbD6gcATecwOhdv1qIR92kzaKgD9kEUWKxiQqN8PpnTVoefJrX
+         WO2w7+KPycY7xvBq5zT8T7jeyZIvPjCQpbNTDkeNYqlgQdB0ju7ugEPpSWtPwXD9nHkG
+         uCm2bcVCaDps9JaNKayHl6732gqEBu9MO9Y1zu+DaFZlKSfhanfXtJwkuhVjEIaetI1j
+         q5NQ==
+X-Gm-Message-State: APjAAAWbHPk7eU570C2he22ueHjGIoZbHKz04Cwk8XPtO7D+xKvNprYB
+        +HWcH9N0jvFc9gCWHChEj94OZxBTZl0ClZRUVZI=
+X-Google-Smtp-Source: APXvYqy9UtPthtDDo0IABzhU454S5hEjWywRyR/c9pHdOIJGh/RDB5dsYOSfJOcmnuriBjgxgc/EA/GA1SCGsaQXAtc=
+X-Received: by 2002:adf:ea42:: with SMTP id j2mr20895943wrn.270.1580132754034;
+ Mon, 27 Jan 2020 05:45:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200127123249.t7agkht3ddgetfhf@pathway.suse.cz>
-X-Originating-IP: [10.72.93.66]
+References: <20200108154047.12526-1-andrew.smirnov@gmail.com>
+ <20200108154047.12526-7-andrew.smirnov@gmail.com> <VI1PR0402MB3485B3F4C3E39D0D94A1D8C6980D0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <VI1PR0402MB3485015AD186F00B258F76D4980C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB3485015AD186F00B258F76D4980C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Mon, 27 Jan 2020 05:45:42 -0800
+Message-ID: <CAHQ1cqG185EmhTYGwfm4LBrhbX1ibACaTAjZ5UnZ5uYx+o88HQ@mail.gmail.com>
+Subject: Re: [PATCH v6 6/7] crypto: caam - enable prediction resistance in HRWNG
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+On Wed, Jan 22, 2020 at 5:37 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 1/21/2020 6:38 PM, Horia Geanta wrote:
+> > On 1/8/2020 5:42 PM, Andrey Smirnov wrote:
+> >> @@ -275,12 +276,25 @@ static int instantiate_rng(struct device *ctrldev, int state_handle_mask,
+> >>              return -ENOMEM;
+> >>
+> >>      for (sh_idx = 0; sh_idx < RNG4_MAX_HANDLES; sh_idx++) {
+> >> +            const u32 rdsta_if = RDSTA_IF0 << sh_idx;
+> >> +            const u32 rdsta_pr = RDSTA_PR0 << sh_idx;
+> >> +            const u32 rdsta_mask = rdsta_if | rdsta_pr;
+> >>              /*
+> >>               * If the corresponding bit is set, this state handle
+> >>               * was initialized by somebody else, so it's left alone.
+> >>               */
+> >> -            if ((1 << sh_idx) & state_handle_mask)
+> >> -                    continue;
+> >> +            if (rdsta_if & state_handle_mask) {
+> >> +                    if (rdsta_pr & state_handle_mask)
+> > instantiate_rng() is called with
+> >       state_handle_mask = rd_reg32(&ctrl->r4tst[0].rdsta) & RDSTA_IFMASK;
+> > so if (rdsta_pr & state_handle_mask) will always be false,
+> > leading to unneeded state handle re-initialization.
+> >
+> Sorry, I missed this change:
+> -#define RDSTA_IFMASK (RDSTA_IF1 | RDSTA_IF0)
+> +#define RDSTA_IFMASK (RDSTA_PR1 | RDSTA_PR0 | RDSTA_IF1 | RDSTA_IF0)
+>
+> which means code is correct (though I must admit not so intuitive).
 
-Thank you for your insights.
+Renamed this to RDSTA_MASK in v7, to, hopefully make things more clear.
 
-On Mon, Jan 27, 2020 at 01:32:49PM +0100, Petr Mladek wrote:
-> On Fri 2020-01-24 17:09:29, Eugeniu Rosca wrote:
-> > On Wed, Jan 22, 2020 at 08:48:12PM +0100, Geert Uytterhoeven wrote:
-> > > On Wed, Jan 22, 2020 at 5:59 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> > > > On Wed, Jan 22, 2020 at 08:31:44AM +0100, Geert Uytterhoeven wrote:
-> > > > > On Wed, Jan 22, 2020 at 3:34 AM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> > > > > > So, what's specific to R-Car3, based on my testing, is that the issue
-> > > > > > can only be reproduced if the printk storm originates on CPU0
-> > 
-> > Slight amendment the above statement. Below results are got on R-Car
-> > H3ULCB running renesas-drivers-2020-01-14-v5.5-rc6 (cX stands for CPUx,
-> > whitespace stands for clean audio, '!' stands for distorted audio):
-> > 
-> >                   printk @:
-> >                   c0 c1 c2 c3 c4 c5 c6 c7
-> > speaker-test @ c0 !
-> >                c1 !  !
-> >                c2 !     !
-> >                c3 !        !
-> >                c4 !           !
-> >                c5 !              !
-> >                c6 !                 !
-> >                c7 !                    !
-> > 
-> > One can see two patterns in the chart. The audio has glitches whenever:
-> >  - printk and the audio application run on the same CPU, or:
-> >  - printk runs on CPU0
-> 
-> The proper longterm solution seems to be offloading printk console
-> handling to a kthread so that it can be bound to a particular CPU
-> and does not block audio.
-
-Same understanding here. I don't think this is possible w/o the full
-switch to the kthread-based concept proposed in this series (I sought
-an easier way out, but failed).
-
-Even after pinning the printk kthread to CPUn, we still accept living
-with the huge latencies of the console drivers on CPUn. To avoid audio
-glitches being caused by the serial console, userspace would need to
-additionally blacklist CPUn from any RT workloads by setting the core
-affinity of audio applications appropriately.
-
-The above imposes certain constraints on the CPU partitioning in the
-system, but that's the most mainline-friendly solution I can think of.
-Any alternative views would be appreciated.
-
-> 
-> Anyway, there is a question whether you really need to send all messages
-> via the serial console. It might make sense to filter less important
-> messages using "loglevel=" or "quiet" kernel parameters. The full
-> log can be read later from userspace (dmesg, syslog, /dev/kmsg).
-> Filtering can get disabled when debugging non-booting kernel.
-> In this case, a distorted audio is the least problem.
-
-This has been discussed in detail with the reporters of the issue.
-Yes, it might be an infrequent requirement in general, but the goal
-is to achieve clean audio even (and specifically) with verbose
-serial console output.
-
--- 
-Best Regards
-Eugeniu Rosca
+Thanks,
+Andrey Smirnov
