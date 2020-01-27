@@ -2,229 +2,82 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CF9C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1135EC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784162168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:12:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J/KiaGAF"
+	by mail.kernel.org (Postfix) with ESMTP id D922E21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgA0JMW (ORCPT
+        id S1729188AbgA0JRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 04:12:22 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45238 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726267AbgA0JMW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 04:12:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580116339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=M9hxx9ozEZkaPTM1+VPDc3TWQ0gfjD9WZsQqXUI/VqM=;
-        b=J/KiaGAFukkx88bafFCbVW0yTDAmtSLkd218om/1Pq/cSzHdbLKszgaq5wCQQBFIAZiQKX
-        pxlmEPnWvEfva86E+ililIp05J/GkIvKRqSdkBkFipmthb0Tlj/ye2oc6PQXruIeigUrwk
-        nwaAMJ2es2nZJ6s2ny8fcBCAILSsGtw=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-PgKeydw9MLisRfpfk3eEGw-1; Mon, 27 Jan 2020 04:12:18 -0500
-X-MC-Unique: PgKeydw9MLisRfpfk3eEGw-1
-Received: by mail-qv1-f69.google.com with SMTP id g6so6077737qvp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 01:12:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=M9hxx9ozEZkaPTM1+VPDc3TWQ0gfjD9WZsQqXUI/VqM=;
-        b=Cjx7RcPya4W3LEZf2Tuf1bjG+J9mVoEGWoG+93VlPgBkJ08LG6XsM9XUc+456sTdIU
-         +O0eW11ewwnujBo8mK3enLPqTiRXPyTRCj0XogAVtUwJrSa5E63Kakf04Y+o3KLzkyws
-         PoP5k/FgIWcSzAzSNbsfDqpTM45BpqO+V6jxXTUHHvSZgpSHYEtLJRtC7cTE9SzAYusZ
-         4S1pqv/5BdJAyhFuJ4Hzzwh2HvKmRqVfG/BUu3EoCMCWYsQ/weeCcbR1qYQPMTqEpLes
-         z7bLNAUEBeJsrUimMWAbaNUKa3yVc0pRzvF/jfoVcAwwQSErEVFPdn1l6p0G+SkDYx0W
-         yEVw==
-X-Gm-Message-State: APjAAAU8pB3ftP+sde7QQk1VF8fRz1n7uf3oLKSiiosZgx2q/0ldjvkN
-        l6BqaA/8aKgWs8Gm90IJzShRhS8KjF5ZbKX1IrQHa98Y+niYZi+Lz1az0Cx+xcpGXOs5BAsWX2n
-        IFhcJMDR8bgeDeJ6oFCNi0rr8WtEis+5Vc+2wfzWD
-X-Received: by 2002:ac8:365c:: with SMTP id n28mr7847296qtb.260.1580116337679;
-        Mon, 27 Jan 2020 01:12:17 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzr6xug3BnUa3I0Ylf4L+XjMwNQRytDMt23oIEXtx/gEFXcaRoK7dGGiqQEcSKnoWu1R6ivcG4RuChkPRN+7W4=
-X-Received: by 2002:ac8:365c:: with SMTP id n28mr7847278qtb.260.1580116337395;
- Mon, 27 Jan 2020 01:12:17 -0800 (PST)
+        Mon, 27 Jan 2020 04:17:39 -0500
+Received: from mga04.intel.com ([192.55.52.120]:23622 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727306AbgA0JRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 04:17:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 01:17:39 -0800
+X-IronPort-AV: E=Sophos;i="5.70,369,1574150400"; 
+   d="scan'208";a="221679165"
+Received: from jpanina-mobl.ger.corp.intel.com (HELO localhost) ([10.252.52.12])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 01:17:35 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, joonas.lahtinen@linux.intel.com,
+        linux-kernel@vger.kernel.org, rodrigo.vivi@intel.com
+Subject: Re: [PATCH 0/2] drm/i915/gem: conversion to new drm logging macros
+In-Reply-To: <157996851987.2524.2577321446102599250@skylake-alporthouse-com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200122125750.9737-1-wambui.karugax@gmail.com> <157996851987.2524.2577321446102599250@skylake-alporthouse-com>
+Date:   Mon, 27 Jan 2020 11:17:37 +0200
+Message-ID: <871rrlcl72.fsf@intel.com>
 MIME-Version: 1.0
-References: <20200111192419.2503922-1-lains@archlinux.org> <aaca852e-cb31-2690-7f90-819ed673bacb@pedrovanzella.com>
-In-Reply-To: <aaca852e-cb31-2690-7f90-819ed673bacb@pedrovanzella.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Mon, 27 Jan 2020 10:12:06 +0100
-Message-ID: <CAO-hwJJwqXbJSTY2iEBTv3=N1_NaoHii6JvpA7_1oJUWQHZHag@mail.gmail.com>
-Subject: Re: [PATCH] HID: logitech-hidpp: BatteryVoltage: only read
- chargeStatus if extPower is active
-To:     Pedro Vanzella <pedro@pedrovanzella.com>
-Cc:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Jan 20, 2020 at 2:43 PM Pedro Vanzella <pedro@pedrovanzella.com> wr=
-ote:
+On Sat, 25 Jan 2020, Chris Wilson <chris@chris-wilson.co.uk> wrote:
+> Quoting Wambui Karuga (2020-01-22 12:57:48)
+>> This series is a part of the conversion to  the new struct drm_device
+>> based logging macros in drm/i915.
+>> This series focuses on the drm/i915/gem directory and converts all
+>> straightforward instances of the printk based logging macros to the new
+>> macros.
 >
-> On 1/11/20 4:24 PM, Filipe La=C3=ADns wrote:
-> > In the HID++ 2.0 function getBatteryInfo() from the BatteryVoltage
-> > (0x1001) feature, chargeStatus is only valid if extPower is active.
-> >
-> > Previously we were ignoring extPower, which resulted in wrong values.
->
-> Nice catch. Sorry for missing that the first time around.
->
-> >
-> > Example:
-> >      With an unplugged mouse
-> >
-> >      $ cat /sys/class/power_supply/hidpp_battery_0/status
-> >      Charging
->
-> Tested and it works as expected now.
+> Overall, I'm not keen on this as it perpetuates the mistake of putting
+> client debug message in dmesg and now gives them even more an air of
+> being device driver debug messages. We need a mechanism by which we
+> report the details of what a client did wrong back to that client
+> (tracefs + context/client getparam to return an isolated debug fd is my
+> idea).
 
-Thanks for the patch and the tests.
-
-Unfortunately, the merge window is already opened, and I'd rather not
-sneak this one right now. This patch doesn't seem very critical so I
-rather not annoy the other maintainers.
-I'll make sure it gets in the 5.6 final by pushing it into a rc when
-things are calmer for everybody.
-
-So the plan would be:
-- wait for the 'normal' 5.6 HID pull request to be sent
-- apply this one in for-5.6/upstream-fixes
-- sent this branch for either 5.6-rc1 or 5.6-rc2
-
-Cheers,
-Benjamin
+I don't disagree, but I also don't think this makes things (much) worse
+in that regard.
 
 >
-> >
-> > This patch makes fixes that, it also renames charge_sts to flags as
-> > charge_sts can be confused with chargeStatus from the spec.
-> >
-> > Spec:
-> > +--------+-------------------------------------------------------------=
-------------+
-> > |  byte  |                                    2                        =
-            |
-> > +--------+--------------+------------+------------+----------+---------=
--+----------+
-> > |   bit  |     0..2     |      3     |      4     |     5    |     6   =
- |     7    |
-> > +--------+--------------+------------+------------+----------+---------=
--+----------+
-> > | buffer | chargeStatus | fastCharge | slowCharge | critical | (unused)=
- | extPower |
-> > +--------+--------------+------------+------------+----------+---------=
--+----------+
-> > Table 1 - battery voltage (0x1001), getBatteryInfo() (ASE 0), 3rd byte
-> >
-> > +-------+--------------------------------------+
-> > | value |                meaning               |
-> > +-------+--------------------------------------+
-> > |   0   | Charging                             |
-> > +-------+--------------------------------------+
-> > |   1   | End of charge (100% charged)         |
-> > +-------+--------------------------------------+
-> > |   2   | Charge stopped (any "normal" reason) |
-> > +-------+--------------------------------------+
-> > |   7   | Hardware error                       |
-> > +-------+--------------------------------------+
-> > Table 2 - chargeStatus value
-> >
-> > Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
-> > ---
-> >   drivers/hid/hid-logitech-hidpp.c | 43 ++++++++++++++++---------------=
--
-> >   1 file changed, 21 insertions(+), 22 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitec=
-h-hidpp.c
-> > index bb063e7d48df..39a5ee0aaab0 100644
-> > --- a/drivers/hid/hid-logitech-hidpp.c
-> > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > @@ -1256,36 +1256,35 @@ static int hidpp20_battery_map_status_voltage(u=
-8 data[3], int *voltage,
-> >   {
-> >       int status;
-> >
-> > -     long charge_sts =3D (long)data[2];
-> > +     long flags =3D (long) data[2];
-> >
-> > -     *level =3D POWER_SUPPLY_CAPACITY_LEVEL_UNKNOWN;
-> > -     switch (data[2] & 0xe0) {
-> > -     case 0x00:
-> > -             status =3D POWER_SUPPLY_STATUS_CHARGING;
-> > -             break;
-> > -     case 0x20:
-> > -             status =3D POWER_SUPPLY_STATUS_FULL;
-> > -             *level =3D POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-> > -             break;
-> > -     case 0x40:
-> > +     if (flags & 0x80)
-> > +             switch (flags & 0x07) {
-> > +             case 0:
-> > +                     status =3D POWER_SUPPLY_STATUS_CHARGING;
-> > +                     break;
-> > +             case 1:
-> > +                     status =3D POWER_SUPPLY_STATUS_FULL;
-> > +                     *level =3D POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-> > +                     break;
-> > +             case 2:
-> > +                     status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
-> > +                     break;
-> > +             default:
-> > +                     status =3D POWER_SUPPLY_STATUS_UNKNOWN;
-> > +                     break;
-> > +             }
-> > +     else
-> >               status =3D POWER_SUPPLY_STATUS_DISCHARGING;
-> > -             break;
-> > -     case 0xe0:
-> > -             status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
-> > -             break;
-> > -     default:
-> > -             status =3D POWER_SUPPLY_STATUS_UNKNOWN;
-> > -     }
-> >
-> >       *charge_type =3D POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-> > -     if (test_bit(3, &charge_sts)) {
-> > +     if (test_bit(3, &flags)) {
-> >               *charge_type =3D POWER_SUPPLY_CHARGE_TYPE_FAST;
-> >       }
-> > -     if (test_bit(4, &charge_sts)) {
-> > +     if (test_bit(4, &flags)) {
-> >               *charge_type =3D POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
-> >       }
-> > -
-> > -     if (test_bit(5, &charge_sts)) {
-> > +     if (test_bit(5, &flags)) {
-> >               *level =3D POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
-> >       }
-> >
-> >
+>> Wambui Karuga (2):
+>>   drm/i915/gem: initial conversion to new logging macros using
+>>     coccinelle.
+>>   drm/i915/gem: manual conversion to struct drm_device logging macros.
 >
-> Tested-by: Pedro Vanzella <pedro@pedrovanzella.com>
-> Reviewed-by: Pedro Vanzella <pedro@pedrovanzella.com>
->
+> Still this is a necessary evil for the current situation,
+> Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
 
+Thanks, pushed both.
+
+BR,
+Jani.
+
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
