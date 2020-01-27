@@ -2,103 +2,104 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC697C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B4EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A622E2467B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895702465B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:07:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SW8fw8Kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgA0Vzh (ORCPT
+        id S1726323AbgA0WHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 16:55:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:49574 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbgA0Vzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 16:55:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DD1031B;
-        Mon, 27 Jan 2020 13:55:35 -0800 (PST)
-Received: from e123648.arm.com (unknown [10.37.12.150])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9E54B3F68E;
-        Mon, 27 Jan 2020 13:55:29 -0800 (PST)
-From:   lukasz.luba@arm.com
-To:     kgene@kernel.org, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        b.zolnierkie@samsung.com, lukasz.luba@arm.com,
-        dietmar.eggemann@arm.com
-Subject: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
-Date:   Mon, 27 Jan 2020 21:54:53 +0000
-Message-Id: <20200127215453.15144-4-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200127215453.15144-1-lukasz.luba@arm.com>
-References: <20200127215453.15144-1-lukasz.luba@arm.com>
+        Mon, 27 Jan 2020 17:07:31 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54948 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgA0WHb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 17:07:31 -0500
+Received: by mail-pj1-f66.google.com with SMTP id dw13so82321pjb.4;
+        Mon, 27 Jan 2020 14:07:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GzZ81ZEB3FexxpeWkdJYSX4VHFVl98wy55kAFWIKurk=;
+        b=SW8fw8Kv65E5kRPBcFxSq1S0yfzeKGhKoEbZ1/oV6Vr6tVcw3yiY2MgrPxThU0SMhe
+         /9mQQMByPwmz9jjzaCNcbc/khCZu4ghiWvJGdnfApwwnFrQyWePNJrNTmaxiRjk7k8h9
+         7vE76mphD8sVLefjs4Y3jVxzvgGTFPOHLrR36C5mLbkL5AwbmyWKUHg7ai9stXc4YP6E
+         1Nz1fv1UG/ZTi9CZuBSC9hXAD3vgLN5SX7/WX92Vdb1C2rSRXP9sjuGz7oA89yRt9o4J
+         kNkFabthAVJvkW9OFd/mhAcHXm1bCzDc+B5HeozdBtutwX+RFbbhcbCLBKqbU8rbQkQ+
+         cqlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GzZ81ZEB3FexxpeWkdJYSX4VHFVl98wy55kAFWIKurk=;
+        b=nZe/PRpFWvsK8Qp9NgnTXunj+Kv0Ml+KdNajLtIuv88GSNJraEb8vcDJ5IraBaIY4U
+         C6WvxfQDUnUE9kkhDH4xfK4RxSkhff56Oy0OcyWW7+zpqjqwcEezC1HGiCvtyRtrTO5J
+         b5RBR1MNg+XBhTpt4jS4gVx3ygvVKssHR2++4vE3ttwvFS/CoWL5xk/ZEzXsFR2QLsjH
+         wqaJgmKEpkdtdM3oij44YQaWG7IrGvYjo/dSjHYcRm/bP9XKEs6A9ebcaah6LP1wLbME
+         YMj0kOAO+tKWT9VOo+nzopucq6mw6F8JtyhGN+pOWkpY/xfgRHEUJ17L9PkfaP5DnBkP
+         5PjA==
+X-Gm-Message-State: APjAAAUYCF7cBQaLzxVMCxex1Ah+CPEXXzST23AgQCYmd74W2/8VeoZG
+        9HU9R/j1116Ht4HAEA4tEnUWwArJ
+X-Google-Smtp-Source: APXvYqy34ij2kuHrKL9gi6NW9NdItOwONjQSxznYbO41dtKKWoZpq+XV++EkUqQKcamDfhylXgFg9A==
+X-Received: by 2002:a17:902:a50d:: with SMTP id s13mr18863509plq.293.1580162850717;
+        Mon, 27 Jan 2020 14:07:30 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 3sm16651155pfi.13.2020.01.27.14.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 14:07:30 -0800 (PST)
+Date:   Mon, 27 Jan 2020 14:07:27 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, hadess@hadess.net,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yannick.fertre@st.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: touchscreen: Add touchscreen schema
+Message-ID: <20200127220727.GE184237@dtor-ws>
+References: <20200108091118.5130-1-benjamin.gaignard@st.com>
+ <20200108091118.5130-2-benjamin.gaignard@st.com>
+ <20200114233010.GA21560@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114233010.GA21560@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukasz Luba <lukasz.luba@arm.com>
+On Tue, Jan 14, 2020 at 05:30:10PM -0600, Rob Herring wrote:
+> On Wed, 8 Jan 2020 10:11:17 +0100, Benjamin Gaignard wrote:
+> > Add touchscreen schema for common properties
+> > 
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > ---
+> > version 2:
+> > - remove old definition in touchscreen.txt
+> > - add type for all properties
+> > - add dependencies between properties 
+> > 
+> >  .../bindings/input/touchscreen/touchscreen.txt     | 40 +----------
+> >  .../bindings/input/touchscreen/touchscreen.yaml    | 83 ++++++++++++++++++++++
+> >  2 files changed, 84 insertions(+), 39 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+> > 
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Enable the Energy Model (EM) brings possibility to use Energy Aware
-Scheduler (EAS). This compiles the EM but does not enable to run EAS in
-default. The EAS only works with SchedUtil - a CPUFreq governor which
-handles direct requests from the scheduler for the frequency change. Thus,
-to make EAS working in default, the SchedUtil governor should be
-configured as default CPUFreq governor. Although, the EAS might be enabled
-in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
-then set as CPUFreq governor, i.e.:
+Applied, thank you.
 
-echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
 
-To check if EAS is ready to work, the read output from the command below
-should show '1':
-cat /proc/sys/kernel/sched_energy_aware
-
-To disable EAS in runtime simply 'echo 0' to the file above.
-
-Some test results, which stress the scheduler on Odroid-XU3:
-hackbench -l 500 -s 4096
-With mainline code and with this patch set.
-
-The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
-(which is set to =y in default exynos_defconfig)
-
-		|		this patch set			| mainline
-		|-----------------------------------------------|---------------
-		| performance	| SchedUtil	| SchedUtil	| performance
-		| governor	| governor	| governor	| governor
-		|		| w/o EAS	| w/ EAS	|
-----------------|---------------|---------------|---------------|---------------
-hackbench w/ PL | 12.7s		| 11.7s		| 12.0s		| 13.0s - 12.2s
-hackbench w/o PL| 9.2s		| 8.1s		| 8.2s		| 9.2s - 8.4s
-
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- arch/arm/configs/exynos_defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-index 1db857056992..c0f8ecabc607 100644
---- a/arch/arm/configs/exynos_defconfig
-+++ b/arch/arm/configs/exynos_defconfig
-@@ -18,6 +18,7 @@ CONFIG_ZBOOT_ROM_BSS=0x0
- CONFIG_ARM_APPENDED_DTB=y
- CONFIG_ARM_ATAG_DTB_COMPAT=y
- CONFIG_CMDLINE="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc mem=256M"
-+CONFIG_ENERGY_MODEL=y
- CONFIG_CPU_FREQ=y
- CONFIG_CPU_FREQ_STAT=y
- CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
 -- 
-2.17.1
-
+Dmitry
