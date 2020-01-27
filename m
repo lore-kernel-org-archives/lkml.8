@@ -2,93 +2,90 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_96_XX,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDBAC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88E1C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D81E20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:42:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="omj1qmc/"
+	by mail.kernel.org (Postfix) with ESMTP id B623821741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgBFDms (ORCPT
+        id S1727717AbgBFDsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 22:42:48 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:23351 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726687AbgBFDmr (ORCPT
+        Wed, 5 Feb 2020 22:48:07 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:50120 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727415AbgBFDsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 22:42:47 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580960567; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=4+cz2Wd6BRjl/2klKhe4XJ41Ph8D75H9lUOHkMUlZCk=;
- b=omj1qmc/ZVx3o6bnAJxhIp6Oc1PaQba2M+6oR6vAAbcLaLE43FvHMW/TDiKV4yeHzPw2P7y9
- 2nOoEJQPT4njqjhYNwNspwy9ZWfDTcYvuZT8AnLQ6YwL6p/Dbym45tJCnuN5iejX0tbjbys4
- TT+s/nA54DiyJnoc46FNf2k2H14=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3b8b36.7f0940795458-smtp-out-n03;
- Thu, 06 Feb 2020 03:42:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0B04AC447AB; Thu,  6 Feb 2020 03:42:45 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 384A1C43383;
-        Thu,  6 Feb 2020 03:42:45 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 06 Feb 2020 11:42:45 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: ufs: Fix registers dump vops caused scheduling
- while atomic
-In-Reply-To: <1580886875-31967-1-git-send-email-cang@codeaurora.org>
-References: <1580886875-31967-1-git-send-email-cang@codeaurora.org>
-Message-ID: <e932a4129b6e6a957b33d3435069172d@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Wed, 5 Feb 2020 22:48:07 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=majun258@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TpFHoWM_1580960879;
+Received: from localhost(mailfrom:majun258@linux.alibaba.com fp:SMTPD_---0TpFHoWM_1580960879)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 06 Feb 2020 11:48:04 +0800
+From:   MaJun <majun258@linux.alibaba.com>
+To:     guoren@kernel.org
+Cc:     majun258@linux.alibaba.com, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, arnd@arndb.de,
+        linux-csky@vger.kernel.org
+Subject: [PATCH] arch/cksy: Support the pci in csky serial core
+Date:   Mon, 27 Jan 2020 10:56:21 +0800
+Message-Id: <1580093781-927-1-git-send-email-majun258@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-05 15:14, Can Guo wrote:
-> Reigsters dump intiated from atomic context should not sleep. To fix 
-> it,
-> add one boolean parameter to register dump vops to inform vendor driver 
-> if
-> sleep is allowed or not.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> 
+Add the pci related code for csky serial core.
 
-Hi,
+Signed-off-by: MaJun <majun258@linux.alibaba.com>
+---
+ arch/csky/Kconfig           |  4 ++++
+ arch/csky/include/asm/pci.h | 17 +++++++++++++++++
+ 2 files changed, 21 insertions(+)
+ create mode 100644 arch/csky/include/asm/pci.h
 
-Sorry for bothering, I will just drop this patch as of now :)
+diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+index cc5dc37..6ceafa3 100644
+--- a/arch/csky/Kconfig
++++ b/arch/csky/Kconfig
+@@ -62,6 +62,10 @@ config CSKY
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+ 	select HAVE_KPROBES if !CPU_CK610
+ 	select HAVE_KRETPROBES if !CPU_CK610
++	select GENERIC_PCI_IOMAP
++	select HAVE_PCI
++	select PCI_DOMAINS_GENERIC if PCI
++	select PCI_SYSCALL if PCI
+ 
+ config CPU_HAS_CACHEV2
+ 	bool
+diff --git a/arch/csky/include/asm/pci.h b/arch/csky/include/asm/pci.h
+new file mode 100644
+index 0000000..ccd844e
+--- /dev/null
++++ b/arch/csky/include/asm/pci.h
+@@ -0,0 +1,17 @@
++#ifndef __ASM_CSKY_PCI_H
++#define __ASM_CSKY_PCI_H
++
++extern int isa_dma_bridge_buggy;
++
++#define PCIBIOS_MIN_IO      0x1000
++#define PCIBIOS_MIN_MEM     0x10000000
++
++static inline int pci_proc_domain(struct pci_bus *bus)
++{
++	/* always show the domain in /proc/bus/pci */
++	return 1;
++}
++
++#define pcibios_assign_all_busses()	1
++
++#endif /* __ASM_CSKY_PCI_H */
+-- 
+1.8.3.1
 
-Thanks,
-Can Guo.
