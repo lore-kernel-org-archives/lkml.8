@@ -2,113 +2,68 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F98C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03789C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F3E2465B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FDdWquOa"
+	by mail.kernel.org (Postfix) with ESMTP id CC73F24684
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgA0XDP (ORCPT
+        id S1726569AbgA0XEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 18:03:15 -0500
-Received: from ozlabs.org ([203.11.71.1]:38909 "EHLO ozlabs.org"
+        Mon, 27 Jan 2020 18:04:55 -0500
+Received: from gentwo.org ([3.19.106.255]:56170 "EHLO gentwo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbgA0XDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 18:03:14 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4864zN27wRz9sNF;
-        Tue, 28 Jan 2020 10:03:12 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580166192;
-        bh=gIdeDcwDr1uc2hbXazpz85MJ4jT0xSRRnAGmsRPJkyo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FDdWquOaSIqR16NlvVfmadY6oEAsvUxcW+LwJ/CCqYu7jCcor8Txl7BwdYY/NlhR8
-         tUm1LDl77ND0SS79Xt5jp9j9yERhPBGbrU7yM/FP5W/tT5mtKOauCL4dYeq7l8iFNj
-         S8uXHo4i3T8cZr6RCIJ4Qn7fHwKvo6UxU1ps+s3wYvzLyhOphwK6pqVgQGyJbXoHbt
-         ciZ40KzGCLQnZmVNbMirN+WbEmSkyc+50Z/cjmPN/BC1Mc8e9/0XJyH7A0EiE5jcew
-         iDNigWHpuATigciuXObiPdheOPSxuY8lL7iyPhf++m38Rt+6Mv1T4QF7U7NPIrsa+t
-         LWReV+N6ZSfyQ==
-Date:   Tue, 28 Jan 2020 10:03:11 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: linux-next: manual merge of the generic-ioremap tree with the
- drivers-x86 tree
-Message-ID: <20200128100311.3ca81231@canb.auug.org.au>
-In-Reply-To: <20200124161558.7cbb88c9@canb.auug.org.au>
-References: <20200124161558.7cbb88c9@canb.auug.org.au>
+        id S1726101AbgA0XEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 18:04:54 -0500
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 7C85D3F25A; Mon, 27 Jan 2020 23:04:53 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 7B7BE3E9B5;
+        Mon, 27 Jan 2020 23:04:53 +0000 (UTC)
+Date:   Mon, 27 Jan 2020 23:04:53 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     =?ISO-8859-15?Q?Michal_Koutn=FD?= <mkoutny@suse.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
+In-Reply-To: <20200127173336.GB17425@blackbody.suse.cz>
+Message-ID: <alpine.DEB.2.21.2001272304080.25307@www.lameter.com>
+References: <alpine.DEB.2.21.1912041524290.18825@www.lameter.com> <20191204153225.GM25242@dhcp22.suse.cz> <alpine.DEB.2.21.1912041652410.29709@www.lameter.com> <20191204173224.GN25242@dhcp22.suse.cz> <20200106115733.GH12699@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2001061550270.23163@www.lameter.com> <20200109145236.GS4951@dhcp22.suse.cz> <20200109114415.cf01bd3ad30c5c4aec981653@linux-foundation.org> <20200117171331.GA17179@blackbody.suse.cz> <20200118161528.94dc18c074aeaa384200486b@linux-foundation.org>
+ <20200127173336.GB17425@blackbody.suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Hzh09TDofALlGaQm7euNQV+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/mixed; boundary="531401748-106161774-1580166293=:25307"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Hzh09TDofALlGaQm7euNQV+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hi all,
+--531401748-106161774-1580166293=:25307
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
-On Fri, 24 Jan 2020 16:15:58 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Mon, 27 Jan 2020, Michal Koutný wrote:
+
+> When I rerun the script with patched kernel, udev sit mostly idle (there
+> were no other udev event sources). So the number can be said to drop to
+> 0% CPU time / event/s.
 >
-> Today's linux-next merge of the generic-ioremap tree got a conflict in:
->=20
->   drivers/platform/x86/intel_scu_ipc.c
->=20
-> between commit:
->=20
->   74e9748b9b21 ("platform/x86: intel_scu_ipc: Drop intel_scu_ipc_i2c_cntr=
-l()")
->=20
-> from the drivers-x86 tree and commit:
->=20
->   4bdc0d676a64 ("remove ioremap_nocache and devm_ioremap_nocache")
->=20
-> from the generic-ioremap tree.
->=20
-> I fixed it up (the former removed the code updated by the latter, so I
-> just did that) and can carry the fix as necessary. This is now fixed as
-> far as linux-next is concerned, but any non trivial conflicts should be
-> mentioned to your upstream maintainer when your tree is submitted for
-> merging.  You may also want to consider cooperating with the maintainer
-> of the conflicting tree to minimise any particularly complex conflicts.
+> > Typically the author, but not always.  If someone else is particularly
+> > motivated to get a patch merged up they can take it over.
+> Christopher, do you consider resending your patch? (I second that it
+> exposes the internal details (wrt cgroup caches) and I can observe the
+> just reading the events by udevd wastes CPU time.)
 
-This is now a conflict between the driver-x86 tree and Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Hzh09TDofALlGaQm7euNQV+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4vbC8ACgkQAVBC80lX
-0Gy1jAf/ZfCi1Xh0XmIwZ+ct8u63y9hKTj+uaIo9RRh5WxQKDzU2dE18GU6ZGybQ
-lP4BzWaKjj9SbalyLzPQjLcrttdPFHJE/X8iNmIGjFvsm+3fPrYrVQig2lHBMD2C
-BNM1Zcxrzg6oUOXP/T7OMx7yfKKqYbt9iNUxkPR73xYnPmql5DxOBB9JWVQy355J
-nSC4mQDkJCk0r7Y/GoheYiaGQTP9XtStWwnIjBaPWItvJZuysepc3fshEzrRkP3L
-B/9uyjed/lqH57k2IHeRY43ww9ZlRNMH40PNLRCIwcHHiE+6VBVxEhIWOe600613
-5LYoyqzbwEAWXz9e88PB5R3dbavIqA==
-=nsDB
------END PGP SIGNATURE-----
-
---Sig_/Hzh09TDofALlGaQm7euNQV+--
+The patch exposes details of cgroup caches? Which patch are we talking
+about?
+--531401748-106161774-1580166293=:25307--
