@@ -2,91 +2,119 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39669C35247
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFA9C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD2D214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5162421569
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:12:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G2VQlgDh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jTFjC7I6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbgA0IMI (ORCPT
+        id S1728809AbgA0IMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 03:12:08 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:37172 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgA0IMH (ORCPT
+        Mon, 27 Jan 2020 03:12:09 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40326 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbgA0IMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 03:12:07 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R88po0043673;
-        Mon, 27 Jan 2020 08:12:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=3VolbQ0o/kJEo5bMe96OVeYFxui+T02Ili+UyFevwTM=;
- b=G2VQlgDhwpGqzmBTQ8Blz8cQwbgpoqsRFY9mMlaoPVw2WOJaWp7MZQUrbGKs7YTi59Mt
- fjJuJoI6vQEE9vd0kLg05/a/RF0kwixzt8BSx2kdFitWGYp2gmiXai8ZNs4kHBroeZI5
- +vnIEdHIs3EAKGdxsnrwCPMyfUgrkaisD30HpMmwmZaFENE8jQxIhm3EIViAHl8ERP2F
- ggQJApLxaVL50Tiopd2nTIKcOMXqXjMeqU6WpFPg2xN74yyua/70aswKedr2gOJcX2H0
- wBmd9ADiw77tvVequQ5kHunc5nzq3eKolY6Fn14/tN1zWTXIP3BoONPeOaaLvzGVcmAn 6g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xrd3twqsc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 08:12:03 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R884ZM006630;
-        Mon, 27 Jan 2020 08:12:02 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2xrytphec7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 08:12:02 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00R8C1Rt015787;
-        Mon, 27 Jan 2020 08:12:01 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Jan 2020 00:12:00 -0800
-Date:   Mon, 27 Jan 2020 11:11:52 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Pragat Pandya <pragat.pandya@gmail.com>
-Cc:     valdis.kletnieks@vt.edu, gregkh@linuxfoundation.org,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] staging: exfat: Fix alignment warnings
-Message-ID: <20200127081152.GR1847@kadam>
-References: <20200125133814.GA3518118@kroah.com>
- <20200126110255.20506-1-pragat.pandya@gmail.com>
+        Mon, 27 Jan 2020 03:12:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IUm93oOamnFo5hv3nJSbaylh1DDwQYJBt4Fpf5TYElU=; b=jTFjC7I67Cn2qeRKe1K6/I5jT
+        yvg1vVFv5/oMehurUQgdtZgH4P1zAgC7IEs/6W4kcTxi86ngyic/hviSfjT5kLXfIM94MNeDRePVF
+        suzzEIMOHDLZiJxHBCoWtpUqssbdXyP4KXWOLn8vbMsuZAUYuRAJZ9PmLOpBlTYHjK0zrKGtdHvGS
+        AMGOSLfYnWMydVEwDDwURS295o9cLVcvZEpnRM4vW1IcTrPns9y77JpoypCxFTt/ouF4kko/cJOvq
+        YSQxKkAUuPH8pvIoHRc0/aEvhhLUXVqU+mCFMlPwbg2d3WCFP2gOQcQRQaG4mKDcYhzRarLqY99+c
+        9o4VxNdlQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ivzUg-00074m-49; Mon, 27 Jan 2020 08:11:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B8214300F4B;
+        Mon, 27 Jan 2020 09:09:52 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3C2F8203CF5D4; Mon, 27 Jan 2020 09:11:34 +0100 (CET)
+Date:   Mon, 27 Jan 2020 09:11:34 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH mk-II 08/17] asm-generic/tlb: Provide
+ MMU_GATHER_TABLE_FREE
+Message-ID: <20200127081134.GI14914@hirez.programming.kicks-ass.net>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122956.112607298@infradead.org>
+ <20191212093205.GU2827@hirez.programming.kicks-ass.net>
+ <20200126155205.GA19169@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200126110255.20506-1-pragat.pandya@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=862
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001270070
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=922 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001270070
+In-Reply-To: <20200126155205.GA19169@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It looks like you sent this on Jan 11 and it was applied already.  Why
-are you resending?
+On Sun, Jan 26, 2020 at 07:52:05AM -0800, Guenter Roeck wrote:
+> On Thu, Dec 12, 2019 at 10:32:05AM +0100, Peter Zijlstra wrote:
+> > As described in the comment, the correct order for freeing pages is:
+> > 
+> >  1) unhook page
+> >  2) TLB invalidate page
+> >  3) free page
+> > 
+> > This order equally applies to page directories.
+> > 
+> > Currently there are two correct options:
+> > 
+> >  - use tlb_remove_page(), when all page directores are full pages and
+> >    there are no futher contraints placed by things like software
+> >    walkers (HAVE_FAST_GUP).
+> > 
+> >  - use MMU_GATHER_RCU_TABLE_FREE and tlb_remove_table() when the
+> >    architecture does not do IPI based TLB invalidate and has
+> >    HAVE_FAST_GUP (or software TLB fill).
+> > 
+> > This however leaves architectures that don't have page based
+> > directories but don't need RCU in a bind. For those, provide
+> > MMU_GATHER_TABLE_FREE, which provides the independent batching for
+> > directories without the additional RCU freeing.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> 
+> Various sparc64 builds (allnoconfig, tinyconfig, as well as builds
+> with SMP disabled):
+> 
+> mm/mmu_gather.c: In function '__tlb_remove_table_free':
+> mm/mmu_gather.c:101:3: error: implicit declaration of function '__tlb_remove_table'; did you mean 'tlb_remove_table'?
 
-regards,
-dan carpenter
+Thanks; I'll respin these patches against Aneesh' pile and make sure to
+look into this when I do so.
+
 
