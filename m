@@ -2,237 +2,117 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC4DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31707C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C017920CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39CA208CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:31:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PL8v0fbA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bxObGFiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbgA0Kam (ORCPT
+        id S1729810AbgA0Kbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 05:30:42 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56690 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726339AbgA0Kal (ORCPT
+        Mon, 27 Jan 2020 05:31:46 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50868 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727985AbgA0Kbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 05:30:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580121039;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=B5seMdInBob5KBB/Ici0anA5L1DZMOsToJq/Z5iUw2E=;
-        b=PL8v0fbAQffHA2A+7Qclqy++udlgoo66bU+lzwdmOirSFO0AUCwhtw0HV+WbCqJaXXuW0Q
-        zj88DsP2uKLl82jRg+ocfnJBVkNj1JcRjYsX8iIBhBpbHmRTsIgxv0PALTsUH3hxjj1C5N
-        m4XPtjl3L2u0Q8DRbsIV7y0f3BJs1wU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-164-VKRf_cdeMcye26BYwJwcDQ-1; Mon, 27 Jan 2020 05:30:38 -0500
-X-MC-Unique: VKRf_cdeMcye26BYwJwcDQ-1
-Received: by mail-wm1-f69.google.com with SMTP id f25so1330928wmb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 02:30:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B5seMdInBob5KBB/Ici0anA5L1DZMOsToJq/Z5iUw2E=;
-        b=Ror3ZTPLk09MEY2G2J20uEqV4d6e5RfWg8gPgz79mdzmXqyfaDOATNKyHNEu9jJylg
-         nsa4Frw0HNd7m0Rc44bQeq/VAOcrWBceDiyU9GMwpsVM+1vFu7lUC5ezO0pj0sByC+i0
-         3EH+Mp73i5QUa/q2nz1qTa91lD1Y+BOAToC6/prwjyMC68BWMj1SgWCeNIucZ8BrCmF9
-         YdLfaPWoBdG4IW34g5xghxhdq+FzIe+eBo/FOkYafr/lJS4cAjO+fS35cMU/KDmK86Vk
-         UOaNznDsmbKc0Upy55N0+B0Lm8ed31zB81KICE7DYxyrMs4VYAktriem4Hd1pBxnNOVA
-         Z90w==
-X-Gm-Message-State: APjAAAXggth6TV1R73IaqzsSetyam8Oy/oJ+FLEnIdUjM1Q/az44+w72
-        +f+GwKxAUvi61IzeDUWB8Ho8myfOS2qpQXCi3+R9Z+nh4FezA5KI8WYfb8s88Iy6Duq7ZOwOw+p
-        m6s7xlPr6ckPAfRf/MhtpR04=
-X-Received: by 2002:a05:600c:20c1:: with SMTP id y1mr5646031wmm.164.1580121036577;
-        Mon, 27 Jan 2020 02:30:36 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxNP1yLOiuz11SqkgN+NSgVx33ZKZPJzCymBsy7575Ijof+Xt9mNxslTm1pwcw9yz9/cYbQrg==
-X-Received: by 2002:a05:600c:20c1:: with SMTP id y1mr5646000wmm.164.1580121036206;
-        Mon, 27 Jan 2020 02:30:36 -0800 (PST)
-Received: from localhost (cpc111743-lutn13-2-0-cust844.9-3.cable.virginm.net. [82.17.115.77])
-        by smtp.gmail.com with ESMTPSA id w22sm17514661wmk.34.2020.01.27.02.30.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 02:30:35 -0800 (PST)
-Date:   Mon, 27 Jan 2020 10:30:34 +0000
-From:   Aaron Tomlin <atomlin@redhat.com>
-To:     Grzegorz Halat <ghalat@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        ssaner@redhat.com, oleksandr@redhat.com, vbendel@redhat.com,
-        kirill@shutemov.name, khlebnikov@yandex-team.ru,
-        borntraeger@de.ibm.com, Andrew Morton <akpm@linux-foundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 1/1] mm: sysctl: add panic_on_mm_error sysctl
-Message-ID: <20200127103034.lb2piuvtohwqysbs@atomlin.usersys.com>
-References: <20200127101100.92588-1-ghalat@redhat.com>
+        Mon, 27 Jan 2020 05:31:45 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00RAVSlH043859;
+        Mon, 27 Jan 2020 04:31:28 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580121088;
+        bh=3h8f4XbI491JsEjdTtwjglxtDcunKaSoHjicJCKo/ZU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=bxObGFiN/208eM+ZN8Zk7SjwcV122LbY+xkUxj+XFtdvp3cJjmWG3w6uluPp5PV7r
+         9BHr1Yd9byuu/qgSnfypN7VwX7UaM6th4kemgebDBhkeF2imXuABaJ78DaUv9YmxQn
+         aXzDDdi+rsYNOKnG8Zd38RIjcS1rY1E2D/ZXCa0w=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RAVSDY015973;
+        Mon, 27 Jan 2020 04:31:28 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 27
+ Jan 2020 04:31:27 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 27 Jan 2020 04:31:27 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RAVOSB111634;
+        Mon, 27 Jan 2020 04:31:25 -0600
+Subject: Re: [PATCH] arm64: defconfig: Enable Texas Instruments UDMA driver
+To:     Olof Johansson <olof@lixom.net>
+CC:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <t-kristo@ti.com>,
+        <vkoul@kernel.org>, <alexandre.belloni@bootlin.com>,
+        <arnd@arndb.de>, <soc@kernel.org>
+References: <20200124092359.12429-1-peter.ujfalusi@ti.com>
+ <20200124200811.ytgs66cg5qpugi5c@localhost>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <12f40648-fec6-9179-1f62-0a648996ed20@ti.com>
+Date:   Mon, 27 Jan 2020 12:32:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200127101100.92588-1-ghalat@redhat.com>
-X-PGP-Key: http://pgp.mit.edu/pks/lookup?search=atomlin%40redhat.com
-X-PGP-Fingerprint: 7906 84EB FA8A 9638 8D1E  6E9B E2DE 9658 19CC 77D6
-User-Agent: NeoMutt/20180716-1637-ee8449
+In-Reply-To: <20200124200811.ytgs66cg5qpugi5c@localhost>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-01-27 11:11 +0100, Grzegorz Halat wrote:
-> Memory management subsystem performs various checks at runtime,
-> if an inconsistency is detected then such event is being logged and kernel
-> continues to run. While debugging such problems it is helpful to collect
-> memory dump as early as possible. Currently, there is no easy way to panic
-> kernel when such error is detected.
-> 
-> It was proposed[1] to panic the kernel if panic_on_oops is set but this
-> approach was not accepted. One of alternative proposals was introduction of
-> a new sysctl.
-> 
-> The patch adds panic_on_mm_error sysctl. If the sysctl is set then the
-> kernel will be crashed when an inconsistency is detected by memory
-> management. This currently means panic when bad page or bad PTE
-> is detected(this may be extended to other places in MM).
-> 
-> Another use case of this sysctl may be in security-wise environments,
-> it may be more desired to crash machine than continue to run with
-> potentially damaged data structures.
-> 
-> [1] https://marc.info/?l=linux-mm&m=142649500728327&w=2
-> 
-> Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
-> ---
->  Documentation/admin-guide/sysctl/kernel.rst | 12 ++++++++++++
->  include/linux/kernel.h                      |  1 +
->  kernel/sysctl.c                             |  9 +++++++++
->  mm/memory.c                                 |  7 +++++++
->  mm/page_alloc.c                             |  4 +++-
->  5 files changed, 32 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index def074807cee..2fecd6b2547e 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -61,6 +61,7 @@ show up in /proc/sys/kernel:
->  - overflowgid
->  - overflowuid
->  - panic
-> +- panic_on_mm_error
->  - panic_on_oops
->  - panic_on_stackoverflow
->  - panic_on_unrecovered_nmi
-> @@ -611,6 +612,17 @@ an IO error.
->     and you can use this option to take a crash dump.
->  
->  
-> +panic_on_mm_error:
-> +==============
-> +
-> +Controls the kernel's behaviour when inconsistency is detected
-> +by memory management code, for example bad page state or bad PTE.
-> +
-> +0: try to continue operation.
-> +
-> +1: panic immediately.
-> +
-> +
->  panic_on_oops:
->  ==============
->  
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 0d9db2a14f44..5f9d408512ff 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -518,6 +518,7 @@ extern int oops_in_progress;		/* If set, an oops, panic(), BUG() or die() is in
->  extern int panic_timeout;
->  extern unsigned long panic_print;
->  extern int panic_on_oops;
-> +extern int panic_on_mm_error;
->  extern int panic_on_unrecovered_nmi;
->  extern int panic_on_io_nmi;
->  extern int panic_on_warn;
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 70665934d53e..6477e1cce28b 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1238,6 +1238,15 @@ static struct ctl_table kern_table[] = {
->  		.extra1		= SYSCTL_ZERO,
->  		.extra2		= SYSCTL_ONE,
->  	},
-> +	{
-> +		.procname	= "panic_on_mm_error",
-> +		.data		= &panic_on_mm_error,
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dointvec_minmax,
-> +		.extra1		= SYSCTL_ZERO,
-> +		.extra2		= SYSCTL_ONE,
-> +	},
->  #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
->  	{
->  		.procname	= "timer_migration",
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 45442d9a4f52..cce74ff39447 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -71,6 +71,7 @@
->  #include <linux/dax.h>
->  #include <linux/oom.h>
->  #include <linux/numa.h>
-> +#include <linux/module.h>
->  
->  #include <trace/events/kmem.h>
->  
-> @@ -88,6 +89,8 @@
->  #warning Unfortunate NUMA and NUMA Balancing config, growing page-frame for last_cpupid.
->  #endif
->  
-> +int panic_on_mm_error __read_mostly;
-> +
->  #ifndef CONFIG_NEED_MULTIPLE_NODES
->  /* use the per-pgdat data instead for discontigmem - mbligh */
->  unsigned long max_mapnr;
-> @@ -543,6 +546,10 @@ static void print_bad_pte(struct vm_area_struct *vma, unsigned long addr,
->  		 vma->vm_ops ? vma->vm_ops->fault : NULL,
->  		 vma->vm_file ? vma->vm_file->f_op->mmap : NULL,
->  		 mapping ? mapping->a_ops->readpage : NULL);
-> +
-> +	print_modules();
-> +	if (panic_on_mm_error)
-> +		panic("Bad page map detected");
->  	dump_stack();
->  	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
->  }
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index d047bf7d8fd4..2ea6a65ba011 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -643,9 +643,11 @@ static void bad_page(struct page *page, const char *reason,
->  	if (bad_flags)
->  		pr_alert("bad because of flags: %#lx(%pGp)\n",
->  						bad_flags, &bad_flags);
-> -	dump_page_owner(page);
->  
-> +	dump_page_owner(page);
->  	print_modules();
-> +	if (panic_on_mm_error)
-> +		panic("Bad page state detected");
->  	dump_stack();
->  out:
->  	/* Leave bad fields for debug, except PageBuddy could make trouble */
+Hi Olof,
 
-Reviewed-by: Aaron Tomlin <atomlin@redhat.com>
+On 24/01/2020 22.08, Olof Johansson wrote:
+> On Fri, Jan 24, 2020 at 11:23:59AM +0200, Peter Ujfalusi wrote:
+>> The UDMA driver is used on K3 platforms (am654 and j721e).
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>> Hi,
+>>
+>> The drivers for UDMA are already in linu-next and the DT patches are going to be
+>> also heading for 5.6.
+>> The only missing piece is to enable the drivers in defconfig so clients can use
+>> the DMA.
+> 
+> Hi Peter,
+> 
+> We normally like to see new options turned on after the driver/option has been
+> merged, so send this during or right after the merge window when that happens,
+> please.
 
--- 
-Aaron Tomlin
+Sure, I'll post it later.
 
+> I also see that this is statically enabling this driver -- we try to keep as
+> many drivers as possible as modules to avoid the static kernel from growing too
+> large. Would that be a suitable approach here, or is the driver needed to reach
+> rootfs for further module loading?
+
+We would need built in DMA for nfs rootfs, SD/MMC has it's own buit-in
+ADMA. We do not have network drivers upstream as they depend on the DMA.
+
+Imho module would be fine for the DMA stack, but neither ringacc or the
+UDMA driver can be built as module atm until the following patches got
+merged:
+https://lore.kernel.org/lkml/20200122104723.16955-1-peter.ujfalusi@ti.com/
+https://lore.kernel.org/lkml/20200122104031.15733-1-peter.ujfalusi@ti.com/
+
+I have the patches to add back module support, but waiting on these
+currently.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
