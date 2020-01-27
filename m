@@ -2,90 +2,117 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A59C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C47C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747682064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04782064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:34:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LDOSuqK4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PjGAUmwk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgA0Odi (ORCPT
+        id S1729138AbgA0Oeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:33:38 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:19360 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726303AbgA0Odi (ORCPT
+        Mon, 27 Jan 2020 09:34:46 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40245 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729106AbgA0Oep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:33:38 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580135617; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=7+xkR3BHg9A0v14RQ5mF55Y04fzclGoR+oy704vl4Fc=;
- b=LDOSuqK4EiPo9x3GCa26paev9eaNUmWSWxobefwkjMgp9q2zizS440bkNKIm7kb+33bp4b1a
- fTJ6aq928eAdczu1NrUZ7XuCA6/ua6GkyzdAg4Y1mxUss00MRM8SJ9kj7L0Ml+KGIPkZVYgd
- man/42mZbKMOyb2aP7xvpVahNF0=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2ef4bc.7fb04834eea0-smtp-out-n02;
- Mon, 27 Jan 2020 14:33:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D78F4C433CB; Mon, 27 Jan 2020 14:33:32 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EBDCEC433CB;
-        Mon, 27 Jan 2020 14:33:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EBDCEC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Mon, 27 Jan 2020 09:34:45 -0500
+Received: by mail-qt1-f195.google.com with SMTP id v25so7489138qto.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 06:34:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o+w00Z+a9Lc3UGBwoCrl8G1pruFGPJ/8zu/QyRd1NbE=;
+        b=PjGAUmwkw5hENfh9WggpD4J+4ewz3me369iaHjzeRLHxT5b1pE0b5p+XPhr7qaE06B
+         tYxg4Hn9fZoQCb8+9BBtfjC+oIGpB60Xo/82Ef4ZyISG6hNHqX812CY4Cr0qqR93UGQN
+         O8p6tzyIBj6ZvJlBWT5R1q8UPMl0vbj3/Wlvn9oqzj037GI7envTjRV4iCZXd+1ZV+Sj
+         a79onzpcvgef1qdE63ntplKozKMIvcNjt+JjYIJaPFkiEjztSJtx7747Lz9yHlS167CM
+         brk8H8YffPG80bvxknob5+2WXPNlTY6fdLwKlQ8z56lOTMf0WNqVGVzn3E6PnMR4OoHg
+         vdIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o+w00Z+a9Lc3UGBwoCrl8G1pruFGPJ/8zu/QyRd1NbE=;
+        b=CCP7NfLXq62/v+e8fceOQL7UVWYsf3BD9ccnmOIAsAqDpg8CLVvKAXV8093LdlvQI2
+         /8KE72uV6VAjKitApIWi0Bjk0hYH6HoPjXjXaknnDG/Qa1SqRUXwUtMMQ//yFVvwhlBF
+         Yw2eB5XAzfLd3zZOSBcvrYnAxo2PXDVBmyJnptq208c9Qhye/Qe4naysZl+Fz3VBD/dR
+         IlTP+1ASvKQ7QZ/KVzdlkZ6WRPnYExQ9rMuBKw2GTIxmRAaLL23Us/UdIyQhaDsZTuLd
+         dz5/M/qB07+7ggx8MSUbOPTvGQwH2mg9jhKecIiCset8nrKjfpvdB9rsaEdl2B07edc8
+         esuw==
+X-Gm-Message-State: APjAAAUrMVVVHDyTMEw4+xCuPAsqh3fcy94QZvXfi2W2biksveubo3MX
+        JkdODEL0kJstFVkvDgsg11C1XUV3GM9lEZZivdg4lg==
+X-Google-Smtp-Source: APXvYqxVMVrUAZqUZayzZO2qnNrfkdGEBHyN3IVl6dTc/yqBU1rShNCy6+RWgClLHDmVDV8d0UX1hrgHMZhXlVnjU+A=
+X-Received: by 2002:ac8:340c:: with SMTP id u12mr15564452qtb.257.1580135684302;
+ Mon, 27 Jan 2020 06:34:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] mwifiex: fix unbalanced locking in
- mwifiex_process_country_ie()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200106224212.189763-1-briannorris@chromium.org>
-References: <20200106224212.189763-1-briannorris@chromium.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     linux-wireless@vger.kernel.org, <linux-kernel@vger.kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        stable@vger.kernel.org, huangwen <huangwenabc@gmail.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200127143332.D78F4C433CB@smtp.codeaurora.org>
-Date:   Mon, 27 Jan 2020 14:33:32 +0000 (UTC)
+References: <0000000000004dbaf2059c193a36@google.com> <20200126024957.11392-1-hdanton@sina.com>
+ <20200127092850.GX1847@kadam>
+In-Reply-To: <20200127092850.GX1847@kadam>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 27 Jan 2020 15:34:32 +0100
+Message-ID: <CACT4Y+ag59G4p=DO3Dg7jnFt3wQb=dtjzBujADtGHKn-97O8_g@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in hiddev_disconnect
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        syzkaller <syzkaller@googlegroups.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+106b378813251e52fc5e@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> wrote:
+On Mon, Jan 27, 2020 at 10:29 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> I already fixed this bug in an earlier thread.
+>
+> Syzbot always reports a use after free as two separate bugs, a read
+> after free and a write after free.  It's too much hassle to mark all
+> the duplicates.
 
-> We called rcu_read_lock(), so we need to call rcu_read_unlock() before
-> we return.
-> 
-> Fixes: 3d94a4a8373b ("mwifiex: fix possible heap overflow in mwifiex_process_country_ie()")
-> Cc: stable@vger.kernel.org
-> Cc: huangwen <huangwenabc@gmail.com>
-> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
++syzkaller mailing list
 
-Patch applied to wireless-drivers.git, thanks.
+Hi Dan,
 
-65b1aae0d9d5 mwifiex: fix unbalanced locking in mwifiex_process_country_ie()
+Not that it happens always, but, yes, it happens for racy bugs (for
+single-threaded the type of the first access is usually
+deterministic). Worse, sometimes they show up as GPF, unable to handle
+kernel paging request, null-ptr-deref, user-memory-access, especially
+for crashes that happen very frequently so that syzbot starts catching
+long tail of more weird/unlucky incarnations.
 
--- 
-https://patchwork.kernel.org/patch/11320227/
+The exact string is under our full control and can be changed. We did
+some refinements to strings/grouping lots of times. I considered if
+all of these should be grouped together and reported just as, say,
+"bad-access in [function name]". However, the problem is that changes
+to the strings/grouping will affect _all_ existing bugs: they will be
+re-reported under new names, then old will be suspected to be fixed
+(stopped happening), fix bisected, some closed as obsolete, some
+concluded to be still happening, etc. And we have 300+ for upstream
+(https://syzkaller.appspot.com/upstream) + 4 LTS versions + 4 Android
+versions + a bunch of internal kernels + all users of syzkaller for
+linux out there. So this will produce a whole lot of churn for
+hundreds of people. The ones that we changed just affected
+significantly fewer bugs (e.g. a new bug type).
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+I don't know what's the right solution at this point...
+Changing the title will include lots of churn.
+Marking as dups is too much hassle.
+Not marking as dups will lead to hundreds of lots bugs and/or lots of
+wasted time for people to rescan list of open bugs again and again,
+missed backports, etc.
