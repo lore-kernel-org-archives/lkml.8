@@ -2,204 +2,331 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B71FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB06C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1463220716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F132D207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Q3bSE2TO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clFzisZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgA0NuZ (ORCPT
+        id S1727590AbgA0NwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:50:25 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:53702 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726179AbgA0NuY (ORCPT
+        Mon, 27 Jan 2020 08:52:05 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:34938 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgA0NwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:50:24 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RDmTkX028171;
-        Mon, 27 Jan 2020 14:50:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=oVMu/aYe8poIVG/cV7ynwO9nXyfdyRvPhcSDKSxQctA=;
- b=Q3bSE2TOtY5znfF/Jp9rhIVBx2jBb07bvgiWU226WE3gRRElotRNZ7/pvPXzcUr/LPvE
- dCheMlSPWnAUJAq6NWg/Qk4K4GDGqzYw67hgacKdYDpjrCW9UaQkMCbQ+3ZwHIGaRL0Y
- G/vuWmdYB7HCGO8UYA+KPA8dK/axBC+jk3EHlxHHI6u4rnyCdBwJg1D/xrI2p0mawWjC
- uz9LmjOEgfah/FhOjjt6ESEBPNtop+j7TQqmW9eHQMo4lJyTF/decPHWcGaiLUTVfylY
- LbBE6QiPpH+9NUPwW3LHnrPG3neC6iB7Cweb95+EsjU9YuUTuVg21xqJuxe3L9PwRjDX Wg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrdek90ma-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jan 2020 14:50:13 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3A79F100038;
-        Mon, 27 Jan 2020 14:50:09 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 290492B2F1F;
-        Mon, 27 Jan 2020 14:50:09 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.51) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan
- 2020 14:50:08 +0100
-Subject: Re: [PATCH 8/9] mmc: mmci: sdmmc: add voltage switch functions
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200110134823.14882-1-ludovic.barre@st.com>
- <20200110134823.14882-9-ludovic.barre@st.com>
- <CAPDyKFp1Qsb3yCoTJevHF+SEt5thVVriLfL-4UZSYsNTc0rdMQ@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <fd005f72-aa74-5650-e8b4-66cf3ff625dd@st.com>
-Date:   Mon, 27 Jan 2020 14:50:07 +0100
+        Mon, 27 Jan 2020 08:52:04 -0500
+Received: by mail-yw1-f66.google.com with SMTP id i190so4744085ywc.2;
+        Mon, 27 Jan 2020 05:52:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U+4tlbg+5b0f0SEB/qwqbokPD/ku3jCQrVSjB/lGf8w=;
+        b=clFzisZWm2lSrM1eSwt+2B6GRe74ll4/3nkskoUhpPM/azftS7wthDg/zStL6pNH0k
+         T8Np7x16Nnn4aKXm2uVVPr0Dhkja1v4exizxH1C7a8A0c+7/gQ6CqJpEXzhy1WyXhUHj
+         0E3n5Fs+/Y7bcvTrPlM+DPll4NA7TbY0x+K8ztehSRamqyrl8QzM4PiUbnPP1mDBTeX1
+         jTDn9MkSqXn4TDzSr0JO0HRNajvfX9JNkJ8OiyDPEiOMmRXjWmyheN68a9g4YPxLlVaL
+         HhQMWgDq/UB8zaEdtt0zrQq0il/HIJUd98TLkBLUIVOmQk1oBJ456Vmc5OCABjPYhLBx
+         eEcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U+4tlbg+5b0f0SEB/qwqbokPD/ku3jCQrVSjB/lGf8w=;
+        b=XfMZalKzsRROPQC2wHuurcl1FX3UoW4R146woSFvMZNDciNCHUBcF5ik7pyyWTTVaA
+         WRUyAUGW/ygLwIs9zpdren0WQ5TQAyCWNmBFauDbCEnse8zKEbtkYaW9rXqd3zsabfC3
+         OkjVKdbUhSvaFWVBIgc1KRRqdGYR1/j37Oj1YMGAH3rUthwS6z/8jngTHNZMDgQ5w9i9
+         C/e339FVLHcNjLHUWYf9S5iMqlp7yMIHy9jA6IoXktfNT6bsUHCvDDtQyB1T5jNOK4fU
+         XAHDuBNOTIMhPIN/ZbiqwPejBxFa64iavw3U+n43WYO2QMWBHJI8jd8ZZSj7snwI6WyA
+         h6UQ==
+X-Gm-Message-State: APjAAAWWoo6fQtAtH0dpwaX6lkRKKEU3KyaUz9Uewi6mq2GW0qxRuBSP
+        ZK1FtNx9fD9IBqF52H3ouuM0rNK4
+X-Google-Smtp-Source: APXvYqxSKgBxI3+lmjDfN+gqTCL3PZaclcgqgJgoLNHvmkUVJd2ZwpgIs57l5kYL5C5Cy6q85/Tbuw==
+X-Received: by 2002:a0d:cb48:: with SMTP id n69mr11810322ywd.48.1580133123239;
+        Mon, 27 Jan 2020 05:52:03 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g190sm6635492ywd.85.2020.01.27.05.52.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 05:52:02 -0800 (PST)
+Subject: Re: [PATCH V1 2/2] hwmon: (powr1220) add scaled voltage support
+To:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Markus Pietrek <mpie@msc-ge.com>
+Cc:     kernel@pengutronix.de, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200127102540.31742-1-o.rempel@pengutronix.de>
+ <20200127102540.31742-2-o.rempel@pengutronix.de>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <f7a357d3-c8c3-a71a-ebc8-bc2d37c7c086@roeck-us.net>
+Date:   Mon, 27 Jan 2020 05:52:00 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFp1Qsb3yCoTJevHF+SEt5thVVriLfL-4UZSYsNTc0rdMQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
+In-Reply-To: <20200127102540.31742-2-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Ulf
+On 1/27/20 2:25 AM, Oleksij Rempel wrote:
+> From: Markus Pietrek <mpie@msc-ge.com>
+> 
+> On some (or may be all?) boards, voltage measured by powr1220 do not
+> reflect real system configuration. This patch provides scale option to
+> set board specific configuration.
+> 
+> Signed-off-by: Markus Pietrek <mpie@msc-ge.com>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
 
-Le 1/24/20 à 2:16 PM, Ulf Hansson a écrit :
-> On Fri, 10 Jan 2020 at 14:49, Ludovic Barre <ludovic.barre@st.com> wrote:
->>
->> To prepare the voltage switch procedure, the VSWITCHEN bit must be
->> set before sending the cmd11.
->> To confirm completion of voltage switch, the VSWEND flag must be
->> checked.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   drivers/mmc/host/mmci.h             |  4 +++
->>   drivers/mmc/host/mmci_stm32_sdmmc.c | 40 ++++++++++++++++++++++++++++-
->>   2 files changed, 43 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
->> index c04a144259a2..3634f98ad2d8 100644
->> --- a/drivers/mmc/host/mmci.h
->> +++ b/drivers/mmc/host/mmci.h
->> @@ -165,6 +165,7 @@
->>   /* Extended status bits for the STM32 variants */
->>   #define MCI_STM32_BUSYD0       BIT(20)
->>   #define MCI_STM32_BUSYD0END    BIT(21)
->> +#define MCI_STM32_VSWEND       BIT(25)
->>
->>   #define MMCICLEAR              0x038
->>   #define MCI_CMDCRCFAILCLR      (1 << 0)
->> @@ -182,6 +183,9 @@
->>   #define MCI_ST_SDIOITC         (1 << 22)
->>   #define MCI_ST_CEATAENDC       (1 << 23)
->>   #define MCI_ST_BUSYENDC                (1 << 24)
->> +/* Extended clear bits for the STM32 variants */
->> +#define MCI_STM32_VSWENDC      BIT(25)
->> +#define MCI_STM32_CKSTOPC      BIT(26)
->>
->>   #define MMCIMASK0              0x03c
->>   #define MCI_CMDCRCFAILMASK     (1 << 0)
->> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
->> index 10059fa19f4a..9f43cf947c5f 100644
->> --- a/drivers/mmc/host/mmci_stm32_sdmmc.c
->> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
->> @@ -263,7 +263,9 @@ static void mmci_sdmmc_set_pwrreg(struct mmci_host *host, unsigned int pwr)
->>          struct mmc_ios ios = host->mmc->ios;
->>          struct sdmmc_dlyb *dlyb = host->variant_priv;
->>
->> -       pwr = host->pwr_reg_add;
->> +       /* adds OF options and preserves voltage switch bits */
->> +       pwr = host->pwr_reg_add |
->> +               (host->pwr_reg & (MCI_STM32_VSWITCHEN | MCI_STM32_VSWITCH));
->>
->>          sdmmc_dlyb_input_ck(dlyb);
->>
->> @@ -454,6 +456,40 @@ static int sdmmc_execute_tuning(struct mmc_host *mmc, u32 opcode)
->>          return sdmmc_dlyb_phase_tuning(host, opcode);
->>   }
->>
->> +static void sdmmc_prep_vswitch(struct mmci_host *host)
->> +{
->> +       /* clear the voltage switch completion flag */
->> +       writel_relaxed(MCI_STM32_VSWENDC, host->base + MMCICLEAR);
->> +       /* enable Voltage switch procedure */
->> +       mmci_write_pwrreg(host, host->pwr_reg | MCI_STM32_VSWITCHEN);
->> +}
->> +
->> +static int sdmmc_vswitch(struct mmci_host *host, struct mmc_ios *ios)
->> +{
->> +       unsigned long flags;
->> +       u32 status;
->> +       int ret = 0;
->> +
->> +       if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
->> +               spin_lock_irqsave(&host->lock, flags);
->> +               mmci_write_pwrreg(host, host->pwr_reg | MCI_STM32_VSWITCH);
->> +               spin_unlock_irqrestore(&host->lock, flags);
->> +
->> +               /* wait voltage switch completion while 10ms */
->> +               ret = readl_relaxed_poll_timeout(host->base + MMCISTATUS,
->> +                                                status,
->> +                                                (status & MCI_STM32_VSWEND),
->> +                                                10, 10000);
->> +
->> +               writel_relaxed(MCI_STM32_VSWENDC | MCI_STM32_CKSTOPC,
->> +                              host->base + MMCICLEAR);
->> +               mmci_write_pwrreg(host, host->pwr_reg &
->> +                                 ~(MCI_STM32_VSWITCHEN | MCI_STM32_VSWITCH));
->> +       }
+NACK; scaling is what sensors3.conf is for. Also, we most definintely
+won't permit out-of-ABI attributes for something like this.
+
+Guenter
+
+>   drivers/hwmon/powr1220.c | 155 +++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 155 insertions(+)
 > 
-> Don't you need to manage things when resetting to
-> MMC_SIGNAL_VOLTAGE_330, which for example happens during a card
-> removal or at system suspend/resume?
+> diff --git a/drivers/hwmon/powr1220.c b/drivers/hwmon/powr1220.c
+> index ad7a82f132e6..7cb2a6d3b3d8 100644
+> --- a/drivers/hwmon/powr1220.c
+> +++ b/drivers/hwmon/powr1220.c
+> @@ -74,6 +74,14 @@ enum powr1220_adc_values {
+>   	MAX_POWR1220_ADC_VALUES
+>   };
+>   
+> +/* Real value = (measured-value * factor) / divisor.
+> + * A divisor of 0 disables scaling and is identical to factor==1 && divisor==1.
+> + */
+> +struct adc_scale {
+> +	int factor;
+> +	int divisor;
+> +};
+> +
+>   struct powr1220_data {
+>   	struct i2c_client *client;
+>   	struct mutex update_lock;
+> @@ -84,6 +92,7 @@ struct powr1220_data {
+>   	/* values */
+>   	int adc_maxes[MAX_POWR1220_ADC_VALUES];
+>   	int adc_values[MAX_POWR1220_ADC_VALUES];
+> +	struct adc_scale adc_scales[MAX_POWR1220_ADC_VALUES];
+>   };
+>   
+>   static const char * const input_names[] = {
+> @@ -184,6 +193,29 @@ static ssize_t powr1220_voltage_show(struct device *dev,
+>   	return sprintf(buf, "%d\n", adc_val);
+>   }
+>   
+> +static ssize_t powr1220_scaled_voltage_show(struct device *dev,
+> +	struct device_attribute *dev_attr, char *buf)
+> +{
+> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+> +	struct powr1220_data *data = dev_get_drvdata(dev);
+> +	int adc_val = powr1220_read_adc(dev, attr->index);
+> +	struct adc_scale *scale;
+> +
+> +	if (adc_val < 0)
+> +		return adc_val;
+> +
+> +	scale = &data->adc_scales[attr->index];
+> +	if (scale->divisor) {
+> +		int64_t lscaled = adc_val;
+> +
+> +		lscaled *= scale->factor;
+> +		lscaled /= scale->divisor;
+> +		adc_val = (int) lscaled;
+> +	}
+> +
+> +	return sprintf(buf, "%d\n", adc_val);
+> +}
+> +
+>   /* Shows the maximum setting associated with the specified ADC channel */
+>   static ssize_t powr1220_max_show(struct device *dev,
+>   				 struct device_attribute *dev_attr, char *buf)
+> @@ -204,6 +236,38 @@ static ssize_t powr1220_label_show(struct device *dev,
+>   	return sprintf(buf, "%s\n", input_names[attr->index]);
+>   }
+>   
+> +/* Shows the scale for the read value.
+> + * real value = (measured value * factor) / divisor. n/0 means scaling disabled
+> + * and raw values are printed.
+> + */
+> +static ssize_t powr1220_scale_show(struct device *dev,
+> +	struct device_attribute *dev_attr, char *buf)
+> +{
+> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+> +	struct powr1220_data *data = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%d/%d\n", data->adc_scales[attr->index].factor,
+> +		       data->adc_scales[attr->index].divisor);
+> +}
+> +
+> +static ssize_t powr1220_scale_store(struct device *dev,
+> +				    struct device_attribute *dev_attr,
+> +				    const char *buf, size_t count)
+> +{
+> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+> +	struct powr1220_data *data = dev_get_drvdata(dev);
+> +	int factor;
+> +	int divisor;
+> +
+> +	if (sscanf(buf, "%d/%d", &factor, &divisor) != 2)
+> +		return -EINVAL;
+> +
+> +	data->adc_scales[attr->index].factor = factor;
+> +	data->adc_scales[attr->index].divisor = divisor;
+> +
+> +	return count;
+> +}
+> +
+>   static SENSOR_DEVICE_ATTR_RO(in0_input, powr1220_voltage, VMON1);
+>   static SENSOR_DEVICE_ATTR_RO(in1_input, powr1220_voltage, VMON2);
+>   static SENSOR_DEVICE_ATTR_RO(in2_input, powr1220_voltage, VMON3);
+> @@ -219,6 +283,26 @@ static SENSOR_DEVICE_ATTR_RO(in11_input, powr1220_voltage, VMON12);
+>   static SENSOR_DEVICE_ATTR_RO(in12_input, powr1220_voltage, VCCA);
+>   static SENSOR_DEVICE_ATTR_RO(in13_input, powr1220_voltage, VCCINP);
+>   
+> +static SENSOR_DEVICE_ATTR_RO(in0_scaled_input, powr1220_scaled_voltage, VMON1);
+> +static SENSOR_DEVICE_ATTR_RO(in1_scaled_input, powr1220_scaled_voltage, VMON2);
+> +static SENSOR_DEVICE_ATTR_RO(in2_scaled_input, powr1220_scaled_voltage, VMON3);
+> +static SENSOR_DEVICE_ATTR_RO(in3_scaled_input, powr1220_scaled_voltage, VMON4);
+> +static SENSOR_DEVICE_ATTR_RO(in4_scaled_input, powr1220_scaled_voltage, VMON5);
+> +static SENSOR_DEVICE_ATTR_RO(in5_scaled_input, powr1220_scaled_voltage, VMON6);
+> +static SENSOR_DEVICE_ATTR_RO(in6_scaled_input, powr1220_scaled_voltage, VMON7);
+> +static SENSOR_DEVICE_ATTR_RO(in7_scaled_input, powr1220_scaled_voltage, VMON8);
+> +static SENSOR_DEVICE_ATTR_RO(in8_scaled_input, powr1220_scaled_voltage, VMON9);
+> +static SENSOR_DEVICE_ATTR_RO(in9_scaled_input, powr1220_scaled_voltage,
+> +			     VMON10);
+> +static SENSOR_DEVICE_ATTR_RO(in10_scaled_input, powr1220_scaled_voltage,
+> +			     VMON11);
+> +static SENSOR_DEVICE_ATTR_RO(in11_scaled_input, powr1220_scaled_voltage,
+> +			     VMON12);
+> +static SENSOR_DEVICE_ATTR_RO(in12_scaled_input, powr1220_scaled_voltage,
+> +			     VCCA);
+> +static SENSOR_DEVICE_ATTR_RO(in13_scaled_input, powr1220_scaled_voltage,
+> +			     VCCINP);
+> +
+>   static SENSOR_DEVICE_ATTR_RO(in0_highest, powr1220_max, VMON1);
+>   static SENSOR_DEVICE_ATTR_RO(in1_highest, powr1220_max, VMON2);
+>   static SENSOR_DEVICE_ATTR_RO(in2_highest, powr1220_max, VMON3);
+> @@ -249,6 +333,21 @@ static SENSOR_DEVICE_ATTR_RO(in11_label, powr1220_label, VMON12);
+>   static SENSOR_DEVICE_ATTR_RO(in12_label, powr1220_label, VCCA);
+>   static SENSOR_DEVICE_ATTR_RO(in13_label, powr1220_label, VCCINP);
+>   
+> +static SENSOR_DEVICE_ATTR_RW(in0_scale, powr1220_scale, VMON1);
+> +static SENSOR_DEVICE_ATTR_RW(in1_scale, powr1220_scale, VMON2);
+> +static SENSOR_DEVICE_ATTR_RW(in2_scale, powr1220_scale, VMON3);
+> +static SENSOR_DEVICE_ATTR_RW(in3_scale, powr1220_scale, VMON4);
+> +static SENSOR_DEVICE_ATTR_RW(in4_scale, powr1220_scale, VMON5);
+> +static SENSOR_DEVICE_ATTR_RW(in5_scale, powr1220_scale, VMON6);
+> +static SENSOR_DEVICE_ATTR_RW(in6_scale, powr1220_scale, VMON7);
+> +static SENSOR_DEVICE_ATTR_RW(in7_scale, powr1220_scale, VMON8);
+> +static SENSOR_DEVICE_ATTR_RW(in8_scale, powr1220_scale, VMON9);
+> +static SENSOR_DEVICE_ATTR_RW(in9_scale, powr1220_scale, VMON10);
+> +static SENSOR_DEVICE_ATTR_RW(in10_scale, powr1220_scale, VMON11);
+> +static SENSOR_DEVICE_ATTR_RW(in11_scale, powr1220_scale, VMON12);
+> +static SENSOR_DEVICE_ATTR_RW(in12_scale, powr1220_scale, VCCA);
+> +static SENSOR_DEVICE_ATTR_RW(in13_scale, powr1220_scale, VCCINP);
+> +
+>   static struct attribute *powr1014_attrs[] = {
+>   	&sensor_dev_attr_in0_input.dev_attr.attr,
+>   	&sensor_dev_attr_in1_input.dev_attr.attr,
+> @@ -263,6 +362,19 @@ static struct attribute *powr1014_attrs[] = {
+>   	&sensor_dev_attr_in12_input.dev_attr.attr,
+>   	&sensor_dev_attr_in13_input.dev_attr.attr,
+>   
+> +	&sensor_dev_attr_in0_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in1_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in2_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in3_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in4_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in5_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in6_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in7_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in8_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in9_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in12_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in13_scaled_input.dev_attr.attr,
+> +
+>   	&sensor_dev_attr_in0_highest.dev_attr.attr,
+>   	&sensor_dev_attr_in1_highest.dev_attr.attr,
+>   	&sensor_dev_attr_in2_highest.dev_attr.attr,
+> @@ -289,6 +401,19 @@ static struct attribute *powr1014_attrs[] = {
+>   	&sensor_dev_attr_in12_label.dev_attr.attr,
+>   	&sensor_dev_attr_in13_label.dev_attr.attr,
+>   
+> +	&sensor_dev_attr_in0_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in1_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in2_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in3_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in4_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in5_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in6_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in7_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in8_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in9_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in12_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in13_scale.dev_attr.attr,
+> +
+>   	NULL
+>   };
+>   
+> @@ -310,6 +435,21 @@ static struct attribute *powr1220_attrs[] = {
+>   	&sensor_dev_attr_in12_input.dev_attr.attr,
+>   	&sensor_dev_attr_in13_input.dev_attr.attr,
+>   
+> +	&sensor_dev_attr_in0_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in1_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in2_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in3_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in4_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in5_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in6_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in7_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in8_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in9_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in10_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in11_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in12_scaled_input.dev_attr.attr,
+> +	&sensor_dev_attr_in13_scaled_input.dev_attr.attr,
+> +
+>   	&sensor_dev_attr_in0_highest.dev_attr.attr,
+>   	&sensor_dev_attr_in1_highest.dev_attr.attr,
+>   	&sensor_dev_attr_in2_highest.dev_attr.attr,
+> @@ -340,6 +480,21 @@ static struct attribute *powr1220_attrs[] = {
+>   	&sensor_dev_attr_in12_label.dev_attr.attr,
+>   	&sensor_dev_attr_in13_label.dev_attr.attr,
+>   
+> +	&sensor_dev_attr_in0_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in1_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in2_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in3_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in4_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in5_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in6_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in7_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in8_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in9_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in10_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in11_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in12_scale.dev_attr.attr,
+> +	&sensor_dev_attr_in13_scale.dev_attr.attr,
+> +
+>   	NULL
+>   };
+>   
 > 
 
-The VSWITCH sequence is used only for 3.3V to 1.8V.
-If there are: card remove | suspend/resume.
-The power cycle of sdmmc must be reinitialised
-and the reset is mandatory.
-
->> +
->> +       return ret;
->> +}
->> +
->>   static struct mmci_host_ops sdmmc_variant_ops = {
->>          .validate_data = sdmmc_idma_validate_data,
->>          .prep_data = sdmmc_idma_prep_data,
->> @@ -465,6 +501,8 @@ static struct mmci_host_ops sdmmc_variant_ops = {
->>          .set_clkreg = mmci_sdmmc_set_clkreg,
->>          .set_pwrreg = mmci_sdmmc_set_pwrreg,
->>          .busy_complete = sdmmc_busy_complete,
->> +       .prep_volt_switch = sdmmc_prep_vswitch,
->> +       .volt_switch = sdmmc_vswitch,
->>   };
->>
->>   void sdmmc_variant_init(struct mmci_host *host)
->> --
->> 2.17.1
->>
-> 
-> Kind regards
-> Uffe
-> 
