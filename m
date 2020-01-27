@@ -2,134 +2,199 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81060C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB51DC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540912467B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD08424681
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vRafyqqd"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Xvqz3GAK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgA0VAU (ORCPT
+        id S1726303AbgA0VEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 16:00:20 -0500
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:56228 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgA0VAT (ORCPT
+        Mon, 27 Jan 2020 16:04:30 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:41965 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgA0VEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 16:00:19 -0500
-Received: by mail-pj1-f73.google.com with SMTP id s6so12791pjr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:00:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=CAH2JUZfxl1gXiFoCO0/GCKYjJBCGBSmgeGFBkbRVI0=;
-        b=vRafyqqdBsTOJgglJmYV5o0OlpyXwllJ3p28sfmm8WEusJw/8TTAuXROIItQFjhfru
-         FoTeyhiVZvrzp0JIm8RXe97PvQkILEt6fOIfd5MLGgbRHwVUGQteeanpwnUNFpDbUmET
-         yeUbkiANImftfw/XgIYW3iLbk9Ux/ghJ7Er+nvIxtGeyx3r4mpmfFWUtKxwkBLylRjuW
-         jzAHdXNaxHvnNn+PhPXHv3feb90RvDruMJozvNa2ceu9wpj55ZA+suoil28EMWaYbUp1
-         gY9llY8XBheRi/d3lSNUfkp4knvPXUGgFng3P5++sDeiWH/SxzYSdXyD/WICjNpLKhfy
-         d9VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=CAH2JUZfxl1gXiFoCO0/GCKYjJBCGBSmgeGFBkbRVI0=;
-        b=ZIZQVcXs/QotSdViR301eqM5fz00ohefPkcjn7wNDF+vqVAaH0CZQsv2fYzhx5zNS6
-         yn3HuqNY1GYw3WdMVp5tDXtuiskz2b6tUxsm4zKldp8vupejEWgwfabcSIJ10sC4MgL+
-         81R18LMOGVr/xyrE6KmRiFCMuqqyhfbfmoX7LRaSBlzKt3c5WkmIVgfL+MZn2CaL0Okq
-         li6PKMVDI4Y7nxGNx4JOwpwjwJdw6yFezZQA55MQ4apbSjxnoCj8BiwZUwWEKTfaCGae
-         0xCbm8Hb07BY682XyXIgdITuLaFeLFYdsLh5XzqHRi0v8ZebGV3DWhYNXlGpmqbT9EHC
-         FgKw==
-X-Gm-Message-State: APjAAAVYhd1koV1doFXnTfilCO4BG8WdDvtIGj0tL8cfBpOj8NgpxIXU
-        5+ezBf59mqUULozh+x7QkgfLvVsMWA==
-X-Google-Smtp-Source: APXvYqxlVzkT24mENi5mvLCMmQUezkOaccKmD22akDDb2kZdKeiEAlnC02DJ2I9eq5Vhr5yinxSlLv5OQw==
-X-Received: by 2002:a63:4503:: with SMTP id s3mr21629876pga.311.1580158818711;
- Mon, 27 Jan 2020 13:00:18 -0800 (PST)
-Date:   Mon, 27 Jan 2020 13:00:14 -0800
-Message-Id: <20200127210014.5207-1-tkjos@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH] staging: android: ashmem: Disallow ashmem memory from being remapped
-From:   Todd Kjos <tkjos@google.com>
-To:     tkjos@google.com, surenb@google.com, gregkh@linuxfoundation.org,
-        arve@android.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, maco@google.com
-Cc:     joel@joelfernandes.org, kernel-team@android.com,
-        Jann Horn <jannh@google.com>, stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jan 2020 16:04:30 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 74080886BF;
+        Tue, 28 Jan 2020 10:04:27 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1580159067;
+        bh=6tDJYJw6qyBxE5gbUdGqb3erz1PiKAMuHxH5IXgdldk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Xvqz3GAKf/YE1UGg4bgNHUGbWhGNNw2d4sbHc7k52JBfoW1yxSAMU/byQ2FRjW7D+
+         kYYUSOZR8ZAyqMiiO3b4mbB6Tk7nX57fn4s8z1pnTuPIKoxlEVtLQ90thl7tpaQEfh
+         sE9PXmCHC42ak3VXOZwiHh7MjjMZuKgTglcHdujHI3Cfn2eQFfVvHNOLgg4myb08ze
+         +vFjzaTfQOC+UqlLieyxuk+fjVpGMMrFIfBATJ9iVulFmNov2t7zWE8XGBXnZeEGf4
+         vWy36zR2SWpyhvAwS/7NtLpxnSDREag1ummTfpTKbwhYk8hnSVlQTINhOdqfPdHXCl
+         V2OrlB3ob3yWg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e2f50560001>; Tue, 28 Jan 2020 10:04:27 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id D88AC13EFAE;
+        Tue, 28 Jan 2020 10:04:21 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 12E3A280071; Tue, 28 Jan 2020 10:04:22 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v3 1/2] dt-bindings: spi: Document binding for generic SPI multiplexer
+Date:   Tue, 28 Jan 2020 10:04:14 +1300
+Message-Id: <20200127210415.5708-2-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200127210415.5708-1-chris.packham@alliedtelesis.co.nz>
+References: <20200127210415.5708-1-chris.packham@alliedtelesis.co.nz>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suren Baghdasaryan <surenb@google.com>
+Add binding documentation for the spi-mux driver. This allows a generic
+multiplexer to be used to provide access to multiple SPI devices.
 
-When ashmem file is being mmapped the resulting vma->vm_file points to the
-backing shmem file with the generic fops that do not check ashmem
-permissions like fops of ashmem do. Fix that by disallowing mapping
-operation for backing shmem file.
-
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Cc: stable <stable@vger.kernel.org> # 4.4,4.9,4.14,4.18,5.4
-Signed-off-by: Todd Kjos <tkjos@google.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- drivers/staging/android/ashmem.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
-index 74d497d39c5a..c6695354b123 100644
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -351,8 +351,23 @@ static inline vm_flags_t calc_vm_may_flags(unsigned long prot)
- 	       _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
- }
- 
-+static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	/* do not allow to mmap ashmem backing shmem file directly */
-+	return -EPERM;
-+}
+Notes:
+    Changes in v3:
+    - make dt_binding_check clean (properly this time)
+   =20
+    Changes in v2:
+    - update license
+    - make dt_binding_check clean
+
+ .../devicetree/bindings/spi/spi-mux.yaml      | 89 +++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-mux.yaml b/Documen=
+tation/devicetree/bindings/spi/spi-mux.yaml
+new file mode 100644
+index 000000000000..0ae692dc28b5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-mux.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/spi-mux.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static unsigned long
-+ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
-+				unsigned long len, unsigned long pgoff,
-+				unsigned long flags)
-+{
-+	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
-+}
++title: Generic SPI Multiplexer
 +
- static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
- {
-+	static struct file_operations vmfile_fops;
- 	struct ashmem_area *asma = file->private_data;
- 	int ret = 0;
- 
-@@ -393,6 +408,19 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
- 		}
- 		vmfile->f_mode |= FMODE_LSEEK;
- 		asma->file = vmfile;
-+		/*
-+		 * override mmap operation of the vmfile so that it can't be
-+		 * remapped which would lead to creation of a new vma with no
-+		 * asma permission checks. Have to override get_unmapped_area
-+		 * as well to prevent VM_BUG_ON check for f_ops modification.
-+		 */
-+		if (!vmfile_fops.mmap) {
-+			vmfile_fops = *vmfile->f_op;
-+			vmfile_fops.mmap = ashmem_vmfile_mmap;
-+			vmfile_fops.get_unmapped_area =
-+					ashmem_vmfile_get_unmapped_area;
-+		}
-+		vmfile->f_op = &vmfile_fops;
- 	}
- 	get_file(asma->file);
- 
--- 
-2.25.0.341.g760bfbb309-goog
++description: |
++  This binding describes a SPI bus multiplexer to route the SPI chip sel=
+ect
++  signals. This can be used when you need more devices than the SPI cont=
+roller
++  has chip selects available. An example setup is shown in ASCII art; th=
+e actual
++  setting of the multiplexer to a channel needs to be done by a specific=
+ SPI mux
++  driver.
++
++        MOSI /--------------------------------+--------+--------+-------=
+-\
++        MISO |/------------------------------+|-------+|-------+|-------=
+\|
++         SCL ||/----------------------------+||------+||------+||------\=
+||
++             |||                            |||      |||      |||      |=
+||
++      +------------+                        |||      |||      |||      |=
+||
++      | SoC  |||   |                      +-+++-+  +-+++-+  +-+++-+  +-+=
+++-+
++      |      |||   |                      | dev |  | dev |  | dev |  | d=
+ev |
++      |   +--+++-+ | CS-X  +------+\      +--+--+  +--+--+  +--+--+  +--=
++--+
++      |   | SPI  +-|-------+ Mux  |\\   CS-0 |        |        |        =
+|
++      |   +------+ |       +--+---+\\\-------/   CS-1 |        |        =
+|
++      |            |          |    \\\----------------/   CS-2 |        =
+|
++      |   +------+ |          |     \\-------------------------/   CS-3 =
+|
++      |   | ?    +-|----------/      \----------------------------------=
+/
++      |   +------+ |
++      +------------+
++
++allOf:
++  - $ref: "/schemas/spi/spi-controller.yaml#"
++
++maintainers:
++  - Chris Packham <chris.packham@alliedtelesis.co.nz>
++
++properties:
++  compatible:
++    const: spi-mux
++
++  mux-controls:
++    maxItems: 1
++
++required:
++   - compatible
++   - reg
++   - spi-max-frequency
++   - mux-controls
++
++examples:
++   - |
++     #include <dt-bindings/gpio/gpio.h>
++     mux: mux-controller {
++       compatible =3D "gpio-mux";
++       #mux-control-cells =3D <0>;
++
++       mux-gpios =3D <&gpio0 3 GPIO_ACTIVE_HIGH>;
++     };
++
++     spi {
++       #address-cells =3D <1>;
++       #size-cells =3D <0>;
++       spi@0 {
++         compatible =3D "spi-mux";
++         reg =3D <0>;
++         #address-cells =3D <1>;
++         #size-cells =3D <0>;
++         spi-max-frequency =3D <100000000>;
++
++         mux-controls =3D <&mux>;
++
++         spi-flash@0 {
++           compatible =3D "jedec,spi-nor";
++           reg =3D <0>;
++           #address-cells =3D <1>;
++           #size-cells =3D <0>;
++           spi-max-frequency =3D <40000000>;
++         };
++
++         spi-device@1 {
++           compatible =3D "lineartechnology,ltc2488";
++           reg =3D <1>;
++           #address-cells =3D <1>;
++           #size-cells =3D <0>;
++           spi-max-frequency =3D <10000000>;
++         };
++       };
++     };
+--=20
+2.25.0
 
