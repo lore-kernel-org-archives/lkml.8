@@ -2,272 +2,389 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1513C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEA7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A794224672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2699F22522
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580142727;
+	bh=UgzoHdVZ6G9QZWi2w8nTGNlYryo2VSEMUY2ZGJ70UXY=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=IgIPypzzs85QioVh437IrJ3iRmir0jYxfzFPf864PxbXpkVuz1NdFLMV18BN4oI1p
+	 bGmsOztRs/nsA5rBMLsf+aWc7aEC3iHDJvep0kCCwnfLBQI/17t0J+bFy7hTBcprhi
+	 k3EW/fsmXBlk5jFFeeqglwRDfe7dTHbm/NPSd/RE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgA0QbO (ORCPT
+        id S1725975AbgA0QcG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:31:14 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35112 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbgA0QbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:31:14 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 23954AAC2;
-        Mon, 27 Jan 2020 16:31:11 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id F2AA7DA730; Mon, 27 Jan 2020 17:30:52 +0100 (CET)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs updates for 5.6
-Date:   Mon, 27 Jan 2020 17:30:48 +0100
-Message-Id: <cover.1580142284.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 27 Jan 2020 11:32:06 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38063 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0QcG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 11:32:06 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l9so7220344oii.5;
+        Mon, 27 Jan 2020 08:32:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=VeccTOturxhWBwOWdsdrI8lN/hBVymQLTDOh5JKZxy8=;
+        b=Rs2T5i6MGF/FWacjXCXK4uM1OmwfxHhGDJRCIm88Iae6vUE/CJEon/R2myiHFNmZeR
+         eRcG9U0pCOTsHlmWXh5VFGaOgfaGoYS2jlHUODo3hC0LaNQh/IzFNb7Z8bG/pKZpk01T
+         ZrO64uin5X3dTlNI4E3/N9CcCrE4/Ks5u4ud3rrYqFbnyNU+aD46NgPVRffbPIGUGNy3
+         Yc7PjTIzQWVgbI8W+gcuX6KJJVwBO/+5Z6XMOChDTSRYaFE9sEfv3zOLacpoF20HYKRG
+         PVPsMugXuCVOxj2UNwym25oUg2AUthbtZuqmgJJBUN+F6QqJYHPcrQGwhAPivnmR1CO8
+         QteQ==
+X-Gm-Message-State: APjAAAV4o/jTzCApvu4KeUmrUsvoGtLGus4b0+hVvokJfSuZ330YNTiT
+        IVM+q59HMLCkE2uk26wqXND50BT+9emSgsP5xbYztm/O
+X-Google-Smtp-Source: APXvYqwhoE7cDXsoVHRpYLKRzp4ltic/HLNEQ2Z/VljtCY4VPRS/aQEVKkmpvsaS/y9JYGdV6HdwnlHFm3qV9IGeeuc=
+X-Received: by 2002:a54:488d:: with SMTP id r13mr7614457oic.115.1580142725384;
+ Mon, 27 Jan 2020 08:32:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 27 Jan 2020 17:31:54 +0100
+Message-ID: <CAJZ5v0jGdfSUK4s3nq_uCiQrg8tWrycv_C_xNg7CYk4LC8o-Dw@mail.gmail.com>
+Subject: [GIT PULL] Power management updates for v5.6-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Linus,
 
-please pull the following updates for btrfs, thanks.
+Please pull from the tag
 
-Features, highlights:
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.6-rc1
 
-* async discard
-  * "mount -o discard=async" to enable it
-  * freed extents are not discarded immediatelly, but grouped together and
-    trimmed later, with IO rate limiting
-  * the "sync" mode submits short extents that could have been ignored
-    completely by the device, for SATA prior to 3.1 the requests are
-    unqueued and have a big impact on performance
-  * the actual discard IO requests have been moved out of transaction
-    commit to a worker thread, improving commit latency
-  * IO rate and request size can be tuned by sysfs files, for now enabled
-    only with CONFIG_BTRFS_DEBUG as we might need to add/delete the files
-    and don't have a stable-ish ABI for general use, defaults are
-    conservative
+with top-most commit c102671af085aacf17219e9bdcfccddc6620a866
 
-* export device state info in sysfs, eg. missing, writeable
+ Merge branch 'pm-devfreq'
 
-* no discard of extents known to be untouched on disk (eg. after
-  reservation)
+on top of commit 3a83c8c81c91fe10e7002c2c0e74b23e80f41f28
 
-* device stats reset is logged with process name and PID that called the
-  ioctl
+ Merge tag 'pm-5.5-rc8' of
+git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
 
-Fixes:
+to receive power management updates for 5.6-rc1.
 
-* fix missing hole after hole punching and fsync when using NO_HOLES
+These add ACPI support to the intel_idle driver along with an admin
+guide document for it, add support for CPR (Core Power Reduction) to
+the AVS (Adaptive Voltage Scaling) subsystem, add new hardware support
+in a few places, add some new sysfs attributes, debugfs files and
+tracepoints, fix bugs and clean up a bunch of things all over.
 
-* writeback: range cyclic mode could miss some dirty pages and lead to OOM
+Specifics:
 
-* two more corner cases for metadata_uuid change after power loss during
-  the change
+ - Update the ACPI processor driver in order to export
+   acpi_processor_evaluate_cst() to the code outside of it, add
+   ACPI support to the intel_idle driver based on that and clean
+   up that driver somewhat (Rafael Wysocki).
 
-* fix infinite loop during fsync after mix of rename operations
+ - Add an admin guide document for the intel_idle driver (Rafael
+   Wysocki).
 
-Core changes:
+ - Clean up cpuidle core and drivers, enable compilation testing
+   for some of them (Benjamin Gaignard, Krzysztof Kozlowski, Rafael
+   Wysocki, Yangtao Li).
 
-* qgroup assign returns ENOTCONN when quotas not enabled, used to return
-  EINVAL that was confusing
+ - Fix reference counting of OPP (operating performance points) table
+   structures (Viresh Kumar).
 
-* device closing does not need to allocate memory anymore
+ - Add support for CPR (Core Power Reduction) to the AVS (Adaptive
+   Voltage Scaling) subsystem (Niklas Cassel, Colin Ian King,
+   YueHaibing).
 
-* snapshot aware code got removed, disabled for years due to performance
-  problems, reimplmentation will allow to select wheter defrag breaks or
-  does not break COW on shared extents
+ - Add support for TigerLake Mobile and JasperLake to the Intel RAPL
+   power capping driver (Zhang Rui).
 
-* tree-checker:
-  * check leaf chunk item size, cross check against number of stripes
-  * verify location keys for DIR_ITEM, DIR_INDEX and XATTR items
+ - Update cpufreq drivers:
 
-* new self test for physical -> logical mapping code, used for super block
-  range exclusion
+   * Add i.MX8MP support to imx-cpufreq-dt (Anson Huang).
 
-* assertion helpers/macros updated to avoid objtool "unreachable code"
-  reports on older compilers or config option combinations
+   * Fix usage of a macro in loongson2_cpufreq (Alexandre Oliva).
 
-----------------------------------------------------------------
-The following changes since commit def9d2780727cec3313ed3522d0123158d87224d:
+   * Fix cpufreq policy reference counting issues in s3c and
+     brcmstb-avs (chenqiwu).
 
-  Linux 5.5-rc7 (2020-01-19 16:02:49 -0800)
+   * Fix ACPI table reference counting issue and HiSilicon quirk
+     handling in the CPPC driver (Hanjun Guo).
 
-are available in the Git repository at:
+   * Clean up spelling mistake in intel_pstate (Harry Pan).
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.6-tag
+   * Convert the kirkwood and tegra186 drivers to using
+     devm_platform_ioremap_resource() (Yangtao Li).
 
-for you to fetch changes up to 4e19443da1941050b346f8fc4c368aa68413bc88:
+ - Update devfreq core:
 
-  btrfs: free block groups after free'ing fs trees (2020-01-23 17:24:39 +0100)
+   * Add 'name' sysfs attribute for devfreq devices (Chanwoo Choi).
 
-----------------------------------------------------------------
-Anand Jain (6):
-      btrfs: sysfs, rename devices kobject holder to devices_kobj
-      btrfs: sysfs, btrfs_sysfs_add_fsid() drop unused argument parent
-      btrfs: sysfs, rename btrfs_sysfs_add_device()
-      btrfs: sysfs, merge btrfs_sysfs_add devices_kobj and fsid
-      btrfs: device stats, log when stats are zeroed
-      btrfs: sysfs, add devid/dev_state kobject and device attributes
+   * Clean up the handing of transition statistics and allow them
+     to be reset by writing 0 to the 'trans_stat' devfreq device
+     attribute in sysfs (Kamil Konieczny).
 
-David Sterba (5):
-      btrfs: use raid_attr table in calc_stripe_length for nparity
-      btrfs: fill ncopies for all raid table entries
-      btrfs: remove unused member btrfs_device::work
-      btrfs: safely advance counter when looking up bio csums
-      btrfs: separate definition of assertion failure handlers
+   * Add 'devfreq_summary' to debugfs (Chanwoo Choi).
 
-Dennis Zhou (24):
-      bitmap: genericize percpu bitmap region iterators
-      btrfs: rename DISCARD mount option to to DISCARD_SYNC
-      btrfs: keep track of which extents have been discarded
-      btrfs: keep track of free space bitmap trim status cleanliness
-      btrfs: add the beginning of async discard, discard workqueue
-      btrfs: handle empty block_group removal for async discard
-      btrfs: discard one region at a time in async discard
-      btrfs: sysfs: add removal calls for debug/
-      btrfs: sysfs: make UUID/debug have its own kobject
-      btrfs: sysfs: add UUID/debug/discard directory
-      btrfs: track discardable extents for async discard
-      btrfs: keep track of discardable_bytes for async discard
-      btrfs: calculate discard delay based on number of extents
-      btrfs: add kbps discard rate limit for async discard
-      btrfs: limit max discard size for async discard
-      btrfs: make max async discard size tunable
-      btrfs: have multiple discard lists
-      btrfs: only keep track of data extents for async discard
-      btrfs: keep track of discard reuse stats
-      btrfs: add async discard implementation overview
-      btrfs: increase the metadata allowance for the free_space_cache
-      btrfs: make smaller extents more likely to go into bitmaps
-      btrfs: ensure removal of discardable_* in free_bitmap()
-      btrfs: add correction to handle -1 edge case in async discard
+   * Clean up kerneldoc comments and Kconfig indentation (Krzysztof
+     Kozlowski, Randy Dunlap).
 
-Filipe Manana (2):
-      Btrfs: fix missing hole after hole punching and fsync when using NO_HOLES
-      Btrfs: fix infinite loop during fsync after rename operations
+ - Update devfreq drivers:
 
-Johannes Thumshirn (6):
-      btrfs: fix possible NULL-pointer dereference in integrity checks
-      btrfs: remove superfluous BUG_ON() in integrity checks
-      btrfs: remove impossible WARN_ON in btrfs_destroy_dev_replace_tgtdev()
-      btrfs: decrement number of open devices after closing the device not before
-      btrfs: reset device back to allocation state when removing
-      btrfs: remove unnecessary wrapper get_alloc_profile
+   * Add dynamic scaling for the imx8m DDR controller and clean up
+     imx8m-ddrc (Leonard Crestez, YueHaibing).
 
-Josef Bacik (6):
-      btrfs: don't pass system_chunk into can_overcommit
-      btrfs: kill min_allocable_bytes in inc_block_group_ro
-      btrfs: fix improper setting of scanned for range cyclic write cache pages
-      btrfs: drop log root for dropped roots
-      btrfs: set trans->drity in btrfs_commit_transaction
-      btrfs: free block groups after free'ing fs trees
+   * Fix DT node reference counting and nitialization error code path
+     in rk3399_dmc and add COMPILE_TEST and HAVE_ARM_SMCCC dependency
+     for it (Chanwoo Choi, Yangtao Li).
 
-Marcos Paulo de Souza (2):
-      btrfs: qgroup: remove one-time use variables for quota_root checks
-      btrfs: qgroup: return ENOTCONN instead of EINVAL when quotas are not enabled
+   * Fix DT node reference counting in rockchip-dfi and make it use
+     devm_platform_ioremap_resource() (Yangtao Li).
 
-Nikolay Borisov (12):
-      btrfs: Don't discard unwritten extents
-      btrfs: Open code __btrfs_free_reserved_extent in btrfs_free_reserved_extent
-      btrfs: Rename __btrfs_free_reserved_extent to btrfs_pin_reserved_extent
-      btrfs: Remove WARN_ON in walk_log_tree
-      btrfs: Remove redundant WARN_ON in walk_down_log_tree
-      btrfs: Opencode ordered_data_tree_panic
-      btrfs: Move and unexport btrfs_rmap_block
-      btrfs: selftests: Add support for dummy devices
-      btrfs: Add self-tests for btrfs_rmap_block
-      btrfs: Refactor btrfs_rmap_block to improve readability
-      btrfs: Handle another split brain scenario with metadata uuid feature
-      btrfs: Fix split-brain handling when changing FSID to metadata uuid
+   * Fix excessive stack usage in exynos-ppmu (Arnd Bergmann).
 
-Omar Sandoval (11):
-      btrfs: use simple_dir_inode_operations for placeholder subvolume directory
-      btrfs: get rid of trivial __btrfs_lookup_bio_sums() wrappers
-      btrfs: get rid of at_offset parameter to btrfs_lookup_bio_sums()
-      btrfs: remove dead snapshot-aware defrag code
-      btrfs: make btrfs_ordered_extent naming consistent with btrfs_file_extent_item
-      btrfs: remove unnecessary pg_offset assignments in __extent_writepage()
-      btrfs: remove trivial goto label in __extent_writepage()
-      btrfs: remove redundant i_size check in __extent_writepage_io()
-      btrfs: drop create parameter to btrfs_get_extent()
-      btrfs: simplify compressed/inline check in __extent_writepage_io()
-      btrfs: remove struct find_free_extent.ram_bytes
+   * Fix initialization error code paths in exynos-bus (Yangtao Li).
 
-Qu Wenruo (6):
-      btrfs: relocation: Output current relocation stage at btrfs_relocate_block_group()
-      btrfs: tree-checker: Check leaf chunk item size
-      btrfs: tree-checker: Clean up fs_info parameter from error message wrapper
-      btrfs: tree-checker: Refactor inode key check into seperate function
-      btrfs: tree-checker: Refactor root key check into separate function
-      btrfs: tree-checker: Verify location key for DIR_ITEM/DIR_INDEX
+   * Clean up exynos-bus and exynos somewhat (Artur Świgoń, Krzysztof
+     Kozlowski).
 
-Su Yue (2):
-      btrfs: Call find_fsid from find_fsid_inprogress
-      btrfs: Factor out metadata_uuid code from find_fsid.
+ - Add tracepoints for tracking usage_count updates unrelated to
+   status changes in PM-runtime (Michał Mirosław).
 
-Yunfeng Ye (1):
-      btrfs: remove unused condition check in btrfs_page_mkwrite()
+ - Add sysfs attribute to control the "sync on suspend" behavior
+   during system-wide suspend (Jonas Meurer).
 
-zhengbin (1):
-      btrfs: Remove unneeded semicolon
+ - Switch system-wide suspend tests over to 64-bit time (Alexandre
+   Belloni).
 
- fs/btrfs/Makefile                 |   2 +-
- fs/btrfs/block-group.c            | 212 ++++++++--
- fs/btrfs/block-group.h            |  40 ++
- fs/btrfs/check-integrity.c        |   4 +-
- fs/btrfs/compression.c            |   4 +-
- fs/btrfs/ctree.h                  |  81 +++-
- fs/btrfs/dev-replace.c            |   1 +
- fs/btrfs/discard.c                | 702 ++++++++++++++++++++++++++++++++
- fs/btrfs/discard.h                |  41 ++
- fs/btrfs/disk-io.c                |  37 +-
- fs/btrfs/disk-io.h                |   4 +-
- fs/btrfs/extent-tree.c            |  50 +--
- fs/btrfs/extent_io.c              |  54 +--
- fs/btrfs/extent_io.h              |   6 +-
- fs/btrfs/file-item.c              |  41 +-
- fs/btrfs/file.c                   |  23 +-
- fs/btrfs/free-space-cache.c       | 619 ++++++++++++++++++++++++----
- fs/btrfs/free-space-cache.h       |  41 +-
- fs/btrfs/inode-map.c              |  13 +-
- fs/btrfs/inode.c                  | 834 ++++----------------------------------
- fs/btrfs/ioctl.c                  |   2 +-
- fs/btrfs/ordered-data.c           |  81 ++--
- fs/btrfs/ordered-data.h           |  26 +-
- fs/btrfs/print-tree.c             |   2 +-
- fs/btrfs/qgroup.c                 |  44 +-
- fs/btrfs/relocation.c             |  20 +-
- fs/btrfs/scrub.c                  |   7 +-
- fs/btrfs/space-info.c             |  42 +-
- fs/btrfs/super.c                  |  39 +-
- fs/btrfs/sysfs.c                  | 394 ++++++++++++++++--
- fs/btrfs/sysfs.h                  |   5 +-
- fs/btrfs/tests/btrfs-tests.c      |  29 ++
- fs/btrfs/tests/btrfs-tests.h      |   1 +
- fs/btrfs/tests/extent-map-tests.c | 154 ++++++-
- fs/btrfs/tests/inode-tests.c      |  44 +-
- fs/btrfs/transaction.c            |  30 +-
- fs/btrfs/tree-checker.c           | 225 +++++++---
- fs/btrfs/tree-log.c               | 455 +++++++--------------
- fs/btrfs/volumes.c                | 284 ++++++-------
- fs/btrfs/volumes.h                |  10 +-
- include/linux/bitmap.h            |  35 ++
- include/trace/events/btrfs.h      |   6 +-
- mm/percpu.c                       |  61 +--
- 43 files changed, 3042 insertions(+), 1763 deletions(-)
- create mode 100644 fs/btrfs/discard.c
- create mode 100644 fs/btrfs/discard.h
+ - Make wakeup sources statistics in debugfs cover deleted ones which
+   used to be the case some time ago (zhuguangqing).
+
+ - Clean up computations carried out during hibernation, update
+   messages related to hibernation and fix a spelling mistake in one
+   of them (Wen Yang, Luigi Semenzato, Colin Ian King).
+
+ - Add mailmap entry for maintainer e-mail address that has not been
+   functional for several years (Rafael Wysocki).
+
+Thanks!
+
+
+---------------
+
+Alexandre Belloni (1):
+      PM: sleep: Switch to rtc_time64_to_tm()/rtc_tm_to_time64()
+
+Alexandre Oliva (1):
+      cpufreq: loongson2_cpufreq: adjust cpufreq uses of LOONGSON_CHIPCFG
+
+Anson Huang (2):
+      cpufreq: Use imx-cpufreq-dt for i.MX8MP's speed grading
+      cpufreq: imx-cpufreq-dt: Add i.MX8MP support
+
+Arnd Bergmann (1):
+      PM / devfreq: exynos-ppmu: Fix excessive stack usage
+
+Artur Świgoń (3):
+      PM / devfreq: exynos-bus: Extract exynos_bus_profile_init()
+      PM / devfreq: exynos-bus: Extract exynos_bus_profile_init_passive()
+      PM / devfreq: exynos-bus: Reduce goto statements and remove unused headers
+
+Benjamin Gaignard (3):
+      cpuidle: coupled: fix warnings when compiling with W=1
+      cpuidle: sysfs: fix warnings when compiling with W=1
+      cpuidle: fix cpuidle_find_deepest_state() kerneldoc warnings
+
+Chanwoo Choi (3):
+      PM / devfreq: Add new name attribute for sysfs
+      PM / devfreq: rk3399_dmc: Add COMPILE_TEST and HAVE_ARM_SMCCC dependency
+      PM / devfreq: Add debugfs support with devfreq_summary file
+
+Colin Ian King (2):
+      power: avs: fix uninitialized error return on failed
+cpr_read_fuse_uV() call
+      PM: hibernate: fix spelling mistake "shapshot" -> "snapshot"
+
+Hanjun Guo (2):
+      cpufreq : CPPC: Break out if HiSilicon CPPC workaround is matched
+      cpufreq: CPPC: put ACPI table after using it
+
+Harry Pan (1):
+      cpufreq: intel_pstate: fix spelling mistake: "Whethet" -> "Whether"
+
+Jonas Meurer (1):
+      PM: suspend: Add sysfs attribute to control the "sync on suspend" behavior
+
+Kamil Konieczny (4):
+      PM / devfreq: Change time stats to 64-bit
+      PM / devfreq: Add clearing transitions stats
+      PM / devfreq: Move statistics to separate struct devfreq_stats
+      PM / devfreq: Move declaration of DEVICE_ATTR_RW(min_freq)
+
+Krzysztof Kozlowski (3):
+      PM / devfreq: Fix Kconfig indentation
+      PM / devfreq: exynos: Rename Exynos to lowercase
+      cpuidle: arm: Enable compile testing for some of drivers
+
+Leonard Crestez (3):
+      dt-bindings: memory: Add bindings for imx8m ddr controller
+      PM / devfreq: Add dynamic scaling for imx8m ddr controller
+      PM / devfreq: imx8m-ddrc: Remove unused defines
+
+Luigi Semenzato (1):
+      PM: hibernate: Add more logging on hibernation failure
+
+Michał Mirosław (1):
+      PM-runtime: add tracepoints for usage_count changes
+
+Niklas Cassel (7):
+      dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
+      power: avs: Add support for CPR (Core Power Reduction)
+      power: avs: qcom-cpr: fix invalid printk specifier in debug print
+      power: avs: qcom-cpr: fix unsigned expression compared with zero
+      power: avs: qcom-cpr: make sure that regmap is available
+      power: avs: qcom-cpr: remove set but unused variable
+      power: avs: qcom-cpr: make cpr_get_opp_hz_for_req() static
+
+Rafael J. Wysocki (22):
+      ACPI: processor: Export function to claim _CST control
+      ACPI: processor: Introduce acpi_processor_evaluate_cst()
+      ACPI: processor: Clean up acpi_processor_evaluate_cst()
+      mailmap: Add entry for <rjw@sisk.pl>
+      ACPI: processor: Make ACPI_PROCESSOR_CSTATE depend on ACPI_PROCESSOR
+      ACPI: processor: Export acpi_processor_evaluate_cst()
+      intel_idle: Refactor intel_idle_cpuidle_driver_init()
+      intel_idle: Use ACPI _CST for processor models without C-state tables
+      cpuidle: Allow idle states to be disabled by default
+      intel_idle: Allow ACPI _CST to be used for selected known processors
+      intel_idle: Add module parameter to prevent ACPI _CST from being used
+      intel_idle: Use ACPI _CST on server systems
+      cpuidle: Drop unused cpuidle_driver_ref/unref() functions
+      Documentation: admin-guide: PM: Add intel_idle document
+      intel_idle: Eliminate __setup_broadcast_timer()
+      intel_idle: Fold intel_idle_probe() into intel_idle_init()
+      intel_idle: Clean up NULL pointer check in intel_idle_init()
+      intel_idle: Rearrange intel_idle_cpuidle_driver_init()
+      intel_idle: Move and clean up intel_idle_cpuidle_devices_uninit()
+      intel_idle: Annotate initialization code and data structures
+      intel_idle: Move 3 functions closer to their callers
+      intel_idle: Clean up irtl_2_usec()
+
+Randy Dunlap (1):
+      PM / devfreq: Fix multiple kernel-doc warnings
+
+Viresh Kumar (2):
+      opp: Free static OPPs on errors while adding them
+      opp: Replace list_kref with a local counter
+
+Wen Yang (1):
+      PM: hibernate: improve arithmetic division in
+preallocate_highmem_fraction()
+
+Yangtao Li (10):
+      cpuidle: clps711x: convert to devm_platform_ioremap_resource()
+      cpuidle: kirkwood: convert to devm_platform_ioremap_resource()
+      PM / devfreq: rockchip-dfi: Add missing of_node_put()
+      PM / devfreq: rk3399_dmc: Add missing of_node_put()
+      PM / devfreq: rockchip-dfi: Convert to devm_platform_ioremap_resource
+      PM / devfreq: rk3399_dmc: Disable devfreq-event device when fails
+      PM / devfreq: exynos-bus: Disable devfreq-event device when fails
+      PM / devfreq: exynos-bus: Add error log when fail to get devfreq-event
+      cpufreq: kirkwood: convert to devm_platform_ioremap_resource
+      cpufreq: tegra186: convert to devm_platform_ioremap_resource
+
+YueHaibing (2):
+      PM / devfreq: imx8m-ddrc: Fix inconsistent IS_ERR and PTR_ERR
+      power: avs: qcom-cpr: remove duplicated include from qcom-cpr.c
+
+Zhang Rui (3):
+      powercap/intel_rapl: add support for TigerLake Mobile
+      x86/cpu: Add Jasper Lake to Intel family
+      powercap/intel_rapl: add support for JasperLake
+
+chenqiwu (2):
+      cpufreq: s3c: fix unbalances of cpufreq policy refcount
+      cpufreq: brcmstb-avs: fix imbalance of cpufreq policy refcount
+
+zhuguangqing (1):
+      PM: wakeup: Show statistics for deleted wakeup sources again
+
+---------------
+
+ .mailmap                                           |    1 +
+ Documentation/ABI/testing/sysfs-class-devfreq      |   18 +-
+ Documentation/ABI/testing/sysfs-devices-system-cpu |    6 +
+ Documentation/ABI/testing/sysfs-power              |   13 +
+ Documentation/admin-guide/pm/cpuidle.rst           |    3 +
+ Documentation/admin-guide/pm/intel_idle.rst        |  246 +++
+ Documentation/admin-guide/pm/working-state.rst     |    1 +
+ .../memory-controllers/fsl/imx8m-ddrc.yaml         |   72 +
+ .../devicetree/bindings/power/avs/qcom,cpr.txt     |  130 ++
+ MAINTAINERS                                        |    8 +
+ arch/x86/include/asm/intel-family.h                |    1 +
+ drivers/acpi/Kconfig                               |    1 +
+ drivers/acpi/acpi_processor.c                      |  182 ++
+ drivers/acpi/processor_idle.c                      |  174 +-
+ drivers/base/power/runtime.c                       |   13 +-
+ drivers/base/power/wakeup.c                        |    3 +
+ drivers/cpufreq/brcmstb-avs-cpufreq.c              |    2 +
+ drivers/cpufreq/cppc_cpufreq.c                     |    8 +-
+ drivers/cpufreq/cpufreq-dt-platdev.c               |    1 +
+ drivers/cpufreq/imx-cpufreq-dt.c                   |    6 +-
+ drivers/cpufreq/intel_pstate.c                     |    2 +-
+ drivers/cpufreq/kirkwood-cpufreq.c                 |    4 +-
+ drivers/cpufreq/loongson2_cpufreq.c                |    8 +-
+ drivers/cpufreq/s3c2416-cpufreq.c                  |   12 +-
+ drivers/cpufreq/s5pv210-cpufreq.c                  |   11 +-
+ drivers/cpufreq/tegra186-cpufreq.c                 |    4 +-
+ drivers/cpuidle/Kconfig.arm                        |   12 +-
+ drivers/cpuidle/coupled.c                          |    9 +-
+ drivers/cpuidle/cpuidle-clps711x.c                 |    5 +-
+ drivers/cpuidle/cpuidle-kirkwood.c                 |    5 +-
+ drivers/cpuidle/cpuidle.c                          |    9 +-
+ drivers/cpuidle/driver.c                           |   46 -
+ drivers/cpuidle/sysfs.c                            |   16 +-
+ drivers/devfreq/Kconfig                            |   21 +-
+ drivers/devfreq/Makefile                           |    1 +
+ drivers/devfreq/devfreq-event.c                    |    4 +-
+ drivers/devfreq/devfreq.c                          |  166 +-
+ drivers/devfreq/event/Kconfig                      |    6 +-
+ drivers/devfreq/event/exynos-nocp.c                |    2 +-
+ drivers/devfreq/event/exynos-nocp.h                |    2 +-
+ drivers/devfreq/event/exynos-ppmu.c                |   15 +-
+ drivers/devfreq/event/exynos-ppmu.h                |    2 +-
+ drivers/devfreq/event/rockchip-dfi.c               |    5 +-
+ drivers/devfreq/exynos-bus.c                       |  155 +-
+ drivers/devfreq/imx8m-ddrc.c                       |  471 +++++
+ drivers/devfreq/rk3399_dmc.c                       |   19 +-
+ drivers/idle/intel_idle.c                          |  482 ++++--
+ drivers/opp/core.c                                 |   48 +-
+ drivers/opp/of.c                                   |   31 +-
+ drivers/opp/opp.h                                  |    6 +-
+ drivers/power/avs/Kconfig                          |   16 +
+ drivers/power/avs/Makefile                         |    1 +
+ drivers/power/avs/qcom-cpr.c                       | 1793 ++++++++++++++++++++
+ drivers/powercap/intel_rapl_common.c               |    2 +
+ include/linux/acpi.h                               |   15 +
+ include/linux/cpuidle.h                            |    6 +-
+ include/linux/devfreq.h                            |   29 +-
+ include/linux/suspend.h                            |    2 +
+ include/trace/events/rpm.h                         |    6 +
+ kernel/power/Kconfig                               |    5 +-
+ kernel/power/hibernate.c                           |   23 +-
+ kernel/power/main.c                                |   33 +
+ kernel/power/snapshot.c                            |   28 +-
+ kernel/power/suspend.c                             |    2 +-
+ kernel/power/suspend_test.c                        |    6 +-
+ 65 files changed, 3829 insertions(+), 606 deletions(-)
