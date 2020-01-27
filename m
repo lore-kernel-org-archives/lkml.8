@@ -2,106 +2,157 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E2FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E75C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06ACE24682
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623F82467F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:39:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kq/LGvpR"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="n+i4eARy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgA0TgZ (ORCPT
+        id S1726210AbgA0TjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 14:36:25 -0500
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:43318 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbgA0TgY (ORCPT
+        Mon, 27 Jan 2020 14:39:07 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35222 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgA0TjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 14:36:24 -0500
-Received: by mail-pl1-f202.google.com with SMTP id n17so4303030plp.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 11:36:24 -0800 (PST)
+        Mon, 27 Jan 2020 14:39:07 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so4125086plt.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 11:39:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=MBXtYUj1QxYipcDyqZexYNOHIwmMYcL9qVU9w76TqMU=;
-        b=kq/LGvpRySXRu0yzwNcC9o5kvB/Lf3EYScRJ6TjobnkWY/KSMsX71QlvFbaUrcvNdo
-         4TgexVq0q81r+Xgp3UVJwsvgjPZJZfOT0/i6OVXMNdyBf+0uQWKenONfiKRj1Fss6TUH
-         uwDT8piaaknCsIiJbuQsD2ibYnoPwH+ua7g4NIFN+B4RoH3urbqrk11neJCl+cSjEw31
-         lDIkR549+4xbzG68w/SuYa2PPrvpKuD4p/tzg5d+h4Ct+2mdRTZlZVpv85a4qOIY5R8F
-         VklCupGL8s3FhI9JtzU/r/U/hwb3VjcPY/dG2CCsgHEr2z0BkYH6rjBGituOCbP170LT
-         aKjQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wL2DenFfwzv9tqkfb30dy8DecNCbnJ/iC87Go+JzFAU=;
+        b=n+i4eARyp6P1blXQKgGthk/op91I5jEIqD70kjMWtL8I8xSp5Srze+JqYP4l1vvsJv
+         T96vdJgh+X8l56q7YEnMmDKi0YN0nl91qZDKjNMApbhYe1fE/+bOi9NExowCdOewn2GM
+         dunbjrrfJqY1P5hdNfagzU5UNHh4R6VjwUR0xIDrw8o600VQOpmXmwpUCJ2YsK1mTCLZ
+         HzqNHWTzwQ961Ngu/XR0j3bWoQx26JzdAzT42CO6WF1Et7WGYT/zE6MYxUvRv+KOrD69
+         mt1L0oQ1ZQxU4nNLOS3Kda1yFKlHWN225HoF0A0XYNW5D3GYGVxpzTHqsGESdiRm2yTw
+         L3ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=MBXtYUj1QxYipcDyqZexYNOHIwmMYcL9qVU9w76TqMU=;
-        b=NEDiBrOFC2zdRMUNXPEs7dSLl/ldryvcBL7PupCJ/Q0EDKlT9L5fa+CQr0OtFvmmQV
-         ja0mc8+PFJkUO09OuafrYoSz9xQY3A+ZhFihTmfmDk30fQsmdMYx2v03xGtsPIkTrxDB
-         PD6Mm5/2JR+wlV4BDlavbd7eK5QWg8gm2s+ySxCRrdrKekWNYeu54Oy8dd2RaLR7U8Ak
-         /CfJlxuJ2rzhGt0tPchid8MwIEDoRjHCDqegXmZ/NoXKwOtyNdHtfOG0kjQtAeF78k88
-         vF4BJHFEdHcCdQyYWHrjwMHeUvVnJxGSni/uBM/Ts8+bdFnE6nJlOFihay86QwozYrZS
-         JO/A==
-X-Gm-Message-State: APjAAAWNhZJMtp8MXwhnk/o+/bDNYJ5KZAspjNBJLSGk93MNewwrromp
-        FD716mCmOrc1UEaojqth4PsjOnWOKW6WRLZxXE3wdQ==
-X-Google-Smtp-Source: APXvYqzw4bcDZfIlq+zGGc1Fi/VjEsM3ED5HMkJFARpf6yPisIbRpOks2FuWI9Odc+UqXEL26ieYokh9OM7CembMrnve0Q==
-X-Received: by 2002:a63:78c:: with SMTP id 134mr20129191pgh.279.1580153784147;
- Mon, 27 Jan 2020 11:36:24 -0800 (PST)
-Date:   Mon, 27 Jan 2020 11:35:49 -0800
-In-Reply-To: <20200127193549.187419-1-brendanhiggins@google.com>
-Message-Id: <20200127193549.187419-3-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20200127193549.187419-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [RFC v1 2/2] arch: um: turn BTF_TYPEINFO support off
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        akpm@linux-foundation.org, changbin.du@intel.com,
-        yamada.masahiro@socionext.com, rdunlap@infradead.org,
-        keescook@chromium.org, andriy.shevchenko@linux.intel.com
-Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        davidgow@google.com, heidifahim@google.com,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wL2DenFfwzv9tqkfb30dy8DecNCbnJ/iC87Go+JzFAU=;
+        b=a+0r8w6YnBeLlKmJ0Q6MSNZARreQRE885lHooOsSIYMHV+Jf0FTgjLH2CEQOrX0elI
+         CWeEjgwslHt4JhBtg5vxKbz1SvWZrpPeroLrTAhqw64RDTJWWnPIF8FCjHfwPpbh7G1b
+         6MGSxceEh3TFHduNuvxB6Q9ZADOthC4sFn9T9hh++qkIsiYFQonv7JVnqaAFVMN9TQE4
+         3aT0z22+juWOm+lLnjdwKoKx46C054Fmjg3W+eqkfYcguhYsDtfuNcm+Emm4GuCofoCG
+         o7VS584MVd82kWOPb5xJxNkcoia+8Qug7r+YtK4/gg1sdJFG3c1Mqj6M0bUwdfIO2V4I
+         VCoQ==
+X-Gm-Message-State: APjAAAVjAKfvq/HGjrxNjer9XFkr6XeKH3PKtlW7bXZ7rWGOpALtkxt7
+        LVgyLerwW0rHaxYWXb/fr1LzCg==
+X-Google-Smtp-Source: APXvYqy7lgOUREckJf6S0ITGjHdH0mKxqYkv2EVTbTDR3MuuG718x6vgdL/bpge1IMTdbctl0JI0Gg==
+X-Received: by 2002:a17:90a:ead3:: with SMTP id ev19mr286376pjb.80.1580153946321;
+        Mon, 27 Jan 2020 11:39:06 -0800 (PST)
+Received: from ?IPv6:2620:10d:c081:1133::11c2? ([2620:10d:c090:180::dec1])
+        by smtp.gmail.com with ESMTPSA id b24sm16548399pfo.55.2020.01.27.11.39.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 11:39:05 -0800 (PST)
+Subject: Re: [PATCH 1/1] blk/core: Gracefully handle unset make_request_fn
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Stefan Bader <stefan.bader@canonical.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        dm-devel@redhat.com, Tyler Hicks <tyler.hicks@canonical.com>,
+        Alasdair Kergon <agk@redhat.com>
+References: <20200123091713.12623-1-stefan.bader@canonical.com>
+ <20200123091713.12623-2-stefan.bader@canonical.com>
+ <20200123103541.GA28102@redhat.com> <20200123172816.GA31063@redhat.com>
+ <81055166-37fb-ad65-6a53-11c22c626ab1@kernel.dk>
+ <20200127193225.GA5065@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <988c930f-b4ee-6387-e1b4-6bfe7af9bcaf@kernel.dk>
+Date:   Mon, 27 Jan 2020 12:39:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200127193225.GA5065@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently CONFIG_DEBUG_INFO_BTF=y doesn't work on UML:
+On 1/27/20 12:32 PM, Mike Snitzer wrote:
+> On Thu, Jan 23 2020 at  1:52pm -0500,
+> Jens Axboe <axboe@kernel.dk> wrote:
+> 
+>> On 1/23/20 10:28 AM, Mike Snitzer wrote:
+>>> On Thu, Jan 23 2020 at  5:35am -0500,
+>>> Mike Snitzer <snitzer@redhat.com> wrote:
+>>>
+>>>> On Thu, Jan 23 2020 at  4:17am -0500,
+>>>> Stefan Bader <stefan.bader@canonical.com> wrote:
+>>>>
+>>>>> When device-mapper adapted for multi-queue functionality, they
+>>>>> also re-organized the way the make-request function was set.
+>>>>> Before, this happened when the device-mapper logical device was
+>>>>> created. Now it is done once the mapping table gets loaded the
+>>>>> first time (this also decides whether the block device is request
+>>>>> or bio based).
+>>>>>
+>>>>> However in generic_make_request(), the request function gets used
+>>>>> without further checks and this happens if one tries to mount such
+>>>>> a partially set up device.
+>>>>>
+>>>>> This can easily be reproduced with the following steps:
+>>>>>  - dmsetup create -n test
+>>>>>  - mount /dev/dm-<#> /mnt
+>>>>>
+>>>>> This maybe is something which also should be fixed up in device-
+>>>>> mapper.
+>>>>
+>>>> I'll look closer at other options.
+>>>>
+>>>>> But given there is already a check for an unset queue
+>>>>> pointer and potentially there could be other drivers which do or
+>>>>> might do the same, it sounds like a good move to add another check
+>>>>> to generic_make_request_checks() and to bail out if the request
+>>>>> function has not been set, yet.
+>>>>>
+>>>>> BugLink: https://bugs.launchpad.net/bugs/1860231
+>>>>
+>>>> >From that bug;
+>>>> "The currently proposed fix introduces no chance of stability
+>>>> regressions. There is a chance of a very small performance regression
+>>>> since an additional pointer comparison is performed on each block layer
+>>>> request but this is unlikely to be noticeable."
+>>>>
+>>>> This captures my immediate concern: slowing down everyone for this DM
+>>>> edge-case isn't desirable.
+>>>
+>>> SO I had a look and there isn't anything easier than adding the proposed
+>>> NULL check in generic_make_request_checks().  Given the many
+>>> conditionals in that  function.. what's one more? ;)
+>>>
+>>> I looked at marking the queue frozen to prevent IO via
+>>> blk_queue_enter()'s existing cheeck -- but that quickly felt like an
+>>> abuse, especially in that there isn't a queue unfreeze for bio-based.
+>>>
+>>> Jens, I'll defer to you to judge this patch further.  If you're OK with
+>>> it: cool.  If not, I'm open to suggestions for how to proceed.  
+>>>
+>>
+>> It does kinda suck... The generic_make_request_checks() is a mess, and
+>> this doesn't make it any better. Any reason why we can't solve this
+>> two step setup in a clean fashion instead of patching around it like
+>> this? Feels like a pretty bad hack, tbh.
+> 
+> I just staged the following DM fix:
+> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.6&id=28a101d6b344f5a38d482a686d18b1205bc92333
 
-scripts/link-vmlinux.sh: line 106: 17463 Segmentation fault      LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
-objcopy: --change-section-vma .BTF=0x0000000000000000 never used
-objcopy: --change-section-lma .BTF=0x0000000000000000 never used
-objcopy: error: the input file '.btf.vmlinux.bin' is empty
-Failed to generate BTF for vmlinux
-Try to disable CONFIG_DEBUG_INFO_BTF
-make: *** [Makefile:1078: vmlinux] Error 1
+I like that a lot more than the NULL check in the core.
 
-So turn off ARCH_HAS_BTF_TYPEINFO support off for the UM architecture.
-
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
- arch/um/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index 0917f8443c285..53e13d8b210e0 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -6,6 +6,7 @@ config UML
- 	bool
- 	default y
- 	select ARCH_HAS_KCOV
-+	select ARCH_NO_BTF_TYPEINFO
- 	select ARCH_NO_PREEMPT
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_SECCOMP_FILTER
 -- 
-2.25.0.341.g760bfbb309-goog
+Jens Axboe
 
