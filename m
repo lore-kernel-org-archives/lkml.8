@@ -2,58 +2,108 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3882AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA18DC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1742D24672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22D124672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580140225;
+	bh=yuIIMVFgehN2evVkHN1c5oRnLCR4k9TmqG/yb2ag9Lw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sPunxWp1NN6fsjLodCVqhQZsS09SZuQkNLmzCLDwHLSVeflW2Xgi+8kaeFOtU+/0e
+	 dOKxqBTC8O8AL4WgpfLeRFl2HKuJ0k9WUnI3MPJTUklHGFyOJbpkuaqWmq4FgFmwUT
+	 aQL7KzGYe5nddnPNQ+jPjt02Yrqqhf0qrEYRlb6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgA0Ptv (ORCPT
+        id S1729671AbgA0PuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:49:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728783AbgA0Ptv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:49:51 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E84F22527;
-        Mon, 27 Jan 2020 15:49:50 +0000 (UTC)
-Date:   Mon, 27 Jan 2020 10:49:48 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'linux-kernel' <linux-kernel@vger.kernel.org>
-Subject: Re: sched/fair: Long delays starting RT processes on idle cpu.
-Message-ID: <20200127104948.59eac75a@gandalf.local.home>
-In-Reply-To: <13797bbe87b64f34877b89a5bbdb6d03@AcuMS.aculab.com>
-References: <13797bbe87b64f34877b89a5bbdb6d03@AcuMS.aculab.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Jan 2020 10:50:25 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34618 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728783AbgA0PuY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 10:50:24 -0500
+Received: by mail-ot1-f68.google.com with SMTP id a15so8806053otf.1;
+        Mon, 27 Jan 2020 07:50:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=beqY/DCoJ59EhwodDnm/pkcRiaCO+zbELfu5AXa7uk4=;
+        b=TXXFCw9+jMWKAavB9RkhUdFuk+bN5PCWEGWja2zUXCZv/PDRdNaOeRbaH0ojgWUitF
+         4uL11ZiaP/VFkCjWRuzAVP7DG0pmtcBhFkut2CmX8R8N1xPG51CKHmL39KN4/ZAyD8iQ
+         2dKx0CBEC7C+YBcN9iE67c9+n0N1j08GKGjcr2a6qCvJtzjk5SAIW7mMj3g3O/UXNJAU
+         ZTr1drABsZ1d7C9OQLhsQMZJWDwYvQ2vPgZ4J8WisEom+8LyVoCtnS7Iaz241+cRhcuV
+         R/wv0OrTd41yGy62almCt6ZIHQC+2hEOiHhNeAv4H1f3Lh1tM2Hm3nFENBvU3gztD9yR
+         C3BQ==
+X-Gm-Message-State: APjAAAUZmUbo6f7Fq7tyxheyyDwsxkokK3qiOi49nJjLXx8G6wp5oK1a
+        EptXgoaUs9/J85CqHWCE2Q==
+X-Google-Smtp-Source: APXvYqyn0BH6mGOr5Sh0ZRs/MHfVUVRkxZjQe26RelsSGtz2sJEWvA4FuKGh6M47f/plr8u4qbEHcg==
+X-Received: by 2002:a05:6830:1094:: with SMTP id y20mr5291444oto.12.1580140223624;
+        Mon, 27 Jan 2020 07:50:23 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t203sm4894791oig.39.2020.01.27.07.50.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 07:50:22 -0800 (PST)
+Received: (nullmailer pid 19844 invoked by uid 1000);
+        Mon, 27 Jan 2020 15:50:21 -0000
+Date:   Mon, 27 Jan 2020 09:50:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kalyani Akula <kalyani.akula@xilinx.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net, monstr@seznam.cz,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, git-dev <git-dev@xilinx.com>,
+        Mohan Marutirao Dhanawade <mohand@xilinx.com>,
+        Sarat Chand Savitala <saratcha@xilinx.com>,
+        Harsh Jain <harshj@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Kalyani Akula <kalyania@xilinx.com>
+Subject: Re: [PATCH V5 2/4] dt-bindings: crypto: Add bindings for ZynqMP
+ AES-GCM driver
+Message-ID: <20200127155021.GA16897@bogus>
+References: <1579777877-10553-1-git-send-email-kalyani.akula@xilinx.com>
+ <1579777877-10553-3-git-send-email-kalyani.akula@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579777877-10553-3-git-send-email-kalyani.akula@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020 15:39:24 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
+On Thu, Jan 23, 2020 at 04:41:15PM +0530, Kalyani Akula wrote:
+> Add documentation to describe Xilinx ZynqMP AES-GCM driver bindings.
+> 
+> Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
+> ---
+> 
+> V5 Changes:
+> - Moved dt-bindings patch from 1/4 to 2/4
+> - Converted dt-bindings from .txt to .yaml format.
+> 
+>  .../bindings/crypto/xlnx,zynqmp-aes.yaml           | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml b/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
+> new file mode 100644
+> index 0000000..b2bca4b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
+> @@ -0,0 +1,37 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-> I'd have thought that the processor should wake up much faster than that.
-> I can't see the memory write that is paired with the monitor/mwait.
-> Does it need a strong barrier?
+Dual license new bindings:
 
-You may want to prevent the CPU from going into a deep C state. 90us is
-something I would expect if the CPU is in a deep C state (I've seen
-much longer wake up times due to deep C state).
+(GPL-2.0-only OR BSD-2-Clause)
 
-Boot the kernel with idle=poll and see if you can trigger the same
-latency. If not, then you know it's the CPU going into a deep C state
-that is causing your latency.
+With that,
 
--- Steve
+Reviewed-by: Rob Herring <robh@kernel.org>
