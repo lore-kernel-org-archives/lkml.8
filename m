@@ -2,120 +2,83 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8429EC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A66C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F47F207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:42:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jYbS0ZG5"
+	by mail.kernel.org (Postfix) with ESMTP id DA6E1207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbgA0KmI (ORCPT
+        id S1730051AbgA0Knk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 05:42:08 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:58985 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729054AbgA0KmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 05:42:07 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 485mX91WVPz9v02y;
-        Mon, 27 Jan 2020 11:42:01 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=jYbS0ZG5; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id wAs_VF93qg3X; Mon, 27 Jan 2020 11:42:01 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 485mX90Jr0z9v02x;
-        Mon, 27 Jan 2020 11:42:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580121721; bh=QSas4AzfycVcrZrrY4ffgcs9Nqt9q9y8HeREqBisZ1g=;
-        h=From:Subject:To:Cc:Date:From;
-        b=jYbS0ZG5TuPWxcWiyHouSkNGKS6T7nOHGR/C/q6ryvjV5iouim64mr7SL5Cgs9goY
-         Ov6I5aKw/QSgPMK1sIlPbI48lAmwds0y09CAp+yoKeClSQXmHGHqTJynVJdSzDGvpE
-         WYlRjdNkkqeAAsSSwCLhq0XUxBCPB2y68rc3QwkQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CEEA48B79C;
-        Mon, 27 Jan 2020 11:42:05 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id V8fDMGbeqcJv; Mon, 27 Jan 2020 11:42:05 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8E0AC8B752;
-        Mon, 27 Jan 2020 11:42:05 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 1A841651FA; Mon, 27 Jan 2020 10:42:04 +0000 (UTC)
-Message-Id: <6d02c3ae6ad77af34392e98117e44c2bf6d13ba1.1580121710.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/32s: Fix CPU wake-up from sleep mode
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 27 Jan 2020 10:42:04 +0000 (UTC)
+        Mon, 27 Jan 2020 05:43:40 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:50114 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727925AbgA0Knk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 05:43:40 -0500
+Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 00RAh5iL081253;
+        Mon, 27 Jan 2020 19:43:05 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp);
+ Mon, 27 Jan 2020 19:43:05 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp)
+Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 00RAgwbk081074
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Mon, 27 Jan 2020 19:43:04 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: [PATCH 1/1] mm: sysctl: add panic_on_mm_error sysctl
+To:     Grzegorz Halat <ghalat@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        ssaner@redhat.com, atomlin@redhat.com, oleksandr@redhat.com,
+        vbendel@redhat.com, kirill@shutemov.name,
+        khlebnikov@yandex-team.ru, borntraeger@de.ibm.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20200127101100.92588-1-ghalat@redhat.com>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <063e702f-dc5f-b0ca-fe26-508a9f1e8e9a@I-love.SAKURA.ne.jp>
+Date:   Mon, 27 Jan 2020 19:42:56 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200127101100.92588-1-ghalat@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit f7354ccac844 ("powerpc/32: Remove CURRENT_THREAD_INFO and
-rename TI_CPU") broke the CPU wake-up from sleep mode (i.e. when
-_TLF_SLEEPING is set) by delaying the tovirt(r2, r2).
+On 2020/01/27 19:11, Grzegorz Halat wrote:
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index def074807cee..2fecd6b2547e 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -61,6 +61,7 @@ show up in /proc/sys/kernel:
+>  - overflowgid
+>  - overflowuid
+>  - panic
+> +- panic_on_mm_error
 
-This is because r2 is not restored by fast_exception_return. It used
-to work (by chance ?) because CPU wake-up interrupt never comes from
-user, so r2 is expected to point to 'current' on return.
+Maybe panic_on_inconsistent_mm is better, for an MM error sounds too generic
+(e.g. is page allocation failure an error, is OOM killer an error,
+is NULL pointer dereference an error, is use-after-free access an error) ?
 
-Commit e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access
-Protection") broke it even more by clobbering r0 which is not
-restored by fast_exception_return either.
+Also, should this be in /proc/sys/vm/ than /proc/sys/kernel/ ?
 
-Use r6 instead of r0. This is possible because r3-r6 are restored by
-fast_exception_return and only r3-r5 are used for exception arguments.
-
-For r2 it could be converted back to virtual address, but stay on the
-safe side and restore it from the stack instead. It should be live
-in the cache at that moment, so loading from the stack should make
-no difference compared to converting it from phys to virt.
-
-Fixes: f7354ccac844 ("powerpc/32: Remove CURRENT_THREAD_INFO and rename TI_CPU")
-Fixes: e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access Protection")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/entry_32.S | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index 73b80143ffac..27e2afce8b78 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -180,7 +180,7 @@ transfer_to_handler:
- 2:	/* if from kernel, check interrupted DOZE/NAP mode and
-          * check for stack overflow
-          */
--	kuap_save_and_lock r11, r12, r9, r2, r0
-+	kuap_save_and_lock r11, r12, r9, r2, r6
- 	addi	r2, r12, -THREAD
- #ifndef CONFIG_VMAP_STACK
- 	lwz	r9,KSP_LIMIT(r12)
-@@ -288,6 +288,7 @@ reenable_mmu:
- 	rlwinm	r9,r9,0,~MSR_EE
- 	lwz	r12,_LINK(r11)		/* and return to address in LR */
- 	kuap_restore r11, r2, r3, r4, r5
-+	lwz	r2, GPR2(r11)
- 	b	fast_exception_return
- #endif
- 
--- 
-2.25.0
-
+>  - panic_on_oops
+>  - panic_on_stackoverflow
+>  - panic_on_unrecovered_nmi
