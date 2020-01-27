@@ -2,152 +2,149 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41873C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B39C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF422465B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7771F2465B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:32:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jH/aWVkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgA0Vbs (ORCPT
+        id S1726569AbgA0VcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 16:31:48 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54090 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725955AbgA0Vbs (ORCPT
+        Mon, 27 Jan 2020 16:32:15 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3437 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA0VcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 16:31:48 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RLHSs7127329
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:31:46 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrjq6nbrm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:31:46 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 27 Jan 2020 21:31:44 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 27 Jan 2020 21:31:41 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00RLVevM30605340
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 21:31:40 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B427C11C052;
-        Mon, 27 Jan 2020 21:31:40 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 239DE11C04A;
-        Mon, 27 Jan 2020 21:31:40 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.185.238])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jan 2020 21:31:40 +0000 (GMT)
-Subject: Re: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
- the boot aggregate
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     linux-integrity@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 27 Jan 2020 16:31:39 -0500
-In-Reply-To: <20200127204941.2ewman4y5nzvkjqe@cantor>
-References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
-         <20200127204941.2ewman4y5nzvkjqe@cantor>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012721-0016-0000-0000-000002E13180
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012721-0017-0000-0000-00003343EFBE
-Message-Id: <1580160699.5088.64.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-27_07:2020-01-24,2020-01-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 mlxscore=0 clxscore=1015 phishscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001270168
+        Mon, 27 Jan 2020 16:32:14 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2f56ce0000>; Mon, 27 Jan 2020 13:31:58 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 27 Jan 2020 13:32:13 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 27 Jan 2020 13:32:13 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan
+ 2020 21:32:12 +0000
+Subject: Re: [PATCH 2/3] mm/gup_benchmark: support pin_user_pages() and
+ related calls
+To:     Nathan Chancellor <natechancellor@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <clang-built-linux@googlegroups.com>
+References: <20200125021115.731629-1-jhubbard@nvidia.com>
+ <20200125021115.731629-3-jhubbard@nvidia.com>
+ <20200127205247.GA578@Ryzen-7-3700X.localdomain>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <f81fab20-5d01-e782-d45e-c65f3e51beec@nvidia.com>
+Date:   Mon, 27 Jan 2020 13:32:12 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <20200127205247.GA578@Ryzen-7-3700X.localdomain>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580160719; bh=LhTJ1/tn6kZiofE+Kr6/Zk0ukPrusIeEJQXQNfI3D4E=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jH/aWVkDdLxaqW2OoiDKS+BWcTzIf6yve3rYKFXwVO1AZhn0Nwy2JTWjicRhjZuY1
+         Pi+hqOq3waR9VenG24erVlsmk7iQeYRgu1pP7ltts7/OQPMIA+rvbeeTUagL2saVaE
+         FBnndluKMcXFzDAFQky/RxazS2q9KA3wBbIybB+Kfhz3tbRIuyfADdixquzqbS3/ht
+         QZfl17htJL+rpegeOpiLipRXjnoNuHjgUP9Ca/X1nMjNXf3tSK7aH/iP6Rl7FoPiAu
+         msS9jWktPmaSnhFZgoUJpbqgbu0+9u2hZHo9iNoF23i2ahh7AfJza6/gl7ruiMf2Y6
+         U6eqDh1wCGNIQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-01-27 at 13:49 -0700, Jerry Snitselaar wrote:
-> On Mon Jan 27 20, Mimi Zohar wrote:
-> >The boot aggregate is a cumulative SHA1 hash over TPM registers 0 - 7.
-> >NIST has depreciated the usage of SHA1 in most instances.  Instead of
-> >continuing to use SHA1 to calculate the boot_aggregate, use the
-> >configured IMA default hash algorithm.
-> >
-> >Although the IMA measurement list boot_aggregate template data contains
-> >the hash algorithm followed by the digest, allowing verifiers (e.g.
-> >attesttaion servers) to calculate and verify the boot_aggregate, the
-> >verifiers might not have the knowledge of what constitutes a good value
-> >based on a different hash algorithm.
-> >
-> >Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> >---
-> > security/integrity/ima/ima_init.c | 8 ++++----
-> > 1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> >diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-> >index 195cb4079b2b..b1b334fe0db5 100644
-> >--- a/security/integrity/ima/ima_init.c
-> >+++ b/security/integrity/ima/ima_init.c
-> >@@ -27,7 +27,7 @@ struct tpm_chip *ima_tpm_chip;
-> > /* Add the boot aggregate to the IMA measurement list and extend
-> >  * the PCR register.
-> >  *
-> >- * Calculate the boot aggregate, a SHA1 over tpm registers 0-7,
-> >+ * Calculate the boot aggregate, a hash over tpm registers 0-7,
-> >  * assuming a TPM chip exists, and zeroes if the TPM chip does not
-> >  * exist.  Add the boot aggregate measurement to the measurement
-> >  * list and extend the PCR register.
-> >@@ -51,14 +51,14 @@ static int __init ima_add_boot_aggregate(void)
-> > 	int violation = 0;
-> > 	struct {
-> > 		struct ima_digest_data hdr;
-> >-		char digest[TPM_DIGEST_SIZE];
-> >+		char digest[TPM_MAX_DIGEST_SIZE];
-> > 	} hash;
-> >
-> > 	memset(iint, 0, sizeof(*iint));
-> > 	memset(&hash, 0, sizeof(hash));
-> > 	iint->ima_hash = &hash.hdr;
-> >-	iint->ima_hash->algo = HASH_ALGO_SHA1;
-> >-	iint->ima_hash->length = SHA1_DIGEST_SIZE;
-> >+	iint->ima_hash->algo = ima_hash_algo;
-> >+	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
-> >
-> > 	if (ima_tpm_chip) {
-> > 		result = ima_calc_boot_aggregate(&hash.hdr);
-> >-- 
-> >2.7.5
-> >
+On 1/27/20 12:52 PM, Nathan Chancellor wrote:
+...
+>> --- a/mm/gup_benchmark.c
+>> +++ b/mm/gup_benchmark.c
+>> @@ -8,6 +8,8 @@
+>>  #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
+>>  #define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
+>>  #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
+>> +#define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
+>> +#define PIN_BENCHMARK		_IOWR('g', 5, struct gup_benchmark)
+>>  
+>>  struct gup_benchmark {
+>>  	__u64 get_delta_usec;
+>> @@ -19,6 +21,47 @@ struct gup_benchmark {
+>>  	__u64 expansion[10];	/* For future use */
+>>  };
+>>  
+>> +static void put_back_pages(int cmd, struct page **pages, unsigned long nr_pages)
 > 
-> Tested the patches on the Dell and no longer spits out the error messages on boot.
-> /sys/kernel/security/ima/ascii_runtime_measurements shows the boot aggregate.
-> 
-> Is there something else I should look at to verify it is functioning properly?
+> We received a Clang build report on this patch because the use of
+> PIN_FAST_BENCHMARK and PIN_BENCHMARK in the switch statement below will
+> overflow int; this should be unsigned int to match the cmd parameter in
+> the ioctls.
 
-The original LTP ima_boot_aggregate.c test needed to be updated to
-support TPM 2.0 before this change.  For TPM 2.0, the PCRs are not
-exported.  With this change, the kernel could be reading PCRs from a
-TPM bank other than SHA1 and calculating the boot_aggregate based on a
-different hash algorithm as well.  I'm not sure how a remote verifier
-would know which TPM bank was read, when calculating the boot-
-aggregate.
 
-At the moment, the only test would be to make sure that the LTP test
-still works for TPM 1.2 properly.
+Thanks for the report! Yes, that should have been "unsigned int cmd", to match the
+one in the ioctls, just as you said.
 
-Mimi
+I'll apply this diff, for the next version of the series:
 
+diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+index 3d5fb765e4e6..7d5573083ab3 100644
+--- a/mm/gup_benchmark.c
++++ b/mm/gup_benchmark.c
+@@ -21,7 +21,8 @@ struct gup_benchmark {
+        __u64 expansion[10];    /* For future use */
+ };
+ 
+-static void put_back_pages(int cmd, struct page **pages, unsigned long nr_pages)
++static void put_back_pages(unsigned int cmd, struct page **pages,
++                          unsigned long nr_pages)
+ {
+        int i;
+ 
+@@ -40,7 +41,7 @@ static void put_back_pages(int cmd, struct page **pages, unsigned long nr_pages)
+        }
+ }
+ 
+-static void verify_dma_pinned(int cmd, struct page **pages,
++static void verify_dma_pinned(unsigned int cmd, struct page **pages,
+                              unsigned long nr_pages)
+ {
+        int i;
+
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
