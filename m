@@ -2,179 +2,206 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB674C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ABFC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC91C215A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A09C22522
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:34:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhW2ulZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729536AbgA0Pdb (ORCPT
+        id S1729464AbgA0Pen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:33:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:46256 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729213AbgA0Pdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:33:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2219E31B;
-        Mon, 27 Jan 2020 07:33:30 -0800 (PST)
-Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 249D73F67D;
-        Mon, 27 Jan 2020 07:33:28 -0800 (PST)
-Subject: Re: [PATCH v2 3/6] arm64/kvm: disable access to AMU registers from
- kvm guests
-To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        dietmar.eggemann@arm.com
-Cc:     peterz@infradead.org, mingo@redhat.com, ggherdovich@suse.cz,
-        vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-References: <20191218182607.21607-1-ionela.voinescu@arm.com>
- <20191218182607.21607-4-ionela.voinescu@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <bc3f582c-9aed-8052-d0cb-b39c76c8ce73@arm.com>
-Date:   Mon, 27 Jan 2020 15:33:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 27 Jan 2020 10:34:43 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:39345 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729085AbgA0Pem (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 10:34:42 -0500
+Received: by mail-qv1-f67.google.com with SMTP id y8so4649762qvk.6;
+        Mon, 27 Jan 2020 07:34:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lVUnJMfjmuGw+lU9thhl2oSy8uhsumVUEINYmzwWOXs=;
+        b=dhW2ulZ3P+R6T8JKYFAot0I7g6GZMnILoApLkWciTMODTNGvU4ZP3Z8ZyZK0jrGcJ1
+         Z49HE8HhMLUBfclgQpkI7XxfdaOKAF/Pm7CDmY/JEKCe5m0x9GDP8EKUBI61qzBV8KlV
+         /vBBgyNk51PMMVjRHsqiLg4uV9tILW3R81Y46qqUHrfX+f449TuDoyxUWSfgahwyzGYo
+         idGlVOi8JhjcgTCCIkMXDoWZivykddRJ3C/pJaTwcHG/ezptCPi6WaNB+LXtQgNXDFOS
+         9/8HIFL1tPZ+9qDt7eXC16fCpXin1aItCZsG4zpjP9nhQQWJYfGvrzok5sudEY8mZGJ+
+         4jKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lVUnJMfjmuGw+lU9thhl2oSy8uhsumVUEINYmzwWOXs=;
+        b=RHo3YP6ayOw1EwdMhas6x/K3SGsgngS+PRISsGfSnYNXXENm2maqI1Ogc+VbSDiza+
+         7qBlqgrNWOB6z6nobtq+RIO6/dzxhgSmT1owG9MVqCWYNJnhBapgIQbUT3bH8aKrbQu2
+         AxHW3pm2l68wxSM54Ds+8n4CJdR370PC7Qal1NQ8F+lUAWIxd48tAG/yBzjM4YxidE31
+         csazbLesoZ8nJmuQzSnuie/ENZlvWIyxoSbXyE1bcKR5BD/bNV2zpFk+iMcKoFNTwCJY
+         A0nR6Z1/PKJyS2YpTcaJlLshufzZjjo1oPnh1yDmSmJKmOMgxihltrHfvkbmlIkjOkIJ
+         J+Jw==
+X-Gm-Message-State: APjAAAV9zwgvIys3tSsoQ4Ok/aLGB09KYIEhIDct3T3fYYK/qHrDIW9c
+        jhPfSZAE9MteWYzOnsWlwRefnYeqXFhcT7F3jSI=
+X-Google-Smtp-Source: APXvYqxCM3fA+7JszJLqjAKCNtex3kozoTfy7cySq/OKOMR+6QXu0LT4v60q7/cLiNaxG6ETDWDHwbgsUlLvAzOTTC0=
+X-Received: by 2002:a05:6214:b23:: with SMTP id w3mr17432626qvj.181.1580139281556;
+ Mon, 27 Jan 2020 07:34:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191218182607.21607-4-ionela.voinescu@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <025801d5bf24$aa242100$fe6c6300$@gmail.com> <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
+ <084f01d5cfba$bc5c4d10$3514e730$@gmail.com> <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
+ <a62e45ba968fe845fa757174efc0cab93c490d54.camel@hammerspace.com>
+ <CALbTx=GxuUmWu9Og_pv8TPbB0ZnOCA3vMqtyG4e18-4+zkY8=A@mail.gmail.com> <6B5432AC-73BA-465E-98FC-82BFD0E817FD@oracle.com>
+In-Reply-To: <6B5432AC-73BA-465E-98FC-82BFD0E817FD@oracle.com>
+From:   Robert Milkowski <rmilkowski@gmail.com>
+Date:   Mon, 27 Jan 2020 15:34:30 +0000
+Message-ID: <CALbTx=E9PD3QomfEqCLSVEVk0cjXW=0+7-UgUkqwEEf=reRpXg@mail.gmail.com>
+Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/12/2019 18:26, Ionela Voinescu wrote:
-> diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-> index 6e5d839f42b5..dd20fb185d56 100644
-> --- a/arch/arm64/include/asm/kvm_arm.h
-> +++ b/arch/arm64/include/asm/kvm_arm.h
-> @@ -266,10 +266,11 @@
->  #define CPTR_EL2_TFP_SHIFT 10
->  
->  /* Hyp Coprocessor Trap Register */
-> -#define CPTR_EL2_TCPAC	(1 << 31)
-> -#define CPTR_EL2_TTA	(1 << 20)
-> -#define CPTR_EL2_TFP	(1 << CPTR_EL2_TFP_SHIFT)
->  #define CPTR_EL2_TZ	(1 << 8)
-> +#define CPTR_EL2_TFP	(1 << CPTR_EL2_TFP_SHIFT)
-> +#define CPTR_EL2_TTA	(1 << 20)
-> +#define CPTR_EL2_TAM	(1 << 30)
-> +#define CPTR_EL2_TCPAC	(1 << 31)
+On Mon, 27 Jan 2020 at 15:05, Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+>
+>
+> > On Jan 27, 2020, at 9:45 AM, Robert Milkowski <rmilkowski@gmail.com> wrote:
+> >
+> > On Thu, 23 Jan 2020 at 19:08, Trond Myklebust <trondmy@hammerspace.com> wrote:
+> >>
+> >> On Wed, 2020-01-22 at 19:10 +0000, Schumaker, Anna wrote:
+> >>> Hi Robert,
+> >>>
+> >>> On Mon, 2020-01-20 at 17:55 +0000, Robert Milkowski wrote:
+> >>>>> -----Original Message-----
+> >>>>> From: Chuck Lever <chuck.lever@oracle.com>
+> >>>>> Sent: 30 December 2019 15:37
+> >>>>> To: Robert Milkowski <rmilkowski@gmail.com>
+> >>>>> Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>; Trond
+> >>>>> Myklebust
+> >>>>> <trond.myklebust@hammerspace.com>; Anna Schumaker
+> >>>>> <anna.schumaker@netapp.com>; linux-kernel@vger.kernel.org
+> >>>>> Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do
+> >>>>> implicit
+> >>>>> lease renewals
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>>> On Dec 30, 2019, at 10:20 AM, Robert Milkowski <
+> >>>>>> rmilkowski@gmail.com>
+> >>>>> wrote:
+> >>>>>> From: Robert Milkowski <rmilkowski@gmail.com>
+> >>>>>>
+> >>>>>> Currently, each time nfs4_do_fsinfo() is called it will do an
+> >>>>>> implicit
+> >>>>>> NFS4 lease renewal, which is not compliant with the NFS4
+> >>>>> specification.
+> >>>>>> This can result in a lease being expired by an NFS server.
+> >>>>>>
+> >>>>>> Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing
+> >>>>>> leases")
+> >>>>>> introduced implicit client lease renewal in nfs4_do_fsinfo(),
+> >>>>>> which
+> >>>>>> can result in the NFSv4.0 lease to expire on a server side, and
+> >>>>>> servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+> >>>>>>
+> >>>>>> This can easily be reproduced by frequently unmounting a sub-
+> >>>>>> mount,
+> >>>>>> then stat'ing it to get it mounted again, which will delay or
+> >>>>>> even
+> >>>>>> completely prevent client from sending RENEW operations if no
+> >>>>>> other
+> >>>>>> NFS operations are issued. Eventually nfs server will expire
+> >>>>>> client's
+> >>>>>> lease and return an error on file access or next RENEW.
+> >>>>>>
+> >>>>>> This can also happen when a sub-mount is automatically
+> >>>>>> unmounted due
+> >>>>>> to inactivity (after nfs_mountpoint_expiry_timeout), then it is
+> >>>>>> mounted again via stat(). This can result in a short window
+> >>>>>> during
+> >>>>>> which client's lease will expire on a server but not on a
+> >>>>>> client.
+> >>>>>> This specific case was observed on production systems.
+> >>>>>>
+> >>>>>> This patch makes an explicit lease renewal instead of an
+> >>>>>> implicit one,
+> >>>>>> by adding RENEW to a compound operation issued by
+> >>>>>> nfs4_do_fsinfo(),
+> >>>>>> similarly to NFSv4.1 which adds SEQUENCE operation.
+> >>>>>>
+> >>>>>> Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing
+> >>>>>> leases")
+> >>>>>> Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+> >>>>>
+> >>>>> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+> >>>>>
+> >>>>>
+> >>>>
+> >>>> How do we progress it further?
+> >>>
+> >>> Thanks for following up! I have the patch included in my linux-next
+> >>> branch for
+> >>> the next merge window.
+> >>
+> >> NACK. This is the wrong way to solve the problem. Lease renewal in
+> >> NFSv4 does not need to be tied to fsinfo. It creates an unnecessary
+> >> extra error condition that has absolutely nothing to do with the
+> >> functionality of retrieving per-filesystem attributes.
+> >
+> > Well, we also do it for NFSv4.1+ with the SEQUENCE operation being
+> > send by fsinfo, and as Chuck pointed out
+> > it makes sense to do similarly for 4.0, which is what this patch does.
+>
+> I did say that.
+>
+> However, I can see that for NFSv4.1+, the client code handling the
+> SEQUENCE response will update cl_last_renewal. It does not need to
+> be done in the fsinfo code.
 
-Nit: why the #define movement? Couldn't that just be added beneath
-CPTR_EL2_TCPAC?
+I think it is the case, yes.
 
->  #define CPTR_EL2_RES1	0x000032ff /* known RES1 bits in CPTR_EL2 */
->  #define CPTR_EL2_DEFAULT	CPTR_EL2_RES1
->  
-> diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-> index 72fbbd86eb5e..0bca87a2621f 100644
-> --- a/arch/arm64/kvm/hyp/switch.c
-> +++ b/arch/arm64/kvm/hyp/switch.c
-> @@ -90,6 +90,17 @@ static void activate_traps_vhe(struct kvm_vcpu *vcpu)
->  	val = read_sysreg(cpacr_el1);
->  	val |= CPACR_EL1_TTA;
->  	val &= ~CPACR_EL1_ZEN;
-> +
-> +	/*
-> +	 * With VHE enabled, we have HCR_EL2.{E2H,TGE} = {1,1}. Note that in
-> +	 * this case CPACR_EL1 has the same bit layout as CPTR_EL2, and
-> +	 * CPACR_EL1 accessing instructions are redefined to access CPTR_EL2.
-> +	 * Therefore use CPTR_EL2.TAM bit reference to activate AMU register
-> +	 * traps.
-> +	 */
-> +
-> +	val |= CPTR_EL2_TAM;
-> +
+>
+> The NFSv4.0 behavior should be correct if cl_last_renewal is not
+> updated. That should force the client to send a separate RENEW
+> operation so that both the client and server agree that the lease
+> is active.
+>
 
-Hmm so this is a bit confusing for me, I've rewritten that part of the
-email too many times (didn't help that I'm far from being a virt guru).
-Rectifications are most welcome.
+I was thinking about removing the call to update the last renewal
+entirely in do_fsinfo(),
+however as briefly discussed back in Dec there is an issue with
+cl_last_renewal initialization on initial mount in 4.0
+I observed it to be 0, as nfs4_setup_state_renewal() calls
+nfs4_proc_get_lease_time() on initial mount and if no error it calls
+nfs4_set_lease_period().
+However with sec=krb the call to nfs4_proc_get_lease_time() returns
+NFS4ERR_WRONGSEC) during initial mount (which seems to be ok), which
+results in not setting cl_last_renewal,
+which iirc prevented scheduling RENEW operations altogether. As
+discussed then, this is really a separate issue which should be fixed
+separately.
+Once fixed then fsinfo() shouldn't need to set cl_last_renewal at all,
+still sending RENEW in fsinfo() seems like a good idea to make it more
+inline with what we do for 4.1.
 
+> If I understand Trond correctly?
+>
 
-First, AFAICT we *don't* have HCR_EL2.TGE set anymore at this point, it's
-cleared just a bit earlier in __activate_traps().
+The problem with what Trond proposed is that it seems to go against
+the rfc, although it should fix the initialization issue.
 
-
-Then, your comment suggests that when we're running this code, CPACR_EL1
-accesses are rerouted to CPTR_EL2. Annoyingly this isn't mentioned in
-the doc of CPACR_EL1, but D5.6.3 does say
-
-"""
-When ARMv8.1-VHE is implemented, and HCR_EL2.E2H is set to 1, when executing
-at EL2, some EL1 System register access instructions are redefined to access
-the equivalent EL2 register.
-"""
-
-And CPACR_EL1 is part of these, so far so good. Now, the thing is
-the doc for CPACR_EL1 *doesn't* mention any TAM bit - but CPTR_EL2 does.
-I believe what *do* want here is to set CPTR_EL2.TAM (which IIUC we end
-up doing via the rerouting).
-
-So, providing I didn't get completely lost on the way, I have to ask:
-why do we use CPACR_EL1 here? Couldn't we use CPTR_EL2 directly?
-
-
->  	if (update_fp_enabled(vcpu)) {
->  		if (vcpu_has_sve(vcpu))
->  			val |= CPACR_EL1_ZEN;
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 9f2165937f7d..940ab9b4c98b 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1003,6 +1003,20 @@ static bool access_pmuserenr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
->  	{ SYS_DESC(SYS_PMEVTYPERn_EL0(n)),					\
->  	  access_pmu_evtyper, reset_unknown, (PMEVTYPER0_EL0 + n), }
->  
-> +static bool access_amu(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
-> +			     const struct sys_reg_desc *r)
-> +{
-> +	kvm_inject_undefined(vcpu);
-> +
-> +	return false;
-> +}
-> +
-> +/* Macro to expand the AMU counter and type registers*/
-> +#define AMU_AMEVCNTR0_EL0(n) { SYS_DESC(SYS_AMEVCNTR0_EL0(n)), access_amu }
-> +#define AMU_AMEVTYPE0_EL0(n) { SYS_DESC(SYS_AMEVTYPE0_EL0(n)), access_amu }
-> +#define AMU_AMEVCNTR1_EL0(n) { SYS_DESC(SYS_AMEVCNTR1_EL0(n)), access_amu }
-> +#define AMU_AMEVTYPE1_EL0(n) { SYS_DESC(SYS_AMEVTYPE1_EL0(n)), access_amu }
-> +
-
-You could save a *whopping* two lines with something like:
-
-#define AMU_AMEVCNTR_EL0(group, n) { SYS_DESC(SYS_AMEVCNTR##group##_EL0(n)), access_amu }
-#define AMU_AMEVTYPE_EL0(group, n) { SYS_DESC(SYS_AMEVTYPE##group##_EL0(n)), access_amu }
-
-Though it doesn't help shortening the big register list below.
-
->  static bool trap_ptrauth(struct kvm_vcpu *vcpu,
->  			 struct sys_reg_params *p,
->  			 const struct sys_reg_desc *rd)
-> @@ -1078,8 +1092,12 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
->  			 (u32)r->CRn, (u32)r->CRm, (u32)r->Op2);
->  	u64 val = raz ? 0 : read_sanitised_ftr_reg(id);
->  
-> -	if (id == SYS_ID_AA64PFR0_EL1 && !vcpu_has_sve(vcpu)) {
-> -		val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-> +	if (id == SYS_ID_AA64PFR0_EL1) {
-> +		if (!vcpu_has_sve(vcpu))
-> +			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-> +		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
-> +	} else if (id == SYS_ID_PFR0_EL1) {
-> +		val &= ~(0xfUL << ID_PFR0_AMU_SHIFT);
->  	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
->  		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
->  			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
-
-Could almost turn the thing into a switch case at this point.
+-- 
+Robert Milkowski
