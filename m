@@ -2,135 +2,138 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABA3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB614C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010C82465B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31AB2467B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:27:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P7/Ol9VF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgA0XYC (ORCPT
+        id S1726267AbgA0X1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 18:24:02 -0500
-Received: from monster.unsafe.ru ([5.9.28.80]:59724 "EHLO mail.unsafe.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgA0XYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 18:24:02 -0500
-Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.unsafe.ru (Postfix) with ESMTPSA id B5A60C61B0E;
-        Mon, 27 Jan 2020 23:23:54 +0000 (UTC)
-Date:   Tue, 28 Jan 2020 00:23:53 +0100
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v7 07/11] proc: flush task dcache entries from all procfs
- instances
-Message-ID: <20200127232352.s3mvvfkrta3i5h7w@comp-core-i7-2640m-0182e6>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20200125130541.450409-1-gladkov.alexey@gmail.com>
- <20200125130541.450409-8-gladkov.alexey@gmail.com>
- <CAHk-=wiGNSQCA8TYa1Akp0_GRpe=ELKDPkDX5nzM5R=oDy1U+Q@mail.gmail.com>
+        Mon, 27 Jan 2020 18:27:36 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39961 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA0X1f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 18:27:35 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k25so5948167pgt.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 15:27:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hwrToBDFY4HIyFLVjgz55WQA/wuDwI/+ZrtWoDNgqy8=;
+        b=P7/Ol9VFJBuzQj3BmDZ7XheRs5xTuuwbS3UWi5CNkSUsTkwKfcix4/o2R+Uqg5Z+S7
+         bgnUa/54hKHdlkuF9qEt8rIwaLxRSrCEDlNlgmuGNNmsaZgbmaHRHhCCy7vdag57HgjB
+         cw4veg02KHYv1G0VjBjblOt60y/D7hKBbXeNw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hwrToBDFY4HIyFLVjgz55WQA/wuDwI/+ZrtWoDNgqy8=;
+        b=hb4ViS67lQLQ4zE4NgdCQ0QiNWh20UY96vcFL+uLUbUkufTR+oJmMOHDe61sTyGHHF
+         kiiS95KYy+lhNnnwN2hyPXMDLgadXO4oeOGnY1NlJY1112de4A2GpcSfFD8kBbI/XpUG
+         a9iB9jAvqzqcymom6ylgsT1HfyOpljHWdpEpRlnkIi5Lj7IIXv+96RdMGCunhq819pVY
+         /m1vLXXl1vKGBV3LapTQBTq0JG7KiTbDOGDfDgJhtY2DERqdrBpI3vSHfv4GGl882u8z
+         tAW7OWbSfnub9kzhm9YDuqyqmCqYlRfSjFTvlvlzVq9iTRv6yF5bLk8/nbqa8RRaGYgA
+         12Yg==
+X-Gm-Message-State: APjAAAW3upP7PogFlovuK0a+eyfn2M0lVP7hTo8oJIgo4RAsypFVgPhc
+        1+n+11iEN5oY63a2kKv2BJCkGA==
+X-Google-Smtp-Source: APXvYqzBa+ZBcDQ+dqyhCzSfqudbD6GhoALp9yymRH4pSJpi2ADb/wQQOBTsiGcGP/atIwo/qfxDjQ==
+X-Received: by 2002:a62:cd86:: with SMTP id o128mr1017346pfg.187.1580167655327;
+        Mon, 27 Jan 2020 15:27:35 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r2sm17236619pgv.16.2020.01.27.15.27.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 15:27:34 -0800 (PST)
+Date:   Mon, 27 Jan 2020 15:27:33 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] pstore: Fix printing of duplicate boot messages to
+ console
+Message-ID: <202001271525.E6EB4FDD6@keescook>
+References: <20200123160031.9853-1-saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wiGNSQCA8TYa1Akp0_GRpe=ELKDPkDX5nzM5R=oDy1U+Q@mail.gmail.com>
+In-Reply-To: <20200123160031.9853-1-saiprakash.ranjan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 10:45:25AM -0800, Linus Torvalds wrote:
-> On Sat, Jan 25, 2020 at 5:06 AM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
-> >
-> > This allows to flush dcache entries of a task on multiple procfs mounts
-> > per pid namespace.
-> 
-> From a quick read-through, this is the only one I really react negatively to.
-> 
-> The locking looks odd. It only seems to protect the new proc_mounts
-> list, but then it's a whole big rwsem, and it's taken over all of
-> proc_flush_task_mnt(), and the locking is exported to all over as a
-> result of that - including the dummy functions for "there is no proc"
-> case.
-> 
-> And proc_flush_task_mnt() itself should need no locking over any of
-> it, so it's all just for the silly looping over the list.
+On Thu, Jan 23, 2020 at 09:30:31PM +0530, Sai Prakash Ranjan wrote:
+> Since commit f92b070f2dc8 ("printk: Do not miss new messages
+> when replaying the log"), CON_PRINTBUFFER flag causes the
+> duplicate boot messages to be printed on the console when
+> PSTORE_CONSOLE and earlycon (boot console) is enabled.
+> Pstore console registers to boot console when earlycon is
+> enabled during pstore_register_console as a part of ramoops
+> initialization in postcore_initcall and the printk core
+> checks for CON_PRINTBUFFER flag and replays the log buffer
+> to registered console (in this case pstore console which
+> just registered to boot console) causing duplicate messages
+> to be printed. Remove the CON_PRINTBUFFER flag from pstore
+> console since pstore is not concerned with the printing of
+> buffer to console but with writing of the buffer to the
+> backend.
 
-Thank you, I will rework this part.
+I agree this patch isn't the solution, but I'm trying to understand
+where better logic could be added. Is the issue that printk sees both
+earlycon and CON_PRINTBUFFER active? Can we add a new CON_* flag that
+means "not actually printing anything"? (Or maybe a new flag for
+non-printing to replace CON_PRINTBUFFER that lets pstore still work?)
 
-> So
-> 
->  (a) this looks fishy and feels wrong - I get a very strong feeling
-> that the locking is wrong to begin with, and could/should have been
-> done differently
-> 
->  (b) all the locking should have been internal to /proc, and those
-> wrappers shouldn't exist in a common header file (and certainly not
-> for the non-proc case).
-> 
-> Yes, (a) is just a feeling, and I don't have any great suggestions.
-> Maybe make it an RCU list and use a spinlock for updating it?
+-Kees
 
-I’m thinking, is it possible to get rid of proc_flush_task at all ?
-Maybe we can try to flush dcache during readdir for example.
-
-> But (b) is pretty much a non-starter in this form. Those wrappers
-> shouldn't be in a globally exported core header file. No way.
 > 
->                Linus
+> Console log with earlycon and pstore console enabled:
 > 
+> [    0.008342] Console: colour dummy device 80x25
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51df805e]
+> ...
+> [    1.244049] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51df805e]
+> 
+> Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
+> Reported-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  fs/pstore/platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+> index d896457e7c11..271b00db0973 100644
+> --- a/fs/pstore/platform.c
+> +++ b/fs/pstore/platform.c
+> @@ -505,7 +505,7 @@ static void pstore_console_write(struct console *con, const char *s, unsigned c)
+>  static struct console pstore_console = {
+>  	.name	= "pstore",
+>  	.write	= pstore_console_write,
+> -	.flags	= CON_PRINTBUFFER | CON_ENABLED | CON_ANYTIME,
+> +	.flags	= CON_ENABLED | CON_ANYTIME,
+>  	.index	= -1,
+>  };
+>  
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
 
 -- 
-Rgrds, legion
-
+Kees Cook
