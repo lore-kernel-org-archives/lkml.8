@@ -2,133 +2,152 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F82C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41873C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5BF62465B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF422465B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgA0V27 (ORCPT
+        id S1726294AbgA0Vbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 16:28:59 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:52700 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725955AbgA0V27 (ORCPT
+        Mon, 27 Jan 2020 16:31:48 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54090 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725955AbgA0Vbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 16:28:59 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TodWSHI_1580160527;
-Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TodWSHI_1580160527)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 28 Jan 2020 05:28:55 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     mhocko@suse.com, richardw.yang@linux.intel.com,
-        willy@infradead.org, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [v4 PATCH] mm: move_pages: report the number of non-attempted pages
-Date:   Tue, 28 Jan 2020 05:28:47 +0800
-Message-Id: <1580160527-109104-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 27 Jan 2020 16:31:48 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RLHSs7127329
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:31:46 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrjq6nbrm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:31:46 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 27 Jan 2020 21:31:44 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 27 Jan 2020 21:31:41 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00RLVevM30605340
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 21:31:40 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B427C11C052;
+        Mon, 27 Jan 2020 21:31:40 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 239DE11C04A;
+        Mon, 27 Jan 2020 21:31:40 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.185.238])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jan 2020 21:31:40 +0000 (GMT)
+Subject: Re: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
+ the boot aggregate
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Jerry Snitselaar <jsnitsel@redhat.com>
+Cc:     linux-integrity@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 27 Jan 2020 16:31:39 -0500
+In-Reply-To: <20200127204941.2ewman4y5nzvkjqe@cantor>
+References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+         <20200127204941.2ewman4y5nzvkjqe@cantor>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012721-0016-0000-0000-000002E13180
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012721-0017-0000-0000-00003343EFBE
+Message-Id: <1580160699.5088.64.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_07:2020-01-24,2020-01-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 clxscore=1015 phishscore=0 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001270168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
-the semantic of move_pages() has changed to return the number of
-non-migrated pages if they were result of a non-fatal reasons (usually a
-busy page).  This was an unintentional change that hasn't been noticed
-except for LTP tests which checked for the documented behavior.
+On Mon, 2020-01-27 at 13:49 -0700, Jerry Snitselaar wrote:
+> On Mon Jan 27 20, Mimi Zohar wrote:
+> >The boot aggregate is a cumulative SHA1 hash over TPM registers 0 - 7.
+> >NIST has depreciated the usage of SHA1 in most instances.  Instead of
+> >continuing to use SHA1 to calculate the boot_aggregate, use the
+> >configured IMA default hash algorithm.
+> >
+> >Although the IMA measurement list boot_aggregate template data contains
+> >the hash algorithm followed by the digest, allowing verifiers (e.g.
+> >attesttaion servers) to calculate and verify the boot_aggregate, the
+> >verifiers might not have the knowledge of what constitutes a good value
+> >based on a different hash algorithm.
+> >
+> >Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> >---
+> > security/integrity/ima/ima_init.c | 8 ++++----
+> > 1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> >diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+> >index 195cb4079b2b..b1b334fe0db5 100644
+> >--- a/security/integrity/ima/ima_init.c
+> >+++ b/security/integrity/ima/ima_init.c
+> >@@ -27,7 +27,7 @@ struct tpm_chip *ima_tpm_chip;
+> > /* Add the boot aggregate to the IMA measurement list and extend
+> >  * the PCR register.
+> >  *
+> >- * Calculate the boot aggregate, a SHA1 over tpm registers 0-7,
+> >+ * Calculate the boot aggregate, a hash over tpm registers 0-7,
+> >  * assuming a TPM chip exists, and zeroes if the TPM chip does not
+> >  * exist.  Add the boot aggregate measurement to the measurement
+> >  * list and extend the PCR register.
+> >@@ -51,14 +51,14 @@ static int __init ima_add_boot_aggregate(void)
+> > 	int violation = 0;
+> > 	struct {
+> > 		struct ima_digest_data hdr;
+> >-		char digest[TPM_DIGEST_SIZE];
+> >+		char digest[TPM_MAX_DIGEST_SIZE];
+> > 	} hash;
+> >
+> > 	memset(iint, 0, sizeof(*iint));
+> > 	memset(&hash, 0, sizeof(hash));
+> > 	iint->ima_hash = &hash.hdr;
+> >-	iint->ima_hash->algo = HASH_ALGO_SHA1;
+> >-	iint->ima_hash->length = SHA1_DIGEST_SIZE;
+> >+	iint->ima_hash->algo = ima_hash_algo;
+> >+	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
+> >
+> > 	if (ima_tpm_chip) {
+> > 		result = ima_calc_boot_aggregate(&hash.hdr);
+> >-- 
+> >2.7.5
+> >
+> 
+> Tested the patches on the Dell and no longer spits out the error messages on boot.
+> /sys/kernel/security/ima/ascii_runtime_measurements shows the boot aggregate.
+> 
+> Is there something else I should look at to verify it is functioning properly?
 
-There are two ways to go around this change.  We can even get back to the
-original behavior and return -EAGAIN whenever migrate_pages is not able
-to migrate pages due to non-fatal reasons.  Another option would be to
-simply continue with the changed semantic and extend move_pages
-documentation to clarify that -errno is returned on an invalid input or
-when migration simply cannot succeed (e.g. -ENOMEM, -EBUSY) or the
-number of pages that couldn't have been migrated due to ephemeral
-reasons (e.g. page is pinned or locked for other reasons).
+The original LTP ima_boot_aggregate.c test needed to be updated to
+support TPM 2.0 before this change.  For TPM 2.0, the PCRs are not
+exported.  With this change, the kernel could be reading PCRs from a
+TPM bank other than SHA1 and calculating the boot_aggregate based on a
+different hash algorithm as well.  I'm not sure how a remote verifier
+would know which TPM bank was read, when calculating the boot-
+aggregate.
 
-This patch implements the second option because this behavior is in
-place for some time without anybody complaining and possibly new users
-depending on it.  Also it allows to have a slightly easier error handling
-as the caller knows that it is worth to retry when err > 0.
+At the moment, the only test would be to make sure that the LTP test
+still works for TPM 1.2 properly.
 
-But since the new semantic would be aborted immediately if migration is
-failed due to ephemeral reasons, need include the number of non-attempted
-pages in the return value too.
-
-Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-Suggested-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Cc: <stable@vger.kernel.org>    [4.17+]
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
-v4: Fixed some typo and grammar errors caught by Willy
-v3: Rephrased the commit log per Michal and added Michal's Acked-by
-v2: Rebased on top of the latest mainline kernel per Andrew
-
- mm/migrate.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 86873b6..2530860 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1627,8 +1627,19 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 			start = i;
- 		} else if (node != current_node) {
- 			err = do_move_pages_to_node(mm, &pagelist, current_node);
--			if (err)
-+			if (err) {
-+				/*
-+				 * Positive err means the number of failed
-+				 * pages to migrate.  Since we are going to
-+				 * abort and return the number of non-migrated
-+				 * pages, so need to incude the rest of the
-+				 * nr_pages that have not been attempted as
-+				 * well.
-+				 */
-+				if (err > 0)
-+					err += nr_pages - i - 1;
- 				goto out;
-+			}
- 			err = store_status(status, start, current_node, i - start);
- 			if (err)
- 				goto out;
-@@ -1659,8 +1670,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 			goto out_flush;
- 
- 		err = do_move_pages_to_node(mm, &pagelist, current_node);
--		if (err)
-+		if (err) {
-+			if (err > 0)
-+				err += nr_pages - i - 1;
- 			goto out;
-+		}
- 		if (i > start) {
- 			err = store_status(status, start, current_node, i - start);
- 			if (err)
-@@ -1674,6 +1688,13 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 
- 	/* Make sure we do not overwrite the existing error */
- 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
-+	/*
-+	 * Don't have to report non-attempted pages here since:
-+	 *     - If the above loop is done gracefully all pages have been
-+	 *       attempted.
-+	 *     - If the above loop is aborted it means a fatal error
-+	 *       happened, should return ret.
-+	 */
- 	if (!err1)
- 		err1 = store_status(status, start, current_node, i - start);
- 	if (!err)
--- 
-1.8.3.1
+Mimi
 
