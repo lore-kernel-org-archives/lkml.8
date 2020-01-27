@@ -2,94 +2,89 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E649C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A17C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F6C20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:04:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="UYaETZAL"
+	by mail.kernel.org (Postfix) with ESMTP id E0AF324679
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:07:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580159237;
+	bh=tAX6yDr0IhujvnZ6kLXHg9mvJe9D611oaH/B6mkzBbU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F7CJVsy6UeQFuDx8/IumsMjGOVB6+2GojcWhSU4BC79MdgMYa1UqbfHUSfrEIwCxY
+	 CxL/y6xmLdMM/BBDNgsbw242ZixICDogZ4EmbufZqfVz8ydR9x9wCJ/58l0HmpEa5c
+	 6vFpcjAqgyllddSdiXs6jdcKvls1CjfC0Vxmuzk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgA0VEh (ORCPT
+        id S1726240AbgA0VHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 16:04:37 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:41960 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgA0VEa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 16:04:30 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 42F078365B;
-        Tue, 28 Jan 2020 10:04:27 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1580159067;
-        bh=zObOk1gVPEvabf/4BaqStZTqrwbvqmmwomyYCQ/yN4g=;
-        h=From:To:Cc:Subject:Date;
-        b=UYaETZALE0H7ZSGG/Rn6jhVwjKzKAsshnEuTczDwb4IZbCu/cTL8KG4IHCpGXscCd
-         z7bFZ28yTtsCpKvBUnWIzl/7HSbv/1yRp4uZQ6pYN7CAYiHbRii0keDOjQA01mk3nr
-         Yg7ynGDSoKffdjGdqrNELZdV522vd3n1uXCIVoytjYj7ZcN+moHQg/YMNsmDSmU5dt
-         nHWUYVbCWFbrMwwfWJxEs+OGbr6dyZLBYv7y52IPH6Y5PmUy8WGOMcV/bS5QRJOhAB
-         HsIPrAQ1kQmOc/eQIA/WUAIKth/sIXYI7N02xwH4SW/R6o/10pSgGjCiZEarI0NRdE
-         iZrGVSVH0KuGg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e2f50560000>; Tue, 28 Jan 2020 10:04:27 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id B7AA313EEC9;
-        Tue, 28 Jan 2020 10:04:21 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id E318C280071; Tue, 28 Jan 2020 10:04:21 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3 0/2] SPI bus multiplexing
-Date:   Tue, 28 Jan 2020 10:04:13 +1300
-Message-Id: <20200127210415.5708-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.0
+        Mon, 27 Jan 2020 16:07:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgA0VHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 16:07:16 -0500
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E7DA24685;
+        Mon, 27 Jan 2020 21:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580159235;
+        bh=tAX6yDr0IhujvnZ6kLXHg9mvJe9D611oaH/B6mkzBbU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dayd5ALxnRvjcmd6CdVdAnAeHlsKPu8amrIZXBRoRG/qDNJYwb+aGAXwJUE87oJnZ
+         zexYy+8zr3ZQZpF6JREvfjVWNvAez7vq/2a/faB3lWJXSqKkBhqfGK4BfJWTE6nJgp
+         5PlPwz4EVva39REDLIN3r45rr6Z7CxVxpm4LTEYA=
+Received: by mail-qt1-f182.google.com with SMTP id d5so8593500qto.0;
+        Mon, 27 Jan 2020 13:07:15 -0800 (PST)
+X-Gm-Message-State: APjAAAXKfuWOmwF6QnqvTSY7DCgvpQvqzE6RcsNe7ZLhO3MoMMM5ZMep
+        DmtMCi/fnLLK3N8WymguEMoMlJwOkwKw4Mh+oA==
+X-Google-Smtp-Source: APXvYqz6TcnGjayCnrZyiOhSkagdqkmRPHWtYG3imaw/anjUcBcBkDZwHIlxd5O98Ut5vvyzcURPSnzpyZ2XVj/mInc=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr17990875qtj.300.1580159234323;
+ Mon, 27 Jan 2020 13:07:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+References: <20200127145223.8283-1-benjamin.gaignard@st.com>
+In-Reply-To: <20200127145223.8283-1-benjamin.gaignard@st.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 27 Jan 2020 15:07:02 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+702FHQtgSu-c7M8j-4G578Ce1x3WhhQY2OCpq8APi5A@mail.gmail.com>
+Message-ID: <CAL_Jsq+702FHQtgSu-c7M8j-4G578Ce1x3WhhQY2OCpq8APi5A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: display: Convert etnaviv to json-schema
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        etnaviv@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a revisit of two earlier efforts to add more complex mutliplexing=
- to
-SPI busses.
+On Mon, Jan 27, 2020 at 8:52 AM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
+>
+> Convert etnaviv bindings to yaml format.
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../bindings/display/etnaviv/etnaviv-drm.txt       | 36 -----------
+>  .../bindings/display/etnaviv/etnaviv-drm.yaml      | 72 ++++++++++++++++++++++
+>  2 files changed, 72 insertions(+), 36 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.yaml
 
-https://patchwork.kernel.org/patch/2706151/
-https://patchwork.kernel.org/patch/10897255/
+Looks good, but can you move this to bindings/gpu/vivante,gc.yaml.
 
-This version makes use of the general purpose mux controller which simpli=
-fies
-things greatly.
-
-One outstanding problem is the need for the spi-max-frequency on the mux
-device. This is not used for anything and is just needed to satisfy the s=
-pi
-driver infrastructure which expects all spi devices to have this property=
-.
-
-Chris Packham (2):
-  dt-bindings: spi: Document binding for generic SPI multiplexer
-  spi: Add generic SPI multiplexer
-
- .../devicetree/bindings/spi/spi-mux.yaml      |  89 +++++++++
- drivers/spi/Kconfig                           |  12 ++
- drivers/spi/Makefile                          |   1 +
- drivers/spi/spi-mux.c                         | 189 ++++++++++++++++++
- 4 files changed, 291 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
- create mode 100644 drivers/spi/spi-mux.c
-
---=20
-2.25.0
-
+Rob
