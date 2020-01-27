@@ -2,109 +2,627 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ED7C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C8EC35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E07EF20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B872C214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:03:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JSy+J+Hv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgA0Gxd (ORCPT
+        id S1727285AbgA0HDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 01:53:33 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:37819 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgA0Gxc (ORCPT
+        Mon, 27 Jan 2020 02:03:03 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37027 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbgA0HDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 01:53:32 -0500
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M734j-1iwoQH2tgd-008b7I for <linux-kernel@vger.kernel.org>; Mon, 27 Jan
- 2020 07:53:30 +0100
-Received: by mail-qk1-f175.google.com with SMTP id x1so8594906qkl.12
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 22:53:30 -0800 (PST)
-X-Gm-Message-State: APjAAAXy96mSdVpWCdIm8WvfqIZ5w7D9MVeOWWRRLy5cwLrbt+Txmn+Y
-        77KP0WAksP+QaqxyhA7titj+XSFYI8PGzRzrMwA=
-X-Google-Smtp-Source: APXvYqyBg0aK/XM7DOCpc+zyNjEeT72WLcZ4upAGMAoAxkkLtsbwNOUentHIPudsyZSd0HoIMQEnbY9lJ1UtKJSacRI=
-X-Received: by 2002:a05:620a:218d:: with SMTP id g13mr14318824qka.286.1580108009529;
- Sun, 26 Jan 2020 22:53:29 -0800 (PST)
+        Mon, 27 Jan 2020 02:03:02 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so3410376plz.4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 23:03:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OcizNhXBLSF+UxmYuD4dUeJW45mhag6vYSCNxWbaQHU=;
+        b=JSy+J+Hv7nQHmDAF2RMKhAcIkElluKrA6T+t6+UU9Dzmr7xid1CGxzGYBe+HmUOB5W
+         G5CwLUwm0oBh6X+b0O/1uKjimCFxh51/8JkLp9HEPidwY5u/7gSnWOWY/xt3fmtIMOLe
+         a8t5/L9CC+cJHp10VmUh/aCoTSlbH/tEv7MhHe9oZOpU6wnX17NcuoSTi3fuYO5PXjPq
+         TzefsdmEzlPKHtmA5MEHhpTAggNx7oOODdfFyldHnLF6wnC9JmnCwTnN2dLqgZrcRtFG
+         xTfHPyPXLO5GL4iCPq0HWkmQvhti/uVa260HEhtSPAoOfpw/YEM1jptPS/ZAuPKIMYGG
+         U6/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OcizNhXBLSF+UxmYuD4dUeJW45mhag6vYSCNxWbaQHU=;
+        b=dlzhj65cJ+EFVg2Y6dYOBVdZ7lOAfrA1bRI8b3CMeR9pwwzOG8L97dH/knrxpCNQXJ
+         eabnvyKurfBpbTvL9hjSaNph5zlGMehb4ZUSPKlMSlD5QC81ZqO8hk9TTfq7sQnP0SUM
+         NP0nMv0UoDqITw5KmLX1ybrS8ng29o4UURK8MZTMw9IFEnsMMXabPlGKFnyW7IjccX5G
+         qxefpWfAPTCgq26G0saIr2umaLUkBsBb2TLsQ4HC5YzlX5fjiOqb/xVZlZqDga0/KysV
+         3y3jFfRB2XNZFPr0kDHWnbDmGTMsNteiWBgYuiYG0Xguw7rYJQKHBkxrhcbvGBfbR1dP
+         KSfA==
+X-Gm-Message-State: APjAAAVMHDBF8dHREOEbxRtLW9mI3uLz4syPBbxYhaG7uVZc2V/VxcXo
+        MECBUTEFpQ80+rL19H6wkCir
+X-Google-Smtp-Source: APXvYqzzOIYztXS5wBtXAUbuDpEZl6WvoNrjXBW4sY5AwnyY2/1lKgTUxxCchM465gMB6t9Raye14w==
+X-Received: by 2002:a17:902:fe90:: with SMTP id x16mr15118782plm.31.1580108581351;
+        Sun, 26 Jan 2020 23:03:01 -0800 (PST)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id gx2sm10330292pjb.18.2020.01.26.23.02.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 26 Jan 2020 23:03:00 -0800 (PST)
+Date:   Mon, 27 Jan 2020 12:32:52 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     jhugo@codeaurora.org, arnd@arndb.de, smohanad@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+Message-ID: <20200127070252.GA4768@mani>
+References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
+ <20200123111836.7414-3-manivannan.sadhasivam@linaro.org>
+ <20200124082939.GA2921617@kroah.com>
+ <42c79181-9d97-3542-c6b0-1e37f9b2ff39@codeaurora.org>
 MIME-Version: 1.0
-References: <1578989048-10162-1-git-send-email-peng.fan@nxp.com>
- <20200114081751.3wjbbnaem7lbnn3v@pengutronix.de> <AM0PR04MB4481A2FB7E2C56C2386297E888340@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CAK8P3a3x55A8y9kR34zy8YyRhto8uay7PZGbDAufupiNS3+ihA@mail.gmail.com>
- <AM0PR04MB44813A1D55659658E3FA203188370@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CAK8P3a29=KWrhO8uu7mMS2gbeCGpkL7Q-xaaUVO2wcVD9MN93g@mail.gmail.com>
- <CAHCN7xKtfKVQeaAg9sjvc3cHjLoAqAX6F-JyvkG5u23w1OG8CA@mail.gmail.com> <AM0PR04MB4481B8BDAD2CD7376208B5F2880B0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4481B8BDAD2CD7376208B5F2880B0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jan 2020 07:53:13 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2gOq=qv5C6_0QwBXPuENqhBinK_KkzL5AcAEJtTDyB1w@mail.gmail.com>
-Message-ID: <CAK8P3a2gOq=qv5C6_0QwBXPuENqhBinK_KkzL5AcAEJtTDyB1w@mail.gmail.com>
-Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when CONFIG_ARM64
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Adam Ford <aford173@gmail.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:XOaoleA782ZySXFisxo7uZHoE0FFNAaE4iSPl0FjUDq109Kek5H
- FbeQEwcp1g9xETqjPPCakDOKM4MwQmsAIlGJzbPhal9nsu4VMG4TP/4zwZghEpSO+DQGDE0
- 4suxstFm3lbBkjcOP06k7jrMyq6rStpACBoKXLuVxC6Nqs366aX+w/4zgLLzPiSZyGaMQYh
- vNN2ig0OmEUABtBJFOB9w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vtiAGHAX2bM=:zznmMc9wNO0YeQeLipyuGP
- ABbTXZlYqGkFBiA4RsefcyvV5GwIlhNnhwf2G6jFU04QzzGKbkqndfoB1fP88xlZrdzjI8Dpt
- LfF42Tc49xFJZTFKv/mwHdLsqPplm2IUe/9poXH2K8ZG1NN3dZ3mde2x1l4WtyWgrHnp2w+Dw
- AOG7PMk4AoNFlR+NMDy4hCXlnCAc5lUnWttLil770+TOJDsQ9IM+2OxLBUrMIvpB8pYgprweT
- CgWLI3CIzCJQjmJihuAg92MLAssqsMd9hRHl9FfqagDmu/3mlSign5hLbjA58mQuhkDxA0gM/
- VkyYOkxiXvvZFEzUE0KYad8RYh1rAj0KWkkL0d6x3Wdj1O49EcCIYBvVcDXXI0EqW1JMaPAJE
- 2Nh8xNZ2smiO33UhOuHOxgyPFgmmBCvM8h68bFq2Cj+sEwtlDPSVfAinMlc7ZQmBm0pOMwoDs
- fbI01t1dsOXXCZK8upt5tMibJfCDym4rHynWyQvQ7hCYB/60p5OlB6MnmszhfSOuApHxAEytj
- f8bQxBZyx3B4ap1aV5UiU7/Kls/9hmlZ9AABTkXsO6/VVqZFA+uiLEwbJsS+PXr0mNs/1xZ/V
- z7ZgBteVP1btJ4T9tEkFBlomfvrnfKwNqzTr16GRGrc8P783yW3cy89xwhItCMU+a2jK/jbAE
- lCdGTo8IslePBMm2cHlrKa6jsxgOZLNltXpXk8ofqDlTV8UXRp/eh0RtteMbJRrihT1daE6or
- 5vlfnFV/8BJcGuXnAfkCX0ERobkBzDjXEsYXOtv5ZqNP/tthwjb5QxRMFTc3SDbcRBes/QJsh
- oNgXrSCZp8rb6qs7PSp8vZWaTCglOYfrPbqRqfV64oWI5U/ZUc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42c79181-9d97-3542-c6b0-1e37f9b2ff39@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 6:05 AM Peng Fan <peng.fan@nxp.com> wrote:
-> > Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when
-> > Does anyone have any suggestions on where I might find some generic stuff
-> > for either iMX8M or generic ARMv8 docs for doing something like this?
->
-> We did a porting for one customer, but code is not public available.
->
-> First let uboot switch to AARCH32 mode when booting Linux, this is already
-> supported by uboot mailine.
->
-> Second, create a mach-imx8m.c under arch/arm/mach-imx to handle i.MX8M
-> just like other i.mx arm32 socs. This is not preferred by Linux community.
->
-> 3rd, build i.MX8M drivers when using imx_v7_defconfig( or imx_v6_v7_defconfig
-> in upstream)
+Hi Greg,
 
-I think the third part is something we can clearly do once it actually boots.
+[On top of Jeff's reply]
 
-Can you post the patch for the second part for reference? In theory nothing
-should be necessary there, so I wonder what I'm missing (as we need no
-code for arch/arm64) and what we can do differently to make it work out of
-the box.
+On Fri, Jan 24, 2020 at 07:24:43AM -0700, Jeffrey Hugo wrote:
+> On 1/24/2020 1:29 AM, Greg KH wrote:
+> > On Thu, Jan 23, 2020 at 04:48:22PM +0530, Manivannan Sadhasivam wrote:
+> > > --- /dev/null
+> > > +++ b/include/linux/mhi.h
+> > > @@ -0,0 +1,438 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +/*
+> > > + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+> > > + *
+> > > + */
+> > > +#ifndef _MHI_H_
+> > > +#define _MHI_H_
+> > > +
+> > > +#include <linux/device.h>
+> > > +#include <linux/dma-direction.h>
+> > > +#include <linux/mutex.h>
+> > > +#include <linux/rwlock_types.h>
+> > > +#include <linux/slab.h>
+> > > +#include <linux/spinlock_types.h>
+> > > +#include <linux/wait.h>
+> > > +#include <linux/workqueue.h>
+> > > +
+> > > +struct mhi_chan;
+> > > +struct mhi_event;
+> > > +struct mhi_ctxt;
+> > > +struct mhi_cmd;
+> > > +struct mhi_buf_info;
+> > > +
+> > > +/**
+> > > + * enum mhi_callback - MHI callback
+> > > + * @MHI_CB_IDLE: MHI entered idle state
+> > > + * @MHI_CB_PENDING_DATA: New data available for client to process
+> > > + * @MHI_CB_LPM_ENTER: MHI host entered low power mode
+> > > + * @MHI_CB_LPM_EXIT: MHI host about to exit low power mode
+> > > + * @MHI_CB_EE_RDDM: MHI device entered RDDM exec env
+> > > + * @MHI_CB_EE_MISSION_MODE: MHI device entered Mission Mode exec env
+> > > + * @MHI_CB_SYS_ERROR: MHI device entered error state (may recover)
+> > > + * @MHI_CB_FATAL_ERROR: MHI device entered fatal error state
+> > > + */
+> > > +enum mhi_callback {
+> > > +	MHI_CB_IDLE,
+> > > +	MHI_CB_PENDING_DATA,
+> > > +	MHI_CB_LPM_ENTER,
+> > > +	MHI_CB_LPM_EXIT,
+> > > +	MHI_CB_EE_RDDM,
+> > > +	MHI_CB_EE_MISSION_MODE,
+> > > +	MHI_CB_SYS_ERROR,
+> > > +	MHI_CB_FATAL_ERROR,
+> > > +};
+> > > +
+> > > +/**
+> > > + * enum mhi_flags - Transfer flags
+> > > + * @MHI_EOB: End of buffer for bulk transfer
+> > > + * @MHI_EOT: End of transfer
+> > > + * @MHI_CHAIN: Linked transfer
+> > > + */
+> > > +enum mhi_flags {
+> > > +	MHI_EOB,
+> > > +	MHI_EOT,
+> > > +	MHI_CHAIN,
+> > > +};
+> > > +
+> > > +/**
+> > > + * enum mhi_device_type - Device types
+> > > + * @MHI_DEVICE_XFER: Handles data transfer
+> > > + * @MHI_DEVICE_TIMESYNC: Use for timesync feature
+> > > + * @MHI_DEVICE_CONTROLLER: Control device
+> > > + */
+> > > +enum mhi_device_type {
+> > > +	MHI_DEVICE_XFER,
+> > > +	MHI_DEVICE_TIMESYNC,
+> > > +	MHI_DEVICE_CONTROLLER,
+> > > +};
+> > > +
+> > > +/**
+> > > + * enum mhi_ch_type - Channel types
+> > > + * @MHI_CH_TYPE_INVALID: Invalid channel type
+> > > + * @MHI_CH_TYPE_OUTBOUND: Outbound channel to the device
+> > > + * @MHI_CH_TYPE_INBOUND: Inbound channel from the device
+> > > + * @MHI_CH_TYPE_INBOUND_COALESCED: Coalesced channel for the device to combine
+> > > + *				   multiple packets and send them as a single
+> > > + *				   large packet to reduce CPU consumption
+> > > + */
+> > > +enum mhi_ch_type {
+> > > +	MHI_CH_TYPE_INVALID = 0,
+> > > +	MHI_CH_TYPE_OUTBOUND = DMA_TO_DEVICE,
+> > > +	MHI_CH_TYPE_INBOUND = DMA_FROM_DEVICE,
+> > > +	MHI_CH_TYPE_INBOUND_COALESCED = 3,
+> > > +};
+> > > +
+> > > +/**
+> > > + * enum mhi_ee_type - Execution environment types
+> > > + * @MHI_EE_PBL: Primary Bootloader
+> > > + * @MHI_EE_SBL: Secondary Bootloader
+> > > + * @MHI_EE_AMSS: Modem, aka the primary runtime EE
+> > > + * @MHI_EE_RDDM: Ram dump download mode
+> > > + * @MHI_EE_WFW: WLAN firmware mode
+> > > + * @MHI_EE_PTHRU: Passthrough
+> > > + * @MHI_EE_EDL: Embedded downloader
+> > > + */
+> > > +enum mhi_ee_type {
+> > > +	MHI_EE_PBL,
+> > > +	MHI_EE_SBL,
+> > > +	MHI_EE_AMSS,
+> > > +	MHI_EE_RDDM,
+> > > +	MHI_EE_WFW,
+> > > +	MHI_EE_PTHRU,
+> > > +	MHI_EE_EDL,
+> > > +	MHI_EE_MAX_SUPPORTED = MHI_EE_EDL,
+> > > +	MHI_EE_DISABLE_TRANSITION, /* local EE, not related to mhi spec */
+> > > +	MHI_EE_NOT_SUPPORTED,
+> > > +	MHI_EE_MAX,
+> > > +};
+> > > +
+> > > +/**
+> > > + * enum mhi_buf_type - Accepted buffer type for the channel
+> > > + * @MHI_BUF_RAW: Raw buffer
+> > > + * @MHI_BUF_SKB: SKB struct
+> > > + * @MHI_BUF_SCLIST: Scatter-gather list
+> > > + * @MHI_BUF_NOP: CPU offload channel, host does not accept transfer
+> > > + * @MHI_BUF_DMA: Receive DMA address mapped by client
+> > > + * @MHI_BUF_RSC_DMA: RSC type premapped buffer
+> > > + */
+> > > +enum mhi_buf_type {
+> > > +	MHI_BUF_RAW,
+> > > +	MHI_BUF_SKB,
+> > > +	MHI_BUF_SCLIST,
+> > > +	MHI_BUF_NOP,
+> > > +	MHI_BUF_DMA,
+> > > +	MHI_BUF_RSC_DMA,
+> > > +};
+> > > +
+> > > +/**
+> > > + * enum mhi_er_data_type - Event ring data types
+> > > + * @MHI_ER_DATA: Only client data over this ring
+> > > + * @MHI_ER_CTRL: MHI control data and client data
+> > > + * @MHI_ER_TSYNC: Time sync events
+> > > + */
+> > > +enum mhi_er_data_type {
+> > > +	MHI_ER_DATA,
+> > > +	MHI_ER_CTRL,
+> > > +	MHI_ER_TSYNC,
+> > > +};
+> > > +
+> > > +/**
+> > > + * enum mhi_db_brst_mode - Doorbell mode
+> > > + * @MHI_DB_BRST_DISABLE: Burst mode disable
+> > > + * @MHI_DB_BRST_ENABLE: Burst mode enable
+> > > + */
+> > > +enum mhi_db_brst_mode {
+> > > +	MHI_DB_BRST_DISABLE = 0x2,
+> > > +	MHI_DB_BRST_ENABLE = 0x3,
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct mhi_channel_config - Channel configuration structure for controller
+> > > + * @num: The number assigned to this channel
+> > > + * @name: The name of this channel
+> > > + * @num_elements: The number of elements that can be queued to this channel
+> > > + * @local_elements: The local ring length of the channel
+> > > + * @event_ring: The event rung index that services this channel
+> > > + * @dir: Direction that data may flow on this channel
+> > > + * @type: Channel type
+> > > + * @ee_mask: Execution Environment mask for this channel
+> > > + * @pollcfg: Polling configuration for burst mode.  0 is default.  milliseconds
+> > > +	     for UL channels, multiple of 8 ring elements for DL channels
+> > > + * @data_type: Data type accepted by this channel
+> > > + * @doorbell: Doorbell mode
+> > > + * @lpm_notify: The channel master requires low power mode notifications
+> > > + * @offload_channel: The client manages the channel completely
+> > > + * @doorbell_mode_switch: Channel switches to doorbell mode on M0 transition
+> > > + * @auto_queue: Framework will automatically queue buffers for DL traffic
+> > > + * @auto_start: Automatically start (open) this channel
+> > > + */
+> > > +struct mhi_channel_config {
+> > > +	u32 num;
+> > > +	char *name;
+> > 
+> > If you have a "name" for your configuration, shouldn't this be a struct
+> > device so you see that in sysfs?  If not, what is the name for?
+> 
+> The config struct is used to create the channel device, but is not the
+> channel device.  Eventually a struct mhi_device is created from this
+> information.
+> 
 
-Is the problem that the SMP bringup using PSCI for arm64 doesn't work
-with the 32-bit kernel for some reason?
+Yes. This struct is used to get the channel information from the controller
+driver and gets passed to the MHI stack, which will inturn create MHI device.
 
-      Arnd
+> > 
+> > > +	u32 num_elements;
+> > > +	u32 local_elements;
+> > > +	u32 event_ring;
+> > > +	enum dma_data_direction dir;
+> > > +	enum mhi_ch_type type;
+> > > +	u32 ee_mask;
+> > > +	u32 pollcfg;
+> > > +	enum mhi_buf_type data_type;
+> > > +	enum mhi_db_brst_mode doorbell;
+> > > +	bool lpm_notify;
+> > > +	bool offload_channel;
+> > > +	bool doorbell_mode_switch;
+> > > +	bool auto_queue;
+> > > +	bool auto_start;
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct mhi_event_config - Event ring configuration structure for controller
+> > > + * @num_elements: The number of elements that can be queued to this ring
+> > > + * @irq_moderation_ms: Delay irq for additional events to be aggregated
+> > > + * @irq: IRQ associated with this ring
+> > > + * @channel: Dedicated channel number. U32_MAX indicates a non-dedicated ring
+> > > + * @mode: Doorbell mode
+> > > + * @data_type: Type of data this ring will process
+> > > + * @hardware_event: This ring is associated with hardware channels
+> > > + * @client_managed: This ring is client managed
+> > > + * @offload_channel: This ring is associated with an offloaded channel
+> > > + * @priority: Priority of this ring. Use 1 for now
+> > > + */
+> > > +struct mhi_event_config {
+> > > +	u32 num_elements;
+> > > +	u32 irq_moderation_ms;
+> > > +	u32 irq;
+> > > +	u32 channel;
+> > > +	enum mhi_db_brst_mode mode;
+> > > +	enum mhi_er_data_type data_type;
+> > > +	bool hardware_event;
+> > > +	bool client_managed;
+> > > +	bool offload_channel;
+> > > +	u32 priority;
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct mhi_controller_config - Root MHI controller configuration
+> > > + * @max_channels: Maximum number of channels supported
+> > > + * @timeout_ms: Timeout value for operations. 0 means use default
+> > > + * @use_bounce_buf: Use a bounce buffer pool due to limited DDR access
+> > > + * @m2_no_db: Host is not allowed to ring DB in M2 state
+> > > + * @buf_len: Size of automatically allocated buffers. 0 means use default
+> > > + * @num_channels: Number of channels defined in @ch_cfg
+> > > + * @ch_cfg: Array of defined channels
+> > > + * @num_events: Number of event rings defined in @event_cfg
+> > > + * @event_cfg: Array of defined event rings
+> > > + */
+> > > +struct mhi_controller_config {
+> > > +	u32 max_channels;
+> > > +	u32 timeout_ms;
+> > > +	bool use_bounce_buf;
+> > > +	bool m2_no_db;
+> > > +	u32 buf_len;
+> > > +	u32 num_channels;
+> > > +	struct mhi_channel_config *ch_cfg;
+> > > +	u32 num_events;
+> > > +	struct mhi_event_config *event_cfg;
+> > 
+> > You really should run pahole on this file to see how badly packed these
+> > structures are :(
+> > 
+
+Right. I was more interested in grouping the members logically so that they
+can look in order. But I can rework these to fill the holes.
+
+Thanks for the pahole pointer :)
+
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct mhi_controller - Master MHI controller structure
+> > > + * @name: Name of the controller
+> > > + * @dev: Driver model device node for the controller
+> > > + * @mhi_dev: MHI device instance for the controller
+> > > + * @dev_id: Device ID of the controller
+> > > + * @bus_id: Physical bus instance used by the controller
+> > > + * @regs: Base address of MHI MMIO register space
+> > > + * @iova_start: IOMMU starting address for data
+> > > + * @iova_stop: IOMMU stop address for data
+> > > + * @fw_image: Firmware image name for normal booting
+> > > + * @edl_image: Firmware image name for emergency download mode
+> > > + * @fbc_download: MHI host needs to do complete image transfer
+> > > + * @sbl_size: SBL image size
+> > > + * @seg_len: BHIe vector size
+> > > + * @max_chan: Maximum number of channels the controller supports
+> > > + * @mhi_chan: Points to the channel configuration table
+> > > + * @lpm_chans: List of channels that require LPM notifications
+> > > + * @total_ev_rings: Total # of event rings allocated
+> > > + * @hw_ev_rings: Number of hardware event rings
+> > > + * @sw_ev_rings: Number of software event rings
+> > > + * @nr_irqs_req: Number of IRQs required to operate
+> > > + * @nr_irqs: Number of IRQ allocated by bus master
+> > > + * @irq: base irq # to request
+> > > + * @mhi_event: MHI event ring configurations table
+> > > + * @mhi_cmd: MHI command ring configurations table
+> > > + * @mhi_ctxt: MHI device context, shared memory between host and device
+> > > + * @timeout_ms: Timeout in ms for state transitions
+> > > + * @pm_mutex: Mutex for suspend/resume operation
+> > > + * @pre_init: MHI host needs to do pre-initialization before power up
+> > > + * @pm_lock: Lock for protecting MHI power management state
+> > > + * @pm_state: MHI power management state
+> > > + * @db_access: DB access states
+> > > + * @ee: MHI device execution environment
+> > > + * @wake_set: Device wakeup set flag
+> > > + * @dev_wake: Device wakeup count
+> > > + * @alloc_size: Total memory allocations size of the controller
+> > > + * @pending_pkts: Pending packets for the controller
+> > > + * @transition_list: List of MHI state transitions
+> > > + * @wlock: Lock for protecting device wakeup
+> > > + * @M0: M0 state counter for debugging
+> > > + * @M2: M2 state counter for debugging
+> > > + * @M3: M3 state counter for debugging
+> > > + * @M3_FAST: M3 Fast state counter for debugging
+> > > + * @st_worker: State transition worker
+> > > + * @fw_worker: Firmware download worker
+> > > + * @syserr_worker: System error worker
+> > > + * @state_event: State change event
+> > > + * @status_cb: CB function to notify various power states to bus master
+> > > + * @link_status: CB function to query link status of the device
+> > > + * @wake_get: CB function to assert device wake
+> > > + * @wake_put: CB function to de-assert device wake
+> > > + * @wake_toggle: CB function to assert and deasset (toggle) device wake
+> > > + * @runtime_get: CB function to controller runtime resume
+> > > + * @runtimet_put: CB function to decrement pm usage
+> > > + * @lpm_disable: CB function to request disable link level low power modes
+> > > + * @lpm_enable: CB function to request enable link level low power modes again
+> > > + * @bounce_buf: Use of bounce buffer
+> > > + * @buffer_len: Bounce buffer length
+> > > + * @priv_data: Points to bus master's private data
+> > > + */
+> > > +struct mhi_controller {
+> > > +	const char *name;
+> > > +	struct device *dev;
+> > 
+> > Why isn't this a struct device directly?  Why a pointer?
+> > 
+
+As like above, this structure will be used by the controller driver to
+pass the information to the MHI stack. So it will pass the struct device
+of the actual transport layer (like PCI-E). This is required since MHI
+stack itself will not involve in the data transport.
+
+Reference controller implementation can be found here:
+https://git.linaro.org/people/manivannan.sadhasivam/linux.git/tree/drivers/net/wireless/ath/ath11k/mhi.c?h=ath11k-qca6390-mhi#n207
+
+Moreover, I should've marked the members of this struct which were required
+by the controller drivers to fill in. This was already pointed out by Jeff
+during internal review but I don't know how the change I did to address not
+included here :/ Will incorporate in next iteration.
+
+> > And why don't you use the name in the struct device?
+> > 
+
+Right, a separate name is not needed. Will fix it.
+
+> > > +	struct mhi_device *mhi_dev;
+> > > +	u32 dev_id;
+> > > +	u32 bus_id;
+> > 
+> > Shouldn't the bus id come from the bus it is assigned to?  Why store it
+> > again?
+> > 
+
+Ah, I got rid of the usecase for these but forgot to remove these variables.
+Will remove.
+
+> > > +	void __iomem *regs;
+> > > +	dma_addr_t iova_start;
+> > > +	dma_addr_t iova_stop;
+> > > +	const char *fw_image;
+> > > +	const char *edl_image;
+> > > +	bool fbc_download;
+> > > +	size_t sbl_size;
+> > > +	size_t seg_len;
+> > > +	u32 max_chan;
+> > > +	struct mhi_chan *mhi_chan;
+> > > +	struct list_head lpm_chans;
+> > > +	u32 total_ev_rings;
+> > > +	u32 hw_ev_rings;
+> > > +	u32 sw_ev_rings;
+> > > +	u32 nr_irqs_req;
+> > > +	u32 nr_irqs;
+> > > +	int *irq;
+> > > +
+> > > +	struct mhi_event *mhi_event;
+> > > +	struct mhi_cmd *mhi_cmd;
+> > > +	struct mhi_ctxt *mhi_ctxt;
+> > > +
+> > > +	u32 timeout_ms;
+> > > +	struct mutex pm_mutex;
+> > > +	bool pre_init;
+> > > +	rwlock_t pm_lock;
+> > > +	u32 pm_state;
+> > > +	u32 db_access;
+> > > +	enum mhi_ee_type ee;
+> > > +	bool wake_set;
+> > > +	atomic_t dev_wake;
+> > > +	atomic_t alloc_size;
+> > > +	atomic_t pending_pkts;
+> > 
+> > Why a bunch of atomic variables when you already have a lock?
+> > 
+
+So there are multiple locks used throughout the MHI stack and each one
+servers its own purpose. For instance, pm_lock protects againt the
+concurrent access to the PM state, transition_lock protects against the
+concurrent access to the state transition list, wlock protects against
+the concurrent access to device wake state. Since there are multiple
+worker threads and each trying to update these variables, we did the
+best to protect against the race condition by having all these locks.
+
+And there are these atomic variables which are again shared with the
+threads holding the above locks, precisely with threads holding read locks.
+So it becomes convenient to just use the atomic_ APIs to update these variables.
+
+> > > +	struct list_head transition_list;
+> > > +	spinlock_t transition_lock;
+> > 
+> > You don't document this lock.
+> > 
+
+Right, will do.
+
+> > > +	spinlock_t wlock;
+> > 
+> > Why have 2 locks?
+> > 
+
+Gave the justification above.
+
+> > > +	u32 M0, M2, M3, M3_FAST;
+> > > +	struct work_struct st_worker;
+> > > +	struct work_struct fw_worker;
+> > > +	struct work_struct syserr_worker;
+> > > +	wait_queue_head_t state_event;
+> > > +
+> > > +	void (*status_cb)(struct mhi_controller *mhi_cntrl, void *priv,
+> > > +			  enum mhi_callback cb);
+> > > +	int (*link_status)(struct mhi_controller *mhi_cntrl, void *priv);
+> > > +	void (*wake_get)(struct mhi_controller *mhi_cntrl, bool override);
+> > > +	void (*wake_put)(struct mhi_controller *mhi_cntrl, bool override);
+> > > +	void (*wake_toggle)(struct mhi_controller *mhi_cntrl);
+> > > +	int (*runtime_get)(struct mhi_controller *mhi_cntrl, void *priv);
+> > > +	void (*runtime_put)(struct mhi_controller *mhi_cntrl, void *priv);
+> > > +	void (*lpm_disable)(struct mhi_controller *mhi_cntrl, void *priv);
+> > > +	void (*lpm_enable)(struct mhi_controller *mhi_cntrl, void *priv);
+> > 
+> > Shouldn't all of these be part of the bus or driver assigned to this
+> > device and not in the device itself?  This feels odd as-is.
+> > 
+
+These are controller specific callbacks which needs to be provided by the
+controller drivers. The MHI stack creates device during the controller
+registration. So there is essentially no further client driver to bind to
+this device. Only for the devices created for each channel, there
+are client drivers which binds to it. So these callbacks should be present
+here itself.
+
+> > > +
+> > > +	bool bounce_buf;
+> > > +	size_t buffer_len;
+> > > +	void *priv_data;
+> > 
+> > Why can't you use the private pointer in struct device?
+> > 
+
+Again, I got rid of the usecase for this but forgot to remove it here.
+
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct mhi_device - Structure representing a MHI device which binds
+> > > + *                     to channels
+> > > + * @dev: Driver model device node for the MHI device
+> > > + * @tiocm: Device current terminal settings
+> > > + * @id: Pointer to MHI device ID struct
+> > > + * @chan_name: Name of the channel to which the device binds
+> > > + * @mhi_cntrl: Controller the device belongs to
+> > > + * @ul_chan: UL channel for the device
+> > > + * @dl_chan: DL channel for the device
+> > > + * @dev_wake: Device wakeup counter
+> > > + * @dev_type: MHI device type
+> > > + */
+> > > +struct mhi_device {
+> > > +	struct device dev;
+> > > +	u32 tiocm;
+> > > +	const struct mhi_device_id *id;
+> > > +	const char *chan_name;
+> > > +	struct mhi_controller *mhi_cntrl;
+> > > +	struct mhi_chan *ul_chan;
+> > > +	struct mhi_chan *dl_chan;
+> > > +	atomic_t dev_wake;
+> > 
+> > Why does this have to be atomic?
+> > 
+
+While having a close look at this, it looks like the atomicity
+is not required here. Will change.
+
+> > > +	enum mhi_device_type dev_type;
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct mhi_result - Completed buffer information
+> > > + * @buf_addr: Address of data buffer
+> > > + * @dir: Channel direction
+> > > + * @bytes_xfer: # of bytes transferred
+> > > + * @transaction_status: Status of last transaction
+> > > + */
+> > > +struct mhi_result {
+> > > +	void *buf_addr;
+> > 
+> > Why void *?
+> 
+> Because its not possible to resolve this more clearly.  The client provides
+> the buffer and knows what the structure is.  The bus does not. Its just an
+> opaque pointer (hence void *) to the bus, and the client needs to decode it.
+> This is the struct that is handed to the client to allow them to decode the
+> activity (either a received buf, or a confirmation that a transmitted buf
+> has been consumed).
+> 
+
+Jeff gave a reasonable justification in further threads also!
+
+Thanks,
+Mani
+
+> > 
+> > > +	enum dma_data_direction dir;
+> > > +	size_t bytes_xferd;
+> > > +	int transaction_status;
+> > > +};
+> > > +
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> 
+> -- 
+> Jeffrey Hugo
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
