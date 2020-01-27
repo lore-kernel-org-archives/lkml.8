@@ -2,108 +2,108 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0830C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEADC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C9A214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE4B206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:19:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EEl7HxHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbgA0LSE (ORCPT
+        id S1729827AbgA0LTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:18:04 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38440 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbgA0LSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:18:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E36B6AAB8;
-        Mon, 27 Jan 2020 11:18:01 +0000 (UTC)
-Date:   Mon, 27 Jan 2020 12:17:55 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     x86-ml <x86@kernel.org>, linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] RAS pile for 5.6
-Message-ID: <20200127111755.GC24228@zn.tnic>
+        Mon, 27 Jan 2020 06:19:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33353 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729043AbgA0LTF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 06:19:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580123944;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BErR0RwzOsFrhtcTHHOPAGFQ2vAoXbVb7DYzS0T3Rg4=;
+        b=EEl7HxHBKJ/e9BmMVkvriTuDIpsTjwPLIF/E23lRd8e7EByZGiic9UCs/ulvFdChWS2rga
+        6kVDoJdM1ikHoOuNyOW64UI9aICfzzbQkbutrNfpnZ5eyibDLzavuvCOcoCOXOHY5jHXYX
+        DHdErWWnlL+NwG9uE8golLAWnzTHC7I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-92-CAdF87FDMpmBX3H00_ZRLw-1; Mon, 27 Jan 2020 06:12:38 -0500
+X-MC-Unique: CAdF87FDMpmBX3H00_ZRLw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 883A5107B272;
+        Mon, 27 Jan 2020 11:12:37 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E60D381;
+        Mon, 27 Jan 2020 11:12:36 +0000 (UTC)
+Date:   Mon, 27 Jan 2020 12:12:34 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] tools lib api fs: Move cgroupsfs_find_mountpoint()
+Message-ID: <20200127111234.GA1114818@krava>
+References: <20200127100031.1368732-1-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200127100031.1368732-1-namhyung@kernel.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Jan 27, 2020 at 07:00:31PM +0900, Namhyung Kim wrote:
 
-please pull the below branch to receive the following RAS updates:
+SNIP
 
-* Misc fixes to the MCA code all over the place, by Jan H. Schönherr.
+> -
+> -	if (strlen(path) < maxlen) {
+> -		strcpy(buf, path);
+> -		return 0;
+> -	}
+> -	return -1;
+> -}
+> -
+>  static int open_cgroup(const char *name)
+>  {
+>  	char path[PATH_MAX + 1];
+> @@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
+>  	int fd;
+>  
+>  
+> -	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
+> +	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
 
-* Initial support for AMD F19h and other cleanups to amd64_edac, by Yazen
-Ghannam.
+nice, but could you please follow fs API names and change the
+name to cgroupfs__mountpoint
 
-* Other small cleanups.
+I think we don't need to define the rest of the functions now,
+if they are not used
 
-Thx.
+	#define FS(name)                                \
+		const char *name##__mountpoint(void);   \
+		const char *name##__mount(void);        \
+		bool name##__configured(void);          \
 
----
+just follow the function name
 
-The following changes since commit 7de7de7ca0ae0fc70515ee3154af33af75edae2c:
+thanks,
+jirka
 
-  Fix root mounting with no mount options (2019-12-16 08:42:39 -0800)
+>  		return -1;
+>  
+>  	scnprintf(path, PATH_MAX, "%s/%s", mnt, name);
+> -- 
+> 2.25.0.341.g760bfbb309-goog
+> 
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
-
-for you to fetch changes up to 86e9f9d60eb5e0c5d99ddf6b79f4d308d6453bd0:
-
-  EDAC/mce_amd: Make fam_ops static global (2020-01-16 21:52:48 +0100)
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      x86/mce/therm_throt: Mark throttle_active_work() as __maybe_unused
-
-Borislav Petkov (1):
-      EDAC/mce_amd: Make fam_ops static global
-
-Jan H. Schönherr (5):
-      x86/mce: Pass MCE message to mce_panic() on failed kernel recovery
-      x86/mce: Remove mce_inject_log() in favor of mce_log()
-      x86/mce: Take action on UCNA/Deferred errors again
-      x86/mce: Fix mce=nobootlog
-      x86/mce: Fix use of uninitialized MCE message string
-
-Yazen Ghannam (5):
-      x86/MCE/AMD, EDAC/mce_amd: Add new Load Store unit McaType
-      EDAC/mce_amd: Always load on SMCA systems
-      x86/amd_nb: Add Family 19h PCI IDs
-      EDAC/amd64: Add family ops for Family 19h Models 00h-0Fh
-      EDAC/amd64: Drop some family checks for newer systems
-
- arch/x86/include/asm/mce.h            |   3 +-
- arch/x86/kernel/amd_nb.c              |   3 +
- arch/x86/kernel/cpu/mce/amd.c         |   2 +
- arch/x86/kernel/cpu/mce/core.c        |  70 ++++++++++-------------
- arch/x86/kernel/cpu/mce/inject.c      |   2 +-
- arch/x86/kernel/cpu/mce/internal.h    |   2 -
- arch/x86/kernel/cpu/mce/therm_throt.c |   2 +-
- drivers/edac/amd64_edac.c             |  62 +++++++++++---------
- drivers/edac/amd64_edac.h             |   3 +
- drivers/edac/mce_amd.c                | 105 ++++++++++++++++++++--------------
- include/linux/pci_ids.h               |   1 +
- 11 files changed, 141 insertions(+), 114 deletions(-)
-
--- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
