@@ -2,143 +2,205 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C7DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E59CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8015821739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:52:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NsLS4wu7"
+	by mail.kernel.org (Postfix) with ESMTP id 163B020CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:53:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580147618;
+	bh=JfR7Lv/JrxeMJWae3NrBaXTX31m23SXkho2CItW4d5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W+xXHlWJSMzH7GOC3Kwmn4eqCxQ7YUjGyFmJ9MrnPudNZur+t7G++CshH6NlbSbzD
+	 rh9jCk7O8Hswdu6E7WE26cpkjCtMZHWpwo5hvbubN9X6DpxIcln7EwGawPQXhCKM98
+	 EdI1Y1xPXbGDKbMEtA3FCr12/jgv5iomVO6JIwBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgA0RwR (ORCPT
+        id S1726173AbgA0Rxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:52:17 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:40278 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgA0RwR (ORCPT
+        Mon, 27 Jan 2020 12:53:37 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46964 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0Rxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:52:17 -0500
-Received: by mail-pj1-f65.google.com with SMTP id 12so2004009pjb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:52:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yOGmPW2hH3nTIkVoQNHklTGWEESx79H9If9kDoWLKYI=;
-        b=NsLS4wu7780fV23Box5dzbKPGJcyuTdRTs8hN//CWEvnRCmjYZQWNdWvHL9Cbh4lIm
-         8wURA7I1pG0DXjaTAcQPsW022JTJpvLLG7mvYANiEfe0c/EoEFSLPTuOpN+t8T+iXrG5
-         57roJI3QLlBKPmAPt33C+qdDkPRWQOeKjkJFo=
+        Mon, 27 Jan 2020 12:53:36 -0500
+Received: by mail-ot1-f66.google.com with SMTP id g64so9228083otb.13;
+        Mon, 27 Jan 2020 09:53:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yOGmPW2hH3nTIkVoQNHklTGWEESx79H9If9kDoWLKYI=;
-        b=XD/AKSuu+cCQLZ3+e6H4RbeSl47ZzbLRsExELcoSmfWmlsBvmna6mnFRn9fzYwbmHH
-         lcLCtinzmbzz2IYqOECTr+02SWPN4o5xDN5V1na9rBnrsQf9/5EQMxEp3xsDSJLn1S4D
-         5JHo/gdeRmWxocpTkEwxcYtoEYHyb5fizq9islymlWrbf1CSBqkGVpUK7loukKBzCThj
-         KSqatPWrC9Pc1aWpHNWdNJYdEDwHXqrYvslSERQ9OaL2OmqzfH5TRqgqdV2RvijbOs5H
-         T1AdDSbRaaQ8OCyjZElK2aLNyzqDEXt/b325hnnZNJqGuTOxBlp9DzN+O1s/WZqJrruw
-         v3eg==
-X-Gm-Message-State: APjAAAWk43v1KEDO/IYZJKP0yfUyLSS2+reCPq+e0U+IUkDFWspBt/MC
-        XkOky8DsYdNwPSRIe+JHrAeoGqbz4PY=
-X-Google-Smtp-Source: APXvYqyeezwFNYo066aBqqzlZ+dHbX+dtfRZjrRniEn/3Ohzh5txiaPSuTL395bYB4JAn2/z3yoi/Q==
-X-Received: by 2002:a17:902:8a8e:: with SMTP id p14mr18742315plo.28.1580147536757;
-        Mon, 27 Jan 2020 09:52:16 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id 3sm17000932pjg.27.2020.01.27.09.52.15
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZwdeJdNohgFWX1mFD2UjbBw/HXmaaN29rT20q0J8HBI=;
+        b=o7j6tNstDjVdxALJYsnH829D1SY/1ZujhSjShSls0By67cFDORF72V233vGpe0KGnc
+         1dS1EM+OdQJ0v2dG1AGYAZcfFdJbsvaLGTagtCoBGmTMvr/CmRsezXuEAywfckMRcjZ8
+         yhkwkWiIPRS6qmu0pFb4nXSxMZkh5of+HCIXBfY+pKb2vMjMgES+/y9xHukxI2ADOM7R
+         BwvE85tbvy6KoFn74oPf3u9CSPVTZrYeNK1rA3PF2yHH43zyPmyKzVymlJfqd4gVfRPT
+         8PJfw1SI5eQptPK+KQO02v4eq6/3O5UfYsuN6kieOA5vWXzAac0FcnX61Ev6adFoHVWR
+         g4mw==
+X-Gm-Message-State: APjAAAWErxZASChI2BlTdkuLPtz3kxihB/7j3VyXuPKq507h83vy3PNo
+        nfK7XHvoRz1qhv9Ao736PBoaCns=
+X-Google-Smtp-Source: APXvYqwdUCJv6mpkyNlq5MZ9t+xypOOB3E8o5xFdi8iB2ko7UaxiRDFXUY5FgcV40zfXH9dcLvJ12Q==
+X-Received: by 2002:a9d:53c2:: with SMTP id i2mr12346342oth.43.1580147616069;
+        Mon, 27 Jan 2020 09:53:36 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n64sm4379460otn.35.2020.01.27.09.53.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 09:52:16 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mon, 27 Jan 2020 09:53:35 -0800 (PST)
+Received: (nullmailer pid 30258 invoked by uid 1000);
+        Mon, 27 Jan 2020 17:53:34 -0000
+Date:   Mon, 27 Jan 2020 11:53:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Anu Ramanathan <anur@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
         Andy Gross <agross@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] scripts/get_maintainer.pl: Deprioritize old Fixes: addresses
-Date:   Mon, 27 Jan 2020 09:50:05 -0800
-Message-Id: <20200127095001.1.I41fba9f33590bfd92cd01960161d8384268c6569@changeid>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 02/19] dt-bindings: phy: Add Qualcomm Synopsys
+ Hi-Speed USB PHY binding
+Message-ID: <20200127175334.GA12315@bogus>
+References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
+ <20200122185610.131930-3-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122185610.131930-3-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently, I found that get_maintainer was causing me to send emails to
-the old addresses for maintainers.  Since I usually just trust the
-output of get_maintainer to know the right email address, I didn't
-even look carefully and fired off two patch series that went to the
-wrong place.  Oops.
+On Wed, Jan 22, 2020 at 06:55:53PM +0000, Bryan O'Donoghue wrote:
+> From: Sriharsha Allenki <sallenki@codeaurora.org>
+> 
+> Adds bindings for QCS404 USB PHY supporting Low-Speed, Full-Speed and
+> Hi-Speed USB connectivity on Qualcomm chipsets.
+> 
+> [bod: Converted to YAML. Changed name dropping snps, 28nm components]
+> 
+> Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+> Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  .../bindings/phy/qcom,qcs404-usb-hs.yaml      | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+> new file mode 100644
+> index 000000000000..d71beb822ae2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,qcs404-usb-hs.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Synopsys QCS-404 High-Speed PHY
+> +
+> +maintainers:
+> +  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> +
+> +description: |
+> +  Qualcomm QCS-404 Low-Speed, Full-Speed, Hi-Speed USB PHY
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,qcs404-usb-hsphy
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: USB PHY base address and length of the register map.
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +    description: Should be 0. See phy/phy-bindings.txt for details.
+> +
+> +  clocks:
+> +    minItems: 3
+> +    maxItems: 3
+> +    description: phandles to rpmcc ref clock, PHY AHB clock, rentention clock.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +      - const: phy
+> +      - const: sleep
+> +
+> +  resets:
+> +    items:
+> +      - description: PHY core reset
+> +      - description: POR reset
+> +
+> +  reset-names:
+> +    items:
+> +      - const: phy
+> +      - const: por
+> +
+> +  vdd-supply:
+> +    maxItems: 1
 
-The problem was introduced recently when trying to add signatures from
-Fixes.  The problem was that these email addresses were added too
-early in the process of compiling our list of places to send.  Things
-added to the list earlier are considered more canonical and when we
-later added maintainer entries we ended up deduplicating to the old
-address.
+Supplies are always 1 entry, so drop this.
 
-Here are two examples using mainline commits (to make it easier to
-replicate) for the two maintainers that I messed up recently:
+> +    description: phandle to the regulator VDD supply node.
+> +
+> +  vdda1p8-supply:
+> +    maxItems: 1
+> +    description: phandle to the regulator 1.8V supply node.
+> +
+> +  vdda3p3-supply:
+> +    maxItems: 1
+> +    description: phandle to the regulator 3.3V supply node.
 
-$ git format-patch d8549bcd0529~..d8549bcd0529
-$ ./scripts/get_maintainer.pl 0001-clk-Add-clk_hw*.patch | grep Boyd
-Stephen Boyd <sboyd@codeaurora.org>...
+No required properties?
 
-$ git format-patch 6d1238aa3395~..6d1238aa3395
-$ ./scripts/get_maintainer.pl 0001-arm64-dts-qcom-qcs404*.patch | grep Andy
-Andy Gross <andy.gross@linaro.org>
+Add:
 
-Let's move the adding of addresses from Fixes: to the end since the
-email addresses from these are much more likely to be older.
+additionalProperties: false
 
-After this patch the above examples get the right addresses for the
-two examples.
-
-Fixes: 2f5bd343694e ("scripts/get_maintainer.pl: add signatures from Fixes: <badcommit> lines in commit message")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-I'm no expert at this script and no expert at Perl.  If moving this
-call like I'm doing is totally stupid then please let me know what a
-more proper fix is.  Thanks!
-
- scripts/get_maintainer.pl | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-index 34085d146fa2..7a228681f89f 100755
---- a/scripts/get_maintainer.pl
-+++ b/scripts/get_maintainer.pl
-@@ -932,10 +932,6 @@ sub get_maintainers {
- 	}
-     }
- 
--    foreach my $fix (@fixes) {
--	vcs_add_commit_signers($fix, "blamed_fixes");
--    }
--
-     foreach my $email (@email_to, @list_to) {
- 	$email->[0] = deduplicate_email($email->[0]);
-     }
-@@ -974,6 +970,10 @@ sub get_maintainers {
- 	}
-     }
- 
-+    foreach my $fix (@fixes) {
-+	vcs_add_commit_signers($fix, "blamed_fixes");
-+    }
-+
-     my @to = ();
-     if ($email || $email_list) {
- 	if ($email) {
--- 
-2.25.0.341.g760bfbb309-goog
-
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
+> +    #include <dt-bindings/clock/qcom,rpmcc.h>
+> +    usb2_phy_prim: phy@7a000 {
+> +        compatible = "qcom,qcs404-usb-hsphy";
+> +        reg = <0x0007a000 0x200>;
+> +        #phy-cells = <0>;
+> +        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+> +                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+> +                 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
+> +        clock-names = "ref", "phy", "sleep";
+> +        resets = <&gcc GCC_USB_HS_PHY_CFG_AHB_BCR>,
+> +                 <&gcc GCC_USB2A_PHY_BCR>;
+> +        reset-names = "phy", "por";
+> +    };
+> +...
+> -- 
+> 2.25.0
+> 
