@@ -2,145 +2,199 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FA2C33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C127FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EAE7214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B2C24681
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:32:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="elJrTPL4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KrJ3vc3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbgA0Tav (ORCPT
+        id S1727749AbgA0Tcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 14:30:51 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35827 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgA0Tav (ORCPT
+        Mon, 27 Jan 2020 14:32:41 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60856 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725938AbgA0Tcl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 14:30:51 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g6so4116615plt.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 11:30:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=4FpDeS7FVDfifQejKt5Fo3FpOuyI3aVXyTigplJTJKg=;
-        b=elJrTPL4i5D0s3VuCe3A4IDJCMJuckpknfF6RIj8HfDon93rN/Eqzm8gM7opbJMwtg
-         +olHjcgUyYyCp6ww5p5oyoHP5iI0CRYn81PHwx0DJxXLDgTpxKOJQ9U87JTTzHWG7Q0Q
-         ZU7VDPNvyMmPVgsEaV3yLk0o2tiP1EGvzlAy/THV0fNIp2kl8NcYAicRC8bdPPvYXuiN
-         nftlTxOTXAO2K0Z4hKH7cYPykfFl9cqSVl11uuxm6YXeRxO8g9DdkB8Fw+8Ux5+dO+1k
-         EpKJAVe9HrdQX3VpnlSo8njj5kQdqYeb5f6yjOXsP3e4VhjxFigNXszMJNPAujQRe42Y
-         PQRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4FpDeS7FVDfifQejKt5Fo3FpOuyI3aVXyTigplJTJKg=;
-        b=kdI8Sa8cdW2PFW8eg4fh2raQEy3oXLw07D2pV64et8G1fSVCPl+Nk4MKBlDTWbbiL8
-         tNCNDNpcHl1IgptdDEDfDKHOThnySvk/QTgdwkzd35EP+tbI95Xqh6k/FV7bOOMoH7J0
-         bdHnNEDcaJdZkD68iShSImY1+cyt6OZwCPJ/GbmrFy0wayYNbgz3SBTFVzrIiy8bfnj0
-         Hms6pGHETzdBB5ZzrDq7mE0v8TuDTFgnhqrvO+M0mKgfuDZzYbk4wjvXXhC5C4oSuniF
-         a4Ma6YSEaQO7WgBMoZmS3SIqkpe1ZtgcLRpWnk0JtuUuQj+ZOvpFU4h0IZ882gTL5QpF
-         P7mg==
-X-Gm-Message-State: APjAAAXGSJdJLXBxCf9RcSS48FzqFUZux0L9j01QpLTnYZzMmRZHXXNE
-        w0DebswdXJRwUHeVqzhIh+TyzyY3/Fk=
-X-Google-Smtp-Source: APXvYqzh/Vr2MusTZAdq4TOlr4ztx3Wty77tirQdE63vSY4MuktYCgn7bpoGIcSfXi+Hff+43HUCfw==
-X-Received: by 2002:a17:90a:858a:: with SMTP id m10mr200813pjn.117.1580153450023;
-        Mon, 27 Jan 2020 11:30:50 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id k26sm9349186pfp.47.2020.01.27.11.30.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 11:30:49 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Felipe Balbi <balbi@kernel.org>, Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v2] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
-Date:   Mon, 27 Jan 2020 19:30:46 +0000
-Message-Id: <20200127193046.110258-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 27 Jan 2020 14:32:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580153559;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Er207Z3trQuVNwal5PsrJpoxdWZjgLJvQ71dKeD3J4E=;
+        b=KrJ3vc3R+OOhjiKKsvp4NzUJX/iUpPDzqshMx+Uvr9dIydE4wQT5gLH+ETCqH2d7B8l4Ld
+        h/SRDzsT2xjIpmMwYsOrK+OeOur3dJ16+9MIk1Bqm1cNSEP0VUzkPSTcXndkDSR0H2SWOI
+        ctdOFqncC1PYOqC5tk+0fG9dbB9GbJM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-Uv2DTnOHMrOJS07RYkL5TA-1; Mon, 27 Jan 2020 14:32:30 -0500
+X-MC-Unique: Uv2DTnOHMrOJS07RYkL5TA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47E9C189F760;
+        Mon, 27 Jan 2020 19:32:29 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E9C35D9CA;
+        Mon, 27 Jan 2020 19:32:26 +0000 (UTC)
+Date:   Mon, 27 Jan 2020 14:32:25 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Stefan Bader <stefan.bader@canonical.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        dm-devel@redhat.com, Tyler Hicks <tyler.hicks@canonical.com>,
+        Alasdair Kergon <agk@redhat.com>
+Subject: Re: [PATCH 1/1] blk/core: Gracefully handle unset make_request_fn
+Message-ID: <20200127193225.GA5065@redhat.com>
+References: <20200123091713.12623-1-stefan.bader@canonical.com>
+ <20200123091713.12623-2-stefan.bader@canonical.com>
+ <20200123103541.GA28102@redhat.com>
+ <20200123172816.GA31063@redhat.com>
+ <81055166-37fb-ad65-6a53-11c22c626ab1@kernel.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <81055166-37fb-ad65-6a53-11c22c626ab1@kernel.dk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+On Thu, Jan 23 2020 at  1:52pm -0500,
+Jens Axboe <axboe@kernel.dk> wrote:
 
-The current code in dwc3_gadget_ep_reclaim_completed_trb() will
-check for IOC/LST bit in the event->status and returns if
-IOC/LST bit is set. This logic doesn't work if multiple TRBs
-are queued per request and the IOC/LST bit is set on the last
-TRB of that request.
+> On 1/23/20 10:28 AM, Mike Snitzer wrote:
+> > On Thu, Jan 23 2020 at  5:35am -0500,
+> > Mike Snitzer <snitzer@redhat.com> wrote:
+> > 
+> >> On Thu, Jan 23 2020 at  4:17am -0500,
+> >> Stefan Bader <stefan.bader@canonical.com> wrote:
+> >>
+> >>> When device-mapper adapted for multi-queue functionality, they
+> >>> also re-organized the way the make-request function was set.
+> >>> Before, this happened when the device-mapper logical device was
+> >>> created. Now it is done once the mapping table gets loaded the
+> >>> first time (this also decides whether the block device is request
+> >>> or bio based).
+> >>>
+> >>> However in generic_make_request(), the request function gets used
+> >>> without further checks and this happens if one tries to mount such
+> >>> a partially set up device.
+> >>>
+> >>> This can easily be reproduced with the following steps:
+> >>>  - dmsetup create -n test
+> >>>  - mount /dev/dm-<#> /mnt
+> >>>
+> >>> This maybe is something which also should be fixed up in device-
+> >>> mapper.
+> >>
+> >> I'll look closer at other options.
+> >>
+> >>> But given there is already a check for an unset queue
+> >>> pointer and potentially there could be other drivers which do or
+> >>> might do the same, it sounds like a good move to add another check
+> >>> to generic_make_request_checks() and to bail out if the request
+> >>> function has not been set, yet.
+> >>>
+> >>> BugLink: https://bugs.launchpad.net/bugs/1860231
+> >>
+> >> >From that bug;
+> >> "The currently proposed fix introduces no chance of stability
+> >> regressions. There is a chance of a very small performance regression
+> >> since an additional pointer comparison is performed on each block layer
+> >> request but this is unlikely to be noticeable."
+> >>
+> >> This captures my immediate concern: slowing down everyone for this DM
+> >> edge-case isn't desirable.
+> > 
+> > SO I had a look and there isn't anything easier than adding the proposed
+> > NULL check in generic_make_request_checks().  Given the many
+> > conditionals in that  function.. what's one more? ;)
+> > 
+> > I looked at marking the queue frozen to prevent IO via
+> > blk_queue_enter()'s existing cheeck -- but that quickly felt like an
+> > abuse, especially in that there isn't a queue unfreeze for bio-based.
+> > 
+> > Jens, I'll defer to you to judge this patch further.  If you're OK with
+> > it: cool.  If not, I'm open to suggestions for how to proceed.  
+> > 
+> 
+> It does kinda suck... The generic_make_request_checks() is a mess, and
+> this doesn't make it any better. Any reason why we can't solve this
+> two step setup in a clean fashion instead of patching around it like
+> this? Feels like a pretty bad hack, tbh.
 
-Consider an example where a queued request has multiple queued
-TRBs and IOC/LST bit is set only for the last TRB. In this case,
-the core generates XferComplete/XferInProgress events only for
-the last TRB (since IOC/LST are set only for the last TRB). As
-per the logic in dwc3_gadget_ep_reclaim_completed_trb()
-event->status is checked for IOC/LST bit and returns on the
-first TRB. This leaves the remaining TRBs left unhandled.
+I just staged the following DM fix:
+https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.6&id=28a101d6b344f5a38d482a686d18b1205bc92333
 
-Similarly, if the gadget function enqueues an unaligned request
-with sglist already in it, it should fail the same way, since we
-will append another TRB to something that already uses more than
-one TRB.
+From: Mike Snitzer <snitzer@redhat.com>
+Date: Mon, 27 Jan 2020 14:07:23 -0500
+Subject: [PATCH] dm: fix potential for q->make_request_fn NULL pointer
 
-To aviod this, this patch changes the code to check for IOC/LST
-bits in TRB->ctrl instead.
+Move blk_queue_make_request() to dm.c:alloc_dev() so that
+q->make_request_fn is never NULL during the lifetime of a DM device
+(even one that is created without a DM table).
 
-At a practical level, this patch resolves USB transfer stalls seen
-with adb on dwc3 based HiKey960 after functionfs gadget added
-scatter-gather support around v4.20.
+Otherwise generic_make_request() will crash simply by doing:
+  dmsetup create -n test
+  mount /dev/dm-N /mnt
 
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Yang Fei <fei.yang@intel.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linux USB List <linux-usb@vger.kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Tested-by: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Reviewed-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-[jstultz: forward ported to mainline, reworded commit log, reworked
- to only check trb->ctrl as suggested by Felipe]
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+While at it, move ->congested_data initialization out of
+dm.c:alloc_dev() and into the bio-based specific init method.
+
+Reported-by: Stefan Bader <stefan.bader@canonical.com>
+BugLink: https://bugs.launchpad.net/bugs/1860231
+Fixes: ff36ab34583a ("dm: remove request-based logic from make_request_fn wrapper")
+Depends-on: c12c9a3c3860c ("dm: various cleanups to md->queue initialization code")
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 ---
-v2:
-* Rework to only check trb->ctrl as suggested by Felipe
-* Reword the commit message to include more of Felipe's assessment
----
- drivers/usb/dwc3/gadget.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/dm.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 154f3f3e8cff..9a085eee1ae3 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2420,7 +2420,8 @@ static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
- 	if (event->status & DEPEVT_STATUS_SHORT && !chain)
- 		return 1;
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index e8f9661a10a1..b89f07ee2eff 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1859,6 +1859,7 @@ static void dm_init_normal_md_queue(struct mapped_device *md)
+ 	/*
+ 	 * Initialize aspects of queue that aren't relevant for blk-mq
+ 	 */
++	md->queue->backing_dev_info->congested_data = md;
+ 	md->queue->backing_dev_info->congested_fn = dm_any_congested;
+ }
  
--	if (event->status & DEPEVT_STATUS_IOC)
-+	if ((trb->ctrl & DWC3_TRB_CTRL_IOC) ||
-+	    (trb->ctrl & DWC3_TRB_CTRL_LST))
- 		return 1;
+@@ -1949,7 +1950,12 @@ static struct mapped_device *alloc_dev(int minor)
+ 	if (!md->queue)
+ 		goto bad;
+ 	md->queue->queuedata = md;
+-	md->queue->backing_dev_info->congested_data = md;
++	/*
++	 * default to bio-based required ->make_request_fn until DM
++	 * table is loaded and md->type established. If request-based
++	 * table is loaded: blk-mq will override accordingly.
++	 */
++	blk_queue_make_request(md->queue, dm_make_request);
  
- 	return 0;
+ 	md->disk = alloc_disk_node(1, md->numa_node_id);
+ 	if (!md->disk)
+@@ -2264,7 +2270,6 @@ int dm_setup_md_queue(struct mapped_device *md, struct dm_table *t)
+ 	case DM_TYPE_DAX_BIO_BASED:
+ 	case DM_TYPE_NVME_BIO_BASED:
+ 		dm_init_normal_md_queue(md);
+-		blk_queue_make_request(md->queue, dm_make_request);
+ 		break;
+ 	case DM_TYPE_NONE:
+ 		WARN_ON_ONCE(true);
 -- 
-2.17.1
+2.21.GIT
 
