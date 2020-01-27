@@ -2,212 +2,251 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED396C35247
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 05:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6882FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 05:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE83C214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 05:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354E520842
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 05:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WOyBbCjo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pI71r8dS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgA0FXI (ORCPT
+        id S1726871AbgA0FbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 00:23:08 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8270 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgA0FXH (ORCPT
+        Mon, 27 Jan 2020 00:31:09 -0500
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:41796 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgA0FbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 00:23:07 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2e73840000>; Sun, 26 Jan 2020 21:22:12 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 26 Jan 2020 21:22:26 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 26 Jan 2020 21:22:26 -0800
-Received: from [10.25.73.144] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jan
- 2020 05:22:21 +0000
-CC:     <spujar@nvidia.com>, <devicetree@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <broonie@kernel.org>,
-        <atalambedu@nvidia.com>, <tiwai@suse.com>, <viswanathl@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <robh+dt@kernel.org>,
-        <thierry.reding@gmail.com>, <sharadg@nvidia.com>,
-        <rlokhande@nvidia.com>, <mkumard@nvidia.com>, <dramesh@nvidia.com>
-Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
- driver
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-5-git-send-email-spujar@nvidia.com>
- <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
- <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
- <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
- <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
- <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
- <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
- <34ac1fd3-ae0f-07f2-555f-a55087a2c9dc@nvidia.com>
- <1a84b393-938f-8bed-d08e-cc3bb6ed4844@gmail.com>
- <0fc814c2-0dc6-7741-b954-463381ff7fb9@nvidia.com>
- <b5c581b9-17af-d004-33fb-2cc782ab820a@gmail.com>
- <9f73afdf-1e9a-cdbd-f972-a022d503ef51@nvidia.com>
- <264d3354-8a2e-ee12-44ae-aff69213d551@nvidia.com>
- <075e476a-36bb-5fee-15bc-76af4474a797@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <c6022a93-b79a-c691-1d75-d007d0b64ead@nvidia.com>
-Date:   Mon, 27 Jan 2020 10:52:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <075e476a-36bb-5fee-15bc-76af4474a797@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Mon, 27 Jan 2020 00:31:09 -0500
+Received: by mail-vk1-f202.google.com with SMTP id i123so4008094vkg.8
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 21:31:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=DI0Lh6q9irgWn+IO9tpXRLACEMIkrMuflR08fFBz6r4=;
+        b=pI71r8dSdD44XMVUvUhi7UqeZJ/7Mpi/EmVb+iICB+EryfZn+dv7YyWzZfd8B4/OoI
+         K85VRP2TqR3qk4Xgqmv0mvqGYPhzU4lOdDVESqkbWTF4xI6NnTQciyO7zEBiOpK8139q
+         8GI82lSq/qYWaE2TexNDH99hLcSvrySrOhxfgMXt80JsvY1M04jx8LgiZiHpK0DOqUFI
+         CuBsrbfM6mnTiTR7vG998LXps6/wSgF4Z7d5KLpD9j1GAuvCTVN3xCzO5UzDsgYCOOPE
+         DtBU5qvgERwToxxUHyck+25YtCV5hxrbEAAZttfpyKgvD9GshDGx+rIuwEGR4ZBsz3+4
+         m0Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=DI0Lh6q9irgWn+IO9tpXRLACEMIkrMuflR08fFBz6r4=;
+        b=UKnFhIaUPVdtMX6rv3cTKd4NvKQe0G2zmq5E+kzMIr/FKET/eHxlGkVwj+VrMTprCf
+         mfudOAegJLsrZOmHP5ZL5JC8Nw9haPySbtW6u+CLigdolNVrn0P1GG2scui//oXzI8G7
+         Xkd/FO75eeF/58zPZ71rocMdXBlYrVmWwZZYU7/a/rrrgEDsnOAtpmAudXduigG59ivh
+         ICrkadyWz9klWgYcQ7pmQvaP9encw7ZUN+zJekqkSNZk6O2obtENFxRbHopGX0bsmO7M
+         6YNYjey92OLaAdYRXrt0HvHMbmVzUrOhDmfrceh8o4Eiluj8h5KuZmm4hCfazl1oY8Gu
+         K8Mg==
+X-Gm-Message-State: APjAAAWyYeS+i1fwUsMMehoefusNI2QYlu2vbz471ASWVxLZ0A2sOwz2
+        71EV8izUWo+DUMiYN2UPt5NRKuw+GXbx
+X-Google-Smtp-Source: APXvYqxatu41pGjPUZtHzfqsdCcxTqfDNWthU11S26MvvQEtN6JcGExq0ge+WiPsE9O4XFLqZJSqf2dYjSpM
+X-Received: by 2002:ab0:6509:: with SMTP id w9mr8912067uam.121.1580103067944;
+ Sun, 26 Jan 2020 21:31:07 -0800 (PST)
+Date:   Sun, 26 Jan 2020 21:30:56 -0800
+In-Reply-To: <20200123014627.71720-1-bgeffon@google.com>
+Message-Id: <20200127053056.213679-1-bgeffon@google.com>
+Mime-Version: 1.0
+References: <20200123014627.71720-1-bgeffon@google.com>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH v3] mm: Add MREMAP_DONTUNMAP to mremap().
+From:   Brian Geffon <bgeffon@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580102532; bh=uyQ7nxDtadx0HKIFwTV9Y/Ni4jJ8RtmHuiaNgpeGCVQ=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=WOyBbCjo0xTj12FVF25Yp1r1fV1gjHMY39c/AKkvSqdoN4YQ+TmEJgCDKGkWZ8CUS
-         uXfojDb95fmA49UWlns0lMxbRtb/hJoXQN1d5bvf7fxIiKhdMy0GTPJm7AxdHGbHXV
-         VFToAlODWyoYIHhldt2qp4LICkvwScpCr6Qkvq2OSpSI7tURbR8etrzEjmAzAauQ/O
-         G/LHqtNBTtMV5HfLqhLxc5AIyA0nojqExfW+mU5kiTOBRmO8mYafsijhf1zdvf3+a+
-         9i11lAj01mx8nuiVj3R91baTa8gkSItMXFk58WRPVK4h4hW9vDXZXUeBZMcd0vIddr
-         Dh1hIr4h4ZZHw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/24/2020 7:34 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 24.01.2020 12:51, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 24/01/2020 09:07, Jon Hunter wrote:
->>> On 23/01/2020 15:16, Dmitry Osipenko wrote:
->>>> 23.01.2020 12:22, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>
->>>>> On 1/22/2020 9:57 PM, Dmitry Osipenko wrote:
->>>>>> External email: Use caution opening links or attachments
->>>>>>
->>>>>>
->>>>>> 22.01.2020 14:52, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>> On 22/01/2020 07:16, Sameer Pujar wrote:
->>>>>>>
->>>>>>> ...
->>>>>>>
->>>>>>>>>>>>>> +static int tegra210_i2s_remove(struct platform_device *pdev=
-)
->>>>>>>>>>>>>> +{
->>>>>>>>>>>>>> +     pm_runtime_disable(&pdev->dev);
->>>>>>>>>>>>>> +     if (!pm_runtime_status_suspended(&pdev->dev))
->>>>>>>>>>>>>> +             tegra210_i2s_runtime_suspend(&pdev->dev);
->>>>>>>>>>>>> This breaks device's RPM refcounting if it was disabled in th=
-e
->>>>>>>>>>>>> active
->>>>>>>>>>>>> state. This code should be removed. At most you could warn
->>>>>>>>>>>>> about the
->>>>>>>>>>>>> unxpected RPM state here, but it shouldn't be necessary.
->>>>>>>>>>>> I guess this was added for safety and explicit suspend keeps c=
-lock
->>>>>>>>>>>> disabled.
->>>>>>>>>>>> Not sure if ref-counting of the device matters when runtime PM=
- is
->>>>>>>>>>>> disabled and device is removed.
->>>>>>>>>>>> I see few drivers using this way.
->>>>>>>>>>> It should matter (if I'm not missing something) because RPM sho=
-uld
->>>>>>>>>>> be in
->>>>>>>>>>> a wrecked state once you'll try to re-load the driver's module.
->>>>>>>>>>> Likely
->>>>>>>>>>> that those few other drivers are wrong.
->>>>>>>>>>>
->>>>>>>>>>> [snip]
->>>>>>>>>> Once the driver is re-loaded and RPM is enabled, I don't think i=
-t
->>>>>>>>>> would use
->>>>>>>>>> the same 'dev' and the corresponding ref count. Doesn't it use t=
-he
->>>>>>>>>> new
->>>>>>>>>> counters?
->>>>>>>>>> If RPM is not working for some reason, most likely it would be t=
-he
->>>>>>>>>> case
->>>>>>>>>> for other
->>>>>>>>>> devices. What best driver can do is probably do a force suspend
->>>>>>>>>> during
->>>>>>>>>> removal if
->>>>>>>>>> already not done. I would prefer to keep, since multiple drivers
->>>>>>>>>> still
->>>>>>>>>> have it,
->>>>>>>>>> unless there is a real harm in doing so.
->>>>>>>>> I took a closer look and looks like the counter actually should b=
-e
->>>>>>>>> reset. Still I don't think that it's a good practice to make chan=
-ges
->>>>>>>>> underneath of RPM, it may strike back.
->>>>>>>> If RPM is broken, it probably would have been caught during device
->>>>>>>> usage.
->>>>>>>> I will remove explicit suspend here if no any concerns from other
->>>>>>>> folks.
->>>>>>>> Thanks.
->>>>>>> I recall that this was the preferred way of doing this from the RPM
->>>>>>> folks. Tegra30 I2S driver does the same and Stephen had pointed me =
-to
->>>>>>> this as a reference.
->>>>>>> I believe that this is meant to ensure that the
->>>>>>> device is always powered-off regardless of it RPM is enabled or not=
- and
->>>>>>> what the current state is.
->>>>>> Yes, it was kinda actual for the case of unavailable RPM.
->>>>>> Anyways, /I think/ variant like this should have been more preferred=
-:
->>>>>>
->>>>>> if (!pm_runtime_enabled(&pdev->dev))
->>>>>>           tegra210_i2s_runtime_suspend(&pdev->dev);
->>>>>> else
->>>>>>           pm_runtime_disable(&pdev->dev);
->>>>> I think it looks to be similar to what is there already.
->>>>>
->>>>> pm_runtime_disable(&pdev->dev); // it would turn out to be a dummy ca=
-ll
->>>>> if !RPM
->>>>> if (!pm_runtime_status_suspended(&pdev->dev)) // it is true always if=
- !RPM
->>>>>          tegra210_i2s_runtime_suspend(&pdev->dev);
->>>> Maybe this is fine for !RPM, but not really fine in a case of enabled
->>>> RPM. Device could be in resumed state after pm_runtime_disable() if it
->>>> wasn't suspended before the disabling.
->>> I don't see any problem with this for the !RPM case.
->> Sorry I meant the RPM case. In other words, I don't see a problem for
->> neither the RPM case of the !RPM case.
-> 1. Device shall be in RPM-suspended state at the time of driver's
-> removal, unless there is a bug in the sound driver. Hence why do you
-> need the dead code which doesn't bring any practical value?
->
-> 2. Making changes underneath of RPM is simply error-prone. It may hit
-> badly in the future once something will change in the RPM core.
-
-I think we are stretching a bit more here when there is no any real harm.
-Right now it works well for both RPM and !RPM case and if we really need to
-fix something in future we can fix. Since my initial inclination was keepin=
+When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+set, the source mapping will not be removed. Instead it will be
+cleared as if a brand new anonymous, private mapping had been created
+atomically as part of the mremap() call. =C2=A0If a userfaultfd was watchin=
 g
-the code as it is and Jon also has similar thoughts, I would retain this=20
-code.
-Sorry Dmitry, we can fix if something comes up and many other drivers would
-need this at that time.
+the source, it will continue to watch the new mapping. =C2=A0For a mapping
+that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
+mremap() call to fail. MREMAP_DONTUNMAP requires that MREMAP_FIXED is
+also used. The final result is two equally sized VMAs where the
+destination contains the PTEs of the source.
+=C2=A0 =C2=A0
+We hope to use this in Chrome OS where with userfaultfd we could write
+an anonymous mapping to disk without having to STOP the process or worry
+about VMA permission changes.
+=C2=A0 =C2=A0
+This feature also has a use case in Android, Lokesh Gidra has said
+that "As part of using userfaultfd for GC, We'll have to move the physical
+pages of the java heap to a separate location. For this purpose mremap
+will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+heap, its virtual mapping will be removed as well. Therefore, we'll
+require performing mmap immediately after. This is not only time consuming
+but also opens a time window where a native thread may call mmap and
+reserve the java heap's address range for its own usage. This flag
+solves the problem."
+=C2=A0 =C2=A0
+Signed-off-by: Brian Geffon <bgeffon@google.com>
+---
+ include/uapi/linux/mman.h |  5 +++--
+ mm/mremap.c               | 38 +++++++++++++++++++++++++++++++-------
+ 2 files changed, 34 insertions(+), 9 deletions(-)
 
+diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
+index fc1a64c3447b..923cc162609c 100644
+--- a/include/uapi/linux/mman.h
++++ b/include/uapi/linux/mman.h
+@@ -5,8 +5,9 @@
+ #include <asm/mman.h>
+ #include <asm-generic/hugetlb_encode.h>
+=20
+-#define MREMAP_MAYMOVE	1
+-#define MREMAP_FIXED	2
++#define MREMAP_MAYMOVE		1
++#define MREMAP_FIXED		2
++#define MREMAP_DONTUNMAP	4
+=20
+ #define OVERCOMMIT_GUESS		0
+ #define OVERCOMMIT_ALWAYS		1
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 122938dcec15..1d164e5fdff0 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *v=
+ma,
+ static unsigned long move_vma(struct vm_area_struct *vma,
+ 		unsigned long old_addr, unsigned long old_len,
+ 		unsigned long new_len, unsigned long new_addr,
+-		bool *locked, struct vm_userfaultfd_ctx *uf,
+-		struct list_head *uf_unmap)
++		bool *locked, unsigned long flags,
++		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
+ {
+ 	struct mm_struct *mm =3D vma->vm_mm;
+ 	struct vm_area_struct *new_vma;
+@@ -408,6 +408,13 @@ static unsigned long move_vma(struct vm_area_struct *v=
+ma,
+ 	if (unlikely(vma->vm_flags & VM_PFNMAP))
+ 		untrack_pfn_moved(vma);
+=20
++	if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
++		if (vm_flags & VM_ACCOUNT)
++			vma->vm_flags |=3D VM_ACCOUNT;
++
++		goto out;
++	}
++
+ 	if (do_munmap(mm, old_addr, old_len, uf_unmap) < 0) {
+ 		/* OOM: unable to split vma, just get accounts right */
+ 		vm_unacct_memory(excess >> PAGE_SHIFT);
+@@ -422,6 +429,7 @@ static unsigned long move_vma(struct vm_area_struct *vm=
+a,
+ 			vma->vm_next->vm_flags |=3D VM_ACCOUNT;
+ 	}
+=20
++out:
+ 	if (vm_flags & VM_LOCKED) {
+ 		mm->locked_vm +=3D new_len >> PAGE_SHIFT;
+ 		*locked =3D true;
+@@ -497,7 +505,7 @@ static struct vm_area_struct *vma_to_resize(unsigned lo=
+ng addr,
+=20
+ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+ 		unsigned long new_addr, unsigned long new_len, bool *locked,
+-		struct vm_userfaultfd_ctx *uf,
++		unsigned long flags, struct vm_userfaultfd_ctx *uf,
+ 		struct list_head *uf_unmap_early,
+ 		struct list_head *uf_unmap)
+ {
+@@ -551,6 +559,17 @@ static unsigned long mremap_to(unsigned long addr, uns=
+igned long old_len,
+ 		goto out;
+ 	}
+=20
++	/*
++	 * MREMAP_DONTUNMAP expands by old_len + (new_len - old_len), we will
++	 * check that we can expand by old_len and vma_to_resize will handle
++	 * the vma growing.
++	 */
++	if (unlikely(flags & MREMAP_DONTUNMAP && !may_expand_vm(mm,
++				vma->vm_flags, old_len >> PAGE_SHIFT))) {
++		ret =3D -ENOMEM;
++		goto out;
++        }
++
+ 	map_flags =3D MAP_FIXED;
+ 	if (vma->vm_flags & VM_MAYSHARE)
+ 		map_flags |=3D MAP_SHARED;
+@@ -561,7 +580,7 @@ static unsigned long mremap_to(unsigned long addr, unsi=
+gned long old_len,
+ 	if (IS_ERR_VALUE(ret))
+ 		goto out1;
+=20
+-	ret =3D move_vma(vma, addr, old_len, new_len, new_addr, locked, uf,
++	ret =3D move_vma(vma, addr, old_len, new_len, new_addr, locked, flags, uf=
+,
+ 		       uf_unmap);
+ 	if (!(offset_in_page(ret)))
+ 		goto out;
+@@ -609,12 +628,16 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned=
+ long, old_len,
+ 	addr =3D untagged_addr(addr);
+ 	new_addr =3D untagged_addr(new_addr);
+=20
+-	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
++	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE | MREMAP_DONTUNMAP)) {
+ 		return ret;
++	}
+=20
+ 	if (flags & MREMAP_FIXED && !(flags & MREMAP_MAYMOVE))
+ 		return ret;
+=20
++	if (flags & MREMAP_DONTUNMAP && !(flags & MREMAP_FIXED))
++		return ret;
++
+ 	if (offset_in_page(addr))
+ 		return ret;
+=20
+@@ -634,7 +657,8 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned l=
+ong, old_len,
+=20
+ 	if (flags & MREMAP_FIXED) {
+ 		ret =3D mremap_to(addr, old_len, new_addr, new_len,
+-				&locked, &uf, &uf_unmap_early, &uf_unmap);
++				&locked, flags, &uf, &uf_unmap_early,
++				&uf_unmap);
+ 		goto out;
+ 	}
+=20
+@@ -712,7 +736,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned l=
+ong, old_len,
+ 		}
+=20
+ 		ret =3D move_vma(vma, addr, old_len, new_len, new_addr,
+-			       &locked, &uf, &uf_unmap);
++			       &locked, flags, &uf, &uf_unmap);
+ 	}
+ out:
+ 	if (offset_in_page(ret)) {
+--=20
+2.25.0.341.g760bfbb309-goog
 
