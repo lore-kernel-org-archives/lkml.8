@@ -2,115 +2,98 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25A3C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BB8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E7C21739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96DB2467B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 23:42:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="l0sAfEcz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KEEfsaPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgA0XlA (ORCPT
+        id S1726670AbgA0Xm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 18:41:00 -0500
-Received: from vern.gendns.com ([98.142.107.122]:47570 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgA0XlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 18:41:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3Cnuq19Xwl7haKLZpaPTEJKb0hDaQOWCuXCekp4VNfM=; b=l0sAfEczAKEPYs1aRPoEgcniDM
-        PQj672CVbH2XvtXnD7+M+J5osaZIajyo2dUruscPmy03mpZ76qkoe5KDWeO0tdsD57Dw1LOjjTAsC
-        Gu1CuHebCZX2+Kg7c1wuKXumS6AXAVhwku/jLr9AkK9f/Trb5sDWTVtGLhR/X/rdcdHRhtw8TD6WV
-        cf8qn/J+/E8eHVifCAOfzUDBqsAkwTcDVy5Gm0zGOpoLa23CRVo8Cr7mbc1LNWx7D8S29Dw07Q2qs
-        5yVyB0wMZzGkAOfw2XeYNEJThvSjGnJo9LljKCOGzq7fyYtcT4vYko+wWKSvhX/sKva1zMV+yOx/U
-        S1H4nBYw==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:56512 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1iwE01-0003wj-IZ; Mon, 27 Jan 2020 18:40:57 -0500
-Subject: Re: [PATCH v2] mfd: syscon: Use a unique name with regmap_config
-To:     Suman Anna <s-anna@ti.com>, Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>,
-        Roger Quadros <rogerq@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-References: <20200127231208.1443-1-s-anna@ti.com>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <217993e5-5e1d-79a1-7684-c6bb964379f0@lechnology.com>
-Date:   Mon, 27 Jan 2020 17:40:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Jan 2020 18:42:28 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40683 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgA0Xm1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 18:42:27 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y1so826308plp.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 15:42:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4jR3NEZ7x+Jvx3U2TQ49TKGsznRacov85tgmCkWAaLs=;
+        b=KEEfsaPzSnHMeqMLqqLF/rKhOnk1MsLgBr28dnqCs8OF9PTkJ+kGeggRfhXfPW8AdM
+         5ignS2E0kGnVhslgsBP8y2I9j5uYqsgB/RjhpdR6fqQN3cHxjGgEp3OwCIYullOj2y5g
+         x1loPleyzV88AC/BVEIpNRNXMByZ94VY3QKAjX6PPGnMgCchseaNbLqYu9raH41h6jxu
+         qxpD3/1hqBM5jHPTxqKIHNdcOObFQsr7HrQo6E8lr2n1h2riX6kKDEq+FcaDAZLdUIYd
+         BGbZf2NJM0rhl/BD/e5neNmcLeRSrbC4bnz9hgkuxwxL4j2O4bk1WtwRxabeG082RSm9
+         ZDuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4jR3NEZ7x+Jvx3U2TQ49TKGsznRacov85tgmCkWAaLs=;
+        b=G7op4knMzgJRo5IJsIUWdFhvR2GHrRwXOdFVdh8yMSwGaNi9MdZ/7WA+blf8SXGQ0x
+         AiL/3w0UrNsCyxLAti3C+iPNm4ctBVj8JWBhFtcEkzvcwjZLSyHig+r4tw8eRF1osft+
+         I4uWKH7S9nyNiloaNHSs1iVVP5icwaBVwmIMv3aMOsy1/qDucbvN2qU4SFbfqubYd9j5
+         RLN70OyiJfrzCRlcpLTv/CT+XYo+yty0xMSRUORKZD1DCKk/Z9H9Pch8d7RkQaRjFnQm
+         28ge1k/nWpwBvUF/eugIWeqOoWjRQHSKuJvMtyJPKwp4bE3DbgxKhIlQGOzIHOozc7gA
+         90Xw==
+X-Gm-Message-State: APjAAAX4aWjGeCGLEcLk8JvC0eROcTGfuNLCoNxnbdDrivYCyKxpca8M
+        Inz+C+ScZoB2jmVs9UQwVadyKw==
+X-Google-Smtp-Source: APXvYqz6tLIUsXV5Wb/Oi6Sc3Ql3UOYy6wK2oscK/U9I/+KHFO2ncIizEywoPt17c47xcms2lkjbpA==
+X-Received: by 2002:a17:90a:3aaf:: with SMTP id b44mr1344980pjc.9.1580168546572;
+        Mon, 27 Jan 2020 15:42:26 -0800 (PST)
+Received: from yoga (pat_11.qualcomm.com. [192.35.156.11])
+        by smtp.gmail.com with ESMTPSA id p18sm325420pjo.3.2020.01.27.15.42.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 15:42:26 -0800 (PST)
+Date:   Mon, 27 Jan 2020 15:42:23 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, ath10k@lists.infradead.org
+Subject: Re: [PATCH 0/2] ath10k: Enable QDSS clock on sm8150
+Message-ID: <20200127234223.GA202699@yoga>
+References: <20191223054855.3020665-1-bjorn.andersson@linaro.org>
+ <20200127184037.3BFB620CC7@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200127231208.1443-1-s-anna@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127184037.3BFB620CC7@mail.kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/27/20 5:12 PM, Suman Anna wrote:
-> The DT node full name is currently being used in regmap_config
-> which in turn is used to create the regmap debugfs directories.
-> This name however is not guaranteed to be unique and the regmap
-> debugfs registration can fail in the cases where the syscon nodes
-> have the same unit-address but are present in different DT node
-> hierarchies. Replace this logic using the syscon reg resource
-> address instead (inspired from logic used while creating platform
-> devices) to ensure a unique name is given for each syscon.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
-> v2: Fix build warning reported by kbuild test bot
-> v1: https://patchwork.kernel.org/patch/11346363/
-> 
->   drivers/mfd/syscon.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index e22197c832e8..f0815d8e6e95 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -101,12 +101,14 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
->   		}
->   	}
->   
-> -	syscon_config.name = of_node_full_name(np);
-> +	syscon_config.name = kasprintf(GFP_KERNEL, "%pOFn@%llx", np,
-> +				       (u64)res.start);
+On Mon 27 Jan 10:40 PST 2020, Stephen Boyd wrote:
 
-Would it make sense to also include the node name along with the
-pointer address so that the name is still easily identifiable?
-
->   	syscon_config.reg_stride = reg_io_width;
->   	syscon_config.val_bits = reg_io_width * 8;
->   	syscon_config.max_register = resource_size(&res) - reg_io_width;
->   
->   	regmap = regmap_init_mmio(NULL, base, &syscon_config);
-> +	kfree(syscon_config.name);
->   	if (IS_ERR(regmap)) {
->   		pr_err("regmap init failed\n");
->   		ret = PTR_ERR(regmap);
+> Quoting Bjorn Andersson (2019-12-22 21:48:53)
+> > On SM8150 the WiFi firmware depends on the QDSS clock ticking, or the system
+> > will reset due to an NoC error. So this adds an optional clock to the ath10k
+> > binding and makes sure it's enabled while the WiFi firmware needs it.
+> 
+> Hopefully this isn't a requirement in production firmware? Seems
+> wasteful to keep the debug clk enabled in the field when nobody is
+> debugging anything.
 > 
 
+I'm confused about this as well, but I'm told that it was fixed
+post-8150.
+
+Regards,
+Bjorn
