@@ -2,70 +2,128 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3880EC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB9FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C22F214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A623C21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:47:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="gFSDjyyD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JzwOaY8R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgA0Jre (ORCPT
+        id S1729868AbgA0Jr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 04:47:34 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:36602 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgA0Jrd (ORCPT
+        Mon, 27 Jan 2020 04:47:59 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:55939 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726911AbgA0Jr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 04:47:33 -0500
-Received: from localhost (unknown [213.175.37.12])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CE0051502D624;
-        Mon, 27 Jan 2020 01:47:30 -0800 (PST)
-Date:   Mon, 27 Jan 2020 10:47:29 +0100 (CET)
-Message-Id: <20200127.104729.424111923374196200.davem@davemloft.net>
-To:     dan.carpenter@oracle.com
-Cc:     syzbot+5cfab121b54dff775399@syzkaller.appspotmail.com,
-        allison@lohutok.net, keescook@chromium.org,
-        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, pankaj.laxminarayan.bharadiya@intel.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Subject: Re: [PATCH] net/802/mrp: disconnect on uninit
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200122072604.hkspgs6ihyelzxtn@kili.mountain>
-References: <000000000000f35c6a059cab64c5@google.com>
-        <20200122072604.hkspgs6ihyelzxtn@kili.mountain>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Jan 2020 01:47:32 -0800 (PST)
+        Mon, 27 Jan 2020 04:47:58 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id EA8158706;
+        Mon, 27 Jan 2020 04:47:57 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 27 Jan 2020 04:47:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=D0agDfMES+f5sz8FtNMBMOC9b25
+        uS9ZmYckjSQrkMEY=; b=gFSDjyyDFqLlM+dXDPSJzHdThqw7dWggT6q+A1hAOP4
+        3fqxBj0kpgkLKVADimwtkVpZY58c1YQM6eErFprywq/epCUxIDkl57xPLbb8A6w/
+        kqCfKSkkDQYZxTn4wdqc+iX3SRCBZ2MC3jfX2U7xwMJgHHqDhK0QSDyxY8Q9v22G
+        fcR1tiaZoFYj01G0gYWyTr5iZtonLlWaKueMQc+kOBt1k3s9gwz5PVQlejQtKBfh
+        Nyp+3ZzZN162bwtzzbo++WNTKh8S/3/pImX0mbCLzJ3cGAhn3EBUzHgOjCGlVCQv
+        16aSuE0eX3wC7vT1TH0xrARXYbD73VLKC6JD/13PezQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=D0agDf
+        MES+f5sz8FtNMBMOC9b25uS9ZmYckjSQrkMEY=; b=JzwOaY8RsRV8d4XIhFGIjJ
+        5NSPq5SFXo9HTN5iCOzdgz/jSyz/Ig55R/QgZ2cYSvn85exPDBKF6SDzuIOWH/XC
+        5n6+Ol4Yrw53jY/mJWxdLFf6Kfoa/Tb28Ml1SCvu7/372X9knABHudBfmeeFmXZX
+        P7rQx8O+r04pK6fDgTl2FwNlDinVXGezBAn5zwy/0K8+Xtruf6cVQYsqClX/8oNh
+        RmeMCQkHMSDTdNnDz+ONEpkS5PrPXD0u+pzMEvpH9P5jQHf1YcXbKVcTuCIgiIi9
+        8PgZXddrb1qMI8+F6iZYTWgXo3oqTe+jRs0IBllXVkg2DhXwpn/nXmBAvMk7NXcQ
+        ==
+X-ME-Sender: <xms:zLEuXgfgLnl7eE_v9KdkAxCwQoLe0tOmhPu_1z8qaJtcoI5PbfCAaQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfedvgddtkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:zLEuXoUcdZjzaRZOlDnmLuWWcZU6sLbIr7GqNbs-CDCX6J-mPCzz8Q>
+    <xmx:zLEuXofHOipnjLbf6s1xGS7a1c7sSiguq0meZO8keXkeOYSBr-HtFg>
+    <xmx:zLEuXtG75JtN5G42Cw4EVRkP5t0nadXYv14t4lYDdw7B4iIYs8WiSA>
+    <xmx:zbEuXj_a599ETY-xBwnSAxkuC2vh8ZgvguKfy1WWPZwWQr2gHdLjpg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 96D40306965C;
+        Mon, 27 Jan 2020 04:47:56 -0500 (EST)
+Date:   Mon, 27 Jan 2020 10:47:54 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i-r40: Add thermal sensor and
+ thermal zones
+Message-ID: <20200127094754.w4wacqgtdodxayln@gilmour.lan>
+References: <20200106174639.20862-1-tiny.windzz@gmail.com>
+ <20200106174639.20862-2-tiny.windzz@gmail.com>
+ <20200107075816.ly6exfd4qtvfxxua@gilmour.lan>
+ <662e157a-603f-7423-0491-f26f0fc8d7b6@linaro.org>
+ <20200109131343.mjyuj5ed2xwvmwd4@gilmour.lan>
+ <af4bca3b-ba95-aa10-5601-753f1c5275b3@linaro.org>
+ <CAEExFWtmUtzBje-DKt71W46rs3PTF_Di_x3YQCz+tg8+W1kyAA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rh4ccto7d4lp6y3i"
+Content-Disposition: inline
+In-Reply-To: <CAEExFWtmUtzBje-DKt71W46rs3PTF_Di_x3YQCz+tg8+W1kyAA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Date: Wed, 22 Jan 2020 10:26:04 +0300
 
-> [  I was investigating this bug and I sort of got carried away and wrote
->    a patch.  I'm going to see if I can find a test system to start
->    testing these patches then I will resend the patch.  - dan ]
-> 
-> Syzbot discovered that mrp_attr attr structs are being leaked.  They're
-> supposed to be freed by mrp_attr_destroy() which is called from
-> mrp_attr_event().
-> 
-> I think that when we close everything down, we're supposed to send one
-> last disconnect event but the code for that wasn't fully implemented.
-> 
-> Reported-by: syzbot+5cfab121b54dff775399@syzkaller.appspotmail.com
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
-> Not tested.  Idea only.
+--rh4ccto7d4lp6y3i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes, please resend this when it is tested, somehow, by someone :-)
+Hi,
+
+On Sun, Jan 26, 2020 at 09:01:01PM +0800, Frank Lee wrote:
+> HI Chen-Yu and Maxime,
+>
+> Can you pick this up again?
+
+Sorry, I'm not quite sure what happened to this patch... I've picked
+it up for 5.7 (for real this time, hopefully).
+
+Maxime
+
+--rh4ccto7d4lp6y3i
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXi6xygAKCRDj7w1vZxhR
+xUkmAP9DgDEkdFW+faazJdPD1Gp2sjOOP/a14Whm0wZv6t0dYgD/fPBVqAvI3326
+HCBqMcPz39j+iwdM+UuywN8uLjHD2Ag=
+=E275
+-----END PGP SIGNATURE-----
+
+--rh4ccto7d4lp6y3i--
