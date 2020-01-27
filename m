@@ -2,90 +2,114 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4B0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A3EC35248
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8286E206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9101206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kyngqvLL"
+	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="fjmT4coy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbgA0M3H (ORCPT
+        id S1730649AbgA0M3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:29:07 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38808 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727642AbgA0M3H (ORCPT
+        Mon, 27 Jan 2020 07:29:47 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:41366 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729887AbgA0M3r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:29:07 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m4so3051591pjv.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 04:29:07 -0800 (PST)
+        Mon, 27 Jan 2020 07:29:47 -0500
+Received: by mail-ua1-f65.google.com with SMTP id f7so3342604uaa.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 04:29:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h1R6WgPaLfjprnwT2K/UdFzkWhfqg+Wgh1Aa2jhCg0M=;
-        b=kyngqvLLf3+MJMnVXsCplq5vDbb0JfZH1dTrEG0ryUa7zh+3I64JbYu9R3L1CxVb/a
-         Xo6urOcr8ADLoISKgDXoGJSd/zkVFTiRv174duzJgZPi8UOfUvkGdgcHMT08TCrGH3AA
-         Hr0pSULJWzoHk0pkXOUQiq7JrmKOGqqsQTxMU37WobJ9OPtBtemdL585dgUDsC7GBMdR
-         iKHXbSk+Qdks7U32g84daLQ5o2ekHG4kOPnoUeWM3kTy6S8SUxJhMtQDpx1AKg2IeDHP
-         o248tw9F0wR/82oFB1vZqwc6+srMdD/0TxOOVQlgJtC3CvYA32rel3tI/xG4O8LUvUJY
-         FvPw==
+         :cc:content-transfer-encoding;
+        bh=TC/jbdNXZ2D9BmqUV22cZuRvRHGXN8uex0O3uaZCCB8=;
+        b=fjmT4coyOvrBK2h+BPci1LCeVr+a3vWJX76FTYcFv0XlUFna4w2ZvTLMkrpnLlk3U0
+         cggT7NAylDCNPt4e1Vm+pkp3CwK78hBam+QsnfR1c2357YuiEfg7v2NwOHoZbupHRLYp
+         s2jEJmwTzdD/jjqV4y5avgneVsl6BT08m4aBtn1GxU+tB7CWwEsCUA7OJAUf5LPopeSb
+         bXLHbRx2Pi9DHFCtDa8MjxaeQm0e/BRVWnBRYHnTfL1VrdFCsNkESmT4fhLVi3B3u1xP
+         wRE7JgaUHijwRdiTzb67S5GesN5QNqnqR4F5dUCEcqr5c9glGsa9qRwbs1ImHDBWN1y2
+         suLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h1R6WgPaLfjprnwT2K/UdFzkWhfqg+Wgh1Aa2jhCg0M=;
-        b=b4N18ah9IYV78uxr+VEJJz4ZMUwMRqDsx8YhRd55UiDBPraxbNX4LuUZhM8pbxuG1t
-         vGho28j/RWBGOe6ZZGnpGuIOdGzCaR5B+vg7DpY2aUM65E/RDMILXXSndeyb3w5gWwjz
-         DnRdrTs5oaPfdyNE9v12VujwAOBJ/W+YolMdEOHRCnmMjN6WtMf8QJJKBhcOfWGj7fbs
-         bteY9sJdA6W1/I6DcLBsdcxD1P3Obnt8ksR6jH0tqydpCWC6v9BhxRx5zEeAYFhfWhfY
-         B49HPCamW+QtQhlgWw8sRSeaU2ISUFCEU2u6aEhVPTMfr/lmPuXc0J0mqaFY5HAz31tT
-         fBXw==
-X-Gm-Message-State: APjAAAX3kVMo7BuWFttWDOCcWFMiiPUv98XuAInMfVRyrSyOxXur66Xy
-        5OHmhbvyZgFaLngMpaztbxdL9Q2/aAaj7PuwYliQuQ==
-X-Google-Smtp-Source: APXvYqwbkq6UEFBP55j3Hu+JAlu5Cyx+6MQ4jxtADqpUnjtOkwWS78sgZ2BBaiYS2fpkGLv6HL6e7mZyBq8tqwh4L+8=
-X-Received: by 2002:a17:902:704b:: with SMTP id h11mr18100629plt.147.1580128146719;
- Mon, 27 Jan 2020 04:29:06 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TC/jbdNXZ2D9BmqUV22cZuRvRHGXN8uex0O3uaZCCB8=;
+        b=BvIGnQ8f85HlOx8iSJZ33rhWqaHsQOKRNJ3geeEz6vgkhmgTUjqxfjLQQVURCgCIGN
+         OwDJRWQEVvpC+LWRNXDhf4twq91WL5Vxac+Bxy9Op07hMjgtPe/q/sotVOM0iqtrl4JI
+         XAHMTGDzv2IAiHRUhDtX23M8HvFqxYrNd6Z7dP9LDfnUwhDI30ReMgGyMmpeSD8BmHyl
+         82vOYMg/ztRfbl467an8mSXgzdifeOkvMhC3LW2hP9/7gi0ZpkGmGq1ervAx7axYnpf9
+         NwkAN/CHEEmksDV6F5u7+yLzV1GgVJQU+8gaYVZGMjzr1mY7j+/H7MNYwN2j3mkfuJaO
+         8tSw==
+X-Gm-Message-State: APjAAAUyR7lTbSvclNrZdfwkJ9d5lupQBB78STn309Pu3GmRCWF+kvUj
+        yXuSWeFC1LiDjzavNMezhDJV5DKevD/Z2K7LNFAggg==
+X-Google-Smtp-Source: APXvYqwZbM7FkGoGBSAI/S5xNKm1fSPmsgIPqD8MahEvFKdy3f+86z+s9RgPmD468G4wv7FiDLxF2cdLNgO5B0lH0oI=
+X-Received: by 2002:a9f:226d:: with SMTP id 100mr9338336uad.107.1580128186076;
+ Mon, 27 Jan 2020 04:29:46 -0800 (PST)
 MIME-Version: 1.0
-References: <0000000000004dbaf2059c193a36@google.com> <20200126024957.11392-1-hdanton@sina.com>
- <20200127092850.GX1847@kadam>
-In-Reply-To: <20200127092850.GX1847@kadam>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 27 Jan 2020 13:28:55 +0100
-Message-ID: <CAAeHK+wddN62F0JAVfma8aUHy4FtkfSViSQuXB1ESNjQXLSD0Q@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in hiddev_disconnect
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+106b378813251e52fc5e@syzkaller.appspotmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <20200126133805.20294-1-gilad@benyossef.com> <CAMuHMdXHgMn8L2_CZ8kXcp3g4Y+3HfQsvFhyTZatf8-xk2kUdQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdXHgMn8L2_CZ8kXcp3g4Y+3HfQsvFhyTZatf8-xk2kUdQ@mail.gmail.com>
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+Date:   Mon, 27 Jan 2020 14:29:35 +0200
+Message-ID: <CAOtvUMdoktR3C_xwkfpzq_=CqyMzmr_BjWEEg6MW-NnoAZ+ssw@mail.gmail.com>
+Subject: Re: [RFC] crypto: ccree - protect against short scatterlists
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ofir Drang <ofir.drang@arm.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 10:29 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+On Mon, Jan 27, 2020 at 10:03 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 >
-> I already fixed this bug in an earlier thread.
+> Hi Gilad,
 >
-> Syzbot always reports a use after free as two separate bugs, a read
-> after free and a write after free.  It's too much hassle to mark all
-> the duplicates.
+> On Sun, Jan 26, 2020 at 2:38 PM Gilad Ben-Yossef <gilad@benyossef.com> wr=
+ote:
+> > Deal gracefully with the event of being handed a scatterlist
+> > which is shorter than expected.
+> >
+> > This mitigates a crash in some cases of crashes due to
+> > attempt to map empty (but not NULL) scatterlists with none
+> > zero lengths.
+> >
+> > This is an interim patch, to help diagnoze the issue, not
+> > intended for mainline in its current form as of yet.
+> >
+> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
 >
-> regards,
-> dan carpenter
+> Thanks for your patch!
 >
->
+> Unfortunately this doesn't make a difference, as ...
 
-#syz dup: KASAN: use-after-free Write in hiddev_disconnect
+
+OK, so this is a different case than the one I am seeing but similar
+in the sense that we get a scatterlist with
+a NULL first buffer, which aead.h says we shouldn't... Oh, well.
+
+Sorry, still waiting to get my R-Car board back. Please try the patch
+I'm about to send and see if it is better.
+
+Thanks,
+Gilad
+
+
+
+--=20
+Gilad Ben-Yossef
+Chief Coffee Drinker
+
+values of =CE=B2 will give rise to dom!
