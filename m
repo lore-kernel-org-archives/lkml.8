@@ -1,111 +1,155 @@
 Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E36C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0945C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7FE20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739C620716
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:15:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TxBbi15s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="paCWn4fR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbgA0PMm (ORCPT
+        id S1729377AbgA0PPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:12:42 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:47210 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbgA0PMm (ORCPT
+        Mon, 27 Jan 2020 10:15:18 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45303 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729146AbgA0PPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:12:42 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00RF9eHL000915;
-        Mon, 27 Jan 2020 15:12:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=fHfyRYxqrv2GKnEybOSy0pNXaorqVF+m3LA7NpU4Y+A=;
- b=TxBbi15sPi/V6nRfn13IAtcIKgCb0WeWBlfmPsoGYlIHQ4pw6eVE7EJsopSxiO4H8WjH
- tX1XpwmJgGqmH+88IZ/Amkc4UTW3e2HEFN3HtsBjJBrwvJfnCHkH1TTCyatnMspBQRn2
- SHrufJwDShOtNuC3ARyrhNftW7TudNhQbre0gkCZyC+5TV7LtdaSi69UuKvcmWYHeflP
- rpJJKoQV0TiVJdIhjDRLmxeacksq+pC4HDtqIixtNcXYM0EZevENMX+2mCai65OFz0k8
- hvkUbdfYvYRIJgnB/pQhKX1kxHPiyWajR/5TfV+DXBmIZGZVcHSuHAdNjo2GDHgcDKR1 TA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xrd3tyxqr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 15:12:05 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00RFBfPG131063;
-        Mon, 27 Jan 2020 15:12:04 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xrytq7aym-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 15:12:03 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00RFBi2v003902;
-        Mon, 27 Jan 2020 15:11:44 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Jan 2020 07:11:43 -0800
-Date:   Mon, 27 Jan 2020 18:11:35 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzkaller <syzkaller@googlegroups.com>,
-        Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+106b378813251e52fc5e@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in hiddev_disconnect
-Message-ID: <20200127151135.GM1870@kadam>
-References: <0000000000004dbaf2059c193a36@google.com>
- <20200126024957.11392-1-hdanton@sina.com>
- <20200127092850.GX1847@kadam>
- <CACT4Y+ag59G4p=DO3Dg7jnFt3wQb=dtjzBujADtGHKn-97O8_g@mail.gmail.com>
+        Mon, 27 Jan 2020 10:15:18 -0500
+Received: by mail-lj1-f195.google.com with SMTP id j26so11036452ljc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 07:15:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m+OnEfzyfg+muaU/2AUGZRAG0jjXR+QcDzWNJ7FtrgE=;
+        b=paCWn4fRy110Dggp/mnjowZDRQwZUnLbDFR8w3jX3jDPvgCjktfRhj7wBkqtasZLkf
+         t/J1rcWs8k2O1YvuMzvkMzH4wc8gGmJDq1MCI/liEXywdK7vd69moww8clsw+BRT+eRb
+         IPlWUBhP82hoemb3DqHIjTrexQCBzar9PKu6i7L8uWuzSZ65AXq1xKNkyXNDgbU40GBZ
+         oLOb+uYX1rAV3K0iv34WeJOlut/haIgrQoEK0JUlgYoTVwnioJfmHOi9aOkpL1VIE4HW
+         zsd4z+V9dnANDam3cR/Q+bU1rCDaHtxGaar+FTrUy17jJKExiunjsERx9OM2udvNH61E
+         bm+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m+OnEfzyfg+muaU/2AUGZRAG0jjXR+QcDzWNJ7FtrgE=;
+        b=WAFsC9cychf058nSkbZNYm/1h548GF72kA8lnQJhJL12Ah2REunoZXvtqLIp73kgM7
+         LHQO9vPDE+Jz1z8dN8Ofc7KPedCGVVrc5iJbNN7WvJG3Rx1d6RJZzmFySSG1C6yWPrYH
+         1DmfPDaWkSA5MIKb/Z9lJnyMjvKIiTtKAk7gmcHQFb0LiCecD91XyU5p+7B2w9aNkzRb
+         Xmr/4MggneKybTqxZzdHseoAG2OIRXko2cf8hkWFUGnhwLOm7dP4S/xnZJpniAMeE8AX
+         q7L8vU1PkNKDexekz5je0nioHjKl4cN2/ofc0fZqc3dmOaD02NJU/N5SvR3pCTOt8l2M
+         6caw==
+X-Gm-Message-State: APjAAAVY0oN7gtY/f2jzjghb9xQPaBxvV3DmdUS0QDUllhWtSWRTeCg9
+        NuU0X3kE5qnE9MC/XMym+kOY9aREWetinSCz3YDQEA==
+X-Google-Smtp-Source: APXvYqx2FBx1N5/FWCTQn77nyta1XZvk3IJKXI03qUaX2hC1b0o1joc6whQV3eAlixolEWIN0F9Ex08LSeVjw/iEKNc=
+X-Received: by 2002:a2e:909a:: with SMTP id l26mr9881296ljg.209.1580138116210;
+ Mon, 27 Jan 2020 07:15:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+ag59G4p=DO3Dg7jnFt3wQb=dtjzBujADtGHKn-97O8_g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9513 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=612
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001270127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9513 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=675 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001270127
+References: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
+ <1579031859-18692-5-git-send-email-thara.gopinath@linaro.org>
+ <20200116151502.GQ2827@hirez.programming.kicks-ass.net> <CAKfTPtA-M_APhGzwADhuwABzW_M5YKjm_ONGzQjFNRoJ+qYBmg@mail.gmail.com>
+ <20200117145544.GE14879@hirez.programming.kicks-ass.net> <CAKfTPtAzgNAV5c_sTycSocmi8Y4oGGT5rDNSYmgL3tCjZ1RAQw@mail.gmail.com>
+ <e0ede843-4cb8-83d8-708b-87d96b6eb1c3@arm.com> <CAKfTPtA-pr9y2MuwY8vTAy=m4beqdhNCek0fgdZP7u0JT8ojvA@mail.gmail.com>
+ <aabc0d05-6092-7e50-9758-acab30d3c434@arm.com>
+In-Reply-To: <aabc0d05-6092-7e50-9758-acab30d3c434@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 27 Jan 2020 16:15:04 +0100
+Message-ID: <CAKfTPtCG2xT2+Hwo__N2+0nSRkdOQqtJ_38AxpC4AbCe60y=Xw@mail.gmail.com>
+Subject: Re: [Patch v8 4/7] sched/fair: Enable periodic update of average
+ thermal pressure
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Quentin Perret <qperret@google.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Amit Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One possible option would be to list the similar bugs at the start of
-the bug report.
+On Mon, 27 Jan 2020 at 13:09, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> On 24/01/2020 16:45, Vincent Guittot wrote:
+> > On Fri, 24 Jan 2020 at 16:37, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> >>
+> >> On 17/01/2020 16:39, Vincent Guittot wrote:
+> >>> On Fri, 17 Jan 2020 at 15:55, Peter Zijlstra <peterz@infradead.org> wrote:
+> >>>>
+> >>>> On Fri, Jan 17, 2020 at 02:22:51PM +0100, Vincent Guittot wrote:
+> >>>>> On Thu, 16 Jan 2020 at 16:15, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> [...]
+>
+> >> The 'now' argument is one thing but why not:
+> >>
+> >> -int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
+> >> +int update_thermal_load_avg(u64 now, struct rq *rq)
+> >>  {
+> >> +       u64 capacity = arch_cpu_thermal_pressure(cpu_of(rq));
+> >> +
+> >>         if (___update_load_sum(now, &rq->avg_thermal,
+> >>
+> >> This would make the call-sites __update_blocked_others() and
+> >> task_tick(_fair)() cleaner.
+> >
+> > I prefer to keep the capacity as argument. This is more aligned with
+> > others that provides the value of the signal to apply
+> >
+> >>
+> >> I guess the argument is not to pollute pelt.c. But it already contains
+> >
+> > you've got it. I don't want to pollute the pelt.c file with things not
+> > related to pelt but thermal as an example.
+> >
+> >> arch_scale_[freq|cpu]_capacity() for irq.
+>
+> But isn't arch_cpu_thermal_pressure() not exactly the same as
+> arch_scale_cpu_capacity() and arch_scale_freq_capacity()?
+>
+> All of them are defined by default within the scheduler code
+> [include/linux/sched/topology.h or kernel/sched/sched.h] and can be
+> overwritten by arch code with a fast implementation (e.g. returning a
+> per-cpu variable).
+>
+> So why is using arch_scale_freq_capacity() and arch_scale_cpu_capacity()
+> in update_irq_load_avg [kernel/sched/pelt.c] and update_rq_clock_pelt()
 
-See also:
+As explained previously, update_irq_load_avg is an exception and not
+the example to follow. update_rt/dl_rq_load_avg are the example to
+follow and fixing update_irq_load_avg exception is on my todo list
 
-	KASAN: use-after-free Write in hiddev_disconnect
-	https://syzkaller.appspot.com/bug?extid=784ccb935f9900cc7c9e
+> [kernel/sched/pelt.h] OK but arch_cpu_thermal_pressure() in
+> update_thermal_load_avg() [kernel/sched/pelt.c] not?
+>
+> Shouldn't arch_cpu_thermal_pressure() not be called
+> arch_scale_thermal_capacity() to highlight the fact that those three
 
-Then we could just copy and paste to the "#syz dup:" command.  The
-bitmap_port_list() stuff was reported something like 15 times so it was
-really complicated to track.  Hopefully if it were easier to mark things
-as duplicate that would help.
+Quoted from cover letter https://lkml.org/lkml/2020/1/14/1164:
+"
+v6->v7:
+       - ...
+        - Renamed arch_scale_thermal_capacity to arch_cpu_thermal_pressure
+          as per review comments from Peter, Dietmar and Ionela.
+       -...
 
-regards,
-dan carpenter
+"
 
-
+> functions are doing the same thing, scaling capacity by something (cpu,
+> frequency or thermal)?
