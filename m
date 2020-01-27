@@ -2,134 +2,180 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7267AC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8C2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4357320702
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61AB20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:51:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="a/tS/vkU"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DZsm73Ov";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="BeD61Bt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbgA0MtW (ORCPT
+        id S1730410AbgA0MvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:49:22 -0500
-Received: from mout.web.de ([212.227.17.12]:38639 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgA0MtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:49:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1580129347;
-        bh=8g0N+5vkbrFGE4HcBA9m8HyPWC69TkpnzXDwc8vS7m0=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=a/tS/vkUmnveU/ULaj1hoYayAujN+oVlvv8EwPUsAb+xE3KZsPsWEFNEAJNme+qiJ
-         XECRvzD72EfTfSdhdoe7JQIL21Ink7RJEJWFTI0eCP1a+Lbw1riIal83cDni59DRnA
-         +xb/EfHd2m/O2bHQnYIvRYDgKWYNNi+mbH8wFO00=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.115.58]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lheqz-1jR10M1KYj-00mugG; Mon, 27
- Jan 2020 13:49:07 +0100
-To:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>
-Subject: Re: [PATCH v9 1/2] fs: New zonefs file system
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <3021e46f-d30b-f6c5-b1fc-81206a7d034b@web.de>
-Date:   Mon, 27 Jan 2020 13:49:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Mon, 27 Jan 2020 07:51:00 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:47240 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726145AbgA0Mu7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 07:50:59 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8C6FC40686;
+        Mon, 27 Jan 2020 12:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1580129458; bh=yD8bGTDRn2KQdx9mjml6eNaQvDpGuafLl7fe3izDByk=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=DZsm73OvyTLDwpbd/atRe6k8aeiD3A8Rbv3nbujZ5joTowPmpdK01TTx5tvTEyCVG
+         mzQgoQsZcUuodxPaorxITPaXZEI5l1IhQBtomPtpV2lWgqCq05Pq8PGxy8G53XFC0C
+         XIvl47wyx2v+G6yZ6ONbHxGl1UvIYsiYi1m01e7zz1aPFf9WdrhDjSqGxw7S87TzAm
+         Qxbnhw9l1FpzMLhuSS0EkKaGLh/OoFTzeaBcAkGJhVPeZgji3j6xEx1FMj/hAQSkzn
+         cKlbv0VIboZlV/bRsIL9GyZiFKxxfoX3QC1zlnLG4Toow1fndCR80UzN+9BbWjoXvp
+         M1NCwUYIaLkVg==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id C7313A0083;
+        Mon, 27 Jan 2020 12:50:56 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 27 Jan 2020 04:50:56 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 27 Jan 2020 04:50:55 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TXSbUJnEYJUFW1xrzq0Ms1vGc9c7o01Bb/zm3GVCW028vhI3ejAMNWwDUx/bHzBOTdt1HaCKOiCQpFkHtpW02SSsdpNZdIDbhf+05nkJSK6fDbN8C2DWQm7vTBGhkaeSfq5nTwKP+meDdSpTW3KpmZ3l1Kv/x95034qMue6XF/5at6s5y3zS+WxUQuJ+1eSHelzEz43yubIfmPq35lyyGTr6va69sR64j2klt4VlDsvzbW0vlgbkyoA69JiWYATSI90w3g6YvTvmFY1F7eEOZjEU9zAZA14iAuZaDSyXsaPSJml6UNZNY9Z9ExOg729PpREV8NgFCbm1u9w4Qu+Ppg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VUxZbgOVKlZEoSoqyu6Wj5egb/s5vPoLAN/v20jCgDA=;
+ b=mEFNFy4o1/82fX0GKV3HI2L+ENSHADMf5nRyK9fWHgYflhkYbkFFtwd92j/reV5E81vbcB38SQaF829nKUcBLrOTJfwXOII/pXD2FEJqeT3t4kIKPWKUTzGZQB1q4tfS6cyl1YT9nEw0BFb4ciiqZXUsZxcqjgk7PHfYZFaRwg8rWmqtRkF3SRuOJsFwP0tyyeYaK5+WflX7t66Nr7B1pwNkZmdzvkYF1PGMG2Lx2qzILOYiY9o/O8LPXzgTtEp6sWbHBOa/x+oI04MWmyLcdNqWzyoho6MLLMDBumQp6ds6qq+WcEnTMK0psKWJ6a1pDAjFxWo21O5ncmAKFMe9xg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VUxZbgOVKlZEoSoqyu6Wj5egb/s5vPoLAN/v20jCgDA=;
+ b=BeD61Bt5Hw25FObOv4+cIBuKn6i5ALtwGEiL07MFf07GlPweRVTFK65PzfLXqAU3AVGOkgiMqmUV/5w6UC0qTZcTYRBT5/UjhgDXdaVUcMjE1d05/GSj5YjjsnjIY76vDDvYy1IsFxqx3XpP/QMyxKQH6JpNeidROxlkm8fClpg=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3491.namprd12.prod.outlook.com (20.178.210.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.26; Mon, 27 Jan 2020 12:50:54 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2665.017; Mon, 27 Jan 2020
+ 12:50:54 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
+ up without PHY
+Thread-Topic: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
+ up without PHY
+Thread-Index: AQHV1QJR/2IdLzxcIUOq2qgDmVwJ/6f+XbIAgAAEH1CAAALaAIAADuww
+Date:   Mon, 27 Jan 2020 12:50:54 +0000
+Message-ID: <BN8PR12MB3266A7C976B4E63466B5FA35D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+ <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+ <20200127112102.GT25745@shell.armlinux.org.uk>
+ <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20200127114600.GU25745@shell.armlinux.org.uk>
+In-Reply-To: <20200127114600.GU25745@shell.armlinux.org.uk>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 601a0064-bec8-492f-1b27-08d7a3278c1d
+x-ms-traffictypediagnostic: BN8PR12MB3491:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR12MB34913A2EC9B72F9C9537C778D30B0@BN8PR12MB3491.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02951C14DC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(366004)(136003)(346002)(396003)(199004)(189003)(33656002)(26005)(6916009)(478600001)(54906003)(316002)(8936002)(2906002)(186003)(86362001)(6506007)(71200400001)(8676002)(81166006)(4326008)(55016002)(9686003)(81156014)(76116006)(66946007)(7416002)(5660300002)(52536014)(66446008)(66476007)(7696005)(66556008)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3491;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5HGYGna8QVzM4CE60UoRA7YrBtu14dryKevKO13QwTYnH4nLiuy/CJ2JEOgzzacKemRhZhy56TxMh3TlKRuZQ/UL1+3Rca2rc7+klc1HbIdH3DwUbcIbjAb6OPBYVmxdFu5JPFEp4GeduUsrmOkeZRke/VdedtDm6UToKgeE3fqpBhg1aoTWSbRZzrI8wIkGtUH/hmUroYITP9NyxQ6tOc5pd63whaNTZCz/mJmCCyX7cqfsgree3pO6BX8Z0IG6VrHtKY184WvmL3xFVvG66g9HOQDgOIfshyz+fyiVGidYp69D+yS++DYKjoUTYZMUx6+fZ9cQ5mg3rlzqu7q0MwsrXwUNef63GtngF1JF8OyqYEE7FYg9/GZEz24FShdc0tXRaDP/olvlbCoSUSbH+quMfz9ktonevoYXyiZLTsAyxEIycM7eo4Aq1Y2yxMB1
+x-ms-exchange-antispam-messagedata: 4A7/fXeQvAhgzBmlXoaqQflCsZqHg7rP6xPmvoQWQLFx8t15DlTCfsldt+1FYQ8THjLC8SNdUAx50A2qZd/itPR+WFriUQC3MrKUmacFbszri8oDSQnphIOHLZ0FP0oadnarJkbZ2iKZOnt7Q+aaPw==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Xq7UEX3MCWoL97fvw/kbgyMqO0Cu88G4a1vKTFqLdIQDHQgWBTH
- 6MWpr+4iE3GCG6weqG9bgpMXx3lyWx2TmbdwIbckdDqf0yY4pyUr11bGL9NuNuQJ1PqaJ+a
- pQ3/nGL3I0ZXS1tNlrMXi4ICCE9LnoL1z1VTBQ3XKR9gXybQAKFBElXLxEqv356ET0Dzzou
- ENxAk1BnpvNI2THz5L8iQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xGs9W2dYyCQ=:07Tudto3Rvo0ZaiAjLmjrV
- i1TmdkghiFPOs6Tmssju6yVEnEO4MQO8vRP64+H/0iNK8q18roCmxvg76gwaHcUqGdJqwLWyI
- VOXvf9Tv1K/X+4Ot+SWRZEZI8Fzrwvv9PxldoHuezj/XwJJpozvybMAGkx5lRLhWw7nIVsyPb
- sivEQdQNmxdgVhfRPvpslxfv74xb2/cFeovaJ54kQ5LV487Xy30ZG7AoZt3Lciz8PoHvgP4v6
- tsf4hmH08+KE+oNZsE5yXd5TtglifB3yqLTLszXhTovsHCKHZjbHuaOmMF7Gh/xKPghiw2dk/
- ifWANmuT/8LtEwmMy0EGNweYUVYbqQvPcPbQbEb1QjLPPJ1Uq7o5YmBBQW6t4HCe6JPOlcVTo
- 24S1GCeiocXXZh+O5qOwhojQmMDO0pdBULFcJ1kK5mweCwrhy3BeUgrvkUWV81n8d4pUF5e6Y
- eRGAPdYxCsyJw+buqjw3LLudhvVHzf9T068sp9lAN8ZYtuyQKQ8yMew2NlcxCeDAFtsA1HKqi
- bmq8xKzWfWyFiV6ofkljh1qwm4yUgfYD/jZxsi6PjgnbWl+KojQ5uzfFLHCu+z0fLWeqvDe2l
- KvwCSot357WlI8Pl6MprxqbZw1JlrVsUoPVB1pyZxomU1YSJQy09JBC9ZENdBarLNdLdUuisc
- kYzX6cio5X7gftVVetupF0SuJaGvgU6Wmz/iQx/F9gNKVWP8Xtt+7uLqHSaynuN6FcSvAAc+8
- SKE6u/mtL9sM58hx/JO5kPOHAh6KD1kNOqnLxm/CHDQxnR1+fXUoL3eVHnwXz0D09YetkLE9j
- iWrRmpMEMSEmuJ5KaMxoF6C7+LyCrlDB7/M7VoJ5MnUJcJdupNrWEELRqWzqntQX5dOKXtpH2
- XoLdjHwnentrtyrZLfTNQKo9ZhygJ6OL4Vw1YWk2e7m+WJLoazhuHP/Hdk5X5PHNbQ41i/yIy
- UHraxCK6vHywegSpyzfuYK1cCiPqpxv+bDSAJ9zQnm2CTC8UbPmvDwF0D/hCCkwo+Ex8bPDdY
- qrLSEb9DUF4530vTQR0FpZ8LTjEPkuBYvFyWmszKe9h7pSxAuGvlLx6vW69GJ+guwW3y208Q2
- 4xoG8qeobCnKvuLpa5DjOqcTvpAJ+fRqDPoD6mUNmqMcprwJC5EsJx+J7leVwYB6loSadg0Hp
- /ru0QzoEJgaVUdoBu8quZHzGnHEt72NoB5LAvp2ved5IChZX+I83nYtTeDS7PSm9Ar5qFghVY
- aMiypjuAuA8G/qiMH
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 601a0064-bec8-492f-1b27-08d7a3278c1d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2020 12:50:54.4255
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AE9OmnPymAvgFrxYqZQloVNXYG14KvB5p19BvGKtvRJU/AW0K5w4mQohBgdGrmrou8XogrXh7ZQDt5D69nKFJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3491
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/zonefs/super.c
-=E2=80=A6
-> +static char *zgroups_name[ZONEFS_ZTYPE_MAX] =3D { "cnv", "seq" };
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Date: Jan/27/2020, 11:46:00 (UTC+00:00)
 
-Would you like to keep this array as mutable?
-How do you think about to mark such data structures as =E2=80=9Cconst=E2=
-=80=9D?
+> On Mon, Jan 27, 2020 at 11:38:05AM +0000, Jose Abreu wrote:
+> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > Date: Jan/27/2020, 11:21:02 (UTC+00:00)
+> >=20
+> > > On Mon, Jan 27, 2020 at 12:09:11PM +0100, Jose Abreu wrote:
+> > > > When we don't have any real PHY driver connected and we get link up=
+ from
+> > > > PCS we shall configure MAC and PCS for the desired speed and also
+> > > > resolve the flow control settings from MAC side.
+> > >=20
+> > > This is certainly the wrong place for it.  Please hold off on this pa=
+tch
+> > > for the time being.  Thanks.
+> >=20
+> > This is actually the change that makes everything work ...
+> >=20
+> > I need to configure PCS before Aneg is complete and then I need to=20
+> > configure MAC once Aneg is done and link is up with the outcome speed a=
+nd=20
+> > flow control.
+>=20
+> Yes, I realise that, but it comes with the expense of potentially
+> breaking mvneta and mvpp2, where the settings are automatically
+> passed between the PCS and MAC in hardware. I also believe DSA
+> works around this, and I need to look at that.
 
-Regards,
-Markus
+OK so there is one alternative solution for this that's just saving the=20
+last link status on stmmac internal structure (if applicable ofc,=20
+something like an_complete is true and link is true) and then just use=20
+that info in mac_link_up() callback to configure the MAC when PCS is in=20
+use.
+
+This patch could then be dropped.
+
+---
+Thanks,
+Jose Miguel Abreu
