@@ -6,72 +6,99 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20070C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C95C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3383206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0057620702
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:37:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbgA0Kfs (ORCPT
+        id S1729974AbgA0KhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 05:35:48 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43611 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729184AbgA0Kfr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 05:35:47 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iw1k8-0003WU-V3; Mon, 27 Jan 2020 11:35:44 +0100
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iw1k7-0002Ty-Lo; Mon, 27 Jan 2020 11:35:43 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Markus Pietrek <mpie@msc-ge.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V1] eeprom: at24: add TPF0001 ACPI ID for 24c1024 device
-Date:   Mon, 27 Jan 2020 11:35:41 +0100
-Message-Id: <20200127103541.6975-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.25.0
+        Mon, 27 Jan 2020 05:37:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:42426 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729184AbgA0KhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 05:37:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C23F030E;
+        Mon, 27 Jan 2020 02:37:23 -0800 (PST)
+Received: from e123195-lin.cambridge.arm.com (e123195-lin.cambridge.arm.com [10.1.196.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BE6EB3F52E;
+        Mon, 27 Jan 2020 02:37:22 -0800 (PST)
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org
+Cc:     maz@kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com
+Subject: [PATCH] KVM: arm64: Treat emulated TVAL TimerValue as a signed 32-bit integer
+Date:   Mon, 27 Jan 2020 10:36:52 +0000
+Message-Id: <20200127103652.2326-1-alexandru.elisei@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Pietrek <mpie@msc-ge.com>
+According to the ARM ARM, registers CNT{P,V}_TVAL_EL0 have bits [63:32]
+RES0 [1]. When reading the register, the value is truncated to the least
+significant 32 bits [2], and on writes, TimerValue is treated as a signed
+32-bit integer [1, 2].
 
-This ID is used at leas on some variants of MSC C6B-SLH board.
+When the guest behaves correctly and writes 32-bit values, treating TVAL
+as an unsigned 64 bit register works as expected. However, things start
+to break down when the guest writes larger values, because
+(u64)0x1_ffff_ffff = 8589934591. but (s32)0x1_ffff_ffff = -1, and the
+former will cause the timer interrupt to be asserted in the future, but
+the latter will cause it to be asserted now.  Let's treat TVAL as a
+signed 32-bit register on writes, to match the behaviour described in
+the architecture, and the behaviour experimentally exhibited by the
+virtual timer on a non-vhe host.
 
-Signed-off-by: Markus Pietrek <mpie@msc-ge.com>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+[1] Arm DDI 0487E.a, section D13.8.18
+[2] Arm DDI 0487E.a, section D11.2.4
+
+Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 ---
- drivers/misc/eeprom/at24.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/kvm/arm_arch_timer.h | 2 ++
+ virt/kvm/arm/arch_timer.c    | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 2cccd82a3106..1c8e2ff96d9d 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -228,6 +228,7 @@ MODULE_DEVICE_TABLE(of, at24_of_match);
+diff --git a/include/kvm/arm_arch_timer.h b/include/kvm/arm_arch_timer.h
+index d120e6c323e7..be912176b7a3 100644
+--- a/include/kvm/arm_arch_timer.h
++++ b/include/kvm/arm_arch_timer.h
+@@ -10,6 +10,8 @@
+ #include <linux/clocksource.h>
+ #include <linux/hrtimer.h>
  
- static const struct acpi_device_id at24_acpi_ids[] = {
- 	{ "INT3499",	(kernel_ulong_t)&at24_data_INT3499 },
-+	{ "TPF0001",	(kernel_ulong_t)&at24_data_24c1024 },
- 	{ /* END OF LIST */ }
- };
- MODULE_DEVICE_TABLE(acpi, at24_acpi_ids);
++#define ARCH_TIMER_TVAL_MASK	((1ULL << 32) - 1)
++
+ enum kvm_arch_timers {
+ 	TIMER_PTIMER,
+ 	TIMER_VTIMER,
+diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
+index f182b2380345..5d40f17f7024 100644
+--- a/virt/kvm/arm/arch_timer.c
++++ b/virt/kvm/arm/arch_timer.c
+@@ -805,6 +805,7 @@ static u64 kvm_arm_timer_read(struct kvm_vcpu *vcpu,
+ 	switch (treg) {
+ 	case TIMER_REG_TVAL:
+ 		val = timer->cnt_cval - kvm_phys_timer_read() + timer->cntvoff;
++		val &= ARCH_TIMER_TVAL_MASK;
+ 		break;
+ 
+ 	case TIMER_REG_CTL:
+@@ -850,7 +851,7 @@ static void kvm_arm_timer_write(struct kvm_vcpu *vcpu,
+ {
+ 	switch (treg) {
+ 	case TIMER_REG_TVAL:
+-		timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + val;
++		timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + (s32)val;
+ 		break;
+ 
+ 	case TIMER_REG_CTL:
 -- 
-2.25.0
+2.20.1
 
