@@ -2,172 +2,141 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1D2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A9AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8EE214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC542465B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580150631;
+	bh=gETwfsz7U5pwhHydGA4x38MtoWqILp4Gnwnzy9bDSto=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2ICFsJ5Ex3CZNo5ZPlWxUEZCJIOFy/iu5U7Fe6Qd76OIBpLGMm60z6ojse9q30HI7
+	 xKD5RTpi784ZzjG4QmcRQGySrjNhdN9C9qFe5UnZE9JBjnbbt/bzGvxI2ZHbQ8VIHN
+	 As7o/0ILXPcTqnbtOmW5iqcwEPB9f/BkvbVkC8Tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgA0Sjv (ORCPT
+        id S1726101AbgA0Snu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 13:39:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52722 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgA0Sju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 13:39:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 802C2B15B;
-        Mon, 27 Jan 2020 18:39:48 +0000 (UTC)
-Date:   Mon, 27 Jan 2020 18:39:52 +0000
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/3] libceph: add non-blocking version of
- ceph_osdc_copy_from()
-Message-ID: <20200127183952.GA22545@suse.com>
-References: <20200127164321.17468-1-lhenriques@suse.com>
- <20200127164321.17468-2-lhenriques@suse.com>
- <CAOi1vP9S3w13axR3FYxqFSZ1uF2V=0aMfnkcsMptMKL4W+-wEA@mail.gmail.com>
+        Mon, 27 Jan 2020 13:43:50 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38904 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgA0Snu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 13:43:50 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l9so7664757oii.5;
+        Mon, 27 Jan 2020 10:43:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kuhUPMd+zYAgWz6fKJAfj/zyuyEErCMf41bcAyXMeG8=;
+        b=GvO/IGeMEQ/n6o1TDVcm7TOkp9xkm6akeyOZuxAnzMZT1NTci+tftLDBp3efhM9Wm1
+         yCSDN7gOptxoRjPjFUbCk2MdcNB9tG+AexGSrddHULfMuwXeSy8Ey9OmvXQxt+d65EU7
+         Sm9uXUhVwsk6cSeOPd9Yr4dwnXzwHAo5nse/ef1qUTjxs5es/HJTUI5V3MNnKPeiF0NT
+         JblVvtqVC2yN+dCSL5VUOpnqbtzuYqJtl/c77iI5J2vCk4CkRD2+zH3cc3nlmv1F0rwq
+         pCtnF3+uSENCR3cR760yD9UdNGV4OBpnxS8WfM229cJh/Ik9ptYtDDQDpss0g9mirZ0u
+         Gxgg==
+X-Gm-Message-State: APjAAAUGShexsL4LAkPwZqY8pLxcPHU4xRbOi5KHtF5jAFGSak7zx6uG
+        Ht7bMGMM3xslshOJvZJdDjIemyk=
+X-Google-Smtp-Source: APXvYqwIL62yTsib7ww0bYJgMGDd0XRUETmkoyWk4Mw/rwMUqd3hSP/eIsHvDGeYCHovkA1uBnb0dQ==
+X-Received: by 2002:a05:6808:9ba:: with SMTP id e26mr295469oig.81.1580150629151;
+        Mon, 27 Jan 2020 10:43:49 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t21sm4326765otr.42.2020.01.27.10.43.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 10:43:48 -0800 (PST)
+Received: (nullmailer pid 3867 invoked by uid 1000);
+        Mon, 27 Jan 2020 18:43:47 -0000
+Date:   Mon, 27 Jan 2020 12:43:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 06/19] dt-bindings: usb: dwc3: Add a
+ gpio-usb-connector description
+Message-ID: <20200127184347.GA27080@bogus>
+References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
+ <20200122185610.131930-7-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOi1vP9S3w13axR3FYxqFSZ1uF2V=0aMfnkcsMptMKL4W+-wEA@mail.gmail.com>
+In-Reply-To: <20200122185610.131930-7-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 06:47:02PM +0100, Ilya Dryomov wrote:
-> On Mon, Jan 27, 2020 at 5:43 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >
-> > A non-blocking version of ceph_osdc_copy_from will allow for callers to
-> > send 'copy-from' requests in bulk and wait for all of them to complete in
-> > the end.
-> >
-> > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > ---
-> >  include/linux/ceph/osd_client.h | 12 ++++++++
-> >  net/ceph/osd_client.c           | 54 +++++++++++++++++++++++++--------
-> >  2 files changed, 53 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-> > index 5a62dbd3f4c2..7916a178d137 100644
-> > --- a/include/linux/ceph/osd_client.h
-> > +++ b/include/linux/ceph/osd_client.h
-> > @@ -537,6 +537,18 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-> >                         u32 truncate_seq, u64 truncate_size,
-> >                         u8 copy_from_flags);
-> >
-> > +struct ceph_osd_request *ceph_osdc_copy_from_nowait(
-> > +                       struct ceph_osd_client *osdc,
-> > +                       u64 src_snapid, u64 src_version,
-> > +                       struct ceph_object_id *src_oid,
-> > +                       struct ceph_object_locator *src_oloc,
-> > +                       u32 src_fadvise_flags,
-> > +                       struct ceph_object_id *dst_oid,
-> > +                       struct ceph_object_locator *dst_oloc,
-> > +                       u32 dst_fadvise_flags,
-> > +                       u32 truncate_seq, u64 truncate_size,
-> > +                       u8 copy_from_flags);
-> > +
-> >  /* watch/notify */
-> >  struct ceph_osd_linger_request *
-> >  ceph_osdc_watch(struct ceph_osd_client *osdc,
-> > diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-> > index b68b376d8c2f..7f984532f37c 100644
-> > --- a/net/ceph/osd_client.c
-> > +++ b/net/ceph/osd_client.c
-> > @@ -5346,23 +5346,24 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
-> >         return 0;
-> >  }
-> >
-> > -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-> > -                       u64 src_snapid, u64 src_version,
-> > -                       struct ceph_object_id *src_oid,
-> > -                       struct ceph_object_locator *src_oloc,
-> > -                       u32 src_fadvise_flags,
-> > -                       struct ceph_object_id *dst_oid,
-> > -                       struct ceph_object_locator *dst_oloc,
-> > -                       u32 dst_fadvise_flags,
-> > -                       u32 truncate_seq, u64 truncate_size,
-> > -                       u8 copy_from_flags)
-> > +struct ceph_osd_request *ceph_osdc_copy_from_nowait(
-> > +               struct ceph_osd_client *osdc,
-> > +               u64 src_snapid, u64 src_version,
-> > +               struct ceph_object_id *src_oid,
-> > +               struct ceph_object_locator *src_oloc,
-> > +               u32 src_fadvise_flags,
-> > +               struct ceph_object_id *dst_oid,
-> > +               struct ceph_object_locator *dst_oloc,
-> > +               u32 dst_fadvise_flags,
-> > +               u32 truncate_seq, u64 truncate_size,
-> > +               u8 copy_from_flags)
-> >  {
-> >         struct ceph_osd_request *req;
-> >         int ret;
-> >
-> >         req = ceph_osdc_alloc_request(osdc, NULL, 1, false, GFP_KERNEL);
-> >         if (!req)
-> > -               return -ENOMEM;
-> > +               return ERR_PTR(-ENOMEM);
-> >
-> >         req->r_flags = CEPH_OSD_FLAG_WRITE;
-> >
-> > @@ -5381,11 +5382,38 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-> >                 goto out;
-> >
-> >         ceph_osdc_start_request(osdc, req, false);
-> > -       ret = ceph_osdc_wait_request(osdc, req);
-> > +       return req;
-> >
-> >  out:
-> >         ceph_osdc_put_request(req);
-> > -       return ret;
-> > +       return ERR_PTR(ret);
-> > +}
-> > +EXPORT_SYMBOL(ceph_osdc_copy_from_nowait);
-> > +
-> > +int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-> > +                       u64 src_snapid, u64 src_version,
-> > +                       struct ceph_object_id *src_oid,
-> > +                       struct ceph_object_locator *src_oloc,
-> > +                       u32 src_fadvise_flags,
-> > +                       struct ceph_object_id *dst_oid,
-> > +                       struct ceph_object_locator *dst_oloc,
-> > +                       u32 dst_fadvise_flags,
-> > +                       u32 truncate_seq, u64 truncate_size,
-> > +                       u8 copy_from_flags)
-> > +{
-> > +       struct ceph_osd_request *req;
-> > +
-> > +       req = ceph_osdc_copy_from_nowait(osdc,
-> > +                       src_snapid, src_version,
-> > +                       src_oid, src_oloc,
-> > +                       src_fadvise_flags,
-> > +                       dst_oid, dst_oloc,
-> > +                       dst_fadvise_flags,
-> > +                       truncate_seq, truncate_size,
-> > +                       copy_from_flags);
-> > +       if (IS_ERR(req))
-> > +               return PTR_ERR(req);
-> > +       return ceph_osdc_wait_request(osdc, req);
+On Wed, Jan 22, 2020 at 06:55:57PM +0000, Bryan O'Donoghue wrote:
+> A USB connector should be a child node of the USB controller
+> connector/usb-connector.txt. This patch adds a property
+> "gpio_usb_connector" which declares a connector child device. Code in the
+> DWC3 driver will then
 > 
-> I don't think we need a blocking version.  Change ceph_osdc_copy_from()
-> and keep the name -- no need for async or nowait suffixes.
+> - Search for "gpio_usb_controller"
+> - Do an of_platform_populate() if found
+> 
+> This will have the effect of making the declared node a child of the USB
+> controller and will make sure that USB role-switch events detected with the
+> gpio_usb_controller driver propagate into the DWC3 controller code
+> appropriately.
 
-Yeah, since the only user is copy_file_range we definitely don't need the
-original version.  I'll include this change in the next iteration.
+This is all driver specifics. This is a binding patch.
 
-Cheers,
---
-Luís
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index 66780a47ad85..b019bd472f83 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -108,6 +108,9 @@ Optional properties:
+>  			When just one value, which means INCRX burst mode enabled. When
+>  			more than one value, which means undefined length INCR burst type
+>  			enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
+> + - gpio_usb_connector: Declares a USB connector named 'gpio_usb_connector' as a
+> +		       child node of the DWC3 block. Use when modelling a USB
+> +		       connector based on the gpio-usb-b-connector driver.
+
+Should be just 'connector'. That's already implicitly allowed for any 
+USB controller, so you don't really need a binding change. And the 
+specific type of connector is outside the scope of the DWC3 binding.
+
+>  
+>   - in addition all properties from usb-xhci.txt from the current directory are
+>     supported as well
+> @@ -121,4 +124,12 @@ dwc3@4a030000 {
+>  	interrupts = <0 92 4>
+>  	usb-phy = <&usb2_phy>, <&usb3,phy>;
+>  	snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+> +	usb_con: gpio_usb_connector {
+> +		compatible = "gpio-usb-b-connector";
+> +		id-gpio = <&tlmm 116 GPIO_ACTIVE_HIGH>;
+> +		vbus-gpio = <&pms405_gpios 12 GPIO_ACTIVE_HIGH>;
+
+*-gpios is the preferred form and should be what's documented.
+
+> +		vbus-supply = <&usb3_vbus_reg>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usb3_id_pin>, <&usb3_vbus_pin>;
+> +	};
+>  };
+> -- 
+> 2.25.0
+> 
