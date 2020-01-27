@@ -2,165 +2,84 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E36C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D23C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8F7124681
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580156168;
-	bh=zcqkL2X1+5RZ6RD91lcWz4KcZ3RzkxAM2y0dev3Kxhs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gwylervUaV+dI3IgSckIMj+3LF2nuRl2THUkkULz586xA75KZXQ/HuLMerlVe20kb
-	 s1bIPLUtGM35vXBTlGBVpJM/afv2dQx1BPNi2H6DOEhMFWSkxmOhX+5a5a1mlTMJSY
-	 yrdLogKEQbwnzuNo9sn7vLAykBnyoB98PxpESFns=
+	by mail.kernel.org (Postfix) with ESMTP id 72DFA24679
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:23:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ai2eNXCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgA0UQI (ORCPT
+        id S1726296AbgA0UXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 15:16:08 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35812 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgA0UQH (ORCPT
+        Mon, 27 Jan 2020 15:23:11 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45634 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbgA0UXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 15:16:07 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r16so9731903otd.2;
-        Mon, 27 Jan 2020 12:16:07 -0800 (PST)
+        Mon, 27 Jan 2020 15:23:11 -0500
+Received: by mail-qk1-f196.google.com with SMTP id x1so10972174qkl.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 12:23:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=8qKqO01LjJEV2xvyFnaCmO2+7pGkQQVcqgngFOI0Bdg=;
+        b=ai2eNXCfULQ9MIfNUuFSqGlNe1UjEeX7vW60s4LzStmubnbO2lXRJ7erZvzrftbU/D
+         t7Af6knAjRi8ykaakXoT8ykGkFSj4yRgs87Y6sSKXFic6KZnBPbgYp8xygd0tofVRTqf
+         RCik9aE3Jb3pv2RNkwlhY4DcmV/N7zanhAyfriSLr92w+nBAXxdC7HSLA1zuq/9ryxdZ
+         Qg0TGIjf6abZH9a/Xbwsl5B9QlNKIa8GtkTcYIolvTmIthTTKR/z0Xe/yCA8hVR1Idh+
+         5NIjzYGbhjTYE5ka+aLtUcuwKTTf2wv/I3oUZCV1B3P2HRbAoORmFY3XneMSQsUSMfo+
+         PSCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kP3meVHpRUwC+Lg41T7kI+wm6FYiDtOOiXX2HrvTBww=;
-        b=BTktUi3fcS0ZkN+Kf42104r1tioKWgNlQBJG5HTd/EVu7FC9+X0MxzY1rCl+5n5gQF
-         Y2tzwTGdQJBWgE7QLyIeKTxMFAaS3oJ8qqJokmIjvLfLL1LiPbp7azai86bYV4SoYTRO
-         289f2h5bMC1S+BHmUODeezZW7bgt0AS3ItZz011HdV+4mjSS/Ao4SHRfVIsB/WqePVeR
-         V1Y2H1cLU5AnJ1pKHFvTZ5Rv4JrDG92St1mhcwuURTuJZ2ZlZtCNZxFgtkN7fI/BDXkQ
-         U4bNVtr4+GTd9SZfHwYgZAoKud8C0472hnVACNCQx8NLq6qjMbSjfBoAgLXEHlOSSAEH
-         9+xg==
-X-Gm-Message-State: APjAAAWiqlA7A8ISBRgt4x5Es4xSz5xoTMZtTSBBIUCKzrTu7CgjPNUq
-        MtWaDK4RK63pNC3OGPKAfuL+7Yc=
-X-Google-Smtp-Source: APXvYqx8cBU9dlCzp2qsiRzvx9t6DQ1OIpfXuWYpi0exeUekVr56E9j4fYVOZ8DSsuYy1LtC8Xa6xw==
-X-Received: by 2002:a9d:1b26:: with SMTP id l35mr13904866otl.307.1580156166836;
-        Mon, 27 Jan 2020 12:16:06 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m19sm5942050otn.47.2020.01.27.12.16.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 12:16:06 -0800 (PST)
-Received: (nullmailer pid 3695 invoked by uid 1000);
-        Mon, 27 Jan 2020 20:16:05 -0000
-Date:   Mon, 27 Jan 2020 14:16:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, biabeniamin@outlook.com,
-        knaack.h@gmx.de, mark.rutland@arm.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: amplifiers: Add docs for
- HMC425A Step Attenuator
-Message-ID: <20200127201605.GA9131@bogus>
-References: <20200122121702.30494-1-beniamin.bia@analog.com>
- <20200122121702.30494-2-beniamin.bia@analog.com>
-MIME-Version: 1.0
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=8qKqO01LjJEV2xvyFnaCmO2+7pGkQQVcqgngFOI0Bdg=;
+        b=YK15un1bD4f6q2sCi1rHOMUmDFw+/Gix7raeAJEeMQ1knnjvQwMFNf+2tCJ5ovJADm
+         Qd/pdXVjfqYEIQOMJNVnQ+vwJCQ88bDhSpETAj/PaR571cREoGim2vQKbTZ4KlgnBuz8
+         AQSDmFsACsgKpDPd7mZWSq3vVvgrcGDVFjnueB+tqCuOR9scvh8OPinA19osoJWx59zg
+         eLwuP2fJ5FbyKriSskItMo20sKBwp/gha/QBmfg5O7T3oTXhslSzhzubfzbC2OjHk1ni
+         Qw4VjPXwKHf0xWCsFiZ64rGnsjOmfu/7R8cRnR7HqdivGzgX9QSoheA1yV2VWpG4hbF1
+         h5Og==
+X-Gm-Message-State: APjAAAUnGsd0twD0nTdv+7idmQJrYyfgA/KdAQADLvE3XBDeibW6iKPe
+        QArxxzKJcE8dwwkboKc7yY82CJbPrTC09A==
+X-Google-Smtp-Source: APXvYqyqwzq9ivF63rt/+NSgs5OiwHgE68E9GTg3XAmC8qmv9oon15bYYFEUopxowFGMR0UBU7Nzew==
+X-Received: by 2002:a37:4dc1:: with SMTP id a184mr18702854qkb.62.1580156590526;
+        Mon, 27 Jan 2020 12:23:10 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d20sm9039726qto.2.2020.01.27.12.23.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 12:23:09 -0800 (PST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122121702.30494-2-beniamin.bia@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm: mempolicy: use VM_BUG_ON_VMA in queue_pages_test_walk()
+Date:   Mon, 27 Jan 2020 15:23:08 -0500
+Message-Id: <89FF2013-1B59-4702-BF1B-A200C6785B37@lca.pw>
+References: <d6c1a434-8670-97f4-345c-28c8007a25ce@linux.alibaba.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <d6c1a434-8670-97f4-345c-28c8007a25ce@linux.alibaba.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 02:17:01PM +0200, Beniamin Bia wrote:
-> From: Michael Hennerich <michael.hennerich@analog.com>
-> 
-> Document support for Analog Devices MC425A Step Attenuator.
-> 
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> ---
->  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> new file mode 100644
-> index 000000000000..a0afa661f4ac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Dual license new bindings:
 
-(GPL-2.0-only OR BSD-2-Clause)
+> On Jan 27, 2020, at 2:57 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>=20
+> Dumping more information to help debugging. I don't run into related bug p=
+ersonally.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HMC425A 6-bit Digital Step Attenuator
-> +
-> +maintainers:
-> +- Michael Hennerich <michael.hennerich@analog.com>
-> +- Beniamin Bia <beniamin.bia@analog.com>
-> +
-> +description: |
-> +  Digital Step Attenuator IIO device with gpio interface.
-> +  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,hmc425a
-> +
-> +  vcc-supply:
-> +    description:
-> +      Digital voltage regulator (see regulator/regulator.txt)
-> +    maxItems: 1
-
-All supplies are a single entry, so drop this. Really, 
-'vcc-supply: true' is sufficient.
-
-> +
-> +  ctrl-gpios:
-> +    description:
-> +      Must contain an array of 6 GPIO specifiers, referring to the GPIO pins
-> +      connected to the control pins V1-V6.
-> +    maxItems: 6
-> +
-> +required:
-> +  - compatible
-> +  - ctrl-gpios
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    gpio {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-
-GPIO clients are not child nodes of GPIO controllers, so you can remove 
-this node.
-
-> +      gpio_hmc425a: hmc425a {
-> +        compatible = "adi,hmc425a";
-> +        ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 39 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 38 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 37 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 36 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 35 GPIO_ACTIVE_HIGH>;
-> +
-> +        vcc-supply = <&foo>;
-> +      };
-> +    };
-> +...
-> -- 
-> 2.17.1
-> 
+This is a relatively weak justification for merging. If we are keeping accep=
+ting those mindless debugging patches, the workload will be unbearable for a=
+ll.=
