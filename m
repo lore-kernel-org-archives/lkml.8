@@ -2,83 +2,108 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56293C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52FFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F84220842
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A85622087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:46:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QaXmIyLj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GOimjhJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgA0LoR (ORCPT
+        id S1730349AbgA0LqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:44:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37174 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726210AbgA0LoQ (ORCPT
+        Mon, 27 Jan 2020 06:46:13 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34930 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729724AbgA0LqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:44:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580125456;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sUtieaM6GD2PpqnJW9FIIx3PImpT0oW9u9OtwSX9XIA=;
-        b=QaXmIyLjhuil/6diU+4737S1IPW/lGtx8LDMY5QUVeUhByDLuX4vasZKOhQIbt8IpxqFTF
-        ur94XbRDEOMHW5kkTYBLsLJjCjfO0f+bCsmV68Rw/zrf6nKVXpeXWkUIG0jigQk3aL/1i+
-        C00j/yA4Qm5yf0rFsj2qf2U9OteI8I0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-292-foaiDgyzN-uZrsXuUKjA4Q-1; Mon, 27 Jan 2020 06:44:12 -0500
-X-MC-Unique: foaiDgyzN-uZrsXuUKjA4Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9756B800EBB;
-        Mon, 27 Jan 2020 11:44:11 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-99.rdu2.redhat.com [10.10.120.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F919451F;
-        Mon, 27 Jan 2020 11:44:10 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200122081340.2bhx5jfezl55b3qb@kili.mountain>
-References: <20200122081340.2bhx5jfezl55b3qb@kili.mountain> <000000000000da7a79059caf2656@google.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     dhowells@redhat.com,
-        syzbot <syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com>,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in __proc_create (2)
+        Mon, 27 Jan 2020 06:46:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=py0/AUeA9tDP937GDApbDIhhJ7mPRllvuk6jqlAolLw=; b=GOimjhJ60sQTWMTcrsW+8/RXc
+        I/aWpmkEN1wmeFYPsQY7wYMww/awb5QDQvVADkiDJ8Kkq8Php4f3d88i2W9V47tt++YlKWm9XXY1W
+        WF5JpCLsAOk26UM8d6w4yKz+u2VydMbhoIV/8rlUAxiJzHFEt0EL9fuYggga9AAAgbMlT3aI2iR3b
+        NXnUV9CoULdc5yTeNdth7mWTKstGISo1EUfc/a7tX1Fka7NruUDvVsnhWBAJ1FzbLutTDXGyXzQo4
+        Ont9UQf1UtnTB+ofsYzuMZTTWFeev5RFoAtVlW3yhao9YTXbDBcJbzTolNMYK8CICjggq8hEM1G8j
+        T+tWanbag==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60536)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iw2qC-00011S-Lg; Mon, 27 Jan 2020 11:46:04 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iw2q8-0001NE-Ro; Mon, 27 Jan 2020 11:46:00 +0000
+Date:   Mon, 27 Jan 2020 11:46:00 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
+ up without PHY
+Message-ID: <20200127114600.GU25745@shell.armlinux.org.uk>
+References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+ <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+ <20200127112102.GT25745@shell.armlinux.org.uk>
+ <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1452048.1580125449.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 27 Jan 2020 11:44:09 +0000
-Message-ID: <1452049.1580125449@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Carpenter <dan.carpenter@oracle.com> wrote:
+On Mon, Jan 27, 2020 at 11:38:05AM +0000, Jose Abreu wrote:
+> From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> Date: Jan/27/2020, 11:21:02 (UTC+00:00)
+> 
+> > On Mon, Jan 27, 2020 at 12:09:11PM +0100, Jose Abreu wrote:
+> > > When we don't have any real PHY driver connected and we get link up from
+> > > PCS we shall configure MAC and PCS for the desired speed and also
+> > > resolve the flow control settings from MAC side.
+> > 
+> > This is certainly the wrong place for it.  Please hold off on this patch
+> > for the time being.  Thanks.
+> 
+> This is actually the change that makes everything work ...
+> 
+> I need to configure PCS before Aneg is complete and then I need to 
+> configure MAC once Aneg is done and link is up with the outcome speed and 
+> flow control.
 
-> We should probably ban '/' characters from the cell name in
-> afs_alloc_cell().
+Yes, I realise that, but it comes with the expense of potentially
+breaking mvneta and mvpp2, where the settings are automatically
+passed between the PCS and MAC in hardware. I also believe DSA
+works around this, and I need to look at that.
 
-Sorry, I forgot to cc you on the patch.  It's now upstream:
+However, right now I'm in the middle of rebasing my git tree on
+top of v5.5 and can't say much more until I've finished that.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Da45ea48e2bcd92c1f678b794f488ca0bda9835b8
-
-David
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
