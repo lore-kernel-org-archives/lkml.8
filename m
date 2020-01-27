@@ -2,193 +2,98 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A292C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20BDC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A3B214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i9m/OGqG"
+	by mail.kernel.org (Postfix) with ESMTP id 810B624673
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580147260;
+	bh=nhUtDQVi49Sb7FeCHFaCFuQ1RDzA6HtDWI/yuoK+g+s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RupdmS2vmIl05I/EGBdlCAht006nB/GHEOOskZqFv5yq/gHb27mAAM4QSOt2GYWvq
+	 CvnWFy1Ii0Qa6tZDjX98yOymFM8E2mBufmGyPUEuzB99UUqhhFkZmtmVfunhoETom5
+	 0tBllzISYVs0iy77ujs8eFbV9gIYraZfM+csRAOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgA0Rq4 (ORCPT
+        id S1726293AbgA0Rrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:46:56 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34615 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgA0Rq4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:46:56 -0500
-Received: by mail-io1-f65.google.com with SMTP id z193so10998871iof.1;
-        Mon, 27 Jan 2020 09:46:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b0TUavpcHdqXN1KWx9EhrCO9VfvqNW5U75/TKE4ufb8=;
-        b=i9m/OGqGzJnRZ6x90WTvzYlcM3OrUbt+EQOTVeSKC8Z+Q01hRuvqVmTL3ZtynkfJk+
-         +1OZAMe4ViVd6KS+ZjcTe4kHLSSRoVr5LEWJtWNLEZz7P6GQrbXxkUG3WEW74aYgDit5
-         ZLu2lkx5MxJYOvcVra/rzsF6F9IVyietpvGAsTZ628B2Nfgs3t8qrX5QWwWzYpLYOjm5
-         yrs++J4Jf1+hsqlpHmz7MphkM36mrEkLO6gREOOQnBlsc3pwFp00fF8muQFN03OA5fPG
-         bB5X0VMhVjv5v29U/NOxVI0y7opnBFiUZ+CTuQeoL2jaFGfbfGbzMz1FvOydKOA7TwWU
-         Wrzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b0TUavpcHdqXN1KWx9EhrCO9VfvqNW5U75/TKE4ufb8=;
-        b=Z0m7aYWoSCgi8vb0IE1dxCJ64JlEhuLwVVDnLRC0FkIjQW/7ikOkIMkKlteGAoAabO
-         3FqkJ/UBY8+1/kOrvg42UMhZ7IvcLITr5IgAoVn6WvE6mnbqP+MyCCY9w+9q+KrC3mOC
-         7JowP375wQ53AkoaRO4IRWqHQWTOjIMHU2omr/cqGxH2erYwwj0ZQrFs+pcagfCPtxwE
-         RYn2scSJLZOFurPsdjr88lA++v63MBbxc2MDE2z4ZdwYEzQK/cjSDjwYTSOWiCkz8bij
-         Lc0qj1YKozuXyOs9hdO5leBKrMYOSTq8UDIZqIQ3u5TbhodaTpqps+VnSY0JectvxiXY
-         O2Uw==
-X-Gm-Message-State: APjAAAXo4XM0dJAw05VwmY2r3bjC0t3gRGAJV4P1HLHfRe+QuNyXiDl+
-        ovhCj3mFXxQNRD6+XaslyehEPnJrZLebKUlRtRXOyUj7Uew=
-X-Google-Smtp-Source: APXvYqysuFAWtF0dsHft9617dGcfrQ8/iSuvarOV7N3nLqLhNGsUR6ujVJE2jTwgHkJOXCFHUbdfcXGsbO7wGwCI0io=
-X-Received: by 2002:a6b:1781:: with SMTP id 123mr13014734iox.282.1580147215170;
- Mon, 27 Jan 2020 09:46:55 -0800 (PST)
+        Mon, 27 Jan 2020 12:47:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:47592 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbgA0Rrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 12:47:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBF0231B;
+        Mon, 27 Jan 2020 09:47:38 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6462C3F67D;
+        Mon, 27 Jan 2020 09:47:37 -0800 (PST)
+Date:   Mon, 27 Jan 2020 17:47:36 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-spi@vger.kernel.org, han.xu@nxp.com,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/5] spi: fspi: enable fspi on imx8qxp and imx8mm
+Message-ID: <20200127174736.GE3763@sirena.org.uk>
+References: <20200126140913.2139260-1-aford173@gmail.com>
 MIME-Version: 1.0
-References: <20200127164321.17468-1-lhenriques@suse.com> <20200127164321.17468-2-lhenriques@suse.com>
-In-Reply-To: <20200127164321.17468-2-lhenriques@suse.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Mon, 27 Jan 2020 18:47:02 +0100
-Message-ID: <CAOi1vP9S3w13axR3FYxqFSZ1uF2V=0aMfnkcsMptMKL4W+-wEA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] libceph: add non-blocking version of ceph_osdc_copy_from()
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="47eKBCiAZYFK5l32"
+Content-Disposition: inline
+In-Reply-To: <20200126140913.2139260-1-aford173@gmail.com>
+X-Cookie: Hangover, n.:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 5:43 PM Luis Henriques <lhenriques@suse.com> wrote:
->
-> A non-blocking version of ceph_osdc_copy_from will allow for callers to
-> send 'copy-from' requests in bulk and wait for all of them to complete in
-> the end.
->
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
->  include/linux/ceph/osd_client.h | 12 ++++++++
->  net/ceph/osd_client.c           | 54 +++++++++++++++++++++++++--------
->  2 files changed, 53 insertions(+), 13 deletions(-)
->
-> diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-> index 5a62dbd3f4c2..7916a178d137 100644
-> --- a/include/linux/ceph/osd_client.h
-> +++ b/include/linux/ceph/osd_client.h
-> @@ -537,6 +537,18 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
->                         u32 truncate_seq, u64 truncate_size,
->                         u8 copy_from_flags);
->
-> +struct ceph_osd_request *ceph_osdc_copy_from_nowait(
-> +                       struct ceph_osd_client *osdc,
-> +                       u64 src_snapid, u64 src_version,
-> +                       struct ceph_object_id *src_oid,
-> +                       struct ceph_object_locator *src_oloc,
-> +                       u32 src_fadvise_flags,
-> +                       struct ceph_object_id *dst_oid,
-> +                       struct ceph_object_locator *dst_oloc,
-> +                       u32 dst_fadvise_flags,
-> +                       u32 truncate_seq, u64 truncate_size,
-> +                       u8 copy_from_flags);
-> +
->  /* watch/notify */
->  struct ceph_osd_linger_request *
->  ceph_osdc_watch(struct ceph_osd_client *osdc,
-> diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-> index b68b376d8c2f..7f984532f37c 100644
-> --- a/net/ceph/osd_client.c
-> +++ b/net/ceph/osd_client.c
-> @@ -5346,23 +5346,24 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
->         return 0;
->  }
->
-> -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-> -                       u64 src_snapid, u64 src_version,
-> -                       struct ceph_object_id *src_oid,
-> -                       struct ceph_object_locator *src_oloc,
-> -                       u32 src_fadvise_flags,
-> -                       struct ceph_object_id *dst_oid,
-> -                       struct ceph_object_locator *dst_oloc,
-> -                       u32 dst_fadvise_flags,
-> -                       u32 truncate_seq, u64 truncate_size,
-> -                       u8 copy_from_flags)
-> +struct ceph_osd_request *ceph_osdc_copy_from_nowait(
-> +               struct ceph_osd_client *osdc,
-> +               u64 src_snapid, u64 src_version,
-> +               struct ceph_object_id *src_oid,
-> +               struct ceph_object_locator *src_oloc,
-> +               u32 src_fadvise_flags,
-> +               struct ceph_object_id *dst_oid,
-> +               struct ceph_object_locator *dst_oloc,
-> +               u32 dst_fadvise_flags,
-> +               u32 truncate_seq, u64 truncate_size,
-> +               u8 copy_from_flags)
->  {
->         struct ceph_osd_request *req;
->         int ret;
->
->         req = ceph_osdc_alloc_request(osdc, NULL, 1, false, GFP_KERNEL);
->         if (!req)
-> -               return -ENOMEM;
-> +               return ERR_PTR(-ENOMEM);
->
->         req->r_flags = CEPH_OSD_FLAG_WRITE;
->
-> @@ -5381,11 +5382,38 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
->                 goto out;
->
->         ceph_osdc_start_request(osdc, req, false);
-> -       ret = ceph_osdc_wait_request(osdc, req);
-> +       return req;
->
->  out:
->         ceph_osdc_put_request(req);
-> -       return ret;
-> +       return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL(ceph_osdc_copy_from_nowait);
-> +
-> +int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-> +                       u64 src_snapid, u64 src_version,
-> +                       struct ceph_object_id *src_oid,
-> +                       struct ceph_object_locator *src_oloc,
-> +                       u32 src_fadvise_flags,
-> +                       struct ceph_object_id *dst_oid,
-> +                       struct ceph_object_locator *dst_oloc,
-> +                       u32 dst_fadvise_flags,
-> +                       u32 truncate_seq, u64 truncate_size,
-> +                       u8 copy_from_flags)
-> +{
-> +       struct ceph_osd_request *req;
-> +
-> +       req = ceph_osdc_copy_from_nowait(osdc,
-> +                       src_snapid, src_version,
-> +                       src_oid, src_oloc,
-> +                       src_fadvise_flags,
-> +                       dst_oid, dst_oloc,
-> +                       dst_fadvise_flags,
-> +                       truncate_seq, truncate_size,
-> +                       copy_from_flags);
-> +       if (IS_ERR(req))
-> +               return PTR_ERR(req);
-> +       return ceph_osdc_wait_request(osdc, req);
 
-I don't think we need a blocking version.  Change ceph_osdc_copy_from()
-and keep the name -- no need for async or nowait suffixes.
+--47eKBCiAZYFK5l32
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Sun, Jan 26, 2020 at 08:09:08AM -0600, Adam Ford wrote:
+> From: Han Xu <han.xu@nxp.com>
+>=20
+> Pull in this patch from NXP's upstream repo to
+> enable fspi on imx8qxp and imx8mm
+>=20
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Signed-off-by: Han Xu <han.xu@nxp.com>
 
-                Ilya
+If you're sending a patch from someone else your signoff is supposed to
+go after theirs to show the chain of people who forwarded the patch.
+
+--47eKBCiAZYFK5l32
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4vIjcACgkQJNaLcl1U
+h9A2iAf9E/LfcLBnilsSxkzczDqr1cpeIKWq/wymH+9z0UeY97TMIJB53KX8wO/U
+MqeJv4vs1mbnFr9nTYm5Fwgbw+HzCpW/bzFRGQYZZIMc0ANudhUdpLMwUirsnGOo
+YU/t5uPyi1TRJlh53nGXj9qFN5HhDBNbgT1wmGY6EzsqlSW0f4foJCR1qxoneyX7
+1arf2u6JnQIe10iFkoOQAoSPs4iuoZ6P3MtUZolBL86j31R9GnC0IlWaZJJQrcbO
+SCcgqGywY9mjN4aGc89RsKyMMPSIXoW1CCJ9NQC+Widz6IM6YIGI0OobQDKP+hSl
+/88QWVJtZljwIHJ1jCETbEpXoJns+g==
+=aRZ3
+-----END PGP SIGNATURE-----
+
+--47eKBCiAZYFK5l32--
