@@ -2,228 +2,257 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570DFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1016BC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E841206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09EF206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580143359;
+	bh=DY8WFoZA7MSE6nKl9tDtfP3EGUiWhKiGOAxwLOR8mpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QHyf9KyWk5cx4YpMFOiFEcabxZ3cOpYDQ114Df8x8sEddCE8vBpeVW/nViEFGWthZ
+	 yX2soUy5L/6ju5YVarKLTB7puyybJQkcQSl7qAZjitowZYOmfmy4lWSN7HLYBGBQ4n
+	 m/82oBBZRWM9/Ru2KRiXvsRtcckv890qvwrbuE54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgA0Qm2 (ORCPT
+        id S1726181AbgA0Qmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:42:28 -0500
-Received: from mga12.intel.com ([192.55.52.136]:34610 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgA0Qm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:42:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 08:42:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,370,1574150400"; 
-   d="scan'208";a="429032891"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Jan 2020 08:42:23 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iw7Sx-000288-Ez; Tue, 28 Jan 2020 00:42:23 +0800
-Date:   Tue, 28 Jan 2020 00:42:00 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:core/rcu] BUILD SUCCESS
- f8a4bb6bfa639fbdd07aede615be6dffe86a9713
-Message-ID: <5e2f12d8.dcDVfOan/MRe2cqG%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 27 Jan 2020 11:42:39 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34829 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0Qmi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 11:42:38 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r16so9004098otd.2;
+        Mon, 27 Jan 2020 08:42:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mjwje25YGXfPaqp/tzkaEu5Nx6YRWwHej2DPtGS41lw=;
+        b=BTI7TnRHpVgnbFkOg2oO3ltT9pqavXgMMMR0wsLVD/KmgZEjmCe7KGABrTRx8A6pus
+         3bBDaAjTYtYr2ccvUnxEc2KaCeUycwgOePVVad+cU4I6JBUyIcO/dcQ3hhMa9vdj8VJr
+         tn4JDgp1oLdMNf8GdrgGIBlfAYBLostQJiLZWBwdkHMUrNEJgP/1sGPZF1U+s2LIhOgX
+         2lVZ5QrVbo6Gm2lYvMk4TX0mZw6Wpi12Jgm5FDkiJj97r6AVAPWZuPsu+YgH9Fu/+4Rt
+         BWXLOur3EuyAU6+wenBW48fKLefWLZwcYBMrrP0jf8uRW4rGy3BDIHaOcdzSPEHaGQul
+         eZ6g==
+X-Gm-Message-State: APjAAAWbU4UCuJ0RvmPKgB/cOFRHFIoOAbOjZlBEtAPspiG4xT6EZ0tK
+        H6oXtll5T2Mk2fXAq2108Q==
+X-Google-Smtp-Source: APXvYqxGZhO7r8DiGp3X+Vn9HS4tyNWXgafm1cLU/PZXPm9i5tFCHq4dyh74QUhHWIcE2n8bDhZqOQ==
+X-Received: by 2002:a9d:6e98:: with SMTP id a24mr5421375otr.53.1580143357057;
+        Mon, 27 Jan 2020 08:42:37 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 5sm3598718otr.13.2020.01.27.08.42.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 08:42:36 -0800 (PST)
+Received: (nullmailer pid 27943 invoked by uid 1000);
+        Mon, 27 Jan 2020 16:42:35 -0000
+Date:   Mon, 27 Jan 2020 10:42:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yuti Amonkar <yamonkar@cadence.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, mark.rutland@arm.com, maxime@cerno.tech,
+        jsarha@ti.com, tomi.valkeinen@ti.com, praneeth@ti.com,
+        mparab@cadence.com, sjakhade@cadence.com
+Subject: Re: [PATCH v3 13/14] dt-bindings: phy: phy-cadence-torrent: Add
+ subnode bindings.
+Message-ID: <20200127164235.GA7662@bogus>
+References: <1579689918-7181-1-git-send-email-yamonkar@cadence.com>
+ <1579689918-7181-14-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1579689918-7181-14-git-send-email-yamonkar@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  core/rcu
-branch HEAD: f8a4bb6bfa639fbdd07aede615be6dffe86a9713  Merge branch 'for-mingo' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu into core/rcu
+On Wed, Jan 22, 2020 at 11:45:17AM +0100, Yuti Amonkar wrote:
+> From: Swapnil Jakhade <sjakhade@cadence.com>
+> 
+> Add sub-node bindings for each group of PHY lanes based on PHY
+> type. Only PHY_TYPE_DP is supported currently. Each sub-node
 
-elapsed time: 2883m
+What the driver supports is not relevant to the binding. Define all 
+modes.
 
-configs tested: 165
-configs skipped: 0
+> includes properties such as master lane number, link reset, phy
+> type, number of lanes etc.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Given the conversion and this have no compatibility, just make the 
+commits delete the old binding and add this new binding. I'd rather not 
+have reviewed what just gets deleted here.
 
-ia64                                defconfig
-powerpc                             defconfig
-i386                             allyesconfig
-x86_64               randconfig-a001-20200126
-x86_64               randconfig-a002-20200126
-x86_64               randconfig-a003-20200126
-i386                 randconfig-a001-20200126
-i386                 randconfig-a002-20200126
-i386                 randconfig-a003-20200126
-x86_64               randconfig-c001-20200126
-x86_64               randconfig-c002-20200126
-x86_64               randconfig-c003-20200126
-i386                 randconfig-c001-20200126
-i386                 randconfig-c002-20200126
-i386                 randconfig-c003-20200126
-x86_64               randconfig-f001-20200126
-x86_64               randconfig-f002-20200126
-x86_64               randconfig-f003-20200126
-i386                 randconfig-f001-20200126
-i386                 randconfig-f002-20200126
-i386                 randconfig-f003-20200126
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64               randconfig-b001-20200126
-x86_64               randconfig-b002-20200126
-x86_64               randconfig-b003-20200126
-i386                 randconfig-b001-20200126
-i386                 randconfig-b002-20200126
-i386                 randconfig-b003-20200126
-alpha                randconfig-a001-20200126
-m68k                 randconfig-a001-20200126
-mips                 randconfig-a001-20200126
-nds32                randconfig-a001-20200126
-parisc               randconfig-a001-20200126
-riscv                randconfig-a001-20200126
-i386                             alldefconfig
-i386                              allnoconfig
-i386                                defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-arc                  randconfig-a001-20200126
-arm                  randconfig-a001-20200126
-arm64                randconfig-a001-20200126
-ia64                 randconfig-a001-20200126
-powerpc              randconfig-a001-20200126
-sparc                randconfig-a001-20200126
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-x86_64               randconfig-h001-20200126
-x86_64               randconfig-h002-20200126
-x86_64               randconfig-h003-20200126
-i386                 randconfig-h001-20200126
-i386                 randconfig-h002-20200126
-i386                 randconfig-h003-20200126
-x86_64               randconfig-g001-20200126
-x86_64               randconfig-g002-20200126
-x86_64               randconfig-g003-20200126
-i386                 randconfig-g001-20200126
-i386                 randconfig-g002-20200126
-i386                 randconfig-g003-20200126
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-csky                 randconfig-a001-20200126
-openrisc             randconfig-a001-20200126
-s390                 randconfig-a001-20200126
-sh                   randconfig-a001-20200126
-xtensa               randconfig-a001-20200126
-c6x                  randconfig-a001-20200126
-h8300                randconfig-a001-20200126
-microblaze           randconfig-a001-20200126
-nios2                randconfig-a001-20200126
-sparc64              randconfig-a001-20200126
-x86_64               randconfig-e001-20200126
-x86_64               randconfig-e002-20200126
-x86_64               randconfig-e003-20200126
-i386                 randconfig-e001-20200126
-i386                 randconfig-e002-20200126
-i386                 randconfig-e003-20200126
-x86_64               randconfig-d001-20200126
-x86_64               randconfig-d002-20200126
-x86_64               randconfig-d003-20200126
-i386                 randconfig-d001-20200126
-i386                 randconfig-d002-20200126
-i386                 randconfig-d003-20200126
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
+> 
+> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+> ---
+>  .../bindings/phy/phy-cadence-torrent.yaml          | 90 ++++++++++++++++++----
+>  1 file changed, 73 insertions(+), 17 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> index dbb8aa5..eb21615 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> @@ -19,6 +19,12 @@ properties:
+>        - cdns,torrent-phy
+>        - ti,j721e-serdes-10g
+>  
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+>    clocks:
+>      maxItems: 1
+>      description:
+> @@ -41,44 +47,94 @@ properties:
+>        - const: torrent_phy
+>        - const: dptx_phy
+>  
+> -  "#phy-cells":
+> -    const: 0
+> +  resets:
+> +    description:
+> +      Must contain an entry for each in reset-names.
+> +      See Documentation/devicetree/bindings/reset/reset.txt
 
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+How many reset entries? Needs a 'maxItems: 1' or an 'items' list if more 
+than 1.
+
+>  
+> -  num_lanes:
+> +  reset-names:
+>      description:
+> -      Number of DisplayPort lanes.
+> -    allOf:
+> -      - $ref: /schemas/types.yaml#/definitions/uint32
+> -      - enum: [1, 2, 4]
+> +      Must be "torrent_reset". It controls the reset to the
+
+Should be a schema, not freeform text. However, not really a useful name 
+as there's only 1, so I'd just remove 'reset-names'.
+
+> +      torrent PHY.
+>  
+> -  max_bit_rate:
+> +patternProperties:
+> +  '^torrent-phy@[0-7]+$':
+> +    type: object
+>      description:
+> -      Maximum DisplayPort link bit rate to use, in Mbps
+> -    allOf:
+> -      - $ref: /schemas/types.yaml#/definitions/uint32
+> -      - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
+> +      Each group of PHY lanes with a single master lane should be represented as a sub-node.
+> +    properties:
+> +      reg:
+> +        description:
+> +          The master lane number. This is the lowest numbered lane in the lane group.
+
+Why not make it the list of lane numbers. Then you don't need num-lanes.
+
+> +
+> +      resets:
+> +        description:
+> +          Contains list of resets to get all the link lanes out of reset.
+
+Needs a schema for how many? 1 per lane?
+
+> +
+> +      "#phy-cells":
+> +        description:
+> +          Generic PHY binding.
+
+Not a useful description. Remove.
+
+> +        const: 0
+> +
+> +      cdns,phy-type:
+> +        description:
+> +          Should be PHY_TYPE_DP.
+
+Sounds like a constraint.
+
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +      cdns,num-lanes:
+> +        description:
+> +          Number of DisplayPort lanes.
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32
+> +          - enum: [1, 2, 4]
+> +
+> +      cdns,max-bit-rate:
+> +        description:
+> +          Maximum DisplayPort link bit rate to use, in Mbps
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32
+> +          - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
+> +
+> +    required:
+> +      - reg
+> +      - resets
+> +      - "#phy-cells"
+> +      - cdns,phy-type
+
+Add (for the child nodes):
+
+       addtionalProperties: false
+
+>  
+>  required:
+>    - compatible
+> +  - "#address-cells"
+> +  - "#size-cells"
+>    - clocks
+>    - clock-names
+>    - reg
+>    - reg-names
+> -  - "#phy-cells"
+> +  - resets
+> +  - reset-names
+>  
+>  additionalProperties: false
+>  
+>  examples:
+>    - |
+> -    dp_phy: phy@f0fb500000 {
+> +    #include <dt-bindings/phy/phy.h>
+> +    torrent_phy: phy@f0fb500000 {
+>            compatible = "cdns,torrent-phy";
+>            reg = <0xf0 0xfb500000 0x0 0x00100000>,
+>                  <0xf0 0xfb030a00 0x0 0x00000040>;
+>            reg-names = "torrent_phy", "dptx_phy";
+> -          num_lanes = <4>;
+> -          max_bit_rate = <8100>;
+> -          #phy-cells = <0>;
+> +          resets = <&phyrst 0>;
+> +          reset-names = "torrent_reset";
+>            clocks = <&ref_clk>;
+>            clock-names = "refclk";
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          torrent_phy_dp: torrent-phy@0 {
+
+Just 'phy@...'
+
+> +                    reg = <0>;
+> +                    resets = <&phyrst 1>;
+> +                    #phy-cells = <0>;
+> +                    cdns,phy-type = <PHY_TYPE_DP>;
+> +                    cdns,num-lanes = <4>;
+> +                    cdns,max-bit-rate = <8100>;
+> +          };
+>      };
+>  ...
+> -- 
+> 2.4.5
+> 
