@@ -2,209 +2,101 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A993C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B32C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411BE20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0A920720
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6vyxMZz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6foz3aE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgA0OqV (ORCPT
+        id S1729140AbgA0Otb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:46:21 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37198 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729113AbgA0OqV (ORCPT
+        Mon, 27 Jan 2020 09:49:31 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38504 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbgA0Ota (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:46:21 -0500
-Received: by mail-qt1-f195.google.com with SMTP id w47so7527796qtk.4;
-        Mon, 27 Jan 2020 06:46:20 -0800 (PST)
+        Mon, 27 Jan 2020 09:49:30 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so11647848wrh.5;
+        Mon, 27 Jan 2020 06:49:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jhZyIGrUSX7QKfH5GDBDLfT80oi3L/4yF0ZDw6xMZ0Q=;
-        b=d6vyxMZzqfiDJotxiVNIXcfULrPKcEJIs/NrbUFBCBhhP0F8JjtteJtaBkW8Odv+ud
-         70vE6zDuvtpPUlrHlFiA4NVAaM3/pZ5d5GUaWmYA5TikIOnqA/a++CJUS+t9nQdtN7gw
-         rFAWO/M5OSnAQcCBG++Usy1rEnizXSSqF2l076osk64XX6o1/jfwc+kQ/swgobTHYvTc
-         9ALNPiOSv2jwO7FTfWAS/DOV7C4MMzY8bZG4ZBqkVbotAIKGpALQwAJW6BVAR3574rNG
-         b5XtnTjNJNcHwvh5V8Xer0M7S0hPHKFqH1a6R5leb7gPYam70yZw/Gtsrt8kzGfbaiR8
-         XuCg==
+        bh=jX8KJNUaBZ7lPrWhJLDlZPLTmG3Da5CIo7TzdsHwbFk=;
+        b=h6foz3aEKiBRWiws9pPytTUFKgH3xDbMgDFUFTQ+9iLbz5EcCaXVdGaetsE1PaGm61
+         GUQEAcdzTq8ceWlO1UQiahsvWhsxfdKw+a8IqVDnYhtnywLmVaGQjY8nZspFrQK50mC0
+         xQTcFk3h9eLo2BX89O1XM2ca3ZIcH0Olf8fwE78AiPZf9od4WLjOUEKnjV3x6ER+/aEr
+         YhVa/28zkcj8iPJS8BuFH6o8GoErmzbQHYQ/rjJvDicev9PkZTsGc++kpl9l3g/HHFLT
+         yaOMYuxojA0AOXSl/twWBof099F5YF9mxT7UnjM7ipnpj/AcQ9CwmtE0u+yVZaSb0h2z
+         OREw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jhZyIGrUSX7QKfH5GDBDLfT80oi3L/4yF0ZDw6xMZ0Q=;
-        b=XKot6OTdTNIzqGlIXfM6903TWHvVtrW9MAGdbOUQeYeH/pYtGavIW+pfP3iMfoe9DQ
-         KCe4ZpQry0YpH0tWFwHlejejtomDmltttA8rzCebaV9BhaJ+pORnM1Xkk0QB3BQCJbbw
-         KktX/BePwYEZ8x8ditpxfFfSWfvcO/VTmlSmQecRT6rVbYQfLd1dp+Pn+ITNFBJJ1N4O
-         aVn7Z36h7trhGehR/zRHTDFYJuaV9Y0aITwplLb4JnF+mKJ68/SSGH4at3sd/yi9AHn2
-         pHh4s+mw5r1VjN6hGM/FXNe8xouOyRu4KkGEfIOPQfMhMErW68tqjqG9XuTRn2H28bIp
-         6eow==
-X-Gm-Message-State: APjAAAXbslt9gzQT9bpKVU+hUIDLiLN1Mo4pgM7GC4678HnX9M3Kgb+h
-        ILJOYC/lZCi1ysoYayu9iKZRD1YNxwQ6VekRH8thPA==
-X-Google-Smtp-Source: APXvYqxIuhgjAeirhsVgTOlv0T5lhSn9/++Ec5ioT2YBoxbQ7IlwJrxFy/7/keNdX6Z0829en5gKOjzQs+2OweA2N+4=
-X-Received: by 2002:ac8:7695:: with SMTP id g21mr7401759qtr.99.1580136379638;
- Mon, 27 Jan 2020 06:46:19 -0800 (PST)
+        bh=jX8KJNUaBZ7lPrWhJLDlZPLTmG3Da5CIo7TzdsHwbFk=;
+        b=UrcJKTWjNKcvc8LDirBehYc0T4WorNMHZs9hhat5xGQUF523yBb/R5TpwEiiV800pa
+         64hPwaVDOxqizy7xRXgya6h3lZjydh3MODcKiugD/TC9IHBG6JHzzwfUwrOGynq3/pQ8
+         QK7nwlx23cDb6sWn7DukHdWYucQwqsxR9csenHSnGoVXhQhM02uU/qd0XyOIbROgErEH
+         wKmOEqHnV6fUXFz1XLlZvWpTrGvERj/p++yg64NjSX1LVmxSQHisOHjsoX4q7rTypQpS
+         o3wNoFKyxxea4RGDhGQZgaR+teoDuXZdjP4+Gy/pytMX8nVxPjGQ1oIyTdnf4JFrU+NI
+         ssgg==
+X-Gm-Message-State: APjAAAVqLKYRLdO4vXD7u1vG7WPTILxy2wEXLLJFwA7H1sakWiJ3kUq7
+        ih8KXRplmg8JAKaBWSW16JffIGKQAPHvkGiZvlE=
+X-Google-Smtp-Source: APXvYqzuUo4DzwKzx54jXhqW/mes8BlzhoUeODxdPF0kk9rT5jKBDQqoOXfDhxLh4Db25Rf8L+pxLvZgr40x5xce4uk=
+X-Received: by 2002:a5d:5708:: with SMTP id a8mr21816515wrv.79.1580136568237;
+ Mon, 27 Jan 2020 06:49:28 -0800 (PST)
 MIME-Version: 1.0
-References: <115c01d5c66d$5dcd7ae0$196870a0$@gmail.com> <041101d5cd50$e398d720$aaca8560$@gmail.com>
- <962370db9ae3ba5a17ba390afe7f9de6cea571d4.camel@hammerspace.com>
- <06bd01d5d12f$0e2288b0$2a679a10$@gmail.com> <76d4ebdbb76c8ac95e79e9db81e86625144d929a.camel@hammerspace.com>
-In-Reply-To: <76d4ebdbb76c8ac95e79e9db81e86625144d929a.camel@hammerspace.com>
-From:   Robert Milkowski <rmilkowski@gmail.com>
-Date:   Mon, 27 Jan 2020 14:46:08 +0000
-Message-ID: <CALbTx=E=pOO1wvzigRqWDZNCyksVYrhS2R6u-8OjaV9CVKHVUA@mail.gmail.com>
-Subject: Re: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+References: <20200108074043.21580-1-svens@linux.ibm.com> <20200108091155.4af8a2c5@gandalf.local.home>
+ <20200127132255.GA75877@tuxmaker.boeblingen.de.ibm.com>
+In-Reply-To: <20200127132255.GA75877@tuxmaker.boeblingen.de.ibm.com>
+From:   Shuah Khan <shuahkhan@gmail.com>
+Date:   Mon, 27 Jan 2020 07:49:17 -0700
+Message-ID: <CAKocOOM1zNgzY8_LE41HpiYLWNkoWQA7z-DC2ZL1sFHpbVxkkA@mail.gmail.com>
+Subject: Re: [PATCH v3] selftests/ftrace: fix glob selftest
+To:     Sven Schnelle <svens@linux.ibm.com>, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jan 2020 at 19:33, Trond Myklebust <trondmy@hammerspace.com> wrote:
+On Mon, Jan 27, 2020 at 6:23 AM Sven Schnelle <svens@linux.ibm.com> wrote:
 >
-> On Wed, 2020-01-22 at 14:20 +0000, Robert Milkowski wrote:
-> > > -----Original Message-----
-> > > From: Trond Myklebust <trondmy@hammerspace.com>
-> > > Sent: 17 January 2020 17:24
-> > > To: linux-nfs@vger.kernel.org; rmilkowski@gmail.com
-> > > Cc: anna.schumaker@netapp.com; linux-kernel@vger.kernel.org;
-> > > chuck.lever@oracle.com
-> > > Subject: Re: [PATCH v2] NFSv4: try lease recovery on
-> > > NFS4ERR_EXPIRED
-> > >
-> > > On Fri, 2020-01-17 at 16:12 +0000, Robert Milkowski wrote:
-> > > > Anyone please?
-> > > >
-> > > >
-> > > > -----Original Message-----
-> > > > From: Robert Milkowski <rmilkowski@gmail.com>
-> > > > Sent: 08 January 2020 21:48
-> > > > To: linux-nfs@vger.kernel.org
-> > > > Cc: 'Trond Myklebust' <trondmy@hammerspace.com>; 'Chuck Lever'
-> > > > <chuck.lever@oracle.com>; 'Anna Schumaker' <
-> > > > anna.schumaker@netapp.com
-> > > > > ;
-> > > > linux-kernel@vger.kernel.org
-> > > > Subject: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-> > > >
-> > > > From: Robert Milkowski <rmilkowski@gmail.com>
-> > > >
-> > > > Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
-> > > > etc.
-> > > > we return EIO to applications without even trying to recover.
-> > > >
-> > > > Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle
-> > > > revoke/expiry of a single stateid")
-> > > > Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-> > > > ---
-> > > >  fs/nfs/nfs4proc.c | 4 ++++
-> > > >  1 file changed, 4 insertions(+)
-> > > >
-> > > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c index
-> > > > 76d3716..2478405
-> > > > 100644
-> > > > --- a/fs/nfs/nfs4proc.c
-> > > > +++ b/fs/nfs/nfs4proc.c
-> > > > @@ -481,6 +481,10 @@ static int nfs4_do_handle_exception(struct
-> > > > nfs_server *server,
-> > > >                                           stateid);
-> > > >                           goto wait_on_recovery;
-> > > >                   }
-> > > > +                 if (state == NULL) {
-> > > > +                         nfs4_schedule_lease_recovery(clp);
-> > > > +                         goto wait_on_recovery;
-> > > > +                 }
-> > > >                   /* Fall through */
-> > > >           case -NFS4ERR_OPENMODE:
-> > > >                   if (inode) {
-> > > > --
-> > > > 1.8.3.1
-> > > >
-> > > >
-> > >
-> > > Does this apply to any case other than NFS4ERR_EXPIRED in the
-> > > specific
-> > > case of nfs4_do_open()? I can't see that it does. It looks to me as
-> > > if
-> > > the open recovery routines already have their own handling of this
-> > > case.
-> >
-> > I only observed the issue with open(). After further
-> > review I think you are right and it only applies to nfs4_do_open().
-> >
-> >
-> > > If so, why not just add it as a special case in the nfs4_do_open()
-> > > error
-> > > handling? Otherwise this patch will end up overriding other generic
-> > > cases where we have an inode, but no open state.
-> > >
-> >
-> > Fair point.
-> > So perhaps, few lines further instead of:
-> >
-> >                       if (inode) {
-> > ...
-> >                       if (state == NULL) {
-> >                                       break;
-> >                       }
-> >
-> > There should be:
-> >
-> >                       if (inode) {
-> > ...
-> >                       if (state == NULL) {
-> >                               nfs4_schedule_lease_recovery(clp);
-> >                               goto wait_on_recovery;
-> >                       }
-> >
-> >
-> >
-> > This way we know that inode cannot be null at this point, and it's a
-> > case where both inode and state are NULL.
-> > This would be a little bit more general in case we reach this point.
-> >
-> > But if you think it is better to move it to nfs4_do_open() then I've
-> > just tested the following patch:
-> >
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index 76d3716..b7c4044 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -3187,6 +3187,11 @@ static struct nfs4_state *nfs4_do_open(struct
-> > inode *dir,
-> >                         exception.retry = 1;
-> >                         continue;
-> >                 }
-> > +               if (status == -NFS4ERR_EXPIRED) {
-> > +                       nfs4_schedule_lease_recovery(server-
-> > >nfs_client);
-> > +                       exception.retry = 1;
-> > +                       continue;
-> > +               }
-> >                 if (status == -EAGAIN) {
-> >                         /* We must have found a delegation */
-> >                         exception.retry = 1;
-> >
+> Hi Steve,
 >
-> This looks like what I'm asking for, yes. That seems like the minimal
-> patch that addresses the problem you're describing.
+> On Wed, Jan 08, 2020 at 09:11:55AM -0500, Steven Rostedt wrote:
+> >
+> > Shuah,
+> >
+> > Want to take this through your tree?
+> >
+> >  https://lore.kernel.org/r/20200108074043.21580-1-svens@linux.ibm.com
+> >
+> > Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>
+> As Shuah didn't reply, can you push that through your tree?
 >
 
-Ok, will submit later today or tomorrow.
-Thanks.
+Hi Sven,
 
--- 
-Robert Milkowski
+Did you run getmaintainers of this patch? You didn't send this to my
+email address listed in the get maintainers file and also didn't cc
+linux-kselftest.
+
+I just happen to notice this now. Please resend with steve's
+Reviewed-by tag to the recipients suggested by get_maintainers.pl
+
+I will take this through ksleftest tree.
+
+thanks,
+-- Shuah
