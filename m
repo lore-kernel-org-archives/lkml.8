@@ -2,88 +2,121 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8487FC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BF7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473FA21739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580134601;
-	bh=VXjYEJj3UelbR/kPZSM2sru72nT+0NHrWpiKo6RVWJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gskn1pyT/Bo56RAkodWg2JKBca4URR2jGVGNmdRGPiagJ9/oTdwnbbp2sSjrFc9TM
-	 4L8d839+7EuZh40m2aoWeJGvStzY6WDEzjxhFS2ClD3uPVTupgyO0T8TvVQjameSFm
-	 0mk0nCQAZT0aubeVBj4dodoUKtOXhyv8hi2xEmi4=
+	by mail.kernel.org (Postfix) with ESMTP id 7C075214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:19:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ssqAzss3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgA0OQk (ORCPT
+        id S1729012AbgA0OTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:16:40 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34068 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727680AbgA0OQk (ORCPT
+        Mon, 27 Jan 2020 09:19:37 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38219 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbgA0OTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:16:40 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t2so11507139wrr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 06:16:38 -0800 (PST)
+        Mon, 27 Jan 2020 09:19:37 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a9so2284662wmj.3;
+        Mon, 27 Jan 2020 06:19:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uCAdJLVoj2sUq92e/C8T9Kl39r5x3+zdQIfnr0K+8yA=;
+        b=ssqAzss3O9NyAFx6NTF8QNCuJrNS/W0OasPeu4LwLXZyw1FDiZsMn1EAckIqWT+2bn
+         E8R8XGLdSjZsirJf89WdkUazx+Gb4i5K82rv2neIpwL9eGom2wDoMmsGwjEB4ELsOQXv
+         J0IlvcG2rd/PTM3G4h0+CVEHbweJVZPVYdnND/4BAQoYKOHE+jRNEpWnBJteYnbnXFly
+         YFUN+ZZSw23XHAq/TpQZfLCuCwH2zbHZfU7egpSLCLU85J1v9z5cvSuPu2kdbBIdtJeO
+         u9vpRS89nnp+0ie2j+N4d73CCx2viKC/SGFquW12trAgUtfK3c8R3AF5vsdwrZr7EZVU
+         VxyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DkvRnFrIduPIix090QyLIYPQKb3q4K6CEnQkAFKQZwg=;
-        b=q0K75DCgQu5INZGVpGN0/KoyjtYdVCcMc41ncZC97USdvHF7ouH5EJM1vt49oMY/h1
-         vesVdkVV/O9OH/Zr/kn5D82sN4ckMOjZ24KhMpmh6aFrtSgUUl9hHAGck1MLDpDwhAdV
-         SzuSR4lHuiQsbyuHoHjs830b/ryQIWJ97T+s47KJS7VuNek1PbJ59Kx9Y2p+CKs7CM7+
-         iL7O6IVukobgdFgWreyU8ovvYlbINUOjwD5aAzIIujmkqPNz64sMPTFa7ICAqO8wzTLW
-         8ZK9PKAjsl9o8HrMZ2XqPX1yNeWhQU5HwnDPuHzKP55f09bdB9NvOX79H9GkQpS4l+EY
-         dl6A==
-X-Gm-Message-State: APjAAAWJSsH12MA7lalIBhMa19qiuqjov2tcjY6wm8CYaSkuQuUcoPCl
-        2BTeE/EDtMOUzRKb0ja1eFU=
-X-Google-Smtp-Source: APXvYqzjTmKdv356FLcmpgivvubhHonm9BDTJSRy6tE0JEMYnoqthPlwXla/efzG9MFagbAvTJLFxg==
-X-Received: by 2002:a5d:5708:: with SMTP id a8mr21637678wrv.79.1580134598275;
-        Mon, 27 Jan 2020 06:16:38 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id q15sm20947373wrr.11.2020.01.27.06.16.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 06:16:37 -0800 (PST)
-Date:   Mon, 27 Jan 2020 15:16:37 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Luigi Semenzato <semenzato@google.com>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geoff Pike <gpike@google.com>
-Subject: Re: [PATCH 1/2] Documentation: clarify limitations of hibernation
-Message-ID: <20200127141637.GL1183@dhcp22.suse.cz>
-References: <20191226220205.128664-1-semenzato@google.com>
- <20191226220205.128664-2-semenzato@google.com>
- <20200106125352.GB9198@dhcp22.suse.cz>
- <CAA25o9S7EzQ0xcoxuWtYr2dd0WB4KSQNP4OxPb2gAeaz0EgomA@mail.gmail.com>
- <20200108114952.GR32178@dhcp22.suse.cz>
- <CAA25o9Q4XP8weCNcTr1ZT9N7Y3V=B90mK8mykLOyy=-4RJ_uHQ@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uCAdJLVoj2sUq92e/C8T9Kl39r5x3+zdQIfnr0K+8yA=;
+        b=ZlatLrrfxZceoy0lrQS1tIx57QTO31d+6jNxtG8nMvGClIgxXgkxtJrp13lh41ZCeP
+         I+HnIwvNWg8coAGJMEVlKqz66rHng78hgatbA5zR+nVgtXUR4dMdyF2cZUt7VrakIkJZ
+         Uo635e2EQJPWsWTMAGYriyy7NCZF34Cy7xltHY1mzKlSt9Eni91fS1JHqNeQmmhzevN/
+         SGwXGuH+Mtj5U4tnoTGzrhC5xjxXhPgzU/qgg94Ux2vv74cVoXH7v5BoYv0Bm6d+/sAC
+         6ncrjglxcFXZ9JxvLlnYcF9xpK4Tq8PuzTnGI9TOUn0mCluKmUqePyV27/ULQfUf6GrO
+         c8Tg==
+X-Gm-Message-State: APjAAAWIrvwXANiT38XKSh7p7wJGA11eBIgbnPkrgxk266obZVL7uZGN
+        UMv0IlimnKkn4obzlRtoR8Y=
+X-Google-Smtp-Source: APXvYqxZYDhx+pQPoRugT+5txziPdge9/7sxEo3a0e0ANlKSdRIEc6rJbMNCuJQwbQnAIF9h0P+L2A==
+X-Received: by 2002:a1c:a952:: with SMTP id s79mr14757024wme.83.1580134774786;
+        Mon, 27 Jan 2020 06:19:34 -0800 (PST)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id g25sm28908061wmh.3.2020.01.27.06.19.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 06:19:34 -0800 (PST)
+Subject: Re: [PATCHv8 03/34] ns: Introduce Time Namespace
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Dmitry Safonov <dima@arista.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        Linux API <linux-api@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>
+References: <20191112012724.250792-1-dima@arista.com>
+ <20191112012724.250792-4-dima@arista.com>
+ <CACT4Y+b70bRRS2XD3yxhBoy4E-LFy_K3wMrjeuPmiEvaPe_c2Q@mail.gmail.com>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <c0a13024-5f56-133a-61f1-c4185f5ac210@gmail.com>
+Date:   Mon, 27 Jan 2020 14:19:27 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA25o9Q4XP8weCNcTr1ZT9N7Y3V=B90mK8mykLOyy=-4RJ_uHQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+b70bRRS2XD3yxhBoy4E-LFy_K3wMrjeuPmiEvaPe_c2Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 24-01-20 08:37:12, Luigi Semenzato wrote:
-[...]
-> The purpose of my documentation patch was to make it clearer that
-> hibernation may fail in situations in which suspend-to-RAM works; for
-> instance, when there is no swap, and anonymous pages are over 50% of
-> total RAM.  I will send a new version of the patch which hopefully
-> makes this clearer.
+Hi Dmitry,
 
-I was under impression that s2disk is pretty much impossible without any
-swap.
--- 
-Michal Hocko
-SUSE Labs
+On 1/27/20 2:12 PM, Dmitry Vyukov wrote:
+> On Tue, Nov 12, 2019 at 2:30 AM Dmitry Safonov <dima@arista.com> wrote:
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 3f7f8cdbc471..037abc28c414 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -13172,6 +13172,8 @@ T:      git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+>>  S:     Maintained
+>>  F:     fs/timerfd.c
+>>  F:     include/linux/timer*
+>> +F:     include/linux/time_namespace.h
+>> +F:     kernel/time_namespace.c
+> 
+> Is it supposed to be kernel/time/namespace.c?
+
+Yes, thanks for catching this.
+I'll send a fixup shortly.
+
+Thanks,
+          Dmitry
