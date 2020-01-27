@@ -2,112 +2,250 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90481C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BD4C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 591FC214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CF920661
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:56:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f3oZhnPu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a56nwxdz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbgA0Kzj (ORCPT
+        id S1730144AbgA0K4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 05:55:39 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60627 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727964AbgA0Kzj (ORCPT
+        Mon, 27 Jan 2020 05:56:11 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48988 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbgA0K4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 05:55:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580122538;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=C5GoHU21tITOeLGcgSeI5DCMeKnGmZHyFA/f49KFvg0=;
-        b=f3oZhnPuzps5Am2LaCzCkb4E3UhI9hSUAYy42buJLvfMh7E+6fSsaAJ+Wl6GHb6rHfGvcW
-        9AGsiM7Cl0R461B5s2P+BduH+ZM9sJ7I6RjZ3ycAUpoA3VP8A2IqRun+cQwf80z/5WeoXD
-        IkFi5FXt8eFwaVD/kZ0k6RE46+FJy3M=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-N96kRo9eOSWJJRITvih0Fg-1; Mon, 27 Jan 2020 05:55:36 -0500
-X-MC-Unique: N96kRo9eOSWJJRITvih0Fg-1
-Received: by mail-wm1-f71.google.com with SMTP id f25so1352116wmb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 02:55:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C5GoHU21tITOeLGcgSeI5DCMeKnGmZHyFA/f49KFvg0=;
-        b=WEgqtaMpL4gBg/SIjlOMqR0pk1viTHbx7VBTtUluZB6f+HC1KOD0j4xEo/91Cc60ON
-         21LPpcoL2LhhNrOYtPKqbK53OfvDsX0rJpf4vMo4SlDei6KpL9IsAeZBBnTmT2j+E8G1
-         DhZqRhc9ddjCQgjRs82XZKvGzMEhExdV8g4DLwcCG4hlmt8MpN0xY+CvVD7EGn+T3EOC
-         CyVN0+pgzfGXx5vaLSMKTjFKA/GacD3Y0x8BoQQugi1lx/W66hkrTJpI9xaUyZRjY3od
-         vrzd7WdmQcSC4bJlD0jVPWp1OZCE2S5f0CWHFa1cAre5t9166yCU86n5jL9tRou+14wK
-         pHEg==
-X-Gm-Message-State: APjAAAUagpfk31YhYRxoRIor5hMpHa9C2iUiBRj8NhCySiZoyCNbd87y
-        Z43/9g9XbUd7BBeKWaQuvNED2/04nAZJYLV0QHJVeV0XN8E9xa9GhUkvepn6Twdf9/qpykU5Ecx
-        2OLco1ynO3cOHYP6g2UXD2lA=
-X-Received: by 2002:adf:e58d:: with SMTP id l13mr21065277wrm.135.1580122535314;
-        Mon, 27 Jan 2020 02:55:35 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxmXHDECwNyV4sc/J2dESQugTCA1QujhGGSTGYrOTm4ABN+g+mCYs8AGc58vXWnshCbjImijQ==
-X-Received: by 2002:adf:e58d:: with SMTP id l13mr21065242wrm.135.1580122535083;
-        Mon, 27 Jan 2020 02:55:35 -0800 (PST)
-Received: from localhost (cpc111743-lutn13-2-0-cust844.9-3.cable.virginm.net. [82.17.115.77])
-        by smtp.gmail.com with ESMTPSA id x14sm18076625wmj.42.2020.01.27.02.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 02:55:34 -0800 (PST)
-Date:   Mon, 27 Jan 2020 10:55:33 +0000
-From:   Aaron Tomlin <atomlin@redhat.com>
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc:     Grzegorz Halat <ghalat@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, ssaner@redhat.com, oleksandr@redhat.com,
-        vbendel@redhat.com, kirill@shutemov.name,
-        khlebnikov@yandex-team.ru, borntraeger@de.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 1/1] mm: sysctl: add panic_on_mm_error sysctl
-Message-ID: <20200127105533.azrlz2ff73vrhg6n@atomlin.usersys.com>
-References: <20200127101100.92588-1-ghalat@redhat.com>
- <063e702f-dc5f-b0ca-fe26-508a9f1e8e9a@I-love.SAKURA.ne.jp>
+        Mon, 27 Jan 2020 05:56:11 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00RAtt0H109735;
+        Mon, 27 Jan 2020 04:55:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580122555;
+        bh=bSzMhNpfR2tSQKzeTTnZQyCy3i+6+xWTPWNXD5SYymo=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=a56nwxdzrtHabjNXzLUvYzrVfKyqxFHyBWsjcZrR7u2ywOdm2ZIkCS5s7YF7irdLE
+         vZr+49Ys1hlt7bn1MKHgaXuqbI1fBKiIADyFXuLBHpC8jGIJgHMFbi41pBk1qdQX+u
+         EmR0NpJUQegWX/1dKvigZayVerAFEgBlVPjBT0H0=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00RAtthO012043
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jan 2020 04:55:55 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 27
+ Jan 2020 04:55:54 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 27 Jan 2020 04:55:54 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RAtmOZ079625;
+        Mon, 27 Jan 2020 04:55:51 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>
+CC:     <tomi.valkeinen@ti.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@siol.net>
+Subject: [PATCH v3 1/2] dt-bindings: display: bridge: Add documentation for Toshiba tc358768
+Date:   Mon, 27 Jan 2020 12:56:33 +0200
+Message-ID: <20200127105634.7638-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200127105634.7638-1-peter.ujfalusi@ti.com>
+References: <20200127105634.7638-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <063e702f-dc5f-b0ca-fe26-508a9f1e8e9a@I-love.SAKURA.ne.jp>
-X-PGP-Key: http://pgp.mit.edu/pks/lookup?search=atomlin%40redhat.com
-X-PGP-Fingerprint: 7906 84EB FA8A 9638 8D1E  6E9B E2DE 9658 19CC 77D6
-User-Agent: NeoMutt/20180716-1637-ee8449
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-01-27 19:42 +0900, Tetsuo Handa wrote:
-> On 2020/01/27 19:11, Grzegorz Halat wrote:
-> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> > index def074807cee..2fecd6b2547e 100644
-> > --- a/Documentation/admin-guide/sysctl/kernel.rst
-> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> > @@ -61,6 +61,7 @@ show up in /proc/sys/kernel:
-> >  - overflowgid
-> >  - overflowuid
-> >  - panic
-> > +- panic_on_mm_error
-> 
-> Maybe panic_on_inconsistent_mm is better, for an MM error sounds too generic
-> (e.g. is page allocation failure an error, is OOM killer an error,
-> is NULL pointer dereference an error, is use-after-free access an error) ?
+TC358768/TC358778 is a Parallel RGB to MIPI DSI bridge.
 
-Fair enough; 'panic_on_inconsistent_mm' is more concise.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ .../display/bridge/toshiba,tc358768.yaml      | 158 ++++++++++++++++++
+ 1 file changed, 158 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
 
+diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+new file mode 100644
+index 000000000000..8dd8cca39a77
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+@@ -0,0 +1,158 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358768.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Toschiba TC358768/TC358778 Parallel RGB to MIPI DSI bridge
++
++maintainers:
++  - Peter Ujfalusi <peter.ujfalusi@ti.com>
++
++description: |
++  The TC358768/TC358778 is bridge device which converts RGB to DSI.
++
++properties:
++  compatible:
++    enum:
++      - toshiba,tc358768
++      - toshiba,tc358778
++
++  reg:
++    maxItems: 1
++    description: base I2C address of the device
++
++  reset-gpios:
++    maxItems: 1
++    description: GPIO connected to active low RESX pin
++
++  vddc-supply:
++    description: Regulator for 1.2V internal core power.
++
++  vddmipi-supply:
++    description: Regulator for 1.2V for the MIPI.
++
++  vddio-supply:
++    description: Regulator for 1.8V - 3.3V IO power.
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: refclk
++
++  ports:
++    type: object
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        additionalProperties: false
++
++        description: |
++          Video port for RGB input
++
++        properties:
++          reg:
++            const: 0
++
++        patternProperties:
++          endpoint:
++            type: object
++            additionalProperties: false
++
++            properties:
++              data-lines:
++                enum: [ 16, 18, 24 ]
++
++              remote-endpoint: true
++
++        required:
++          - reg
++
++      port@1:
++        type: object
++        additionalProperties: false
++
++        description: |
++          Video port for DSI output (panel or connector).
++
++        properties:
++          reg:
++            const: 1
++
++        patternProperties:
++          endpoint:
++            type: object
++            additionalProperties: false
++
++            properties:
++              remote-endpoint: true
++
++        required:
++          - reg
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - reg
++  - vddc-supply
++  - vddmipi-supply
++  - vddio-supply
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c1 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dsi_bridge: tc358768@0e {
++        compatible = "toshiba,tc358768";
++        reg = <0x0e>;
++
++        clocks = <&tc358768_refclk>;
++        clock-names = "refclk";
++
++        /* GPIO line is inverted before going to the bridge */
++        reset-gpios = <&pcf_display_board 0 1 /* GPIO_ACTIVE_LOW */>;
++
++        vddc-supply = <&v1_2d>;
++        vddmipi-supply = <&v1_2d>;
++        vddio-supply = <&v3_3d>;
++
++        dsi_bridge_ports: ports {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          port@0 {
++            reg = <0>;
++            rgb_in: endpoint {
++              remote-endpoint = <&dpi_out>;
++              data-lines = <24>;
++            };
++          };
++
++          port@1 {
++            reg = <1>;
++            dsi_out: endpoint {
++              remote-endpoint = <&lcd_in>;
++            };
++          };
++        };
++      };
++    };
++    
 -- 
-Aaron Tomlin
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
