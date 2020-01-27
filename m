@@ -2,101 +2,109 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155F1C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5239EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E278E20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:00:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RQRS9wEU"
+	by mail.kernel.org (Postfix) with ESMTP id 34E0120CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgA0SAh (ORCPT
+        id S1726164AbgA0SBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 13:00:37 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31458 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725845AbgA0SAg (ORCPT
+        Mon, 27 Jan 2020 13:01:46 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2536 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725893AbgA0SBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 13:00:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580148035;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LISUUc5mSbwq4OOhAuP2n+5DZiLWcPcw5gQzbhBN3r0=;
-        b=RQRS9wEUxc+4pyuat24bvH+M62RR1bvIeqphh0phXj1dtjfaU1GOD0bnY/HEZYPyrfWkz8
-        dwMpTTNIUDx30haOWICziJmTVjXV8SWJZsBxX3hd4rlx988PPqkueZXHYMTU9Bm/JueFHG
-        jC7IkOqVBHjra3liav6s3TmwROii1Ok=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-354-nvOQnH2RPY-jpmcll3XMfA-1; Mon, 27 Jan 2020 13:00:33 -0500
-X-MC-Unique: nvOQnH2RPY-jpmcll3XMfA-1
-Received: by mail-wr1-f72.google.com with SMTP id c6so6482078wrm.18
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 10:00:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LISUUc5mSbwq4OOhAuP2n+5DZiLWcPcw5gQzbhBN3r0=;
-        b=rKWp+5VPNho7JAeECwAuU6AZcR38dUh4UtgTtXzgZJaH5MXqWVjQFCAJv6K6F55pgc
-         gJwgvU42j8qT6C3UdaTuyiCVXqWPNsLYI47RAr/6XaTlAyxHuoMbzNvZLvoLaNwgA9Ru
-         gduSsZvsAF6/AcpKl9WTAnC77P1/ALlmN40YnWJU6JSar0945TLd4I4AYYlElyzmz4lK
-         W1FZ3LGPLkoNV676Za2sf2nTIMnX8OLK0fWK5L5JBJHz2TnC7ykSVk/hzluRjg6nh5Mf
-         3NaavpTqZLHmRRuyXBER4lJlVdMqMy42VqLTmilkSq66D6iDRR+dFA3nFChDZQmIekZS
-         +1FQ==
-X-Gm-Message-State: APjAAAUsg36AvELD/lAAEWNL7gc732T37/t3pHnCZ8LuheQiJSR0etEU
-        KJwysK0xJ2jNWtHvq3Gj+ZfQiIxWyUZfaxX4ACk4ntuxT4AauRM8573tWKj8FZWL4Qj6bjh3Pr4
-        BzGNyEjJ1NUbD0uj4wdMPS4gx
-X-Received: by 2002:a05:6000:11c6:: with SMTP id i6mr24247855wrx.178.1580148032217;
-        Mon, 27 Jan 2020 10:00:32 -0800 (PST)
-X-Google-Smtp-Source: APXvYqydXL8Hy6hmc2+0FfdGyYbjp+tHmBYor3OXZuBag9Hl+JQXNDQY2Irhah3wQr6DKLU4A9G9yQ==
-X-Received: by 2002:a05:6000:11c6:: with SMTP id i6mr24247828wrx.178.1580148031996;
-        Mon, 27 Jan 2020 10:00:31 -0800 (PST)
-Received: from steredhat ([80.188.125.198])
-        by smtp.gmail.com with ESMTPSA id u7sm19732499wmj.3.2020.01.27.10.00.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 10:00:31 -0800 (PST)
-Date:   Mon, 27 Jan 2020 19:00:28 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH liburing 0/1] test: add epoll test case
-Message-ID: <20200127180028.f7s5xhhizii3dsnr@steredhat>
-References: <20200127161701.153625-1-sgarzare@redhat.com>
- <d409ad33-2122-9500-51f4-37e9748f1d73@kernel.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d409ad33-2122-9500-51f4-37e9748f1d73@kernel.dk>
+        Mon, 27 Jan 2020 13:01:46 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RHsKFB091754
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:01:44 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xrg62e820-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:01:44 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 27 Jan 2020 18:01:42 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 27 Jan 2020 18:01:41 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00RI1eMN51314770
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 18:01:40 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12F6E11C052;
+        Mon, 27 Jan 2020 18:01:40 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 431D411C04A;
+        Mon, 27 Jan 2020 18:01:39 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.185.238])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jan 2020 18:01:39 +0000 (GMT)
+Subject: Re: [PATCH 2/2] ima: support calculating the boot_aggregate based
+ on different TPM banks
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 27 Jan 2020 13:01:38 -0500
+In-Reply-To: <87e6b531-3596-4523-a6b0-629ae8fd6995@linux.microsoft.com>
+References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+         <1580140919-6127-2-git-send-email-zohar@linux.ibm.com>
+         <87e6b531-3596-4523-a6b0-629ae8fd6995@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012718-0020-0000-0000-000003A4778E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012718-0021-0000-0000-000021FC1E62
+Message-Id: <1580148098.5088.32.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_06:2020-01-24,2020-01-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 suspectscore=0 phishscore=0 adultscore=0 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001270145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 09:26:41AM -0700, Jens Axboe wrote:
-> On 1/27/20 9:17 AM, Stefano Garzarella wrote:
-> > Hi Jens,
-> > I wrote the test case for epoll.
-> > 
-> > Since it fails also without sqpoll (Linux 5.4.13-201.fc31.x86_64),
-> > can you take a look to understand if the test is wrong?
-> > 
-> > Tomorrow I'll travel, but on Wednesday I'll try this test with the patch
-> > that I sent and also with the upstream kernel.
+On Mon, 2020-01-27 at 08:50 -0800, Lakshmi Ramasubramanian wrote:
+> On 1/27/2020 8:01 AM, Mimi Zohar wrote:
 > 
-> I'll take a look, but your patches are coming through garbled and don't
-> apply.
+> > +
+> > +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
+> > +		if (ima_tpm_chip->allocated_banks[i].alg_id == d.alg_id)
+> > +			break;
+> > +	}
+> > +
+> > +	if (i == ima_tpm_chip->nr_allocated_banks)
+> > +		d.alg_id = ima_tpm_chip->allocated_banks[0].alg_id;
+> > +
+> 
+> Can the number of allocated banks (ima_tpm_chip->nr_allocated_banks) be 
+> zero? Should that be checked before accessing "allocated_banks"?
 
-Weird, I'm using git-publish as usual. I tried to download the patch
-received from the ML, and I tried to reapply and it seams to work here.
+Yes, that might be the true, but I think the solution is not fixing
+the problem here, but when ima_tpm_chip is set in ima_init().
+tpm_default_chip() should be modified to return a TPM with at least
+one bank enabled; and ima_init() needs to go into TPM-bypass mode if
+there isn't.
 
-Which kind of issue do you have? (just to fix my setup)
+Can anyone look into this please?
 
-Anyway I pushed my tree here:
-    https://github.com/stefano-garzarella/liburing.git epoll
+Mimi
 
