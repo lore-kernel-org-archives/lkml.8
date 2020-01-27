@@ -2,77 +2,130 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB913C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C568C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C310214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580109196;
-	bh=rr2uI6+r4ElsfZG9/N7HSzT4yhWF8nb+Voz8rFD3JmE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tGLoRuYnBZQLP5eK2cumeVb8K5ZJqZOYE6X/lHQFngrgKjqIL8u+tPWiXxaYg+qv4
-	 UTy0CbPcL2fPYXYV3XzeBoiY/YVCgGCI4DdydjYxeF3Ead78aGqux4BR9eLTTBVEoe
-	 xaV3v8IPrWstwEyMaTkA6HuEb+vhfJwf3CwIXiHw=
+	by mail.kernel.org (Postfix) with ESMTP id DD685214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tsfuDBGT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgA0HNP (ORCPT
+        id S1727233AbgA0HQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 02:13:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgA0HNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 02:13:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 737B4214AF;
-        Mon, 27 Jan 2020 07:13:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580109194;
-        bh=rr2uI6+r4ElsfZG9/N7HSzT4yhWF8nb+Voz8rFD3JmE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0tvhJLGWvxM550jgfs4uRrSCD8n8GLchcxFd9fQaOCFMq1R49cQTy367EkCPWEtOK
-         QRCZdieSk9pcC1vl+xnA4LDPOj75Jnh1VIyhNHuxhPyJt01Kqy7FEtqczw+nkFVXSN
-         YsflHF5r6hLW5WsKt78YWrxuqhnaVGWlDX+5Vi9I=
-Date:   Mon, 27 Jan 2020 08:13:12 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [git pull] habanalabs pull request for kernel 5.6
-Message-ID: <20200127071312.GB279449@kroah.com>
-References: <20200127064007.GA12713@ogabbay-VM>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127064007.GA12713@ogabbay-VM>
+        Mon, 27 Jan 2020 02:16:19 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44622 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgA0HQS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 02:16:18 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so7404093otj.11;
+        Sun, 26 Jan 2020 23:16:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZTshCe94WzSsfXve6ziu+qTyps0fLQU+BDDkCbT6Bso=;
+        b=tsfuDBGTQVhy70maJJPR3yaIKX8BjW23nAIzNWcWsDqNiB/oBXDoWDJ1whQefG8H5T
+         qA+zgESqYPhbL05359SxdqjN7XPsc4ZCVcF60/E3vAaWD8dyjnpXX28Bw5HW44X/bShJ
+         IspH7PC33TbNJdg9v4cXf5eQGf0WRNIbH5gI0DPlFwQAM2ZU/+tQtoN+KcJK15Uw4zgj
+         AX5NwHYvM2nrcqgjzy2uOE8dE1NndLkC3lfJU+MUH4T9vVKIR5yoBQYrclHpQuUBjq5A
+         MMAZ4I80FDACK65hhPDSWN3aS18HSk1chsTDXMUCsJy4Dh/Ppk5sCK+P9WP6kjloGkb6
+         Lu+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZTshCe94WzSsfXve6ziu+qTyps0fLQU+BDDkCbT6Bso=;
+        b=oE35V4duXWT75m32qjpdodBvoe5fnRW5N+jSjPEmxTV8U1U2LQmzbWUMVJE1Kwb7vA
+         Thc4hvMFWlaITAwG0KwPdEqVmXvuCcVJFOlrU+JiwAhJ6ny3KKbL1e7e4WnCIC1oBM0/
+         mL8L+Hyb4GNO+dMi5571Z+tOchCy+Ehv//R/cuk+rfVLpjspUWsAjxZsMmpgIhhytvsR
+         198qC9qmrOBhhREaCthwP2tElnn+myfv7uZQQanKdBEA+qST+l54uGSPo/SnlcO5Phfk
+         QyHqC4UC9mDn5Hej9lsJHFZ8Z/blrzHD2VGJl/fLpGZcvzX9FtnUSzK1NSMSkREn62oi
+         h8qA==
+X-Gm-Message-State: APjAAAVqM5TAOgHE3z7rJpqmHcIqs0kKlAiz0hCIEyABkolwCylB0EUN
+        p0TO5upCK9q6IgseX5jB8UI=
+X-Google-Smtp-Source: APXvYqyBvsPV5HUfCbEOF6ZmFCmj7SSgxfXyaKHBatxbogtKM0leCRK+ExTQvjrYuSeo/zgeV0umsQ==
+X-Received: by 2002:a9d:729c:: with SMTP id t28mr8584637otj.66.1580109377176;
+        Sun, 26 Jan 2020 23:16:17 -0800 (PST)
+Received: from nick-Blade-Stealth.attlocal.net (23-121-157-107.lightspeed.sntcca.sbcglobal.net. [23.121.157.107])
+        by smtp.googlemail.com with ESMTPSA id n25sm4500248oic.6.2020.01.26.23.16.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jan 2020 23:16:16 -0800 (PST)
+From:   Nick Desaulniers <nick.desaulniers@gmail.com>
+To:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de
+Cc:     Nick Desaulniers <nick.desaulniers@gmail.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] dynamically allocate struct cpumask
+Date:   Sun, 26 Jan 2020 23:16:02 -0800
+Message-Id: <20200127071602.11460-1-nick.desaulniers@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 08:40:07AM +0200, Oded Gabbay wrote:
-> Hello Greg,
-> 
-> This is the pull request for habanalabs driver for kernel 5.6.
+This helps avoid avoid a potentially large stack allocation.
 
-It's too late for this, sorry :(
+When building with:
+$ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
+The following warning is observed:
+arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
+function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
+static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
+vector)
+            ^
+Debugging with:
+https://github.com/ClangBuiltLinux/frame-larger-than
+via:
+$ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
+  kvm_send_ipi_mask_allbutself
+points to the stack allocated `struct cpumask newmask` in
+`kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
+potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
+the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
+8192, making a single instance of a `struct cpumask` 1024 B.
 
-Code needed to be in my tree usually for a week before the merge window
-opens before I can add it to that merge window.  This got no testing in
-linux-next or anywhere else, so I can't take it.
+Signed-off-by: Nick Desaulniers <nick.desaulniers@gmail.com>
+---
+ arch/x86/kernel/kvm.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Feel free to split it up into bug fixes for 5.6-final and new stuff for
-5.7-rc1 and I will be glad to take those after 5.6-rc1 is out.
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 32ef1ee733b7..d41c0a0d62a2 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -494,13 +494,15 @@ static void kvm_send_ipi_mask(const struct cpumask *mask, int vector)
+ static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
+ {
+ 	unsigned int this_cpu = smp_processor_id();
+-	struct cpumask new_mask;
++	struct cpumask *new_mask;
+ 	const struct cpumask *local_mask;
+ 
+-	cpumask_copy(&new_mask, mask);
+-	cpumask_clear_cpu(this_cpu, &new_mask);
+-	local_mask = &new_mask;
++	new_mask = kmalloc(sizeof(*new_mask), GFP_KERNEL);
++	cpumask_copy(new_mask, mask);
++	cpumask_clear_cpu(this_cpu, new_mask);
++	local_mask = new_mask;
+ 	__send_ipi_mask(local_mask, vector);
++	kfree(new_mask);
+ }
+ 
+ /*
+-- 
+2.17.1
 
-> In addition, I got my pgp key signed by Olof.J. I would appreciate it if
-> you could verify it.
-
-Any clues as to how to verify it, is it on a specific keyserver?
-
-thanks,
-
-greg k-h
