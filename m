@@ -2,150 +2,161 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044C8C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB64C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7AAE20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:03:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="CR0MHc9u"
+	by mail.kernel.org (Postfix) with ESMTP id 4C1F0206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:15:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580123752;
+	bh=XtPA8Ig4ryv+n4XTiVr/+miOFcjAr3IBN5e8V49V0oc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hJvA1vjGurCY6cwY4gjlXQeDiGehJMRRI3TU/zVB2+057jsRyGGoBsnp3emVgchV6
+	 CFV7+41H3ziRqfZu2Li5gHspjAOCyo0fMC17k2Hv+ku2EZG+94iKikRBGkc6wYlm8A
+	 igpZufuX63yZZBEbCq7ixm8Fd4lRYfoUanrtVrvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730209AbgA0LDS (ORCPT
+        id S1730211AbgA0LPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:03:18 -0500
-Received: from mail-mw2nam12on2087.outbound.protection.outlook.com ([40.107.244.87]:10081
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729154AbgA0LDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:03:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JFGcpbJcJ88abxxedtjrYOBrA9uajU3/K7SICe1H9asyGgzk6DyH83QgJV5djZ/wQWr/2cu4lMwsOzlhbBwhlwVqxQhDZCQOLNCfOZYiQH/evJrnBTCbgdDN1SKDJWJrj6tXqTUvs0TSq0OJjQr/1SYGd/FJXoEjssN4jUOV0qUkyrzBX6KJh3CKB0aNjJpZh0D57eNn6PhHVr599V8vsvGKuUFXrlfot4Iz9b8TKH+w47CToahiSwH9H2rPahGDMZt4qjxuUNLrlrBojOamvGP+SFRqVloqj9C/UDMP3S+Wn6sCcJWvB0jyPyYtAYIcIdqhZxTnfPGW4sXfXV8y/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0yqPztloZmppVt9Hi6ktff4iJeI6Sd5afmyTsEES3P8=;
- b=SFFxMrLSZn+l1aARj0TiDgx2Ma3AazB/yARG5SIc8S51x39Ea/2h6MCqIRPjRgWTBygkBVQcK/ARMiFcdo2YnyXx9Ej5gVvniZZg4iN5C2BbZiMQ+8FctgJVAJWIQrwtvHe8VUOtM6zjWcCfu9bKW4Yl6djqgnRs9juv4iaX1W39qrc26elUFoHk825L8pZ6LEeMxK/Azr2tHFIHkCZ9gQRIKLGVAKyOejLRyVGqzVzYAuxh1jTg5BZ59gQ31X8QYox8TOwfmTaZwhRhanq8Xo0xDfe+tmY4L33+D7FZ8hj04+0Ag/Gx+6Wi7T5oDEhHKoPc8KF5Qcc8sRNozenxFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0yqPztloZmppVt9Hi6ktff4iJeI6Sd5afmyTsEES3P8=;
- b=CR0MHc9uRgHFCGgL4kZKlEfr44L0IMW72Dz5YfXP5BzzXC9uKPPC1ZM4Vh9Tfj7p05BlByU3xtbRGhlRvvfgk3sMBegt8lWNmzYFbgKHkzGLrGrtOpQLNnQflc6+HhLSmL1aGnygc2FWZMTgH31fJfMk/sm79LX7FSf9QgPE8aI=
-Received: from MWHPR02CA0024.namprd02.prod.outlook.com (2603:10b6:300:4b::34)
- by BYAPR02MB5430.namprd02.prod.outlook.com (2603:10b6:a03:a4::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.22; Mon, 27 Jan
- 2020 11:03:14 +0000
-Received: from SN1NAM02FT023.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::204) by MWHPR02CA0024.outlook.office365.com
- (2603:10b6:300:4b::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.22 via Frontend
- Transport; Mon, 27 Jan 2020 11:03:14 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT023.mail.protection.outlook.com (10.152.72.156) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2665.18
- via Frontend Transport; Mon, 27 Jan 2020 11:03:13 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iw2Aj-0000cJ-H5; Mon, 27 Jan 2020 03:03:13 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iw2Ae-0002VD-DQ; Mon, 27 Jan 2020 03:03:08 -0800
-Received: from [172.30.17.107]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1iw2Aa-0002UC-GI; Mon, 27 Jan 2020 03:03:04 -0800
-Subject: Re: [PATCH][next][V2] i2c: xiic: fix indentation issue
-To:     Colin King <colin.king@canonical.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200127102303.44133-1-colin.king@canonical.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <2dd84ab2-a7a3-fdd8-6bd6-07f1b3d5cd00@xilinx.com>
-Date:   Mon, 27 Jan 2020 12:03:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Jan 2020 06:15:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726771AbgA0LPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 06:15:46 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B98C206A2;
+        Mon, 27 Jan 2020 11:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580123274;
+        bh=XtPA8Ig4ryv+n4XTiVr/+miOFcjAr3IBN5e8V49V0oc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oyjsE4Tia2Xnz3WM35PVEk56sRpDCe/euovB/pw+uefePlv5393JZDREcGK5b36Oj
+         0zG68m2ZlSJU21o80OQgWbdzZlBN8L34HkpKrWL3ic1O1TqX+yJbtg6+gV7YfKI/8g
+         b4agbuXpEZQGiSCylixAVF/Xfvith77Aw4v70OJ4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1iw2FE-001arU-EI; Mon, 27 Jan 2020 11:07:52 +0000
 MIME-Version: 1.0
-In-Reply-To: <20200127102303.44133-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(396003)(39850400004)(189003)(199004)(426003)(26005)(186003)(336012)(44832011)(2616005)(36756003)(31696002)(2906002)(70206006)(70586007)(31686004)(478600001)(356004)(81156014)(4326008)(110136005)(8676002)(316002)(81166006)(5660300002)(8936002)(9786002)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5430;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 34c96d88-7001-4ed7-d3f7-08d7a3188156
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5430:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB5430C90234407F056070FC08C60B0@BYAPR02MB5430.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:425;
-X-Forefront-PRVS: 02951C14DC
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: A6mf5Fsl5b0gjZvcCwaI8XRDHtt3IA28RldYB+/d609QkvhXZDFCcBIuJn7s7AT+x1BsuHEDyLf8qtcP3mwHUmWNolxXrTcJlnS+QnGWJtaz76iofuU5g9+9EfXNXVgBGu1z1fh5oKFbmXkLegxOiZ2idFT46DxIXoSOn4SkbmduvmFxZL7cdKs1rPKE44rDgChmRgRK7/0j8fW4GqC5qzmP/LdpVpryRvR1MtK2m1Lp+1kzZlc+oSIQqon6YS8p7B7IEuVJqTrwnYGBOKaPaQwTDuRQ4RZ6WikorPurAv13onkLjy8EliOeCNMj5YygEtz7dWpYmgejVmUehXFjh2OFgGdspFJR6sOp1WfLdY5yMILiRb3zMAakKkM2+ywg0KbHDBEvBo1jKmOJGYiNtMBgKuAgdwkP44wRRgKeAAkq8XgUWkVyNfezW2Ft44eX
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2020 11:03:13.9337
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34c96d88-7001-4ed7-d3f7-08d7a3188156
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5430
+Date:   Mon, 27 Jan 2020 11:07:52 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Alexandru Elisei <alexandru.elisei@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+Subject: Re: [PATCH] KVM: arm64: Treat emulated TVAL TimerValue as a signed
+ 32-bit integer
+In-Reply-To: <20200127103652.2326-1-alexandru.elisei@arm.com>
+References: <20200127103652.2326-1-alexandru.elisei@arm.com>
+Message-ID: <5f633dfb2abe63059d75c0da58c69241@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: alexandru.elisei@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27. 01. 20 11:23, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a statement that is indented one level too deeply, remove
-> the extraneous tab.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
-> V2: fix type in commit message
-> ---
->  drivers/i2c/busses/i2c-xiic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
-> index b17d30c9ab40..90c1c362394d 100644
-> --- a/drivers/i2c/busses/i2c-xiic.c
-> +++ b/drivers/i2c/busses/i2c-xiic.c
-> @@ -261,7 +261,7 @@ static int xiic_clear_rx_fifo(struct xiic_i2c *i2c)
->  		xiic_getreg8(i2c, XIIC_DRR_REG_OFFSET);
->  		if (time_after(jiffies, timeout)) {
->  			dev_err(i2c->dev, "Failed to clear rx fifo\n");
-> -				return -ETIMEDOUT;
-> +			return -ETIMEDOUT;
->  		}
->  	}
->  
-> 
+Hi Alexandru,
 
-As was suggested by Peter you should also add Fixes: <sha1> ("patch
-subject")
+On 2020-01-27 10:36, Alexandru Elisei wrote:
+> According to the ARM ARM, registers CNT{P,V}_TVAL_EL0 have bits [63:32]
+> RES0 [1]. When reading the register, the value is truncated to the 
+> least
+> significant 32 bits [2], and on writes, TimerValue is treated as a 
+> signed
+> 32-bit integer [1, 2].
+> 
+> When the guest behaves correctly and writes 32-bit values, treating 
+> TVAL
+> as an unsigned 64 bit register works as expected. However, things start
+> to break down when the guest writes larger values, because
+> (u64)0x1_ffff_ffff = 8589934591. but (s32)0x1_ffff_ffff = -1, and the
+> former will cause the timer interrupt to be asserted in the future, but
+> the latter will cause it to be asserted now.  Let's treat TVAL as a
+> signed 32-bit register on writes, to match the behaviour described in
+> the architecture, and the behaviour experimentally exhibited by the
+> virtual timer on a non-vhe host.
+> 
+> [1] Arm DDI 0487E.a, section D13.8.18
+> [2] Arm DDI 0487E.a, section D11.2.4
+> 
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+
+Huhuh... Nice catch!
+
+Fixes: 8fa761624871 ("KVM: arm/arm64: arch_timer: Fix CNTP_TVAL 
+calculation")
+
+(how many times are we doing to fix this???)
+
+> ---
+>  include/kvm/arm_arch_timer.h | 2 ++
+>  virt/kvm/arm/arch_timer.c    | 3 ++-
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/kvm/arm_arch_timer.h 
+> b/include/kvm/arm_arch_timer.h
+> index d120e6c323e7..be912176b7a3 100644
+> --- a/include/kvm/arm_arch_timer.h
+> +++ b/include/kvm/arm_arch_timer.h
+> @@ -10,6 +10,8 @@
+>  #include <linux/clocksource.h>
+>  #include <linux/hrtimer.h>
+> 
+> +#define ARCH_TIMER_TVAL_MASK	((1ULL << 32) - 1)
+> +
+>  enum kvm_arch_timers {
+>  	TIMER_PTIMER,
+>  	TIMER_VTIMER,
+> diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
+> index f182b2380345..5d40f17f7024 100644
+> --- a/virt/kvm/arm/arch_timer.c
+> +++ b/virt/kvm/arm/arch_timer.c
+> @@ -805,6 +805,7 @@ static u64 kvm_arm_timer_read(struct kvm_vcpu 
+> *vcpu,
+>  	switch (treg) {
+>  	case TIMER_REG_TVAL:
+>  		val = timer->cnt_cval - kvm_phys_timer_read() + timer->cntvoff;
+> +		val &= ARCH_TIMER_TVAL_MASK;
+
+nit: Do we really need this mask? I'd rather see it written as
+
+                 val = lower_32_bits(val);
+
+
+>  		break;
+> 
+>  	case TIMER_REG_CTL:
+> @@ -850,7 +851,7 @@ static void kvm_arm_timer_write(struct kvm_vcpu 
+> *vcpu,
+>  {
+>  	switch (treg) {
+>  	case TIMER_REG_TVAL:
+> -		timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + val;
+> +		timer->cnt_cval = kvm_phys_timer_read() - timer->cntvoff + (s32)val;
+>  		break;
+> 
+>  	case TIMER_REG_CTL:
+
+Otherwise, looks good to me. If you're OK with the above change, I'll
+take it as a fix.
 
 Thanks,
-Michal
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
