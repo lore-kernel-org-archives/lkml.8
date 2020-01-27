@@ -2,106 +2,120 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CA3C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB4AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848FA20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:42:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oz58F4m2"
+	by mail.kernel.org (Postfix) with ESMTP id ECC6C20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgA0Nmm (ORCPT
+        id S1728241AbgA0NnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:42:42 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44054 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbgA0Nmm (ORCPT
+        Mon, 27 Jan 2020 08:43:01 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62716 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727479AbgA0NnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:42:42 -0500
-Received: by mail-wr1-f65.google.com with SMTP id q10so11340363wrm.11;
-        Mon, 27 Jan 2020 05:42:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y6ki84dpG3p3ueoh8tAmX4ZWvgFXi6ehd6g1X98nIDY=;
-        b=oz58F4m2sfW3y9sCPEbOpOZAefxEjNLwcykf10DEj3+dfzrRVX72hMDNRW1Ei/RE7C
-         ZXA6GXb69ir2cLwgZlV2CL7yZM2Yvye242O1kiiPu2fZx6SZDwWcqA+/7VWBgq3OHS1l
-         FAMOjWQBUwjtefp15OGbKMwhZb/boQ4+612L71nWs2IQyWOgb6dVHJOAuavfrFDzzxYM
-         0VMvqCoOttl/W9Qp/O6KyWLHje9z+SLTm9L2TeKQ64Oy17fHZ+DiUt4Cz6V14vEHmSzL
-         sXaoxloZEUbfXL6/vfCMjIviwSHEe1ndDe6C7ERfDk+qptzSt5MtVz/VO/ReEA2lms19
-         mntw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y6ki84dpG3p3ueoh8tAmX4ZWvgFXi6ehd6g1X98nIDY=;
-        b=WmA25/LDPEdUu1uqyA+Dy6ucSTz3HMVOZrFcA6ebfs0MemPey3YDE/pu3EuUDrZ5xO
-         g15K0wPsxCwWkoDn2vFcgAjdn6EA1LkOk0lbuEzCW3xiLxz3Fw3AtLJ7MY4XbyjoN9xK
-         WMGKHLB4vzqSNQMnHtBJwHkj+jAs5o48MAIXUSZ8A07pvA+Boqir7UhUSIH6FguVINbx
-         o57lvnKmZ35spHVCUgJ26ow2yMoudhDRKMnz55wfaP1ZnNxoYMCX86dkOcYsDhfnlY+f
-         v1zyI8207WrKNDcPtnAHjz2P/kztjaW5XfOf1QRZQ2mwI1NqP1oUzb/FPINGisB55Euz
-         BOig==
-X-Gm-Message-State: APjAAAVEbybSS7v+ZYZvpQhCX5aRK55agO+bPtxs9FDaWsZ+tJmy3UGr
-        jYRuBWe8lrWZ8OWfnCnqC5PafftudgNAfcaEqlE=
-X-Google-Smtp-Source: APXvYqyFtGBbRA+cDOX0+IuYiCJ8AbkYd7rNtVArOO1PApnoVqO65/bL89MorhL629a4I9ncNiZFwEBTT3bDsDBk0CI=
-X-Received: by 2002:a05:6000:11c5:: with SMTP id i5mr21942512wrx.102.1580132560146;
- Mon, 27 Jan 2020 05:42:40 -0800 (PST)
+        Mon, 27 Jan 2020 08:43:00 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RDfrSq003287
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 08:42:59 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrjmtu6w1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 08:42:59 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Mon, 27 Jan 2020 13:42:57 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 27 Jan 2020 13:42:51 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00RDgo5e48038068
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 13:42:50 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 140AFA404D;
+        Mon, 27 Jan 2020 13:42:50 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1AB9BA4053;
+        Mon, 27 Jan 2020 13:42:46 +0000 (GMT)
+Received: from [9.85.84.39] (unknown [9.85.84.39])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jan 2020 13:42:45 +0000 (GMT)
+Subject: Re: [PATCH mk-II 08/17] asm-generic/tlb: Provide
+ MMU_GATHER_TABLE_FREE
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122956.112607298@infradead.org>
+ <20191212093205.GU2827@hirez.programming.kicks-ass.net>
+ <20200126155205.GA19169@roeck-us.net>
+ <20200127081134.GI14914@hirez.programming.kicks-ass.net>
+ <33932bc9-1fca-66ae-8f55-6da2f131c5be@linux.ibm.com>
+ <20200127130503.GG14879@hirez.programming.kicks-ass.net>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Date:   Mon, 27 Jan 2020 19:12:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200108154047.12526-1-andrew.smirnov@gmail.com>
- <20200108154047.12526-8-andrew.smirnov@gmail.com> <VI1PR0402MB3485E327703191780AC68BFE98350@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB3485E327703191780AC68BFE98350@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Mon, 27 Jan 2020 05:42:28 -0800
-Message-ID: <CAHQ1cqEohhpY62dqKpi=-hzWDKJMDB1jr1+wM+6KYDBQr8wV=w@mail.gmail.com>
-Subject: Re: [PATCH v6 7/7] crypto: caam - limit single JD RNG output to
- maximum of 16 bytes
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200127130503.GG14879@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012713-0008-0000-0000-0000034D1997
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012713-0009-0000-0000-00004A6D8F0C
+Message-Id: <523015f1-99d0-3974-8f4a-44f54d4280c2@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=994 suspectscore=0
+ mlxscore=0 adultscore=0 clxscore=1015 impostorscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001270116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 6:10 AM Horia Geanta <horia.geanta@nxp.com> wrote:
->
-> On 1/8/2020 5:42 PM, Andrey Smirnov wrote:
-> > In order to follow recommendation in SP800-90C (section "9.4 The
-> > Oversampling-NRBG Construction") limit the output of "generate" JD
-> > submitted to CAAM. See
-> > https://lore.kernel.org/linux-crypto/VI1PR0402MB3485EF10976A4A69F90E5B0F98580@VI1PR0402MB3485.eurprd04.prod.outlook.com/
-> > for more details.
-> >
-> > This change should make CAAM's hwrng driver good enough to have 999
-> > quality rating.
-> >
-> [...]
-> > @@ -241,6 +241,7 @@ int caam_rng_init(struct device *ctrldev)
-> >       ctx->rng.init    = caam_init;
-> >       ctx->rng.cleanup = caam_cleanup;
-> >       ctx->rng.read    = caam_read;
-> > +     ctx->rng.quality = 999;
-> >
-> AFAICS the maximum value of hwrng.quality is 1024.
->
-> Any reason why it's configured to be lower, now that CAAM RNG-based DRBG
-> is configured to reseed as requested by FIPS spec to behave as a TRNG?
->
+On 1/27/20 6:35 PM, Peter Zijlstra wrote:
+> On Mon, Jan 27, 2020 at 01:43:34PM +0530, Aneesh Kumar K.V wrote:
+> 
+>> I did send a change to fix that. it is to drop !SMP change in the patch
+>>
+>> https://lore.kernel.org/linux-mm/87v9p9mhnr.fsf@linux.ibm.com
+> 
+> Indeed you did. Did those patches land anywhere, or is it all still up
+> in the air? (I was hoping to find those patches in a tree somewhere)
+> 
 
-Only my reading of the old version of corresponding documentation
-which listed this field as being per mil. Will fix in v7.
+Andrew did pick the series. I am not sure whether he got to pick the 
+build fix.
 
-Thanks,
-Andrey Smirnov
+Guenter,
+
+Can you confirm that patch did fix the build issue?
+
+
+-aneesh
+
