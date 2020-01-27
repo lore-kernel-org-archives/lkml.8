@@ -2,128 +2,101 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891E4C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EF8C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F81520702
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343BC21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:10:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F4hAZJLK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CIjLD+pw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgA0IKE (ORCPT
+        id S1728668AbgA0IKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 03:10:04 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:56232 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgA0IKE (ORCPT
+        Mon, 27 Jan 2020 03:10:13 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36198 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA0IKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 03:10:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NSkXKOkLVFSqskr8Fv8C50qKSUgO0Fch8+tEjDsF97E=; b=F4hAZJLK7Fe2reLHo/KcRVnHz
-        0Z8pBkj5nWzXnOz7AKhokwWpIjmIr+RMt6mUxbe1naCa2WJE5MDnXarGvxwFNNinfvMQqbrjEcXjy
-        nLRoVrupuxBlAXhn/0MiqkhQ1G1NiDaj7IwcCKW/0JlURpDfwNnZxwfpMpZ8kRvF1fWhcuOmynjPE
-        NcEFeH37cjRNaUhPuN7GBOmhQ8/sAiPatuige+3tUyGRoLMCG2qg2wESc1KELSf0u8NDu1ZhXylb/
-        kmdqyd7feqDD/2g5BzYWwC9oKl1t30bva3v5s2XRn+NNWzKLVL4yqOoLrqhVS7jVngUj0xo7V+tsq
-        0aqGhlCrw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ivzSk-0004Vq-1F; Mon, 27 Jan 2020 08:09:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 437B2300F4B;
-        Mon, 27 Jan 2020 09:07:54 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 08180203CF5D4; Mon, 27 Jan 2020 09:09:36 +0100 (CET)
-Date:   Mon, 27 Jan 2020 09:09:36 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nick Desaulniers <nick.desaulniers@gmail.com>
-Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] dynamically allocate struct cpumask
-Message-ID: <20200127080935.GH14914@hirez.programming.kicks-ass.net>
-References: <20200127071602.11460-1-nick.desaulniers@gmail.com>
+        Mon, 27 Jan 2020 03:10:13 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R88NjO020434;
+        Mon, 27 Jan 2020 08:10:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=jd96EvBODZ1OmeCFJuFhnzEFmdqOYHBsCDn6ZgiV2sM=;
+ b=CIjLD+pwa9IzEDfXQCAqWpdKiOFqijZCfhU2KNk3fovQVdIwTp+HghTtUvRxrqHKlkpj
+ 57Tl42SK0fVvDfndHCaAV/L6xHDpirawDsUg9dkGWYK6jFoN0o249KbMD4DhZSQGx08z
+ k4wewgfYZjPwsYdgBSe6hLXuP6JZQn6AoTQN/LJMlfGYywFLozwZkaTqwO+gfV7brELi
+ aXiET5/Q2ZYJKEguC8pXqKsJoosPvTAh4ugw1OX/J8Vclg9VhZfFjehVm/1eN+ti3cLV
+ QjA8Tw0yFpA7tv4OXPF4SWci3nhqzdasG1bysc9QedomQreIMB04Y8c+98bGbZzqrOBP SA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2xreaqwkab-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 08:10:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R88gXq069886;
+        Mon, 27 Jan 2020 08:10:04 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2xryu8v17p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 08:10:04 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00R8A2ca014877;
+        Mon, 27 Jan 2020 08:10:02 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jan 2020 00:10:02 -0800
+Date:   Mon, 27 Jan 2020 11:09:53 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>
+Cc:     vireshk@kernel.org, johan@kernel.org, elder@kernel.org,
+        gregkh@linuxfoundation.org, greybus-dev@lists.linaro.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        saurav.girepunje@hotmail.com
+Subject: Re: [PATCH] staging: greybus: bootrom: fix uninitialized variables
+Message-ID: <20200127080953.GQ1847@kadam>
+References: <20200125084403.GA3386@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200127071602.11460-1-nick.desaulniers@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200125084403.GA3386@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001270070
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001270070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 11:16:02PM -0800, Nick Desaulniers wrote:
-> This helps avoid avoid a potentially large stack allocation.
+On Sat, Jan 25, 2020 at 02:14:03PM +0530, Saurav Girepunje wrote:
+> fix uninitialized variables issue found using static code analysis tool
 > 
-> When building with:
-> $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
-> The following warning is observed:
-> arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
-> function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
-> static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
-> vector)
->             ^
-> Debugging with:
-> https://github.com/ClangBuiltLinux/frame-larger-than
-> via:
-> $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
->   kvm_send_ipi_mask_allbutself
-> points to the stack allocated `struct cpumask newmask` in
-> `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
-> potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
-> the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
-> 8192, making a single instance of a `struct cpumask` 1024 B.
+> (error) Uninitialized variable: offset
+> (error) Uninitialized variable: size
 > 
-> Signed-off-by: Nick Desaulniers <nick.desaulniers@gmail.com>
-> ---
->  arch/x86/kernel/kvm.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 32ef1ee733b7..d41c0a0d62a2 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -494,13 +494,15 @@ static void kvm_send_ipi_mask(const struct cpumask *mask, int vector)
->  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
->  {
->  	unsigned int this_cpu = smp_processor_id();
-> -	struct cpumask new_mask;
 
-Right, on stack cpumask is definitely dodgy.
+These are false positives as Johan said.  Don't change the code just to
+make the static analysis tool happy, fix the tools instead.
 
-> +	struct cpumask *new_mask;
->  	const struct cpumask *local_mask;
->  
-> -	cpumask_copy(&new_mask, mask);
-> -	cpumask_clear_cpu(this_cpu, &new_mask);
-> -	local_mask = &new_mask;
-> +	new_mask = kmalloc(sizeof(*new_mask), GFP_KERNEL);
-> +	cpumask_copy(new_mask, mask);
-> +	cpumask_clear_cpu(this_cpu, new_mask);
-> +	local_mask = new_mask;
->  	__send_ipi_mask(local_mask, vector);
-> +	kfree(new_mask);
->  }
+Also the patch doesn't apply.  Read the first paragraph of
+Documentation/process/email-clients.rst and figure out why it's not
+working.
 
-One alternative approach is adding the inverse of cpu_bit_bitmap. I'm
-not entirely sure how often we need the all-but-self mask, but ISTR
-there were other places too.
+regards,
+dan carpenter
+
