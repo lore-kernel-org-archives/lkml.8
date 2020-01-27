@@ -2,159 +2,113 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE77FC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F20BC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E2F20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:23:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZkdUqd2z"
+	by mail.kernel.org (Postfix) with ESMTP id 264EF20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgA0HXI (ORCPT
+        id S1725985AbgA0H0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 02:23:08 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:41586 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgA0HXI (ORCPT
+        Mon, 27 Jan 2020 02:26:22 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:37505 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgA0H0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 02:23:08 -0500
-Received: by mail-vk1-f196.google.com with SMTP id p191so2285725vkf.8
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 23:23:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Zs7ordlPu6oLMie0ztw+ViABr97RTMvxSHDoSvg2y8=;
-        b=ZkdUqd2zKSeWdVR91y36SdzJKYZWn6y3ItuefmZXZQ65FE7TOnAneczRyXuYZ73Q09
-         dxyrhyivxIhtQcR2Niso9FYPdVIMx7MpX3rk2ZMJ0xzAOkFCuRZxaewbU0pVz0EnbFTf
-         RwBf8kQhz4qiuQMkW/EoW11SdohZV+sqIYsjjZXPVt4bwAZ+59aKtKpOT4x+mz3DATbJ
-         l8XSQjy40AFGHpBJmIXEwQ54J73jRsoZi6Gy68//Pw8gcbJwFQ77p8u1E4EGmL7UpgvB
-         JZ/1N0idA75Y+pP1l/5Pl9EJcLI54QRiC4BtLNNHuB7wI92mBOYSLhRXl9HWHp1fHViD
-         6DQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Zs7ordlPu6oLMie0ztw+ViABr97RTMvxSHDoSvg2y8=;
-        b=mC+s9skAFnv7yni5BNYQiPEvFVWVyOz8FL7i6cNISXQt41hMLP10ls9udLCqXlGk6q
-         g8y3FsD7q8/mh/ZC8TMlLkgKB6vljZLdKz5c3gg29pxlf9yXCM7eLVa17alnGxOzd7hT
-         fVAD37x0PLvvrj2td4uIZyWjPrFY7MP2By0OIR4JaHJSXApZrH6Ce+HNsPbUcW6o7JlX
-         7VIliVu2B7jSBsG8Gm8OuiAJ2k+UT1sPOxI7cT8ApHDYOw5t8UMKuutw50kBIu+7LWFs
-         pRL9MsuEcFtpQ4BRbSxO4qcvCQKmoPZX+prbhzRtvKDHzVV2edKmzUGd6VHq7dVJoMj6
-         Fmqg==
-X-Gm-Message-State: APjAAAU7bhKopjpuSgY5KQVjY+tXBw6XbRo84labm5r7Aw2mxVKPlMa+
-        N/pwKqK7dbZ/CkOtKrxpWKYCxJf/kEwNVWVVjSA3Lg==
-X-Google-Smtp-Source: APXvYqz4OQZA/2kIUqEb6B2klRTdDoZkhD2PvmDkLDercb9w5oGLFffYnzmHjIgmSkCuBSvVCAvCAxfvm+k7OKQr2M8=
-X-Received: by 2002:a1f:434b:: with SMTP id q72mr8497371vka.53.1580109787392;
- Sun, 26 Jan 2020 23:23:07 -0800 (PST)
+        Mon, 27 Jan 2020 02:26:21 -0500
+Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MQeIA-1jGO0w1Lni-00NkXH; Mon, 27 Jan 2020 08:26:20 +0100
+Received: by mail-qk1-f178.google.com with SMTP id q15so8681606qke.9;
+        Sun, 26 Jan 2020 23:26:20 -0800 (PST)
+X-Gm-Message-State: APjAAAXo6yGNTX4WiZmZRQfrosrPSVm7SjLJUIwyt/DfqlYhuyX5Yi2a
+        rLBGazeqeZTAdef0YYieKRLfngPgXv4iPkT1fsU=
+X-Google-Smtp-Source: APXvYqxlylkK1tDp0siCP+ozzjLtsjUJ1/pYYXDqAsuxoykoyBiDLDdftjf04CgOzZk2GHrZ8hTORthbFnaJFMo2yc0=
+X-Received: by 2002:a05:620a:12e1:: with SMTP id f1mr14839537qkl.394.1580109979147;
+ Sun, 26 Jan 2020 23:26:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20200126115247.13402-1-mpe@ellerman.id.au>
-In-Reply-To: <20200126115247.13402-1-mpe@ellerman.id.au>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 27 Jan 2020 08:22:29 +0100
-Message-ID: <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
-Subject: Re: [PATCH] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        linuxppc-dev@ozlabs.org
+References: <20200123153341.19947-1-will@kernel.org> <26ad7a8a975c4e06b44a3184d7c86e5f@AcuMS.aculab.com>
+ <20200123171641.GC20126@willie-the-truck> <2bfe2be6da484f15b0d229dd02d16ae6@AcuMS.aculab.com>
+ <CAKwvOdkFGTeVQPm8Z3Y7mQ-=6d5CFxmEJ+hBb8ns2r2H1cb0hQ@mail.gmail.com>
+ <20200123190125.GA2683468@rani.riverdale.lan> <20200126010959.vhq7mg4esoq5w26j@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200126010959.vhq7mg4esoq5w26j@e107158-lin.cambridge.arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 Jan 2020 08:26:03 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2P41JjO8=GTSVL9WVEfjA_M+StH7Ons27SqSNK2JOrHg@mail.gmail.com>
+Message-ID: <CAK8P3a2P41JjO8=GTSVL9WVEfjA_M+StH7Ons27SqSNK2JOrHg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] Rework READ_ONCE() to improve codegen
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        Will Deacon <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:ahfyygVcR59V0LNaGPKYoyNS1BjUiiy8xN3GSibjLksSJclAyZJ
+ LMCHKHudTnjEKO8AmJ3yN3xpfFPamCml9t1e7fwZJXlDSXck4+bPhE4pxH7FE4ls88jd2bk
+ IvfxfNYmjsaIJQVWMIi3bMrcvG/jx0JBQo3CacojQZM8qlCWOQb8gyzZ5K7/NtKJSMppByY
+ vVmEzb6cShDXHeYj87CiA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SckyZFLtMSg=:lyWcXYdhWBXEXYN4cGLYiF
+ lYa2Ta3dgLaUcB2FcogMXdDX5dyefS5hU0nvIpTMIcSzS2LxhEe39zYnv1m/n/LKg1oxoAcPw
+ TmjBXKge/hHBi9uW3B9qmcTx/LNXM8vnKjEtbkgnF9uVj8eNJzc20Rx9RlXUUBuEOHNfCvgiX
+ g9h/aC+4i+Vm4XikHqiX1e5mur8AiQrUtSD7e/A71+PduXc4WYsE+rruYjq7vsqcXUy9dRovv
+ 9TeWGbMKaQ6vQ/X2qRD37qoCtcoFLagLjLhGY2JPOgX9bC56G8ZjC8boJuR5AU620OeLyiRga
+ yOmzyCsli3G7AVQ2mEDzYSoGPxtiREXpH/OksQVkA6lq+Q4dk8uvAeXLU2gW/tE1te6kaURBL
+ MJtmJkJtPbw50Ga9ykrjldj7iQF3LkYF63fAQZYlTkzbAxuB9Kzn7xhyGSvSCGeT5v/N6mpET
+ OD8fja5slfffpcwoO5O6FIt1purlDTKbzpzBnSGzVDtr92huRiEf+sSuT2ekcE85VL2uNfpvh
+ b88SCFTDJRjhb8VS0+IfxOYjSg227GRoo97VJtPk0M3gshSf+onSv0imMvmMNVDPzFj5BymUD
+ fuApRs53wgGuRd0QZKOj3d9O309V8huI8OMOn/qV4u5ONZQW5ty543uv/Cpxig9ch6Mhxv9Uj
+ jJfw/pClXRXPNrYNaSSymqEk+E6dDEfBofD5G0hyViLY9zuDqQSyR6QOreIgwlu8c6yYGAxu0
+ +uT0GVJ7Gwl/xDMUNXRm0P82fsYSQg3Il6Tu0hFGVzGzO1c0k6cTwMEyUPnlIy9QZKiEXxka7
+ lLtD1mj4rB+z99Q00KUbAuO+9jFzNyWon4HkpD9ggCnfH8QUpE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 Jan 2020 at 12:53, Michael Ellerman <mpe@ellerman.id.au> wrote:
+On Sun, Jan 26, 2020 at 2:10 AM Qais Yousef <qais.yousef@arm.com> wrote:
+> On 01/23/20 14:01, Arvind Sankar wrote:
+> > On Thu, Jan 23, 2020 at 10:45:08AM -0800, Nick Desaulniers wrote:
+> > > On Thu, Jan 23, 2020 at 9:32 AM David Laight <David.Laight@aculab.com> wrote:
+> >
+> > Reposting Arnd's link
+> > https://www.spinics.net/lists/linux-kbuild/msg23648.html
 >
-> There's an OF helper called of_dma_is_coherent(), which checks if a
-> device has a "dma-coherent" property to see if the device is coherent
-> for DMA.
->
-> But on some platforms devices are coherent by default, and on some
-> platforms it's not possible to update existing device trees to add the
-> "dma-coherent" property.
->
-> So add a Kconfig symbol to allow arch code to tell
-> of_dma_is_coherent() that devices are coherent by default, regardless
-> of the presence of the property.
->
-> Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
-> when the system has a coherent cache.
->
-> Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
-> Cc: stable@vger.kernel.org # v3.16+
-> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-> Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> This list seems to be x86 centric? I remember when the switch to GCC 4.6
+> happened a couple or more archs had to be dropped because they lacked a newer
+> compiler.
 
-Thanks Michael for helping out fixing and this! The patch looks good to me.
+There are two architectures that already had problems last time:
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+- unicore32 never had any compiler that shipped with sources, only an ancient
+  set of gcc binaries that already had problems building the kernel during the
+  move to gcc-4.6. The maintainer said he'd work on providing support for
+  modern gcc or clang, but I don't think anything came out of that.
 
-Kind regards
-Uffe
+- hexagon had an unmaintained gcc-4.5 port, but internally Qualcomm were
+  already using clang to build their kernels, which should now work with the
+  upstream version. I don't think there are any plans to have a more modern
+  gcc.
 
-> ---
->  arch/powerpc/Kconfig | 1 +
->  drivers/of/Kconfig   | 4 ++++
->  drivers/of/address.c | 6 +++++-
->  3 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 1ec34e16ed65..19f5aa8ac9a3 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -238,6 +238,7 @@ config PPC
->         select NEED_DMA_MAP_STATE               if PPC64 || NOT_COHERENT_CACHE
->         select NEED_SG_DMA_LENGTH
->         select OF
-> +       select OF_DMA_DEFAULT_COHERENT          if !NOT_COHERENT_CACHE
->         select OF_EARLY_FLATTREE
->         select OLD_SIGACTION                    if PPC32
->         select OLD_SIGSUSPEND
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 37c2ccbefecd..d91618641be6 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -103,4 +103,8 @@ config OF_OVERLAY
->  config OF_NUMA
->         bool
->
-> +config OF_DMA_DEFAULT_COHERENT
-> +       # arches should select this if DMA is coherent by default for OF devices
-> +       bool
-> +
->  endif # OF
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 99c1b8058559..e8a39c3ec4d4 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -995,12 +995,16 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->   * @np:        device node
->   *
->   * It returns true if "dma-coherent" property was found
-> - * for this device in DT.
-> + * for this device in the DT, or if DMA is coherent by
-> + * default for OF devices on the current platform.
->   */
->  bool of_dma_is_coherent(struct device_node *np)
->  {
->         struct device_node *node = of_node_get(np);
->
-> +       if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
-> +               return true;
-> +
->         while (node) {
->                 if (of_property_read_bool(node, "dma-coherent")) {
->                         of_node_put(node);
-> --
-> 2.21.1
->
+Everything else works with mainline gcc now, openrisc and csky were the
+last to get added in gcc-9.
+
+Some of the older sub-targets (armv3, s390-g6, powerpcspe) are removed
+in gcc-9, but these have a few more years before we need to worry about
+them.
+
+     Arnd
