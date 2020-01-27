@@ -2,154 +2,184 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D6FC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2388C33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF67B206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893EA206A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:05:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="lSrHYImJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbgA0QEx (ORCPT
+        id S1729800AbgA0QFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:04:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729146AbgA0QEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:04:52 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16894206A2;
-        Mon, 27 Jan 2020 16:04:51 +0000 (UTC)
-Date:   Mon, 27 Jan 2020 11:04:49 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [GIT PULL][PATCH] tracing/kprobes: Have uname use __get_str() in
- print_fmt
-Message-ID: <20200127110449.512c13a1@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Jan 2020 11:05:20 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43877 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729707AbgA0QFU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 11:05:20 -0500
+Received: by mail-wr1-f65.google.com with SMTP id d16so11985936wre.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 08:05:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=m6H46utUXqWdcEAdVv2FVcUX2Nzt6oOZWEwm5mopEtQ=;
+        b=lSrHYImJgrXOI9Xb9HdwFOlIhHOT7WlPCAHlGon94ANIEMufexCuQtRYNTeJQq6hWK
+         s9U7i+AvdS+wc7zSyt5W7VUxd/xD/Dn/aeVhcB2724gCMmkx0x/STt+zS71QDnLPfrO8
+         o0Vqb3iOw8/E7E4x8DYjqJTtTQhCYOLoA5uupr7ew2KNOrlNzkCOQfZe/Nha+VlXwxIB
+         LaN41dV3GyfgAWf2o8hNMTaZOU2oGe7UWOcTgWvgMsih1y7Awd/OM/XhzmyhcKI4pMrv
+         2otBaIHeLbmWPw1yiRKoJUXjjDBk5hLbuLiTDu9palf6il16C854zU9SD9VoMaJTJFjU
+         TImA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m6H46utUXqWdcEAdVv2FVcUX2Nzt6oOZWEwm5mopEtQ=;
+        b=aDTj59YffvdUdunK+E1UROq8Ak1Ls7I1/vOvIzedlPAjcyTZYzYlFJOlDTkG2KV+Au
+         x7M3/toh5cGPxwL69/zKcaXflgNn9i0TW7mogHj+ADhzNDAJRQyYiumku2OdVQus+80z
+         tfhJOV2qH/O7B/PhoNfnHXr+PpYsbOx7xLay75qhGjIoREpUvLylR5QUa8WUcXNHC1ls
+         vxWPhaXyTUVS2ID7Ab1/G7gYng85ut2VfFnhG1WChU+bbhXtdKfDW2RnBogyVeQ3F9xW
+         ceBHmsCMNIHjzLdUc6RHih0xs83/WTGjGK+6q3l22ogB9UY3MiP69TBG0WnKvr5IsWfM
+         y6Ww==
+X-Gm-Message-State: APjAAAX2m1VJnrXvuFdWJWrPYtES9rh5ZqVy0/TypIVpWyKAfokarPJJ
+        lYeupa+dhZMVg8u1siIJUAKq6A==
+X-Google-Smtp-Source: APXvYqwpYQz0VV1m6hgiBAcj+79gFn95NBwTzxj50XN2aw3gaqLikpXVbctrQJK2nyss4LiIc0hpFA==
+X-Received: by 2002:adf:d0c1:: with SMTP id z1mr24177891wrh.371.1580141117057;
+        Mon, 27 Jan 2020 08:05:17 -0800 (PST)
+Received: from tsr-lap-08.nix.tessares.net (hag0-main.tessares.net. [87.98.252.165])
+        by smtp.gmail.com with ESMTPSA id 16sm18938279wmi.0.2020.01.27.08.05.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 08:05:16 -0800 (PST)
+Subject: Re: [PATCH] selftests: settings: tests can be in subsubdirs
+To:     Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mptcp <mptcp@lists.01.org>
+References: <20191022171223.27934-1-matthieu.baerts@tessares.net>
+ <c9ce5016-9e83-67c0-ae22-2d3c46427b25@tessares.net>
+ <201911211018.D6CD68AC5@keescook>
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <602ab319-dcb9-4ac7-b2b8-f7b6072ddc03@tessares.net>
+Date:   Mon, 27 Jan 2020 17:05:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <201911211018.D6CD68AC5@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Shuah, Kees,
 
-Linus,
+On 21/11/2019 19:52, Kees Cook wrote:
+> On Thu, Nov 21, 2019 at 05:32:42PM +0100, Matthieu Baerts wrote:
+>> Hi Shuah,
+>>
+>> First, thank you for maintaining the Kernel Selftest framework!
+>>
+>> On 22/10/2019 19:12, Matthieu Baerts wrote:
+>>> Commit 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second
+>>> timeout per test) adds support for a new per-test-directory "settings"
+>>> file. But this only works for tests not in a sub-subdirectories, e.g.
+>>>
+>>>    - tools/testing/selftests/rtc (rtc) is OK,
+>>>    - tools/testing/selftests/net/mptcp (net/mptcp) is not.
+>>>
+>>> We have to increase the timeout for net/mptcp tests which are not
+>>> upstreamed yet but this fix is valid for other tests if they need to add
+>>> a "settings" file, see the full list with:
+>>>
+>>>     tools/testing/selftests/*/*/**/Makefile
+>>>
+>>> Note that this patch changes the text header message printed at the end
+>>> of the execution but this text is modified only for the tests that are
+>>> in sub-subdirectories, e.g.
+>>>
+>>>     ok 1 selftests: net/mptcp: mptcp_connect.sh
+>>>
+>>> Before we had:
+>>>
+>>>     ok 1 selftests: mptcp: mptcp_connect.sh
+>>>
+>>> But showing the full target name is probably better, just in case a
+>>> subsubdir has the same name as another one in another subdirectory.
+>>>
+>>> Fixes: 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second timeout per test)
+>>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> Sorry to bother you again with this but by chance, did you have a look at
+>> the patch below? :)
+>>
+>> It doesn't only fix an issue with MPTCP, not in the kernel yet. But it also
+>> fixes the issue of taking the right "settings" file (if available) for any
+>> other tests in a sub-directory, e.g.:
+>>
+>>    drivers/dma-buf
+>>    filesystems/binderfs
+>>    net/forwarding
+>>    networking/timestamping
+>>
+>> But I guess all tests in powerpc/* dirs and others.
+> 
+> Thanks for the ping! I missed this patch when you originally sent it.
+> Yes, this make sense to me:
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-[ This is not a merge window pull, I was waiting on a tested-by from
-  the reporter ]
+Kees, Thank you for this review!
 
-Kprobe events added "ustring" to distinguish reading strings
-from kernel space or user space. But the creating of the event format
-file only checks for "string" to display string formats. "ustring" must
-also be handled.
+Shuah, I am sorry to send you this new request. It is just to inform you 
+that the first selftests for MPTCP are now in "net-next" repo, ready for 
+the future Linux 5.6.
+We would then be very happy to see this patch here below for the 
+kselftest framework accepted to avoid timeouts. Locally we apply this 
+patch before running the selftests but we cannot ask everybody running 
+MPTCP' selftests to do the same :)
 
+> As an improvement on this, I wonder if we need to walk all directories
+> between $BASEDIR and $DIR? Actually, let me write this and send it...
 
-Please pull the latest trace-v5.5-rc7 tree, which can be found at:
+Thank you, Kees, for this improvement!
 
+Cheers,
+Matt
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.5-rc7
-
-Tag SHA1: 83993af56b45a4c0b34401ee5bdd96c94180d77d
-Head SHA1: 20279420ae3a8ef4c5d9fedc360a2c37a1dbdf1b
-
-
-Steven Rostedt (VMware) (1):
-      tracing/kprobes: Have uname use __get_str() in print_fmt
-
-----
- kernel/trace/trace_probe.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
----------------------------
-commit 20279420ae3a8ef4c5d9fedc360a2c37a1dbdf1b
-Author: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Date:   Fri Jan 24 10:07:42 2020 -0500
-
-    tracing/kprobes: Have uname use __get_str() in print_fmt
-    
-    Thomas Richter reported:
-    
-    > Test case 66 'Use vfs_getname probe to get syscall args filenames'
-    > is broken on s390, but works on x86. The test case fails with:
-    >
-    >  [root@m35lp76 perf]# perf test -F 66
-    >  66: Use vfs_getname probe to get syscall args filenames
-    >            :Recording open file:
-    >  [ perf record: Woken up 1 times to write data ]
-    >  [ perf record: Captured and wrote 0.004 MB /tmp/__perf_test.perf.data.TCdYj\
-    >        (20 samples) ]
-    >  Looking at perf.data file for vfs_getname records for the file we touched:
-    >   FAILED!
-    >   [root@m35lp76 perf]#
-    
-    The root cause was the print_fmt of the kprobe event that referenced the
-    "ustring"
-    
-    > Setting up the kprobe event using perf command:
-    >
-    >  # ./perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
-    >
-    > generates this format file:
-    >   [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/probe/\
-    >         vfs_getname/format
-    >   name: vfs_getname
-    >   ID: 1172
-    >   format:
-    >     field:unsigned short common_type; offset:0; size:2; signed:0;
-    >     field:unsigned char common_flags; offset:2; size:1; signed:0;
-    >     field:unsigned char common_preempt_count; offset:3; size:1; signed:0;
-    >     field:int common_pid; offset:4; size:4; signed:1;
-    >
-    >     field:unsigned long __probe_ip; offset:8; size:8; signed:0;
-    >     field:__data_loc char[] pathname; offset:16; size:4; signed:1;
-    >
-    >     print fmt: "(%lx) pathname=\"%s\"", REC->__probe_ip, REC->pathname
-    
-    Instead of using "__get_str(pathname)" it referenced it directly.
-    
-    Link: http://lkml.kernel.org/r/20200124100742.4050c15e@gandalf.local.home
-    
-    Cc: stable@vger.kernel.org
-    Fixes: 88903c464321 ("tracing/probe: Add ustring type for user-space string")
-    Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-    Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-    Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-    Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 9ae87be422f2..ab8b6436d53f 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -876,7 +876,8 @@ static int __set_print_fmt(struct trace_probe *tp, char *buf, int len,
- 	for (i = 0; i < tp->nr_args; i++) {
- 		parg = tp->args + i;
- 		if (parg->count) {
--			if (strcmp(parg->type->name, "string") == 0)
-+			if ((strcmp(parg->type->name, "string") == 0) ||
-+			    (strcmp(parg->type->name, "ustring") == 0))
- 				fmt = ", __get_str(%s[%d])";
- 			else
- 				fmt = ", REC->%s[%d]";
-@@ -884,7 +885,8 @@ static int __set_print_fmt(struct trace_probe *tp, char *buf, int len,
- 				pos += snprintf(buf + pos, LEN_OR_ZERO,
- 						fmt, parg->name, j);
- 		} else {
--			if (strcmp(parg->type->name, "string") == 0)
-+			if ((strcmp(parg->type->name, "string") == 0) ||
-+			    (strcmp(parg->type->name, "ustring") == 0))
- 				fmt = ", __get_str(%s)";
- 			else
- 				fmt = ", REC->%s";
+> 
+> -Kees
+> 
+>>
+>> Cheers,
+>> Matt
+>>
+>>> ---
+>>>    tools/testing/selftests/kselftest/runner.sh | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
+>>> index 84de7bc74f2c..0d7a89901ef7 100644
+>>> --- a/tools/testing/selftests/kselftest/runner.sh
+>>> +++ b/tools/testing/selftests/kselftest/runner.sh
+>>> @@ -90,7 +90,7 @@ run_one()
+>>>    run_many()
+>>>    {
+>>>    	echo "TAP version 13"
+>>> -	DIR=$(basename "$PWD")
+>>> +	DIR="${PWD#${BASE_DIR}/}"
+>>>    	test_num=0
+>>>    	total=$(echo "$@" | wc -w)
+>>>    	echo "1..$total"
+>>> -- 
+Matthieu Baerts | R&D Engineer
+matthieu.baerts@tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
