@@ -2,81 +2,83 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF91C35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFD0C35247
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12BA2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77E821569
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580117612;
+	bh=Ef9oXJraHrZcKRv51kyBrh6GiZS62kKnN8mPno2E3vc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XjbKEE6C6mWmuDQMTDrRFrkF5XmQOygNpjLy4W4W2Lu1uwVfEdS81XaoTov2sqRs6
+	 BE2/TXnZGsWXIxjXclBcvGayhgb8EYKwarkhUeLzdp/UHvQIPkV3UEJ4PnLjwRh0UZ
+	 +1u+zEFwzXB4/fInBD3Tfm6iEh3dzRWVRpOXufa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbgA0JbL (ORCPT
+        id S1729664AbgA0Jdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 04:31:11 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:52460 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729506AbgA0JbL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 04:31:11 -0500
-Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id vMX82100m5USYZQ01MX8js; Mon, 27 Jan 2020 10:31:09 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iw0jc-0003G7-KQ; Mon, 27 Jan 2020 10:31:08 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iw0jc-0006ua-Gi; Mon, 27 Jan 2020 10:31:08 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] scripts/find-unused-docs: Fix massive false positives
-Date:   Mon, 27 Jan 2020 10:31:07 +0100
-Message-Id: <20200127093107.26401-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Mon, 27 Jan 2020 04:33:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729575AbgA0Jdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 04:33:31 -0500
+Received: from localhost (unknown [84.241.194.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A53602071E;
+        Mon, 27 Jan 2020 09:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580117611;
+        bh=Ef9oXJraHrZcKRv51kyBrh6GiZS62kKnN8mPno2E3vc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rN7Px3OMO+IPDGSNQ0oOUJHHtSsQVk8+4YQKqKsKRm1XGoyYM6DSR3b0EBCrmhtdr
+         eUiJu4GrMY/Eh79tGYLVE6vP1NseMZwj2TRXNiM5GCncTpVl3phUZFwPTDz3RDhhKx
+         68TCnSfpvoZQxS7bArQdpoMP+VuyulA5Pphg1Q+c=
+Date:   Mon, 27 Jan 2020 10:33:28 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Namjae Jeon <linkinjeon@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        valdis.kletnieks@vt.edu, sj1557.seo@samsung.com, arnd@arndb.de,
+        namjae.jeon@samsung.com, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH v13 00/13] add the latest exfat driver
+Message-ID: <20200127093328.GA413113@kroah.com>
+References: <20200121125727.24260-1-linkinjeon@gmail.com>
+ <20200125213228.GA5518@lst.de>
+ <20200127090409.vvv7sd2uohmliwk5@pali>
+ <20200127092343.GB392535@kroah.com>
+ <20200127092840.gogcrq3pozgfayiy@pali>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200127092840.gogcrq3pozgfayiy@pali>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scripts/find-unused-docs.sh invokes scripts/kernel-doc to find out if a
-source file contains kerneldoc or not.
+On Mon, Jan 27, 2020 at 10:28:40AM +0100, Pali Rohár wrote:
+> On Monday 27 January 2020 10:23:43 Greg KH wrote:
+> > On Mon, Jan 27, 2020 at 10:04:09AM +0100, Pali Rohár wrote:
+> > > On Saturday 25 January 2020 22:32:28 Christoph Hellwig wrote:
+> > > > The RCU changes looks sensible to me:
+> > > > 
+> > > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > > 
+> > > Great! Are there any other issues with this last version?
+> > > 
+> > > If not, Greg would you take this patch series?
+> > 
+> > Me?  I'm not the vfs/fs maintainer.
+> 
+> You took exfat driver (into staging), so I thought that exfat handled by you.
 
-However, as it passes the no longer supported "-text" option to
-scripts/kernel-doc, the latter prints out its help text, causing all
-files to be considered containing kerneldoc.
+I am the maintainer of drivers/staging/*.
 
-Get rid of these false positives by removing the no longer supported
-"-text" option from the scripts/kernel-doc invocation.
-
-Fixes: b05142675310d2ac ("scripts: kernel-doc: get rid of unused output formats")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Triggered by https://lwn.net/Articles/810404/
-
- scripts/find-unused-docs.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/find-unused-docs.sh b/scripts/find-unused-docs.sh
-index 3f46f8977dc4dc88..ee6a50e33aba805d 100755
---- a/scripts/find-unused-docs.sh
-+++ b/scripts/find-unused-docs.sh
-@@ -54,7 +54,7 @@ for file in `find $1 -name '*.c'`; do
- 	if [[ ${FILES_INCLUDED[$file]+_} ]]; then
- 	continue;
- 	fi
--	str=$(scripts/kernel-doc -text -export "$file" 2>/dev/null)
-+	str=$(scripts/kernel-doc -export "$file" 2>/dev/null)
- 	if [[ -n "$str" ]]; then
- 	echo "$file"
- 	fi
--- 
-2.17.1
+scripts/get_maintainer.pl is your friend :)
 
