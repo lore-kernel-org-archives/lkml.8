@@ -2,172 +2,87 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E3BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7D1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5404721739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D57214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580143542;
+	bh=DJ0wb8syXehawTeHzEXtbOF6zwtZlqOz8iTkcLtSie4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YraQEa0qbUB6GIOtmR7ZjgxJipJggutTtekF8dv3rI0Vlsi8lDM8tYtcrYnhSWHVG
+	 uOeSQU6gL3AB0sfcunh+P+KGj6+5WtzvATBq4m3Kqogcsgd9gwknqxWbhE8T89mRG8
+	 xc9I2CFJkasv//BXehWKODXxR0HFek9hlsgOtSkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgA0Qnf (ORCPT
+        id S1726036AbgA0Qpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:43:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40684 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgA0QnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:43:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 94B9FB146;
-        Mon, 27 Jan 2020 16:43:19 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Gregory Farnum <gfarnum@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [RFC PATCH 2/3] ceph: parallelize all copy-from requests in copy_file_range
-Date:   Mon, 27 Jan 2020 16:43:20 +0000
-Message-Id: <20200127164321.17468-3-lhenriques@suse.com>
-In-Reply-To: <20200127164321.17468-1-lhenriques@suse.com>
-References: <20200127164321.17468-1-lhenriques@suse.com>
+        Mon, 27 Jan 2020 11:45:41 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37092 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0Qpl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 11:45:41 -0500
+Received: by mail-oi1-f196.google.com with SMTP id z64so7282015oia.4;
+        Mon, 27 Jan 2020 08:45:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qjocpJAxA81IVt1bUmufDITg+GzjDlPdLwgQfGnaP7c=;
+        b=l2NrnwXB9Sw+uhjIEGB5+rkj9YDeI+zCBE30oDBsfXoF7tNAUmRqcoJ38G7kpqalgp
+         hIeyRG/A0OmH4Owo/fkk8qGZh9pT+8XzZ8ea3+nREuNj+RGRPts9jp0ALG3G4EIA6IYc
+         L3Up3fuGeE2g4diTBZJndqvkRVdjdgOMIRDXznWoz5QrOPzA/3X4H+yrrpN0sk9WmcZr
+         7gDXrWEJjGFO7E15P7uyIRYK2d8PKKARlO13U/J4OsQdDdAG7ngKnwE2YZvOaE53vD5S
+         RDXXlXTxjl6xm0OIWuwllBH1umKla/uazXDX0449gVgkEQYD50b6lDvmoNn+6KL6fYka
+         nzPA==
+X-Gm-Message-State: APjAAAWvipP81ViXNiHKl+3zR51ZlJTVwFlIQ8/7JBuAtycPtgv486sR
+        7FTxfPhtABdP6PDrnUifDQ==
+X-Google-Smtp-Source: APXvYqwz9akG8oXLqrPsCNC1PhlGDchvLiGOlcKR5KH6Pud9QkCqtorHesxJwSnXfGprXw/Lb4yibQ==
+X-Received: by 2002:a54:4e8d:: with SMTP id c13mr7972010oiy.27.1580143540313;
+        Mon, 27 Jan 2020 08:45:40 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n27sm2316807oie.18.2020.01.27.08.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 08:45:39 -0800 (PST)
+Received: (nullmailer pid 32076 invoked by uid 1000);
+        Mon, 27 Jan 2020 16:45:38 -0000
+Date:   Mon, 27 Jan 2020 10:45:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yuti Amonkar <yamonkar@cadence.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, mark.rutland@arm.com, maxime@cerno.tech,
+        jsarha@ti.com, tomi.valkeinen@ti.com, praneeth@ti.com,
+        mparab@cadence.com, sjakhade@cadence.com
+Subject: Re: [PATCH v3 13/14] dt-bindings: phy: phy-cadence-torrent: Add
+ subnode bindings.
+Message-ID: <20200127164538.GB7662@bogus>
+References: <1579689918-7181-1-git-send-email-yamonkar@cadence.com>
+ <1579689918-7181-14-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579689918-7181-14-git-send-email-yamonkar@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
-operations, waiting for each request to complete before sending the next
-one.  This patch modifies copy_file_range so that all the 'copy-from'
-operations are sent in bulk and waits for its completion at the end.  This
-will allow significant speed-ups, specially when sending requests for
-different target OSDs.
+On Wed, Jan 22, 2020 at 11:45:17AM +0100, Yuti Amonkar wrote:
+> From: Swapnil Jakhade <sjakhade@cadence.com>
+> 
+> Add sub-node bindings for each group of PHY lanes based on PHY
+> type. Only PHY_TYPE_DP is supported currently. Each sub-node
+> includes properties such as master lane number, link reset, phy
+> type, number of lanes etc.
+> 
+> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
----
- fs/ceph/file.c                  | 38 +++++++++++++++++++++++++++++++--
- include/linux/ceph/osd_client.h |  2 ++
- net/ceph/osd_client.c           |  1 +
- 3 files changed, 39 insertions(+), 2 deletions(-)
-
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 1e6cdf2dfe90..5d8f0ba11719 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1931,6 +1931,28 @@ static int is_file_size_ok(struct inode *src_inode, struct inode *dst_inode,
- 	return 0;
- }
- 
-+static int wait_copy_from_reqs(struct list_head *osd_reqs)
-+{
-+	struct ceph_osd_request *req;
-+	int ret = 0, err;
-+
-+	while (!list_empty(osd_reqs)) {
-+		req = list_first_entry(osd_reqs,
-+				       struct ceph_osd_request,
-+				       r_copy_item);
-+		list_del_init(&req->r_copy_item);
-+		err = ceph_osdc_wait_request(req->r_osdc, req);
-+		if (err) {
-+			if (!ret)
-+				ret = err;
-+			dout("copy request failed (err=%d)\n", err);
-+		}
-+		ceph_osdc_put_request(req);
-+	}
-+
-+	return ret;
-+}
-+
- static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 				      struct file *dst_file, loff_t dst_off,
- 				      size_t len, unsigned int flags)
-@@ -1943,12 +1965,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
- 	struct ceph_object_locator src_oloc, dst_oloc;
- 	struct ceph_object_id src_oid, dst_oid;
-+	struct ceph_osd_request *req;
- 	loff_t endoff = 0, size;
- 	ssize_t ret = -EIO;
- 	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
- 	u32 src_objlen, dst_objlen, object_size;
- 	int src_got = 0, dst_got = 0, err, dirty;
- 	bool do_final_copy = false;
-+	LIST_HEAD(osd_reqs);
- 
- 	if (src_inode->i_sb != dst_inode->i_sb) {
- 		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-@@ -2097,7 +2121,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 		ceph_oid_printf(&dst_oid, "%llx.%08llx",
- 				dst_ci->i_vino.ino, dst_objnum);
- 		/* Do an object remote copy */
--		err = ceph_osdc_copy_from(
-+		req = ceph_osdc_copy_from_nowait(
- 			&src_fsc->client->osdc,
- 			src_ci->i_vino.snap, 0,
- 			&src_oid, &src_oloc,
-@@ -2108,7 +2132,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
- 			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
- 			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
--		if (err) {
-+		if (IS_ERR(req)) {
-+			err = PTR_ERR(req);
- 			if (err == -EOPNOTSUPP) {
- 				src_fsc->have_copy_from2 = false;
- 				pr_notice("OSDs don't support 'copy-from2'; "
-@@ -2117,14 +2142,23 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 			dout("ceph_osdc_copy_from returned %d\n", err);
- 			if (!ret)
- 				ret = err;
-+			/* wait for all queued requests */
-+			wait_copy_from_reqs(&osd_reqs);
- 			goto out_caps;
- 		}
-+		list_add(&req->r_copy_item, &osd_reqs);
- 		len -= object_size;
- 		src_off += object_size;
- 		dst_off += object_size;
- 		ret += object_size;
- 	}
- 
-+	err = wait_copy_from_reqs(&osd_reqs);
-+	if (err) {
-+		if (!ret)
-+			ret = err;
-+		goto out_caps;
-+	}
- 	if (len)
- 		/* We still need one final local copy */
- 		do_final_copy = true;
-diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-index 7916a178d137..2b4a14bc6154 100644
---- a/include/linux/ceph/osd_client.h
-+++ b/include/linux/ceph/osd_client.h
-@@ -210,6 +210,8 @@ struct ceph_osd_request {
- 	u64 r_data_offset;                    /* ditto */
- 	bool r_linger;                        /* don't resend on failure */
- 
-+	struct list_head r_copy_item;         /* used for copy-from operations */
-+
- 	/* internal */
- 	unsigned long r_stamp;                /* jiffies, send or check time */
- 	unsigned long r_start_stamp;          /* jiffies */
-diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-index 7f984532f37c..16f38c3d606e 100644
---- a/net/ceph/osd_client.c
-+++ b/net/ceph/osd_client.c
-@@ -531,6 +531,7 @@ static void request_init(struct ceph_osd_request *req)
- 	RB_CLEAR_NODE(&req->r_node);
- 	RB_CLEAR_NODE(&req->r_mc_node);
- 	INIT_LIST_HEAD(&req->r_private_item);
-+	INIT_LIST_HEAD(&req->r_copy_item);
- 
- 	target_init(&req->r_t);
- }
+Also, if you send patches from another author, your S-o-b should also be 
+present.
