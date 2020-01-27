@@ -2,116 +2,126 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FB1C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2EEC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A38D2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A615D20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IsJnbR37"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="gOVL8mR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgA0IEl (ORCPT
+        id S1728238AbgA0IIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 03:04:41 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:56192 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgA0IEl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 03:04:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sZi2zm/JG5duSVHmWzKHgCFXi+/oFyOvHLu50859iFY=; b=IsJnbR37rrQBmfGapoKQzAs8B
-        lP8fZMtd+MpCUXtcjfgJ4WsqTrU8aPK190wIBC+PjaA0RUdmozBdJaB+gtKyneZVYJEUeaJS5I5oJ
-        2la0fN9AtW/MYO8DTP+ZScgFCeEflGf3yYV+fM0KPEX7oRtWrkOBnK0Br7ID5RiJtAZ/6IsSFXorv
-        BzIstbZUTvymqYxbvD6yp5xqs5Xk84Z9yvKe+XW8qVlIXZQff5VzwmqZw1CHyDNKDHX6J6BZDmKxi
-        m/ZAtGDsCEcaRqwu4p7HBWIX56ywDtwQEoR+vD1gzsLI8BYCOD44ywF7KuAViVkoFlRuDguW/lvom
-        7786r97fA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ivzNc-0004Qx-Or; Mon, 27 Jan 2020 08:04:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6FF3A300F4B;
-        Mon, 27 Jan 2020 09:02:37 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 41862203CF5D4; Mon, 27 Jan 2020 09:04:19 +0100 (CET)
-Date:   Mon, 27 Jan 2020 09:04:19 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v15] x86/split_lock: Enable split lock detection by kernel
-Message-ID: <20200127080419.GG14914@hirez.programming.kicks-ass.net>
-References: <20200122224245.GA2331824@rani.riverdale.lan>
- <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
- <20200123004507.GA2403906@rani.riverdale.lan>
- <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com>
- <20200123044514.GA2453000@rani.riverdale.lan>
- <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
- <87h80kmta4.fsf@nanos.tec.linutronix.de>
- <20200125024727.GA32483@agluck-desk2.amr.corp.intel.com>
- <20200125212524.GA538225@rani.riverdale.lan>
- <20200125215003.GB17914@agluck-desk2.amr.corp.intel.com>
+        Mon, 27 Jan 2020 03:08:53 -0500
+Received: from mail-db8eur05on2058.outbound.protection.outlook.com ([40.107.20.58]:35200
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725955AbgA0IIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 03:08:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b68im0XjNDExwb3sfmppoZ391ArpUxWV48yO/xCQzxGjG3XKzLachKQyR1CIhCE6WlvYeYjWI5mz/imHfJ1s9fX7sqQ8AjyUIw5tIEyzzydibu3LuPgFP7PC31pcYkMpxp+7X8u74Ao8cF1swy0V7AM3lCv10WqaEVNG0BtnMQN6GitFo9jFFi24+LAuAESSarjKqGQUWT0UO9j+8gndgo5Frq6NFjpUpDVcui4jyhE5niPmQfkzy0308GNXY7j5TVhIAwFQIbtO4PsYGYTAP2heFN+Dj+WqSiktutZ7gc3CMptIiGzNhddD/YiTNhPE/yNwPCfKJwO6nmoIBOwByQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VRimNDtcrqpAoob8H+ybJK2CtM2WDSMt9Sgk/XLq0Rc=;
+ b=Nax1i9luUEhrCPS6RwGDb/F9QSr6Qkf/Mr5+9CwXOQj/SM3qBNCIUfzcdh8zqGuOWSNueqWsSsTV3zguFs7sXovsN5qmMj7BakBl8a5hersjWKL+BtUgOeyn/0pvYMcyqT7sd2Vm5BbKNfEq8K0WOS6Ppudf6BQQ9gavqhGUyR5abrqq884GBQkzmvYOsIxmMeFsEd7/BqW5B52VnNWY/rdluPvikORs75sVI4u9qas5RSLeggslXwTxUc/4WJ5V+umTepw+av7y1f7bhtu574xelbZQvNyD6MuIh5gff7kMain+AwISzG/NEC0TyRzX5JLd2NNXklzv1qh2BTyQ9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VRimNDtcrqpAoob8H+ybJK2CtM2WDSMt9Sgk/XLq0Rc=;
+ b=gOVL8mR226InZ57Ijfdt4LJmarU8DZNeCEZhjRjT2b8LMsVnk6i1qCqn94V645/+XOBDQdsrehM4/JjHrplRhoGesV5+c0bZzQdm9YqBnxjEZs6DR3u7DPuVdhS3v5zSpI4Sf46l6MdxxNPwvA70CtoMB0wPcXzFgpMtPxev9Pw=
+Received: from AM6PR05MB5460.eurprd05.prod.outlook.com (20.177.189.76) by
+ AM6PR05MB6167.eurprd05.prod.outlook.com (20.178.94.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.20; Mon, 27 Jan 2020 08:08:48 +0000
+Received: from AM6PR05MB5460.eurprd05.prod.outlook.com
+ ([fe80::c5ae:717a:f178:c829]) by AM6PR05MB5460.eurprd05.prod.outlook.com
+ ([fe80::c5ae:717a:f178:c829%4]) with mapi id 15.20.2665.025; Mon, 27 Jan 2020
+ 08:08:48 +0000
+Received: from [10.80.4.9] (193.47.165.251) by AM3PR05CA0145.eurprd05.prod.outlook.com (2603:10a6:207:3::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend Transport; Mon, 27 Jan 2020 08:08:47 +0000
+From:   Boris Pismenny <borisp@mellanox.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH] net/mlx5: Remove a useless 'drain_workqueue()' call in
+ 'mlx5e_ipsec_cleanup()'
+Thread-Topic: [PATCH] net/mlx5: Remove a useless 'drain_workqueue()' call in
+ 'mlx5e_ipsec_cleanup()'
+Thread-Index: AQHV1HE08SQb1JAKjECDsRl72U4cTqf+KRuA
+Date:   Mon, 27 Jan 2020 08:08:48 +0000
+Message-ID: <f9b066c7-e59a-9106-da57-a7c0ffc36d9b@mellanox.com>
+References: <20200126175104.17948-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20200126175104.17948-1-christophe.jaillet@wanadoo.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM3PR05CA0145.eurprd05.prod.outlook.com
+ (2603:10a6:207:3::23) To AM6PR05MB5460.eurprd05.prod.outlook.com
+ (2603:10a6:20b:36::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=borisp@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.47.165.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 60ee128f-c99c-423f-a08d-08d7a3002348
+x-ms-traffictypediagnostic: AM6PR05MB6167:|AM6PR05MB6167:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR05MB61675BF1B61EEB1F3EB1A230B00B0@AM6PR05MB6167.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:222;
+x-forefront-prvs: 02951C14DC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(136003)(396003)(376002)(39860400002)(199004)(189003)(6486002)(956004)(5660300002)(4744005)(16576012)(4326008)(2616005)(316002)(8936002)(31696002)(66476007)(66556008)(66446008)(66946007)(64756008)(31686004)(186003)(52116002)(54906003)(53546011)(2906002)(478600001)(110136005)(81166006)(71200400001)(81156014)(36756003)(16526019)(26005)(8676002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB6167;H:AM6PR05MB5460.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PK/IOnhVfdhwBcs1xxHf/c8OglTbwkV+6fS2OddkVWYRG8JEHc0x1lv/EIjA3txKbtLfGIka8N+15vGlEWtuNzlhC32IPBCYOl24QDzjE1YPw/BfiVU3AnmxYqetSpyotmQJr/+RjleFudkMvH4aSz2w7Ega3Xu3ZObhel/nTPJeYRPR39IcbNQDxp0/ZVyKZhJ+M/MFcjAZTgH0T0V+DO4+J0akVoM0azJLDGRFC2IEy+obcVcR+Qansqzq9jgfIiMiYaqxaxXkj35odQVZRrc5qE7BYC+iWznuA4nMyVuUMYmW2iHGP7Kwi7/9YMXLDOOeyoNa4FYb9YSbwRA3cpQGGtGfiAgU2LuWyzp5cFHC+F0dKB+TKSiuq5QzCA+f9kxZT25RnVV2bOJNSAm629M4H4UZuDrdfe7k/R/A5Dbgizpl9Ous4MaCWJ7DCk+9
+x-ms-exchange-antispam-messagedata: whwvN6CLSTW8pnTAurC5jQpTZuGXCSQX/YvddMLOCNyEwaUtsaQODAv1e4S77EbZdlHwaiKxC4g3UleUh/ZgmomLbCDoSEwWYvFbTC1J+YtjvuDQQK5AWWW90K3v0ew5JDgMhiup17NdIsYeDjEuKA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0C6E3EBCF9707E4294ED0A0030D613C7@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200125215003.GB17914@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60ee128f-c99c-423f-a08d-08d7a3002348
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2020 08:08:48.5583
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XytIj7c7dUatZehNxsSre/F2MODLShDZNAlepotNrZFaTSxBAljiYh2JWmE8RokDcfJcGZYWBLB5eX4lQ20gjQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 01:50:03PM -0800, Luck, Tony wrote:
-> On Sat, Jan 25, 2020 at 04:25:25PM -0500, Arvind Sankar wrote:
-> > On Fri, Jan 24, 2020 at 06:47:27PM -0800, Luck, Tony wrote:
-> > > I did find something with a new test. Applications that hit a
-> > > split lock warn as expected. But if they sleep before they hit
-> > > a new split lock, we get another warning. This is may be because
-> > > I messed up when fixing a PeterZ typo in the untested patch.
-> > > But I think there may have been bigger problems.
-> > > 
-> > > Context switch in V14 code did: 
-> > > 
-> > >        if (tifp & _TIF_SLD)
-> > >                switch_to_sld(prev_p);
-> > > 
-> > > void switch_to_sld(struct task_struct *prev)
-> > > {
-> > >        __sld_msr_set(true);
-> > >        clear_tsk_thread_flag(prev, TIF_SLD);
-> > > }
-> > > 
-> > > Which re-enables split lock checking for the next process to run. But
-> > > mysteriously clears the TIF_SLD bit on the previous task.
-> > 
-> > Did Peter mean to disable it only for the current timeslice and
-> > re-enable it for the next time its scheduled?
-> 
-> He's seen and commented on this thread since I made this comment. So
-
-Yeah, I sorta don't care either way :-)
-
-> I'll assume not.  Things get really noisy on the console (even with
-> the rate limit) if split lock detection is re-enabled after a context
-> switch (my new test highlighted this!)
-
-Have you found any actual bad software ? The only way I could trigger
-was by explicitly writing a program to tickle it.
+DQpPbiAxLzI2LzIwMjAgNzo1MSBQTSwgQ2hyaXN0b3BoZSBKQUlMTEVUIHdyb3RlOg0KPiAnZGVz
+dHJveV93b3JrcXVldWUoKScgYWxyZWFkeSBjYWxscyAnZHJhaW5fd29ya3F1ZXVlKCknLCB0aGVy
+ZSBpcyBubyBuZWVkDQo+IHRvIGNhbGwgaXQgZXhwbGljaXRseS4NCj4NCj4gU2lnbmVkLW9mZi1i
+eTogQ2hyaXN0b3BoZSBKQUlMTEVUIDxjaHJpc3RvcGhlLmphaWxsZXRAd2FuYWRvby5mcj4NCj4g
+LS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZW5fYWNjZWwv
+aXBzZWMuYyB8IDEgLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgZGVsZXRpb24oLSkNCj4NCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lbl9hY2Nl
+bC9pcHNlYy5jIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VuX2Fj
+Y2VsL2lwc2VjLmMNCj4gaW5kZXggY2Y1OGM5NjM3OTA0Li4yOTYyNmM2YzljMjUgMTAwNjQ0DQo+
+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lbl9hY2NlbC9p
+cHNlYy5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9l
+bl9hY2NlbC9pcHNlYy5jDQo+IEBAIC00MzMsNyArNDMzLDYgQEAgdm9pZCBtbHg1ZV9pcHNlY19j
+bGVhbnVwKHN0cnVjdCBtbHg1ZV9wcml2ICpwcml2KQ0KPiAgCWlmICghaXBzZWMpDQo+ICAJCXJl
+dHVybjsNCj4gIA0KPiAtCWRyYWluX3dvcmtxdWV1ZShpcHNlYy0+d3EpOw0KPiAgCWRlc3Ryb3lf
+d29ya3F1ZXVlKGlwc2VjLT53cSk7DQo+ICANCj4gIAlpZGFfZGVzdHJveSgmaXBzZWMtPmhhbGxv
+Yyk7DQpMR1RNDQo=
