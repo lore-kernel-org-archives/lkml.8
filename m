@@ -2,113 +2,98 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F20BC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662E6C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 264EF20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266C720702
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:29:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5o84jaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgA0H0W (ORCPT
+        id S1725938AbgA0H3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 02:26:22 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:37505 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgA0H0V (ORCPT
+        Mon, 27 Jan 2020 02:29:38 -0500
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:40912 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgA0H3h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 02:26:21 -0500
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MQeIA-1jGO0w1Lni-00NkXH; Mon, 27 Jan 2020 08:26:20 +0100
-Received: by mail-qk1-f178.google.com with SMTP id q15so8681606qke.9;
-        Sun, 26 Jan 2020 23:26:20 -0800 (PST)
-X-Gm-Message-State: APjAAAXo6yGNTX4WiZmZRQfrosrPSVm7SjLJUIwyt/DfqlYhuyX5Yi2a
-        rLBGazeqeZTAdef0YYieKRLfngPgXv4iPkT1fsU=
-X-Google-Smtp-Source: APXvYqxlylkK1tDp0siCP+ozzjLtsjUJ1/pYYXDqAsuxoykoyBiDLDdftjf04CgOzZk2GHrZ8hTORthbFnaJFMo2yc0=
-X-Received: by 2002:a05:620a:12e1:: with SMTP id f1mr14839537qkl.394.1580109979147;
- Sun, 26 Jan 2020 23:26:19 -0800 (PST)
+        Mon, 27 Jan 2020 02:29:37 -0500
+Received: by mail-ot1-f54.google.com with SMTP id i6so3581809otr.7
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 23:29:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NfMrwB1dkIx18kXQujsnQe+a/E9cf+lBLu1cGJqqNxY=;
+        b=A5o84jaz9pUdpt9W1GrwC+W/wsSbs8JVD8SXyzhWRKoxPDmYfEOJfXzJ1AFUzlub5E
+         b6OseiA4BtqGKXurOGa/6GrPFjRdvI6hrON6ku9E72R9AI3tHnw4P5Xv+lkDJhegOtkm
+         MSOZLqsXL//7XGAR1At5ix/PVsmYy1z2nsswZw5BD3/hGf7tppj6ts8FOX+LLHY5c7B5
+         wd/PUcnEqkjel+4PuIW30WEimfAB/fIHFDTtdEs3R5rR2gVZNbjQ5Jgynh9YwE00zoxz
+         9JlkfSMS/6VGVUMt81Aq6Blr/icElwPUrH/oOd9vLdF/nc8kYH3OL6bOJzc+Vj/NDvF4
+         316A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NfMrwB1dkIx18kXQujsnQe+a/E9cf+lBLu1cGJqqNxY=;
+        b=g4My3erx+FtP4fGwczpIpzHPfWI5y5rrPVh+ah2tr2aHizdi56qC3VMlJD4dDag3Z1
+         QV5IUptghiYPtzaGznmYpQ9dWa6Fh0TZ/blzsotN3V4X0j7s7rLCaF1rcA+zCs//QZ4b
+         ZfXtoX8VIioKXdyn8wyrv0vd2vD6XGZA8oD5ixp6ACLxwm3AYnayWWAXaOSFc+JxKgJ3
+         E9eL97UfbXX7sFZe00Bx4zYB0J2Mle8g9fsRZu5IqVPyTkueoFk7By2O2rNnDryNhwKY
+         3BmdK7QRLWy3uvwmeqvgEPFY6Ug09kB+wtb1yFy0D/3H/4s+C2AFxKf2orSLzgkIiIap
+         osgg==
+X-Gm-Message-State: APjAAAVyy7x8NG5EY77To2jLjLk1FGS620fGEoYLCCHyoLlgdRfP1fmy
+        4R5Gq1TaSbXJpHheCKwhrWuwb5130x3sqtcpIWqBH7Uc
+X-Google-Smtp-Source: APXvYqy1duEJsYsg2iN0Tu7wdJs60Lnfxv9aLCAzH7SwQE/LjloeQhS+pjVsujmpBNnMSwAJWJQggIQ0JYj2oJei3ts=
+X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr11483452oth.145.1580110176778;
+ Sun, 26 Jan 2020 23:29:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20200123153341.19947-1-will@kernel.org> <26ad7a8a975c4e06b44a3184d7c86e5f@AcuMS.aculab.com>
- <20200123171641.GC20126@willie-the-truck> <2bfe2be6da484f15b0d229dd02d16ae6@AcuMS.aculab.com>
- <CAKwvOdkFGTeVQPm8Z3Y7mQ-=6d5CFxmEJ+hBb8ns2r2H1cb0hQ@mail.gmail.com>
- <20200123190125.GA2683468@rani.riverdale.lan> <20200126010959.vhq7mg4esoq5w26j@e107158-lin.cambridge.arm.com>
-In-Reply-To: <20200126010959.vhq7mg4esoq5w26j@e107158-lin.cambridge.arm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jan 2020 08:26:03 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2P41JjO8=GTSVL9WVEfjA_M+StH7Ons27SqSNK2JOrHg@mail.gmail.com>
-Message-ID: <CAK8P3a2P41JjO8=GTSVL9WVEfjA_M+StH7Ons27SqSNK2JOrHg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/10] Rework READ_ONCE() to improve codegen
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        David Laight <David.Laight@aculab.com>,
-        Will Deacon <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
+References: <20200127064007.GA12713@ogabbay-VM> <20200127071312.GB279449@kroah.com>
+In-Reply-To: <20200127071312.GB279449@kroah.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Mon, 27 Jan 2020 09:29:10 +0200
+Message-ID: <CAFCwf110FGemXFKgb1AyhA1ShC2dQdb1seeQF-COO=M0OMz97A@mail.gmail.com>
+Subject: Re: [git pull] habanalabs pull request for kernel 5.6
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ahfyygVcR59V0LNaGPKYoyNS1BjUiiy8xN3GSibjLksSJclAyZJ
- LMCHKHudTnjEKO8AmJ3yN3xpfFPamCml9t1e7fwZJXlDSXck4+bPhE4pxH7FE4ls88jd2bk
- IvfxfNYmjsaIJQVWMIi3bMrcvG/jx0JBQo3CacojQZM8qlCWOQb8gyzZ5K7/NtKJSMppByY
- vVmEzb6cShDXHeYj87CiA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SckyZFLtMSg=:lyWcXYdhWBXEXYN4cGLYiF
- lYa2Ta3dgLaUcB2FcogMXdDX5dyefS5hU0nvIpTMIcSzS2LxhEe39zYnv1m/n/LKg1oxoAcPw
- TmjBXKge/hHBi9uW3B9qmcTx/LNXM8vnKjEtbkgnF9uVj8eNJzc20Rx9RlXUUBuEOHNfCvgiX
- g9h/aC+4i+Vm4XikHqiX1e5mur8AiQrUtSD7e/A71+PduXc4WYsE+rruYjq7vsqcXUy9dRovv
- 9TeWGbMKaQ6vQ/X2qRD37qoCtcoFLagLjLhGY2JPOgX9bC56G8ZjC8boJuR5AU620OeLyiRga
- yOmzyCsli3G7AVQ2mEDzYSoGPxtiREXpH/OksQVkA6lq+Q4dk8uvAeXLU2gW/tE1te6kaURBL
- MJtmJkJtPbw50Ga9ykrjldj7iQF3LkYF63fAQZYlTkzbAxuB9Kzn7xhyGSvSCGeT5v/N6mpET
- OD8fja5slfffpcwoO5O6FIt1purlDTKbzpzBnSGzVDtr92huRiEf+sSuT2ekcE85VL2uNfpvh
- b88SCFTDJRjhb8VS0+IfxOYjSg227GRoo97VJtPk0M3gshSf+onSv0imMvmMNVDPzFj5BymUD
- fuApRs53wgGuRd0QZKOj3d9O309V8huI8OMOn/qV4u5ONZQW5ty543uv/Cpxig9ch6Mhxv9Uj
- jJfw/pClXRXPNrYNaSSymqEk+E6dDEfBofD5G0hyViLY9zuDqQSyR6QOreIgwlu8c6yYGAxu0
- +uT0GVJ7Gwl/xDMUNXRm0P82fsYSQg3Il6Tu0hFGVzGzO1c0k6cTwMEyUPnlIy9QZKiEXxka7
- lLtD1mj4rB+z99Q00KUbAuO+9jFzNyWon4HkpD9ggCnfH8QUpE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 2:10 AM Qais Yousef <qais.yousef@arm.com> wrote:
-> On 01/23/20 14:01, Arvind Sankar wrote:
-> > On Thu, Jan 23, 2020 at 10:45:08AM -0800, Nick Desaulniers wrote:
-> > > On Thu, Jan 23, 2020 at 9:32 AM David Laight <David.Laight@aculab.com> wrote:
-> >
-> > Reposting Arnd's link
-> > https://www.spinics.net/lists/linux-kbuild/msg23648.html
+On Mon, Jan 27, 2020 at 9:13 AM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> This list seems to be x86 centric? I remember when the switch to GCC 4.6
-> happened a couple or more archs had to be dropped because they lacked a newer
-> compiler.
+> On Mon, Jan 27, 2020 at 08:40:07AM +0200, Oded Gabbay wrote:
+> > Hello Greg,
+> >
+> > This is the pull request for habanalabs driver for kernel 5.6.
+>
+> It's too late for this, sorry :(
+>
+> Code needed to be in my tree usually for a week before the merge window
+> opens before I can add it to that merge window.  This got no testing in
+> linux-next or anywhere else, so I can't take it.
+>
+> Feel free to split it up into bug fixes for 5.6-final and new stuff for
+> 5.7-rc1 and I will be glad to take those after 5.6-rc1 is out.
 
-There are two architectures that already had problems last time:
+ok, no problem, I'll do that.
 
-- unicore32 never had any compiler that shipped with sources, only an ancient
-  set of gcc binaries that already had problems building the kernel during the
-  move to gcc-4.6. The maintainer said he'd work on providing support for
-  modern gcc or clang, but I don't think anything came out of that.
+>
+> > In addition, I got my pgp key signed by Olof.J. I would appreciate it if
+> > you could verify it.
+>
+> Any clues as to how to verify it, is it on a specific keyserver?
+>
+Nevermind, I managed it on my own. You can see it at:
+http://keys2.kfwebs.net/pks/lookup?op=vindex&search=oded+gabbay
 
-- hexagon had an unmaintained gcc-4.5 port, but internally Qualcomm were
-  already using clang to build their kernels, which should now work with the
-  upstream version. I don't think there are any plans to have a more modern
-  gcc.
-
-Everything else works with mainline gcc now, openrisc and csky were the
-last to get added in gcc-9.
-
-Some of the older sub-targets (armv3, s390-g6, powerpcspe) are removed
-in gcc-9, but these have a few more years before we need to worry about
-them.
-
-     Arnd
+> thanks,
+>
+> greg k-h
