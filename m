@@ -2,135 +2,97 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DD4C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D237C35247
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE3532071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21602168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ry6MxWHz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbgA0J0Y (ORCPT
+        id S1729530AbgA0J2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 04:26:24 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:50017 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729213AbgA0J0X (ORCPT
+        Mon, 27 Jan 2020 04:28:05 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38039 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgA0J2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 04:26:23 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iw0ez-0007hO-Eo; Mon, 27 Jan 2020 09:26:21 +0000
-Subject: Re: [PATCH][next] i2c: xiic: fix indentation issue
-To:     Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200126154257.41336-1-colin.king@canonical.com>
- <e20558ec-bf4e-9348-f6cb-a37c5dbbb2de@xilinx.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <6558ccbc-56f7-b30d-df02-1eaf07072c4d@canonical.com>
-Date:   Mon, 27 Jan 2020 09:26:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Jan 2020 04:28:05 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a9so1269483wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 01:28:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=0rrhtVNAh9PShHy/q9Ma9GVW1EfhEw69zS9XJ919ql0=;
+        b=Ry6MxWHzMuizNcrIXmJ+ILo+Ug7WUFj2cdd4Eac/fjorUhjJ2vLe5BblmPQiY93Ojy
+         ZalxLlJsMUzY5eE/JWqQaa48yat6sljaz/LQePrn8lUkDLo0e4xb0Yhfnsyi3I3dp1Xm
+         VXoU8+gImAEfDIYfovlDVgbs9va2kmsp5dOpps8YcCCzJruwdjxY0jNi7Z//uCkt4mNs
+         7QP/OTgqbl+7t2XJUf0KNj7wII9CH/3zuP7oS0U6piojruWjHIY2LdXiQ2ROqb1A8GCz
+         TYOOrRYslFYNPP27XVVKnsYZ5MirgESSHJvSmm0OYpM0Icbc+1htpRyckYSlwJtShVtE
+         AT0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0rrhtVNAh9PShHy/q9Ma9GVW1EfhEw69zS9XJ919ql0=;
+        b=ElJT0gEh5uzA76EK6ER2f5ZsWHv3Vj4PW54+mnSmmdP4YdMX3chpRy26yyhYezmOpv
+         4ETJFX5R/b/9+2MBly+6lAQqIuAB1kVCIRucl/8N0isbp98cXi7+QqydoNDC1uIRg7kP
+         tY6O0zvURAKNM2cCsFaLODNCbi9ddDNTlri9TKcoiyku1IE5pXgg3m9IXqvcS2ZhJvOX
+         kBGvMr9Pimf9hXeOraAJF8mufcXKTHhkUZh3OK3FJHn1DfdWdRpHD5CWPH/lUYUfK4Cd
+         yB5ikwObxVLxfEgL7JZJ3T3UgS1awq9bnkkTobnFe5WAxs1GIIJpnOrD6KVnFTt/ffC0
+         HheA==
+X-Gm-Message-State: APjAAAU9r61qoa+ajQQ9/e3wT+jPNSPtbGgdz5UtQ2Pv4mSbXm3kZMuL
+        W9HrdNs/4oUl64FFOMxpW6nJnw==
+X-Google-Smtp-Source: APXvYqzNHfraG8VHB52d4ZUiAtnUfeH8L+HhvLAOE6hLMkT3axNMdPiY+28wttfTyIVlaLSDOucCtQ==
+X-Received: by 2002:a1c:dcd5:: with SMTP id t204mr12654838wmg.34.1580117283232;
+        Mon, 27 Jan 2020 01:28:03 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id d14sm21424165wru.9.2020.01.27.01.28.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 01:28:02 -0800 (PST)
+Date:   Mon, 27 Jan 2020 09:28:15 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, b.galvani@gmail.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org
+Subject: Re: [PATCH 2/5] mfd: rn5t618: add ADC subdevice for RC5T619
+Message-ID: <20200127092815.GA3548@dell>
+References: <20200117215926.15194-1-andreas@kemnade.info>
+ <20200117215926.15194-3-andreas@kemnade.info>
+ <20200120084934.GZ15507@dell>
+ <20200124162818.0697f551@kemnade.info>
 MIME-Version: 1.0
-In-Reply-To: <e20558ec-bf4e-9348-f6cb-a37c5dbbb2de@xilinx.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200124162818.0697f551@kemnade.info>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/01/2020 07:43, Michal Simek wrote:
-> On 26. 01. 20 16:42, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> There is a statment that is indented one level too deeply, remove
-> 
-> typo             ^
+On Fri, 24 Jan 2020, Andreas Kemnade wrote:
+> hmm, I cannot find this in any branch/repo I know of and not in linux-next,
+> just wondering...
+> I guess the iio part is something to go towards 5.7 unless 5.5
+> is delayed mucch.
 
-Can this be fixed when the patch is applied rather than sending a V2?
+Oh, it looks like there was a conflict.  Could you collect any Acks
+(including mine) rebase and resend please?
 
-Colin
-
-> 
->> the extraneous tab.
->>
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  drivers/i2c/busses/i2c-xiic.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
->> index b17d30c9ab40..90c1c362394d 100644
->> --- a/drivers/i2c/busses/i2c-xiic.c
->> +++ b/drivers/i2c/busses/i2c-xiic.c
->> @@ -261,7 +261,7 @@ static int xiic_clear_rx_fifo(struct xiic_i2c *i2c)
->>  		xiic_getreg8(i2c, XIIC_DRR_REG_OFFSET);
->>  		if (time_after(jiffies, timeout)) {
->>  			dev_err(i2c->dev, "Failed to clear rx fifo\n");
->> -				return -ETIMEDOUT;
->> +			return -ETIMEDOUT;
->>  		}
->>  	}
-> 
-> When fixed.
-> 
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> 
-> Thanks,
-> Michal
-> 
-> 
-> 
-> 
-> 
-> 
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
