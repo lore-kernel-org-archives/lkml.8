@@ -2,138 +2,145 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8636C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B952FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 826A422522
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF79207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:28:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5cRyYfA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kfiwF+Mi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgA0R03 (ORCPT
+        id S1726099AbgA0R2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:26:29 -0500
-Received: from mail-qk1-f177.google.com ([209.85.222.177]:41138 "EHLO
-        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgA0R03 (ORCPT
+        Mon, 27 Jan 2020 12:28:14 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:39566 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0R2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:26:29 -0500
-Received: by mail-qk1-f177.google.com with SMTP id s187so10396159qke.8;
-        Mon, 27 Jan 2020 09:26:29 -0800 (PST)
+        Mon, 27 Jan 2020 12:28:13 -0500
+Received: by mail-ua1-f65.google.com with SMTP id 73so3731816uac.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:28:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kf2FDJGFABsa8dMfNJh+lTWVV7yYf0R3wgfeAqnShMc=;
-        b=K5cRyYfAGJg49+k4NPcUlUtuPQo2ckeAhTzgYeX+0cOluS/SHNz7C++gaNn06jOaC7
-         dh2q8dcz16E2AB7zc+/cntD0ETNl8qxZZWF4YZqnlgUU+VySOZ6R5yp6lXLQmOoMWM5L
-         /n4cNa4DQAMcqbFzjtr1EigbhqHtWUwI34hLInhTIu3v1zjVFvQKIisS8B22c8Lxd5A8
-         ubgzLIl1HLm6alyMWpdqJKTK40k5ZxUvFJfdGVhKHNeLdZYSRt1UbnLjzGYXsYFEDe19
-         H80gYbhCRYdhD+KEwEUVdb0Qu84sV6GXmnl0hGg6vQ9CAN2piOebNgSGRgsvs50mAksU
-         QITQ==
+        bh=s3P3TBsc4sOWAtF5ewj8AqN0VmzASpj4qfvh3bEowwI=;
+        b=kfiwF+MinrCuEO3Qnq235rAwfGRjUwQbK6IpfVFZ4SRZ0RSO5HVmrLaFjLuIBQwSfW
+         F+38sbMilpec9kwriZK6RheZGbAyFbR5pI9inmvu1gMGwMkqWVx/uQHtIvOImJDE3IYK
+         suPkXvdZZ2+CqGXFnCB6ayEj3r0etglx6WWcALXjQh47c4z1TQwq+FSJcPuGdAF4P60o
+         rxJ8ZP35fMCEwDosk0Tqd5PYU5ePX0qWkBO70e1gxKWihpe/8LcZ0GZB/7+Y4I9FYfvt
+         Qkdu5wGHtOjzcwLQah/0jjGH3zfL2iR52JB+FmWs2Z243eMY6sDLmZFzjiimghrP4jIT
+         FCzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kf2FDJGFABsa8dMfNJh+lTWVV7yYf0R3wgfeAqnShMc=;
-        b=DYVtDXPTg29QEW1gFwTCoBRw/AxeiP4aAR94Sf7bbOBf9eMVlWXCiWQ126TRtNLy5K
-         2d7wIWCjfSmI2RQzBWRDP0OUUtXw2nJVZxNaiiQ1CHKSfL5FMgT7iBZnOeUMczrLQ5op
-         pVN4XGywpjpGCIxPzW/E2xtmYwI7e8jY9v862bKdVhCLuta1ysuzojFYNTAd3qRs+C2u
-         8c+4vVf3xGPAUFXjY4WLGHEU8BkVrzPifD+Drpk8EfObg8Fw2u75EhksYlORP0WyppmF
-         MdM1r6ignayWZ72/ziCx34AJMaF8Itut0Gdi7a9kfii0Zjy05hAgGnMPPIu3t8yRmC1s
-         DhYQ==
-X-Gm-Message-State: APjAAAUg0CO5mZg74UovlEOSaW1fZ43SGW1vqZX0ORH9ayg9Z35V6M+u
-        1kvQqGujyBBxzkqLN5ci3iGgt/DNZcdINjxw1+Y=
-X-Google-Smtp-Source: APXvYqy0XhigD/SKPQ3G9sFERZqGihKttc4IFVvnazIK9f9RlMbKcNwXPBZgTwa7qrr1/4wXy5hX5IaYFYwU7foDN/M=
-X-Received: by 2002:a37:4047:: with SMTP id n68mr17831482qka.258.1580145988471;
- Mon, 27 Jan 2020 09:26:28 -0800 (PST)
+        bh=s3P3TBsc4sOWAtF5ewj8AqN0VmzASpj4qfvh3bEowwI=;
+        b=O5Nsb/cTHufpFsMmMsyUy2ozTXYK+k7YKvVrrgIwAfB4QjUstbUfsccEk1EFEzLbI9
+         DH26PAOLyPaHw1erm3ISF5UwXdWzV+IBJxMEm4o63fBO3x51RrN8QOHaTvQsWUVYJgLP
+         irpJBRJPRr5QCEx05qptEGoOgQbBLRAbY/3hZEEM/XmKzns213KPqKABBFogdKAjHMzI
+         jvnUdDJSgfmG6I8XArXLoZ1pNQD0pbr2vU0yeodxVBJMfQsK2aL4iJxm/mSK2ruepzdI
+         nnHCysclgud7Qu2+O/Qu6UdKKQYXM14rTSnSLFSzNgNGvXetIVhD2Bo8XTEAnZ3YdNKX
+         /Caw==
+X-Gm-Message-State: APjAAAX3q86n9GTl1vz4FF7ZlpQKo3BcYLwez7HXJ1Ba/aAQ+5eOsBde
+        ew3x21qaYwpMSI3XBbqC/XiO91Ex4eivW7PS+HK6T5GL
+X-Google-Smtp-Source: APXvYqy13JW+3DjsIsvxAfdU3Wibc51f21lE/4A5G2QY91lTiOLICQ5URIuVMs3E1SZXtGTpb6iOyBLLgOzGcTK0Cbg=
+X-Received: by 2002:ab0:5510:: with SMTP id t16mr10816954uaa.15.1580146092261;
+ Mon, 27 Jan 2020 09:28:12 -0800 (PST)
 MIME-Version: 1.0
-References: <025801d5bf24$aa242100$fe6c6300$@gmail.com> <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
- <084f01d5cfba$bc5c4d10$3514e730$@gmail.com> <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
- <a62e45ba968fe845fa757174efc0cab93c490d54.camel@hammerspace.com>
- <CALbTx=GxuUmWu9Og_pv8TPbB0ZnOCA3vMqtyG4e18-4+zkY8=A@mail.gmail.com> <197269d91db31284dce51b831bfbe2231ac870d4.camel@hammerspace.com>
-In-Reply-To: <197269d91db31284dce51b831bfbe2231ac870d4.camel@hammerspace.com>
-From:   Robert Milkowski <rmilkowski@gmail.com>
-Date:   Mon, 27 Jan 2020 17:26:16 +0000
-Message-ID: <CALbTx=E7Hk4bVtSehjo4TPykTZsP+fSR0zeHFWyqd4XtHDyL4g@mail.gmail.com>
-Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+References: <20200123180436.99487-1-bgardon@google.com> <20200123180436.99487-10-bgardon@google.com>
+ <92042648-e43a-d996-dc38-aded106b976b@redhat.com> <CANgfPd8jpUykwrOnToXx+zhJOJvnWvxhZPSKhAwST=wwYdtA3A@mail.gmail.com>
+ <6812a36c-7de6-c0c9-a2f3-5f9e02db6621@redhat.com>
+In-Reply-To: <6812a36c-7de6-c0c9-a2f3-5f9e02db6621@redhat.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Mon, 27 Jan 2020 09:28:01 -0800
+Message-ID: <CANgfPd81ocW0O4nqSnfBwEn_V-ZzY_WJ=TvymCBfy_w5==GxmQ@mail.gmail.com>
+Subject: Re: [PATCH v4 09/10] KVM: selftests: Stop memslot creation in KVM
+ internal memslot region
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jan 25, 2020 at 1:37 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 24/01/20 19:41, Ben Gardon wrote:
+> > On Fri, Jan 24, 2020 at 12:58 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >>
+> >> On 23/01/20 19:04, Ben Gardon wrote:
+> >>> KVM creates internal memslots covering the region between 3G and 4G in
+> >>> the guest physical address space, when the first vCPU is created.
+> >>> Mapping this region before creation of the first vCPU causes vCPU
+> >>> creation to fail. Prohibit tests from creating such a memslot and fail
+> >>> with a helpful warning when they try to.
+> >>>
+> >>> Signed-off-by: Ben Gardon <bgardon@google.com>
+> >>> ---
+> >>
+> >> The internal memslots are much higher than this (0xfffbc000 and
+> >> 0xfee00000).  I'm changing the patch to block 0xfe0000000 and above,
+> >> otherwise it breaks vmx_dirty_log_test.
 > >
-> > > All that needs to be done here is to move the setting of clp-
-> > > > cl_last_renewal _out_ of nfs4_set_lease_period(), and just have
-> > > nfs4_proc_setclientid_confirm() and nfs4_update_session() call
-> > > do_renew_lease().
-> > >
+> > Perhaps we're working in different units, but I believe paddrs
+> > 0xfffbc000 and 0xfee00000 are between 3GiB and 4GiB.
+> > "Proof by Python":
+>
+> I invoke the "not a native speaker" card.  Rephrasing: there is a large
+> part at the beginning of the area between 3GiB and 4GiB that isn't used
+> by internal memslot (but is used by vmx_dirty_log_test).
+
+Ah, that makes perfect sense, thank you for clarifying. I think the
+3G-4G in my head may have come from the x86 PCI hole or similar. In
+any case, reducing the prohibited range to just the range covered by
+internal memslots feels like a good change.
+
+> Though I have no excuse for the extra zero, the range to block is
+> 0xfe000000 to 0x100000000.
+>
+> Paolo
+>
+> >>>> B=1
+> >>>> KB=1024*B
+> >>>> MB=1024*KB
+> >>>> GB=1024*MB
+> >>>> hex(3*GB)
+> > '0xc0000000'
+> >>>> hex(4*GB)
+> > '0x100000000'
+> >>>> 3*GB == 3<<30
+> > True
+> >>>> 0xfffbc000 > 3*GB
+> > True
+> >>>> 0xfffbc000 < 4*GB
+> > True
+> >>>> 0xfee00000 > 3*GB
+> > True
+> >>>> 0xfee00000 < 4*GB
+> > True
 > >
-> > This would also require nfs4_setup_state_renewal() to call
-> > do_renew_lease() I think - at least it currently calls
-> > nfs4_set_lease_period().
->
-> This is the mechanism we're replacing. There is no need for a call to
-> do_renew_lease() in nfs4_setup_state_renewal().
-
-ok
-
->
-> > Also, iirc fsinfo() not setting cl_last_renewal leads to
-> > cl_last_renewal initialization issues under some circumstances.
+> > Am I missing something?
 > >
-> > Then the RFC 7530 in section 16.34.5 states:
-> > "SETCLIENTID_CONFIRM does not establish or renew a lease.", so
-> > calling
-> > do_renew_lease() from nfs4_setclientid_confirm() doesn't seem to be
-> > ok.
->
-> So just move the do_renew_lease() to nfs4_proc_setclientid(). The
-> successful combination SETCLIENTID+SETCLIENTID_CONFIRM definitely
-> _does_ establish a lease.
->
-
-ok
-
-> > I'm not sure if is is valid to do implicit lease renewal in
-> > nfs4_update_session() either...
->
-> Ditto. Move to the exchange_id call.
->
-
-ok
-
+> > I don't think blocking 0xfe0000000 and above is useful, as there's
+> > nothing mapped in that region and AFAIK it's perfectly valid to create
+> > memslots there.
 > >
-> > Anyway, the patch would be something like (haven't tested it yet):
 > >
-...
-> > @@ -6146,6 +6143,10 @@ int nfs4_proc_setclientid_confirm(struct
-> > nfs_client *clp,
-> >                 clp->cl_clientid);
-> >         status = rpc_call_sync(clp->cl_rpcclient, &msg,
-> >                                RPC_TASK_TIMEOUT |
-> > RPC_TASK_NO_ROUND_ROBIN);
-> > +       if(status == 0) {
-> > +               unsigned long now = jiffies;
+> >>
+> >> Paolo
+> >>
+> >
 >
-> The variable 'now' needs to be set before the RPC call in order to
-> avoid overestimating the remaining lease period.
->
-
-yes, thx.
-
-I will get a new patch tested and submitted here this week.
-
--- 
-Robert Milkowski
