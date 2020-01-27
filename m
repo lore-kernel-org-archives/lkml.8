@@ -2,99 +2,89 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF48C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874ECC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 803E3214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF69214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:05:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UoFaOHjo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgA0NDG (ORCPT
+        id S1726360AbgA0NFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:03:06 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:53846 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgA0NDF (ORCPT
+        Mon, 27 Jan 2020 08:05:34 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42820 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgA0NFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:03:05 -0500
-Received: from ip5f5bd665.dynamic.kabel-deutschland.de ([95.91.214.101] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iw42e-0001Yk-8w; Mon, 27 Jan 2020 13:03:00 +0000
-Date:   Mon, 27 Jan 2020 14:02:59 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Mike Christie <mchristi@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
+        Mon, 27 Jan 2020 08:05:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Qc26HyQAHogWcsmxTgBMKkoJi2+EVu/8ujULdcjBIe0=; b=UoFaOHjohUQOSrNw18yEKcDQs
+        IPmp5D1GQJ6a3TvW8gwb54yw2Dwpjl+Rz6q2mO8GknLvkOp29yMdvGozOxzuixFcnqsgDw5BK68na
+        rnDJhEEwhB06SuDgrwnORP2PKkkO8VBLC6c2N13gey00wMDQv5RBheY6tjbnTMK4k8Rw89u3DLKRg
+        6hO1m8hgLqprxw+EC9Q9d7NkPwUsTcnIMw1lIWDzPk9H24AuimUx1cD2DdbnKiDlpTnYRQCp+Ga+a
+        4ffYMHq3F07jPYL8irFCnD2uwpbsuK9ygp975UF5DiRHMd4AIebXy2ww4zuae/JGePtC3nQNkOs68
+        wQeLRqdfQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iw44g-0001WM-55; Mon, 27 Jan 2020 13:05:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8633B302524;
+        Mon, 27 Jan 2020 14:03:21 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1BAD720D95C0C; Mon, 27 Jan 2020 14:05:03 +0100 (CET)
+Date:   Mon, 27 Jan 2020 14:05:03 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Will Deacon <will@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-api@vger.kernel.org, idryomov@gmail.com,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-block@vger.kernel.org, martin@urbackup.org,
-        Damien.LeMoal@wdc.com, Michal Hocko <mhocko@suse.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>
-Subject: Re: [PATCH] Add prctl support for controlling mem reclaim V4
-Message-ID: <20200127130258.2bknkl3mwpkfyml4@wittgenstein>
-References: <20191112001900.9206-1-mchristi@redhat.com>
- <CALvZod47XyD2x8TuZcb9PgeVY14JBwNhsUpN3RAeAt+RJJC=hg@mail.gmail.com>
- <5E2B19C9.6080907@redhat.com>
- <20200124211642.GB7216@dread.disaster.area>
+        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH mk-II 08/17] asm-generic/tlb: Provide
+ MMU_GATHER_TABLE_FREE
+Message-ID: <20200127130503.GG14879@hirez.programming.kicks-ass.net>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122956.112607298@infradead.org>
+ <20191212093205.GU2827@hirez.programming.kicks-ass.net>
+ <20200126155205.GA19169@roeck-us.net>
+ <20200127081134.GI14914@hirez.programming.kicks-ass.net>
+ <33932bc9-1fca-66ae-8f55-6da2f131c5be@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200124211642.GB7216@dread.disaster.area>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <33932bc9-1fca-66ae-8f55-6da2f131c5be@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 08:16:42AM +1100, Dave Chinner wrote:
-> On Fri, Jan 24, 2020 at 10:22:33AM -0600, Mike Christie wrote:
-> > On 12/05/2019 04:43 PM, Shakeel Butt wrote:
-> > > On Mon, Nov 11, 2019 at 4:19 PM Mike Christie <mchristi@redhat.com> wrote:
-> > >> This patch adds a new prctl command that daemons can use after they have
-> > >> done their initial setup, and before they start to do allocations that
-> > >> are in the IO path. It sets the PF_MEMALLOC_NOIO and PF_LESS_THROTTLE
-> > >> flags so both userspace block and FS threads can use it to avoid the
-> > >> allocation recursion and try to prevent from being throttled while
-> > >> writing out data to free up memory.
-> > >>
-> > >> Signed-off-by: Mike Christie <mchristi@redhat.com>
-> > >> Acked-by: Michal Hocko <mhocko@suse.com>
-> > >> Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
-> > >> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-> > > 
-> > > I suppose this patch should be routed through MM tree, so, CCing Andrew.
-> > >
-> > 
-> > Andrew and other mm/storage developers,
-> > 
-> > Do I need to handle anything else for this patch, or are there any other
-> > concerns? Is this maybe something we want to talk about at a quick LSF
-> > session?
-> > 
-> > I have retested it with Linus's current tree. It still applies cleanly
-> > (just some offsets), and fixes the problem described above we have been
-> > hitting.
-> 
-> I must have missed this version being posted (just looked it up on
-> lore.kernel.org). As far as I'm concerned this is good to go and it
-> is absolutely necessary for userspace IO stacks to function
-> correctly.
-> 
-> Reviewed-by: Dave Chinner <dchinner@redhat.com>
-> 
-> If no manintainer picks it up before the next merge window, then I
+On Mon, Jan 27, 2020 at 01:43:34PM +0530, Aneesh Kumar K.V wrote:
 
-Since prctl() is thread-management and fs people seem to be happy and
-have acked it I can pick this up too if noone objects and send this
-along with the rest of process management.
+> I did send a change to fix that. it is to drop !SMP change in the patch
+> 
+> https://lore.kernel.org/linux-mm/87v9p9mhnr.fsf@linux.ibm.com
 
-Christian
+Indeed you did. Did those patches land anywhere, or is it all still up
+in the air? (I was hoping to find those patches in a tree somewhere)
