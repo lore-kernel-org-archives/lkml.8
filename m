@@ -2,90 +2,90 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FD4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7681C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFCC20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 927D420720
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="DDTA9J1C"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="KrVk633e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgA0Qcq (ORCPT
+        id S1726339AbgA0Qcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:32:46 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39689 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgA0Qcp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:32:45 -0500
-Received: by mail-io1-f67.google.com with SMTP id c16so10686067ioh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 08:32:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Yov7ap4biFBzdzvuUJNulONNcHIgznC4VCf+Gem9vsM=;
-        b=DDTA9J1CCeDgzLa078hSsNZrE5s+EWQhKdJ2pqw/kyeJPhUdV2fImtaKqWoH0yU2qT
-         u+V3r4O9ouTvDVKCkNBs6KL1ZhLd+TSZ2YoubgVTvhqVadU0FvkTkbibF+iXAGhzk+b4
-         Gvje+NpQRSk2WLu1xUSn11H2Brc+4tKnly6s7uluSICp9V5HKUQWB+sBmQbvgJbH6yye
-         i8bWFFK1bCwjh7UHjnSzHZ0rJ+dA0gF44r+dAL1oF70gJnEw4U4ctfwJTS9ZZC+7thVd
-         uFbYCeaccmaIiop1Hmg3wYzQ6J4qgfZwYOL4lcOOPD2ioNKD6JHg+Owwk48k3DS2zfPl
-         vCnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Yov7ap4biFBzdzvuUJNulONNcHIgznC4VCf+Gem9vsM=;
-        b=EHTIY43/LPWMHNSyn+7QVCWI4YncdReFOayApswiFb25+6iLmoShdHaoaMM5g+pE4J
-         Ym8RcGDPsePIbkMzxyM9Yfi1QHdU9ckO6C0Bh4pCceK8siUhMRbI+Zq1YK9kOcGgRVRc
-         +zzEAloBmjb6uqg0Ow/iq5Wn4/1ymJBNxHPi2JwNcBs+rsVnq8AweJfvpi0xDllsUh8J
-         OWS7wzQmW7mmfFvIxlzjkzJOviD0Xfbaa/bQ2kLuZOPCG5X+2tXpAbDyK12R2HV1DyUF
-         f35QoLOwr1SpQHwlQPeY2zm6ib/F/l1Sw6vHAmoLk4H8OeDCLHN98zw3jTF5FV2XvSop
-         R8oA==
-X-Gm-Message-State: APjAAAUwb6bCPvbsMwZfLm1H31lun3eB/BsUMViM67RgxrVrFMkxP8Bm
-        w0l3LjV0P59B/TmT9/F2q70eHjMic9o=
-X-Google-Smtp-Source: APXvYqyMgBh8BeGwDTsAgvsRxyN69Aa0BceylNk8A0OQ2Na89SDXKSpTd/BI6G96G7GcyQnHsYUnjg==
-X-Received: by 2002:a02:c942:: with SMTP id u2mr14262871jao.49.1580142764895;
-        Mon, 27 Jan 2020 08:32:44 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id n207sm2720985iod.55.2020.01.27.08.32.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 08:32:44 -0800 (PST)
-Subject: Re: [PATCH liburing 1/1] test: add epoll test case
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200127161701.153625-1-sgarzare@redhat.com>
- <20200127161701.153625-2-sgarzare@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b1b26e79-507a-b339-2850-d2686661e669@kernel.dk>
-Date:   Mon, 27 Jan 2020 09:32:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Jan 2020 11:32:50 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:56242 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbgA0Qct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 11:32:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=BnSfaZk62rOeNYfQ6Q5vO9fhE1qKEGe75T8dAanwXwk=; b=KrVk633erhN4xaEPpKrr+NevW2
+        GsJ+AKkyK8sVkRdsD/oFOpNTSOHRW9t7+JGjKS/CZTNF4DyHMsjPNisewktHT41HFxJA/CGFjsS4/
+        6MzWUO0URxpXbITMLaq1V2Hgi+n9e/2rRb/+LVN6fdjUE9+HVzr666Nc6N9uYoC1ESkQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iw7JZ-0007C7-U2; Mon, 27 Jan 2020 17:32:41 +0100
+Date:   Mon, 27 Jan 2020 17:32:41 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
+ up without PHY
+Message-ID: <20200127163241.GK13647@lunn.ch>
+References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+ <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+ <20200127112102.GT25745@shell.armlinux.org.uk>
+ <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20200127114600.GU25745@shell.armlinux.org.uk>
+ <20200127140038.GD13647@lunn.ch>
+ <20200127140834.GW25745@shell.armlinux.org.uk>
+ <20200127145107.GE13647@lunn.ch>
+ <20200127161132.GX25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200127161701.153625-2-sgarzare@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127161132.GX25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/27/20 9:17 AM, Stefano Garzarella wrote:
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> Presumably, all these should be visible on the ZII rev B as well?
 
-You're not reaping CQ events, and hence you overflow the ring. Once
-overflown, an attempt to submit new IO will returns in a -16/-EBUSY
-return value. This is io_uring telling you that it won't submit more
-IO until you've emptied the completion ring so io_uring can flush
-the overflown entries to the ring.
+Maybe. The two SFF mounted on most rev B are connected to ports which
+only do SGMII, not 1000Base X. They tend to work by chance, and as
+such, i've never taken them seriously.
 
--- 
-Jens Axboe
+If i remember correctly, you modified your board, moved the SFF over
+to the normally unpopulated slots, and removed a resistor. That setup
+then has the SFF connected to the 6352, which can do both SGMII and
+1000BaseX.
 
+It could also be that the 6352 does have pass through from the PCS to
+the MAC, where as the 6390 does not? The 6390 is much more capable,
+having 2.5G and 10G support. The SERDES registers are very different,
+C45 vs C22 of the 6352.
+
+    Andrew
