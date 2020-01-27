@@ -2,171 +2,173 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6211C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DC1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1292087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:11:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ul6LkH0c"
+	by mail.kernel.org (Postfix) with ESMTP id 4FF20214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgA0QLu (ORCPT
+        id S1729753AbgA0QNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:11:50 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:38174 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729470AbgA0QLu (ORCPT
+        Mon, 27 Jan 2020 11:13:09 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33582 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729470AbgA0QNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:11:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gEl6tSo6zZ7fDJ2My+QHjzpT/cnxKFaOYeklSZ0cvYE=; b=ul6LkH0cilXWVwQ+Ixv2rqWTE
-        sBu0kntPb7nVSZT+OAF5OG0rQZ7OKnxVWLHPOEBYgcRxOeKJ1Cvq/8zQGjEe7t87FQSly+RKzpMvC
-        WwyofFvrDFCUkDc8Tk5ChmaGRQhZdivcjzOzMNv6Dr7gw0KKrCO2hDLXQfTkqWKGAzI7VACqxNltE
-        fur5lbEKHc3R7tpVF5phn4V9yoAHFU+B5KPcmP+1hmRMXAGcP5pavf3WyxhgoGi1Z//l9qY7a2kXo
-        WzBkbDBGPl0BVDF/zmh7gbJbcbiv0cX/CKSN05m7wIH5R+jF1SgEon7Re/Xe0lI65uiy/eFRM8XX2
-        kkyJHe9FQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44044)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iw6zB-0002LM-Ik; Mon, 27 Jan 2020 16:11:37 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iw6z6-0001Xp-TY; Mon, 27 Jan 2020 16:11:32 +0000
-Date:   Mon, 27 Jan 2020 16:11:32 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200127161132.GX25745@shell.armlinux.org.uk>
-References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
- <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
- <20200127112102.GT25745@shell.armlinux.org.uk>
- <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200127114600.GU25745@shell.armlinux.org.uk>
- <20200127140038.GD13647@lunn.ch>
- <20200127140834.GW25745@shell.armlinux.org.uk>
- <20200127145107.GE13647@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127145107.GE13647@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 27 Jan 2020 11:13:09 -0500
+Received: from localhost.localdomain (p200300CB87166A002102C4F03A4721D7.dip0.t-ipconnect.de [IPv6:2003:cb:8716:6a00:2102:c4f0:3a47:21d7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id DF01628CAE7;
+        Mon, 27 Jan 2020 16:13:05 +0000 (GMT)
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        dafna.hirschfeld@collabora.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, helen.koike@collabora.com,
+        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com
+Subject: [PATCH] dt-bindings: convert i2c-cros-ec-tunnel.txt to yaml
+Date:   Mon, 27 Jan 2020 17:12:13 +0100
+Message-Id: <20200127161213.13339-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 03:51:07PM +0100, Andrew Lunn wrote:
-> > Can you give a hint which platform this is and how to reproduce it
-> > please?
-> 
-> Hi Russell
-> 
-> Devel C has issues with its fibre ports. I tend to test with
-> sff2/port9 not sff3/port3, because i also have the copper port plugged
-> in. If the copper gets link before the fibre, copper is used.
-> 
-> What i see is that after the SERDES syncs, its registers indicate a 1G
-> link, full duplex, etc. But the MAC is using 10/Half. And hence no
-> packets go through. If i set the MAC to the same as the PCS, i can at
-> least transmit. Receive does not work, but i think that is something
-> else. The statistics counters indicate the SERDES is receiving frames,
-> but the MAC statistic counters suggests the MAC never sees them.
-> 
-> I've also had issues with the DSA links, also being configured to
-> 10/Half. That seems to be related to having a phy-mode property in
-> device tree. I need to add a fixed-link property to set the correct
-> speed. Something is broken here, previously the fixed-link was only
-> needed if the speed needed to be lower than the ports maximum. I think
-> that is a separate issue i need to dig into, not part of the PCS to
-> MAC transfer.
+Convert the binding file i2c-cros-ec-tunnel.txt to yaml format.
 
-Presumably, all these should be visible on the ZII rev B as well?
-I've not noticed any issues there, and I have 5.4 built from my
-tree on December 22nd which would've included most of what is in
-5.5, and quite a bit of what's queued in net-next.
+This was tested and verified on ARM and ARM64 with:
 
-There, I see:
+make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
 
-mv88e6xxx.0/regs:    GLOBAL GLOBAL2 SERDES     0    1    2    3    4    5    6
-mv88e6xxx.0/regs: 1:     2    8007     149     3    3    3    3    3 403e   3d
-mv88e6xxx.1/regs:    GLOBAL GLOBAL2 SERDES     0    1    2    3    4    5    6
-mv88e6xxx.1/regs: 1:     2    8807     14d     3    3    3    3    3 403e 403e
-mv88e6xxx.2/regs:    GLOBAL GLOBAL2 SERDES     0    1    2    3    4    5    6    7    8    9
-regs: 1:  7209       0    ffff  c503 c503 c503 2403 2403 2403 2403 2403 2403 c13e
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+---
+ .../bindings/i2c/i2c-cros-ec-tunnel.txt       | 39 ------------
+ .../bindings/i2c/i2c-cros-ec-tunnel.yaml      | 61 +++++++++++++++++++
+ 2 files changed, 61 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
 
-which looks fine to me:
-- switch 0
-   - port 5 is the DSA port, which is forced to 1G.
-   - port 6 is the CPU port, which is forced to 100M.
-- switch 1
-   - ports 5 and 6 are DSA ports, forced to 1G
-- switch 2
-   - port 9 is the DSA port, forced to 1G.
-
-Booting 5.5 is more noisy than 5.4 - there's loads of complaints about
-"already a member of VLAN 1".  As far as the port MAC settings go, it
-looks just the same as the 5.4 settings I quoted above.
-
-Now, I do have some differences between what is in mainline and my tree
-and one of them involves adding a whole bunch of "phylink_mac_config"
-and "phylink_link_force" methods to the mv88e6xxx_ops for Marvell DSA
-switches.  Without these, dsa_port_phylink_mac_config() will ignore
-phylink's attempts to configure the MAC.
-
-Quite why this is, I don't know; these are patches I've carried for
-ages, since trying to get the SFF modules working on these platforms,
-before mainline gained phylink support for DSA.  I seem to remember
-that mainline's work was based on what I'd done, or was very similar,
-but I never really understood why bits such as this were left out.
-Since this work has been published online in my git tree since day 1,
-I find it really strange that people go off and do what seems to be a
-half-hearted implementation.  See the "zii" branch.
-
-Mainline did diverge on the issue of how the SFF modules should be
-driven; whether to drive them with the SFP code or whether to use
-a fixed-link instead.  I've kept my original approach, which is less
-than perfect since we don't have a link interrupt to trigger the call
-to phylink_mac_change().  However, I'm suspecting that once we solve
-the PCS/MAC split issue, and use the clause 37 phylink PCS helpers
-I've proposed in the last few weeks, this will be resolvable.
-
-> Heiner has another device which has an Aquantia PHY running in an odd
-> mode so that it does 1G over a T2 link. It uses SGMII for this, and
-> that is where we first noticed the issue of the MAC and PCS having
-> different configurations.
-
-Do you know when the issue appeared?
-
-It sounds like this regression has been known for some time, yet this
-is the first I've heard about it.
-
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+deleted file mode 100644
+index 898f030eba62..000000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
++++ /dev/null
+@@ -1,39 +0,0 @@
+-I2C bus that tunnels through the ChromeOS EC (cros-ec)
+-======================================================
+-On some ChromeOS board designs we've got a connection to the EC (embedded
+-controller) but no direct connection to some devices on the other side of
+-the EC (like a battery and PMIC).  To get access to those devices we need
+-to tunnel our i2c commands through the EC.
+-
+-The node for this device should be under a cros-ec node like google,cros-ec-spi
+-or google,cros-ec-i2c.
+-
+-
+-Required properties:
+-- compatible: google,cros-ec-i2c-tunnel
+-- google,remote-bus: The EC bus we'd like to talk to.
+-
+-Optional child nodes:
+-- One node per I2C device connected to the tunnelled I2C bus.
+-
+-
+-Example:
+-	cros-ec@0 {
+-		compatible = "google,cros-ec-spi";
+-
+-		...
+-
+-		i2c-tunnel {
+-			compatible = "google,cros-ec-i2c-tunnel";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			google,remote-bus = <0>;
+-
+-			battery: sbs-battery@b {
+-				compatible = "sbs,sbs-battery";
+-				reg = <0xb>;
+-				sbs,poll-retry-count = <1>;
+-			};
+-		};
+-	}
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+new file mode 100644
+index 000000000000..c1383e607f47
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i2c/i2c-cros-ec-tunnel.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: I2C bus that tunnels through the ChromeOS EC (cros-ec)
++
++maintainers:
++  - Benson Leung <bleung@chromium.org>
++  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++  - Guenter Roeck <groeck@chromium.org>
++
++description: |
++  On some ChromeOS board designs we've got a connection to the EC (embedded
++  controller) but no direct connection to some devices on the other side of
++  the EC (like a battery and PMIC). To get access to those devices we need
++  to tunnel our i2c commands through the EC.
++  The node for this device should be under a cros-ec node like google,cros-ec-spi
++  or google,cros-ec-i2c.
++
++properties:
++  compatible:
++    const:
++      google,cros-ec-i2c-tunnel
++
++  google,remote-bus:
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    description: The EC bus we'd like to talk to.
++
++  "#address-cells": true
++  "#size-cells": true
++
++patternProperties:
++  "^.*@[0-9a-f]+$":
++    type: object
++    description: One node per I2C device connected to the tunnelled I2C bus.
++
++additionalProperties: false
++
++required:
++  - compatible
++  - google,remote-bus
++
++examples:
++  - |
++    cros-ec@0 {
++        compatible = "google,cros-ec-spi";
++        i2c-tunnel {
++            compatible = "google,cros-ec-i2c-tunnel";
++            #address-cells = <1>;
++            #size-cells = <0>;
++            google,remote-bus = <0>;
++
++            battery: sbs-battery@b {
++                compatible = "sbs,sbs-battery";
++                reg = <0xb>;
++                sbs,poll-retry-count = <1>;
++            };
++        };
++    };
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.17.1
+
