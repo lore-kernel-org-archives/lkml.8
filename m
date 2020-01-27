@@ -2,193 +2,120 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE015C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5D7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B649214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA33720842
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kOc4+jOX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vf8y+dkI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgA0GGW (ORCPT
+        id S1727084AbgA0GLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 01:06:22 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:46458 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgA0GGV (ORCPT
+        Mon, 27 Jan 2020 01:11:22 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32807 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgA0GLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 01:06:21 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R6365q111317;
-        Mon, 27 Jan 2020 06:05:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=JHl3pxKyojAGqGYtfwPFlNCopLmnuaTKzY6k8aSGSUo=;
- b=kOc4+jOX6atn7j9uyuG/XIuhfbNoYv9V/Dg/jICNfYgMbvDP/yAaoCHG++BO5OUH3zYq
- mo5r6N01ZydHh6+tMXhEHlxTQFqjRHYSpbcZ4tIE9/S4VTpDzvbvU3mhqMADQbRRgABw
- +YIYu3w3uPDpYILjOHtqshx0KrdyZUgfNUSmtHTIQzhcZGrcfsVxRNFoIW9nB2nf4Wa+
- 6qhUqTsj+MVBVhKz3l9eVAWOlHbZJNx5k9pXedlkaqEfKcSNWIdTODvy6kAGztxCD5JQ
- hcdUuyxHJ2rHmC2OLmqVDWR/vD5NJaAS5mTlPyrFn97iTc628nlMbA/OBc/yIkSOR1yS rg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xrdmq58bc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 06:05:01 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R643Vq184794;
-        Mon, 27 Jan 2020 06:05:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2xry4tm010-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 06:05:00 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00R64i3x020066;
-        Mon, 27 Jan 2020 06:04:47 GMT
-Received: from [10.39.241.133] (/10.39.241.133)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 26 Jan 2020 22:04:43 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <20200126224245.GA22901@paulmck-ThinkPad-P72>
-Date:   Mon, 27 Jan 2020 01:04:45 -0500
-Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FB96E148-C72B-4D00-95F0-C4B69A3EE454@oracle.com>
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
- <20200124222434.GA7196@paulmck-ThinkPad-P72>
- <6AAE7FC6-F5DE-4067-8BC4-77F27948CD09@oracle.com>
- <20200125005713.GZ2935@paulmck-ThinkPad-P72>
- <02defadb-217d-7803-88a1-ec72a37eda28@redhat.com>
- <adb4fb09-f374-4d64-096b-ba9ad8b35fd5@redhat.com>
- <20200125045844.GC2935@paulmck-ThinkPad-P72>
- <967f99ee-b781-43f4-d8ba-af83786c429c@redhat.com>
- <20200126153535.GL2935@paulmck-ThinkPad-P72>
- <20200126224245.GA22901@paulmck-ThinkPad-P72>
-To:     paulmck@kernel.org
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001270052
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001270052
+        Mon, 27 Jan 2020 01:11:22 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 6so4623154pgk.0
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 22:11:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XlOxx0+jj+Ueflcbt7+M5DoGBZOJ3YgoxX9npTLU818=;
+        b=vf8y+dkIOyamo0I61J7+ZSkbJGj40SHUioxA/UvAT4mXKJOPpTWo1waDRBuWBQKGFe
+         VB4npKCMULhEanj7fe7B8P0Tpm6YqrKnLnSB1yeFvIIKAc2mOQCU3qzaP7f9Jp3Lks/W
+         myykYoBSgxnIpiUwckSSFRex0x/vmDrNBMpRxBLIu3KmrNHM4QwwqGBMNr+qRycfZOuj
+         M9XsKdkv5UAKHg9vMRFEuDQmUgrGsepnOmykL2wWoEI0MGV+RmTS8ozosY4EKos+mJkF
+         qnnM6p9WFGXItpOfMQpF4gzErGhDTlMY3VyrI1dsQwHQp0c+2p4zjnepe8qoscXiZNd5
+         NwRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XlOxx0+jj+Ueflcbt7+M5DoGBZOJ3YgoxX9npTLU818=;
+        b=Ro2XrkkGBQCdn7G4B3svfujA6tNOA8zakBjvRZj5L0mlj6pxlgKMxI8hwRezZSzrat
+         lm5WMr25j7V8gi8mxyyWZn0enk3uR/THPnRkfOeIqxXWI5NdKzqTj2CP4501R7xArQSw
+         p07Vvl5Xw0XmU9UnQqBVib1kLwTk6qBBlKIztZREMupgdxRMqImt7ABu719vkBqPkPhp
+         e4TGCEOW9GQ6VsCKO4pHENDZMCo1Lers5T78tq18Xr0PKaCPkF+UNEcxB+UQG3Svjh0p
+         KziaGISQbHVooqCICgzM5bnTZUoKrLZR/PaK7kgN46b3A0NAHd1fqxqDCcBrHCNtAm5j
+         BseQ==
+X-Gm-Message-State: APjAAAWRFmFJ5afEBsirNMh0XDB1opX0dI0aQtpMIZXAQiolfC5jl1gT
+        RN8+iTdmllLgi3he1YVxi46SnA==
+X-Google-Smtp-Source: APXvYqwq3tBDze8fUjKjAxaItvqrHL1lPAynvz1JenxDlEme4cEH+PsLyuKkYKU8r2459NUUhS/9IA==
+X-Received: by 2002:a63:554c:: with SMTP id f12mr18365168pgm.23.1580105481429;
+        Sun, 26 Jan 2020 22:11:21 -0800 (PST)
+Received: from localhost ([122.172.51.87])
+        by smtp.gmail.com with ESMTPSA id j9sm14298014pfn.152.2020.01.26.22.11.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 26 Jan 2020 22:11:20 -0800 (PST)
+Date:   Mon, 27 Jan 2020 11:41:18 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>, kernel-team@android.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] OPP: Improve require-opps linking
+Message-ID: <20200127061118.5bxei6nghowlmf53@vireshk-i7>
+References: <20190717222340.137578-1-saravanak@google.com>
+ <20190717222340.137578-4-saravanak@google.com>
+ <20191125112812.26jk5hsdwqfnofc2@vireshk-i7>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191125112812.26jk5hsdwqfnofc2@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 25-11-19, 16:58, Viresh Kumar wrote:
+> >From 8df083ca64d82ff57f778689271cc1be75aa99c4 Mon Sep 17 00:00:00 2001
+> Message-Id: <8df083ca64d82ff57f778689271cc1be75aa99c4.1574681211.git.viresh.kumar@linaro.org>
+> From: Viresh Kumar <viresh.kumar@linaro.org>
+> Date: Mon, 25 Nov 2019 13:57:58 +0530
+> Subject: [PATCH] opp: Allow lazy-linking of required-opps
+> 
+> The OPP core currently requires the required opp tables to be available
+> before the dependent OPP table is added, as it needs to create links
+> from the dependent OPP table to the required ones. This may not be
+> convenient to all the platforms though, as this requires strict ordering
+> of probing of drivers.
+> 
+> This patch allows lazy-linking of the required-opps. The OPP tables for
+> which the required-opp-tables aren't available at the time of their
+> initialization, are added to a special list of OPP tables:
+> pending_opp_tables. Later on, whenever a new OPP table is registered
+> with the OPP core, we check if it is required by an OPP table in the
+> pending list; if yes, then we complete the linking then and there.
+> 
+> An OPP table is marked unusable until the time all its required-opp
+> tables are available. And if lazy-linking fails for an OPP table, the
+> OPP core disables all of its OPPs to make sure no one can use them.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/opp/core.c |  13 ++++++
+>  drivers/opp/of.c   | 113 +++++++++++++++++++++++++++++++++++++++++++--
+>  drivers/opp/opp.h  |   4 +-
+>  3 files changed, 124 insertions(+), 6 deletions(-)
+
+I was hoping to queue this up for next release, any update on getting
+this tested ?
 
 
-> On Jan 26, 2020, at 5:42 PM, Paul E. McKenney <paulmck@kernel.org> =
-wrote:
->=20
-> On Sun, Jan 26, 2020 at 07:35:35AM -0800, Paul E. McKenney wrote:
->> On Sat, Jan 25, 2020 at 02:41:39PM -0500, Waiman Long wrote:
->>> On 1/24/20 11:58 PM, Paul E. McKenney wrote:
->>>> On Fri, Jan 24, 2020 at 09:17:05PM -0500, Waiman Long wrote:
->>>>> On 1/24/20 8:59 PM, Waiman Long wrote:
->>>>>>> You called it!  I will play with QEMU's -numa argument to see if =
-I can get
->>>>>>> CNA to run for me.  Please accept my apologies for the false =
-alarm.
->>>>>>>=20
->>>>>>> 							Thanx, =
-Paul
->>>>>>>=20
->>>>>> CNA is not currently supported in a VM guest simply because the =
-numa
->>>>>> information is not reliable. You will have to run it on baremetal =
-to
->>>>>> test it. Sorry for that.
->>>>> Correction. There is a command line option to force CNA lock to be =
-used
->>>>> in a VM. Use the "numa_spinlock=3Don" boot command line parameter.
->>>> As I understand it, I need to use a series of -numa arguments to =
-qemu
->>>> combined with the numa_spinlock=3Don (or =3D1) on the kernel =
-command line.
->>>> If the kernel thinks that there is only one NUMA node, it appears =
-to
->>>> avoid doing CNA.
->>>>=20
->>>> Correct?
->>>>=20
->>>> 							Thanx, Paul
->>>>=20
->>> In auto-detection mode (the default), CNA will only be turned on =
-when
->>> paravirt qspinlock is not enabled first and there are at least 2 =
-numa
->>> nodes. The "numa_spinlock=3Don" option will force it on even when =
-both of
->>> the above conditions are false.
->>=20
->> Hmmm...
->>=20
->> Here is my kernel command line taken from the console log:
->>=20
->> console=3DttyS0 locktorture.onoff_interval=3D0 numa_spinlock=3Don =
-locktorture.stat_interval=3D15 locktorture.shutdown_secs=3D1800 =
-locktorture.verbose=3D1
->>=20
->> Yet the string "Enabling CNA spinlock" does not appear.
->>=20
->> Ah, idiot here needs to enable CONFIG_NUMA_AWARE_SPINLOCKS in his =
-build.
->> Trying again with "--kconfig "CONFIG_NUMA_AWARE_SPINLOCKS=3Dy"...
->=20
-> And after fixing that, plus adding the other three Kconfig options =
-required
-> to enable this, I really do see "Enabling CNA spinlock" in the console =
-log.
-> Yay!
-Great! Your persistence paid off :)
-
-Yet, CNA does not do much interesting here, as it sees only one numa =
-node.
-
->=20
-> At the end of the 30-minute locktorture exclusive-lock run, I see =
-this:
->=20
-> Writes:  Total: 572176565  Max/Min: 54167704/10878216 ???  Fail: 0
->=20
-> This is about a five-to-one ratio.  Is this expected behavior, given a
-> single NUMA node on a single-socket system with 12 hardware threads?
-I=E2=80=99m not sure what is expected here.
-I=E2=80=99m guessing that if you boot your guest with the default=20
-(non-CNA/non-paravirt) qspinlock, you will get a similar result.
-
->=20
-> I will try reader-writer lock next.
->=20
-> Again, should I be using qemu's -numa command-line option to create =
-nodes?
-> If so, what would be a sane configuration given 12 CPUs and 512MB of
-> memory for the VM?  If not, what is a good way to exercise CNA's NUMA
-> capabilities within a guest OS?
-That=E2=80=99s a good question. Perhaps Longman knows the answer?
-
-Regards,
-=E2=80=94 Alex=
+-- 
+viresh
