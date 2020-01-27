@@ -2,101 +2,94 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67957C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D36C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3DC21739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:33:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A9hPJ8Rt"
+	by mail.kernel.org (Postfix) with ESMTP id E460C2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbgA0LdE (ORCPT
+        id S1730252AbgA0LhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:33:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33738 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730109AbgA0LdD (ORCPT
+        Mon, 27 Jan 2020 06:37:07 -0500
+Received: from www62.your-server.de ([213.133.104.62]:50590 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbgA0LhH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:33:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580124782;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PlXx4GCmusHDyEhr1tc9UGO1kB0k8P75h0J2Af90Eb0=;
-        b=A9hPJ8RtIVEC8gjkpIoWwyV7FkbDcO9J57D5P1KR1dL8vCv79pwW8bSNsT1zp5CK4VbY/Q
-        H4eR15Ow2t54M1vOkJKRPL8cUGMbE0mA2NDljAhxZ4kBDLR6bCsD8bm1YMbJDNpbgMVsRg
-        c4Os02fKk4XsMcgke5iJPFnLy1Whzao=
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
- [209.85.167.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-3_4QDrRxNJeYRh_Sehvrvw-1; Mon, 27 Jan 2020 06:33:01 -0500
-X-MC-Unique: 3_4QDrRxNJeYRh_Sehvrvw-1
-Received: by mail-oi1-f199.google.com with SMTP id o5so1629933oif.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 03:33:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PlXx4GCmusHDyEhr1tc9UGO1kB0k8P75h0J2Af90Eb0=;
-        b=nk5u3dVFqWnrVTipl0cZy92jMxEkmkaiKt4LEgUX29ImGZKVljLjmycABYT4SYwWX1
-         q0GvyhvMN+td0U6G9lSj8m79qb2YMMAedrPOGR+IGe8YpvUtpfm/SspMlWSh9mBwnxjY
-         87iXVcMVSXM88pSZPLJLEZr/D9Qy73eaWkasZSD3Fqu9Qa/JosGUKU/qcl20x35NiKJu
-         SeDo+JCf86+otLs+7N+UC1Qx997rzvWlOJXRdurb+Fg2LgxcatvqMERwWZxoAQpLHmOG
-         mIjM+1C8Fg3Wi80yw03cmQRSfBNgvW8iBW7LZ9EQgTq61RKEjYNZyGZT4oeEz9I61czy
-         OQGQ==
-X-Gm-Message-State: APjAAAWk1OF+mmzFgVa6oDbcOPkTWidypBBboposFe9EV/PM9NWwrlpy
-        EGuy2JXMW1d8Yi4sIs1IOVa4omQr51zJvgv/Vtqe4hFomYAw1q9PiJjpowO07Pu6RwgcHrfaKMT
-        nGhsO7gcKXjQNRtv84OpMAoiGyXeaYC2rrhpNWK74
-X-Received: by 2002:a9d:53c4:: with SMTP id i4mr12833307oth.48.1580124780170;
-        Mon, 27 Jan 2020 03:33:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy2WCKL3TcEQWLEGBx1bgWgRFFUvo6KJVLgtkrNqpfuMHkeNAswCT3gA+Mrw2sEoru3XQgdgZuxdIpa/3I3A0I=
-X-Received: by 2002:a9d:53c4:: with SMTP id i4mr12833293oth.48.1580124779964;
- Mon, 27 Jan 2020 03:32:59 -0800 (PST)
+        Mon, 27 Jan 2020 06:37:07 -0500
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iw2H7-0000Fy-9E; Mon, 27 Jan 2020 12:09:49 +0100
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iw2H6-00054j-PT; Mon, 27 Jan 2020 12:09:48 +0100
+Subject: Re: [PATCH] selftests/bpf: Elide a check for LLVM versions that can't
+ compile it
+To:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     shuah@kernel.org, ast@kernel.org, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, kernel-team@android.com,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+References: <20200124180839.185837-1-palmerdabbelt@google.com>
+ <87ftg4fvmo.fsf@toke.dk>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <dcbed741-a16f-0057-6589-e2d2e41e9bfc@iogearbox.net>
+Date:   Mon, 27 Jan 2020 12:09:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200127101100.92588-1-ghalat@redhat.com> <063e702f-dc5f-b0ca-fe26-508a9f1e8e9a@I-love.SAKURA.ne.jp>
-In-Reply-To: <063e702f-dc5f-b0ca-fe26-508a9f1e8e9a@I-love.SAKURA.ne.jp>
-From:   Grzegorz Halat <ghalat@redhat.com>
-Date:   Mon, 27 Jan 2020 12:32:48 +0100
-Message-ID: <CAKbGCsfyiLfvwi1iYuTu2Gg5=TXQwUQ3iv73PdNvY8o_NZJ7aQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm: sysctl: add panic_on_mm_error sysctl
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Aaron Tomlin <atomlin@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Stan Saner <ssaner@redhat.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Vratislav Bendel <vbendel@redhat.com>, kirill@shutemov.name,
-        khlebnikov@yandex-team.ru, borntraeger@de.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87ftg4fvmo.fsf@toke.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25707/Sun Jan 26 12:40:28 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020 at 11:43, Tetsuo Handa wrote:
->
-> Maybe panic_on_inconsistent_mm is better, for an MM error sounds too generic
-> (e.g. is page allocation failure an error, is OOM killer an error,
-> is NULL pointer dereference an error, is use-after-free access an error) ?
->
-yes, panic_on_inconsistent_mm is better
+On 1/24/20 9:27 PM, Toke Høiland-Jørgensen wrote:
+> Palmer Dabbelt <palmerdabbelt@google.com> writes:
+> 
+>> The current stable LLVM BPF backend fails to compile the BPF selftests
+>> due to a compiler bug.  The bug has been fixed in trunk, but that fix
+>> hasn't landed in the binary packages I'm using yet (Fedora arm64).
+>> Without this workaround the tests don't compile for me.
+>>
+>> This patch triggers a preprocessor warning on LLVM versions that
+>> definitely have the bug.  The test may be conservative (ie, I'm not sure
+>> if 9.1 will have the fix), but it should at least make the current set
+>> of stable releases work together.
+>>
+>> See https://reviews.llvm.org/D69438 for more information on the fix.  I
+>> obtained the workaround from
+>> https://lore.kernel.org/linux-kselftest/aed8eda7-df20-069b-ea14-f06628984566@gmail.com/T/
+>>
+>> Fixes: 20a9ad2e7136 ("selftests/bpf: add CO-RE relocs array tests")
+>> Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> 
+> Having to depend on the latest trunk llvm to compile the selftests is
+> definitely unfortunate. I believe there are some tests that won't work
+> at all without trunk llvm (the fentry/fexit stuff comes to mind;
+> although I'm not sure if they'll fail to compile, just fail to run?).
+> Could we extend this type of checking to any such case?
 
-> Also, should this be in /proc/sys/vm/ than /proc/sys/kernel/ ?
-Agreed
+Yeah, Palmer, are you saying that with this fix you're able to run through
+all of the BPF test suite on bpf-next with clang/llvm 9.0?
 
-I will wait a day or two for more feedback and send V2 with sysctl
-named as 'vm.panic_on_inconsistent_mm'.
-
-Thanks,
---
-Grzegorz Halat
-
+So far policy has been that tests run always on latest trunk to also cover
+llvm changes in BPF backend to make sure there are no regressions there. OT:
+perhaps we should have a 'make deps' target in BPF selftests to make it easier
+for developers to spin up a latest test env to run selftests in.
