@@ -2,185 +2,139 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ABDC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186DEC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD40220716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DECBB20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jb/w3Bb1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FchA0Pz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730100AbgA0LUR (ORCPT
+        id S1730122AbgA0LVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:20:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22868 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727747AbgA0LUJ (ORCPT
+        Mon, 27 Jan 2020 06:21:12 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34594 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgA0LVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:20:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580124007;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LIk00X/KXVdbLkFtuKPrEpZyGO0RG3xstfsngS1E1yw=;
-        b=Jb/w3Bb1GxCVGfpM4Ibfm/mblr2VGLYlx3vHYBA5xBivn54ZtqXHwbXm4D7I7lxbcLDGxZ
-        fnFlizoVn08z3IYiGIO8D+X3+Fg/qUczqxGK6mvnG7N/Lu2xOAQ+Yx+s34RYBqqBdlvQae
-        X6T0k5TzqNnPCwtzK+qmX38lLfSVcdc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-114-DEOqPzKLM7u2wxz8DVsayw-1; Mon, 27 Jan 2020 06:04:35 -0500
-X-MC-Unique: DEOqPzKLM7u2wxz8DVsayw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DB901083E95;
-        Mon, 27 Jan 2020 11:04:33 +0000 (UTC)
-Received: from t480s.redhat.com (unknown [10.36.118.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D20D19E9C;
-        Mon, 27 Jan 2020 11:04:31 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: [PATCH v1 1/3] drivers/base/memory.c: drop section_count
-Date:   Mon, 27 Jan 2020 12:04:22 +0100
-Message-Id: <20200127110424.5757-2-david@redhat.com>
-In-Reply-To: <20200127110424.5757-1-david@redhat.com>
-References: <20200127110424.5757-1-david@redhat.com>
+        Mon, 27 Jan 2020 06:21:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oN9jrHITT8NXPApGR5IdI2zdZsOhyn/YSoMnNfuDNDA=; b=FchA0Pz8WrdNQTx9TZOkxLvOV
+        /1bPeZn17gBYrAnfgHxUyFM+fIwkwlPcSETRQsHKFtGdf/R6kuK/uS9C0sWK6/kqPwDWSqgyX0iRr
+        ei5VsfhNvh19TG4oOweCY0FW4J8QLNV8hggyiAw8kUz43sr89Jf/eVHUJb1YW5O33vmcu/FMTeAEl
+        kRgTZBW/EiOuHnEkSLpSeQQsafpyaWFF/bVML1fC39Md6ZZtWx1LZEBJxH6VhTjuelj9dYus0xoAX
+        jCAux7AN6nGMMTeyciG2N+Wvc5oMPbtvuthIHCiN8AwnUisyPlZZpm1shEZLxINlYAM+s634ybDDO
+        byc/CulpA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60526)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iw2S1-0000u0-5S; Mon, 27 Jan 2020 11:21:05 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iw2Ry-0001M9-7w; Mon, 27 Jan 2020 11:21:02 +0000
+Date:   Mon, 27 Jan 2020 11:21:02 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
+ up without PHY
+Message-ID: <20200127112102.GT25745@shell.armlinux.org.uk>
+References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+ <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit c5e79ef561b0 ("mm/memory_hotplug.c: don't allow to
-online/offline memory blocks with holes") we have a generic check in
-offline_pages() that disallows offlining memory blocks with holes.
+On Mon, Jan 27, 2020 at 12:09:11PM +0100, Jose Abreu wrote:
+> When we don't have any real PHY driver connected and we get link up from
+> PCS we shall configure MAC and PCS for the desired speed and also
+> resolve the flow control settings from MAC side.
 
-Memory blocks with missing sections are just another variant of these
-type of blocks. We can stop checking (and especially storing) present
-sections. A proper error message is now printed why offlining failed.
+This is certainly the wrong place for it.  Please hold off on this patch
+for the time being.  Thanks.
 
-section_count was initially introduced in commit 07681215975e ("Driver
-core: Add section count to memory_block struct") in order to detect
-when it is okay to remove a memory block. It was used in commit
-26bbe7ef6d5c ("drivers/base/memory.c: prohibit offlining of memory blocks
-with missing sections") to disallow offlining memory blocks with missing
-sections. As we refactored creation/removal of memory devices and have
-a proper check for holes in place, we can drop the section_count.
+> 
+> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+> 
+> ---
+> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Jose Abreu <joabreu@synopsys.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/net/phy/phylink.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index 4174d874b1f7..75dbaf80d7a5 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -533,10 +533,20 @@ static void phylink_resolve(struct work_struct *w)
+>  
+>  	if (link_changed) {
+>  		pl->old_link_state = link_state.link;
+> -		if (!link_state.link)
+> +		if (!link_state.link) {
+>  			phylink_mac_link_down(pl);
+> -		else
+> +		} else {
+> +			/* If no PHY is connected, we still need to configure
+> +			 * MAC/PCS for flow control and speed.
+> +			 */
+> +			if (!pl->phydev) {
+> +				phylink_resolve_flow(pl, &link_state);
+> +				phylink_mac_config(pl, &link_state);
+> +			}
+> +
+>  			phylink_mac_link_up(pl, link_state);
+> +		}
+> +
+>  	}
+>  	if (!link_state.link && pl->mac_link_dropped) {
+>  		pl->mac_link_dropped = false;
+> -- 
+> 2.7.4
+> 
+> 
 
-This also removes a leftover comment regarding the mem_sysfs_mutex,
-which was removed in commit 848e19ad3c33 ("drivers/base/memory.c: drop
-the mem_sysfs_mutex").
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/base/memory.c  | 17 +++--------------
- include/linux/memory.h |  1 -
- 2 files changed, 3 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 6503f5d0b749..852fece9be1d 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -292,10 +292,6 @@ static int memory_subsys_offline(struct device *dev)
- 	if (mem->state =3D=3D MEM_OFFLINE)
- 		return 0;
-=20
--	/* Can't offline block with non-present sections */
--	if (mem->section_count !=3D sections_per_block)
--		return -EINVAL;
--
- 	return memory_block_change_state(mem, MEM_OFFLINE, MEM_ONLINE);
- }
-=20
-@@ -660,7 +656,7 @@ static int init_memory_block(struct memory_block **me=
-mory,
-=20
- static int add_memory_block(unsigned long base_section_nr)
- {
--	int ret, section_count =3D 0;
-+	int section_count =3D 0;
- 	struct memory_block *mem;
- 	unsigned long nr;
-=20
-@@ -671,12 +667,8 @@ static int add_memory_block(unsigned long base_secti=
-on_nr)
-=20
- 	if (section_count =3D=3D 0)
- 		return 0;
--	ret =3D init_memory_block(&mem, base_memory_block_id(base_section_nr),
--				MEM_ONLINE);
--	if (ret)
--		return ret;
--	mem->section_count =3D section_count;
--	return 0;
-+	return init_memory_block(&mem, base_memory_block_id(base_section_nr),
-+				 MEM_ONLINE);
- }
-=20
- static void unregister_memory(struct memory_block *memory)
-@@ -714,7 +706,6 @@ int create_memory_block_devices(unsigned long start, =
-unsigned long size)
- 		ret =3D init_memory_block(&mem, block_id, MEM_OFFLINE);
- 		if (ret)
- 			break;
--		mem->section_count =3D sections_per_block;
- 	}
- 	if (ret) {
- 		end_block_id =3D block_id;
-@@ -723,7 +714,6 @@ int create_memory_block_devices(unsigned long start, =
-unsigned long size)
- 			mem =3D find_memory_block_by_id(block_id);
- 			if (WARN_ON_ONCE(!mem))
- 				continue;
--			mem->section_count =3D 0;
- 			unregister_memory(mem);
- 		}
- 	}
-@@ -752,7 +742,6 @@ void remove_memory_block_devices(unsigned long start,=
- unsigned long size)
- 		mem =3D find_memory_block_by_id(block_id);
- 		if (WARN_ON_ONCE(!mem))
- 			continue;
--		mem->section_count =3D 0;
- 		unregister_memory_block_under_nodes(mem);
- 		unregister_memory(mem);
- 	}
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index 0b8d791b6669..439a89e758d8 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -26,7 +26,6 @@
- struct memory_block {
- 	unsigned long start_section_nr;
- 	unsigned long state;		/* serialized by the dev->lock */
--	int section_count;		/* serialized by mem_sysfs_mutex */
- 	int online_type;		/* for passing data to online routine */
- 	int phys_device;		/* to which fru does this belong? */
- 	struct device dev;
---=20
-2.24.1
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
