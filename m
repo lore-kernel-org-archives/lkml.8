@@ -2,189 +2,145 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14531C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221D6C33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C1E21739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:16:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hb4Rm2T3"
+	by mail.kernel.org (Postfix) with ESMTP id EE7F521739
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580145421;
+	bh=PglgpVemLWFSZcqxwzUkIG2G/5M7nzcxv89bJ6SA8d4=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=djXmz1NJj1GrIoiWCs1ko0mkxexxG8AZCeuVzNExUf8a+p1SbMGncLc7SLcS6QITh
+	 2pzYvtaHosJs9XsDgo4uqbu1ucouTFcCTV2/jNGMTQe2GP+AW5YMDiXBPMppz4hTZ0
+	 xQr3Z4F4clJy+8dc9jmP+Y+h9kt8V+UcdtTLoJuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgA0RQc (ORCPT
+        id S1726338AbgA0RRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:16:32 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41504 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgA0RQb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:16:31 -0500
-Received: by mail-lf1-f67.google.com with SMTP id m30so6742448lfp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:16:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+bYkFYyzlADrxfOOfruFV0DySun5/W9XTnyRwJfjfl8=;
-        b=Hb4Rm2T3zMuJm3b53/HOriq6QnhhM4oHwG+MhubxkYBndXSiHaxpqD3mo+IRm4trT4
-         XYk6UAypgr0YsWLDyS8qLN3aeh1fA7epeD4WgbVujBms7TsmryWy0IWNPw+oxid0iN+j
-         dgd6t/LaIkL0XTTn2/cRx4u44jdloPponwQ9YZmbK2m6kki8JEXjvmZTzRK/e4LJx390
-         pIC7U/t8iALoRiWYIVQjc/1feajrW0rwUNwdOdvRZilTBOq9MaRa8nseMZjyYzCMJ0A+
-         Vv6bxq/W6kpxrZl+rAMq795OWBTvewcWUq/nkd+uq6H4AQ5zLjIsVOH+L3napUC36SQ5
-         rVDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+bYkFYyzlADrxfOOfruFV0DySun5/W9XTnyRwJfjfl8=;
-        b=IQqiLsizxHas12b1FlB3tWKxI56FkLY2syY+y2D6E1VmG7Beh7Fcu/Cc0VfgueLCyz
-         bqzKTg0cLrmFRldfLxv0kYV/72RzR0m62Us3kAbybYn9Q5US2bj5d+Xw4O1EKXOfr5Ae
-         4mFDlpooUaLP8KGLhqq5DPuDWNaD81tecdWDWVbjfybfC2HvySkmRwT/Ayow9B+R7cee
-         X8akbhkkZseDKX15ivzNgvEgjwK1j+NlYFH7rzox2eijL8ACTQtZCam2Xtn4iX+tvu1x
-         xmjRZuHcv5aXAvmnmz2MB4TZF+MRFvk84BxhK/fkQHJZXkzRIbJb8KrfMmRjTzy1QxSG
-         fpIQ==
-X-Gm-Message-State: APjAAAVMrn23mCz6xMoFsi64ci+8/pAehVwy0MYpEJggduRuy8bJnhJv
-        XDDZC38jEfdUp3c09OmVSVKz1RYm9gqO2jcaCzb/Iw==
-X-Google-Smtp-Source: APXvYqwSM9E4ObJW0+KiBcC3xZJ7rr4nNUeeJHxI+9QUmq6ihZlCdhupuSZY8zan8cLAf3ZeGlJpgjnryNYn/qaObY8=
-X-Received: by 2002:a19:5504:: with SMTP id n4mr8124769lfe.25.1580145388644;
- Mon, 27 Jan 2020 09:16:28 -0800 (PST)
+        Mon, 27 Jan 2020 12:17:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbgA0RQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 12:16:59 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90D0721739;
+        Mon, 27 Jan 2020 17:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580145418;
+        bh=PglgpVemLWFSZcqxwzUkIG2G/5M7nzcxv89bJ6SA8d4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DYX5oPrLNctYSgyCCGsTdEc3PYUdnRmEOpzmidU2MUIlJcpvn33jqC357LcFSefd0
+         mG7Y0FZh4EH3L2AS6dxWQ0Anp4uakN7zugQYPnXzL+1pIgwbl4lBDzxv/VlBQTnFxY
+         7i9wEL8J/66nftUmnewCagRZYzCas5ei6tn2//X4=
+Subject: Re: [PATCH] selftests: settings: tests can be in subsubdirs
+To:     Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mptcp <mptcp@lists.01.org>, shuah <shuah@kernel.org>
+References: <20191022171223.27934-1-matthieu.baerts@tessares.net>
+ <c9ce5016-9e83-67c0-ae22-2d3c46427b25@tessares.net>
+ <201911211018.D6CD68AC5@keescook>
+ <602ab319-dcb9-4ac7-b2b8-f7b6072ddc03@tessares.net>
+From:   shuah <shuah@kernel.org>
+Message-ID: <bcce12e4-f122-10ae-dbc7-cc199d9716b6@kernel.org>
+Date:   Mon, 27 Jan 2020 10:16:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200122173538.1142069-1-douglas.raillard@arm.com>
-In-Reply-To: <20200122173538.1142069-1-douglas.raillard@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 27 Jan 2020 18:16:17 +0100
-Message-ID: <CAKfTPtC9A6KVwYsQWgXXk-12GeJhkJfEm3Lk=LjcoOJvvoZ1uA@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
-To:     Douglas RAILLARD <douglas.raillard@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        viresh kumar <viresh.kumar@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Quentin Perret <qperret@google.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <602ab319-dcb9-4ac7-b2b8-f7b6072ddc03@tessares.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 at 18:36, Douglas RAILLARD <douglas.raillard@arm.com> wrote:
+On 1/27/20 9:05 AM, Matthieu Baerts wrote:
+> Hi Shuah, Kees,
+> 
+> On 21/11/2019 19:52, Kees Cook wrote:
+>> On Thu, Nov 21, 2019 at 05:32:42PM +0100, Matthieu Baerts wrote:
+>>> Hi Shuah,
+>>>
+>>> First, thank you for maintaining the Kernel Selftest framework!
+>>>
+>>> On 22/10/2019 19:12, Matthieu Baerts wrote:
+>>>> Commit 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second
+>>>> timeout per test) adds support for a new per-test-directory "settings"
+>>>> file. But this only works for tests not in a sub-subdirectories, e.g.
+>>>>
+>>>>    - tools/testing/selftests/rtc (rtc) is OK,
+>>>>    - tools/testing/selftests/net/mptcp (net/mptcp) is not.
+>>>>
+>>>> We have to increase the timeout for net/mptcp tests which are not
+>>>> upstreamed yet but this fix is valid for other tests if they need to 
+>>>> add
+>>>> a "settings" file, see the full list with:
+>>>>
+>>>>     tools/testing/selftests/*/*/**/Makefile
+>>>>
+>>>> Note that this patch changes the text header message printed at the end
+>>>> of the execution but this text is modified only for the tests that are
+>>>> in sub-subdirectories, e.g.
+>>>>
+>>>>     ok 1 selftests: net/mptcp: mptcp_connect.sh
+>>>>
+>>>> Before we had:
+>>>>
+>>>>     ok 1 selftests: mptcp: mptcp_connect.sh
+>>>>
+>>>> But showing the full target name is probably better, just in case a
+>>>> subsubdir has the same name as another one in another subdirectory.
+>>>>
+>>>> Fixes: 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second 
+>>>> timeout per test)
+>>>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>>> Sorry to bother you again with this but by chance, did you have a 
+>>> look at
+>>> the patch below? :)
+>>>
+>>> It doesn't only fix an issue with MPTCP, not in the kernel yet. But 
+>>> it also
+>>> fixes the issue of taking the right "settings" file (if available) 
+>>> for any
+>>> other tests in a sub-directory, e.g.:
+>>>
+>>>    drivers/dma-buf
+>>>    filesystems/binderfs
+>>>    net/forwarding
+>>>    networking/timestamping
+>>>
+>>> But I guess all tests in powerpc/* dirs and others.
+>>
+>> Thanks for the ping! I missed this patch when you originally sent it.
+>> Yes, this make sense to me:
+>>
+>> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> Kees, Thank you for this review!
+> 
+> Shuah, I am sorry to send you this new request. It is just to inform you 
+> that the first selftests for MPTCP are now in "net-next" repo, ready for 
+> the future Linux 5.6.
+> We would then be very happy to see this patch here below for the 
+> kselftest framework accepted to avoid timeouts. Locally we apply this 
+> patch before running the selftests but we cannot ask everybody running 
+> MPTCP' selftests to do the same :)
+> 
 >
-> Make schedutil cpufreq governor energy-aware.
->
-> - patch 1 introduces a function to retrieve a frequency given a base
->   frequency and an energy cost margin.
-> - patch 2 links Energy Model perf_domain to sugov_policy.
-> - patch 3 updates get_next_freq() to make use of the Energy Model.
-> - patch 4 adds sugov_cpu_ramp_boost() function.
-> - patch 5 updates sugov_update_(single|shared)() to make use of
->   sugov_cpu_ramp_boost().
-> - patch 6 introduces a tracepoint in get_next_freq() for
->   testing/debugging. Since it's not a trace event, it's not exposed to
->   userspace in a directly usable way, allowing for painless future
->   updates/removal.
->
-> The benefits of using the EM in schedutil are twofold:
->
-> 1) Selecting the highest possible frequency for a given cost. Some
->    platforms can have lower frequencies that are less efficient than
->    higher ones, in which case they should be skipped for most purposes.
 
-This make sense. Why using a lower frequency when a higher one is more
-power efficient
+I am sorry for the delay. My bad. Looks like I just missed it. I will
+make sure it gets into 5.6-rc1
 
->    They can still be useful to give more freedom to thermal throttling
->    mechanisms, but not under normal circumstances.
->    note: the EM framework will warn about such OPPs "hertz/watts ratio
->    non-monotonically decreasing"
->
-> 2) Driving the frequency selection with power in mind, in addition to
->    maximizing the utilization of the non-idle CPUs in the system.
->
-> Point 1) is implemented in "PM: Introduce em_pd_get_higher_freq()" and
-> enabled in schedutil by
-> "sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()".
->
-> Point 2) is enabled in
-> "sched/cpufreq: Boost schedutil frequency ramp up". It allows using
-> higher frequencies when it is known that the true utilization of
-> currently running tasks is exceeding their previous stable point.
-> The benefits are:
->
-> * Boosting the frequency when the behavior of a runnable task changes,
->   leading to an increase in utilization. That shortens the frequency
->   ramp up duration, which in turns allows the utilization signal to
->   reach stable values quicker.  Since the allowed frequency boost is
->   bounded in energy, it will behave consistently across platforms,
->   regardless of the OPP cost range.
+Thanks for your patience and ping.
 
-Could you explain this a bit more ?
-
->
-> * The boost is only transient, and should not impact a lot the energy
->   consumed of workloads with very stable utilization signals.
->
-> This has been lightly tested with a rtapp task ramping from 10% to 75%
-> utilisation on a big core.
-
-Which kind of UC are you targeting ?
-
-Do you have some benchmark showing the benefit and how you can bound
-the increase of energy ?
-
-The benefit of point2 is less obvious for me. We already have uclamp
-which helps to overwrite the "utilization" that is seen by schedutil
-to boost or cap the frequency when some tasks are running. I'm curious
-to see what would be the benefit of this on top.
-
->
-> v1 -> v2:
->
->   * Split the new sugov_cpu_ramp_boost() from the existing
->     sugov_cpu_is_busy() as they seem to seek a different goal.
->
->   * Implement sugov_cpu_ramp_boost() based on CFS util_avg and
->     util_est_enqueued signals, rather than using idle calls count.
->     This makes the ramp boost much more accurate in finding boost
->     opportunities, and give a "continuous" output rather than a boolean.
->
->   * Add EM_COST_MARGIN_SCALE=1024 to represent the
->     margin values of em_pd_get_higher_freq().
->
-> v2 -> v3:
->
->   * Check util_avg >= sg_cpu->util_avg in sugov_cpu_ramp_boost_update()
->     to avoid boosting when the utilization is decreasing.
->
->   * Add a tracepoint for testing.
->
-> v3 -> v4:
->
->   * em_pd_get_higher_freq() now interprets the margin as absolute,
->     rather than relative to the cost of the base frequency.
->
->   * Modify misleading comment in em_pd_get_higher_freq() since min_freq
->     can actually be higher than the max available frequency in normal
->     operations.
->
-> Douglas RAILLARD (6):
->   PM: Introduce em_pd_get_higher_freq()
->   sched/cpufreq: Attach perf domain to sugov policy
->   sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()
->   sched/cpufreq: Introduce sugov_cpu_ramp_boost
->   sched/cpufreq: Boost schedutil frequency ramp up
->   sched/cpufreq: Add schedutil_em_tp tracepoint
->
->  include/linux/energy_model.h     |  56 ++++++++++++++
->  include/trace/events/power.h     |   9 +++
->  kernel/sched/cpufreq_schedutil.c | 124 +++++++++++++++++++++++++++++--
->  3 files changed, 182 insertions(+), 7 deletions(-)
->
-> --
-> 2.24.1
->
+thanks,
+-- Shuah
