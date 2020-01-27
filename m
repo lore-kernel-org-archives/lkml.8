@@ -2,116 +2,209 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70601C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5212C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432A2214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701A0214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="atdE9krN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TWYS4cP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgA0Igp (ORCPT
+        id S1729143AbgA0Iiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 03:36:45 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42752 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgA0Igo (ORCPT
+        Mon, 27 Jan 2020 03:38:50 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21545 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728668AbgA0Iiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 03:36:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=INV8lW4jOqrKHZ5smg8wZ5jkIja+5SUyErQCdgM0jI4=; b=atdE9krN/VqGTwvG06EQuVuXW
-        IAHsjU8r+SDvZCmRtrw6Ys+bnMS+z3DXz8P4phw1VJrzfA9u4l9oGQBPBEmNPoQJUeBity8u6kUJ9
-        n5e+ZQjPq1yoAuNwuo2T8Tkju/4l4NH1OEuWVIfYu+TFq0QllZYHySDPKUpWMOZzD90OdddHgcci6
-        7MlXMoIr26/4qDl3CkzxwUkmSeDwMthtymZmm64XUCN478UG48DaoeMzlFG34KS8ga7ReZI93NPCy
-        23oWsYd4Xl3ptnyBSvjhqeWF9xIuE4RjC5GafiSYTvga9LpzduMM8mz4Cx8T5d5pycQ3LcKG8C1FP
-        zsI1Lcj9Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ivzso-0003gK-3g; Mon, 27 Jan 2020 08:36:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 625D2302C0F;
-        Mon, 27 Jan 2020 09:34:50 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 327532019658B; Mon, 27 Jan 2020 09:36:32 +0100 (CET)
-Date:   Mon, 27 Jan 2020 09:36:32 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v15] x86/split_lock: Enable split lock detection by kernel
-Message-ID: <20200127083632.GI14946@hirez.programming.kicks-ass.net>
-References: <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
- <20200123004507.GA2403906@rani.riverdale.lan>
- <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com>
- <20200123044514.GA2453000@rani.riverdale.lan>
- <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
- <87h80kmta4.fsf@nanos.tec.linutronix.de>
- <20200125024727.GA32483@agluck-desk2.amr.corp.intel.com>
- <20200125212524.GA538225@rani.riverdale.lan>
- <20200125215003.GB17914@agluck-desk2.amr.corp.intel.com>
- <20200127080419.GG14914@hirez.programming.kicks-ass.net>
+        Mon, 27 Jan 2020 03:38:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580114329;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6xHjqcGoKCBGKlL3qdqNz6iPbD1SCDfAlhNTZTWBwQI=;
+        b=TWYS4cP/nS2v41+Adw261lU6Vbh7Q790VDcyYD3Vbpfnw/QrGTCSue+yYXJEBo4OY3BhmN
+        BD4XM00U+KpHLftRthcU1h+eFODahZ90w/5DGNJPq6fYap3P9TElz19gSj2ZVmEgmfTiR7
+        HnfMona5hDWkiQ1aknpHeQuXXO2ACqM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-16-7JGMZ4wYPHaLPIBsHxr0GA-1; Mon, 27 Jan 2020 03:38:47 -0500
+X-MC-Unique: 7JGMZ4wYPHaLPIBsHxr0GA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AFC6D1800D41;
+        Mon, 27 Jan 2020 08:38:45 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8CEA4863C5;
+        Mon, 27 Jan 2020 08:38:41 +0000 (UTC)
+Date:   Mon, 27 Jan 2020 09:38:38 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>, Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>
+Subject: Re: [PATCH v4 06/10] KVM: selftests: Add support for vcpu_args_set
+ to aarch64 and s390x
+Message-ID: <20200127083838.u32bylca2n4om6zx@kamzik.brq.redhat.com>
+References: <20200123180436.99487-1-bgardon@google.com>
+ <20200123180436.99487-7-bgardon@google.com>
+ <6061cd22-59bb-c191-bd98-f14d7cd274ae@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200127080419.GG14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6061cd22-59bb-c191-bd98-f14d7cd274ae@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 09:04:19AM +0100, Peter Zijlstra wrote:
-> On Sat, Jan 25, 2020 at 01:50:03PM -0800, Luck, Tony wrote:
-> > On Sat, Jan 25, 2020 at 04:25:25PM -0500, Arvind Sankar wrote:
-> > > On Fri, Jan 24, 2020 at 06:47:27PM -0800, Luck, Tony wrote:
-> > > > I did find something with a new test. Applications that hit a
-> > > > split lock warn as expected. But if they sleep before they hit
-> > > > a new split lock, we get another warning. This is may be because
-> > > > I messed up when fixing a PeterZ typo in the untested patch.
-> > > > But I think there may have been bigger problems.
-> > > > 
-> > > > Context switch in V14 code did: 
-> > > > 
-> > > >        if (tifp & _TIF_SLD)
-> > > >                switch_to_sld(prev_p);
-> > > > 
-> > > > void switch_to_sld(struct task_struct *prev)
-> > > > {
-> > > >        __sld_msr_set(true);
-> > > >        clear_tsk_thread_flag(prev, TIF_SLD);
-> > > > }
-> > > > 
-> > > > Which re-enables split lock checking for the next process to run. But
-> > > > mysteriously clears the TIF_SLD bit on the previous task.
-> > > 
-> > > Did Peter mean to disable it only for the current timeslice and
-> > > re-enable it for the next time its scheduled?
+On Sat, Jan 25, 2020 at 10:34:16AM +0100, Paolo Bonzini wrote:
+> On 23/01/20 19:04, Ben Gardon wrote:
+> > Currently vcpu_args_set is only implemented for x86. This makes writing
+> > tests with multiple vCPUs difficult as each guest vCPU must either a.)
+> > do the same thing or b.) derive some kind of unique token from it's
+> > registers or the architecture. To simplify the process of writing tests
+> > with multiple vCPUs for s390 and aarch64, add set args functions for
+> > those architectures.
 > > 
-> > He's seen and commented on this thread since I made this comment. So
+> > Signed-off-by: Ben Gardon <bgardon@google.com>
+> > ---
+> >  .../selftests/kvm/lib/aarch64/processor.c     | 33 +++++++++++++++++
+> >  .../selftests/kvm/lib/s390x/processor.c       | 35 +++++++++++++++++++
+> >  2 files changed, 68 insertions(+)
+> > 
+> > diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> > index 86036a59a668e..a2ff90a75f326 100644
+> > --- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> > +++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> > @@ -333,3 +333,36 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
+> >  {
+> >  	aarch64_vcpu_add_default(vm, vcpuid, NULL, guest_code);
+> >  }
+> > +
+> > +/* VM VCPU Args Set
+> > + *
+> > + * Input Args:
+> > + *   vm - Virtual Machine
+> > + *   vcpuid - VCPU ID
+> > + *   num - number of arguments
+> > + *   ... - arguments, each of type uint64_t
+> > + *
+> > + * Output Args: None
+> > + *
+> > + * Return: None
+> > + *
+> > + * Sets the first num function input arguments to the values
+> > + * given as variable args.  Each of the variable args is expected to
+> > + * be of type uint64_t. The registers set by this function are r0-r7.
+> > + */
+> > +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
+> > +{
+> > +	va_list ap;
+> > +
+> > +	TEST_ASSERT(num >= 1 && num <= 8, "Unsupported number of args,\n"
+> > +		    "  num: %u\n",
+> > +		    num);
+> > +
+> > +	va_start(ap, num);
+> > +
+> > +	for (i = 0; i < num; i++)
+> > +		set_reg(vm, vcpuid, ARM64_CORE_REG(regs.regs[num]),
+
+For AArch64 you also need to squash s/num/i/ for this line.
+
+(Plus I'm still not that pleased with adding this big header to this
+file for this function, or the weird line breaks in the assert.)
+
+> > +			va_arg(ap, uint64_t));
+> > +
+> > +	va_end(ap);
+> > +}
+> > diff --git a/tools/testing/selftests/kvm/lib/s390x/processor.c b/tools/testing/selftests/kvm/lib/s390x/processor.c
+> > index 32a02360b1eb0..680f37be9dbc9 100644
+> > --- a/tools/testing/selftests/kvm/lib/s390x/processor.c
+> > +++ b/tools/testing/selftests/kvm/lib/s390x/processor.c
+> > @@ -269,6 +269,41 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
+> >  	run->psw_addr = (uintptr_t)guest_code;
+> >  }
+> >  
+> > +/* VM VCPU Args Set
+> > + *
+> > + * Input Args:
+> > + *   vm - Virtual Machine
+> > + *   vcpuid - VCPU ID
+> > + *   num - number of arguments
+> > + *   ... - arguments, each of type uint64_t
+> > + *
+> > + * Output Args: None
+> > + *
+> > + * Return: None
+> > + *
+> > + * Sets the first num function input arguments to the values
+> > + * given as variable args.  Each of the variable args is expected to
+> > + * be of type uint64_t. The registers set by this function are r2-r6.
+> > + */
+> > +void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
+> > +{
+> > +	va_list ap;
+> > +	struct kvm_regs regs;
+> > +
+> > +	TEST_ASSERT(num >= 1 && num <= 5, "Unsupported number of args,\n"
+> > +		    "  num: %u\n",
+> > +		    num);
+> > +
+> > +	va_start(ap, num);
+> > +	vcpu_regs_get(vm, vcpuid, &regs);
+> > +
+> > +	for (i = 0; i < num; i++)
+> > +		regs.gprs[i + 2] = va_arg(ap, uint64_t);
+> > +
+> > +	vcpu_regs_set(vm, vcpuid, &regs);
+> > +	va_end(ap);
+> > +}
+> > +
+> >  void vcpu_dump(FILE *stream, struct kvm_vm *vm, uint32_t vcpuid, uint8_t indent)
+> >  {
+> >  	struct vcpu *vcpu = vm->vcpu_head;
+> > 
 > 
-> Yeah, I sorta don't care either way :-)
+> Squashing this:
+> 
+> diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> index a2ff90a75f32..839a76c96f01 100644
+> --- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> +++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
+> @@ -353,6 +353,7 @@ void vm_vcpu_add_default(struct kvm_vm *vm, uint32_t vcpuid, void *guest_code)
+>  void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
+>  {
+>  	va_list ap;
+> +	int i;
+>  
+>  	TEST_ASSERT(num >= 1 && num <= 8, "Unsupported number of args,\n"
+>  		    "  num: %u\n",
+> diff --git a/tools/testing/selftests/kvm/lib/s390x/processor.c b/tools/testing/selftests/kvm/lib/s390x/processor.c
+> index 680f37be9dbc..a0b84235c848 100644
+> --- a/tools/testing/selftests/kvm/lib/s390x/processor.c
+> +++ b/tools/testing/selftests/kvm/lib/s390x/processor.c
+> @@ -289,6 +289,7 @@ void vcpu_args_set(struct kvm_vm *vm, uint32_t vcpuid, unsigned int num, ...)
+>  {
+>  	va_list ap;
+>  	struct kvm_regs regs;
+> +	int i;
+>  
+>  	TEST_ASSERT(num >= 1 && num <= 5, "Unsupported number of args,\n"
+>  		    "  num: %u\n",
+> 
+> Paolo
+> 
 
-Part of the reason I did that was to get the MSR back to enabled ASAP,
-to limit the blind spot on the sibling.
-
-By leaving the TIF_SLD cleared for a task, and using the XOR logic used
-for other TIF flags, the blind spots will be much larger.
