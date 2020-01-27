@@ -2,109 +2,115 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D569DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095E3C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B4621739
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3497214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:18:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="OZuaUBMT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgA0NM5 (ORCPT
+        id S1726303AbgA0NSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:12:57 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:36925 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgA0NM4 (ORCPT
+        Mon, 27 Jan 2020 08:18:15 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46942 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725907AbgA0NSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:12:56 -0500
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N5max-1jfm4C104B-017ALR for <linux-kernel@vger.kernel.org>; Mon, 27 Jan
- 2020 14:12:55 +0100
-Received: by mail-qk1-f180.google.com with SMTP id w15so7772862qkf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 05:12:55 -0800 (PST)
-X-Gm-Message-State: APjAAAUnbSknQ0zJ4GD0R1ND9itcN/JMIjTJM+kFJ5mnKqHM+ty4hg+n
-        iSpPmTmaK5tARUY0eARf4+M7iqo7QzRNMcElR/k=
-X-Google-Smtp-Source: APXvYqxbvFpeiM8Jlbq76v1COK9TQt9IgHSB9reHtWof52+MxgY5qWFvlyLbK38KNCc7xX0a4X/9uw7X/O9LDCisT4g=
-X-Received: by 2002:a05:620a:12e1:: with SMTP id f1mr15895676qkl.394.1580130774164;
- Mon, 27 Jan 2020 05:12:54 -0800 (PST)
-MIME-Version: 1.0
-References: <1580117979-4629-1-git-send-email-peng.fan@nxp.com>
- <CAK8P3a2YLo4rNBXu9NhvKv6QOFUcZhCVXNR4XJe_0Kc_RJ=ubA@mail.gmail.com> <AM0PR04MB4481E1AACAC4285D49E721AD880B0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4481E1AACAC4285D49E721AD880B0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jan 2020 14:12:38 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a30vieqOdend-o+_1AesAQCN97cW6KtQmAgV3uhDWi_jw@mail.gmail.com>
-Message-ID: <CAK8P3a30vieqOdend-o+_1AesAQCN97cW6KtQmAgV3uhDWi_jw@mail.gmail.com>
-Subject: Re: [PATCH V2 0/5] soc: imx: increase build coverage for imx8 soc driver
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "krzk@kernel.org" <krzk@kernel.org>,
+        Mon, 27 Jan 2020 08:18:15 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RDCPuc010457;
+        Mon, 27 Jan 2020 14:17:55 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=c+hFzAdIS/ZnJvsdSSsIUfuzk1mAp/1PFd89s5h3LUs=;
+ b=OZuaUBMTUdGI7IbENiN6ix0An7f95cN1yX6VPzF/5H71q6NR0vgNn46CX122o8lu1dIT
+ o9EL3Zu+aZ1LHcyrOP2e+sPqr91A+z24To2NrXL8PYTVpED06cmJZ10h1HwTc4JKTQs8
+ 4u2uBkZEbjxdFK/w/aq1njYx0RdBgnWNFUSPULviAQq3PO+kAZkAAuLKD18VIXTS32Aw
+ Vwf2VBWDPCTW1DxT1VYpar2grQ9O4kP3vJ2IUrGQnTx7HM5z9ts7hTAiESfZQPD0mmD3
+ yruC1jf+w8wbzvGob+gD88iUd22IIhsOH/J1cSyimK1roXxMsWErv98AVTxXhF9dqOcl UA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrdek8vsm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jan 2020 14:17:55 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 24EBE10002A;
+        Mon, 27 Jan 2020 14:17:51 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0F4192AD9F5;
+        Mon, 27 Jan 2020 14:17:51 +0100 (CET)
+Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 Jan
+ 2020 14:17:50 +0100
+Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
+ SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
+ 15.00.1347.000; Mon, 27 Jan 2020 14:17:50 +0100
+From:   Pascal PAILLET-LME <p.paillet@st.com>
+To:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        David HERNANDEZ SANCHEZ <david.hernandezsanchez@st.com>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:qE2yDiwHg7JNQtxjcQlnFbX5nu1u3yPS7jitsxKbQ68nLfeR9Vw
- Ug+YpPNBZ3NjvfQ+L3NkQxYlwdV3MLTOuRGljHfAL7g7cfDNHVXB9B2XnHyKpnCgzjOOzZy
- nXcLbH/UOVCyzAZDXZa6b2v+2t2ASdWZ7nqiH+0eAxxk5rom031NGbcX7zsu+apKfY63sv4
- rIesKHM1kV+IBE/fKfTDQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nWFo/m0Rd7Y=:GgsDSlmps7slgP7nwCG9EF
- eht/O8TOOxe8NeueGZt0DriZqp6gvCdGldcWJiA0+l7ZRdlLpWL/rJuruNKTJM6igcUD2G92W
- DzxEIg0/Sxtu5ObNi6/H/JpFvR8SoV6BFuGQocJp1IdYFOq8COktj6ZQxYIVexNC9JWhwMK2D
- olEMyOkgj3pb9xZPnLJfstd8QAY+VfscyE/qdofCYjB88E/ds1YuJE3gktJdVdD2LxzI5JtMK
- UoSwFaqaNbg47fz1rxf/b6lTms4A+iEC9LAuly7WbdcwJL5PtqpO+ZhHIoWrrsU+C4KmjSKGp
- H7c1zTT3v04vB7T3M8rXd7snWzuFE65fn9/oo4atwgfeO6ATaQQMOAa/ZiW6g4QQwez55XV/z
- h5WGI3sEY70E/tuKPnblBM3JBuYQEx68s8ca2WFFKYUpgIUR1CSHXBvS3VSFatgyjjD8VY1Y7
- DdUMxaOrTS+yz1LYFHmFSmw5x2JI+jZtGQ2F+7aUTF+PTpDo6wZ1FHLckfUe2sewDdsHR+3I0
- XKzS/utdEhDM/r9jWaDRHQ7q4PufX2lMfejw8u0KTM9Ad/357NrVAyiOtVBdjhBhji79c9msY
- Em/rhmO0qxlUJBPCWRYGPc8OGjFAmDK9yGz2t20rHZj4lHOfzDcWKCryTZqB0fxbYXUK0yM6u
- x7upDV0E1ovXrIqAAxh86tZ8YQEXY4B2DPL/OTRovS1sdt8UXFeWTdjc2zDInqXVdpbpDm63U
- 9AxZKP3HTbZ3FwtF9fIMDxpDQKBHdNnROtQmbUVvrqd9vQnEtunnXvPTE4KUhGy18kBGgsdeD
- g867ngB01VPV52gtvJUR3sDl8vZjZ9wyRP1eDdqUjsVIkqjqM4=
+Subject: Re: [PATCH_V3 0/6] thermal: stm32: driver improvements
+Thread-Topic: [PATCH_V3 0/6] thermal: stm32: driver improvements
+Thread-Index: AQHVx575+Q0vFMQB1USceV4qSXzFT6f+iFaA
+Date:   Mon, 27 Jan 2020 13:17:50 +0000
+Message-ID: <a400d4e2-4abb-aad8-73f0-57c9300ca351@st.com>
+References: <20200110101605.24984-1-p.paillet@st.com>
+In-Reply-To: <20200110101605.24984-1-p.paillet@st.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F142B21D02B60D49A091256E0AAA3F53@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 1:33 PM Peng Fan <peng.fan@nxp.com> wrote:
->
-> Hi Arnd,
->
-> > Subject: Re: [PATCH V2 0/5] soc: imx: increase build coverage for imx8 soc
-> > driver
-> >
-> > On Mon, Jan 27, 2020 at 10:44 AM Peng Fan <peng.fan@nxp.com> wrote:
-> > >
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > >
-> > > V2:
-> > >  Include Leonard's patch to fix build break after enable compile test
-> > > Add Leonard's R-b tag
-> > >
-> > > Rename soc-imx8.c to soc-imx8m.c which is for i.MX8M family Add
-> > > SOC_IMX8M for build gate soc-imx8m.c Increase build coverage for i.MX
-> > > SoC driver
-> >
-> > The changes all look good to me, but I'd just do it all in one combined patch, as
-> > the changes are all logically part of the same thing. You can leave Leonard's fix
-> > as a [PATCH 1/2]  if you want, but the rest should clearly be a single change.
->
-> There is a arm64 defconfig change, should it be also included in the single change?
-
-Good point, that one is probably better left separate indeed.
-
-      Arnd
+VGhlIGdvYWwgb2YgdGhpcyBwYXRjaHNldCBpcyB0byBpbXByb3ZlIGFuZCBzaW1wbGlmeSB0aGUg
+c3RtMzIgdGhlcm1hbA0KPiBkcml2ZXI6DQo+ICogbGV0IHRoZSBmcmFtZXdvcmsgaGFuZGxlIHRo
+ZSB0cmlwIHBvaW50czogaXQgdmVyeSBpcyBoYXJkIHRvIHNwbGl0IHRoaXMgcGF0Y2gNCj4gaW50
+byBzbWFsbGVyIG9uZXMgYW5kIGtlZXAgZWFjaCBpbmRpdmlkdWFsIHBhdGNoIGZ1bmN0aW9uYWwu
+DQo+ICogZml4IGludGVycnVwdCBtYW5hZ2VtZW50IHRvIGF2b2lkIHJlY2VpdmluZyBodW5kcmVk
+cyBvZg0KPiBpbnRlcnJ1cHRzIHdoZW4gdGhlIHRlbXBlcmF0dXJlIGlzIGNsb3NlIHRvIHRoZSBs
+b3cgdGhyZXNob2xkLg0KPiAqIGltcHJvdmUgdGVtcGVyYXR1cmUgcmVhZGluZyByZXNvbHV0aW9u
+DQo+ICogdGhlIGRpcnZlciBpcyBiYWNrYXdyZCBjb21wYXRpYmxlLg0KPg0KPiBQYXNjYWwgUGFp
+bGxldCAoNik6DQo+IGNoYW5nZXMgaW4gdjI6DQo+ICogU3BsaXQgImhhbmRsZSBtdWx0aXBsZSB0
+cmlwIHBvaW50cyIgcGF0Y2ggdG8gbWFrZSBvbmVzOg0KPiAqICAgcmV3b3JrIHNlbnNvciBtb2Rl
+IG1hbmFnZW1lbnQNCj4gKiAgIGRpc2FibGUgaW50ZXJydXB0cyBhdCBwcm9iZQ0KPiAqICJyZW1v
+dmUgaGFyZHdhcmUgaXJxIGhhbmRsZXIiIGlzIHNxdWFzaGVkIGluICJoYW5kbGUgbXVsdGlwbGUg
+dHJpcCBwb2ludHMiDQpraW5kIHJlbWluZGVyIGZvciByZXZpZXcNCj4gICAgdGhlcm1hbDogc3Rt
+MzI6IGZpeCBpY2lmciByZWdpc3RlciBuYW1lDQo+ICAgIHRoZXJtYWw6IHN0bTMyOiByZXdvcmsg
+c2Vuc29yIG1vZGUgbWFuYWdlbWVudA0KPiAgICB0aGVybWFsOiBzdG0zMjogZGlzYWJsZSBpbnRl
+cnJ1cHRzIGF0IHByb2JlDQo+ICAgIHRoZXJtYWw6IHN0bTMyOiBoYW5kbGUgbXVsdGlwbGUgdHJp
+cCBwb2ludHMNCj4gICAgdGhlcm1hbDogc3RtMzI6IGltcHJvdmUgdGVtcGVyYXR1cmUgY29tcHV0
+aW5nDQo+ICAgIHRoZXJtYWw6IHN0bTMyOiBmaXggbG93IHRocmVzaG9sZCBpbnRlcnJ1cHQgZmxv
+b2QNCj4NCj4gICBkcml2ZXJzL3RoZXJtYWwvc3Qvc3RtX3RoZXJtYWwuYyB8IDM4OCArKysrKysr
+KysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEyMCBpbnNlcnRp
+b25zKCspLCAyNjggZGVsZXRpb25zKC0pDQo+DQo=
