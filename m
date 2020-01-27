@@ -2,140 +2,87 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7C0C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F91EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525DA20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:59:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="OpzF5pvU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="td99w1MQ"
+	by mail.kernel.org (Postfix) with ESMTP id D5981214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580137184;
+	bh=YYrfflvCXkGkXIlAe9YreqE3Q6fSlLm0zr6pLY2c9IM=;
+	h=Date:From:To:cc:Subject:List-ID:From;
+	b=bltjev0fIhkJEnebhKR4/jLlQ8i1TB8BvV9Fa2LEm8h+Cddw856zMuJTI36oNmwDL
+	 +YUtcLv4kMO19FO0cHcKKQONLSDz9i5l5b1+84sgT4ngm062ulhvD/GspOiW1JQLBO
+	 i4FuX+DLJ3rJn4b7WtFNVuJEM4EKgX8VujVvIYsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbgA0O7g (ORCPT
+        id S1729396AbgA0O7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:59:36 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:33387 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726443AbgA0O7g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:59:36 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 423A92208C;
-        Mon, 27 Jan 2020 09:59:35 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 27 Jan 2020 09:59:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=kYYUUnAwZZI0feOedjjFh/1OaT1
-        i27hqj14Wc+HfQjQ=; b=OpzF5pvUdsVCFA/kFgiqVy6T3l1nBnrZ/uILXG21Mkg
-        FB6rZKwuhXRNQ+aWYXzG2M7M3Y/Z8H77vEx6t2Y1piTDGmK9ECaX4BcYSsu1nNtM
-        2q5sdPBiPfcxt36QH4rwoTAT27+W1guhzeulofgxSNoaoSraBOmO89PXjeQwSBm9
-        RxiAHoNVZ36Bb/PsVVdMfB8G+D2k20jdXnV6Py0MRupMWBnDCqHCuSXPcufy6jFL
-        MVULaK+G0+5xpEhsmF0R63keOiJTx+j/zLlt9M1Rtub+EIKMRqS1qHDtKJPKZ/0+
-        GxrvOwlODv+Ocb6VDXt1a1NV7NhozQQc3GHd+uXdNbw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=kYYUUn
-        AwZZI0feOedjjFh/1OaT1i27hqj14Wc+HfQjQ=; b=td99w1MQjVqGxuSkEEZb8l
-        dDX+K73+mR0eWaDWGqidX45jZNz1Y7ne/kmG9+KfSYwXroHZrRuqUICsOLpS/eCU
-        6MhCqxsiF90TLJkWGLVndm9nMHllyHtX0GBwlMmE5ogOHtKBl1QHTKEpLmH8gXGN
-        qjOo3IN1U3XwXn1+3jp4gg7aSl39M8uBk8AQDdv1AJYxUd6/qSMqQyoxsqN+fPZW
-        BM+jyZkExFK8L33m6HoC0pkeCbwJ9Ffa8FNnQrn0CAcWMYkizh+j7bjQKTqDJCvo
-        2vImDdqLmsNCINgBEBjbPPVlNw9gTvi547Zqp0IOGwtN7fCpFQ/jTbdjTCAdC2mw
-        ==
-X-ME-Sender: <xms:1fouXjpeBdt_tFZxI91BOJHS7m16IFPjjxjd5Ak1o-1F_ObqhkeeUw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfedvgdejtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:1fouXsJNbdco-veunsL5RGMK2TLrzaBmAS-qX2wb7sCJdNNXm4KNuA>
-    <xmx:1fouXm7d9yFizwEq5a-SZKnFCf787Qw7ZGAIINtSRc5avB4igbNwow>
-    <xmx:1fouXmAGFzk3Wr3SiUnKKhAW7Q8lb_67zuAvuFNcrLEn7ZiHG3ROzw>
-    <xmx:1_ouXsT4orjMUqm8CuXKrZsn3-H1QpZj_tdINWOKvvemakc2m64TUg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 26DCD3069FF8;
-        Mon, 27 Jan 2020 09:59:33 -0500 (EST)
-Date:   Mon, 27 Jan 2020 15:59:31 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, mchehab@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 3/5] arm64: dts: allwinner: a64: Add MBUS controller node
-Message-ID: <20200127145931.rjewha4awnlorfvb@gilmour.lan>
-References: <20200125110353.591658-1-jernej.skrabec@siol.net>
- <20200125110353.591658-4-jernej.skrabec@siol.net>
+        Mon, 27 Jan 2020 09:59:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbgA0O7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 09:59:43 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A75C215A4;
+        Mon, 27 Jan 2020 14:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580137182;
+        bh=YYrfflvCXkGkXIlAe9YreqE3Q6fSlLm0zr6pLY2c9IM=;
+        h=Date:From:To:cc:Subject:From;
+        b=o+F6XV/LWB/hPf6IUEN6//rfnFPylXXE6d6qo4173QFhyU88e3a0gxGqrDmtPubLh
+         N6x0DSj4hJG/uj5WZ9ixeAvyNvh2jXjC01SlPzf+L2X6C6K7mSy61PGBGF0YGPvQPP
+         kmvHC/cp8+IDqYjcJS11W43+AsR15OvVmH+CjJRQ=
+Date:   Mon, 27 Jan 2020 15:59:38 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>
+Subject: [GIT PULL] livepatching for 5.6
+Message-ID: <nycvar.YFH.7.76.2001271556370.31058@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hchmskw2va5gdqje"
-Content-Disposition: inline
-In-Reply-To: <20200125110353.591658-4-jernej.skrabec@siol.net>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
---hchmskw2va5gdqje
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+please pull from
 
-Hi,
+  git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git for-linus
 
-On Sat, Jan 25, 2020 at 12:03:51PM +0100, Jernej Skrabec wrote:
-> A64 contains MBUS, which is the bus used by DMA devices to access
-> system memory.
->
-> MBUS controller is responsible for arbitration between channels based
-> on set priority and can do some other things as well, like report
-> bandwidth used. It also maps RAM region to different address than CPU.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 862b47dc9dc9..d225ea1f3b87 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -1061,6 +1061,14 @@ pwm: pwm@1c21400 {
->  			status = "disabled";
->  		};
->
-> +		mbus: dram-controller@1c62000 {
-> +			compatible = "allwinner,sun50i-a64-mbus";
-> +			reg = <0x01c62000 0x1000>;
-> +			clocks = <&ccu CLK_MBUS>;
+to receive livepatching subsystem updates for 5.6 merge window.
 
-We're merging the clock header patch and the DT through two different
-trees, so you can't use it right away. You should use the raw ID here.
+=====
+- fixes of selftests and samples for 'shadow variables' livepatching 
+  feature, from Petr Mladek
+=====
 
-(also, as a general remark, it's easier on us to not send the patches
-during the rc6 <-> rc1 phase), so if you can resend them as soon as
-rc1 is out, that would be great :)
+----------------------------------------------------------------
+Petr Mladek (4):
+      livepatch/sample: Use the right type for the leaking data pointer
+      livepatch/selftest: Clean up shadow variable names and type
+      livepatch/samples/selftest: Use klp_shadow_alloc() API correctly
+      livepatch: Handle allocation failure in the sample of shadow variable API
 
-Maxime
+ lib/livepatch/test_klp_shadow_vars.c      | 119 +++++++++++++++++-------------
+ samples/livepatch/livepatch-shadow-fix1.c |  39 ++++++----
+ samples/livepatch/livepatch-shadow-fix2.c |   4 +-
+ samples/livepatch/livepatch-shadow-mod.c  |   4 +-
+ 4 files changed, 99 insertions(+), 67 deletions(-)
 
---hchmskw2va5gdqje
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXi760wAKCRDj7w1vZxhR
-xV3PAQChOtKOxyE6bSJr+/fHayOoz8h6A1dqalhBnV4Yedxv2QD/a9QqEgknQXMe
-KRf3qGZyHOAWbKWvK2FkvcTP92UVFgE=
-=7bxe
------END PGP SIGNATURE-----
-
---hchmskw2va5gdqje--
+-- 
+Jiri Kosina
+SUSE Labs
