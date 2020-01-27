@@ -2,88 +2,105 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8965DC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D7AC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCFE20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308B322464
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgA0OuH (ORCPT
+        id S1729275AbgA0Ou2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:50:07 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60840 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbgA0OuH (ORCPT
+        Mon, 27 Jan 2020 09:50:28 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:61426 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726635AbgA0Ou2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:50:07 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 97E1C293CA5
-Subject: Re: [PATCH v8 3/4] mfd: cros_ec: Check DT node for usbpd-notify add
-To:     Prashant Malani <pmalani@chromium.org>, groeck@chromium.org,
-        bleung@chromium.org, lee.jones@linaro.org, sre@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200124231834.63628-1-pmalani@chromium.org>
- <20200124231834.63628-3-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <495e2427-7233-cb4d-0128-f6926969fb8a@collabora.com>
-Date:   Mon, 27 Jan 2020 15:50:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20200124231834.63628-3-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 27 Jan 2020 09:50:28 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=guoren@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Toc6Kte_1580136614;
+Received: from localhost(mailfrom:guoren@linux.alibaba.com fp:SMTPD_---0Toc6Kte_1580136614)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 27 Jan 2020 22:50:14 +0800
+From:   Guo Ren <guoren@linux.alibaba.com>
+To:     paul.walmsley@sifive.com, andrew@sifive.com, palmer@dabbelt.com
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Subject: [PATCH V2] riscv: Use flush_icache_mm for flush_icache_user_range
+Date:   Mon, 27 Jan 2020 22:50:08 +0800
+Message-Id: <20200127145008.2850-1-guoren@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+The patch is the fixup for the commit 08f051eda33b by Andrew.
 
-On 25/1/20 0:18, Prashant Malani wrote:
-> Add a check to ensure there is indeed an EC device tree entry before
-> adding the cros-usbpd-notify device. This covers configs where both
-> CONFIG_ACPI and CONFIG_OF are defined, but the EC device is defined
-> using device tree and not in ACPI.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+For copy_to_user_page, the only call path is:
+__access_remote_vm -> copy_to_user_page -> flush_icache_user_range
 
-With this change, an playing with different CONFIG_ACPI + CONFIG_OF combinations
-I don't see anymore the problem where the driver is registered twice on
-CONFIG_ACPI side. So,
+Seems it's ok to use flush_icache_mm instead of flush_icache_all and
+it could reduce flush_icache_all called on other harts.
 
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Add (vma->vm_flags & VM_EXEC) condition to flush icache only for
+executable vma area.
 
-Maybe it requires a fixes tag if Lee already picked the other patch?
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE is used in a lot of fs/block codes.
+We need it to make their pages dirty and defer sync i/dcache in
+update_mmu_cache().
 
-Fixes: 4602dce0361e ("mfd: cros_ec: Add cros-usbpd-notify subdevice")
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Andrew Waterman <andrew@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
 
-> ---
-> 
-> Changes in v8:
-> - Patch first introduced in v8 of the series.
-> 
->  drivers/mfd/cros_ec_dev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index d0c28a4c10ad0..411e80fc9a066 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -212,7 +212,7 @@ static int ec_device_probe(struct platform_device *pdev)
->  	 * explicitly added on platforms that don't have the PD notifier ACPI
->  	 * device entry defined.
->  	 */
-> -	if (IS_ENABLED(CONFIG_OF)) {
-> +	if (IS_ENABLED(CONFIG_OF) && ec->ec_dev->dev->of_node) {
->  		if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
->  			retval = mfd_add_hotplug_devices(ec->dev,
->  					cros_usbpd_notify_cells,
-> 
+---
+Changelog V2:
+ - Add VM_EXEC condition.
+ - Remove flush_icache_user_range definition.
+ - define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+---
+ arch/riscv/include/asm/cacheflush.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
+index b69aecbb36d3..ae57d6ce63a9 100644
+--- a/arch/riscv/include/asm/cacheflush.h
++++ b/arch/riscv/include/asm/cacheflush.h
+@@ -8,7 +8,7 @@
+ 
+ #include <linux/mm.h>
+ 
+-#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
++#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+ 
+ /*
+  * The cache doesn't need to be flushed when TLB entries change when
+@@ -62,7 +62,8 @@ static inline void flush_cache_vunmap(unsigned long start, unsigned long end)
+ #define copy_to_user_page(vma, page, vaddr, dst, src, len) \
+ 	do { \
+ 		memcpy(dst, src, len); \
+-		flush_icache_user_range(vma, page, vaddr, len); \
++		if (vma->vm_flags & VM_EXEC) \
++			flush_icache_mm(vma->vm_mm, 0); \
+ 	} while (0)
+ #define copy_from_user_page(vma, page, vaddr, dst, src, len) \
+ 	memcpy(dst, src, len)
+@@ -85,7 +86,6 @@ static inline void flush_dcache_page(struct page *page)
+  * so instead we just flush the whole thing.
+  */
+ #define flush_icache_range(start, end) flush_icache_all()
+-#define flush_icache_user_range(vma, pg, addr, len) flush_icache_all()
+ 
+ void dma_wbinv_range(unsigned long start, unsigned long end);
+ void dma_wb_range(unsigned long start, unsigned long end);
+-- 
+2.17.0
+
