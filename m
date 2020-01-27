@@ -2,131 +2,176 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C88AC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7C0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F84206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D147B20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 12:28:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EV78N2ya"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d9He6za6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbgA0M2K (ORCPT
+        id S1730616AbgA0M20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 07:28:10 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42801 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727642AbgA0M2J (ORCPT
+        Mon, 27 Jan 2020 07:28:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27081 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727642AbgA0M20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 07:28:09 -0500
-Received: by mail-pg1-f193.google.com with SMTP id s64so5075509pgb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 04:28:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cyKi2C2E/DAzDkpv5Bc8WYZz4cP/WF80nTy9kORAPME=;
-        b=EV78N2yaNyur/ZLKrvmzkt7S1u7530+tYPA0SV6rAJ/bY8UyEqtU3oIx8TPXiWAh4+
-         v6FLzakE+serof6o+wNI48WjZPub3p1OyfcskqfxSfi3G86L/FXJrnkjp0pmyTumxm3A
-         YLmRWV6tnK5PKcjYpkj/nXnYwCZpi0w5f+VYcqIFeHdqAG9XjTQxF5l59hNuw1HtQrai
-         nk7h0JXSKpL0emDeQC95VYwa0kjVvUjv8sS6w+mzAL9aSyJhCGjqw3tCz8qJdumcLAEC
-         SKCeALbMGNadYxApuDHLkB1ax3fJKDjvlAojAsLRwVcOPOYZtWQ43NlXPNONAtI/6wSR
-         pmaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cyKi2C2E/DAzDkpv5Bc8WYZz4cP/WF80nTy9kORAPME=;
-        b=L7sflkMvOcEo5h4jRK79wRBHQwlCl1bKwKhmz80uQIFFHaKN8Y2kilxFgU2jsSqiNj
-         XFGYy5VQwcCp5hrkalXxOyKV5XXCWBFukGfGx5xRS/svvn1HvLwzUh3GXTLPWjV8qMts
-         U/Iw/aTwpcpvNyFhFh0fVoGU9+vwAtaBsnyDK4abccoe49fY1N879TujdwShD/YURw4M
-         1dJqI2HXvMW9gLr/+69dq6FnlwRBFVXSh4dR90niYnaVfq2+ug5mX/p12GQRzyzUAcgt
-         zXMSbGRYXAyM5s2wlGKML4pkBtfGrlU8k+6c5DRwJ2cSsOxiG9NkbwcJL+v8oHJ0oO1U
-         l2VA==
-X-Gm-Message-State: APjAAAVKLQ8RdMw2oDOddxK0/K9xSNJXFX2K1telju6X7N/w6bqxrlI8
-        ZomqesGM7iGmkzVVFl4P6xA2F02TvQOMSH0POSfN+w==
-X-Google-Smtp-Source: APXvYqzkc5LvBv1czBSlpohSy32KHfPPbYvVuxg1l19yqW3ryxB3bm5KIKRPhPdwTOrRZKiUXYCREAAmPkPBw8w+WcI=
-X-Received: by 2002:a63:d906:: with SMTP id r6mr19362630pgg.440.1580128088829;
- Mon, 27 Jan 2020 04:28:08 -0800 (PST)
+        Mon, 27 Jan 2020 07:28:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580128105;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/U1rAD7/ugS/TyNh/KrBeO+Geg5Mm8BgHhTLNH1TcIk=;
+        b=d9He6za6mQ9Dcf4oS7Oz4pcKYXvotf0LU7MWkdk5+0e2HOIdTYrwqjRdnvlm/ToTEvw07y
+        NJh+JcwqLgwSL/FMQJsjeklhbP/Pro8Ea/woP1/O7OVrzNfxj0LrcOuW8DjTv5vY8wfaDW
+        pcD3XCa/CIEV1I2cyFMO3m6LQfvV6YQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-fYjLqxVaMyCOtNy1jm-zmQ-1; Mon, 27 Jan 2020 07:28:23 -0500
+X-MC-Unique: fYjLqxVaMyCOtNy1jm-zmQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91992107ACC9;
+        Mon, 27 Jan 2020 12:28:22 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.70])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7D6CD60BF1;
+        Mon, 27 Jan 2020 12:28:18 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 27 Jan 2020 13:28:22 +0100 (CET)
+Date:   Mon, 27 Jan 2020 13:28:17 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andrew Fox <afox@redhat.com>,
+        Stephen Johnston <sjohnsto@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH v2] sched/cputime: make scale_stime() more precise
+Message-ID: <20200127122817.GA10957@redhat.com>
+References: <20190718131834.GA22211@redhat.com>
 MIME-Version: 1.0
-References: <cover.1579007786.git.andreyknvl@google.com> <461a787e63a9a01d83edc563575b8585bc138e8d.1579007786.git.andreyknvl@google.com>
- <CAAeHK+wGijhTaCdoD+xcUY=PRWLUOv5uwg7OjD=uMrU8nqqrdw@mail.gmail.com> <20200122145012.GB59473@kroah.com>
-In-Reply-To: <20200122145012.GB59473@kroah.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 27 Jan 2020 13:27:57 +0100
-Message-ID: <CAAeHK+xJ_Xhy96vVXQLk2G_DqVtjh+3ivNM=yFVXFPBjZ6P3iA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] usb: gadget: add raw-gadget interface
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718131834.GA22211@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 3:50 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Jan 22, 2020 at 03:37:46PM +0100, Andrey Konovalov wrote:
-> > On Tue, Jan 14, 2020 at 2:24 PM Andrey Konovalov <andreyknvl@google.com> wrote:
-> > >
-> > > USB Raw Gadget is a kernel module that provides a userspace interface for
-> > > the USB Gadget subsystem. Essentially it allows to emulate USB devices
-> > > from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
-> > > currently a strictly debugging feature and shouldn't be used in
-> > > production.
-> > >
-> > > Raw Gadget is similar to GadgetFS, but provides a more low-level and
-> > > direct access to the USB Gadget layer for the userspace. The key
-> > > differences are:
-> > >
-> > > 1. Every USB request is passed to the userspace to get a response, while
-> > >    GadgetFS responds to some USB requests internally based on the provided
-> > >    descriptors. However note, that the UDC driver might respond to some
-> > >    requests on its own and never forward them to the Gadget layer.
-> > >
-> > > 2. GadgetFS performs some sanity checks on the provided USB descriptors,
-> > >    while Raw Gadget allows you to provide arbitrary data as responses to
-> > >    USB requests.
-> > >
-> > > 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
-> > >    while GadgetFS currently binds to the first available UDC.
-> > >
-> > > 4. Raw Gadget uses predictable endpoint names (handles) across different
-> > >    UDCs (as long as UDCs have enough endpoints of each required transfer
-> > >    type).
-> > >
-> > > 5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
-> > >
-> > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > > ---
-> > >
-> > > Greg, I've assumed your LGTM meant that I can add a Reviewed-by from you.
-> > >
-> > > Felipe, looking forward to your review, thanks!
-> >
-> > Hi Greg and Felipe,
-> >
-> > I was wondering if it's feasible to get this reviewed and merged
-> > during the upcoming merge window? This patch is the only piece missing
-> > to enable USB fuzzing for Android common kernels on syzbot.
->
-> No objection from me, if Felipe acks it I can take it...
+People report that utime and stime from /proc/<pid>/stat become very
+wrong when the numbers are big enough, especially if you watch these
+counters incrementally.
 
-Hi Felipe,
+Say, if the monitored process runs 100 days 50/50 in user/kernel mode
+it looks as if it runs 20 minutes entirely in kernel mode, then 20
+minutes in user mode. See the test-case which tries to demonstrate this
+behaviour:
 
-Any idea if you'll be able to look at this?
+	https://lore.kernel.org/lkml/20200124154215.GA14714@redhat.com/
 
-Thanks!
+The new implementation does the additional div64_u64_rem() but according
+to my naive measurements it is faster on x86_64, much faster if rtime/etc
+are big enough. See
+
+	https://lore.kernel.org/lkml/20200123130541.GA30620@redhat.com/
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ kernel/sched/cputime.c | 65 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 32 insertions(+), 33 deletions(-)
+
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index d43318a..ae1ea09 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -528,42 +528,41 @@ void account_idle_ticks(unsigned long ticks)
+  */
+ static u64 scale_stime(u64 stime, u64 rtime, u64 total)
+ {
+-	u64 scaled;
++	u64 res = 0, div, rem;
++	int shift;
+ 
+-	for (;;) {
+-		/* Make sure "rtime" is the bigger of stime/rtime */
+-		if (stime > rtime)
+-			swap(rtime, stime);
+-
+-		/* Make sure 'total' fits in 32 bits */
+-		if (total >> 32)
+-			goto drop_precision;
+-
+-		/* Does rtime (and thus stime) fit in 32 bits? */
+-		if (!(rtime >> 32))
+-			break;
+-
+-		/* Can we just balance rtime/stime rather than dropping bits? */
+-		if (stime >> 31)
+-			goto drop_precision;
+-
+-		/* We can grow stime and shrink rtime and try to make them both fit */
+-		stime <<= 1;
+-		rtime >>= 1;
+-		continue;
+-
+-drop_precision:
+-		/* We drop from rtime, it has more bits than stime */
+-		rtime >>= 1;
+-		total >>= 1;
++	/* can stime * rtime overflow ? */
++	if (ilog2(stime) + ilog2(rtime) > 62) {
++		/*
++		 * (rtime * stime) / total is equal to
++		 *
++		 *	(rtime / total) * stime +
++		 *	(rtime % total) * stime / total
++		 *
++		 * if nothing overflows. Can the 1st multiplication
++		 * overflow? Yes, but we do not care: this can only
++		 * happen if the end result can't fit in u64 anyway.
++		 *
++		 * So the code below does
++		 *
++		 *	res = (rtime / total) * stime;
++		 *	rtime = rtime % total;
++		 */
++		div = div64_u64_rem(rtime, total, &rem);
++		res = div * stime;
++		rtime = rem;
++
++		shift = ilog2(stime) + ilog2(rtime) - 62;
++		if (shift > 0) {
++			/* drop precision */
++			rtime >>= shift;
++			total >>= shift;
++			if (!total)
++				return res;
++		}
+ 	}
+ 
+-	/*
+-	 * Make sure gcc understands that this is a 32x32->64 multiply,
+-	 * followed by a 64/32->64 divide.
+-	 */
+-	scaled = div_u64((u64) (u32) stime * (u64) (u32) rtime, (u32)total);
+-	return scaled;
++	return res + div64_u64(stime * rtime, total);
+ }
+ 
+ /*
+-- 
+2.5.0
+
+
