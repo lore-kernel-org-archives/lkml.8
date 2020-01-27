@@ -2,91 +2,137 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF29C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541CBC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69093206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AF02087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:08:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="FRyn74VX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgA0KFp (ORCPT
+        id S1729148AbgA0KIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 05:05:45 -0500
-Received: from mga12.intel.com ([192.55.52.136]:6723 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbgA0KFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 05:05:45 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 02:05:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,369,1574150400"; 
-   d="scan'208";a="228918331"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 27 Jan 2020 02:05:41 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iw1H4-00029T-6C; Mon, 27 Jan 2020 12:05:42 +0200
-Date:   Mon, 27 Jan 2020 12:05:42 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michal Simek <monstr@monstr.eu>, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kbuild@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH v1] kbuild: Fix off-by-one error when generate a new
- version
-Message-ID: <20200127100542.GV32742@smile.fi.intel.com>
-References: <20200124195859.86991-1-andriy.shevchenko@linux.intel.com>
+        Mon, 27 Jan 2020 05:08:37 -0500
+Received: from mail-eopbgr70125.outbound.protection.outlook.com ([40.107.7.125]:57038
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726179AbgA0KIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 05:08:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S8o7ZdSYN3EEGG8yUBJoIzVJ0i5/1ZtZtk8G02+oxZSAb9YVPccDI9hh0TRSlcsIftSKdL+8NtBu5TShg6tmungIKsI0dWRfEkgh4H3vwOSqhqO/3gw3sJjBz3Ez+U/GQwD5tnfbGi6+iMfw7zPn73sxp1eVEo40m9QtTiM8DuRL8KRkDvxFipBzHcJvv4dcjLK7xw0m/5kEG80Zsv9qFlkeW8W3NNe5adKq4Dk1NNlQ5GdZrRUBJK1S6MijGlF4UelvYqpHStX8ajOjQakmlsGa/b3aTvlw7gJvQKyiAoyUQPvzjgkfP1xVP8UzEpFcUaY53v92tbncbjbnKCCSAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DP0visv+1QQ5bROCjSnALyf+03E81AE1jRd+Qoncw9I=;
+ b=Xzz825vIFblXtFEa9ERXFgAcO9iirCtCPc0x9fDcHUEhHWsv6f0oJHMUnSoeSx9jkDMJ+TQxbp6JncW5aukQp9ML1GZyEkE+k5iEhsJvsJqaXQy0kxfq5vWjGeqrubg6JhXa6rsFTZ91zJ/SOYjBNGrNPFdzuX6hg1sw6AOlMNffyPiwXb0ujQI20oiiiTYF4mI6dHs+/Aka4E1u1UeUuH6OmXNmFycrEDmcwvAuxbq7nyIIRPHYAs6zt7jo8evvyoXJTmihdixz7T7kjTZyyIhNDzigp0HW2tGT8W3J6Z1RWR6L055QBKWAdo80jgzKoxEVpNH48+JRSHBoiKeUKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DP0visv+1QQ5bROCjSnALyf+03E81AE1jRd+Qoncw9I=;
+ b=FRyn74VXwmahYqgllGoNfXytT2z7/s0wRReA25ZjcZS+XPtMuiUA4jyCs9T7Vpvr6yilYXJPwKIdycoPaO4PuBrhCtNNSTFS2WxGIAoEAR0Qnhp9Q70v5TQ7dXX6ou73miwOqjIljvNOx7qaMuaB7WkE8O++l3C3Cx+nRYYbw/s=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3385.eurprd02.prod.outlook.com (52.134.73.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.24; Mon, 27 Jan 2020 10:08:27 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2665.017; Mon, 27 Jan 2020
+ 10:08:27 +0000
+Received: from [192.168.13.3] (213.112.138.4) by HE1PR0502CA0009.eurprd05.prod.outlook.com (2603:10a6:3:e3::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.21 via Frontend Transport; Mon, 27 Jan 2020 10:08:26 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Colin Ian King <colin.king@canonical.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] i2c: xiic: fix indentation issue
+Thread-Topic: [PATCH][next] i2c: xiic: fix indentation issue
+Thread-Index: AQHV1F9MXsnBtPvzREO9EfvLgEq5Laf+IjwAgAAcsYCAAAvAAA==
+Date:   Mon, 27 Jan 2020 10:08:27 +0000
+Message-ID: <a49786b8-bf71-727b-0785-62bd606a159b@axentia.se>
+References: <20200126154257.41336-1-colin.king@canonical.com>
+ <e20558ec-bf4e-9348-f6cb-a37c5dbbb2de@xilinx.com>
+ <6558ccbc-56f7-b30d-df02-1eaf07072c4d@canonical.com>
+In-Reply-To: <6558ccbc-56f7-b30d-df02-1eaf07072c4d@canonical.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-originating-ip: [213.112.138.4]
+x-clientproxiedby: HE1PR0502CA0009.eurprd05.prod.outlook.com
+ (2603:10a6:3:e3::19) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 04a5fcc8-d9ec-4e3b-f6fd-08d7a310da38
+x-ms-traffictypediagnostic: DB3PR0202MB3385:
+x-microsoft-antispam-prvs: <DB3PR0202MB3385DCFE13C48A008737D6D6BC0B0@DB3PR0202MB3385.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02951C14DC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(396003)(366004)(346002)(376002)(136003)(189003)(199004)(31686004)(86362001)(31696002)(71200400001)(316002)(53546011)(16576012)(110136005)(54906003)(2906002)(508600001)(6486002)(81156014)(4326008)(81166006)(8676002)(36756003)(52116002)(8936002)(16526019)(956004)(5660300002)(186003)(66946007)(26005)(2616005)(66446008)(66556008)(66476007)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3385;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nTmqrX7L85eAPXLwoqtrSiB0Ww9Obmah/st+/PPDzESY20UE2IFLAee8GsGBHzjPtKfDhaMWHiuB9HId/VEWu70E4RDO+XvB2JbzGJ8mg92EoQ6RX4C1pojFwHkmRLaSCkZPAENXwwd3qSNhz3288Aqb8ltEIZaBPz1NBBFDWdk59Wgi7OWLpKcMnG5ZQJWMAKBRp2l28gmXYSFf7cDZ6mjTl4Paoo1kYNreE0vfv4TYrXX6uaq5uZc7RSlZ7AKxX6xv9MZRA7ZqAOw4LPZx1gpOF+aqG9/yYKSv1UQPNyBekuyHIdXSzNQ3c0TlGhaYsCyduxUUKOtEO0wX0Zf5b65Sr0gdEEDm+Blx7+m2ChhXg06Bb936ZRCoRhWqD/dYY1idGb+jT1Q+V/bxcpj980V9tjaB02uTxfz1SQMMcPkQqss/UM3IEBvoSHkzDi38
+x-ms-exchange-antispam-messagedata: hJ2Y9a8/a632aDFErlh72/weW8YqCwbyiOTlioeq0+51itwbB/j3dqPaQXwCjpk/x2ZH1Mjm0TdSHSXm/QdNvazx98etRddBqiqsgdpTLl5/6FrehOg6vbkd4Iu/BAVQb+j6bIlMgphuHxI60gXLcw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9D4CE742CE73534BAB68505071BDB30E@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124195859.86991-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04a5fcc8-d9ec-4e3b-f6fd-08d7a310da38
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2020 10:08:27.4743
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: X09dddJvbhKD2KKSdpp3wwyFKPDPOCchtlXTAa6CYqtN04ZseZ64P5ghd1lxlJHy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3385
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 09:58:59PM +0200, Andy Shevchenko wrote:
-> When build on, for example, x86 using `make O=... -j64` the version
-> in the built kernel comes from include/generated/compile.h, which is:
-> 
-> 	#define UTS_VERSION "#351 SMP Fri Jan 24 18:46:34 EET 2020"
-> 
-> While at the end the x86 specific Makefile prints the contents of
-> the .version file:
-> 
-> 	Kernel: arch/x86/boot/bzImage is ready  (#352)
-> 
-> Obviously the latter is not true. This happens because we first
-> check compile.h and update it and then generate new version, which is
-> incorrect flow:
-> 
->   CHK     include/generated/compile.h
->   UPD     include/generated/compile.h
->   ...
->   GEN     .version
-> 
-> In order to fix this, move the version generation from link-vmlinux.sh
-> to scripts/version.sh and re-use it in init/Makefile.
-> 
-> Additionally provide a unified way to get the current version of the build
-> and use this in few callers. This will respect the KBUILD_BUILD_VERSION
-> in case it's provided.
-
-Hmm... It looks like a mess in my build tree.
-I have to setup more experiments here.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+T24gMjAyMC0wMS0yNyAxMDoyNiwgQ29saW4gSWFuIEtpbmcgd3JvdGU6DQo+IE9uIDI3LzAxLzIw
+MjAgMDc6NDMsIE1pY2hhbCBTaW1layB3cm90ZToNCj4+IE9uIDI2LiAwMS4gMjAgMTY6NDIsIENv
+bGluIEtpbmcgd3JvdGU6DQo+Pj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fu
+b25pY2FsLmNvbT4NCj4+Pg0KPj4+IFRoZXJlIGlzIGEgc3RhdG1lbnQgdGhhdCBpcyBpbmRlbnRl
+ZCBvbmUgbGV2ZWwgdG9vIGRlZXBseSwgcmVtb3ZlDQo+Pg0KPj4gdHlwbyAgICAgICAgICAgICBe
+DQo+IA0KPiBDYW4gdGhpcyBiZSBmaXhlZCB3aGVuIHRoZSBwYXRjaCBpcyBhcHBsaWVkIHJhdGhl
+ciB0aGFuIHNlbmRpbmcgYSBWMj8NCg0KSXQgY2FuLCBidXQgSSB0aGluayB5b3Ugd2lsbCBtYWtl
+IGl0IGVhc2llciBmb3IgV29sZnJhbSBpZiB5b3Ugc2VuZCBhIHYyLg0KV2hpY2ggaXMgdGhlIHJp
+Z2h0IHRoaW5nIHRvIGRvIGFueXdheSBzaW5jZSB5b3UgYXJlIG1pc3NpbmcgYSBGaXhlcyB0YWcu
+DQpJIHRoaW5rIHlvdSBzaG91bGQgaGF2ZSBvbmUsIHNpbmNlIGl0IGlzIGJvcmRlcmxpbmUgaWYg
+dGhpcyBwYXRjaCBpcyBnb2luZw0KdG8gbWFrZSBpdCBiZWZvcmUgNS42Lg0KDQpDaGVlcnMsDQpQ
+ZXRlcg0KDQo+IENvbGluDQo+IA0KPj4NCj4+PiB0aGUgZXh0cmFuZW91cyB0YWIuDQo+Pj4NCj4+
+PiBTaWduZWQtb2ZmLWJ5OiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29t
+Pg0KPj4+IC0tLQ0KPj4+ICBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLXhpaWMuYyB8IDIgKy0NCj4+
+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+Pj4NCj4+
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy14aWljLmMgYi9kcml2ZXJzL2ky
+Yy9idXNzZXMvaTJjLXhpaWMuYw0KPj4+IGluZGV4IGIxN2QzMGM5YWI0MC4uOTBjMWMzNjIzOTRk
+IDEwMDY0NA0KPj4+IC0tLSBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMteGlpYy5jDQo+Pj4gKysr
+IGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy14aWljLmMNCj4+PiBAQCAtMjYxLDcgKzI2MSw3IEBA
+IHN0YXRpYyBpbnQgeGlpY19jbGVhcl9yeF9maWZvKHN0cnVjdCB4aWljX2kyYyAqaTJjKQ0KPj4+
+ICAJCXhpaWNfZ2V0cmVnOChpMmMsIFhJSUNfRFJSX1JFR19PRkZTRVQpOw0KPj4+ICAJCWlmICh0
+aW1lX2FmdGVyKGppZmZpZXMsIHRpbWVvdXQpKSB7DQo+Pj4gIAkJCWRldl9lcnIoaTJjLT5kZXYs
+ICJGYWlsZWQgdG8gY2xlYXIgcnggZmlmb1xuIik7DQo+Pj4gLQkJCQlyZXR1cm4gLUVUSU1FRE9V
+VDsNCj4+PiArCQkJcmV0dXJuIC1FVElNRURPVVQ7DQo+Pj4gIAkJfQ0KPj4+ICAJfQ0KPj4NCj4+
+IFdoZW4gZml4ZWQuDQo+Pg0KPj4gQWNrZWQtYnk6IE1pY2hhbCBTaW1layA8bWljaGFsLnNpbWVr
+QHhpbGlueC5jb20+DQo+Pg0KPj4gVGhhbmtzLA0KPj4gTWljaGFsDQo+Pg0KPj4NCj4+DQo+Pg0K
+Pj4NCj4+DQo+IA0KDQo=
