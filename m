@@ -7,119 +7,104 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F24C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6DFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE2620716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2979220720
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580135185;
-	bh=V+RtYx4rDRwVt97bmBt6XB44quPwdv8d3Z9dwT7Tjb0=;
+	s=default; t=1580135214;
+	bh=4PAV10Xu+MoMQA1ALga7QbTjbfG6PoLUWqwKPzDQhns=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qb09yKgCpLck6Z0q5MdJgsm+3G4L5fNqP/rqdefghYecyXdjxxCBDgLw040jzmL4T
-	 ByEgUXH+oMFjD7H71LhpRxW/LR5j7BtxfYElgbjeCAvzD02S6+vnCFI7qAugNaVxSz
-	 GkgSe7zXu9ybkGxfEy7T+oQVSdpNp8ClIrCwNGL8=
+	b=SnXgDqRveaH4sPzaeMzaVprza7h06A16ferHfryMi9jz86ETumWB9/VtHmWPNgZYi
+	 4VpWB6YlKPeZQPgqPC7sjlBYG/+if/O2jZN8IskLfK8Ysae8E0Z9B/VCqzxDOqitL/
+	 gfad5IGeQvVTB/VzC8sTJKsrgJcd0Wk6ElOipk4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgA0O0Z (ORCPT
+        id S1729112AbgA0O0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:26:25 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41721 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgA0O0Y (ORCPT
+        Mon, 27 Jan 2020 09:26:53 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43743 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbgA0O0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:26:24 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r27so8481740otc.8;
-        Mon, 27 Jan 2020 06:26:24 -0800 (PST)
+        Mon, 27 Jan 2020 09:26:53 -0500
+Received: by mail-ot1-f65.google.com with SMTP id p8so8490029oth.10;
+        Mon, 27 Jan 2020 06:26:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Nxt//FHypijseal0ghIbraBsi2lnDnz+2r9nMCuOYJI=;
-        b=eZAPI5FnyZz44CPp9IGSQEvBWwCn4DXi/Guo5baZ6bhVjt3fMCNXuA0yI4ATjE3iOF
-         3JHzBL1/mRiXV167pLJR7kcRza4t3Kga6EOUX7lygX3pqtpzmcVDUXpTyRyPij/U6wgl
-         nofLvaxUBmmpHNLerroiPVg+6gka9k/87YklZ1HJ35zSZL3zf84mSwCJzeu9Z4Cd25oD
-         fRFfj/JsO9CGTL59ZlYE1noNwg+/8OfSokTfah+Nez4wV0sk9p/swDNIaZuzuL1yUGlz
-         9gJ5MVy5EvrZe9QcoQqFDzEFmJJOgoh7MXQuBfcNv/bfX/t1IvMDzvReTkVlkvipE4z+
-         CPDA==
-X-Gm-Message-State: APjAAAVQf7mrKRbOgOROMG32VePv32vgJ7BmvnFlv7Re/q4oPR+kS0Gm
-        YRJF2wsT0n9gmPUsYY+MdQ==
-X-Google-Smtp-Source: APXvYqyBPH3RWTQHiqmN/lkBJBZUFhrE+9jZVDWpGBXqHJYibAu4HcUdQ/ttp2aqxhjJ+ejTuvj9gg==
-X-Received: by 2002:a9d:2028:: with SMTP id n37mr13077692ota.127.1580135183616;
-        Mon, 27 Jan 2020 06:26:23 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=384aXLk+Dp5oNTQmdLCF7Z+jOr9Ua155OMVyKVmomg4=;
+        b=VIWewOxjLUuTP2WoCzETvP8DVDjMBREHRfXYK4fGAaCW0XjBk2XtvaYqp309JaBwio
+         QK9gp4h5SLvlE5+PQm49FhDpAAuXAv8R6mnywS4qKhJ/0TOv0Th0Pj4hQrH5ngffuhhn
+         LspSM1yQQjSQ2kEZAPXfRLz1ROPY7W3plfNd6LkbdfZqxTsX09WjaMYLpiv4O7tIwkn/
+         7vL0S8e8xXuH1ZblAG2lkl2Vc1IdlXkKyOf2ImKTZJBydTOi1mKTr2sCm5h6ud/g3gSw
+         OJMEssjOvzwKgE950jpviFC/aKmGIO150hXVIRdvOucaYDvCpNKSkDKZcx0MHjP1qDSX
+         oB0g==
+X-Gm-Message-State: APjAAAVTIqachpf9810jVb+cDA28vOlfSnGvC1WiSuX3J5H8s7QqZ2/Z
+        K65Q6KaPjE2vdWOJPRvMs4nDaSM=
+X-Google-Smtp-Source: APXvYqyP63MnmHJt0hGWP9PkKahnDDxwFoVmtDIBkx6YXdHnUBlVqA1nwvgSNYg+n1ALMcngCXMc9w==
+X-Received: by 2002:a9d:6f0d:: with SMTP id n13mr12889727otq.165.1580135212187;
+        Mon, 27 Jan 2020 06:26:52 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t7sm2606437oth.79.2020.01.27.06.26.21
+        by smtp.gmail.com with ESMTPSA id n2sm4798369oia.58.2020.01.27.06.26.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 06:26:22 -0800 (PST)
-Received: (nullmailer pid 29798 invoked by uid 1000);
-        Mon, 27 Jan 2020 14:26:20 -0000
-Date:   Mon, 27 Jan 2020 08:26:20 -0600
+        Mon, 27 Jan 2020 06:26:51 -0800 (PST)
+Received: (nullmailer pid 30592 invoked by uid 1000);
+        Mon, 27 Jan 2020 14:26:50 -0000
+Date:   Mon, 27 Jan 2020 08:26:50 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        tglx@linutronix.de, daniel.lezcano@linaro.org, shawnguo@kernel.org,
-        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
-        miquel.raynal@bootlin.com, keescook@chromium.org,
-        ebiederm@xmission.com, krzk@kernel.org, geert+renesas@glider.be,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        mturquette@baylibre.com, sboyd@kernel.org, chenhc@lemote.com,
-        jiaxun.yang@flygoat.com, paul@boddie.org.uk, hns@goldelico.com,
-        mips-creator-ci20-dev@googlegroups.com, rick.tyliu@ingenic.com
-Subject: Re: [PATCH v3 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Message-ID: <20200127142620.GA29108@bogus>
-References: <1579867508-81499-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1579867508-81499-5-git-send-email-zhouyanjie@wanyeetech.com>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v2 4/5] dt-bindings: input: Add docs for ADC driven
+ joystick.
+Message-ID: <20200127142650.GA30045@bogus>
+References: <20200126161236.63631-1-contact@artur-rojek.eu>
+ <20200126161236.63631-4-contact@artur-rojek.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1579867508-81499-5-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To: <20200126161236.63631-4-contact@artur-rojek.eu>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jan 2020 20:05:05 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= wrote:
-> Document the available properties for the SoC root node and the
-> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+On Sun, 26 Jan 2020 17:12:35 +0100, Artur Rojek wrote:
+> Add documentation for the adc-joystick driver, used to provide support
+> for joysticks connected over ADC.
 > 
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
 > ---
 > 
-> Notes:
->     v1->v2:
->     Change the two Document from txt to yaml.
->     
->     v2->v3:
->     Fix formatting errors.
+>  Changes:
 > 
->  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 53 ++++++++++++++++++++++
->  .../bindings/mips/ingenic/ingenic,soc,yaml         | 35 ++++++++++++++
->  2 files changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml
+>  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
+>      - rename `linux,abs-code` property to `linux,code`,
+>      - drop `linux,` prefix from the remaining properties of axis subnode
+> 
+>  .../bindings/input/adc-joystick.yaml          | 117 ++++++++++++++++++
+>  1 file changed, 117 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-warning: no schema found in file: Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: ignoring, error in schema: properties: compatible: oneOf: 0
 Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: properties:compatible:oneOf:0: 'ingenic,xburst' is not of type 'object', 'boolean'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: properties:compatible:oneOf:1: 'ingenic,xburst2' is not of type 'object', 'boolean'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: Additional properties are not allowed ('Example' was unexpected)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml: Additional properties are not allowed ('Example' was unexpected)
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts] Error 1
+Error: Documentation/devicetree/bindings/input/adc-joystick.example.dts:22.31-32 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml] Error 1
 Makefile:1263: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1228796
+See https://patchwork.ozlabs.org/patch/1229387
 Please check and re-submit.
