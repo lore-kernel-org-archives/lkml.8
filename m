@@ -2,97 +2,120 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423CAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8429EC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19CA3207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F47F207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 10:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jYbS0ZG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbgA0Klr (ORCPT
+        id S1730011AbgA0KmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 05:41:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48332 "EHLO mx2.suse.de"
+        Mon, 27 Jan 2020 05:42:08 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:58985 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbgA0Klr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 05:41:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6B7CDAFDF;
-        Mon, 27 Jan 2020 10:41:45 +0000 (UTC)
-Date:   Mon, 27 Jan 2020 11:41:39 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] EDAC pile for 5.6
-Message-ID: <20200127104139.GB24228@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1729054AbgA0KmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 05:42:07 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 485mX91WVPz9v02y;
+        Mon, 27 Jan 2020 11:42:01 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=jYbS0ZG5; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id wAs_VF93qg3X; Mon, 27 Jan 2020 11:42:01 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 485mX90Jr0z9v02x;
+        Mon, 27 Jan 2020 11:42:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580121721; bh=QSas4AzfycVcrZrrY4ffgcs9Nqt9q9y8HeREqBisZ1g=;
+        h=From:Subject:To:Cc:Date:From;
+        b=jYbS0ZG5TuPWxcWiyHouSkNGKS6T7nOHGR/C/q6ryvjV5iouim64mr7SL5Cgs9goY
+         Ov6I5aKw/QSgPMK1sIlPbI48lAmwds0y09CAp+yoKeClSQXmHGHqTJynVJdSzDGvpE
+         WYlRjdNkkqeAAsSSwCLhq0XUxBCPB2y68rc3QwkQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CEEA48B79C;
+        Mon, 27 Jan 2020 11:42:05 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id V8fDMGbeqcJv; Mon, 27 Jan 2020 11:42:05 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8E0AC8B752;
+        Mon, 27 Jan 2020 11:42:05 +0100 (CET)
+Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 1A841651FA; Mon, 27 Jan 2020 10:42:04 +0000 (UTC)
+Message-Id: <6d02c3ae6ad77af34392e98117e44c2bf6d13ba1.1580121710.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/32s: Fix CPU wake-up from sleep mode
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 27 Jan 2020 10:42:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Commit f7354ccac844 ("powerpc/32: Remove CURRENT_THREAD_INFO and
+rename TI_CPU") broke the CPU wake-up from sleep mode (i.e. when
+_TLF_SLEEPING is set) by delaying the tovirt(r2, r2).
 
-please pull our totally boring branch this time around.
+This is because r2 is not restored by fast_exception_return. It used
+to work (by chance ?) because CPU wake-up interrupt never comes from
+user, so r2 is expected to point to 'current' on return.
 
-Thx.
+Commit e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access
+Protection") broke it even more by clobbering r0 which is not
+restored by fast_exception_return either.
 
+Use r6 instead of r0. This is possible because r3-r6 are restored by
+fast_exception_return and only r3-r5 are used for exception arguments.
+
+For r2 it could be converted back to virtual address, but stay on the
+safe side and restore it from the stack instead. It should be live
+in the cache at that moment, so loading from the stack should make
+no difference compared to converting it from phys to virt.
+
+Fixes: f7354ccac844 ("powerpc/32: Remove CURRENT_THREAD_INFO and rename TI_CPU")
+Fixes: e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access Protection")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
+ arch/powerpc/kernel/entry_32.S | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_for_5.6
-
-for you to fetch changes up to 7e5d6cf35329c8b232a1e97114545c1745d79083:
-
-  EDAC/amd64: Do not warn when removing instances (2020-01-17 13:00:06 +0100)
-
-----------------------------------------------------------------
-A garden variety of small fixes all over the place.
-
-----------------------------------------------------------------
-Aristeu Rozanski (1):
-      EDAC: skx_common: downgrade message importance on missing PCI device
-
-Borislav Petkov (1):
-      EDAC/amd64: Do not warn when removing instances
-
-Krzysztof Kozlowski (1):
-      EDAC/Kconfig: Fix Kconfig indentation
-
-Wei Yongjun (1):
-      EDAC/sifive: Fix return value check in ecc_register()
-
-Xu Wang (1):
-      EDAC/aspeed: Remove unneeded semicolon
-
-yu kuai (1):
-      EDAC: remove set but not used variable 'ecc_loc'
-
- drivers/edac/Kconfig       | 3 +--
- drivers/edac/amd64_edac.c  | 3 ---
- drivers/edac/aspeed_edac.c | 4 ++--
- drivers/edac/i5100_edac.c  | 7 -------
- drivers/edac/sifive_edac.c | 4 ++--
- drivers/edac/skx_common.c  | 2 +-
- 6 files changed, 6 insertions(+), 17 deletions(-)
-
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index 73b80143ffac..27e2afce8b78 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -180,7 +180,7 @@ transfer_to_handler:
+ 2:	/* if from kernel, check interrupted DOZE/NAP mode and
+          * check for stack overflow
+          */
+-	kuap_save_and_lock r11, r12, r9, r2, r0
++	kuap_save_and_lock r11, r12, r9, r2, r6
+ 	addi	r2, r12, -THREAD
+ #ifndef CONFIG_VMAP_STACK
+ 	lwz	r9,KSP_LIMIT(r12)
+@@ -288,6 +288,7 @@ reenable_mmu:
+ 	rlwinm	r9,r9,0,~MSR_EE
+ 	lwz	r12,_LINK(r11)		/* and return to address in LR */
+ 	kuap_restore r11, r2, r3, r4, r5
++	lwz	r2, GPR2(r11)
+ 	b	fast_exception_return
+ #endif
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.25.0
 
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
