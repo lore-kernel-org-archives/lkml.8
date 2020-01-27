@@ -2,61 +2,87 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB260C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009CEC33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951CF2467B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB0024688
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 19:57:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jtPFWPoN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgA0T5Z (ORCPT
+        id S1726481AbgA0T5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 14:57:25 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:54063 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725944AbgA0T5Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 14:57:25 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TocxhF-_1580155041;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TocxhF-_1580155041)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 28 Jan 2020 03:57:22 +0800
-Subject: Re: [PATCH] mm: mempolicy: use VM_BUG_ON_VMA in
- queue_pages_test_walk()
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1579068565-110432-1-git-send-email-yang.shi@linux.alibaba.com>
- <1221B3C6-6A3B-4427-92DD-25AD54FF6BB5@lca.pw>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <d6c1a434-8670-97f4-345c-28c8007a25ce@linux.alibaba.com>
-Date:   Mon, 27 Jan 2020 11:57:17 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 27 Jan 2020 14:57:55 -0500
+Received: from ozlabs.org ([203.11.71.1]:48273 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbgA0T5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 14:57:54 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4860sX1FkTz9sNF;
+        Tue, 28 Jan 2020 06:57:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580155072;
+        bh=kMXhVkPXN/dGN5IWbiO3bPA2KIN51Po0G/kn1Ph4VjI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jtPFWPoNGACulFqHZn5ULwoPUeebppE75yD7IIeDgnphnqVb2KHJN3mnnBGTRNmAT
+         NeiPi/6z1BBcRBToVNRu6vQWCRDDYayWB9w4njbZF54FM2krhkCRaKEnk66TDpvgDR
+         JRqobYGvHyxD1wwmw/Ms/coHJ1eJLIo01Kq3qd8rKML+DDeS9OeZu6qcA/Mc/lnUwp
+         11cEK1PBXHeqJX/ygFnXh34uNucmd7UD5gex5AMA1pm3qNSFjRYN7T3wCkN15YoVhU
+         ruFhedNQkGt98jZUV7VmIMAzBdy3Ylt0fDyOove4im03ranq8lwv1YzyYiU0jCUI9n
+         xeSwkJ7YGDcHQ==
+Date:   Tue, 28 Jan 2020 06:57:42 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steve French <smfrench@gmail.com>,
+        CIFS <linux-cifs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the cifs tree
+Message-ID: <20200128065742.397cd3d2@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <1221B3C6-6A3B-4427-92DD-25AD54FF6BB5@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; boundary="Sig_/DZWONxN=.h7HF2CgKZaE/k/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/DZWONxN=.h7HF2CgKZaE/k/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 1/27/20 10:17 AM, Qian Cai wrote:
->
->> On Jan 15, 2020, at 1:09 AM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
->>
->> The VM_BUG_ON() is already used by queue_pages_test_walk(), it sounds
->> better to dump more debug information by using VM_BUG_ON_VMA() to help
->> debugging.
-> What’s the problem this is trying to resolve? Was there an existing bug would trigger this?
+Commit
 
-Dumping more information to help debugging. I don't run into related bug 
-personally.
+  503e9ac76c90 ("cifs: update internal module version number")
 
+is missing a Signed-off-by from its author and committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/DZWONxN=.h7HF2CgKZaE/k/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4vQLYACgkQAVBC80lX
+0Gz1uAgAlqejX7/gXhbKqN9bygvbGEkXkKdEWb0wdyL/KBHrVtMlu+uS9d/ab1qg
+5BuYhxt2Knagn5XzMvWFm6PhZlofXfeNHWEp6L/qZ2EsEaEDwt6osnoO0e23AMI7
+7x3wbUexsJZ9OSunKsLSVb0g5GqI2q4vVXpXF/IRV8ZyJQh3b9PgOqolrT6kSQye
+IG2M4GSTMm5x1/MzpN7AEf0/SL3wUoMhj0JoF5EnNPXIsAfoL9h1gxjkjt+pKuJi
+Ba091YsiZFkcI3hCCtQ100ZNBZfn1hPUQEQzgzhWaMdB/+sEbD5wLuuer89aOB8G
+i0auhbA19rVPWLFp729ElP/J97WmQQ==
+=JHIv
+-----END PGP SIGNATURE-----
+
+--Sig_/DZWONxN=.h7HF2CgKZaE/k/--
