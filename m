@@ -2,177 +2,83 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7E6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56293C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6DC920842
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F84220842
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 11:44:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z/aLYsfr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QaXmIyLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbgA0Lny (ORCPT
+        id S1730340AbgA0LoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 06:43:54 -0500
-Received: from mail-db8eur05on2079.outbound.protection.outlook.com ([40.107.20.79]:6259
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726210AbgA0Lnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 06:43:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EoorGe/rUqrpcw2vIvSw4g7Aw2oZLCErIcEv9DgL0+kAijIuELZxk9h5sLlClbLcoOH4osmLd/7zNT8UZ8TglM4vAKD1nwshkQPp4Sr9uUYV5r690Ri9V1MtN9zy2QraQLeyCN/82FExa+wit1EYztZdHEUc6AbIKxEVQxnoPkl9ftWhxf6tvZY15W/3lSDS7PehiV5ohpjvoaSlOBOVa5zfbux4nPpfL9VKRBtYkquoXSQ95XHazioigpEZ1LzWfSIy5bj1xX/T9cYWFAtL1Ia0BJnhtF/hIU6uPsZa/1bej95Mx7dXbcOhs5qc7JcAdhYIPA+RtG2qMY40QwNKuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JIngfjI75VLckPIzvaoDorlrNdQ2pJL+MFns//uBN9c=;
- b=RxHT/VMJg4EgNu39DhuqY+eZ0p07ah4sgQcc4BCLLEXun2b73iLC1U1zg6ZOn9PkQl6MUdp1Big5aGrIOiciD27JMzwQvTkRljfMZ3dspGXrMgK3NiWLL3IBmtxmTsjAdepF8/jwyHAWCvWguddGFM6ys1inHBGaXRk7kJmkqBR8eQGOvw3OvwvH+QS176jVIy/LJPO/rgfkjfA4VeZPFxB+eHD+nUq4Lf52J/KZF2imVaNPnmzp0OYhEqTAqvIU2yO+BYhfWawa9imjfKPnkbpaLp2oTsyhwLnH5sy+Rub9OL+rzDCCyvHyz0lI0KbNfRZzTgX5u43vhDM+r1BwfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JIngfjI75VLckPIzvaoDorlrNdQ2pJL+MFns//uBN9c=;
- b=Z/aLYsfrgIUqH3p5zHopBVTNM3iWT9+Og4BUCKa4QZIkuI/HZ+Kd8xMx30rs0yoHyAaVn3l9Y9OCngk4uXs9u0v27G5dwCBrxsJIW/A7sGUuATIbc6SsS3aUNpgXIKN1xsiZtlC4JH/o3g9qduVHtJGOnyIy459Fn91XlUtNubk=
-Received: from AM6PR04MB4774.eurprd04.prod.outlook.com (20.177.33.85) by
- AM6PR04MB6694.eurprd04.prod.outlook.com (20.179.247.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.19; Mon, 27 Jan 2020 11:43:10 +0000
-Received: from AM6PR04MB4774.eurprd04.prod.outlook.com
- ([fe80::48e8:9bdb:166d:1402]) by AM6PR04MB4774.eurprd04.prod.outlook.com
- ([fe80::48e8:9bdb:166d:1402%5]) with mapi id 15.20.2665.017; Mon, 27 Jan 2020
- 11:43:10 +0000
-From:   Claudiu Manoil <claudiu.manoil@nxp.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: RE: [PATCH] gianfar: Allocate the correct number of rx queues in
- 'gfar_of_init()'
-Thread-Topic: [PATCH] gianfar: Allocate the correct number of rx queues in
- 'gfar_of_init()'
-Thread-Index: AQHV1Cnp/aGg7k6RokG5M3Bmrty8Qqf+TbxQ
-Date:   Mon, 27 Jan 2020 11:43:10 +0000
-Message-ID: <AM6PR04MB47745F475F454DC598A8D771960B0@AM6PR04MB4774.eurprd04.prod.outlook.com>
-References: <20200126092028.14246-1-christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20200126092028.14246-1-christophe.jaillet@wanadoo.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=claudiu.manoil@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6e1c0ef3-a052-4e26-dc6d-08d7a31e15ad
-x-ms-traffictypediagnostic: AM6PR04MB6694:
-x-microsoft-antispam-prvs: <AM6PR04MB6694A0BBBE3237AFD543CC47960B0@AM6PR04MB6694.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02951C14DC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(376002)(39860400002)(136003)(199004)(189003)(186003)(478600001)(26005)(55016002)(9686003)(71200400001)(52536014)(8676002)(76116006)(66946007)(316002)(54906003)(5660300002)(6506007)(86362001)(44832011)(66556008)(7696005)(4326008)(110136005)(81166006)(8936002)(2906002)(81156014)(33656002)(66476007)(64756008)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6694;H:AM6PR04MB4774.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZINFnuJILXsXvPZ5zzxIW5fXeLKWjtbGqLrp+zDw+erBJJYoiX6c1di8ksTr3oqedL3URtwPIO7WuLkMO9Ip4nzqCFZQ9VEQTQYSurukA635+PXri7yI4cq280gstnu7HS9w+VGrcOdANtHwLx91gTMEGoMDoyi3XJ5SHd0YLvBW4Q9d27+3E3WnZoi9bBrqygyArDA28cPoPO1a69v27V3GD2iQV7mYnzlyX5UcyTSuOAtd7eSufiUSvN5i0p7KiLTt1wMS9piUPW2EHsAg4uln5dqbw4sif/n/YrrXpnIJe5vCwN94jlVqvDuXD7sd2ccIJQtW0i/Keia1lfDRrZ7f4LXIhZai8rDSQMzRADr00ZL/xS/2feCR2eAvlNx00veXRM9BM2Juh9pE1V09ci19+DU6vze0bLZZs9NOh8Xdl7Amwcm9HY1lUQcDOoBm
-x-ms-exchange-antispam-messagedata: A8iS136VnmeKhcTIQ98zkHntlW+I1Wd8Ass/BEYUHY1tl/F4H61JVtErTw2AhPEvqC0bvXH4FGq0bPAWjtlmv+6jFwRt/WGQ7tVSzOWKp5XuXfyPbGC6rR3A0vC2Ju4BiMq0jaiebqK4CEpzsCIHoA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 27 Jan 2020 06:44:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37174 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726210AbgA0LoQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 06:44:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580125456;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sUtieaM6GD2PpqnJW9FIIx3PImpT0oW9u9OtwSX9XIA=;
+        b=QaXmIyLjhuil/6diU+4737S1IPW/lGtx8LDMY5QUVeUhByDLuX4vasZKOhQIbt8IpxqFTF
+        ur94XbRDEOMHW5kkTYBLsLJjCjfO0f+bCsmV68Rw/zrf6nKVXpeXWkUIG0jigQk3aL/1i+
+        C00j/yA4Qm5yf0rFsj2qf2U9OteI8I0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-292-foaiDgyzN-uZrsXuUKjA4Q-1; Mon, 27 Jan 2020 06:44:12 -0500
+X-MC-Unique: foaiDgyzN-uZrsXuUKjA4Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9756B800EBB;
+        Mon, 27 Jan 2020 11:44:11 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-99.rdu2.redhat.com [10.10.120.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F919451F;
+        Mon, 27 Jan 2020 11:44:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200122081340.2bhx5jfezl55b3qb@kili.mountain>
+References: <20200122081340.2bhx5jfezl55b3qb@kili.mountain> <000000000000da7a79059caf2656@google.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     dhowells@redhat.com,
+        syzbot <syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com>,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in __proc_create (2)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e1c0ef3-a052-4e26-dc6d-08d7a31e15ad
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2020 11:43:10.3646
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 664UAMe8TBku55K22C1H87rxiOM1+6pbFyEvB1AALITjbV8b8X/kB5gIY8wrj+2r4ct3c4VS3JOcqdFjsDluIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6694
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1452048.1580125449.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 27 Jan 2020 11:44:09 +0000
+Message-ID: <1452049.1580125449@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->Sent: Sunday, January 26, 2020 11:20 AM
->To: Claudiu Manoil <claudiu.manoil@nxp.com>; davem@davemloft.net
->Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; kernel-
->janitors@vger.kernel.org; Christophe JAILLET
-><christophe.jaillet@wanadoo.fr>
->Subject: [PATCH] gianfar: Allocate the correct number of rx queues in
->'gfar_of_init()'
->
->We can get values for rx and tx queues from "fsl,num_rx_queues" and
->"fsl,num_tx_queues". However, when 'alloc_etherdev_mq()' is called, the
->value for "tx" is used for both.
->
->Use 'alloc_etherdev_mqs()' instead.
->
->Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->---
->WARNING: This patch is purely speculative!
->
->I don't fully understand the code, and tx and rx queues seem to be
->allocated by 'gfar_alloc_[rt]x_queues()' and handled with priv-> fields.
->I don't know the relationship between queues provided by the core, and the
->ones specificly handled in this driver.
->
->'netif_set_real_num_rx_queues()' a few lines below is also spurious to me.
->If "fsl,num_rx_queues" > "fsl,num_tx_queues" it will return an error and
->things then look out of synch (i.e. 'priv->num_rx_queues' is set to a valu=
-e
->bigger than what is allocated by core, that is to say the one from
->'priv->num_tx_queues')
->
->If my assumptions are correct, I guess that the call to
->'netif_set_real_num_rx_queues()' is useless
->
->
->Sorry for the noise if I'm completly wrong.
->In such a case, some explanation would be appreciated.
+Dan Carpenter <dan.carpenter@oracle.com> wrote:
 
-Your patch is reasonable, you rightly noticed that something is amiss,=20
-we could reasonably say that:
-Fixes: fba4ed030cfa ("gianfar: Add Multiple Queue Support")
+> We should probably ban '/' characters from the cell name in
+> afs_alloc_cell().
 
-But the fix doesn't change the behavior of the current mainline code.  That=
-'s because
-in the current mainline code num_rx_qs is always equal to num_tx_qs, and bo=
-th can be
-either 1 or 2, depending on whether the platform has 1 or 2 CPUs.  The GFAR=
-_MQ_POLLING
-mode option is never set, not on the mainline at least (you can look up thi=
-s define in the code
-for comments).  As it is now, the GFAR_MQ_POLLING option can be activated b=
-y adding an extra
-if statement in the driver, to select it by a special device tree compatibi=
-lity string for example.
+Sorry, I forgot to cc you on the patch.  It's now upstream:
 
-So, the problem is that this option to support more than 2 Rx and 2 Tx queu=
-es in the mainline code
-cannot be accessed without modifying the driver.  Supporting more than 2 qu=
-eues has shown
-considerable overhead in the past.  So the decision was made to support onl=
-y one pair of=20
-Rx/Tx queues per CPU by default.  However there's no easy way to change the=
-se defaults at
-runtime, and switch to GFAR_MQ_POLLING.  And so far I received no feedback/=
- request to support
-GFAR_MQ_POLLING upstream.  So I see several options here: 1) remove the GFA=
-R_MQ_POLLING
-code (something I was about to do 6 years ago, but I was prompted to leave =
-it there), 2) come up
-with a way to activate it at runtime, 3) add support to activate it at prob=
-e time via new device tree
-properties /strings (not ideal).  Any suggestion?
+	https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/?id=3Da45ea48e2bcd92c1f678b794f488ca0bda9835b8
 
-Thanks,
-Claudiu
+David
 
