@@ -2,224 +2,116 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DB5C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF7AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA622467F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580149879;
-	bh=OSnR0c1UCFu8uMj4x/xuLPY3jKCvX4upsRiqBeBl7GI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=wBVTQnlUEeMpDW6eqjGAahXQACWrsc9fp7Y6XQiDBd9W5agrofPfapeEHL/AORuej
-	 JUWSrdu/Q2IFQvuzUH7legWUm56SkNsaFzgI6Nt7SKlspFxvn3CygJOHTqwQ1C8Cop
-	 Kor8lX5BYQ+lVAEX9YGYuSKn4uUGGGjogpprNzPI=
+	by mail.kernel.org (Postfix) with ESMTP id 4A7A1214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:36:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgA0SbS (ORCPT
+        id S1726181AbgA0Sf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 13:31:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:48120 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgA0SbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 13:31:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFC5930E;
-        Mon, 27 Jan 2020 10:31:16 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C58A3F67D;
-        Mon, 27 Jan 2020 10:31:16 -0800 (PST)
-Date:   Mon, 27 Jan 2020 18:31:14 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     broonie@kernel.org, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
-        robh+dt@kernel.org, sravanhome@gmail.com
-Subject: Applied "dt-bindings: regulator: add document bindings for mpq7920" to the regulator tree
-In-Reply-To: <20200123215338.11109-1-sravanhome@gmail.com>
-Message-Id: <applied-20200123215338.11109-1-sravanhome@gmail.com>
-X-Patchwork-Hint: ignore
+        Mon, 27 Jan 2020 13:35:59 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31894 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725845AbgA0Sf7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 13:35:59 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RIZYul139611
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:35:57 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrhv0s517-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:35:57 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 27 Jan 2020 18:35:54 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 27 Jan 2020 18:35:51 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00RIZo8a43057508
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 18:35:50 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 068CFAE051;
+        Mon, 27 Jan 2020 18:35:50 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53ABEAE058;
+        Mon, 27 Jan 2020 18:35:49 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.185.238])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jan 2020 18:35:49 +0000 (GMT)
+Subject: Re: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
+ the boot aggregate
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Mon, 27 Jan 2020 13:35:48 -0500
+In-Reply-To: <1580148975.5088.38.camel@linux.ibm.com>
+References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+         <ca189378a5f841d0ba111c6405079569@huawei.com>
+         <1580148975.5088.38.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012718-0012-0000-0000-00000381286D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012718-0013-0000-0000-000021BD795E
+Message-Id: <1580150148.5088.41.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_06:2020-01-24,2020-01-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001270147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Mon, 2020-01-27 at 13:16 -0500, Mimi Zohar wrote:
+> On Mon, 2020-01-27 at 17:38 +0000, Roberto Sassu wrote:
+> > > -----Original Message-----
+> > > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
+> > > owner@vger.kernel.org] On Behalf Of Mimi Zohar
+> > > Sent: Monday, January 27, 2020 5:02 PM
+> > > To: linux-integrity@vger.kernel.org
+> > > Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
+> > > <James.Bottomley@HansenPartnership.com>; linux-
+> > > kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
+> > > Subject: [PATCH 1/2] ima: use the IMA configured hash algo to calculate the
+> > > boot aggregate
+> > 
+> > Hi Mimi
+> > 
+> > I did a similar change (patch 8/8) in the patch set I just sent. The patch is simpler,
+> > as it reuses the data structures I introduced in the previous patches. Let me know
+> > if I can keep this part in my patch set or I should remove it.
+> 
+> Only 2/2 "ima: support calculating the boot_aggregate based on
+> different TPM banks" is really needed to address Jerry's bug report.
+>  Let's review your patch set before making any decisions about 1/2
+> "ima: use the IMA configured hash algo to calculate the boot
+> aggregate".
 
-   dt-bindings: regulator: add document bindings for mpq7920
+To be more precise, we need to be able to backport the bug fix.  So
+the change needs to be independent of anything you're defining now.
+ Changes/improvements can be made on top of the bug fix.
 
-has been applied to the regulator tree at
+thanks,
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 44e9b3446423164dd04f58a5f9efd988c4d5e84b Mon Sep 17 00:00:00 2001
-From: Saravanan Sekar <sravanhome@gmail.com>
-Date: Thu, 23 Jan 2020 22:53:38 +0100
-Subject: [PATCH] dt-bindings: regulator: add document bindings for mpq7920
-
-Add device tree binding information for mpq7920 regulator driver.
-Example bindings for mpq7920 are added.
-
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20200123215338.11109-1-sravanhome@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/regulator/mps,mpq7920.yaml       | 121 ++++++++++++++++++
- 1 file changed, 121 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-
-diff --git a/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-new file mode 100644
-index 000000000000..a682af0dc67e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-@@ -0,0 +1,121 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/mps,mpq7920.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Monolithic Power System MPQ7920 PMIC
-+
-+maintainers:
-+  - Saravanan Sekar <sravanhome@gmail.com>
-+
-+properties:
-+  $nodename:
-+    pattern: "pmic@[0-9a-f]{1,2}"
-+  compatible:
-+    enum:
-+      - mps,mpq7920
-+
-+  reg:
-+    maxItems: 1
-+
-+  regulators:
-+    type: object
-+    allOf:
-+      - $ref: regulator.yaml#
-+    description: |
-+      list of regulators provided by this controller, must be named
-+      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
-+
-+    properties:
-+      mps,switch-freq:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint8"
-+        enum: [ 0, 1, 2, 3 ]
-+        default: 2
-+        description: |
-+          switching frequency must be one of following corresponding value
-+          1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz
-+
-+    patternProperties:
-+      "^ldo[1-4]$":
-+        type: object
-+        allOf:
-+          - $ref: regulator.yaml#
-+
-+      "^ldortc$":
-+        type: object
-+        allOf:
-+          - $ref: regulator.yaml#
-+
-+      "^buck[1-4]$":
-+        type: object
-+        allOf:
-+          - $ref: regulator.yaml#
-+
-+        properties:
-+          mps,buck-softstart:
-+            allOf:
-+              - $ref: "/schemas/types.yaml#/definitions/uint8"
-+            enum: [ 0, 1, 2, 3 ]
-+            description: |
-+              defines the soft start time of this buck, must be one of the following
-+              corresponding values 150us, 300us, 610us, 920us
-+
-+          mps,buck-phase-delay:
-+            allOf:
-+              - $ref: "/schemas/types.yaml#/definitions/uint8"
-+            enum: [ 0, 1, 2, 3 ]
-+            description: |
-+              defines the phase delay of this buck, must be one of the following
-+              corresponding values 0deg, 90deg, 180deg, 270deg
-+
-+          mps,buck-ovp-disable:
-+            type: boolean
-+            description: |
-+              disables over voltage protection of this buck
-+
-+      additionalProperties: false
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - regulators
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pmic@69 {
-+          compatible = "mps,mpq7920";
-+          reg = <0x69>;
-+
-+          regulators {
-+            mps,switch-freq = /bits/ 8 <1>;
-+
-+            buck1 {
-+             regulator-name = "buck1";
-+             regulator-min-microvolt = <400000>;
-+             regulator-max-microvolt = <3587500>;
-+             regulator-min-microamp  = <460000>;
-+             regulator-max-microamp  = <7600000>;
-+             regulator-boot-on;
-+             mps,buck-ovp-disable;
-+             mps,buck-phase-delay = /bits/ 8 <2>;
-+             mps,buck-softstart = /bits/ 8 <1>;
-+            };
-+
-+            ldo2 {
-+             regulator-name = "ldo2";
-+             regulator-min-microvolt = <650000>;
-+             regulator-max-microvolt = <3587500>;
-+            };
-+         };
-+       };
-+     };
-+...
--- 
-2.20.1
+Mimi
 
