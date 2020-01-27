@@ -2,180 +2,142 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B51BC35247
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF66C35247
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71EA21569
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:41:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580118107;
-	bh=DaFjNtGdNAe/MNhFUwRHR81fJnCKYdn5oJUskszNIfM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QThZNK73ez2wUawmsmtyTOcoFhwCQTirzOpaiQNjx2nFHS0CbmH79o08Ww+SxWcg9
-	 aCtgJm2c0C+wjawI/Az7Nj6T5tEWjLiF6YLTFSbxFMubISuSp8B/pHjBEfchLYFpL7
-	 lI1rdnETyiIaixGs3LXH2CK5kMXfxI8b6cNulJ+c=
+	by mail.kernel.org (Postfix) with ESMTP id 84D1321569
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 09:42:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IQ8rtfCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbgA0Jlr (ORCPT
+        id S1729735AbgA0Jmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 04:41:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbgA0Jlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 04:41:47 -0500
-Received: from localhost (unknown [84.241.194.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 27 Jan 2020 04:42:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22284 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727295AbgA0Jmf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 04:42:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580118153;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=Q6YN4hW4JTvSsXGjrvs6v5fpmdU5j7t9SYzgLeHUpT8=;
+        b=IQ8rtfCmcOzyRy0Ajvy5h7z4zuU82Q9F0NLRM8hJEVTRb2sJEZ25r85XE6igHsWbrZ4bpG
+        drw8nSEAq3e8IikKVbxA/AFeDIIpGLucssgZSa7wV9acOSKCPj+HCdAYN4LC/kc1QZfD9v
+        C/aYqR1byqldr/ky+5PMd4Yr3W/gjFI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-25-oLDz0EByPDyQNbm6YkINZg-1; Mon, 27 Jan 2020 04:42:31 -0500
+X-MC-Unique: oLDz0EByPDyQNbm6YkINZg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EC51214DB;
-        Mon, 27 Jan 2020 09:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580118105;
-        bh=DaFjNtGdNAe/MNhFUwRHR81fJnCKYdn5oJUskszNIfM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TcgggTuGF1ymsDVE8RagUtIFU7PcPpJPfZ5Rrtl4VrI8P8zC1aYpEZdMF6dU163NR
-         iKM7DAgJq8frZ0k3j8uRM8IKrb9AXRlU7Zf7j8drpl7ksFle8a1AT+32qNLY0YdG0k
-         2QS7U5+HjQXGPFUUyPR7SxCLCMgJjghclaw3gwrE=
-Date:   Mon, 27 Jan 2020 10:41:42 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 4.19 000/639] 4.19.99-stable review
-Message-ID: <20200127094142.GA414145@kroah.com>
-References: <20200124093047.008739095@linuxfoundation.org>
- <23f2a904-3351-4a75-aaaf-2623dc55d114@nvidia.com>
- <20200124173659.GD3166016@kroah.com>
- <8a782263-aca3-3846-12a0-4eb21f015894@nvidia.com>
- <87fcb1f0-b1b8-a6e2-b8f6-b95a07f67919@nvidia.com>
- <eadee1dd-fb6d-855d-935a-4bf93a9ad505@roeck-us.net>
- <20200126091319.GA3549630@kroah.com>
- <61b59750-b08f-c4e9-b472-44b1d096f4cf@nvidia.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA607800D41;
+        Mon, 27 Jan 2020 09:42:29 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-117-94.ams2.redhat.com [10.36.117.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EC83F87025;
+        Mon, 27 Jan 2020 09:42:24 +0000 (UTC)
+Subject: Re: [PATCH v4 10/10] KVM: selftests: Move memslot 0 above KVM
+ internal memslots
+To:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20200123180436.99487-1-bgardon@google.com>
+ <20200123180436.99487-11-bgardon@google.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <f6aa338c-3942-b09f-863b-3725483de909@redhat.com>
+Date:   Mon, 27 Jan 2020 10:42:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <61b59750-b08f-c4e9-b472-44b1d096f4cf@nvidia.com>
+In-Reply-To: <20200123180436.99487-11-bgardon@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 09:38:17AM +0000, Jon Hunter wrote:
+On 23/01/2020 19.04, Ben Gardon wrote:
+> KVM creates internal memslots between 3 and 4 GiB paddrs on the first
+> vCPU creation. If memslot 0 is large enough it collides with these
+> memslots an causes vCPU creation to fail. Instead of creating memslot 0
+> at paddr 0, start it 4G into the guest physical address space.
 > 
-> On 26/01/2020 09:13, Greg Kroah-Hartman wrote:
-> > On Sat, Jan 25, 2020 at 07:46:47AM -0800, Guenter Roeck wrote:
-> >> On 1/25/20 3:32 AM, Jon Hunter wrote:
-> >>>
-> >>> On 24/01/2020 18:07, Jon Hunter wrote:
-> >>>>
-> >>>> On 24/01/2020 17:36, Greg Kroah-Hartman wrote:
-> >>>>> On Fri, Jan 24, 2020 at 02:50:05PM +0000, Jon Hunter wrote:
-> >>>>>> Hi Greg,
-> >>>>>>
-> >>>>>> On 24/01/2020 09:22, Greg Kroah-Hartman wrote:
-> >>>>>>> This is the start of the stable review cycle for the 4.19.99 release.
-> >>>>>>> There are 639 patches in this series, all will be posted as a response
-> >>>>>>> to this one.  If anyone has any issues with these being applied, please
-> >>>>>>> let me know.
-> >>>>>>>
-> >>>>>>> Responses should be made by Sun, 26 Jan 2020 09:26:29 +0000.
-> >>>>>>> Anything received after that time might be too late.
-> >>>>>>>
-> >>>>>>> The whole patch series can be found in one patch at:
-> >>>>>>> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.99-rc1.gz
-> >>>>>>> or in the git tree and branch at:
-> >>>>>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> >>>>>>> and the diffstat can be found below.
-> >>>>>>>
-> >>>>>>> thanks,
-> >>>>>>>
-> >>>>>>> greg k-h
-> >>>>>>>
-> >>>>>>> -------------
-> >>>>>>> Pseudo-Shortlog of commits:
-> >>>>>>
-> >>>>>> ...
-> >>>>>>
-> >>>>>>> Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>>>>>>      PCI: PM: Skip devices in D0 for suspend-to-idle
-> >>>>>>
-> >>>>>> The above commit is causing a suspend regression on Tegra124 Jetson-TK1.
-> >>>>>> Reverting this on top of v4.19.99-rc1 fixes the issue.
-> >>>>>
-> >>>>> This is also in the 4.14 queue, so should I drop it there too?
-> >>>>
-> >>>> I did not see any failures with the same board on that branch, so I
-> >>>> would say no, but odd that it only fails here. It was failing for me
-> >>>> 100% so I would have expected to see if there too if it was a problem.
-> >>>
-> >>> Hmmm, rc2 still not working for me ...
-> >>>
-> >>> Test results for stable-v4.19:
-> >>>      11 builds:	11 pass, 0 fail
-> >>>      22 boots:	22 pass, 0 fail
-> >>>      32 tests:	30 pass, 2 fail
-> >>>
-> >>> Linux version:	4.19.99-rc2-g24832ad2c623
-> >>> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-> >>>                  tegra194-p2972-0000, tegra20-ventana,
-> >>>                  tegra210-p2371-2180, tegra30-cardhu-a04
-> >>>
-> >>> I still see the following commit in rc2 ...
-> >>>
-> >>> commit bb52152abe85f971278a7a4f033b29483f64bfdb
-> >>> Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>> Date:   Thu Jun 13 23:59:45 2019 +0200
-> >>>
-> >>>      PCI: PM: Skip devices in D0 for suspend-to-idle
-> > 
-> > Yes, I did not change anything in -rc2 for you, sorry.
-> > 
-> >>> BTW, I checked the 4.14. queue and I do not see the above change in
-> >>> there, however, there is similar change ...
-> >>>
-> >>> Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>>      PCI: PM: Avoid possible suspend-to-idle issue
-> >>>
-> >> bb52152abe85 fixes this one, which in turn fixes 33e4f80ee69b.
-> >> The above in 4.14 but not its fixes is spelling a bit of trouble.
-> >>
-> >> Maybe commit 471a739a47aa7 ("PCI: PM: Avoid skipping bus-level
-> >> PM on platforms without ACPI") was added to -rc2, since it is
-> >> supposed to fix bb52152abe85.
-> > 
-> > I have added that fix to 4.14 now, and will go push out a -rc3 for both
-> > 4.19.y and 4.14.y to try to sync up on this and figure it out.
-> > 
-> > Jon, if you could retest 4.14.y, that would be great, to see if it has
-> > the same issue that 4.19.y has.  And if so, that means I should probably
-> > just drop both patches from both trees, right?
+> Signed-off-by: Ben Gardon <bgardon@google.com>
+> ---
+>  tools/testing/selftests/kvm/lib/kvm_util.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
-> 
-> So v4.19 is still failing for me ...
-> 
-> Test results for stable-v4.19:
->     11 builds:  11 pass, 0 fail
->     22 boots:   22 pass, 0 fail
->     32 tests:   30 pass, 2 fail
-> 
-> Linux version:  4.19.99-rc3-g041f280e6a1a
-> Boards tested:  tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
-> However, I am not seeing any issues with v4.14, so still not clear what
-> is going on here.
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index 5b971c04f1643..427c88d32e988 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -130,9 +130,11 @@ _Static_assert(sizeof(vm_guest_mode_string)/sizeof(char *) == NUM_VM_MODES,
+>   *
+>   * Creates a VM with the mode specified by mode (e.g. VM_MODE_P52V48_4K).
+>   * When phy_pages is non-zero, a memory region of phy_pages physical pages
+> - * is created and mapped starting at guest physical address 0.  The file
+> - * descriptor to control the created VM is created with the permissions
+> - * given by perm (e.g. O_RDWR).
+> + * is created, starting at 4G into the guest physical address space to avoid
+> + * KVM internal memslots which map the region between 3G and 4G. If tests need
+> + * to use the physical region between 0 and 3G, they can allocate another
+> + * memslot for that region. The file descriptor to control the created VM is
+> + * created with the permissions given by perm (e.g. O_RDWR).
+>   */
+>  struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
+>  {
+> @@ -231,7 +233,8 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
+>  	vm->vpages_mapped = sparsebit_alloc();
+>  	if (phy_pages != 0)
+>  		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
+> -					    0, 0, phy_pages, 0);
+> +					    KVM_INTERNAL_MEMSLOTS_END_PADDR,
+> +					    0, phy_pages, 0);
+>  
+>  	return vm;
+>  }
 
-Ugh, odd.  Ok, I'll go drop both patches from both trees and do some
-releases in a few hours and then try adding them back so we can do a bit
-more debugging without the deadline of the release being on us.
+This patch causes *all* tests on s390x to fail like this:
 
-thanks so much for letting me know!
+# selftests: kvm: sync_regs_test
+# Testing guest mode: PA-bits:52,  VA-bits:48,  4K pages
+# ==== Test Assertion Failure ====
+#   lib/kvm_util.c:1059: false
+#   pid=248244 tid=248244 - Success
+#      1	0x0000000001002f3d: addr_gpa2hva at kvm_util.c:1059
+#      2	 (inlined by) addr_gpa2hva at kvm_util.c:1047
+#      3	0x0000000001006edf: addr_gva2gpa at processor.c:144
+#      4	0x0000000001004345: addr_gva2hva at kvm_util.c:1636
+#      5	0x00000000010077c1: kvm_vm_elf_load at elf.c:192
+#      6	0x00000000010070c3: vm_create_default at processor.c:228
+#      7	0x0000000001001347: main at sync_regs_test.c:87
+#      8	0x000003ffba7a3461: ?? ??:0
+#      9	0x0000000001001965: .annobin_init.c.hot at crt1.o:?
+#     10	0xffffffffffffffff: ?? ??:0
+#   No vm physical memory at 0x0
+not ok 2 selftests: kvm: sync_regs_test # exit=254
 
-greg k-h
+AFAIK the ELF binaries on s390x are linked to addresses below 4G, so
+generally removing the memslot here seems to be a bad idea on s390x.
+
+ Thomas
+
