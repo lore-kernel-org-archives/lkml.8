@@ -2,120 +2,134 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5D7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572C9C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA33720842
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB6120842
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 06:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vf8y+dkI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y/YSmaBF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgA0GLW (ORCPT
+        id S1726871AbgA0GRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 01:11:22 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32807 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgA0GLW (ORCPT
+        Mon, 27 Jan 2020 01:17:12 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:56656 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgA0GRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 01:11:22 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so4623154pgk.0
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 22:11:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XlOxx0+jj+Ueflcbt7+M5DoGBZOJ3YgoxX9npTLU818=;
-        b=vf8y+dkIOyamo0I61J7+ZSkbJGj40SHUioxA/UvAT4mXKJOPpTWo1waDRBuWBQKGFe
-         VB4npKCMULhEanj7fe7B8P0Tpm6YqrKnLnSB1yeFvIIKAc2mOQCU3qzaP7f9Jp3Lks/W
-         myykYoBSgxnIpiUwckSSFRex0x/vmDrNBMpRxBLIu3KmrNHM4QwwqGBMNr+qRycfZOuj
-         M9XsKdkv5UAKHg9vMRFEuDQmUgrGsepnOmykL2wWoEI0MGV+RmTS8ozosY4EKos+mJkF
-         qnnM6p9WFGXItpOfMQpF4gzErGhDTlMY3VyrI1dsQwHQp0c+2p4zjnepe8qoscXiZNd5
-         NwRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XlOxx0+jj+Ueflcbt7+M5DoGBZOJ3YgoxX9npTLU818=;
-        b=Ro2XrkkGBQCdn7G4B3svfujA6tNOA8zakBjvRZj5L0mlj6pxlgKMxI8hwRezZSzrat
-         lm5WMr25j7V8gi8mxyyWZn0enk3uR/THPnRkfOeIqxXWI5NdKzqTj2CP4501R7xArQSw
-         p07Vvl5Xw0XmU9UnQqBVib1kLwTk6qBBlKIztZREMupgdxRMqImt7ABu719vkBqPkPhp
-         e4TGCEOW9GQ6VsCKO4pHENDZMCo1Lers5T78tq18Xr0PKaCPkF+UNEcxB+UQG3Svjh0p
-         KziaGISQbHVooqCICgzM5bnTZUoKrLZR/PaK7kgN46b3A0NAHd1fqxqDCcBrHCNtAm5j
-         BseQ==
-X-Gm-Message-State: APjAAAWRFmFJ5afEBsirNMh0XDB1opX0dI0aQtpMIZXAQiolfC5jl1gT
-        RN8+iTdmllLgi3he1YVxi46SnA==
-X-Google-Smtp-Source: APXvYqwq3tBDze8fUjKjAxaItvqrHL1lPAynvz1JenxDlEme4cEH+PsLyuKkYKU8r2459NUUhS/9IA==
-X-Received: by 2002:a63:554c:: with SMTP id f12mr18365168pgm.23.1580105481429;
-        Sun, 26 Jan 2020 22:11:21 -0800 (PST)
-Received: from localhost ([122.172.51.87])
-        by smtp.gmail.com with ESMTPSA id j9sm14298014pfn.152.2020.01.26.22.11.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 26 Jan 2020 22:11:20 -0800 (PST)
-Date:   Mon, 27 Jan 2020 11:41:18 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>, kernel-team@android.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] OPP: Improve require-opps linking
-Message-ID: <20200127061118.5bxei6nghowlmf53@vireshk-i7>
-References: <20190717222340.137578-1-saravanak@google.com>
- <20190717222340.137578-4-saravanak@google.com>
- <20191125112812.26jk5hsdwqfnofc2@vireshk-i7>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191125112812.26jk5hsdwqfnofc2@vireshk-i7>
-User-Agent: NeoMutt/20180716-391-311a52
+        Mon, 27 Jan 2020 01:17:12 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R6DIcW119854;
+        Mon, 27 Jan 2020 06:16:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=gJ/jpXTHwRBSq22rXvdlhHavOGJ9Q+e1no1Mq6F4Bvw=;
+ b=Y/YSmaBFS9lARC5G6233J/9lchWbfrA75ugGtpPugGClHYpgmtGMotz2gMoQF8X/ATIJ
+ ygHRsmQtsrk6wFVvWBC0NS2fLFkbJv8RkTGJBmuHc3+C4TDgVf+CJAwmIsG7qKEm7osv
+ 3/R+M0BOGKKElRC4TBXo9DP5tu0yp92Kf9zNe3FPZbTkekOzi8hDht1OnMngD0E09fhL
+ aRdznbzsQkbytkP5N8hEx/Wac5dc82MyS4xVbntjXZrKdO3L1qOmdOh6Jaqq/SvF98i+
+ an5wMSQtn2I3E1NGzNmEh9Dk0g8euyQ3jy12mvLH1cY1JMn1piQQ8PMWX9XKLEabYKfB MQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2xrdmq5adk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 06:16:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00R6ECZ9111490;
+        Mon, 27 Jan 2020 06:16:36 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2xry6qr03t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jan 2020 06:16:36 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00R6GYZC001241;
+        Mon, 27 Jan 2020 06:16:34 GMT
+Received: from [10.39.241.133] (/10.39.241.133)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 26 Jan 2020 22:16:34 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
+From:   Alex Kogan <alex.kogan@oracle.com>
+In-Reply-To: <CAC4j=Y_SMHe4WNpaaS0kK1JYfnufM+AAiwwUMBx27L8U6bD8Yg@mail.gmail.com>
+Date:   Mon, 27 Jan 2020 01:16:36 -0500
+Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
+        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
+        longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com, dave.dice@oracle.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        Will Deacon <will@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3CBCD208-0859-458E-8A89-96E8E9A98664@oracle.com>
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+ <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
+ <4F71A184-42C0-4865-9AAA-79A636743C25@oracle.com>
+ <CAC4j=Y_SMHe4WNpaaS0kK1JYfnufM+AAiwwUMBx27L8U6bD8Yg@mail.gmail.com>
+To:     Lihao Liang <lihaoliang@google.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001270054
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9512 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001270054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-11-19, 16:58, Viresh Kumar wrote:
-> >From 8df083ca64d82ff57f778689271cc1be75aa99c4 Mon Sep 17 00:00:00 2001
-> Message-Id: <8df083ca64d82ff57f778689271cc1be75aa99c4.1574681211.git.viresh.kumar@linaro.org>
-> From: Viresh Kumar <viresh.kumar@linaro.org>
-> Date: Mon, 25 Nov 2019 13:57:58 +0530
-> Subject: [PATCH] opp: Allow lazy-linking of required-opps
-> 
-> The OPP core currently requires the required opp tables to be available
-> before the dependent OPP table is added, as it needs to create links
-> from the dependent OPP table to the required ones. This may not be
-> convenient to all the platforms though, as this requires strict ordering
-> of probing of drivers.
-> 
-> This patch allows lazy-linking of the required-opps. The OPP tables for
-> which the required-opp-tables aren't available at the time of their
-> initialization, are added to a special list of OPP tables:
-> pending_opp_tables. Later on, whenever a new OPP table is registered
-> with the OPP core, we check if it is required by an OPP table in the
-> pending list; if yes, then we complete the linking then and there.
-> 
-> An OPP table is marked unusable until the time all its required-opp
-> tables are available. And if lazy-linking fails for an OPP table, the
-> OPP core disables all of its OPPs to make sure no one can use them.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/opp/core.c |  13 ++++++
->  drivers/opp/of.c   | 113 +++++++++++++++++++++++++++++++++++++++++++--
->  drivers/opp/opp.h  |   4 +-
->  3 files changed, 124 insertions(+), 6 deletions(-)
 
-I was hoping to queue this up for next release, any update on getting
-this tested ?
+>>> This is particularly relevant
+>>> in high contention situations when new threads keep arriving on the =
+same
+>>> socket as the lock holder.
+>> In this case, the lock will stay on the same NUMA node/socket for
+>> 2^numa_spinlock_threshold times, which is the worst case scenario if =
+we
+>> consider the long-term fairness. And if we have multiple nodes, it =
+will take
+>> up to 2^numa_spinlock_threshold X (nr_nodes - 1) + nr_cpus_per_node
+>> lock transitions until any given thread will acquire the lock
+>> (assuming 2^numa_spinlock_threshold > nr_cpus_per_node).
+>>=20
+>=20
+> You're right that the latest version of the patch handles long-term =
+fairness
+> deterministically.
+>=20
+> As I understand it, the n-th thread in the main queue is guaranteed to
+> acquire the lock after N lock handovers, where N is bounded by
+>=20
+> n - 1 + 2^numa_spinlock_threshold * (nr_nodes - 1)
+>=20
+> I'm not sure what role the variable nr_cpus_per_node plays in your =
+analysis.
 
+Yeah, that=E2=80=99s a minor point, but let me try to clarify.
 
--- 
-viresh
+The "n-th thread in the main queue=E2=80=9D is (at most) the =
+nr_cpus_per_node-th thread=20
+for some node k. So when the node k gets the preference, that thread =
+will
+get the lock after at most nr_cpus_per_node-1 lock transitions. As we =
+consider
+the upper bound, your analysis is also correct; mine is just a bit =
+tighter.
+
+Makes sense?
+
+Regards,
+=E2=80=94 Alex
+
