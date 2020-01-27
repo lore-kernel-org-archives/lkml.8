@@ -2,206 +2,109 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ABFC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C2FC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A09C22522
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:34:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhW2ulZ3"
+	by mail.kernel.org (Postfix) with ESMTP id 07A4921739
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580139310;
+	bh=XlQkHY1fDUiPsQxLG2f4cm7hcqh48mk+Pd4GwyAnINM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bC5TLL6t6JkJh9kh0VY2jZ+2x53IomB/cnjOjv5gaQ9WfP8tVJ7445gAzLQ1kZpWS
+	 /3NuQrqhY3Ia0aLmN3Wf4GemQdPiQlPNxo6IUSTMP9Xlz3hncrdMZg+T2wvMS6E4Lo
+	 +9eMFx/nv61WmCt8p22yUA/j2frw4BfoSr9cbqnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbgA0Pen (ORCPT
+        id S1729555AbgA0PfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:34:43 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:39345 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729085AbgA0Pem (ORCPT
+        Mon, 27 Jan 2020 10:35:09 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35290 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729085AbgA0PfI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:34:42 -0500
-Received: by mail-qv1-f67.google.com with SMTP id y8so4649762qvk.6;
-        Mon, 27 Jan 2020 07:34:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lVUnJMfjmuGw+lU9thhl2oSy8uhsumVUEINYmzwWOXs=;
-        b=dhW2ulZ3P+R6T8JKYFAot0I7g6GZMnILoApLkWciTMODTNGvU4ZP3Z8ZyZK0jrGcJ1
-         Z49HE8HhMLUBfclgQpkI7XxfdaOKAF/Pm7CDmY/JEKCe5m0x9GDP8EKUBI61qzBV8KlV
-         /vBBgyNk51PMMVjRHsqiLg4uV9tILW3R81Y46qqUHrfX+f449TuDoyxUWSfgahwyzGYo
-         idGlVOi8JhjcgTCCIkMXDoWZivykddRJ3C/pJaTwcHG/ezptCPi6WaNB+LXtQgNXDFOS
-         9/8HIFL1tPZ+9qDt7eXC16fCpXin1aItCZsG4zpjP9nhQQWJYfGvrzok5sudEY8mZGJ+
-         4jKQ==
+        Mon, 27 Jan 2020 10:35:08 -0500
+Received: by mail-oi1-f193.google.com with SMTP id b18so3077424oie.2;
+        Mon, 27 Jan 2020 07:35:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lVUnJMfjmuGw+lU9thhl2oSy8uhsumVUEINYmzwWOXs=;
-        b=RHo3YP6ayOw1EwdMhas6x/K3SGsgngS+PRISsGfSnYNXXENm2maqI1Ogc+VbSDiza+
-         7qBlqgrNWOB6z6nobtq+RIO6/dzxhgSmT1owG9MVqCWYNJnhBapgIQbUT3bH8aKrbQu2
-         AxHW3pm2l68wxSM54Ds+8n4CJdR370PC7Qal1NQ8F+lUAWIxd48tAG/yBzjM4YxidE31
-         csazbLesoZ8nJmuQzSnuie/ENZlvWIyxoSbXyE1bcKR5BD/bNV2zpFk+iMcKoFNTwCJY
-         A0nR6Z1/PKJyS2YpTcaJlLshufzZjjo1oPnh1yDmSmJKmOMgxihltrHfvkbmlIkjOkIJ
-         J+Jw==
-X-Gm-Message-State: APjAAAV9zwgvIys3tSsoQ4Ok/aLGB09KYIEhIDct3T3fYYK/qHrDIW9c
-        jhPfSZAE9MteWYzOnsWlwRefnYeqXFhcT7F3jSI=
-X-Google-Smtp-Source: APXvYqxCM3fA+7JszJLqjAKCNtex3kozoTfy7cySq/OKOMR+6QXu0LT4v60q7/cLiNaxG6ETDWDHwbgsUlLvAzOTTC0=
-X-Received: by 2002:a05:6214:b23:: with SMTP id w3mr17432626qvj.181.1580139281556;
- Mon, 27 Jan 2020 07:34:41 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=omtnsWBjbVm/NZL/pqX4cwBZTFhWoiBZO939OVp2MOA=;
+        b=JlmgtMQp5lo1ph99hEYYeebBX4WCrk4C9Qzl3cHJZoYMMoHGy0kMDrzzLMPt8fDkMT
+         FsqsVGsGRjGCCU/a+txb4LAk64jRGNaM/82B4rXuPBwTKG9lbo65nr1teT+ZqCktQ2/w
+         GLAqLaxkV2C1FOKW7rIYeJGP0xr1YtvD4keRvFPB6MEhQnJf5c24vN2BWFv6T09o8EL9
+         cgxilNdqE+ApzW7SucgtGGBiUNLzNwaUHw8NSrRk3syzNfiITgpebaTedabV6xks/j8L
+         9gA5TbHPxMwuE/UURlf2CxQg0xfQUs/UAQGvnE8RsegBA2icPAdlQ8YPy4xznM12Cuv6
+         AIWQ==
+X-Gm-Message-State: APjAAAXR+JPoxmKBTeuA2OyAzfIWtVi78Zs8UZeZKlkfmHzj5UP5ad/Y
+        oqpL0bwX025ufsJ7ADj0kQ==
+X-Google-Smtp-Source: APXvYqyifQ9wAgKfHNoCNFNZQ8VQ+kHY+fZ5ztdZiqbY8OQhMgLbLTtW7aWY56EDCLmmEoxxJSqgHw==
+X-Received: by 2002:aca:e146:: with SMTP id y67mr7414091oig.93.1580139307777;
+        Mon, 27 Jan 2020 07:35:07 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l1sm4872297oic.22.2020.01.27.07.35.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 07:35:06 -0800 (PST)
+Received: (nullmailer pid 29568 invoked by uid 1000);
+        Mon, 27 Jan 2020 15:35:06 -0000
+Date:   Mon, 27 Jan 2020 09:35:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mans Rullgard <mans@mansr.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports
+ hub property
+Message-ID: <20200127153506.GA4589@bogus>
+References: <20200124152504.23411-1-mans@mansr.com>
 MIME-Version: 1.0
-References: <025801d5bf24$aa242100$fe6c6300$@gmail.com> <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
- <084f01d5cfba$bc5c4d10$3514e730$@gmail.com> <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
- <a62e45ba968fe845fa757174efc0cab93c490d54.camel@hammerspace.com>
- <CALbTx=GxuUmWu9Og_pv8TPbB0ZnOCA3vMqtyG4e18-4+zkY8=A@mail.gmail.com> <6B5432AC-73BA-465E-98FC-82BFD0E817FD@oracle.com>
-In-Reply-To: <6B5432AC-73BA-465E-98FC-82BFD0E817FD@oracle.com>
-From:   Robert Milkowski <rmilkowski@gmail.com>
-Date:   Mon, 27 Jan 2020 15:34:30 +0000
-Message-ID: <CALbTx=E9PD3QomfEqCLSVEVk0cjXW=0+7-UgUkqwEEf=reRpXg@mail.gmail.com>
-Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200124152504.23411-1-mans@mansr.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020 at 15:05, Chuck Lever <chuck.lever@oracle.com> wrote:
->
->
->
-> > On Jan 27, 2020, at 9:45 AM, Robert Milkowski <rmilkowski@gmail.com> wrote:
-> >
-> > On Thu, 23 Jan 2020 at 19:08, Trond Myklebust <trondmy@hammerspace.com> wrote:
-> >>
-> >> On Wed, 2020-01-22 at 19:10 +0000, Schumaker, Anna wrote:
-> >>> Hi Robert,
-> >>>
-> >>> On Mon, 2020-01-20 at 17:55 +0000, Robert Milkowski wrote:
-> >>>>> -----Original Message-----
-> >>>>> From: Chuck Lever <chuck.lever@oracle.com>
-> >>>>> Sent: 30 December 2019 15:37
-> >>>>> To: Robert Milkowski <rmilkowski@gmail.com>
-> >>>>> Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>; Trond
-> >>>>> Myklebust
-> >>>>> <trond.myklebust@hammerspace.com>; Anna Schumaker
-> >>>>> <anna.schumaker@netapp.com>; linux-kernel@vger.kernel.org
-> >>>>> Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do
-> >>>>> implicit
-> >>>>> lease renewals
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>>> On Dec 30, 2019, at 10:20 AM, Robert Milkowski <
-> >>>>>> rmilkowski@gmail.com>
-> >>>>> wrote:
-> >>>>>> From: Robert Milkowski <rmilkowski@gmail.com>
-> >>>>>>
-> >>>>>> Currently, each time nfs4_do_fsinfo() is called it will do an
-> >>>>>> implicit
-> >>>>>> NFS4 lease renewal, which is not compliant with the NFS4
-> >>>>> specification.
-> >>>>>> This can result in a lease being expired by an NFS server.
-> >>>>>>
-> >>>>>> Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing
-> >>>>>> leases")
-> >>>>>> introduced implicit client lease renewal in nfs4_do_fsinfo(),
-> >>>>>> which
-> >>>>>> can result in the NFSv4.0 lease to expire on a server side, and
-> >>>>>> servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
-> >>>>>>
-> >>>>>> This can easily be reproduced by frequently unmounting a sub-
-> >>>>>> mount,
-> >>>>>> then stat'ing it to get it mounted again, which will delay or
-> >>>>>> even
-> >>>>>> completely prevent client from sending RENEW operations if no
-> >>>>>> other
-> >>>>>> NFS operations are issued. Eventually nfs server will expire
-> >>>>>> client's
-> >>>>>> lease and return an error on file access or next RENEW.
-> >>>>>>
-> >>>>>> This can also happen when a sub-mount is automatically
-> >>>>>> unmounted due
-> >>>>>> to inactivity (after nfs_mountpoint_expiry_timeout), then it is
-> >>>>>> mounted again via stat(). This can result in a short window
-> >>>>>> during
-> >>>>>> which client's lease will expire on a server but not on a
-> >>>>>> client.
-> >>>>>> This specific case was observed on production systems.
-> >>>>>>
-> >>>>>> This patch makes an explicit lease renewal instead of an
-> >>>>>> implicit one,
-> >>>>>> by adding RENEW to a compound operation issued by
-> >>>>>> nfs4_do_fsinfo(),
-> >>>>>> similarly to NFSv4.1 which adds SEQUENCE operation.
-> >>>>>>
-> >>>>>> Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing
-> >>>>>> leases")
-> >>>>>> Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-> >>>>>
-> >>>>> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-> >>>>>
-> >>>>>
-> >>>>
-> >>>> How do we progress it further?
-> >>>
-> >>> Thanks for following up! I have the patch included in my linux-next
-> >>> branch for
-> >>> the next merge window.
-> >>
-> >> NACK. This is the wrong way to solve the problem. Lease renewal in
-> >> NFSv4 does not need to be tied to fsinfo. It creates an unnecessary
-> >> extra error condition that has absolutely nothing to do with the
-> >> functionality of retrieving per-filesystem attributes.
-> >
-> > Well, we also do it for NFSv4.1+ with the SEQUENCE operation being
-> > send by fsinfo, and as Chuck pointed out
-> > it makes sense to do similarly for 4.0, which is what this patch does.
->
-> I did say that.
->
-> However, I can see that for NFSv4.1+, the client code handling the
-> SEQUENCE response will update cl_last_renewal. It does not need to
-> be done in the fsinfo code.
+On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
+> Add a non-removable-ports property that lists the hardwired downstream
+> ports of a hub.  Although hubs can provide this information, they are
+> not always configured correctly.  An alternate means of indicating this
+> for built-in USB devices is thus useful.
+> 
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
 
-I think it is the case, yes.
+I reviewed this already, but since you didn't add my reviewed-by, I'm 
+looking at it again and having 2nd thoughts.
 
->
-> The NFSv4.0 behavior should be correct if cl_last_renewal is not
-> updated. That should force the client to send a separate RENEW
-> operation so that both the client and server agree that the lease
-> is active.
->
+> ---
+>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> index 036be172b1ae..92d863cc96b6 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
+>  - #size-cells: shall be 0
+>  
+>  
+> +Optional properties for hub and host-controller nodes:
+> +- non-removable-ports: list of hardwired downstream ports
 
-I was thinking about removing the call to update the last renewal
-entirely in do_fsinfo(),
-however as briefly discussed back in Dec there is an issue with
-cl_last_renewal initialization on initial mount in 4.0
-I observed it to be 0, as nfs4_setup_state_renewal() calls
-nfs4_proc_get_lease_time() on initial mount and if no error it calls
-nfs4_set_lease_period().
-However with sec=krb the call to nfs4_proc_get_lease_time() returns
-NFS4ERR_WRONGSEC) during initial mount (which seems to be ok), which
-results in not setting cl_last_renewal,
-which iirc prevented scheduling RENEW operations altogether. As
-discussed then, this is really a separate issue which should be fixed
-separately.
-Once fixed then fsinfo() shouldn't need to set cl_last_renewal at all,
-still sending RENEW in fsinfo() seems like a good idea to make it more
-inline with what we do for 4.1.
+If you have a hardwired device and need to know that, doesn't that imply 
+there's some other stuff you need to describe beyond what a standard USB 
+device has. Such as a power supply that's not Vbus from the hub.
 
-> If I understand Trond correctly?
->
+At a minimum, I think this should be a per port property. Though really, 
+I think this should just be implied by describing the device in DT. I'm 
+not sure if there's a case for hotpluggable devices described in DT. 
+Maybe with overlays.
 
-The problem with what Trond proposed is that it seems to go against
-the rfc, although it should fix the initialization issue.
-
--- 
-Robert Milkowski
+Rob
