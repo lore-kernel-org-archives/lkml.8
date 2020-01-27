@@ -2,163 +2,164 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C59BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471D5C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386FE20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2881020720
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgA0RHT (ORCPT
+        id S1727964AbgA0RH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:07:19 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2308 "EHLO huawei.com"
+        Mon, 27 Jan 2020 12:07:26 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2309 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726099AbgA0RHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:07:17 -0500
-Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 7D538FE425EF68D12A98;
-        Mon, 27 Jan 2020 17:07:16 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 27 Jan 2020 17:07:15 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 27 Jan
- 2020 17:07:16 +0000
-Date:   Mon, 27 Jan 2020 17:07:13 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <james.quinlan@broadcom.com>, <lukasz.luba@arm.com>,
-        <sudeep.holla@arm.com>
-Subject: Re: [RFC PATCH 01/11] firmware: arm_scmi: Add receive buffer
- support for notifications
-Message-ID: <20200127170713.000013ee@Huawei.com>
-In-Reply-To: <20200120122333.46217-2-cristian.marussi@arm.com>
-References: <20200120122333.46217-1-cristian.marussi@arm.com>
-        <20200120122333.46217-2-cristian.marussi@arm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1727586AbgA0RH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 12:07:26 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id BBBAF1FB86A83793CFCF;
+        Mon, 27 Jan 2020 17:07:24 +0000 (GMT)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
+ by smtpsuk.huawei.com (10.201.108.33) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 27 Jan 2020 17:07:15 +0000
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <jarkko.sakkinen@linux.intel.com>,
+        <james.bottomley@hansenpartnership.com>,
+        <linux-integrity@vger.kernel.org>
+CC:     <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH 8/8] ima: switch to ima_hash_algo for boot aggregate
+Date:   Mon, 27 Jan 2020 18:04:43 +0100
+Message-ID: <20200127170443.21538-9-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200127170443.21538-1-roberto.sassu@huawei.com>
+References: <20200127170443.21538-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.160]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 12:23:23 +0000
-Cristian Marussi <cristian.marussi@arm.com> wrote:
+boot_aggregate is the first entry of IMA measurement list. Its purpose is
+to link pre-boot measurements to IMA measurements. As IMA was designed to
+work with a TPM 1.2, the SHA1 PCR bank was always selected.
 
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> With all the plumbing in place, let's just add the separate dedicated
-> receive buffers to handle notifications that can arrive asynchronously
-> from the platform firmware to OS.
-> 
-> Also add check to see if the platform supports any receive channels
-> before allocating the receive buffers.
+Currently, even if a TPM 2.0 is used, the SHA1 PCR bank is selected.
+However, the assumption that the SHA1 PCR bank is always available is not
+correct, as PCR banks can be selected with the PCR_Allocate() TPM command.
 
-Perhaps hand hold the reader a tiny bit more by saying that we need
-to move the initialization later so that we can know *if* the receive
-channels are supported.  Took me a moment to figure out why you did that ;)
+This patch tries to use ima_hash_algo as hash algorithm for boot_aggregate.
+If no PCR bank uses that algorithm, the patch scans the allocated PCR banks
+and selects the first for which the mapping between TPM algorithm ID and
+crypto algorithm ID is known. If no suitable algorithm is found, an error
+is returned.
 
-One minor suggestion inline.
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+---
+ security/integrity/ima/ima_crypto.c | 38 +++++++++++++++++------------
+ security/integrity/ima/ima_init.c   |  6 ++---
+ 2 files changed, 25 insertions(+), 19 deletions(-)
 
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/firmware/arm_scmi/driver.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index 2c96f6b5a7d8..9611e8037d77 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -123,6 +123,7 @@ struct scmi_chan_info {
->   * @version: SCMI revision information containing protocol version,
->   *	implementation version and (sub-)vendor identification.
->   * @tx_minfo: Universal Transmit Message management info
-> + * @rx_minfo: Universal Receive Message management info
->   * @tx_idr: IDR object to map protocol id to Tx channel info pointer
->   * @rx_idr: IDR object to map protocol id to Rx channel info pointer
->   * @protocols_imp: List of protocols implemented, currently maximum of
-> @@ -136,6 +137,7 @@ struct scmi_info {
->  	struct scmi_revision_info version;
->  	struct scmi_handle handle;
->  	struct scmi_xfers_info tx_minfo;
-> +	struct scmi_xfers_info rx_minfo;
->  	struct idr tx_idr;
->  	struct idr rx_idr;
->  	u8 *protocols_imp;
-> @@ -690,13 +692,13 @@ int scmi_handle_put(const struct scmi_handle *handle)
->  	return 0;
->  }
->  
-> -static int scmi_xfer_info_init(struct scmi_info *sinfo)
-> +static int __scmi_xfer_info_init(struct scmi_info *sinfo, bool tx)
->  {
->  	int i;
->  	struct scmi_xfer *xfer;
->  	struct device *dev = sinfo->dev;
->  	const struct scmi_desc *desc = sinfo->desc;
-> -	struct scmi_xfers_info *info = &sinfo->tx_minfo;
-> +	struct scmi_xfers_info *info = tx ? &sinfo->tx_minfo : &sinfo->rx_minfo;
-
-Perhaps cleaner to just pass in the relevant info structure rather than a boolean
-to pick it.  Saves people having to check if the boolean is saying it's
-tx or rx when reading the call sites.
-
->  
->  	/* Pre-allocated messages, no more than what hdr.seq can support */
->  	if (WARN_ON(desc->max_msg >= MSG_TOKEN_MAX)) {
-> @@ -731,6 +733,16 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
->  	return 0;
->  }
->  
-> +static int scmi_xfer_info_init(struct scmi_info *sinfo)
-> +{
-> +	int ret = __scmi_xfer_info_init(sinfo, true);
-> +
-> +	if (!ret && idr_find(&sinfo->rx_idr, SCMI_PROTOCOL_BASE))
-> +		ret = __scmi_xfer_info_init(sinfo, false);
-> +
-> +	return ret;
-> +}
-> +
->  static int scmi_mailbox_check(struct device_node *np, int idx)
->  {
->  	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells",
-> @@ -908,10 +920,6 @@ static int scmi_probe(struct platform_device *pdev)
->  	info->desc = desc;
->  	INIT_LIST_HEAD(&info->node);
->  
-> -	ret = scmi_xfer_info_init(info);
-> -	if (ret)
-> -		return ret;
-> -
->  	platform_set_drvdata(pdev, info);
->  	idr_init(&info->tx_idr);
->  	idr_init(&info->rx_idr);
-> @@ -924,6 +932,10 @@ static int scmi_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	ret = scmi_xfer_info_init(info);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = scmi_base_protocol_init(handle);
->  	if (ret) {
->  		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
-
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index f84dfd8fc5ca..9bf5e69945b7 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -780,25 +780,27 @@ static void __init ima_pcrread(u32 idx, struct tpm_digest *d)
+ /*
+  * Calculate the boot aggregate hash
+  */
+-static int __init ima_calc_boot_aggregate_tfm(char *digest,
+-					      struct crypto_shash *tfm)
++static int __init ima_calc_boot_aggregate_tfm(char *digest, int bank_idx)
+ {
+-	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
++	struct tpm_digest d = { .digest = {0} };
+ 	int rc;
+ 	u32 i;
+-	SHASH_DESC_ON_STACK(shash, tfm);
++	SHASH_DESC_ON_STACK(shash, ima_algo_array[bank_idx].tfm);
+ 
+-	shash->tfm = tfm;
++	shash->tfm = ima_algo_array[bank_idx].tfm;
+ 
+ 	rc = crypto_shash_init(shash);
+ 	if (rc != 0)
+ 		return rc;
+ 
++	d.alg_id = ima_tpm_chip->allocated_banks[bank_idx].alg_id;
++
+ 	/* cumulative sha1 over tpm registers 0-7 */
+ 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+ 		ima_pcrread(i, &d);
+ 		/* now accumulate with current aggregate */
+-		rc = crypto_shash_update(shash, d.digest, TPM_DIGEST_SIZE);
++		rc = crypto_shash_update(shash, d.digest,
++			ima_tpm_chip->allocated_banks[bank_idx].digest_size);
+ 	}
+ 	if (!rc)
+ 		crypto_shash_final(shash, digest);
+@@ -807,17 +809,21 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
+ 
+ int __init ima_calc_boot_aggregate(struct ima_digest_data *hash)
+ {
+-	struct crypto_shash *tfm;
+-	int rc;
++	int bank_idx = ima_hash_algo_idx;
+ 
+-	tfm = ima_alloc_tfm(hash->algo);
+-	if (IS_ERR(tfm))
+-		return PTR_ERR(tfm);
+-
+-	hash->length = crypto_shash_digestsize(tfm);
+-	rc = ima_calc_boot_aggregate_tfm(hash->digest, tfm);
++	if (bank_idx >= ima_tpm_chip->nr_allocated_banks) {
++		for (bank_idx = 0; bank_idx < ima_tpm_chip->nr_allocated_banks;
++		     bank_idx++)
++			if (ima_algo_array[bank_idx].tfm)
++				break;
+ 
+-	ima_free_tfm(tfm);
++		if (bank_idx == ima_tpm_chip->nr_allocated_banks) {
++			pr_err("No suitable algo found for boot aggregate\n");
++			return -ENOENT;
++		}
++	}
+ 
+-	return rc;
++	hash->algo = ima_algo_array[bank_idx].algo;
++	hash->length = crypto_shash_digestsize(ima_algo_array[bank_idx].tfm);
++	return ima_calc_boot_aggregate_tfm(hash->digest, bank_idx);
+ }
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index 195cb4079b2b..b4da190a33ba 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -51,14 +51,14 @@ static int __init ima_add_boot_aggregate(void)
+ 	int violation = 0;
+ 	struct {
+ 		struct ima_digest_data hdr;
+-		char digest[TPM_DIGEST_SIZE];
++		char digest[SHA512_DIGEST_SIZE];
+ 	} hash;
+ 
+ 	memset(iint, 0, sizeof(*iint));
+ 	memset(&hash, 0, sizeof(hash));
+ 	iint->ima_hash = &hash.hdr;
+-	iint->ima_hash->algo = HASH_ALGO_SHA1;
+-	iint->ima_hash->length = SHA1_DIGEST_SIZE;
++	iint->ima_hash->algo = ima_hash_algo;
++	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
+ 
+ 	if (ima_tpm_chip) {
+ 		result = ima_calc_boot_aggregate(&hash.hdr);
+-- 
+2.17.1
 
