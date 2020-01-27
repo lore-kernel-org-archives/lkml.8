@@ -2,138 +2,159 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC070C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE77FC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B38C20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E2F20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 07:23:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="swBUXasp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZkdUqd2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgA0HVk (ORCPT
+        id S1726164AbgA0HXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 02:21:40 -0500
-Received: from mout.web.de ([212.227.17.11]:48307 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgA0HVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 02:21:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1580109683;
-        bh=Pc06qExR8Kb6H/LUYyhBxdPZ2jme5MOfyUnPNO9DSJo=;
-        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
-        b=swBUXaspFCZ5Q7nABy8cDgYkGagdfKiFzZEPCOTxeXtZtEOCyrdB5G12CpnG56/Ue
-         7tbMcr4XhfSBlXTnUGM+mfMNc3eRqiqau+9z1huaJqXsX8kl+V3WXAkXXoiFPOqbsY
-         Gm2dEoEw0Iz8xcxrz1t5tgvqSBoYugGWWqq4RWAQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.115.58]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MDPEX-1ioai60OOD-00GtDt; Mon, 27
- Jan 2020 08:21:23 +0100
-Cc:     linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Yi Zhang <yi.zhang@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>
-Subject: Re: [PATCH V2] drm/v3d: remove duplicated kfree in
- v3d_submit_cl_ioctl
-To:     Yu Kuai <yukuai3@huawei.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Eric Anholt <eric@anholt.net>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        dri-devel@lists.freedesktop.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <56e99398-15be-aeb0-32b3-aa8a20d71e97@web.de>
-Date:   Mon, 27 Jan 2020 08:20:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Jan 2020 02:23:08 -0500
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:41586 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgA0HXI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 02:23:08 -0500
+Received: by mail-vk1-f196.google.com with SMTP id p191so2285725vkf.8
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 23:23:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Zs7ordlPu6oLMie0ztw+ViABr97RTMvxSHDoSvg2y8=;
+        b=ZkdUqd2zKSeWdVR91y36SdzJKYZWn6y3ItuefmZXZQ65FE7TOnAneczRyXuYZ73Q09
+         dxyrhyivxIhtQcR2Niso9FYPdVIMx7MpX3rk2ZMJ0xzAOkFCuRZxaewbU0pVz0EnbFTf
+         RwBf8kQhz4qiuQMkW/EoW11SdohZV+sqIYsjjZXPVt4bwAZ+59aKtKpOT4x+mz3DATbJ
+         l8XSQjy40AFGHpBJmIXEwQ54J73jRsoZi6Gy68//Pw8gcbJwFQ77p8u1E4EGmL7UpgvB
+         JZ/1N0idA75Y+pP1l/5Pl9EJcLI54QRiC4BtLNNHuB7wI92mBOYSLhRXl9HWHp1fHViD
+         6DQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Zs7ordlPu6oLMie0ztw+ViABr97RTMvxSHDoSvg2y8=;
+        b=mC+s9skAFnv7yni5BNYQiPEvFVWVyOz8FL7i6cNISXQt41hMLP10ls9udLCqXlGk6q
+         g8y3FsD7q8/mh/ZC8TMlLkgKB6vljZLdKz5c3gg29pxlf9yXCM7eLVa17alnGxOzd7hT
+         fVAD37x0PLvvrj2td4uIZyWjPrFY7MP2By0OIR4JaHJSXApZrH6Ce+HNsPbUcW6o7JlX
+         7VIliVu2B7jSBsG8Gm8OuiAJ2k+UT1sPOxI7cT8ApHDYOw5t8UMKuutw50kBIu+7LWFs
+         pRL9MsuEcFtpQ4BRbSxO4qcvCQKmoPZX+prbhzRtvKDHzVV2edKmzUGd6VHq7dVJoMj6
+         Fmqg==
+X-Gm-Message-State: APjAAAU7bhKopjpuSgY5KQVjY+tXBw6XbRo84labm5r7Aw2mxVKPlMa+
+        N/pwKqK7dbZ/CkOtKrxpWKYCxJf/kEwNVWVVjSA3Lg==
+X-Google-Smtp-Source: APXvYqz4OQZA/2kIUqEb6B2klRTdDoZkhD2PvmDkLDercb9w5oGLFffYnzmHjIgmSkCuBSvVCAvCAxfvm+k7OKQr2M8=
+X-Received: by 2002:a1f:434b:: with SMTP id q72mr8497371vka.53.1580109787392;
+ Sun, 26 Jan 2020 23:23:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:U86YuvZ5etNwnJ4QvCtj2kY6LQZOf3fqnnG/9PWEF8nYoS668ms
- EzeOlcJsIxmlh8S7s+JJNzgPNchqsqUSrLBgySjuTm9hY+lxh51G+b6bA/J1IYCDaRrbsCC
- FLwh8Js5h/8SFFVlYXK0vXWmfOeKWdu//Rt/huLZIKziw+pDja7JHwOAXT0EwXwd/FXF5V1
- mZto11QBiHQOdHQ7Is/5A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+PEUXOPj8gw=:tUZkP/qHsH20kKfxCeoJVu
- Q9t0u2mns5CjkvfxHJjLyGebldt4IutpIOMNfDKgWT6AxpcoqbMlvtlybcOsA39pQuIFoGI2C
- 4osbmpKvC/u+orntwKNZxL3xWql8SkwzBFnSTLyGgPhyonKxoAQcFEsZk3ytidStcdWv3UpY6
- kxoY1Fhe95Z7khDf/etGVc7ScdAhXggf63k1Dx4P+9JwIRcEBRfQ4Ybrh6Ka958IjCpyFhnSZ
- 1qke8bdq9nG9ltNYcW3i0qKprSrQxrTJc3Rfz79u6zxCuu/NBIVS5FskwTB3XSiUBCPpu9nAc
- 7vrTiywWt9LD/0Gjdms8e/KqYeb4LIl7SKqbaeMe3ItLn3rc0UCdKHfp2OpDIS26aNDjgvYPB
- 3OfGEqHFryTA+8iNFOJaQD6tNGan1k57DPUh+EcQhbr+6rYIKWTJEfSaEYBc6SMpQj7AE6SWE
- ql+2MjyG9q9Jm0Fcf4LR1N2Hk9r63BHBmHs//8yOA2iZhK1TezpGE18dpzJ/xQVydiys+r/FZ
- RLg6p9u9uZ99Ha+tMysSFxt8MSO0duqMhdtADcPMxRtMN+GKA9Kth1Zol4LPU2gPDt3Uarhp+
- zarQHMaOqWNI9/DyepiItEIpEEke2ZnQ48W7ruzZlnmMLfuor7Oviw0hR1TEkBnmSuaD3P6je
- MG1bv/uy21F/3Irkg+X3REwDqHCux9SzHw7TzZV6EDMnlki0aK37sXQLlRqARHh4sqp2hDiwA
- KC66vQsleN/nilH2yqro1VtZS2TPXFIgI51srwzAeyRF48BJb4InzPSxWIAgc0P2eopdQ3I+F
- T8DifGF9NLly87NCdr9dYk7+GrlXiGAoAuzZ6hXGh5wwn+no11HobmLpcUs2h9dBwsSrfzuZv
- 42C2QWyBaopophsiL884MvLjCtOc4Kw2GA7VTXHALunFe5nBXLLP+PYFXYYIdV0EEsgcS/IJs
- 3UqVfb6/abEPu5Ro6XUeSRMOeP8Yj20r1YGyt5mGlGMeSMVMHoupzYTZDe6d1lwWDMSHQhxB0
- BqyZh/VC85qu0E/2X20COQxe9rEtUuMWs1RaxLezkxY96EzPpMFsCHsmI65Vd3uOaI0JDrDlz
- 4PYtdFT5Y7h5HHiz00foY8ABPoNwO9ilQ/5zh/HKoRU+I31N29BP5JtcVonGVOpKhWcZbOYjL
- bA8qdC0N6CP8UZ7y5u5XVMh43+ngSWF5poQd5NiTz7SIU6BAEFgc2ZzQ7MulAj7bXgH0R8jLI
- kApo1vKd5NhA1KQfp
+References: <20200126115247.13402-1-mpe@ellerman.id.au>
+In-Reply-To: <20200126115247.13402-1-mpe@ellerman.id.au>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 27 Jan 2020 08:22:29 +0100
+Message-ID: <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
+Subject: Re: [PATCH] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        linuxppc-dev@ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> kfree() was called for the same variable twice within an if branch.
+On Sun, 26 Jan 2020 at 12:53, Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> There's an OF helper called of_dma_is_coherent(), which checks if a
+> device has a "dma-coherent" property to see if the device is coherent
+> for DMA.
+>
+> But on some platforms devices are coherent by default, and on some
+> platforms it's not possible to update existing device trees to add the
+> "dma-coherent" property.
+>
+> So add a Kconfig symbol to allow arch code to tell
+> of_dma_is_coherent() that devices are coherent by default, regardless
+> of the presence of the property.
+>
+> Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
+> when the system has a coherent cache.
+>
+> Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
+> Cc: stable@vger.kernel.org # v3.16+
+> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+> Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 
-I wonder still how this software situation happened.
+Thanks Michael for helping out fixing and this! The patch looks good to me.
 
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Now I imagine that it could be more logical to delete the second of
-this function call if you would like to look at the history of previous
-two patches once more.
+Kind regards
+Uffe
 
-
-How do you think about to add another jump target for a bit of common
-exception handling?
-
-Regards,
-Markus
+> ---
+>  arch/powerpc/Kconfig | 1 +
+>  drivers/of/Kconfig   | 4 ++++
+>  drivers/of/address.c | 6 +++++-
+>  3 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 1ec34e16ed65..19f5aa8ac9a3 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -238,6 +238,7 @@ config PPC
+>         select NEED_DMA_MAP_STATE               if PPC64 || NOT_COHERENT_CACHE
+>         select NEED_SG_DMA_LENGTH
+>         select OF
+> +       select OF_DMA_DEFAULT_COHERENT          if !NOT_COHERENT_CACHE
+>         select OF_EARLY_FLATTREE
+>         select OLD_SIGACTION                    if PPC32
+>         select OLD_SIGSUSPEND
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index 37c2ccbefecd..d91618641be6 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -103,4 +103,8 @@ config OF_OVERLAY
+>  config OF_NUMA
+>         bool
+>
+> +config OF_DMA_DEFAULT_COHERENT
+> +       # arches should select this if DMA is coherent by default for OF devices
+> +       bool
+> +
+>  endif # OF
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 99c1b8058559..e8a39c3ec4d4 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -995,12 +995,16 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+>   * @np:        device node
+>   *
+>   * It returns true if "dma-coherent" property was found
+> - * for this device in DT.
+> + * for this device in the DT, or if DMA is coherent by
+> + * default for OF devices on the current platform.
+>   */
+>  bool of_dma_is_coherent(struct device_node *np)
+>  {
+>         struct device_node *node = of_node_get(np);
+>
+> +       if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
+> +               return true;
+> +
+>         while (node) {
+>                 if (of_property_read_bool(node, "dma-coherent")) {
+>                         of_node_put(node);
+> --
+> 2.21.1
+>
