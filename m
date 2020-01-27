@@ -2,74 +2,189 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D67FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14531C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131222064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C1E21739
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 17:16:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hb4Rm2T3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgA0RPp (ORCPT
+        id S1726083AbgA0RQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 12:15:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgA0RPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 12:15:44 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35E0B22527;
-        Mon, 27 Jan 2020 17:15:44 +0000 (UTC)
-Date:   Mon, 27 Jan 2020 12:15:42 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'linux-kernel' <linux-kernel@vger.kernel.org>
-Subject: Re: sched/fair: Long delays starting RT processes on idle cpu.
-Message-ID: <20200127121542.05a124d7@gandalf.local.home>
-In-Reply-To: <a23fe4c769364ab49865e4c46aa73830@AcuMS.aculab.com>
-References: <13797bbe87b64f34877b89a5bbdb6d03@AcuMS.aculab.com>
-        <20200127104948.59eac75a@gandalf.local.home>
-        <a23fe4c769364ab49865e4c46aa73830@AcuMS.aculab.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Jan 2020 12:16:32 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41504 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgA0RQb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 12:16:31 -0500
+Received: by mail-lf1-f67.google.com with SMTP id m30so6742448lfp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 09:16:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+bYkFYyzlADrxfOOfruFV0DySun5/W9XTnyRwJfjfl8=;
+        b=Hb4Rm2T3zMuJm3b53/HOriq6QnhhM4oHwG+MhubxkYBndXSiHaxpqD3mo+IRm4trT4
+         XYk6UAypgr0YsWLDyS8qLN3aeh1fA7epeD4WgbVujBms7TsmryWy0IWNPw+oxid0iN+j
+         dgd6t/LaIkL0XTTn2/cRx4u44jdloPponwQ9YZmbK2m6kki8JEXjvmZTzRK/e4LJx390
+         pIC7U/t8iALoRiWYIVQjc/1feajrW0rwUNwdOdvRZilTBOq9MaRa8nseMZjyYzCMJ0A+
+         Vv6bxq/W6kpxrZl+rAMq795OWBTvewcWUq/nkd+uq6H4AQ5zLjIsVOH+L3napUC36SQ5
+         rVDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+bYkFYyzlADrxfOOfruFV0DySun5/W9XTnyRwJfjfl8=;
+        b=IQqiLsizxHas12b1FlB3tWKxI56FkLY2syY+y2D6E1VmG7Beh7Fcu/Cc0VfgueLCyz
+         bqzKTg0cLrmFRldfLxv0kYV/72RzR0m62Us3kAbybYn9Q5US2bj5d+Xw4O1EKXOfr5Ae
+         4mFDlpooUaLP8KGLhqq5DPuDWNaD81tecdWDWVbjfybfC2HvySkmRwT/Ayow9B+R7cee
+         X8akbhkkZseDKX15ivzNgvEgjwK1j+NlYFH7rzox2eijL8ACTQtZCam2Xtn4iX+tvu1x
+         xmjRZuHcv5aXAvmnmz2MB4TZF+MRFvk84BxhK/fkQHJZXkzRIbJb8KrfMmRjTzy1QxSG
+         fpIQ==
+X-Gm-Message-State: APjAAAVMrn23mCz6xMoFsi64ci+8/pAehVwy0MYpEJggduRuy8bJnhJv
+        XDDZC38jEfdUp3c09OmVSVKz1RYm9gqO2jcaCzb/Iw==
+X-Google-Smtp-Source: APXvYqwSM9E4ObJW0+KiBcC3xZJ7rr4nNUeeJHxI+9QUmq6ihZlCdhupuSZY8zan8cLAf3ZeGlJpgjnryNYn/qaObY8=
+X-Received: by 2002:a19:5504:: with SMTP id n4mr8124769lfe.25.1580145388644;
+ Mon, 27 Jan 2020 09:16:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+In-Reply-To: <20200122173538.1142069-1-douglas.raillard@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 27 Jan 2020 18:16:17 +0100
+Message-ID: <CAKfTPtC9A6KVwYsQWgXXk-12GeJhkJfEm3Lk=LjcoOJvvoZ1uA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
+To:     Douglas RAILLARD <douglas.raillard@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <qperret@google.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020 16:56:12 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
+On Wed, 22 Jan 2020 at 18:36, Douglas RAILLARD <douglas.raillard@arm.com> wrote:
+>
+> Make schedutil cpufreq governor energy-aware.
+>
+> - patch 1 introduces a function to retrieve a frequency given a base
+>   frequency and an energy cost margin.
+> - patch 2 links Energy Model perf_domain to sugov_policy.
+> - patch 3 updates get_next_freq() to make use of the Energy Model.
+> - patch 4 adds sugov_cpu_ramp_boost() function.
+> - patch 5 updates sugov_update_(single|shared)() to make use of
+>   sugov_cpu_ramp_boost().
+> - patch 6 introduces a tracepoint in get_next_freq() for
+>   testing/debugging. Since it's not a trace event, it's not exposed to
+>   userspace in a directly usable way, allowing for painless future
+>   updates/removal.
+>
+> The benefits of using the EM in schedutil are twofold:
+>
+> 1) Selecting the highest possible frequency for a given cost. Some
+>    platforms can have lower frequencies that are less efficient than
+>    higher ones, in which case they should be skipped for most purposes.
 
-> >From Steven Rostedt
-> > Sent: 27 January 2020 15:50
-> > On Mon, 27 Jan 2020 15:39:24 +0000
-> > David Laight <David.Laight@ACULAB.COM> wrote:
-> >   
-> > > I'd have thought that the processor should wake up much faster than that.
-> > > I can't see the memory write that is paired with the monitor/mwait.
-> > > Does it need a strong barrier?  
-> > 
-> > You may want to prevent the CPU from going into a deep C state. 90us is
-> > something I would expect if the CPU is in a deep C state (I've seen
-> > much longer wake up times due to deep C state).
-> > 
-> > Boot the kernel with idle=poll and see if you can trigger the same
-> > latency. If not, then you know it's the CPU going into a deep C state
-> > that is causing your latency.  
-> 
-> With idle=poll the delays seem to be minimal.
-> 
-> Is there any way to limit the C state entered by mwait?
+This make sense. Why using a lower frequency when a higher one is more
+power efficient
 
-I believe you can dynamically change C state. There's a pdf about it:
+>    They can still be useful to give more freedom to thermal throttling
+>    mechanisms, but not under normal circumstances.
+>    note: the EM framework will warn about such OPPs "hertz/watts ratio
+>    non-monotonically decreasing"
+>
+> 2) Driving the frequency selection with power in mind, in addition to
+>    maximizing the utilization of the non-idle CPUs in the system.
+>
+> Point 1) is implemented in "PM: Introduce em_pd_get_higher_freq()" and
+> enabled in schedutil by
+> "sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()".
+>
+> Point 2) is enabled in
+> "sched/cpufreq: Boost schedutil frequency ramp up". It allows using
+> higher frequencies when it is known that the true utilization of
+> currently running tasks is exceeding their previous stable point.
+> The benefits are:
+>
+> * Boosting the frequency when the behavior of a runnable task changes,
+>   leading to an increase in utilization. That shortens the frequency
+>   ramp up duration, which in turns allows the utilization signal to
+>   reach stable values quicker.  Since the allowed frequency boost is
+>   bounded in energy, it will behave consistently across platforms,
+>   regardless of the OPP cost range.
 
-  https://wiki.ntb.ch/infoportal/_media/embedded_systems/ethercat/controlling_processor_c-state_usage_in_linux_v1.1_nov2013.pdf
+Could you explain this a bit more ?
 
--- Steve
+>
+> * The boost is only transient, and should not impact a lot the energy
+>   consumed of workloads with very stable utilization signals.
+>
+> This has been lightly tested with a rtapp task ramping from 10% to 75%
+> utilisation on a big core.
 
+Which kind of UC are you targeting ?
+
+Do you have some benchmark showing the benefit and how you can bound
+the increase of energy ?
+
+The benefit of point2 is less obvious for me. We already have uclamp
+which helps to overwrite the "utilization" that is seen by schedutil
+to boost or cap the frequency when some tasks are running. I'm curious
+to see what would be the benefit of this on top.
+
+>
+> v1 -> v2:
+>
+>   * Split the new sugov_cpu_ramp_boost() from the existing
+>     sugov_cpu_is_busy() as they seem to seek a different goal.
+>
+>   * Implement sugov_cpu_ramp_boost() based on CFS util_avg and
+>     util_est_enqueued signals, rather than using idle calls count.
+>     This makes the ramp boost much more accurate in finding boost
+>     opportunities, and give a "continuous" output rather than a boolean.
+>
+>   * Add EM_COST_MARGIN_SCALE=1024 to represent the
+>     margin values of em_pd_get_higher_freq().
+>
+> v2 -> v3:
+>
+>   * Check util_avg >= sg_cpu->util_avg in sugov_cpu_ramp_boost_update()
+>     to avoid boosting when the utilization is decreasing.
+>
+>   * Add a tracepoint for testing.
+>
+> v3 -> v4:
+>
+>   * em_pd_get_higher_freq() now interprets the margin as absolute,
+>     rather than relative to the cost of the base frequency.
+>
+>   * Modify misleading comment in em_pd_get_higher_freq() since min_freq
+>     can actually be higher than the max available frequency in normal
+>     operations.
+>
+> Douglas RAILLARD (6):
+>   PM: Introduce em_pd_get_higher_freq()
+>   sched/cpufreq: Attach perf domain to sugov policy
+>   sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()
+>   sched/cpufreq: Introduce sugov_cpu_ramp_boost
+>   sched/cpufreq: Boost schedutil frequency ramp up
+>   sched/cpufreq: Add schedutil_em_tp tracepoint
+>
+>  include/linux/energy_model.h     |  56 ++++++++++++++
+>  include/trace/events/power.h     |   9 +++
+>  kernel/sched/cpufreq_schedutil.c | 124 +++++++++++++++++++++++++++++--
+>  3 files changed, 182 insertions(+), 7 deletions(-)
+>
+> --
+> 2.24.1
+>
