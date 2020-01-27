@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25741C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A17C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB1F721569
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD802214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 08:54:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YImN5QDA"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0RxnEf+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgA0IyN (ORCPT
+        id S1729518AbgA0IyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 03:54:13 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:18112 "EHLO
+        Mon, 27 Jan 2020 03:54:21 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:44282 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729424AbgA0IyF (ORCPT
+        by vger.kernel.org with ESMTP id S1728449AbgA0IyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 03:54:05 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00R8rFdG011482;
-        Mon, 27 Jan 2020 09:53:47 +0100
+        Mon, 27 Jan 2020 03:54:03 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00R8qifV031730;
+        Mon, 27 Jan 2020 09:53:49 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=LtSHbdDzwkhiZy1H0EyZ/LNU5Qx0QFD829og3RZwGKs=;
- b=YImN5QDAJ5SKzsF1n+ufDKihYRX45WURp8FPosQTzM0WVB9mujnHP6WlH4LkNSscIlts
- KGd8oFY4DRHUB6sdbgkNVWazgrbM9aiEasOIAMds5Ms4Hy42Xf2xTPkcrr8Rk9aru7nB
- Bq22vnQ3Zix3LKxXKUuVM3+9JGK+i66E/Ukcu6Wp5FQJ5Fd3lA/tb2UUaqWyD6ai44lj
- zuuC1U6fZciw9HQ+phYRtCOs0g5RTongw7XV9vkOjrYNkPZQG+0jy8p7CHM+1TsN0etg
- emFcN3Y/jsFtGti0+RC2tP1kOPMJJuv6DGZpRcpldeL5ijE6YNneUnEs7q0EQ+kXAiyQ 6g== 
+ bh=jX92yodowvq0X+wN/iB1cefd5N695QA/mW6VRMfU52M=;
+ b=0RxnEf+PDs4l6Jt7vFC9p/9bEgkDAiSE9hDan9ya6sf0WNX8ZeM6Pbi+8v/VdkNuQ/M3
+ VjOeSDa2wAQN00SlQrvJMSi6dTcG9jrPXyHXJiyqIqs4/YG9CtPp2gC+lXAxzZ7ZR+JB
+ OotVFr9oMWobsOuTB1ZPE7EYPDoSCHekbnANMTrpb9UZGG93Wjs6pT665b5SseeuWGCc
+ Y/oRMbekYFFWpTi9XTRwfsSE6HXRKO95Wd+KvMMEv5lI2qzs1hXzDGCYP90QetjlvjsB
+ aJmjcWoGKU5ZnvKwzHzTDRWf4bMFnDXwWGI5ScYwNs9umfsZoUzB5RmTKWYLcLynQ7Qr cA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrbpar4sv-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xrdek7tsf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jan 2020 09:53:47 +0100
+        Mon, 27 Jan 2020 09:53:49 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F15DD10003B;
-        Mon, 27 Jan 2020 09:53:42 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7180310002A;
+        Mon, 27 Jan 2020 09:53:45 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E54F021CA6A;
-        Mon, 27 Jan 2020 09:53:42 +0100 (CET)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6635321CA6A;
+        Mon, 27 Jan 2020 09:53:45 +0100 (CET)
 Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 Jan 2020 09:53:42
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 Jan 2020 09:53:45
  +0100
 From:   Amelie Delaunay <amelie.delaunay@st.com>
 To:     Vinod Koul <vkoul@kernel.org>,
@@ -59,9 +59,9 @@ CC:     <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Amelie Delaunay <amelie.delaunay@st.com>,
         Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH 1/6] dmaengine: stm32-mdma: add suspend/resume power management support
-Date:   Mon, 27 Jan 2020 09:53:29 +0100
-Message-ID: <20200127085334.13163-2-amelie.delaunay@st.com>
+Subject: [PATCH 5/6] dmaengine: stm32-mdma: enable descriptor_reuse
+Date:   Mon, 27 Jan 2020 09:53:33 +0100
+Message-ID: <20200127085334.13163-6-amelie.delaunay@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200127085334.13163-1-amelie.delaunay@st.com>
 References: <20200127085334.13163-1-amelie.delaunay@st.com>
@@ -79,59 +79,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
-Add suspend/resume power management relying on PM Runtime engine.
+Enable descriptor reuse to allow client to resubmit already processed
+descriptors in order to save descriptor creation time.
 
 Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- drivers/dma/stm32-mdma.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ drivers/dma/stm32-mdma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index 5838311cf990..2898411941d5 100644
+index 2dbd1f38a6f5..f2043f47ae9e 100644
 --- a/drivers/dma/stm32-mdma.c
 +++ b/drivers/dma/stm32-mdma.c
-@@ -1697,7 +1697,40 @@ static int stm32_mdma_runtime_resume(struct device *dev)
- }
- #endif
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int stm32_mdma_pm_suspend(struct device *dev)
-+{
-+	struct stm32_mdma_device *dmadev = dev_get_drvdata(dev);
-+	u32 ccr, id;
-+	int ret;
+@@ -1618,6 +1618,8 @@ static int stm32_mdma_probe(struct platform_device *pdev)
+ 	dd->device_resume = stm32_mdma_resume;
+ 	dd->device_terminate_all = stm32_mdma_terminate_all;
+ 	dd->device_synchronize = stm32_mdma_synchronize;
++	dd->descriptor_reuse = true;
 +
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (id = 0; id < dmadev->nr_channels; id++) {
-+		ccr = stm32_mdma_read(dmadev, STM32_MDMA_CCR(id));
-+		if (ccr & STM32_MDMA_CCR_EN) {
-+			dev_warn(dev, "Suspend is prevented by Chan %i\n", id);
-+			return -EBUSY;
-+		}
-+	}
-+
-+	pm_runtime_put_sync(dev);
-+
-+	pm_runtime_force_suspend(dev);
-+
-+	return 0;
-+}
-+
-+static int stm32_mdma_pm_resume(struct device *dev)
-+{
-+	return pm_runtime_force_resume(dev);
-+}
-+#endif
-+
- static const struct dev_pm_ops stm32_mdma_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(stm32_mdma_pm_suspend, stm32_mdma_pm_resume)
- 	SET_RUNTIME_PM_OPS(stm32_mdma_runtime_suspend,
- 			   stm32_mdma_runtime_resume, NULL)
- };
+ 	dd->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+ 		BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+ 		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
 -- 
 2.17.1
 
