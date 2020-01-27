@@ -2,111 +2,134 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8E9C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81060C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1C024682
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 20:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 540912467B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 21:00:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vRafyqqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgA0UzY (ORCPT
+        id S1726240AbgA0VAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 15:55:24 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36966 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725946AbgA0UzX (ORCPT
+        Mon, 27 Jan 2020 16:00:20 -0500
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:56228 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbgA0VAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 15:55:23 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00RKsEgl010508;
-        Mon, 27 Jan 2020 15:55:22 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrgvmdfmm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jan 2020 15:55:22 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00RKqrQM023597;
-        Mon, 27 Jan 2020 20:55:21 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma05wdc.us.ibm.com with ESMTP id 2xrda6m2ae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jan 2020 20:55:21 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00RKtK7U51249414
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jan 2020 20:55:20 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60A476A04D;
-        Mon, 27 Jan 2020 20:55:20 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F145D6A047;
-        Mon, 27 Jan 2020 20:55:19 +0000 (GMT)
-Received: from [9.2.202.58] (unknown [9.2.202.58])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jan 2020 20:55:19 +0000 (GMT)
-Subject: Re: [PATCH 2/2] ima: support calculating the boot_aggregate based on
- different TPM banks
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
- <1580140919-6127-2-git-send-email-zohar@linux.ibm.com>
- <87e6b531-3596-4523-a6b0-629ae8fd6995@linux.microsoft.com>
-From:   Ken Goldman <kgold@linux.ibm.com>
-Message-ID: <2f93bcf7-9a59-06a6-9590-f002e15ba10a@linux.ibm.com>
-Date:   Mon, 27 Jan 2020 15:55:20 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <87e6b531-3596-4523-a6b0-629ae8fd6995@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-27_07:2020-01-24,2020-01-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 bulkscore=0 priorityscore=1501
- clxscore=1011 spamscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001270165
+        Mon, 27 Jan 2020 16:00:19 -0500
+Received: by mail-pj1-f73.google.com with SMTP id s6so12791pjr.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 13:00:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=CAH2JUZfxl1gXiFoCO0/GCKYjJBCGBSmgeGFBkbRVI0=;
+        b=vRafyqqdBsTOJgglJmYV5o0OlpyXwllJ3p28sfmm8WEusJw/8TTAuXROIItQFjhfru
+         FoTeyhiVZvrzp0JIm8RXe97PvQkILEt6fOIfd5MLGgbRHwVUGQteeanpwnUNFpDbUmET
+         yeUbkiANImftfw/XgIYW3iLbk9Ux/ghJ7Er+nvIxtGeyx3r4mpmfFWUtKxwkBLylRjuW
+         jzAHdXNaxHvnNn+PhPXHv3feb90RvDruMJozvNa2ceu9wpj55ZA+suoil28EMWaYbUp1
+         gY9llY8XBheRi/d3lSNUfkp4knvPXUGgFng3P5++sDeiWH/SxzYSdXyD/WICjNpLKhfy
+         d9VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=CAH2JUZfxl1gXiFoCO0/GCKYjJBCGBSmgeGFBkbRVI0=;
+        b=ZIZQVcXs/QotSdViR301eqM5fz00ohefPkcjn7wNDF+vqVAaH0CZQsv2fYzhx5zNS6
+         yn3HuqNY1GYw3WdMVp5tDXtuiskz2b6tUxsm4zKldp8vupejEWgwfabcSIJ10sC4MgL+
+         81R18LMOGVr/xyrE6KmRiFCMuqqyhfbfmoX7LRaSBlzKt3c5WkmIVgfL+MZn2CaL0Okq
+         li6PKMVDI4Y7nxGNx4JOwpwjwJdw6yFezZQA55MQ4apbSjxnoCj8BiwZUwWEKTfaCGae
+         0xCbm8Hb07BY682XyXIgdITuLaFeLFYdsLh5XzqHRi0v8ZebGV3DWhYNXlGpmqbT9EHC
+         FgKw==
+X-Gm-Message-State: APjAAAVYhd1koV1doFXnTfilCO4BG8WdDvtIGj0tL8cfBpOj8NgpxIXU
+        5+ezBf59mqUULozh+x7QkgfLvVsMWA==
+X-Google-Smtp-Source: APXvYqxlVzkT24mENi5mvLCMmQUezkOaccKmD22akDDb2kZdKeiEAlnC02DJ2I9eq5Vhr5yinxSlLv5OQw==
+X-Received: by 2002:a63:4503:: with SMTP id s3mr21629876pga.311.1580158818711;
+ Mon, 27 Jan 2020 13:00:18 -0800 (PST)
+Date:   Mon, 27 Jan 2020 13:00:14 -0800
+Message-Id: <20200127210014.5207-1-tkjos@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH] staging: android: ashmem: Disallow ashmem memory from being remapped
+From:   Todd Kjos <tkjos@google.com>
+To:     tkjos@google.com, surenb@google.com, gregkh@linuxfoundation.org,
+        arve@android.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, maco@google.com
+Cc:     joel@joelfernandes.org, kernel-team@android.com,
+        Jann Horn <jannh@google.com>, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/27/2020 11:50 AM, Lakshmi Ramasubramanian wrote:
-> Can the number of allocated banks (ima_tpm_chip->nr_allocated_banks) be 
-> zero? Should that be checked before accessing "allocated_banks"?
+From: Suren Baghdasaryan <surenb@google.com>
 
-Summary:
+When ashmem file is being mmapped the resulting vma->vm_file points to the
+backing shmem file with the generic fops that do not check ashmem
+permissions like fops of ashmem do. Fix that by disallowing mapping
+operation for backing shmem file.
 
-It's unlikely that Linux on a PC will encounter a TPM without PCR 10.
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Cc: stable <stable@vger.kernel.org> # 4.4,4.9,4.14,4.18,5.4
+Signed-off-by: Todd Kjos <tkjos@google.com>
+---
+ drivers/staging/android/ashmem.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-It is likely that PCR 10 will be only SHA-256, that there will be no 
-SHA-1 PCR 10.
+diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
+index 74d497d39c5a..c6695354b123 100644
+--- a/drivers/staging/android/ashmem.c
++++ b/drivers/staging/android/ashmem.c
+@@ -351,8 +351,23 @@ static inline vm_flags_t calc_vm_may_flags(unsigned long prot)
+ 	       _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
+ }
+ 
++static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
++{
++	/* do not allow to mmap ashmem backing shmem file directly */
++	return -EPERM;
++}
++
++static unsigned long
++ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
++				unsigned long len, unsigned long pgoff,
++				unsigned long flags)
++{
++	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
++}
++
+ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+ {
++	static struct file_operations vmfile_fops;
+ 	struct ashmem_area *asma = file->private_data;
+ 	int ret = 0;
+ 
+@@ -393,6 +408,19 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+ 		}
+ 		vmfile->f_mode |= FMODE_LSEEK;
+ 		asma->file = vmfile;
++		/*
++		 * override mmap operation of the vmfile so that it can't be
++		 * remapped which would lead to creation of a new vma with no
++		 * asma permission checks. Have to override get_unmapped_area
++		 * as well to prevent VM_BUG_ON check for f_ops modification.
++		 */
++		if (!vmfile_fops.mmap) {
++			vmfile_fops = *vmfile->f_op;
++			vmfile_fops.mmap = ashmem_vmfile_mmap;
++			vmfile_fops.get_unmapped_area =
++					ashmem_vmfile_get_unmapped_area;
++		}
++		vmfile->f_op = &vmfile_fops;
+ 	}
+ 	get_file(asma->file);
+ 
+-- 
+2.25.0.341.g760bfbb309-goog
 
-~~
-
-In theory:
-
-Yes, one could have a TPM with no allocated banks.
-
-In practice:
-
-A PC Client TPM must have at least one bank with PCR 0 and PCR 17.
-
-Some other TPMs, like automotive or embedded, may be different.
-
-Most platforms will be designed to meet Windows requirements, which will 
-have AFAIK at least one bank of 24 PCRs.
-
-The TPM specification permits allocation of partial banks.  In theory, 
-one could encounter a TPM with e.g., PCR 0-7 but not PCR 10.
-
-In practice, AFAIK the hardware TPMs implement only full banks. 
-Platform firmware allocates full banks.
