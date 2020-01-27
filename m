@@ -2,104 +2,135 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E197EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20791C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58102071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FD82071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 14:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FJji4eBD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MAfCmObL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbgA0OIq (ORCPT
+        id S1729031AbgA0OJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 09:08:46 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:36640 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgA0OIp (ORCPT
+        Mon, 27 Jan 2020 09:09:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53718 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726029AbgA0OJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 09:08:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=WNZMMHq/DEgG2TAGsW1GLa13iz6G/nCCbL9fpHEwYPE=; b=FJji4eBDh1ncH1ZpXMPgURV3X
-        dj1fYyBWuwF70IsvJrIIE8pTPyUYE0/omNoeZ6ZFi9f1KcaYnYyi0SXUDRN+3PG8Vsa0EuD0Vr2Q7
-        qGOZeb1BzO9bhPdcEhw0pyqm0qABjwayRlhAJ89aF9NweV2ti36BDhvY8dJOyEcp8+/NLoi5Fm3QW
-        sqo5Hs14PuNUyI9zILJIq24F3qvL3hjBYtsgl5/EjFAoGnZdTVN4p9+01ynjloljDjTG+W7zjWbUd
-        xa5oblOkpcDijdJ4uxP9XT/tEQgWsj4JYbmuS7oq/bDW+lVFqAnNtG4bc3uuNFSV7NREbZVHYEP5p
-        rG+EnFRcg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:39866)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iw54A-0001kz-Ej; Mon, 27 Jan 2020 14:08:38 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iw546-0001SA-KA; Mon, 27 Jan 2020 14:08:34 +0000
-Date:   Mon, 27 Jan 2020 14:08:34 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200127140834.GW25745@shell.armlinux.org.uk>
-References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
- <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
- <20200127112102.GT25745@shell.armlinux.org.uk>
- <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200127114600.GU25745@shell.armlinux.org.uk>
- <20200127140038.GD13647@lunn.ch>
+        Mon, 27 Jan 2020 09:09:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580134159;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=J0tWyHYw98UjELXx0eG2rBwfSBPRrMQ58+BFQIrIctE=;
+        b=MAfCmObLREFeUWQ58a7yHZ2t1RnNL9DcZAWrDHMCe8NCJbWM3P2p9raSXgVSIp7rCyfEcs
+        Jtp7RKZ0dkaHXzrRLLz/BbbK4TXdgsxruKUXnmpCTI8EEuZtGgeDuqWiFzykL1XNe6x0VC
+        /kFdsRYAuf/R4UU7N5wy8MiUoFWVI8E=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-168-XxCQfPQ_Pbi78YV_NY45Ig-1; Mon, 27 Jan 2020 09:09:17 -0500
+X-MC-Unique: XxCQfPQ_Pbi78YV_NY45Ig-1
+Received: by mail-wr1-f71.google.com with SMTP id z15so6171858wrw.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 06:09:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J0tWyHYw98UjELXx0eG2rBwfSBPRrMQ58+BFQIrIctE=;
+        b=rdLr36tNOCRmIN6P8XVFa0rUAZQcXg/9HvRiQPyBC6TGbG2GcAOD6QjrMDu0jquz2S
+         GbJla+hP4h1T6Slv8s6opX6XcxhirF+AYys3psLd1zpzHy0b3RvQ27b8VUvD9oiLicJi
+         gU6y9ApwnLaclX7uGbmdJiMmrqhUV2kBGQMuH+dJM5Qq4lQVNqwH74shW3V0E96EGJPM
+         ug6tk0CRGoNLAPcTExttw/rItmtI+yz3TLdj04vD0gD2gulWwxvAtt0/G1593QEW2AXU
+         0frNoX3HttN8555m3fnYAi0ivB/TG0vKloPATIeh6QQbMdix2w/L9/aDl7bmBLbF7K3J
+         0Lpg==
+X-Gm-Message-State: APjAAAXFw+8+vfW0p3ezbrIko2iaCD+7lWlwQ3UA/uNs6MouGey5l92m
+        Sds0nBkTYOQXwZUCCAdBZWySW5Fjp4kRGHYO9zX0gqqbMhLrHH3LUUMUl9bdv4tS81cAmYaE15n
+        1gPUu7BJo7TWWLxf41l5ncUpb
+X-Received: by 2002:a1c:9d08:: with SMTP id g8mr13430013wme.141.1580134155794;
+        Mon, 27 Jan 2020 06:09:15 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxL1mkRTXScdallzJa6atatfMWFPsRST+u2+CId8f49QKDBROlfW8LGzAMTi5X6FzaKHo4AVQ==
+X-Received: by 2002:a1c:9d08:: with SMTP id g8mr13430001wme.141.1580134155613;
+        Mon, 27 Jan 2020 06:09:15 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id x11sm19143881wmg.46.2020.01.27.06.09.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 06:09:15 -0800 (PST)
+Subject: Re: [PATCH] staging: rtl8723bs: fix copy of overlapping memory
+To:     Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200126220549.9849-1-colin.king@canonical.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <32254b45-be59-a83b-0036-6a6d9fe86379@redhat.com>
+Date:   Mon, 27 Jan 2020 15:09:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127140038.GD13647@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200126220549.9849-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 03:00:38PM +0100, Andrew Lunn wrote:
-> > Yes, I realise that, but it comes with the expense of potentially
-> > breaking mvneta and mvpp2, where the settings are automatically
-> > passed between the PCS and MAC in hardware. I also believe DSA
-> > works around this, and I need to look at that.
-> 
-> Hi Russell
-> 
-> The mv88e6xxx driver has code for when SGMII is used. It transfers the
-> negotiated speed from the PCS to the MAC.
-> 
-> But it recently turned out something like this is also needed for
-> other link modes involving the SERDES. It used to work, i think
-> because Phylink would initially configure the MAC approximately right,
-> or the mv88e6xxx driver was looking at phylink state it should not.
-> But it no longer works.
+HI,
 
-Can you give a hint which platform this is and how to reproduce it
-please?
+On 26-01-2020 23:05, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the rtw_sprintf prints the contents of thread_name
+> onto thread_name and this can lead to a potential copy of a
+> string over itself. Avoid this by printing the literal string RTWHALXT
+> instread of the contents of thread_name.
+> 
+> Addresses-Coverity: ("copy of overlapping memory")
+> Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+> ---
+>   drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+> index b44e902ed338..890e0ecbeb2e 100644
+> --- a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+> +++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+> @@ -476,14 +476,13 @@ int rtl8723bs_xmit_thread(void *context)
+>   	s32 ret;
+>   	struct adapter *padapter;
+>   	struct xmit_priv *pxmitpriv;
+> -	u8 thread_name[20] = "RTWHALXT";
+> -
+> +	u8 thread_name[20];
+>   
+>   	ret = _SUCCESS;
+>   	padapter = context;
+>   	pxmitpriv = &padapter->xmitpriv;
+>   
+> -	rtw_sprintf(thread_name, 20, "%s-"ADPT_FMT, thread_name, ADPT_ARG(padapter));
+> +	rtw_sprintf(thread_name, 20, "RTWHALXT-" ADPT_FMT, ADPT_ARG(padapter));
+>   	thread_enter(thread_name);
+>   
+>   	DBG_871X("start "FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
+> 
+
