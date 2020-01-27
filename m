@@ -2,141 +2,183 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A9AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAD5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC542465B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:43:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580150631;
-	bh=gETwfsz7U5pwhHydGA4x38MtoWqILp4Gnwnzy9bDSto=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2ICFsJ5Ex3CZNo5ZPlWxUEZCJIOFy/iu5U7Fe6Qd76OIBpLGMm60z6ojse9q30HI7
-	 xKD5RTpi784ZzjG4QmcRQGySrjNhdN9C9qFe5UnZE9JBjnbbt/bzGvxI2ZHbQ8VIHN
-	 As7o/0ILXPcTqnbtOmW5iqcwEPB9f/BkvbVkC8Tk=
+	by mail.kernel.org (Postfix) with ESMTP id 9FED0214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 18:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgA0Snu (ORCPT
+        id S1726442AbgA0Som (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 13:43:50 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38904 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0Snu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 13:43:50 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l9so7664757oii.5;
-        Mon, 27 Jan 2020 10:43:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kuhUPMd+zYAgWz6fKJAfj/zyuyEErCMf41bcAyXMeG8=;
-        b=GvO/IGeMEQ/n6o1TDVcm7TOkp9xkm6akeyOZuxAnzMZT1NTci+tftLDBp3efhM9Wm1
-         yCSDN7gOptxoRjPjFUbCk2MdcNB9tG+AexGSrddHULfMuwXeSy8Ey9OmvXQxt+d65EU7
-         Sm9uXUhVwsk6cSeOPd9Yr4dwnXzwHAo5nse/ef1qUTjxs5es/HJTUI5V3MNnKPeiF0NT
-         JblVvtqVC2yN+dCSL5VUOpnqbtzuYqJtl/c77iI5J2vCk4CkRD2+zH3cc3nlmv1F0rwq
-         pCtnF3+uSENCR3cR760yD9UdNGV4OBpnxS8WfM229cJh/Ik9ptYtDDQDpss0g9mirZ0u
-         Gxgg==
-X-Gm-Message-State: APjAAAUGShexsL4LAkPwZqY8pLxcPHU4xRbOi5KHtF5jAFGSak7zx6uG
-        Ht7bMGMM3xslshOJvZJdDjIemyk=
-X-Google-Smtp-Source: APXvYqwIL62yTsib7ww0bYJgMGDd0XRUETmkoyWk4Mw/rwMUqd3hSP/eIsHvDGeYCHovkA1uBnb0dQ==
-X-Received: by 2002:a05:6808:9ba:: with SMTP id e26mr295469oig.81.1580150629151;
-        Mon, 27 Jan 2020 10:43:49 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t21sm4326765otr.42.2020.01.27.10.43.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 10:43:48 -0800 (PST)
-Received: (nullmailer pid 3867 invoked by uid 1000);
-        Mon, 27 Jan 2020 18:43:47 -0000
-Date:   Mon, 27 Jan 2020 12:43:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 06/19] dt-bindings: usb: dwc3: Add a
- gpio-usb-connector description
-Message-ID: <20200127184347.GA27080@bogus>
-References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
- <20200122185610.131930-7-bryan.odonoghue@linaro.org>
+        Mon, 27 Jan 2020 13:44:42 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53926 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbgA0Som (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 13:44:42 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9D599AD81;
+        Mon, 27 Jan 2020 18:44:39 +0000 (UTC)
+Date:   Mon, 27 Jan 2020 18:44:43 +0000
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 2/3] ceph: parallelize all copy-from requests in
+ copy_file_range
+Message-ID: <20200127184443.GB22545@suse.com>
+References: <20200127164321.17468-1-lhenriques@suse.com>
+ <20200127164321.17468-3-lhenriques@suse.com>
+ <CAOi1vP9HB4dPTHrgn2bTZ3nM2HSpLkwRvjZ8za0KE4NNnHmmtw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200122185610.131930-7-bryan.odonoghue@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOi1vP9HB4dPTHrgn2bTZ3nM2HSpLkwRvjZ8za0KE4NNnHmmtw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 06:55:57PM +0000, Bryan O'Donoghue wrote:
-> A USB connector should be a child node of the USB controller
-> connector/usb-connector.txt. This patch adds a property
-> "gpio_usb_connector" which declares a connector child device. Code in the
-> DWC3 driver will then
+On Mon, Jan 27, 2020 at 06:58:46PM +0100, Ilya Dryomov wrote:
+> On Mon, Jan 27, 2020 at 5:43 PM Luis Henriques <lhenriques@suse.com> wrote:
+> >
+> > Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
+> > operations, waiting for each request to complete before sending the next
+> > one.  This patch modifies copy_file_range so that all the 'copy-from'
+> > operations are sent in bulk and waits for its completion at the end.  This
+> > will allow significant speed-ups, specially when sending requests for
+> > different target OSDs.
+> >
+> > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > ---
+> >  fs/ceph/file.c                  | 38 +++++++++++++++++++++++++++++++--
+> >  include/linux/ceph/osd_client.h |  2 ++
+> >  net/ceph/osd_client.c           |  1 +
+> >  3 files changed, 39 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > index 1e6cdf2dfe90..5d8f0ba11719 100644
+> > --- a/fs/ceph/file.c
+> > +++ b/fs/ceph/file.c
+> > @@ -1931,6 +1931,28 @@ static int is_file_size_ok(struct inode *src_inode, struct inode *dst_inode,
+> >         return 0;
+> >  }
+> >
+> > +static int wait_copy_from_reqs(struct list_head *osd_reqs)
+> > +{
+> > +       struct ceph_osd_request *req;
+> > +       int ret = 0, err;
+> > +
+> > +       while (!list_empty(osd_reqs)) {
+> > +               req = list_first_entry(osd_reqs,
+> > +                                      struct ceph_osd_request,
+> > +                                      r_copy_item);
+> > +               list_del_init(&req->r_copy_item);
+> > +               err = ceph_osdc_wait_request(req->r_osdc, req);
+> > +               if (err) {
+> > +                       if (!ret)
+> > +                               ret = err;
+> > +                       dout("copy request failed (err=%d)\n", err);
+> > +               }
+> > +               ceph_osdc_put_request(req);
+> > +       }
+> > +
+> > +       return ret;
+> > +}
 > 
-> - Search for "gpio_usb_controller"
-> - Do an of_platform_populate() if found
+> This should probably go into libceph, as ceph_osdc_wait_requests().
+
+Sure, that makes sense.
+
+> > +
+> >  static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >                                       struct file *dst_file, loff_t dst_off,
+> >                                       size_t len, unsigned int flags)
+> > @@ -1943,12 +1965,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >         struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+> >         struct ceph_object_locator src_oloc, dst_oloc;
+> >         struct ceph_object_id src_oid, dst_oid;
+> > +       struct ceph_osd_request *req;
+> >         loff_t endoff = 0, size;
+> >         ssize_t ret = -EIO;
+> >         u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
+> >         u32 src_objlen, dst_objlen, object_size;
+> >         int src_got = 0, dst_got = 0, err, dirty;
+> >         bool do_final_copy = false;
+> > +       LIST_HEAD(osd_reqs);
+> >
+> >         if (src_inode->i_sb != dst_inode->i_sb) {
+> >                 struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+> > @@ -2097,7 +2121,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >                 ceph_oid_printf(&dst_oid, "%llx.%08llx",
+> >                                 dst_ci->i_vino.ino, dst_objnum);
+> >                 /* Do an object remote copy */
+> > -               err = ceph_osdc_copy_from(
+> > +               req = ceph_osdc_copy_from_nowait(
+> >                         &src_fsc->client->osdc,
+> >                         src_ci->i_vino.snap, 0,
+> >                         &src_oid, &src_oloc,
+> > @@ -2108,7 +2132,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> >                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> >                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > -               if (err) {
+> > +               if (IS_ERR(req)) {
+> > +                       err = PTR_ERR(req);
+> >                         if (err == -EOPNOTSUPP) {
+> >                                 src_fsc->have_copy_from2 = false;
+> >                                 pr_notice("OSDs don't support 'copy-from2'; "
+> > @@ -2117,14 +2142,23 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> >                         dout("ceph_osdc_copy_from returned %d\n", err);
+> >                         if (!ret)
+> >                                 ret = err;
+> > +                       /* wait for all queued requests */
+> > +                       wait_copy_from_reqs(&osd_reqs);
+> >                         goto out_caps;
+> >                 }
+> > +               list_add(&req->r_copy_item, &osd_reqs);
+> >                 len -= object_size;
+> >                 src_off += object_size;
+> >                 dst_off += object_size;
+> >                 ret += object_size;
+> >         }
+> >
+> > +       err = wait_copy_from_reqs(&osd_reqs);
+> > +       if (err) {
+> > +               if (!ret)
+> > +                       ret = err;
+> > +               goto out_caps;
+> > +       }
+> >         if (len)
+> >                 /* We still need one final local copy */
+> >                 do_final_copy = true;
+> > diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
+> > index 7916a178d137..2b4a14bc6154 100644
+> > --- a/include/linux/ceph/osd_client.h
+> > +++ b/include/linux/ceph/osd_client.h
+> > @@ -210,6 +210,8 @@ struct ceph_osd_request {
+> >         u64 r_data_offset;                    /* ditto */
+> >         bool r_linger;                        /* don't resend on failure */
+> >
+> > +       struct list_head r_copy_item;         /* used for copy-from operations */
+> > +
 > 
-> This will have the effect of making the declared node a child of the USB
-> controller and will make sure that USB role-switch events detected with the
-> gpio_usb_controller driver propagate into the DWC3 controller code
-> appropriately.
+> We have r_private_item for exactly this kind of ad-hoc lists, already
+> used in rbd and ceph_direct_read_write().
 
-This is all driver specifics. This is a binding patch.
+Ah!  I've actually considered using it, but thought that using the same
+field for different purposes may be a source of confusion and bugs in the
+future.  But sure, it can be used.  I'll add a comment in the struct
+definition regarding this ad-hoc usage.
 
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 66780a47ad85..b019bd472f83 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -108,6 +108,9 @@ Optional properties:
->  			When just one value, which means INCRX burst mode enabled. When
->  			more than one value, which means undefined length INCR burst type
->  			enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
-> + - gpio_usb_connector: Declares a USB connector named 'gpio_usb_connector' as a
-> +		       child node of the DWC3 block. Use when modelling a USB
-> +		       connector based on the gpio-usb-b-connector driver.
-
-Should be just 'connector'. That's already implicitly allowed for any 
-USB controller, so you don't really need a binding change. And the 
-specific type of connector is outside the scope of the DWC3 binding.
-
->  
->   - in addition all properties from usb-xhci.txt from the current directory are
->     supported as well
-> @@ -121,4 +124,12 @@ dwc3@4a030000 {
->  	interrupts = <0 92 4>
->  	usb-phy = <&usb2_phy>, <&usb3,phy>;
->  	snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-> +	usb_con: gpio_usb_connector {
-> +		compatible = "gpio-usb-b-connector";
-> +		id-gpio = <&tlmm 116 GPIO_ACTIVE_HIGH>;
-> +		vbus-gpio = <&pms405_gpios 12 GPIO_ACTIVE_HIGH>;
-
-*-gpios is the preferred form and should be what's documented.
-
-> +		vbus-supply = <&usb3_vbus_reg>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usb3_id_pin>, <&usb3_vbus_pin>;
-> +	};
->  };
-> -- 
-> 2.25.0
-> 
+Cheers,
+--
+Luís
