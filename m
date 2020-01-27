@@ -2,107 +2,105 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC07DC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE8BC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A730E2465B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580140233;
-	bh=l4vkYQEbw+215jDrvc2or4bZB2M0545GfZ/8flIQKNY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=J+EZbQo2HSn6kRsMNaSmH3xVPGZ9H25nG1MXf+Qs0N4qADFIO/wmnBjhZH8ssmKVC
-	 TZntEMqDNgmi6cwg2oZicU+VJ1BGX6UQAaSBriFvkBMDlD+cudj01f/k9Xn8ryRwLO
-	 GJd1gfS50U/2MrRUvefwy1yqBYLzttm53EaDQCA0=
+	by mail.kernel.org (Postfix) with ESMTP id 4298024654
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 15:51:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QKQOioEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgA0Pud (ORCPT
+        id S1729715AbgA0PvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 10:50:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728783AbgA0Puc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 10:50:32 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 100A224654;
-        Mon, 27 Jan 2020 15:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580140232;
-        bh=l4vkYQEbw+215jDrvc2or4bZB2M0545GfZ/8flIQKNY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=a6i6J3DQfpWbjblq/Em3af+OsFAjd+ZneObyvGgoWMbrNwRO2+XtK0yloK76URUya
-         SAieEMBVLq8w1gi691tkuHunOucS+UZ5fp51X86PXnEi+Op4ogqNerKS7p65tGxn9L
-         0RNxnNMPqpujEKkzM7Xxw8bZH5NH7ZOur3To9jHc=
-Subject: Re: [PATCH] Correction to manpage of cpupower
-To:     latha@linux.vnet.ibm.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trenn@suse.com, shuah <shuah@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20200123143319.19580-1-latha@linux.vnet.ibm.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <6971ef88-7187-94d4-1693-45f6e57040ff@kernel.org>
-Date:   Mon, 27 Jan 2020 08:49:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Jan 2020 10:51:18 -0500
+Received: from mail-qk1-f178.google.com ([209.85.222.178]:42405 "EHLO
+        mail-qk1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729203AbgA0PvS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 10:51:18 -0500
+Received: by mail-qk1-f178.google.com with SMTP id q15so10037657qke.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 07:51:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2bynkYO/VfrflNCUOpdCEBQtWE9uevrxves93+nkBNg=;
+        b=QKQOioEPrUVeKSj7Lk3b6riyhYFvcUoN9UrIRxyVKhPk6si/ExnvFLr7SfVnfG+0eT
+         kdPIDRiseXehUgtuwLNOJ6RdynHXa2HPOYPta2ivqOmnLIfiU7TcYg0x352BSMaCnQd5
+         jKFnCxrXe3lDYI5TNtiiVmDkqOP++3c0nHBwczGhJ/0ce6lTDNgy6wzwSklyT9f8iOMy
+         euLEQ8YyP4vtpI4Xi72cQ5ZJvIU6qvaE2ijgo68//OrnzIVFfxMw4VH14ZaeX1DgLY4J
+         Y7HQhL72QaEbY66iRVcma/UtbK3Kw6HxA8AiT2tXwRN/Qwu2wFE25usgOpDILFlrCnqW
+         OUaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2bynkYO/VfrflNCUOpdCEBQtWE9uevrxves93+nkBNg=;
+        b=p3ir1Xwaborc5VnoB9WetwV/mP9VcFQnaUGuORZ4izDO+VaF7CzI0R+VDF8C1RQXI0
+         +1dPCvNQHbJisJyyVZEfOYwP90WCx+OtpBLmDNAAwU3acrZGgLuhPTmRT221f3mIUI45
+         hb+o+YCAs+BLKi25RZpnVknaB6gkhX/vIMPLQZ1k30XrVb2XwE7vO7HD8hhhgCridQAf
+         dK75KKQiTmUvzqymdzDyAJcr3rnlBqhsQxErhl9WyHGhjW6LiVb7xoi9ZLgGkWdA1Xrb
+         kUFea6tVIkGpowhycm8W44Q7qDsQ2qFOvJBT/TcbWrFlnd9B4TlbiQBi04vnEA+KERx6
+         /E1A==
+X-Gm-Message-State: APjAAAVHyOTH8H5YBr3e0IBFxWJhPixkMd0OTNG2zVEnh+tkgVjiMyta
+        x/zNGAkX0TsmlsLO0PRDGQ8+pHA/PO/zN6sEDrg5zg==
+X-Google-Smtp-Source: APXvYqyW/Dv+r7IzLVHyn5vKXp9eLH03u8Oq1EucWp83Jstsj4ATT35HA7fr3z/q5ImHk9D4Fcu5s28HtcVbBYCRrgs=
+X-Received: by 2002:ae9:e50c:: with SMTP id w12mr15641083qkf.407.1580140276809;
+ Mon, 27 Jan 2020 07:51:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200123143319.19580-1-latha@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <0000000000004dbaf2059c193a36@google.com> <20200126024957.11392-1-hdanton@sina.com>
+ <20200127092850.GX1847@kadam> <CACT4Y+ag59G4p=DO3Dg7jnFt3wQb=dtjzBujADtGHKn-97O8_g@mail.gmail.com>
+ <20200127151135.GM1870@kadam>
+In-Reply-To: <20200127151135.GM1870@kadam>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 27 Jan 2020 16:51:05 +0100
+Message-ID: <CACT4Y+Ya-GEPAezCceKadsXGD0WdAHMeNH=hkkGaM50nP7S6ww@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in hiddev_disconnect
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     syzkaller <syzkaller@googlegroups.com>,
+        Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+106b378813251e52fc5e@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/23/20 7:33 AM, latha@linux.vnet.ibm.com wrote:
-> From: Brahadambal Srinivasan <latha@linux.vnet.ibm.com>
-> 
-> Manpage of cpupower is listing wrong sub-commands in "See Also"
-> section. The option for cpupower-idle(1) should actually be
-> cpupower-idle-info(1) and cpupower-idle-set(1). This patch corrects
-> this anomaly.
-> 
-> Signed-off-by: Brahadambal Srinivasan <latha@linux.vnet.ibm.com>
-> ---
->   tools/power/cpupower/man/cpupower.1 | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/power/cpupower/man/cpupower.1 b/tools/power/cpupower/man/cpupower.1
-> index baf741d06e82..bdbf089794c7 100644
-> --- a/tools/power/cpupower/man/cpupower.1
-> +++ b/tools/power/cpupower/man/cpupower.1
-> @@ -62,9 +62,9 @@ all cores
->   Print the package name and version number.
->   
->   .SH "SEE ALSO"
-> -cpupower-set(1), cpupower-info(1), cpupower-idle(1),
-> -cpupower-frequency-set(1), cpupower-frequency-info(1), cpupower-monitor(1),
-> -powertop(1)
-> +cpupower-set(1), cpupower-info(1), cpupower-idle-info(1),
-> +cpupower-idle-set(1), cpupower-frequency-set(1), cpupower-frequency-info(1),
-> +cpupower-monitor(1), powertop(1)
->   .PP
->   .SH AUTHORS
->   .nf
-> 
+On Mon, Jan 27, 2020 at 4:12 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> One possible option would be to list the similar bugs at the start of
+> the bug report.
+>
+> See also:
+>
+>         KASAN: use-after-free Write in hiddev_disconnect
+>         https://syzkaller.appspot.com/bug?extid=784ccb935f9900cc7c9e
+>
+> Then we could just copy and paste to the "#syz dup:" command.  The
+> bitmap_port_list() stuff was reported something like 15 times so it was
+> really complicated to track.  Hopefully if it were easier to mark things
+> as duplicate that would help.
+>
+> regards,
+> dan carpenter
 
-Thanks for fixing this. Applied to
-
-git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux.git cpupower
-
-for 5.6-rc1 or rc2 pull request to pm maintainer Rafael Wysocki
-
-Please remember to run checkpatch before sending patches in the future
-I fixed up minor white space errors in this patch before applying it.
-
-Please run get_maintainers as well to get the complete list of
-recipients in the future.
-
-thanks,
--- Shuah
+Interesting. This should be doable. I've filed
+https://github.com/google/syzkaller/issues/1575 to keep track of this.
+If it detects potential dups, then it could auto-dup as well, but it's
+not completely trivial (some things are mentioned on the issue).
+But note it won't help if the bug happens in different functions (e.g.
+I think lots of bitmap_port_list were actually in different
+functions). And this is also common for racy bugs -- a racy free
+catches use in another thread at different locations.
