@@ -2,96 +2,89 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154C1C35240
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127FFC35240
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFD72071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1DE20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 02:11:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRb2aDU6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3eLgOqDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgA0CFS (ORCPT
+        id S1727235AbgA0CLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 21:05:18 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38495 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgA0CFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 21:05:17 -0500
-Received: by mail-qk1-f194.google.com with SMTP id k6so8216453qki.5
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jan 2020 18:05:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YGWktXY8izladCeKTPYZjChyIF7pTTYKYvBJ6t63cho=;
-        b=PRb2aDU6TRi6c9Ho9q3A9heYVWMEySZST9C3p3TAzb3lG0zVgZr3HocUO5LNrnzdpb
-         70/S6MfhA3FIP6bBjyVbNwUlYu65e52WdyZuvMRaFBCMW+1yCzU8MvvjwZBHZJaalJ/v
-         2cwsNZISNYi1c/Q40dagHk1nGbfdQ60SKKylTrM4P8v7gvQocpDkJRocKJ8ztX2kpNSV
-         dscj5Rcx5QswsmASEw+djgj4uYP7cyQvKoBnGRxqOAmPuuzhgk7SdX36A5faPk7O3AHA
-         gnLUrA25qq8dG/DlnA1QsIjr7TL0EXalXMrc9QGlkLNI32NBz1LnAad6o1De5g5NGbfy
-         17Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YGWktXY8izladCeKTPYZjChyIF7pTTYKYvBJ6t63cho=;
-        b=Tm6xMRPb7r8nITWvHDEsFdgTYXYbL2zw6/2XBnCVcxhYGROmS93lNsdI+EYZOlt3DR
-         KzNW4d7WdgJXEFW7dwoBwRBhdhxeoCEjobxG2+N6brgoG2XORzCOhw9ITTt1I2oGLPpo
-         aDFvAXdixSm7pkTe/KNgcrFD+UrzX1Pe6jmTfUchoVPETxH87Ny/MZ3Ry4XACxwSrrCv
-         Jqs58pQfW9uZtUpdd386KL1nh9sUkSUSI5b2v3AGpZMCGwwby5WbVklvOqNH22vu7f2u
-         XQy2U+m0rvrmAjvT1IqimW3RPy4ijtkPLBCcFgIghCdgscVyL9/q6NKwY7XltzjOTpzf
-         dM6g==
-X-Gm-Message-State: APjAAAW7vTg8S5v7qhHfGDFrryq9qyU0oQpEy9XeRtuhGK2cc+jYJ/+a
-        VJu4YOwRy4UC1QrllHYRANlUoYPhxIQfi/VTM4Y=
-X-Google-Smtp-Source: APXvYqxkoQBxAkCqML4DF3HWl7yzpWJAIgoyQWj+U2oSg/xBSZ7zQ3QzoRQ1CFt/vyNR9m0il8n8AR0mFjZ+7TAPqq0=
-X-Received: by 2002:a37:6897:: with SMTP id d145mr14355546qkc.398.1580090716502;
- Sun, 26 Jan 2020 18:05:16 -0800 (PST)
+        Sun, 26 Jan 2020 21:11:41 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:55158 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726670AbgA0CLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 21:11:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=y7YuVKCXqFUYF08PynV1zLsYzbNxNQ3jNx/XdrnhwM8=; b=3eLgOqDQ92tcKjx7fglJfBqCAT
+        BBS/OC4CDGd/+El84Ouvrof2JgBV+0d2Ni84XolBXFyNtXqHWdVXPxtehEOKHRygOHQ/e9sVsrpX6
+        jrpiPKMNhTWKN8wF8CIHGIGtfoNKA9yuR4bRYzZ/o0SeMtEoWFfu58JC7sqMBpPx7WjE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ivts4-0003xj-2k; Mon, 27 Jan 2020 03:11:24 +0100
+Date:   Mon, 27 Jan 2020 03:11:24 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 5/7] ethtool: provide WoL settings with WOL_GET
+ request
+Message-ID: <20200127021124.GF12816@lunn.ch>
+References: <cover.1580075977.git.mkubecek@suse.cz>
+ <a52977208338f48ef1383a5cd7288dd916245669.1580075977.git.mkubecek@suse.cz>
 MIME-Version: 1.0
-References: <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
- <20200123004507.GA2403906@rani.riverdale.lan> <20200123035359.GA23659@agluck-desk2.amr.corp.intel.com>
- <20200123044514.GA2453000@rani.riverdale.lan> <20200123231652.GA4457@agluck-desk2.amr.corp.intel.com>
- <87h80kmta4.fsf@nanos.tec.linutronix.de> <20200125024727.GA32483@agluck-desk2.amr.corp.intel.com>
- <20200125212524.GA538225@rani.riverdale.lan> <20200125215003.GB17914@agluck-desk2.amr.corp.intel.com>
- <20200125235130.GA565241@rani.riverdale.lan> <20200126025225.GA20804@agluck-desk2.amr.corp.intel.com>
-In-Reply-To: <20200126025225.GA20804@agluck-desk2.amr.corp.intel.com>
-From:   Tony Luck <tony.luck@gmail.com>
-Date:   Sun, 26 Jan 2020 18:05:05 -0800
-Message-ID: <CA+8MBbKah37goKsCxJoSD-xF7ZchKfWu0n27rN04UYiOCeXXBQ@mail.gmail.com>
-Subject: Re: [PATCH v15] x86/split_lock: Enable split lock detection by kernel
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a52977208338f48ef1383a5cd7288dd916245669.1580075977.git.mkubecek@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 6:53 PM Luck, Tony <tony.luck@intel.com> wrote:
+On Sun, Jan 26, 2020 at 11:11:13PM +0100, Michal Kubecek wrote:
+> Implement WOL_GET request to get wake-on-lan settings for a device,
+> traditionally available via ETHTOOL_GWOL ioctl request.
+> 
+> As part of the implementation, provide symbolic names for wake-on-line
 
-> So why don't we come through __switch_to_xtra() when the spinner
-> runs out its time slice (or the udelay interrupt happens and
-> preempts the spinner)?
+Hi Michal
 
-To close out this part of the thread. Linux doesn't call __switch_to_xtra()
-in this case because I didn't ask it to. There are separate masks to check
-TIF bits for the previous and next tasks in a context switch. I'd only set the
-_TIF_SLD bit in the mask for the previous task.
+LAN, not line.
 
-See the v17 I posted a few hours before this message for the fix.
+> modes as ETH_SS_WOL_MODES string set.
 
--Tony
+I think it would also be good to repeat here what you have in the
+cover note, that unlike the ioctl version, CAP_NET_ADMIN is required.
+The cover note does get committed to the git history, but it is a lot
+less likely to be seen than this patches commit message.
+
+> +WOL_GET
+> +=======
+> +
+> +Query device wake-on-lan settings. Unlike most "GET" type requests,
+> +``ETHTOOL_MSG_WOL_GET`` requires (netns) ``CAP_NET_ADMIN`` privileges as it
+> +(potentially) provides SecureOn(tm) password which is confidential.
+
+provides _the_ SecureOn(tm)
+
+Apart from that:
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
