@@ -2,114 +2,227 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D748BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1187CC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDDC20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD736207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 13:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580132827;
-	bh=tVZSvPbMuhT+sfRNfYMyVDZvO44e3dvytoFF7axcFag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1Z4Jf98Dsa/KqWorUrAIqhILQHbAU9C/UadynnqVZP5jGUTK4iFG/MYR4qjAd+eBy
-	 osvC5ojZpRJqaKMaegrsfbV9vQ2YX69u0fUGL8fKy8regwCeKe/OkOcTUnHthjS21N
-	 zThJlIqZCycWxIRa3zGQVJyJHAcyb7dE8F5hHBf8=
+	s=default; t=1580132933;
+	bh=nHi/YUzGUCuratHwiOmc3Q8G3EswlHxPtofNzsOAzkM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=M+LKxrLug6lkXy5Y6DWI1Il73LfCfJ5AQLb8Ez4qEGn9wT8e2+9ejT9vdo+Tl2st8
+	 5XkJNRrHW39AIvOX0IXclQDMtvSwgui6wYgiXWxnScHYchQSqQdScpekp081LRuF4s
+	 5Eo0B/ATNiBUZs7KNqflrC/5QsobIy+BiJJNDIoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgA0NrG (ORCPT
+        id S1728241AbgA0Nsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 08:47:06 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33532 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgA0NrG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 08:47:06 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so11394641wrq.0;
-        Mon, 27 Jan 2020 05:47:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RrWpQE/VnIZwikbFGvSuSK1v5GexTEwUzERkPHgg/GE=;
-        b=SPXRZ7N9u8vERq5HcrxbMrXfD3/tHsxJ5maOZEErBoqt55UaePjEnuRN4ZBkNEW48w
-         eq0gLsF+fv5GG1dEPigzpiKZFV8KGi+SkSo0EhBgVOE9wMNYjc8oBSfc90oms23Qu2nl
-         uSlT11Vyktafb1/LOcC42WJjSx9uxm1KN4xOFzmZ5rNKulYM/RiDtmbm5v19pF5dcYcf
-         jPDGzHAJaObHjMs4JjwOlIE+jXOvg0l7eCmCEaZYDdC0Ui6X7xIf5u0T+0tpN3qtWGC5
-         cle48SUXw6+inVToHmu11HgmL8meRUmAafKftFAPqyIlhB/zf6M1aakk0h4iUcWK6FOb
-         SGaQ==
-X-Gm-Message-State: APjAAAWf/si+2/W42BJ16g1P9tkTOV+8hVrTZhNgVEyjPlX+eiVk48ZT
-        tJHbep5OftF8WT2CS+/2fYA=
-X-Google-Smtp-Source: APXvYqxuzSy7u6AvBpDEBh+3XBuTPRlHz0vMV4tjwz6eWfNfOphsZWVdcAae62Dpz1a+TxrgovrIhQ==
-X-Received: by 2002:adf:fc03:: with SMTP id i3mr22197142wrr.306.1580132824077;
-        Mon, 27 Jan 2020 05:47:04 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id m7sm18599014wma.39.2020.01.27.05.47.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 05:47:03 -0800 (PST)
-Date:   Mon, 27 Jan 2020 14:47:02 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable <stable@vger.kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
-Message-ID: <20200127134702.GJ1183@dhcp22.suse.cz>
-References: <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com>
- <CAPcyv4jixmv8fJ5FiYE=97Jud3Mc+6QzRX1txceSYU+WY_0rQA@mail.gmail.com>
- <fc0cfb97-5a60-7e73-4f85-d8e6947c5e28@redhat.com>
- <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
- <64902066-51dd-9693-53fc-4a5975c58409@redhat.com>
- <CAPcyv4hcDNeQO3CfnqTRou+6R5gZwyi4pVUMxp1DadAOp7kJGQ@mail.gmail.com>
- <516aa930-9b64-b377-557c-5413ed9fe336@redhat.com>
- <CAPcyv4iiYtN6iGt=rVuNR=O=H9YcY1b1yWp+5TuDhu0QoVqT_A@mail.gmail.com>
- <20200124124512.GT29276@dhcp22.suse.cz>
- <CAPcyv4jcCnfGy5HcYimxcyF6v_Anw4nMdaNHQt4tMrqUaN70Rg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jcCnfGy5HcYimxcyF6v_Anw4nMdaNHQt4tMrqUaN70Rg@mail.gmail.com>
+        Mon, 27 Jan 2020 08:48:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726164AbgA0Nsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 08:48:53 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA6E420716;
+        Mon, 27 Jan 2020 13:48:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580132932;
+        bh=nHi/YUzGUCuratHwiOmc3Q8G3EswlHxPtofNzsOAzkM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kbf9uxSb48wx/B5aCcBDNhei3Zk8UP2/ICpM/fNVWC73DCZJILSFYXnijddbVVVqC
+         V+OU7zF4kRLrr6Cf5Mr07yojkH8Z1r919KJpJm6JoFx/8AAA2bRwxVlM9iH9yZlrZ1
+         hMnENtPQCYxKHNRs9Ged4naxHPlihhSgBhWnvSAw=
+Date:   Mon, 27 Jan 2020 22:48:47 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
+        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org, ndesaulniers@google.com
+Subject: Re: [PATCH v3 00/12] tracing: Add support for in-kernel dynamic
+ event API
+Message-Id: <20200127224847.54ad704c08785b85a63c18a5@kernel.org>
+In-Reply-To: <cover.1579904761.git.zanussi@kernel.org>
+References: <cover.1579904761.git.zanussi@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 24-01-20 10:04:52, Dan Williams wrote:
-> On Fri, Jan 24, 2020 at 4:56 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Fri 10-01-20 13:27:24, Dan Williams wrote:
-> > > On Fri, Jan 10, 2020 at 9:42 AM David Hildenbrand <david@redhat.com> wrote:
-> > [...]
-> > > > For your reference (roughly 5 months ago, so not that old)
-> > > >
-> > > > https://lkml.kernel.org/r/20190724143017.12841-1-david@redhat.com
-> > >
-> > > Oh, now I see the problem. You need to add that lock so far away from
-> > > the __add_memory() to avoid lock inversion problems with the
-> > > acpi_scan_lock. The organization I was envisioning would not work
-> > > without deeper refactoring.
-> >
-> > Sorry to come back to this late. Has this been resolved?
+Hi Tom,
+
+On Fri, 24 Jan 2020 16:56:11 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
+
+> Hi,
 > 
-> The mem_hotplug_lock lockdep splat fix in this patch has not landed.
-> David and I have not quite come to consensus on how to resolve online
-> racing removal. IIUC David wants that invalidation to be
-> pages_correctly_probed(), I would prefer it to be directly tied to the
-> object, struct memory_block, that remove_memory_block_devices() has
-> modified, mem->section_count = 0.
+> This is v3 of 'tracing: Add support for in-kernel dynamic event API',
+> incorporating changes based on suggestions from Masami and Steven.
+> 
+>   - Rebased to trace/for-next
+> 
+>   - Regularized the entire API to use synth_event_*, kprobe_event_*,
+>     dynevent_*, and added some new macros and functions to make things
+>     more consistent
+> 
+>   - Introduced trace_array_find_get() and used it in
+>     trace_array_get_file() as suggested
+>   
+>   - Removed exports from dynevent_cmd functions that didn't need to be
+>     exported
+> 
+>   - Switched the param order of __kprobe_event_gen_cmd_start() to fix
+>     a problem found building with clang.  Apparently varargs and
+>     implicit promotion of types like bool don't mix.  Thanks to Nick
+>     Desaulniers for pointing that out.
+> 
+>   - Updated the documentation for all of the above
+> 
+> Text from the v2 posting:
+> 
+> This is v2 of the previous 'tracing: Add support for in-kernel
+> synthetic event API', and is largely a rewrite based on suggestions
+> from Masami to expand the scope to include other types of dynamic
+> events such as kprobe events, in addition to the original sythetic
+> event focus.
 
-I was asking about this part and I can see you have already posted a
-patch[1] and I do not see any reason for not merging it.
+Yeah, v3 basically looks good to me now :)
+Please see my comment on [4/12]. Others are good. You can put my
+Acked-by to those patches. 
 
-[1] http://lkml.kernel.org/r/157991441887.2763922.4770790047389427325.stgit@dwillia2-desk3.amr.corp.intel.com
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+except for [04/12].
+
+Thank you!
+
+> 
+> The functionality of the original API remains available, though it's
+> in a slightly different form due to the use of the new dynevent_cmd
+> API it's now based on.  The dynevent_cmd API provides a common dynamic
+> event command generation capability that both the synthetic event API
+> and the kprobe event API are now based on, and there are now test
+> modules demonstrating both the synthetic event and kprobes APIs.
+> 
+> A couple of the patches are snippets from Masami's 'tracing:
+> bootconfig: Boot-time tracing and Extra boot config' series, and the
+> patch implementing the dynevent_cmd API includes some of the
+> spnprintf() generating code from that patchset.
+> 
+> Because I used Masami's gen_*_cmd() naming suggestion for generating
+> the commands, the previous patchset's generate_*() functions were
+> renamed to trace_*() to avoid confusion, and probably is better naming
+> anyway.
+> 
+> An overview of the user-visible changes in comparison to v1:
+> 
+>   - create_synth_event() using an array of synth_desc_fields remains
+>     unchanged and works the same way as previously
+> 
+>   - gen_synth_cmd() takes a variable-length number of args which
+>     represent 'type field;' pairs.  Using this with no field args
+>     basically replaces the previous 'create_empty_synth_event()'
+> 
+>   - The 'add_synth_field()' and 'add_synth_fields()' function from v1
+>     are essentially the same except that they now take a dynevent_cmd
+>     instead of a synth_event pointer
+> 
+>   - The finalize_synth_event() from v1 is replaced by
+>     create_dynevent() in the new version.
+>   
+>   - The new v2 API includes some additional functions to initialize
+>     the dynevent_cmd - synth_dynevent_cmd() is used to do that.  While
+>     it's an extra step, it makes it easier to do error handling.
+> 
+>   - There's a new trace_synth_event() function that traces a synthetic
+>     event using a variable-arg list of values.
+> 
+>   - The original generate_synth_event() using an array of values is
+>     now called trace_synth_event_array().
+> 
+>   - For piecewise event tracing, the original
+>     generate_synth_event_start() and generate_synth_event_end() have
+>     now been renamed to trace_synth_event_end().
+> 
+>   - add_next_synth_val() and add_synth_val() remain the same.
+> 
+>   - A similar API and test module demonstrating the API has been added
+>     for kprobe events
+> 
+>   - Both the synthetic events and kprobe events API is based on the
+>     dynevent_cmd API, newly added
+> 
+>   - The Documentation for all of the above has been updated
+> 
+> Text from the orginal v1 posting:
+> 
+> I've recently had several requests and suggestions from users to add
+> support for the creation and generation of synthetic events from
+> kernel code such as modules, and not just from the available command
+> line commands.
+> 
+> This patchset adds support for that.  The first three patches add some
+> minor preliminary setup, followed by the two main patches that add the
+> ability to create and generate synthetic events from the kernel.  The
+> next patch adds a test module that demonstrates actual use of the API
+> and verifies that it works as intended, followed by Documentation.
+> 
+> Special thanks to Artem Bityutskiy, who worked with me over several
+> iterations of the API, and who had many great suggestions on the
+> details of the interface, and pointed out several problems with the
+> code itself.
+> 
+> The following changes since commit 659ded30272d67a04b3692f0bfa12263be20d790:
+> 
+>   trace/kprobe: Remove unused MAX_KPROBE_CMDLINE_SIZE (2020-01-22 07:07:38 -0500)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/synth-event-gen-v3
+> 
+> Tom Zanussi (12):
+>   tracing: Add trace_array_find/_get() to find instance trace arrays
+>   tracing: Add trace_get/put_event_file()
+>   tracing: Add synth_event_delete()
+>   tracing: Add dynamic event command creation interface
+>   tracing: Add synthetic event command generation functions
+>   tracing: Change trace_boot to use synth_event interface
+>   tracing: Add synth_event_trace() and related functions
+>   tracing: Add synth event generation test module
+>   tracing: Add kprobe event command generation functions
+>   tracing: Change trace_boot to use kprobe_event interface
+>   tracing: Add kprobe event command generation test module
+>   tracing: Documentation for in-kernel synthetic event API
+> 
+>  Documentation/trace/events.rst       | 515 ++++++++++++++++++++
+>  include/linux/trace_events.h         | 124 +++++
+>  kernel/trace/Kconfig                 |  25 +
+>  kernel/trace/Makefile                |   2 +
+>  kernel/trace/kprobe_event_gen_test.c | 225 +++++++++
+>  kernel/trace/synth_event_gen_test.c  | 523 ++++++++++++++++++++
+>  kernel/trace/trace.c                 |  43 +-
+>  kernel/trace/trace.h                 |  36 ++
+>  kernel/trace/trace_boot.c            |  66 ++-
+>  kernel/trace/trace_events.c          | 325 +++++++++++++
+>  kernel/trace/trace_events_hist.c     | 896 ++++++++++++++++++++++++++++++++++-
+>  kernel/trace/trace_kprobe.c          | 160 ++++++-
+>  12 files changed, 2868 insertions(+), 72 deletions(-)
+>  create mode 100644 kernel/trace/kprobe_event_gen_test.c
+>  create mode 100644 kernel/trace/synth_event_gen_test.c
+> 
+> -- 
+> 2.14.1
+> 
+
 
 -- 
-Michal Hocko
-SUSE Labs
+Masami Hiramatsu <mhiramat@kernel.org>
