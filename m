@@ -2,233 +2,118 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8428BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D90C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5897C214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F79E214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 16:54:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GmIZc3LA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgA0Qwr (ORCPT
+        id S1726049AbgA0QyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 11:52:47 -0500
-Received: from mga02.intel.com ([134.134.136.20]:22311 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgA0Qwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 11:52:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 08:42:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,370,1574150400"; 
-   d="scan'208";a="246436989"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 27 Jan 2020 08:42:24 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iw7Sx-0002Hi-Vp; Tue, 28 Jan 2020 00:42:23 +0800
-Date:   Tue, 28 Jan 2020 00:42:05 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/cleanups] BUILD SUCCESS
- 3c749b81ee99ef1a01d342ee5e4bc01e4332eb75
-Message-ID: <5e2f12dd.qVscyFsB+HgIFA8f%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 27 Jan 2020 11:54:14 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:39036 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgA0QyN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 11:54:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1580144054; x=1611680054;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=0SviMkKcxANZUVYkfDAkB59AQTxTuaXQe+9xsrFF+KY=;
+  b=GmIZc3LAUR+A+2Z0jQf65iU9RrFqv61H+uISTDBj+/NEPKZCJ/CwrNR2
+   JF5gNAb2t4hTm+IROFAvHAi3VOyvy6+o6oGVeJe+SV8iNCSPYOn7liJjo
+   nNyNvok/Q9k+3GgX44B02U0dMpyZXfSp8VQUZKZQRKqyLD7E29zU3HYPE
+   Q=;
+IronPort-SDR: KQN/UHYdxS0e4lNPplrDxisvIUDa7mjblFbw4Kkbyi5rHwH8t6bvfdVvas6iUNGq4yglNWYZL8
+ BGXZ4gkuwxBw==
+X-IronPort-AV: E=Sophos;i="5.70,370,1574121600"; 
+   d="scan'208";a="21336953"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 27 Jan 2020 16:53:51 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 2D67CA1EED;
+        Mon, 27 Jan 2020 16:53:49 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 27 Jan 2020 16:53:48 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.117) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 27 Jan 2020 16:53:42 +0000
+From:   <sjpark@amazon.com>
+To:     SeongJae Park <sj38.park@gmail.com>
+CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <corbet@lwn.net>, <mgorman@suse.de>,
+        <dwmw@amazon.com>, <amit@kernel.org>, <rostedt@goodmis.org>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: Re: Re: [PATCH 0/8] Introduce Data Access MONitor (DAMON)
+Date:   Mon, 27 Jan 2020 17:53:25 +0100
+Message-ID: <20200127165325.21279-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200120181440.7826-1-sj38.park@gmail.com> (raw)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.117]
+X-ClientProxiedBy: EX13D28UWC001.ant.amazon.com (10.43.162.166) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cleanups
-branch HEAD: 3c749b81ee99ef1a01d342ee5e4bc01e4332eb75  x86/CPU/AMD: Remove amd_get_topology_early()
+On Mon, 20 Jan 2020 19:14:40 +0100 SeongJae Park <sj38.park@gmail.com> wrote:
 
-elapsed time: 2883m
+> On Mon, 20 Jan 2020 19:55:51 +0300 "Kirill A. Shutemov" <kirill@shutemov.name> wrote:
+> 
+> > On Mon, Jan 20, 2020 at 05:27:49PM +0100, SeongJae Park wrote:
+> > > This patchset introduces a new kernel module for practical monitoring of
+> > > data accesses, namely DAMON.
+> > 
+> > Looks like it's not integrated with perf at all right? Why?
+> > Correlating measurements from different domains would help to see the
+> > bigger picture.
+> 
+> Right, it's not integrated with perf.  DAMON provides only its debugfs
+> interface.  Also I agree that correlating measurments will be helpful.  I do
+> not integrate DAMON with perf with this patchset for following reasons.
+> 
+> First of all, I think I have no deep understanding of perf, yet.  Partly for
+> the reason, I couldn't figure out the best way to integrate DAMON with perf.
+> Especially, I couldn't straightforwardly classify DAMON providing information
+> into one of the categories of the perf events I know.
+> 
+> Therefore, rather than integrating DAMON with perf in my arguable way and
+> increasing the complexity of the code, I decided to keep the interface as
+> simple and flexible as it can be for the first stage.  That said, I believe it
+> would be not too hard to integrate DAMON with perf in a future.
 
-configs tested: 170
-configs skipped: 3
+I think I was unnecessarily worry about the best way.  I added a tracepoint to
+the monitoring result writing logic of DAMON.  Other tracers including perf
+would easily integrate DAMON using it, though the tracepoint is not highly
+optimized yet.  Will post next version soon.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-ia64                                defconfig
-powerpc                             defconfig
-openrisc             randconfig-a001-20200127
-csky                 randconfig-a001-20200127
-xtensa               randconfig-a001-20200127
-s390                 randconfig-a001-20200127
-sh                   randconfig-a001-20200127
-i386                             allyesconfig
-arm64                               defconfig
-x86_64               randconfig-a001-20200126
-x86_64               randconfig-a002-20200126
-x86_64               randconfig-a003-20200126
-i386                 randconfig-a001-20200126
-i386                 randconfig-a002-20200126
-i386                 randconfig-a003-20200126
-x86_64               randconfig-c001-20200126
-x86_64               randconfig-c002-20200126
-x86_64               randconfig-c003-20200126
-i386                 randconfig-c001-20200126
-i386                 randconfig-c002-20200126
-i386                 randconfig-c003-20200126
-arm                              allmodconfig
-arm64                            allmodconfig
-x86_64               randconfig-f001-20200126
-x86_64               randconfig-f002-20200126
-x86_64               randconfig-f003-20200126
-i386                 randconfig-f001-20200126
-i386                 randconfig-f002-20200126
-i386                 randconfig-f003-20200126
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64               randconfig-b001-20200126
-x86_64               randconfig-b002-20200126
-x86_64               randconfig-b003-20200126
-i386                 randconfig-b001-20200126
-i386                 randconfig-b002-20200126
-i386                 randconfig-b003-20200126
-alpha                randconfig-a001-20200126
-m68k                 randconfig-a001-20200126
-mips                 randconfig-a001-20200126
-nds32                randconfig-a001-20200126
-parisc               randconfig-a001-20200126
-riscv                randconfig-a001-20200126
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-x86_64               randconfig-h001-20200126
-x86_64               randconfig-h002-20200126
-x86_64               randconfig-h003-20200126
-i386                 randconfig-h001-20200126
-i386                 randconfig-h002-20200126
-i386                 randconfig-h003-20200126
-x86_64               randconfig-g001-20200126
-x86_64               randconfig-g002-20200126
-x86_64               randconfig-g003-20200126
-i386                 randconfig-g001-20200126
-i386                 randconfig-g002-20200126
-i386                 randconfig-g003-20200126
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-i386                             alldefconfig
-csky                 randconfig-a001-20200126
-openrisc             randconfig-a001-20200126
-s390                 randconfig-a001-20200126
-sh                   randconfig-a001-20200126
-xtensa               randconfig-a001-20200126
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-c6x                  randconfig-a001-20200126
-h8300                randconfig-a001-20200126
-microblaze           randconfig-a001-20200126
-nios2                randconfig-a001-20200126
-sparc64              randconfig-a001-20200126
-arc                  randconfig-a001-20200126
-arm                  randconfig-a001-20200126
-arm64                randconfig-a001-20200126
-ia64                 randconfig-a001-20200126
-powerpc              randconfig-a001-20200126
-sparc                randconfig-a001-20200126
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-i386                              allnoconfig
-i386                                defconfig
-x86_64               randconfig-e001-20200126
-x86_64               randconfig-e002-20200126
-x86_64               randconfig-e003-20200126
-i386                 randconfig-e001-20200126
-i386                 randconfig-e002-20200126
-i386                 randconfig-e003-20200126
-x86_64               randconfig-d001-20200126
-x86_64               randconfig-d002-20200126
-x86_64               randconfig-d003-20200126
-i386                 randconfig-d001-20200126
-i386                 randconfig-d002-20200126
-i386                 randconfig-d003-20200126
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
+Thanks,
+SeongJae Park
 
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+> 
+> 
+> Thanks,
+> SeongJae Park
+> 
+> > 
+> > -- 
+> >  Kirill A. Shutemov
+> > 
+> > 
