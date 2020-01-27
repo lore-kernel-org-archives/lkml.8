@@ -2,125 +2,230 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9ACC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6818AC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 177012465B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F71E22527
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 22:26:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pxyyG60a"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Lgl9X7Kh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgA0WUO (ORCPT
+        id S1726438AbgA0W0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 17:20:14 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35740 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgA0WUO (ORCPT
+        Mon, 27 Jan 2020 17:26:34 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40202 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgA0W0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 17:20:14 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r16so10088371otd.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 14:20:12 -0800 (PST)
+        Mon, 27 Jan 2020 17:26:34 -0500
+Received: by mail-ed1-f67.google.com with SMTP id p3so10747555edx.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 14:26:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uBRmgLGJ/1OiXghi/aZjiQp1GNObfLNGGUBUjy3wBJE=;
-        b=pxyyG60aG7khWI+GMVIV0mt4SFPdL7Ng0iNwWu4H7ky2B/kUGB+knIzb5aMZOojgsK
-         Bp4zFoo+zcPIlSvcPRmU6SctCVLtQIsjLGpznqyuqCD+n8rvexUFIPDuFAFkdJhcjAZC
-         dQMhOfS8ICqNj0Ru23H/2mqs9gz5HfvADc15LXUkb0exTv+Lezo1wdRqg27ADCDnzTxU
-         GWMwOAaHx8FJhQXf7hjQgJw171HTkH6adlhz9GAK/Rk4jTb+lcGG7JSXcTD9FUiPbwHd
-         fYz6oQZvLdprO6dhZRumMVDhY6SsvFjoB+Ghj5B4PQIRMqE+eX0NY79/oMjeK5haGnhv
-         Gj8w==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=ImJurKyjDdBFqXnGp8NsllsDY2CX8cUxhNCfpbNIn+A=;
+        b=Lgl9X7KhlV051rZwpS9tg/Oe1lRzwP4rip1ENWeFFsgeVPdRRDLrJVgmIdPE1Aeteu
+         AE+2iy/3mNv9pePcXK7NySRC4llED37VmpRAtqzB5K8vNNWAnHcek0A9SmQYGumAyWEc
+         XaVB7uBJMwrDtP8C/HfHRveeguPFjuKCudWzjd6XxWWHGmnZeTW3h9fy8MPCxLPz5LFN
+         BuPCfXF7My2mQTiTJ/kGqAnrr/idPyYzWngwl2EY0RpV/aHJBiJAMewP44mLEHa2fC/B
+         we468W/esPC/FWkvJ5m47GCNqQ29vl4ILakKge/2WaLKX3mbFjphlFQ9fsd0XIHzIvSs
+         wB3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uBRmgLGJ/1OiXghi/aZjiQp1GNObfLNGGUBUjy3wBJE=;
-        b=qAVxZf4kQh+SWWfGDiTHBWy4zkVPpwi5Dv1lJSUJDUxkbd7G0wbgeKf2ZvPc1kQsUt
-         /7Bq97TDSzWup0M+CEYocL1y14Iinrova4mdzqTTV+PPuh1FxKE6ygP9SK3uQf47XXkp
-         wbYhngsjPqZx/MN1KMVehfwlQHHEJfBGAsZG/6/5Zh267fXUB80UBKhIebRgOZdxPRa0
-         0Ibd2ADo4N6RuOOQTwlGGvvu4+Jjh/j2gtxHqIbOu63T4v1jiokpsb8uYRvaYjgjbmuR
-         DWDYCbfzGEsqN0FGbY/FZCqsN1DkRJw5mOwTsMUhXNlHCP4O+d0FeSEDRo/zwJSY8hG5
-         0Jkw==
-X-Gm-Message-State: APjAAAXXkJuZRZ06+OHnmRLk00D8DTna8nAzUzYF4qWUUKxu1tAzMuU7
-        NTWPdqu/vsC4ptRuXjl7EreAbH/lSUJEkSVJJ6wfIept
-X-Google-Smtp-Source: APXvYqz/r1H0zhbnKmJ6HpRJcG11DlHwv4O6l88J52v/ddot2qKyyZzJ9Fy9w87p8wdRni38ufizZi601B+wTu8j+gk=
-X-Received: by 2002:a9d:6a85:: with SMTP id l5mr11027609otq.231.1580163611412;
- Mon, 27 Jan 2020 14:20:11 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=ImJurKyjDdBFqXnGp8NsllsDY2CX8cUxhNCfpbNIn+A=;
+        b=ToQkAfWDj51A9aXCnK4NVuOnn2aUf41UOOL4N9ljuR8Ajk7c4XaZ+8KLPb0EiRN+Go
+         B/qkE1+HetHFILX2e+F9iN8gCQF3EnqFdqDBZx/jpNxfIIOLZwyGw942npvauu0Xjfvw
+         Ogs+66Xf4eEyD46GJRrZSDZVVVxSHZQizigQXgCyVo/Tn5KTAP93rNjp638KZ9GC58zr
+         TlwdNcY6cWCXov1tRZ70otYuYwl/R2/zmmaLt0+PG7pR1UZGmLAeuk3O2pt/0jMCQgh+
+         ARv42FyEgzWcQXOvIOwAtMB47FjOJR3ozln/syQca2P/MKdESO1KNjeSKSapQNoWi+6M
+         ff4Q==
+X-Gm-Message-State: APjAAAWBmNdiciAK7wWNTeaZ1geEySdWrmNvM1le+qsqBZzyQqGI5mQO
+        h/DN7m1NTjdknImXHI3aB8QiMrL3tVUf563AO1jh
+X-Google-Smtp-Source: APXvYqwRgMacKHVgEJejATnw9fXYyY2GDwe9WDz8PNsuWYZaE/MUvELQwyVKYMZaGgjusDPbsnKlOLRDu0Az2bjH4DQ=
+X-Received: by 2002:a17:906:7c47:: with SMTP id g7mr662588ejp.281.1580163989574;
+ Mon, 27 Jan 2020 14:26:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20200122080352.GA15354@willie-the-truck> <20200122081205.GA2227985@kroah.com>
- <20200122135352.GA9458@kroah.com> <8d68b75c-05b8-b403-0a10-d17b94a73ba7@akamai.com>
- <20200122192940.GA88549@kroah.com> <20200122193118.GA88722@kroah.com>
- <20200123155340.GD147870@mit.edu> <20200123175536.GA1796501@kroah.com>
- <20200124060200.GG147870@mit.edu> <20200124072940.GA2909311@kroah.com>
- <20200125014231.GI147870@mit.edu> <20200125101130.449a8e4d@lwn.net>
-In-Reply-To: <20200125101130.449a8e4d@lwn.net>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 27 Jan 2020 14:19:34 -0800
-Message-ID: <CAGETcx86rQpS4qodSiv_v+E_8P3DUQDY9jiN_Yq07Jwh9tHQcQ@mail.gmail.com>
-Subject: Re: [PATCH v3] dynamic_debug: allow to work if debugfs is disabled
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Baron <jbaron@akamai.com>, Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 27 Jan 2020 17:26:18 -0500
+Message-ID: <CAHC9VhR_5564up7u1V-PRXOz_RRfTLj16m508qgNvdWC8gcRTA@mail.gmail.com>
+Subject: [GIT PULL] SELinux patches for v5.6
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 9:11 AM Jonathan Corbet <corbet@lwn.net> wrote:
->
-> On Fri, 24 Jan 2020 20:42:31 -0500
-> "Theodore Y. Ts'o" <tytso@mit.edu> wrote:
->
-> > On Fri, Jan 24, 2020 at 08:29:40AM +0100, Greg Kroah-Hartman wrote:
-> > > > It's likely that people who normally use
-> > > > distribution kernels where debugfs is disabled will have scripts which
-> > > > are hard-coded to look in /proc, and then when they build a kernel
-> > > > with debugfs enabled, the /proc entry will go **poof**, and their
-> > > > script will break.
-> > >
-> > > **poof** they didn't test it :)
-> > >
-> > > Seriously, I am doing this change to make it _easier_ for those people
-> > > who want debugfs disabled, yet want this type of debugging.  This is
-> > > much better than having no debugging at all.
-> > >
-> > > Don't put extra complexity in the kernel for when it can be trivially
-> > > handled in userspace, you know this :)
-> >
-> > It's also trivial to handle this in the kernel by potentially having
-> > the control file appear in two places.  Consider what it would be like
-> > to explain this in the Linux documentation --- "the control file could
-> > be here, or it could be there", depending on how the kernel is
-> > configured.  The complexity of documenting this, and the complexity in
-> > userspace; and we have to have the code in the source code for the
-> > file to be in the appear in both places *anyway*.
->
-> FWIW, avoiding the need to document something like this has been a
-> motivating factor behind a number of my patches over the years.
->
-> Moving a control knob based on kernel configuration is a user-hostile
-> feature.  Scripts can be made to cope with this kind of behavior in one
-> place; if you let such things accumulate in a system, though, it gets to
-> the point where it's really hard for anybody to keep track of all the
-> pieces and be sure that their code will work.
->
-> If dynamic debug is meant to be a feature supported on all kernels, it
-> should, IMO, be lifted out of debugfs and made into a proper feature - with
-> a compatibility link left behind in debugfs for as long as it's needed, of
-> course.
->
-> </sermon> :)
+Hi Linus,
 
-My 2 cents -- agree with what Ted and Jon have said.
+This is one of the bigger SELinux pull requests in recent years with
+28 patches.  Everything is passing our test suite and the highlights
+are listed below, please merge them for v5.6.
 
--Saravana
+- Mark CONFIG_SECURITY_SELINUX_DISABLE as deprecated.  We're some time
+away from actually attempting to remove this in the kernel, but the
+only distro we know that still uses it (Fedora) is working on moving
+away from this so we want to at least let people know we are planning
+to remove it.
+
+- Reorder the SELinux hooks to help prevent bad things when SELinux is
+disabled at runtime.  The proper fix is to remove the
+CONFIG_SECURITY_SELINUX_DISABLE functionality (see above) and just
+take care of it at boot time (e.g. "selinux=0").
+
+- Add SELinux controls for the kernel lockdown functionality,
+introducing a new SELinux class/permissions: "lockdown { integrity
+confidentiality }".
+
+- Add a SELinux control for move_mount(2) that reuses the "file {
+mounton }" permission.
+
+- Improvements to the SELinux security label data store lookup
+functions to speed up translations between our internal label
+representations and the visible string labels (both directions).
+
+- Revisit a previous fix related to SELinux inode auditing and
+permission caching and do it correctly this time.
+
+- Fix the SELinux access decision cache to cleanup properly on error.
+In some extreme cases this could limit the cache size and result in a
+decrease in performance.
+
+- Enable SELinux per-file labeling for binderfs.
+
+- The SELinux initialized and disabled flags were wrapped with
+accessors to ensure they are accessed correctly.
+
+- Mark several key SELinux structures with __randomize_layout.
+
+- Changes to the LSM build configuration to only build
+security/lsm_audit.c when needed.
+
+- Changes to the SELinux build configuration to only build the IB
+object cache when CONFIG_SECURITY_INFINIBAND is enabled.
+
+- Move a number of single-caller functions into their callers.
+
+- Documentation fixes (/selinux -> /sys/fs/selinux).
+
+- A handful of cleanup patches that aren't worth mentioning on their
+own, the individual descriptions have plenty of detail.
+
+Thanks,
+-Paul
+
+--
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+
+ Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the Git repository at:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+   tags/selinux-pr-20200127
+
+for you to fetch changes up to 98aa00345de54b8340dc2ddcd87f446d33387b5e:
+
+ selinux: fix regression introduced by move_mount(2) syscall
+   (2020-01-20 07:42:37 -0500)
+
+----------------------------------------------------------------
+selinux/stable-5.6 PR 20200127
+
+----------------------------------------------------------------
+Hridya Valsaraju (1):
+     selinux: allow per-file labelling for binderfs
+
+Huaisheng Ye (2):
+     selinux: remove redundant msg_msg_alloc_security
+     selinux: remove redundant selinux_nlmsg_perm
+
+Jaihind Yadav (1):
+     selinux: ensure we cleanup the internal AVC counters on error in
+              avc_update()
+
+Jeff Vander Stoep (1):
+     selinux: sidtab reverse lookup hash table
+
+Ondrej Mosnacek (5):
+     selinux: cache the SID -> context string translation
+     selinux: treat atomic flags more carefully
+     selinux: reorder hooks to make runtime disable less broken
+     selinux: fix wrong buffer types in policydb.c
+     selinux: do not allocate ancillary buffer on first load
+
+Paul Moore (4):
+     selinux: ensure we cleanup the internal AVC counters on error in
+              avc_insert()
+     selinux: ensure the policy has been loaded before reading the sidtab stats
+     selinux: deprecate disabling SELinux and runtime
+     selinux: remove redundant allocation and helper functions
+
+Ravi Kumar Siddojigari (1):
+     selinux: move ibpkeys code under CONFIG_SECURITY_INFINIBAND.
+
+Stephen Smalley (10):
+     security,lockdown,selinux: implement SELinux lockdown
+     selinux: revert "stop passing MAY_NOT_BLOCK to the AVC upon follow_link"
+     selinux: fall back to ref-walk if audit is required
+     selinux: clean up selinux_inode_permission MAY_NOT_BLOCK tests
+     security: only build lsm_audit if CONFIG_SECURITY=y
+     selinux: clean up selinux_enabled/disabled/enforcing_boot
+     selinux: randomize layout of key structures
+     Documentation,selinux: fix references to old selinuxfs mount point
+     selinux: make default_noexec read-only after init
+     selinux: fix regression introduced by move_mount(2) syscall
+
+Yang Guo (1):
+     selinux: remove unnecessary selinux cred request
+
+YueHaibing (1):
+     selinux: remove set but not used variable 'sidtab'
+
+liuyang34 (1):
+     selinuxfs: use scnprintf to get real length for inode
+
+Documentation/ABI/obsolete/sysfs-selinux-disable |  26 ++
+Documentation/admin-guide/kernel-parameters.txt  |   9 +-
+MAINTAINERS                                      |   1 +
+include/linux/lsm_audit.h                        |   2 +
+include/linux/security.h                         |   2 +
+security/Makefile                                |   2 +-
+security/lockdown/lockdown.c                     |  27 --
+security/lsm_audit.c                             |   5 +
+security/security.c                              |  33 ++
+security/selinux/Kconfig                         |  33 +-
+security/selinux/Makefile                        |   4 +-
+security/selinux/avc.c                           |  95 +++---
+security/selinux/hooks.c                         | 388 ++++++++++--------
+security/selinux/ibpkey.c                        |   2 +-
+security/selinux/include/avc.h                   |  13 +-
+security/selinux/include/classmap.h              |   2 +
+security/selinux/include/ibpkey.h                |  13 +-
+security/selinux/include/objsec.h                |   2 +-
+security/selinux/include/security.h              |  40 ++-
+security/selinux/netif.c                         |   2 +-
+security/selinux/netnode.c                       |   2 +-
+security/selinux/netport.c                       |   2 +-
+security/selinux/selinuxfs.c                     |  87 ++++-
+security/selinux/ss/context.h                    |  11 +-
+security/selinux/ss/policydb.c                   |   9 +-
+security/selinux/ss/policydb.h                   |   2 +-
+security/selinux/ss/services.c                   | 312 +++++++++++-------
+security/selinux/ss/services.h                   |   6 +-
+security/selinux/ss/sidtab.c                     | 402 ++++++++++++-------
+security/selinux/ss/sidtab.h                     |  70 +++-
+30 files changed, 1045 insertions(+), 559 deletions(-)
+create mode 100644 Documentation/ABI/obsolete/sysfs-selinux-disable
+
+-- 
+paul moore
+www.paul-moore.com
