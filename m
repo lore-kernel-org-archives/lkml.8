@@ -2,82 +2,76 @@ Return-Path: <SRS0=1cir=3Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F50BC35240
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 00:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA0C35240
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 01:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643D22083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 00:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C677D2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jan 2020 01:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aa6V4/Pg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HPFqa6hp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgA0AyH (ORCPT
+        id S1727084AbgA0BEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jan 2020 19:54:07 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52445 "EHLO ozlabs.org"
+        Sun, 26 Jan 2020 20:04:42 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:55106 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbgA0AyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jan 2020 19:54:07 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 485WTm6mPlz9sR1;
-        Mon, 27 Jan 2020 11:54:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580086445;
-        bh=JXBzMRZ/+AdlggAxZFJEkq9AL0uC+PLRgn9c+hwwn7c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=aa6V4/PgcE3kaVAClHmkmSw/jwU+teM7K/H/Gohg7jwgH9YuBj1O0GJTIl47fjkQT
-         3tRzsh5G1WBpHctVo3m546GD0f3pNqQ6EAQxJoRX0TtkTyhl2sHQms5fstloXPTMsR
-         OTtSeDakowl76d+j8XRzqP6Zoe7kYITstRSAwMo0lyWhILc8k81EIZ7unAVYQHeISE
-         pJIY2U9rw4imq+zm527TmNeFiM8VwJbj9YqkaBI2xojJLOXb3MYwPl5WePF/z/Zps0
-         QBCMi36E66vOx2usZJQNEWjt8UNLrm4kBAI7tzixiv9wot8OHZuVJcp4FrqBvBaq1s
-         SzZ5W7JI6TBrg==
-Date:   Mon, 27 Jan 2020 11:54:01 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: No release today
-Message-ID: <20200127115401.48e1e3b2@canb.auug.org.au>
+        id S1726382AbgA0BEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jan 2020 20:04:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=c9fvEG5Id56ZAJvx9m7EYbTwULGMf6u8BNm+CeOqTKY=; b=HPFqa6hpSYsiFpSILGI40j+7Z1
+        F/c13pM+2SKnoU9+E1KYukRKi/4j1if/1500mmEp6niEFRGmFv7XZHha8MQjnlHlt0rkzmHlCq2B1
+        8LdBZIq7wMu/S2qbSj8y4eDT1DZtntPL00mMRasQlIOIElnffwPlyEuTktE/INmAjFjo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ivspC-0003nT-8c; Mon, 27 Jan 2020 02:04:22 +0100
+Date:   Mon, 27 Jan 2020 02:04:22 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 3/7] ethtool: set message mask with DEBUG_SET
+ request
+Message-ID: <20200127010422.GD12816@lunn.ch>
+References: <cover.1580075977.git.mkubecek@suse.cz>
+ <844bf6bf518640fbfc67b5dd7976d9e8683c2d2d.1580075977.git.mkubecek@suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zVeBr4nTb6fpKu1XPjkgG_R";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <844bf6bf518640fbfc67b5dd7976d9e8683c2d2d.1580075977.git.mkubecek@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zVeBr4nTb6fpKu1XPjkgG_R
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> +	ret = ethnl_parse_header(&req_info, tb[ETHTOOL_A_DEBUG_HEADER],
+> +				 genl_info_net(info), info->extack, true);
 
-Hi all,
+> +	dev_put(dev);
 
-There will be no linux-next release today.
+Hi Michal
 
---=20
-Cheers,
-Stephen Rothwell
+While reviewing this patch i noticed this dev_put() and wondered where
+the dev_get() was. It is hiding inside ethnl_parse_header(). The
+documentation does make it clear it takes a reference on the device,
+but how many people read the documentation? I would not be too
+surprised if at some point in the future we have bugs from missing
+dev_put().
 
---Sig_/zVeBr4nTb6fpKu1XPjkgG_R
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Could we make this a bit more explicit by calling it
+ethnl_parse_header_dev_get(). It is rather long though.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4uNKkACgkQAVBC80lX
-0GwPmAf7BQydlbwHx95WXWuot175/muVByLUG6D40MPrx7Ivm9pLxfEEfbQB3q50
-9//5UJ/AMKfoyWRy2J8lxNICZ5aIDtJISHOYJaHJnQaSRnHuJm1KAd0geK7ochEG
-LfX297bReVnayq3VyOdDWOxw1P7OB3Kw5BE9TUkRb3WHFjckrZrlgbpcM6K2jQ8T
-1+WHxkk6kZ1vexJycNrelHn7Xh6yK6xbJOT1x5wnFNePbiB+QDb1RXDDzniD9bms
-hsD/Nc4ZXQSn4pXIHd7uWj6kXejyIwJCbpnudXe89x2V/v0I0hpMXSR4bV+tirSO
-Jw8m5CS2UziTdnAyS8BxIzj5iPzdjA==
-=xNQv
------END PGP SIGNATURE-----
-
---Sig_/zVeBr4nTb6fpKu1XPjkgG_R--
+     Andrew
