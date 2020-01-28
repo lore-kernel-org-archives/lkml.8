@@ -2,114 +2,336 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D80C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DEFC35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD5C20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076A420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqhrNAkJ"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NyfqsIb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgA1REe (ORCPT
+        id S1726497AbgA1RFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:04:34 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40024 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgA1REd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:04:33 -0500
-Received: by mail-pj1-f66.google.com with SMTP id 12so1306937pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 09:04:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hrpqq0qmt055ivxYOcya64V22z0guJQnRikudWo5V1o=;
-        b=iqhrNAkJpBFY77ZafhxIj7/QWP5/5H0XpYl+CIOJr/+f2wTff1CP8cck3B8bty4sn7
-         sG+/tQWqexrTeQz7O4GW9hOAcXhKLvR1IHuiCOTlRV0DFn2VF6SHbaGjIV6utMs6iFuM
-         oEr9RL7i8cidbU2te1StqRlY/EJOwtGpLvvueWiYpQCn2cA3L3nAx7S1t8HvxNsRWL/q
-         bjX7ex8PEBlJg7GYQgzO+zbHQJXNeVWTuBEL/gNPpjIcEraxBumR+5wExUIYRdM2erw/
-         TuKcE7LqDH8zojXUKiuM1YNcXOFxNE4oRaT+RQkxO3mCNirPJgELGXjfbb2ZWdgKy6Hi
-         u3mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hrpqq0qmt055ivxYOcya64V22z0guJQnRikudWo5V1o=;
-        b=mLSy9bmExHZmlyOGM4mRYFY2lXx6afo6oFblZy0SqgVQx7qoZ0u/8mxfI132chUDpi
-         fhd0zrSAktC0R37g/IjmdLIw7EhWdZp3f2MzhWqJZRi2ieo4hUaVEIVIF3g6frMPBBPk
-         h/IVuICtq8HygBa2hY4gl17Zqgq11kgYRR7xunDb3V+iYg5LYibqvBaKsNbAGFPhCw5x
-         EcoF9v4lm0z4EtaixDiFxg17jUiB3Xk88BxnRslyFEOU+Z8ehvewdnIObktzRJQ9AYdj
-         8sT74tAV66F92mUyMWJ5O5G2EC6ch/IdItBW4XDNS2Rnfa5e/pl8koqh0lteuXpYXc7s
-         mnqA==
-X-Gm-Message-State: APjAAAVfsyYeMrimvkz72woslVQT7ozX7eGKV/YTvoxOrbThfztb5Bis
-        O9c4YPE/pPKi7fEEkQ3fZDM=
-X-Google-Smtp-Source: APXvYqwpWnWtmFhyZIcUf/4vhrtU1X6d2/NVeAtGcn6K7tfLSxaEpAwaH5kohS15m/ziPT5y5v6L6Q==
-X-Received: by 2002:a17:902:e789:: with SMTP id cp9mr23713546plb.85.1580231073104;
-        Tue, 28 Jan 2020 09:04:33 -0800 (PST)
-Received: from workstation-portable ([103.211.17.252])
-        by smtp.gmail.com with ESMTPSA id a195sm20701932pfa.120.2020.01.28.09.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 09:04:32 -0800 (PST)
-Date:   Tue, 28 Jan 2020 22:34:26 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
+        Tue, 28 Jan 2020 12:05:44 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:3878 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbgA1RFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:05:43 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 486Y0M18SRz9tyrg;
+        Tue, 28 Jan 2020 18:05:39 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=NyfqsIb0; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id BxhrHtxf1fJY; Tue, 28 Jan 2020 18:05:39 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 486Y0L6ltRz9tyrf;
+        Tue, 28 Jan 2020 18:05:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580231138; bh=ihfPCvoS5mhssdU/CWQGRQyoTkFqbnCSL7XYZpDWBBI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=NyfqsIb0WYfGkwwRXCi4mviBXVht5035XRkQEUMkYVrK+kvXsqyC01Ge/84pDXico
+         JiX6P4e/rd1XwHKFdfUYAulUl8Bab7lOcDCfWoS6b7lkyqkPzcXggxczTjMouWp1w8
+         BakNDUS9X1lr5teDKcou4UiSzbqUTfYKRsLhysmw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 775F08B7E7;
+        Tue, 28 Jan 2020 18:05:40 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 34jfQVcpYhXe; Tue, 28 Jan 2020 18:05:40 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AE28C8B7E6;
+        Tue, 28 Jan 2020 18:05:37 +0100 (CET)
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] cred: Use RCU primitives to access RCU pointers
-Message-ID: <20200128170426.GA10277@workstation-portable>
-References: <20200128072740.21272-1-frextrite@gmail.com>
- <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <68ed6488-aa25-ab41-8da6-f0ddeb15d52b@c-s.fr>
+Date:   Tue, 28 Jan 2020 18:05:37 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
+In-Reply-To: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 10:30:19AM +0100, Jann Horn wrote:
-> On Tue, Jan 28, 2020 at 8:28 AM Amol Grover <frextrite@gmail.com> wrote:
-> > task_struct.cred and task_struct.real_cred are annotated by __rcu,
+
+
+Le 28/01/2020 à 02:27, Anshuman Khandual a écrit :
+> This adds tests which will validate architecture page table helpers and
+> other accessors in their compliance with expected generic MM semantics.
+> This will help various architectures in validating changes to existing
+> page table helpers or addition of new ones.
 > 
-> task_struct.cred doesn't actually have RCU semantics though, see
-> commit d7852fbd0f0423937fa287a598bfde188bb68c22. For task_struct.cred,
-> it would probably be more correct to remove the __rcu annotation?
+> This test covers basic page table entry transformations including but not
+> limited to old, young, dirty, clean, write, write protect etc at various
+> level along with populating intermediate entries with next page table page
+> and validating them.
+> 
+> Test page table pages are allocated from system memory with required size
+> and alignments. The mapped pfns at page table levels are derived from a
+> real pfn representing a valid kernel text symbol. This test gets called
+> right after page_alloc_init_late().
+> 
+> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
+> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
+> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
+> arm64. Going forward, other architectures too can enable this after fixing
+> build or runtime problems (if any) with their page table helpers.
+> 
+> Folks interested in making sure that a given platform's page table helpers
+> conform to expected generic MM semantics should enable the above config
+> which will just trigger this test during boot. Any non conformity here will
+> be reported as an warning which would need to be fixed. This test will help
+> catch any changes to the agreed upon semantics expected from generic MM and
+> enable platforms to accommodate it thereafter.
 > 
 
-Hi Jann,
+[...]
 
-I went through the commit you mentioned. If I understand it correctly,
-->cred was not being accessed concurrently (via RCU), hence, a non_rcu
-flag was introduced, which determined if the clean-up should wait for
-RCU grace-periods or not. And since, the changes were 'thread local'
-there was no need to wait for an entire RCU GP to elapse.
+> 
+> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>		#PPC32
 
-The commit too, as you said, mentions the removal of __rcu annotation.
-However, simply removing the annotation won't work, as there are quite a
-few instances where RCU primitives are used. Even get_current_cred()
-uses RCU APIs to get a reference to ->cred. So, currently, maybe we
-should continue to use RCU APIs and leave the __rcu annotation in?
-(Until someone who takes it on himself to remove __rcu annotation and
-fix all the instances). Does that sound good? Or do you want me to
-remove __rcu annotation and get the process started?
+Also tested on PPC64 (under QEMU): book3s/64 64k pages, book3s/64 4k 
+pages and book3e/64
 
-Thanks
-Amol
+> Reviewed-by: Ingo Molnar <mingo@kernel.org>
+> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
 
-> > hence use rcu_access_pointer to access them.
+[...]
+
+> 
+> diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+> new file mode 100644
+> index 000000000000..f3f8111edbe3
+> --- /dev/null
+> +++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+> @@ -0,0 +1,35 @@
+> +#
+> +# Feature name:          debug-vm-pgtable
+> +#         Kconfig:       ARCH_HAS_DEBUG_VM_PGTABLE
+> +#         description:   arch supports pgtable tests for semantics compliance
+> +#
+> +    -----------------------
+> +    |         arch |status|
+> +    -----------------------
+> +    |       alpha: | TODO |
+> +    |         arc: |  ok  |
+> +    |         arm: | TODO |
+> +    |       arm64: |  ok  |
+> +    |         c6x: | TODO |
+> +    |        csky: | TODO |
+> +    |       h8300: | TODO |
+> +    |     hexagon: | TODO |
+> +    |        ia64: | TODO |
+> +    |        m68k: | TODO |
+> +    |  microblaze: | TODO |
+> +    |        mips: | TODO |
+> +    |       nds32: | TODO |
+> +    |       nios2: | TODO |
+> +    |    openrisc: | TODO |
+> +    |      parisc: | TODO |
+> +    |  powerpc/32: |  ok  |
+> +    |  powerpc/64: | TODO |
+
+You can change the two above lines by
+
+	powerpc: ok
+
+> +    |       riscv: | TODO |
+> +    |        s390: | TODO |
+> +    |          sh: | TODO |
+> +    |       sparc: | TODO |
+> +    |          um: | TODO |
+> +    |   unicore32: | TODO |
+> +    |         x86: |  ok  |
+> +    |      xtensa: | TODO |
+> +    -----------------------
+
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 1ec34e16ed65..253dcab0bebc 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -120,6 +120,7 @@ config PPC
+>   	#
+>   	select ARCH_32BIT_OFF_T if PPC32
+>   	select ARCH_HAS_DEBUG_VIRTUAL
+> +	select ARCH_HAS_DEBUG_VM_PGTABLE if PPC32
+
+Remove the 'if PPC32' as we now know it also work on PPC64.
+
+>   	select ARCH_HAS_DEVMEM_IS_ALLOWED
+>   	select ARCH_HAS_ELF_RANDOMIZE
+>   	select ARCH_HAS_FORTIFY_SOURCE
+
+> diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
+> index 0b6c4042942a..fb0e76d254b3 100644
+> --- a/arch/x86/include/asm/pgtable_64.h
+> +++ b/arch/x86/include/asm/pgtable_64.h
+> @@ -53,6 +53,12 @@ static inline void sync_initial_page_table(void) { }
+>   
+>   struct mm_struct;
+>   
+> +#define mm_p4d_folded mm_p4d_folded
+> +static inline bool mm_p4d_folded(struct mm_struct *mm)
+> +{
+> +	return !pgtable_l5_enabled();
+> +}
+> +
+
+For me this should be part of another patch, it is not directly linked 
+to the tests.
+
+>   void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
+>   void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
+>   
+> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+> index 798ea36a0549..e0b04787e789 100644
+> --- a/include/asm-generic/pgtable.h
+> +++ b/include/asm-generic/pgtable.h
+> @@ -1208,6 +1208,12 @@ static inline bool arch_has_pfn_modify_check(void)
+>   # define PAGE_KERNEL_EXEC PAGE_KERNEL
+>   #endif
+>   
+> +#ifdef CONFIG_DEBUG_VM_PGTABLE
+
+Not sure it is a good idea to put that in include/asm-generic/pgtable.h
+
+By doing this you are forcing a rebuild of almost all files, whereas 
+only init/main.o and mm/debug_vm_pgtable.o should be rebuilt when 
+activating this config option.
+
+> +extern void debug_vm_pgtable(void);
+
+Please don't use the 'extern' keyword, it is useless and not to be used 
+for functions declaration.
+
+> +#else
+> +static inline void debug_vm_pgtable(void) { }
+> +#endif
+> +
+>   #endif /* !__ASSEMBLY__ */
+>   
+>   #ifndef io_remap_pfn_range
+> diff --git a/init/main.c b/init/main.c
+> index da1bc0b60a7d..5e59e6ac0780 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1197,6 +1197,7 @@ static noinline void __init kernel_init_freeable(void)
+>   	sched_init_smp();
+>   
+>   	page_alloc_init_late();
+> +	debug_vm_pgtable();
+
+Wouldn't it be better to call debug_vm_pgtable() in kernel_init() 
+between the call to async_synchronise_full() and ftrace_free_init_mem() ?
+
+>   	/* Initialize page ext after all struct pages are initialized. */
+>   	page_ext_init();
+>   
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 5ffe144c9794..7cceae923c05 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -653,6 +653,12 @@ config SCHED_STACK_END_CHECK
+>   	  data corruption or a sporadic crash at a later stage once the region
+>   	  is examined. The runtime overhead introduced is minimal.
+>   
+> +config ARCH_HAS_DEBUG_VM_PGTABLE
+> +	bool
+> +	help
+> +	  An architecture should select this when it can successfully
+> +	  build and run DEBUG_VM_PGTABLE.
+> +
+>   config DEBUG_VM
+>   	bool "Debug VM"
+>   	depends on DEBUG_KERNEL
+> @@ -688,6 +694,22 @@ config DEBUG_VM_PGFLAGS
+>   
+>   	  If unsure, say N.
+>   
+> +config DEBUG_VM_PGTABLE
+> +	bool "Debug arch page table for semantics compliance"
+> +	depends on MMU
+> +	depends on DEBUG_VM
+
+Does it really need to depend on DEBUG_VM ?
+I think we could make it standalone and 'default y if DEBUG_VM' instead.
+
+> +	depends on ARCH_HAS_DEBUG_VM_PGTABLE
+> +	default y
+> +	help
+> +	  This option provides a debug method which can be used to test
+> +	  architecture page table helper functions on various platforms in
+> +	  verifying if they comply with expected generic MM semantics. This
+> +	  will help architecture code in making sure that any changes or
+> +	  new additions of these helpers still conform to expected
+> +	  semantics of the generic MM.
+> +
+> +	  If unsure, say N.
+> +
+
+Does it make sense to make it 'default y' and say 'If unsure, say N' ?
+
+>   config ARCH_HAS_DEBUG_VIRTUAL
+>   	bool
+>   
+
+Christophe
