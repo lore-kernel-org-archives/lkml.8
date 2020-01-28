@@ -2,122 +2,279 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79551C33CB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 03:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5534C35248
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 03:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2682467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 03:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580182098;
-	bh=BhyghtdmAWWwwJHjRxMEXePXbm1jy4jT8e09vApDRBc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t6TNPv5euEIQLyXtKKQ+zWlMGORNIitZCVMk5+VC4pArSqapgS+Fi4As9NsPhL9hy
-	 ZHCtfHsQzYhbBPl9ftjpSYyaiJqr0OIfhkVOZph45RLd+zlrvYPt8l6M16KoYhaPEz
-	 HpElexmzXjch2epxi6vqGXP9NYM1BHS1TAhBJXgw=
+	by mail.kernel.org (Postfix) with ESMTP id 9CFAC2467F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 03:33:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="KHS74x6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgA1D2Q (ORCPT
+        id S1726485AbgA1DdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 22:28:16 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:42408 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgA1D2Q (ORCPT
+        Mon, 27 Jan 2020 22:33:14 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34350 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgA1DdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 22:28:16 -0500
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 00S3S3Tm020546
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 12:28:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 00S3S3Tm020546
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1580182084;
-        bh=jPg30W9Wd4V1k+r19IZv85tXWHy/WeE9O1ipLqP4Wa0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dPj6ubQBmkVGjEEQKh3kQ5BMIKfaMjT4WjNc2VVZ+e/FixOuiozeJbLJ5G7tIufSa
-         7E4cM/QmC389xoRBRUhqtw2zKPfwrlo4Xzaz3WuxrfpVfxMnIf3/hqdZqw5tlXQwel
-         V6IX6Bf8fkrXR+uJlC5KKjaW2LTEwRNgAlNgHXwJeAaHe1JHQccDYn/JlmBTtF+uS8
-         BsBUazz29Twp6bHjHEk6fhuykfDUFXLo+EdU25wLJQgz+03fQIQE05CESWLLSF4THA
-         tWYzIQWDginPR1NK9FSYn8DINIfU7roeNvQP9sF6ltlR7w4JGhJDFXIlEp6IurNAz4
-         STy4TyIxJaDHA==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id r18so7181941vso.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 19:28:04 -0800 (PST)
-X-Gm-Message-State: APjAAAVAal2hb2tQsi4Lan+hKTe1vZuVFqgYM/w/6YCm76L5FHM53cha
-        NJdICzJeaFIFRP1Qf1FJ8Qkqv/andIJhOMMdiig=
-X-Google-Smtp-Source: APXvYqwGIUxHJH2LBGc/TLAR3nkqL69dSib07JC9anxXOAaH117GDjLj548pzb7bFWOb8NNbUUp9rV4BKO6PMGnMkfQ=
-X-Received: by 2002:a05:6102:48b:: with SMTP id n11mr12542394vsa.181.1580182083009;
- Mon, 27 Jan 2020 19:28:03 -0800 (PST)
-MIME-Version: 1.0
-References: <20200127193549.187419-1-brendanhiggins@google.com> <20200127193549.187419-2-brendanhiggins@google.com>
-In-Reply-To: <20200127193549.187419-2-brendanhiggins@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 28 Jan 2020 12:27:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASR13WjasKPmq-8gURhNUpOsrsCN2ODUh56fpM9DKWq7A@mail.gmail.com>
-Message-ID: <CAK7LNASR13WjasKPmq-8gURhNUpOsrsCN2ODUh56fpM9DKWq7A@mail.gmail.com>
-Subject: Re: [RFC v1 1/2] kbuild: add arch specific dependency for BTF support
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Mon, 27 Jan 2020 22:33:13 -0500
+Received: by mail-qt1-f195.google.com with SMTP id h12so9236750qtu.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 19:33:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=hiF0rDs1H28qeAvw6niA1Fht63msxN8o6VOgzZRc4ZY=;
+        b=KHS74x6yTx0RnN7ss0tz6JoIoUgSasIumDJZMZv93DPcof2L1ji3yecx4t+Jd3Mi0y
+         nhP8AaMOJYfgwoZgDGCzvhuxs8L6/lFaOrIjyGg1+fn0M6Prx395HWnXkClydRQjs2gB
+         ZEqWD0BAtPz9E0JKcr5erVXORB3D6kYVfb446oJmbSSMZHoltRCqLv3TEWCS4VyXgokl
+         WClhm57Fzz9bDqlopLexq8FZKIpGq/nVddaadFBm4izkl0CzG3z0MPs0d9OlsUrBNBF7
+         zQx4OBLh8MEjxjAFj5bePuEIU17leN8ASXF0lVZd6mLs8j+gGhYOl4HcWbf4FJsYsWKc
+         zOHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=hiF0rDs1H28qeAvw6niA1Fht63msxN8o6VOgzZRc4ZY=;
+        b=Yba9oIgSO09GRkak0Zw2bgZD+s9286G15B2bj8YebpngD6fEJ5KKoA7SMPIpGALDYr
+         JZqu5xQ+hlF4+dzT+lJQbz5M6JFhGI6ONK8sq/7SYoget3BibVEsalvMSWKJwi+a5yc0
+         HkdBvl2ItnfC8pCCm4fImGDF0iJEQ2wcpDa85Mzbkc/TsDqlv70lgchoiyuMjPVjpTUr
+         Drz2x4OaPyfkJLry1jL30MOVBop7U/BH0KxmM5tK2KjU7QwzMMEYzbI0QvVTuxdJOcFo
+         MOToS0ZysnULhjyRKzp+f2ESRb/AaSDxTNf2s/ub3s26D3ukJ3U1+X212okvOmovztKR
+         YGBg==
+X-Gm-Message-State: APjAAAUucMG1WbalcKNEFwTk7XOSsDQx/dcjsUY/411F2PVytMXms2Iw
+        albMDR4auZ7qZCboHN4nHjU8kg==
+X-Google-Smtp-Source: APXvYqwv8G+QCXSGBnR3Z9NxxxYOPT18bysSnp4r4ypjfj9SFKtIHbtOKzlHQY2Zr1dmADEVne6QFQ==
+X-Received: by 2002:aed:25a4:: with SMTP id x33mr19760654qtc.165.1580182391598;
+        Mon, 27 Jan 2020 19:33:11 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id z126sm11409542qka.34.2020.01.27.19.33.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Jan 2020 19:33:11 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <214c0d53-eb34-9b0c-2e4e-1aa005146331@arm.com>
+Date:   Mon, 27 Jan 2020 22:33:08 -0500
+Cc:     Linux-MM <linux-mm@kvack.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-um@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        davidgow@google.com, heidifahim@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <016A776F-EFD9-4D2B-A3A9-788008617D95@lca.pw>
+References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
+ <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
+ <214c0d53-eb34-9b0c-2e4e-1aa005146331@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
-
-On Tue, Jan 28, 2020 at 4:36 AM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> Some archs (like UM) do not build with CONFIG_DEBUG_INFO_BTF=y, so add
-> an options for archs to select to opt-in or out of BTF typeinfo support.
 
 
-Could you use a different subject prefix (e.g. "btf:") ?
+> On Jan 27, 2020, at 10:06 PM, Anshuman Khandual =
+<anshuman.khandual@arm.com> wrote:
+>=20
+>=20
+>=20
+> On 01/28/2020 07:41 AM, Qian Cai wrote:
+>>=20
+>>=20
+>>> On Jan 27, 2020, at 8:28 PM, Anshuman Khandual =
+<Anshuman.Khandual@arm.com> wrote:
+>>>=20
+>>> This adds tests which will validate architecture page table helpers =
+and
+>>> other accessors in their compliance with expected generic MM =
+semantics.
+>>> This will help various architectures in validating changes to =
+existing
+>>> page table helpers or addition of new ones.
+>>>=20
+>>> This test covers basic page table entry transformations including =
+but not
+>>> limited to old, young, dirty, clean, write, write protect etc at =
+various
+>>> level along with populating intermediate entries with next page =
+table page
+>>> and validating them.
+>>>=20
+>>> Test page table pages are allocated from system memory with required =
+size
+>>> and alignments. The mapped pfns at page table levels are derived =
+from a
+>>> real pfn representing a valid kernel text symbol. This test gets =
+called
+>>> right after page_alloc_init_late().
+>>>=20
+>>> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected =
+along with
+>>> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also =
+need to
+>>> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to =
+x86 and
+>>> arm64. Going forward, other architectures too can enable this after =
+fixing
+>>> build or runtime problems (if any) with their page table helpers.
+>=20
+> Hello Qian,
+>=20
+>>=20
+>> What=E2=80=99s the value of this block of new code? It only supports =
+x86 and arm64
+>> which are supposed to be good now.
+>=20
+> We have been over the usefulness of this code many times before as the =
+patch is
+> already in it's V12. Currently it is enabled on arm64, x86 (except =
+PAE), arc and
+> ppc32. There are build time or runtime problems with other archs which =
+prevent
 
-This is unrelated to kbuild.
+I am not sure if I care too much about arc and ppc32 which are pretty =
+much legacy
+platforms.
 
-Thanks.
+> enablement of this test (for the moment) but then the goal is to =
+integrate all
+> of them going forward. The test not only validates platform's =
+adherence to the
+> expected semantics from generic MM but also helps in keeping it that =
+way during
+> code changes in future as well.
 
+Another option maybe to get some decent arches on board first before =
+merging this
+thing, so it have more changes to catch regressions for developers who =
+might run this.=20
 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
->  lib/Kconfig.debug | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index e4676b992eae9..f5bcb391f1b7d 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -238,9 +238,12 @@ config DEBUG_INFO_DWARF4
->           But it significantly improves the success of resolving
->           variables in gdb on optimized code.
->
-> +config ARCH_NO_BTF_TYPEINFO
-> +       bool
-> +
->  config DEBUG_INFO_BTF
->         bool "Generate BTF typeinfo"
-> -       depends on DEBUG_INFO
-> +       depends on DEBUG_INFO && !ARCH_NO_BTF_TYPEINFO
->         help
->           Generate deduplicated BTF type information from DWARF debug info.
->           Turning this on expects presence of pahole tool, which will convert
-> --
-> 2.25.0.341.g760bfbb309-goog
->
+>=20
+>> Did those tests ever find any regression or this is almost only =
+useful for new
+>=20
+> The test has already found problems with s390 page table helpers.
 
+Hmm, that is pretty weak where s390 is not even official supported with =
+this version.
 
--- 
-Best Regards
-Masahiro Yamada
+>=20
+>> architectures which only happened once in a few years?
+>=20
+> Again, not only it validates what exist today but its also a tool to =
+make
+> sure that all platforms continue adhere to a common agreed upon =
+semantics
+> as reflected through the tests here.
+>=20
+>> The worry if not many people will use this config and code those that =
+much in
+>=20
+> Debug features or tests in the kernel are used when required. These =
+are never or
+> should not be enabled by default. AFAICT this is true even for entire =
+DEBUG_VM
+> packaged tests. Do you have any particular data or precedence to =
+substantiate
+> the fact that this test will be used any less often than the other =
+similar ones
+> in the tree ? I can only speak for arm64 platform but the very idea =
+for this
+> test came from Catalin when we were trying to understand the semantics =
+for THP
+> helpers while enabling THP migration without split. Apart from going =
+over the
+> commit messages from the past, there were no other way to figure out =
+how any
+> particular page table helper is suppose to change given page table =
+entry. This
+> test tries to formalize those semantics.
+
+I am thinking about how we made so many mistakes before by merging too =
+many of
+those debugging options that many of them have been broken for many =
+releases
+proving that nobody actually used them regularly. We don=E2=80=99t need =
+to repeat the same
+mistake again. I am actually thinking about to remove things like  =
+page_poisoning often
+which is almost are never found any bug recently and only cause pains =
+when interacting
+with other new features that almost nobody will test them together to =
+begin with.
+We even have some SLUB debugging code sit there for almost 15 years that =
+almost
+nobody used it and maintainers refused to remove it.
+
+>=20
+>> the future because it is inefficient to find bugs, it will simply be =
+rotten
+> Could you be more specific here ? What parts of the test are =
+inefficient ? I
+> am happy to improve upon the test. Do let me know you if you have =
+suggestions.
+>=20
+>> like a few other debugging options out there we have in the mainline =
+that
+> will be a pain to remove later on.
+>>=20
+>=20
+> Even though I am not agreeing to your assessment about the usefulness =
+of the
+> test without any substantial data backing up the claims, the test case =
+in
+> itself is very much compartmentalized, staying clear from generic MM =
+and
+> debug_vm_pgtable() is only function executing the test which is =
+getting
+> called from kernel_init_freeable() path.
+
+I am thinking exactly the other way around. You are proposing to merge =
+this tests
+without proving how useful it will be able to find regressions for =
+future developers
+to make sure it will actually get used.
+
