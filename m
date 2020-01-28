@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A730C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D1BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6226724685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38BBD2468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221569;
-	bh=J5pL+7+wFFgM5HZuizWklpWOyeU2sFdQ4P4gH7diCww=;
+	s=default; t=1580221572;
+	bh=UiVvcOxIJPdD8WM6VCX+s3qaxNYb/keReGTjo7C8E3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nez64soV4iD8QI6joSkh6hoqndiCa0d9uit3HD+/2kSC+AHV5GXN64RMWXF2JfVpr
-	 7wuvMoVQ7vog70RoRnsTUUpmM2LYWo0r7pVL79eAftdQSK3hkwSXp8xuksAkRl20GW
-	 s372Q739p2kYoZ3JtEPDL2o375K/Wc9KH65v9xG4=
+	b=z3qG0iDtMVCpHj8SdZUj9LIPIOwHeBPlPvZ/e8XT7GXod0bkdBms8gsbp7XKYAgCT
+	 QF7q/2C4FJNKzCYVyElYWflPSApMvmsCRHAQLuHpEjdP88Yh8Q+ZNeNexTJLO0jGst
+	 pmUV/rwEvkzHxR/DBJPgzEOzwK5r6/B7JO9r9kHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733149AbgA1O0I (ORCPT
+        id S1733157AbgA1O0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:26:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53298 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:26:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733125AbgA1O0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:26:04 -0500
+        id S1733150AbgA1O0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:26:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B0932468D;
-        Tue, 28 Jan 2020 14:26:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EA8224685;
+        Tue, 28 Jan 2020 14:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221563;
-        bh=J5pL+7+wFFgM5HZuizWklpWOyeU2sFdQ4P4gH7diCww=;
+        s=default; t=1580221568;
+        bh=UiVvcOxIJPdD8WM6VCX+s3qaxNYb/keReGTjo7C8E3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DKabx719CHi3R80sQsj2jZLAA1nJVL/tg4im60bWsOzmQYl/ds0QlZZmxsW1sZ7CC
-         uLvMx6zOx8UNGAKLI7LBf3QB2Vw/Me4/YCVzYbDVRrWvvm49kBgOeCfX0vsJS8B/DP
-         NCuwQoA4Q4IjVXqfUVHQUtVZMIUV/RrJB4M0KXX0=
+        b=Ao3ns2BRSHbmdWfPhnmjVpHIsd2hcWKZLuoKNJVdQeYRU9M80IB0HKuAgvGuy+APA
+         ZZ/MzIsOozc0VnX1JNWBWP8rOc5rs0CfJnQVtrVxNK5zRY8jrM5ku+riZDUwEE5SBv
+         LWz+Hw+6qxQgmzebeI4aMzgp4K1Ao1cXnRZdUfGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bo Wu <wubo40@huawei.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Lee Duncan <lduncan@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 267/271] scsi: iscsi: Avoid potential deadlock in iscsi_if_rx func
-Date:   Tue, 28 Jan 2020 15:06:56 +0100
-Message-Id: <20200128135912.468409329@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.9 269/271] bitmap: Add bitmap_alloc(), bitmap_zalloc() and bitmap_free()
+Date:   Tue, 28 Jan 2020 15:06:58 +0100
+Message-Id: <20200128135912.620442094@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,109 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bo Wu <wubo40@huawei.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit bba340c79bfe3644829db5c852fdfa9e33837d6d upstream.
+commit c42b65e363ce97a828f81b59033c3558f8fa7f70 upstream.
 
-In iscsi_if_rx func, after receiving one request through
-iscsi_if_recv_msg func, iscsi_if_send_reply will be called to try to
-reply to the request in a do-while loop.  If the iscsi_if_send_reply
-function keeps returning -EAGAIN, a deadlock will occur.
+A lot of code become ugly because of open coding allocations for bitmaps.
 
-For example, a client only send msg without calling recvmsg func, then
-it will result in the watchdog soft lockup.  The details are given as
-follows:
+Introduce three helpers to allow users be more clear of intention
+and keep their code neat.
 
-	sock_fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ISCSI);
-	retval = bind(sock_fd, (struct sock addr*) & src_addr, sizeof(src_addr);
-	while (1) {
-		state_msg = sendmsg(sock_fd, &msg, 0);
-		//Note: recvmsg(sock_fd, &msg, 0) is not processed here.
-	}
-	close(sock_fd);
+Note, due to multiple circular dependencies we may not provide
+the helpers as inliners. For now we keep them exported and, perhaps,
+at some point in the future we will sort out header inclusion and
+inheritance.
 
-watchdog: BUG: soft lockup - CPU#7 stuck for 22s! [netlink_test:253305] Sample time: 4000897528 ns(HZ: 250) Sample stat:
-curr: user: 675503481560, nice: 321724050, sys: 448689506750, idle: 4654054240530, iowait: 40885550700, irq: 14161174020, softirq: 8104324140, st: 0
-deta: user: 0, nice: 0, sys: 3998210100, idle: 0, iowait: 0, irq: 1547170, softirq: 242870, st: 0 Sample softirq:
-         TIMER:        992
-         SCHED:          8
-Sample irqstat:
-         irq    2: delta       1003, curr:    3103802, arch_timer
-CPU: 7 PID: 253305 Comm: netlink_test Kdump: loaded Tainted: G           OE
-Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-pstate: 40400005 (nZcv daif +PAN -UAO)
-pc : __alloc_skb+0x104/0x1b0
-lr : __alloc_skb+0x9c/0x1b0
-sp : ffff000033603a30
-x29: ffff000033603a30 x28: 00000000000002dd
-x27: ffff800b34ced810 x26: ffff800ba7569f00
-x25: 00000000ffffffff x24: 0000000000000000
-x23: ffff800f7c43f600 x22: 0000000000480020
-x21: ffff0000091d9000 x20: ffff800b34eff200
-x19: ffff800ba7569f00 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000000 x14: 0001000101000100
-x13: 0000000101010000 x12: 0101000001010100
-x11: 0001010101010001 x10: 00000000000002dd
-x9 : ffff000033603d58 x8 : ffff800b34eff400
-x7 : ffff800ba7569200 x6 : ffff800b34eff400
-x5 : 0000000000000000 x4 : 00000000ffffffff
-x3 : 0000000000000000 x2 : 0000000000000001
-x1 : ffff800b34eff2c0 x0 : 0000000000000300 Call trace:
-__alloc_skb+0x104/0x1b0
-iscsi_if_rx+0x144/0x12bc [scsi_transport_iscsi]
-netlink_unicast+0x1e0/0x258
-netlink_sendmsg+0x310/0x378
-sock_sendmsg+0x4c/0x70
-sock_write_iter+0x90/0xf0
-__vfs_write+0x11c/0x190
-vfs_write+0xac/0x1c0
-ksys_write+0x6c/0xd8
-__arm64_sys_write+0x24/0x30
-el0_svc_common+0x78/0x130
-el0_svc_handler+0x38/0x78
-el0_svc+0x8/0xc
-
-Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E3D4D2@dggeml505-mbx.china.huawei.com
-Signed-off-by: Bo Wu <wubo40@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/scsi_transport_iscsi.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ include/linux/bitmap.h |    8 ++++++++
+ lib/bitmap.c           |   20 ++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -37,6 +37,8 @@
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -86,6 +86,14 @@
+  */
  
- #define ISCSI_TRANSPORT_VERSION "2.0-870"
- 
-+#define ISCSI_SEND_MAX_ALLOWED  10
+ /*
++ * Allocation and deallocation of bitmap.
++ * Provided in lib/bitmap.c to avoid circular dependency.
++ */
++extern unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags);
++extern unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags);
++extern void bitmap_free(const unsigned long *bitmap);
 +
- static int dbg_session;
- module_param_named(debug_session, dbg_session, int,
- 		   S_IRUGO | S_IWUSR);
-@@ -3694,6 +3696,7 @@ iscsi_if_rx(struct sk_buff *skb)
- 		struct nlmsghdr	*nlh;
- 		struct iscsi_uevent *ev;
- 		uint32_t group;
-+		int retries = ISCSI_SEND_MAX_ALLOWED;
++/*
+  * lib/bitmap.c provides these functions:
+  */
  
- 		nlh = nlmsg_hdr(skb);
- 		if (nlh->nlmsg_len < sizeof(*nlh) + sizeof(*ev) ||
-@@ -3724,6 +3727,10 @@ iscsi_if_rx(struct sk_buff *skb)
- 				break;
- 			err = iscsi_if_send_reply(group, nlh->nlmsg_seq,
- 				nlh->nlmsg_type, 0, 0, ev, sizeof(*ev));
-+			if (err == -EAGAIN && --retries < 0) {
-+				printk(KERN_WARNING "Send reply failed, error %d\n", err);
-+				break;
-+			}
- 		} while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
- 		skb_pull(skb, rlen);
- 	}
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -13,6 +13,7 @@
+ #include <linux/bitops.h>
+ #include <linux/bug.h>
+ #include <linux/kernel.h>
++#include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/uaccess.h>
+ 
+@@ -1212,3 +1213,22 @@ void bitmap_copy_le(unsigned long *dst,
+ }
+ EXPORT_SYMBOL(bitmap_copy_le);
+ #endif
++
++unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags)
++{
++	return kmalloc_array(BITS_TO_LONGS(nbits), sizeof(unsigned long),
++			     flags);
++}
++EXPORT_SYMBOL(bitmap_alloc);
++
++unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags)
++{
++	return bitmap_alloc(nbits, flags | __GFP_ZERO);
++}
++EXPORT_SYMBOL(bitmap_zalloc);
++
++void bitmap_free(const unsigned long *bitmap)
++{
++	kfree(bitmap);
++}
++EXPORT_SYMBOL(bitmap_free);
 
 
