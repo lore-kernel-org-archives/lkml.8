@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB691C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E48C47409
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A492468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE042468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220634;
-	bh=yWx+SyF8JNDr/KrEqZhljwIs9PAmmvfLfKF+FNV5/Gk=;
+	s=default; t=1580220639;
+	bh=pv1hu2EFHzRvnISsGUXaVLZ6f/q/Eeg8I5rNzw1c06Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZBGC+ZuKpKKETA55JgMwUZjD+jmHLnDrbPE743wPUKrVkLn1M4nrPFzAbStiX4GQ/
-	 eiET+rbn3G9BMEWflFfztkXYs7IygRMpVcU7banTBSUZSBJ/HMCBEgkqPfc1nteqTr
-	 SDsh8OTJbW/cr1RJB64IQvVnLOyMWHJeg1t+U4mk=
+	b=xp21jLV8lASZE6XRsFrqSTxAKl8EudMNiKI4/jlOmwcDnDrBZJkQXTKLG3xWqgODd
+	 iGFH1xKrIzf9iURE8Rfi5O7YrOg3EYJ86PtYRXYwlqtxU2DljiuL7BULXAwqRMTiqy
+	 rysbCuKbSEnDKyDaqn65JVw7v8HMsFp1kU42DOho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgA1OKa (ORCPT
+        id S1728522AbgA1OKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:10:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59300 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:10:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbgA1OK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:10:27 -0500
+        id S1727129AbgA1OKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:10:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7818522522;
-        Tue, 28 Jan 2020 14:10:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 717DF22522;
+        Tue, 28 Jan 2020 14:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220626;
-        bh=yWx+SyF8JNDr/KrEqZhljwIs9PAmmvfLfKF+FNV5/Gk=;
+        s=default; t=1580220631;
+        bh=pv1hu2EFHzRvnISsGUXaVLZ6f/q/Eeg8I5rNzw1c06Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hB/pJ8aj1sbCkAP2Ktj6isP3jdgBFRAecl4RNqacfRuJPm+bkVLiMu8k2G55X9qcL
-         8BQYJ6I+ZkFTHrmHy9odFXkuCp7OuvHT67cBqSyaSj+epcjzoDzVCnS9s8vXp35oUk
-         Lb7C8bm6R3QIyXUTPgHTvuNvtdoI0dEgG3k1jyVw=
+        b=D7CYGAmhoevHZR25wvVlAPeoN+QUOr0FgwquXFlabB2zwMu7EYF0gsySdttpm0GBz
+         cbxDv4F0HTjJ4Z8KKYcXcrV/1zHN6UR0dBf1WoLcjAFso0vY2wPiFcGOKkwgFlEzuX
+         qZDEYa7ppVOS+guH5ub/H8jl7nhhNDe5DFNA6TQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Laight <David.Laight@aculab.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 083/183] packet: in recvmsg msg_name return at least sizeof sockaddr_ll
-Date:   Tue, 28 Jan 2020 15:05:02 +0100
-Message-Id: <20200128135838.223490325@linuxfoundation.org>
+Subject: [PATCH 4.4 085/183] IB/mlx5: Add missing XRC options to QP optional params mask
+Date:   Tue, 28 Jan 2020 15:05:04 +0100
+Message-Id: <20200128135838.461808358@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,67 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c ]
+[ Upstream commit 8f4426aa19fcdb9326ac44154a117b1a3a5ae126 ]
 
-Packet send checks that msg_name is at least sizeof sockaddr_ll.
-Packet recv must return at least this length, so that its output
-can be passed unmodified to packet send.
+The QP transition optional parameters for the various transition for XRC
+QPs are identical to those for RC QPs.
 
-This ceased to be true since adding support for lladdr longer than
-sll_addr. Since, the return value uses true address length.
+Many of the XRC QP transition optional parameter bits are missing from the
+QP optional mask table.  These omissions caused failures when doing XRC QP
+state transitions.
 
-Always return at least sizeof sockaddr_ll, even if address length
-is shorter. Zero the padding bytes.
+For example, when trying to change the response timer of an XRC receive QP
+via the RTS2RTS transition, the new timer value was ignored because
+MLX5_QP_OPTPAR_RNR_TIMEOUT bit was missing from the optional params mask
+for XRC qps for the RTS2RTS transition.
 
-Change v1->v2: do not overwrite zeroed padding again. use copy_len.
+Fix this by adding the missing XRC optional parameters for all QP
+transitions to the opt_mask table.
 
-Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
-Suggested-by: David Laight <David.Laight@aculab.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Fixes: a4774e9095de ("IB/mlx5: Fix opt param mask according to firmware spec")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/packet/af_packet.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx5/qp.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 8b277658905f7..9de7e3e6edd30 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -3309,20 +3309,29 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 	sock_recv_ts_and_drops(msg, sk, skb);
- 
- 	if (msg->msg_name) {
-+		int copy_len;
-+
- 		/* If the address length field is there to be filled
- 		 * in, we fill it in now.
- 		 */
- 		if (sock->type == SOCK_PACKET) {
- 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
- 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
-+			copy_len = msg->msg_namelen;
- 		} else {
- 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
- 
- 			msg->msg_namelen = sll->sll_halen +
- 				offsetof(struct sockaddr_ll, sll_addr);
-+			copy_len = msg->msg_namelen;
-+			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
-+				memset(msg->msg_name +
-+				       offsetof(struct sockaddr_ll, sll_addr),
-+				       0, sizeof(sll->sll_addr));
-+				msg->msg_namelen = sizeof(struct sockaddr_ll);
-+			}
- 		}
--		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
--		       msg->msg_namelen);
-+		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
- 	}
- 
- 	if (pkt_sk(sk)->auxdata) {
+diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
+index 43d277a931c2a..eac5f5eff8d22 100644
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -1426,6 +1426,11 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_PKEY_INDEX	|
+ 					  MLX5_QP_OPTPAR_Q_KEY		|
+ 					  MLX5_QP_OPTPAR_PRI_PORT,
++			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
++					  MLX5_QP_OPTPAR_RAE		|
++					  MLX5_QP_OPTPAR_RWE		|
++					  MLX5_QP_OPTPAR_PKEY_INDEX	|
++					  MLX5_QP_OPTPAR_PRI_PORT,
+ 		},
+ 		[MLX5_QP_STATE_RTR] = {
+ 			[MLX5_QP_ST_RC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH  |
+@@ -1459,6 +1464,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 					  MLX5_QP_OPTPAR_RWE		|
+ 					  MLX5_QP_OPTPAR_PM_STATE,
+ 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY,
++			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH	|
++					  MLX5_QP_OPTPAR_RRE		|
++					  MLX5_QP_OPTPAR_RAE		|
++					  MLX5_QP_OPTPAR_RWE		|
++					  MLX5_QP_OPTPAR_PM_STATE	|
++					  MLX5_QP_OPTPAR_RNR_TIMEOUT,
+ 		},
+ 	},
+ 	[MLX5_QP_STATE_RTS] = {
+@@ -1475,6 +1486,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY		|
+ 					  MLX5_QP_OPTPAR_SRQN		|
+ 					  MLX5_QP_OPTPAR_CQN_RCV,
++			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
++					  MLX5_QP_OPTPAR_RAE		|
++					  MLX5_QP_OPTPAR_RWE		|
++					  MLX5_QP_OPTPAR_RNR_TIMEOUT	|
++					  MLX5_QP_OPTPAR_PM_STATE	|
++					  MLX5_QP_OPTPAR_ALT_ADDR_PATH,
+ 		},
+ 	},
+ 	[MLX5_QP_STATE_SQER] = {
+@@ -1486,6 +1503,10 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 					   MLX5_QP_OPTPAR_RWE		|
+ 					   MLX5_QP_OPTPAR_RAE		|
+ 					   MLX5_QP_OPTPAR_RRE,
++			[MLX5_QP_ST_XRC]  = MLX5_QP_OPTPAR_RNR_TIMEOUT	|
++					   MLX5_QP_OPTPAR_RWE		|
++					   MLX5_QP_OPTPAR_RAE		|
++					   MLX5_QP_OPTPAR_RRE,
+ 		},
+ 	},
+ };
 -- 
 2.20.1
 
