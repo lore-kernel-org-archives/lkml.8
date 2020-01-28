@@ -5,286 +5,437 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFA0C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ABBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE81822522
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CFA24688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VQmvCVGY"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GD//P2aa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgA1NeZ (ORCPT
+        id S1726668AbgA1Nea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:34:25 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:58983 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbgA1NeT (ORCPT
+        Tue, 28 Jan 2020 08:34:30 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52418 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgA1NeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:34:19 -0500
+        Tue, 28 Jan 2020 08:34:22 -0500
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200128133418euoutp01a42f9a046cfffde246ff90234ea3de83~uEFC6VVst0189001890euoutp01P
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 13:34:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200128133418euoutp01a42f9a046cfffde246ff90234ea3de83~uEFC6VVst0189001890euoutp01P
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200128133421euoutp02b30ca0dfe120c97adc1ab734cdb0ef6e~uEFFz3A4N2858228582euoutp02H
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 13:34:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200128133421euoutp02b30ca0dfe120c97adc1ab734cdb0ef6e~uEFFz3A4N2858228582euoutp02H
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580218458;
-        bh=CEDKPDVx78ARY0rhMGLN2/WrTMo5btTHp+8A5sbfC1w=;
+        s=mail20170921; t=1580218461;
+        bh=f4pGIZF5n68twmRaSlTYAptwbRCwIxi64/HHyKcDMRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VQmvCVGYEOkEPeJvGkrd3pd0IQxbVSXBhOWo37kS9LU3jCjiE+x2OFSl/rMCPtLtf
-         JpHzlkbOU34NfeLPZBpMnTyDMdoliAYPfVVd/Ily1tgpnrFwICbp2DQEeAHBs9avaD
-         9nxas4TjXlv2XGK4byZ2u+zAxqVavdVzG9Gl/GuY=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200128133417eucas1p132d7a2b0e104d8e0824b4096c93fb000~uEFCqj6s20713407134eucas1p1w;
-        Tue, 28 Jan 2020 13:34:17 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id A0.DA.61286.958303E5; Tue, 28
-        Jan 2020 13:34:17 +0000 (GMT)
+        b=GD//P2aasZ8cxk7SJt0DxoYzk+vWarE2gBBggI9hkUyBQt4+IhOQQzpf1a8PGrTKW
+         mIKV/Y+HhmeMRI1bdx/NJImRN7IGfqfrrpDFOK2PgeSKx5L2S4AM7J5CBAiiR3VseN
+         +31+JYqV8wrlsftJt6OoTs2WtoYxEm+T8fX6alZs=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200128133421eucas1p20f62ac9c228146101fd2558b27b6e450~uEFFk5LEM1871818718eucas1p2S;
+        Tue, 28 Jan 2020 13:34:21 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 49.5A.60679.C58303E5; Tue, 28
+        Jan 2020 13:34:21 +0000 (GMT)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200128133417eucas1p28b1e3fbb20c686bd75997f5339993071~uEFCKwOc51871818718eucas1p2L;
-        Tue, 28 Jan 2020 13:34:17 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        20200128133420eucas1p23e99a72e7735412f93dc015b8cb25d4b~uEFFKrQ9Q0683706837eucas1p2R;
+        Tue, 28 Jan 2020 13:34:20 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200128133417eusmtrp2e7c771d1b394cb125aefe84d2ce57772~uEFCKQkDi0330003300eusmtrp27;
-        Tue, 28 Jan 2020 13:34:17 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-8a-5e3038597d59
+        20200128133420eusmtrp25db619364d396acfb9065a41acc5c03c~uEFFKGqXl0330003300eusmtrp2D;
+        Tue, 28 Jan 2020 13:34:20 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-65-5e30385c2808
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A2.82.07950.958303E5; Tue, 28
-        Jan 2020 13:34:17 +0000 (GMT)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id E7.92.08375.C58303E5; Tue, 28
+        Jan 2020 13:34:20 +0000 (GMT)
 Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200128133417eusmtip296496a0bc9275258b5d53e4f03cac4aa~uEFB16PmA0113601136eusmtip2H;
-        Tue, 28 Jan 2020 13:34:16 +0000 (GMT)
+        20200128133420eusmtip2ecd0ea1077e217ad84af2e9868b97c29~uEFExJU-80724907249eusmtip2D;
+        Tue, 28 Jan 2020 13:34:20 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Michael Schmitz <schmitzmic@gmail.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
         b.zolnierkie@samsung.com
-Subject: [PATCH 20/28] ata: move sata_link_init_spd() to libata-core-sata.c
-Date:   Tue, 28 Jan 2020 14:33:35 +0100
-Message-Id: <20200128133343.29905-21-b.zolnierkie@samsung.com>
+Subject: [PATCH 28/28] ata: move ata_eh_set_lpm() to libata-core-sata.c
+Date:   Tue, 28 Jan 2020 14:33:43 +0100
+Message-Id: <20200128133343.29905-29-b.zolnierkie@samsung.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200128133343.29905-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBKsWRmVeSWpSXmKPExsWy7djPc7qRFgZxBt++mFisvtvPZrFxxnpW
-        i2e39jJZHNvxiMni8q45bBZzW6ezO7B57Jx1l93j8tlSj0OHOxg9+rasYvT4vEkugDWKyyYl
-        NSezLLVI3y6BK+PE7V2sBWe0K57fP8TSwHhJuYuRk0NCwETiSNs+pi5GLg4hgRWMEp1P26Gc
-        L4wSs47/ZIZwPjNKNPxfwNrFyAHWcrVNGyK+nFHiz/xFrHAdkzsOs4HMZROwkpjYvooRxBYR
-        UJDo+b2SDaSIWWANo8Sqw01gCWEBb4mFv76wgNgsAqoSDc9ngDXzCthJzHx7mAXiQHmJrd8+
-        gW3mBIr37DWHKBGUODnzCVgJM1BJ89bZYJdKCDSzS2w52s4O0esi8bTxMyuELSzx6vgWqLiM
-        xP+d85kgGtYxSvzteAHVvZ1RYvnkf2wQVdYSd879YgPZzCygKbF+lz5E2FHi+Lp7LJCg4JO4
-        8VYQ4gg+iUnbpjNDhHklOtqEIKrVJDYs28AGs7Zr50qoEg+JmadLJjAqzkLyzSwk38xCWLuA
-        kXkVo3hqaXFuemqxYV5quV5xYm5xaV66XnJ+7iZGYHo5/e/4px2MXy8lHWIU4GBU4uGdoWIQ
-        J8SaWFZcmXuIUYKDWUmEt5MJKMSbklhZlVqUH19UmpNafIhRmoNFSZzXeNHLWCGB9MSS1OzU
-        1ILUIpgsEwenVAOjBFPrpQcqXKX7q022uLuZtAs/9Gow3WnIeuzN3uTZ3iccvWJcRVUM+A6u
-        c7d4qhwq+6ReWVJ9w8neHbm1ItG8qxeuz6/ISLvwq7c4csYvtl3vNj/ezyp47tmFiI6VrxSP
-        9bpIR1uyTJBJCPZyv2RRcy/5tMtyV6/fcxTj2AVkjqTVz53V2KXEUpyRaKjFXFScCAAvEc2y
-        KwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphkeLIzCtJLcpLzFFi42I5/e/4Pd1IC4M4g08tIhar7/azWWycsZ7V
-        4tmtvUwWx3Y8YrK4vGsOm8Xc1unsDmweO2fdZfe4fLbU49DhDkaPvi2rGD0+b5ILYI3SsynK
-        Ly1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQyzhxexdrwRnt
-        iuf3D7E0MF5S7mLk4JAQMJG42qbdxcjJISSwlFHixm0ziLCMxPH1ZSBhCQFhiT/Xuti6GLmA
-        Sj4xSpyc/YIVJMEmYCUxsX0VI4gtIqAg0fN7JVgRs8AGRolXN7+wgCSEBbwlFv6CsFkEVCUa
-        ns9gA7F5BewkZr49zAKxQV5i67dPrCCLOYHiPXvNIe6xlVh/5ikrRLmgxMmZT8DKmYHKm7fO
-        Zp7AKDALSWoWktQCRqZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgTGw7djPLTsYu94FH2IU
-        4GBU4uF1UDKIE2JNLCuuzD3EKMHBrCTC28kEFOJNSaysSi3Kjy8qzUktPsRoCvTDRGYp0eR8
-        YHzmlcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+LglGpgXHUrWWLxaWWD
-        2S+0H6ySsTsx+17ehdhD9m4S+xaEv3vCslpxrxj71WS+m08N03Yd0Iq+uTrfWEbhnDVX72KW
-        pTmcIpZttawnmwP+8h5g/pZnV/9KetoVvc7kjS3ah1k4D0+Z1cly5Mq1QJHm4OWX3308UJjT
-        d37NxbfTpzD8VJ9udJVxtiarmxJLcUaioRZzUXEiAL4si3+XAgAA
-X-CMS-MailID: 20200128133417eucas1p28b1e3fbb20c686bd75997f5339993071
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKKsWRmVeSWpSXmKPExsWy7djP87qxFgZxBpPsLFbf7Wez2DhjPavF
+        s1t7mSyO7XjEZHF51xw2i7mt09kd2Dx2zrrL7nH5bKnHocMdjB59W1YxenzeJBfAGsVlk5Ka
+        k1mWWqRvl8CVcfrZCtaC7f4V278mNzDuteti5OCQEDCROHhQoYuRi0NIYAWjRM/FCewQzhdG
+        iY+3j7JCOJ8ZJdZe/cLcxcgJ1vHl0jwmEFtIYDmjxIf5KXAd0xsPsoAk2ASsJCa2r2IEsUUE
+        FCR6fq9kAyliFljDKLHqcBNYQljAXeLCp/lsIDaLgKrE1cvfwZp5Bewk9lyZxwixTV5i67dP
+        rCC3cgLFe/aaQ5QISpyc+QSsnBmopHnrbKjj2tklmk/GQdguEt83fWaDsIUlXh3fwg5hy0j8
+        3zmfCeQeCYF1jBJ/O14wQzjbGSWWT/4H1WEtcefcLzaQxcwCmhLrd+lDhB0lHqy5xQYJOz6J
+        G28FIW7gk5i0bTozRJhXoqNNCKJaTWLDsg1sMGu7dq6EOtND4uj+N4wTGBVnIflmFpJvZiHs
+        XcDIvIpRPLW0ODc9tdgoL7Vcrzgxt7g0L10vOT93EyMwsZz+d/zLDsZdf5IOMQpwMCrx8M5Q
+        MYgTYk0sK67MPcQowcGsJMLbyQQU4k1JrKxKLcqPLyrNSS0+xCjNwaIkzmu86GWskEB6Yklq
+        dmpqQWoRTJaJg1OqgTGQR/37FCvhS0xyJ297V+Xx6yvyPmZo82kOitk+1/Z0tqNX1EzV19sN
+        nu9knpeh1/BzqcNbtYIDuseF9l3c2n/fWDvxQ2CeTUBjrFqFRUO+nb/sW1tJ9Z/xW373HO3x
+        C52i++WV+ZdSxXhfM7czOY92/S6sEryb3u7xW+XRHyPpY0GO3bdMlViKMxINtZiLihMBLTqv
+        TigDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42I5/e/4Pd0YC4M4gz3HZSxW3+1ns9g4Yz2r
+        xbNbe5ksju14xGRxedccNou5rdPZHdg8ds66y+5x+Wypx6HDHYwefVtWMXp83iQXwBqlZ1OU
+        X1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl3H62QrWgu3+
+        Fdu/Jjcw7rXrYuTkkBAwkfhyaR5TFyMXh5DAUkaJxuY21i5GDqCEjMTx9WUQNcISf651sUHU
+        fGKUOHd8NitIgk3ASmJi+ypGEFtEQEGi5/dKsCJmgQ2MEq9ufmEBSQgLuEtc+DSfDcRmEVCV
+        uHr5O1icV8BOYs+VeYwQG+Qltn77BLaYEyjes9ccJCwkYCux/sxTVohyQYmTM5+AtTIDlTdv
+        nc08gVFgFpLULCSpBYxMqxhFUkuLc9Nziw31ihNzi0vz0vWS83M3MQKjYNuxn5t3MF7aGHyI
+        UYCDUYmHd4aKQZwQa2JZcWXuIUYJDmYlEd5OJqAQb0piZVVqUX58UWlOavEhRlOgHyYyS4km
+        5wMjNK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA+PckvdT4s+9
+        nrv52va9t229v2zv23Tsx6pHfD7bP22etujklhMWgbMqLK7tvPn3xLxvIvN/sNycU1rQNL8n
+        3lmw873Nqnitzb3M/g+db99t2F0uVXCjIdVsZdSpRr9j8eK7ZA+KNxbXT2Bd9SG4ye2B8Y6s
+        rDuT2rYVXjQ8zP5zz//FUhP0PjP+UWIpzkg01GIuKk4EABKbaveYAgAA
+X-CMS-MailID: 20200128133420eucas1p23e99a72e7735412f93dc015b8cb25d4b
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200128133417eucas1p28b1e3fbb20c686bd75997f5339993071
+X-RootMTR: 20200128133420eucas1p23e99a72e7735412f93dc015b8cb25d4b
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200128133417eucas1p28b1e3fbb20c686bd75997f5339993071
+X-CMS-RootMailID: 20200128133420eucas1p23e99a72e7735412f93dc015b8cb25d4b
 References: <20200128133343.29905-1-b.zolnierkie@samsung.com>
-        <CGME20200128133417eucas1p28b1e3fbb20c686bd75997f5339993071@eucas1p2.samsung.com>
+        <CGME20200128133420eucas1p23e99a72e7735412f93dc015b8cb25d4b@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* move sata_link_init_spd() to libata-core-sata.c
+* un-static ata_eh_set_lpm() and move it to libata-eh-sata.c
 
-* add static inline for CONFIG_SATA_HOST=n case
-
-* cover ata_force_link_limits() with CONFIG_SATA_HOST ifdef (it
-  depends on code from libata-core.c while its only user is in
-  libata-core-sata.c)
+* add static inline for ata_eh_set_lpm() for CONFIG_SATA_HOST=n
+  case (for PATA hosts "ap && !ap->ops->set_lpm" condition is
+  always true so it's sufficient for the function to return zero)
 
 Code size savings on m68k arch using atari_defconfig:
 
    text    data     bss     dec     hex filename
 before:
-  33574     572      40   34186    858a drivers/ata/libata-core.o
+  16092      18       0   16110    3eee drivers/ata/libata-eh.o
 after:
-  33212     572      40   33824    8420 drivers/ata/libata-core.o
+  15346      18       0   15364    3c04 drivers/ata/libata-eh.o
 
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/ata/libata-core-sata.c | 33 ++++++++++++++++++++++++++++++
- drivers/ata/libata-core.c      | 37 +++-------------------------------
- drivers/ata/libata.h           |  7 ++++++-
- 3 files changed, 42 insertions(+), 35 deletions(-)
+ drivers/ata/libata-eh-sata.c | 133 +++++++++++++++++++++++++++++++++++
+ drivers/ata/libata-eh.c      | 133 -----------------------------------
+ drivers/ata/libata.h         |   9 +++
+ 3 files changed, 142 insertions(+), 133 deletions(-)
 
-diff --git a/drivers/ata/libata-core-sata.c b/drivers/ata/libata-core-sata.c
-index b43207396829..8c6ed82dc166 100644
---- a/drivers/ata/libata-core-sata.c
-+++ b/drivers/ata/libata-core-sata.c
-@@ -772,6 +772,39 @@ int sata_link_hardreset(struct ata_link *link, const unsigned long *timing,
+diff --git a/drivers/ata/libata-eh-sata.c b/drivers/ata/libata-eh-sata.c
+index 4b55d89862fb..cd7b1b434d53 100644
+--- a/drivers/ata/libata-eh-sata.c
++++ b/drivers/ata/libata-eh-sata.c
+@@ -214,3 +214,136 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
+ 	ehc->i.err_mask &= ~AC_ERR_DEV;
  }
- EXPORT_SYMBOL_GPL(sata_link_hardreset);
- 
+ EXPORT_SYMBOL_GPL(ata_eh_analyze_ncq_error);
++
 +/**
-+ *	sata_link_init_spd - Initialize link->sata_spd_limit
-+ *	@link: Link to configure sata_spd_limit for
++ *	ata_eh_set_lpm - configure SATA interface power management
++ *	@link: link to configure power management
++ *	@policy: the link power management policy
++ *	@r_failed_dev: out parameter for failed device
 + *
-+ *	Initialize @link->[hw_]sata_spd_limit to the currently
-+ *	configured value.
++ *	Enable SATA Interface power management.  This will enable
++ *	Device Interface Power Management (DIPM) for min_power and
++ *	medium_power_with_dipm policies, and then call driver specific
++ *	callbacks for enabling Host Initiated Power management.
 + *
 + *	LOCKING:
-+ *	Kernel thread context (may sleep).
++ *	EH context.
 + *
 + *	RETURNS:
 + *	0 on success, -errno on failure.
 + */
-+int sata_link_init_spd(struct ata_link *link)
++int ata_eh_set_lpm(struct ata_link *link, enum ata_lpm_policy policy,
++		   struct ata_device **r_failed_dev)
 +{
-+	u8 spd;
++	struct ata_port *ap = ata_is_host_link(link) ? link->ap : NULL;
++	struct ata_eh_context *ehc = &link->eh_context;
++	struct ata_device *dev, *link_dev = NULL, *lpm_dev = NULL;
++	enum ata_lpm_policy old_policy = link->lpm_policy;
++	bool no_dipm = link->ap->flags & ATA_FLAG_NO_DIPM;
++	unsigned int hints = ATA_LPM_EMPTY | ATA_LPM_HIPM;
++	unsigned int err_mask;
 +	int rc;
 +
-+	rc = sata_scr_read(link, SCR_CONTROL, &link->saved_scontrol);
-+	if (rc)
-+		return rc;
++	/* if the link or host doesn't do LPM, noop */
++	if ((link->flags & ATA_LFLAG_NO_LPM) || (ap && !ap->ops->set_lpm))
++		return 0;
 +
-+	spd = (link->saved_scontrol >> 4) & 0xf;
-+	if (spd)
-+		link->hw_sata_spd_limit &= (1 << spd) - 1;
++	/*
++	 * DIPM is enabled only for MIN_POWER as some devices
++	 * misbehave when the host NACKs transition to SLUMBER.  Order
++	 * device and link configurations such that the host always
++	 * allows DIPM requests.
++	 */
++	ata_for_each_dev(dev, link, ENABLED) {
++		bool hipm = ata_id_has_hipm(dev->id);
++		bool dipm = ata_id_has_dipm(dev->id) && !no_dipm;
 +
-+	ata_force_link_limits(link);
++		/* find the first enabled and LPM enabled devices */
++		if (!link_dev)
++			link_dev = dev;
 +
-+	link->sata_spd_limit = link->hw_sata_spd_limit;
++		if (!lpm_dev && (hipm || dipm))
++			lpm_dev = dev;
++
++		hints &= ~ATA_LPM_EMPTY;
++		if (!hipm)
++			hints &= ~ATA_LPM_HIPM;
++
++		/* disable DIPM before changing link config */
++		if (policy < ATA_LPM_MED_POWER_WITH_DIPM && dipm) {
++			err_mask = ata_dev_set_feature(dev,
++					SETFEATURES_SATA_DISABLE, SATA_DIPM);
++			if (err_mask && err_mask != AC_ERR_DEV) {
++				ata_dev_warn(dev,
++					     "failed to disable DIPM, Emask 0x%x\n",
++					     err_mask);
++				rc = -EIO;
++				goto fail;
++			}
++		}
++	}
++
++	if (ap) {
++		rc = ap->ops->set_lpm(link, policy, hints);
++		if (!rc && ap->slave_link)
++			rc = ap->ops->set_lpm(ap->slave_link, policy, hints);
++	} else
++		rc = sata_pmp_set_lpm(link, policy, hints);
++
++	/*
++	 * Attribute link config failure to the first (LPM) enabled
++	 * device on the link.
++	 */
++	if (rc) {
++		if (rc == -EOPNOTSUPP) {
++			link->flags |= ATA_LFLAG_NO_LPM;
++			return 0;
++		}
++		dev = lpm_dev ? lpm_dev : link_dev;
++		goto fail;
++	}
++
++	/*
++	 * Low level driver acked the transition.  Issue DIPM command
++	 * with the new policy set.
++	 */
++	link->lpm_policy = policy;
++	if (ap && ap->slave_link)
++		ap->slave_link->lpm_policy = policy;
++
++	/* host config updated, enable DIPM if transitioning to MIN_POWER */
++	ata_for_each_dev(dev, link, ENABLED) {
++		if (policy >= ATA_LPM_MED_POWER_WITH_DIPM && !no_dipm &&
++		    ata_id_has_dipm(dev->id)) {
++			err_mask = ata_dev_set_feature(dev,
++					SETFEATURES_SATA_ENABLE, SATA_DIPM);
++			if (err_mask && err_mask != AC_ERR_DEV) {
++				ata_dev_warn(dev,
++					"failed to enable DIPM, Emask 0x%x\n",
++					err_mask);
++				rc = -EIO;
++				goto fail;
++			}
++		}
++	}
++
++	link->last_lpm_change = jiffies;
++	link->flags |= ATA_LFLAG_CHANGED;
 +
 +	return 0;
-+}
 +
- /**
-  *	ata_slave_link_init - initialize slave link
-  *	@ap: port to initialize slave link for
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index bd82cab2996e..17f1d98eab71 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -338,6 +338,7 @@ void ata_force_cbl(struct ata_port *ap)
- 	}
- }
- 
-+#ifdef CONFIG_SATA_HOST
- /**
-  *	ata_force_link_limits - force link limits according to libata.force
-  *	@link: ATA link of interest
-@@ -354,7 +355,7 @@ void ata_force_cbl(struct ata_port *ap)
-  *	LOCKING:
-  *	EH context.
-  */
--static void ata_force_link_limits(struct ata_link *link)
-+void ata_force_link_limits(struct ata_link *link)
- {
- 	bool did_spd = false;
- 	int linkno = link->pmp;
-@@ -389,6 +390,7 @@ static void ata_force_link_limits(struct ata_link *link)
- 		}
- 	}
- }
-+#endif
- 
- /**
-  *	ata_force_xfermask - force xfermask according to libata.force
-@@ -5078,39 +5080,6 @@ void ata_link_init(struct ata_port *ap, struct ata_link *link, int pmp)
- 	}
++fail:
++	/* restore the old policy */
++	link->lpm_policy = old_policy;
++	if (ap && ap->slave_link)
++		ap->slave_link->lpm_policy = old_policy;
++
++	/* if no device or only one more chance is left, disable LPM */
++	if (!dev || ehc->tries[dev->devno] <= 2) {
++		ata_link_warn(link, "disabling LPM on the link\n");
++		link->flags |= ATA_LFLAG_NO_LPM;
++	}
++	if (r_failed_dev)
++		*r_failed_dev = dev;
++	return rc;
++}
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index b37e93c5013d..723645cefee9 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -3208,139 +3208,6 @@ static int ata_eh_maybe_retry_flush(struct ata_device *dev)
+ 	return rc;
  }
  
 -/**
-- *	sata_link_init_spd - Initialize link->sata_spd_limit
-- *	@link: Link to configure sata_spd_limit for
+- *	ata_eh_set_lpm - configure SATA interface power management
+- *	@link: link to configure power management
+- *	@policy: the link power management policy
+- *	@r_failed_dev: out parameter for failed device
 - *
-- *	Initialize @link->[hw_]sata_spd_limit to the currently
-- *	configured value.
+- *	Enable SATA Interface power management.  This will enable
+- *	Device Interface Power Management (DIPM) for min_power and
+- *	medium_power_with_dipm policies, and then call driver specific
+- *	callbacks for enabling Host Initiated Power management.
 - *
 - *	LOCKING:
-- *	Kernel thread context (may sleep).
+- *	EH context.
 - *
 - *	RETURNS:
 - *	0 on success, -errno on failure.
 - */
--int sata_link_init_spd(struct ata_link *link)
+-static int ata_eh_set_lpm(struct ata_link *link, enum ata_lpm_policy policy,
+-			  struct ata_device **r_failed_dev)
 -{
--	u8 spd;
+-	struct ata_port *ap = ata_is_host_link(link) ? link->ap : NULL;
+-	struct ata_eh_context *ehc = &link->eh_context;
+-	struct ata_device *dev, *link_dev = NULL, *lpm_dev = NULL;
+-	enum ata_lpm_policy old_policy = link->lpm_policy;
+-	bool no_dipm = link->ap->flags & ATA_FLAG_NO_DIPM;
+-	unsigned int hints = ATA_LPM_EMPTY | ATA_LPM_HIPM;
+-	unsigned int err_mask;
 -	int rc;
 -
--	rc = sata_scr_read(link, SCR_CONTROL, &link->saved_scontrol);
--	if (rc)
--		return rc;
+-	/* if the link or host doesn't do LPM, noop */
+-	if ((link->flags & ATA_LFLAG_NO_LPM) || (ap && !ap->ops->set_lpm))
+-		return 0;
 -
--	spd = (link->saved_scontrol >> 4) & 0xf;
--	if (spd)
--		link->hw_sata_spd_limit &= (1 << spd) - 1;
+-	/*
+-	 * DIPM is enabled only for MIN_POWER as some devices
+-	 * misbehave when the host NACKs transition to SLUMBER.  Order
+-	 * device and link configurations such that the host always
+-	 * allows DIPM requests.
+-	 */
+-	ata_for_each_dev(dev, link, ENABLED) {
+-		bool hipm = ata_id_has_hipm(dev->id);
+-		bool dipm = ata_id_has_dipm(dev->id) && !no_dipm;
 -
--	ata_force_link_limits(link);
+-		/* find the first enabled and LPM enabled devices */
+-		if (!link_dev)
+-			link_dev = dev;
 -
--	link->sata_spd_limit = link->hw_sata_spd_limit;
+-		if (!lpm_dev && (hipm || dipm))
+-			lpm_dev = dev;
+-
+-		hints &= ~ATA_LPM_EMPTY;
+-		if (!hipm)
+-			hints &= ~ATA_LPM_HIPM;
+-
+-		/* disable DIPM before changing link config */
+-		if (policy < ATA_LPM_MED_POWER_WITH_DIPM && dipm) {
+-			err_mask = ata_dev_set_feature(dev,
+-					SETFEATURES_SATA_DISABLE, SATA_DIPM);
+-			if (err_mask && err_mask != AC_ERR_DEV) {
+-				ata_dev_warn(dev,
+-					     "failed to disable DIPM, Emask 0x%x\n",
+-					     err_mask);
+-				rc = -EIO;
+-				goto fail;
+-			}
+-		}
+-	}
+-
+-	if (ap) {
+-		rc = ap->ops->set_lpm(link, policy, hints);
+-		if (!rc && ap->slave_link)
+-			rc = ap->ops->set_lpm(ap->slave_link, policy, hints);
+-	} else
+-		rc = sata_pmp_set_lpm(link, policy, hints);
+-
+-	/*
+-	 * Attribute link config failure to the first (LPM) enabled
+-	 * device on the link.
+-	 */
+-	if (rc) {
+-		if (rc == -EOPNOTSUPP) {
+-			link->flags |= ATA_LFLAG_NO_LPM;
+-			return 0;
+-		}
+-		dev = lpm_dev ? lpm_dev : link_dev;
+-		goto fail;
+-	}
+-
+-	/*
+-	 * Low level driver acked the transition.  Issue DIPM command
+-	 * with the new policy set.
+-	 */
+-	link->lpm_policy = policy;
+-	if (ap && ap->slave_link)
+-		ap->slave_link->lpm_policy = policy;
+-
+-	/* host config updated, enable DIPM if transitioning to MIN_POWER */
+-	ata_for_each_dev(dev, link, ENABLED) {
+-		if (policy >= ATA_LPM_MED_POWER_WITH_DIPM && !no_dipm &&
+-		    ata_id_has_dipm(dev->id)) {
+-			err_mask = ata_dev_set_feature(dev,
+-					SETFEATURES_SATA_ENABLE, SATA_DIPM);
+-			if (err_mask && err_mask != AC_ERR_DEV) {
+-				ata_dev_warn(dev,
+-					"failed to enable DIPM, Emask 0x%x\n",
+-					err_mask);
+-				rc = -EIO;
+-				goto fail;
+-			}
+-		}
+-	}
+-
+-	link->last_lpm_change = jiffies;
+-	link->flags |= ATA_LFLAG_CHANGED;
 -
 -	return 0;
+-
+-fail:
+-	/* restore the old policy */
+-	link->lpm_policy = old_policy;
+-	if (ap && ap->slave_link)
+-		ap->slave_link->lpm_policy = old_policy;
+-
+-	/* if no device or only one more chance is left, disable LPM */
+-	if (!dev || ehc->tries[dev->devno] <= 2) {
+-		ata_link_warn(link, "disabling LPM on the link\n");
+-		link->flags |= ATA_LFLAG_NO_LPM;
+-	}
+-	if (r_failed_dev)
+-		*r_failed_dev = dev;
+-	return rc;
 -}
 -
- /**
-  *	ata_port_alloc - allocate and initialize basic ATA port resources
-  *	@host: ATA host this allocated port belongs to
+ int ata_link_nr_enabled(struct ata_link *link)
+ {
+ 	struct ata_device *dev;
 diff --git a/drivers/ata/libata.h b/drivers/ata/libata.h
-index 518a8e08a26d..8f5da7be88fe 100644
+index 2bb87a3e7a62..5860ad5f348e 100644
 --- a/drivers/ata/libata.h
 +++ b/drivers/ata/libata.h
-@@ -76,7 +76,6 @@ extern bool ata_phys_link_online(struct ata_link *link);
- extern bool ata_phys_link_offline(struct ata_link *link);
- extern void ata_dev_init(struct ata_device *dev);
- extern void ata_link_init(struct ata_port *ap, struct ata_link *link, int pmp);
--extern int sata_link_init_spd(struct ata_link *link);
- extern int ata_task_ioctl(struct scsi_device *scsidev, void __user *arg);
- extern int ata_cmd_ioctl(struct scsi_device *scsidev, void __user *arg);
- extern struct ata_port *ata_port_alloc(struct ata_host *host);
-@@ -85,6 +84,7 @@ extern int ata_port_probe(struct ata_port *ap);
- extern void __ata_port_probe(struct ata_port *ap);
- extern unsigned int ata_read_log_page(struct ata_device *dev, u8 log,
- 				      u8 page, void *buf, unsigned int sectors);
-+extern void ata_force_link_limits(struct ata_link *link);
+@@ -220,6 +220,15 @@ extern int ata_ering_map(struct ata_ering *ering,
+ extern unsigned int atapi_eh_tur(struct ata_device *dev, u8 *r_sense_key);
+ extern unsigned int atapi_eh_request_sense(struct ata_device *dev,
+ 					   u8 *sense_buf, u8 dfl_sense_key);
++/* libata-eh-sata.c */
++#ifdef CONFIG_SATA_HOST
++int ata_eh_set_lpm(struct ata_link *link, enum ata_lpm_policy policy,
++		   struct ata_device **r_failed_dev);
++#else
++static inline int ata_eh_set_lpm(struct ata_link *link,
++				 enum ata_lpm_policy policy,
++				 struct ata_device **r_failed_dev) { return 0; }
++#endif
  
- static inline bool ata_sstatus_online(u32 sstatus)
- {
-@@ -108,6 +108,7 @@ int ata_do_link_spd_horkage(struct ata_device *dev);
- int ata_dev_config_ncq(struct ata_device *dev, char *desc, size_t desc_sz);
- void sata_print_link_status(struct ata_link *link);
- int sata_down_spd_limit(struct ata_link *link, u32 spd_limit);
-+int sata_link_init_spd(struct ata_link *link);
- #else
- static inline int ata_do_link_spd_horkage(struct ata_device *dev) { return 0; }
- static inline int ata_dev_config_ncq(struct ata_device *dev, char *desc,
-@@ -121,6 +122,10 @@ static inline int sata_down_spd_limit(struct ata_link *link, u32 spd_limit)
- {
- 	return -EOPNOTSUPP;
- }
-+static inline int sata_link_init_spd(struct ata_link *link)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif
- 
- /* libata-acpi.c */
+ /* libata-pmp.c */
+ #ifdef CONFIG_SATA_PMP
 -- 
 2.24.1
 
