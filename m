@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A13C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F82C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C45A20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B4820702
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222356;
-	bh=cPEmQ8PSkG3gHp0isK5MwvQ+vtEACJ8Ijg0XjouAvIw=;
+	s=default; t=1580222360;
+	bh=yniMCHJcUMBFjVrDnRjpp7sQccbfr5C/tTjc7ZX7s5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nQEve2BFqOF0n3HDclCLOl1kQBqhcSMs0Exq1NgYCPpksSzxwGIcimXSs2YoUjMMj
-	 AgNYiA0Pb1ThGiBbL5SLQHJ4zlY0yKpMYUPwPu7VI68J9R3tG9B5m4S58r/ABjZvfQ
-	 V+P0D4oXUttJQp9APzcyAkeZdpQjG7NqG0GT0VyI=
+	b=Y02jYe8aqp+EI8XKQ7xqcnpYOEK4SUaKVkUwxyL7y++nO9WNdQPTRnwJcgkU0vJV/
+	 OAxxG6lTqYIc3I8MVtNsQW/jeyIfJH10e62en3dkvGOMbKXDcmWCxnq9gVfIGAnTSN
+	 tAbusHBCpF6tKsNFNKAs48YN9QUzfk3ciP3hu1B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbgA1ORb (ORCPT
+        id S1727099AbgA1OjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:17:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41164 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:39:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730292AbgA1ORZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:17:25 -0500
+        id S1730524AbgA1ORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:17:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 514AE21739;
-        Tue, 28 Jan 2020 14:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 331D624681;
+        Tue, 28 Jan 2020 14:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221044;
-        bh=cPEmQ8PSkG3gHp0isK5MwvQ+vtEACJ8Ijg0XjouAvIw=;
+        s=default; t=1580221049;
+        bh=yniMCHJcUMBFjVrDnRjpp7sQccbfr5C/tTjc7ZX7s5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aeSzsAErl1IWoVTV6ApPFGAiFT/7Rh5h606kNBkqiq6r3TbitF+SVNp6o1SA3iuwz
-         JR25vf6p95nFmGMnU5DKyGCSu5yi13aYjU3IiWh2npN+Ghy5Ug1ty6JviqigGWioEs
-         CznU5ddiyLR55BuQxHZQ1tY3yf2I5t6yxsw8LWIA=
+        b=prSlTEc1py54BPHuxHa6jLTIcJn/LOy1ISDAXe/F8FboNFuc2K5aNfm+SOTs4w549
+         Si7Ra18DuP8i4YDCa/wnWc6PC5zcWR5Adzfvn7zBUu40Xg9BHCA2NRSEpwIxZSneCg
+         FZMKj3wBr8rrXMHd1Xf8OSGTJAnOgk3Vqaw4BN2U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Steve Wise <swise@opengridcomputing.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 065/271] fbdev: chipsfb: remove set but not used variable size
-Date:   Tue, 28 Jan 2020 15:03:34 +0100
-Message-Id: <20200128135857.450856334@linuxfoundation.org>
+Subject: [PATCH 4.9 067/271] iw_cxgb4: use tos when finding ipv6 routes
+Date:   Tue, 28 Jan 2020 15:03:36 +0100
+Message-Id: <20200128135857.593309620@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -63,49 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Steve Wise <swise@opengridcomputing.com>
 
-[ Upstream commit 8e71fa5e4d86bedfd26df85381d65d6b4c860020 ]
+[ Upstream commit c8a7eb554a83214c3d8ee5cb322da8c72810d2dc ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+When IPv6 support was added, the correct tos was not passed to
+cxgb_find_route6(). This potentially results in the wrong route entry.
 
-drivers/video/fbdev/chipsfb.c: In function 'chipsfb_pci_init':
-drivers/video/fbdev/chipsfb.c:352:22: warning:
- variable 'size' set but not used [-Wunused-but-set-variable]
-
-Fixes: 8c8709334cec ("[PATCH] ppc32: Remove CONFIG_PMAC_PBOOK").
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-[b.zolnierkie: minor commit summary and description fixups]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Fixes: 830662f6f032 ("RDMA/cxgb4: Add support for active and passive open connection with IPv6 address")
+Signed-off-by: Steve Wise <swise@opengridcomputing.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/chipsfb.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/infiniband/hw/cxgb4/cm.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/chipsfb.c b/drivers/video/fbdev/chipsfb.c
-index 59abdc6a97f66..314b7eceb81c5 100644
---- a/drivers/video/fbdev/chipsfb.c
-+++ b/drivers/video/fbdev/chipsfb.c
-@@ -350,7 +350,7 @@ static void init_chips(struct fb_info *p, unsigned long addr)
- static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
- {
- 	struct fb_info *p;
--	unsigned long addr, size;
-+	unsigned long addr;
- 	unsigned short cmd;
- 	int rc = -ENODEV;
- 
-@@ -362,7 +362,6 @@ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
- 	if ((dp->resource[0].flags & IORESOURCE_MEM) == 0)
- 		goto err_disable;
- 	addr = pci_resource_start(dp, 0);
--	size = pci_resource_len(dp, 0);
- 	if (addr == 0)
- 		goto err_disable;
- 
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index a29fe11d688a5..a04a53acb24ff 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -2135,7 +2135,8 @@ static int c4iw_reconnect(struct c4iw_ep *ep)
+ 					   laddr6->sin6_addr.s6_addr,
+ 					   raddr6->sin6_addr.s6_addr,
+ 					   laddr6->sin6_port,
+-					   raddr6->sin6_port, 0,
++					   raddr6->sin6_port,
++					   ep->com.cm_id->tos,
+ 					   raddr6->sin6_scope_id);
+ 		iptype = 6;
+ 		ra = (__u8 *)&raddr6->sin6_addr;
+@@ -3278,7 +3279,7 @@ int c4iw_connect(struct iw_cm_id *cm_id, struct iw_cm_conn_param *conn_param)
+ 					   laddr6->sin6_addr.s6_addr,
+ 					   raddr6->sin6_addr.s6_addr,
+ 					   laddr6->sin6_port,
+-					   raddr6->sin6_port, 0,
++					   raddr6->sin6_port, cm_id->tos,
+ 					   raddr6->sin6_scope_id);
+ 	}
+ 	if (!ep->dst) {
 -- 
 2.20.1
 
