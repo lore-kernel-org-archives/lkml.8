@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA66C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B6FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B7220702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EBDA20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222216;
-	bh=BDmzMUOv+jwCWIgzcr7uhDx7cxYkavGXJYJFdjJ7oTE=;
+	s=default; t=1580222221;
+	bh=8OzNsdy4d7Ke874WxL42U1gN9E01qAY2+swLm2PIZCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUqav2p4E5mEhUhnqvNPoBvzJvVPupJkZYlbPoPQGd1RKpeopgw3HPOcJWHzzPgES
-	 YYaZMD6aEtjQ+jxTwxgZ+UbTaGjp6LS0vYwiSA3cGqg1ZO49dVSWczBFWXdlyZ5lyO
-	 Nn9Q5Mgoxq4QVTNiHD4ZKvWVEQPFK+RM2WRuJ0RQ=
+	b=g9yCIs7bpkGI2rX6Kvdck0/caFejpdd6EMW8XBSTyS0+SxF1e9aimZFPbxq28jlXK
+	 OhXwhS2DIRyZjoV4V5cLbWIEsj8G+i3kelsTqsTcIwiFNqHsnN6OWQ7ur+86DuSJ0c
+	 coWr82s9Q5Aunz2hqqmwrPtlQgg7Cj3On7bKJhCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731195AbgA1OVC (ORCPT
+        id S1731161AbgA1OU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:21:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46076 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:20:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731178AbgA1OU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:20:59 -0500
+        id S1731145AbgA1OUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:20:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3080A2468A;
-        Tue, 28 Jan 2020 14:20:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD20E21739;
+        Tue, 28 Jan 2020 14:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221258;
-        bh=BDmzMUOv+jwCWIgzcr7uhDx7cxYkavGXJYJFdjJ7oTE=;
+        s=default; t=1580221251;
+        bh=8OzNsdy4d7Ke874WxL42U1gN9E01qAY2+swLm2PIZCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gL60sfiX9gs5B8b0I8ug2B61HTS5a2CvWjk/btbtTr5P7ysq2Aq+vdjcT3uZH9wEr
-         90b+KCeCNUM8apN2hbqgHrEv/L4jTtZnOLUgH5zsSPWAvyrLpYucSiHTin48/Kf/rz
-         fbH95WiFqtPcHaX7iDIcDzcAlXW4cYS1k0NodK0U=
+        b=fNq+XUryZfLNT48sMMxNjNS5A6MeMpiVfU+7hCaHLEA0/Md03ISP2+ipHPMrnu7GO
+         MCyA3NdhMF8yI4dBoSyNZYaaSmq+Wo8XC5+H+CjuSGq5w0WJsLsSHQvWTbbqt6oWjx
+         /BkVjfoDsum2EPoRDPIjnmo1Iw8/H/Fe5DI2mBfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 116/271] hwmon: (w83627hf) Use request_muxed_region for Super-IO accesses
-Date:   Tue, 28 Jan 2020 15:04:25 +0100
-Message-Id: <20200128135901.212745091@linuxfoundation.org>
+Subject: [PATCH 4.9 113/271] ehea: Fix a copy-paste err in ehea_init_port_res
+Date:   Tue, 28 Jan 2020 15:04:22 +0100
+Message-Id: <20200128135900.987677866@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,119 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit e95fd518d05bfc087da6fcdea4900a57cfb083bd ]
+[ Upstream commit c8f191282f819ab4e9b47b22a65c6c29734cefce ]
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+pr->tx_bytes should be assigned to tx_bytes other than
+rx_bytes.
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
-
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
-
-Fixes: b72656dbc491 ("hwmon: (w83627hf) Stop using globals for I/O port numbers")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: ce45b873028f ("ehea: Fixing statistics")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/w83627hf.c | 42 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/w83627hf.c b/drivers/hwmon/w83627hf.c
-index 721295b9a0517..43c0f89cefdf0 100644
---- a/drivers/hwmon/w83627hf.c
-+++ b/drivers/hwmon/w83627hf.c
-@@ -130,17 +130,23 @@ superio_select(struct w83627hf_sio_data *sio, int ld)
- 	outb(ld,  sio->sioaddr + 1);
- }
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index 2dd17e01e3a7a..3692adb8902d1 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -1476,7 +1476,7 @@ static int ehea_init_port_res(struct ehea_port *port, struct ehea_port_res *pr,
  
--static inline void
-+static inline int
- superio_enter(struct w83627hf_sio_data *sio)
- {
-+	if (!request_muxed_region(sio->sioaddr, 2, DRVNAME))
-+		return -EBUSY;
-+
- 	outb(0x87, sio->sioaddr);
- 	outb(0x87, sio->sioaddr);
-+
-+	return 0;
- }
+ 	memset(pr, 0, sizeof(struct ehea_port_res));
  
- static inline void
- superio_exit(struct w83627hf_sio_data *sio)
- {
- 	outb(0xAA, sio->sioaddr);
-+	release_region(sio->sioaddr, 2);
- }
- 
- #define W627_DEVID 0x52
-@@ -1275,7 +1281,7 @@ static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
- static int __init w83627hf_find(int sioaddr, unsigned short *addr,
- 				struct w83627hf_sio_data *sio_data)
- {
--	int err = -ENODEV;
-+	int err;
- 	u16 val;
- 
- 	static __initconst char *const names[] = {
-@@ -1287,7 +1293,11 @@ static int __init w83627hf_find(int sioaddr, unsigned short *addr,
- 	};
- 
- 	sio_data->sioaddr = sioaddr;
--	superio_enter(sio_data);
-+	err = superio_enter(sio_data);
-+	if (err)
-+		return err;
-+
-+	err = -ENODEV;
- 	val = force_id ? force_id : superio_inb(sio_data, DEVID);
- 	switch (val) {
- 	case W627_DEVID:
-@@ -1641,9 +1651,21 @@ static int w83627thf_read_gpio5(struct platform_device *pdev)
- 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
- 	int res = 0xff, sel;
- 
--	superio_enter(sio_data);
-+	if (superio_enter(sio_data)) {
-+		/*
-+		 * Some other driver reserved the address space for itself.
-+		 * We don't want to fail driver instantiation because of that,
-+		 * so display a warning and keep going.
-+		 */
-+		dev_warn(&pdev->dev,
-+			 "Can not read VID data: Failed to enable SuperIO access\n");
-+		return res;
-+	}
-+
- 	superio_select(sio_data, W83627HF_LD_GPIO5);
- 
-+	res = 0xff;
-+
- 	/* Make sure these GPIO pins are enabled */
- 	if (!(superio_inb(sio_data, W83627THF_GPIO5_EN) & (1<<3))) {
- 		dev_dbg(&pdev->dev, "GPIO5 disabled, no VID function\n");
-@@ -1674,7 +1696,17 @@ static int w83687thf_read_vid(struct platform_device *pdev)
- 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
- 	int res = 0xff;
- 
--	superio_enter(sio_data);
-+	if (superio_enter(sio_data)) {
-+		/*
-+		 * Some other driver reserved the address space for itself.
-+		 * We don't want to fail driver instantiation because of that,
-+		 * so display a warning and keep going.
-+		 */
-+		dev_warn(&pdev->dev,
-+			 "Can not read VID data: Failed to enable SuperIO access\n");
-+		return res;
-+	}
-+
- 	superio_select(sio_data, W83627HF_LD_HWM);
- 
- 	/* Make sure these GPIO pins are enabled */
+-	pr->tx_bytes = rx_bytes;
++	pr->tx_bytes = tx_bytes;
+ 	pr->tx_packets = tx_packets;
+ 	pr->rx_bytes = rx_bytes;
+ 	pr->rx_packets = rx_packets;
 -- 
 2.20.1
 
