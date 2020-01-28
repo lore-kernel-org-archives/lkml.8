@@ -2,268 +2,245 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27013C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5F6C35246
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC5592467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:54:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="FMGXr3/X"
+	by mail.kernel.org (Postfix) with ESMTP id 897862467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgA1Eyy (ORCPT
+        id S1726590AbgA1E6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 23:54:54 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44066 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgA1Eyy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 23:54:54 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q10so14434200wrm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 20:54:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6npXOuD/Bo9Epv5uCeYToBPL1sbhP+ZtGVUUhP+lSl4=;
-        b=FMGXr3/X5d5MGN25hhpmHA0I89Je2TlY/luDe2ZDEyCBgWWLoS+USu2m9mWi6jIcDC
-         CxpOLgkwdzLc5sLd4Ei2ZQYzU+OowUfHLM3nxn2E4q2VPaBV4W+5jBxyRZt1imd6O1QT
-         njuUqLVVgLpOZLoYRPwBAo9HFifDcmyFuKTPyVI2HbbBCmDmj5c+/uaYqOFtD2UkWwAJ
-         Z9DaVA4ml/+j43chulho0QtwQ+QhB+DMRWJFQ62sWaBvuh4MXmTTNseGTCuDkUW2G1lR
-         /o81IkQ0lVL4L5TWP8yECxzfZqKmdMqPM6d0jpMUofOLmyyd7YiG2Ix04ue30OZR5MRs
-         B/kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6npXOuD/Bo9Epv5uCeYToBPL1sbhP+ZtGVUUhP+lSl4=;
-        b=PWRDzc6sFsXaA2KbuHz1YJHFVNdQhXGhQh+9BeW+WQenr8LxrBTofslwu+vIJGqT+a
-         Lu6kQgDGmS/DbZk92UU3H4bPFEgpEnVeMVyhMRZP1HFQKGptKXI0Ie+HJs66iLtiN00E
-         B8wB2GiRIj0rMnfCo7YlA4qdXXHEFKZ1Dxl2z2dCJPFOUzDR2hXAG9nWKW1xVSkpkKYp
-         EPEbQ9+d7kM8cbS23cmQOS5i/42yt9A/AgpsuSKjQn3cktLFlBPj3OuOEVAEN+DfyIm0
-         iJqvcx3ppARdJOkNXEP6upRfPCXH8OPsuc5OpObsqadf1RPcfz2jmnBxDisu8q5VGvja
-         FrXg==
-X-Gm-Message-State: APjAAAUwo1fNKirt4LuDlfRozWbFwY31+1rf6CbMMGsKmDdOyZTtr5rq
-        FlPFj6AkFlIkCP+4JGM2wC1r+BpamPlgXP2MqghTxw==
-X-Google-Smtp-Source: APXvYqxO8qqIfHJxIrZsVj/r0pQPCXFKnUcnGiVAVQmGDRByQc1Hu/tzfYlYDbYF99jedC0aySwaqN7z1IVhDjGZGZE=
-X-Received: by 2002:a5d:538e:: with SMTP id d14mr26992846wrv.358.1580187290925;
- Mon, 27 Jan 2020 20:54:50 -0800 (PST)
-MIME-Version: 1.0
-References: <20200128022737.15371-1-atish.patra@wdc.com> <20200128022737.15371-9-atish.patra@wdc.com>
-In-Reply-To: <20200128022737.15371-9-atish.patra@wdc.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 28 Jan 2020 10:24:39 +0530
-Message-ID: <CAAhSdy1DtsPeKYrSDuqNUirDixypvrd42xQnr1bVExc8XE-Npw@mail.gmail.com>
-Subject: Re: [PATCH v7 08/10] RISC-V: Add SBI HSM extension
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Borislav Petkov <bp@suse.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
+        Mon, 27 Jan 2020 23:58:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:52082 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726205AbgA1E6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 23:58:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B96C31B;
+        Mon, 27 Jan 2020 20:58:03 -0800 (PST)
+Received: from [10.163.1.151] (unknown [10.163.1.151])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97BA23F68E;
+        Mon, 27 Jan 2020 20:57:49 -0800 (PST)
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Qian Cai <cai@lca.pw>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Mao Han <han_mao@c-sky.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Abner Chang <abner.chang@hpe.com>, Chester Lin <clin@suse.com>,
-        nickhu@andestech.com, Palmer Dabbelt <palmerdabbelt@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
+ <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
+ <214c0d53-eb34-9b0c-2e4e-1aa005146331@arm.com>
+ <016A776F-EFD9-4D2B-A3A9-788008617D95@lca.pw>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <012158b7-a40e-050f-cd1b-d6ce7faf042f@arm.com>
+Date:   Tue, 28 Jan 2020 10:27:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <016A776F-EFD9-4D2B-A3A9-788008617D95@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 7:58 AM Atish Patra <atish.patra@wdc.com> wrote:
->
-> SBI specification defines HSM extension that allows to start/stop a hart
-> by a supervisor anytime. The specification is available at
->
-> https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
->
-> Implement SBI HSM extension.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/include/asm/sbi.h | 22 ++++++++++++++++
->  arch/riscv/kernel/sbi.c      | 51 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 73 insertions(+)
->
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index d55d8090ab5c..bed6fa26ec84 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -26,6 +26,7 @@ enum sbi_ext_id {
->         SBI_EXT_TIME = 0x54494D45,
->         SBI_EXT_IPI = 0x735049,
->         SBI_EXT_RFENCE = 0x52464E43,
-> +       SBI_EXT_HSM = 0x48534D,
->  };
->
->  enum sbi_ext_base_fid {
-> @@ -56,6 +57,12 @@ enum sbi_ext_rfence_fid {
->         SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
->  };
->
-> +enum sbi_ext_hsm_fid {
-> +       SBI_EXT_HSM_HART_START = 0,
-> +       SBI_EXT_HSM_HART_STOP,
-> +       SBI_EXT_HSM_HART_STATUS,
-> +};
-> +
 
-I think we should also define the possible return values of
-SBI_EXT_HSM_HART_STATUS function.
 
->  #define SBI_SPEC_VERSION_DEFAULT       0x1
->  #define SBI_SPEC_VERSION_MAJOR_SHIFT   24
->  #define SBI_SPEC_VERSION_MAJOR_MASK    0x7f
-> @@ -70,6 +77,7 @@ enum sbi_ext_rfence_fid {
->  #define SBI_ERR_INVALID_ADDRESS -5
->
->  extern unsigned long sbi_spec_version;
-> +extern bool sbi_hsm_avail;
->  struct sbiret {
->         long error;
->         long value;
-> @@ -110,8 +118,18 @@ int sbi_remote_hfence_vvma_asid(const unsigned long *hart_mask,
->                                 unsigned long start,
->                                 unsigned long size,
->                                 unsigned long asid);
-> +int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
-> +                      unsigned long priv);
-> +int sbi_hsm_hart_stop(void);
-> +int sbi_hsm_hart_get_status(unsigned long hartid);
-> +
->  int sbi_probe_extension(int ext);
->
-> +static inline bool sbi_hsm_is_available(void)
-> +{
-> +       return sbi_hsm_avail;
-> +}
-> +
->  /* Check if current SBI specification version is 0.1 or not */
->  static inline int sbi_spec_is_0_1(void)
->  {
-> @@ -137,5 +155,9 @@ void sbi_clear_ipi(void);
->  void sbi_send_ipi(const unsigned long *hart_mask);
->  void sbi_remote_fence_i(const unsigned long *hart_mask);
->  void sbi_init(void);
-> +static inline bool sbi_hsm_is_available(void)
-> +{
-> +       return false;
-> +}
->  #endif /* CONFIG_RISCV_SBI */
->  #endif /* _ASM_RISCV_SBI_H */
-> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> index 3c34aba30f6f..9bdc9801784d 100644
-> --- a/arch/riscv/kernel/sbi.c
-> +++ b/arch/riscv/kernel/sbi.c
-> @@ -12,6 +12,8 @@
->
->  /* default SBI version is 0.1 */
->  unsigned long sbi_spec_version = SBI_SPEC_VERSION_DEFAULT;
-> +bool sbi_hsm_avail;
-> +
->  EXPORT_SYMBOL(sbi_spec_version);
->
->  static void (*__sbi_set_timer)(uint64_t stime);
-> @@ -496,6 +498,54 @@ static void sbi_power_off(void)
->         sbi_shutdown();
->  }
->
-> +int sbi_hsm_hart_stop(void)
-> +{
-> +       struct sbiret ret;
-> +
-> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
-> +
-> +       if (!ret.error)
-> +               return ret.value;
-> +       else
-> +               return sbi_err_map_linux_errno(ret.error);
-> +}
-> +EXPORT_SYMBOL(sbi_hsm_hart_stop);
-> +
-> +int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
-> +                      unsigned long priv)
-> +{
-> +       struct sbiret ret;
-> +
-> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
-> +                             hartid, saddr, priv, 0, 0, 0);
-> +       if (!ret.error)
-> +               return ret.value;
-> +       else
-> +               return sbi_err_map_linux_errno(ret.error);
-> +}
-> +EXPORT_SYMBOL(sbi_hsm_hart_start);
-> +
-> +int sbi_hsm_hart_get_status(unsigned long hartid)
-> +{
-> +       struct sbiret ret;
-> +
-> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
-> +                             hartid, 0, 0, 0, 0, 0);
-> +       if (!ret.error)
-> +               return ret.value;
-> +       else
-> +               return sbi_err_map_linux_errno(ret.error);
-> +}
-> +EXPORT_SYMBOL(sbi_hsm_hart_get_status);
-> +
-> +void __init sbi_hsm_ext_init(void)
-> +{
-> +       if (sbi_probe_extension(SBI_EXT_HSM) > 0) {
-> +               pr_info("SBI v0.2 HSM extension detected\n");
-> +               sbi_hsm_avail = true;
-> +       }
-> +}
-> +
+On 01/28/2020 09:03 AM, Qian Cai wrote:
+> 
+> 
+>> On Jan 27, 2020, at 10:06 PM, Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+>>
+>>
+>>
+>> On 01/28/2020 07:41 AM, Qian Cai wrote:
+>>>
+>>>
+>>>> On Jan 27, 2020, at 8:28 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
+>>>>
+>>>> This adds tests which will validate architecture page table helpers and
+>>>> other accessors in their compliance with expected generic MM semantics.
+>>>> This will help various architectures in validating changes to existing
+>>>> page table helpers or addition of new ones.
+>>>>
+>>>> This test covers basic page table entry transformations including but not
+>>>> limited to old, young, dirty, clean, write, write protect etc at various
+>>>> level along with populating intermediate entries with next page table page
+>>>> and validating them.
+>>>>
+>>>> Test page table pages are allocated from system memory with required size
+>>>> and alignments. The mapped pfns at page table levels are derived from a
+>>>> real pfn representing a valid kernel text symbol. This test gets called
+>>>> right after page_alloc_init_late().
+>>>>
+>>>> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
+>>>> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
+>>>> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
+>>>> arm64. Going forward, other architectures too can enable this after fixing
+>>>> build or runtime problems (if any) with their page table helpers.
+>>
+>> Hello Qian,
+>>
+>>>
+>>> What’s the value of this block of new code? It only supports x86 and arm64
+>>> which are supposed to be good now.
+>>
+>> We have been over the usefulness of this code many times before as the patch is
+>> already in it's V12. Currently it is enabled on arm64, x86 (except PAE), arc and
+>> ppc32. There are build time or runtime problems with other archs which prevent
+> 
+> I am not sure if I care too much about arc and ppc32 which are pretty much legacy
+> platforms.
 
-If we start adding all present and future extensions in
-arch/riscv/kernel/sbi.c then it will blow-up.
+Okay but FWIW the maintainers for all these enabled platforms cared for this test
+at the least and really helped in shaping the test to it's current state. Besides
+I am still failing to understand your point here about evaluating particular feature's
+usefulness based on it's support on relative and perceived importance of some platforms
+compared to others. Again the idea is to integrate all platforms eventually but we had
+discovered build and runtime issues which needs to be resolved at platform level first.
+Unless I am mistaken, debug feature like this which is putting down a framework while
+also benefiting some initial platforms to start with, will be a potential candidate for
+eventual inclusion in the mainline. Otherwise, please point to any other agreed upon
+community criteria for debug feature's mainline inclusion which I will try to adhere.
+I wonder if all other similar debug features from the past ever met 'the all inclusive
+at the beginning' criteria which you are trying to propose here. This test also adds a
+feature file, enlisting all supported archs as suggested by Ingo for the exact same
+reason. This is not the first time, a feature is listing out archs which are supported
+and archs which are not.
 
-IMHO, we should only keep legacy and replacement
-extension in arch/riscv/kernel/sbi.c. All other extensions
-will be separate based on how they are integrated.
+> 
+>> enablement of this test (for the moment) but then the goal is to integrate all
+>> of them going forward. The test not only validates platform's adherence to the
+>> expected semantics from generic MM but also helps in keeping it that way during
+>> code changes in future as well.
+> 
+> Another option maybe to get some decent arches on board first before merging this
+> thing, so it have more changes to catch regressions for developers who might run this. 
+> 
+>>
+>>> Did those tests ever find any regression or this is almost only useful for new
+>>
+>> The test has already found problems with s390 page table helpers.
+> 
+> Hmm, that is pretty weak where s390 is not even official supported with this version.
 
-For SBI HSM, all sbi_hsm_xyz() functions should be in
-arch/riscv/kernel/cpu_ops_sbi.c which will be only compiled
-when CONFIG_RISCV_SBI is enabled.
+And there were valid reasons why s390 could not be enabled just yet as explained by s390
+folks during our previous discussions. I just pointed out an example where this test was
+useful as you had asked previously. Not being official supported in this version does
+not take away the fact the it was indeed useful for that platform in discovering a bug.
 
-Maybe merge PATCH8 and PATCH9 ?
+> 
+>>
+>>> architectures which only happened once in a few years?
+>>
+>> Again, not only it validates what exist today but its also a tool to make
+>> sure that all platforms continue adhere to a common agreed upon semantics
+>> as reflected through the tests here.
+>>
+>>> The worry if not many people will use this config and code those that much in
+>>
+>> Debug features or tests in the kernel are used when required. These are never or
+>> should not be enabled by default. AFAICT this is true even for entire DEBUG_VM
+>> packaged tests. Do you have any particular data or precedence to substantiate
+>> the fact that this test will be used any less often than the other similar ones
+>> in the tree ? I can only speak for arm64 platform but the very idea for this
+>> test came from Catalin when we were trying to understand the semantics for THP
+>> helpers while enabling THP migration without split. Apart from going over the
+>> commit messages from the past, there were no other way to figure out how any
+>> particular page table helper is suppose to change given page table entry. This
+>> test tries to formalize those semantics.
+> 
+> I am thinking about how we made so many mistakes before by merging too many of
+> those debugging options that many of them have been broken for many releases
+> proving that nobody actually used them regularly. We don’t need to repeat the same
 
-Regards,
-Anup
+Again will ask for some data to substantiate these claims. Though I am not really
+sure but believe that there are integration test frameworks out there which regularly
+validates each of these code path on multiple platforms. One such automation found
+that V11 of the test was broken on X86 PAE platform which I fixed. Nonetheless, I can
+speak only for arm64 platform and we intend to use this test to validate arm64 exported
+page table helpers. Citing unsubstantiated past examples should not really block these
+enabled platforms (arm64 at the very least) from getting this debug feature which has
+already demonstrated it's usefulness during arm64 THP migration development and on s390
+platforms as well.
 
->  int __init sbi_init(void)
->  {
->         int ret;
-> @@ -532,5 +582,6 @@ int __init sbi_init(void)
->                 __sbi_rfence    = __sbi_rfence_v01;
->         }
->
-> +       sbi_hsm_ext_init();
+> mistake again. I am actually thinking about to remove things like  page_poisoning often
+> which is almost are never found any bug recently and only cause pains when interacting
+> with other new features that almost nobody will test them together to begin with.
+> We even have some SLUB debugging code sit there for almost 15 years that almost
+> nobody used it and maintainers refused to remove it.
 
-We don't need sbi_hsm_ext_init() because we can check
-and set CPU ops at boot-time in cpu_set_ops()
+Unlike those, the proposed test here is isolated as a stand alone test and stays clear
+off from any other code path. I have not been involved in or aware of the usefulness of
+existing MM debug features and hence will just leave them upto the judgment of the
+maintainers whether to keep or discard them.
 
->         return 0;
->  }
-> --
-> 2.24.0
->
+> 
+>>
+>>> the future because it is inefficient to find bugs, it will simply be rotten
+>> Could you be more specific here ? What parts of the test are inefficient ? I
+>> am happy to improve upon the test. Do let me know you if you have suggestions.
+>>
+>>> like a few other debugging options out there we have in the mainline that
+>> will be a pain to remove later on.
+>>>
+>>
+>> Even though I am not agreeing to your assessment about the usefulness of the
+>> test without any substantial data backing up the claims, the test case in
+>> itself is very much compartmentalized, staying clear from generic MM and
+>> debug_vm_pgtable() is only function executing the test which is getting
+>> called from kernel_init_freeable() path.
+> 
+> I am thinking exactly the other way around. You are proposing to merge this tests
+> without proving how useful it will be able to find regressions for future developers
+> to make sure it will actually get used.
 
-Regards,
-Anup
+As I had mentioned before, the test attempts to formalize page table helper semantics
+as expected from generic MM code paths and intend to catch deviations when enabled on
+a given platform. How else should we test semantics errors otherwise ? There are past
+examples of usefulness for this procedure on arm64 and on s390. I am wondering how
+else to prove the usefulness of a debug feature if these references are not enough.
+
+> 
