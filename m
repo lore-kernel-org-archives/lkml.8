@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A92CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 345FAC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4FA24686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D2624688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221359;
-	bh=OEcU7b+/F7+cumlbFBaYVrG3ZfIqMFdLfhcW1NhHUTA=;
+	s=default; t=1580221369;
+	bh=W7xtTQ/Seu3GcN/vKIk0ij30T6WGNN3v6s4L10ALXG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4I6SFv3V9eilszGSEWdWKR8lBLDB7tR+vkL+PR7tn8kGjV5ZZlDPCXPWK6VRjc/H
-	 63JOp+RcPP9po2dHGjvKWRsjWjbzbJpwmEJvbElzWazRtrtlX7TmqCSZOABy8k6SAq
-	 osldgaAiMTuai5Q9qaLIhLBmgNrDc27aiC+9Jm3M=
+	b=d6tKlndRwnu9QhyLQowgqXiesuBFWYga5gZKKOJ6qyZo89pIABbyzCh2QGt0otzzL
+	 YBIUNbB33I6YpEYJPfVGrVow3hT0AOgGhScPMgP+VtFOBhWk68wRTEjJbUwP8wkYEZ
+	 9caeGmuKXf5fIFDqQ+t29fVlgtbog9p5kBtRcmFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731650AbgA1OWi (ORCPT
+        id S1731712AbgA1OWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:22:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48404 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:22:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727549AbgA1OWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:22:33 -0500
+        id S1731667AbgA1OWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:22:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4BA524686;
-        Tue, 28 Jan 2020 14:22:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82CA124686;
+        Tue, 28 Jan 2020 14:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221353;
-        bh=OEcU7b+/F7+cumlbFBaYVrG3ZfIqMFdLfhcW1NhHUTA=;
+        s=default; t=1580221361;
+        bh=W7xtTQ/Seu3GcN/vKIk0ij30T6WGNN3v6s4L10ALXG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b9YPw17E7xuJj+8c2vSFZQEq6sd0YWeV+htH+2KobSbwQc+bcSFkXuTKb2mdbyMoW
-         kkl2Rau5D6j7jjZFACR0f3dlwXgoRLYnB3nmDYqyL68B67Om6/IMBfDtRc2nVFXkIr
-         0ryd50p1FooWkjxwNd3VjLjGZT9LzArRyXc6X9QU=
+        b=zaBjQ0TgjnS/DwB0gdZ+zKvJQunwsCZBsXlMCpA3tA87Z2l/6f6FgR88YLF1Yg6tr
+         6+DLHUjyGx4V+UQO7TL9gzvK+SfKcXJ07TMl+UYbpC0iISk2i9Z6VXpR+O9daoHQj9
+         9inJO09e8unmFeB87OQhKgU7NhJGRR7fzCyFofJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 154/271] drm/msm/mdp5: Fix mdp5_cfg_init error return
-Date:   Tue, 28 Jan 2020 15:05:03 +0100
-Message-Id: <20200128135904.029585964@linuxfoundation.org>
+Subject: [PATCH 4.9 147/271] serial: stm32: fix transmit_chars when tx is stopped
+Date:   Tue, 28 Jan 2020 15:04:56 +0100
+Message-Id: <20200128135903.499231268@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,37 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Erwan Le Ray <erwan.leray@st.com>
 
-[ Upstream commit fc19cbb785d7bbd1a1af26229b5240a3ab332744 ]
+[ Upstream commit b83b957c91f68e53f0dc596e129e8305761f2a32 ]
 
-If mdp5_cfg_init fails because of an unknown major version, a null pointer
-dereference occurs.  This is because the caller of init expects error
-pointers, but init returns NULL on error.  Fix this by returning the
-expected values on error.
+Disables the tx irq  when the transmission is ended and updates stop_tx
+conditions for code cleanup.
 
-Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Fixes: 48a6092fb41f ("serial: stm32-usart: Add STM32 USART Driver")
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/stm32-usart.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
-index 8b4e3004f4518..86b0448d2ce58 100644
---- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
-+++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
-@@ -542,7 +542,7 @@ fail:
- 	if (cfg_handler)
- 		mdp5_cfg_destroy(cfg_handler);
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index 033856287ca21..ea8b591dd46f4 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -293,13 +293,8 @@ static void stm32_transmit_chars(struct uart_port *port)
+ 		return;
+ 	}
  
--	return NULL;
-+	return ERR_PTR(ret);
+-	if (uart_tx_stopped(port)) {
+-		stm32_stop_tx(port);
+-		return;
+-	}
+-
+-	if (uart_circ_empty(xmit)) {
+-		stm32_stop_tx(port);
++	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
++		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
+ 		return;
+ 	}
+ 
+@@ -312,7 +307,7 @@ static void stm32_transmit_chars(struct uart_port *port)
+ 		uart_write_wakeup(port);
+ 
+ 	if (uart_circ_empty(xmit))
+-		stm32_stop_tx(port);
++		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
  }
  
- static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
+ static irqreturn_t stm32_interrupt(int irq, void *ptr)
 -- 
 2.20.1
 
