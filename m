@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C694FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B124AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9453024681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84DFF21739
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221201;
-	bh=XO0+NLDuMRiRfNYXOUuu8trLmiLI07OFXGYBE43V+fQ=;
+	s=default; t=1580221204;
+	bh=D8fBwoZBDMUsrKEpYFRmpjicuXupUwfS+5KO69103g0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MCwxeYmPLVQnF/tcnFpL3+YXyPahdiyNri29cMOVRLUQjNc4D85vsdvigzj2VdQXx
-	 3sSJ900gk100gg2XMQQexGBkpbEfCH2PNMJ7I2hmWJ7eMjvOA/kqkoTzd9Wr60Iuyy
-	 YDoFRlHp95iV9uDM/WUrc5t+ADb+VtoaO0XKeHZE=
+	b=g6mCmPx+pl4Pk1RyhJGLGS7Dk6MXDyA0Of2iXVpPSAVSwzTACanKUPO3F+tmuxA0R
+	 Vsx9T4ATE/Bv3bJML7etuguQiukhZrNzHgIHeap/ASJOVm6RKYIr22quB8UiFBnAl8
+	 oKN4uwXizMp17i66zWN5JopIKb9htbNogFiQLNVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbgA1OT7 (ORCPT
+        id S1730989AbgA1OUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:19:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44536 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:20:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730968AbgA1OT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:19:56 -0500
+        id S1730963AbgA1OTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:19:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 726CC21739;
-        Tue, 28 Jan 2020 14:19:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E93A92071E;
+        Tue, 28 Jan 2020 14:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221195;
-        bh=XO0+NLDuMRiRfNYXOUuu8trLmiLI07OFXGYBE43V+fQ=;
+        s=default; t=1580221193;
+        bh=D8fBwoZBDMUsrKEpYFRmpjicuXupUwfS+5KO69103g0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hty+pPiVep1qwpG+gSiSWchbhK/Q18GE8F3Bp/D3lMnZ1/5pGhQzVmVUpqKTbwarj
-         HpBrrivOl4sy2TQZPMk6ujdIwV717VZSXMM4hCt/v7F49WFFAtuiW+cgtsOogyZtqY
-         eJgyLZpnSzR5JsvN6AmCP8yC2zGXryqmA+G0ndGE=
+        b=dhJChARiIQGnQC+fHifg1TdszMILFnvdNvSRiuEtGrXET/GLGuJin5qYgK2dfi5hL
+         s2iLiWKWNc24P+U9SleQ+qxM1uReWhZBQ53FCFplVB9PZiibFk4I4ATOcNhJadVs9v
+         G9V+aVbZO3NuHhb0I70HwDNAnzvsisL0jMJWd/YE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 110/271] spi: tegra114: fix for unpacked mode transfers
-Date:   Tue, 28 Jan 2020 15:04:19 +0100
-Message-Id: <20200128135900.763553873@linuxfoundation.org>
+Subject: [PATCH 4.9 127/271] IB/mlx5: Add missing XRC options to QP optional params mask
+Date:   Tue, 28 Jan 2020 15:04:36 +0100
+Message-Id: <20200128135902.050977654@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,162 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit 1a89ac5b91895127f7c586ec5075c3753ca25501 ]
+[ Upstream commit 8f4426aa19fcdb9326ac44154a117b1a3a5ae126 ]
 
-Fixes: computation of actual bytes to fill/receive in/from FIFO in unpacked
-mode when transfer length is not a multiple of requested bits per word.
+The QP transition optional parameters for the various transition for XRC
+QPs are identical to those for RC QPs.
 
-unpacked mode transfers fails when the transfer includes partial bytes in
-the last word.
+Many of the XRC QP transition optional parameter bits are missing from the
+QP optional mask table.  These omissions caused failures when doing XRC QP
+state transitions.
 
-Total words to be written/read to/from FIFO is computed based on transfer
-length and bits per word. Unpacked mode includes 0 padding bytes for partial
-words to align with bits per word and these extra bytes are also accounted
-for calculating bytes left to transfer in the current driver.
+For example, when trying to change the response timer of an XRC receive QP
+via the RTS2RTS transition, the new timer value was ignored because
+MLX5_QP_OPTPAR_RNR_TIMEOUT bit was missing from the optional params mask
+for XRC qps for the RTS2RTS transition.
 
-This causes extra bytes access of tx/rx buffers along with buffer index
-position crossing actual length where remain_len becomes negative and due to
-unsigned type, negative value is a 32 bit representation of signed value
-and transferred bytes never meets the actual transfer length resulting in
-transfer timeout and a hang.
+Fix this by adding the missing XRC optional parameters for all QP
+transitions to the opt_mask table.
 
-This patch fixes this with proper computation of the actual bytes to fill in
-FIFO during transmit and the actual bytes to read from FIFO during receive
-ignoring 0 padded bytes.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Fixes: a4774e9095de ("IB/mlx5: Fix opt param mask according to firmware spec")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 43 +++++++++++++++++++++++++++++++-------
- 1 file changed, 36 insertions(+), 7 deletions(-)
+ drivers/infiniband/hw/mlx5/qp.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index d98c502a9c478..e37712bed0b2d 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -307,10 +307,16 @@ static unsigned tegra_spi_fill_tx_fifo_from_client_txbuf(
- 				x |= (u32)(*tx_buf++) << (i * 8);
- 			tegra_spi_writel(tspi, x, SPI_TX_FIFO);
- 		}
-+
-+		tspi->cur_tx_pos += written_words * tspi->bytes_per_word;
- 	} else {
-+		unsigned int write_bytes;
- 		max_n_32bit = min(tspi->curr_dma_words,  tx_empty_count);
- 		written_words = max_n_32bit;
- 		nbytes = written_words * tspi->bytes_per_word;
-+		if (nbytes > t->len - tspi->cur_pos)
-+			nbytes = t->len - tspi->cur_pos;
-+		write_bytes = nbytes;
- 		for (count = 0; count < max_n_32bit; count++) {
- 			u32 x = 0;
- 
-@@ -319,8 +325,10 @@ static unsigned tegra_spi_fill_tx_fifo_from_client_txbuf(
- 				x |= (u32)(*tx_buf++) << (i * 8);
- 			tegra_spi_writel(tspi, x, SPI_TX_FIFO);
- 		}
-+
-+		tspi->cur_tx_pos += write_bytes;
- 	}
--	tspi->cur_tx_pos += written_words * tspi->bytes_per_word;
-+
- 	return written_words;
- }
- 
-@@ -344,20 +352,27 @@ static unsigned int tegra_spi_read_rx_fifo_to_client_rxbuf(
- 			for (i = 0; len && (i < 4); i++, len--)
- 				*rx_buf++ = (x >> i*8) & 0xFF;
- 		}
--		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 		read_words += tspi->curr_dma_words;
-+		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 	} else {
- 		u32 rx_mask = ((u32)1 << t->bits_per_word) - 1;
-+		u8 bytes_per_word = tspi->bytes_per_word;
-+		unsigned int read_bytes;
- 
-+		len = rx_full_count * bytes_per_word;
-+		if (len > t->len - tspi->cur_pos)
-+			len = t->len - tspi->cur_pos;
-+		read_bytes = len;
- 		for (count = 0; count < rx_full_count; count++) {
- 			u32 x = tegra_spi_readl(tspi, SPI_RX_FIFO) & rx_mask;
- 
--			for (i = 0; (i < tspi->bytes_per_word); i++)
-+			for (i = 0; len && (i < bytes_per_word); i++, len--)
- 				*rx_buf++ = (x >> (i*8)) & 0xFF;
- 		}
--		tspi->cur_rx_pos += rx_full_count * tspi->bytes_per_word;
- 		read_words += rx_full_count;
-+		tspi->cur_rx_pos += read_bytes;
- 	}
-+
- 	return read_words;
- }
- 
-@@ -372,12 +387,17 @@ static void tegra_spi_copy_client_txbuf_to_spi_txbuf(
- 		unsigned len = tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 		memcpy(tspi->tx_dma_buf, t->tx_buf + tspi->cur_pos, len);
-+		tspi->cur_tx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 	} else {
- 		unsigned int i;
- 		unsigned int count;
- 		u8 *tx_buf = (u8 *)t->tx_buf + tspi->cur_tx_pos;
- 		unsigned consume = tspi->curr_dma_words * tspi->bytes_per_word;
-+		unsigned int write_bytes;
- 
-+		if (consume > t->len - tspi->cur_pos)
-+			consume = t->len - tspi->cur_pos;
-+		write_bytes = consume;
- 		for (count = 0; count < tspi->curr_dma_words; count++) {
- 			u32 x = 0;
- 
-@@ -386,8 +406,9 @@ static void tegra_spi_copy_client_txbuf_to_spi_txbuf(
- 				x |= (u32)(*tx_buf++) << (i * 8);
- 			tspi->tx_dma_buf[count] = x;
- 		}
-+
-+		tspi->cur_tx_pos += write_bytes;
- 	}
--	tspi->cur_tx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 	/* Make the dma buffer to read by dma */
- 	dma_sync_single_for_device(tspi->dev, tspi->tx_dma_phys,
-@@ -405,20 +426,28 @@ static void tegra_spi_copy_spi_rxbuf_to_client_rxbuf(
- 		unsigned len = tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 		memcpy(t->rx_buf + tspi->cur_rx_pos, tspi->rx_dma_buf, len);
-+		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 	} else {
- 		unsigned int i;
- 		unsigned int count;
- 		unsigned char *rx_buf = t->rx_buf + tspi->cur_rx_pos;
- 		u32 rx_mask = ((u32)1 << t->bits_per_word) - 1;
-+		unsigned consume = tspi->curr_dma_words * tspi->bytes_per_word;
-+		unsigned int read_bytes;
- 
-+		if (consume > t->len - tspi->cur_pos)
-+			consume = t->len - tspi->cur_pos;
-+		read_bytes = consume;
- 		for (count = 0; count < tspi->curr_dma_words; count++) {
- 			u32 x = tspi->rx_dma_buf[count] & rx_mask;
- 
--			for (i = 0; (i < tspi->bytes_per_word); i++)
-+			for (i = 0; consume && (i < tspi->bytes_per_word);
-+							i++, consume--)
- 				*rx_buf++ = (x >> (i*8)) & 0xFF;
- 		}
-+
-+		tspi->cur_rx_pos += read_bytes;
- 	}
--	tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 	/* Make the dma buffer to read by dma */
- 	dma_sync_single_for_device(tspi->dev, tspi->rx_dma_phys,
+diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
+index a7bc89f5dae7e..4d906a7904818 100644
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -2324,6 +2324,11 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_PKEY_INDEX	|
+ 					  MLX5_QP_OPTPAR_Q_KEY		|
+ 					  MLX5_QP_OPTPAR_PRI_PORT,
++			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
++					  MLX5_QP_OPTPAR_RAE		|
++					  MLX5_QP_OPTPAR_RWE		|
++					  MLX5_QP_OPTPAR_PKEY_INDEX	|
++					  MLX5_QP_OPTPAR_PRI_PORT,
+ 		},
+ 		[MLX5_QP_STATE_RTR] = {
+ 			[MLX5_QP_ST_RC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH  |
+@@ -2357,6 +2362,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 					  MLX5_QP_OPTPAR_RWE		|
+ 					  MLX5_QP_OPTPAR_PM_STATE,
+ 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY,
++			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH	|
++					  MLX5_QP_OPTPAR_RRE		|
++					  MLX5_QP_OPTPAR_RAE		|
++					  MLX5_QP_OPTPAR_RWE		|
++					  MLX5_QP_OPTPAR_PM_STATE	|
++					  MLX5_QP_OPTPAR_RNR_TIMEOUT,
+ 		},
+ 	},
+ 	[MLX5_QP_STATE_RTS] = {
+@@ -2373,6 +2384,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY		|
+ 					  MLX5_QP_OPTPAR_SRQN		|
+ 					  MLX5_QP_OPTPAR_CQN_RCV,
++			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
++					  MLX5_QP_OPTPAR_RAE		|
++					  MLX5_QP_OPTPAR_RWE		|
++					  MLX5_QP_OPTPAR_RNR_TIMEOUT	|
++					  MLX5_QP_OPTPAR_PM_STATE	|
++					  MLX5_QP_OPTPAR_ALT_ADDR_PATH,
+ 		},
+ 	},
+ 	[MLX5_QP_STATE_SQER] = {
+@@ -2384,6 +2401,10 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 					   MLX5_QP_OPTPAR_RWE		|
+ 					   MLX5_QP_OPTPAR_RAE		|
+ 					   MLX5_QP_OPTPAR_RRE,
++			[MLX5_QP_ST_XRC]  = MLX5_QP_OPTPAR_RNR_TIMEOUT	|
++					   MLX5_QP_OPTPAR_RWE		|
++					   MLX5_QP_OPTPAR_RAE		|
++					   MLX5_QP_OPTPAR_RRE,
+ 		},
+ 	},
+ };
 -- 
 2.20.1
 
