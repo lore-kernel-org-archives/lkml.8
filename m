@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C944BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99495C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A90024688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8D224693
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220782;
-	bh=CfwPkFbg8bR94YgwudsN0HyJQWmcsxgi8/jUu+7gDeM=;
+	s=default; t=1580220786;
+	bh=MDVhzwSy+CT00CFyl7zN6IJUO7eVyLnaK9TRLK27Tzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YreEXcJyRvCPYA/hm9sw//xZZUydaRLQtoAbsGur0Q64eiWYnKI2xfKNamYCcxKcv
-	 Q0E9mzhkicyGL3ajM7oMLl9eyXI1kkJYE+j2XMHGbLORUKmG8FP0M62cxHMXv3dpXc
-	 Wqit+Vsm3Rca1MDQ3ZkmPzDSUVQa91iDDes/tsY8=
+	b=J59YbAXv/u2dLGLB0cLLTecRG36Gv9Y/eu9UvBHlYXfmYD6V+54Yk/a6fSSuTUJ7f
+	 PSxW9xl8rrFWYih7mr5LMFqX/yibJRXxP84ex0kfYC4678c6WfJaayPjIacUUX+bmF
+	 zP2agxMH449CsWmuZmH5G74PKf/N6z6Ra8vJEZ/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgA1ONC (ORCPT
+        id S1729617AbgA1ONF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:13:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34362 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:13:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728763AbgA1OMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:12:55 -0500
+        id S1729330AbgA1OM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:12:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 771FC24690;
-        Tue, 28 Jan 2020 14:12:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C4FA2468D;
+        Tue, 28 Jan 2020 14:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220773;
-        bh=CfwPkFbg8bR94YgwudsN0HyJQWmcsxgi8/jUu+7gDeM=;
+        s=default; t=1580220778;
+        bh=MDVhzwSy+CT00CFyl7zN6IJUO7eVyLnaK9TRLK27Tzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WR5sC8FHg/607tWrkk23UamgTxpWaoIo61KDr5rMsjhMFRNtcoJkMTx9oYJquqr6Y
-         2HDvkKcsGJufXBxYrBm+RbOm0inD1stRFFoYeC00C3GONjWV9aGXQeONAwC2K00Woh
-         icpyx8tVdjStzIHbaZujHkpWjC5iNAES4S7+81tI=
+        b=nRkTPFf/dod5YYx2HwMOv8m9ffaEDhubCQvGJ4sdzyOia26wSvAuMaNWpZaDpSTtF
+         BTP3DRW/EmapFNus5PITkioeDJ/nPilt+4EV1S/acTnWzjCR1BKAW9jrY6jdnR6zNe
+         gPMcQ32a9LiMaa2+ual3gJLL5OuTHTszcHklWWN0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 114/183] mic: avoid statically declaring a struct device.
-Date:   Tue, 28 Jan 2020 15:05:33 +0100
-Message-Id: <20200128135841.313756995@linuxfoundation.org>
+Subject: [PATCH 4.4 142/183] net: ethernet: stmmac: Fix signedness bug in ipq806x_gmac_of_parse()
+Date:   Tue, 28 Jan 2020 15:06:01 +0100
+Message-Id: <20200128135843.948461441@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -59,116 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit bc83f79bd2119230888fb8574639d5a51b38f903 ]
+[ Upstream commit 231042181dc9d6122c6faba64e99ccb25f13cc6c ]
 
-Generally, declaring a platform device as a static variable is
-a bad idea and can cause all kinds of problems, in particular
-with the DMA configuration and lifetime rules.
+The "gmac->phy_mode" variable is an enum and in this context GCC will
+treat it as an unsigned int so the error handling will never be
+triggered.
 
-A specific problem we hit here is from a bug in clang that warns
-about certain (otherwise valid) macros when used in static variables:
-
-drivers/misc/mic/card/mic_x100.c:285:27: warning: shift count >= width of type [-Wshift-count-overflow]
-static u64 mic_dma_mask = DMA_BIT_MASK(64);
-                          ^~~~~~~~~~~~~~~~
-include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
- #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-                                                     ^ ~~~
-
-A slightly better way here is to create the platform device dynamically
-and set the dma mask in the probe function.
-This avoids the warning and some other problems, but is still not ideal
-because the device creation should really be separated from the driver,
-and the fact that the device has no parent means we have to force
-the dma mask rather than having it set up from the bus that the device
-is actually on.
-
-Fixes: dd8d8d44df64 ("misc: mic: MIC card driver specific changes to enable SCIF")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190712092426.872625-1-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: b1c17215d718 ("stmmac: add ipq806x glue layer")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/mic/card/mic_x100.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/mic/card/mic_x100.c b/drivers/misc/mic/card/mic_x100.c
-index b2958ce2368c7..cd778e2b4f3ea 100644
---- a/drivers/misc/mic/card/mic_x100.c
-+++ b/drivers/misc/mic/card/mic_x100.c
-@@ -249,6 +249,9 @@ static int __init mic_probe(struct platform_device *pdev)
- 	mdrv->dev = &pdev->dev;
- 	snprintf(mdrv->name, sizeof(mic_driver_name), mic_driver_name);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+index 82de68b1a4527..1fc356c177509 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+@@ -203,7 +203,7 @@ static void *ipq806x_gmac_of_parse(struct ipq806x_gmac *gmac)
+ 	struct device *dev = &gmac->pdev->dev;
  
-+	/* FIXME: use dma_set_mask_and_coherent() and check result */
-+	dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+
- 	mdev->mmio.pa = MIC_X100_MMIO_BASE;
- 	mdev->mmio.len = MIC_X100_MMIO_LEN;
- 	mdev->mmio.va = devm_ioremap(&pdev->dev, MIC_X100_MMIO_BASE,
-@@ -294,18 +297,6 @@ static void mic_platform_shutdown(struct platform_device *pdev)
- 	mic_remove(pdev);
- }
- 
--static u64 mic_dma_mask = DMA_BIT_MASK(64);
--
--static struct platform_device mic_platform_dev = {
--	.name = mic_driver_name,
--	.id   = 0,
--	.num_resources = 0,
--	.dev = {
--		.dma_mask = &mic_dma_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
--	},
--};
--
- static struct platform_driver __refdata mic_platform_driver = {
- 	.probe = mic_probe,
- 	.remove = mic_remove,
-@@ -315,6 +306,8 @@ static struct platform_driver __refdata mic_platform_driver = {
- 	},
- };
- 
-+static struct platform_device *mic_platform_dev;
-+
- static int __init mic_init(void)
- {
- 	int ret;
-@@ -327,9 +320,12 @@ static int __init mic_init(void)
+ 	gmac->phy_mode = of_get_phy_mode(dev->of_node);
+-	if (gmac->phy_mode < 0) {
++	if ((int)gmac->phy_mode < 0) {
+ 		dev_err(dev, "missing phy mode property\n");
+ 		return ERR_PTR(-EINVAL);
  	}
- 
- 	mic_init_card_debugfs();
--	ret = platform_device_register(&mic_platform_dev);
-+
-+	mic_platform_dev = platform_device_register_simple(mic_driver_name,
-+							   0, NULL, 0);
-+	ret = PTR_ERR_OR_ZERO(mic_platform_dev);
- 	if (ret) {
--		pr_err("platform_device_register ret %d\n", ret);
-+		pr_err("platform_device_register_full ret %d\n", ret);
- 		goto cleanup_debugfs;
- 	}
- 	ret = platform_driver_register(&mic_platform_driver);
-@@ -340,7 +336,7 @@ static int __init mic_init(void)
- 	return ret;
- 
- device_unregister:
--	platform_device_unregister(&mic_platform_dev);
-+	platform_device_unregister(mic_platform_dev);
- cleanup_debugfs:
- 	mic_exit_card_debugfs();
- done:
-@@ -350,7 +346,7 @@ done:
- static void __exit mic_exit(void)
- {
- 	platform_driver_unregister(&mic_platform_driver);
--	platform_device_unregister(&mic_platform_dev);
-+	platform_device_unregister(mic_platform_dev);
- 	mic_exit_card_debugfs();
- }
- 
 -- 
 2.20.1
 
