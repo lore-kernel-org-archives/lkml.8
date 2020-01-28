@@ -2,130 +2,111 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DE1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF02C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBEC20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580217664;
-	bh=6yMPyzyzgayEIhWQisn5URP1nsUaexkHHx5nPCWZHxE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CLTPZQqJ6RuoVsR1gFeqeyb8RiCF6XIR8J73olXfwasyMSp38vKtuInCBrmJfY1uj
-	 jWM4DTS3M8KanfoQUDcDJ1ari9XZkZkuxF1TClyM6Ejr112Xm4N3UsXVW3ogSz2Ka5
-	 biPlWFCp3zWkoUUyNrHUCEa215DQjVzwe+6IYuXY=
+	by mail.kernel.org (Postfix) with ESMTP id 1534B24688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:23:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewsejym0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgA1NVE (ORCPT
+        id S1726199AbgA1NXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:21:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgA1NVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:21:03 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 722502467B;
-        Tue, 28 Jan 2020 13:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580217662;
-        bh=6yMPyzyzgayEIhWQisn5URP1nsUaexkHHx5nPCWZHxE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=m/qnAjAWjKa7ujJV4+9bpIdnM8mieHm/wpjVEvkvRm9L3PYJnE5/FmP+1SvRPtqBR
-         Tr6tDlVON4RnWc0Q/zVwJ2TH8GGOHQ0Z/AQT2Zyb7H/gS7g2HcGKX1gUmwAPkHvQTu
-         b8olEF31GK411fPrGLjVPuPn58DV+ShN/oweXQ50=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1iwQnc-001ofc-Hp; Tue, 28 Jan 2020 13:21:00 +0000
+        Tue, 28 Jan 2020 08:23:00 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:43543 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgA1NXA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:23:00 -0500
+Received: by mail-yw1-f68.google.com with SMTP id v126so6445129ywc.10;
+        Tue, 28 Jan 2020 05:22:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XkZYELoimGvZaAW5RBxWL7cGk2TFSREoOSfJlXIP9Vg=;
+        b=ewsejym0mCr1Ke8POn4UD4mjF5wH29knENLueIwwvPdcbt+amzwmgCS3Zi0IDJaq0B
+         yZfZF1/mznPPZOAxeL5C3Uw3ifQwUQh/pthk52IqTIUBdsuAVceDf9qzgBhuL6S3jtFh
+         cT/FmyCtooXdfCOtYUxgjm5KapidE9WeFVxsuhu2VvnkFQXUChV3F1lRtAnscstgTXhS
+         6J502JETrdA7ub9FfFGunvuYx7rSAs9MP/g/G1X0ofFynmPEdLp1TbKP+R0fMxm0lgI2
+         kc/7g5KrbU3aT/6i1/5Po7a4Jl6rOEgnWaP85W4hbywy8YHT9tZPMBGS7dRvkk0x6Zlo
+         Rhcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XkZYELoimGvZaAW5RBxWL7cGk2TFSREoOSfJlXIP9Vg=;
+        b=NxVH6rdW1gjVzYONtdJQB47mP+nJQKrgwfXVMjNkYUo3LAhI2LTGQL1l1WlLR3kCMq
+         Y0bJJNwkNzaZDpfNdHg8x3TgxVpwIjv1zZL1aRVJ//sOoi1zETUt/L3jNq0uvmObr0ay
+         wEmwv2AaCzuCp52+sFn6Ls5iW8wyqGvTy7hSSg7UCndkxuaLqEdr4t6nLXaUNKZEHRMM
+         fSOFdsRTTTsJDzgRjsLqAtm8rqCQUNozY31wRJBvyVSZxE7WEZViFHBKvWSifTUp8Zey
+         ggte5YbV5DNvPoP8UaOE8ZUvaL+lgIlX7rrb/S69LO3ikiNPsRX7GHtUhaVaAqLCPsgS
+         LRsg==
+X-Gm-Message-State: APjAAAVU6WAJ77N2EIVnrIQAyl4HIMkHsQuubi1QfpqtRRWgSRUPrpD5
+        UsbMUrQ4pd/2noPmc0Qr4oAhQKhr
+X-Google-Smtp-Source: APXvYqwUR5d09oL3MsIocx1dJ/ALYSnzLGEzt90SxTJDw3vrlpABD1JdKOJR+9gyt9+3SAPBZ4Kh4Q==
+X-Received: by 2002:a81:1889:: with SMTP id 131mr14998832ywy.277.1580217778469;
+        Tue, 28 Jan 2020 05:22:58 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9sm8364217ywh.55.2020.01.28.05.22.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 05:22:57 -0800 (PST)
+Subject: Re: vcnl3020 hwmon/proximity driver
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cb21d1285e04a8a7a3817398629431f69aeebf2f.camel@yadro.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <0e2f88e3-b7d3-9dd2-50ce-011be09d53c9@roeck-us.net>
+Date:   Tue, 28 Jan 2020 05:22:55 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <cb21d1285e04a8a7a3817398629431f69aeebf2f.camel@yadro.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jan 2020 13:21:00 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, wesley@sifive.com,
-        atish.patra@wdc.com, linux-gpio@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sachin.ghadi@sifive.com
-Subject: Re: [PATCH] gpio/sifive: fix static checker warning
-In-Reply-To: <1580189061-14091-1-git-send-email-yash.shah@sifive.com>
-References: <1580189061-14091-1-git-send-email-yash.shah@sifive.com>
-Message-ID: <ecb0e9404a3f6256a7ba1fe48b5a1471@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, palmer@dabbelt.com, paul.walmsley@sifive.com, wesley@sifive.com, atish.patra@wdc.com, linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-28 05:24, Yash Shah wrote:
-> Typcasting "irq_state" leads to the below static checker warning:
-> The fix is to declare "irq_state" as unsigned long instead of u32.
+On 1/28/20 3:31 AM, Ivan Mikhaylov wrote:
+> Hello, I want to make driver for vcnl3020 but not sure where should I put it.
+> It's similar to vcnl40xx series which is already in iio/light/vcnl4000.c
+> but it perfectly fits with hwmon intrusion detection concept
+> (intrusion[0-*]_alarm), so I'm a little bit confused.
 > 
-> 	drivers/gpio/gpio-sifive.c:97 sifive_gpio_irq_enable()
-> 	warn: passing casted pointer '&chip->irq_state' to
-> 	'assign_bit()' 32 vs 64.
+> vcnl3020 - proximity sensor which mostly using for intrusion detection
+> vcnl4020 - light and proximity sensor
 > 
-> Fixes: 96868dce644d ("gpio/sifive: Add GPIO driver for SiFive SoCs")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  drivers/gpio/gpio-sifive.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> Doc's links:
+> https://www.vishay.com/docs/84150/vcnl3020.pdf
+> https://www.vishay.com/docs/83476/vcnl4020.pdf
 > 
-> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
-> index 147a1bd..c54dd08 100644
-> --- a/drivers/gpio/gpio-sifive.c
-> +++ b/drivers/gpio/gpio-sifive.c
-> @@ -35,7 +35,7 @@ struct sifive_gpio {
->  	void __iomem		*base;
->  	struct gpio_chip	gc;
->  	struct regmap		*regs;
-> -	u32			irq_state;
-> +	unsigned long		irq_state;
->  	unsigned int		trigger[SIFIVE_GPIO_MAX];
->  	unsigned int		irq_parent[SIFIVE_GPIO_MAX];
->  };
-> @@ -94,7 +94,7 @@ static void sifive_gpio_irq_enable(struct irq_data 
-> *d)
->  	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+> That's what I think about possible ways:
 > 
->  	/* Enable interrupts */
-> -	assign_bit(offset, (unsigned long *)&chip->irq_state, 1);
-> +	assign_bit(offset, &chip->irq_state, 1);
->  	sifive_gpio_set_ie(chip, offset);
->  }
+> 1. just iio/proximity/vcnl3020.c
+> 2. extend functionality inside vcnl4000.c with ifdefs and dts stuff and maybe
+>     rename it with generalization inside
+> 3. hwmon driver for intrusion detection inside drivers/hwmon
+> 4. both iio/proximity/vcnl3020.c and hwmon/vcnl3020.c
+>     Example: hwmon/wm8350-hwmon.c + mfd/wm8350-core.c
+>     So, just make proximity driver, do the depend in Kconfig for hwmon driver
+>     on proximity driver and use proximity driver calls if would be needed.
 > 
-> @@ -104,7 +104,7 @@ static void sifive_gpio_irq_disable(struct irq_data 
-> *d)
->  	struct sifive_gpio *chip = gpiochip_get_data(gc);
->  	int offset = irqd_to_hwirq(d) % SIFIVE_GPIO_MAX;
-> 
-> -	assign_bit(offset, (unsigned long *)&chip->irq_state, 0);
-> +	assign_bit(offset, &chip->irq_state, 0);
->  	sifive_gpio_set_ie(chip, offset);
->  	irq_chip_disable_parent(d);
->  }
 
-Yup, nice one. Should have spotted it.
+"intrusion" in the context of hardware monitoring is for chassis intrusion,
+not for intrusion into an area. This driver should reside in iio.
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-
-Linus, do you want me to queue this via the irqchip tree (given that
-it is where the original bug came from)? Or would you rather take it?
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks,
+Guenter
