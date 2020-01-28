@@ -2,187 +2,124 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD54C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FE2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E60214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D55F214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:54:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VzBbyfrX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V3FY0oe6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgA1Tx1 (ORCPT
+        id S1726487AbgA1TyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 14:53:27 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45812 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgA1Tx0 (ORCPT
+        Tue, 28 Jan 2020 14:54:01 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46383 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbgA1TyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 14:53:26 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b9so7551260pgk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:53:25 -0800 (PST)
+        Tue, 28 Jan 2020 14:54:00 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y8so5509419pll.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:54:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fd0Bf5ciOLDTzu4NvqY5lz18CA8ytAWcDkClCt4wOyA=;
-        b=VzBbyfrXVyTu7+qADXfLaD3EjrI4fRju5zzq6rggViLj1t/lQA5k01gHSHLjHTTFQD
-         1W4boLRmulXdcHOS3sn7t2I4ZwVPsNWq2uq9VvKzMNc/jboiF6Mml59qVjX5mB5mZQaL
-         ZOuCxQKhPWuI9boE0o/Y/80zNA7ioPQIGtPa4=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V/f5zRc++UUEl2oF7a/v6c3iW8+A1FaOUHgeSr1YnVs=;
+        b=V3FY0oe6cawkXOzECXYXusqM1m9RESvFiJ318Zd1jyxpfbejY+CSUTAG0yDVae+gh7
+         pYc3vMUzJ+h98Raq2Mf3MaJlkPS3Tq1kTEaVxRYxNtvNYvMIFeOQhAHA2IdylHb12t4O
+         /Xyz1C6esVXDMnLz/jxMeZ051W5J+xMFr/TVseT7PIJ1Ykuj8JtuXkbEyg471Cv3xiyo
+         IBdrZrDnfkkfbBfGnUduk8UZwMsrIx5XW2N13A4UEIBDsoED3fGtcpdZwubSJZPxsIvU
+         K2iZbZPxbx7ZMoe/+aDnxn5RQhf9IVAHuYIr3D6N8L7T+IJ1VEFDze2+++I3nOi8MZ31
+         WG2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fd0Bf5ciOLDTzu4NvqY5lz18CA8ytAWcDkClCt4wOyA=;
-        b=k0dE4SNT5EJ96C4vh+q5a541Dm8ucS8VLQoKad0PJdw2cOua9xQFUbnIA6zAAO2f7f
-         +nUbx6R6OQz9j5mKgemT1Hk4g7IC/03mMQ6Gootcw8L5Ks51tQbiRabcTsgXpq54Zf30
-         fl26iMoIHgAiUz/M53tL+3KB1olhq8GJ7WOD/RuUiUnT95AYFk80f5pSegIt+khtkkCa
-         nfvcB8v8sdHl1RQivPaXiQjjYBuJLDuID1MGZBwRad6xpVQzDaBBcOitlJY2/FAmY2x4
-         /4idGuGQ1UVLISgW2sYxE59GO0N0nU8kt2ozadcyBRYLrLmPvqkWXENNh4xqDXuQvqdB
-         89AA==
-X-Gm-Message-State: APjAAAX7gRFodvkcy0zB1ZaHlf3TG0zkF8AHM4Zvl9mjbpr5lS8+73Nr
-        YQFZeigmvxJLRJBWVmrhhAeY2Q==
-X-Google-Smtp-Source: APXvYqxnNBwdER95BEHw3GteU6AfO0/0iBE9siRHXhDTs3M6ALIsjR66bbcQH9s8Amw+OkFTtECJBw==
-X-Received: by 2002:a65:484d:: with SMTP id i13mr27036413pgs.32.1580241205473;
-        Tue, 28 Jan 2020 11:53:25 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w3sm20442356pgj.48.2020.01.28.11.53.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 11:53:24 -0800 (PST)
-Date:   Tue, 28 Jan 2020 11:53:23 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [v1] arm64: dts: sc7180: add dsi controller and phy entries for
- idp dts
-Message-ID: <20200128195323.GC46072@google.com>
-References: <1580218617-30293-1-git-send-email-harigovi@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V/f5zRc++UUEl2oF7a/v6c3iW8+A1FaOUHgeSr1YnVs=;
+        b=krVtMWdgxxHzgMFrBvzf3TENsw80wCNcs/TPmBn3fP4VGhklDXDTDPa2bZnh7aJmz3
+         KsB4UqRXmLyuRzFh/rEV9bDr52YZIwnGod44FRKzlT7yHPV7i1NeOwH17j3qaHZKiBVd
+         8NB2oVBqIvBV6K0JDF/t08ZRiG5Rb/G/CmpAR1S194NqM6N9Es1B1A/DxGY9fSsTkLDk
+         gAJPWUvVSoSDIxtJEIe/j6yHRNx/BCdHwR1+qN5S3/fILHGtzXvquAbBpXqqh0GPHyxq
+         HuqD6V5gOPKEga6itu/+mHbAQpGTGHtknBaVWnp12daCWY/zrAWtXYc6dsTcJLixzAbG
+         CeeA==
+X-Gm-Message-State: APjAAAXaxru0iOMmYgvsa8i5USlOwsP9BxzKkyI/b3CPx64qV1QTpxKC
+        LktAyxj+xONvtZX+E3/fPpDXHAOtqMfDzXlIDQUPow==
+X-Google-Smtp-Source: APXvYqwsSX23sWF/7Cv3Xx+gB6ffHVSnTl6Sr/scnY3zT8fQnBaaunzuRNN1mXGoW9KHCLqS7PSV7ksn+8m5qxFFXXI=
+X-Received: by 2002:a17:90a:858a:: with SMTP id m10mr6625852pjn.117.1580241239520;
+ Tue, 28 Jan 2020 11:53:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1580218617-30293-1-git-send-email-harigovi@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191216220555.245089-1-brendanhiggins@google.com>
+ <20200106224022.GX11244@42.do-not-panic.com> <CAFd5g456c2Zs7rCvRPgio83G=SrtPGi25zbqAUyTBHspHwtu4w@mail.gmail.com>
+ <594b7815-0611-34ea-beb5-0642114b5d82@gmail.com> <CAFd5g469TWzrLKmQNR2i0HACJ3FEu-=4-Rk005g9szB5UsZAcw@mail.gmail.com>
+ <e801e4ac-b7c2-3d0a-71e7-f8153a3dfbc8@gmail.com> <ECADFF3FD767C149AD96A924E7EA6EAF982C9840@USCULXMSG17.am.sony.com>
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF982C9840@USCULXMSG17.am.sony.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 28 Jan 2020 11:53:48 -0800
+Message-ID: <CAFd5g46Ut9Suptmp_bBspkp=KKt2GP+=1C5zLu0FXJY9dGJbFQ@mail.gmail.com>
+Subject: Re: [RFC v1 0/6] kunit: create a centralized executor to dispatch all
+ KUnit tests
+To:     "Bird, Timothy" <Tim.Bird@sony.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Alan Maguire <alan.maguire@oracle.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Jan 28, 2020 at 11:35 AM <Tim.Bird@sony.com> wrote:
+>
+> > -----Original Message-----
+> > From:  Frank Rowand on January 28, 2020 11:37 AM
+> >
+> > On 1/28/20 1:19 AM, Brendan Higgins wrote:
+> > > On Mon, Jan 27, 2020 at 9:40 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> ...
+> > > we could add Kconfigs to control this, but the compiler nevertheless
+> > > complains because it doesn't know what phase KUnit runs in.
+> > >
+> > > Is there any way to tell the compiler that it is okay for non __init
+> > > code to call __init code? I would prefer not to have a duplicate
+> > > version of all the KUnit libraries with all the symbols marked __init.
+> >
+> > I'm not sure.  The build messages have always been useful and valid in
+> > my context, so I never thought to consider that possibility.
+> >
+> > > Thoughts?
+>
+> I'm not sure there's a restriction on non __init code calling __init
+> code.  In init/main.c arch_call_reset_init() is in __init, and it calls
+> rest_init which is non __init, without any special handling.
+>
+> Is the compiler complaint mentioned above related to  calling
+> into __init code, or with some other issue?
 
-On Tue, Jan 28, 2020 at 07:06:57PM +0530, Harigovindan P wrote:
-> Adding dsi controller and phy entries for idp dt.
-> 
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 56 +++++++++++++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 388f50a..9f42367 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -7,6 +7,7 @@
->  
->  /dts-v1/;
->  
-> +#include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->  #include "sc7180.dtsi"
->  #include "pm6150.dtsi"
-> @@ -232,6 +233,50 @@
->  	};
->  };
->  
-> +&dsi_controller {
-> +	status = "okay";
-> +
-> +	vdda-supply = <&vreg_l3c_1p2>;
-> +
-> +	panel@0 {
-> +		compatible = "visionox,rm69299-1080p-display";
-
-This depends on the series "Add support for rm69299 Visionox panel
-driver and add devicetree bindings for visionox panel"
-(https://patchwork.kernel.org/cover/11320773/) which hasn't landed
-IIUC. This should be mentioned after '---'.
-
-> +		reg = <0>;
-> +
-> +		vdda-supply = <&vreg_l8c_1p8>;
-> +		vdd3p3-supply = <&vreg_l18a_2p8>;
-> +
-> +		pinctrl-names = "default", "suspend";
-> +		pinctrl-0 = <&disp_pins_default>;
-> +		pinctrl-1 = <&disp_pins_default>;
-
-Is there a point for listing a suspend configuration if it is the same
-as the default?
-
-> +		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			port@0 {
-> +				reg = <0>;
-> +				panel0_in: endpoint {
-> +					remote-endpoint = <&dsi0_out>;
-
-The 'dsi0_out' node is added by 'arm64: dts: sc7180: add display dt nodes'
-(https://patchwork.kernel.org/patch/11354253/), which has not landed. So
-either you should list it as dependency below the commit message, or
-(probably better) send the two patches in the same series.
-
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	ports {
-> +		port@1 {
-> +			endpoint {
-> +				remote-endpoint = <&panel0_in>;
-> +				data-lanes = <0 1 2 3>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&dsi_phy {
-
-Also this node does not exist yet, it also depends on the patch mentioned
-above.
-
-> +	status = "okay";
-> +};
-> +
->  &qspi {
->  	status = "okay";
->  	pinctrl-names = "default";
-> @@ -289,6 +334,17 @@
->  
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
->  
-> +&pm6150l_gpio {
-> +	disp_pins_default: disp-pins-default{
-
-nit: missing blank before curly brace
-
-If there is no suspend configuration you can get rid of the 'default'
-suffix.
-
-Since this is only a single pin I would suggest to use a name that
-describes the function of the pin or the name used in the schematic
-instead of 'disp-pins'.
-
-Thanks
-
-Matthias
+I distinctly remember having the compiler complain at me when I was
+messing around with the device tree unit tests because of KUnit
+calling code marked as __init. Maybe it's time to start converting
+those to KUnit to force the issue? Frank, does that work for you?
