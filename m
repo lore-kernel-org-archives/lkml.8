@@ -2,173 +2,101 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF6BC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2280DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABE92468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4022468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580221159;
+	bh=Aby7x+mCBw7j5lzoe2MiqhlI2mkx6GH5atF2p99QOHE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xSxDb450GuP8jhMCiWZVwhmUP1keL64QkcP/PSr0EAyNL6PNB/RmJlgyyIA7vuYU9
+	 aHQYpHRbcX40iJbxH+YigxtKLsq2qulRRuwtais5Gjr3Tir98a0Bd6dyvBcSmePoi8
+	 STRLygOcRogY1F+/nSdL1qruTw+aC9hUkUuM8JhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbgA1OTP convert rfc822-to-8bit (ORCPT
+        id S1730856AbgA1OTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:19:15 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2317 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730828AbgA1OTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:19:11 -0500
-Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id B52AA4558B5B07A8D235;
-        Tue, 28 Jan 2020 14:19:08 +0000 (GMT)
-Received: from fraeml706-chm.china.huawei.com (10.206.15.55) by
- lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Jan 2020 14:19:07 +0000
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 28 Jan 2020 15:19:07 +0100
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
- Tue, 28 Jan 2020 15:19:07 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-CC:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH 2/2] ima: support calculating the boot_aggregate based on
- different TPM banks
-Thread-Topic: [PATCH 2/2] ima: support calculating the boot_aggregate based on
- different TPM banks
-Thread-Index: AQHV1SsuUuwpXjLewk6D/BEn4qmmH6gAHIeg
-Date:   Tue, 28 Jan 2020 14:19:07 +0000
-Message-ID: <465015d0c9ca4e278ed32f78eb3eb4a4@huawei.com>
-References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
- <1580140919-6127-2-git-send-email-zohar@linux.ibm.com>
-In-Reply-To: <1580140919-6127-2-git-send-email-zohar@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 28 Jan 2020 09:19:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730368AbgA1OTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:19:12 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77FA521739;
+        Tue, 28 Jan 2020 14:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580221152;
+        bh=Aby7x+mCBw7j5lzoe2MiqhlI2mkx6GH5atF2p99QOHE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nbMQbVufyiLImGEn+jk5JGYGKzqUwVtRHxt3hYq703vcvX0DJKNR+pbjKs9A7lZ3l
+         Djkp/ZwxvjKy6RSoaCncpCWb7yPkQsET/pqujPnYI7HcAEdZA8fd9chnaMozwrYbcy
+         cUiOJ1DXZoaqztKs8oBMBCC0jnPMoLFCj/j4ccnQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Bin Liu <b-liu@ti.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 072/271] usb: phy: twl6030-usb: fix possible use-after-free on remove
+Date:   Tue, 28 Jan 2020 15:03:41 +0100
+Message-Id: <20200128135857.942817171@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
+References: <20200128135852.449088278@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
-> owner@vger.kernel.org] On Behalf Of Mimi Zohar
-> Sent: Monday, January 27, 2020 5:02 PM
-> To: linux-integrity@vger.kernel.org
-> Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
-> <James.Bottomley@HansenPartnership.com>; linux-
-> kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
-> Subject: [PATCH 2/2] ima: support calculating the boot_aggregate based on
-> different TPM banks
-> 
-> Calculating the boot_aggregate attempts to read the TPM SHA1 bank,
-> assuming it is always enabled.  With TPM 2.0 hash agility, TPM chips
-> could support multiple TPM PCR banks, allowing firmware to configure and
-> enable different banks.
-> 
-> Instead of hard coding the TPM 2.0 bank hash algorithm used for calculating
-> the boot-aggregate, see if the configured IMA_DEFAULT_HASH algorithm is
-> an allocated TPM bank, otherwise use the first allocated TPM bank.
-> 
-> For TPM 1.2 SHA1 is the only supported hash algorithm.
-> 
-> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> ---
->  security/integrity/ima/ima_crypto.c | 37
-> ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 36 insertions(+), 1 deletion(-)
-> 
-> diff --git a/security/integrity/ima/ima_crypto.c
-> b/security/integrity/ima/ima_crypto.c
-> index 7967a6904851..b1b26d61f174 100644
-> --- a/security/integrity/ima/ima_crypto.c
-> +++ b/security/integrity/ima/ima_crypto.c
-> @@ -656,8 +656,25 @@ static void __init ima_pcrread(u32 idx, struct
-> tpm_digest *d)
->  		pr_err("Error Communicating to TPM chip\n");
->  }
-> 
-> +/* tpm2_hash_map is the same as defined in tpm2-cmd.c and
-> trusted_tpm2.c */
-> +static struct tpm2_hash tpm2_hash_map[] = {
-> +	{HASH_ALGO_SHA1, TPM_ALG_SHA1},
-> +	{HASH_ALGO_SHA256, TPM_ALG_SHA256},
-> +	{HASH_ALGO_SHA384, TPM_ALG_SHA384},
-> +	{HASH_ALGO_SHA512, TPM_ALG_SHA512},
-> +	{HASH_ALGO_SM3_256, TPM_ALG_SM3_256},
-> +};
-> +
->  /*
-> - * Calculate the boot aggregate hash
-> + * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
-> + * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
-> + * allowing firmware to configure and enable different banks.
-> + *
-> + * Instead of hard coding the TPM bank hash algorithm used for calculating
-> + * the boot-aggregate, see if the configured IMA_DEFAULT_HASH
-> algorithm is
-> + * an allocated TPM bank, otherwise use the first allocated TPM bank.
-> + *
-> + * For TPM 1.2 SHA1 is the only hash algorithm.
->   */
->  static int __init ima_calc_boot_aggregate_tfm(char *digest,
->  					      struct crypto_shash *tfm)
-> @@ -673,6 +690,24 @@ static int __init ima_calc_boot_aggregate_tfm(char
-> *digest,
->  	if (rc != 0)
->  		return rc;
-> 
-> +	for (i = 0; i < ARRAY_SIZE(tpm2_hash_map); i++) {
-> +		if (tpm2_hash_map[i].crypto_id == ima_hash_algo) {
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-It is not necessary to define a new map. ima_tpm_chip->allocated_banks
-has a crypto_id field.
+[ Upstream commit 5895d311d28f2605e2f71c1a3e043ed38f3ac9d2 ]
 
-> +			d.alg_id = tpm2_hash_map[i].tpm_id;
-> +			break;
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
-> +		if (ima_tpm_chip->allocated_banks[i].alg_id == d.alg_id)
-> +			break;
-> +	}
-> +
-> +	if (i == ima_tpm_chip->nr_allocated_banks)
-> +		d.alg_id = ima_tpm_chip->allocated_banks[0].alg_id;
+In remove(), use cancel_delayed_work_sync() to cancel the
+delayed work. Otherwise there's a chance that this work
+will continue to run until after the device has been removed.
 
-This code assumes that the algorithm used to calculate boot_aggregate and
-the algorithm of the PCR bank can be different. I don't know if it is possible to
-communicate to the verifier which bank has been selected (it depends on
-the local configuration).
+This issue was detected with the help of Coccinelle.
 
-In my opinion the safest approach would be to use the same algorithm for the
-digest and the PCR bank. If you agree to this, then the code above must be
-moved to ima_calc_boot_aggregate() so that the algorithm of the selected
-PCR bank can be passed to ima_alloc_tfm().
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Bin Liu <b-liu@ti.com>
+Fixes: b6a619a883c3 ("usb: phy: Check initial state for twl6030")
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/phy/phy-twl6030-usb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The selected PCR bank might be not the first, if the algorithm is unknown to
-the crypto subsystem.
+diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
+index a72e8d670adc8..cf0b67433ac95 100644
+--- a/drivers/usb/phy/phy-twl6030-usb.c
++++ b/drivers/usb/phy/phy-twl6030-usb.c
+@@ -422,7 +422,7 @@ static int twl6030_usb_remove(struct platform_device *pdev)
+ {
+ 	struct twl6030_usb *twl = platform_get_drvdata(pdev);
+ 
+-	cancel_delayed_work(&twl->get_status_work);
++	cancel_delayed_work_sync(&twl->get_status_work);
+ 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
+ 		REG_INT_MSK_LINE_C);
+ 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
+-- 
+2.20.1
 
-> +	pr_info("Calculating the boot-aggregregate, reading TPM PCR
 
-Typo.
 
-Roberto
-
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Li Peng, Li Jian, Shi Yanli
