@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052CAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10221C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD26C2468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0EF22468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221596;
-	bh=qV0WTWfRpMVnCr3u5uMAmCSY3+zE+d0NXXZ2q9BfVUw=;
+	s=default; t=1580221597;
+	bh=QHFduYetVXp18KqrwLRNczgW2umXofVRO1RGBi7dz+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wo2wgcwtamsFcbpo/RAh9v4JF73T+gb+nMi8e/3iGzgfuCio8tT5ZUSQ1n+pnJbxf
-	 jLpJApFCq3sFH5YLvqptj/+jHRuAxPmTSUVt4IYRXKC4oszOT/nmozP8oVddc1dfP9
-	 /i7q1oBKry0FQ42p4Y+pkuuwAssNo0+f4dfto7Ao=
+	b=ojidtBbsDYrdZbkv876Ji6Chd86CTsz7UvMvfr0DQ6EIGCZlZu8/1QGVnL838Lx5J
+	 Xm6t1Gfhzl+UUFp0Pg9udFusI8KVxEc1+h5e1gygtmOFNaRflIy58W5/Y8MtBcQJpq
+	 uaDCdflboiHJvd9zoTb8I2gPtKUF744xHdSUkXcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733190AbgA1O0g (ORCPT
+        id S1732939AbgA1O0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:26:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53994 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:26:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733185AbgA1O0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:26:33 -0500
+        id S1732570AbgA1O0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:26:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38BAB21739;
-        Tue, 28 Jan 2020 14:26:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08EB12468D;
+        Tue, 28 Jan 2020 14:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221592;
-        bh=qV0WTWfRpMVnCr3u5uMAmCSY3+zE+d0NXXZ2q9BfVUw=;
+        s=default; t=1580221595;
+        bh=QHFduYetVXp18KqrwLRNczgW2umXofVRO1RGBi7dz+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zcGlx9nhBECCih3HoLiF6A425ir37+w6HMqt/Y5fRE/3POO1qYSKJKpd2zU0Y7dub
-         ocVp+HBNdURmbizvv9XkG5rW5ED62OaLnjHbyIg7Ny6XBbgmilAOyFYJEElLIZW+CJ
-         txmwfHzIsRYfNwxy+wDaLcfsU/GOaC1LR2l/1j5c=
+        b=m6fWFlbggikSAV10uBJwufuRISd1TUcQcVMao/csKzFTp1XnXwA/8QssZrk5ua8Ce
+         MfWfvA8zgykz7MIG61ENKm+V3L9BSC7Q6KDE1cdOAX5/FAEEo4e9J7zHdJ/LRlPAO+
+         x+0mPpdobDVreSzwR1UYNA+sEIsZSZWs+MECyqKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>
-Subject: [PATCH 4.19 12/92] net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
-Date:   Tue, 28 Jan 2020 15:07:40 +0100
-Message-Id: <20200128135810.761455279@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 13/92] net-sysfs: fix netdev_queue_add_kobject() breakage
+Date:   Tue, 28 Jan 2020 15:07:41 +0100
+Message-Id: <20200128135810.897145079@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,106 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit b8eb718348b8fb30b5a7d0a8fce26fb3f4ac741b upstream.
+commit 48a322b6f9965b2f1e4ce81af972f0e287b07ed0 upstream.
 
-kobject_init_and_add takes reference even when it fails. This has
-to be given up by the caller in error handling. Otherwise memory
-allocated by kobject_init_and_add is never freed. Originally found
-by Syzkaller:
+kobject_put() should only be called in error path.
 
-BUG: memory leak
-unreferenced object 0xffff8880679f8b08 (size 8):
-  comm "netdev_register", pid 269, jiffies 4294693094 (age 12.132s)
-  hex dump (first 8 bytes):
-    72 78 2d 30 00 36 20 d4                          rx-0.6 .
-  backtrace:
-    [<000000008c93818e>] __kmalloc_track_caller+0x16e/0x290
-    [<000000001f2e4e49>] kvasprintf+0xb1/0x140
-    [<000000007f313394>] kvasprintf_const+0x56/0x160
-    [<00000000aeca11c8>] kobject_set_name_vargs+0x5b/0x140
-    [<0000000073a0367c>] kobject_init_and_add+0xd8/0x170
-    [<0000000088838e4b>] net_rx_queue_update_kobjects+0x152/0x560
-    [<000000006be5f104>] netdev_register_kobject+0x210/0x380
-    [<00000000e31dab9d>] register_netdevice+0xa1b/0xf00
-    [<00000000f68b2465>] __tun_chr_ioctl+0x20d5/0x3dd0
-    [<000000004c50599f>] tun_chr_ioctl+0x2f/0x40
-    [<00000000bbd4c317>] do_vfs_ioctl+0x1c7/0x1510
-    [<00000000d4c59e8f>] ksys_ioctl+0x99/0xb0
-    [<00000000946aea81>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000038d946e5>] do_syscall_64+0x16f/0x580
-    [<00000000e0aa5d8f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<00000000285b3d1a>] 0xffffffffffffffff
-
-Cc: David Miller <davem@davemloft.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Jouni Hogander <jouni.hogander@unikie.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/net-sysfs.c |   24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ net/core/net-sysfs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/net/core/net-sysfs.c
 +++ b/net/core/net-sysfs.c
-@@ -932,21 +932,23 @@ static int rx_queue_add_kobject(struct n
- 	error = kobject_init_and_add(kobj, &rx_queue_ktype, NULL,
- 				     "rx-%u", index);
- 	if (error)
--		return error;
-+		goto err;
- 
- 	dev_hold(queue->dev);
- 
- 	if (dev->sysfs_rx_queue_group) {
- 		error = sysfs_create_group(kobj, dev->sysfs_rx_queue_group);
--		if (error) {
--			kobject_put(kobj);
--			return error;
--		}
-+		if (error)
-+			goto err;
- 	}
- 
- 	kobject_uevent(kobj, KOBJ_ADD);
- 
- 	return error;
-+
-+err:
-+	kobject_put(kobj);
-+	return error;
- }
- #endif /* CONFIG_SYSFS */
- 
-@@ -1471,21 +1473,21 @@ static int netdev_queue_add_kobject(stru
- 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
- 				     "tx-%u", index);
- 	if (error)
--		return error;
-+		goto err;
- 
- 	dev_hold(queue->dev);
- 
- #ifdef CONFIG_BQL
- 	error = sysfs_create_group(kobj, &dql_group);
--	if (error) {
--		kobject_put(kobj);
--		return error;
--	}
-+	if (error)
-+		goto err;
+@@ -1484,6 +1484,7 @@ static int netdev_queue_add_kobject(stru
  #endif
  
  	kobject_uevent(kobj, KOBJ_ADD);
++	return 0;
  
--	return 0;
-+err:
-+	kobject_put(kobj);
-+	return error;
- }
- #endif /* CONFIG_SYSFS */
- 
+ err:
+ 	kobject_put(kobj);
 
 
