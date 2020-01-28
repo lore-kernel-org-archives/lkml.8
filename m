@@ -2,198 +2,106 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C202CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D02CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950F92073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6018124688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Oe0Deoml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgA1Ucs (ORCPT
+        id S1726363AbgA1UkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 15:32:48 -0500
-Received: from mga09.intel.com ([134.134.136.24]:19718 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbgA1Ucs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 15:32:48 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 12:19:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,375,1574150400"; 
-   d="scan'208";a="311217350"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Jan 2020 12:19:46 -0800
-Received: from [10.251.18.141] (kliang2-mobl.ccr.corp.intel.com [10.251.18.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id DDC955802B1;
-        Tue, 28 Jan 2020 12:19:44 -0800 (PST)
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v4_2/2=5d_perf_x86=3a_Exposing_an_Uncore_u?=
- =?UTF-8?Q?nit_to_PMON_for_Intel_Xeon=c2=ae_server_platform?=
-To:     "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Andi Kleen <ak@linux.intel.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, bgregg@netflix.com, alexander.antonov@intel.com
-References: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
- <20200117133759.5729-3-roman.sudarikov@linux.intel.com>
- <20200117141944.GC1856891@kroah.com>
- <20200117162357.GK302770@tassilo.jf.intel.com>
- <20200117165406.GA1937954@kroah.com>
- <f62a14a4-4fea-84f7-4cab-8bef74cf9e8a@linux.intel.com>
- <20200121171547.GA632898@kroah.com>
- <db0a1fca-536e-8106-0e7d-fbcca82d7a15@linux.intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <a513868f-addf-3774-2a43-b65262b7db4e@linux.intel.com>
-Date:   Tue, 28 Jan 2020 15:19:43 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 28 Jan 2020 15:40:08 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39675 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgA1UkI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 15:40:08 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 4so7627284pgd.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 12:40:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2i3ifj+o7a56Ej6B9maiwsFtxZ+qZn9EVpxFQulwzyI=;
+        b=Oe0Deoml28uBRBuJGwSYnMX4gjeW08RPDQPW1p9i/uhQqlnGChZF22DGhZYBwL7qNu
+         nGzDMvsDqIjQm5sW4u42/ryWYW2uLjdypkNR59DAfrWdRa4YSZH9CmBbGqg2dXyEVXX/
+         wEn4suIUo2Hb9TqHuzqhMbTqpQacXNSJsvVKY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2i3ifj+o7a56Ej6B9maiwsFtxZ+qZn9EVpxFQulwzyI=;
+        b=mGqNUP5neg9oEG6ORT690NSRl6lRB87PkYiQSo2CMpXgYpZVhCP2BYuPSexKl5WN4T
+         Obgnejq28EnufK0OFvqNLKtWSVBAMVZpgXQymP1nW+aRlazYfTwP5Nrl3NP2vGTYNowj
+         HpUEYBI9QbVbn2xerJde6RkLNUNnYtVTCDNC/v9EE1iLElo0snw6ONvUrgwFNWUnTult
+         HEh0DdBtFaFD96tO1CMpuy6ty5GavYS7Saow0SPiaNHM6sxlACjjZcFQKPgasG/vH2zA
+         YavCFOP6GMqVggkws8r78ab+r/JQlIZrkpja4oshhAZuFCO2ubky7ZS8Q3pbLl8HAf75
+         //7A==
+X-Gm-Message-State: APjAAAU2csjShE5tWg0fPOejAdXfE+KEvmgTuZMh/tFF0CtFNtCE8Fm6
+        yDy4NohQW8TcvQ6cCOleQhcrQQ==
+X-Google-Smtp-Source: APXvYqwMQdKxHn6Q4Ri/enHwlEiGz4BaCFfgC4w0rKZoFtqzu009EY6UmncTFq6yvHoRzxcL6hMY2A==
+X-Received: by 2002:aa7:84c6:: with SMTP id x6mr5442136pfn.181.1580244007783;
+        Tue, 28 Jan 2020 12:40:07 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id z19sm20419043pfn.49.2020.01.28.12.40.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 12:40:07 -0800 (PST)
+Date:   Tue, 28 Jan 2020 12:40:05 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org
+Subject: Re: [RFC v3 01/10] arm64: dts: qcom: sdm845: Add SoC compatible to
+ MTP
+Message-ID: <20200128204005.GE46072@google.com>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <20200127200350.24465-2-sibis@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <db0a1fca-536e-8106-0e7d-fbcca82d7a15@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200127200350.24465-2-sibis@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sibi,
 
-
-On 1/28/2020 9:55 AM, Sudarikov, Roman wrote:
-> On 21.01.2020 20:15, Greg KH wrote:
->> On Tue, Jan 21, 2020 at 07:15:56PM +0300, Sudarikov, Roman wrote:
->>> On 17.01.2020 19:54, Greg KH wrote:
->>>> On Fri, Jan 17, 2020 at 08:23:57AM -0800, Andi Kleen wrote:
->>>>>> I thought I was nice and gentle last time and said that this was a
->>>>>> really bad idea and you would fix it up.  That didn't happen, so I am
->>>>>> being explicit here, THIS IS NOT AN ACCEPTABLE FILE OUTPUT FOR A 
->>>>>> SYSFS
->>>>>> FILE.
->>>>> Could you suggest how such a 1:N mapping should be expressed 
->>>>> instead in
->>>>> sysfs?
->>>> I have yet to figure out what it is you all are trying to express here
->>>> given a lack of Documentation/ABI/ file :)
->>>>
->>>> But again, sysfs is ONE VALUE PER FILE.  You have a list of items here,
->>>> that is bounded only by the number of devices in the system at the
->>>> moment.  That number will go up in time, as we all know.  So this is
->>>> just not going to work at all as-is.
->>>>
->>>> greg k-h
->>> Hi Greg,
->>>
->>> Technically, the motivation behind this patch is to enable Linux perf 
->>> tool
->>> to attribute IO traffic to IO device.
->>>
->>> Currently, perf tool provides interface to configure IO PMUs only 
->>> without
->>> any
->>> context.
->>>
->>> Understanding IIO stack concept to find which IIO stack that particular
->>> IO device is connected to, or to identify an IIO PMON block to program
->>> for monitoring specific IIO stack assumes a lot of implicit knowledge
->>> about given Intel server platform architecture.
->> Is "IIO" being used here the same way that drivers/iio/ is in the
->> kernel, or is this some other term?  If it is the same, why isn't the
->> iio developers involved in this?  If it is some other term, please
->> always define it and perhaps pick a different name :)
-> The term "IIO" (Integrated IO) in that context refers to set of PMUs 
-> which are
-> responsible for monitoring traffic crossing PCIe domain boundaries. It's 
-> specific
-> for Intel Xeon server line and supported by Linux kernel perf tool 
-> starting v4.9.
-> So I'm just referring to what's already in the kernel :)
->>> Please consider the following mapping schema:
->>>
->>> 1. new "mapping" directory is to be added under each uncore_iio_N 
->>> directory
->> What is uncore_iio_N?  A struct device?  Or something else?
-> It's interface to corresponding IIO PMU, should be struct device
->>> 2. that "mapping" directory is supposed to contain symlinks named "dieN"
->>> which are pointed to corresponding root bus.
->>> Below is how it looks like for 2S machine:
->>>
->>> # ll uncore_iio_0/mapping/
->>> lrwxrwxrwx 1 root root 0 Jan 20 23:55 die0 ->
->>> ../../pci0000:00/pci_bus/0000:00
->> Where did "pci_bus" come from in there?  I don't see under /sys/devices/
->> for my pci bridges.
->>
->>> lrwxrwxrwx 1 root root 0 Jan 20 23:55 die1 ->
->>> ../../pci0000:80/pci_bus/0000:80
->>>
->>> # ll uncore_iio_1/mapping/
->>> lrwxrwxrwx 1 root root 0 Jan 20 23:55 die0 ->
->>> ../../pci0000:17/pci_bus/0000:17
->>> lrwxrwxrwx 1 root root 0 Jan 20 23:55 die1 ->
->>> ../../pci0000:85/pci_bus/0000:85
->>>
->>> # ll uncore_iio_2/mapping/
->>> lrwxrwxrwx 1 root root 0 Jan 20 23:55 die0 ->
->>> ../../pci0000:3a/pci_bus/0000:3a
->>> lrwxrwxrwx 1 root root 0 Jan 20 23:55 die1 ->
->>> ../../pci0000:ae/pci_bus/0000:ae
->>>
->>> # ll uncore_iio_3/mapping/
->>> lrwxrwxrwx 1 root root 0 Jan 20 23:55 die0 ->
->>> ../../pci0000:5d/pci_bus/0000:5d
->>> lrwxrwxrwx 1 root root 0 Jan 20 23:55 die1 ->
->>> ../../pci0000:d7/pci_bus/0000:d7
->> Why have a subdir here?
-> Just for convenience. I can put it the same level as other attributes 
-> (cpumask etc).
-> Please let me know which layout to choose.
->> Anyway, yes, that would make sense, if userspace can actually do
->> something with that, can it?
-> Sure! The linux perf tool will use it to attribute IO traffic to devices.
-> Initially the feature was sent for review containing both kernel[1] and
-> user space[2] parts, but later it was decided to finalize kernel part first
-> and then proceed with user space.
+On Tue, Jan 28, 2020 at 01:33:41AM +0530, Sibi Sankar wrote:
+> Add missing SoC compatible to SDM845 MTP board file.
 > 
-> [1] 
-> https://lore.kernel.org/lkml/20191126163630.17300-2-roman.sudarikov@linux.intel.com/ 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> [2] 
-> https://lore.kernel.org/lkml/20191126163630.17300-5-roman.sudarikov@linux.intel.com/ 
-> 
->>
->> Also, what tears those symlinks down when you remove those pci devices
->> from the system?  Shouldn't you have an entry in the pci device itself
->> for this type of thing?  And if so, isn't this really just a "normal"
->> class type driver you are writing?  That should handle all of the
->> symlinks and stuff for you automatically, right?
-> The IIO PMUs by design monitors traffic crossing integrated pci root ports.
-> For each IIO PMU the feature creates symlinks to its  pci root port on 
-> each node.
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index 09ad37b0dd71d..54087847794aa 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -13,7 +13,7 @@
+>  
+>  / {
+>  	model = "Qualcomm Technologies, Inc. SDM845 MTP";
+> -	compatible = "qcom,sdm845-mtp";
+> +	compatible = "qcom,sdm845-mtp", "qcom,sdm845";
 
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 
-Can we just simply assign the BUS# to it as below?
-# cat uncore_iio_1/mapping/die0
-0000:00
-I'm not sure why we need a symlink here.
-
-Also, if the BUS is removed, I think we may want to update mapping as well.
-
-Thanks,
-Kan
-
-> Those pci devices, by its nature, can not be "just removed". If the SOC is
-> designed the way that some integrated root port is not present
-> then the case will be correctly handled by the feature.
->> thanks,
->>
->> greg k-h
-> 
-> 
+Since this is v3 already I think you can omit the RFC tag in the next
+revision of the series.
