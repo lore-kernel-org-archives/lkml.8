@@ -2,226 +2,216 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE9CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F13C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135CF24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE29524685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580226031;
+	bh=vIQFlgFBXBFq03FtrTUcYLipjkKDm0tJv3h8aZx/qh4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2YGDbHuG+4C2h5nxLDHmL4hhYRmNi/XYjMYEyJ+JtzWYzfxmQAPfGkgZ5oDCZY+DB
+	 b8dQgSdPmKoPoaPGMZLwaL3pDCF+vOiDPJ6lCTv5MGmInLVmJFQXGZVRTdWAY0keg/
+	 1Sxt3r6rNZAbmtbxyQg4weqIFvW6vBU/UCUDK6bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgA1PkN (ORCPT
+        id S1726959AbgA1Pka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:40:13 -0500
-Received: from outbound-smtp13.blacknight.com ([46.22.139.230]:59346 "EHLO
-        outbound-smtp13.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726389AbgA1PkL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:40:11 -0500
-Received: from mail.blacknight.com (unknown [81.17.254.17])
-        by outbound-smtp13.blacknight.com (Postfix) with ESMTPS id A21FD1C30E8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 15:40:08 +0000 (GMT)
-Received: (qmail 23247 invoked from network); 28 Jan 2020 15:40:08 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 28 Jan 2020 15:40:08 -0000
-Date:   Tue, 28 Jan 2020 15:40:06 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] sched, fair: Allow a per-cpu kthread waking a task to
- stack on the same CPU
-Message-ID: <20200128154006.GD3466@techsingularity.net>
+        Tue, 28 Jan 2020 10:40:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726389AbgA1Pka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:40:30 -0500
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 380E02468A;
+        Tue, 28 Jan 2020 15:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580226029;
+        bh=vIQFlgFBXBFq03FtrTUcYLipjkKDm0tJv3h8aZx/qh4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VE88acMmglXD5DNpUqw6gBfh7OAT6VN26cGhD6BTnko4ya3ck8v2LEaIo7jwAjPi7
+         M0n15l6uLrj64WmJsAFgx4SWdbbxYXQprIBUfKNhMxtLIQFXkYHpoSNzFg4GGdWD+l
+         ZAEH5QVvdcQw/WhBWVlXPf00pVqLGBMdrTGw8mPM=
+Received: by mail-qk1-f173.google.com with SMTP id d10so13779871qke.1;
+        Tue, 28 Jan 2020 07:40:29 -0800 (PST)
+X-Gm-Message-State: APjAAAUa02KlhuFWtcwXDjdrmsOG7EloisJUN2ABH+fscVXRmF1unmh/
+        ZT5w6yn7XbnnAJX0SrNm9EpECg85Tx6Kdm3tng==
+X-Google-Smtp-Source: APXvYqwwiFahkoxmuc163fTarevKuM1kql9XD48hlQ7trUe56xmd3XOmWMviv3V7Mu7y1iKxkwylIC3mc3ktXc5v1t4=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr23193589qkg.152.1580226028149;
+ Tue, 28 Jan 2020 07:40:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1579689918-7181-1-git-send-email-yamonkar@cadence.com>
+ <1579689918-7181-14-git-send-email-yamonkar@cadence.com> <20200127164235.GA7662@bogus>
+ <3e5d7620-d1ec-ba37-0b5b-e28ed74e49d9@ti.com>
+In-Reply-To: <3e5d7620-d1ec-ba37-0b5b-e28ed74e49d9@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 28 Jan 2020 09:40:16 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+UrxAL9DEB3E-o0fWEK3QNhWiYQnGDZ3asRoQLb61Cjg@mail.gmail.com>
+Message-ID: <CAL_Jsq+UrxAL9DEB3E-o0fWEK3QNhWiYQnGDZ3asRoQLb61Cjg@mail.gmail.com>
+Subject: Re: [PATCH v3 13/14] dt-bindings: phy: phy-cadence-torrent: Add
+ subnode bindings.
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     Yuti Amonkar <yamonkar@cadence.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Milind Parab <mparab@cadence.com>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 8ab39f11d974 ("xfs: prevent CIL push holdoff in log
-recovery") changed from using bound workqueues to using unbound
-workqueues. Functionally this makes sense but it was observed at the
-time that the dbench performance dropped quite a lot and CPU migrations
-were increased.
+On Tue, Jan 28, 2020 at 4:04 AM Jyri Sarha <jsarha@ti.com> wrote:
+>
+> On 27/01/2020 18:42, Rob Herring wrote:
+> > On Wed, Jan 22, 2020 at 11:45:17AM +0100, Yuti Amonkar wrote:
+> >> From: Swapnil Jakhade <sjakhade@cadence.com>
+> >>
+> >> Add sub-node bindings for each group of PHY lanes based on PHY
+> >> type. Only PHY_TYPE_DP is supported currently. Each sub-node
+> >
+> > What the driver supports is not relevant to the binding. Define all
+> > modes.
+> >
+> >> includes properties such as master lane number, link reset, phy
+> >> type, number of lanes etc.
+> >
+> > Given the conversion and this have no compatibility, just make the
+> > commits delete the old binding and add this new binding. I'd rather not
+> > have reviewed what just gets deleted here.
+> >
+> >>
+> >> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+> >> ---
+> >>  .../bindings/phy/phy-cadence-torrent.yaml          | 90 ++++++++++++++++++----
+> >>  1 file changed, 73 insertions(+), 17 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> >> index dbb8aa5..eb21615 100644
+> >> --- a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> >> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> >> @@ -19,6 +19,12 @@ properties:
+> >>        - cdns,torrent-phy
+> >>        - ti,j721e-serdes-10g
+> >>
+> >> +  '#address-cells':
+> >> +    const: 1
+> >> +
+> >> +  '#size-cells':
+> >> +    const: 0
+> >> +
+> >>    clocks:
+> >>      maxItems: 1
+> >>      description:
+> >> @@ -41,44 +47,94 @@ properties:
+> >>        - const: torrent_phy
+> >>        - const: dptx_phy
+> >>
+> >> -  "#phy-cells":
+> >> -    const: 0
+> >> +  resets:
+> >> +    description:
+> >> +      Must contain an entry for each in reset-names.
+> >> +      See Documentation/devicetree/bindings/reset/reset.txt
+> >
+> > How many reset entries? Needs a 'maxItems: 1' or an 'items' list if more
+> > than 1.
+> >
+> >>
+> >> -  num_lanes:
+> >> +  reset-names:
+> >>      description:
+> >> -      Number of DisplayPort lanes.
+> >> -    allOf:
+> >> -      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> -      - enum: [1, 2, 4]
+> >> +      Must be "torrent_reset". It controls the reset to the
+> >
+> > Should be a schema, not freeform text. However, not really a useful name
+> > as there's only 1, so I'd just remove 'reset-names'.
+> >
+>
+> This binding is trying to follow "cdns,sierra-phy-t0" binding [1] when
+> it makes sense. Sierra defines two resets here. But if we can not name
+> the other reset now (at least I can not), I guess we can just drop the
+> reset-names here.
+>
+> >> +      torrent PHY.
+> >>
+> >> -  max_bit_rate:
+> >> +patternProperties:
+> >> +  '^torrent-phy@[0-7]+$':
+> >> +    type: object
+> >>      description:
+> >> -      Maximum DisplayPort link bit rate to use, in Mbps
+> >> -    allOf:
+> >> -      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> -      - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
+> >> +      Each group of PHY lanes with a single master lane should be represented as a sub-node.
+> >> +    properties:
+> >> +      reg:
+> >> +        description:
+> >> +          The master lane number. This is the lowest numbered lane in the lane group.
+> >
+> > Why not make it the list of lane numbers. Then you don't need num-lanes.
+> >
+>
+> Sierra binding already defines this method [1] and my plan was to rely
+> on this method when selecting the lane types in the
+> "ti,phy-j721e-wiz"-driver [2].
+>
+> IOW, I would like the both Sierra and Torrent bindings (which both are
+> wrapped by the wiz wrapper IP) to be compatible enough for wiz driver to
+> peek the lane types from the wrapped phy-node.
 
-The current pattern of the task migration is straight-forward. With XFS,
-an IO issuer delegates work to xlog_cil_push_work on an unbound kworker.
-This runs on a nearby CPU and on completion, dbench wakes up on its old CPU
-as it is still idle and no migration occurs. dbench then queues the real
-IO on the blk_mq_requeue_work work item which runs on a bound kworker
-which is forced to run on the same CPU as dbench. When IO completes,
-the bound kworker wakes dbench but as the kworker is a bound but,
-real task, the CPU is not considered idle and dbench gets migrated by
-select_idle_sibling to a new CPU. dbench may ping-pong between two CPUs
-for a while but ultimately it starts a round-robin of all CPUs sharing
-the same LLC. High-frequency migration on each IO completion has poor
-performance overall. It has negative implications both in commication
-costs and power management. mpstat confirmed that at low thread counts
-that all CPUs sharing an LLC has low level of activity.
+Okay.
 
-Note that even if the CIL patch was reverted, there still would
-be migrations but the impact is less noticeable. It turns out that
-individually the scheduler, XFS, blk-mq and workqueues all made sensible
-decisions but in combination, the overall effect was sub-optimal.
+> >> +      resets:
+> >> +        description:
+> >> +          Contains list of resets to get all the link lanes out of reset.
+> >
+> > Needs a schema for how many? 1 per lane?
+> >
+>
+> That is what the current implementation is, but do we have to lock it
+> down in the binding? There can hardly be more than 1 / lane, but I can
+> imagine it to be just one for a number of lanes.
 
-This patch special cases the IO issue/completion pattern and allows
-a bound kworker waker and a task wakee to stack on the same CPU if
-there is a strong chance they are directly related. The expectation
-is that the kworker is likely going back to sleep shortly. This is not
-guaranteed as the IO could be queued asynchronously but there is a very
-strong relationship between the task and kworker in this case that would
-justify stacking on the same CPU instead of migrating. There should be
-few concerns about kworker starvation given that the special casing is
-only when the kworker is the waker.
+Yes, you have to define it in the schema. If not, there's really no
+point in doing schemas.
 
-DBench on XFS
-MMTests config: io-dbench4-async modified to run on a fresh XFS filesystem
+> >> +      "#phy-cells":
+> >> +        description:
+> >> +          Generic PHY binding.
+> >
+> > Not a useful description. Remove.
+> >
+> >> +        const: 0
+> >> +
+> >> +      cdns,phy-type:
+> >> +        description:
+> >> +          Should be PHY_TYPE_DP.
+> >
+> > Sounds like a constraint.
+> >
+>
+> I do not think there is point to limit this to PHY_TYPE_DP only. The
+> current implementation may not support anything else but DP, but we
+> should not limit the binding because of it. I think referring to the
+> include/dt-bindings/phy/phy.h header here would be appropriate.
 
-UMA machine with 8 cores sharing LLC
-                          5.5.0-rc7              5.5.0-rc7
-                  tipsched-20200124           kworkerstack
-Amean     1        22.63 (   0.00%)       20.54 *   9.23%*
-Amean     2        25.56 (   0.00%)       23.40 *   8.44%*
-Amean     4        28.63 (   0.00%)       27.85 *   2.70%*
-Amean     8        37.66 (   0.00%)       37.68 (  -0.05%)
-Amean     64      469.47 (   0.00%)      468.26 (   0.26%)
-Stddev    1         1.00 (   0.00%)        0.72 (  28.12%)
-Stddev    2         1.62 (   0.00%)        1.97 ( -21.54%)
-Stddev    4         2.53 (   0.00%)        3.58 ( -41.19%)
-Stddev    8         5.30 (   0.00%)        5.20 (   1.92%)
-Stddev    64       86.36 (   0.00%)       94.53 (  -9.46%)
+Referring to the include is still not a constraint. You need const,
+enum, or minimum/maximum.
 
-NUMA machine, 48 CPUs total, 24 CPUs share cache
-                           5.5.0-rc7              5.5.0-rc7
-                   tipsched-20200124      kworkerstack-v1r2
-Amean     1         58.69 (   0.00%)       30.21 *  48.53%*
-Amean     2         60.90 (   0.00%)       35.29 *  42.05%*
-Amean     4         66.77 (   0.00%)       46.55 *  30.28%*
-Amean     8         81.41 (   0.00%)       68.46 *  15.91%*
-Amean     16       113.29 (   0.00%)      107.79 *   4.85%*
-Amean     32       199.10 (   0.00%)      198.22 *   0.44%*
-Amean     64       478.99 (   0.00%)      477.06 *   0.40%*
-Amean     128     1345.26 (   0.00%)     1372.64 *  -2.04%*
-Stddev    1          2.64 (   0.00%)        4.17 ( -58.08%)
-Stddev    2          4.35 (   0.00%)        5.38 ( -23.73%)
-Stddev    4          6.77 (   0.00%)        6.56 (   3.00%)
-Stddev    8         11.61 (   0.00%)       10.91 (   6.04%)
-Stddev    16        18.63 (   0.00%)       19.19 (  -3.01%)
-Stddev    32        38.71 (   0.00%)       38.30 (   1.06%)
-Stddev    64       100.28 (   0.00%)       91.24 (   9.02%)
-Stddev    128      186.87 (   0.00%)      160.34 (  14.20%)
-
-Dbench has been modified to report the time to complete a single "load
-file". This is a more meaningful metric for dbench that a throughput
-metric as the benchmark makes many different system calls that are not
-throughput-related
-
-Patch shows a 9.23% and 48.53% reduction in the time to process a load
-file with the difference partially explained by the number of CPUs sharing
-a LLC. In a separate run, task migrations were almost eliminated by the
-patch for low client counts. In case people have issue with the metric
-used for the benchmark, this is a comparison of the throughputs as
-reported by dbench on the NUMA machine.
-
-dbench4 Throughput (misleading but traditional)
-                           5.5.0-rc7              5.5.0-rc7
-                   tipsched-20200124      kworkerstack-v1r2
-Hmean     1        321.41 (   0.00%)      617.82 *  92.22%*
-Hmean     2        622.87 (   0.00%)     1066.80 *  71.27%*
-Hmean     4       1134.56 (   0.00%)     1623.74 *  43.12%*
-Hmean     8       1869.96 (   0.00%)     2212.67 *  18.33%*
-Hmean     16      2673.11 (   0.00%)     2806.13 *   4.98%*
-Hmean     32      3032.74 (   0.00%)     3039.54 (   0.22%)
-Hmean     64      2514.25 (   0.00%)     2498.96 *  -0.61%*
-Hmean     128     1778.49 (   0.00%)     1746.05 *  -1.82%*
-
-Note that this is somewhat specific to XFS and ext4 shows no performance
-difference as it does not rely on kworkers in the same way. No major
-problem was observed running other workloads on different machines although
-not all tests have completed yet.
-
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- kernel/sched/core.c  | 11 -----------
- kernel/sched/fair.c  | 14 ++++++++++++++
- kernel/sched/sched.h | 13 +++++++++++++
- 3 files changed, 27 insertions(+), 11 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index fc1dfc007604..1f615a223791 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1442,17 +1442,6 @@ void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
- 
- #ifdef CONFIG_SMP
- 
--static inline bool is_per_cpu_kthread(struct task_struct *p)
--{
--	if (!(p->flags & PF_KTHREAD))
--		return false;
--
--	if (p->nr_cpus_allowed != 1)
--		return false;
--
--	return true;
--}
--
- /*
-  * Per-CPU kthreads are allowed to run on !active && online CPUs, see
-  * __set_cpus_allowed_ptr() and select_fallback_rq().
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index fe4e0d775375..52a62f550082 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5912,6 +5912,20 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	    (available_idle_cpu(prev) || sched_idle_cpu(prev)))
- 		return prev;
- 
-+	/*
-+	 * Allow a per-cpu kthread to stack with the wakee if the
-+	 * kworker thread and the tasks previous CPUs are the same.
-+	 * The assumption is that the wakee queued work for the
-+	 * per-cpu kthread that is now complete and the wakeup is
-+	 * essentially a sync wakeup. An obvious example of this
-+	 * pattern is IO completions.
-+	 */
-+	if (is_per_cpu_kthread(current) &&
-+	    prev == smp_processor_id() &&
-+	    this_rq()->nr_running <= 1) {
-+		return prev;
-+	}
-+
- 	/* Check a recently used CPU as a potential idle candidate: */
- 	recent_used_cpu = p->recent_used_cpu;
- 	if (recent_used_cpu != prev &&
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 1a88dc8ad11b..5876e6ba5903 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2479,3 +2479,16 @@ static inline void membarrier_switch_mm(struct rq *rq,
- {
- }
- #endif
-+
-+#ifdef CONFIG_SMP
-+static inline bool is_per_cpu_kthread(struct task_struct *p)
-+{
-+	if (!(p->flags & PF_KTHREAD))
-+		return false;
-+
-+	if (p->nr_cpus_allowed != 1)
-+		return false;
-+
-+	return true;
-+}
-+#endif
+Rob
