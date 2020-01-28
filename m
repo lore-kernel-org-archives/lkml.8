@@ -2,162 +2,86 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B9AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4BCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E3521739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221970;
-	bh=fA/B9G2d55+a4zcXyCidgiM1scGvdikipkUh8OpG4sQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k0E6RmPnJszAmYvJlymp7S4lrAhQKsdUMpq/HhENPZWPdtPW75ryOdvHWaDWkwEEu
-	 XdrzS0i6CDPqI9zkSpe6F25+ydEEHbaHXXFvJC1VFyQw6EL5o/Zvi7U/kWtC0ImAZr
-	 o1dz/nZ/OeNpjcM26uVxXrfbipmCf8L/6ki2MExc=
+	by mail.kernel.org (Postfix) with ESMTP id E6C5721739
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387533AbgA1Ocs (ORCPT
+        id S2387641AbgA1Oc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:32:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34028 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:32:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53960 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgA1Ocp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:32:45 -0500
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D073324685;
-        Tue, 28 Jan 2020 14:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221965;
-        bh=fA/B9G2d55+a4zcXyCidgiM1scGvdikipkUh8OpG4sQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aPc+8DJ44URecMpBKGA6Krd3ddBfgQoZQELTra5XX16oVB7gKPIPj22Dgxj7CBf5+
-         rpbV5ocO+1J1Jqo8qz3lO1l5WRi3Q7YuuN8Pki1c8JryD3JLjWYaJkH0WjhOWyA8Wp
-         ZnFz0sndRQgZ6zjI5/XVlCDCnk3CLh39+RLlbn3A=
-Received: by mail-qt1-f182.google.com with SMTP id h12so10398693qtu.1;
-        Tue, 28 Jan 2020 06:32:44 -0800 (PST)
-X-Gm-Message-State: APjAAAXcCl0cBqxAbZ3M1+xVS11dVuHk1GzgmjWiObYKYEX6tzLK2mWw
-        27PWbFyYcHC9b5CggRe2gPEc5xLWeJt80hVk8Q==
-X-Google-Smtp-Source: APXvYqzxJnZDHkxRQDe9t+Eah8Fx57BBszoCD+dphD/GZrMOT/aXuj/TVsyJGpZsYv/1fLKoBTwELyq9kDRKgm/tJlU=
-X-Received: by 2002:aed:2344:: with SMTP id i4mr21770697qtc.136.1580221963861;
- Tue, 28 Jan 2020 06:32:43 -0800 (PST)
+        id S1732916AbgA1Ocw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:32:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 40FF1ACF2;
+        Tue, 28 Jan 2020 14:32:51 +0000 (UTC)
+Date:   Tue, 28 Jan 2020 14:53:47 +0100
+From:   Petr Tesarik <ptesarik@suse.cz>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs/Kconfig: default to no mandatory locking
+Message-ID: <20200128145347.5e4fc5db@ezekiel.suse.cz>
+Organization: SUSE Linux, s.r.o.
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-References: <20191229204421.337612-1-alexandre.belloni@bootlin.com> <20191229204421.337612-2-alexandre.belloni@bootlin.com>
-In-Reply-To: <20191229204421.337612-2-alexandre.belloni@bootlin.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 28 Jan 2020 08:32:32 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+nQbZkY_oDhCCTGr02xWxUXvCVaWZ8KZHkDhsgawM_wA@mail.gmail.com>
-Message-ID: <CAL_Jsq+nQbZkY_oDhCCTGr02xWxUXvCVaWZ8KZHkDhsgawM_wA@mail.gmail.com>
-Subject: Re: [PATCH 2/9] dt-bindings: rtc: at91rm9200: convert bindings to json-schema
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Eugen Hristev <Eugen.Hristev@microchip.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/xwm0zxcQyAV=8Dm=KND=wlp"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 2:45 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> Convert Real Time Clock for Atmel/Microchip SoCs bindings documentation
-> to json-schema.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  .../bindings/rtc/atmel,at91rm9200-rtc.txt     | 17 --------
->  .../bindings/rtc/atmel,at91rm9200-rtc.yaml    | 42 +++++++++++++++++++
->  2 files changed, 42 insertions(+), 17 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
-> deleted file mode 100644
-> index 5d3791e789c6..000000000000
-> --- a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
-> +++ /dev/null
-> @@ -1,17 +0,0 @@
-> -Atmel AT91RM9200 Real Time Clock
-> -
-> -Required properties:
-> -- compatible: should be: "atmel,at91rm9200-rtc" or "atmel,at91sam9x5-rtc"
-> -- reg: physical base address of the controller and length of memory mapped
-> -  region.
-> -- interrupts: rtc alarm/event interrupt
-> -- clocks: phandle to input clock.
-> -
-> -Example:
-> -
-> -rtc@fffffe00 {
-> -       compatible = "atmel,at91rm9200-rtc";
-> -       reg = <0xfffffe00 0x100>;
-> -       interrupts = <1 4 7>;
-> -       clocks = <&clk32k>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
-> new file mode 100644
-> index 000000000000..55bd87e884d3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rtc/atmel,at91rm9200-rtc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atmel AT91 RTC Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "rtc.yaml#"
-> +
-> +maintainers:
-> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - atmel,at91rm9200-rtc
-> +      - atmel,at91sam9x5-rtc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    rtc@fffffe00 {
-> +        compatible = "atmel,at91rm9200-rtc";
-> +        reg = <0xfffffe00 0x100>;
-> +        interrupts = <1 4 7>;
-> +        clocks = <&clk32k>;
+--Sig_/xwm0zxcQyAV=8Dm=KND=wlp
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-clocks is not documented.
+If the help text says this code is dead, the option itself should
+not default to y.
 
-Looks like this landed in linux-next now and breaks 'make dt_binding_check':
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ fs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.example.dt.yaml:
-rtc@fffffe00: 'clocks' does not match any of the regexes:
-'pinctrl-[0-9]+'
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 7b623e9fc1b0..fc60b8bbebc2 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -103,7 +103,7 @@ config FILE_LOCKING
+ config MANDATORY_FILE_LOCKING
+ 	bool "Enable Mandatory file locking"
+ 	depends on FILE_LOCKING
+-	default y
++	default n
+ 	help
+ 	  This option enables files appropriately marked files on appropriely
+ 	  mounted filesystems to support mandatory locking.
+--=20
+2.16.4
 
-Rob
+
+--Sig_/xwm0zxcQyAV=8Dm=KND=wlp
+Content-Type: application/pgp-signature
+Content-Description: Digitální podpis OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEHl2YIZkIo5VO2MxYqlA7ya4PR6cFAl4wPOsACgkQqlA7ya4P
+R6dv8ggAjkoehufY1utaFFX3CabNFkNCMx/T5zH/RQ6yheefCUP9M4gveQo9sttu
+eV/km+EpZzPK4KH7h61rbG+OTtWXDvjsmKtXp4F4zBQm9sC2KzlStvgVLOzirQjh
+1oPSkDC4QSSQop7ZTAUvSF6gnU5HbZch9HiD6aLfUWt7lm2qPGf/vfCVINCLBTCj
+BIMhiTJBbcwT/AbADoHVyIt1S/GbslFay5RxD00g9Gv4zLY8B1EHlof8yx+URdA7
+1Am7oKp2/0mpwcmzPUZyyxCKkzghN9mDZVQNzh1X1XXQkrYYjRVVck/0+oGUao3L
+uqeZZOvgaoFQTcjxyqGfJNJGBG/nfA==
+=d6jB
+-----END PGP SIGNATURE-----
+
+--Sig_/xwm0zxcQyAV=8Dm=KND=wlp--
