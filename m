@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9B5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBB5C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65AA824688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2D120716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222791;
-	bh=qeubVtjGPkxwmdUo+kI9xbarZDGPcg0nVGIze15XR4g=;
+	s=default; t=1580222795;
+	bh=66TyLEf87qx8niwUpUx7Ly1GZpafg2y1sUW55dSL/9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YL3+f+D2g88+J4p65ywc+kgWLS8H/82mH0R5h4NH65cpOPkHDlr3FNn06xCXkeNF5
-	 IJJ7yzNG07m7HtgR4XHXEWlTlww31OZlaEKyxncalBh/EN6DKv5VeepIBOuyHm0dIt
-	 kom6jJuktr4qGjNiFjddHjDOlpvPWP5btYfolmb8=
+	b=lmnImaxOUKPaNaGQwnYQKB/TQUc53wCq6ck46Atk03kuPeluNanqnGJhoLuDOo/Zl
+	 NrukAufL3+4TX0Qmm6mQ5vhgy1mNh4aqiNDx/6roafDQbqOlbuwKd2SY/VX59XZVGJ
+	 jEd56a3GkLIwLxcVrGs9WAIYWDCEZW8Q1IZvCaXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgA1Oq2 (ORCPT
+        id S1728657AbgA1OJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:46:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:09:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727789AbgA1OJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:09:12 -0500
+        id S1728139AbgA1OIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:08:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B56924688;
-        Tue, 28 Jan 2020 14:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED9432468E;
+        Tue, 28 Jan 2020 14:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220551;
-        bh=qeubVtjGPkxwmdUo+kI9xbarZDGPcg0nVGIze15XR4g=;
+        s=default; t=1580220534;
+        bh=66TyLEf87qx8niwUpUx7Ly1GZpafg2y1sUW55dSL/9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NNNrJWw9KO2Om5lQzn0d2Xje9IC1QPMUGFrd7Hfq8txPn659WNfZI+zdWIoldIIQZ
-         vAPgnFS7+uFDPg6wUF3yO0AzKIgQnokyc356gGlNx76Kr7THzY36IVWobwNGffBm6K
-         8TF/2jHnwh3qF0tsvR9P5DZF1NnqXttUpUzPaDNY=
+        b=Hy8iKuwM3RgaEtu9hFKJY6rhHUlcG0awV8DHqwV0Xk7Gjx/lzlptdnk6FPbKlVBMn
+         Uet1gli6ix7IrXr5wZSSSv87Fvx6SGHZ+gzTgaF1SFYOdkBsqZi8Qf6b9R7H4wvd80
+         14ze0fBQx5qesbg3kR5bR5WNVK5ktwx6QAar+4sM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 052/183] ASoC: qcom: Fix of-node refcount unbalance in apq8016_sbc_parse_of()
-Date:   Tue, 28 Jan 2020 15:04:31 +0100
-Message-Id: <20200128135835.112688114@linuxfoundation.org>
+Subject: [PATCH 4.4 046/183] pinctrl: sh-pfc: sh73a0: Fix fsic_spdif pin groups
+Date:   Tue, 28 Jan 2020 15:04:25 +0100
+Message-Id: <20200128135834.568820294@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,89 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 8d1667200850f8753c0265fa4bd25c9a6e5f94ce ]
+[ Upstream commit 0e6e448bdcf896d001a289a6112a704542d51516 ]
 
-The apq8016 driver leaves the of-node refcount at aborting from the
-loop of for_each_child_of_node() in the error path.  Not only the
-iterator node of for_each_child_of_node(), the children nodes referred
-from it for codec and cpu have to be properly unreferenced.
+There are two pin groups for the FSIC SPDIF signal, but the FSIC pin
+group array lists only one, and it refers to a nonexistent group.
 
-Fixes: bdb052e81f62 ("ASoC: qcom: add apq8016 sound card support")
-Cc: Patrick Lai <plai@codeaurora.org>
-Cc: Banajit Goswami <bgoswami@codeaurora.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 2ecd4154c906b7d6 ("sh-pfc: sh73a0: Add FSI pin groups and functions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/apq8016_sbc.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-sh73a0.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
-index 1efdf0088ecdf..886f2027e6712 100644
---- a/sound/soc/qcom/apq8016_sbc.c
-+++ b/sound/soc/qcom/apq8016_sbc.c
-@@ -98,13 +98,15 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
+index ea5da5dcad2c5..b173bd759ee19 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
+@@ -2895,7 +2895,8 @@ static const char * const fsic_groups[] = {
+ 	"fsic_sclk_out",
+ 	"fsic_data_in",
+ 	"fsic_data_out",
+-	"fsic_spdif",
++	"fsic_spdif_0",
++	"fsic_spdif_1",
+ };
  
- 		if (!cpu || !codec) {
- 			dev_err(dev, "Can't find cpu/codec DT node\n");
--			return ERR_PTR(-EINVAL);
-+			ret = -EINVAL;
-+			goto error;
- 		}
- 
- 		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
- 		if (!link->cpu_of_node) {
- 			dev_err(card->dev, "error getting cpu phandle\n");
--			return ERR_PTR(-EINVAL);
-+			ret = -EINVAL;
-+			goto error;
- 		}
- 
- 		link->codec_of_node = of_parse_phandle(codec, "sound-dai", 0);
-@@ -116,13 +118,13 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
- 		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting cpu dai name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		ret = snd_soc_of_get_dai_name(codec, &link->codec_dai_name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting codec dai name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		link->platform_of_node = link->cpu_of_node;
-@@ -132,15 +134,24 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
- 		ret = of_property_read_string(np, "link-name", &link->name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting codec dai_link name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		link->stream_name = link->name;
- 		link->init = apq8016_sbc_dai_init;
- 		link++;
-+
-+		of_node_put(cpu);
-+		of_node_put(codec);
- 	}
- 
- 	return data;
-+
-+ error:
-+	of_node_put(np);
-+	of_node_put(cpu);
-+	of_node_put(codec);
-+	return ERR_PTR(ret);
- }
- 
- static int apq8016_sbc_platform_probe(struct platform_device *pdev)
+ static const char * const fsid_groups[] = {
 -- 
 2.20.1
 
