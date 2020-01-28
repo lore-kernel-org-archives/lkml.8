@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75688C35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC649C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A46324684
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10FB24684
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:07:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bk06kxhV"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UBEY8dkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgA1JHA (ORCPT
+        id S1726467AbgA1JH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:07:00 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55730 "EHLO
+        Tue, 28 Jan 2020 04:07:26 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55784 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725881AbgA1JGy (ORCPT
+        by vger.kernel.org with ESMTP id S1726059AbgA1JHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:06:54 -0500
+        Tue, 28 Jan 2020 04:07:00 -0500
 Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S92i9c021525;
-        Tue, 28 Jan 2020 10:06:44 +0100
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S92jMX021530;
+        Tue, 28 Jan 2020 10:06:51 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=osJmv1TofsLiqLia+94YgpW5rj8JhzwPxMGK3NL9Llg=;
- b=bk06kxhVT9niKdowr/sJozA1K1H5u4/CpemQFHGURTB2SJePjg/ChM4ZbRhtiPPYpquc
- QZy1k6v3Ih0a/swDDtHmqaPpfzFpvTD/onLQF6OQ0mFT11V9FBi1AxhBo1cywPgwvj9E
- Yedi75xWmv5ThLB/8R2yDHwosIkcK/QFKVTVCTLuPuSt37IndIJv3Q0gYmGk/BkzsvHS
- WekHwDJIegsAI9fDZdEf2a/8kFCVec+OLHk9iH5cB6QQ2p918WSlPJQ9KzTCmeOuVtVO
- M+7I+BXXwc5VesIXw/LJ2ps/fyFLqcXThmrDmDIL4QtrfyNOrHs1RnsuTnZhSfwYzRNZ Gg== 
+ bh=Huk5zIYk1Jr66peEpN7YfxHE+3Lw48xMpcF+1ILPSFg=;
+ b=UBEY8dkfV9vYziGbMOlt2M2pP2Fy9RiXcODVGjwsW6RzEA76eQ+IV+J5tnT8sWpBgz+1
+ DNfDrQKNsvYzY4U/KBXMrExjBzvji/0ZKTV+jkt3gzYR0+lw0qUwkk1L6ol+KbVc5xtT
+ Gwo94TXbAPrY4mZdGwm9Wo9Uuz3j46KY2+We6TsV2ybBwRQcLeRqTI+U/r3Mc1N/JOsc
+ RttPeq3YbbChkpEQTwpzIeuUapWo4i8hUsVdbmRHhQeJc+eIFWHHAzMq7hrZIiS2LWMr
+ 8h+ME2diwl6tem4BIPzBcZQUxtmSa4XvHcpIc1MMAUN6vqVDI5au+ST5etmubO/CdwIQ ig== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrdekcugq-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xrdekcuhn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 10:06:44 +0100
+        Tue, 28 Jan 2020 10:06:51 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5AF6E10002A;
-        Tue, 28 Jan 2020 10:06:40 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C8307100053;
+        Tue, 28 Jan 2020 10:06:44 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4E7CA212A38;
-        Tue, 28 Jan 2020 10:06:40 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan 2020 10:06:39
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B0F50212A38;
+        Tue, 28 Jan 2020 10:06:44 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan 2020 10:06:44
  +0100
 From:   Ludovic Barre <ludovic.barre@st.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
@@ -59,16 +59,16 @@ CC:     <srinivas.kandagatla@linaro.org>,
         <linux-mmc@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V2 1/9] mmc: mmci: sdmmc: replace sg_dma_xxx macros
-Date:   Tue, 28 Jan 2020 10:06:28 +0100
-Message-ID: <20200128090636.13689-2-ludovic.barre@st.com>
+Subject: [PATCH V2 5/9] dt-bindings: mmc: mmci: add delay block base register for sdmmc
+Date:   Tue, 28 Jan 2020 10:06:32 +0100
+Message-ID: <20200128090636.13689-6-ludovic.barre@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200128090636.13689-1-ludovic.barre@st.com>
 References: <20200128090636.13689-1-ludovic.barre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG6NODE1.st.com
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG6NODE1.st.com
  (10.75.127.16)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
@@ -77,41 +77,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sg_dma_xxx should be used after a dma_map_sg call has been done
-to get bus addresses of each of the SG entries and their lengths.
-But mmci_host_ops validate_data can be called before dma_map_sg.
-This patch replaces theses macros by sg->offset and sg->length
-which are always defined.
+To support the sdr104 mode, the sdmmc variant has a
+hardware delay block to manage the clock phase when sampling
+data received by the card.
+
+This patch adds a second base register (optional) for
+sdmmc delay block.
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- drivers/mmc/host/mmci_stm32_sdmmc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/mmc/mmci.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-index a4f7e8e689d3..6ccfbbc82c77 100644
---- a/drivers/mmc/host/mmci_stm32_sdmmc.c
-+++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-@@ -36,8 +36,8 @@ static int sdmmc_idma_validate_data(struct mmci_host *host,
- 	 * excepted the last element which has no constraint on idmasize
- 	 */
- 	for_each_sg(data->sg, sg, data->sg_len - 1, i) {
--		if (!IS_ALIGNED(sg_dma_address(data->sg), sizeof(u32)) ||
--		    !IS_ALIGNED(sg_dma_len(data->sg), SDMMC_IDMA_BURST)) {
-+		if (!IS_ALIGNED(data->sg->offset, sizeof(u32)) ||
-+		    !IS_ALIGNED(data->sg->length, SDMMC_IDMA_BURST)) {
- 			dev_err(mmc_dev(host->mmc),
- 				"unaligned scatterlist: ofst:%x length:%d\n",
- 				data->sg->offset, data->sg->length);
-@@ -45,7 +45,7 @@ static int sdmmc_idma_validate_data(struct mmci_host *host,
- 		}
- 	}
+diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
+index 6d3c626e017d..4ec921e4bf34 100644
+--- a/Documentation/devicetree/bindings/mmc/mmci.txt
++++ b/Documentation/devicetree/bindings/mmc/mmci.txt
+@@ -28,6 +28,8 @@ specific for ux500 variant:
+ - st,sig-pin-fbclk       : feedback clock signal pin used.
  
--	if (!IS_ALIGNED(sg_dma_address(data->sg), sizeof(u32))) {
-+	if (!IS_ALIGNED(data->sg->offset, sizeof(u32))) {
- 		dev_err(mmc_dev(host->mmc),
- 			"unaligned last scatterlist: ofst:%x length:%d\n",
- 			data->sg->offset, data->sg->length);
+ specific for sdmmc variant:
++- reg			 : a second base register may be defined if a delay
++                           block is present and used for tuning.
+ - st,sig-dir             : signal direction polarity used for cmd, dat0 dat123.
+ - st,neg-edge            : data & command phase relation, generated on
+                            sd clock falling edge.
 -- 
 2.17.1
 
