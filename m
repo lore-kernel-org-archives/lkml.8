@@ -2,160 +2,111 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C59AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84629C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17292070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 294B220708
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:14:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580242461;
+	bh=4SM/2bdnv+DFbeLsTV2fqxBw/Yh8zMSu+SuA3eOC/1M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nz5NkWFgKkofjjDEq9ME0XRyO/ea8Lq2zLEXAVxORpz040nwTwIlGi5sUMMAgYHVY
+	 efNZRk1xpCG9DrWzHaQgXM4okDmmD1TABMgQe4q4EqNFoNfs5JIzgUzqlpbAPVAnoe
+	 NTefQYdyn1Sm7mksb4Gx4lr8PZsbjQMLQ+mu1+jA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgA1UJy (ORCPT
+        id S1726391AbgA1UOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 15:09:54 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38998 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726141AbgA1UJx (ORCPT
+        Tue, 28 Jan 2020 15:14:20 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51305 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgA1UOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 15:09:53 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SK9WZj125493
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 15:09:52 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xrfg1eab5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 15:09:51 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 28 Jan 2020 20:09:50 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 Jan 2020 20:09:48 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00SK9mgh58851500
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 20:09:48 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0AAE711C04C;
-        Tue, 28 Jan 2020 20:09:48 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 31BDD11C04A;
-        Tue, 28 Jan 2020 20:09:47 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.227.61])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 28 Jan 2020 20:09:47 +0000 (GMT)
-Subject: [GIT PULL] integrity subsystem updates for v5.6
-From:   Mimi Zohar <zohar@linux.ibm.com>
+        Tue, 28 Jan 2020 15:14:20 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t23so3925411wmi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 12:14:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y/ed9DUQExY9n11iK5mbjNhe8YjTArUKxK4NVRoKnXc=;
+        b=VybF2xFfvJabsCgeo4SwZvw7v3ouC7JxqF/KS3M/WSwRoFOd7xjvrwH1s21UNAzSr6
+         PvSHkGRqgb+9qYFMQ92KJMdcU9vovmhiCjAWorvdueMlBH9kqGaNE8VInQow7shLsq0q
+         OmPP/xDOKziicv0Je1CWw9Im8WFpGIGy6tWaaRAzZjylJOd1vHf1knc4+aw9RezZzPFW
+         Fv0HHHno4AyyB0b0OohgcFlLB1tw2HI0Kxs7wkefTVVElyXC45XJTdUDvap1KoxV27Xn
+         Zav9SN/DK1pv0S0ANaovA4Qz7d3wmwh4pJz/cW+iz6F57YqsH7KYeoe48okthhIK/Md5
+         duzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y/ed9DUQExY9n11iK5mbjNhe8YjTArUKxK4NVRoKnXc=;
+        b=ZUxdG7kXFoC+i7RjspbadOt+D0dBeeZMkeOb7+sVHxyTvZyV9Ezbm0mu9UbV7vl9Nu
+         2LbOFGsn2LQvW0qV+QvcWaHkQQlKZSX5BegV8LeHkLgKpcXRt6yu/J4lV0RSJd/XPHpb
+         HVXJZZQRQxi+sJHijjZWfu0R1shTcUifTW0p98PnHIRwBGREfq1jCR7MR/fSo9QyTOf/
+         pd+8wbkAVaHIVQ5UM1JY7bVlFDoQhdL0ZpgUfU8hztr6agfPsYrV0bPLswSHVpzkV4CX
+         cqIDWk6aYqOH73A5CHwJMb7XFKfvPAg+kqC0L9tPeTQBBHImspJV8xdy4iNTF8AWBW0R
+         P40Q==
+X-Gm-Message-State: APjAAAU6RpRfDLth7op6mexlbMfD+NuvKeQuICIre6IdFZoqmF0Cs6LA
+        cDTHVm5ny35P4R1k5yFkhf8=
+X-Google-Smtp-Source: APXvYqzZNMu6ODSHvWgoDTZLaLu1muxIJVdFQ3ZzjU2etpeEsDzN9DZZHHilsFHH+kkujz7zq4vDOg==
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr7336168wmk.68.1580242458477;
+        Tue, 28 Jan 2020 12:14:18 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id v3sm27201166wru.32.2020.01.28.12.14.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2020 12:14:17 -0800 (PST)
+Date:   Tue, 28 Jan 2020 21:14:15 +0100
+From:   Ingo Molnar <mingo@kernel.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Jan 2020 15:09:46 -0500
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012820-4275-0000-0000-0000039BC873
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012820-4276-0000-0000-000038AFE1B0
-Message-Id: <1580242186.5088.96.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_07:2020-01-28,2020-01-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
- phishscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
- suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001280150
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] x86/asm changes for v5.6
+Message-ID: <20200128201415.GA89586@gmail.com>
+References: <20200128165906.GA67781@gmail.com>
+ <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
+ <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-Two new features - measuring certificates and querying IMA for a file
-hash - and three bug fixes are included in this pull request.
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-- Measuring certificates is like the rest of IMA, based on policy, but
-requires loading a custom policy.  Certificates loaded onto a keyring,
-for example during early boot, before a custom policy has been loaded,
-are queued and only processed after loading the custom policy.
+> On Tue, Jan 28, 2020 at 11:51 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> >         ALTERNATIVE_2 \
+> >                 "cmp  $680, %rdx ; jb 3f ; cmpb %dil, %sil; je 4f", \
+> >                 "movq %rdx, %rcx ; rep movsb; retq", X86_FEATURE_FSRM, \
+> >                 "cmp $0x20, %rdx; jb 1f; movq %rdx, %rcx; rep movsb; retq", X86_FEATURE_ERMS
+> 
+> Note the UNTESTED part.
+> 
+> In particular, I didn't check what the priority for the alternatives
+> is. Since FSRM being set always implies ERMS being set too, it may be
+> that the ERMS case is always picked with the above code.
+> 
+> So maybe the FSRM and ERMS lines need to be switched around, and
+> somebody should add a comment to the ALTERNATIVE_2 macro about the
+> priority rules for feature1 vs feature2 when both are set..
+> 
+> IOW, testing most definitely required for that patch suggestion of mine..
 
-- IMA calculates and caches files hashes.  Other kernel subsystems,
-and possibly kernel modules, are interested in accessing these cached
-file hashes.  
+Understood, thanks!
 
-The bug fixes prevents classifying a file short read (e.g. shutdown)
-as an invalid file signature, adds a missing blank when displaying the
-securityfs policy rules containing LSM labels, and, lastly, fixes the
-handling of the IMA policy information for unknown LSM labels.
-
-thanks,
-
-Mimi
-
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
-
-for you to fetch changes up to d54e17b4066612d88c4ef3e5fb3115f12733763d:
-
-  Merge branch 'next-integrity.defer-measuring-keys' into next-integrity (2020-01-23 17:24:35 -0500)
-
-----------------------------------------------------------------
-Clay Chang (1):
-      ima: Add a space after printing LSM rules for readability
-
-Florent Revest (1):
-      ima: add the ability to query the cached hash of a given file
-
-Janne Karhunen (1):
-      ima: ima/lsm policy rule loading logic bug fixes
-
-Lakshmi Ramasubramanian (11):
-      IMA: Check IMA policy flag
-      IMA: Add KEY_CHECK func to measure keys
-      IMA: Define an IMA hook to measure keys
-      KEYS: Call the IMA hook to measure keys
-      IMA: Add support to limit measuring keys
-      IMA: Read keyrings= option from the IMA policy
-      IMA: fix measuring asymmetric keys Kconfig
-      IMA: pre-allocate buffer to hold keyrings string
-      IMA: Define workqueue for early boot key measurements
-      IMA: Call workqueue functions to measure queued keys
-      IMA: Defined delayed workqueue to free the queued keys
-
-Mimi Zohar (2):
-      Merge branch 'next-integrity.measure-keys' into next-integrity
-      Merge branch 'next-integrity.defer-measuring-keys' into next-integrity
-
-Patrick Callaghan (1):
-      ima: avoid appraise error for hash calc interrupt
-
- Documentation/ABI/testing/ima_policy         |  16 ++-
- include/linux/ima.h                          |  20 ++++
- security/integrity/ima/Kconfig               |  12 ++
- security/integrity/ima/Makefile              |   2 +
- security/integrity/ima/ima.h                 |  33 +++++-
- security/integrity/ima/ima_api.c             |   8 +-
- security/integrity/ima/ima_appraise.c        |   4 +-
- security/integrity/ima/ima_asymmetric_keys.c |  66 +++++++++++
- security/integrity/ima/ima_crypto.c          |   4 +-
- security/integrity/ima/ima_init.c            |   8 +-
- security/integrity/ima/ima_main.c            |  61 +++++++++-
- security/integrity/ima/ima_policy.c          | 165 ++++++++++++++++++++++----
- security/integrity/ima/ima_queue_keys.c      | 171 +++++++++++++++++++++++++++
- security/keys/key.c                          |  10 ++
- 14 files changed, 540 insertions(+), 40 deletions(-)
- create mode 100644 security/integrity/ima/ima_asymmetric_keys.c
- create mode 100644 security/integrity/ima/ima_queue_keys.c
-
+	Ingo
