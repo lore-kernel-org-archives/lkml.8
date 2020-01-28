@@ -2,51 +2,51 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FB1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08327C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FDCF2467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA15C2467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:06:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="LbHHADT6"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="T4qoyRrO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgA1IGi (ORCPT
+        id S1725974AbgA1IGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 03:06:38 -0500
-Received: from mail-eopbgr10074.outbound.protection.outlook.com ([40.107.1.74]:32833
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        Tue, 28 Jan 2020 03:06:41 -0500
+Received: from mail-eopbgr80055.outbound.protection.outlook.com ([40.107.8.55]:4525
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725825AbgA1IGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 03:06:38 -0500
+        id S1725810AbgA1IGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 03:06:39 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iU3NVbi6vX+h5oT5XY8df15BR2eNk9dG6jBeX/Xuyaxq0R35c0xIvV5OABkpgZyi/tKcwsrblHrdAXrSLULTg1DteQ4Xj7BxfTsY1dlEqk1X+Vi9GPCLRZS5ysFjRm4/jih30ro78MsLBEhWqbp80h8HjgFEVQloBBL12EFInAEGHw5JSdoYgs6FE45HJiYvQuezbrnmtjMrsnviplc0K0yfjmeK9Sa3l2R7YgfwRDJPXjH5pSHpuPpwyNbSCQ/oRb4Zc346alAFQ2nQrh9Eqc4/HZTweBGu/d71ar1INjCeKSIpil3Zt7ZNF2s0xuA9QLhStzNmzWfU/l9HHlLHmw==
+ b=RcTZS67YXKo02xzIVwD4oMEVSFzG2Xggn7x8gKybgw/bIVC+l81B2yfLZRBeLjYpRVjv2QwLVO1cIDEqLmEAmkOeh4qHI7yLgdbBjsCVU1YXfcqm8QPKVNtdTzq9A8cMW7H2fsVuuAA3qO/lRLWjdjQkRTKxJTLBjR690rRA6Wb9sCX+ezBzosP6LrPSlK9ONrD3ieGlPLiPNycs4W/u5XBYN9c4DCjfIR2dJukSLnkVp58KnHiPTzCvnO0Zg/xdKLphnVofH3VeWB/JWseuSgG+H0CuV2UxqJfMT9bZRKOJOy9kCv9HmwtP1fqCJy1/GO8hhavYLCjXoatU4+52Yw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ippRL3gKhAvxUK9cSq3OolHLCZ0QPiDMfMPQLTG0GoY=;
- b=I5JU3LoLS96QNzWknUojnuPKO+QVFDrFlpFjg08XsmagbseiPlSWBgqLKZTF2Ke8OHFXthCNkGKbEt1P2nneeqxJnRckdTCP65zjBYdXiCYsE8pfM+RwKtLI/CBFQb3d95bapqC9qCWq5/N8/FWrUNnapzClimEzgm1Cq7FmSy/bEXmcMiKpqJ2Ts1WegI+y+O8FKvPkDSp3ywtUa7zGuy7yiZXM+Jj2fs8dZuZ7hIQB4BNAuQD/BI3MGOo5txI6t4GyPw6tfD2Igr6TOS7dei5lASMubtXLNs+9MfONob3JGoFTBHWC0cMSHJvxDyCYVzVHJ6u6ioFSurDJV3BcEQ==
+ bh=3mcnEvcfcRTM/xbDBnLnflFfaGT4x5i+8ek1kujgnJA=;
+ b=nc8e8CNg4e6RoWMSv4ukUDwtT/a82gYWNbf/uaX3naDLr9hjWsSZaFWL+1P9YinPn9dWy73HxXkNFw7ZJJ+6ZdGi/f3sbqmZ/1GR+jKkWwRRW6WYrFw2guEnO76baiysTHvD/DGKyHN3t7Su/B1VnqzzQFEXpL5mlctHzfsB8XSCCnqTB7TRycqO08v3Zs5ObDecpTOiWam8/ckJvFgZy33G5Bxw0xSPZ53BzOX8jdKoaoiR6W2EmRs2EUmh6TdCYbg+K+nDNEFRf8xvBHjBoHWn1MTL2kGaiUWWkxV06mfK/+TwTeIECmSpRE2BlaNHL9eOq7uIxB2sevvfgZZz0w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ippRL3gKhAvxUK9cSq3OolHLCZ0QPiDMfMPQLTG0GoY=;
- b=LbHHADT6HIwBFfyyHnhCw+3GdMI99rMuiX7n01wvTlb8XwSJZ+a9fAmky76hMnrTNmN458TVvXiZVs3fjIP8hgaDwO91IBKakevXbY1Xp0Ydbrf3e/nM0TzeEElFKozzUcjqeTTA6JXRMT4pi2k9G+SscGJjbQkjamnPBgL5Hb4=
+ bh=3mcnEvcfcRTM/xbDBnLnflFfaGT4x5i+8ek1kujgnJA=;
+ b=T4qoyRrOpuV+4o9tQnYh/7085Si8W2nn9BuJf/iB5dAvO9UwYPj42+Li3in/VtZHdlyjSTCZe95faqWOlP3aYjAA/rKmaD8TjtzuLQ9a6xfck5QY+P3PQGXtlvAXk3/idkYGmGW3jgpMIveYGseGRX1iMjgS119YhmFz+IbC6oY=
 Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com (52.134.16.147) by
- VI1PR0402MB3646.eurprd04.prod.outlook.com (52.134.13.30) with Microsoft SMTP
+ VI1PR0402MB3423.eurprd04.prod.outlook.com (52.134.4.145) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.23; Tue, 28 Jan 2020 08:06:34 +0000
+ 15.20.2665.24; Tue, 28 Jan 2020 08:06:31 +0000
 Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com
  ([fe80::8881:e155:f058:c0d1]) by VI1PR0402MB3839.eurprd04.prod.outlook.com
  ([fe80::8881:e155:f058:c0d1%4]) with mapi id 15.20.2665.026; Tue, 28 Jan 2020
- 08:06:34 +0000
-Received: from fsr-ub1864-103.ro-buh02.nxp.com (89.37.124.34) by AM4PR0701CA0015.eurprd07.prod.outlook.com (2603:10a6:200:42::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.13 via Frontend Transport; Tue, 28 Jan 2020 08:06:32 +0000
+ 08:06:31 +0000
+Received: from fsr-ub1864-103.ro-buh02.nxp.com (89.37.124.34) by AM4PR0701CA0015.eurprd07.prod.outlook.com (2603:10a6:200:42::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.13 via Frontend Transport; Tue, 28 Jan 2020 08:06:30 +0000
 From:   "Daniel Baluta (OSS)" <daniel.baluta@oss.nxp.com>
 To:     "broonie@kernel.org" <broonie@kernel.org>,
         "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
@@ -60,11 +60,11 @@ CC:     "festevam@gmail.com" <festevam@gmail.com>,
         <linux-arm-kernel@lists.infradead.org>,
         Paul Olaru <paul.olaru@nxp.com>,
         Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 3/4] ASoC: SOF: Add i.MX8QM device descriptor
-Thread-Topic: [PATCH 3/4] ASoC: SOF: Add i.MX8QM device descriptor
-Thread-Index: AQHV1bHa4q1UohZ6fEmmFQ/wI2RSEw==
-Date:   Tue, 28 Jan 2020 08:06:33 +0000
-Message-ID: <20200128080518.29970-4-daniel.baluta@oss.nxp.com>
+Subject: [PATCH 1/4] ASoC: SOF: Rename i.MX8 platform to i.MX8X
+Thread-Topic: [PATCH 1/4] ASoC: SOF: Rename i.MX8 platform to i.MX8X
+Thread-Index: AQHV1bHZin203cfhfk6wRFW9b+E5DA==
+Date:   Tue, 28 Jan 2020 08:06:31 +0000
+Message-ID: <20200128080518.29970-2-daniel.baluta@oss.nxp.com>
 References: <20200128080518.29970-1-daniel.baluta@oss.nxp.com>
 In-Reply-To: <20200128080518.29970-1-daniel.baluta@oss.nxp.com>
 Accept-Language: en-US
@@ -81,32 +81,32 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [89.37.124.34]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a9bde7d1-b52b-4be3-564b-08d7a3c8fd5d
-x-ms-traffictypediagnostic: VI1PR0402MB3646:|VI1PR0402MB3646:
+x-ms-office365-filtering-correlation-id: 11bb4cc2-bea7-41d1-8f95-08d7a3c8fbde
+x-ms-traffictypediagnostic: VI1PR0402MB3423:|VI1PR0402MB3423:
 x-ms-exchange-sharedmailbox-routingagent-processed: True
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3646E97F9904DE0836DADE27B80A0@VI1PR0402MB3646.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:293;
+x-microsoft-antispam-prvs: <VI1PR0402MB34232D36B522B2399C566A50B80A0@VI1PR0402MB3423.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 029651C7A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(39860400002)(396003)(366004)(189003)(199004)(86362001)(6506007)(6512007)(54906003)(110136005)(2906002)(316002)(478600001)(81156014)(6486002)(956004)(66946007)(71200400001)(66476007)(2616005)(64756008)(66446008)(1076003)(8936002)(16526019)(81166006)(5660300002)(186003)(4326008)(66556008)(26005)(8676002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3646;H:VI1PR0402MB3839.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(366004)(39860400002)(396003)(346002)(199004)(189003)(5660300002)(6486002)(66556008)(66476007)(66446008)(64756008)(52116002)(66946007)(110136005)(316002)(54906003)(16526019)(8676002)(8936002)(81166006)(81156014)(186003)(956004)(2616005)(71200400001)(1076003)(26005)(2906002)(478600001)(6506007)(6512007)(86362001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3423;H:VI1PR0402MB3839.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
 received-spf: None (protection.outlook.com: oss.nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gJIe7R9h7b19n4fU22dR84ZFAZ/hetb2bx4QspcGYyvZZWh9TGXYy7X0kd6iZzVtOLRonaKAMDBCzzOvrzG+6qhtX1BI39SM2Ku7oMno/uzdwZdHgIVtDJegD0wPbA4byuPaS9rb/mt4SCNMkhNB5c8+77AOf2XaZK4MRSVXNvB8GUa2XWV/BOo4CFFV72/Mp21dxewZqCKz3wuivHt7bdd3/6Xqf8JJq4v9Lmiyk5s7hnrjYjKnGJe/yHGzoLajnW0ZPEld6Hbw10Ft427ORJIR7Qlhx9RJPAJWUNzQ17U65z02vr+uwwk8IdLb+S/KS/hGfX9zfD3/NRa2FYRt0pvF8ZGh47GjzmuVDk25su/MFXXFDuLJ2hO9rpAMuJsfeHwAoUhJl3D5Atn0C/eT7gowGnPwTyLc1QMP+RcmPt5qmqvgNty6litH+tZR9mj+
-x-ms-exchange-antispam-messagedata: LOHGVyXoebp8Y8a0PLkrYQktcvVK3dayri5Acj5P0hwjQbB80pFcu4fOuZtLHg5Gpgu/g1ijQYUdr94EWU+1yJscuOkASK5y99wiwmVtmSMk/F/LX28dKvlbo22pQX7DotQ6O2nuQ4k0PcQOqoFDQg==
+x-microsoft-antispam-message-info: 1IxkTZCYsYY/2AjEGKWPHBdXuqfMGu4spjjJJyj3loiTyGO/glpwtz/5k65AeewTuKX2fb+voS1rUQ042wOmZerfZmwV74c7Rf46UC6N5/9Mlg3JqiAuTqWDQT8aloyURzJViXm/lJoSrMLnJk8TGPZ5Y/P9Y3JIV+qNenkcvrDSKggdp5bphzJGGB7t3ELqVdmcx2CsqtagDvw3C1j7o0KNZiLTcNSgEsfD6J3ElDSKDs+KB0im1dHEszBlg5F4Xd4xZQO12+Y0/hWqBJO/333eQwk28HsoBPkUNrS8+5oY7m+8LQJxOhQL9h4aWdZL1aH5GKk6bRm64YIZd6OloyvSci+sEcj22B7H+iQDGIYO/MpCDXjY4Cub/dZyW5IKKx0qChlJwAUB8MUlqWOjn4/TXxP3NCAp66nIpZwaQ+LnZrtLxFjFRTiJVRTDt+lR
+x-ms-exchange-antispam-messagedata: CNVbdr1x4Ir+mUmysKJQXujdjaL4xgfA3xr7CYKEciWtiUzapteywOO9fzXnZ80vvYBThx+t055eCExK5EheOarxp9Z/ArG/6p12bMCmbEVQP+Q45smeZJDmE/wCT3YK5X675faO4c5GLcpTq88EGQ==
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9bde7d1-b52b-4be3-564b-08d7a3c8fd5d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 08:06:33.8562
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11bb4cc2-bea7-41d1-8f95-08d7a3c8fbde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 08:06:31.3436
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cPfj0NJfDpJ0lF+kRXMV9wX3/vSNty+X/g5E0oTkwH4+Q3cDhslQ0FTaH7FRVkwvxsWKojGvGrtbGBBB30izYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3646
+X-MS-Exchange-CrossTenant-userprincipalname: GwoSsgcraQnHIROF4eBfpY8M3LIwsKTRgI7fbyA0OFgMbAvVtoA5NY6p66XpmyLvfcrGyf/OcfnaSnDOwAPtJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3423
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -114,49 +114,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Paul Olaru <paul.olaru@nxp.com>
 
-Add SOF device and DT descriptors for i.MX8QM platform.
+i.MX8 and i.MX8X platforms are very similar and were treated the same.
+Anyhow, we need to account for the differences somehow.
+
+Current supported platform is i.MX8QXP which is from i.MX8X family.
+Rename i.MX8 platform to i.MX8X to prepare for future i.MX8 platforms.
 
 Signed-off-by: Paul Olaru <paul.olaru@nxp.com>
 Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 ---
- sound/soc/sof/sof-of-dev.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ sound/soc/sof/imx/imx8.c   | 10 +++++-----
+ sound/soc/sof/sof-of-dev.c |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
+diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
+index aef6ca167b9c..94481adc2240 100644
+--- a/sound/soc/sof/imx/imx8.c
++++ b/sound/soc/sof/imx/imx8.c
+@@ -138,7 +138,7 @@ static int imx8_send_msg(struct snd_sof_dev *sdev, stru=
+ct snd_sof_ipc_msg *msg)
+ /*
+  * DSP control.
+  */
+-static int imx8_run(struct snd_sof_dev *sdev)
++static int imx8x_run(struct snd_sof_dev *sdev)
+ {
+ 	struct imx8_priv *dsp_priv =3D (struct imx8_priv *)sdev->private;
+ 	int ret;
+@@ -361,13 +361,13 @@ static struct snd_soc_dai_driver imx8_dai[] =3D {
+ },
+ };
+=20
+-/* i.MX8  ops */
+-struct snd_sof_dsp_ops sof_imx8_ops =3D {
++/* i.MX8X ops */
++struct snd_sof_dsp_ops sof_imx8x_ops =3D {
+ 	/* probe and remove */
+ 	.probe		=3D imx8_probe,
+ 	.remove		=3D imx8_remove,
+ 	/* DSP core boot */
+-	.run		=3D imx8_run,
++	.run		=3D imx8x_run,
+=20
+ 	/* Block IO */
+ 	.block_read	=3D sof_block_read,
+@@ -399,6 +399,6 @@ struct snd_sof_dsp_ops sof_imx8_ops =3D {
+ 			SNDRV_PCM_INFO_PAUSE |
+ 			SNDRV_PCM_INFO_NO_PERIOD_WAKEUP
+ };
+-EXPORT_SYMBOL(sof_imx8_ops);
++EXPORT_SYMBOL(sof_imx8x_ops);
+=20
+ MODULE_LICENSE("Dual BSD/GPL");
 diff --git a/sound/soc/sof/sof-of-dev.c b/sound/soc/sof/sof-of-dev.c
-index 2da1bd859d98..16e49f2ee629 100644
+index 39ea8af6213f..2da1bd859d98 100644
 --- a/sound/soc/sof/sof-of-dev.c
 +++ b/sound/soc/sof/sof-of-dev.c
-@@ -13,6 +13,7 @@
- #include "ops.h"
-=20
- extern struct snd_sof_dsp_ops sof_imx8_ops;
-+extern struct snd_sof_dsp_ops sof_imx8x_ops;
-=20
- /* platform specific devices */
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
-@@ -23,6 +24,14 @@ static struct sof_dev_desc sof_of_imx8qxp_desc =3D {
+@@ -19,9 +19,9 @@ extern struct snd_sof_dsp_ops sof_imx8_ops;
+ static struct sof_dev_desc sof_of_imx8qxp_desc =3D {
+ 	.default_fw_path =3D "imx/sof",
+ 	.default_tplg_path =3D "imx/sof-tplg",
+-	.default_fw_filename =3D "sof-imx8.ri",
++	.default_fw_filename =3D "sof-imx8x.ri",
  	.nocodec_tplg_filename =3D "sof-imx8-nocodec.tplg",
- 	.ops =3D &sof_imx8x_ops,
+-	.ops =3D &sof_imx8_ops,
++	.ops =3D &sof_imx8x_ops,
  };
-+
-+static struct sof_dev_desc sof_of_imx8qm_desc =3D {
-+	.default_fw_path =3D "imx/sof",
-+	.default_tplg_path =3D "imx/sof-tplg",
-+	.default_fw_filename =3D "sof-imx8.ri",
-+	.nocodec_tplg_filename =3D "sof-imx8-nocodec.tplg",
-+	.ops =3D &sof_imx8_ops,
-+};
  #endif
 =20
- static const struct dev_pm_ops sof_of_pm =3D {
-@@ -103,6 +112,7 @@ static int sof_of_remove(struct platform_device *pdev)
- static const struct of_device_id sof_of_ids[] =3D {
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
- 	{ .compatible =3D "fsl,imx8qxp-dsp", .data =3D &sof_of_imx8qxp_desc},
-+	{ .compatible =3D "fsl,imx8qm-dsp", .data =3D &sof_of_imx8qm_desc},
- #endif
- 	{ }
- };
 --=20
 2.17.1
 
