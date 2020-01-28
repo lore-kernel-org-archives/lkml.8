@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418BEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6269CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A12621739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B4024686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221557;
-	bh=N53L2593G9AItP5Hfi5f6AE/8lIDgtBvs63EpGa8FJM=;
+	s=default; t=1580221560;
+	bh=+87kAnNydczXb7BW97pURPntkWjZgoBlJtHDxJHMwDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rq8Gt8Skjr2emfFTxZJJeGNAmLxYrvHYI+L6n+Zk+8sCzrMoUljaZ0UOG7mlRCrhR
-	 QidUEibALeUkfqfZ6dfw9uHQd+IosH3CArqleAxnjBiAPiG6O0FM29UO/uR1lQdjlS
-	 6F8t8tJ4YkRjhk7X9CPTAhgpESPWsvZSCHfanfeY=
+	b=SfW0N3vulUtGmbdYLE23AR21wY/V9kZulOjLDw+Tu/ogISAcX63ZNdjpaOv0VfP7Y
+	 0AqwnlJ/WLOQUA8y5+zGZyNsuPo/cR3fsIBqycZ07joi3T/Tt21kyiKaGTLgunNQ2X
+	 rDvCE3w03Tr6Aqvgidaj55Q8ZXAByRgXexvH/v/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733102AbgA1OZ4 (ORCPT
+        id S1733109AbgA1OZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:25:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:25:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730766AbgA1OZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:53 -0500
+        id S1733098AbgA1OZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:25:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BC3224686;
-        Tue, 28 Jan 2020 14:25:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D18420716;
+        Tue, 28 Jan 2020 14:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221552;
-        bh=N53L2593G9AItP5Hfi5f6AE/8lIDgtBvs63EpGa8FJM=;
+        s=default; t=1580221555;
+        bh=+87kAnNydczXb7BW97pURPntkWjZgoBlJtHDxJHMwDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pQT6KO8YfrkCE3fqpJLz480OFcjDxuk8e5gt99WfhlLXrmnUpRNoNhymUTVrbKhUs
-         C/b6O3Ll3SCixCG2EHLG6CXvwkA47KnPhkRWp/uq2i7XTBhwugmIbI0KoB/byEAoKa
-         QgBRCbwUEJBsa0AMRtQtyHCBBLl/r0N09FfidYiI=
+        b=0U63r2YWqhsOv9jdm1g8d0I/jQEsCN7Z/Wlh7FXFa96/lOVgV94N/1kGBFjOMeHrr
+         gD68W8c61YEu5q7ZJuqqwQXNT8TTFb/1CMbgCVXYTNtmdobXfPv4QWMAS86OcoLiNv
+         ZC/CnufwU6RVRUMs/JCFsdr4D4DWZXPdDKVgbYuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com,
-        Richard Palethorpe <rpalethorpe@suse.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tyler Hall <tylerwhall@gmail.com>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller@googlegroups.com
-Subject: [PATCH 4.9 234/271] can, slip: Protect tty->disc_data in write_wakeup and close with RCU
-Date:   Tue, 28 Jan 2020 15:06:23 +0100
-Message-Id: <20200128135909.978871848@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 235/271] firestream: fix memory leaks
+Date:   Tue, 28 Jan 2020 15:06:24 +0100
+Message-Id: <20200128135910.049750526@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -65,109 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Palethorpe <rpalethorpe@suse.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 0ace17d56824165c7f4c68785d6b58971db954dd ]
+[ Upstream commit fa865ba183d61c1ec8cbcab8573159c3b72b89a4 ]
 
-write_wakeup can happen in parallel with close/hangup where tty->disc_data
-is set to NULL and the netdevice is freed thus also freeing
-disc_data. write_wakeup accesses disc_data so we must prevent close from
-freeing the netdev while write_wakeup has a non-NULL view of
-tty->disc_data.
+In fs_open(), 'vcc' is allocated through kmalloc() and assigned to
+'atm_vcc->dev_data.' In the following execution, if an error occurs, e.g.,
+there is no more free channel, an error code EBUSY or ENOMEM will be
+returned. However, 'vcc' is not deallocated, leading to memory leaks. Note
+that, in normal cases where fs_open() returns 0, 'vcc' will be deallocated
+in fs_close(). But, if fs_open() fails, there is no guarantee that
+fs_close() will be invoked.
 
-We also need to make sure that accesses to disc_data are atomic. Which can
-all be done with RCU.
+To fix this issue, deallocate 'vcc' before the error code is returned.
 
-This problem was found by Syzkaller on SLCAN, but the same issue is
-reproducible with the SLIP line discipline using an LTP test based on the
-Syzkaller reproducer.
-
-A fix which didn't use RCU was posted by Hillf Danton.
-
-Fixes: 661f7fda21b1 ("slip: Fix deadlock in write_wakeup")
-Fixes: a8e83b17536a ("slcan: Port write_wakeup deadlock fix from slip")
-Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
-Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Tyler Hall <tylerwhall@gmail.com>
-Cc: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: syzkaller@googlegroups.com
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/can/slcan.c |   12 ++++++++++--
- drivers/net/slip/slip.c |   12 ++++++++++--
- 2 files changed, 20 insertions(+), 4 deletions(-)
+ drivers/atm/firestream.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -344,9 +344,16 @@ static void slcan_transmit(struct work_s
-  */
- static void slcan_write_wakeup(struct tty_struct *tty)
- {
--	struct slcan *sl = tty->disc_data;
-+	struct slcan *sl;
-+
-+	rcu_read_lock();
-+	sl = rcu_dereference(tty->disc_data);
-+	if (!sl)
-+		goto out;
+--- a/drivers/atm/firestream.c
++++ b/drivers/atm/firestream.c
+@@ -927,6 +927,7 @@ static int fs_open(struct atm_vcc *atm_v
+ 			}
+ 			if (!to) {
+ 				printk ("No more free channels for FS50..\n");
++				kfree(vcc);
+ 				return -EBUSY;
+ 			}
+ 			vcc->channo = dev->channo;
+@@ -937,6 +938,7 @@ static int fs_open(struct atm_vcc *atm_v
+ 			if (((DO_DIRECTION(rxtp) && dev->atm_vccs[vcc->channo])) ||
+ 			    ( DO_DIRECTION(txtp) && test_bit (vcc->channo, dev->tx_inuse))) {
+ 				printk ("Channel is in use for FS155.\n");
++				kfree(vcc);
+ 				return -EBUSY;
+ 			}
+ 		}
+@@ -950,6 +952,7 @@ static int fs_open(struct atm_vcc *atm_v
+ 			    tc, sizeof (struct fs_transmit_config));
+ 		if (!tc) {
+ 			fs_dprintk (FS_DEBUG_OPEN, "fs: can't alloc transmit_config.\n");
++			kfree(vcc);
+ 			return -ENOMEM;
+ 		}
  
- 	schedule_work(&sl->tx_work);
-+out:
-+	rcu_read_unlock();
- }
- 
- /* Send a can_frame to a TTY queue. */
-@@ -640,10 +647,11 @@ static void slcan_close(struct tty_struc
- 		return;
- 
- 	spin_lock_bh(&sl->lock);
--	tty->disc_data = NULL;
-+	rcu_assign_pointer(tty->disc_data, NULL);
- 	sl->tty = NULL;
- 	spin_unlock_bh(&sl->lock);
- 
-+	synchronize_rcu();
- 	flush_work(&sl->tx_work);
- 
- 	/* Flush network side */
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -452,9 +452,16 @@ static void slip_transmit(struct work_st
-  */
- static void slip_write_wakeup(struct tty_struct *tty)
- {
--	struct slip *sl = tty->disc_data;
-+	struct slip *sl;
-+
-+	rcu_read_lock();
-+	sl = rcu_dereference(tty->disc_data);
-+	if (!sl)
-+		goto out;
- 
- 	schedule_work(&sl->tx_work);
-+out:
-+	rcu_read_unlock();
- }
- 
- static void sl_tx_timeout(struct net_device *dev)
-@@ -887,10 +894,11 @@ static void slip_close(struct tty_struct
- 		return;
- 
- 	spin_lock_bh(&sl->lock);
--	tty->disc_data = NULL;
-+	rcu_assign_pointer(tty->disc_data, NULL);
- 	sl->tty = NULL;
- 	spin_unlock_bh(&sl->lock);
- 
-+	synchronize_rcu();
- 	flush_work(&sl->tx_work);
- 
- 	/* VSV = very important to remove timers */
 
 
