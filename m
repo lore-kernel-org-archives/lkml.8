@@ -2,521 +2,374 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB84C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0055AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 868B92467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD98E22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="l/+3rQ6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgA1E1K (ORCPT
+        id S1726518AbgA1EbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 23:27:10 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:33079 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgA1E1K (ORCPT
+        Mon, 27 Jan 2020 23:31:23 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34524 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgA1EbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 23:27:10 -0500
-Received: by mail-il1-f199.google.com with SMTP id s9so9445496ilk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 20:27:09 -0800 (PST)
+        Mon, 27 Jan 2020 23:31:22 -0500
+Received: by mail-wm1-f67.google.com with SMTP id s144so874796wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 20:31:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fRsUnXBUE4PZHTWQPpeYq1ZjUN3os/yERYKuiBu0EAk=;
+        b=l/+3rQ6l256sMBhkUCGKUq3xBEevdA/KmXxwfTKI+qErQKWSwCbKB/2sd9G1fgzhV5
+         8L/g5Q3ZxFyNzk/T6GncfI64bWz+G0TRU7LVYo89pKoSOnUHhkM7JFsINVDAQrkfhVSj
+         f1HEya4cQMGok6ObDv/jUtoIp3tymidVJm0aS4oyL3tJcf0SJmVTFumLYB0Ws6RuueyJ
+         B78rJ8epmu6mlocV4g0OUZfQ9GnIp0ZlLv/Y8R/hdJ4yBPkmehKx1JYSu50cogXvJaiR
+         8YQpoPiCaJTVFZ8XkUb/NVOVJTfW9aODzRA4UskganRqbistb8P80MQiTbvQwaVLQD1g
+         /iOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=p+rB1dZgkwqfEmd+2Nzrd3XdbBvZlV/M6qDLNM8VIIA=;
-        b=ZhLdr9u9HG3CqFQalTCXxBQrVflB8KD5kNNcNz6FYLaiZ7+VSEH1Aeam379jeFcoXh
-         +qaIp449/nf/GRAfnS6wcwTaK5vqwM/O12h0o9SC3x18NVynTFKk3XgbTC+1/31PI30k
-         ocQ+wLEWyx4J9DTPhwLxk/6v2JudMr7UUxTLTs+WO9i6Geldu78hzhBR/SgWGoyccH8+
-         Dz/B1logTq/lpfU6alWoxObp9u//Fl/xjy/u5kFqC6gkp9Aw/Ov0XYufrLWQ1LMYZSUX
-         sZ6e0E5zLQ5P2vCL69eR2pr4cyoSrqcu+wqqBEtK8umXsUBctsXE4iViHkOP0g+gv5RD
-         npWw==
-X-Gm-Message-State: APjAAAUE9WptnGU3L4F8b6LfhAZLjIii/BWL+jikVlBf0v41jgbAuzbL
-        A6O2eqk0+u6N3CtzKkPaFPJs2OhI9rQ2IN/U3LZPDwH3QxRQ
-X-Google-Smtp-Source: APXvYqztJ4oBsJRoUATG8s4x1XvITJEwgVUJOyBwugK0MGqhbyEFY41H+53bobTJkmbDsoHVrjRB1Ahf/+9mjK3jcpuDJ4w1pD61
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fRsUnXBUE4PZHTWQPpeYq1ZjUN3os/yERYKuiBu0EAk=;
+        b=nsHhWuuY61RmyfoAH3Q91P48s7OhizZX40pXSMLyQIzI2pusnwNqHnLCnzsmFSpszQ
+         zflBjdVEzVbp4C0JqpX744rNIQqarovx0iERyIbUYDWmrXuw6PeWqQRxC+U9+X9zKADV
+         /7nydbOyxhvs548YjBXPd1cLrd6YiBpEKZcsIunGdxcxbJgfCWhtZo1supleHrf7JZBc
+         lKEOV7XvZYooSo+ZOI3Yoh5XlfRTqIj9ZPEkqA6TIdsSiEsm8hnR0CfCYR/3jWKerCBl
+         Tzn+hzMgwh4ejPwoj8ZqXVs/ZO6syhKHHQQwIk2MO6cqHi+O4LR+Y/VziA61TGC5vzbx
+         qlDA==
+X-Gm-Message-State: APjAAAVuhbY40saIbi72OYU5EpE+2KZU9HvNMhOvoglaAlqFdytRT16O
+        H2Kq1VQgg32mOVCYwZSzZMLpr0FI7iw9VuQNyngPvXVVHIFRng==
+X-Google-Smtp-Source: APXvYqzOxpasv/CFJ6oKkot/L6ks7/kh+ytnkcxTtueG43hwPwMbkz6Nra7XqSgI0BBpniO3V3nB1EobQzAX7UefMJo=
+X-Received: by 2002:a1c:9c87:: with SMTP id f129mr2461194wme.26.1580185878641;
+ Mon, 27 Jan 2020 20:31:18 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a02:3946:: with SMTP id w6mr16386407jae.9.1580185628718;
- Mon, 27 Jan 2020 20:27:08 -0800 (PST)
-Date:   Mon, 27 Jan 2020 20:27:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000143de7059d2ba3e5@google.com>
-Subject: possible deadlock in sidtab_sid2str_put
-From:   syzbot <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com>
-To:     eparis@parisplace.org, jeffv@google.com, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, omosnace@redhat.com,
-        paul@paul-moore.com, paulmck@kernel.org, sds@tycho.nsa.gov,
-        selinux@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20200128022737.15371-1-atish.patra@wdc.com> <20200128022737.15371-7-atish.patra@wdc.com>
+In-Reply-To: <20200128022737.15371-7-atish.patra@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 28 Jan 2020 10:01:07 +0530
+Message-ID: <CAAhSdy3BcVCKnWb3RcbyaQHfmCHZycajLJvZ-hmn6v8_g0i_BA@mail.gmail.com>
+Subject: Re: [PATCH v7 06/10] RISC-V: Add cpu_ops and modify default booting method
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Borislav Petkov <bp@suse.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Mao Han <han_mao@c-sky.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Abner Chang <abner.chang@hpe.com>, Chester Lin <clin@suse.com>,
+        nickhu@andestech.com, Palmer Dabbelt <palmerdabbelt@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Jan 28, 2020 at 7:58 AM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> Currently, all non-booting harts start booting after the booting hart
+> updates the per-hart stack pointer. This is done in a way that, it's
+> difficult to implement any other booting method without breaking the
+> backward compatibility.
+>
+> Define a cpu_ops method that allows to introduce other booting methods
+> in future. Modify the current booting method to be compatible with
+> cpu_ops.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/include/asm/cpu_ops.h | 31 ++++++++++++++++
+>  arch/riscv/kernel/Makefile       |  1 +
+>  arch/riscv/kernel/cpu_ops.c      | 61 ++++++++++++++++++++++++++++++++
+>  arch/riscv/kernel/setup.c        |  4 ++-
+>  arch/riscv/kernel/smpboot.c      | 52 ++++++++++++++++-----------
+>  5 files changed, 127 insertions(+), 22 deletions(-)
+>  create mode 100644 arch/riscv/include/asm/cpu_ops.h
+>  create mode 100644 arch/riscv/kernel/cpu_ops.c
 
-syzbot found the following crash on:
+This has to be more modular considering the fact that CONFIG_RISCV_SBI
+can be disabled.
 
-HEAD commit:    b0be0eff Merge tag 'x86-pti-2020-01-28' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15232735e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9784e57c96a92f20
-dashboard link: https://syzkaller.appspot.com/bug?extid=61cba5033e2072d61806
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+I have few suggestions on how to break cpu_ops.c
 
-Unfortunately, I don't have any reproducer for this crash yet.
+>
+> diff --git a/arch/riscv/include/asm/cpu_ops.h b/arch/riscv/include/asm/cpu_ops.h
+> new file mode 100644
+> index 000000000000..27e9dfee5460
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/cpu_ops.h
+> @@ -0,0 +1,31 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
+> + * Based on arch/arm64/include/asm/cpu_ops.h
+> + */
+> +#ifndef __ASM_CPU_OPS_H
+> +#define __ASM_CPU_OPS_H
+> +
+> +#include <linux/init.h>
+> +#include <linux/threads.h>
+> +
+> +/**
+> + * struct cpu_operations - Callback operations for hotplugging CPUs.
+> + *
+> + * @name:              Name of the boot protocol.
+> + * @cpu_prepare:       Early one-time preparation step for a cpu. If there
+> + *                     is a mechanism for doing so, tests whether it is
+> + *                     possible to boot the given HART.
+> + * @cpu_start:         Boots a cpu into the kernel.
+> + */
+> +struct cpu_operations {
+> +       const char      *name;
+> +       int             (*cpu_prepare)(unsigned int cpu);
+> +       int             (*cpu_start)(unsigned int cpu,
+> +                                    struct task_struct *tidle);
+> +};
+> +
+> +extern const struct cpu_operations *cpu_ops[NR_CPUS];
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com
+Add following here:
+extern void *__cpu_up_stack_pointer[NR_CPUS];
+extern void *__cpu_up_task_pointer[NR_CPUS];
 
-=====================================================
-WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-5.5.0-syzkaller #0 Not tainted
------------------------------------------------------
-syz-executor.3/20867 [HC0[0]:SC0[2]:HE1:SE0] is trying to acquire:
-ffff888022b68098 (&(&s->cache_lock)->rlock){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-ffff888022b68098 (&(&s->cache_lock)->rlock){+.+.}, at: sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
+> +int __init cpu_set_ops(int cpu);
+> +
+> +#endif /* ifndef __ASM_CPU_OPS_H */
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index f40205cb9a22..d77def5b4e87 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -32,6 +32,7 @@ obj-$(CONFIG_RISCV_M_MODE)    += clint.o
+>  obj-$(CONFIG_FPU)              += fpu.o
+>  obj-$(CONFIG_SMP)              += smpboot.o
+>  obj-$(CONFIG_SMP)              += smp.o
+> +obj-$(CONFIG_SMP)              += cpu_ops.o
+>  obj-$(CONFIG_MODULES)          += module.o
+>  obj-$(CONFIG_MODULE_SECTIONS)  += module-sections.o
+>
+> diff --git a/arch/riscv/kernel/cpu_ops.c b/arch/riscv/kernel/cpu_ops.c
+> new file mode 100644
+> index 000000000000..099dbb6ff9f0
+> --- /dev/null
+> +++ b/arch/riscv/kernel/cpu_ops.c
+> @@ -0,0 +1,61 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
+> + *
+> + */
+> +
+> +#include <linux/errno.h>
+> +#include <linux/mm.h>
+> +#include <linux/of.h>
+> +#include <linux/string.h>
+> +#include <linux/sched/task_stack.h>
+> +#include <asm/cpu_ops.h>
+> +#include <asm/sbi.h>
+> +#include <asm/smp.h>
+> +
+> +const struct cpu_operations *cpu_ops[NR_CPUS] __ro_after_init;
+> +
+> +void *__cpu_up_stack_pointer[NR_CPUS];
+> +void *__cpu_up_task_pointer[NR_CPUS];
+> +
+> +const struct cpu_operations cpu_spinwait_ops;
+> +
+> +static int spinwait_cpu_prepare(unsigned int cpuid)
+> +{
+> +       if (!cpu_spinwait_ops.cpu_start) {
+> +               pr_err("cpu start method not defined for CPU [%d]\n", cpuid);
+> +               return -ENODEV;
+> +       }
+> +       return 0;
+> +}
+> +
+> +static int spinwait_cpu_start(unsigned int cpuid, struct task_struct *tidle)
+> +{
+> +       int hartid = cpuid_to_hartid_map(cpuid);
+> +
+> +       /*
+> +        * In this protocol, all cpus boot on their own accord.  _start
+> +        * selects the first cpu to boot the kernel and causes the remainder
+> +        * of the cpus to spin in a loop waiting for their stack pointer to be
+> +        * setup by that main cpu.  Writing __cpu_up_stack_pointer signals to
+> +        * the spinning cpus that they can continue the boot process.
+> +        */
+> +       smp_mb();
+> +       WRITE_ONCE(__cpu_up_stack_pointer[hartid],
+> +                 task_stack_page(tidle) + THREAD_SIZE);
+> +       WRITE_ONCE(__cpu_up_task_pointer[hartid], tidle);
+> +
+> +       return 0;
+> +}
+> +
+> +const struct cpu_operations cpu_spinwait_ops = {
+> +       .name           = "spinwait",
+> +       .cpu_prepare    = spinwait_cpu_prepare,
+> +       .cpu_start      = spinwait_cpu_start,
+> +};
 
-and this task is already holding:
-ffffffff898605d8 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-ffffffff898605d8 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-which would create a new lock dependency:
- (&(&nf_conntrack_locks[i])->rlock){+.-.} -> (&(&s->cache_lock)->rlock){+.+.}
+Move cpu_spinwait_ops, spinwait_cpu_start, and spinwait_cpu_prepare
+to arch/riscv/kernel/cpu_ops_spinwait.c
 
-but this new dependency connects a SOFTIRQ-irq-safe lock:
- (&(&nf_conntrack_locks[i])->rlock){+.-.}
+Have "extern const struct cpu_operations cpu_spinwait_ops;" here.
 
-... which became SOFTIRQ-irq-safe at:
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-  nf_conntrack_double_lock.isra.0+0xac/0x100 net/netfilter/nf_conntrack_core.c:134
-  __nf_conntrack_confirm+0x252/0x1710 net/netfilter/nf_conntrack_core.c:963
-  nf_conntrack_confirm include/net/netfilter/nf_conntrack_core.h:63 [inline]
-  nf_confirm+0x3e7/0x4d0 net/netfilter/nf_conntrack_proto.c:154
-  ipv4_confirm+0x14c/0x240 net/netfilter/nf_conntrack_proto.c:169
-  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
-  nf_hook include/linux/netfilter.h:262 [inline]
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  ip_local_deliver+0x352/0x520 net/ipv4/ip_input.c:252
-  dst_input include/net/dst.h:442 [inline]
-  ip_sublist_rcv_finish+0x9b/0x2d0 net/ipv4/ip_input.c:549
-  ip_list_rcv_finish net/ipv4/ip_input.c:599 [inline]
-  ip_sublist_rcv+0x5a6/0xa20 net/ipv4/ip_input.c:607
-  ip_list_rcv+0x37e/0x4bf net/ipv4/ip_input.c:642
-  __netif_receive_skb_list_ptype net/core/dev.c:5193 [inline]
-  __netif_receive_skb_list_core+0x5fc/0x9d0 net/core/dev.c:5241
-  __netif_receive_skb_list net/core/dev.c:5293 [inline]
-  netif_receive_skb_list_internal+0x7eb/0xe50 net/core/dev.c:5388
-  gro_normal_list.part.0+0x1e/0xb0 net/core/dev.c:5499
-  gro_normal_list net/core/dev.c:6232 [inline]
-  napi_complete_done+0x208/0x510 net/core/dev.c:6220
-  virtqueue_napi_complete+0x31/0xa0 drivers/net/virtio_net.c:329
-  virtnet_poll+0xbad/0xe90 drivers/net/virtio_net.c:1432
-  napi_poll net/core/dev.c:6534 [inline]
-  net_rx_action+0x508/0x1120 net/core/dev.c:6602
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  run_ksoftirqd kernel/softirq.c:603 [inline]
-  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
-  smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> +
+> +int __init cpu_set_ops(int cpuid)
+> +{
+> +       cpu_ops[cpuid] = &cpu_spinwait_ops;
+> +       return 0;
+> +}
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index de3e65dae83a..8208d1109ddb 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -16,12 +16,13 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/sched/task.h>
+>  #include <linux/swiotlb.h>
+> +#include <linux/smp.h>
+>
+>  #include <asm/clint.h>
+> +#include <asm/cpu_ops.h>
+>  #include <asm/setup.h>
+>  #include <asm/sections.h>
+>  #include <asm/pgtable.h>
+> -#include <asm/smp.h>
+>  #include <asm/sbi.h>
+>  #include <asm/tlbflush.h>
+>  #include <asm/thread_info.h>
+> @@ -79,6 +80,7 @@ void __init setup_arch(char **cmdline_p)
+>                 sbi_init();
+>
+>  #ifdef CONFIG_SMP
+> +       cpu_set_ops(0);
+>         setup_smp();
+>  #endif
+>
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> index 8bc01f0ca73b..f2cf541bc895 100644
+> --- a/arch/riscv/kernel/smpboot.c
+> +++ b/arch/riscv/kernel/smpboot.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/sched/task_stack.h>
+>  #include <linux/sched/mm.h>
+>  #include <asm/clint.h>
+> +#include <asm/cpu_ops.h>
+>  #include <asm/irq.h>
+>  #include <asm/mmu_context.h>
+>  #include <asm/tlbflush.h>
+> @@ -34,8 +35,6 @@
+>
+>  #include "head.h"
+>
+> -void *__cpu_up_stack_pointer[NR_CPUS];
+> -void *__cpu_up_task_pointer[NR_CPUS];
+>  static DECLARE_COMPLETION(cpu_running);
+>
+>  void __init smp_prepare_boot_cpu(void)
+> @@ -46,6 +45,7 @@ void __init smp_prepare_boot_cpu(void)
+>  void __init smp_prepare_cpus(unsigned int max_cpus)
+>  {
+>         int cpuid;
+> +       int ret;
+>
+>         /* This covers non-smp usecase mandated by "nosmp" option */
+>         if (max_cpus == 0)
+> @@ -54,6 +54,11 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+>         for_each_possible_cpu(cpuid) {
+>                 if (cpuid == smp_processor_id())
+>                         continue;
+> +               if (cpu_ops[cpuid]->cpu_prepare) {
+> +                       ret = cpu_ops[cpuid]->cpu_prepare(cpuid);
+> +                       if (ret)
+> +                               continue;
+> +               }
+>                 set_cpu_present(cpuid, true);
+>         }
+>  }
+> @@ -92,36 +97,41 @@ void __init setup_smp(void)
+>                         cpuid, nr_cpu_ids);
+>
+>         for (cpuid = 1; cpuid < nr_cpu_ids; cpuid++) {
+> -               if (cpuid_to_hartid_map(cpuid) != INVALID_HARTID)
+> +               if (cpuid_to_hartid_map(cpuid) != INVALID_HARTID) {
+> +                       if (cpu_set_ops(cpuid)) {
+> +                               cpuid_to_hartid_map(cpuid) = INVALID_HARTID;
+> +                               continue;
+> +                       }
+>                         set_cpu_possible(cpuid, true);
+> +               }
+>         }
+>  }
+>
+> +int start_secondary_cpu(int cpu, struct task_struct *tidle)
+> +{
+> +       if (cpu_ops[cpu]->cpu_start)
+> +               return cpu_ops[cpu]->cpu_start(cpu, tidle);
+> +
+> +       return -EOPNOTSUPP;
+> +}
+> +
+>  int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+>  {
+>         int ret = 0;
+> -       int hartid = cpuid_to_hartid_map(cpu);
+>         tidle->thread_info.cpu = cpu;
+>
+> -       /*
+> -        * On RISC-V systems, all harts boot on their own accord.  Our _start
+> -        * selects the first hart to boot the kernel and causes the remainder
+> -        * of the harts to spin in a loop waiting for their stack pointer to be
+> -        * setup by that main hart.  Writing __cpu_up_stack_pointer signals to
+> -        * the spinning harts that they can continue the boot process.
+> -        */
+> -       smp_mb();
+> -       WRITE_ONCE(__cpu_up_stack_pointer[hartid],
+> -                 task_stack_page(tidle) + THREAD_SIZE);
+> -       WRITE_ONCE(__cpu_up_task_pointer[hartid], tidle);
+> -
+> -       lockdep_assert_held(&cpu_running);
+> -       wait_for_completion_timeout(&cpu_running,
+> +       ret = start_secondary_cpu(cpu, tidle);
+> +       if (!ret) {
+> +               lockdep_assert_held(&cpu_running);
+> +               wait_for_completion_timeout(&cpu_running,
+>                                             msecs_to_jiffies(1000));
+>
+> -       if (!cpu_online(cpu)) {
+> -               pr_crit("CPU%u: failed to come online\n", cpu);
+> -               ret = -EIO;
+> +               if (!cpu_online(cpu)) {
+> +                       pr_crit("CPU%u: failed to come online\n", cpu);
+> +                       ret = -EIO;
+> +               }
+> +       } else {
+> +               pr_crit("CPU%u: failed to start\n", cpu);
+>         }
+>
+>         return ret;
+> --
+> 2.24.0
+>
 
-to a SOFTIRQ-irq-unsafe lock:
- (&(&s->cache_lock)->rlock){+.+.}
-
-... which became SOFTIRQ-irq-unsafe at:
-...
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-  sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-  sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-  sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-  security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-  security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-  avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
-  common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
-  slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
-  avc_audit security/selinux/include/avc.h:140 [inline]
-  avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
-  inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
-  selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
-  security_mmap_file+0xa4/0x1e0 security/security.c:1482
-  vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
-  vm_mmap+0x94/0xc0 mm/util.c:525
-  elf_map+0x10a/0x2b0 fs/binfmt_elf.c:377
-  load_elf_binary+0xd4b/0x5310 fs/binfmt_elf.c:982
-  search_binary_handler fs/exec.c:1658 [inline]
-  search_binary_handler+0x16d/0x570 fs/exec.c:1635
-  exec_binprm fs/exec.c:1701 [inline]
-  __do_execve_file.isra.0+0x1329/0x22b0 fs/exec.c:1821
-  do_execveat_common fs/exec.c:1867 [inline]
-  do_execve fs/exec.c:1884 [inline]
-  __do_sys_execve fs/exec.c:1960 [inline]
-  __se_sys_execve fs/exec.c:1955 [inline]
-  __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&(&s->cache_lock)->rlock);
-                               local_irq_disable();
-                               lock(&(&nf_conntrack_locks[i])->rlock);
-                               lock(&(&s->cache_lock)->rlock);
-  <Interrupt>
-    lock(&(&nf_conntrack_locks[i])->rlock);
-
- *** DEADLOCK ***
-
-4 locks held by syz-executor.3/20867:
- #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnl_lock net/netfilter/nfnetlink.c:62 [inline]
- #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnetlink_rcv_msg+0x9ee/0xfb0 net/netfilter/nfnetlink.c:224
- #1: ffff88800ce3c5d8 (nlk_cb_mutex-NETFILTER){+.+.}, at: netlink_dump+0xe7/0xfb0 net/netlink/af_netlink.c:2199
- #2: ffffffff898605d8 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
- #2: ffffffff898605d8 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
- #3: ffffffff8b7df008 (&selinux_ss.policy_rwlock){.+.?}, at: security_sid_to_context_core+0x1ca/0x3c0 security/selinux/ss/services.c:1344
-
-the dependencies between SOFTIRQ-irq-safe lock and the holding lock:
--> (&(&nf_conntrack_locks[i])->rlock){+.-.} {
-   HARDIRQ-ON-W at:
-                    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                    spin_lock include/linux/spinlock.h:338 [inline]
-                    nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-                    get_next_corpse net/netfilter/nf_conntrack_core.c:2001 [inline]
-                    nf_ct_iterate_cleanup+0x1d2/0x4e0 net/netfilter/nf_conntrack_core.c:2035
-                    nf_ct_iterate_destroy+0x12e/0x160 net/netfilter/nf_conntrack_core.c:2162
-                    nf_conntrack_helper_unregister+0x111/0x160 net/netfilter/nf_conntrack_helper.c:469
-                    nf_conntrack_helpers_unregister net/netfilter/nf_conntrack_helper.c:532 [inline]
-                    nf_conntrack_helpers_register+0xaa/0xe0 net/netfilter/nf_conntrack_helper.c:523
-                    nf_conntrack_sip_init+0x266/0x2a4 net/netfilter/nf_conntrack_sip.c:1693
-                    do_one_initcall+0x120/0x820 init/main.c:939
-                    do_initcall_level init/main.c:1007 [inline]
-                    do_initcalls init/main.c:1015 [inline]
-                    do_basic_setup init/main.c:1032 [inline]
-                    kernel_init_freeable+0x4ca/0x570 init/main.c:1203
-                    kernel_init+0x12/0x1bf init/main.c:1110
-                    ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-   IN-SOFTIRQ-W at:
-                    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                    spin_lock include/linux/spinlock.h:338 [inline]
-                    nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-                    nf_conntrack_double_lock.isra.0+0xac/0x100 net/netfilter/nf_conntrack_core.c:134
-                    __nf_conntrack_confirm+0x252/0x1710 net/netfilter/nf_conntrack_core.c:963
-                    nf_conntrack_confirm include/net/netfilter/nf_conntrack_core.h:63 [inline]
-                    nf_confirm+0x3e7/0x4d0 net/netfilter/nf_conntrack_proto.c:154
-                    ipv4_confirm+0x14c/0x240 net/netfilter/nf_conntrack_proto.c:169
-                    nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-                    nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
-                    nf_hook include/linux/netfilter.h:262 [inline]
-                    NF_HOOK include/linux/netfilter.h:305 [inline]
-                    ip_local_deliver+0x352/0x520 net/ipv4/ip_input.c:252
-                    dst_input include/net/dst.h:442 [inline]
-                    ip_sublist_rcv_finish+0x9b/0x2d0 net/ipv4/ip_input.c:549
-                    ip_list_rcv_finish net/ipv4/ip_input.c:599 [inline]
-                    ip_sublist_rcv+0x5a6/0xa20 net/ipv4/ip_input.c:607
-                    ip_list_rcv+0x37e/0x4bf net/ipv4/ip_input.c:642
-                    __netif_receive_skb_list_ptype net/core/dev.c:5193 [inline]
-                    __netif_receive_skb_list_core+0x5fc/0x9d0 net/core/dev.c:5241
-                    __netif_receive_skb_list net/core/dev.c:5293 [inline]
-                    netif_receive_skb_list_internal+0x7eb/0xe50 net/core/dev.c:5388
-                    gro_normal_list.part.0+0x1e/0xb0 net/core/dev.c:5499
-                    gro_normal_list net/core/dev.c:6232 [inline]
-                    napi_complete_done+0x208/0x510 net/core/dev.c:6220
-                    virtqueue_napi_complete+0x31/0xa0 drivers/net/virtio_net.c:329
-                    virtnet_poll+0xbad/0xe90 drivers/net/virtio_net.c:1432
-                    napi_poll net/core/dev.c:6534 [inline]
-                    net_rx_action+0x508/0x1120 net/core/dev.c:6602
-                    __do_softirq+0x262/0x98c kernel/softirq.c:292
-                    run_ksoftirqd kernel/softirq.c:603 [inline]
-                    run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
-                    smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
-                    kthread+0x361/0x430 kernel/kthread.c:255
-                    ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-   INITIAL USE at:
-                   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                   spin_lock include/linux/spinlock.h:338 [inline]
-                   nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-                   get_next_corpse net/netfilter/nf_conntrack_core.c:2001 [inline]
-                   nf_ct_iterate_cleanup+0x1d2/0x4e0 net/netfilter/nf_conntrack_core.c:2035
-                   nf_ct_iterate_destroy+0x12e/0x160 net/netfilter/nf_conntrack_core.c:2162
-                   nf_conntrack_helper_unregister+0x111/0x160 net/netfilter/nf_conntrack_helper.c:469
-                   nf_conntrack_helpers_unregister net/netfilter/nf_conntrack_helper.c:532 [inline]
-                   nf_conntrack_helpers_register+0xaa/0xe0 net/netfilter/nf_conntrack_helper.c:523
-                   nf_conntrack_sip_init+0x266/0x2a4 net/netfilter/nf_conntrack_sip.c:1693
-                   do_one_initcall+0x120/0x820 init/main.c:939
-                   do_initcall_level init/main.c:1007 [inline]
-                   do_initcalls init/main.c:1015 [inline]
-                   do_basic_setup init/main.c:1032 [inline]
-                   kernel_init_freeable+0x4ca/0x570 init/main.c:1203
-                   kernel_init+0x12/0x1bf init/main.c:1110
-                   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
- }
- ... key      at: [<ffffffff8c1ad440>] __key.79496+0x0/0x40
- ... acquired at:
-   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-   spin_lock include/linux/spinlock.h:338 [inline]
-   sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-   sidtab_sid2str_put security/selinux/ss/sidtab.c:594 [inline]
-   sidtab_sid2str_get+0x3b5/0x66e security/selinux/ss/sidtab.c:594
-   sidtab_entry_to_string+0x37/0x110 security/selinux/ss/services.c:1271
-   security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-   security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-   selinux_secid_to_secctx+0x2d/0x40 security/selinux/hooks.c:6451
-   security_secid_to_secctx+0x75/0xc0 security/security.c:1950
-   ctnetlink_dump_secctx.isra.0+0x8c/0x330 net/netfilter/nf_conntrack_netlink.c:335
-   ctnetlink_dump_info net/netfilter/nf_conntrack_netlink.c:531 [inline]
-   ctnetlink_fill_info+0x750/0xd40 net/netfilter/nf_conntrack_netlink.c:591
-   ctnetlink_dump_table+0x68c/0x1130 net/netfilter/nf_conntrack_netlink.c:979
-   netlink_dump+0x558/0xfb0 net/netlink/af_netlink.c:2244
-   __netlink_dump_start+0x66a/0x930 net/netlink/af_netlink.c:2352
-   netlink_dump_start include/linux/netlink.h:233 [inline]
-   ctnetlink_get_conntrack+0x55e/0x6a0 net/netfilter/nf_conntrack_netlink.c:1355
-   nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
-   netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-   nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
-   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-   netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-   netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-   sock_sendmsg_nosec net/socket.c:639 [inline]
-   sock_sendmsg+0xd7/0x130 net/socket.c:659
-   ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-   ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-   __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-   __do_sys_sendmsg net/socket.c:2426 [inline]
-   __se_sys_sendmsg net/socket.c:2424 [inline]
-   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-
-the dependencies between the lock to be acquired
- and SOFTIRQ-irq-unsafe lock:
--> (&(&s->cache_lock)->rlock){+.+.} {
-   HARDIRQ-ON-W at:
-                    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                    spin_lock include/linux/spinlock.h:338 [inline]
-                    sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-                    sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-                    sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-                    sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-                    security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-                    security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-                    avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
-                    common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
-                    slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
-                    avc_audit security/selinux/include/avc.h:140 [inline]
-                    avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
-                    inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
-                    selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
-                    security_mmap_file+0xa4/0x1e0 security/security.c:1482
-                    vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
-                    vm_mmap+0x94/0xc0 mm/util.c:525
-                    elf_map+0x10a/0x2b0 fs/binfmt_elf.c:377
-                    load_elf_binary+0xd4b/0x5310 fs/binfmt_elf.c:982
-                    search_binary_handler fs/exec.c:1658 [inline]
-                    search_binary_handler+0x16d/0x570 fs/exec.c:1635
-                    exec_binprm fs/exec.c:1701 [inline]
-                    __do_execve_file.isra.0+0x1329/0x22b0 fs/exec.c:1821
-                    do_execveat_common fs/exec.c:1867 [inline]
-                    do_execve fs/exec.c:1884 [inline]
-                    __do_sys_execve fs/exec.c:1960 [inline]
-                    __se_sys_execve fs/exec.c:1955 [inline]
-                    __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
-                    do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-                    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-   SOFTIRQ-ON-W at:
-                    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                    spin_lock include/linux/spinlock.h:338 [inline]
-                    sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-                    sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-                    sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-                    sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-                    security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-                    security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-                    avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
-                    common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
-                    slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
-                    avc_audit security/selinux/include/avc.h:140 [inline]
-                    avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
-                    inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
-                    selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
-                    security_mmap_file+0xa4/0x1e0 security/security.c:1482
-                    vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
-                    vm_mmap+0x94/0xc0 mm/util.c:525
-                    elf_map+0x10a/0x2b0 fs/binfmt_elf.c:377
-                    load_elf_binary+0xd4b/0x5310 fs/binfmt_elf.c:982
-                    search_binary_handler fs/exec.c:1658 [inline]
-                    search_binary_handler+0x16d/0x570 fs/exec.c:1635
-                    exec_binprm fs/exec.c:1701 [inline]
-                    __do_execve_file.isra.0+0x1329/0x22b0 fs/exec.c:1821
-                    do_execveat_common fs/exec.c:1867 [inline]
-                    do_execve fs/exec.c:1884 [inline]
-                    __do_sys_execve fs/exec.c:1960 [inline]
-                    __se_sys_execve fs/exec.c:1955 [inline]
-                    __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
-                    do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-                    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-   INITIAL USE at:
-                   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                   spin_lock include/linux/spinlock.h:338 [inline]
-                   sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-                   sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-                   sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-                   sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-                   security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-                   security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-                   avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
-                   common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
-                   slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
-                   avc_audit security/selinux/include/avc.h:140 [inline]
-                   avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
-                   inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
-                   selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
-                   security_mmap_file+0xa4/0x1e0 security/security.c:1482
-                   vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
-                   vm_mmap+0x94/0xc0 mm/util.c:525
-                   elf_map+0x10a/0x2b0 fs/binfmt_elf.c:377
-                   load_elf_binary+0xd4b/0x5310 fs/binfmt_elf.c:982
-                   search_binary_handler fs/exec.c:1658 [inline]
-                   search_binary_handler+0x16d/0x570 fs/exec.c:1635
-                   exec_binprm fs/exec.c:1701 [inline]
-                   __do_execve_file.isra.0+0x1329/0x22b0 fs/exec.c:1821
-                   do_execveat_common fs/exec.c:1867 [inline]
-                   do_execve fs/exec.c:1884 [inline]
-                   __do_sys_execve fs/exec.c:1960 [inline]
-                   __se_sys_execve fs/exec.c:1955 [inline]
-                   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
-                   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-                   entry_SYSCALL_64_after_hwframe+0x49/0xbe
- }
- ... key      at: [<ffffffff8b7dec80>] __key.69173+0x0/0x40
- ... acquired at:
-   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-   spin_lock include/linux/spinlock.h:338 [inline]
-   sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-   sidtab_sid2str_put security/selinux/ss/sidtab.c:594 [inline]
-   sidtab_sid2str_get+0x3b5/0x66e security/selinux/ss/sidtab.c:594
-   sidtab_entry_to_string+0x37/0x110 security/selinux/ss/services.c:1271
-   security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-   security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-   selinux_secid_to_secctx+0x2d/0x40 security/selinux/hooks.c:6451
-   security_secid_to_secctx+0x75/0xc0 security/security.c:1950
-   ctnetlink_dump_secctx.isra.0+0x8c/0x330 net/netfilter/nf_conntrack_netlink.c:335
-   ctnetlink_dump_info net/netfilter/nf_conntrack_netlink.c:531 [inline]
-   ctnetlink_fill_info+0x750/0xd40 net/netfilter/nf_conntrack_netlink.c:591
-   ctnetlink_dump_table+0x68c/0x1130 net/netfilter/nf_conntrack_netlink.c:979
-   netlink_dump+0x558/0xfb0 net/netlink/af_netlink.c:2244
-   __netlink_dump_start+0x66a/0x930 net/netlink/af_netlink.c:2352
-   netlink_dump_start include/linux/netlink.h:233 [inline]
-   ctnetlink_get_conntrack+0x55e/0x6a0 net/netfilter/nf_conntrack_netlink.c:1355
-   nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
-   netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-   nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
-   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-   netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-   netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-   sock_sendmsg_nosec net/socket.c:639 [inline]
-   sock_sendmsg+0xd7/0x130 net/socket.c:659
-   ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-   ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-   __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-   __do_sys_sendmsg net/socket.c:2426 [inline]
-   __se_sys_sendmsg net/socket.c:2424 [inline]
-   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-
-stack backtrace:
-CPU: 0 PID: 20867 Comm: syz-executor.3 Not tainted 5.5.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_bad_irq_dependency kernel/locking/lockdep.c:2094 [inline]
- check_irq_usage.cold+0x586/0x6fe kernel/locking/lockdep.c:2292
- check_prev_add kernel/locking/lockdep.c:2479 [inline]
- check_prevs_add kernel/locking/lockdep.c:2580 [inline]
- validate_chain kernel/locking/lockdep.c:2970 [inline]
- __lock_acquire+0x25b4/0x4a00 kernel/locking/lockdep.c:3954
- lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
- __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
- _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
- spin_lock include/linux/spinlock.h:338 [inline]
- sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
- sidtab_sid2str_put security/selinux/ss/sidtab.c:594 [inline]
- sidtab_sid2str_get+0x3b5/0x66e security/selinux/ss/sidtab.c:594
- sidtab_entry_to_string+0x37/0x110 security/selinux/ss/services.c:1271
- security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
- security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
- selinux_secid_to_secctx+0x2d/0x40 security/selinux/hooks.c:6451
- security_secid_to_secctx+0x75/0xc0 security/security.c:1950
- ctnetlink_dump_secctx.isra.0+0x8c/0x330 net/netfilter/nf_conntrack_netlink.c:335
- ctnetlink_dump_info net/netfilter/nf_conntrack_netlink.c:531 [inline]
- ctnetlink_fill_info+0x750/0xd40 net/netfilter/nf_conntrack_netlink.c:591
- ctnetlink_dump_table+0x68c/0x1130 net/netfilter/nf_conntrack_netlink.c:979
- netlink_dump+0x558/0xfb0 net/netlink/af_netlink.c:2244
- __netlink_dump_start+0x66a/0x930 net/netlink/af_netlink.c:2352
- netlink_dump_start include/linux/netlink.h:233 [inline]
- ctnetlink_get_conntrack+0x55e/0x6a0 net/netfilter/nf_conntrack_netlink.c:1355
- nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
- nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:639 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:659
- ____sys_sendmsg+0x753/0x880 net/socket.c:2330
- ___sys_sendmsg+0x100/0x170 net/socket.c:2384
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
- __do_sys_sendmsg net/socket.c:2426 [inline]
- __se_sys_sendmsg net/socket.c:2424 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45b3f9
-Code: bd b1 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 8b b1 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fbe326f8c88 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 000000000072bf00 RCX: 000000000045b3f9
-RDX: 0000000000000000 RSI: 0000000020000500 RDI: 0000000000000003
-RBP: 00007fbe326f96d4 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000008f1 R14: 00000000004ba9a8 R15: 00000000006eaa80
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Regards,
+Anup
