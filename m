@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F84C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0FAC35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E4E2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69E2824687
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221900;
-	bh=GWxwkadIlVobGboLxGw+xsL9+RnjZssd4gllY72ToZE=;
+	s=default; t=1580221903;
+	bh=ClzRhY20vh1VhccPsTDb3PIDknispVqEK0Br7DxT5QI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jgs0sFx/QXJ79OL85mypbufVbOTF1/xrvMMkd7J3JbgiknqvWgPITgaMakgRnUW5s
-	 xdnreau4sHIAahRvq0CvGMkXooyP0gvG8dQTd987k7rHIh9vatxPNF08VLxcXyQ+8y
-	 Uxa3TPRVtog8qoB4k3+NXbUzne0D8b1k9zdH+St8=
+	b=ROkXA/mDvjGmHc6EuFQuLiJvLxHXiJpK0wv4AzMLGQN5QEhvMYOiB/H6/BTz8Oba5
+	 riM5L38brjXbkWHvPJwkZ856/cYQqg+YPYYUhEo4dbC62D5T12jckBqZpU/mkVJAMZ
+	 9aAQsA67gS4BxcUoXvE5vl/6O43dDdTc/rd0iMIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387636AbgA1Obk (ORCPT
+        id S1733303AbgA1O1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:31:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55484 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:27:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733309AbgA1O1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:27:41 -0500
+        id S1733153AbgA1O12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:27:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16017207FD;
-        Tue, 28 Jan 2020 14:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CC4624688;
+        Tue, 28 Jan 2020 14:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221660;
-        bh=GWxwkadIlVobGboLxGw+xsL9+RnjZssd4gllY72ToZE=;
+        s=default; t=1580221647;
+        bh=ClzRhY20vh1VhccPsTDb3PIDknispVqEK0Br7DxT5QI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IGPz0bEyvywilTfliHEN2qt1Z6Mqb6uCbmyyp7FCV70Y2yZsWMhjxOvhk1tJQqUMJ
-         BQ3KP5LQOkEemztqjXA+9vBgQ52OpkaROtRoCT7OBny1LHpzhTwZ+NN0ahEuzvNkpI
-         8c/RXgbKRLmBKh0VpE1XlqsuvYLLQmEQM+vJSPDs=
+        b=CkcOm3gUB9v0ZHtrp4Lt9C/eA86+4lRMLsXn5iR+bhEjJZmhgSjOAgnzvJ8/pITpM
+         e/Wb6ylT6cSLY+n/fcTxmqe0kHW1OKK1WEm+o5axyJt5Ke/2z0iNucYNQjqliAWWBZ
+         yUBhigKVZ59Ck/7qFw5YUXgXPQJvOWz0YeiuQmIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 23/92] hwmon: (adt7475) Make volt2reg return same reg as reg2volt input
-Date:   Tue, 28 Jan 2020 15:07:51 +0100
-Message-Id: <20200128135812.082497945@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Vladis Dronov <vdronov@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 34/92] Input: sur40 - fix interface sanity checks
+Date:   Tue, 28 Jan 2020 15:08:02 +0100
+Message-Id: <20200128135813.455366620@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,44 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
+From: Johan Hovold <johan@kernel.org>
 
-commit cf3ca1877574a306c0207cbf7fdf25419d9229df upstream.
+commit 6b32391ed675827f8425a414abbc6fbd54ea54fe upstream.
 
-reg2volt returns the voltage that matches a given register value.
-Converting this back the other way with volt2reg didn't return the same
-register value because it used truncation instead of rounding.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-This meant that values read from sysfs could not be written back to sysfs
-to set back the same register value.
+This in turn could cause the driver to misbehave or trigger a WARN() in
+usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-With this change, volt2reg will return the same value for every voltage
-previously returned by reg2volt (for the set of possible input values)
-
-Signed-off-by: Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
-Link: https://lore.kernel.org/r/20191205231659.1301-1-luuk.paulussen@alliedtelesis.co.nz
-cc: stable@vger.kernel.org
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: bdb5c57f209c ("Input: add sur40 driver for Samsung SUR40 (aka MS Surface 2.0/Pixelsense)")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Vladis Dronov <vdronov@redhat.com>
+Link: https://lore.kernel.org/r/20191210113737.4016-8-johan@kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/adt7475.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/input/touchscreen/sur40.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hwmon/adt7475.c
-+++ b/drivers/hwmon/adt7475.c
-@@ -296,9 +296,10 @@ static inline u16 volt2reg(int channel,
- 	long reg;
+--- a/drivers/input/touchscreen/sur40.c
++++ b/drivers/input/touchscreen/sur40.c
+@@ -657,7 +657,7 @@ static int sur40_probe(struct usb_interf
+ 	int error;
  
- 	if (bypass_attn & (1 << channel))
--		reg = (volt * 1024) / 2250;
-+		reg = DIV_ROUND_CLOSEST(volt * 1024, 2250);
- 	else
--		reg = (volt * r[1] * 1024) / ((r[0] + r[1]) * 2250);
-+		reg = DIV_ROUND_CLOSEST(volt * r[1] * 1024,
-+					(r[0] + r[1]) * 2250);
- 	return clamp_val(reg, 0, 1023) & (0xff << 2);
- }
+ 	/* Check if we really have the right interface. */
+-	iface_desc = &interface->altsetting[0];
++	iface_desc = interface->cur_altsetting;
+ 	if (iface_desc->desc.bInterfaceClass != 0xFF)
+ 		return -ENODEV;
  
 
 
