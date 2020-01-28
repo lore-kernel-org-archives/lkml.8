@@ -2,112 +2,92 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC66C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50830C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8065024683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D32C22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:47:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcWsTGox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgA1RrS (ORCPT
+        id S1726733AbgA1Rre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:47:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:32994 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbgA1RrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:47:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C6C9328;
-        Tue, 28 Jan 2020 09:47:16 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.47])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F3B43F52E;
-        Tue, 28 Jan 2020 09:47:11 -0800 (PST)
-Date:   Tue, 28 Jan 2020 17:47:09 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        James Hogan <jhogan@kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-Message-ID: <20200128174709.GK655507@arrakis.emea.arm.com>
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
- <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
+        Tue, 28 Jan 2020 12:47:34 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41289 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgA1Rre (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:47:34 -0500
+Received: by mail-il1-f194.google.com with SMTP id f10so11434906ils.8;
+        Tue, 28 Jan 2020 09:47:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+k9I/zy5WnzhP8AJXoHMWTULu2SIA+5CA0oszI/obuk=;
+        b=WcWsTGox8x7cX97PMT77vE7NtFF1OjKHGOhWA+6niUTW9T1kM+joHtD5rN/bwL8I4k
+         QKl1dR+nRcCTRUIBZslbKX1KA5c3HemJbbOS/MYuuCfF5Ov7Dq7/T432G4OCqNwzZoUP
+         +/lQRvHiUBx2tT36q0cL97t01fGkXxG0dSSMe0imojVEKpc1gJ/1aYmWas/a6LBZHIzD
+         WO/IjrjAXqKoKI+xYoyw+9ct2BVQpp6L9BFG0VU3GyGEoQntzH1siLzyK7ooufJhQvT7
+         q7dgRYIflMvt1EMlE4AqQTNOwNGHZtTTgiatjQ4rj+J0bW0nUaeW82TZ9Z9nkg2V42Hs
+         zBHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+k9I/zy5WnzhP8AJXoHMWTULu2SIA+5CA0oszI/obuk=;
+        b=gH3oxiOOxqwJjTadqjsYks1q5DoDq1LhnGLTZKfrThXI8DEq6BdRW95NjWYsClKHD2
+         njzTciVNvmfnr3Mp85bqOPItjSaaSUiPFjCpXgiGFbapq90ByQRZMHLDObyAJSc2BEbq
+         jM0bH/JkcT4SoqKbpPl5sSvNsOvFkl6coKPZFjXyfQzKGYdst7mEhhKx2A30P3c96uVK
+         675BHek9/wPMr59PAZhPjecbq28mxTNNX8O/DERICeUwl4bb9220QrCuvR9N9RlTXEl9
+         rI8Wlw+00NiCXEaFXkBDoRpF/QQfdOH80jAk5n3tUF0Ne/rdPhGwZsimgRwYsOYFG9b+
+         M2Ig==
+X-Gm-Message-State: APjAAAUrarTP885/NRduvgKIlEf7xRFXFJFdAsIw/2C/QsWctxfvyCeT
+        RiHUyWm0lMb/8FmnNLA0GOJzihoJZsIups4EIXao3jsj
+X-Google-Smtp-Source: APXvYqy5CYo3D8gbIP/JcsA+WxlY+wi2dZeV4qT0x/teYocTBjcqOhdsOhNvhZX2Ar/HDTonbmAjXHiLjl9DDmzmwlk=
+X-Received: by 2002:a92:cb8c:: with SMTP id z12mr20188900ilo.5.1580233653351;
+ Tue, 28 Jan 2020 09:47:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
+References: <20200128065742.397cd3d2@canb.auug.org.au>
+In-Reply-To: <20200128065742.397cd3d2@canb.auug.org.au>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 28 Jan 2020 11:47:22 -0600
+Message-ID: <CAH2r5mu7Sc8H1nxTpkkTLntXQzORjg7H_6yT=44-ZoOi=QU1NQ@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 09:11:53PM -0500, Qian Cai wrote:
-> On Jan 27, 2020, at 8:28 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
-> > This adds tests which will validate architecture page table helpers and
-> > other accessors in their compliance with expected generic MM semantics.
-> > This will help various architectures in validating changes to existing
-> > page table helpers or addition of new ones.
-[...]
-> What’s the value of this block of new code? It only supports x86 and
-> arm64 which are supposed to be good now. Did those tests ever find any
-> regression or this is almost only useful for new architectures which
-> only happened once in a few years?
+removed patch temporarily
 
-The primary goal here is not finding regressions but having clearly
-defined semantics of the page table accessors across architectures. x86
-and arm64 are a good starting point and other architectures will be
-enabled as they are aligned to the same semantics.
+On Mon, Jan 27, 2020 at 1:57 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Commit
+>
+>   503e9ac76c90 ("cifs: update internal module version number")
+>
+> is missing a Signed-off-by from its author and committer.
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-See for example this past discussion:
 
-https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
-
-These tests should act as the 'contract' between the generic mm code and
-the architecture port. Without clear semantics, some bugs may be a lot
-subtler than a boot failure.
-
-FTR, I fully support this patch (and I should get around to review it
-properly; thanks for the reminder ;)).
 
 -- 
-Catalin
+Thanks,
+
+Steve
