@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358BDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFB4C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C43424692
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2FE20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220712;
-	bh=rO20ReY0D17Z08+D6hDKugrRpVERf/wymJFyg4vn6yo=;
+	s=default; t=1580220717;
+	bh=C+pc8y2pEMMfOnYaCwAgQSs53kmqKNheVu3WOtWPoJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HlD7lFN9WzXtzlYoabHg8wgEIYcI/QLWj7+5oRkvy9nEG5mWvXYnrRQsOfOjgclJs
-	 P6w21qxtLC1uw0VdZayeIWXCn+pxHcFJTv2Yw2eiQApIZwZjWLdHK5FNQamTcmMOVP
-	 s9FaxgnZqZql6jONuftRJO/RJ6XHNlL28Q4R+RAM=
+	b=2ZIEKwUZuJI61bPO5Q96deE12phP59iKHaybHFC13mjfxejFFDCAYwfVKx3FnDwkx
+	 ZzqhcVZd1i1CTOV6HAcekRsnnGEbC3dir47Xr7Tx2PtfYUavvgGcLxBURgUyu6umBi
+	 UAFST/sEyim7ZfRX9iGtWdUJ1NOkyKWw6yRMPVFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbgA1OLv (ORCPT
+        id S1728406AbgA1OL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:11:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60988 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:11:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727848AbgA1OLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:11:47 -0500
+        id S1729361AbgA1OLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:11:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A336320678;
-        Tue, 28 Jan 2020 14:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2950424685;
+        Tue, 28 Jan 2020 14:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220707;
-        bh=rO20ReY0D17Z08+D6hDKugrRpVERf/wymJFyg4vn6yo=;
+        s=default; t=1580220709;
+        bh=C+pc8y2pEMMfOnYaCwAgQSs53kmqKNheVu3WOtWPoJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qucIfMsD2TAKewn9WGHudugS5+IycWP2y008FEolkIUuvukD7qwHzURV2vb3zR1qa
-         V2d+VQ7qly8JmQc9jj/Nw+YVft8dXZvhMORfolkG4dUZ2ORtApoiu1fqhfBBoX4dF7
-         G7k7JuxzFYg/4rIv9txMY+snZps+908DoqQC1qE8=
+        b=y1Wfb8eaYV2wA4RYySgugp3tlaz7x8A87M/udf64/JWUL5bHxzzbZn2+7eQI0WZKT
+         Q+y7TSzAT4aHkM1+vPcrze/dRNLBl7tGsRcJ8P/PMftlFiEZ9RiaFPTiBRQm/9xwZg
+         o02FAjlAOnjmdgBqI/zBu4xDSM2BF+iogA1Rvoos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jie Liu <liujie165@huawei.com>,
-        Qiang Ning <ningqiang1@huawei.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 077/183] tipc: set sysctl_tipc_rmem and named_timeout right range
-Date:   Tue, 28 Jan 2020 15:04:56 +0100
-Message-Id: <20200128135837.642929838@linuxfoundation.org>
+Subject: [PATCH 4.4 078/183] powerpc: vdso: Make vdso32 installation conditional in vdso_install
+Date:   Tue, 28 Jan 2020 15:04:57 +0100
+Message-Id: <20200128135837.727519035@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -63,58 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jie Liu <liujie165@huawei.com>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-[ Upstream commit 4bcd4ec1017205644a2697bccbc3b5143f522f5f ]
+[ Upstream commit ff6d27823f619892ab96f7461764840e0d786b15 ]
 
-We find that sysctl_tipc_rmem and named_timeout do not have the right minimum
-setting. sysctl_tipc_rmem should be larger than zero, like sysctl_tcp_rmem.
-And named_timeout as a timeout setting should be not less than zero.
+The 32-bit vDSO is not needed and not normally built for 64-bit
+little-endian configurations.  However, the vdso_install target still
+builds and installs it.  Add the same config condition as is normally
+used for the build.
 
-Fixes: cc79dd1ba9c10 ("tipc: change socket buffer overflow control to respect sk_rcvbuf")
-Fixes: a5325ae5b8bff ("tipc: add name distributor resiliency queue")
-Signed-off-by: Jie Liu <liujie165@huawei.com>
-Reported-by: Qiang Ning <ningqiang1@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e0d005916994 ("powerpc/vdso: Disable building the 32-bit VDSO ...")
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/sysctl.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/tipc/sysctl.c b/net/tipc/sysctl.c
-index 1a779b1e85100..40f6d82083d7b 100644
---- a/net/tipc/sysctl.c
-+++ b/net/tipc/sysctl.c
-@@ -37,6 +37,8 @@
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index d7eb035a9c960..65cb22541c660 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -350,7 +350,9 @@ vdso_install:
+ ifeq ($(CONFIG_PPC64),y)
+ 	$(Q)$(MAKE) $(build)=arch/$(ARCH)/kernel/vdso64 $@
+ endif
++ifdef CONFIG_VDSO32
+ 	$(Q)$(MAKE) $(build)=arch/$(ARCH)/kernel/vdso32 $@
++endif
  
- #include <linux/sysctl.h>
- 
-+static int zero;
-+static int one = 1;
- static struct ctl_table_header *tipc_ctl_hdr;
- 
- static struct ctl_table tipc_table[] = {
-@@ -45,14 +47,16 @@ static struct ctl_table tipc_table[] = {
- 		.data		= &sysctl_tipc_rmem,
- 		.maxlen		= sizeof(sysctl_tipc_rmem),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1         = &one,
- 	},
- 	{
- 		.procname	= "named_timeout",
- 		.data		= &sysctl_tipc_named_timeout,
- 		.maxlen		= sizeof(sysctl_tipc_named_timeout),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1         = &zero,
- 	},
- 	{}
- };
+ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(boot)
 -- 
 2.20.1
 
