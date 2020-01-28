@@ -2,149 +2,1022 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD39C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086B2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB5F2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580208645;
-	bh=xn/+wGx2wdvNYeHfEvNeO9WqRTrsPri3ACJFwmTconE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O/GhnTepnU7Npf4YWyk4q5rXvxC9OWl3+ef6ARE5Dtpdmwn5sM4Agt0zk+WfEXyCQ
-	 GthYcwQpGdiWBkUtlxoBL/PDnasAJPKFwW3mG2ScwL1g1lwou4Lz/+NSn4MTy2CddR
-	 RtCJ89o1fO8974QXNGjzA0IpTY9bM/90r/LGvNXA=
+	by mail.kernel.org (Postfix) with ESMTP id A4FFF2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:54:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yFDqGlX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgA1Kuo (ORCPT
+        id S1726007AbgA1Ky1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:50:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgA1Kun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:50:43 -0500
-Received: from localhost (unknown [223.226.101.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02E9A24681;
-        Tue, 28 Jan 2020 10:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580208643;
-        bh=xn/+wGx2wdvNYeHfEvNeO9WqRTrsPri3ACJFwmTconE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E8Xuor/XyPCcJ/eHtBuGVcURbPZfWcNDdBL71eqV6irDMNC+JnkPU37rKtXRpzmC+
-         YZXjADJoa564vYuXQQ0ywV++HJOWuoWtvX/HHgl0bYwqIitAf6iloWvd1Wgxy6qVQf
-         MmUBL3o691pKPKp857GVAyujlSeuqUTkEXYhXcpA=
-Date:   Tue, 28 Jan 2020 16:20:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH v5 09/17] soundwire: intel: remove platform
- devices and use 'Master Devices' instead
-Message-ID: <20200128105036.GO2841@vkoul-mobl>
-References: <20200114060959.GA2818@vkoul-mobl>
- <6635bf0b-c20a-7561-bcbf-4a480a077ae4@linux.intel.com>
- <20200118071257.GY2818@vkoul-mobl>
- <73907607-0763-576d-b24e-4773dfb15f0b@linux.intel.com>
+        Tue, 28 Jan 2020 05:54:27 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34424 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgA1Ky0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 05:54:26 -0500
+Received: by mail-pj1-f65.google.com with SMTP id f2so606642pjq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 02:54:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jcekx/5TbMGrRqEc9+RftdoZ5GRTV4T7Amr2Z76V9oQ=;
+        b=yFDqGlX4Km3BdmNy5TJSF+Jok2+3wqfZRDIwaKqgw9cM2LkTOHTsZ9jA7x1EYfjvQF
+         p1KaRwoBqNMCVm23MyF6qH3bCtFcu2kWjy4QaaxPzYu6VXAT0sTTmqe77ysuxCPsR9R3
+         yzlZArRfQdRvdJKcWcLx0NQwRejmRk3EvcnSgfkQngfOfTUufy5KLh5tsM4RnriKQojE
+         QvoMH5u4yw1D4cjpCdwSGBmeLNZ3rqztI1Wb2TS/yMekq/sQ5/5Cd7OS8TMIP0gB7SID
+         AJQ3X9nuykj4o87ugW0fSqpkizxiMiY+mmhjIgdzaOG3cwrELOu4K8FKoXwvD1myboym
+         YGqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jcekx/5TbMGrRqEc9+RftdoZ5GRTV4T7Amr2Z76V9oQ=;
+        b=TqFaIsJAhDLFXlcSTDVpzdN3RxXAzMyIiEl7WpqaKszOEFWql+2y434r81EVlJTXM1
+         lqdiM+ZbA7fj7pCEVbOlVvIpv2Id7pHqtR3dRjEa7SZgC+AOc62F3FCDW4nRAlakFs0E
+         bSKRgxaonKopfVawgiMCpBX+exToVGrAyPZPJSEPhmrTjMRtZVn3GNJuFM4jty09m3p3
+         FDU/GY1ASwiWge3fQjkYTdJYDAee8Via0AtkVHsvE0KBlfNGCoflOL0zcJ1HgPKuNEhZ
+         HVdHfNZz0K0oHhkORNFgj4n4UahGtsjg3+ZBTgEdkWA9KfgYQT44iT4o44KlfnwZJ2GH
+         N5Hg==
+X-Gm-Message-State: APjAAAVcrNkN1wfHHC+0fVUHuZSqe++RNFXPO/nqByQwe9nUKwGnJcvW
+        /pYZRB8Mntbe2ngg5aHa/D2tbA==
+X-Google-Smtp-Source: APXvYqw2yE4MlDdRWitOW+KHkr08JRtzDHdj2NwNdcKktKmOoRE5KYqT/2btwYW3UM1mTxhE1Yn+mQ==
+X-Received: by 2002:a17:902:bc87:: with SMTP id bb7mr21567972plb.272.1580208864602;
+        Tue, 28 Jan 2020 02:54:24 -0800 (PST)
+Received: from localhost ([122.172.141.204])
+        by smtp.gmail.com with ESMTPSA id l1sm2409364pjb.28.2020.01.28.02.54.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Jan 2020 02:54:23 -0800 (PST)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     arnd@arndb.de, Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, jassisinghbrar@gmail.com,
+        cristian.marussi@arm.com, peng.fan@nxp.com,
+        peter.hilber@opensynergy.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH V5] firmware: arm_scmi: Make scmi core independent of the transport type
+Date:   Tue, 28 Jan 2020 16:24:19 +0530
+Message-Id: <f170b33989b426ac095952634fcd1bf45b86a7a3.1580208329.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73907607-0763-576d-b24e-4773dfb15f0b@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pierre,
+The SCMI specification is fairly independent of the transport protocol,
+which can be a simple mailbox (already implemented) or anything else.
+The current Linux implementation however is very much dependent on the
+mailbox transport layer.
 
-I took some time to look into the overall code and how this is fitting
-into big picture and help recommend way forward.
+This patch makes the SCMI core code (driver.c) independent of the
+mailbox transport layer and moves all mailbox related code to a new
+file: mailbox.c.
 
-On 21-01-20, 11:31, Pierre-Louis Bossart wrote:
-> 
-> 
-> > A rename away from probe will certainly be very helpful as
-> > you would also agree that terms 'probe' and 'remove' have a very
-> > special meaning in kernel, so let us avoid these
-> 
-> ok, so would the following be ok with you?
-> 
-> /**
->  * struct sdw_md_driver - SoundWire 'Master Device' driver
->  *
->  * @init: allocations and initializations (hardware may not be enabled yet)
->  * @startup: initialization handled after the hardware is enabled, all
->  * clock/power dependencies are available
->  * @shutdown: cleanups before hardware is disabled (optional)
->  * @exit: free all remaining resources
->  * @autonomous_clock_stop_enable: enable/disable driver control while
->  * in clock-stop mode, typically in always-on/D0ix modes. When the driver
->  * yields control, another entity in the system (typically firmware
->  * running on an always-on microprocessor) is responsible to tracking
->  * Slave-initiated wakes
->  */
-> struct sdw_md_driver {
-> 	int (*init)(struct sdw_master_device *md, void *link_ctx);
-> 	int (*startup)(struct sdw_master_device *md);
-> 	int (*shutdown)(struct sdw_master_device *md);
-> 	int (*exit)(struct sdw_master_device *md);
-> 	int (*autonomous_clock_stop_enable)(struct sdw_master_device *md,
-> 					    bool state);
-> };
+We can now implement more transport protocols to transport SCMI
+messages.
 
-So this is a soundwire core driver structure, but the modelling and
-explanation provided here suggests the reasoning to be based on hardware
-sequencing. I am not sure if we should follow this approach. Solving
-hardware sequencing is fine but that should IMO be restricted to intel
-code as that is intel issue which may or may not be present on other
-controllers.
+The transport protocols just need to provide struct scmi_transport_ops,
+with its version of the callbacks to enable exchange of SCMI messages.
 
-If I look at the calling sequence of the code (looked up the sof code on
-github, topic/sof-dev-rebase), the sof code sound/soc/sof/intel/hda.c
-invokes the sdw_intel_startup() and sdw_intel_probe() based on hardware
-sequencing and further you call .init and .probe/startup of sdw_md_driver.
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+@Sudeep: Please help getting this tested as well :)
 
-I really do not see why we need a sdw_md_driver object to do that. You can
-easily have a another function exported by sdw_intel driver and you call
-these and do same functionality without having a sdw_md_driver in
-between.
+V4->V5:
+- struct scmi_shared_mem is moved to mailbox.c and it is completely
+  handled by transport layer now.
+- And so lots of ops change due to this.
+- Fixed a bug from previous version where wrong dev structure was
+  getting passed to devm_kzalloc().
 
-Now, I am going to step back one more step and ask you why should we
-have a sdw_md_driver? I am not seeing the driver object achieving
-anything here expect adding wrappers which we can avoid. But we still
-need to add the sdw_master_device() as a new device object and use that
-for both sysfs representation as well as representing the master device
-and do all the things we want, but it *can* come without having
-accompanying sdw_md_driver.
+V3->V4:
+- Rebased on top of linux-next.
 
-This way you can retain you calling sequence and add the master device.
+V2->V3:
+- Added more ops to the structure to read/write/memcpy data
+- Payload is moved to mailbox.c and is handled in transport specific way
+  now. This resulted in lots of changes.
 
-Stretching this one more step I would ask that maybe it is even better
-idea that we should hide sdw_master_device_add() calling for soundwire
-drivers and move that internal to bus as part of bus registration as
-well, I don't see sdw_master_device calling back into the driver so it
-should not impact your sequences as well.
+V1->V2:
+- Dropped __iomem from payload data.
+- Moved transport ops to scmi_desc, and that has a per transport
+  instance now which is differentiated using the compatible string.
+- Converted IS_ERR_OR_NULL to IS_ERR.
 
-Do you see a reason for sdw_md_driver which is must have? I couldn't
-find that by looking at the code, let me know if I have missed anything
-here.
+ drivers/firmware/arm_scmi/Makefile  |   3 +-
+ drivers/firmware/arm_scmi/common.h  | 102 +++++++++-
+ drivers/firmware/arm_scmi/driver.c  | 292 ++++------------------------
+ drivers/firmware/arm_scmi/mailbox.c | 236 ++++++++++++++++++++++
+ 4 files changed, 371 insertions(+), 262 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/mailbox.c
 
-
-So to summarize, my recommendation would be to drop sdw_md_driver, keep
-sdw_master_device object and make sdw_master_device_add() hidden to
-driver and call it from sdw_add_bus_master() and keep intel specific
-startup/init routine which do same steps as they have now.
-
-Thanks
+diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+index 5f298f00a82e..df2c05a545d8 100644
+--- a/drivers/firmware/arm_scmi/Makefile
++++ b/drivers/firmware/arm_scmi/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o
++obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o scmi-transport.o
+ scmi-bus-y = bus.o
+ scmi-driver-y = driver.o
++scmi-transport-y = mailbox.o
+ scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
+ obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+index df35358ff324..805482c41ab4 100644
+--- a/drivers/firmware/arm_scmi/common.h
++++ b/drivers/firmware/arm_scmi/common.h
+@@ -13,6 +13,7 @@
+ #include <linux/errno.h>
+ #include <linux/kernel.h>
+ #include <linux/scmi_protocol.h>
++#include <linux/stddef.h>
+ #include <linux/types.h>
+ 
+ #include <asm/unaligned.h>
+@@ -33,8 +34,8 @@ enum scmi_common_cmd {
+ /**
+  * struct scmi_msg_resp_prot_version - Response for a message
+  *
+- * @major_version: Major version of the ABI that firmware supports
+  * @minor_version: Minor version of the ABI that firmware supports
++ * @major_version: Major version of the ABI that firmware supports
+  *
+  * In general, ABI version changes follow the rule that minor version increments
+  * are backward compatible. Major revision changes in ABI may not be
+@@ -47,6 +48,19 @@ struct scmi_msg_resp_prot_version {
+ 	__le16 major_version;
+ };
+ 
++#define MSG_ID_MASK		GENMASK(7, 0)
++#define MSG_XTRACT_ID(hdr)	FIELD_GET(MSG_ID_MASK, (hdr))
++#define MSG_TYPE_MASK		GENMASK(9, 8)
++#define MSG_XTRACT_TYPE(hdr)	FIELD_GET(MSG_TYPE_MASK, (hdr))
++#define MSG_TYPE_COMMAND	0
++#define MSG_TYPE_DELAYED_RESP	2
++#define MSG_TYPE_NOTIFICATION	3
++#define MSG_PROTOCOL_ID_MASK	GENMASK(17, 10)
++#define MSG_XTRACT_PROT_ID(hdr)	FIELD_GET(MSG_PROTOCOL_ID_MASK, (hdr))
++#define MSG_TOKEN_ID_MASK	GENMASK(27, 18)
++#define MSG_XTRACT_TOKEN(hdr)	FIELD_GET(MSG_TOKEN_ID_MASK, (hdr))
++#define MSG_TOKEN_MAX		(MSG_XTRACT_TOKEN(MSG_TOKEN_ID_MASK) + 1)
++
+ /**
+  * struct scmi_msg_hdr - Message(Tx/Rx) header
+  *
+@@ -67,6 +81,33 @@ struct scmi_msg_hdr {
+ 	bool poll_completion;
+ };
+ 
++/**
++ * pack_scmi_header() - packs and returns 32-bit header
++ *
++ * @hdr: pointer to header containing all the information on message id,
++ *	protocol id and sequence id.
++ *
++ * Return: 32-bit packed message header to be sent to the platform.
++ */
++static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
++{
++	return FIELD_PREP(MSG_ID_MASK, hdr->id) |
++		FIELD_PREP(MSG_TOKEN_ID_MASK, hdr->seq) |
++		FIELD_PREP(MSG_PROTOCOL_ID_MASK, hdr->protocol_id);
++}
++
++/**
++ * unpack_scmi_header() - unpacks and records message and protocol id
++ *
++ * @msg_hdr: 32-bit packed message header sent from the platform
++ * @hdr: pointer to header to fetch message and protocol id.
++ */
++static inline void unpack_scmi_header(u32 msg_hdr, struct scmi_msg_hdr *hdr)
++{
++	hdr->id = MSG_XTRACT_ID(msg_hdr);
++	hdr->protocol_id = MSG_XTRACT_PROT_ID(msg_hdr);
++}
++
+ /**
+  * struct scmi_msg - Message(Tx/Rx) structure
+  *
+@@ -88,7 +129,7 @@ struct scmi_msg {
+  *	message. If request-ACK protocol is used, we can reuse the same
+  *	buffer for the rx path as we use for the tx path.
+  * @done: command message transmit completion event
+- * @async: pointer to delayed response message received event completion
++ * @async_done: pointer to delayed response message received event completion
+  */
+ struct scmi_xfer {
+ 	int transfer_id;
+@@ -113,3 +154,60 @@ void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
+ 				     u8 *prot_imp);
+ 
+ int scmi_base_protocol_init(struct scmi_handle *h);
++
++/* SCMI Transport */
++/**
++ * struct scmi_chan_info - Structure representing a SCMI channel information
++ *
++ * @dev: Reference to device in the SCMI hierarchy corresponding to this
++ *	 channel
++ * @handle: Pointer to SCMI entity handle
++ * @transport_info: Transport layer related information
++ */
++struct scmi_chan_info {
++	struct device *dev;
++	struct scmi_handle *handle;
++	void *transport_info;
++};
++
++/**
++ * struct scmi_transport_ops - Structure representing a SCMI transport ops
++ *
++ * @chan_available: Callback to check if channel is available or not
++ * @chan_setup: Callback to allocate and setup a channel
++ * @chan_free: Callback to free a channel
++ * @send_message: Callback to send a message
++ * @mark_txdone: Callback to mark tx as done
++ * @fetch_response: Callback to fetch response
++ * @poll_done: Callback to poll transfer status
++ */
++struct scmi_transport_ops {
++	bool (*chan_available)(struct device *dev, int idx);
++	int (*chan_setup)(struct scmi_chan_info *cinfo, struct device *dev, bool tx);
++	int (*chan_free)(int id, void *p, void *data);
++	int (*send_message)(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer);
++	void (*mark_txdone)(struct scmi_chan_info *cinfo, int ret);
++	void (*fetch_response)(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer);
++	bool (*poll_done)(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer);
++};
++
++/**
++ * struct scmi_desc - Description of SoC integration
++ *
++ * @ops: Pointer to the transport specific ops structure
++ * @max_rx_timeout_ms: Timeout for communication with SoC (in Milliseconds)
++ * @max_msg: Maximum number of messages that can be pending
++ *	simultaneously in the system
++ * @max_msg_size: Maximum size of data per message that can be handled.
++ */
++struct scmi_desc {
++	struct scmi_transport_ops *ops;
++	int max_rx_timeout_ms;
++	int max_msg;
++	int max_msg_size;
++};
++
++extern const struct scmi_desc scmi_mailbox_desc;
++
++void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr);
++void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr, int id);
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 2c96f6b5a7d8..a4d5286ba8a6 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -19,12 +19,10 @@
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/ktime.h>
+-#include <linux/mailbox_client.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+ #include <linux/processor.h>
+-#include <linux/semaphore.h>
+ #include <linux/slab.h>
+ 
+ #include "common.h"
+@@ -32,19 +30,6 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/scmi.h>
+ 
+-#define MSG_ID_MASK		GENMASK(7, 0)
+-#define MSG_XTRACT_ID(hdr)	FIELD_GET(MSG_ID_MASK, (hdr))
+-#define MSG_TYPE_MASK		GENMASK(9, 8)
+-#define MSG_XTRACT_TYPE(hdr)	FIELD_GET(MSG_TYPE_MASK, (hdr))
+-#define MSG_TYPE_COMMAND	0
+-#define MSG_TYPE_DELAYED_RESP	2
+-#define MSG_TYPE_NOTIFICATION	3
+-#define MSG_PROTOCOL_ID_MASK	GENMASK(17, 10)
+-#define MSG_XTRACT_PROT_ID(hdr)	FIELD_GET(MSG_PROTOCOL_ID_MASK, (hdr))
+-#define MSG_TOKEN_ID_MASK	GENMASK(27, 18)
+-#define MSG_XTRACT_TOKEN(hdr)	FIELD_GET(MSG_TOKEN_ID_MASK, (hdr))
+-#define MSG_TOKEN_MAX		(MSG_XTRACT_TOKEN(MSG_TOKEN_ID_MASK) + 1)
+-
+ enum scmi_error_codes {
+ 	SCMI_SUCCESS = 0,	/* Success */
+ 	SCMI_ERR_SUPPORT = -1,	/* Not supported */
+@@ -82,46 +67,14 @@ struct scmi_xfers_info {
+ 	spinlock_t xfer_lock;
+ };
+ 
+-/**
+- * struct scmi_desc - Description of SoC integration
+- *
+- * @max_rx_timeout_ms: Timeout for communication with SoC (in Milliseconds)
+- * @max_msg: Maximum number of messages that can be pending
+- *	simultaneously in the system
+- * @max_msg_size: Maximum size of data per message that can be handled.
+- */
+-struct scmi_desc {
+-	int max_rx_timeout_ms;
+-	int max_msg;
+-	int max_msg_size;
+-};
+-
+-/**
+- * struct scmi_chan_info - Structure representing a SCMI channel information
+- *
+- * @cl: Mailbox Client
+- * @chan: Transmit/Receive mailbox channel
+- * @payload: Transmit/Receive mailbox channel payload area
+- * @dev: Reference to device in the SCMI hierarchy corresponding to this
+- *	 channel
+- * @handle: Pointer to SCMI entity handle
+- */
+-struct scmi_chan_info {
+-	struct mbox_client cl;
+-	struct mbox_chan *chan;
+-	void __iomem *payload;
+-	struct device *dev;
+-	struct scmi_handle *handle;
+-};
+-
+ /**
+  * struct scmi_info - Structure representing a SCMI instance
+  *
+  * @dev: Device pointer
+  * @desc: SoC description for this instance
+- * @handle: Instance of SCMI handle to send to clients
+  * @version: SCMI revision information containing protocol version,
+  *	implementation version and (sub-)vendor identification.
++ * @handle: Instance of SCMI handle to send to clients
+  * @tx_minfo: Universal Transmit Message management info
+  * @tx_idr: IDR object to map protocol id to Tx channel info pointer
+  * @rx_idr: IDR object to map protocol id to Rx channel info pointer
+@@ -143,27 +96,8 @@ struct scmi_info {
+ 	int users;
+ };
+ 
+-#define client_to_scmi_chan_info(c) container_of(c, struct scmi_chan_info, cl)
+ #define handle_to_scmi_info(h)	container_of(h, struct scmi_info, handle)
+ 
+-/*
+- * SCMI specification requires all parameters, message headers, return
+- * arguments or any protocol data to be expressed in little endian
+- * format only.
+- */
+-struct scmi_shared_mem {
+-	__le32 reserved;
+-	__le32 channel_status;
+-#define SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR	BIT(1)
+-#define SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE	BIT(0)
+-	__le32 reserved1[2];
+-	__le32 flags;
+-#define SCMI_SHMEM_FLAG_INTR_ENABLED	BIT(0)
+-	__le32 length;
+-	__le32 msg_header;
+-	u8 msg_payload[0];
+-};
+-
+ static const int scmi_linux_errmap[] = {
+ 	/* better than switch case as long as return value is continuous */
+ 	0,			/* SCMI_SUCCESS */
+@@ -199,77 +133,6 @@ static inline void scmi_dump_header_dbg(struct device *dev,
+ 		hdr->id, hdr->seq, hdr->protocol_id);
+ }
+ 
+-static void scmi_fetch_response(struct scmi_xfer *xfer,
+-				struct scmi_shared_mem __iomem *mem)
+-{
+-	xfer->hdr.status = ioread32(mem->msg_payload);
+-	/* Skip the length of header and status in payload area i.e 8 bytes */
+-	xfer->rx.len = min_t(size_t, xfer->rx.len, ioread32(&mem->length) - 8);
+-
+-	/* Take a copy to the rx buffer.. */
+-	memcpy_fromio(xfer->rx.buf, mem->msg_payload + 4, xfer->rx.len);
+-}
+-
+-/**
+- * pack_scmi_header() - packs and returns 32-bit header
+- *
+- * @hdr: pointer to header containing all the information on message id,
+- *	protocol id and sequence id.
+- *
+- * Return: 32-bit packed message header to be sent to the platform.
+- */
+-static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
+-{
+-	return FIELD_PREP(MSG_ID_MASK, hdr->id) |
+-		FIELD_PREP(MSG_TOKEN_ID_MASK, hdr->seq) |
+-		FIELD_PREP(MSG_PROTOCOL_ID_MASK, hdr->protocol_id);
+-}
+-
+-/**
+- * unpack_scmi_header() - unpacks and records message and protocol id
+- *
+- * @msg_hdr: 32-bit packed message header sent from the platform
+- * @hdr: pointer to header to fetch message and protocol id.
+- */
+-static inline void unpack_scmi_header(u32 msg_hdr, struct scmi_msg_hdr *hdr)
+-{
+-	hdr->id = MSG_XTRACT_ID(msg_hdr);
+-	hdr->protocol_id = MSG_XTRACT_PROT_ID(msg_hdr);
+-}
+-
+-/**
+- * scmi_tx_prepare() - mailbox client callback to prepare for the transfer
+- *
+- * @cl: client pointer
+- * @m: mailbox message
+- *
+- * This function prepares the shared memory which contains the header and the
+- * payload.
+- */
+-static void scmi_tx_prepare(struct mbox_client *cl, void *m)
+-{
+-	struct scmi_xfer *t = m;
+-	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
+-	struct scmi_shared_mem __iomem *mem = cinfo->payload;
+-
+-	/*
+-	 * Ideally channel must be free by now unless OS timeout last
+-	 * request and platform continued to process the same, wait
+-	 * until it releases the shared memory, otherwise we may endup
+-	 * overwriting its response with new message payload or vice-versa
+-	 */
+-	spin_until_cond(ioread32(&mem->channel_status) &
+-			SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
+-	/* Mark channel busy + clear error */
+-	iowrite32(0x0, &mem->channel_status);
+-	iowrite32(t->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED,
+-		  &mem->flags);
+-	iowrite32(sizeof(mem->msg_header) + t->tx.len, &mem->length);
+-	iowrite32(pack_scmi_header(&t->hdr), &mem->msg_header);
+-	if (t->tx.buf)
+-		memcpy_toio(mem->msg_payload, t->tx.buf, t->tx.len);
+-}
+-
+ /**
+  * scmi_xfer_get() - Allocate one message
+  *
+@@ -338,10 +201,10 @@ __scmi_xfer_put(struct scmi_xfers_info *minfo, struct scmi_xfer *xfer)
+ }
+ 
+ /**
+- * scmi_rx_callback() - mailbox client callback for receive messages
++ * scmi_rx_callback() - callback for receiving messages
+  *
+- * @cl: client pointer
+- * @m: mailbox message
++ * @cinfo: SCMI channel info
++ * @msg_hdr: Message header
+  *
+  * Processes one received message to appropriate transfer information and
+  * signals completion of the transfer.
+@@ -349,21 +212,14 @@ __scmi_xfer_put(struct scmi_xfers_info *minfo, struct scmi_xfer *xfer)
+  * NOTE: This function will be invoked in IRQ context, hence should be
+  * as optimal as possible.
+  */
+-static void scmi_rx_callback(struct mbox_client *cl, void *m)
++void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr)
+ {
+-	u8 msg_type;
+-	u32 msg_hdr;
+-	u16 xfer_id;
+-	struct scmi_xfer *xfer;
+-	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
+-	struct device *dev = cinfo->dev;
+ 	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
+ 	struct scmi_xfers_info *minfo = &info->tx_minfo;
+-	struct scmi_shared_mem __iomem *mem = cinfo->payload;
+-
+-	msg_hdr = ioread32(&mem->msg_header);
+-	msg_type = MSG_XTRACT_TYPE(msg_hdr);
+-	xfer_id = MSG_XTRACT_TOKEN(msg_hdr);
++	u16 xfer_id = MSG_XTRACT_TOKEN(msg_hdr);
++	u8 msg_type = MSG_XTRACT_TYPE(msg_hdr);
++	struct device *dev = cinfo->dev;
++	struct scmi_xfer *xfer;
+ 
+ 	if (msg_type == MSG_TYPE_NOTIFICATION)
+ 		return; /* Notifications not yet supported */
+@@ -378,7 +234,7 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
+ 
+ 	scmi_dump_header_dbg(dev, &xfer->hdr);
+ 
+-	scmi_fetch_response(xfer, mem);
++	info->desc->ops->fetch_response(cinfo, xfer);
+ 
+ 	trace_scmi_rx_done(xfer->transfer_id, xfer->hdr.id,
+ 			   xfer->hdr.protocol_id, xfer->hdr.seq,
+@@ -403,28 +259,15 @@ void scmi_xfer_put(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 	__scmi_xfer_put(&info->tx_minfo, xfer);
+ }
+ 
+-static bool
+-scmi_xfer_poll_done(const struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
+-{
+-	struct scmi_shared_mem __iomem *mem = cinfo->payload;
+-	u16 xfer_id = MSG_XTRACT_TOKEN(ioread32(&mem->msg_header));
+-
+-	if (xfer->hdr.seq != xfer_id)
+-		return false;
+-
+-	return ioread32(&mem->channel_status) &
+-		(SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR |
+-		SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
+-}
+-
+ #define SCMI_MAX_POLL_TO_NS	(100 * NSEC_PER_USEC)
+ 
+-static bool scmi_xfer_done_no_timeout(const struct scmi_chan_info *cinfo,
++static bool scmi_xfer_done_no_timeout(struct scmi_chan_info *cinfo,
+ 				      struct scmi_xfer *xfer, ktime_t stop)
+ {
+-	ktime_t __cur = ktime_get();
++	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
+ 
+-	return scmi_xfer_poll_done(cinfo, xfer) || ktime_after(__cur, stop);
++	return info->desc->ops->poll_done(cinfo, xfer) ||
++	       ktime_after(ktime_get(), stop);
+ }
+ 
+ /**
+@@ -453,29 +296,26 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 			      xfer->hdr.protocol_id, xfer->hdr.seq,
+ 			      xfer->hdr.poll_completion);
+ 
+-	ret = mbox_send_message(cinfo->chan, xfer);
++	ret = info->desc->ops->send_message(cinfo, xfer);
+ 	if (ret < 0) {
+-		dev_dbg(dev, "mbox send fail %d\n", ret);
++		dev_dbg(dev, "Failed to send message %d\n", ret);
+ 		return ret;
+ 	}
+ 
+-	/* mbox_send_message returns non-negative value on success, so reset */
+-	ret = 0;
+-
+ 	if (xfer->hdr.poll_completion) {
+ 		ktime_t stop = ktime_add_ns(ktime_get(), SCMI_MAX_POLL_TO_NS);
+ 
+ 		spin_until_cond(scmi_xfer_done_no_timeout(cinfo, xfer, stop));
+ 
+ 		if (ktime_before(ktime_get(), stop))
+-			scmi_fetch_response(xfer, cinfo->payload);
++			info->desc->ops->fetch_response(cinfo, xfer);
+ 		else
+ 			ret = -ETIMEDOUT;
+ 	} else {
+ 		/* And we wait for the response. */
+ 		timeout = msecs_to_jiffies(info->desc->max_rx_timeout_ms);
+ 		if (!wait_for_completion_timeout(&xfer->done, timeout)) {
+-			dev_err(dev, "mbox timed out in resp(caller: %pS)\n",
++			dev_err(dev, "timed out in resp(caller: %pS)\n",
+ 				(void *)_RET_IP_);
+ 			ret = -ETIMEDOUT;
+ 		}
+@@ -484,13 +324,7 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 	if (!ret && xfer->hdr.status)
+ 		ret = scmi_to_linux_errno(xfer->hdr.status);
+ 
+-	/*
+-	 * NOTE: we might prefer not to need the mailbox ticker to manage the
+-	 * transfer queueing since the protocol layer queues things by itself.
+-	 * Unfortunately, we have to kick the mailbox framework after we have
+-	 * received our message.
+-	 */
+-	mbox_client_txdone(cinfo->chan, ret);
++	info->desc->ops->mark_txdone(cinfo, ret);
+ 
+ 	trace_scmi_xfer_end(xfer->transfer_id, xfer->hdr.id,
+ 			    xfer->hdr.protocol_id, xfer->hdr.seq,
+@@ -731,23 +565,12 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
+ 	return 0;
+ }
+ 
+-static int scmi_mailbox_check(struct device_node *np, int idx)
+-{
+-	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells",
+-					  idx, NULL);
+-}
+-
+-static int scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev,
+-				int prot_id, bool tx)
++static int scmi_chan_setup(struct scmi_info *info, struct device *dev,
++			   int prot_id, bool tx)
+ {
+ 	int ret, idx;
+-	struct resource res;
+-	resource_size_t size;
+-	struct device_node *shmem, *np = dev->of_node;
+ 	struct scmi_chan_info *cinfo;
+-	struct mbox_client *cl;
+ 	struct idr *idr;
+-	const char *desc = tx ? "Tx" : "Rx";
+ 
+ 	/* Transmit channel is first entry i.e. index 0 */
+ 	idx = tx ? 0 : 1;
+@@ -758,7 +581,7 @@ static int scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev,
+ 	if (cinfo)
+ 		return 0;
+ 
+-	if (scmi_mailbox_check(np, idx)) {
++	if (!info->desc->ops->chan_available(dev, idx)) {
+ 		cinfo = idr_find(idr, SCMI_PROTOCOL_BASE);
+ 		if (unlikely(!cinfo)) /* Possible only if platform has no Rx */
+ 			return -EINVAL;
+@@ -771,36 +594,9 @@ static int scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev,
+ 
+ 	cinfo->dev = dev;
+ 
+-	cl = &cinfo->cl;
+-	cl->dev = dev;
+-	cl->rx_callback = scmi_rx_callback;
+-	cl->tx_prepare = tx ? scmi_tx_prepare : NULL;
+-	cl->tx_block = false;
+-	cl->knows_txdone = tx;
+-
+-	shmem = of_parse_phandle(np, "shmem", idx);
+-	ret = of_address_to_resource(shmem, 0, &res);
+-	of_node_put(shmem);
+-	if (ret) {
+-		dev_err(dev, "failed to get SCMI %s payload memory\n", desc);
+-		return ret;
+-	}
+-
+-	size = resource_size(&res);
+-	cinfo->payload = devm_ioremap(info->dev, res.start, size);
+-	if (!cinfo->payload) {
+-		dev_err(dev, "failed to ioremap SCMI %s payload\n", desc);
+-		return -EADDRNOTAVAIL;
+-	}
+-
+-	cinfo->chan = mbox_request_channel(cl, idx);
+-	if (IS_ERR(cinfo->chan)) {
+-		ret = PTR_ERR(cinfo->chan);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "failed to request SCMI %s mailbox\n",
+-				desc);
++	ret = info->desc->ops->chan_setup(cinfo, info->dev, tx);
++	if (ret)
+ 		return ret;
+-	}
+ 
+ idr_alloc:
+ 	ret = idr_alloc(idr, cinfo, prot_id, prot_id + 1, GFP_KERNEL);
+@@ -814,12 +610,12 @@ static int scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev,
+ }
+ 
+ static inline int
+-scmi_mbox_txrx_setup(struct scmi_info *info, struct device *dev, int prot_id)
++scmi_txrx_setup(struct scmi_info *info, struct device *dev, int prot_id)
+ {
+-	int ret = scmi_mbox_chan_setup(info, dev, prot_id, true);
++	int ret = scmi_chan_setup(info, dev, prot_id, true);
+ 
+ 	if (!ret) /* Rx is optional, hence no error check */
+-		scmi_mbox_chan_setup(info, dev, prot_id, false);
++		scmi_chan_setup(info, dev, prot_id, false);
+ 
+ 	return ret;
+ }
+@@ -837,7 +633,7 @@ scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
+ 		return;
+ 	}
+ 
+-	if (scmi_mbox_txrx_setup(info, &sdev->dev, prot_id)) {
++	if (scmi_txrx_setup(info, &sdev->dev, prot_id)) {
+ 		dev_err(&sdev->dev, "failed to setup transport\n");
+ 		scmi_device_destroy(sdev);
+ 		return;
+@@ -890,12 +686,6 @@ static int scmi_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *child, *np = dev->of_node;
+ 
+-	/* Only mailbox method supported, check for the presence of one */
+-	if (scmi_mailbox_check(np, 0)) {
+-		dev_err(dev, "no mailbox found in %pOF\n", np);
+-		return -EINVAL;
+-	}
+-
+ 	desc = of_device_get_match_data(dev);
+ 	if (!desc)
+ 		return -EINVAL;
+@@ -920,7 +710,7 @@ static int scmi_probe(struct platform_device *pdev)
+ 	handle->dev = info->dev;
+ 	handle->version = &info->version;
+ 
+-	ret = scmi_mbox_txrx_setup(info, dev, SCMI_PROTOCOL_BASE);
++	ret = scmi_txrx_setup(info, dev, SCMI_PROTOCOL_BASE);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -955,19 +745,9 @@ static int scmi_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int scmi_mbox_free_channel(int id, void *p, void *data)
++void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr, int id)
+ {
+-	struct scmi_chan_info *cinfo = p;
+-	struct idr *idr = data;
+-
+-	if (!IS_ERR_OR_NULL(cinfo->chan)) {
+-		mbox_free_channel(cinfo->chan);
+-		cinfo->chan = NULL;
+-	}
+-
+ 	idr_remove(idr, id);
+-
+-	return 0;
+ }
+ 
+ static int scmi_remove(struct platform_device *pdev)
+@@ -987,11 +767,11 @@ static int scmi_remove(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	/* Safe to free channels since no more users */
+-	ret = idr_for_each(idr, scmi_mbox_free_channel, idr);
++	ret = idr_for_each(idr, info->desc->ops->chan_free, idr);
+ 	idr_destroy(&info->tx_idr);
+ 
+ 	idr = &info->rx_idr;
+-	ret = idr_for_each(idr, scmi_mbox_free_channel, idr);
++	ret = idr_for_each(idr, info->desc->ops->chan_free, idr);
+ 	idr_destroy(&info->rx_idr);
+ 
+ 	return ret;
+@@ -1043,15 +823,9 @@ static struct attribute *versions_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(versions);
+ 
+-static const struct scmi_desc scmi_generic_desc = {
+-	.max_rx_timeout_ms = 30,	/* We may increase this if required */
+-	.max_msg = 20,		/* Limited by MBOX_TX_QUEUE_LEN */
+-	.max_msg_size = 128,
+-};
+-
+ /* Each compatible listed below must have descriptor associated with it */
+ static const struct of_device_id scmi_of_match[] = {
+-	{ .compatible = "arm,scmi", .data = &scmi_generic_desc },
++	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
+ 	{ /* Sentinel */ },
+ };
+ 
+diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
+new file mode 100644
+index 000000000000..ffc7457831e1
+--- /dev/null
++++ b/drivers/firmware/arm_scmi/mailbox.c
+@@ -0,0 +1,236 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * System Control and Management Interface (SCMI) Message Mailbox Transport
++ * driver.
++ *
++ * Copyright (C) 2019 ARM Ltd.
++ */
++
++#include <linux/err.h>
++#include <linux/device.h>
++#include <linux/mailbox_client.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/processor.h>
++#include <linux/slab.h>
++
++#include "common.h"
++
++/*
++ * SCMI specification requires all parameters, message headers, return
++ * arguments or any protocol data to be expressed in little endian
++ * format only.
++ */
++struct scmi_shared_mem {
++	__le32 reserved;
++	__le32 channel_status;
++#define SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR	BIT(1)
++#define SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE	BIT(0)
++	__le32 reserved1[2];
++	__le32 flags;
++#define SCMI_SHMEM_FLAG_INTR_ENABLED	BIT(0)
++	__le32 length;
++	__le32 msg_header;
++	u8 msg_payload[0];
++};
++
++/**
++ * struct scmi_mailbox - Structure representing a SCMI mailbox transport
++ *
++ * @cl: Mailbox Client
++ * @chan: Transmit/Receive mailbox channel
++ * @cinfo: SCMI channel info
++ * @shmem: Transmit/Receive shared memory area
++ */
++struct scmi_mailbox {
++	struct mbox_client cl;
++	struct mbox_chan *chan;
++	struct scmi_chan_info *cinfo;
++	struct scmi_shared_mem __iomem *shmem;
++};
++
++#define client_to_scmi_mailbox(c) container_of(c, struct scmi_mailbox, cl)
++
++static void tx_prepare(struct mbox_client *cl, void *m)
++{
++	struct scmi_mailbox *smbox = client_to_scmi_mailbox(cl);
++	struct scmi_shared_mem __iomem *shmem = smbox->shmem;
++	struct scmi_xfer *xfer = m;
++
++	/*
++	 * Ideally channel must be free by now unless OS timeout last
++	 * request and platform continued to process the same, wait
++	 * until it releases the shared memory, otherwise we may endup
++	 * overwriting its response with new message payload or vice-versa
++	 */
++	spin_until_cond(ioread32(&shmem->channel_status) &
++			SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
++	/* Mark channel busy + clear error */
++	iowrite32(0x0, &shmem->channel_status);
++	iowrite32(xfer->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED,
++		  &shmem->flags);
++	iowrite32(sizeof(shmem->msg_header) + xfer->tx.len, &shmem->length);
++	iowrite32(pack_scmi_header(&xfer->hdr), &shmem->msg_header);
++	if (xfer->tx.buf)
++		memcpy_toio(shmem->msg_payload, xfer->tx.buf, xfer->tx.len);
++}
++
++static void rx_callback(struct mbox_client *cl, void *m)
++{
++	struct scmi_mailbox *smbox = client_to_scmi_mailbox(cl);
++	struct scmi_shared_mem __iomem *shmem = smbox->shmem;
++
++	scmi_rx_callback(smbox->cinfo, ioread32(&shmem->msg_header));
++}
++
++static bool mailbox_chan_available(struct device *dev, int idx)
++{
++	return !of_parse_phandle_with_args(dev->of_node, "mboxes",
++					   "#mbox-cells", idx, NULL);
++}
++
++static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
++			      bool tx)
++{
++	const char *desc = tx ? "Tx" : "Rx";
++	struct device *cdev = cinfo->dev;
++	struct scmi_mailbox *smbox;
++	struct device_node *shmem;
++	int ret, idx = tx ? 0 : 1;
++	struct mbox_client *cl;
++	resource_size_t size;
++	struct resource res;
++
++	smbox = devm_kzalloc(dev, sizeof(*smbox), GFP_KERNEL);
++	if (!smbox)
++		return -ENOMEM;
++
++	shmem = of_parse_phandle(cdev->of_node, "shmem", idx);
++	ret = of_address_to_resource(shmem, 0, &res);
++	of_node_put(shmem);
++	if (ret) {
++		dev_err(cdev, "failed to get SCMI %s shared memory\n", desc);
++		return ret;
++	}
++
++	size = resource_size(&res);
++	smbox->shmem = devm_ioremap(dev, res.start, size);
++	if (!smbox->shmem) {
++		dev_err(dev, "failed to ioremap SCMI %s shared memory\n", desc);
++		return -EADDRNOTAVAIL;
++	}
++
++	cl = &smbox->cl;
++	cl->dev = cdev;
++	cl->tx_prepare = tx ? tx_prepare : NULL;
++	cl->rx_callback = rx_callback;
++	cl->tx_block = false;
++	cl->knows_txdone = tx;
++
++	smbox->chan = mbox_request_channel(cl, tx ? 0 : 1);
++	if (IS_ERR(smbox->chan)) {
++		ret = PTR_ERR(smbox->chan);
++		if (ret != -EPROBE_DEFER)
++			dev_err(cdev, "failed to request SCMI %s mailbox\n",
++				tx ? "Tx" : "Rx");
++		return ret;
++	}
++
++	cinfo->transport_info = smbox;
++	smbox->cinfo = cinfo;
++
++	return 0;
++}
++
++static int mailbox_chan_free(int id, void *p, void *data)
++{
++	struct scmi_chan_info *cinfo = p;
++	struct scmi_mailbox *smbox = cinfo->transport_info;
++
++	if (!IS_ERR(smbox->chan)) {
++		mbox_free_channel(smbox->chan);
++		cinfo->transport_info = NULL;
++		smbox->chan = NULL;
++		smbox->cinfo = NULL;
++	}
++
++	scmi_free_channel(cinfo, data, id);
++
++	return 0;
++}
++
++static int mailbox_send_message(struct scmi_chan_info *cinfo,
++				struct scmi_xfer *xfer)
++{
++	struct scmi_mailbox *smbox = cinfo->transport_info;
++	int ret;
++
++	ret = mbox_send_message(smbox->chan, xfer);
++
++	/* mbox_send_message returns non-negative value on success, so reset */
++	if (ret > 0)
++		ret = 0;
++
++	return ret;
++}
++
++static void mailbox_mark_txdone(struct scmi_chan_info *cinfo, int ret)
++{
++	struct scmi_mailbox *smbox = cinfo->transport_info;
++
++	/*
++	 * NOTE: we might prefer not to need the mailbox ticker to manage the
++	 * transfer queueing since the protocol layer queues things by itself.
++	 * Unfortunately, we have to kick the mailbox framework after we have
++	 * received our message.
++	 */
++	mbox_client_txdone(smbox->chan, ret);
++}
++
++static void mailbox_fetch_response(struct scmi_chan_info *cinfo,
++				   struct scmi_xfer *xfer)
++{
++	struct scmi_mailbox *smbox = cinfo->transport_info;
++	struct scmi_shared_mem __iomem *shmem = smbox->shmem;
++
++	xfer->hdr.status = ioread32(shmem->msg_payload);
++	/* Skip the length of header and status in shmem area i.e 8 bytes */
++	xfer->rx.len = min_t(size_t, xfer->rx.len, ioread32(&shmem->length) - 8);
++
++	/* Take a copy to the rx buffer.. */
++	memcpy_fromio(xfer->rx.buf, shmem->msg_payload + 4, xfer->rx.len);
++}
++
++static bool
++mailbox_poll_done(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
++{
++	struct scmi_mailbox *smbox = cinfo->transport_info;
++	struct scmi_shared_mem __iomem *shmem = smbox->shmem;
++	u16 xfer_id;
++
++	xfer_id = MSG_XTRACT_TOKEN(ioread32(&shmem->msg_header));
++
++	if (xfer->hdr.seq != xfer_id)
++		return false;
++
++	return ioread32(&shmem->channel_status) &
++		(SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR |
++		 SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
++}
++
++static struct scmi_transport_ops scmi_mailbox_ops = {
++	.chan_available = mailbox_chan_available,
++	.chan_setup = mailbox_chan_setup,
++	.chan_free = mailbox_chan_free,
++	.send_message = mailbox_send_message,
++	.mark_txdone = mailbox_mark_txdone,
++	.fetch_response = mailbox_fetch_response,
++	.poll_done = mailbox_poll_done,
++};
++
++const struct scmi_desc scmi_mailbox_desc = {
++	.ops = &scmi_mailbox_ops,
++	.max_rx_timeout_ms = 30, /* We may increase this if required */
++	.max_msg = 20, /* Limited by MBOX_TX_QUEUE_LEN */
++	.max_msg_size = 128,
++};
 -- 
-~Vinod
+2.21.0.rc0.269.g1a574e7a288b
+
