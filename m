@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F39C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB605C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F02A24691
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973FA24690
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221266;
-	bh=rO20ReY0D17Z08+D6hDKugrRpVERf/wymJFyg4vn6yo=;
+	s=default; t=1580221269;
+	bh=Dxw+0f89/DOVqp441cgRJbzq3Pg2nRwQeSh2x1Rm7CE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0EzIV2cTcw2L6/7lPt/2/k965UdHKbQyhxE3KgRdyCSPs5KrXqu8kgZi2l9mFoqP
-	 mwxmcU5nFIJLV8wzb0K+5VIqdEbACaneJ/TridmZER7MLVM2FQtwNp5GdbK7PiWViA
-	 XSO1J+xFqfC94knibaYwSaxfhThXOuo4uXyTmbj8=
+	b=inUaPcdtqp1p8xNm7w6aKywIUafSZc+B+ExLVXigrDHZUQj61epYeSTi5MiGskvWl
+	 sEgU7JVjVZ6lGPxvlqW8L4+W5abhNme8rKIPDaSVTtq6Ej1VQgS5sTeZ1xkFvVG4bG
+	 zRw0apP3Ou1lQ4mSGaE87FeEgHbbV1/fRKY0MDZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730973AbgA1OVE (ORCPT
+        id S1731210AbgA1OVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:21:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46188 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:21:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731190AbgA1OVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:21:01 -0500
+        id S1728034AbgA1OVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:21:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A068D24690;
-        Tue, 28 Jan 2020 14:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A7B52071E;
+        Tue, 28 Jan 2020 14:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221261;
-        bh=rO20ReY0D17Z08+D6hDKugrRpVERf/wymJFyg4vn6yo=;
+        s=default; t=1580221263;
+        bh=Dxw+0f89/DOVqp441cgRJbzq3Pg2nRwQeSh2x1Rm7CE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cRRN2OTb75EHwJoO8HW5jr6I2gGFjfCrA9yD+83PL/XYqkwd8oqQyVwnFA/un1vrx
-         W8ze/frwsLfndivc5kFpGH+ob947u5xhUTm8pFYVHG/1+2iPDYBIYivPRqTsRBHsM7
-         Y0nRsoPwb2/anCEQmKvhd3eavVy8zSmMO/281rFg=
+        b=HoZE+r8AR4gryiHedbfq8Y9lk1Ef2om1HcXWS4KKXeZX8adP9ji3nqUbYJIBAKjGp
+         AakkT/JlO15H/o9gvsF4hZ1v15ADFFPt49N/Rxij6NxuHNmECNQVXzbpugvswBWA+A
+         ITuY0qBHJqxQ9Ne2u6UJ1K8hwG1R8Uaq3vAvsNlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jie Liu <liujie165@huawei.com>,
-        Qiang Ning <ningqiang1@huawei.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 117/271] tipc: set sysctl_tipc_rmem and named_timeout right range
-Date:   Tue, 28 Jan 2020 15:04:26 +0100
-Message-Id: <20200128135901.298365269@linuxfoundation.org>
+Subject: [PATCH 4.9 108/271] media: tw5864: Fix possible NULL pointer dereference in tw5864_handle_frame
+Date:   Tue, 28 Jan 2020 15:04:17 +0100
+Message-Id: <20200128135900.618848609@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -63,58 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jie Liu <liujie165@huawei.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 4bcd4ec1017205644a2697bccbc3b5143f522f5f ]
+[ Upstream commit 2e7682ebfc750177a4944eeb56e97a3f05734528 ]
 
-We find that sysctl_tipc_rmem and named_timeout do not have the right minimum
-setting. sysctl_tipc_rmem should be larger than zero, like sysctl_tcp_rmem.
-And named_timeout as a timeout setting should be not less than zero.
+'vb' null check should be done before dereferencing it in
+tw5864_handle_frame, otherwise a NULL pointer dereference
+may occur.
 
-Fixes: cc79dd1ba9c10 ("tipc: change socket buffer overflow control to respect sk_rcvbuf")
-Fixes: a5325ae5b8bff ("tipc: add name distributor resiliency queue")
-Signed-off-by: Jie Liu <liujie165@huawei.com>
-Reported-by: Qiang Ning <ningqiang1@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 34d1324edd31 ("[media] pci: Add tw5864 driver")
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/sysctl.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/media/pci/tw5864/tw5864-video.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/tipc/sysctl.c b/net/tipc/sysctl.c
-index 1a779b1e85100..40f6d82083d7b 100644
---- a/net/tipc/sysctl.c
-+++ b/net/tipc/sysctl.c
-@@ -37,6 +37,8 @@
+diff --git a/drivers/media/pci/tw5864/tw5864-video.c b/drivers/media/pci/tw5864/tw5864-video.c
+index 1ddf80f85c248..27ff6e0d98453 100644
+--- a/drivers/media/pci/tw5864/tw5864-video.c
++++ b/drivers/media/pci/tw5864/tw5864-video.c
+@@ -1386,13 +1386,13 @@ static void tw5864_handle_frame(struct tw5864_h264_frame *frame)
+ 	input->vb = NULL;
+ 	spin_unlock_irqrestore(&input->slock, flags);
  
- #include <linux/sysctl.h>
+-	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
+-
+ 	if (!vb) { /* Gone because of disabling */
+ 		dev_dbg(&dev->pci->dev, "vb is empty, dropping frame\n");
+ 		return;
+ 	}
  
-+static int zero;
-+static int one = 1;
- static struct ctl_table_header *tipc_ctl_hdr;
- 
- static struct ctl_table tipc_table[] = {
-@@ -45,14 +47,16 @@ static struct ctl_table tipc_table[] = {
- 		.data		= &sysctl_tipc_rmem,
- 		.maxlen		= sizeof(sysctl_tipc_rmem),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1         = &one,
- 	},
- 	{
- 		.procname	= "named_timeout",
- 		.data		= &sysctl_tipc_named_timeout,
- 		.maxlen		= sizeof(sysctl_tipc_named_timeout),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1         = &zero,
- 	},
- 	{}
- };
++	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
++
+ 	/*
+ 	 * Check for space.
+ 	 * Mind the overhead of startcode emulation prevention.
 -- 
 2.20.1
 
