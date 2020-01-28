@@ -2,80 +2,122 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AB0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645F8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FB924681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D2EA24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580220427;
+	bh=gTKXZqGSWTCaq/2mjRbkSq8dGOn8KG/W2Ti1fQPskK4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=h7p+NI71RHM9EFXUfafy6Oiac/7+JE1yjfLvf6Ywfmn14EX7CCDC7ZtdY8LzFqmti
+	 DxeCdpn/grDnZY/71pdiReOKf6sHA9jeJ0xh8hcgV99gUnvtrWWF/Zxt5BqoXdkUL5
+	 R1HlCVwuQ6dCbcaRdUy6vFd8LX4/MpAW7W0hSUXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgA1OHD (ORCPT
+        id S1726865AbgA1OD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:07:03 -0500
-Received: from olimex.com ([184.105.72.32]:58579 "EHLO olimex.com"
+        Tue, 28 Jan 2020 09:03:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgA1OG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:06:57 -0500
-Received: from localhost.localdomain ([94.155.250.134])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 06:06:52 -0800
-From:   Stefan Mavrodiev <stefan@olimex.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR ALLWINNER
-        A10),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support)
-Cc:     linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH v3 0/1] Add support for sun4i HDMI audio
-Date:   Tue, 28 Jan 2020 16:06:41 +0200
-Message-Id: <20200128140642.8404-1-stefan@olimex.com>
-X-Mailer: git-send-email 2.17.1
+        id S1727942AbgA1ODu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:03:50 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 347D624683;
+        Tue, 28 Jan 2020 14:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580220229;
+        bh=gTKXZqGSWTCaq/2mjRbkSq8dGOn8KG/W2Ti1fQPskK4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rlNw7l5hjOPp3t8xT6uTo7jgzjHSk3P41QtL8fwPVWSUiKA8K2CszvH3AQl4I+k4k
+         /q+Mx+Fm9yPc+lq1Wo4uv3+gg9Yh1Lep9tkntFvHJdMMZoiIuLKrujhGuGe9YpU39d
+         Fr8b6axcSgKVw/nx+Fa6LCKtYU+yjEyXjQW6Gi88=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Johannes Stezenbach <js@sig21.net>,
+        Alexander Potapenko <glider@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 041/104] PM: hibernate: fix crashes with init_on_free=1
+Date:   Tue, 28 Jan 2020 15:00:02 +0100
+Message-Id: <20200128135823.321759348@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
+References: <20200128135817.238524998@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series add support for HDMI audio for sun4i HDMI encored.
-The code uses some parts from the Allwinners's BSP kernel.
+From: Alexander Potapenko <glider@google.com>
 
-In the previous patch series there was additional patch enabling the
-cyclic DMA transfers. It was accepted, so it's omitted here.
+commit 18451f9f9e5810b8bd1245c5ae166f257e0e2b9d upstream.
 
-The patch is tested on A20 chip. For the other chips, only the addresses
-of the registers are checked.
+Upon resuming from hibernation, free pages may contain stale data from
+the kernel that initiated the resume. This breaks the invariant
+inflicted by init_on_free=1 that freed pages must be zeroed.
 
-Changes for v3:
- - Dropped the patch which enable the cyclic DMA transfers
- - In v2, a separate platform_driver was created. However this is not
-   practical and the idea is dropped.
- - Since this module depends on SND_SOC, a new Kconfig entry is added. When
-   SND_SOC is not enabled, the audio part is not initialized.
- - The "big" issue with v1 was that snd_soc_register_card() overwrites
-   the driver_data pointer. To resolve this issue, the original pointer is
-   stored as drvdata of the card. Then before card unregistering, the
-   pointer is restored. This is done by calling additional destroy function.
+To deal with this problem, make clear_free_pages() also clear the free
+pages when init_on_free is enabled.
 
-Changes for v2:
- - Create a new platform driver instead of using the HDMI encoder
- - Expose a new kcontrol to the userspace holding the ELD data
- - Wrap all macro arguments in parentheses
+Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
+Reported-by: Johannes Stezenbach <js@sig21.net>
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Stefan Mavrodiev (1):
-  drm: sun4i: hdmi: Add support for sun4i HDMI encoder audio
+---
+ kernel/power/snapshot.c |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
- drivers/gpu/drm/sun4i/Kconfig            |  11 +
- drivers/gpu/drm/sun4i/Makefile           |   3 +
- drivers/gpu/drm/sun4i/sun4i_hdmi.h       |  37 ++
- drivers/gpu/drm/sun4i/sun4i_hdmi_audio.c | 450 +++++++++++++++++++++++
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c   |  14 +
- 5 files changed, 515 insertions(+)
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_audio.c
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -1147,24 +1147,24 @@ void free_basic_memory_bitmaps(void)
+ 
+ void clear_free_pages(void)
+ {
+-#ifdef CONFIG_PAGE_POISONING_ZERO
+ 	struct memory_bitmap *bm = free_pages_map;
+ 	unsigned long pfn;
+ 
+ 	if (WARN_ON(!(free_pages_map)))
+ 		return;
+ 
+-	memory_bm_position_reset(bm);
+-	pfn = memory_bm_next_pfn(bm);
+-	while (pfn != BM_END_OF_MAP) {
+-		if (pfn_valid(pfn))
+-			clear_highpage(pfn_to_page(pfn));
+-
++	if (IS_ENABLED(CONFIG_PAGE_POISONING_ZERO) || want_init_on_free()) {
++		memory_bm_position_reset(bm);
+ 		pfn = memory_bm_next_pfn(bm);
++		while (pfn != BM_END_OF_MAP) {
++			if (pfn_valid(pfn))
++				clear_highpage(pfn_to_page(pfn));
++
++			pfn = memory_bm_next_pfn(bm);
++		}
++		memory_bm_position_reset(bm);
++		pr_info("free pages cleared after restore\n");
+ 	}
+-	memory_bm_position_reset(bm);
+-	pr_info("free pages cleared after restore\n");
+-#endif /* PAGE_POISONING_ZERO */
+ }
+ 
+ /**
 
--- 
-2.17.1
+
