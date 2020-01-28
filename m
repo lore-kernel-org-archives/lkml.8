@@ -2,51 +2,52 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB55C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BB4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952BE24686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A47824681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221314;
-	bh=IwRh4MwwKbEAJczjkT6p7Y8EFA00nRALELVHg28Gjt8=;
+	s=default; t=1580221317;
+	bh=AWANv358SCCe+zsonAa1awzaNFZZS6khwqstwCg5sCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MXvFOwhPOflSrquqivGm5bikGL8tJRbPsxp7RyN8Kqv6NGb9m3iUpY47npxL/Fe4U
-	 0iSvhyqsc2YRHSE0O8xGIJK6UOIIBZKbRJ0/R+/ZESQXuF8+x8SDwTwWSKKPrgoEU5
-	 +gzZ0zXSNQnigN7WrQ/ynIFN4rRNZapFWY9bQNKg=
+	b=n5KUhdnRxDQ1bLMc9ma2sxrQOyRXtrJ67vOT/XJVz3ziVD8Vf6VqdMo/cqb9JfQgI
+	 DnAoAjucodUndqfttII/ihH9d5dnq1QXgTURW0YTICfgk8e7mFxkIvgvVrhwby0U6G
+	 0UfKJoyzCsLNn4Qqilh2LTcE4Z87EZl89TpJQMho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731434AbgA1OVx (ORCPT
+        id S1731449AbgA1OV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:21:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47340 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:21:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730917AbgA1OVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:21:52 -0500
+        id S1731430AbgA1OVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:21:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CA1824686;
-        Tue, 28 Jan 2020 14:21:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0A872468A;
+        Tue, 28 Jan 2020 14:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221310;
-        bh=IwRh4MwwKbEAJczjkT6p7Y8EFA00nRALELVHg28Gjt8=;
+        s=default; t=1580221313;
+        bh=AWANv358SCCe+zsonAa1awzaNFZZS6khwqstwCg5sCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gdl5uPJdzOg6Z0uILQKqCgHjs1bWQ/9pk3ZrZ+VlHdRti+8WH76STKE3MRreRbuiy
-         mw6af7d7/Bo/gWNSQp1DdFdGWfIVN/h0P6LeVrrhOChQlQN3xXLm4jWlcFv77TIcJY
-         DkpUIhEiJc9H4fOeaMg8P2+umzampk01NOTwdCGM=
+        b=kPdxMTuTcqySIuWPU08SLEMmfNxYeEyrixGuqogMMU33yBeOVfmN3PP0Huy+DeRYj
+         OnGYyiM6uYTwmPezSq9Pp4JhbHUZXWvFlXwjEykVWc1jvlanakTrHnd3y4xoakuoex
+         4MealLn4MQ9PARVdcypPwzS4syOxAAo9XS4f48OM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 173/271] mic: avoid statically declaring a struct device.
-Date:   Tue, 28 Jan 2020 15:05:22 +0100
-Message-Id: <20200128135905.441816132@linuxfoundation.org>
+Subject: [PATCH 4.9 174/271] x86/kgbd: Use NMI_VECTOR not APIC_DM_NMI
+Date:   Tue, 28 Jan 2020 15:05:23 +0100
+Message-Id: <20200128135905.513642798@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,115 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit bc83f79bd2119230888fb8574639d5a51b38f903 ]
+[ Upstream commit 2591bc4e8d70b4e1330d327fb7e3921f4e070a51 ]
 
-Generally, declaring a platform device as a static variable is
-a bad idea and can cause all kinds of problems, in particular
-with the DMA configuration and lifetime rules.
+apic->send_IPI_allbutself() takes a vector number as argument.
 
-A specific problem we hit here is from a bug in clang that warns
-about certain (otherwise valid) macros when used in static variables:
+APIC_DM_NMI is clearly not a vector number. It's defined to 0x400 which is
+outside the vector space.
 
-drivers/misc/mic/card/mic_x100.c:285:27: warning: shift count >= width of type [-Wshift-count-overflow]
-static u64 mic_dma_mask = DMA_BIT_MASK(64);
-                          ^~~~~~~~~~~~~~~~
-include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
- #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-                                                     ^ ~~~
+Use NMI_VECTOR instead as that's what it is intended to be.
 
-A slightly better way here is to create the platform device dynamically
-and set the dma mask in the probe function.
-This avoids the warning and some other problems, but is still not ideal
-because the device creation should really be separated from the driver,
-and the fact that the device has no parent means we have to force
-the dma mask rather than having it set up from the bus that the device
-is actually on.
-
-Fixes: dd8d8d44df64 ("misc: mic: MIC card driver specific changes to enable SCIF")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190712092426.872625-1-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 82da3ff89dc2 ("x86: kgdb support")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105218.855189979@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/mic/card/mic_x100.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ arch/x86/kernel/kgdb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/mic/card/mic_x100.c b/drivers/misc/mic/card/mic_x100.c
-index b9f0710ffa6b0..4007adc666f37 100644
---- a/drivers/misc/mic/card/mic_x100.c
-+++ b/drivers/misc/mic/card/mic_x100.c
-@@ -249,6 +249,9 @@ static int __init mic_probe(struct platform_device *pdev)
- 	mdrv->dev = &pdev->dev;
- 	snprintf(mdrv->name, sizeof(mic_driver_name), mic_driver_name);
- 
-+	/* FIXME: use dma_set_mask_and_coherent() and check result */
-+	dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+
- 	mdev->mmio.pa = MIC_X100_MMIO_BASE;
- 	mdev->mmio.len = MIC_X100_MMIO_LEN;
- 	mdev->mmio.va = devm_ioremap(&pdev->dev, MIC_X100_MMIO_BASE,
-@@ -294,18 +297,6 @@ static void mic_platform_shutdown(struct platform_device *pdev)
- 	mic_remove(pdev);
- }
- 
--static u64 mic_dma_mask = DMA_BIT_MASK(64);
--
--static struct platform_device mic_platform_dev = {
--	.name = mic_driver_name,
--	.id   = 0,
--	.num_resources = 0,
--	.dev = {
--		.dma_mask = &mic_dma_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
--	},
--};
--
- static struct platform_driver __refdata mic_platform_driver = {
- 	.probe = mic_probe,
- 	.remove = mic_remove,
-@@ -315,6 +306,8 @@ static struct platform_driver __refdata mic_platform_driver = {
- 	},
- };
- 
-+static struct platform_device *mic_platform_dev;
-+
- static int __init mic_init(void)
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index 8e36f249646e2..904e18bb38c52 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -438,7 +438,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
+  */
+ void kgdb_roundup_cpus(unsigned long flags)
  {
- 	int ret;
-@@ -328,9 +321,12 @@ static int __init mic_init(void)
- 
- 	request_module("mic_x100_dma");
- 	mic_init_card_debugfs();
--	ret = platform_device_register(&mic_platform_dev);
-+
-+	mic_platform_dev = platform_device_register_simple(mic_driver_name,
-+							   0, NULL, 0);
-+	ret = PTR_ERR_OR_ZERO(mic_platform_dev);
- 	if (ret) {
--		pr_err("platform_device_register ret %d\n", ret);
-+		pr_err("platform_device_register_full ret %d\n", ret);
- 		goto cleanup_debugfs;
- 	}
- 	ret = platform_driver_register(&mic_platform_driver);
-@@ -341,7 +337,7 @@ static int __init mic_init(void)
- 	return ret;
- 
- device_unregister:
--	platform_device_unregister(&mic_platform_dev);
-+	platform_device_unregister(mic_platform_dev);
- cleanup_debugfs:
- 	mic_exit_card_debugfs();
- done:
-@@ -351,7 +347,7 @@ done:
- static void __exit mic_exit(void)
- {
- 	platform_driver_unregister(&mic_platform_driver);
--	platform_device_unregister(&mic_platform_dev);
-+	platform_device_unregister(mic_platform_dev);
- 	mic_exit_card_debugfs();
+-	apic->send_IPI_allbutself(APIC_DM_NMI);
++	apic->send_IPI_allbutself(NMI_VECTOR);
  }
+ #endif
  
 -- 
 2.20.1
