@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79360C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0001CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB402468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAC024683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220278;
-	bh=iPd/z60B6zp/AWzCXYB+uhw1cWKMiDj4+ysvjc7Ci74=;
+	s=default; t=1580220280;
+	bh=mGJZeLJHhubC4r9HA3jWOxvIkBc2ESlia8YEN8x+d50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgUGGWnD0Yc++CFtkwgDmxBVq6M87FZREVvZjEqQdddiDTQGGZnRTHHzJwyndbS4O
-	 vswauXczB9IoTk/tvI7T9/3jqfSQ4i8eaRcXNNc13P2rM0Xr8Y36M/ANP2/eXM35g/
-	 +OEbSXDDziMUSmBz4HQhhJ7f4vUgIFvcMI+Hyezg=
+	b=iThJdlsUBNWwA/epPygrZ8QK8Dp/AYqg4Cz0mNFGD65jLCbauVRuRFT8B6A9TPV+H
+	 v5fLlNgELTlF1SCM90NrLCvj7qpwpxVelha1pFBm50LsrxuwaBLnzR0oaZGB1oA4kR
+	 WExC+8gmr5mb5wkPkeWT755z8xRqy7WsPXQbi3lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbgA1OEh (ORCPT
+        id S1728130AbgA1OEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:04:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:04:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbgA1OEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:04:30 -0500
+        id S1728106AbgA1OEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:04:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63BAB24694;
-        Tue, 28 Jan 2020 14:04:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF2F42468F;
+        Tue, 28 Jan 2020 14:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220269;
-        bh=iPd/z60B6zp/AWzCXYB+uhw1cWKMiDj4+ysvjc7Ci74=;
+        s=default; t=1580220272;
+        bh=mGJZeLJHhubC4r9HA3jWOxvIkBc2ESlia8YEN8x+d50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BiwU0K+VfEM2uThHJjNuAZTHuw0TeuCnSmTzToL9cmYSxEvH1M7DwgoLbMPyfviTQ
-         922HGDb5wmwd2b1UXA8GYctcZDfUZ5SFiCdAH5gsKcU8aKMuYJ60577AYYZ6kFXSc/
-         vjtBko880jYSLRUCSjn3G5t7yNp68uGVZ26X1G9w=
+        b=WSgK8HDqr+++kXNDCouzUB9snUiy96DOXbHPnslOiJsOH2DgmeOeIbSeyGqYNc1qN
+         IJpwR74gT2EaIVWBQAoWLP+89BdMq+boJcchTbvzeyw9YJ6UgUxXuDl5G1PIVmllJR
+         VaF+HQAetdpm++Lj+37NyJbn9Ne1UP2Zyo5Mj8x4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 047/104] powerpc/xive: Discard ESB load value when interrupt is invalid
-Date:   Tue, 28 Jan 2020 15:00:08 +0100
-Message-Id: <20200128135824.216683362@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.4 038/104] PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken
+Date:   Tue, 28 Jan 2020 14:59:59 +0100
+Message-Id: <20200128135822.801192122@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,68 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Barrat <fbarrat@linux.ibm.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit 17328f218fb760c9c6accc5b52494889243a6b98 upstream.
+commit 5e89cd303e3a4505752952259b9f1ba036632544 upstream.
 
-A load on an ESB page returning all 1's means that the underlying
-device has invalidated the access to the PQ state of the interrupt
-through mmio. It may happen, for example when querying a PHB interrupt
-while the PHB is in an error state.
+To account for parts of the chip that are "harvested" (disabled) due to
+silicon flaws, caches on some AMD GPUs must be initialized before ATS is
+enabled.
 
-In that case, we should consider the interrupt to be invalid when
-checking its state in the irq_get_irqchip_state() handler.
+ATS is normally enabled by the IOMMU driver before the GPU driver loads, so
+this cache initialization would have to be done in a quirk, but that's too
+complex to be practical.
 
-Fixes: da15c03b047d ("powerpc/xive: Implement get_irqchip_state method for XIVE to fix shutdown race")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-[clg: wrote a commit log, introduced XIVE_ESB_INVALID ]
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200113130118.27969-1-clg@kaod.org
+For Navi14 (device ID 0x7340), this initialization is done by the VBIOS,
+but apparently some boards went to production with an older VBIOS that
+doesn't do it.  Disable ATS for those boards.
+
+Link: https://lore.kernel.org/r/20200114205523.1054271-3-alexander.deucher@amd.com
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/1015
+See-also: d28ca864c493 ("PCI: Mark AMD Stoney Radeon R7 GPU ATS as broken")
+See-also: 9b44b0b09dec ("PCI: Mark AMD Stoney GPU ATS as broken")
+[bhelgaas: squash into one patch, simplify slightly, commit log]
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/xive-regs.h |    1 +
- arch/powerpc/sysdev/xive/common.c    |   15 ++++++++++++---
- 2 files changed, 13 insertions(+), 3 deletions(-)
+ drivers/pci/quirks.c |   19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
---- a/arch/powerpc/include/asm/xive-regs.h
-+++ b/arch/powerpc/include/asm/xive-regs.h
-@@ -39,6 +39,7 @@
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5021,18 +5021,25 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SE
  
- #define XIVE_ESB_VAL_P		0x2
- #define XIVE_ESB_VAL_Q		0x1
-+#define XIVE_ESB_INVALID	0xFF
- 
+ #ifdef CONFIG_PCI_ATS
  /*
-  * Thread Management (aka "TM") registers
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -972,12 +972,21 @@ static int xive_get_irqchip_state(struct
- 				  enum irqchip_irq_state which, bool *state)
+- * Some devices have a broken ATS implementation causing IOMMU stalls.
+- * Don't use ATS for those devices.
++ * Some devices require additional driver setup to enable ATS.  Don't use
++ * ATS for those devices as ATS will be enabled before the driver has had a
++ * chance to load and configure the device.
+  */
+-static void quirk_no_ats(struct pci_dev *pdev)
++static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
  {
- 	struct xive_irq_data *xd = irq_data_get_irq_handler_data(data);
-+	u8 pq;
- 
- 	switch (which) {
- 	case IRQCHIP_STATE_ACTIVE:
--		*state = !xd->stale_p &&
--			 (xd->saved_p ||
--			  !!(xive_esb_read(xd, XIVE_ESB_GET) & XIVE_ESB_VAL_P));
-+		pq = xive_esb_read(xd, XIVE_ESB_GET);
+-	pci_info(pdev, "disabling ATS (broken on this device)\n");
++	if (pdev->device == 0x7340 && pdev->revision != 0xc5)
++		return;
 +
-+		/*
-+		 * The esb value being all 1's means we couldn't get
-+		 * the PQ state of the interrupt through mmio. It may
-+		 * happen, for example when querying a PHB interrupt
-+		 * while the PHB is in an error state. We consider the
-+		 * interrupt to be inactive in that case.
-+		 */
-+		*state = (pq != XIVE_ESB_INVALID) && !xd->stale_p &&
-+			(xd->saved_p || !!(pq & XIVE_ESB_VAL_P));
- 		return 0;
- 	default:
- 		return -EINVAL;
++	pci_info(pdev, "disabling ATS\n");
+ 	pdev->ats_cap = 0;
+ }
+ 
+ /* AMD Stoney platform GPU */
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_no_ats);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_no_ats);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_amd_harvest_no_ats);
++/* AMD Iceland dGPU */
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
++/* AMD Navi14 dGPU */
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
+ #endif /* CONFIG_PCI_ATS */
+ 
+ /* Freescale PCIe doesn't support MSI in RC mode */
 
 
