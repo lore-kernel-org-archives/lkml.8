@@ -2,159 +2,238 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFAFC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EA9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A89832467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F8B2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9pKAmpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgA1PBk (ORCPT
+        id S1726930AbgA1PBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:01:40 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2319 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726243AbgA1PBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:01:39 -0500
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 5BFBE50E8A17CDAF3232;
-        Tue, 28 Jan 2020 14:46:08 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Jan 2020 14:46:07 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jan
- 2020 14:46:07 +0000
-Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, <jeremy.linton@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ACPI Devel Maling List" <linux-acpi@vger.kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        gregkh <gregkh@linuxfoundation.org>
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <1580210059-199540-3-git-send-email-john.garry@huawei.com>
- <CAK8P3a2famGETLM7JgEh+eUJ9HSqm_Fu79uAkU_BPOkDvV2ROg@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <683fc9df-3655-5044-f81c-00e2896a268d@huawei.com>
-Date:   Tue, 28 Jan 2020 14:46:07 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 28 Jan 2020 10:01:44 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35496 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgA1PBm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:01:42 -0500
+Received: by mail-lf1-f67.google.com with SMTP id z18so9329540lfe.2;
+        Tue, 28 Jan 2020 07:01:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jxwyE4yCuJly/POgSDmd0mgjgoTTNrnCHPv8m1hThlw=;
+        b=r9pKAmpcGxCnJQHpeUV186FjMp6g8ZLFV0vbqprv6kdJ06k55bvT1gSajqUntVTSSj
+         /dBkeIqVll8OujXg80OGCegtmjpTelrjQ34GbYIJ/kWJ8v+Pe1nmicD+xBYekQuggSd0
+         T5zhu4wYNUF5tLHncUPdiR9qJCDeyoB1tjnWWCKqJzuw++TmtRoY46p61ZIaDkVM+Fw6
+         l+D/km54MrSWj65dv7z52suZ/YiOdwiPYz/HSG/FAfhuSWpHTDEQp5XSX2eO2BNOXGxG
+         Z4QEHFf5wtUvIzwh4kko0qen16g5eEfU95Shd+b0QF3rF1izob6S0iOXOKSgrxx1Y0s2
+         OMVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jxwyE4yCuJly/POgSDmd0mgjgoTTNrnCHPv8m1hThlw=;
+        b=Ctkj+Bkm4kRC90ur9aFKMkFKq9G4Nn1MJj9s77DdYbHzffyVg0LFjM8VPF4Fc/xDxl
+         PtzVV+p667c2p+zlw25wz0Qmk9iq8WIqzKsEHIywfW5VAJ3c1BRqbLOpVPdbKsANO9al
+         elptn4bF7FCBGx/pcNo7D9WQeDic4NhOJ2TpcROM63fwK7Yc1wuE9OxDQ86HLv19hpD9
+         g1gAJyQ1NF7XMtKv1CXuj2xdsGPP1PS5WA7ev8SMKFTiWscsaoNfK3TBOaW9EaO4Glb/
+         fB3Bd59sFBHxxCeZh+n/NMh4ii9EJPax21CIH9DnJDopI9m6z1p5Ub8WpmeTvl+DxOZX
+         36Bw==
+X-Gm-Message-State: APjAAAU1eAiEfgoK0GfPGC2JH2ORspjoUZs4OYxSxJ57VENxtlqI5Xp4
+        oTmoU/BwBDInCXyOf2ntECSbdd9h
+X-Google-Smtp-Source: APXvYqw3RsrE6AGKOzv0pZfEsLBAjHfve5tnkCmTy0TEA0qNwFJ2y1TSQdaqNO+CJhWKyHw5evw2WA==
+X-Received: by 2002:a19:c6cd:: with SMTP id w196mr2653759lff.79.1580223699796;
+        Tue, 28 Jan 2020 07:01:39 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id u13sm9960229lfq.19.2020.01.28.07.01.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 07:01:39 -0800 (PST)
+Subject: Re: [PATCH v4 08/14] dmaengine: tegra-apb: Fix coding style problems
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-9-digetx@gmail.com>
+ <844c4ace-d043-a908-823d-545b5b753008@nvidia.com>
+ <134adcfb-83fb-4bb7-986e-65217bc4f821@gmail.com>
+ <bab1eec0-8b1d-6005-e9eb-05e93da844aa@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a99ff711-22af-a377-9500-ab4b8644b0ff@gmail.com>
+Date:   Tue, 28 Jan 2020 18:01:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2famGETLM7JgEh+eUJ9HSqm_Fu79uAkU_BPOkDvV2ROg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <bab1eec0-8b1d-6005-e9eb-05e93da844aa@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/01/2020 12:50, Arnd Bergmann wrote:
-
-Hi Arnd,
-
-> On Tue, Jan 28, 2020 at 12:18 PM John Garry <john.garry@huawei.com> wrote:
+28.01.2020 17:05, Jon Hunter пишет:
+> 
+> On 16/01/2020 17:37, Dmitry Osipenko wrote:
+>> 15.01.2020 12:49, Jon Hunter пишет:
+>>>
+>>>
+>>> On 12/01/2020 17:30, Dmitry Osipenko wrote:
+>>>> This patch fixes few dozens of coding style problems reported by
+>>>> checkpatch and prettifies code where makes sense.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/dma/tegra20-apb-dma.c | 276 ++++++++++++++++++----------------
+>>>>  1 file changed, 144 insertions(+), 132 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>>> index dff21e80ffa4..7158bd3145c4 100644
+>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>
+>>> ...
+>>>
+>>>> @@ -1003,20 +1014,23 @@ static void tegra_dma_prep_wcount(struct tegra_dma_channel *tdc,
+>>>>  		ch_regs->csr |= len_field;
+>>>>  }
+>>>>  
+>>>> -static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>>>> -	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
+>>>> -	enum dma_transfer_direction direction, unsigned long flags,
+>>>> -	void *context)
+>>>> +static struct dma_async_tx_descriptor *
+>>>> +tegra_dma_prep_slave_sg(struct dma_chan *dc,
+>>>> +			struct scatterlist *sgl,
+>>>> +			unsigned int sg_len,
+>>>> +			enum dma_transfer_direction direction,
+>>>> +			unsigned long flags,
+>>>> +			void *context)
+>>>>  {
+>>>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>>>> +	struct tegra_dma_sg_req *sg_req = NULL;
+>>>> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
+>>>> +	enum dma_slave_buswidth slave_bw;
+>>>>  	struct tegra_dma_desc *dma_desc;
+>>>> -	unsigned int i;
+>>>> -	struct scatterlist *sg;
+>>>> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
+>>>>  	struct list_head req_list;
+>>>> -	struct tegra_dma_sg_req  *sg_req = NULL;
+>>>> -	u32 burst_size;
+>>>> -	enum dma_slave_buswidth slave_bw;
+>>>> +	struct scatterlist *sg;
+>>>> +	unsigned int burst_size;
+>>>> +	unsigned int i;
+>>>
+>>> This is not really consistent with the rest of the changes by having 'i'
+>>> and 'burst_size' on separate lines.
 >>
->> Add a generic driver for platforms which populate their ACPI PPTT
->> processor package ID Type Structure according to suggestion in the ACPI
->> spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
+>> The goal wasn't to squash everything into a single line, but to make
+>> code more readable. In this particular case the separated lines look
+>> better to me.
 >>
->> The soc_id is from member LEVEL_2_ID.
+>>>>  
+>>>>  	if (!tdc->config_init) {
+>>>>  		dev_err(tdc2dev(tdc), "DMA channel is not configured\n");
+>>>> @@ -1028,7 +1042,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>>>>  	}
+>>>>  
+>>>>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
+>>>> -				&burst_size, &slave_bw) < 0)
+>>>> +			       &burst_size, &slave_bw) < 0)
+>>>>  		return NULL;
+>>>>  
+>>>>  	INIT_LIST_HEAD(&req_list);
+>>>> @@ -1074,7 +1088,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>>>>  		len = sg_dma_len(sg);
+>>>>  
+>>>>  		if ((len & 3) || (mem & 3) ||
+>>>> -				(len > tdc->tdma->chip_data->max_dma_count)) {
+>>>> +		    len > tdc->tdma->chip_data->max_dma_count) {
+>>>>  			dev_err(tdc2dev(tdc),
+>>>>  				"DMA length/memory address is not supported\n");
+>>>>  			tegra_dma_desc_put(tdc, dma_desc);
+>>>> @@ -1126,20 +1140,21 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>>>>  	return &dma_desc->txd;
+>>>>  }
+>>>>  
+>>>> -static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+>>>> -	struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_len,
+>>>> -	size_t period_len, enum dma_transfer_direction direction,
+>>>> -	unsigned long flags)
+>>>> +static struct dma_async_tx_descriptor *
+>>>> +tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
+>>>> +			  size_t buf_len,
+>>>> +			  size_t period_len,
+>>>> +			  enum dma_transfer_direction direction,
+>>>> +			  unsigned long flags)
+>>>>  {
+>>>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>>>> -	struct tegra_dma_desc *dma_desc = NULL;
+>>>>  	struct tegra_dma_sg_req *sg_req = NULL;
+>>>> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
+>>>> -	int len;
+>>>> -	size_t remain_len;
+>>>> -	dma_addr_t mem = buf_addr;
+>>>> -	u32 burst_size;
+>>>> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
+>>>>  	enum dma_slave_buswidth slave_bw;
+>>>> +	struct tegra_dma_desc *dma_desc;
+>>>> +	dma_addr_t mem = buf_addr;
+>>>> +	unsigned int burst_size;
+>>>> +	size_t len, remain_len;
+>>>>  
+>>>>  	if (!buf_len || !period_len) {
+>>>>  		dev_err(tdc2dev(tdc), "Invalid buffer/period len\n");
+>>>> @@ -1173,13 +1188,13 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+>>>>  
+>>>>  	len = period_len;
+>>>>  	if ((len & 3) || (buf_addr & 3) ||
+>>>> -			(len > tdc->tdma->chip_data->max_dma_count)) {
+>>>> +	    len > tdc->tdma->chip_data->max_dma_count) {
+>>>>  		dev_err(tdc2dev(tdc), "Req len/mem address is not correct\n");
+>>>>  		return NULL;
+>>>>  	}
+>>>>  
+>>>>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
+>>>> -				&burst_size, &slave_bw) < 0)
+>>>> +			       &burst_size, &slave_bw) < 0)
+>>>>  		return NULL;
+>>>>  
+>>>>  	ahb_seq = TEGRA_APBDMA_AHBSEQ_INTR_ENB;
+>>>> @@ -1269,7 +1284,6 @@ static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
+>>>>  	int ret;
+>>>>  
+>>>>  	dma_cookie_init(&tdc->dma_chan);
+>>>> -	tdc->config_init = false;
+>>>
+>>> Why is this removed? Does not seem to belong in this patch.
 >>
->> For this, we need to use a whitelist of platforms which are known to
->> populate the structure as suggested.
->>
->> For now, only the vendor and soc_id fields are exposed.
->>
->> Signed-off-by: John Garry <john.garry@huawei.com>
+>> Because initially, on driver's probe, the tdc->config_init is false for
+>> all channels and then tegra_dma_free_chan_resources() also sets it to
+>> false. Thus there is no need to re-initilize the already initialized
+>> variable. It's not a very good coding style if variables are
+>> unnecessarily initialized, you probably noticed that there are few other
+>> cases of removing the unneeded initializations of local variables in
+>> this patch.
 > 
-> Would it be possible to make this the root device for all on-chip devices
-> to correctly reflect the hierarchy inside of the soc?
+> OK, but I don't really consider this coding-style and would prefer a
+> separate patch for this.
 
-I don't think so. The information about the SoC is got from the PPTT, 
-which only describes processors, caches, and physical package 
-boundaries. It doesn't include references to on-chip devices.
-
-Having said that (and unrelated to this series), we could add 
-/sys/devices/system/soc folder, similar to node folder.
-
-> 
->> +/*
->> + * Known platforms that fill in PPTT package ID structures according to
->> + * ACPI spec examples, that being:
->> + * - Custom driver attribute is in ID Type Structure VENDOR_ID member
->> + * - SoC id is in ID Type Structure LEVEL_2_ID member
->> + *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
->> + */
->> +static struct acpi_platform_list plat_list[] = {
->> +       {"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
->> +       { } /* End */
->> +};
-> 
-> That matches a single machine, right? It doesn't seem very generic
-> that way.
-
-Yes :) The problem is that the PPTT ID structure is open to use how the 
-implementer wants, so we can't assume everything/anything implemented 
-according to the spec examples. Maybe we could call it type1 or 
-something like that for platforms which did use the convention in the 
-spec example.
-
-> 
->> +struct acpi_generic_soc_struct {
->> +       struct soc_device_attribute dev_attr;
->> +       u32 vendor;
->> +};
->> +
->> +static ssize_t vendor_show(struct device *dev,
->> +                          struct device_attribute *attr,
->> +                          char *buf)
->> +{
->> +       struct acpi_generic_soc_struct *soc = dev_get_drvdata(dev);
->> +       u8 vendor_id[5] = {};
->> +
->> +       *(u32 *)vendor_id = soc->vendor;
->> +
->> +       return sprintf(buf, "%s\n", vendor_id);
->> +}
-> 
-> I'd rather not see nonstandard attributes in a "generic" driver at
-> all. Maybe the
-> you can simply concatenate the vendor and  LEVEL_2_ID into a single string
-> here?
-
-I actually don't really require the vendor attr. And since "vendor" is 
-not in the set of standard soc driver attrs, it can just be omitted.
-
-> 
->> +                       soc = kzalloc(sizeof(*soc), GFP_KERNEL);
->> +                       if (!soc)
->> +                               return -ENOMEM;
->> +
->> +                       soc_dev_attr = &soc->dev_attr;
->> +                       soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s",
->> +                                                        soc_id);
-> 
-> On the other hand, it would make sense to fill out additional fields here.
-> You have already matched the name of the board from the
-> acpi_platform_list, so there are two strings available that could be put
-> into the "machine" field, and it would make sense to fill out "family" with
-> something that identifies it as coming from ACPI PPTT data.
-
-OK, maybe the ones you suggested could be added. I did just want to 
-start out with a minimal sets of files, especially since we don't always 
-have a direct mapping between soc driver attrs and this PPTT ID structure.
-
-Thanks,
-John
+If if it's not a coding-style, then how would you name it? :)
