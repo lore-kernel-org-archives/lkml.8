@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EF6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E1DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC3924692
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DE424692
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221831;
-	bh=Rz4cxySQyiJR1dS4W5KqaCzgtzfhUbD97rFXyY6jhhg=;
+	s=default; t=1580221839;
+	bh=BQAj4qjdO1Cr/ZGUin3wq0t0sf/n7x0NI0Ilb+ugw/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GV7VKRz3v5majQBJogEUGDPiFqfnmF1fTCy7VJJPnYooXRJicqNtoyuOnIDJb0D+1
-	 ZiXHLaJo37lVCMR9eK81J5i9HRA0yDhKkGNE04UtxAXdQEIDOHcyrqUrn4RIcoPu9N
-	 3xpczUs/eZSLTOIiU0i4hUx1ONhKc5VzAtuR6Gns=
+	b=Dx70qmABdrQSpMA/jr/GUqVyWUupHxdzRaS1+H6yIILBqPv9u/JJoX/8FHBXxefmW
+	 Nxo61nDXamR91wAdEeo893f79mGfZqYJlj+cZxOSOXuEG42VdNbRCe0geSwvklvZLp
+	 uuZK0XSZvll2zcOD+pbPH3V1VHgP11NPvMv1ZJJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387722AbgA1Oa0 (ORCPT
+        id S1727318AbgA1Oai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:30:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57528 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:30:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbgA1O3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:29:10 -0500
+        id S2387563AbgA1O2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:28:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABDF224692;
-        Tue, 28 Jan 2020 14:29:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BCA221739;
+        Tue, 28 Jan 2020 14:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221750;
-        bh=Rz4cxySQyiJR1dS4W5KqaCzgtzfhUbD97rFXyY6jhhg=;
+        s=default; t=1580221732;
+        bh=BQAj4qjdO1Cr/ZGUin3wq0t0sf/n7x0NI0Ilb+ugw/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hSQFx7NhGTBETYNCy8sEq9Yo5dRiadDQlm8i4Th/zb99EZUS2qsUd1iGkoL2XACRs
-         r/SVkYpduXLrEbYyNG/d3sgCqpzHtlhs9tM8tZZ4j6xqMKycINNiOiVgWG/9yj96YE
-         rx1vUQu9KTPEc/BHfRzyUeaqegVeKFTvfLSLqgSA=
+        b=SVNl96tcuKicGiBguRA/uBKZC1BjZG7fCiPaI4oUCIw8Tjc9JvWe52LJmwrQZbevi
+         bd4kbLF/hm9awBj2gW1i5KlKMJZbEPW8vYL3h4PVetb7AiGgoeOz5xvDvRj4A/Ktnj
+         liuNQ/pMjFrNqvhP4dKLPWq5v7pDGBcNTDZ3qkW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 59/92] sd: Fix REQ_OP_ZONE_REPORT completion handling
-Date:   Tue, 28 Jan 2020 15:08:27 +0100
-Message-Id: <20200128135816.802992447@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
+        syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com,
+        syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 68/92] net/x25: fix nonblocking connect
+Date:   Tue, 28 Jan 2020 15:08:36 +0100
+Message-Id: <20200128135818.061653217@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,60 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masato Suzuki <masato.suzuki@wdc.com>
+From: Martin Schiller <ms@dev.tdt.de>
 
+commit e21dba7a4df4d93da237da65a096084b4f2e87b4 upstream.
 
-ZBC/ZAC report zones command may return less bytes than requested if the
-number of matching zones for the report request is small. However, unlike
-read or write commands, the remainder of incomplete report zones commands
-cannot be automatically requested by the block layer: the start sector of
-the next report cannot be known, and the report reply may not be 512B
-aligned for SAS drives (a report zone reply size is always a multiple of
-64B). The regular request completion code executing bio_advance() and
-restart of the command remainder part currently causes invalid zone
-descriptor data to be reported to the caller if the report zone size is
-smaller than 512B (a case that can happen easily for a report of the last
-zones of a SAS drive for example).
+This patch fixes 2 issues in x25_connect():
 
-Since blkdev_report_zones() handles report zone command processing in a
-loop until completion (no more zones are being reported), we can safely
-avoid that the block layer performs an incorrect bio_advance() call and
-restart of the remainder of incomplete report zone BIOs. To do so, always
-indicate a full completion of REQ_OP_ZONE_REPORT by setting good_bytes to
-the request buffer size and by setting the command resid to 0. This does
-not affect the post processing of the report zone reply done by
-sd_zbc_complete() since the reply header indicates the number of zones
-reported.
+1. It makes absolutely no sense to reset the neighbour and the
+connection state after a (successful) nonblocking call of x25_connect.
+This prevents any connection from being established, since the response
+(call accept) cannot be processed.
 
-Fixes: 89d947561077 ("sd: Implement support for ZBC devices")
-Cc: <stable@vger.kernel.org> # 4.19
-Cc: <stable@vger.kernel.org> # 4.14
-Signed-off-by: Masato Suzuki <masato.suzuki@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+2. Any further calls to x25_connect() while a call is pending should
+simply return, instead of creating new Call Request (on different
+logical channels).
+
+This patch should also fix the "KASAN: null-ptr-deref Write in
+x25_connect" and "BUG: unable to handle kernel NULL pointer dereference
+in x25_connect" bugs reported by syzbot.
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Reported-by: syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com
+Reported-by: syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/sd.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/x25/af_x25.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1969,9 +1969,13 @@ static int sd_done(struct scsi_cmnd *SCp
- 		}
- 		break;
- 	case REQ_OP_ZONE_REPORT:
-+		/* To avoid that the block layer performs an incorrect
-+		 * bio_advance() call and restart of the remainder of
-+		 * incomplete report zone BIOs, always indicate a full
-+		 * completion of REQ_OP_ZONE_REPORT.
-+		 */
- 		if (!result) {
--			good_bytes = scsi_bufflen(SCpnt)
--				- scsi_get_resid(SCpnt);
-+			good_bytes = scsi_bufflen(SCpnt);
- 			scsi_set_resid(SCpnt, 0);
- 		} else {
- 			good_bytes = 0;
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -765,6 +765,10 @@ static int x25_connect(struct socket *so
+ 	if (sk->sk_state == TCP_ESTABLISHED)
+ 		goto out;
+ 
++	rc = -EALREADY;	/* Do nothing if call is already in progress */
++	if (sk->sk_state == TCP_SYN_SENT)
++		goto out;
++
+ 	sk->sk_state   = TCP_CLOSE;
+ 	sock->state = SS_UNCONNECTED;
+ 
+@@ -811,7 +815,7 @@ static int x25_connect(struct socket *so
+ 	/* Now the loop */
+ 	rc = -EINPROGRESS;
+ 	if (sk->sk_state != TCP_ESTABLISHED && (flags & O_NONBLOCK))
+-		goto out_put_neigh;
++		goto out;
+ 
+ 	rc = x25_wait_for_connection_establishment(sk);
+ 	if (rc)
 
 
