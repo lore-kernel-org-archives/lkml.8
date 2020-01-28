@@ -2,148 +2,123 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01418C33CB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6203C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE7624681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9F52173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jZmBH73p"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RF9nMOM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgA1CL5 (ORCPT
+        id S1726703AbgA1COq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 21:11:57 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:41710 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgA1CL4 (ORCPT
+        Mon, 27 Jan 2020 21:14:46 -0500
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:41391 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgA1COq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 21:11:56 -0500
-Received: by mail-qv1-f66.google.com with SMTP id x1so5529457qvr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 18:11:55 -0800 (PST)
+        Mon, 27 Jan 2020 21:14:46 -0500
+Received: by mail-pf1-f173.google.com with SMTP id w62so5819767pfw.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 18:14:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=7Y+cJY1xhd0yBpcec7AzD+9evfVDrwqprX0erT9gNQ8=;
-        b=jZmBH73pillRBQpbX84TZ57nVUbP8l/pwzyrT6F1TLbL143seIWhzMHM+f433HkTJ5
-         4+74y+cXEGlf05IjEqB0rGqFVcscYw+GLhSFsx8WaySmYsTRfGWpPzerjlys6mf9W6z9
-         7MQu28uGR+vExcu4XcFzxZsCEsEyIZnW5XYihpKw20TjtS/g7K7vcnSmLO9Y2I2ACMbR
-         UKd7mEwngqjuWYnzl9qMnEhgnX2KVdsQpg9XPqLIZZY/9EZaReISvH0tgX5LHWCxTzuH
-         Sdb0djgaeTc7Y2XT2pWCZ+vec+pYHc73GLTjZ8LH4FVsFHxU1dJtwXiD8faH/K6Piqjx
-         Qz+Q==
+        d=google.com; s=20161025;
+        h=subject:date:message-id:mime-version:content-transfer-encoding:cc
+         :from:to;
+        bh=DrrSxaqg+xMHJET+xxCFd4AzKeXkcnr9cON2fZed2UM=;
+        b=RF9nMOM9cUcTpHOes6fCDFot2ORVBBSCK8xX151vp4yLYwGKEqjk1LuTUbuy/rYMUo
+         OB7cLFZX3tiVGf3mh7j55tR2V/wRiwGIYn0Pp4DcnTb7qRrxNvUo99NGQVrNzDg5pkK/
+         sSYcAjedIPNO4Uerbz8D6UaaqPtAyKJk0C0pm8A3nO3nfWqjC6PdUCrzye4Xbkpikeg8
+         UOjEUmWm5kuJ9uwJphYlQDPai4Dm0JE5K5m3CgLTreFAFGEF7ZvE2dYE1D33MvPeCtik
+         jcrDB1UucvsBipSDT9pfMlydmZVMDbaV1fws6wYK9YgRq8dTq5Il0or6opZDw4YxWxwf
+         oYYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=7Y+cJY1xhd0yBpcec7AzD+9evfVDrwqprX0erT9gNQ8=;
-        b=aHQFmYG3QOBVWi52k7nW0InydMHf0cEMIHjYrmgDmnG0czVrZSMS+tCnIujsV6tfiS
-         QU5Vry+1ETzm9DreuMEtQDhx91UXEvttFjFm69nbmArUHv5UKmBg8B8Om2E/fzPRjLXx
-         ONGMXvina2uVrFF+OQzf62spoK0DnRxxja2X7ttL7nb9uTM0tgdIbc0MHzkLpIOXYtUU
-         OHGUv0Kzhs7yfVjIF1oV215kjFJaO23gUh3PfpIccyYW1GoYwFTYsAr0gC+Hb3ooqXXF
-         SWUrE4bB9KYZlCWC+P3bTbv+cmD8HEwh3EYCFrZgcVl8J8oQdiBQEjtrpKPgC6Mocu0k
-         Y+EA==
-X-Gm-Message-State: APjAAAVYKEuO8NFE9plQKDmMUA13GCY0BDaRsEbORUvmngFbdhbQyAhY
-        faontXs/PVIhJk9tlp/go3yyqQ==
-X-Google-Smtp-Source: APXvYqzg/cYWhjYHl3Ki3ZAih+ex/42KJTx6ZAw8WelCuco+qFvVUewpgAxMMsdmClIjS/CcngZCgg==
-X-Received: by 2002:a05:6214:9d2:: with SMTP id dp18mr19624941qvb.98.1580177515237;
-        Mon, 27 Jan 2020 18:11:55 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id m21sm11036189qka.117.2020.01.27.18.11.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 18:11:54 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page table helpers
-Date:   Mon, 27 Jan 2020 21:11:53 -0500
-Message-Id: <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
-To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
-X-Mailer: iPhone Mail (17C54)
+        h=x-gm-message-state:subject:date:message-id:mime-version
+         :content-transfer-encoding:cc:from:to;
+        bh=DrrSxaqg+xMHJET+xxCFd4AzKeXkcnr9cON2fZed2UM=;
+        b=U1QNPMKMGVzj0RN+5wuFAgQAquuuU4Bq0ufSAc1ynWh0tPq618BeALAjY8lF3ai6/B
+         fEZHeUh81YgR4gSOmTNUOMNLV5+QFIiuULg6OByXu2s2b7z+09LQ7rAa3UwydjAWrajp
+         WDLsjaT10J7f6MI+0QtryF4Ns2Trnct/CebiP2V0hngqJyoKPuhsEMmC/Twdzh33Ja8k
+         JHkrilUPneYWWyeLkcYbS8UHLx5rwuEKuc+o1xpCJi1KFfV/jXnY4nhDup+KAA4zWEuT
+         42bm7t5G0klFZRBGHuNBTe3C2heVfK/liSoMQFbtrYpk2zjsA13liosniiMHv8Wcgex0
+         o0qA==
+X-Gm-Message-State: APjAAAVC6cEpkOzC63D3fWfalGk/nV7eQhdYWMUuXc9p7FgRrscO1+1k
+        kmWAGDvN/9ge4LGzMcHR7MXq7Q==
+X-Google-Smtp-Source: APXvYqzQaE82BkrwN8enKVWh7LhvYVblBpdtkI68w4zgo2qGK/PKGkjLJeYUCgcwMaQr9ym7GELY6A==
+X-Received: by 2002:a63:ff5c:: with SMTP id s28mr22418848pgk.196.1580177685323;
+        Mon, 27 Jan 2020 18:14:45 -0800 (PST)
+Received: from localhost ([216.9.110.8])
+        by smtp.gmail.com with ESMTPSA id b15sm17010169pft.58.2020.01.27.18.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 18:14:44 -0800 (PST)
+Subject: arm64: bpf: Elide some moves to a0 after calls
+Date:   Mon, 27 Jan 2020 18:11:41 -0800
+Message-Id: <20200128021145.36774-1-palmerdabbelt@google.com>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Cc:     daniel@iogearbox.net, ast@kernel.org, zlim.lnx@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        shuah@kernel.org, Palmer Dabbelt <palmerdabbelt@google.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com, kernel-team@android.com
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+To:     Bjorn Topel <bjorn.topel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There's four patches here, but only one of them actually does anything.  The
+first patch fixes a BPF selftests build failure on my machine and has already
+been sent to the list separately.  The next three are just staged such that
+there are some patches that avoid changing any functionality pulled out from
+the whole point of those refactorings, with two cleanups and then the idea.
 
+Maybe this is an odd thing to say in a cover letter, but I'm not actually sure
+this patch set is a good idea.  The issue of extra moves after calls came up as
+I was reviewing some unrelated performance optimizations to the RISC-V BPF JIT.
+I figured I'd take a whack at performing the optimization in the context of the
+arm64 port just to get a breath of fresh air, and I'm not convinced I like the
+results.
 
-> On Jan 27, 2020, at 8:28 PM, Anshuman Khandual <Anshuman.Khandual@arm.com>=
- wrote:
->=20
-> This adds tests which will validate architecture page table helpers and
-> other accessors in their compliance with expected generic MM semantics.
-> This will help various architectures in validating changes to existing
-> page table helpers or addition of new ones.
->=20
-> This test covers basic page table entry transformations including but not
-> limited to old, young, dirty, clean, write, write protect etc at various
-> level along with populating intermediate entries with next page table page=
+That said, I think I would accept something like this for the RISC-V port
+because we're already doing a multi-pass optimization for shrinking function
+addresses so it's not as much extra complexity over there.  If we do that we
+should probably start puling some of this code into the shared BPF compiler,
+but we're also opening the doors to more complicated BPF JIT optimizations.
+Given that the BPF JIT appears to have been designed explicitly to be
+simple/fast as opposed to perform complex optimization, I'm not sure this is a
+sane way to move forward.
 
-> and validating them.
->=20
-> Test page table pages are allocated from system memory with required size
-> and alignments. The mapped pfns at page table levels are derived from a
-> real pfn representing a valid kernel text symbol. This test gets called
-> right after page_alloc_init_late().
->=20
-> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along wit=
-h
-> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to=
+I figured I'd send the patch set out as more of a question than anything else.
+Specifically:
 
-> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 an=
-d
-> arm64. Going forward, other architectures too can enable this after fixing=
+* How should I go about measuring the performance of these sort of
+  optimizations?  I'd like to balance the time it takes to run the JIT with the
+  time spent executing the program, but I don't have any feel for what real BPF
+  programs look like or have any benchmark suite to run.  Is there something
+  out there this should be benchmarked against?  (I'd also like to know that to
+  run those benchmarks on the RISC-V port.)
+* Is this the sort of thing that makes sense in a BPF JIT?  I guess I've just
+  realized I turned "review this patch" into a way bigger rabbit hole than I
+  really want to go down...
 
-> build or runtime problems (if any) with their page table helpers.
+I worked on top of 5.4 for these, but trivially different versions of the
+patches applied on Linus' master a few days ago when I tried.  LMK if those
+aren't sane places to start from over here, I'm new to both arm64 and BPF so I
+might be a bit lost.
 
-What=E2=80=99s the value of this block of new code? It only supports x86 and=
- arm64 which are supposed to be good now. Did those tests ever find any regr=
-ession or this is almost only useful for new architectures which only happen=
-ed once in a few years? The worry if not many people will use this config an=
-d code those that much in the future because it is inefficient to find bugs,=
- it will simply be rotten like a few other debugging options out there we ha=
-ve in the mainline that will be a pain to remove later on.=
+[PATCH 1/4] selftests/bpf: Elide a check for LLVM versions that can't
+[PATCH 2/4] arm64: bpf: Convert bpf2a64 to a function
+[PATCH 3/4] arm64: bpf: Split the read and write halves of dst
+[PATCH 4/4] arm64: bpf: Elide some moves to a0 after calls
+
