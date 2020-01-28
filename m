@@ -2,229 +2,167 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEC8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B2DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16ADF2468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA42206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:41:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="W/F6uEsQ";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="AOchz/8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgA1Mjy (ORCPT
+        id S1726073AbgA1Ml6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:39:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:56304 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgA1Mjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:39:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAA40101E;
-        Tue, 28 Jan 2020 04:39:51 -0800 (PST)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.1.151])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DC9F83F52E;
-        Tue, 28 Jan 2020 04:39:48 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] arm64/cpufeature: Replace all open bits shift encodings with macros
-Date:   Tue, 28 Jan 2020 18:09:09 +0530
-Message-Id: <1580215149-21492-7-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580215149-21492-1-git-send-email-anshuman.khandual@arm.com>
-References: <1580215149-21492-1-git-send-email-anshuman.khandual@arm.com>
+        Tue, 28 Jan 2020 07:41:58 -0500
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:59454 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725852AbgA1Ml5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 07:41:57 -0500
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SCbkdK030982;
+        Tue, 28 Jan 2020 04:41:54 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=H7XkXAP62BHAxe9CssuBwEn/jjnBV+MUwHphl2+ZxRk=;
+ b=W/F6uEsQ3j2676N9cIRFr37ES8PyM1dPz7V+XdN4qwy5P4nN+K3ZmlzBmuuSe6t2JrPQ
+ UN6dnhkoY1I9i5v7DI8bk4Mku1Zd2EnBCh++x4Z/LzoakOinVgkSLKN137UUL/xpGl6V
+ 8gN+rBUx+vbx4cbxM7yWx2YU0wxq1mH7Uq+nsiMvW+csVOwSk8EWIZ57IUDbLYI3yffJ
+ wAlMDgZwE2gAmPVR/3LPVN4dLs5K1TVRl8z9VN6beFVU7QiRYMxmuMFm/+lGMyWsx+vb
+ tj3tM8giiDdYLYSd/HS96GKNDDtYFK3D3YcCTIj7VnXq0HK+JhyNItcbwgTdXbXnmddp KA== 
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2049.outbound.protection.outlook.com [104.47.66.49])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2xrk442y3q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jan 2020 04:41:53 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SozKlyJKCFRgNjks6RFQoBROZcNxBOLL6LX4RdzC6ooJZBg0FT+rC6D5T7hUIUR1etlYY4596vmQSnrYPRhSl4M+HjxLAmpdZ9DalSQGe7Vm6tlbFbNZlmRo5Y3IfZyXHfLLhmzyhtwEUC0xa1jgWLZ+5Bw0zIZmV83ALygdnhXAA8tJDpEhskEdAKOJyF0e3TeaDYsqIKJniQMd99a4jGUbo66B+3HAwTYRNPe9LFHrlVml/lTc7Wk16wmWPYnTv0pmKv9XEs/zIN3CgT60EQzwY7CECKJTuOK+GpYV3GXCmiaxj5e4rLiAztZvXik/gldbg83gSPTadCpLXZWqhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H7XkXAP62BHAxe9CssuBwEn/jjnBV+MUwHphl2+ZxRk=;
+ b=jgClifViVC5QnyO55+IFLgmFeWhdy3TK2UTteXSrs7EW/Wn5aesGbAWJf+T4Z87e61CAkWup1IxaLoQvD6xJbNUdRHPbneAD1HpYZ0n9jgMXUSD9wFOSPFneohDbHWWaXl4mptpOmX+tgzer+/SYBxzznxK0fALEQsKs4rCp4PIN3sIdRChL94smO9f6fieSqSaGUaDYz/9E4kk9HLC+r3vedR8wql4e3d83uc/obW6N1iwaGxhAi5G4+0zxGj9QQh9xvGgg0RJ92F69GkS4xi6L3ZAn8A+/m76yMl1zyPnpJgbzljMxXgGU5NMjahvL6LkFc7gYCqZu4/vMiXlUBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 64.207.220.243) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H7XkXAP62BHAxe9CssuBwEn/jjnBV+MUwHphl2+ZxRk=;
+ b=AOchz/8VTveu7iDoJAkrUNK1jcy53OtrHdIgRuUNBBL0Y1cc89hyRB6F1CxZv9yWgSUCnUYHm+TtJ2aPRZ5SbcA/Ry1EiwEI7+iN0YV/yDnjoW4jFRoffiteIJUdeWwBRjmxv7vTozyCU6xmMcO+GeMN+iXWAjEVTGkw8RmAbxw=
+Received: from DM5PR07CA0062.namprd07.prod.outlook.com (2603:10b6:4:ad::27) by
+ BYAPR07MB4295.namprd07.prod.outlook.com (2603:10b6:a02:c7::26) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.24; Tue, 28 Jan 2020 12:41:50 +0000
+Received: from BN8NAM12FT055.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe5b::205) by DM5PR07CA0062.outlook.office365.com
+ (2603:10b6:4:ad::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.22 via Frontend
+ Transport; Tue, 28 Jan 2020 12:41:49 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 64.207.220.243 as permitted sender) receiver=protection.outlook.com;
+ client-ip=64.207.220.243; helo=wcmailrelayl01.cadence.com;
+Received: from wcmailrelayl01.cadence.com (64.207.220.243) by
+ BN8NAM12FT055.mail.protection.outlook.com (10.13.182.252) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.12 via Frontend Transport; Tue, 28 Jan 2020 12:41:47 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 00SCfhVB023491
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Tue, 28 Jan 2020 04:41:45 -0800
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Tue, 28 Jan 2020 13:41:43 +0100
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 28 Jan 2020 13:41:43 +0100
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 00SCfhbp012258;
+        Tue, 28 Jan 2020 13:41:43 +0100
+Received: (from konrad@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 00SCfgY6012256;
+        Tue, 28 Jan 2020 13:41:42 +0100
+From:   Konrad Kociolek <konrad@cadence.com>
+CC:     Konrad Kociolek <konrad@cadence.com>,
+        Mark Brown <broonie@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>
+Subject: [PATCH v2 0/2] spi: cadence-xspi: Add support for Cadence XSPI controller
+Date:   Tue, 28 Jan 2020 13:40:29 +0100
+Message-ID: <20200128124042.11469-1-konrad@cadence.com>
+X-Mailer: git-send-email 2.15.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:64.207.220.243;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(346002)(376002)(36092001)(189003)(199004)(81166006)(81156014)(8676002)(356004)(6666004)(8936002)(4326008)(2906002)(86362001)(109986005)(42186006)(36906005)(1076003)(316002)(54906003)(70206006)(478600001)(5660300002)(186003)(336012)(2616005)(70586007)(26005)(426003)(36756003)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB4295;H:wcmailrelayl01.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:ErrorRetry;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3ab1ddc0-f910-4c59-6b71-08d7a3ef7052
+X-MS-TrafficTypeDiagnostic: BYAPR07MB4295:
+X-Microsoft-Antispam-PRVS: <BYAPR07MB4295D969CE22A903AE0B7F83C30A0@BYAPR07MB4295.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 029651C7A1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cnoutwuOSUFG8+mJeHUYnzaTeRpkLEY6LspIvieOZKwpBoPJgOy783FT1V3URz+h8AM35M9bHIFnTqiPSfb6D0HNu1Som8d5sbff2L/YrhTppyWSsWXwpm1oCORZ3agYBKfjni8HzPcMH8iWDd4zRYafFJ6Djju4ZNcteKM1chWNafCmhzhuPeKhW+8sJzuTmaB/HZOlaJru/oI76TGB3/eKRmlDtSZviShOgK8MOXj84zpl1BK/7BKKr3wE0qOczHLimFRhf3HS3mM0D4BpvzPae9Xb4Grmb5s+RtZGdAKBv6BVK4czazZ3czBGINh5qlrJXVFK+8d2n93CITUId2Cwt496qNgYVa3yWkxs1FvbSOgaxWytA9w8IVZimJ/yccsJOW102KKX9nqsMqsf6sEUHYShA9miVtqC76aRbD0v0+uTBNWzGH2U+Ii8wIHmYCJIUAzpEMnZapKTYPXsWIGCmWpGS3u070jlRh66MwW6lfAMnW7F5d7FdIykU7AnDUDZWbRCLr2c/zWpyp1QYw==
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2020 12:41:47.1716
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ab1ddc0-f910-4c59-6b71-08d7a3ef7052
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.243];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB4295
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_03:2020-01-24,2020-01-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
+ bulkscore=0 clxscore=1015 suspectscore=0 adultscore=0 mlxscore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 priorityscore=1501
+ spamscore=0 mlxlogscore=983 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1911200001 definitions=main-2001280102
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are many open bits shift encodings for various CPU ID registers that
-are scattered across cpufeature. This replaces them with register specific
-sensible macro definitions. This should not have any functional change.
+Driver for Cadence xSPI flash controller.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/include/asm/sysreg.h | 28 ++++++++++++++++++
- arch/arm64/kernel/cpufeature.c  | 52 ++++++++++++++++-----------------
- 2 files changed, 54 insertions(+), 26 deletions(-)
+Command processing
+Driver uses STIG work mode to communicate with flash memories.
+In this mode, controller sends low-level instructions to memory.
+Each instruction is 128-bit width. There is special instruction
+DataSequence which carries information about data phase.
+Driver uses Slave DMA interface to transfer data as only this
+interface can be used in STIG work mode.
 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 2bcd574bafb3..711a6cd09531 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -695,6 +695,7 @@
- #define ID_AA64MMFR2_CNP_SHIFT		0
- 
- /* id_aa64dfr0 */
-+#define ID_AA64DFR0_DOUBLELOCK_SHIFT	36
- #define ID_AA64DFR0_PMSVER_SHIFT	32
- #define ID_AA64DFR0_CTX_CMPS_SHIFT	28
- #define ID_AA64DFR0_WRPS_SHIFT		20
-@@ -732,10 +733,32 @@
- #define ID_MMFR4_HPDS_SHIFT		16
- #define ID_MMFR4_CNP_SHIFT		12
- #define ID_MMFR4_XNX_SHIFT		8
-+#define ID_MMFR4_AC2_SHIFT		4
- #define ID_MMFR4_SPECSEI_SHIFT		0
- 
-+#define ID_MMFR0_INNERSHR_SHIFT		28
-+#define ID_MMFR0_FCSE_SHIFT		24
-+#define ID_MMFR0_AUXREG_SHIFT		20
-+#define ID_MMFR0_TCM_SHIFT		16
-+#define ID_MMFR0_SHARELVL_SHIFT		12
-+#define ID_MMFR0_OUTERSHR_SHIFT		8
-+#define ID_MMFR0_PMSA_SHIFT		4
-+#define ID_MMFR0_VMSA_SHIFT		0
-+
- #define ID_PFR0_DIT_SHIFT		24
- #define ID_PFR0_CSV2_SHIFT		16
-+#define ID_PFR0_STATE3_SHIFT		12
-+#define ID_PFR0_STATE2_SHIFT		8
-+#define ID_PFR0_STATE1_SHIFT		4
-+#define ID_PFR0_STATE0_SHIFT		0
-+
-+#define ID_DFR0_PERFMON_SHIFT		24
-+#define ID_DFR0_MPROFDBG_SHIFT		20
-+#define ID_DFR0_MMAPTRC_SHIFT		16
-+#define ID_DFR0_COPTRC_SHIFT		12
-+#define ID_DFR0_MMAPDBG_SHIFT		8
-+#define ID_DFR0_COPSDBG_SHIFT		4
-+#define ID_DFR0_COPDBG_SHIFT		0
- 
- #define ID_PFR2_SSBS_SHIFT		4
- #define ID_PFR2_CSV3_SHIFT		0
-@@ -758,6 +781,11 @@
- #define MVFR1_FPDNAN_SHIFT		4
- #define MVFR1_FPFTZ_SHIFT		0
- 
-+#define MVFR2_FPMISC_SHIFT		4
-+#define MVFR2_SIMDMISC_SHIFT		0
-+
-+#define DCZID_DZP_SHIFT			4
-+#define DCZID_BS_SHIFT			0
- 
- #define ID_AA64MMFR0_TGRAN4_SHIFT	28
- #define ID_AA64MMFR0_TGRAN64_SHIFT	24
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index a8ded1f0eeaf..ff7d9e0394a6 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -263,7 +263,7 @@ static const struct arm64_ftr_bits ftr_ctr[] = {
- 	 * make use of *minLine.
- 	 * If we have differing I-cache policies, report it as the weakest - VIPT.
- 	 */
--	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_EXACT, 14, 2, ICACHE_POLICY_VIPT),	/* L1Ip */
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_EXACT, CTR_L1IP_SHIFT, 2, ICACHE_POLICY_VIPT),	/* L1Ip */
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, CTR_IMINLINE_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
-@@ -274,19 +274,19 @@ struct arm64_ftr_reg arm64_ftr_reg_ctrel0 = {
- };
- 
- static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0xf),	/* InnerShr */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 24, 4, 0),	/* FCSE */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 20, 4, 0),	/* AuxReg */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 16, 4, 0),	/* TCM */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),	/* ShareLvl */
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0xf),	/* OuterShr */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),	/* PMSA */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),	/* VMSA */
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_INNERSHR_SHIFT, 4, 0xf),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_FCSE_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_MMFR0_AUXREG_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_TCM_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_SHARELVL_SHIFT, 4, 0),
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_OUTERSHR_SHIFT, 4, 0xf),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_PMSA_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR0_VMSA_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
- static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_EXACT, 36, 28, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_EXACT, ID_AA64DFR0_DOUBLELOCK_SHIFT, 28, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_PMSVER_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_CTX_CMPS_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_WRPS_SHIFT, 4, 0),
-@@ -302,14 +302,14 @@ static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
- };
- 
- static const struct arm64_ftr_bits ftr_mvfr2[] = {
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),		/* FPMisc */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),		/* SIMDMisc */
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, MVFR2_FPMISC_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, MVFR2_SIMDMISC_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
- static const struct arm64_ftr_bits ftr_dczid[] = {
--	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_EXACT, 4, 1, 1),		/* DZP */
--	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),	/* BS */
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_EXACT, DCZID_DZP_SHIFT, 1, 1),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, DCZID_BS_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
-@@ -341,7 +341,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr4[] = {
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR4_HPDS_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR4_CNP_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR4_XNX_SHIFT, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),	/* ac2 */
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR4_AC2_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_HIGHER_SAFE, ID_MMFR4_SPECSEI_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
-@@ -360,10 +360,10 @@ static const struct arm64_ftr_bits ftr_id_isar6[] = {
- static const struct arm64_ftr_bits ftr_id_pfr0[] = {
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_DIT_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_CSV2_SHIFT, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),		/* State3 */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),		/* State2 */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),		/* State1 */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),		/* State0 */
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE3_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE2_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE1_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE0_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
-@@ -374,13 +374,13 @@ static const struct arm64_ftr_bits ftr_id_pfr2[] = {
- };
- 
- static const struct arm64_ftr_bits ftr_id_dfr0[] = {
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 24, 4, 0xf),	/* PerfMon */
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 20, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 16, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_PERFMON_SHIFT, 4, 0xf),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_MPROFDBG_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_MMAPTRC_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_COPTRC_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_MMAPDBG_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_COPSDBG_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR0_COPDBG_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
+PHY initialization
+The initialization of PHY module in Cadence XSPI controller
+is done by driving external pin-strap signals to controller.
+Next, driver runs PHY training to find optimal value of
+read_dqs_delay parameter. Controller checks device discovery
+status and if it's completed and with no error PHY training
+passes.
+
+Changes between initial version and v2:
+ - fixed device tree schema yaml file
+
+Konrad Kociolek (2):
+  Add Cadence XSPI driver
+  Add dt-bindings for Cadence XSPI controller
+
+ .../devicetree/bindings/spi/cdns,xspi.yaml         | 166 ++++
+ drivers/spi/Kconfig                                |  11 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-cadence-xspi.c                     | 895 +++++++++++++++++++++
+ 4 files changed, 1073 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/cdns,xspi.yaml
+ create mode 100644 drivers/spi/spi-cadence-xspi.c
+
 -- 
-2.20.1
+2.15.0
 
