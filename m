@@ -2,123 +2,84 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1E5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3882DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3DCF24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0278C24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220387;
-	bh=Y/HWBZEFvdTGW6XNFPNxL6VXarzoQPnz8xuwDjlImvA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GRFDo3SzdPViwfhb4h3LXb8kIg9B/9E0lrGs3muDgtC/sRs67zARg+m5fm8KC5BZh
-	 1bW7JSjN0kO7eSe1BwYZPzpmu4KmEFQE5PQuXWuwbAgFM3BrIEEjnQFxkhGXBShysf
-	 sHCDeJZX+IEke8BwmpB4wo3uJXVvw8gC1EwQicm8=
+	s=default; t=1580220393;
+	bh=HdJSVpKN5JwLk0pwKiSneDoMoxLzqMSUGMkaRqH6haw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=G0Ws1QpVBz1RvDk9gt2I4R3wbdgFvUqSA4e9W4nTd+ERB84uqTQsZmNfSD57gdMrC
+	 GqMu2ApWJlGmbkUTDYuiSht2JX3XJ23z0OvVgoe8DiOImdSxvAEMMvadfN/7XVYl7e
+	 PJoeNZ+CbXTXu6aLOEr6M3KMaFfbGEK8ifX7Q7Nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgA1OG1 (ORCPT
+        id S1727888AbgA1OGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:06:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51962 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:06:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbgA1OEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:04:40 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726821AbgA1OEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:04:38 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 739672468A;
-        Tue, 28 Jan 2020 14:04:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3693624685;
+        Tue, 28 Jan 2020 14:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220279;
-        bh=Y/HWBZEFvdTGW6XNFPNxL6VXarzoQPnz8xuwDjlImvA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LEVe/roWXjUR/I/1fQGneK2Y05wNEC+aYlGVcrC9nifX5AbcYzYoW5UgD7PXrGBNp
-         EoXgkjtxTuXW7mLVsMIJyxGbVEKoFNgSvo6bVsm9mJ2hC4UbSZvYuuZf3wxC9oY8FV
-         95wRjfDgTOk1N1wodd+KWh72TOdHLe9F1nckgNts=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 089/104] net/sonic: Use MMIO accessors
-Date:   Tue, 28 Jan 2020 15:00:50 +0100
-Message-Id: <20200128135829.409513000@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
-References: <20200128135817.238524998@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1580220278;
+        bh=HdJSVpKN5JwLk0pwKiSneDoMoxLzqMSUGMkaRqH6haw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HaTXBk4mDSCOL/fjI8NNX7pDSI/hDMf313v0noxUeKW2PrB3tkKVbjI2+xWe3GFAa
+         I81UNYidQUJSK1qX25fUH8gRVuDgLEb7ulh+pXL842XiNqJlzE6XTVndHKLOnhxLfM
+         UXq7Wc/5327RkVg5e4xUapqFeEdRrYRT8C/s2CoQ=
+Date:   Tue, 28 Jan 2020 08:04:37 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rgummal@xilinx.com
+Subject: Re: [PATCH v4 0/2] Adding support for Versal CPM as Root Port driver.
+Message-ID: <20200128140437.GA149959@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580215483-8835-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+On Tue, Jan 28, 2020 at 06:14:41PM +0530, Bharat Kumar Gogada wrote:
+> - Add support for Versal CPM as Root port.
+> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+>   block for CPM along with the integrated bridge can function
+>   as PCIe Root Port.
+> - Versal CPM uses GICv3 ITS feature for assigning MSI/MSI-X
+>   vectors and handling MSI/MSI-X interrupts.
+> - Bridge error and legacy interrupts in Versal CPM are handled using
+>   Versal CPM specific MISC interrupt line.
+> 
+> Bharat Kumar Gogada (2):
+>   PCI: xilinx-cpm: Add device tree binding for Versal CPM host bridge.
+>   PCI: xilinx-cpm: Add Versal CPM Root Port driver
 
-commit e3885f576196ddfc670b3d53e745de96ffcb49ab upstream.
+Nit for next time: Omit the period at the end of the subject.  No need
+to repost just for that.
 
-The driver accesses descriptor memory which is simultaneously accessed by
-the chip, so the compiler must not be allowed to re-order CPU accesses.
-sonic_buf_get() used 'volatile' to prevent that. sonic_buf_put() should
-have done so too but was overlooked.
-
-Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/net/ethernet/natsemi/sonic.h |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
---- a/drivers/net/ethernet/natsemi/sonic.h
-+++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -345,30 +345,30 @@ static void sonic_msg_init(struct net_de
-    as far as we can tell. */
- /* OpenBSD calls this "SWO".  I'd like to think that sonic_buf_put()
-    is a much better name. */
--static inline void sonic_buf_put(void* base, int bitmode,
-+static inline void sonic_buf_put(u16 *base, int bitmode,
- 				 int offset, __u16 val)
- {
- 	if (bitmode)
- #ifdef __BIG_ENDIAN
--		((__u16 *) base + (offset*2))[1] = val;
-+		__raw_writew(val, base + (offset * 2) + 1);
- #else
--		((__u16 *) base + (offset*2))[0] = val;
-+		__raw_writew(val, base + (offset * 2) + 0);
- #endif
- 	else
--	 	((__u16 *) base)[offset] = val;
-+		__raw_writew(val, base + (offset * 1) + 0);
- }
- 
--static inline __u16 sonic_buf_get(void* base, int bitmode,
-+static inline __u16 sonic_buf_get(u16 *base, int bitmode,
- 				  int offset)
- {
- 	if (bitmode)
- #ifdef __BIG_ENDIAN
--		return ((volatile __u16 *) base + (offset*2))[1];
-+		return __raw_readw(base + (offset * 2) + 1);
- #else
--		return ((volatile __u16 *) base + (offset*2))[0];
-+		return __raw_readw(base + (offset * 2) + 0);
- #endif
- 	else
--		return ((volatile __u16 *) base)[offset];
-+		return __raw_readw(base + (offset * 1) + 0);
- }
- 
- /* Inlines that you should actually use for reading/writing DMA buffers */
-
-
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.txt  |  66 +++
+>  drivers/pci/controller/Kconfig                     |   8 +
+>  drivers/pci/controller/Makefile                    |   1 +
+>  drivers/pci/controller/pcie-xilinx-cpm.c           | 506 +++++++++++++++++++++
+>  4 files changed, 581 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+>  create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
+> 
+> -- 
+> 2.7.4
+> 
