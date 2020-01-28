@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3897C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6800EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B176024688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B14B24690
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220610;
-	bh=imP1lVLmVr62EPE8Lw+MwCm/y8htQT19fBkKWTSVtdo=;
+	s=default; t=1580220615;
+	bh=jh53Q/Ozkk8U/82aeS6OkO2XtSpp62JCOjza6w+v6FY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HUv/INx0EnDmL+TeC86H3HCFUX3YyuOBUnPEu+c9Y3f47f6rCNc0+WCGN033NGaUy
-	 zTepI135zzWSKrdLrgSrkJjKwsCXCdxzg760F6BCEH+G+VZqNCzo5hWRmu+6KAVFr+
-	 YPkoZ1hKkKogQhGLRMgfHhnHC4a0ONWMWbh6JYz4=
+	b=Y88fG8UGY37qGMLmO5bMHKkAMAy3pqvJTxpvVKtAqOwlypichpwRKL3nzV37qwWei
+	 52oMdw1C1X3NvQC3nu+wnzhqnYjpUaZRoDqv71IIijQH8cSlVA7n69naKyWce+okk9
+	 eHdw5q9FETOEd2hSc4Ha/IHrhNZbAwX786AcvfLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgA1OKK (ORCPT
+        id S1729143AbgA1OKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:10:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58740 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:10:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbgA1OKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:10:07 -0500
+        id S1729126AbgA1OKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:10:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40DE524685;
-        Tue, 28 Jan 2020 14:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C04324693;
+        Tue, 28 Jan 2020 14:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220606;
-        bh=imP1lVLmVr62EPE8Lw+MwCm/y8htQT19fBkKWTSVtdo=;
+        s=default; t=1580220611;
+        bh=jh53Q/Ozkk8U/82aeS6OkO2XtSpp62JCOjza6w+v6FY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=evAi4hb8CPmWAWcE73Pmdv0Pb5no9tPsK59WxywJijxmPvzQuMGg/I4wq7sU4tDCt
-         IRcm692pXd33D3K1rtzjDxC3A9REFvNAZzRMhxvPk1ywI+CDg3kmHUhOo4nsMZktIW
-         Os8LszGs86efVfuoFYIKpNr/Y4lDfJROVsElk1yE=
+        b=Q9NPs1XWNcWAwXTMILLGGxZQMamJKYmEqsxvCiRBGPnQLDY1VtbpLjcTJP8ejgg8N
+         cpAB1SWUogKkee+aC858gsMXLStbYSlrhwfbQ5hbGBPHc7SI++b9lGAcFzSN/tcf0l
+         A9kbMbsrVzADb0vscOZx8oFlcmj341c9V9LVtQeQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Sylvain Chouleur <sylvain.chouleur@intel.com>,
-        Patrick McDermott <patrick.mcdermott@libiquity.com>,
-        linux-rtc@vger.kernel.org, Eric Wong <e@80x24.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 037/183] rtc: cmos: ignore bogus century byte
-Date:   Tue, 28 Jan 2020 15:04:16 +0100
-Message-Id: <20200128135833.714056908@linuxfoundation.org>
+Subject: [PATCH 4.4 039/183] rtc: ds1672: fix unintended sign extension
+Date:   Tue, 28 Jan 2020 15:04:18 +0100
+Message-Id: <20200128135833.915100317@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -64,43 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Wong <e@80x24.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 2a4daadd4d3e507138f8937926e6a4df49c6bfdc ]
+[ Upstream commit f0c04c276739ed8acbb41b4868e942a55b128dca ]
 
-Older versions of Libreboot and Coreboot had an invalid value
-(`3' in my case) in the century byte affecting the GM45 in
-the Thinkpad X200.  Not everybody's updated their firmwares,
-and Linux <= 4.2 was able to read the RTC without problems,
-so workaround this by ignoring invalid values.
+Shifting a u8 by 24 will cause the value to be promoted to an integer. If
+the top bit of the u8 is set then the following conversion to an unsigned
+long will sign extend the value causing the upper 32 bits to be set in
+the result.
 
-Fixes: 3c217e51d8a272b9 ("rtc: cmos: century support")
+Fix this by casting the u8 value to an unsigned long before the shift.
 
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Sylvain Chouleur <sylvain.chouleur@intel.com>
-Cc: Patrick McDermott <patrick.mcdermott@libiquity.com>
-Cc: linux-rtc@vger.kernel.org
-Signed-off-by: Eric Wong <e@80x24.org>
+Detected by CoverityScan, CID#138801 ("Unintended sign extension")
+
+Fixes: edf1aaa31fc5 ("[PATCH] RTC subsystem: DS1672 driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/asm-generic/rtc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/rtc-ds1672.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/asm-generic/rtc.h b/include/asm-generic/rtc.h
-index 4e3b6558331ea..3e457ae2d571d 100644
---- a/include/asm-generic/rtc.h
-+++ b/include/asm-generic/rtc.h
-@@ -106,7 +106,7 @@ static inline unsigned int __get_rtc_time(struct rtc_time *time)
- 	time->tm_year += real_year - 72;
- #endif
+diff --git a/drivers/rtc/rtc-ds1672.c b/drivers/rtc/rtc-ds1672.c
+index 92b1cbf2c4a76..2bea733b15893 100644
+--- a/drivers/rtc/rtc-ds1672.c
++++ b/drivers/rtc/rtc-ds1672.c
+@@ -60,7 +60,8 @@ static int ds1672_get_datetime(struct i2c_client *client, struct rtc_time *tm)
+ 		"%s: raw read data - counters=%02x,%02x,%02x,%02x\n",
+ 		__func__, buf[0], buf[1], buf[2], buf[3]);
  
--	if (century)
-+	if (century > 20)
- 		time->tm_year += (century - 19) * 100;
+-	time = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	time = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++	       (buf[1] << 8) | buf[0];
  
- 	/*
+ 	rtc_time_to_tm(time, tm);
+ 
 -- 
 2.20.1
 
