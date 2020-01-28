@@ -2,134 +2,120 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96665C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065BCC35246
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BFE4214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E03214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Vd1cPzWT"
+	dkim=pass (1024-bit key) header.d=televic.com header.i=@televic.com header.b="TNBfkGm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbgA1JuD (ORCPT
+        id S1726096AbgA1Juj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:50:03 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33762 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgA1JuD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:50:03 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so15248673wrq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 01:50:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=krzQC6LqfwtaefGbtLfnweRUXZnrIw45EFVRk7Dwe0M=;
-        b=Vd1cPzWTU2CwUahMQwXNc6ikKQRlZciwb53KDJxby5esl0lZquxqFUBzGPHqdZiPg/
-         3YIVQlHixFP9LZ24H2wEpwItCpelzpBwY++rOPGbj31myI/llqTBKEIPXFcShk7dvs1x
-         Do5Y1hHqPWGIXWSfF44ZVutgstFPUnIcAHznyMY3tELtc2l5kA0ixFpS9i4TJyjZFjc8
-         /sAIKR/dCGvNC1pNmDcsh96tRhQFrGBPvIZoTUmQtWD+aUzlDvj/dLv5zs4U69WTOlF/
-         kHuJ8Q/DD2tfA5niaXipsHAWVwWb9KhcIJVIGGcWyv8HZUL2gb38eDmU9GY2AEAs0UZg
-         fgEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=krzQC6LqfwtaefGbtLfnweRUXZnrIw45EFVRk7Dwe0M=;
-        b=KdeXszZEuTqlGqBI4Mh7RHR8qBMf6bYxl17RLeDtA6FZ/suxxfmt9yg+6wEHvezeAO
-         wIMXnHQvbvSCUTeTcttAbsZ57qF9aXfl28H347J+H1GVCR6KRvP8fdfGzSWLs1bgK+Tr
-         xYXyQS4RvF7Ez9UrnsJjrAlX7aTJclEopxi3IGRNPEfzveO+MeWyIv190dxHHg7Kx29C
-         TdGjRNkvxEwmyiZ6Zq0fHtmx1j9pOVSkBUcsZ+O6/vWwYDF0wJ6CHkjts0B0zJ2pi9HC
-         eLLwZaB9cGq84I0NNlMn05cKeZ579eh0lfvAjKgF961fWZDLdA1DTU0cyZFkZTqWhRS1
-         1qGQ==
-X-Gm-Message-State: APjAAAXVNTrOJeI2y0ZF5khz+lEXzX5CgxO4UMb/wElMB5PCSYGf5Jza
-        LYXI1nLgu2QvKb7nU2/Nu5IjuWZ/fHI=
-X-Google-Smtp-Source: APXvYqwbmLK25eGGh921vryiHgxw5hyfvygM98trY/hU88fxM4cgTrzDxfcuv847HVkD38LBVnlzPA==
-X-Received: by 2002:adf:dd46:: with SMTP id u6mr26436272wrm.13.1580205000172;
-        Tue, 28 Jan 2020 01:50:00 -0800 (PST)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id c2sm24676359wrp.46.2020.01.28.01.49.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 01:49:59 -0800 (PST)
-Date:   Tue, 28 Jan 2020 10:49:57 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     arei.gonglei@huawei.com, jasowang@redhat.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        virtualization@lists.linux-foundation.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [CRASH] crypto: virtio: crash when modprobing tcrypt on 5.5-rc7
- / next-20200122
-Message-ID: <20200128094957.GC10493@Red>
-References: <20200123101000.GB24255@Red>
- <20200123065150-mutt-send-email-mst@kernel.org>
+        Tue, 28 Jan 2020 04:50:39 -0500
+Received: from mail-eopbgr70131.outbound.protection.outlook.com ([40.107.7.131]:31630
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725987AbgA1Juj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 04:50:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z7Gs230wpxTwEYI/Ww31RoZF+TPGsZsNc5qDLd1oKiX1P1GUSmSSG8EsR+cLl3YHatRukaNabCcvShfino06UfnChIowYz6ZLP1AdnimlMRKGtay6u4uiafbWauLNUMRRIdPGUjlnt5Ydya9RtfaYSM2q1d2Yg+PyoOomaWU0IpCmnKime8psGTkvcESsuDIWNfc9QkvItk8SkwAj7nKdUpKttZc6sJEdR6nYtHpccacjJm7k4hxhfJbrG73w3nYPHEIHEA89vch2LqCMH/3CMEXpG25sHPWq7J6H97MKuHAONm9vuVIgsrR6pb6UR8jiR7pZHAuz+dm6Ik1cRSNog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IijY61Yupu3lpZShNtNKKqM22oGkxJyhATEBVRGXy+M=;
+ b=EiysYZsbvIfei+E6ZTz9MYdxLjhipG3/fXnDTuAF6FYsAKKtj2J4FmMkUPPMqoRXHCY5ndhF/VoVef2/hCVsDV+DbynxEnU9O9jSo7SltUtIbzkrsNkyUFXXXm4Go2G/GeeuONz7e/c4QPHTms/8rhxkHwhYxY7PT9pZhxSiCTfZRI0WzSd1BJyeakNDy8K9fRMO4wzf6Qt8TxnSeKVok1G2v8/i1/3Lc8PmPuXylBQz+NR6cV2dWH7RF0W856PPffky9fQZ6l9bN/JEkPSwiOtiL5fWRaQJI3q/i2qJFX5q3SgWF/+XwlDVo2Ko7VguKV0fp2Zk7ajlg4LAO451kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=televic.com; dmarc=pass action=none header.from=televic.com;
+ dkim=pass header.d=televic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=televic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IijY61Yupu3lpZShNtNKKqM22oGkxJyhATEBVRGXy+M=;
+ b=TNBfkGm+152pfp+0idSHyzjtJDZcIKs8ZLzHccqnzBHd8Y8EZvc3jK7dx1wkStz19R6JkNF5jjedbMhM7Ec6pjiWKgksUJnig1UdKpCEyS4tmL/lopXp31tlahIvb79SdoiagSGL1BmlmBhG+a6MxwGWXVwwxVHHMQY9dBj4oxM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=J.Lambrecht@TELEVIC.com; 
+Received: from VI1PR07MB5085.eurprd07.prod.outlook.com (20.177.203.77) by
+ VI1PR07MB5837.eurprd07.prod.outlook.com (20.178.122.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.13; Tue, 28 Jan 2020 09:50:35 +0000
+Received: from VI1PR07MB5085.eurprd07.prod.outlook.com
+ ([fe80::6591:ac75:8bbf:2349]) by VI1PR07MB5085.eurprd07.prod.outlook.com
+ ([fe80::6591:ac75:8bbf:2349%5]) with mapi id 15.20.2686.019; Tue, 28 Jan 2020
+ 09:50:35 +0000
+From:   =?UTF-8?Q?J=c3=bcrgen_Lambrecht?= <j.lambrecht@televic.com>
+Subject: Re: [RFC net-next v3 06/10] net: bridge: mrp: switchdev: Extend
+ switchdev API to offload MRP
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-7-horatiu.vultur@microchip.com>
+ <20200125163504.GF18311@lunn.ch>
+ <20200126132213.fmxl5mgol5qauwym@soft-dev3.microsemi.net>
+ <20200126155911.GJ18311@lunn.ch>
+ <20200127110418.f7443ecls6ih2fwt@lx-anielsen.microsemi.net>
+Message-ID: <8f59fcfc-09e3-2411-0139-9be54d3e156f@televic.com>
+Date:   Tue, 28 Jan 2020 10:50:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <20200127110418.f7443ecls6ih2fwt@lx-anielsen.microsemi.net>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR05CA0029.eurprd05.prod.outlook.com
+ (2603:10a6:208:55::42) To VI1PR07MB5085.eurprd07.prod.outlook.com
+ (2603:10a6:803:9d::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123065150-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from [10.40.216.140] (84.199.255.188) by AM0PR05CA0029.eurprd05.prod.outlook.com (2603:10a6:208:55::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend Transport; Tue, 28 Jan 2020 09:50:34 +0000
+X-Originating-IP: [84.199.255.188]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1ec00279-ed93-4d4e-64bd-08d7a3d78568
+X-MS-TrafficTypeDiagnostic: VI1PR07MB5837:
+X-Microsoft-Antispam-PRVS: <VI1PR07MB5837CF1444E2C00967C7EF4FFF0A0@VI1PR07MB5837.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 029651C7A1
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(396003)(346002)(136003)(366004)(376002)(189003)(199004)(109986005)(478600001)(8936002)(36756003)(31696002)(52116002)(81156014)(81166006)(450100002)(8676002)(956004)(4326008)(2616005)(66946007)(31686004)(66556008)(66476007)(2906002)(26005)(86362001)(16526019)(186003)(53546011)(16576012)(6486002)(316002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB5837;H:VI1PR07MB5085.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: TELEVIC.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Bbl7LEjh9D5kRfwPV/wcSKsp1UpUssnmqazoMfwJENKYKggdh0CcmNW5v6tUd92e6RRH8IDn/Es6aQxG1Csl0tZGO3MlmRjrTub/e2SXk/stq3gFzcXWPnBByl1LVb+rqN55mAgcLNA8IAdoKOQlQbU43su/PNwoQ5CLT8Siz6z2ED7KkZk5ONhz1Lx0bR0lZsAVv8/02R5eF7SkWCQNyosr2ewau2HHcJ4cy49+cWRlyMdgzEytcJ9pABizuLI0n8Kl6r2zYsPglc5RHKESUFv0OnVe3HVu67/XgKrg5FkwNtWQkWYB9QE+8ABx0hYT1NY3DatrlKWe/pSyWKRronKPpxK3oLhB4o5YCiyOA1DODTtdV+zoolT4kH/HoaoOT4aiuqZM4ejY2zIC1LdYZPKbSoQhf0T7mn1a2KYLBeZJ0mLnWyTVgmMPfuIw4cHo
+X-MS-Exchange-AntiSpam-MessageData: XC3N0pFXPVtQJD3IvTZh6yBEFJtjg1lIL11aknG4f4u6Fc4ifglnEtZUCX3l3E+qa3i4AAG7AIiUGCbul52l3PDZKKrMyfLdaaeCsV5YkgyXmXR90iupjohDKYej54Nidb5k/JnKsUrd3eYESdNXlg==
+X-OriginatorOrg: televic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ec00279-ed93-4d4e-64bd-08d7a3d78568
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2020 09:50:35.0050
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 68a8593e-d1fc-4a6a-b782-1bdcb0633231
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gEWU7ZbajPrMW6tBHE9Xdq6b0mmc/B/CNcQ3tHcCtcRRvJYPTHtgu7+dOQJ2aRS4vZhwuLvapia3G5iydNxuaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB5837
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 06:52:29AM -0500, Michael S. Tsirkin wrote:
-> On Thu, Jan 23, 2020 at 11:10:00AM +0100, LABBE Corentin wrote:
-> > Hello
-> > 
-> > When modprobing tcrypt on qemu 4.1.0 I get a kernel panic on 5.5-rc7 and next-20200122
-> > qemu is started by:
-> > /usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic -net nic,model=e1000,macaddr=52:54:00:12:34:58 -net tap -m 512 -monitor none -object cryptodev-backend-builtin,id=cryptodev0 -device virtio-crypto-pci,id=crypto0,cryptodev=cryptodev0 -append 'console=ttyS0 root=/dev/ram0 ip=dhcp' -kernel /var/lib/lava/dispatcher/tmp/41332/deployimages-td18675m/kernel/bzImage -initrd /var/lib/lava/dispatcher/tmp/41332/deployimages-td18675m/ramdisk/rootfs.cpio.gz -drive format=qcow2,file=/var/lib/lava/dispatcher/tmp/41332/apply-overlay-guest-icy4k1ol/lava-guest.qcow2,media=disk,if=ide,id=lavatest
-> > 
-> > [  112.771925] general protection fault: 0000 [#1] SMP PTI
-> > [  112.772686] CPU: 0 PID: 126 Comm: virtio0-engine Not tainted 5.5.0-rc7+ #1
-> > [  112.773576] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
-> > [  112.775319] RIP: 0010:sg_next+0x0/0x20
-> > [  112.775821] Code: cc cc cc cc cc cc cc cc cc cc c7 47 10 00 00 00 00 89 57 0c 48 89 37 89 4f 08 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <f6> 07 02 75 17 48 8b 57 20 48 8d 47 20 48 89 d1 48 83 e1 fc 83 e2
-> > [  112.778330] RSP: 0018:ffffa92440237d90 EFLAGS: 00010006
-> > [  112.779071] RAX: fefefefe00000000 RBX: 000000000000000a RCX: fefefefe00000000
-> > [  112.780081] RDX: 0000000000000001 RSI: ffff9b19da1a2180 RDI: fefefefe00000000
-> > [  112.781081] RBP: ffff9b19da1a2198 R08: ffff9b19dfb24ee8 R09: 0000000000000a20
-> > [  112.782079] R10: ffff9b19da125010 R11: 0000000000000000 R12: ffff9b19da1a21b8
-> > [  112.783079] R13: 0000000000000003 R14: ffff9b19da1a2180 R15: 0000000000000004
-> > [  112.784077] FS:  0000000000000000(0000) GS:ffff9b19de400000(0000) knlGS:0000000000000000
-> > [  112.785202] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  112.786030] CR2: 00007f18a157b050 CR3: 000000001040a004 CR4: 0000000000060ef0
-> > [  112.787034] Call Trace:
-> > [  112.787393]  virtqueue_add_sgs+0x4c/0x90
-> > [  112.787998]  virtio_crypto_skcipher_crypt_req+0x310/0x3e0
-> > [  112.788817]  crypto_pump_work+0x10c/0x240
-> > [  112.789420]  ? __kthread_init_worker+0x50/0x50
-> > [  112.790082]  kthread_worker_fn+0x89/0x180
-> > [  112.790690]  kthread+0x10e/0x130
-> > [  112.791182]  ? kthread_park+0x80/0x80
-> > [  112.791736]  ret_from_fork+0x35/0x40
-> > [  112.792282] Modules linked in: cts lzo salsa20_generic camellia_x86_64 camellia_generic fcrypt pcbc tgr192 anubis wp512 khazad tea michael_mic arc4 cast6_generic cast5_generic cast_common deflate sha512_ssse3 sha512_generic cfb ofb serpent_sse2_x86_64 serpent_generic lrw twofish_x86_64_3way twofish_x86_64 crypto_simd cryptd glue_helper twofish_generic twofish_common blowfish_x86_64 blowfish_generic blowfish_common md4 tcrypt(+)
-> > [  112.797652] ---[ end trace 4a8142d4a08c2518 ]---
-> > [  112.798320] RIP: 0010:sg_next+0x0/0x20
-> > [  112.798865] Code: cc cc cc cc cc cc cc cc cc cc c7 47 10 00 00 00 00 89 57 0c 48 89 37 89 4f 08 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <f6> 07 02 75 17 48 8b 57 20 48 8d 47 20 48 89 d1 48 83 e1 fc 83 e2
-> > [  112.801452] RSP: 0018:ffffa92440237d90 EFLAGS: 00010006
-> > [  112.802189] RAX: fefefefe00000000 RBX: 000000000000000a RCX: fefefefe00000000
-> > [  112.803190] RDX: 0000000000000001 RSI: ffff9b19da1a2180 RDI: fefefefe00000000
-> > [  112.804192] RBP: ffff9b19da1a2198 R08: ffff9b19dfb24ee8 R09: 0000000000000a20
-> > [  112.805201] R10: ffff9b19da125010 R11: 0000000000000000 R12: ffff9b19da1a21b8
-> > [  112.806195] R13: 0000000000000003 R14: ffff9b19da1a2180 R15: 0000000000000004
-> > [  112.807222] FS:  0000000000000000(0000) GS:ffff9b19de400000(0000) knlGS:0000000000000000
-> > [  112.808352] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  112.809169] CR2: 00007f18a157b050 CR3: 000000001040a004 CR4: 0000000000060ef0
-> > 
-> > I have tested also 5.4.14 
-> > and I got random freeze with:
-> > qemu-system-x86_64: virtio: zero sized buffers are not allowed
-> > 
-> > Regards
-> 
-> did any of previous versions work for you?
-> Any chance of a bisect?
-> 
+[sending again to vger.kernel.org, because previous was rejected]
 
-I will try latest version, and if I found a working version I will bisect.
+On 1/27/20 12:04 PM, Allan W. Nielsen wrote:
+>>> > How do you handle the 'headless chicken' scenario? User space tells
+>>> > the port to start sending MRP_Test frames. It then dies. The hardware
+
+Andrew, I am a bit confused here - maybe I missed an email-thread, I'm sorry then.
+
+In previous emails you and others talked about hardware support to send packets (inside the switch). But somebody also talked about data-plane and control-plane (about STP in-kernel being a bad idea), and that data-plane is in-kernel, and control plane is a mrp-daemon (in user space).
+And in my mind, the "hardware" you mention is a frame-injector and can be both real hardware and a driver in the kernel.
+
+Do I see it right?
+
+>>> > continues sending these messages, and the neighbours thinks everything
+>>> > is O.K, but in reality the state machine is dead, and when the ring
+>>> > breaks, the daemon is not there to fix it?
+> I agree, we need to find a solution to this issue.
+>
+
