@@ -4,48 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2798EC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B11CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D302468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C5924694
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220874;
-	bh=Kuk7ATdNCRy7wLCVOOlcJOkAmy/NY/D9SfnazNQMDaM=;
+	s=default; t=1580220880;
+	bh=jHMKAVzMW6nzIywW3PHvUmKYlMXkVYX0txP8GYsfOo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yLE5xP04UJL7xR5T/Ra8fgKqEG8iw7wE4GWBqqLsGdzZGdU1RIgULBZCU2UmFNbwK
-	 +kS7vsEkOJ2vcx67XsQlMvKsjaXegjalwtJy/RAXnW9u266tvu4ovkmY3yAyNsUHAf
-	 4LzvZZfNp/Sr7Qa///SimDCpktzXJKUrox0xE3Ec=
+	b=kpikwUaAdFE5EAmMTv2JX/QTgiCkh9UBolcGueBm86AkWF4rsJcPnHDZ51qKXLQ+E
+	 x8zKBZS+LRf8Lmasq90flvEP/I/+SgSr3Wtpy2jpkiGKxr8p0LL7fMJeq5mDESO9TF
+	 ZUl7gSn+IFJYtqADE3D8rY36mG4WaT9t+WcxXnlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgA1OOZ (ORCPT
+        id S1729921AbgA1OOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:14:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:14:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729857AbgA1OOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:14:21 -0500
+        id S1729113AbgA1OOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:14:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64C95246AA;
-        Tue, 28 Jan 2020 14:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02C9724691;
+        Tue, 28 Jan 2020 14:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220860;
-        bh=Kuk7ATdNCRy7wLCVOOlcJOkAmy/NY/D9SfnazNQMDaM=;
+        s=default; t=1580220875;
+        bh=jHMKAVzMW6nzIywW3PHvUmKYlMXkVYX0txP8GYsfOo0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oqccoILEVOpMoTVbadqjM/7u9zikrNu64AM8ej74RHqPT+S7zGOoxPm16yZYg1T4u
-         j0khNhB4aXqwVMwcSyhwEULtGQY/DYc3w0YkIS2E9TKCxBQHzNDc22WxbOF1W/1Aa/
-         hOm+PygVrVBrm7KgVmSCGpIIbrutJDEbInRQcd8A=
+        b=sIANJceqIF0mPm0f5ZF2mw8gV9ilJ7fY3CXD9ayKdRjwB4/pXQKq7cxdetrZcGFdx
+         N8q0Rf8Oczpw7XC9ECPoaIF8wSxPWCZBS1EVyJSL6BylFDwXZ3Sewtr3yuhJr0oXSU
+         5fck8zmXhSTdCAiog30sgnwVdlup4RMe52v5txYw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.4 176/183] do_last(): fetch directory ->i_mode and ->i_uid before its too late
-Date:   Tue, 28 Jan 2020 15:06:35 +0100
-Message-Id: <20200128135847.326406099@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fabca5cbf5e54f3fe2de@syzkaller.appspotmail.com,
+        syzbot+827ced406c9a1d9570ed@syzkaller.appspotmail.com,
+        syzbot+190d63957b22ef673ea5@syzkaller.appspotmail.com,
+        syzbot+dfccdb2bdb4a12ad425e@syzkaller.appspotmail.com,
+        syzbot+df0d0f5895ef1f41a65b@syzkaller.appspotmail.com,
+        syzbot+b08bd19bb37513357fd4@syzkaller.appspotmail.com,
+        syzbot+53cdd0ec0bbabd53370a@syzkaller.appspotmail.com,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.4 181/183] netfilter: ipset: use bitmap infrastructure completely
+Date:   Tue, 28 Jan 2020 15:06:40 +0100
+Message-Id: <20200128135847.803026157@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -58,74 +67,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Kadlecsik József <kadlec@blackhole.kfki.hu>
 
-commit d0cb50185ae942b03c4327be322055d622dc79f6 upstream.
+commit 32c72165dbd0e246e69d16a3ad348a4851afd415 upstream.
 
-may_create_in_sticky() call is done when we already have dropped the
-reference to dir.
+The bitmap allocation did not use full unsigned long sizes
+when calculating the required size and that was triggered by KASAN
+as slab-out-of-bounds read in several places. The patch fixes all
+of them.
 
-Fixes: 30aba6656f61e (namei: allow restricted O_CREAT of FIFOs and regular files)
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Reported-by: syzbot+fabca5cbf5e54f3fe2de@syzkaller.appspotmail.com
+Reported-by: syzbot+827ced406c9a1d9570ed@syzkaller.appspotmail.com
+Reported-by: syzbot+190d63957b22ef673ea5@syzkaller.appspotmail.com
+Reported-by: syzbot+dfccdb2bdb4a12ad425e@syzkaller.appspotmail.com
+Reported-by: syzbot+df0d0f5895ef1f41a65b@syzkaller.appspotmail.com
+Reported-by: syzbot+b08bd19bb37513357fd4@syzkaller.appspotmail.com
+Reported-by: syzbot+53cdd0ec0bbabd53370a@syzkaller.appspotmail.com
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/namei.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ include/linux/netfilter/ipset/ip_set.h    |    7 -------
+ net/netfilter/ipset/ip_set_bitmap_gen.h   |    2 +-
+ net/netfilter/ipset/ip_set_bitmap_ip.c    |    6 +++---
+ net/netfilter/ipset/ip_set_bitmap_ipmac.c |    6 +++---
+ net/netfilter/ipset/ip_set_bitmap_port.c  |    6 +++---
+ 5 files changed, 10 insertions(+), 17 deletions(-)
 
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -988,7 +988,8 @@ static int may_linkat(struct path *link)
-  * may_create_in_sticky - Check whether an O_CREAT open in a sticky directory
-  *			  should be allowed, or not, on files that already
-  *			  exist.
-- * @dir: the sticky parent directory
-+ * @dir_mode: mode bits of directory
-+ * @dir_uid: owner of directory
-  * @inode: the inode of the file to open
-  *
-  * Block an O_CREAT open of a FIFO (or a regular file) when:
-@@ -1004,18 +1005,18 @@ static int may_linkat(struct path *link)
-  *
-  * Returns 0 if the open is allowed, -ve on error.
-  */
--static int may_create_in_sticky(struct dentry * const dir,
-+static int may_create_in_sticky(umode_t dir_mode, kuid_t dir_uid,
- 				struct inode * const inode)
- {
- 	if ((!sysctl_protected_fifos && S_ISFIFO(inode->i_mode)) ||
- 	    (!sysctl_protected_regular && S_ISREG(inode->i_mode)) ||
--	    likely(!(dir->d_inode->i_mode & S_ISVTX)) ||
--	    uid_eq(inode->i_uid, dir->d_inode->i_uid) ||
-+	    likely(!(dir_mode & S_ISVTX)) ||
-+	    uid_eq(inode->i_uid, dir_uid) ||
- 	    uid_eq(current_fsuid(), inode->i_uid))
- 		return 0;
+--- a/include/linux/netfilter/ipset/ip_set.h
++++ b/include/linux/netfilter/ipset/ip_set.h
+@@ -530,13 +530,6 @@ ip6addrptr(const struct sk_buff *skb, bo
+ 	       sizeof(*addr));
+ }
  
--	if (likely(dir->d_inode->i_mode & 0002) ||
--	    (dir->d_inode->i_mode & 0020 &&
-+	if (likely(dir_mode & 0002) ||
-+	    (dir_mode & 0020 &&
- 	     ((sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) ||
- 	      (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode))))) {
- 		return -EACCES;
-@@ -3059,6 +3060,8 @@ static int do_last(struct nameidata *nd,
- 		   int *opened)
+-/* Calculate the bytes required to store the inclusive range of a-b */
+-static inline int
+-bitmap_bytes(u32 a, u32 b)
+-{
+-	return 4 * ((((b - a + 8) / 8) + 3) / 4);
+-}
+-
+ #include <linux/netfilter/ipset/ip_set_timeout.h>
+ #include <linux/netfilter/ipset/ip_set_comment.h>
+ 
+--- a/net/netfilter/ipset/ip_set_bitmap_gen.h
++++ b/net/netfilter/ipset/ip_set_bitmap_gen.h
+@@ -81,7 +81,7 @@ mtype_flush(struct ip_set *set)
+ 
+ 	if (set->extensions & IPSET_EXT_DESTROY)
+ 		mtype_ext_cleanup(set);
+-	memset(map->members, 0, map->memsize);
++	bitmap_zero(map->members, map->elements);
+ }
+ 
+ static int
+--- a/net/netfilter/ipset/ip_set_bitmap_ip.c
++++ b/net/netfilter/ipset/ip_set_bitmap_ip.c
+@@ -40,7 +40,7 @@ MODULE_ALIAS("ip_set_bitmap:ip");
+ 
+ /* Type structure */
+ struct bitmap_ip {
+-	void *members;		/* the set members */
++	unsigned long *members;	/* the set members */
+ 	u32 first_ip;		/* host byte order, included in range */
+ 	u32 last_ip;		/* host byte order, included in range */
+ 	u32 elements;		/* number of max elements in the set */
+@@ -222,7 +222,7 @@ init_map_ip(struct ip_set *set, struct b
+ 	    u32 first_ip, u32 last_ip,
+ 	    u32 elements, u32 hosts, u8 netmask)
  {
- 	struct dentry *dir = nd->path.dentry;
-+	kuid_t dir_uid = dir->d_inode->i_uid;
-+	umode_t dir_mode = dir->d_inode->i_mode;
- 	int open_flag = op->open_flag;
- 	bool will_truncate = (open_flag & O_TRUNC) != 0;
- 	bool got_write = false;
-@@ -3211,7 +3214,7 @@ finish_open:
- 		error = -EISDIR;
- 		if (d_is_dir(nd->path.dentry))
- 			goto out;
--		error = may_create_in_sticky(dir,
-+		error = may_create_in_sticky(dir_mode, dir_uid,
- 					     d_backing_inode(nd->path.dentry));
- 		if (unlikely(error))
- 			goto out;
+-	map->members = ip_set_alloc(map->memsize);
++	map->members = bitmap_zalloc(elements, GFP_KERNEL | __GFP_NOWARN);
+ 	if (!map->members)
+ 		return false;
+ 	map->first_ip = first_ip;
+@@ -315,7 +315,7 @@ bitmap_ip_create(struct net *net, struct
+ 	if (!map)
+ 		return -ENOMEM;
+ 
+-	map->memsize = bitmap_bytes(0, elements - 1);
++	map->memsize = BITS_TO_LONGS(elements) * sizeof(unsigned long);
+ 	set->variant = &bitmap_ip;
+ 	if (!init_map_ip(set, map, first_ip, last_ip,
+ 			 elements, hosts, netmask)) {
+--- a/net/netfilter/ipset/ip_set_bitmap_ipmac.c
++++ b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
+@@ -46,7 +46,7 @@ enum {
+ 
+ /* Type structure */
+ struct bitmap_ipmac {
+-	void *members;		/* the set members */
++	unsigned long *members;	/* the set members */
+ 	u32 first_ip;		/* host byte order, included in range */
+ 	u32 last_ip;		/* host byte order, included in range */
+ 	u32 elements;		/* number of max elements in the set */
+@@ -297,7 +297,7 @@ static bool
+ init_map_ipmac(struct ip_set *set, struct bitmap_ipmac *map,
+ 	       u32 first_ip, u32 last_ip, u32 elements)
+ {
+-	map->members = ip_set_alloc(map->memsize);
++	map->members = bitmap_zalloc(elements, GFP_KERNEL | __GFP_NOWARN);
+ 	if (!map->members)
+ 		return false;
+ 	map->first_ip = first_ip;
+@@ -361,7 +361,7 @@ bitmap_ipmac_create(struct net *net, str
+ 	if (!map)
+ 		return -ENOMEM;
+ 
+-	map->memsize = bitmap_bytes(0, elements - 1);
++	map->memsize = BITS_TO_LONGS(elements) * sizeof(unsigned long);
+ 	set->variant = &bitmap_ipmac;
+ 	if (!init_map_ipmac(set, map, first_ip, last_ip, elements)) {
+ 		kfree(map);
+--- a/net/netfilter/ipset/ip_set_bitmap_port.c
++++ b/net/netfilter/ipset/ip_set_bitmap_port.c
+@@ -34,7 +34,7 @@ MODULE_ALIAS("ip_set_bitmap:port");
+ 
+ /* Type structure */
+ struct bitmap_port {
+-	void *members;		/* the set members */
++	unsigned long *members;	/* the set members */
+ 	u16 first_port;		/* host byte order, included in range */
+ 	u16 last_port;		/* host byte order, included in range */
+ 	u32 elements;		/* number of max elements in the set */
+@@ -207,7 +207,7 @@ static bool
+ init_map_port(struct ip_set *set, struct bitmap_port *map,
+ 	      u16 first_port, u16 last_port)
+ {
+-	map->members = ip_set_alloc(map->memsize);
++	map->members = bitmap_zalloc(map->elements, GFP_KERNEL | __GFP_NOWARN);
+ 	if (!map->members)
+ 		return false;
+ 	map->first_port = first_port;
+@@ -250,7 +250,7 @@ bitmap_port_create(struct net *net, stru
+ 		return -ENOMEM;
+ 
+ 	map->elements = elements;
+-	map->memsize = bitmap_bytes(0, map->elements);
++	map->memsize = BITS_TO_LONGS(elements) * sizeof(unsigned long);
+ 	set->variant = &bitmap_port;
+ 	if (!init_map_port(set, map, first_port, last_port)) {
+ 		kfree(map);
 
 
