@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B124AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3708C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84DFF21739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DC124690
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221204;
-	bh=D8fBwoZBDMUsrKEpYFRmpjicuXupUwfS+5KO69103g0=;
+	s=default; t=1580221206;
+	bh=nSP8sb8U6UsTtSCBrxZasHOtuaL9If0F0xYS33SxkBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g6mCmPx+pl4Pk1RyhJGLGS7Dk6MXDyA0Of2iXVpPSAVSwzTACanKUPO3F+tmuxA0R
-	 Vsx9T4ATE/Bv3bJML7etuguQiukhZrNzHgIHeap/ASJOVm6RKYIr22quB8UiFBnAl8
-	 oKN4uwXizMp17i66zWN5JopIKb9htbNogFiQLNVg=
+	b=ucbr/xcjimh4dCCrEGx2M+XFQW25C4fNLHqXirwZtAfwsroRt9dgDR65nt017q1lT
+	 f7hsi30VC39a2BwzlibqWb3xpY6oCv6ssU9vzEGlPN9IBBQbs3PbcnWahzD12xAoWW
+	 G/RjHqhAD7po7mqjyqhjfn6XLVfmd3n5EsC5wvYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbgA1OUD (ORCPT
+        id S1731004AbgA1OUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:20:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44462 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:20:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730963AbgA1OTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:19:54 -0500
+        id S1730977AbgA1OT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:19:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E93A92071E;
-        Tue, 28 Jan 2020 14:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB5C2071E;
+        Tue, 28 Jan 2020 14:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221193;
-        bh=D8fBwoZBDMUsrKEpYFRmpjicuXupUwfS+5KO69103g0=;
+        s=default; t=1580221198;
+        bh=nSP8sb8U6UsTtSCBrxZasHOtuaL9If0F0xYS33SxkBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dhJChARiIQGnQC+fHifg1TdszMILFnvdNvSRiuEtGrXET/GLGuJin5qYgK2dfi5hL
-         s2iLiWKWNc24P+U9SleQ+qxM1uReWhZBQ53FCFplVB9PZiibFk4I4ATOcNhJadVs9v
-         G9V+aVbZO3NuHhb0I70HwDNAnzvsisL0jMJWd/YE=
+        b=UXBI2FeTYxfpyM6ozK+u16T/nyBPlgNrNj01l+kBvnGsfREVToHj2YATT8OXOFF2N
+         Vh445j4HeLAaEAEWJnA37xKcyeFy3JWnJoc4QtErRb9XkK6ihjnKVicYr/+7XMm7LV
+         /jA3+NzRDaTV8FaGKmHNjN1HaQqoK+4UFFHSuNBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 127/271] IB/mlx5: Add missing XRC options to QP optional params mask
-Date:   Tue, 28 Jan 2020 15:04:36 +0100
-Message-Id: <20200128135902.050977654@linuxfoundation.org>
+        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 128/271] iommu/vt-d: Make kernel parameter igfx_off work with vIOMMU
+Date:   Tue, 28 Jan 2020 15:04:37 +0100
+Message-Id: <20200128135902.127906391@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -62,88 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit 8f4426aa19fcdb9326ac44154a117b1a3a5ae126 ]
+[ Upstream commit 5daab58043ee2bca861068e2595564828f3bc663 ]
 
-The QP transition optional parameters for the various transition for XRC
-QPs are identical to those for RC QPs.
+The kernel parameter igfx_off is used by users to disable
+DMA remapping for the Intel integrated graphic device. It
+was designed for bare metal cases where a dedicated IOMMU
+is used for graphic. This doesn't apply to virtual IOMMU
+case where an include-all IOMMU is used.  This makes the
+kernel parameter work with virtual IOMMU as well.
 
-Many of the XRC QP transition optional parameter bits are missing from the
-QP optional mask table.  These omissions caused failures when doing XRC QP
-state transitions.
-
-For example, when trying to change the response timer of an XRC receive QP
-via the RTS2RTS transition, the new timer value was ignored because
-MLX5_QP_OPTPAR_RNR_TIMEOUT bit was missing from the optional params mask
-for XRC qps for the RTS2RTS transition.
-
-Fix this by adding the missing XRC optional parameters for all QP
-transitions to the opt_mask table.
-
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Fixes: a4774e9095de ("IB/mlx5: Fix opt param mask according to firmware spec")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Suggested-by: Kevin Tian <kevin.tian@intel.com>
+Fixes: c0771df8d5297 ("intel-iommu: Export a flag indicating that the IOMMU is used for iGFX.")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Tested-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/qp.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/iommu/intel-iommu.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
-index a7bc89f5dae7e..4d906a7904818 100644
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -2324,6 +2324,11 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_PKEY_INDEX	|
- 					  MLX5_QP_OPTPAR_Q_KEY		|
- 					  MLX5_QP_OPTPAR_PRI_PORT,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_PKEY_INDEX	|
-+					  MLX5_QP_OPTPAR_PRI_PORT,
- 		},
- 		[MLX5_QP_STATE_RTR] = {
- 			[MLX5_QP_ST_RC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH  |
-@@ -2357,6 +2362,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 					  MLX5_QP_OPTPAR_RWE		|
- 					  MLX5_QP_OPTPAR_PM_STATE,
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH	|
-+					  MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_PM_STATE	|
-+					  MLX5_QP_OPTPAR_RNR_TIMEOUT,
- 		},
- 	},
- 	[MLX5_QP_STATE_RTS] = {
-@@ -2373,6 +2384,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY		|
- 					  MLX5_QP_OPTPAR_SRQN		|
- 					  MLX5_QP_OPTPAR_CQN_RCV,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_RNR_TIMEOUT	|
-+					  MLX5_QP_OPTPAR_PM_STATE	|
-+					  MLX5_QP_OPTPAR_ALT_ADDR_PATH,
- 		},
- 	},
- 	[MLX5_QP_STATE_SQER] = {
-@@ -2384,6 +2401,10 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 					   MLX5_QP_OPTPAR_RWE		|
- 					   MLX5_QP_OPTPAR_RAE		|
- 					   MLX5_QP_OPTPAR_RRE,
-+			[MLX5_QP_ST_XRC]  = MLX5_QP_OPTPAR_RNR_TIMEOUT	|
-+					   MLX5_QP_OPTPAR_RWE		|
-+					   MLX5_QP_OPTPAR_RAE		|
-+					   MLX5_QP_OPTPAR_RRE,
- 		},
- 	},
- };
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 25cc6ae87039d..5c6e0a9fd2f36 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -3345,9 +3345,12 @@ static int __init init_dmars(void)
+ 		iommu_identity_mapping |= IDENTMAP_ALL;
+ 
+ #ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
+-	iommu_identity_mapping |= IDENTMAP_GFX;
++	dmar_map_gfx = 0;
+ #endif
+ 
++	if (!dmar_map_gfx)
++		iommu_identity_mapping |= IDENTMAP_GFX;
++
+ 	check_tylersburg_isoch();
+ 
+ 	if (iommu_identity_mapping) {
 -- 
 2.20.1
 
