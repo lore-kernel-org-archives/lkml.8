@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F29C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDFFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583FF24686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACD924686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221923;
-	bh=xPJ4DVVjuH7+QRs/g3mZ9AXjGQdLwflaajAmAbDLLC8=;
+	s=default; t=1580221927;
+	bh=bKRE5mSFY1bAGSEyekelZnv63qvYTAjK9lidtNV4oTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eftG1vkMqdjcoevivPNyL/UhuEmwsT+lSXKSIcGMtOVRrob5c+SDIr3qAi/GJSzqN
-	 OIMnj2BMAoMisNtmHvwP1U5o+qt+OZPI13tWNkbznGvhMJ1K4+EwLuHouLLAkhlxDz
-	 GI49bm0rfvgd6K6/K9mBjR53iCZpZ8WXhjZUcHZQ=
+	b=IrALNhGaFi3hBsQGHKQ+guk5W7mvZTtN1akSC0uSYFLlNw8C3DE4ZEtIBRpmTvx/y
+	 lsrz1ykUxw+bR2b47VnNoq89vTve2MzXf+td2A9+WrNU2i/xSEguOKQraX1Jkw2bGl
+	 plTusDyKZHrBZIXQ2VLKGk6eFHHzU5emMVt/u/5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387747AbgA1OcC (ORCPT
+        id S1733253AbgA1O1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:32:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54888 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:27:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733276AbgA1O1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:27:13 -0500
+        id S1733067AbgA1O0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:26:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57B4E24688;
-        Tue, 28 Jan 2020 14:27:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C54420716;
+        Tue, 28 Jan 2020 14:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221632;
-        bh=xPJ4DVVjuH7+QRs/g3mZ9AXjGQdLwflaajAmAbDLLC8=;
+        s=default; t=1580221612;
+        bh=bKRE5mSFY1bAGSEyekelZnv63qvYTAjK9lidtNV4oTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y9M8RhULf8IsPzrF6oH8n2+2WBQq2W7uKYxY8jk4w46568nUJKEmJAOeNonnMmYVt
-         rt1IgiIx120Wgi8TNWKXV5CwL+IkyoNkOHttv9dCTWzzXooYYtlYlTQJJXqAOlh5sd
-         U7aoKhnWPk275N1lo/u9Ru2qBcBQ4VrNlJCOv3tE=
+        b=fQIGYm/9e1/JhNLoLDAtoC2ePGk0K+BMjC3/btIC6e0UvryOZpm3oQEpfzw2gWc3a
+         RNngHQyZZEc0HXEFBbisqJGLsrqTwmPB4vJL4RIPcaXV7s3kf547iLVI55XX2SbBSJ
+         bWnhid8SJ/43ggDdQvrRD4vWxQ6pxf21jGbe5lB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Timo Kaufmann <timokau@zoho.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 28/92] Revert "Input: synaptics-rmi4 - dont increment rmiaddr for SMBus transfers"
-Date:   Tue, 28 Jan 2020 15:07:56 +0100
-Message-Id: <20200128135812.642298369@linuxfoundation.org>
+        stable@vger.kernel.org, Yuki Taguchi <tagyounit@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 04/92] ipv6: sr: remove SKB_GSO_IPXIP6 on End.D* actions
+Date:   Tue, 28 Jan 2020 15:07:32 +0100
+Message-Id: <20200128135809.875908879@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,50 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Yuki Taguchi <tagyounit@gmail.com>
 
-commit 8ff771f8c8d55d95f102cf88a970e541a8bd6bcf upstream.
+[ Upstream commit 62ebaeaedee7591c257543d040677a60e35c7aec ]
 
-This reverts commit a284e11c371e446371675668d8c8120a27227339.
+After LRO/GRO is applied, SRv6 encapsulated packets have
+SKB_GSO_IPXIP6 feature flag, and this flag must be removed right after
+decapulation procedure.
 
-This causes problems (drifting cursor) with at least the F11 function that
-reads more than 32 bytes.
+Currently, SKB_GSO_IPXIP6 flag is not removed on End.D* actions, which
+creates inconsistent packet state, that is, a normal TCP/IP packets
+have the SKB_GSO_IPXIP6 flag. This behavior can cause unexpected
+fallback to GSO on routing to netdevices that do not support
+SKB_GSO_IPXIP6. For example, on inter-VRF forwarding, decapsulated
+packets separated into small packets by GSO because VRF devices do not
+support TSO for packets with SKB_GSO_IPXIP6 flag, and this degrades
+forwarding performance.
 
-The real issue is in the F54 driver, and so this should be fixed there, and
-not in rmi_smbus.c.
+This patch removes encapsulation related GSO flags from the skb right
+after the End.D* action is applied.
 
-So first revert this bad commit, then fix the real problem in F54 in another
-patch.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: Timo Kaufmann <timokau@zoho.com>
-Fixes: a284e11c371e ("Input: synaptics-rmi4 - don't increment rmiaddr for SMBus transfers")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200115124819.3191024-2-hverkuil-cisco@xs4all.nl
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: d7a669dd2f8b ("ipv6: sr: add helper functions for seg6local")
+Signed-off-by: Yuki Taguchi <tagyounit@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/input/rmi4/rmi_smbus.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv6/seg6_local.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/input/rmi4/rmi_smbus.c
-+++ b/drivers/input/rmi4/rmi_smbus.c
-@@ -166,6 +166,7 @@ static int rmi_smb_write_block(struct rm
- 		/* prepare to write next block of bytes */
- 		cur_len -= SMB_MAX_COUNT;
- 		databuff += SMB_MAX_COUNT;
-+		rmiaddr += SMB_MAX_COUNT;
- 	}
- exit:
- 	mutex_unlock(&rmi_smb->page_mutex);
-@@ -217,6 +218,7 @@ static int rmi_smb_read_block(struct rmi
- 		/* prepare to read next block of bytes */
- 		cur_len -= SMB_MAX_COUNT;
- 		databuff += SMB_MAX_COUNT;
-+		rmiaddr += SMB_MAX_COUNT;
- 	}
+--- a/net/ipv6/seg6_local.c
++++ b/net/ipv6/seg6_local.c
+@@ -28,6 +28,7 @@
+ #include <net/addrconf.h>
+ #include <net/ip6_route.h>
+ #include <net/dst_cache.h>
++#include <net/ip_tunnels.h>
+ #ifdef CONFIG_IPV6_SEG6_HMAC
+ #include <net/seg6_hmac.h>
+ #endif
+@@ -135,7 +136,8 @@ static bool decap_and_validate(struct sk
  
- 	retval = 0;
+ 	skb_reset_network_header(skb);
+ 	skb_reset_transport_header(skb);
+-	skb->encapsulation = 0;
++	if (iptunnel_pull_offloads(skb))
++		return false;
+ 
+ 	return true;
+ }
 
 
