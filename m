@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC07C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59836C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31BD22522
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A5F22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220483;
-	bh=AL84hXQnvQ6S9Zt46n2nAflUzeffjOxJDWDAJW2DTHE=;
+	s=default; t=1580220486;
+	bh=6QPJnlWiwIuhPmfIE+phg+GH1Dc6EoYBLQGTnVyj/sM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jWGYVBSp6QcSBeE8XSXEzl0/TMJoC5JT0QZtSz7wuHJBiN5WeQJOYI4Qto/6VgXGo
-	 i/e6pXZl8USATXg2i2sZ4gFU2BZISv38Do7b5/NxeZNgLx3vWdXZ8Fa05aLg9UI/+U
-	 +Tpao+hxPinpJ2Xh4aIdw2iBo8QZPA1lYWsc2Zcc=
+	b=BgyE0ohLl56rYDhiv8z/rJL8FFxw0LEIni51qY7Agig+2ND48KggrA/Zm9Bfjo+a3
+	 wIb7+4Azqljn762iw6z83xDSzuxPFM4gzYPYTdLMoGhMf5J6OOl525x/95Z2EgXrsb
+	 Ja0K4NHOvqPimqpkeJWFkExtKwGoYPNlIp0sOrLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgA1OID (ORCPT
+        id S1728412AbgA1OIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:08:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55886 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:08:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728140AbgA1OIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:08:00 -0500
+        id S1728356AbgA1OIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:08:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E47CD24685;
-        Tue, 28 Jan 2020 14:07:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 682D222522;
+        Tue, 28 Jan 2020 14:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220479;
-        bh=AL84hXQnvQ6S9Zt46n2nAflUzeffjOxJDWDAJW2DTHE=;
+        s=default; t=1580220481;
+        bh=6QPJnlWiwIuhPmfIE+phg+GH1Dc6EoYBLQGTnVyj/sM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WaYeuU1wcEpmhpGBawt09b57kVbJoTWtrY7zGap6nVbUr1RgTcq7AJjsSNjZl6ZSn
-         hUpw47yi9CX+BL+PHLjOPaH5ekmCeBA2a5qYA5Unc1699EkMESU+dY9B7wKRTxVRmN
-         QKiEBpk/1OUnd/iaevAlmzLe3Gvkxozij2mzBspY=
+        b=X9WQnV2R9Me8i9IcqNR7KBAnEa/Nq7ZwzsdnrGK4SVNvebanINqR+K0AIWYVi3rT6
+         LeIXEsg8fSwski9PZQx1mB6VxQoMVbvZ/6DXRh7QJL5Otgg95xTXY9AJ06EMTr/qzn
+         DrgI/bS4mMGYmPB6VPGkIxk/cqWHRekcME+iWW2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 023/183] clk: socfpga: fix refcount leak
-Date:   Tue, 28 Jan 2020 15:04:02 +0100
-Message-Id: <20200128135832.294024888@linuxfoundation.org>
+Subject: [PATCH 4.4 024/183] clk: samsung: exynos4: fix refcount leak in exynos4_get_xom()
+Date:   Tue, 28 Jan 2020 15:04:03 +0100
+Message-Id: <20200128135832.408251819@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -62,46 +62,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 7f9705beeb3759e69165e7aff588f6488ff6c1ac ]
+[ Upstream commit cee82eb9532090cd1dc953e845d71f9b1445c84e ]
 
 The of_find_compatible_node() returns a node pointer with refcount
 incremented, but there is the lack of use of the of_node_put() when
 done. Add the missing of_node_put() to release the refcount.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 5343325ff3dd ("clk: socfpga: add a clock driver for the Arria 10 platform")
-Fixes: a30d27ed739b ("clk: socfpga: fix clock driver for 3.15")
+Fixes: e062b571777f ("clk: exynos4: register clocks using common clock framework")
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/socfpga/clk-pll-a10.c | 1 +
- drivers/clk/socfpga/clk-pll.c     | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/clk/samsung/clk-exynos4.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/socfpga/clk-pll-a10.c b/drivers/clk/socfpga/clk-pll-a10.c
-index 402d630bd531e..623d5b77fb432 100644
---- a/drivers/clk/socfpga/clk-pll-a10.c
-+++ b/drivers/clk/socfpga/clk-pll-a10.c
-@@ -95,6 +95,7 @@ static struct __init clk * __socfpga_pll_init(struct device_node *node,
+diff --git a/drivers/clk/samsung/clk-exynos4.c b/drivers/clk/samsung/clk-exynos4.c
+index 7f370d3e09837..6c8e45e007c84 100644
+--- a/drivers/clk/samsung/clk-exynos4.c
++++ b/drivers/clk/samsung/clk-exynos4.c
+@@ -1224,6 +1224,7 @@ static unsigned long exynos4_get_xom(void)
+ 			xom = readl(chipid_base + 8);
  
- 	clkmgr_np = of_find_compatible_node(NULL, NULL, "altr,clk-mgr");
- 	clk_mgr_a10_base_addr = of_iomap(clkmgr_np, 0);
-+	of_node_put(clkmgr_np);
- 	BUG_ON(!clk_mgr_a10_base_addr);
- 	pll_clk->hw.reg = clk_mgr_a10_base_addr + reg;
+ 		iounmap(chipid_base);
++		of_node_put(np);
+ 	}
  
-diff --git a/drivers/clk/socfpga/clk-pll.c b/drivers/clk/socfpga/clk-pll.c
-index c7f463172e4b9..b4b44e9b59011 100644
---- a/drivers/clk/socfpga/clk-pll.c
-+++ b/drivers/clk/socfpga/clk-pll.c
-@@ -100,6 +100,7 @@ static __init struct clk *__socfpga_pll_init(struct device_node *node,
- 
- 	clkmgr_np = of_find_compatible_node(NULL, NULL, "altr,clk-mgr");
- 	clk_mgr_base_addr = of_iomap(clkmgr_np, 0);
-+	of_node_put(clkmgr_np);
- 	BUG_ON(!clk_mgr_base_addr);
- 	pll_clk->hw.reg = clk_mgr_base_addr + reg;
- 
+ 	return xom;
 -- 
 2.20.1
 
