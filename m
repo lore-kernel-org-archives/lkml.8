@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE7CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EFEC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84CF920716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8482467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222155;
-	bh=eZbzZl63CocdykNF/izWkPuPePlfNVXqsFtH/f2204E=;
+	s=default; t=1580222157;
+	bh=lKuh8kUzrzC0Ya9d900qL0BQ9vCnuvjCKGEbQHkXQw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t1+lOKt2sSavjb19OA9lWL1f+W6tdn9gcjpbeQDfjNgZAQoe8kRC5JFPkmuBcbV4F
-	 rOZl67uaBVlD7yzulhsxEsStRyZYrC97luXm+dHwR0yRyViukBm5xhdJ+rG2ebAZ5u
-	 n7wNKPkKPF82CY38EoK1sgfXRpTe86iig6bIYgDc=
+	b=YhvG9pj2CWg9m01/l2jox4nD2h+Z9FjTLonJlayKQTJ+RTd7OwUV4ZDFdEC8M+Shp
+	 aeUPkvESk2jA82AA4rcWnOAs0w9FhEGlFPdoTJZA4/E0ELDKpbfegvChrv/g9Stnxf
+	 q62wB4K11N0FEirZuh0AksLf/aU3uHhjXFDNbISs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731685AbgA1OWq (ORCPT
+        id S1731668AbgA1OWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:22:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48496 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:22:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731651AbgA1OWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:22:39 -0500
+        id S1731591AbgA1OWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:22:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 206892468F;
-        Tue, 28 Jan 2020 14:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A21DA24692;
+        Tue, 28 Jan 2020 14:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221358;
-        bh=eZbzZl63CocdykNF/izWkPuPePlfNVXqsFtH/f2204E=;
+        s=default; t=1580221356;
+        bh=lKuh8kUzrzC0Ya9d900qL0BQ9vCnuvjCKGEbQHkXQw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nz/Kv89RDDNX1qHWPz1DOwKruusXMuDUdfp9vjVYE9l/BWtwQibUiOafOuVBg7e6y
-         JdNIaGbDZJMw7Ze2APimE6hbYZEr1E2YWkcYGCKI+xGLlPJ7J7+dZ/H6Mnxzv1J1Em
-         wnc+VbXvGlAyv2slDYqM5de97XZaUzT5Av0dsQQw=
+        b=m2NOmsR2W6dL+Rl6XkdHrEVaCaiygKMJyzhQcVUFq94Zd0hgJnbq5GXv9jQb74Xvb
+         E2xFxfXVhx5RGae6mwvhoqKMmPmA3ylOCuhK8xw+NgshX/Tqd3NEwwlKzOBYAuCQ5c
+         IXLl8oU8YQ5rChmqxe6SLqc5jvQTD4uQ1AvwuAms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 156/271] net/af_iucv: always register net_device notifier
-Date:   Tue, 28 Jan 2020 15:05:05 +0100
-Message-Id: <20200128135904.180380061@linuxfoundation.org>
+Subject: [PATCH 4.9 155/271] net: netem: fix backlog accounting for corrupted GSO frames
+Date:   Tue, 28 Jan 2020 15:05:04 +0100
+Message-Id: <20200128135904.103779079@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,82 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 06996c1d4088a0d5f3e7789d7f96b4653cc947cc ]
+[ Upstream commit 177b8007463c4f36c9a2c7ce7aa9875a4cad9bd5 ]
 
-Even when running as VM guest (ie pr_iucv != NULL), af_iucv can still
-open HiperTransport-based connections. For robust operation these
-connections require the af_iucv_netdev_notifier, so register it
-unconditionally.
+When GSO frame has to be corrupted netem uses skb_gso_segment()
+to produce the list of frames, and re-enqueues the segments one
+by one.  The backlog length has to be adjusted to account for
+new frames.
 
-Also handle any error that register_netdevice_notifier() returns.
+The current calculation is incorrect, leading to wrong backlog
+lengths in the parent qdisc (both bytes and packets), and
+incorrect packet backlog count in netem itself.
 
-Fixes: 9fbd87d41392 ("af_iucv: handle netdev events")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+Parent backlog goes negative, netem's packet backlog counts
+all non-first segments twice (thus remaining non-zero even
+after qdisc is emptied).
+
+Move the variables used to count the adjustment into local
+scope to make 100% sure they aren't used at any stage in
+backports.
+
+Fixes: 6071bd1aa13e ("netem: Segment GSO packets on enqueue")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/iucv/af_iucv.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ net/sched/sch_netem.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
-index c2dfc32eb9f21..02e10deef5b45 100644
---- a/net/iucv/af_iucv.c
-+++ b/net/iucv/af_iucv.c
-@@ -2431,6 +2431,13 @@ out:
- 	return err;
+diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
+index 95002e56fa48b..308d92491757e 100644
+--- a/net/sched/sch_netem.c
++++ b/net/sched/sch_netem.c
+@@ -437,8 +437,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
+ 	struct netem_skb_cb *cb;
+ 	struct sk_buff *skb2;
+ 	struct sk_buff *segs = NULL;
+-	unsigned int len = 0, last_len, prev_len = qdisc_pkt_len(skb);
+-	int nb = 0;
++	unsigned int prev_len = qdisc_pkt_len(skb);
+ 	int count = 1;
+ 	int rc = NET_XMIT_SUCCESS;
+ 	int rc_drop = NET_XMIT_DROP;
+@@ -495,6 +494,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
+ 			segs = netem_segment(skb, sch, to_free);
+ 			if (!segs)
+ 				return rc_drop;
++			qdisc_skb_cb(segs)->pkt_len = segs->len;
+ 		} else {
+ 			segs = skb;
+ 		}
+@@ -585,6 +585,11 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
+ 
+ finish_segs:
+ 	if (segs) {
++		unsigned int len, last_len;
++		int nb = 0;
++
++		len = skb->len;
++
+ 		while (segs) {
+ 			skb2 = segs->next;
+ 			segs->next = NULL;
+@@ -600,9 +605,7 @@ finish_segs:
+ 			}
+ 			segs = skb2;
+ 		}
+-		sch->q.qlen += nb;
+-		if (nb > 1)
+-			qdisc_tree_reduce_backlog(sch, 1 - nb, prev_len - len);
++		qdisc_tree_reduce_backlog(sch, -nb, prev_len - len);
+ 	}
+ 	return NET_XMIT_SUCCESS;
  }
- 
-+static void afiucv_iucv_exit(void)
-+{
-+	device_unregister(af_iucv_dev);
-+	driver_unregister(&af_iucv_driver);
-+	pr_iucv->iucv_unregister(&af_iucv_handler, 0);
-+}
-+
- static int __init afiucv_init(void)
- {
- 	int err;
-@@ -2464,11 +2471,18 @@ static int __init afiucv_init(void)
- 		err = afiucv_iucv_init();
- 		if (err)
- 			goto out_sock;
--	} else
--		register_netdevice_notifier(&afiucv_netdev_notifier);
-+	}
-+
-+	err = register_netdevice_notifier(&afiucv_netdev_notifier);
-+	if (err)
-+		goto out_notifier;
-+
- 	dev_add_pack(&iucv_packet_type);
- 	return 0;
- 
-+out_notifier:
-+	if (pr_iucv)
-+		afiucv_iucv_exit();
- out_sock:
- 	sock_unregister(PF_IUCV);
- out_proto:
-@@ -2482,12 +2496,11 @@ out:
- static void __exit afiucv_exit(void)
- {
- 	if (pr_iucv) {
--		device_unregister(af_iucv_dev);
--		driver_unregister(&af_iucv_driver);
--		pr_iucv->iucv_unregister(&af_iucv_handler, 0);
-+		afiucv_iucv_exit();
- 		symbol_put(iucv_if);
--	} else
--		unregister_netdevice_notifier(&afiucv_netdev_notifier);
-+	}
-+
-+	unregister_netdevice_notifier(&afiucv_netdev_notifier);
- 	dev_remove_pack(&iucv_packet_type);
- 	sock_unregister(PF_IUCV);
- 	proto_unregister(&iucv_proto);
 -- 
 2.20.1
 
