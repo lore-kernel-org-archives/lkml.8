@@ -2,119 +2,107 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7D3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41416C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 417022467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1798024684
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErOK+PKg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dwotw4Ka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725941AbgA1H2z (ORCPT
+        id S1725951AbgA1Hd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 02:28:55 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33663 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgA1H2z (ORCPT
+        Tue, 28 Jan 2020 02:33:58 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40978 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbgA1Hd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 02:28:55 -0500
-Received: by mail-pl1-f193.google.com with SMTP id ay11so4764257plb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 23:28:54 -0800 (PST)
+        Tue, 28 Jan 2020 02:33:58 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c9so14766156wrw.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 23:33:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TawkIIO8Cb/tgElG2C0aCqCdkT8w60kpDmt3fNug/+o=;
-        b=ErOK+PKgLRTXy1g+eXt3RPbgNMGJ+fJJgirflfywne1W8bVviXLif+rxPq2ttpBrxU
-         NWSZnmUgNnk97CfVlkQotJmDRhtSYT57PDJmwE22yqZdLt54ZXWU9xgnuCEn9ZVQPvBv
-         KeLS0CyffyxruVl1X6nKiDu/m6YIbFpUh83GuxAUz3c9WmkvlMEDPDsL5yEjlPHzIFLB
-         MaydMBc7Wu4ax3jrHNGVCcVN/DjSS1SfC+rx4StGYW6t6CL1L2mTpUQIezntT7Kd7r2q
-         IK9h3+/cwtwg0LFlZNuFmFQHfWNKh+zDY7O3neLu9wQ/j3zKpVjO8aKto6sByZejXsjA
-         +OkQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M8/h2bPEqPWeThJEypD1fDrIV3uZkJ0Spf9SsxFALTw=;
+        b=dwotw4KanF7Rr5R8R+2zrC3GotxW2umZNPfukUzk39baBmVods+BoK4dMAq69uYY7g
+         w+SGWEGZHNJ117MWwkKscB+LUpFA0VTRNzPK5XqDaJvKe5Qj2nkaCcDoJ37jygI6Qko+
+         TrLELDx6JWBc5d4RGGgNhVk054IOYJNs7Gz1W+rYkqSELCoMtxiqUTLaa+Ua/RvykWui
+         fB3lw5IUXN6sGkdbULostObMmmUdEVueFtG0ZIY2lKIFB1p2LE2rZw9EW/wnf5Kug4nS
+         MGe6fZlyEvhDmlbzuJY2E+FIUkQkEF8t9chSY/c3eX8dC4ULgOQy+d2PN6O42rumfvFZ
+         6/mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TawkIIO8Cb/tgElG2C0aCqCdkT8w60kpDmt3fNug/+o=;
-        b=aZnW+kWUsucjr4kvMxTrlbH86euKvDb/3sY3AISqoMo/itqrD4CW/CqGOq4yDNnuVe
-         hvjpX5x11CMUMht6bMqp5yFaN7IL1A5KNE2pfQ5lMvGpZYI2NUaaGDI2Cnz2d9FPaLDY
-         G3y1KWqX1mFYLAvBXD5NK6TgZNhkiBVWM/JjRNEZAU5Le/CRjixisr4ckqPeqaqGihEm
-         IlB3mjMQYPcD1co+Q5U+ZVAN7qQiOHvUv9ePK18wYeK8erK71TjR5a8NC2l35G1fRJjK
-         /s+RF7sTJ879mUj8H3gze+HgxCrA5tn4CLfzi/m1e6U+vRQHLNFUmHDgsqXwcEgH/OZE
-         7ChQ==
-X-Gm-Message-State: APjAAAX60hdOZQUY0cerGSQbMkYBeMLJZhcqtbqlfu1q5UN+4uAtz/E8
-        X7tLaZSR1n/OVXitQ8YV55g=
-X-Google-Smtp-Source: APXvYqy0iufQreHHLowZtxXJRW3T0q5xrqdUwdfyK1KW2xyLCd9zueHsqYHKYZsqGj+Pc/kp2WU0ZQ==
-X-Received: by 2002:a17:90a:8a98:: with SMTP id x24mr3295738pjn.113.1580196534294;
-        Mon, 27 Jan 2020 23:28:54 -0800 (PST)
-Received: from localhost.localdomain ([103.211.17.252])
-        by smtp.googlemail.com with ESMTPSA id j17sm18566735pfa.28.2020.01.27.23.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 23:28:53 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     David Howells <dhowells@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Amol Grover <frextrite@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH] cred: Use RCU primitives to access RCU pointers
-Date:   Tue, 28 Jan 2020 12:57:41 +0530
-Message-Id: <20200128072740.21272-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M8/h2bPEqPWeThJEypD1fDrIV3uZkJ0Spf9SsxFALTw=;
+        b=F41EbY1vZNsdelE9ijA052l59HKzMj3CI8pFzhi8wWqlcaUUirO+10/khF9DtV1jl2
+         /hVz9AdoXhDmhBnybn68X2XKn/srwz4wLCoSskIRXtOtH9o9EFsvp7hJthdI3CQKy7U1
+         iMyuDjuKzI14Qzg8dfBivysRoFGO9WQ+yCCy5MUmYeqi9gnEK7ez13mCY7OIPLunFsvN
+         8FbZOmWz+yKpRbV91i0vUAQRb7sx1DEddg8qfG6MhjsEiEWGMqAWg4Qq43kuUdKJK7i9
+         6BiMywDHzhTJGfYKK2Vu2UFcc56U8EjrWZ/feQTWj0SlMaYMBvMBm6yt91nTO+523fbj
+         lVWQ==
+X-Gm-Message-State: APjAAAW6ijC8yr4Qyqsa/p/38SNmExfuevoOOZI88sg+Heip5bgCZZnr
+        +ucn3LI9XwheSdKUjWIwM9XrPyoSvVwS2zXdzTVSpA==
+X-Google-Smtp-Source: APXvYqzRsFwG9bEQ85NBunD148AjHa0dxOfEOo4Rm/EgIgpxum6o/BtnVYQzHUFVAAdT5QZodGqW2WChnr5jeU+fLZs=
+X-Received: by 2002:a5d:65cf:: with SMTP id e15mr26280990wrw.126.1580196836110;
+ Mon, 27 Jan 2020 23:33:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAKv+Gu8ZcO3jRMuMJL_eTmWtuzJ+=qEA9muuN5DpdpikFLwamg@mail.gmail.com>
+ <E600649B-A8CA-48D3-AD86-A2BAAE0BCA25@lca.pw> <CACT4Y+a5q1dWrm+PhWH3uQRfLWZ0HOyHA6Er4V3bn9tk85TKYA@mail.gmail.com>
+In-Reply-To: <CACT4Y+a5q1dWrm+PhWH3uQRfLWZ0HOyHA6Er4V3bn9tk85TKYA@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 28 Jan 2020 08:33:45 +0100
+Message-ID: <CAKv+Gu8ZRjqvQvOJ5JXpAQXyApMQNAFz7cRO9NSjq9u=WnjkTA@mail.gmail.com>
+Subject: Re: mmotm 2020-01-23-21-12 uploaded (efi)
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Qian Cai <cai@lca.pw>, Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.cz>, mm-commits@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-task_struct.cred and task_struct.real_cred are annotated by __rcu,
-hence use rcu_access_pointer to access them.
+On Tue, 28 Jan 2020 at 07:26, Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Tue, Jan 28, 2020 at 7:15 AM Qian Cai <cai@lca.pw> wrote:
+> > > Should be fixed by
+> > >
+> > > https://lore.kernel.org/linux-efi/20200121093912.5246-1-ardb@kernel.org/
+> >
+> > Cc kasan-devel@
+> >
+> > If everyone has to disable KASAN for the whole subdirectories like this, I am worried about we are losing testing coverage fairly quickly. Is there a bug in compiler?
+>
+> My understanding is that this is invalid C code in the first place,
+> no? It just happened to compile with some compilers, some options and
+> probably only with high optimization level.
 
-Fixes the following sparse errors:
-kernel/cred.c:144:9: error: incompatible types in comparison expression
-(different address spaces):
-kernel/cred.c:144:9:    struct cred *
-kernel/cred.c:144:9:    struct cred const [noderef] <asn:4> *
-kernel/cred.c:145:9: error: incompatible types in comparison expression
-(different address spaces):
-kernel/cred.c:145:9:    struct cred *
-kernel/cred.c:145:9:    struct cred const [noderef] <asn:4> *
+No, this is not true. The whole point of favoring IS_ENABLED(...) over
+#ifdef ... has always been that the code remains visible to the
+compiler, regardless of whether the option is selected or not, but
+that it gets optimized away entirely. The linker errors prove that
+there is dead code remaining in the object files, which means we can
+no longer rely on IS_ENABLED() to work as intended.
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- kernel/cred.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> There is a known, simple fix that is used throughout the kernel -
+> provide empty static inline stub, or put whole calls under ifdef.
 
-diff --git a/kernel/cred.c b/kernel/cred.c
-index 809a985b1793..3043c8e1544d 100644
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -141,8 +141,8 @@ void __put_cred(struct cred *cred)
- 	cred->magic = CRED_MAGIC_DEAD;
- 	cred->put_addr = __builtin_return_address(0);
- #endif
--	BUG_ON(cred == current->cred);
--	BUG_ON(cred == current->real_cred);
-+	BUG_ON(cred == rcu_access_pointer(current->cred));
-+	BUG_ON(cred == rcu_access_pointer(current->real_cred));
- 
- 	if (cred->non_rcu)
- 		put_cred_rcu(&cred->rcu);
--- 
-2.24.1
-
+No, sorry, that doesn't work for me. I think it is great that we have
+diagnostic features that are as powerful as KASAN, but if they require
+code changes beyond enable/disable, I am not going to rely on them.
