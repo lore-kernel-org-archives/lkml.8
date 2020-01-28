@@ -2,112 +2,109 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3203BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454D2C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DBC24687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580225302;
-	bh=PQHnL6aU/KfqN7PEUbK2n33KLsCnNyWL05OqeO6lBn4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RHG0qlcICn1rq+aGaLz5hkCw/RTRJSUQhHaA3Aw24JqvOdiRZ/SNgYJ1UWAylkb3p
-	 viG54K9UDlEgK5vb9Nu/wK86E6MC4XQgO62mswrSR7KVCvzjk9HTc9BlwUDSHwk+9g
-	 V0WJ0N5DdyzjmXkgB8SsIQal8fSvWp5GVB4O9o1c=
+	by mail.kernel.org (Postfix) with ESMTP id 26063207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgA1P2V (ORCPT
+        id S1726734AbgA1P2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:28:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 10:28:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:59464 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbgA1P2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:28:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46782207FD;
-        Tue, 28 Jan 2020 15:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580225300;
-        bh=PQHnL6aU/KfqN7PEUbK2n33KLsCnNyWL05OqeO6lBn4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jsskb7ILBAwlgTuG3MlnGlxigTi0HH8XpIm9EUmLnYeLRt0kXU0CghSGRnsDelofj
-         xnqTcH3sT9FYnvkdiD923daXUZVkcHTZhtBpMkdGy2QqviQGfsQW2Detu96t6ERoIT
-         /A3skskvqGAo+paVd5kg7TFGn8Mer7BbscVkmr54=
-Date:   Tue, 28 Jan 2020 16:28:18 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports
- hub property
-Message-ID: <20200128152818.GB3437093@kroah.com>
-References: <20200124152504.23411-1-mans@mansr.com>
- <20200127153506.GA4589@bogus>
- <yw1xy2tsvnww.fsf@mansr.com>
- <20200128134745.GA3048749@kroah.com>
- <yw1xpnf3vchs.fsf@mansr.com>
+        id S1726383AbgA1P2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:28:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 286EB31B;
+        Tue, 28 Jan 2020 07:28:48 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC3383F68E;
+        Tue, 28 Jan 2020 07:28:46 -0800 (PST)
+Subject: Re: [PATCH 1/3] clk: rockchip: convert rk3399 pll type to use
+ readl_poll_timeout
+To:     Heiko Stuebner <heiko@sntech.de>, linux-clk@vger.kernel.org
+Cc:     sboyd@kernel.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        mturquette@baylibre.com, zhangqing@rock-chips.com,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com
+References: <20200128100204.1318450-1-heiko@sntech.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f8001dbb-ebbc-ebe3-d1db-c75d3888fd38@arm.com>
+Date:   Tue, 28 Jan 2020 15:28:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <yw1xpnf3vchs.fsf@mansr.com>
+In-Reply-To: <20200128100204.1318450-1-heiko@sntech.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 03:15:11PM +0000, Måns Rullgård wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+On 28/01/2020 10:02 am, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 > 
-> > On Mon, Jan 27, 2020 at 04:56:15PM +0000, Måns Rullgård wrote:
-> >> Rob Herring <robh@kernel.org> writes:
-> >> 
-> >> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
-> >> >> Add a non-removable-ports property that lists the hardwired downstream
-> >> >> ports of a hub.  Although hubs can provide this information, they are
-> >> >> not always configured correctly.  An alternate means of indicating this
-> >> >> for built-in USB devices is thus useful.
-> >> >> 
-> >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> >> >
-> >> > I reviewed this already, but since you didn't add my reviewed-by, I'm 
-> >> > looking at it again and having 2nd thoughts.
-> >> >
-> >> >> ---
-> >> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
-> >> >>  1 file changed, 4 insertions(+)
-> >> >> 
-> >> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> >> >> index 036be172b1ae..92d863cc96b6 100644
-> >> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
-> >> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> >> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
-> >> >>  - #size-cells: shall be 0
-> >> >>  
-> >> >>  
-> >> >> +Optional properties for hub and host-controller nodes:
-> >> >> +- non-removable-ports: list of hardwired downstream ports
-> >> >
-> >> > If you have a hardwired device and need to know that, doesn't that imply 
-> >> > there's some other stuff you need to describe beyond what a standard USB 
-> >> > device has. Such as a power supply that's not Vbus from the hub.
-> >> 
-> >> I suppose there could be, but there isn't in my actual situation.
-> >> 
-> >> > At a minimum, I think this should be a per port property.
-> >> 
-> >> That's what I suggested first.  Greg told me to do it like this instead.
-> >
-> > I said that?  I do not remember discussing this at all, when did that
-> > happen?
+> Instead of open coding the polling of the lock status, use the
+> handy readl_poll_timeout for this. As the pll locking is normally
+> blazingly fast and we don't want to incur additional delays, we're
+> not doing any sleeps similar to for example the imx clk-pllv4
+> and define a very safe but still short timeout of 1ms.
 > 
-> https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
+> Suggested-by: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>   drivers/clk/rockchip/clk-pll.c | 21 ++++++++++-----------
+>   1 file changed, 10 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/clk/rockchip/clk-pll.c b/drivers/clk/rockchip/clk-pll.c
+> index 198417d56300..43c9fd0086a2 100644
+> --- a/drivers/clk/rockchip/clk-pll.c
+> +++ b/drivers/clk/rockchip/clk-pll.c
+> @@ -585,19 +585,18 @@ static const struct clk_ops rockchip_rk3066_pll_clk_ops = {
+>   static int rockchip_rk3399_pll_wait_lock(struct rockchip_clk_pll *pll)
+>   {
+>   	u32 pllcon;
+> -	int delay = 24000000;
+> +	int ret;
+>   
+> -	/* poll check the lock status in rk3399 xPLLCON2 */
+> -	while (delay > 0) {
+> -		pllcon = readl_relaxed(pll->reg_base + RK3399_PLLCON(2));
+> -		if (pllcon & RK3399_PLLCON2_LOCK_STATUS)
+> -			return 0;
+> +	/*
+> +	 * Lock time typical 250, max 500 input clock cycles @24MHz
+> +	 * So define a very safe maximum of 1000us, meaning 24000 cycles.
+> +	 */
+> +	ret = readl_poll_timeout(pll->reg_base + RK3399_PLLCON(2), pllcon,
+> +				 pllcon & RK3399_PLLCON2_LOCK_STATUS, 0, 1000);
 
-Almost a full year ago!  Hah, I can't remember what I wrote last week.
+Note that the existing I/O accessor was readl_relaxed(), but using plain 
+readl_poll_timeout() switches it to regular readl(). It may well not 
+matter, but since it's not noted as an intentional change it seemed 
+worth pointing out.
+
+Robin.
+
+> +	if (ret)
+> +		pr_err("%s: timeout waiting for pll to lock\n", __func__);
+>   
+> -		delay--;
+> -	}
+> -
+> -	pr_err("%s: timeout waiting for pll to lock\n", __func__);
+> -	return -ETIMEDOUT;
+> +	return ret;
+>   }
+>   
+>   static void rockchip_rk3399_pll_get_params(struct rockchip_clk_pll *pll,
+> 
