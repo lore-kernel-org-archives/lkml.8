@@ -2,130 +2,149 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2734BC33CB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 01:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178E2C33CB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 01:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A1824681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 01:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YQuxh3Nb"
+	by mail.kernel.org (Postfix) with ESMTP id E3A212173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 01:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580176017;
+	bh=lr1TtkPAw46qDf+d4N/SnYvTgRxlT3N0rKG9IJ6qTbA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=r1m9KUcIFq4XZHclc0iFSEWdFefB4UWNnEQQB528Ra4jgOmNu5fqo/3toK/LHJ5Pj
+	 ImwneDftYNmJ6RcUXYnZeXDRqN1VR6DNPhgxr+I5PjLmWvewm3zMJ9Elti3x+TqGJZ
+	 j1NtoPJsTAPfeSYIXHoD3wvz02LXcIL2jN4toKGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgA1BgJ (ORCPT
+        id S1726443AbgA1Bq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 20:36:09 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38897 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgA1BgI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 20:36:08 -0500
-Received: by mail-ed1-f67.google.com with SMTP id p23so4146637edr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 17:36:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Crjx+5QQrEucO7G7mPXgmMnWuJ0oteWXeZ4JlN/M8ds=;
-        b=YQuxh3NbOiJ+dKXmeUU1Z/8VEVIPsnSsHTDZJAjufPbsfkmO0zDnRXF0ifSfj9He4G
-         jBGiR66Cn37+5/XyWFlEtwhWQDTmnC4F7/YbLmJ8/6RaOlWn4iVsO+3IGlW4ZjsWaVql
-         1bUyIxB9ZZKoeB2XnEvqaPfd+D+9rzYMmoRiSGgeOMOZmaMeeJ8u1Ul970EWbwVXML18
-         oHUn3+ruk3TNRCHRpiGQvn8ggab7wE9mDH4/w72NTGDeegdT3NreH9sZnbF2+M2q1z7V
-         zbN7raOB40jkg3tQVnU+4gLmL/TFdoKI4i0u3GxgZGWAZbtI0c7K8tEgfRS3FPUB658W
-         qgFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Crjx+5QQrEucO7G7mPXgmMnWuJ0oteWXeZ4JlN/M8ds=;
-        b=a5gdVmqaTcqrfYG2Wf/05neJ1owUzFHrz44TndpeDORM5+xubankqLBvQ1CW7dYWNg
-         d6IoyhNmJmDWxvqYHXWBHsWI3ZW8teXpH1Y+xwU32qT7COE7HP4Q3h4HVrygH28sc2G6
-         XGWqYERqx7nvxm6i7AbWEmShBSwL8W+XnCZNhqUgu/Y7iqhZu4mCbysBlEYJ5RhwZRCd
-         at9V1ulzCifoTb+5dnlCXechu1fGHRR4MbPPhZTYI/8lH5smvQbeCqYdsElA9lBzoVbs
-         lKx2tpWafLTImKUofxSt1R08BjCohyavCc8FSbpR2ZHeH7dXtYkQ81Di5SqRIxh/2dqY
-         LrDw==
-X-Gm-Message-State: APjAAAUn5/S6BD5uPEkP+rVhT88dxtQ2Wg22ndF1F4VpXVVU0W5lG/XX
-        N4uq4mQVkNgODYx9UIPs1W15N/n39A3qsrfXasUV+Q==
-X-Google-Smtp-Source: APXvYqyV4VLuvnfJLGmY7TZvmrf57n5fPdUEkoVlX8bSQLT0/E1hgAPOBzOsZPbWzr2GZLSCZkLSu+O7SBtsHf0flr8=
-X-Received: by 2002:a17:906:4e01:: with SMTP id z1mr1206542eju.46.1580175366815;
- Mon, 27 Jan 2020 17:36:06 -0800 (PST)
+        Mon, 27 Jan 2020 20:46:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbgA1Bq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 20:46:56 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6233214AF;
+        Tue, 28 Jan 2020 01:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580176015;
+        bh=lr1TtkPAw46qDf+d4N/SnYvTgRxlT3N0rKG9IJ6qTbA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cqYd7QKXvUceC5PzgPSZ/bE2097stte3DG4D2oPME66YdL+7ulDNPgc2DupoZg8cb
+         2xo7bClv8D0TskJO5zx3lNoQTU+xAk0kLYPI/Dn41ItM/+egz25uOG3zMUXG+lS7jX
+         c/2mes651GtPNlOmgecueJBMSymiMQY8ZbJAHV1s=
+Date:   Mon, 27 Jan 2020 17:46:53 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Daniel Rosenberg <drosen@google.com>
+Subject: [GIT PULL] fscrypt updates for 5.6
+Message-ID: <20200128014653.GA960@sol.localdomain>
 MIME-Version: 1.0
-References: <20200123014627.71720-1-bgeffon@google.com> <20200124190625.257659-1-bgeffon@google.com>
- <20200126220650.i4lwljpvohpgvsi2@box>
-In-Reply-To: <20200126220650.i4lwljpvohpgvsi2@box>
-From:   Brian Geffon <bgeffon@google.com>
-Date:   Mon, 27 Jan 2020 17:35:40 -0800
-Message-ID: <CADyq12xCK_3MhGi88Am5P6DVZvrW8vqtyJMHO0zjNhvhYegm1w@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: Add MREMAP_DONTUNMAP to mremap().
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>, Jesse Barnes <jsbarnes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kirill,
-Thanks for taking the time to look at this. I'll update the wording to
-make it clear that MREMAP_FIXED is required with MREMAP_DONTUNMAP.
+The following changes since commit fd6988496e79a6a4bdb514a4655d2920209eb85d:
 
-Regarding rmap, you're completely right I'm going to roll a new patch
-which will call unlink_anon_vmas() to make sure the rmap is correct,
-I'll also explicitly check that the vma is anonymous and not shared
-returning EINVAL if not, how does that sound?
+  Linux 5.5-rc4 (2019-12-29 15:29:16 -0800)
 
-Brian
+are available in the Git repository at:
 
-On Sun, Jan 26, 2020 at 2:06 PM Kirill A. Shutemov <kirill@shutemov.name> wrote:
->
-> On Fri, Jan 24, 2020 at 11:06:25AM -0800, Brian Geffon wrote:
-> > When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
-> > set, the source mapping will not be removed. Instead it will be
-> > cleared as if a brand new anonymous, private mapping had been created
-> > atomically as part of the mremap() call.  If a userfaultfd was watching
-> > the source, it will continue to watch the new mapping.  For a mapping
-> > that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
-> > mremap() call to fail. MREMAP_DONTUNMAP implies that MREMAP_FIXED is
-> > also used.
->
-> Implies? From code it looks like it requires MREMAP_FIXED. And
-> MREMAP_FIXED requires MREMAP_MAYMOVE. That's strange flag chaining.
-> I don't really see need in such dependencies. It maybe indeed implied, not
-> requied.
->
-> > The final result is two equally sized VMAs where the
-> > destination contains the PTEs of the source.
->
-> Could you clarify rmap situation here? How the rmap hierarchy will look
-> like before and after the operation. Can the new VMA merge with the old
-> one? Sounds fishy to me.
->
-> > We hope to use this in Chrome OS where with userfaultfd we could write
-> > an anonymous mapping to disk without having to STOP the process or worry
-> > about VMA permission changes.
-> >
-> > This feature also has a use case in Android, Lokesh Gidra has said
-> > that "As part of using userfaultfd for GC, We'll have to move the physical
-> > pages of the java heap to a separate location. For this purpose mremap
-> > will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
-> > heap, its virtual mapping will be removed as well. Therefore, we'll
-> > require performing mmap immediately after. This is not only time consuming
-> > but also opens a time window where a native thread may call mmap and
-> > reserve the java heap's address range for its own usage. This flag
-> > solves the problem."
->
-> --
->  Kirill A. Shutemov
+  https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fscrypt-for-linus
+
+for you to fetch changes up to edc440e3d27fb31e6f9663cf413fad97d714c060:
+
+  fscrypt: improve format of no-key names (2020-01-22 14:50:03 -0800)
+
+----------------------------------------------------------------
+
+- Extend the FS_IOC_ADD_ENCRYPTION_KEY ioctl to allow the raw key to be
+  provided via a keyring key.
+
+- Prepare for the new dirhash method (SipHash of plaintext name) that
+  will be used by directories that are both encrypted and casefolded.
+
+- Switch to a new format for "no-key names" that prepares for the new
+  dirhash method, and also fixes a longstanding bug where multiple
+  filenames could map to the same no-key name.
+
+- Allow the crypto algorithms used by fscrypt to be built as loadable
+  modules when the fscrypt-capable filesystems are.
+
+- Optimize fscrypt_zeroout_range().
+
+- Various cleanups.
+
+----------------------------------------------------------------
+Daniel Rosenberg (3):
+      fscrypt: don't allow v1 policies with casefolding
+      fscrypt: derive dirhash key for casefolded directories
+      fscrypt: improve format of no-key names
+
+Eric Biggers (22):
+      fscrypt: support passing a keyring key to FS_IOC_ADD_ENCRYPTION_KEY
+      fscrypt: use crypto_skcipher_driver_name()
+      fscrypt: verify that the crypto_skcipher has the correct ivsize
+      fscrypt: constify struct fscrypt_hkdf parameter to fscrypt_hkdf_expand()
+      fscrypt: constify inode parameter to filename encryption functions
+      fscrypt: move fscrypt_d_revalidate() to fname.c
+      fscrypt: introduce fscrypt_needs_contents_encryption()
+      fscrypt: split up fscrypt_supported_policy() by policy version
+      fscrypt: check for appropriate use of DIRECT_KEY flag earlier
+      fscrypt: move fscrypt_valid_enc_modes() to policy.c
+      fscrypt: remove fscrypt_is_direct_key_policy()
+      fscrypt: don't check for ENOKEY from fscrypt_get_encryption_info()
+      fscrypt: include <linux/ioctl.h> in UAPI header
+      fscrypt: remove redundant bi_status check
+      fscrypt: optimize fscrypt_zeroout_range()
+      fscrypt: document gfp_flags for bounce page allocation
+      ubifs: use IS_ENCRYPTED() instead of ubifs_crypt_is_encrypted()
+      fscrypt: don't print name of busy file when removing key
+      fscrypt: add "fscrypt_" prefix to fname_encrypt()
+      fscrypt: clarify what is meant by a per-file key
+      ubifs: don't trigger assertion on invalid no-key filename
+      ubifs: allow both hash and disk name to be provided in no-key names
+
+Herbert Xu (1):
+      fscrypt: Allow modular crypto algorithms
+
+ Documentation/filesystems/fscrypt.rst |  75 ++++++--
+ fs/crypto/Kconfig                     |  22 ++-
+ fs/crypto/bio.c                       | 114 ++++++++----
+ fs/crypto/crypto.c                    |  57 +-----
+ fs/crypto/fname.c                     | 316 +++++++++++++++++++++++++++-------
+ fs/crypto/fscrypt_private.h           |  58 +++----
+ fs/crypto/hkdf.c                      |   2 +-
+ fs/crypto/hooks.c                     |  47 ++++-
+ fs/crypto/keyring.c                   | 147 +++++++++++++---
+ fs/crypto/keysetup.c                  | 102 ++++++-----
+ fs/crypto/keysetup_v1.c               |  19 +-
+ fs/crypto/policy.c                    | 170 ++++++++++++------
+ fs/ext4/Kconfig                       |   1 +
+ fs/ext4/dir.c                         |   2 +-
+ fs/f2fs/Kconfig                       |   1 +
+ fs/f2fs/dir.c                         |   2 +-
+ fs/inode.c                            |   3 +-
+ fs/ubifs/Kconfig                      |   1 +
+ fs/ubifs/dir.c                        |  16 +-
+ fs/ubifs/file.c                       |   4 +-
+ fs/ubifs/journal.c                    |  10 +-
+ fs/ubifs/key.h                        |   1 -
+ fs/ubifs/ubifs.h                      |   7 -
+ include/linux/fscrypt.h               | 122 +++++--------
+ include/uapi/linux/fscrypt.h          |  14 +-
+ 25 files changed, 864 insertions(+), 449 deletions(-)
