@@ -2,52 +2,52 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AF7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC00C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54CB92468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F83A2468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220796;
-	bh=sD5JA99T2jbDhqjq/2YkM6MoGEkyglXfYER3WHOlp9k=;
+	s=default; t=1580220806;
+	bh=lj+GWmybPZjmwTYNtb7dYZcWyhiodEmLuVMxyv3X4MQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=va2L9t3d6cN9EsF1CWzIkFkJGaqy8D9rCgvFApSbOxHGfUBcXeSwJXyCkPJ+9EjTZ
-	 ujeLcX5IoBOLkDkoZgpCZPLaun31U23O1ba9maUM9o3AhQU6J75UXZy3ozfUH4p5+h
-	 X8+7SGIA35KTRxB0QTfpJWeBIlk21NhA+ZyQc9XE=
+	b=OFolBXw/FXB8e/ia4emjK4rQLwEtG6lIPQPlKxgxja5YSYVrYwxcaD7p2hSMXz3LH
+	 VFejkZ6k+9UdM0X75dzrJBWfTTQG+AsAsDRNFCyFfeP3i794n/z0puthODhm607+Ga
+	 wjP5qyhBFpk3g+igTc2if7YR8U9ON7SF3+oAagL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgA1ONP (ORCPT
+        id S1729690AbgA1ONZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:13:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34664 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:13:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729624AbgA1ONG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:13:06 -0500
+        id S1729214AbgA1ONT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:13:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C405520678;
-        Tue, 28 Jan 2020 14:13:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61FC820678;
+        Tue, 28 Jan 2020 14:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220786;
-        bh=sD5JA99T2jbDhqjq/2YkM6MoGEkyglXfYER3WHOlp9k=;
+        s=default; t=1580220798;
+        bh=lj+GWmybPZjmwTYNtb7dYZcWyhiodEmLuVMxyv3X4MQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3AivzzyGD98xWT2LKK/njyUC8JmR9+PKIa0+GuMIAtf7z+bUZ3ohqhf5Zmg1c+BZ
-         baCCyuEcEvDk6MB9s+JJbxquKRNbf70+nhUtSDX7eLGUF9nHlvaTddxZvLTaGjZJ+B
-         MucM459zqrtPf4Wn+5nRW3n9JkLFIHG7vctqsmJ4=
+        b=l0irqLSgpgMdFVE+fQhEq+FeT835Pp/jcsOYN4h0N1NAMrEPVHAvxW40xzhGrCoLj
+         cmpRNHzwnUITJPtljVMcxQQGn3G5UUePJ2yjrwZuIOTRKw79WEn1gWePlSF4nUAfoU
+         8Osn3EfHeGV2pJwnM5z7qHyR62mGo+bJbouW/64A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 145/183] llc: fix sk_buff refcounting in llc_conn_state_process()
-Date:   Tue, 28 Jan 2020 15:06:04 +0100
-Message-Id: <20200128135844.233791933@linuxfoundation.org>
+Subject: [PATCH 4.4 115/183] x86/kgbd: Use NMI_VECTOR not APIC_DM_NMI
+Date:   Tue, 28 Jan 2020 15:05:34 +0100
+Message-Id: <20200128135841.410496373@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,123 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 36453c852816f19947ca482a595dffdd2efa4965 ]
+[ Upstream commit 2591bc4e8d70b4e1330d327fb7e3921f4e070a51 ]
 
-If llc_conn_state_process() sees that llc_conn_service() put the skb on
-a list, it will drop one fewer references to it.  This is wrong because
-the current behavior is that llc_conn_service() never consumes a
-reference to the skb.
+apic->send_IPI_allbutself() takes a vector number as argument.
 
-The code also makes the number of skb references being dropped
-conditional on which of ind_prim and cfm_prim are nonzero, yet neither
-of these affects how many references are *acquired*.  So there is extra
-code that tries to fix this up by sometimes taking another reference.
+APIC_DM_NMI is clearly not a vector number. It's defined to 0x400 which is
+outside the vector space.
 
-Remove the unnecessary/broken refcounting logic and instead just add an
-skb_get() before the only two places where an extra reference is
-actually consumed.
+Use NMI_VECTOR instead as that's what it is intended to be.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 82da3ff89dc2 ("x86: kgdb support")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105218.855189979@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/llc/llc_conn.c | 33 ++++++---------------------------
- 1 file changed, 6 insertions(+), 27 deletions(-)
+ arch/x86/kernel/kgdb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
-index 5d653f5261c55..3b002ab68b290 100644
---- a/net/llc/llc_conn.c
-+++ b/net/llc/llc_conn.c
-@@ -64,12 +64,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	struct llc_sock *llc = llc_sk(skb->sk);
- 	struct llc_conn_state_ev *ev = llc_conn_ev(skb);
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index 44256a62702b2..4a08fda2b06f0 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -437,7 +437,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
+  */
+ void kgdb_roundup_cpus(unsigned long flags)
+ {
+-	apic->send_IPI_allbutself(APIC_DM_NMI);
++	apic->send_IPI_allbutself(NMI_VECTOR);
+ }
+ #endif
  
--	/*
--	 * We have to hold the skb, because llc_conn_service will kfree it in
--	 * the sending path and we need to look at the skb->cb, where we encode
--	 * llc_conn_state_ev.
--	 */
--	skb_get(skb);
- 	ev->ind_prim = ev->cfm_prim = 0;
- 	/*
- 	 * Send event to state machine
-@@ -77,21 +71,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	rc = llc_conn_service(skb->sk, skb);
- 	if (unlikely(rc != 0)) {
- 		printk(KERN_ERR "%s: llc_conn_service failed\n", __func__);
--		goto out_kfree_skb;
--	}
--
--	if (unlikely(!ev->ind_prim && !ev->cfm_prim)) {
--		/* indicate or confirm not required */
--		if (!skb->next)
--			goto out_kfree_skb;
- 		goto out_skb_put;
- 	}
- 
--	if (unlikely(ev->ind_prim && ev->cfm_prim)) /* Paranoia */
--		skb_get(skb);
--
- 	switch (ev->ind_prim) {
- 	case LLC_DATA_PRIM:
-+		skb_get(skb);
- 		llc_save_primitive(sk, skb, LLC_DATA_PRIM);
- 		if (unlikely(sock_queue_rcv_skb(sk, skb))) {
- 			/*
-@@ -108,6 +93,7 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		 * skb->sk pointing to the newly created struct sock in
- 		 * llc_conn_handler. -acme
- 		 */
-+		skb_get(skb);
- 		skb_queue_tail(&sk->sk_receive_queue, skb);
- 		sk->sk_state_change(sk);
- 		break;
-@@ -123,7 +109,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 				sk->sk_state_change(sk);
- 			}
- 		}
--		kfree_skb(skb);
- 		sock_put(sk);
- 		break;
- 	case LLC_RESET_PRIM:
-@@ -132,14 +117,11 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		 * RESET is not being notified to upper layers for now
- 		 */
- 		printk(KERN_INFO "%s: received a reset ind!\n", __func__);
--		kfree_skb(skb);
- 		break;
- 	default:
--		if (ev->ind_prim) {
-+		if (ev->ind_prim)
- 			printk(KERN_INFO "%s: received unknown %d prim!\n",
- 				__func__, ev->ind_prim);
--			kfree_skb(skb);
--		}
- 		/* No indication */
- 		break;
- 	}
-@@ -181,15 +163,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		printk(KERN_INFO "%s: received a reset conf!\n", __func__);
- 		break;
- 	default:
--		if (ev->cfm_prim) {
-+		if (ev->cfm_prim)
- 			printk(KERN_INFO "%s: received unknown %d prim!\n",
- 					__func__, ev->cfm_prim);
--			break;
--		}
--		goto out_skb_put; /* No confirmation */
-+		/* No confirmation */
-+		break;
- 	}
--out_kfree_skb:
--	kfree_skb(skb);
- out_skb_put:
- 	kfree_skb(skb);
- 	return rc;
 -- 
 2.20.1
 
