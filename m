@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A450C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26C8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14EF24688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD882468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220738;
-	bh=IwdRdXE+mG0CktYQBEUB09NnRQJI+kcwKpJ/qRDoAew=;
+	s=default; t=1580220742;
+	bh=8WJOEl1qWNSyxzfiwg8ltidaByHuIaW8yhNEakVLz/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zdiM4QHRmx3gO2gG8mbQln8tKdF40ShCFCwZlbwwLhBL8Aec0Y2yJ/b4vk26vzxOX
-	 zEV3iBPqZvQdDBkLBMnD1CinUWII79EjuUNknY3c9ZDYrsA9KdS0MU0qXm9TIDj9Mx
-	 KrMy6RYBNvMpLK0XtamVk/0h0JNfbXw7qET/HbKk=
+	b=zmX5WkRXO3ueqlcVFGND9+b/g4Egb8Hwsdu/awidJgtneIo0JVHRcsKMbP5IAW4iI
+	 W9IoOQBmPT1aCffFh7S4sAzZiNduwwt+L6l7jNW+8fpfeQS4rVs7Zmgl5HN8SDrAqZ
+	 FZ7bsaUiIctlKGI3mDha3zgrgWmtxCctIjiHX1lA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgA1OMP (ORCPT
+        id S1726718AbgA1OMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:12:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33360 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:12:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729425AbgA1OML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:12:11 -0500
+        id S1728320AbgA1OMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:12:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5B1520678;
-        Tue, 28 Jan 2020 14:12:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4458620678;
+        Tue, 28 Jan 2020 14:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220731;
-        bh=IwdRdXE+mG0CktYQBEUB09NnRQJI+kcwKpJ/qRDoAew=;
+        s=default; t=1580220738;
+        bh=8WJOEl1qWNSyxzfiwg8ltidaByHuIaW8yhNEakVLz/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SdISrLxNRE/YM4l1PbMZYOetCyTRFl/0GN9+Cnz7Cs+JcpY0jUQdnMU7wNCFACWr1
-         vJmqpgtxX8Iotazm24yH5TZ2IWBu2a/UD6mpb9qM8IaKuFNrNo8uFwdCtw9InEy8AI
-         H1SJe2Tdfe7iccknhYzy9pE4JLOrr08lJBZOhs4M=
+        b=miEoF7OaU5VsHpBb2616k+Nn8YA7i9k5Z3DB0bLddWqy/CnpPKJDF3fFFhT45j3lI
+         QERtKACZBrjNL+k33aN1H5K/j7nbXBtFDzdkqcSLy2FBlGideDaxvt5HkusPQbxbb/
+         uDHIMhqIPymOeYDfgIpB2EV8hsFgAoEZs64K6b3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, laokz <laokz@foxmail.com>,
+        Stefani Seibold <stefani@seibold.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg KH <greg@kroah.com>, Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 125/183] mac80211: minstrel_ht: fix per-group max throughput rate initialization
-Date:   Tue, 28 Jan 2020 15:05:44 +0100
-Message-Id: <20200128135842.375604429@linuxfoundation.org>
+Subject: [PATCH 4.4 128/183] Partially revert "kfifo: fix kfifo_alloc() and kfifo_init()"
+Date:   Tue, 28 Jan 2020 15:05:47 +0100
+Message-Id: <20200128135842.651838815@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,35 +65,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 56dd918ff06e3ee24d8067e93ed12b2a39e71394 ]
+[ Upstream commit ab9bb6318b0967671e0c9b6537c1537d51ca4f45 ]
 
-The group number needs to be multiplied by the number of rates per group
-to get the full rate index
+Commit dfe2a77fd243 ("kfifo: fix kfifo_alloc() and kfifo_init()") made
+the kfifo code round the number of elements up.  That was good for
+__kfifo_alloc(), but it's actually wrong for __kfifo_init().
 
-Fixes: 5935839ad735 ("mac80211: improve minstrel_ht rate sorting by throughput & probability")
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Link: https://lore.kernel.org/r/20190820095449.45255-1-nbd@nbd.name
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+The difference? __kfifo_alloc() will allocate the rounded-up number of
+elements, but __kfifo_init() uses an allocation done by the caller.  We
+can't just say "use more elements than the caller allocated", and have
+to round down.
+
+The good news? All the normal cases will be using power-of-two arrays
+anyway, and most users of kfifo's don't use kfifo_init() at all, but one
+of the helper macros to declare a KFIFO that enforce the proper
+power-of-two behavior.  But it looks like at least ibmvscsis might be
+affected.
+
+The bad news? Will Deacon refers to an old thread and points points out
+that the memory ordering in kfifo's is questionable.  See
+
+  https://lore.kernel.org/lkml/20181211034032.32338-1-yuleixzhang@tencent.com/
+
+for more.
+
+Fixes: dfe2a77fd243 ("kfifo: fix kfifo_alloc() and kfifo_init()")
+Reported-by: laokz <laokz@foxmail.com>
+Cc: Stefani Seibold <stefani@seibold.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Will Deacon <will@kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rc80211_minstrel_ht.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/kfifo.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
-index ff3b28e7dbce8..fb44f0107da1b 100644
---- a/net/mac80211/rc80211_minstrel_ht.c
-+++ b/net/mac80211/rc80211_minstrel_ht.c
-@@ -546,7 +546,7 @@ minstrel_ht_update_stats(struct minstrel_priv *mp, struct minstrel_ht_sta *mi)
+diff --git a/lib/kfifo.c b/lib/kfifo.c
+index 90ba1eb1df06e..a94227c555510 100644
+--- a/lib/kfifo.c
++++ b/lib/kfifo.c
+@@ -82,7 +82,8 @@ int __kfifo_init(struct __kfifo *fifo, void *buffer,
+ {
+ 	size /= esize;
  
- 		/* (re)Initialize group rate indexes */
- 		for(j = 0; j < MAX_THR_RATES; j++)
--			tmp_group_tp_rate[j] = group;
-+			tmp_group_tp_rate[j] = MCS_GROUP_RATES * group;
+-	size = roundup_pow_of_two(size);
++	if (!is_power_of_2(size))
++		size = rounddown_pow_of_two(size);
  
- 		for (i = 0; i < MCS_GROUP_RATES; i++) {
- 			if (!(mg->supported & BIT(i)))
+ 	fifo->in = 0;
+ 	fifo->out = 0;
 -- 
 2.20.1
 
