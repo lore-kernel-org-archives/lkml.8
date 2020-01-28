@@ -2,79 +2,123 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF958C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E7FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7686207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580251666;
-	bh=klSBdKKdnRTmi7mTHAVGBUqT7E/n668NU4PR+t2Nl6g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gFan0GxP8ysVcCstoLXSYkErC9+vvUh8JoKLYD13pIvdYOm8Rak+BzpuYO5hokc1D
-	 VQVrpNAG8eN9iOLF/I0RcteGZ0OYyxrrfTsxhAnGdjkaAkEYuokz7H5u0kSxgs+2xP
-	 13hiPjIjqeRJ3bpsW0R5wtqe6Q/GAcZEg22x+bhM=
+	by mail.kernel.org (Postfix) with ESMTP id 50148207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:48:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgA1Wrq (ORCPT
+        id S1726438AbgA1Wsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 17:47:46 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45423 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgA1Wrp (ORCPT
+        Tue, 28 Jan 2020 17:48:39 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50132 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgA1Wsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 17:47:45 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so13703100otp.12;
-        Tue, 28 Jan 2020 14:47:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=klSBdKKdnRTmi7mTHAVGBUqT7E/n668NU4PR+t2Nl6g=;
-        b=Cgr1vymJjEmJElzYj/WPju97bIZOC5cDeac9W7xbiqZEtB2RsNon23pxj279fmyMLm
-         qRhnZOJZEiuPvZMt8YuEPcjleTr7iNS/oKTT8OOWwcPulusa40ZqLtZIEZuCKndJc2Mg
-         HxH372g38i9PYZURcVAUrPyKgdLXtAoEL5Yrp3NcCpv+9JpsYqdmg4xfJYZlmhdTo227
-         dpNedYTh9Eqom1FM86EXYz0uWLFwPoDl/fH+l5CNMGsJXUsDKLmHyWCksdoG8NYR2B43
-         H18KtSpEBrcYU3JpoZlaX3dhKtKwkcVyjSI8t0+v6PyR5Xr20VEwewryqF7U5ae8jUu7
-         n+lQ==
-X-Gm-Message-State: APjAAAVoq9njRN4UOwyU+OKEJiIYXarVNvTY28LHx7ji+Sh1fktIaQlD
-        5r4S0MXHDEC+AZqaJq7lJ8iLEA0UL+I4Boy5xf6m6w==
-X-Google-Smtp-Source: APXvYqyz7fMPx9+EVgqX+4bnisBn7uxQXIsr54CzBkU4mLkCTVihzn9FhbYwfwNR9OqfAt2yx6o50kT2OHH63GmSDc4=
-X-Received: by 2002:a9d:7559:: with SMTP id b25mr2334949otl.189.1580251665123;
- Tue, 28 Jan 2020 14:47:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20200128035957.2577561-1-dsmythies@telus.net>
-In-Reply-To: <20200128035957.2577561-1-dsmythies@telus.net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 28 Jan 2020 23:47:33 +0100
-Message-ID: <CAJZ5v0h2StxrjdohNFzTUFCYZ3ZB7SBnjfaZT9F2gKJhHQ4uKg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] tools/power/x86/intel_pstate_tracer: changes for
- pyhton 3 and newer processors
-To:     Doug Smythies <doug.smythies@gmail.com>
-Cc:     Doug Smythies <dsmythies@telus.net>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
+        Tue, 28 Jan 2020 17:48:39 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iwZer-0006o0-HV; Tue, 28 Jan 2020 23:48:33 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 084FB101227; Tue, 28 Jan 2020 23:48:33 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        x86@kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+In-Reply-To: <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com>
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com> <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com> <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de> <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com> <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com> <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com> <87d0b82a9o.fsf@nanos.tec.linutronix.de> <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com> <878slwmpu9.fsf@nanos.tec.linutronix.de> <87imkv63yf.fsf@nanos.tec.linutronix.de> <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com>
+Date:   Tue, 28 Jan 2020 23:48:32 +0100
+Message-ID: <87pnf342pr.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 5:00 AM Doug Smythies <doug.smythies@gmail.com> wrote:
->
-> Some distributions are deleting python 3 support.
-> A backward compatible minor syntax change is needed for
-> use with python 3.
->
-> Processors have exceeded some of the fixed y-axis scale maximum values.
-> Change them to autoscale the y-axis.
->
-> Tested with python 2.7 and 3.7.
+Evan,
 
-Both patches applied as 5.6 material, thanks!
+Evan Green <evgreen@chromium.org> writes:
+> On Tue, Jan 28, 2020 at 6:38 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> The patch is only lightly tested, but so far it survived.
+>>
+>
+> Hi Thomas,
+> Thanks for the patch, I gave it a try. I get the following splat, then a hang:
+>
+> [   62.238406]        CPU0
+> [   62.241135]        ----
+> [   62.243863]   lock(vector_lock);
+> [   62.247467]   lock(vector_lock);
+> [   62.251071]
+> [   62.251071]  *** DEADLOCK ***
+> [   62.251071]
+> [   62.257687]  May be due to missing lock nesting notation
+> [   62.257687]
+> [   62.265274] 2 locks held by migration/1/17:
+> [   62.269946]  #0: 00000000cfa9d8c3 (&irq_desc_lock_class){-.-.}, at:
+> irq_migrate_all_off_this_cpu+0x44/0x28f
+> [   62.280846]  #1: 000000006885da2d (vector_lock){-.-.}, at:
+> msi_set_affinity+0x13c/0x27b
+> [   62.289801]
+> [   62.289801] stack backtrace:
+> [   62.294669] CPU: 1 PID: 17 Comm: migration/1 Not tainted 4.19.96 #2
+> [   62.310713] Call Trace:
+> [   62.313446]  dump_stack+0xac/0x11e
+> [   62.317255]  __lock_acquire+0x64f/0x19bc
+> [   62.321646]  ? find_held_lock+0x3d/0xb8
+> [   62.325936]  ? pci_conf1_write+0x4f/0xdf
+> [   62.330320]  lock_acquire+0x1b2/0x1fa
+> [   62.334413]  ? apic_retrigger_irq+0x31/0x63
+> [   62.339097]  _raw_spin_lock_irqsave+0x51/0x7d
+> [   62.343972]  ? apic_retrigger_irq+0x31/0x63
+> [   62.348646]  apic_retrigger_irq+0x31/0x63
+> [   62.353124]  msi_set_affinity+0x25a/0x27b
+
+Bah. I'm sure I looked at that call chain, noticed the double vector
+lock and then forgot. Delta patch below.
+
+Thanks,
+
+        tglx
+
+8<--------------
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -64,6 +64,7 @@ msi_set_affinity(struct irq_data *irqd,
+ 	struct irq_cfg old_cfg, *cfg = irqd_cfg(irqd);
+ 	struct irq_data *parent = irqd->parent_data;
+ 	unsigned int cpu;
++	bool pending;
+ 	int ret;
+ 
+ 	/* Save the current configuration */
+@@ -147,9 +148,13 @@ msi_set_affinity(struct irq_data *irqd,
+ 	 * vector/CPU. Check whether the transition raced with a device
+ 	 * interrupt and is pending in the local APICs IRR.
+ 	 */
+-	if (lapic_vector_set_in_irr(cfg->vector))
+-		irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
++	pending = lapic_vector_set_in_irr(cfg->vector);
++
+ 	unlock_vector_lock();
++
++	if (pending)
++		irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
++
+ 	return ret;
+ }
+ 
