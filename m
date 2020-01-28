@@ -2,97 +2,174 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F801C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D21DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7A8205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F337024685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:01:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580220084;
+	bh=EwXjGWs7thXZw3btPUQgVqg1lZbS3AAmMapr0MrHlx0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wVCCMfh9gOJI33KnuCPxY7NaaEqo8eKRvhH7FmE4gPIzbHw6NSMn6EHRV/ts1ca4M
+	 rNQS6ej7yvfIlnudzIhg41Qu+FV+G5PtoqRiMt6RvzQZ/66uXPDQvgXCOvP0sAf2zB
+	 vPDNUtPJh6IO+ZVi2FJxlz2mRIAu/7BDfQGb9uhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbgA1OBE (ORCPT
+        id S1727425AbgA1OBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:01:04 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42784 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgA1OBA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:01:00 -0500
-Received: by mail-oi1-f194.google.com with SMTP id j132so9263829oih.9;
-        Tue, 28 Jan 2020 06:00:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OCFuL8nkr5blWlcwOVW49/EKio8n2sFV+etyZ2EpR94=;
-        b=lPbY9TtFDDjxQo9DADRzjMXzxtZYwhpBMgms8SHM1wbOWF7PUOcHU5jzA3daN7MVkB
-         T2eKeTBuijJ5DmfbRl3RVwtHE8K3vfU10sV/7by1c3F8Y+PiVRCUoKZarf/bYXDyXE/g
-         YBARftlCdMqZgysnB/j2h8vmGPtEOC/juBei90CwKrXGhsLRzSpzT+pvJEZl2+mbLqzs
-         ryimnpcJqJC+NTYfMaaNquE18/acvXtn0NcMM8oGqd7z94UUsLiS8ZE5Y8hIF9RVZspJ
-         OkJYpVzuyH3wkxRpf32yaPwC+YyMnl9pz6M/lAE1XAIGV2CrjlwLiEHHZb4nmkJS6+wp
-         +J9w==
-X-Gm-Message-State: APjAAAVqq+hNFT5EcHTPI37v8pd1Ry3+SGZ+OKz4byFj1dWYNGVcoWng
-        t1HIeD9ymSpTggwVXcMyT69ohboNpl0l/3vev9E6nIeS
-X-Google-Smtp-Source: APXvYqxrHnIsrRlmUTpiBsG79AVEhNTd/CViP1DeJLvEwZ7XUcGo4ohWp0QXGaIEAI242T0kOYFgmJFOWCMQh7kKbxw=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr2770347oia.148.1580220058752;
- Tue, 28 Jan 2020 06:00:58 -0800 (PST)
+        Tue, 28 Jan 2020 09:01:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727408AbgA1OBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:01:20 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AA40205F4;
+        Tue, 28 Jan 2020 14:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580220079;
+        bh=EwXjGWs7thXZw3btPUQgVqg1lZbS3AAmMapr0MrHlx0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uo05UiWNsDq7e9NcKTvTHkEJZa20ocirsdOzTx6gXX6ssczHZ6Ts6nWwpUqoEAU77
+         8hQB/OTd9709P9VwP0StclpIWLay50cvu+o3pVBezOzdLJB3ihwUSzHC57HikRlsEK
+         5otskJyHpA4YmsXzXcJ0iiZEACE+TAyhAbbNks1E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com,
+        Richard Palethorpe <rpalethorpe@suse.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tyler Hall <tylerwhall@gmail.com>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller@googlegroups.com
+Subject: [PATCH 5.4 001/104] can, slip: Protect tty->disc_data in write_wakeup and close with RCU
+Date:   Tue, 28 Jan 2020 14:59:22 +0100
+Message-Id: <20200128135817.462851820@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
+References: <20200128135817.238524998@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <CGME20200128133410eucas1p19fb97c9696596da07181e0c630fb6c6b@eucas1p1.samsung.com>
- <20200128133343.29905-1-b.zolnierkie@samsung.com>
-In-Reply-To: <20200128133343.29905-1-b.zolnierkie@samsung.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 Jan 2020 15:00:47 +0100
-Message-ID: <CAMuHMdWRRRNh2kkDt2KAOQoQgh36Fh_axQXYSYdq5dAhfs++fA@mail.gmail.com>
-Subject: Re: [PATCH 00/28] ata: optimize core code size on PATA only setups
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-ide@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartlomiej,
+From: Richard Palethorpe <rpalethorpe@suse.com>
 
-CC linux-m68k
+[ Upstream commit 0ace17d56824165c7f4c68785d6b58971db954dd ]
 
-On Tue, Jan 28, 2020 at 2:34 PM Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
-> There have been reports in the past of libata core code size
-> being a problem in migration from deprecated IDE subsystem on
-> legacy PATA only systems, i.e.:
->
-> https://lore.kernel.org/linux-ide/db2838b7-4862-785b-3a1d-3bf09811340a@gmail.com/
->
-> This patchset re-organizes libata core code to exclude SATA
-> specific code from being built for PATA only setups.
->
-> The end result is up to 17% (by 17246 bytes, from 101787 bytes to
-> 84541 bytes) smaller libata core code size (as measured for m68k
-> arch using atari_defconfig) on affected setups.
->
-> I've tested this patchset using pata_falcon driver under ARAnyM
-> emulator.
+write_wakeup can happen in parallel with close/hangup where tty->disc_data
+is set to NULL and the netdevice is freed thus also freeing
+disc_data. write_wakeup accesses disc_data so we must prevent close from
+freeing the netdev while write_wakeup has a non-NULL view of
+tty->disc_data.
 
-Thanks a lot!
+We also need to make sure that accesses to disc_data are atomic. Which can
+all be done with RCU.
 
-[...]
+This problem was found by Syzkaller on SLCAN, but the same issue is
+reproducible with the SLIP line discipline using an LTP test based on the
+Syzkaller reproducer.
 
-https://lore.kernel.org/lkml/20200128133343.29905-1-b.zolnierkie@samsung.com/
+A fix which didn't use RCU was posted by Hillf Danton.
 
-Gr{oetje,eeting}s,
+Fixes: 661f7fda21b1 ("slip: Fix deadlock in write_wakeup")
+Fixes: a8e83b17536a ("slcan: Port write_wakeup deadlock fix from slip")
+Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
+Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Tyler Hall <tylerwhall@gmail.com>
+Cc: linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: syzkaller@googlegroups.com
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/can/slcan.c |   12 ++++++++++--
+ drivers/net/slip/slip.c |   12 ++++++++++--
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
-                        Geert
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -344,9 +344,16 @@ static void slcan_transmit(struct work_s
+  */
+ static void slcan_write_wakeup(struct tty_struct *tty)
+ {
+-	struct slcan *sl = tty->disc_data;
++	struct slcan *sl;
++
++	rcu_read_lock();
++	sl = rcu_dereference(tty->disc_data);
++	if (!sl)
++		goto out;
+ 
+ 	schedule_work(&sl->tx_work);
++out:
++	rcu_read_unlock();
+ }
+ 
+ /* Send a can_frame to a TTY queue. */
+@@ -644,10 +651,11 @@ static void slcan_close(struct tty_struc
+ 		return;
+ 
+ 	spin_lock_bh(&sl->lock);
+-	tty->disc_data = NULL;
++	rcu_assign_pointer(tty->disc_data, NULL);
+ 	sl->tty = NULL;
+ 	spin_unlock_bh(&sl->lock);
+ 
++	synchronize_rcu();
+ 	flush_work(&sl->tx_work);
+ 
+ 	/* Flush network side */
+--- a/drivers/net/slip/slip.c
++++ b/drivers/net/slip/slip.c
+@@ -452,9 +452,16 @@ static void slip_transmit(struct work_st
+  */
+ static void slip_write_wakeup(struct tty_struct *tty)
+ {
+-	struct slip *sl = tty->disc_data;
++	struct slip *sl;
++
++	rcu_read_lock();
++	sl = rcu_dereference(tty->disc_data);
++	if (!sl)
++		goto out;
+ 
+ 	schedule_work(&sl->tx_work);
++out:
++	rcu_read_unlock();
+ }
+ 
+ static void sl_tx_timeout(struct net_device *dev)
+@@ -882,10 +889,11 @@ static void slip_close(struct tty_struct
+ 		return;
+ 
+ 	spin_lock_bh(&sl->lock);
+-	tty->disc_data = NULL;
++	rcu_assign_pointer(tty->disc_data, NULL);
+ 	sl->tty = NULL;
+ 	spin_unlock_bh(&sl->lock);
+ 
++	synchronize_rcu();
+ 	flush_work(&sl->tx_work);
+ 
+ 	/* VSV = very important to remove timers */
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
