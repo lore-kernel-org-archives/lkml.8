@@ -2,53 +2,62 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A1BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39312C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AEF24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109702173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222565;
-	bh=o2EdR++2WPKoIvYqUvhtA2VH9DhrxH5SuJrHcibTyiU=;
+	s=default; t=1580222576;
+	bh=bQ7Ch7w2vy4MOIB1WFMg92oKjuy8tP+9iUlBmjabkBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HMJ9kU8WJh3GW5vPRgnGLzIV/dmwgKmth0+MIZZfdkTRpuQGMbDAvYsuLuOHbvKyb
-	 NOtV6P2SR7hk94+Lgb+lWJKt0OrgS2BPF0thSpET36E23Nmb4lc8zwtX7yuo1y7QQ6
-	 s8PyYuEvoFK+kN4+4aioY9oR3ttg/tZcozn7gAMg=
+	b=W7VNUoOR2bquEfHHgky7s2g7KEfRN6zpwZR7r6B96Kpq8Sqw0QYaSKV8XeuTOD/rk
+	 oagz0GU0yMPr2ZSLnZR+UxneKfBRkOT2w5D6jG5ji+R9KfhrPAzjwaBhzvyRcBhCb6
+	 oaBbfCmdbXAqnmuxxQBMs3i0YI6XFjURKwJZlKxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbgA1OMi (ORCPT
+        id S1728661AbgA1OMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:12:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33924 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:12:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728003AbgA1OMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:12:34 -0500
+        id S1727397AbgA1OMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:12:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D96F92469A;
-        Tue, 28 Jan 2020 14:12:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3305224685;
+        Tue, 28 Jan 2020 14:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220753;
-        bh=o2EdR++2WPKoIvYqUvhtA2VH9DhrxH5SuJrHcibTyiU=;
+        s=default; t=1580220733;
+        bh=bQ7Ch7w2vy4MOIB1WFMg92oKjuy8tP+9iUlBmjabkBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vD8UVUzlz9ReNtdjQJPtj4FmttfUYw5cHtaiaQ8z7sfffq+GjbIiZ3LuhaE/rkD59
-         zbGqCDhdGaHqTHzM5/i945ra+nYV2oimLlAZ+WUg1mqDNsrIux4fcjm93JBrv4XbSc
-         gn9SbQOnytJ+04OhG1IRjloFYrk6M4DOXzMe4e8o=
+        b=cB7ACNL6yJeWog2gNufa3+2u0rTWF8vnYdDqj83Jg6sh30t2cEO7aLHKv0xIwu2gp
+         hEksI83hwcjrQPGYgAQlaCJFzpnoF8gA2sWAiiflDoImlNHAsdRecyGPJBob8Lr4Zk
+         0F76pdmQQBxMPbS+vhXK5xxKDFkVOAO2NYWoLF2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Koen Vandeputte <koen.vandeputte@ncentric.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 133/183] ath9k: dynack: fix possible deadlock in ath_dynack_node_{de}init
-Date:   Tue, 28 Jan 2020 15:05:52 +0100
-Message-Id: <20200128135843.088754604@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Stephen Kitt <steve@sk2.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 126/183] mips: avoid explicit UB in assignment of mips_io_port_base
+Date:   Tue, 28 Jan 2020 15:05:45 +0100
+Message-Id: <20200128135842.463604020@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,134 +70,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit e1aa1a1db3b01c9890e82cf065cee99962ba1ed9 ]
+[ Upstream commit 12051b318bc3ce5b42d6d786191008284b067d83 ]
 
-Fix following lockdep warning disabling bh in
-ath_dynack_node_init/ath_dynack_node_deinit
+The code in question is modifying a variable declared const through
+pointer manipulation.  Such code is explicitly undefined behavior, and
+is the lone issue preventing malta_defconfig from booting when built
+with Clang:
 
-[   75.955878] --------------------------------
-[   75.955880] inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-[   75.955884] swapper/0/0 [HC0[0]:SC1[3]:HE1:SE0] takes:
-[   75.955888] 00000000792a7ee0 (&(&da->qlock)->rlock){+.?.}, at: ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
-[   75.955905] {SOFTIRQ-ON-W} state was registered at:
-[   75.955912]   lock_acquire+0x9a/0x160
-[   75.955917]   _raw_spin_lock+0x2c/0x70
-[   75.955927]   ath_dynack_node_init+0x2a/0x60 [ath9k_hw]
-[   75.955934]   ath9k_sta_state+0xec/0x160 [ath9k]
-[   75.955976]   drv_sta_state+0xb2/0x740 [mac80211]
-[   75.956008]   sta_info_insert_finish+0x21a/0x420 [mac80211]
-[   75.956039]   sta_info_insert_rcu+0x12b/0x2c0 [mac80211]
-[   75.956069]   sta_info_insert+0x7/0x70 [mac80211]
-[   75.956093]   ieee80211_prep_connection+0x42e/0x730 [mac80211]
-[   75.956120]   ieee80211_mgd_auth.cold+0xb9/0x15c [mac80211]
-[   75.956152]   cfg80211_mlme_auth+0x143/0x350 [cfg80211]
-[   75.956169]   nl80211_authenticate+0x25e/0x2b0 [cfg80211]
-[   75.956172]   genl_family_rcv_msg+0x198/0x400
-[   75.956174]   genl_rcv_msg+0x42/0x90
-[   75.956176]   netlink_rcv_skb+0x35/0xf0
-[   75.956178]   genl_rcv+0x1f/0x30
-[   75.956180]   netlink_unicast+0x154/0x200
-[   75.956182]   netlink_sendmsg+0x1bf/0x3d0
-[   75.956186]   ___sys_sendmsg+0x2c2/0x2f0
-[   75.956187]   __sys_sendmsg+0x44/0x80
-[   75.956190]   do_syscall_64+0x55/0x1a0
-[   75.956192]   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   75.956194] irq event stamp: 2357092
-[   75.956196] hardirqs last  enabled at (2357092): [<ffffffff818c62de>] _raw_spin_unlock_irqrestore+0x3e/0x50
-[   75.956199] hardirqs last disabled at (2357091): [<ffffffff818c60b1>] _raw_spin_lock_irqsave+0x11/0x80
-[   75.956202] softirqs last  enabled at (2357072): [<ffffffff8106dc09>] irq_enter+0x59/0x60
-[   75.956204] softirqs last disabled at (2357073): [<ffffffff8106dcbe>] irq_exit+0xae/0xc0
-[   75.956206]
-               other info that might help us debug this:
-[   75.956207]  Possible unsafe locking scenario:
+If an attempt is made to modify an object defined with a const-qualified
+type through use of an lvalue with non-const-qualified type, the
+behavior is undefined.
 
-[   75.956208]        CPU0
-[   75.956209]        ----
-[   75.956210]   lock(&(&da->qlock)->rlock);
-[   75.956213]   <Interrupt>
-[   75.956214]     lock(&(&da->qlock)->rlock);
-[   75.956216]
-                *** DEADLOCK ***
+LLVM is removing such assignments. A simple fix is to not declare
+variables const that you plan on modifying.  Limiting the scope would be
+a better method of preventing unwanted writes to such a variable.
 
-[   75.956217] 1 lock held by swapper/0/0:
-[   75.956219]  #0: 000000003bb5675c (&(&sc->sc_pcu_lock)->rlock){+.-.}, at: ath9k_tasklet+0x55/0x240 [ath9k]
-[   75.956225]
-               stack backtrace:
-[   75.956228] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc1-wdn+ #13
-[   75.956229] Hardware name: Dell Inc. Studio XPS 1340/0K183D, BIOS A11 09/08/2009
-[   75.956231] Call Trace:
-[   75.956233]  <IRQ>
-[   75.956236]  dump_stack+0x67/0x90
-[   75.956239]  mark_lock+0x4c1/0x640
-[   75.956242]  ? check_usage_backwards+0x130/0x130
-[   75.956245]  ? sched_clock_local+0x12/0x80
-[   75.956247]  __lock_acquire+0x484/0x7a0
-[   75.956250]  ? __lock_acquire+0x3b9/0x7a0
-[   75.956252]  lock_acquire+0x9a/0x160
-[   75.956259]  ? ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
-[   75.956262]  _raw_spin_lock_bh+0x34/0x80
-[   75.956268]  ? ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
-[   75.956275]  ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
-[   75.956280]  ath_rx_tasklet+0xd09/0xe90 [ath9k]
-[   75.956286]  ath9k_tasklet+0x102/0x240 [ath9k]
-[   75.956288]  tasklet_action_common.isra.0+0x6d/0x170
-[   75.956291]  __do_softirq+0xcc/0x425
-[   75.956294]  irq_exit+0xae/0xc0
-[   75.956296]  do_IRQ+0x8a/0x110
-[   75.956298]  common_interrupt+0xf/0xf
-[   75.956300]  </IRQ>
-[   75.956303] RIP: 0010:cpuidle_enter_state+0xb2/0x400
-[   75.956308] RSP: 0018:ffffffff82203e70 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffd7
-[   75.956310] RAX: ffffffff82219800 RBX: ffffffff822bd0a0 RCX: 0000000000000000
-[   75.956312] RDX: 0000000000000046 RSI: 0000000000000006 RDI: ffffffff82219800
-[   75.956314] RBP: ffff888155a01c00 R08: 00000011af51aabe R09: 0000000000000000
-[   75.956315] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
-[   75.956317] R13: 00000011af51aabe R14: 0000000000000003 R15: ffffffff82219800
-[   75.956321]  cpuidle_enter+0x24/0x40
-[   75.956323]  do_idle+0x1ac/0x220
-[   75.956326]  cpu_startup_entry+0x14/0x20
-[   75.956329]  start_kernel+0x482/0x489
-[   75.956332]  secondary_startup_64+0xa4/0xb0
+Further, the code in question mentions "compiler bugs" without any links
+to bug reports, so it is difficult to know if the issue is resolved in
+GCC. The patch was authored in 2006, which would have been GCC 4.0.3 or
+4.1.1. The minimal supported version of GCC in the Linux kernel is
+currently 4.6.
 
-Fixes: c774d57fd47c ("ath9k: add dynamic ACK timeout estimation")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Tested-by: Koen Vandeputte <koen.vandeputte@ncentric.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+For what its worth, there was UB before the commit in question, it just
+added a barrier and got lucky IRT codegen. I don't think there's any
+actual compiler bugs related, just runtime bugs due to UB.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/610
+Fixes: 966f4406d903 ("[MIPS] Work around bad code generation for <asm/io.h>.")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Eli Friedman <efriedma@quicinc.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: Maciej W. Rozycki <macro@linux-mips.org>
+Cc: Hassan Naveed <hnaveed@wavecomp.com>
+Cc: Stephen Kitt <steve@sk2.org>
+Cc: Serge Semin <fancer.lancer@gmail.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/dynack.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/mips/include/asm/io.h | 14 ++------------
+ arch/mips/kernel/setup.c   |  2 +-
+ 2 files changed, 3 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/dynack.c b/drivers/net/wireless/ath/ath9k/dynack.c
-index 22b3cc4c27cda..58205a5bd74b5 100644
---- a/drivers/net/wireless/ath/ath9k/dynack.c
-+++ b/drivers/net/wireless/ath/ath9k/dynack.c
-@@ -285,9 +285,9 @@ void ath_dynack_node_init(struct ath_hw *ah, struct ath_node *an)
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index ab1df19b09571..60604b26fa72c 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -60,21 +60,11 @@
+  * instruction, so the lower 16 bits must be zero.  Should be true on
+  * on any sane architecture; generic code does not use this assumption.
+  */
+-extern const unsigned long mips_io_port_base;
++extern unsigned long mips_io_port_base;
  
- 	an->ackto = ackto;
- 
--	spin_lock(&da->qlock);
-+	spin_lock_bh(&da->qlock);
- 	list_add_tail(&an->list, &da->nodes);
--	spin_unlock(&da->qlock);
-+	spin_unlock_bh(&da->qlock);
- }
- EXPORT_SYMBOL(ath_dynack_node_init);
- 
-@@ -301,9 +301,9 @@ void ath_dynack_node_deinit(struct ath_hw *ah, struct ath_node *an)
+-/*
+- * Gcc will generate code to load the value of mips_io_port_base after each
+- * function call which may be fairly wasteful in some cases.  So we don't
+- * play quite by the book.  We tell gcc mips_io_port_base is a long variable
+- * which solves the code generation issue.  Now we need to violate the
+- * aliasing rules a little to make initialization possible and finally we
+- * will need the barrier() to fight side effects of the aliasing chat.
+- * This trickery will eventually collapse under gcc's optimizer.  Oh well.
+- */
+ static inline void set_io_port_base(unsigned long base)
  {
- 	struct ath_dynack *da = &ah->dynack;
- 
--	spin_lock(&da->qlock);
-+	spin_lock_bh(&da->qlock);
- 	list_del(&an->list);
--	spin_unlock(&da->qlock);
-+	spin_unlock_bh(&da->qlock);
+-	* (unsigned long *) &mips_io_port_base = base;
+-	barrier();
++	mips_io_port_base = base;
  }
- EXPORT_SYMBOL(ath_dynack_node_deinit);
  
+ /*
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 4f9f1ae492138..fadc946b306d2 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -80,7 +80,7 @@ static char __initdata builtin_cmdline[COMMAND_LINE_SIZE] = CONFIG_CMDLINE;
+  * mips_io_port_base is the begin of the address space to which x86 style
+  * I/O ports are mapped.
+  */
+-const unsigned long mips_io_port_base = -1;
++unsigned long mips_io_port_base = -1;
+ EXPORT_SYMBOL(mips_io_port_base);
+ 
+ static struct resource code_resource = { .name = "Kernel code", };
 -- 
 2.20.1
 
