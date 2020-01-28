@@ -2,59 +2,52 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FB6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDC0C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02352469A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C39324692
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221821;
-	bh=ce+zIUqgZVaCw2M2uGxh8Jj9B4ifS+24IzmbU10V8Aw=;
+	s=default; t=1580221823;
+	bh=DGkn0T8um9aUZbLl16ewYz61FG8Hvju4fsmee5CFgaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=De8gygIuddRoGhD9UcCn93h2fKkAvVE7KKxCHGwxS39k4Q6Q4DSBpykrHERiUnj9X
-	 E0bZfw+dr2Bw2aNN8bViAtcZEDNoCMIoVMROsB1UW+M5l+sJbk3rRbDOdjZ5aMeOu0
-	 xEsE/esmCWq7n8xbPjHdqtRnC9c3S6RJna2j7XiE=
+	b=Ukzl3dptE9H2uNZljGx2LuN3wrbHvJcgOnQotIxkuu+qhCgSrhk6I1kfaHpnojsc9
+	 uNY9Scb8bDQeYyKxxE6qo8+jCFOuEJgNQ5YQCUYc4nPNMHc0JgQeNnON6JZ/wzEE7M
+	 H3RAPQxsMGvpbJpodZlUuaxQIzzjCTLxH690l7tE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387464AbgA1OaV (ORCPT
+        id S2387435AbgA1O3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:30:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60078 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:29:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728066AbgA1OaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:30:18 -0500
+        id S2387601AbgA1O3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:29:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD33424698;
-        Tue, 28 Jan 2020 14:30:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E6E724688;
+        Tue, 28 Jan 2020 14:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221818;
-        bh=ce+zIUqgZVaCw2M2uGxh8Jj9B4ifS+24IzmbU10V8Aw=;
+        s=default; t=1580221753;
+        bh=DGkn0T8um9aUZbLl16ewYz61FG8Hvju4fsmee5CFgaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0f1tSdX5hGp2BDTjAO1XRlEcDVHsVuvgxisRf3E0542eArD9Q6i8lQvPBKVKqZnDl
-         ApeN/5tZ3mxIQfwHtZJi0UFRvQelCLYtSznS42Iu5iWohFaWm83iJDLKfwHGw2SeyL
-         5a8EePrFYsdhGsBIrXJJJC8mOvvYxJshK/Bu71xw=
+        b=u+cuqlJbW0R1vcEVX4SnbYneB6p+TGqhS2mUAe86GlkdbH/fuM3kzX6IH7YVrZYIP
+         c1rxWJ5Sv1YZzG/u/YgoR+R6yFtVZY7lEM5mztdbCasVtt8rYotx+TAJXyjYaPE0CO
+         m7yw4u7DWVCq+t4Hr59oNnHOyetCv+qvLWlTcNmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 92/92] mm/memory_hotplug: shrink zones when offlining memory
-Date:   Tue, 28 Jan 2020 15:09:00 +0100
-Message-Id: <20200128135821.343688457@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Florian Bezdeka <florian@bezdeka.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 60/92] crypto: geode-aes - switch to skcipher for cbc(aes) fallback
+Date:   Tue, 28 Jan 2020 15:08:28 +0100
+Message-Id: <20200128135816.937763211@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -67,357 +60,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit feee6b2989165631b17ac6d4ccdbf6759254e85a upstream.
+commit 504582e8e40b90b8f8c58783e2d1e4f6a2b71a3a upstream.
 
--- snip --
+Commit 79c65d179a40e145 ("crypto: cbc - Convert to skcipher") updated
+the generic CBC template wrapper from a blkcipher to a skcipher algo,
+to get away from the deprecated blkcipher interface. However, as a side
+effect, drivers that instantiate CBC transforms using the blkcipher as
+a fallback no longer work, since skciphers can wrap blkciphers but not
+the other way around. This broke the geode-aes driver.
 
-- Missing arm64 hot(un)plug support
-- Missing some vmem_altmap_offset() cleanups
-- Missing sub-section hotadd support
-- Missing unification of mm/hmm.c and kernel/memremap.c
+So let's fix it by moving to the sync skcipher interface when allocating
+the fallback. At the same time, align with the generic API for ECB and
+CBC by rejecting inputs that are not a multiple of the AES block size.
 
--- snip --
-
-We currently try to shrink a single zone when removing memory.  We use
-the zone of the first page of the memory we are removing.  If that
-memmap was never initialized (e.g., memory was never onlined), we will
-read garbage and can trigger kernel BUGs (due to a stale pointer):
-
-    BUG: unable to handle page fault for address: 000000000000353d
-    #PF: supervisor write access in kernel mode
-    #PF: error_code(0x0002) - not-present page
-    PGD 0 P4D 0
-    Oops: 0002 [#1] SMP PTI
-    CPU: 1 PID: 7 Comm: kworker/u8:0 Not tainted 5.3.0-rc5-next-20190820+ #317
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
-    Workqueue: kacpi_hotplug acpi_hotplug_work_fn
-    RIP: 0010:clear_zone_contiguous+0x5/0x10
-    Code: 48 89 c6 48 89 c3 e8 2a fe ff ff 48 85 c0 75 cf 5b 5d c3 c6 85 fd 05 00 00 01 5b 5d c3 0f 1f 840
-    RSP: 0018:ffffad2400043c98 EFLAGS: 00010246
-    RAX: 0000000000000000 RBX: 0000000200000000 RCX: 0000000000000000
-    RDX: 0000000000200000 RSI: 0000000000140000 RDI: 0000000000002f40
-    RBP: 0000000140000000 R08: 0000000000000000 R09: 0000000000000001
-    R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
-    R13: 0000000000140000 R14: 0000000000002f40 R15: ffff9e3e7aff3680
-    FS:  0000000000000000(0000) GS:ffff9e3e7bb00000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 000000000000353d CR3: 0000000058610000 CR4: 00000000000006e0
-    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-    Call Trace:
-     __remove_pages+0x4b/0x640
-     arch_remove_memory+0x63/0x8d
-     try_remove_memory+0xdb/0x130
-     __remove_memory+0xa/0x11
-     acpi_memory_device_remove+0x70/0x100
-     acpi_bus_trim+0x55/0x90
-     acpi_device_hotplug+0x227/0x3a0
-     acpi_hotplug_work_fn+0x1a/0x30
-     process_one_work+0x221/0x550
-     worker_thread+0x50/0x3b0
-     kthread+0x105/0x140
-     ret_from_fork+0x3a/0x50
-    Modules linked in:
-    CR2: 000000000000353d
-
-Instead, shrink the zones when offlining memory or when onlining failed.
-Introduce and use remove_pfn_range_from_zone(() for that.  We now
-properly shrink the zones, even if we have DIMMs whereby
-
- - Some memory blocks fall into no zone (never onlined)
-
- - Some memory blocks fall into multiple zones (offlined+re-onlined)
-
- - Multiple memory blocks that fall into different zones
-
-Drop the zone parameter (with a potential dubious value) from
-__remove_pages() and __remove_section().
-
-Link: http://lkml.kernel.org/r/20191006085646.5768-6-david@redhat.com
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: <stable@vger.kernel.org>	[5.0+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Fixes: 79c65d179a40e145 ("crypto: cbc - Convert to skcipher")
+Cc: <stable@vger.kernel.org> # v4.20+ ONLY
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Florian Bezdeka <florian@bezdeka.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Florian Bezdeka <florian@bezdeka.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/ia64/mm/init.c            |    4 +---
- arch/powerpc/mm/mem.c          |   11 +----------
- arch/s390/mm/init.c            |    4 +---
- arch/sh/mm/init.c              |    4 +---
- arch/x86/mm/init_32.c          |    4 +---
- arch/x86/mm/init_64.c          |    8 +-------
- include/linux/memory_hotplug.h |    7 +++++--
- kernel/memremap.c              |    3 +--
- mm/hmm.c                       |    4 +---
- mm/memory_hotplug.c            |   29 ++++++++++++++---------------
- 10 files changed, 27 insertions(+), 51 deletions(-)
 
---- a/arch/ia64/mm/init.c
-+++ b/arch/ia64/mm/init.c
-@@ -666,9 +666,7 @@ void arch_remove_memory(int nid, u64 sta
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
--	struct zone *zone;
+---
+ drivers/crypto/geode-aes.c |   57 ++++++++++++++++++++++++++-------------------
+ drivers/crypto/geode-aes.h |    2 -
+ 2 files changed, 35 insertions(+), 24 deletions(-)
+
+--- a/drivers/crypto/geode-aes.c
++++ b/drivers/crypto/geode-aes.c
+@@ -14,6 +14,7 @@
+ #include <linux/spinlock.h>
+ #include <crypto/algapi.h>
+ #include <crypto/aes.h>
++#include <crypto/skcipher.h>
  
--	zone = page_zone(pfn_to_page(start_pfn));
--	__remove_pages(zone, start_pfn, nr_pages, altmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- }
- #endif
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -144,18 +144,9 @@ void __ref arch_remove_memory(int nid, u
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
--	struct page *page;
- 	int ret;
- 
--	/*
--	 * If we have an altmap then we need to skip over any reserved PFNs
--	 * when querying the zone.
--	 */
--	page = pfn_to_page(start_pfn);
--	if (altmap)
--		page += vmem_altmap_offset(altmap);
--
--	__remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- 
- 	/* Remove htab bolted mappings for this section of memory */
- 	start = (unsigned long)__va(start);
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -244,10 +244,8 @@ void arch_remove_memory(int nid, u64 sta
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
--	struct zone *zone;
- 
--	zone = page_zone(pfn_to_page(start_pfn));
--	__remove_pages(zone, start_pfn, nr_pages, altmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- 	vmem_remove_mapping(start, size);
- }
- #endif /* CONFIG_MEMORY_HOTPLUG */
---- a/arch/sh/mm/init.c
-+++ b/arch/sh/mm/init.c
-@@ -448,9 +448,7 @@ void arch_remove_memory(int nid, u64 sta
- {
- 	unsigned long start_pfn = PFN_DOWN(start);
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
--	struct zone *zone;
- 
--	zone = page_zone(pfn_to_page(start_pfn));
--	__remove_pages(zone, start_pfn, nr_pages, altmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- }
- #endif /* CONFIG_MEMORY_HOTPLUG */
---- a/arch/x86/mm/init_32.c
-+++ b/arch/x86/mm/init_32.c
-@@ -865,10 +865,8 @@ void arch_remove_memory(int nid, u64 sta
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
--	struct zone *zone;
- 
--	zone = page_zone(pfn_to_page(start_pfn));
--	__remove_pages(zone, start_pfn, nr_pages, altmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- }
- #endif
- 
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1146,14 +1146,8 @@ void __ref arch_remove_memory(int nid, u
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
--	struct page *page = pfn_to_page(start_pfn);
--	struct zone *zone;
- 
--	/* With altmap the first mapped page is offset from @start */
--	if (altmap)
--		page += vmem_altmap_offset(altmap);
--	zone = page_zone(page);
--	__remove_pages(zone, start_pfn, nr_pages, altmap);
-+	__remove_pages(start_pfn, nr_pages, altmap);
- 	kernel_physical_mapping_remove(start, start + size);
- }
- #endif /* CONFIG_MEMORY_HOTPLUG */
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -110,8 +110,8 @@ static inline bool movable_node_is_enabl
- 
- extern void arch_remove_memory(int nid, u64 start, u64 size,
- 			       struct vmem_altmap *altmap);
--extern void __remove_pages(struct zone *zone, unsigned long start_pfn,
--			   unsigned long nr_pages, struct vmem_altmap *altmap);
-+extern void __remove_pages(unsigned long start_pfn, unsigned long nr_pages,
-+			   struct vmem_altmap *altmap);
- 
- /* reasonably generic interface to expand the physical pages */
- extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
-@@ -331,6 +331,9 @@ extern int arch_add_memory(int nid, u64
- 		struct vmem_altmap *altmap, bool want_memblock);
- extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
- 		unsigned long nr_pages, struct vmem_altmap *altmap);
-+extern void remove_pfn_range_from_zone(struct zone *zone,
-+				       unsigned long start_pfn,
-+				       unsigned long nr_pages);
- extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
- extern bool is_memblock_offlined(struct memory_block *mem);
- extern int sparse_add_one_section(int nid, unsigned long start_pfn,
---- a/kernel/memremap.c
-+++ b/kernel/memremap.c
-@@ -141,8 +141,7 @@ static void devm_memremap_pages_release(
- 	mem_hotplug_begin();
- 	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
- 		pfn = align_start >> PAGE_SHIFT;
--		__remove_pages(page_zone(first_page), pfn,
--			       align_size >> PAGE_SHIFT, NULL);
-+		__remove_pages(pfn, align_size >> PAGE_SHIFT, NULL);
- 	} else {
- 		arch_remove_memory(nid, align_start, align_size,
- 				pgmap->altmap_valid ? &pgmap->altmap : NULL);
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -997,7 +997,6 @@ static void hmm_devmem_release(void *dat
- 	struct hmm_devmem *devmem = data;
- 	struct resource *resource = devmem->resource;
- 	unsigned long start_pfn, npages;
--	struct zone *zone;
- 	struct page *page;
- 	int nid;
- 
-@@ -1006,12 +1005,11 @@ static void hmm_devmem_release(void *dat
- 	npages = ALIGN(resource_size(resource), PA_SECTION_SIZE) >> PAGE_SHIFT;
- 
- 	page = pfn_to_page(start_pfn);
--	zone = page_zone(page);
- 	nid = page_to_nid(page);
- 
- 	mem_hotplug_begin();
- 	if (resource->desc == IORES_DESC_DEVICE_PRIVATE_MEMORY)
--		__remove_pages(zone, start_pfn, npages, NULL);
-+		__remove_pages(start_pfn, npages, NULL);
- 	else
- 		arch_remove_memory(nid, start_pfn << PAGE_SHIFT,
- 				   npages << PAGE_SHIFT, NULL);
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -449,10 +449,11 @@ static void update_pgdat_span(struct pgl
- 	pgdat->node_spanned_pages = node_end_pfn - node_start_pfn;
- }
- 
--static void __remove_zone(struct zone *zone, unsigned long start_pfn)
-+void __ref remove_pfn_range_from_zone(struct zone *zone,
-+				      unsigned long start_pfn,
-+				      unsigned long nr_pages)
- {
- 	struct pglist_data *pgdat = zone->zone_pgdat;
--	int nr_pages = PAGES_PER_SECTION;
- 	unsigned long flags;
- 
- #ifdef CONFIG_ZONE_DEVICE
-@@ -465,14 +466,17 @@ static void __remove_zone(struct zone *z
- 		return;
- #endif
- 
-+	clear_zone_contiguous(zone);
-+
- 	pgdat_resize_lock(zone->zone_pgdat, &flags);
- 	shrink_zone_span(zone, start_pfn, start_pfn + nr_pages);
- 	update_pgdat_span(pgdat);
- 	pgdat_resize_unlock(zone->zone_pgdat, &flags);
-+
-+	set_zone_contiguous(zone);
- }
- 
--static void __remove_section(struct zone *zone, struct mem_section *ms,
--			     unsigned long map_offset,
-+static void __remove_section(struct mem_section *ms, unsigned long map_offset,
- 			     struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn;
-@@ -483,14 +487,12 @@ static void __remove_section(struct zone
- 
- 	scn_nr = __section_nr(ms);
- 	start_pfn = section_nr_to_pfn((unsigned long)scn_nr);
--	__remove_zone(zone, start_pfn);
- 
- 	sparse_remove_one_section(ms, map_offset, altmap);
- }
- 
- /**
-- * __remove_pages() - remove sections of pages from a zone
-- * @zone: zone from which pages need to be removed
-+ * __remove_pages() - remove sections of pages
-  * @phys_start_pfn: starting pageframe (must be aligned to start of a section)
-  * @nr_pages: number of pages to remove (must be multiple of section size)
-  * @altmap: alternative device page map or %NULL if default memmap is used
-@@ -500,8 +502,8 @@ static void __remove_section(struct zone
-  * sure that pages are marked reserved and zones are adjust properly by
-  * calling offline_pages().
-  */
--void __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
--		    unsigned long nr_pages, struct vmem_altmap *altmap)
-+void __remove_pages(unsigned long phys_start_pfn, unsigned long nr_pages,
-+		    struct vmem_altmap *altmap)
- {
- 	unsigned long i;
- 	unsigned long map_offset = 0;
-@@ -510,8 +512,6 @@ void __remove_pages(struct zone *zone, u
- 	if (altmap)
- 		map_offset = vmem_altmap_offset(altmap);
- 
--	clear_zone_contiguous(zone);
--
+ #include <linux/io.h>
+ #include <linux/delay.h>
+@@ -170,13 +171,15 @@ static int geode_setkey_blk(struct crypt
  	/*
- 	 * We can only remove entire sections
+ 	 * The requested key size is not supported by HW, do a fallback
  	 */
-@@ -523,12 +523,9 @@ void __remove_pages(struct zone *zone, u
- 		unsigned long pfn = phys_start_pfn + i*PAGES_PER_SECTION;
+-	op->fallback.blk->base.crt_flags &= ~CRYPTO_TFM_REQ_MASK;
+-	op->fallback.blk->base.crt_flags |= (tfm->crt_flags & CRYPTO_TFM_REQ_MASK);
++	crypto_skcipher_clear_flags(op->fallback.blk, CRYPTO_TFM_REQ_MASK);
++	crypto_skcipher_set_flags(op->fallback.blk,
++				  tfm->crt_flags & CRYPTO_TFM_REQ_MASK);
  
- 		cond_resched();
--		__remove_section(zone, __pfn_to_section(pfn), map_offset,
--				 altmap);
-+		__remove_section(__pfn_to_section(pfn), map_offset, altmap);
- 		map_offset = 0;
+-	ret = crypto_blkcipher_setkey(op->fallback.blk, key, len);
++	ret = crypto_skcipher_setkey(op->fallback.blk, key, len);
+ 	if (ret) {
+ 		tfm->crt_flags &= ~CRYPTO_TFM_RES_MASK;
+-		tfm->crt_flags |= (op->fallback.blk->base.crt_flags & CRYPTO_TFM_RES_MASK);
++		tfm->crt_flags |= crypto_skcipher_get_flags(op->fallback.blk) &
++				  CRYPTO_TFM_RES_MASK;
  	}
--
--	set_zone_contiguous(zone);
- }
- 
- int set_online_page_callback(online_page_callback_t callback)
-@@ -898,6 +895,7 @@ failed_addition:
- 		 (unsigned long long) pfn << PAGE_SHIFT,
- 		 (((unsigned long long) pfn + nr_pages) << PAGE_SHIFT) - 1);
- 	memory_notify(MEM_CANCEL_ONLINE, &arg);
-+	remove_pfn_range_from_zone(zone, pfn, nr_pages);
- 	mem_hotplug_done();
  	return ret;
  }
-@@ -1682,6 +1680,7 @@ repeat:
- 	writeback_set_ratelimit();
+@@ -185,33 +188,28 @@ static int fallback_blk_dec(struct blkci
+ 		struct scatterlist *dst, struct scatterlist *src,
+ 		unsigned int nbytes)
+ {
+-	unsigned int ret;
+-	struct crypto_blkcipher *tfm;
+ 	struct geode_aes_op *op = crypto_blkcipher_ctx(desc->tfm);
++	SKCIPHER_REQUEST_ON_STACK(req, op->fallback.blk);
  
- 	memory_notify(MEM_OFFLINE, &arg);
-+	remove_pfn_range_from_zone(zone, start_pfn, nr_pages);
- 	mem_hotplug_done();
- 	return 0;
+-	tfm = desc->tfm;
+-	desc->tfm = op->fallback.blk;
+-
+-	ret = crypto_blkcipher_decrypt_iv(desc, dst, src, nbytes);
++	skcipher_request_set_tfm(req, op->fallback.blk);
++	skcipher_request_set_callback(req, 0, NULL, NULL);
++	skcipher_request_set_crypt(req, src, dst, nbytes, desc->info);
  
+-	desc->tfm = tfm;
+-	return ret;
++	return crypto_skcipher_decrypt(req);
+ }
++
+ static int fallback_blk_enc(struct blkcipher_desc *desc,
+ 		struct scatterlist *dst, struct scatterlist *src,
+ 		unsigned int nbytes)
+ {
+-	unsigned int ret;
+-	struct crypto_blkcipher *tfm;
+ 	struct geode_aes_op *op = crypto_blkcipher_ctx(desc->tfm);
++	SKCIPHER_REQUEST_ON_STACK(req, op->fallback.blk);
+ 
+-	tfm = desc->tfm;
+-	desc->tfm = op->fallback.blk;
+-
+-	ret = crypto_blkcipher_encrypt_iv(desc, dst, src, nbytes);
++	skcipher_request_set_tfm(req, op->fallback.blk);
++	skcipher_request_set_callback(req, 0, NULL, NULL);
++	skcipher_request_set_crypt(req, src, dst, nbytes, desc->info);
+ 
+-	desc->tfm = tfm;
+-	return ret;
++	return crypto_skcipher_encrypt(req);
+ }
+ 
+ static void
+@@ -311,6 +309,9 @@ geode_cbc_decrypt(struct blkcipher_desc
+ 	struct blkcipher_walk walk;
+ 	int err, ret;
+ 
++	if (nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	if (unlikely(op->keylen != AES_KEYSIZE_128))
+ 		return fallback_blk_dec(desc, dst, src, nbytes);
+ 
+@@ -343,6 +344,9 @@ geode_cbc_encrypt(struct blkcipher_desc
+ 	struct blkcipher_walk walk;
+ 	int err, ret;
+ 
++	if (nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	if (unlikely(op->keylen != AES_KEYSIZE_128))
+ 		return fallback_blk_enc(desc, dst, src, nbytes);
+ 
+@@ -370,8 +374,9 @@ static int fallback_init_blk(struct cryp
+ 	const char *name = crypto_tfm_alg_name(tfm);
+ 	struct geode_aes_op *op = crypto_tfm_ctx(tfm);
+ 
+-	op->fallback.blk = crypto_alloc_blkcipher(name, 0,
+-			CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK);
++	op->fallback.blk = crypto_alloc_skcipher(name, 0,
++						 CRYPTO_ALG_ASYNC |
++						 CRYPTO_ALG_NEED_FALLBACK);
+ 
+ 	if (IS_ERR(op->fallback.blk)) {
+ 		printk(KERN_ERR "Error allocating fallback algo %s\n", name);
+@@ -385,7 +390,7 @@ static void fallback_exit_blk(struct cry
+ {
+ 	struct geode_aes_op *op = crypto_tfm_ctx(tfm);
+ 
+-	crypto_free_blkcipher(op->fallback.blk);
++	crypto_free_skcipher(op->fallback.blk);
+ 	op->fallback.blk = NULL;
+ }
+ 
+@@ -424,6 +429,9 @@ geode_ecb_decrypt(struct blkcipher_desc
+ 	struct blkcipher_walk walk;
+ 	int err, ret;
+ 
++	if (nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	if (unlikely(op->keylen != AES_KEYSIZE_128))
+ 		return fallback_blk_dec(desc, dst, src, nbytes);
+ 
+@@ -454,6 +462,9 @@ geode_ecb_encrypt(struct blkcipher_desc
+ 	struct blkcipher_walk walk;
+ 	int err, ret;
+ 
++	if (nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	if (unlikely(op->keylen != AES_KEYSIZE_128))
+ 		return fallback_blk_enc(desc, dst, src, nbytes);
+ 
+--- a/drivers/crypto/geode-aes.h
++++ b/drivers/crypto/geode-aes.h
+@@ -64,7 +64,7 @@ struct geode_aes_op {
+ 	u8 *iv;
+ 
+ 	union {
+-		struct crypto_blkcipher *blk;
++		struct crypto_skcipher *blk;
+ 		struct crypto_cipher *cip;
+ 	} fallback;
+ 	u32 keylen;
 
 
