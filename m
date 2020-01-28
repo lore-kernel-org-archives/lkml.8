@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EBCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E86C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D70207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A0420716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222919;
-	bh=3hKvNmT8nmLVI3xCpYfux5YxrqvOxqQ22wVDWQSZauo=;
+	s=default; t=1580222923;
+	bh=4mTqcUWHS9yCc82Xc+8HHbgzuyY5H1RUR/J6Ui0wbis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NYj1CDRm/Pl1fOEycnKK6XL7kRhvddOxp6lK6GzVN5V4ABnrVGVoqHzQVf7ecAFU0
-	 osenGbmn+rJhpf/tEneZKyKX+zYjB4aV5BagDxSuHgOC/Rygg4J13PkPBC+Kqwr2U5
-	 S6HXmkMPe6HU1qQZVrucI9AmXoMVYIOWJPKivpqc=
+	b=jooV6IFGs5abo/C9fvBNBTNPN70lZU4vNRETvx121YydVpl/fJvfQYv7oV3iUuV8w
+	 1dJGn/q2OcN0huP6mHRGkxRSznba9vwhdfwzOcCnEMJ3W7xWuoO2+Nnr8sARHXASzx
+	 vegjjpFe3YT2LJZ7fXma/l2dITJCrRdB01IkhQXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgA1Osi (ORCPT
+        id S1727239AbgA1OCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:48:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48578 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:02:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbgA1OCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:02:19 -0500
+        id S1727550AbgA1OCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:02:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75097205F4;
-        Tue, 28 Jan 2020 14:02:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5799205F4;
+        Tue, 28 Jan 2020 14:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220138;
-        bh=3hKvNmT8nmLVI3xCpYfux5YxrqvOxqQ22wVDWQSZauo=;
+        s=default; t=1580220124;
+        bh=4mTqcUWHS9yCc82Xc+8HHbgzuyY5H1RUR/J6Ui0wbis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MhVaQu6qarECxABreXgoWGBF7mxYQlBk7fJiGjThhNsrVEcDB1Kn/fEBSn5+Hwgr1
-         hDAY5KtzGdJte9tOQ9g+2mSC2LNZEYqccTtKmX1bIUseUhrHwd+TwZgey4kfuwu9cj
-         Pthd7iNjW3Lkqtm4u5A0c7uEvnVpb2dfljkmc+8s=
+        b=ZQWoWFWijj/UeosxLR44J09fesGE7Yf9WSRFWdvmzj9RIrQL0/EkM/USPcOgbsu4Q
+         d9FtbqXpRkEmjUjaWmu2q2XcrOiL5rQUYCnQwee5HXa4EAqIWjp/3vMpgmdIcK9uz8
+         +nL/Z3wIj8kqPXIlet2ehW7d+F3gMRqmlIWFUFSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven-Haegar Koch <haegar@sdinet.de>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 032/104] ipv4: Detect rollover in specific fib table dump
-Date:   Tue, 28 Jan 2020 14:59:53 +0100
-Message-Id: <20200128135821.698374819@linuxfoundation.org>
+        stable@vger.kernel.org, Hamdan Igbaria <hamdani@mellanox.com>,
+        Erez Shitrit <erezsh@mellanox.com>,
+        Alex Vesker <valex@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 026/104] net/mlx5: DR, Enable counter on non-fwd-dest objects
+Date:   Tue, 28 Jan 2020 14:59:47 +0100
+Message-Id: <20200128135820.878204926@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,46 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Erez Shitrit <erezsh@mellanox.com>
 
-[ Upstream commit 9827c0634e461703abf81e8cc8b7adf5da5886d0 ]
+commmit b850a82114df9b0ec1d191dc64eed1f20a772e0f upstream.
 
-Sven-Haegar reported looping on fib dumps when 255.255.255.255 route has
-been added to a table. The looping is caused by the key rolling over from
-FFFFFFFF to 0. When dumping a specific table only, we need a means to detect
-when the table dump is done. The key and count saved to cb args are both 0
-only at the start of the table dump. If key is 0 and count > 0, then we are
-in the rollover case. Detect and return to avoid looping.
+The current code handles only counters that attached to dest, we still
+have the cases where we have counter on non-dest, like over drop etc.
 
-This only affects dumps of a specific table; for dumps of all tables
-(the case prior to the change in the Fixes tag) inet_dump_fib moved
-the entry counter to the next table and reset the cb args used by
-fib_table_dump and fn_trie_dump_leaf, so the rollover ffffffff back
-to 0 did not cause looping with the dumps.
-
-Fixes: effe67926624 ("net: Enable kernel side filtering of route dumps")
-Reported-by: Sven-Haegar Koch <haegar@sdinet.de>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 6a48faeeca10 ("net/mlx5: Add direct rule fs_cmd implementation")
+Signed-off-by: Hamdan Igbaria <hamdani@mellanox.com>
+Signed-off-by: Erez Shitrit <erezsh@mellanox.com>
+Reviewed-by: Alex Vesker <valex@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/fib_trie.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/steering/fs_dr.c |   42 ++++++++++-----
+ 1 file changed, 29 insertions(+), 13 deletions(-)
 
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -2175,6 +2175,12 @@ int fib_table_dump(struct fib_table *tb,
- 	int count = cb->args[2];
- 	t_key key = cb->args[3];
+--- a/drivers/net/ethernet/mellanox/mlx5/core/steering/fs_dr.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/fs_dr.c
+@@ -352,26 +352,16 @@ static int mlx5_cmd_dr_create_fte(struct
+ 	if (fte->action.action & MLX5_FLOW_CONTEXT_ACTION_FWD_DEST) {
+ 		list_for_each_entry(dst, &fte->node.children, node.list) {
+ 			enum mlx5_flow_destination_type type = dst->dest_attr.type;
+-			u32 id;
  
-+	/* First time here, count and key are both always 0. Count > 0
-+	 * and key == 0 means the dump has wrapped around and we are done.
-+	 */
-+	if (count && !key)
-+		return skb->len;
+ 			if (num_actions == MLX5_FLOW_CONTEXT_ACTION_MAX) {
+ 				err = -ENOSPC;
+ 				goto free_actions;
+ 			}
+ 
+-			switch (type) {
+-			case MLX5_FLOW_DESTINATION_TYPE_COUNTER:
+-				id = dst->dest_attr.counter_id;
++			if (type == MLX5_FLOW_DESTINATION_TYPE_COUNTER)
++				continue;
+ 
+-				tmp_action =
+-					mlx5dr_action_create_flow_counter(id);
+-				if (!tmp_action) {
+-					err = -ENOMEM;
+-					goto free_actions;
+-				}
+-				fs_dr_actions[fs_dr_num_actions++] = tmp_action;
+-				actions[num_actions++] = tmp_action;
+-				break;
++			switch (type) {
+ 			case MLX5_FLOW_DESTINATION_TYPE_FLOW_TABLE:
+ 				tmp_action = create_ft_action(dev, dst);
+ 				if (!tmp_action) {
+@@ -397,6 +387,32 @@ static int mlx5_cmd_dr_create_fte(struct
+ 		}
+ 	}
+ 
++	if (fte->action.action & MLX5_FLOW_CONTEXT_ACTION_COUNT) {
++		list_for_each_entry(dst, &fte->node.children, node.list) {
++			u32 id;
 +
- 	while ((l = leaf_walk_rcu(&tp, key)) != NULL) {
- 		int err;
++			if (dst->dest_attr.type !=
++			    MLX5_FLOW_DESTINATION_TYPE_COUNTER)
++				continue;
++
++			if (num_actions == MLX5_FLOW_CONTEXT_ACTION_MAX) {
++				err = -ENOSPC;
++				goto free_actions;
++			}
++
++			id = dst->dest_attr.counter_id;
++			tmp_action =
++				mlx5dr_action_create_flow_counter(id);
++			if (!tmp_action) {
++				err = -ENOMEM;
++				goto free_actions;
++			}
++
++			fs_dr_actions[fs_dr_num_actions++] = tmp_action;
++			actions[num_actions++] = tmp_action;
++		}
++	}
++
+ 	params.match_sz = match_sz;
+ 	params.match_buf = (u64 *)fte->val;
  
 
 
