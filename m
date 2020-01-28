@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CEFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FF5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169D624696
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0697620716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221550;
-	bh=WOzg1VHjGzAsOAm8nzNjjHEfGl3A5OKtibNtSXTdt2E=;
+	s=default; t=1580221553;
+	bh=/0hs1BMJug76hD76DDn1hUvFOfwgJOJkSsrfJoSqd8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNtElY6dVl0Evd5zLr6ACIJRysJFTVwXVh7a6sB/6rb1e6n2E82yw0lK9BSa60V9f
-	 KXvfkEO6l2GLbhzOcBdCyRPEz98WveFmJfFg2H3p3Jb61LwVSR+aBlvqSCjcCzjFN1
-	 FWMtN8n2iFxujE50SmoF/4hyKI6ik2iHKrb4V4nc=
+	b=nWLKcjxAKGDjiqI4uV6dRbKfPqJ0Om5MdivTHlRMYq2za02mPpItPflEosdBU1zPv
+	 m0bc1SV+CNlfH9hJaHYQigMsGCEUO8QWjaAcvmCSGslrQILYmXoasMiizgF7L0/T3J
+	 Xo75SqtEcI32BpSjSjJSHTxV8QPSJKYnbfrw9F1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733087AbgA1OZt (ORCPT
+        id S1731272AbgA1OZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:25:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52912 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:25:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732685AbgA1OZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:48 -0500
+        id S1730766AbgA1OZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:25:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47F692071E;
-        Tue, 28 Jan 2020 14:25:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B835424686;
+        Tue, 28 Jan 2020 14:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221547;
-        bh=WOzg1VHjGzAsOAm8nzNjjHEfGl3A5OKtibNtSXTdt2E=;
+        s=default; t=1580221550;
+        bh=/0hs1BMJug76hD76DDn1hUvFOfwgJOJkSsrfJoSqd8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aBv57GNPBDP3i22SWn1pAf1+RJyYuW8vX9S+hH0Smewik03zpcNyAks91YKQ/IqTq
-         kbpJI5B1rvobdmsZhkBC1fePA37FgCMXOimdJ/NFFXgCtw4vAquRY1nelNpjJzDU5m
-         Q8dAs7y9mRTfdYCaAUUzGfJU7+WPMa43AumVeFg8=
+        b=oGfCOSVWTJRs1YSwjQLvv2QVUdCsTIZ52y4kn+hbBojhYb19k5sb/whR/X1fUrr+K
+         myJ8guGLhp7HssYyqsj0kYSxBU0+K96UnzR7WdZR44KyU6sxZc+dljL2l0JqsJR6r1
+         8PEE6iKk7qbrcSc3NiA66OsX/JAjUf8tI18o0yEA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 232/271] net: ethtool: Add back transceiver type
-Date:   Tue, 28 Jan 2020 15:06:21 +0100
-Message-Id: <20200128135909.838035237@linuxfoundation.org>
+Subject: [PATCH 4.9 233/271] net: phy: Keep reporting transceiver type
+Date:   Tue, 28 Jan 2020 15:06:22 +0100
+Message-Id: <20200128135909.908143382@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,66 +61,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 19cab8872692960535aa6d12e3a295ac51d1a648 upstream.
+commit ceb628134a75564d7bfa8e4ef902e6e588339e11 upstream.
 
-Commit 3f1ac7a700d0 ("net: ethtool: add new ETHTOOL_xLINKSETTINGS API")
-deprecated the ethtool_cmd::transceiver field, which was fine in
-premise, except that the PHY library was actually using it to report the
-type of transceiver: internal or external.
-
-Use the first word of the reserved field to put this __u8 transceiver
-field back in. It is made read-only, and we don't expect the
-ETHTOOL_xLINKSETTINGS API to be doing anything with this anyway, so this
-is mostly for the legacy path where we do:
-
-ethtool_get_settings()
--> dev->ethtool_ops->get_link_ksettings()
-   -> convert_link_ksettings_to_legacy_settings()
-
-to have no information loss compared to the legacy get_settings API.
+With commit 2d55173e71b0 ("phy: add generic function to support
+ksetting support"), we lost the ability to report the transceiver type
+like we used to. Now that we have added back the transceiver type to
+ethtool_link_settings, we can report it back like we used to and have no
+loss of information.
 
 Fixes: 3f1ac7a700d0 ("net: ethtool: add new ETHTOOL_xLINKSETTINGS API")
+Fixes: 2d55173e71b0 ("phy: add generic function to support ksetting support")
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/ethtool.h |    6 +++++-
- net/core/ethtool.c           |    2 ++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/phy/phy.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/include/uapi/linux/ethtool.h
-+++ b/include/uapi/linux/ethtool.h
-@@ -1687,6 +1687,8 @@ enum ethtool_reset_flags {
-  *	%ethtool_link_mode_bit_indices for the link modes, and other
-  *	link features that the link partner advertised through
-  *	autonegotiation; 0 if unknown or not applicable.  Read-only.
-+ * @transceiver: Used to distinguish different possible PHY types,
-+ *	reported consistently by PHYLIB.  Read-only.
-  *
-  * If autonegotiation is disabled, the speed and @duplex represent the
-  * fixed link mode and are writable if the driver supports multiple
-@@ -1738,7 +1740,9 @@ struct ethtool_link_settings {
- 	__u8	eth_tp_mdix;
- 	__u8	eth_tp_mdix_ctrl;
- 	__s8	link_mode_masks_nwords;
--	__u32	reserved[8];
-+	__u8	transceiver;
-+	__u8	reserved1[3];
-+	__u32	reserved[7];
- 	__u32	link_mode_masks[0];
- 	/* layout of link_mode_masks fields:
- 	 * __u32 map_supported[link_mode_masks_nwords];
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -514,6 +514,8 @@ convert_link_ksettings_to_legacy_setting
- 		= link_ksettings->base.eth_tp_mdix;
- 	legacy_settings->eth_tp_mdix_ctrl
- 		= link_ksettings->base.eth_tp_mdix_ctrl;
-+	legacy_settings->transceiver
-+		= link_ksettings->base.transceiver;
- 	return retval;
- }
- 
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -463,7 +463,8 @@ int phy_ethtool_ksettings_get(struct phy
+ 		cmd->base.port = PORT_BNC;
+ 	else
+ 		cmd->base.port = PORT_MII;
+-
++	cmd->base.transceiver = phy_is_internal(phydev) ?
++				XCVR_INTERNAL : XCVR_EXTERNAL;
+ 	cmd->base.phy_address = phydev->mdio.addr;
+ 	cmd->base.autoneg = phydev->autoneg;
+ 	cmd->base.eth_tp_mdix_ctrl = phydev->mdix;
 
 
