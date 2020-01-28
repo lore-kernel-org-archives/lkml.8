@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D5FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3897C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87C524681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B176024688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220608;
-	bh=FjKs7kj1QyIdMdGW6JMz6tb12uo0pJoik3pgWS1XT2M=;
+	s=default; t=1580220610;
+	bh=imP1lVLmVr62EPE8Lw+MwCm/y8htQT19fBkKWTSVtdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYELJN9dmuzSSziqpD4RBwUAMMqOdtMjtUXCAADi+C+Cmau4rOhuZvkeMtR6OwMFx
-	 bk6DTKDFf14JE6jCmFunehm8YTXvKhZM150HjK8frV6wXXnZzpKpNxuAcw9aH1Ns/k
-	 SrCNxP6Y4nfL6jzhkY5sBu6hcdU+PZjQBONGDNfw=
+	b=HUv/INx0EnDmL+TeC86H3HCFUX3YyuOBUnPEu+c9Y3f47f6rCNc0+WCGN033NGaUy
+	 zTepI135zzWSKrdLrgSrkJjKwsCXCdxzg760F6BCEH+G+VZqNCzo5hWRmu+6KAVFr+
+	 YPkoZ1hKkKogQhGLRMgfHhnHC4a0ONWMWbh6JYz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgA1OKG (ORCPT
+        id S1728144AbgA1OKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:10:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58610 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:10:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729075AbgA1OKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:10:02 -0500
+        id S1729113AbgA1OKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:10:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 525F724685;
-        Tue, 28 Jan 2020 14:10:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40DE524685;
+        Tue, 28 Jan 2020 14:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220601;
-        bh=FjKs7kj1QyIdMdGW6JMz6tb12uo0pJoik3pgWS1XT2M=;
+        s=default; t=1580220606;
+        bh=imP1lVLmVr62EPE8Lw+MwCm/y8htQT19fBkKWTSVtdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPyGn1qJH7Zdm69iOGFH3P0OO7wgyr4rsiRWQhmS80VU5m5p4M6GWJT5PpQtqXWZZ
-         tum0G4CWQHbn7mSanbHduZw21oyFrogLIEe5saCdssqFXIMKrxDZ5FKM2+JWIPHqnY
-         X/QvdZbKQGjQEt2DTIUGsOibc0V5eKkV8rHATgms=
+        b=evAi4hb8CPmWAWcE73Pmdv0Pb5no9tPsK59WxywJijxmPvzQuMGg/I4wq7sU4tDCt
+         IRcm692pXd33D3K1rtzjDxC3A9REFvNAZzRMhxvPk1ywI+CDg3kmHUhOo4nsMZktIW
+         Os8LszGs86efVfuoFYIKpNr/Y4lDfJROVsElk1yE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Sylvain Chouleur <sylvain.chouleur@intel.com>,
+        Patrick McDermott <patrick.mcdermott@libiquity.com>,
+        linux-rtc@vger.kernel.org, Eric Wong <e@80x24.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 035/183] crypto: tgr192 - fix unaligned memory access
-Date:   Tue, 28 Jan 2020 15:04:14 +0100
-Message-Id: <20200128135833.524246053@linuxfoundation.org>
+Subject: [PATCH 4.4 037/183] rtc: cmos: ignore bogus century byte
+Date:   Tue, 28 Jan 2020 15:04:16 +0100
+Message-Id: <20200128135833.714056908@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,48 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Eric Wong <e@80x24.org>
 
-[ Upstream commit f990f7fb58ac8ac9a43316f09a48cff1a49dda42 ]
+[ Upstream commit 2a4daadd4d3e507138f8937926e6a4df49c6bfdc ]
 
-Fix an unaligned memory access in tgr192_transform() by using the
-unaligned access helpers.
+Older versions of Libreboot and Coreboot had an invalid value
+(`3' in my case) in the century byte affecting the GM45 in
+the Thinkpad X200.  Not everybody's updated their firmwares,
+and Linux <= 4.2 was able to read the RTC without problems,
+so workaround this by ignoring invalid values.
 
-Fixes: 06ace7a9bafe ("[CRYPTO] Use standard byte order macros wherever possible")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 3c217e51d8a272b9 ("rtc: cmos: century support")
+
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Sylvain Chouleur <sylvain.chouleur@intel.com>
+Cc: Patrick McDermott <patrick.mcdermott@libiquity.com>
+Cc: linux-rtc@vger.kernel.org
+Signed-off-by: Eric Wong <e@80x24.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/tgr192.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/asm-generic/rtc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/crypto/tgr192.c b/crypto/tgr192.c
-index 321bc6ff2a9d1..904c8444aa0a2 100644
---- a/crypto/tgr192.c
-+++ b/crypto/tgr192.c
-@@ -25,8 +25,9 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/mm.h>
--#include <asm/byteorder.h>
- #include <linux/types.h>
-+#include <asm/byteorder.h>
-+#include <asm/unaligned.h>
+diff --git a/include/asm-generic/rtc.h b/include/asm-generic/rtc.h
+index 4e3b6558331ea..3e457ae2d571d 100644
+--- a/include/asm-generic/rtc.h
++++ b/include/asm-generic/rtc.h
+@@ -106,7 +106,7 @@ static inline unsigned int __get_rtc_time(struct rtc_time *time)
+ 	time->tm_year += real_year - 72;
+ #endif
  
- #define TGR192_DIGEST_SIZE 24
- #define TGR160_DIGEST_SIZE 20
-@@ -468,10 +469,9 @@ static void tgr192_transform(struct tgr192_ctx *tctx, const u8 * data)
- 	u64 a, b, c, aa, bb, cc;
- 	u64 x[8];
- 	int i;
--	const __le64 *ptr = (const __le64 *)data;
+-	if (century)
++	if (century > 20)
+ 		time->tm_year += (century - 19) * 100;
  
- 	for (i = 0; i < 8; i++)
--		x[i] = le64_to_cpu(ptr[i]);
-+		x[i] = get_unaligned_le64(data + i * sizeof(__le64));
- 
- 	/* save */
- 	a = aa = tctx->a;
+ 	/*
 -- 
 2.20.1
 
