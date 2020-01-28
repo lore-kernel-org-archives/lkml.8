@@ -2,95 +2,165 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F7BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400E1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C382071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221474;
-	bh=U7KFAaLtlV+YU5BPWP95GtvN00quRSfQ7ja0XbUw8LA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GTwTZDDCg/QBa0686WTjdQxrj36TjEEvKFdeHsSf6yUleRPbcpe1GMF/l6pF0cHwc
-	 zyAf5ovAfy/6t1WbxcYQmt+heh0lLyFtf8bnHqmRtezsXAKdjWjnlsyvJZ5eVkwTGT
-	 uZ8WsuW7hpga9MsjDlKIk+InfoDz/EF6zaLBt7Os=
+	by mail.kernel.org (Postfix) with ESMTP id 1782324690
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgA1OYd (ORCPT
+        id S1727843AbgA1OYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Jan 2020 09:24:37 -0500
+Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:53950 "EHLO
+        outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732560AbgA1OYd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jan 2020 09:24:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730145AbgA1OY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:24:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B94724686;
-        Tue, 28 Jan 2020 14:24:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221467;
-        bh=U7KFAaLtlV+YU5BPWP95GtvN00quRSfQ7ja0XbUw8LA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=08uIz6wFbmsYWecjIRQPFOUOns7Xrw5KOS0A0VoaTvvvAcCS4ua/ZDZ4GxH1S9LHW
-         p51GVBedYzkNmH9a5qDak2B6vUgj0Z4PgJRGekBU/k2lwIjykjSkF8DaJXDRPTBMEH
-         aGuse9UDepQX4FD5YLk0svfcHXziPH6q9aQlgwq4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, William Dauchy <w.dauchy@criteo.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 237/271] net, ip6_tunnel: fix namespaces move
-Date:   Tue, 28 Jan 2020 15:06:26 +0100
-Message-Id: <20200128135910.191879594@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
-References: <20200128135852.449088278@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id 551B61C2386
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 14:24:30 +0000 (GMT)
+Received: (qmail 7133 invoked from network); 28 Jan 2020 14:24:30 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 28 Jan 2020 14:24:30 -0000
+Date:   Tue, 28 Jan 2020 14:24:27 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Jan Kara <jack@suse.cz>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
+ stack on the same CPU
+Message-ID: <20200128142427.GC3466@techsingularity.net>
+References: <20200127143608.GX3466@techsingularity.net>
+ <20200127223256.GA18610@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200127223256.GA18610@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: William Dauchy <w.dauchy@criteo.com>
+I'm adding Jan Kara to the cc as he was looking into the workqueue
+implemention in depth this morning and helped me better understand what
+is going on.
 
-[ Upstream commit 5311a69aaca30fa849c3cc46fb25f75727fb72d0 ]
+Phil and Ming are still cc'd as an independent test would still be nice.
 
-in the same manner as commit d0f418516022 ("net, ip_tunnel: fix
-namespaces move"), fix namespace moving as it was broken since commit
-8d79266bc48c ("ip6_tunnel: add collect_md mode to IPv6 tunnel"), but for
-ipv6 this time; there is no reason to keep it for ip6_tunnel.
+> <light bulb illumination>
+> 
+> Is this actually ping-ponging the CIL flush and journal IO
+> completion because xlog_bio_end_io() always punts journal IO
+> completion to the log workqueue, which is:
+> 
+> 	log->l_ioend_workqueue = alloc_workqueue("xfs-log/%s",
+> 			WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_HIGHPRI, 0,
+> 			mp->m_super->s_id);
+> 
+> i.e. it uses per-cpu kthreads for processing journal IO completion
+> similar to DIO io completion and thereby provides a vector for
+> the same issue?
+> 
 
-Fixes: 8d79266bc48c ("ip6_tunnel: add collect_md mode to IPv6 tunnel")
-Signed-off-by: William Dauchy <w.dauchy@criteo.com>
-Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/ip6_tunnel.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Your light bulb is on point. The XFS unbound workqueue does run near the
+task and does not directly cause the migration but the IO completions
+matter. As it turned out, it was the IO completions I was looking at
+in the old traces but there was insufficient detail to see the exact
+sequence. I only observed that a bound wq at the end was causing the
+migration and it was a consistent pattern.
 
---- a/net/ipv6/ip6_tunnel.c
-+++ b/net/ipv6/ip6_tunnel.c
-@@ -1861,10 +1861,8 @@ static int ip6_tnl_dev_init(struct net_d
- 	if (err)
- 		return err;
- 	ip6_tnl_link_config(t);
--	if (t->parms.collect_md) {
--		dev->features |= NETIF_F_NETNS_LOCAL;
-+	if (t->parms.collect_md)
- 		netif_keep_dst(dev);
--	}
- 	return 0;
- }
- 
+I did a more detailed trace that included workqueue tracepoints. I limited
+the run to 1 and 2 dbench clients and compared with and without the
+patch. I still did not dig deep into the specifics of how XFS interacts
+with workqueues because I'm focused on how the scheduler reacts.
 
+The patch is still having an impact with bound workqueues as expected
+because;
 
+# zgrep sched_migrate_task 5.5.0-rc7-tipsched-20200124/iter-0/ftrace-dbench4.gz | wc -l
+556259
+# zgrep sched_migrate_task 5.5.0-rc7-kworkerstack-v1r2/iter-0/ftrace-dbench4.gz | wc -l
+11736
+
+There are still migrations happening but there also was a lot of logging
+going on for this run so it's not directly comparable what I originally
+reported.
+
+This is an example sequence of what's happening from a scheduler
+perspective on the vanilla kernel. It's editted a bit because there
+were a lot of other IOs going on, mostly logging related which confuse
+the picture.
+
+          dbench-25633 [004] d...   194.998648: workqueue_queue_work: work struct=000000001cccdc2d function=xlog_cil_push_work [xfs] workqueue=00000000d90239c9 req_cpu=512 cpu=4294967295
+          dbench-25633 [004] d...   194.998650: sched_waking: comm=kworker/u161:6 pid=718 prio=120 target_cpu=006
+          dbench-25633 [004] d...   194.998655: sched_wakeup: comm=kworker/u161:6 pid=718 prio=120 target_cpu=006
+  kworker/u161:6-718   [006] ....   194.998692: workqueue_execute_start: work struct 000000001cccdc2d: function xlog_cil_push_work [xfs]
+  kworker/u161:6-718   [006] ....   194.998706: workqueue_execute_end: work struct 000000001cccdc2d
+
+Dbench is on CPU 4, it queues xlog_cil_push_work on an UNBOUND
+workqueue. An unbound kworker wakes on CPU 6 and finishes quickly.
+
+  kworker/u161:6-718   [006] ....   194.998707: workqueue_execute_start: work struct 0000000046fbf8d5: function wq_barrier_func
+  kworker/u161:6-718   [006] d...   194.998708: sched_waking: comm=dbench pid=25633 prio=120 target_cpu=004
+  kworker/u161:6-718   [006] d...   194.998712: sched_wakeup: comm=dbench pid=25633 prio=120 target_cpu=004
+  kworker/u161:6-718   [006] ....   194.998713: workqueue_execute_end: work struct 0000000046fbf8d5
+
+The kworker wakes dbench and finding that CPU 4 is still free, dbench
+uses its previous CPU and no migration occurs.
+
+          dbench-25633 [004] d...   194.998727: workqueue_queue_work: work struct=00000000442434a7 function=blk_mq_requeue_work workqueue=00000000df918933 req_cpu=512 cpu=4
+          dbench-25633 [004] d...   194.998728: sched_waking: comm=kworker/4:1H pid=991 prio=100 target_cpu=004
+          dbench-25633 [004] dN..   194.998731: sched_wakeup: comm=kworker/4:1H pid=991 prio=100 target_cpu=004
+
+Dbench queues blk_mq_requeue_work. This is a BOUND workqueue with a
+mandatory CPU target of 4 so no migration..
+
+    kworker/4:1H-991   [004] ....   194.998736: workqueue_execute_start: work struct 00000000442434a7: function blk_mq_requeue_work
+    kworker/4:1H-991   [004] ....   194.998742: workqueue_execute_end: work struct 00000000442434a7
+
+blk_mq_requeue_work is done
+
+          <idle>-0     [004] d.s.   194.998859: workqueue_queue_work: work struct=00000000442434a7 function=blk_mq_requeue_work workqueue=00000000df918933 req_cpu=512 cpu=4
+          <idle>-0     [004] d.s.   194.998861: sched_waking: comm=kworker/4:1H pid=991 prio=100 target_cpu=004
+          <idle>-0     [004] dNs.   194.998862: sched_wakeup: comm=kworker/4:1H pid=991 prio=100 target_cpu=004
+    kworker/4:1H-991   [004] ....   194.998866: workqueue_execute_start: work struct 00000000442434a7: function blk_mq_requeue_work
+    kworker/4:1H-991   [004] ....   194.998870: workqueue_execute_end: work struct 00000000442434a7
+          <idle>-0     [004] d.s.   194.998911: workqueue_queue_work: work struct=0000000072f39adb function=xlog_ioend_work [xfs] workqueue=00000000008f3d7f req_cpu=512 cpu=4
+          <idle>-0     [004] d.s.   194.998912: sched_waking: comm=kworker/4:1H pid=991 prio=100 target_cpu=004
+          <idle>-0     [004] dNs.   194.998913: sched_wakeup: comm=kworker/4:1H pid=991 prio=100 target_cpu=004
+
+Ok, this looks like an IRQ delivered for IO completion and the
+xlog_ioend_work is reached. The BOUND kworker is woken again by the IRQ
+handler on CPU 4 because it has no choice.
+
+    kworker/4:1H-991   [004] ....   194.998918: workqueue_execute_start: work struct 0000000072f39adb: function xlog_ioend_work [xfs]
+    kworker/4:1H-991   [004] d...   194.998943: sched_waking: comm=dbench pid=25633 prio=120 target_cpu=004
+    kworker/4:1H-991   [004] d...   194.998945: sched_migrate_task: comm=dbench pid=25633 prio=120 orig_cpu=4 dest_cpu=5
+    kworker/4:1H-991   [004] d...   194.998947: sched_wakeup: comm=dbench pid=25633 prio=120 target_cpu=005
+    kworker/4:1H-991   [004] ....   194.998948: workqueue_execute_end: work struct 0000000072f39adb
+
+The IO completion handler finishes, the bound workqueue tries to wake
+dbench on its old CPU. The BOUND kworker is on CPU 4, the task wants
+CPU 4 but the CPU is busy with the kworker so the scheduler function
+select_idle_sibling picks CPU 5 instead and now the task is migrated
+and we have started our round-trip of all CPUs sharing a LLC. It's not a
+perfect round-robin because p->recent_used_cpu often works.  Looking at
+the traces, dbench bounces back and forth between CPUs 4 and 5 for 7 IO
+completions before bouncing between CPUs 6/7 and so on.
+
+The patch alters the very last stage. The IO completion is a bound kworker
+and allows the wakee task to use the same CPU and avoid the migration.
+
+-- 
+Mel Gorman
+SUSE Labs
