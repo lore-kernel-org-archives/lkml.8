@@ -2,155 +2,105 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8424FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76FAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6461A2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9328206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:07:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580242039;
+	bh=+t4gH/6cEZWpTIvs+VphKJu6DJ1p8PO9dp9lHOUgO5c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ghvmXWgEWR802Q+5/AJbdZTSR1VfRdf9bjR8afLMccAAao64dlJoziC3lgXVGOY4v
+	 0K1exgAGQ+4jt7fkiT1qkR7HZisMDV2beCWH8DGRKPkFMm+0L5J07HWyY7VouMYwNH
+	 Xa5lrZOSl7v2qmusPp4CyoTtVlT8YeotCmZMXb3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgA1UHI (ORCPT
+        id S1726487AbgA1UHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 15:07:08 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2325 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726143AbgA1UHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 15:07:08 -0500
-Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id CA9D9A9543D69BE1C047;
-        Tue, 28 Jan 2020 20:07:06 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Jan 2020 20:07:06 +0000
-Received: from [127.0.0.1] (10.210.167.110) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jan
- 2020 20:07:05 +0000
-Subject: Re: [PATCH RFC 0/2] Add basic generic ACPI soc driver
-To:     Jeremy Linton <jeremy.linton@arm.com>, <rjw@rjwysocki.net>,
-        <lenb@kernel.org>
-CC:     <arnd@arndb.de>, <olof@lixom.net>, <linux-kernel@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <guohanjun@huawei.com>,
-        <gregkh@linuxfoundation.org>
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <bb87efe5-d0be-498a-25a1-008a7bebd452@arm.com>
- <5ab3a97d-bbc4-6d5a-fd06-f8da324339ab@huawei.com>
- <6be8d175-477d-d163-3fe0-3ab562874ce4@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b4d00a0a-1bf9-9ccd-c734-f532cac523d1@huawei.com>
-Date:   Tue, 28 Jan 2020 20:07:04 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 28 Jan 2020 15:07:13 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35219 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbgA1UHN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 15:07:13 -0500
+Received: by mail-lf1-f68.google.com with SMTP id z18so10086917lfe.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 12:07:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Nlt/tjFD5YomiN29t88wVXqgOVY3HN5LwPb1TeoyMQ=;
+        b=fjxKCNEIL8MNiobXiUQ2LZhUR17pH9rB7rnCnKQhsYTU2ytQnMxMLjeZBNimhw58SX
+         xQ3azVty531ADvo2tmF/+jCOsLaafMFFiGNfts71TboTNbjQhs+bXBbbKB3dk3WkJMn0
+         cqtZeLCpFlkEAbetKQLcpsIOX5oAEJOmI0ReY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Nlt/tjFD5YomiN29t88wVXqgOVY3HN5LwPb1TeoyMQ=;
+        b=lwVbAhgFkPyd3rsS7Gp2ZU0isYGvHYcGCeua4jiTdjJzhfyOV7qjvBuFeXCjEUPYKb
+         rNRcr+ryp9E9AmmJvryRZCgzHTWRuIZmY3QTBwwKFzS2xrjJVYxOsF5v0nZ9nnTJ+Mux
+         3wHJ72F3RowQF/RqueVN6Urlu9IZLZJFhazgAlO245T+9UZBJcv0/gcOoKFr9YieHivh
+         NNbz9ljG7BFI7Zpgtr8SwI56dRJd9YBdqeXeJuy6avHDc1lVHAv90OeIxHDOvMAIW/ya
+         RYLdSZNSiWd54K/+IOk1k+okYP5Y3qQCpdDc8enDSByEQRL4BpOIq5OneYfiY+Ee2VBc
+         2meQ==
+X-Gm-Message-State: APjAAAXGoCkqRWDRN+HQ122QjzwruzgIMunVCtVhQ3tLrKM3YxaicMvl
+        XXQUcDv2zMa8n06Ptw88u2YgD0zy8bg=
+X-Google-Smtp-Source: APXvYqyOyGN3/V2NHD2Nbk0h+DBNUrb6x0coogU3E0J878zQwPE2LdlLYRNggoMUu7KMXtwOsUeEhw==
+X-Received: by 2002:a19:5007:: with SMTP id e7mr3364384lfb.153.1580242030535;
+        Tue, 28 Jan 2020 12:07:10 -0800 (PST)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id o6sm10182850lfg.11.2020.01.28.12.07.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 12:07:09 -0800 (PST)
+Received: by mail-lf1-f46.google.com with SMTP id b15so10097958lfc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 12:07:09 -0800 (PST)
+X-Received: by 2002:a19:f514:: with SMTP id j20mr3346825lfb.31.1580242029371;
+ Tue, 28 Jan 2020 12:07:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <6be8d175-477d-d163-3fe0-3ab562874ce4@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.167.110]
-X-ClientProxiedBy: lhreml712-chm.china.huawei.com (10.201.108.63) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <20200128165906.GA67781@gmail.com> <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
+In-Reply-To: <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 28 Jan 2020 12:06:53 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+Message-ID: <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/asm changes for v5.6
+To:     Ingo Molnar <mingo@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@suse.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeremy,
+On Tue, Jan 28, 2020 at 11:51 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+>         ALTERNATIVE_2 \
+>                 "cmp  $680, %rdx ; jb 3f ; cmpb %dil, %sil; je 4f", \
+>                 "movq %rdx, %rcx ; rep movsb; retq", X86_FEATURE_FSRM, \
+>                 "cmp $0x20, %rdx; jb 1f; movq %rdx, %rcx; rep movsb; retq", X86_FEATURE_ERMS
 
->> I did consider DMI, but I want something more generic, i.e. could 
->> cover embedded/DT systems also.
->>
->> And I need to double check if DMI really has the info I require. Last 
->> time I checked, it didn't for my dev board, but I know that some 
->> fields are simply not filled in.
-> 
-> Well the info is probably there, but that doesn't mean it should be used 
-> programmatically. As your board shows, its not that reliable. And 
-> looking at the linked patch I see you mention that.
+Note the UNTESTED part.
 
-Right, I am trying to stay away from that.
+In particular, I didn't check what the priority for the alternatives
+is. Since FSRM being set always implies ERMS being set too, it may be
+that the ERMS case is always picked with the above code.
 
-> 
-> 
->>
->>>
->>> But, quickly looking at the use case, I can't help but think you 
->>> don't really want any of the above, or the PPTT id. It seems the 
->>> mapping should actually be tied directly to the uncore PMU 
->>> definition, rather than a soc/machine/whatever identifier. Which 
->>> would imply keying off one of the ACPI object identifiers for the PMU 
->>> itself.
->>
->> So a PMU device (/sys/bus/event_source/devices) does not have a link 
->> to the ACPI object identifiers or uncore PMU platform device etc.
->>
->> And even if it did, there is no clear link between that ACPI object 
->> and the events it supports for that implementation.
-> 
-> Having a direct link isn't ideal either. It seems you do mention the pmu 
-> naming conventions, which can be controlled based on ACPI object 
-> identifiers.
+So maybe the FSRM and ERMS lines need to be switched around, and
+somebody should add a comment to the ALTERNATIVE_2 macro about the
+priority rules for feature1 vs feature2 when both are set..
 
-Not necessarily.
+IOW, testing most definitely required for that patch suggestion of mine..
 
-  Something like "uncore_dmc_hsi1" where the appended bits
-> could for example vary on _CID+_UID or DT name.
-
-We already do include some naming from ACPI tables in naming (see 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c?h=v5.5#n377), 
-but this is not good enough. I'll explain below.
-
-> 
-> Not sure that is a particularly good suggestion either, but I do think 
-> its a better idea to tie the mapping to the pmu type/man/version concept 
-> than the SOC it appears in. The sysfs-bus-event_source-devices-* ABI 
-> docs are noticeably silent on the format of the pmu name (is that 
-> somewhere else?).
-
-I would say that there is a lack of PMU naming convention, which I did 
-note in my referenced patchset.
-
-Apart from that, I think that this problem can be better explained with 
-the SMMUv3 PMCG example.
-
-So this PMU has support for a number of IMP DEF events. The SMMUv3 PMCG 
-has no method to identify the implementation, so we cannot know which 
-IMP DEF events are supported for a specific implementation.
-
-The PMCG PMU naming is fixed, and is in the form smmuv3_pmcg_XXXX - so 
-we cannot use some special naming. And the XXXX does not tell us 
-anything about the implementation to help know the IMP DEF events.
-
-Now the perf tool has support to know which CPU+uncore events are 
-supported for a particular CPU through pmu-events feature - see 
-tools/perf/pmu-events/README
-
-The perf tool includes a number of per-CPU event tables.
-
-The matching of per-CPU event table the perf tool uses is based on 
-knowing the host CPUID - this is easy to retrieve this via some special 
-arch-specific CPU reg, etc. So once it knows the CPUID, "perf list" 
-command can show all the events for that CPU.
-
-Now we can extend this idea for the PMCG PMU to support the IMP DEF 
-events. For this, we add support for a table of "system" PMU events per 
-SoC - similar to the CPU tables - containing the PMCG events. We cannot 
-use the CPUID to match the event table for SoC, as a CPUID is not always 
-specific to a SoC - that's definite for ARM world and definite for 
-SMMUv3 PMCG. So then perf tool needs to know some SoC identifier to 
-match the per-SoC events table. That's why I want the SoC id in readable 
-form in sysfs.
-
-To add a final note on uncore PMUs, for ARM this is bit of grey area. So 
-currently we match uncore PMUs on CPUID. However I figure some SoC 
-implementer could take, for example, an A72, and add some uncore PMUs. 
-As such, we cannot always match on CPUID, so being able to match on a 
-SoC identifier would be better also.
-
-Hope it explains.
-
-Thanks,
-John
+                Linus
