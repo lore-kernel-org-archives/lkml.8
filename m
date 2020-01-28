@@ -2,85 +2,146 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54265C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B8FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1892C207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E40207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:00:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KnDzVDoX"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TsSA3csC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgA1V7l (ORCPT
+        id S1726427AbgA1WAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 16:59:41 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45381 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgA1V7k (ORCPT
+        Tue, 28 Jan 2020 17:00:38 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:47364 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726234AbgA1WAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 16:59:40 -0500
-Received: by mail-il1-f193.google.com with SMTP id p8so12107252iln.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 13:59:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5qE2yGDar/QO89ZtmbEwV0agYaFSTn6aRkOLzm6MdDM=;
-        b=KnDzVDoX/735WRiNifi2vMkpwGbkqY73NCKHH2E7ldvV16oBi22WMClKG0mBbMlGoP
-         agf6TI3e+yFWCxKVjYsWoadqbKcJ2Y/FWp0721tdhrwJ9PXevZB1t61oMCg4H7DpShbA
-         LYf2DFWQTfn9Em0DZZweVfszDmmnGSE6SeLYTGeQmUpFn82c+4huguBLrWvgNi6giiSt
-         QsCoreTxs1E/HkcMHUFTcbq1npKL2NMPCY0LbbqcqTFOxJ1H2r4KUJVu0CBREgM47dcx
-         yeMKjAg704GP99/Z2dIS5/oePgycIA2fudk8NWYJzVtRWVJAYPhFH/QKET5c1O3ZRtAJ
-         SaLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5qE2yGDar/QO89ZtmbEwV0agYaFSTn6aRkOLzm6MdDM=;
-        b=Tu9uDIlQHpqztjub86O4QnLvllGGEMQf7vHv2XuVOHRVAhqPFZvAZOyV+9pmN9Dcni
-         qIoxTYM8ZxXtwouPkxaYeTE9Dt6bQcFLdmK0u/eB+S1QvEKb/mSkw4P46M5ubMwfFpjT
-         uiopmkatpTPZmqwtuPINHAltNHNJmbvbxAcTjn7sbGshds/u50sivYwUTTV/MTI4MfS8
-         uCBacfDH3rsDoJOVreD43xrI/C0ybuN42s1WMH+vjdPv/XuUcqrkBykwUWjTKfoWTNg/
-         1Av7jXaNFgaqZxBtHy2DBLgDr+US09+ANFmLQPLljk1cknDGSk226TIkEjhaWAVIHGKs
-         pjjA==
-X-Gm-Message-State: APjAAAVijAIcVzXVI8ajb2t38RizKFw9Y7EQ2WdyYxF8Xu47gqe+8YEQ
-        t+yvjTmxoJ1T2htQlQ2MJubWD8GE2DKvnrNScHcwDw==
-X-Google-Smtp-Source: APXvYqya8Ty/3A9imY+gRu5qeRRZ4MwOyuIOlPAzOz3kBJ9Jn7sXOuYGYnovYbSG1jsWbvYccvovJ3B1i4a9Sepp7QQ=
-X-Received: by 2002:a92:8141:: with SMTP id e62mr21629924ild.119.1580248779692;
- Tue, 28 Jan 2020 13:59:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20200127212256.194310-1-ehankland@google.com>
-In-Reply-To: <20200127212256.194310-1-ehankland@google.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 28 Jan 2020 13:59:28 -0800
-Message-ID: <CALMp9eRfeFFb6n22Uf4R2Pf8WW7BVLX_Vuf04WFwiMtrk14Y-Q@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: Fix perfctr WRMSR for running counters
-To:     Eric Hankland <ehankland@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Shier <pshier@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 28 Jan 2020 17:00:38 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580248837; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=Mf6gK8Pui4SYiZYwgie2fpyV4QvxBlRoxDwIb21t6R0=; b=TsSA3csCUTuls+COML7zibhk9JY94zLJmx8gsx4ELt9Ex6mxXvKbN4bSk/nzeTIGsfBppLvw
+ ZX9EYC5YM+j9V5J+5uOHKpQ2uhGUegCYXUC4ZpIQbsjRzk5vIik6q8m0p4tN5CcfXGGxXqJ9
+ 6XmBIQujCKavFq7Kr2OAINsG+lw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e30af04.7fa9e5dc7880-smtp-out-n02;
+ Tue, 28 Jan 2020 22:00:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4BE32C447B3; Tue, 28 Jan 2020 22:00:34 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 914EAC43383;
+        Tue, 28 Jan 2020 22:00:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 914EAC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     iommu@lists.linux-foundation.org
+Cc:     robin.murphy@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        dri-devel@lists.freedesktop.org, Sam Ravnborg <sam@ravnborg.org>,
+        Fritz Koenig <frkoenig@google.com>,
+        David Airlie <airlied@linux.ie>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Allison Randal <allison@lohutok.net>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Enrico Weigelt <info@metux.net>,
+        zhengbin <zhengbin13@huawei.com>, linux-kernel@vger.kernel.org,
+        Brian Masney <masneyb@onstation.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        freedreno@lists.freedesktop.org,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v5 0/5] iommu/arm-smmu: Split pagetable support for arm-smmu-v2
+Date:   Tue, 28 Jan 2020 15:00:14 -0700
+Message-Id: <1580248819-12644-1-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 1:23 PM Eric Hankland <ehankland@google.com> wrote:
->
-> Correct the logic in intel_pmu_set_msr() for fixed and general purpose
-> counters. This was recently changed to set pmc->counter without taking
-> in to account the value of pmc_read_counter() which will be incorrect if
-> the counter is currently running and non-zero; this changes back to the
-> old logic which accounted for the value of currently running counters.
->
-> Signed-off-by: Eric Hankland <ehankland@google.com>
+This is another iteration for the split pagetable support based on the
+suggestions from Robin and Will [1].
 
-Fixes: 2924b52117b2 ("KVM: x86/pmu: do not mask the value that is
-written to fixed PMUs")
+Background: In order to support per-context pagetables the GPU needs to enable
+split tables so that we can store global buffers in the TTBR1 space leaving the
+GPU free to program the TTBR0 register with the address of a context specific
+pagetable.
 
-Reviewed-by: Jim Mattson <jmattson@google.com>
+If the DOMAIN_ATTR_SPLIT_TABLES attribute is set on the domain before attaching,
+the context bank assigned to the domain will be programmed to allow translations
+in the TTBR1 space. Translations in the TTBR0 region will be disallowed because,
+as Robin pointe out, having a un-programmed TTBR0 register is dangerous.
+
+The driver can determine if TTBR1 was successfully programmed by querying
+DOMAIN_ATTR_SPLIT_TABLES after attaching. The domain geometry will also be
+updated to reflect the virtual address space for the TTBR1 range.
+
+Upcoming changes will allow auxiliary domains to be attached to the device which
+will enable and program TTBR0.
+
+This patchset is based on top of linux-next-20200127.
+
+Change log:
+
+v4: Only program TTBR1 when split pagetables are requested. TTBR0 will be
+enabled later when an auxiliary domain is attached
+v3: Remove the implementation specific and make split pagetable support
+part of the generic configuration
+
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2020-January/041373.html
+
+Jordan Crouse (5):
+  iommu: Add DOMAIN_ATTR_SPLIT_TABLES
+  iommu/arm-smmu: Add support for TTBR1
+  drm/msm: Attach the IOMMU device during initialization
+  drm/msm: Refactor address space initialization
+  drm/msm/a6xx: Support split pagetables
+
+ drivers/gpu/drm/msm/adreno/a2xx_gpu.c    | 16 ++++++++++
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c    |  1 +
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.c    |  1 +
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c    |  1 +
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c    | 51 ++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c  | 23 ++++++++++----
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h  |  8 +++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  | 18 ++++-------
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c | 18 +++++------
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c |  4 ---
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 18 +++++------
+ drivers/gpu/drm/msm/msm_drv.h            |  8 ++---
+ drivers/gpu/drm/msm/msm_gem_vma.c        | 36 ++++------------------
+ drivers/gpu/drm/msm/msm_gpu.c            | 49 ++----------------------------
+ drivers/gpu/drm/msm/msm_gpu.h            |  4 +--
+ drivers/gpu/drm/msm/msm_gpummu.c         |  6 ----
+ drivers/gpu/drm/msm/msm_iommu.c          | 18 ++++++-----
+ drivers/gpu/drm/msm/msm_mmu.h            |  1 -
+ drivers/iommu/arm-smmu.c                 | 48 +++++++++++++++++++++++++-----
+ drivers/iommu/arm-smmu.h                 | 22 ++++++++++----
+ include/linux/iommu.h                    |  2 ++
+ 21 files changed, 198 insertions(+), 155 deletions(-)
+
+-- 
+2.7.4
