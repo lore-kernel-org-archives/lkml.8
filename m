@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BB8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C0DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45CD924683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABED924681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220347;
-	bh=u8FEAMoac37zAG9ZH+8up4ADy+KrvFAr7q8E0WT9JOI=;
+	s=default; t=1580220349;
+	bh=CJ/pOZAWUiKC1kHy2DFYmQdmfiLpZfUluRTV+1H2eFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K7M7GKNUPDKfpqrxsjI8tJ02dqhar6GkQF+KHsR99Y7FBAiWhJFzjfl1NxuP6qqVB
-	 TEdi2m5SM2ZYkJKkw3w1gAxLy9UBPlb/tL3ZuIxwJwAnBOLfbYhndq58qUKyHuHmI4
-	 /jQwKsRuk5LOU96I7FpW7TvROTXXI8OY0mbKwliE=
+	b=dlvT3nGXrrGat4H6M38BRWTNjeD22MedsSR6NPN2heLMPt6prPzNlwD6T0oFxheeY
+	 BlHXj9fEzSHAs8eY5yoQBd9x4qtlIhM6VIFRMZnjY1TPMtlQP6bzUs7v4fvMY9Q4q1
+	 P59dqhN1nqkOT3DoSuNxNfsw5EkbAH5FTyjJImSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgA1OFq (ORCPT
+        id S1728318AbgA1OFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:05:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53378 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:05:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727773AbgA1OFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:05:41 -0500
+        id S1728308AbgA1OFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:05:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B294124688;
-        Tue, 28 Jan 2020 14:05:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 481372468A;
+        Tue, 28 Jan 2020 14:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220340;
-        bh=u8FEAMoac37zAG9ZH+8up4ADy+KrvFAr7q8E0WT9JOI=;
+        s=default; t=1580220337;
+        bh=CJ/pOZAWUiKC1kHy2DFYmQdmfiLpZfUluRTV+1H2eFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VyiHY6du+n6LfUCr+Inx5LGaU5ZlyN9qzhng4nexT/1f3uGz1dzOXOpScLQFmyWjy
-         QzPJUGvYkuq7FKB12NHL9JUNcB9K/jAeCtBdOuWvBjQaF4pVxP/6aDNx2j8uyJKk4C
-         bbVVKCY4f026kz31vBw+xkfG9XG7BWMyzeYJJKoA=
+        b=QcumJC6nRe8zWAV9M7MNuL9qIJHbItkTyD1ifc+HiDNz24pMwdXsxZf6MV22RHjAN
+         QVrgOLNvKT1SRny36Cy+YA+5rZN7jH7HbZUQPEYcMHt5YbeKNLy1MqMZG44Jywuglv
+         ih/aFJZcBAga2lfLJfqggLP+GfKHtKFMLVnAXbYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 078/104] scsi: RDMA/isert: Fix a recently introduced regression related to logout
-Date:   Tue, 28 Jan 2020 15:00:39 +0100
-Message-Id: <20200128135827.989226960@linuxfoundation.org>
+        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 087/104] net/sonic: Add mutual exclusion for accessing shared state
+Date:   Tue, 28 Jan 2020 15:00:48 +0100
+Message-Id: <20200128135829.150875861@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -62,79 +60,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 04060db41178c7c244f2c7dcd913e7fd331de915 upstream.
+commit 865ad2f2201dc18685ba2686f13217f8b3a9c52c upstream.
 
-iscsit_close_connection() calls isert_wait_conn(). Due to commit
-e9d3009cb936 both functions call target_wait_for_sess_cmds() although that
-last function should be called only once. Fix this by removing the
-target_wait_for_sess_cmds() call from isert_wait_conn() and by only calling
-isert_wait_conn() after target_wait_for_sess_cmds().
+The netif_stop_queue() call in sonic_send_packet() races with the
+netif_wake_queue() call in sonic_interrupt(). This causes issues
+like "NETDEV WATCHDOG: eth0 (macsonic): transmit queue 0 timed out".
+Fix this by disabling interrupts when accessing tx_skb[] and next_tx.
+Update a comment to clarify the synchronization properties.
 
-Fixes: e9d3009cb936 ("scsi: target: iscsi: Wait for all commands to finish before freeing a session").
-Link: https://lore.kernel.org/r/20200116044737.19507-1-bvanassche@acm.org
-Reported-by: Rahul Kundu <rahul.kundu@chelsio.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Acked-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/isert/ib_isert.c |   12 ------------
- drivers/target/iscsi/iscsi_target.c     |    6 +++---
- 2 files changed, 3 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c |   49 +++++++++++++++++++++++++----------
+ drivers/net/ethernet/natsemi/sonic.h |    1 
+ 2 files changed, 36 insertions(+), 14 deletions(-)
 
---- a/drivers/infiniband/ulp/isert/ib_isert.c
-+++ b/drivers/infiniband/ulp/isert/ib_isert.c
-@@ -2575,17 +2575,6 @@ isert_wait4logout(struct isert_conn *ise
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -64,6 +64,8 @@ static int sonic_open(struct net_device
+ 
+ 	netif_dbg(lp, ifup, dev, "%s: initializing sonic driver\n", __func__);
+ 
++	spin_lock_init(&lp->lock);
++
+ 	for (i = 0; i < SONIC_NUM_RRS; i++) {
+ 		struct sk_buff *skb = netdev_alloc_skb(dev, SONIC_RBSIZE + 2);
+ 		if (skb == NULL) {
+@@ -206,8 +208,6 @@ static void sonic_tx_timeout(struct net_
+  *   wake the tx queue
+  * Concurrently with all of this, the SONIC is potentially writing to
+  * the status flags of the TDs.
+- * Until some mutual exclusion is added, this code will not work with SMP. However,
+- * MIPS Jazz machines and m68k Macs were all uni-processor machines.
+  */
+ 
+ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+@@ -215,7 +215,8 @@ static int sonic_send_packet(struct sk_b
+ 	struct sonic_local *lp = netdev_priv(dev);
+ 	dma_addr_t laddr;
+ 	int length;
+-	int entry = lp->next_tx;
++	int entry;
++	unsigned long flags;
+ 
+ 	netif_dbg(lp, tx_queued, dev, "%s: skb=%p\n", __func__, skb);
+ 
+@@ -237,6 +238,10 @@ static int sonic_send_packet(struct sk_b
+ 		return NETDEV_TX_OK;
  	}
+ 
++	spin_lock_irqsave(&lp->lock, flags);
++
++	entry = lp->next_tx;
++
+ 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
+ 	sonic_tda_put(dev, entry, SONIC_TD_FRAG_COUNT, 1);   /* single fragment */
+ 	sonic_tda_put(dev, entry, SONIC_TD_PKTSIZE, length); /* length of packet */
+@@ -246,10 +251,6 @@ static int sonic_send_packet(struct sk_b
+ 	sonic_tda_put(dev, entry, SONIC_TD_LINK,
+ 		sonic_tda_get(dev, entry, SONIC_TD_LINK) | SONIC_EOL);
+ 
+-	/*
+-	 * Must set tx_skb[entry] only after clearing status, and
+-	 * before clearing EOL and before stopping queue
+-	 */
+ 	wmb();
+ 	lp->tx_len[entry] = length;
+ 	lp->tx_laddr[entry] = laddr;
+@@ -272,6 +273,8 @@ static int sonic_send_packet(struct sk_b
+ 
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_TXP);
+ 
++	spin_unlock_irqrestore(&lp->lock, flags);
++
+ 	return NETDEV_TX_OK;
  }
  
--static void
--isert_wait4cmds(struct iscsi_conn *conn)
--{
--	isert_info("iscsi_conn %p\n", conn);
--
--	if (conn->sess) {
--		target_sess_cmd_list_set_waiting(conn->sess->se_sess);
--		target_wait_for_sess_cmds(conn->sess->se_sess);
--	}
--}
--
- /**
-  * isert_put_unsol_pending_cmds() - Drop commands waiting for
-  *     unsolicitate dataout
-@@ -2633,7 +2622,6 @@ static void isert_wait_conn(struct iscsi
- 
- 	ib_drain_qp(isert_conn->qp);
- 	isert_put_unsol_pending_cmds(conn);
--	isert_wait4cmds(conn);
- 	isert_wait4logout(isert_conn);
- 
- 	queue_work(isert_release_wq, &isert_conn->release_work);
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4151,9 +4151,6 @@ int iscsit_close_connection(
- 	iscsit_stop_nopin_response_timer(conn);
- 	iscsit_stop_nopin_timer(conn);
- 
--	if (conn->conn_transport->iscsit_wait_conn)
--		conn->conn_transport->iscsit_wait_conn(conn);
--
- 	/*
- 	 * During Connection recovery drop unacknowledged out of order
- 	 * commands for this connection, and prepare the other commands
-@@ -4239,6 +4236,9 @@ int iscsit_close_connection(
- 	target_sess_cmd_list_set_waiting(sess->se_sess);
- 	target_wait_for_sess_cmds(sess->se_sess);
- 
-+	if (conn->conn_transport->iscsit_wait_conn)
-+		conn->conn_transport->iscsit_wait_conn(conn);
+@@ -284,9 +287,21 @@ static irqreturn_t sonic_interrupt(int i
+ 	struct net_device *dev = dev_id;
+ 	struct sonic_local *lp = netdev_priv(dev);
+ 	int status;
++	unsigned long flags;
 +
- 	ahash_request_free(conn->conn_tx_hash);
- 	if (conn->conn_rx_hash) {
- 		struct crypto_ahash *tfm;
++	/* The lock has two purposes. Firstly, it synchronizes sonic_interrupt()
++	 * with sonic_send_packet() so that the two functions can share state.
++	 * Secondly, it makes sonic_interrupt() re-entrant, as that is required
++	 * by macsonic which must use two IRQs with different priority levels.
++	 */
++	spin_lock_irqsave(&lp->lock, flags);
++
++	status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT;
++	if (!status) {
++		spin_unlock_irqrestore(&lp->lock, flags);
+ 
+-	if (!(status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT))
+ 		return IRQ_NONE;
++	}
+ 
+ 	do {
+ 		if (status & SONIC_INT_PKTRX) {
+@@ -300,11 +315,12 @@ static irqreturn_t sonic_interrupt(int i
+ 			int td_status;
+ 			int freed_some = 0;
+ 
+-			/* At this point, cur_tx is the index of a TD that is one of:
+-			 *   unallocated/freed                          (status set   & tx_skb[entry] clear)
+-			 *   allocated and sent                         (status set   & tx_skb[entry] set  )
+-			 *   allocated and not yet sent                 (status clear & tx_skb[entry] set  )
+-			 *   still being allocated by sonic_send_packet (status clear & tx_skb[entry] clear)
++			/* The state of a Transmit Descriptor may be inferred
++			 * from { tx_skb[entry], td_status } as follows.
++			 * { clear, clear } => the TD has never been used
++			 * { set,   clear } => the TD was handed to SONIC
++			 * { set,   set   } => the TD was handed back
++			 * { clear, set   } => the TD is available for re-use
+ 			 */
+ 
+ 			netif_dbg(lp, intr, dev, "%s: tx done\n", __func__);
+@@ -406,7 +422,12 @@ static irqreturn_t sonic_interrupt(int i
+ 		/* load CAM done */
+ 		if (status & SONIC_INT_LCD)
+ 			SONIC_WRITE(SONIC_ISR, SONIC_INT_LCD); /* clear the interrupt */
+-	} while((status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT));
++
++		status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT;
++	} while (status);
++
++	spin_unlock_irqrestore(&lp->lock, flags);
++
+ 	return IRQ_HANDLED;
+ }
+ 
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -322,6 +322,7 @@ struct sonic_local {
+ 	int msg_enable;
+ 	struct device *device;         /* generic device */
+ 	struct net_device_stats stats;
++	spinlock_t lock;
+ };
+ 
+ #define TX_TIMEOUT (3 * HZ)
 
 
