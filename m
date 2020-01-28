@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BBCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB85C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 291D320678
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC7F2468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220706;
-	bh=bglMOhpW0akwAO+UKsVyPEKX3a4ppREXxXPwjhFHAw4=;
+	s=default; t=1580220709;
+	bh=BDmzMUOv+jwCWIgzcr7uhDx7cxYkavGXJYJFdjJ7oTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DhyQJ93lR/KL5riHQsrqrVSogiKFL4yAopOWbb17m6A5EJd4zzhkWb9vClpMGa2Oi
-	 vQgIh7pQYN8JMN2+TkiWSAgs/Lb9x2UAp6l9zdU8v/oWIK16lIkCV99++dl3mURM09
-	 Wn93gsWuNVRTNedK3zVP2KM5fnaags+FGsRORWf8=
+	b=P8pmObTMxsXmB0FQx2yXNiU5DX1Cna5JtabOyS+Gb7JEa/2x6cf0Pihl6BYBUcZ7+
+	 BCGHdFogDa3YNvJeRT1CWiYzohoP/5wK6bBS6d7Xz5neKGDj65bs/csfdonk+/fs6K
+	 1OkizlUVrIZE78Ilb6nMiabEwiS2AL5mL51xezd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgA1OLo (ORCPT
+        id S1729352AbgA1OLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:11:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60832 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:11:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbgA1OLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:11:40 -0500
+        id S1727097AbgA1OLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:11:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4959E24685;
-        Tue, 28 Jan 2020 14:11:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 313D024688;
+        Tue, 28 Jan 2020 14:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220699;
-        bh=bglMOhpW0akwAO+UKsVyPEKX3a4ppREXxXPwjhFHAw4=;
+        s=default; t=1580220704;
+        bh=BDmzMUOv+jwCWIgzcr7uhDx7cxYkavGXJYJFdjJ7oTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=frmn8J2D3e8YSTKtf4SuDTCbs8t1nFn9MEGzUdYXHMO9u6PrjjTNUNX/YUMRnas9F
-         YdDmf6zdb1lhz4FFotUh8UX/Q92qTSf3QnqSvGTinMCB1wicXD4khKJ/ui0AsjiL31
-         zaCmYy3os2wsDWzlUZwwsRKA5bUAGojINgtTQO+I=
+        b=k2PF5aOUD984aZiF9AYeq84sJ1fcwFYqLRhOtiggoUJYchk+CjfiUSo6Ja0auKgEY
+         H1k9VYsrxzIxUPz75rP5dYth+gbunUqN5JoXZl9OLoYEpF4HfjWa3XuVFVK7a5hUpH
+         MZHg3vZst7ciNPnJiKd/fUP1fKA6YiseqhKc+ssA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 110/183] net: pasemi: fix an use-after-free in pasemi_mac_phy_init()
-Date:   Tue, 28 Jan 2020 15:05:29 +0100
-Message-Id: <20200128135840.905748645@linuxfoundation.org>
+Subject: [PATCH 4.4 076/183] hwmon: (w83627hf) Use request_muxed_region for Super-IO accesses
+Date:   Tue, 28 Jan 2020 15:04:55 +0100
+Message-Id: <20200128135837.549555723@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -63,47 +59,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit faf5577f2498cea23011b5c785ef853ded22700b ]
+[ Upstream commit e95fd518d05bfc087da6fcdea4900a57cfb083bd ]
 
-The phy_dn variable is still being used in of_phy_connect() after the
-of_node_put() call, which may result in use-after-free.
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-Fixes: 1dd2d06c0459 ("net: Rework pasemi_mac driver to use of_mdio infrastructure")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
+
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
+
+Fixes: b72656dbc491 ("hwmon: (w83627hf) Stop using globals for I/O port numbers")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/pasemi/pasemi_mac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/w83627hf.c | 42 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
-index 57a6e6cd74fc3..48106953cf64b 100644
---- a/drivers/net/ethernet/pasemi/pasemi_mac.c
-+++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
-@@ -1091,7 +1091,6 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+diff --git a/drivers/hwmon/w83627hf.c b/drivers/hwmon/w83627hf.c
+index 721295b9a0517..43c0f89cefdf0 100644
+--- a/drivers/hwmon/w83627hf.c
++++ b/drivers/hwmon/w83627hf.c
+@@ -130,17 +130,23 @@ superio_select(struct w83627hf_sio_data *sio, int ld)
+ 	outb(ld,  sio->sioaddr + 1);
+ }
  
- 	dn = pci_device_to_OF_node(mac->pdev);
- 	phy_dn = of_parse_phandle(dn, "phy-handle", 0);
--	of_node_put(phy_dn);
+-static inline void
++static inline int
+ superio_enter(struct w83627hf_sio_data *sio)
+ {
++	if (!request_muxed_region(sio->sioaddr, 2, DRVNAME))
++		return -EBUSY;
++
+ 	outb(0x87, sio->sioaddr);
+ 	outb(0x87, sio->sioaddr);
++
++	return 0;
+ }
  
- 	mac->link = 0;
- 	mac->speed = 0;
-@@ -1100,6 +1099,7 @@ static int pasemi_mac_phy_init(struct net_device *dev)
- 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
- 				PHY_INTERFACE_MODE_SGMII);
+ static inline void
+ superio_exit(struct w83627hf_sio_data *sio)
+ {
+ 	outb(0xAA, sio->sioaddr);
++	release_region(sio->sioaddr, 2);
+ }
  
-+	of_node_put(phy_dn);
- 	if (!phydev) {
- 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
- 		return -ENODEV;
+ #define W627_DEVID 0x52
+@@ -1275,7 +1281,7 @@ static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
+ static int __init w83627hf_find(int sioaddr, unsigned short *addr,
+ 				struct w83627hf_sio_data *sio_data)
+ {
+-	int err = -ENODEV;
++	int err;
+ 	u16 val;
+ 
+ 	static __initconst char *const names[] = {
+@@ -1287,7 +1293,11 @@ static int __init w83627hf_find(int sioaddr, unsigned short *addr,
+ 	};
+ 
+ 	sio_data->sioaddr = sioaddr;
+-	superio_enter(sio_data);
++	err = superio_enter(sio_data);
++	if (err)
++		return err;
++
++	err = -ENODEV;
+ 	val = force_id ? force_id : superio_inb(sio_data, DEVID);
+ 	switch (val) {
+ 	case W627_DEVID:
+@@ -1641,9 +1651,21 @@ static int w83627thf_read_gpio5(struct platform_device *pdev)
+ 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
+ 	int res = 0xff, sel;
+ 
+-	superio_enter(sio_data);
++	if (superio_enter(sio_data)) {
++		/*
++		 * Some other driver reserved the address space for itself.
++		 * We don't want to fail driver instantiation because of that,
++		 * so display a warning and keep going.
++		 */
++		dev_warn(&pdev->dev,
++			 "Can not read VID data: Failed to enable SuperIO access\n");
++		return res;
++	}
++
+ 	superio_select(sio_data, W83627HF_LD_GPIO5);
+ 
++	res = 0xff;
++
+ 	/* Make sure these GPIO pins are enabled */
+ 	if (!(superio_inb(sio_data, W83627THF_GPIO5_EN) & (1<<3))) {
+ 		dev_dbg(&pdev->dev, "GPIO5 disabled, no VID function\n");
+@@ -1674,7 +1696,17 @@ static int w83687thf_read_vid(struct platform_device *pdev)
+ 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
+ 	int res = 0xff;
+ 
+-	superio_enter(sio_data);
++	if (superio_enter(sio_data)) {
++		/*
++		 * Some other driver reserved the address space for itself.
++		 * We don't want to fail driver instantiation because of that,
++		 * so display a warning and keep going.
++		 */
++		dev_warn(&pdev->dev,
++			 "Can not read VID data: Failed to enable SuperIO access\n");
++		return res;
++	}
++
+ 	superio_select(sio_data, W83627HF_LD_HWM);
+ 
+ 	/* Make sure these GPIO pins are enabled */
 -- 
 2.20.1
 
