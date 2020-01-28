@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAEFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FA2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582C621739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCE524690
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221078;
-	bh=DMawGORGw/GHzM9qUcSUjMhFK4aAx1nQqfwLv03Q3sA=;
+	s=default; t=1580221081;
+	bh=W+W7qfr4NN0qW0qR0HP8xlisYMsZ5+HAseU1qBFJtS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SNEjCByGd+eyk5EwR4UuLtKug/RsDKBh7Lv5eMbE0u9uU38CiyCDvbfNRkkP4j3R2
-	 +i+Vr7uQeQS7sK96LTuHxMw2QNIQwEw9kxMtK20diXxquLp67C6vKxw7lwAMMA5SeR
-	 GGLA+EEBhkMF1qUvCdkRtwWCDZVQvz3/Gp4QWlhg=
+	b=N306nQ43bHNKdzd7wRNSMY416eQ6b5ctoKSpnQyzBxT2lOIj8Rt21s7Tfyrs1Jw+T
+	 23GhVYz+6xrVG/0n2v8kihyz+qCONF7yQq3nz0MAWaP316egaSwJD7FsX6RfXbbuK1
+	 wW8gkzeo1TsFejpb/vs5kyyoHELf/g1E1Uc8O71o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbgA1OR5 (ORCPT
+        id S1729871AbgA1OSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:17:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41566 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:18:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730562AbgA1ORp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:17:45 -0500
+        id S1730566AbgA1ORu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:17:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 373562468D;
-        Tue, 28 Jan 2020 14:17:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27EA121739;
+        Tue, 28 Jan 2020 14:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221064;
-        bh=DMawGORGw/GHzM9qUcSUjMhFK4aAx1nQqfwLv03Q3sA=;
+        s=default; t=1580221069;
+        bh=W+W7qfr4NN0qW0qR0HP8xlisYMsZ5+HAseU1qBFJtS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x0FEviZ7BsAX+dQ7U2YygIIjt5WJeY3656rbNsPXw9ogc1npprGDXwUPuToRfZP/E
-         MP+9V7KNF/w4seLtPIaOO8+X82/Wwk8SHdDVMUlQoy89Ryr/1scLCSikfAkvIic0Xj
-         wOAKUgrxWpZYi7L5nyxozSKHwmIdrlu0WMU1uyAw=
+        b=q3Ag3TF9uIwPR2VKFQGycsfKJrCBzNtEpGOe97lu/qSPqyJKQv9TepADaItBadta2
+         IcTFUs+yPOQTFpEFvVceIsovaRY0y/ylMSEtRM3SMf7W68qtQokoZ166Gi1zYHAN3R
+         MbS7D7ULa9zF+MFvFBM+TSZeKIc7g76CsBb6XUdQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 037/271] clk: dove: fix refcount leak in dove_clk_init()
-Date:   Tue, 28 Jan 2020 15:03:06 +0100
-Message-Id: <20200128135855.436158530@linuxfoundation.org>
+Subject: [PATCH 4.9 069/271] pinctrl: sh-pfc: r8a7791: Fix scifb2_data_c pin group
+Date:   Tue, 28 Jan 2020 15:03:38 +0100
+Message-Id: <20200128135857.733702600@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,45 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 8d726c5128298386b907963033be93407b0c4275 ]
+[ Upstream commit a4b0350047f1b10207e25e72d7cd3f7826e93769 ]
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+The entry for "scifb2_data_c" in the SCIFB2 pin group array contains a
+typo, thus the group cannot be selected.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Fixes: 8f7fc5450b64 ("clk: mvebu: dove: maintain clock init order")
-Fixes: 63b8d92c793f ("clk: add Dove PLL divider support for GPU, VMeta and AXI clocks")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 5088451962389924 ("pinctrl: sh-pfc: r8a7791 PFC support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mvebu/dove.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/mvebu/dove.c b/drivers/clk/mvebu/dove.c
-index 59fad9546c847..5f258c9bb68bf 100644
---- a/drivers/clk/mvebu/dove.c
-+++ b/drivers/clk/mvebu/dove.c
-@@ -190,10 +190,14 @@ static void __init dove_clk_init(struct device_node *np)
- 
- 	mvebu_coreclk_setup(np, &dove_coreclks);
- 
--	if (ddnp)
-+	if (ddnp) {
- 		dove_divider_clk_init(ddnp);
-+		of_node_put(ddnp);
-+	}
- 
--	if (cgnp)
-+	if (cgnp) {
- 		mvebu_clk_gating_setup(cgnp, dove_gating_desc);
-+		of_node_put(cgnp);
-+	}
- }
- CLK_OF_DECLARE(dove_clk, "marvell,dove-core-clock", dove_clk_init);
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+index 1e7f32b5dce8c..dd350e2961423 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+@@ -5078,7 +5078,7 @@ static const char * const scifb2_groups[] = {
+ 	"scifb2_data_b",
+ 	"scifb2_clk_b",
+ 	"scifb2_ctrl_b",
+-	"scifb0_data_c",
++	"scifb2_data_c",
+ 	"scifb2_clk_c",
+ 	"scifb2_data_d",
+ };
 -- 
 2.20.1
 
