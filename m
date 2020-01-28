@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BCAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A28C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8184220716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A9220716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222079;
-	bh=4db/nx/Z2/7s+zbDP2Dx7JKPtmOIeHK33hDUB5t1qtE=;
+	s=default; t=1580222090;
+	bh=JlBcrsMyqtkte5MzpILC6IwTloc/Cakizcl6i2FH4jI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRHs2p/8D0e8Z5WkQhdlwRj+us6/Y/rTlD0D4Xm2orELqW5+C4zEXJcs+vqnXzR8S
-	 Cbk1aGD9bpX2HFfCa64UdP/e38DzS8OIbj7J41EBhopst6ETnP2MRzrNlHYSKcgSvN
-	 JD2wkfOEDPmA6ErgPZaYByapgkodSh7quhAhxnw0=
+	b=CT52QtmOKIDrxgE/kdXElG3OBzvzKjIenogGmgWxJMZZoP1LSl/a5wgO8p697WbuZ
+	 YdMSbRJRA8yLtvn+O9vLIbbKvDmTAHdZttx6zVWcVs24l6Ro4OJRm8FmdNcfPkHtiZ
+	 tdXGuLYRGmrAlG5X4rncgHIFQk7QwHctrMfcifDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387420AbgA1Oei (ORCPT
+        id S1733259AbgA1Oet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:34:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:34:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732459AbgA1OYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:24:03 -0500
+        id S1726710AbgA1OXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:23:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CEDD2468A;
-        Tue, 28 Jan 2020 14:24:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B7A524690;
+        Tue, 28 Jan 2020 14:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221443;
-        bh=4db/nx/Z2/7s+zbDP2Dx7JKPtmOIeHK33hDUB5t1qtE=;
+        s=default; t=1580221428;
+        bh=JlBcrsMyqtkte5MzpILC6IwTloc/Cakizcl6i2FH4jI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DaW3WWWW+f+eae0vF4VsnjS9gDMwqmBnzcqAXALJR5Gzq5quZBvXdzWLiLGw/dZP4
-         DVfOksvLLbANtSM7ra/m//Odp5SSN5GajAoaNZLb1dEyApISFIOOGXzmtKcxPPvbAH
-         WUczB8809uME/QGFO09b6hECdUDAqS5UcNng1S6I=
+        b=MH+SsTdzOJ4RfjELI+fgTVDWmYWJHXBW/TYNLQX5kP+vTUzZE9zf8geBfPLjveTcy
+         L1e0SwNxVE+si0LJw8LC72OS2NqD+hX8AKk4al6S0Z3XnOTNDVL9rV8+WpGrJU78NS
+         to0NJ2sqbDx3bbZchaRRxlnTD1lm8oFWzwt57NEM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@in-tech.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 225/271] net: neigh: use long type to store jiffies delta
-Date:   Tue, 28 Jan 2020 15:06:14 +0100
-Message-Id: <20200128135909.308445604@linuxfoundation.org>
+Subject: [PATCH 4.9 219/271] net: qca_spi: Move reset_count to struct qcaspi
+Date:   Tue, 28 Jan 2020 15:06:08 +0100
+Message-Id: <20200128135908.848301624@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,35 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Stefan Wahren <stefan.wahren@in-tech.com>
 
-[ Upstream commit 9d027e3a83f39b819e908e4e09084277a2e45e95 ]
+[ Upstream commit bc19c32904e36548335b35fdce6ce734e20afc0a ]
 
-A difference of two unsigned long needs long storage.
+The reset counter is specific for every QCA700x chip. So move this
+into the private driver struct. Otherwise we get unpredictable reset
+behavior in setups with multiple QCA700x chips.
 
-Fixes: c7fb64db001f ("[NETLINK]: Neighbour table configuration and statistics via rtnetlink")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: 291ab06ecf67 (net: qualcomm: new Ethernet over SPI driver for QCA7000)
+Signed-off-by: Stefan Wahren <stefan.wahren@in-tech.com>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/neighbour.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qualcomm/qca_spi.c | 9 ++++-----
+ drivers/net/ethernet/qualcomm/qca_spi.h | 1 +
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index cd85cee14bd03..6578d1f8e6c4a 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -1834,8 +1834,8 @@ static int neightbl_fill_info(struct sk_buff *skb, struct neigh_table *tbl,
- 		goto nla_put_failure;
- 	{
- 		unsigned long now = jiffies;
--		unsigned int flush_delta = now - tbl->last_flush;
--		unsigned int rand_delta = now - tbl->last_rand;
-+		long flush_delta = now - tbl->last_flush;
-+		long rand_delta = now - tbl->last_rand;
- 		struct neigh_hash_table *nht;
- 		struct ndt_config ndc = {
- 			.ndtc_key_len		= tbl->key_len,
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/ethernet/qualcomm/qca_spi.c
+index 21f546587e3d5..31583d6f044f4 100644
+--- a/drivers/net/ethernet/qualcomm/qca_spi.c
++++ b/drivers/net/ethernet/qualcomm/qca_spi.c
+@@ -438,7 +438,6 @@ qcaspi_qca7k_sync(struct qcaspi *qca, int event)
+ 	u16 signature = 0;
+ 	u16 spi_config;
+ 	u16 wrbuf_space = 0;
+-	static u16 reset_count;
+ 
+ 	if (event == QCASPI_EVENT_CPUON) {
+ 		/* Read signature twice, if not valid
+@@ -491,13 +490,13 @@ qcaspi_qca7k_sync(struct qcaspi *qca, int event)
+ 
+ 		qca->sync = QCASPI_SYNC_RESET;
+ 		qca->stats.trig_reset++;
+-		reset_count = 0;
++		qca->reset_count = 0;
+ 		break;
+ 	case QCASPI_SYNC_RESET:
+-		reset_count++;
++		qca->reset_count++;
+ 		netdev_dbg(qca->net_dev, "sync: waiting for CPU on, count %u.\n",
+-			   reset_count);
+-		if (reset_count >= QCASPI_RESET_TIMEOUT) {
++			   qca->reset_count);
++		if (qca->reset_count >= QCASPI_RESET_TIMEOUT) {
+ 			/* reset did not seem to take place, try again */
+ 			qca->sync = QCASPI_SYNC_UNKNOWN;
+ 			qca->stats.reset_timeout++;
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.h b/drivers/net/ethernet/qualcomm/qca_spi.h
+index 6e31a0e744a45..c48c314ca4dfa 100644
+--- a/drivers/net/ethernet/qualcomm/qca_spi.h
++++ b/drivers/net/ethernet/qualcomm/qca_spi.h
+@@ -97,6 +97,7 @@ struct qcaspi {
+ 
+ 	unsigned int intr_req;
+ 	unsigned int intr_svc;
++	u16 reset_count;
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *device_root;
 -- 
 2.20.1
 
