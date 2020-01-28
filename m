@@ -2,142 +2,126 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F991C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79360C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F0A24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB402468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220273;
-	bh=ub4UwKqrZMgy6+sqrMhH+mrNyxJs1wj0mog/wg3Wxx0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=yUKNgzPOf/SJg7NxQU9+u+pi32DSdSxcJtKPWJ+4f5bbaGd6B5FB1aHGqDAWCpjgv
-	 qlQyGo/+R2iWRJdFdb9jJDSikvJradnDLHhmpQ2JvLKLAYA2aabREozwuO+YOeBYIs
-	 u/A+bzdrLTsHvewdfws24sbWbc5r91NrasRKMeQ8=
+	s=default; t=1580220278;
+	bh=iPd/z60B6zp/AWzCXYB+uhw1cWKMiDj4+ysvjc7Ci74=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pgUGGWnD0Yc++CFtkwgDmxBVq6M87FZREVvZjEqQdddiDTQGGZnRTHHzJwyndbS4O
+	 vswauXczB9IoTk/tvI7T9/3jqfSQ4i8eaRcXNNc13P2rM0Xr8Y36M/ANP2/eXM35g/
+	 +OEbSXDDziMUSmBz4HQhhJ7f4vUgIFvcMI+Hyezg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgA1OEc (ORCPT
+        id S1727534AbgA1OEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:04:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51638 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:04:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728070AbgA1OE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:04:27 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        id S1728087AbgA1OEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:04:30 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 212012468F;
-        Tue, 28 Jan 2020 14:04:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63BAB24694;
+        Tue, 28 Jan 2020 14:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220266;
-        bh=ub4UwKqrZMgy6+sqrMhH+mrNyxJs1wj0mog/wg3Wxx0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=2UXpA6vi6H0YSp/fpxanVwcpc42jUmIi3kYBrYYIq/in9lxz55IcxTVto6yR3Qns0
-         zTf0Qdk2pZcJzQ+ZCjDYagC9ZENOLyQudDxjhQc0n4CwKAJ38zq+TdHLcBE/OuOwMK
-         askCzG5zDppDZuwGYKJ+jhu/ibUp1dTtJS5tGHcA=
-Date:   Tue, 28 Jan 2020 08:04:24 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rgummal@xilinx.com
-Subject: Re: [PATCH v4 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Message-ID: <20200128140424.GA150109@google.com>
+        s=default; t=1580220269;
+        bh=iPd/z60B6zp/AWzCXYB+uhw1cWKMiDj4+ysvjc7Ci74=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BiwU0K+VfEM2uThHJjNuAZTHuw0TeuCnSmTzToL9cmYSxEvH1M7DwgoLbMPyfviTQ
+         922HGDb5wmwd2b1UXA8GYctcZDfUZ5SFiCdAH5gsKcU8aKMuYJ60577AYYZ6kFXSc/
+         vjtBko880jYSLRUCSjn3G5t7yNp68uGVZ26X1G9w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 047/104] powerpc/xive: Discard ESB load value when interrupt is invalid
+Date:   Tue, 28 Jan 2020 15:00:08 +0100
+Message-Id: <20200128135824.216683362@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
+References: <20200128135817.238524998@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580215483-8835-3-git-send-email-bharat.kumar.gogada@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 06:14:43PM +0530, Bharat Kumar Gogada wrote:
-> - Add support for Versal CPM as Root Port.
-> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
->   block for CPM along with the integrated bridge can function
->   as PCIe Root Port.
-> - CPM Versal uses GICv3 ITS feature for achieving assigning MSI/MSI-X
->   vectors and handling MSI/MSI-X interrupts.
-> - Bridge error and legacy interrupts in Versal CPM are handled using
->   Versal CPM specific MISC interrupt line.
-> 
-> Changes v4:
-> - change commit subject.
-> - Remove unnecessary comments and type cast.
-> - Added comments for CPM block register access using readl/writel.
-> 
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> ...
+From: Frederic Barrat <fbarrat@linux.ibm.com>
 
-> +static bool xilinx_cpm_pcie_valid_device(struct pci_bus *bus,
-> +					 unsigned int devfn)
-> +{
-> +	struct xilinx_cpm_pcie_port *port = bus->sysdata;
-> +
-> +	/* Only one device down on each root port */
-> +	if (bus->number == port->root_busno && devfn > 0)
-> +		return false;
+commit 17328f218fb760c9c6accc5b52494889243a6b98 upstream.
 
-This whole *_valid_device() thing is a mess.  We shouldn't need it at
-all.  But if we *do* need it, I don't think you should check the
-entire devfn because that means you can't attach a multifunction
-device.
+A load on an ESB page returning all 1's means that the underlying
+device has invalidated the access to the PQ state of the interrupt
+through mmio. It may happen, for example when querying a PHB interrupt
+while the PHB is in an error state.
 
-Several other drivers with similar *_valid_device() implementations
-check only PCI_SLOT():
+In that case, we should consider the interrupt to be invalid when
+checking its state in the irq_get_irqchip_state() handler.
 
-  dw_pcie_valid_device()
-  advk_pcie_valid_device()
-  pci_dw_valid_device()
-  altera_pcie_valid_device()
-  mobiveil_pcie_valid_device()
-  rockchip_pcie_valid_device()
+Fixes: da15c03b047d ("powerpc/xive: Implement get_irqchip_state method for XIVE to fix shutdown race")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
+[clg: wrote a commit log, introduced XIVE_ESB_INVALID ]
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200113130118.27969-1-clg@kaod.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Even checking just PCI_SLOT() is problematic because I think an ARI
-device with more than 8 functions will not work correctly.
+---
+ arch/powerpc/include/asm/xive-regs.h |    1 +
+ arch/powerpc/sysdev/xive/common.c    |   15 ++++++++++++---
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-What exactly happens if you omit this function, i.e., if we just go
-ahead and attempt config accesses when the device is not present?  We
-*should* get something like an Unsupported Request completion, and
-that *should* be a recoverable error.  Most hardware turns this error
-into read data of 0xffffffff.  The OS should be able to figure out
-that there's no device there and continue with no ill effects.
+--- a/arch/powerpc/include/asm/xive-regs.h
++++ b/arch/powerpc/include/asm/xive-regs.h
+@@ -39,6 +39,7 @@
+ 
+ #define XIVE_ESB_VAL_P		0x2
+ #define XIVE_ESB_VAL_Q		0x1
++#define XIVE_ESB_INVALID	0xFF
+ 
+ /*
+  * Thread Management (aka "TM") registers
+--- a/arch/powerpc/sysdev/xive/common.c
++++ b/arch/powerpc/sysdev/xive/common.c
+@@ -972,12 +972,21 @@ static int xive_get_irqchip_state(struct
+ 				  enum irqchip_irq_state which, bool *state)
+ {
+ 	struct xive_irq_data *xd = irq_data_get_irq_handler_data(data);
++	u8 pq;
+ 
+ 	switch (which) {
+ 	case IRQCHIP_STATE_ACTIVE:
+-		*state = !xd->stale_p &&
+-			 (xd->saved_p ||
+-			  !!(xive_esb_read(xd, XIVE_ESB_GET) & XIVE_ESB_VAL_P));
++		pq = xive_esb_read(xd, XIVE_ESB_GET);
++
++		/*
++		 * The esb value being all 1's means we couldn't get
++		 * the PQ state of the interrupt through mmio. It may
++		 * happen, for example when querying a PHB interrupt
++		 * while the PHB is in an error state. We consider the
++		 * interrupt to be inactive in that case.
++		 */
++		*state = (pq != XIVE_ESB_INVALID) && !xd->stale_p &&
++			(xd->saved_p || !!(pq & XIVE_ESB_VAL_P));
+ 		return 0;
+ 	default:
+ 		return -EINVAL;
 
-> +	return true;
-> +}
-> +
-> +/**
-> + * xilinx_cpm_pcie_map_bus - Get configuration base
-> + * @bus: PCI Bus structure
-> + * @devfn: Device/function
-> + * @where: Offset from base
-> + *
-> + * Return: Base address of the configuration space needed to be
-> + *	   accessed.
-> + */
-> +static void __iomem *xilinx_cpm_pcie_map_bus(struct pci_bus *bus,
-> +					     unsigned int devfn, int where)
-> +{
-> +	struct xilinx_cpm_pcie_port *port = bus->sysdata;
-> +	int relbus;
-> +
-> +	if (!xilinx_cpm_pcie_valid_device(bus, devfn))
-> +		return NULL;
-> +
-> +	relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
-> +		 (devfn << ECAM_DEV_NUM_SHIFT);
-> +
-> +	return port->reg_base + relbus + where;
-> +}
-> +
-> +/* PCIe operations */
-> +static struct pci_ops xilinx_cpm_pcie_ops = {
-> +	.map_bus = xilinx_cpm_pcie_map_bus,
-> +	.read	= pci_generic_config_read,
-> +	.write	= pci_generic_config_write,
-> +};
+
