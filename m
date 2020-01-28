@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DF9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154E7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7B124688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB5F2468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221762;
-	bh=4/7RcDeaeToni4381JN0AY9801ClJmkqpOrbO/f/Veg=;
+	s=default; t=1580221768;
+	bh=bQ/AA0JQydPMYBGepLSJ5xP31TfC9NHGuv1NYNG3yfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W8Kex2pzq9yhIlXXf5HSsXnMH9A2binfrwG4Am3H7hEDdt7AiJKOqUplFOGsoNA/L
-	 JQs8FRsbPjdjXnqL+w7s8iswktvINPvI0RfSw9/OiARF3OyLvvfCy1rHm2siragJ+v
-	 PHiL3MFElvTJrR+35CYPTZ2/aFRKEVvV97/UKcsA=
+	b=lIcJYnhp8dal86fHY3flrhsAtGFRBf5+OyhzQgnNufyF+CzZkpF0MAjaAQ/cYA/wX
+	 In4qABVdnMU4KCUxd+DUH7drZqdWZ+9U9NvrLHGVMpXrPKieJL2fssMsRKMAEQ4S6R
+	 uGjXuxU38Qg23lgnTKV+9cOj8v9HyhPPu+niWxms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733263AbgA1O3V (ORCPT
+        id S2387498AbgA1O31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:29:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57692 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:29:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387640AbgA1O3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:29:18 -0500
+        id S2387474AbgA1O3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:29:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98CE524698;
-        Tue, 28 Jan 2020 14:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAB4824688;
+        Tue, 28 Jan 2020 14:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221758;
-        bh=4/7RcDeaeToni4381JN0AY9801ClJmkqpOrbO/f/Veg=;
+        s=default; t=1580221763;
+        bh=bQ/AA0JQydPMYBGepLSJ5xP31TfC9NHGuv1NYNG3yfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNdbcznTTNntChYCvmfy14ulLQLmZPYlQWslms+D6LSkI+/U76/R8R+PqfFDmg26m
-         SVYuwKmj2rRxB+MjXwHHv96VEjgEOSBlqOgzHxIyWWxyU3i31QkTnpyFCUxxYq3TMy
-         Ly0DRXjHnDj9+VcT19taEkcvh1HxQjG5QggDf20I=
+        b=ka4iYbJjpMasn3xzwmmZgkDHu+BytNMtKyoD9+/2sjDIUWAm0yzb4S9R30+QnDawn
+         MX1KpTat8xs2uTG+LKFBThKkHMPI0kdolzPSWXgPlErJf8XO2xnpgQhYV67X+93Wpy
+         0T5aRG/v+kqGsxKuhw5lB6fqgYiwo+VFldpm78Fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 4.19 62/92] coresight: tmc-etf: Do not call smp_processor_id from preemptible
-Date:   Tue, 28 Jan 2020 15:08:30 +0100
-Message-Id: <20200128135817.213005765@linuxfoundation.org>
+        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 54/92] net/sonic: Fix CAM initialization
+Date:   Tue, 28 Jan 2020 15:08:22 +0100
+Message-Id: <20200128135816.119647041@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,63 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 024c1fd9dbcc1d8a847f1311f999d35783921b7f upstream.
+commit 772f66421d5aa0b9f256056f513bbc38ac132271 upstream.
 
-During a perf session we try to allocate buffers on the "node" associated
-with the CPU the event is bound to. If it is not bound to a CPU, we
-use the current CPU node, using smp_processor_id(). However this is unsafe
-in a pre-emptible context and could generate the splats as below :
+Section 4.3.1 of the datasheet says,
 
- BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
- caller is tmc_alloc_etf_buffer+0x5c/0x60
- CPU: 2 PID: 2544 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
- Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
- Call trace:
-  dump_backtrace+0x0/0x150
-  show_stack+0x14/0x20
-  dump_stack+0x9c/0xc4
-  debug_smp_processor_id+0x10c/0x110
-  tmc_alloc_etf_buffer+0x5c/0x60
-  etm_setup_aux+0x1c4/0x230
-  rb_alloc_aux+0x1b8/0x2b8
-  perf_mmap+0x35c/0x478
-  mmap_region+0x34c/0x4f0
-  do_mmap+0x2d8/0x418
-  vm_mmap_pgoff+0xd0/0xf8
-  ksys_mmap_pgoff+0x88/0xf8
-  __arm64_sys_mmap+0x28/0x38
-  el0_svc_handler+0xd8/0x138
-  el0_svc+0x8/0xc
+    This bit [TXP] must not be set if a Load CAM operation is in
+    progress (LCAM is set). The SONIC will lock up if both bits are
+    set simultaneously.
 
-Use NUMA_NO_NODE hint instead of using the current node for events
-not bound to CPUs.
+Testing has shown that the driver sometimes attempts to set LCAM
+while TXP is set. Avoid this by waiting for command completion
+before and after giving the LCAM command.
 
-Fixes: 2e499bbc1a929ac ("coresight: tmc: implementing TMC-ETF AUX space API")
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: stable <stable@vger.kernel.org> # 4.7+
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20190620221237.3536-4-mathieu.poirier@linaro.org
+After issuing the Load CAM command, poll for !SONIC_CR_LCAM rather than
+SONIC_INT_LCD, because the SONIC_CR_TXP bit can't be used until
+!SONIC_CR_LCAM.
+
+When in reset mode, take the opportunity to reset the CAM Enable
+register.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/coresight/coresight-tmc-etf.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -304,9 +304,7 @@ static void *tmc_alloc_etf_buffer(struct
- 	int node;
- 	struct cs_buffers *buf;
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -633,6 +633,8 @@ static void sonic_multicast_list(struct
+ 		    (netdev_mc_count(dev) > 15)) {
+ 			rcr |= SONIC_RCR_AMC;
+ 		} else {
++			unsigned long flags;
++
+ 			netif_dbg(lp, ifup, dev, "%s: mc_count %d\n", __func__,
+ 				  netdev_mc_count(dev));
+ 			sonic_set_cam_enable(dev, 1);  /* always enable our own address */
+@@ -646,9 +648,14 @@ static void sonic_multicast_list(struct
+ 				i++;
+ 			}
+ 			SONIC_WRITE(SONIC_CDC, 16);
+-			/* issue Load CAM command */
+ 			SONIC_WRITE(SONIC_CDP, lp->cda_laddr & 0xffff);
++
++			/* LCAM and TXP commands can't be used simultaneously */
++			spin_lock_irqsave(&lp->lock, flags);
++			sonic_quiesce(dev, SONIC_CR_TXP);
+ 			SONIC_WRITE(SONIC_CMD, SONIC_CR_LCAM);
++			sonic_quiesce(dev, SONIC_CR_LCAM);
++			spin_unlock_irqrestore(&lp->lock, flags);
+ 		}
+ 	}
  
--	if (cpu == -1)
--		cpu = smp_processor_id();
--	node = cpu_to_node(cpu);
-+	node = (cpu == -1) ? NUMA_NO_NODE : cpu_to_node(cpu);
+@@ -674,6 +681,9 @@ static int sonic_init(struct net_device
+ 	SONIC_WRITE(SONIC_ISR, 0x7fff);
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
  
- 	/* Allocate memory structure for interaction with Perf */
- 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
++	/* While in reset mode, clear CAM Enable register */
++	SONIC_WRITE(SONIC_CE, 0);
++
+ 	/*
+ 	 * clear software reset flag, disable receiver, clear and
+ 	 * enable interrupts, then completely initialize the SONIC
+@@ -784,14 +794,7 @@ static int sonic_init(struct net_device
+ 	 * load the CAM
+ 	 */
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_LCAM);
+-
+-	i = 0;
+-	while (i++ < 100) {
+-		if (SONIC_READ(SONIC_ISR) & SONIC_INT_LCD)
+-			break;
+-	}
+-	netif_dbg(lp, ifup, dev, "%s: CMD=%x, ISR=%x, i=%d\n", __func__,
+-		  SONIC_READ(SONIC_CMD), SONIC_READ(SONIC_ISR), i);
++	sonic_quiesce(dev, SONIC_CR_LCAM);
+ 
+ 	/*
+ 	 * enable receiver, disable loopback
 
 
