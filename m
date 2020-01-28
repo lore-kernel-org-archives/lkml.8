@@ -2,86 +2,134 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22D8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331AEC35246
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0592173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580197854;
-	bh=JCv/NyT1mrCMzv4okq1iCXZ4H3lbeVqPn9G8p80jpHo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IOaKnPXzykIhKLXr07PF+/u4HdLqp6j4i0pkfwbhXeNXQsPVmkDOl29M0ipCNQg4g
-	 XQMMeEafGYRe/TVi6wqRw1mFrzVeUZse0yRibIUnIfhvStslyAJBoBCJC8MgnUXFt9
-	 EANVR2wiMQnYMgcHmOo024W71nctc0eM1u5ydTyo=
+	by mail.kernel.org (Postfix) with ESMTP id 0A5552465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:53:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d/UvB+j8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725901AbgA1Hux (ORCPT
+        id S1725922AbgA1HxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 02:50:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgA1Hux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 02:50:53 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70EF620678;
-        Tue, 28 Jan 2020 07:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580197853;
-        bh=JCv/NyT1mrCMzv4okq1iCXZ4H3lbeVqPn9G8p80jpHo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dyt9jvL5L0NnbDojGspxXNnhsNhkwfABkWI0Z4r7ASOU7AsbfRmykIZJaJ56g6DWJ
-         Np6+0WBmRaH8cp1VdbYbrJkoyFgFQyhoYJ5HGPD7EG4gFeGZsZEGYNjIsquamurMHO
-         +zA1HLMGAxKsUlurc2zGowhd4rL6JzqZEubIQzSM=
-Date:   Tue, 28 Jan 2020 08:50:50 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Alexander Popov <alex.popov@linux.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        notify@kernel.org
-Subject: Re: [PATCH v2 1/1] lkdtm/stackleak: Make the test more verbose
-Message-ID: <20200128075050.GC2105706@kroah.com>
-References: <20200102234907.585508-1-alex.popov@linux.com>
- <e8f1b3e9-50ae-2482-3e10-32b21cd7ebb4@linux.com>
- <202001271514.345A5CC9C@keescook>
+        Tue, 28 Jan 2020 02:53:22 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43642 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbgA1HxW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 02:53:22 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00S7qwsh032869;
+        Tue, 28 Jan 2020 01:52:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580197978;
+        bh=nDdLPYZ6LprTv2NjVWGFnvSMmFg46W0Ix7XgkSNJ8EY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=d/UvB+j8pNRgH37eFe3kuwKD0BAbukWFdtwrecsE/2l1bXd64J0e4b9QYHtjxaUPy
+         11s0Zq9X2odVsawhOPTRqfO0GzLmj1WHKC63LGAh7XAM+CJ5VhhyohIH/mjTQM91fR
+         Kx+AU9NJG9N9U6NcKEYJRGny7lpKBOuaQLmaCTsM=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00S7qwCT050697
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jan 2020 01:52:58 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 28
+ Jan 2020 01:52:57 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 28 Jan 2020 01:52:57 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00S7qtWf064227;
+        Tue, 28 Jan 2020 01:52:55 -0600
+Subject: Re: [PATCH] dma: ti: dma-crossbar: convert to
+ devm_platform_ioremap_resource()
+To:     <qiwuchen55@gmail.com>, <vkoul@kernel.org>,
+        <dan.j.williams@intel.com>, <allison@lohutok.net>,
+        <kstewart@linuxfoundation.org>
+CC:     <tglx@linutronix.de>, <wenwen@cs.uga.edu>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        chenqiwu <chenqiwu@xiaomi.com>
+References: <1580189746-2864-1-git-send-email-qiwuchen55@gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <2d85b488-6cc1-f062-c926-b17d1165bde1@ti.com>
+Date:   Tue, 28 Jan 2020 09:53:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202001271514.345A5CC9C@keescook>
+In-Reply-To: <1580189746-2864-1-git-send-email-qiwuchen55@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 03:15:08PM -0800, Kees Cook wrote:
-> On Wed, Jan 22, 2020 at 02:58:44PM +0300, Alexander Popov wrote:
-> > On 03.01.2020 02:49, Alexander Popov wrote:
-> > > Make the stack erasing test more verbose about the errors that it
-> > > can detect.
-> > > 
-> > > Signed-off-by: Alexander Popov <alex.popov@linux.com>
-> > > ---
-> > >  drivers/misc/lkdtm/stackleak.c | 25 +++++++++++++++++--------
-> > >  1 file changed, 17 insertions(+), 8 deletions(-)
-> > 
-> > Hello!
-> > 
-> > Pinging about this version of the patch.
-> > 
-> > Kees, it uses dump_stack() instead of BUG(), as we negotiated.
+
+
+On 28/01/2020 7.35, qiwuchen55@gmail.com wrote:
+> From: chenqiwu <chenqiwu@xiaomi.com>
 > 
-> Yup, this is in my queue -- I've just gotten back from travelling and
-> will get to it shortly. :)
+> Use a new API devm_platform_ioremap_resource() to simplify code.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+> Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+> ---
+>  drivers/dma/ti/dma-crossbar.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 > 
-> Greg, feel free to take this directly if you want, too.
+> diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+> index f255056..4ba8fa5 100644
+> --- a/drivers/dma/ti/dma-crossbar.c
+> +++ b/drivers/dma/ti/dma-crossbar.c
+> @@ -133,7 +133,6 @@ static int ti_am335x_xbar_probe(struct platform_device *pdev)
+>  	const struct of_device_id *match;
+>  	struct device_node *dma_node;
+>  	struct ti_am335x_xbar_data *xbar;
+> -	struct resource *res;
+>  	void __iomem *iomem;
+>  	int i, ret;
+>  
+> @@ -173,8 +172,7 @@ static int ti_am335x_xbar_probe(struct platform_device *pdev)
+>  		xbar->xbar_events = TI_AM335X_XBAR_LINES;
+>  	}
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	iomem = devm_ioremap_resource(&pdev->dev, res);
+> +	iomem = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(iomem))
+>  		return PTR_ERR(iomem);
+>  
+> @@ -323,7 +321,6 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
+>  	struct device_node *dma_node;
+>  	struct ti_dra7_xbar_data *xbar;
+>  	struct property *prop;
+> -	struct resource *res;
+>  	u32 safe_val;
+>  	int sz;
+>  	void __iomem *iomem;
+> @@ -403,8 +400,7 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
+>  		kfree(rsv_events);
+>  	}
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	iomem = devm_ioremap_resource(&pdev->dev, res);
+> +	iomem = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(iomem))
+>  		return PTR_ERR(iomem);
+>  
+> 
 
-If I were to take it, it would have to wait until after 5.6-rc1, sorry.
+- Péter
 
-thanks,
-
-greg k-h
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
