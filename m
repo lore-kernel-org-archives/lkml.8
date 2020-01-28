@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93333C47409
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F39C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6503624690
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F02A24691
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221260;
-	bh=dfvrLCjUuNwlPrEBLjqxka2nipU725v7isZIiKzbVn0=;
+	s=default; t=1580221266;
+	bh=rO20ReY0D17Z08+D6hDKugrRpVERf/wymJFyg4vn6yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DyLV1R3GXdrekgru5zPuh8DRgYZeiHJD4Tf5oIauOCCySiBhAcYviXZk1k1/BRCRj
-	 qIYtNmQSHCeCR5hwkBO+9g2gFkx0xJHpTmkXMGTNLF5+lxj7PpEhT6O43L5psnD4dJ
-	 XmcCx3UKLfG8PAsBLEi1fdtS2C0vkwc/AGzuZWBE=
+	b=H0EzIV2cTcw2L6/7lPt/2/k965UdHKbQyhxE3KgRdyCSPs5KrXqu8kgZi2l9mFoqP
+	 mwxmcU5nFIJLV8wzb0K+5VIqdEbACaneJ/TridmZER7MLVM2FQtwNp5GdbK7PiWViA
+	 XSO1J+xFqfC94knibaYwSaxfhThXOuo4uXyTmbj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbgA1OU7 (ORCPT
+        id S1730973AbgA1OVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:20:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46044 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:21:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731162AbgA1OU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:20:56 -0500
+        id S1731190AbgA1OVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:21:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFE7821739;
-        Tue, 28 Jan 2020 14:20:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A068D24690;
+        Tue, 28 Jan 2020 14:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221256;
-        bh=dfvrLCjUuNwlPrEBLjqxka2nipU725v7isZIiKzbVn0=;
+        s=default; t=1580221261;
+        bh=rO20ReY0D17Z08+D6hDKugrRpVERf/wymJFyg4vn6yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wbMAICB/scYzExCppyvu1HcfmL4NzvSAlti5srVCWv7sVNgs1SVekykQBOAp36D3S
-         TWONJBIyOGQzRO5sqd5RXbZNHqM8DqaAmCsCXWvgckdKnaZ9S08iVfJHusnOKxLj6R
-         LFLeySy1q/wiZZBS1Zz+7rwLZ6Lm6MwhKP7laDlA=
+        b=cRRN2OTb75EHwJoO8HW5jr6I2gGFjfCrA9yD+83PL/XYqkwd8oqQyVwnFA/un1vrx
+         W8ze/frwsLfndivc5kFpGH+ob947u5xhUTm8pFYVHG/1+2iPDYBIYivPRqTsRBHsM7
+         Y0nRsoPwb2/anCEQmKvhd3eavVy8zSmMO/281rFg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
+        stable@vger.kernel.org, Jie Liu <liujie165@huawei.com>,
+        Qiang Ning <ningqiang1@huawei.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 115/271] ARM: pxa: ssp: Fix "WARNING: invalid free of devm_ allocated data"
-Date:   Tue, 28 Jan 2020 15:04:24 +0100
-Message-Id: <20200128135901.136665929@linuxfoundation.org>
+Subject: [PATCH 4.9 117/271] tipc: set sysctl_tipc_rmem and named_timeout right range
+Date:   Tue, 28 Jan 2020 15:04:26 +0100
+Message-Id: <20200128135901.298365269@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,45 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jie Liu <liujie165@huawei.com>
 
-[ Upstream commit 9ee8578d953023cc57e7e736ae48502c707c0210 ]
+[ Upstream commit 4bcd4ec1017205644a2697bccbc3b5143f522f5f ]
 
-Since commit 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-kfree, iounmap, clk_put etc are not needed anymore in remove path.
+We find that sysctl_tipc_rmem and named_timeout do not have the right minimum
+setting. sysctl_tipc_rmem should be larger than zero, like sysctl_tcp_rmem.
+And named_timeout as a timeout setting should be not less than zero.
 
-Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-[ commit message spelling fix ]
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Fixes: cc79dd1ba9c10 ("tipc: change socket buffer overflow control to respect sk_rcvbuf")
+Fixes: a5325ae5b8bff ("tipc: add name distributor resiliency queue")
+Signed-off-by: Jie Liu <liujie165@huawei.com>
+Reported-by: Qiang Ning <ningqiang1@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-pxa/ssp.c | 6 ------
- 1 file changed, 6 deletions(-)
+ net/tipc/sysctl.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
-index b92673efffffb..97bd43c16cd87 100644
---- a/arch/arm/plat-pxa/ssp.c
-+++ b/arch/arm/plat-pxa/ssp.c
-@@ -230,18 +230,12 @@ static int pxa_ssp_probe(struct platform_device *pdev)
+diff --git a/net/tipc/sysctl.c b/net/tipc/sysctl.c
+index 1a779b1e85100..40f6d82083d7b 100644
+--- a/net/tipc/sysctl.c
++++ b/net/tipc/sysctl.c
+@@ -37,6 +37,8 @@
  
- static int pxa_ssp_remove(struct platform_device *pdev)
- {
--	struct resource *res;
- 	struct ssp_device *ssp;
+ #include <linux/sysctl.h>
  
- 	ssp = platform_get_drvdata(pdev);
- 	if (ssp == NULL)
- 		return -ENODEV;
++static int zero;
++static int one = 1;
+ static struct ctl_table_header *tipc_ctl_hdr;
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	release_mem_region(res->start, resource_size(res));
--
--	clk_put(ssp->clk);
--
- 	mutex_lock(&ssp_lock);
- 	list_del(&ssp->node);
- 	mutex_unlock(&ssp_lock);
+ static struct ctl_table tipc_table[] = {
+@@ -45,14 +47,16 @@ static struct ctl_table tipc_table[] = {
+ 		.data		= &sysctl_tipc_rmem,
+ 		.maxlen		= sizeof(sysctl_tipc_rmem),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1         = &one,
+ 	},
+ 	{
+ 		.procname	= "named_timeout",
+ 		.data		= &sysctl_tipc_named_timeout,
+ 		.maxlen		= sizeof(sysctl_tipc_named_timeout),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1         = &zero,
+ 	},
+ 	{}
+ };
 -- 
 2.20.1
 
