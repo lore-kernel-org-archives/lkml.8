@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE9DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FACC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3CA92468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B022468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221250;
-	bh=rcoi9ILvqlhRpjOQ7wka7HxDzfxpSnWuFo6BYQtY0bg=;
+	s=default; t=1580221254;
+	bh=+cwP9XADjrvZI1b705EfYZDrZt+Y9lRU5CyBykThi80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UXSmEfx8U5ewCY4EpwKkCG+tMpEoVAWIdzWQJnpwnZsCBXZP89LuLchKuWHgxRdxO
-	 z0m1h5w6bIqKsoeMUyub99XHi+aqDR1xSU8sMqggLsuogg6ahWw2YAfsXvRBg9yXiv
-	 1xR1iI0NIRBSWWRQrZ5YSSA5uP79TH2iyx9Qcr0M=
+	b=tqn8fiDAk5kvfVwBH3v6kx5oz67QePiZG75gd8hUGMo2HXwVNZOzw5ffnvJ1QgoKR
+	 WvgpAVmzGDckrG2hDNKwb9sBA30ary9dK2wQ3IlNQJTh7wU5ESMiLqVOo3hCJ6AlNl
+	 T9dTO6UHCPB/W9CC+UoDazWEOkofzIGBO5SR7GQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbgA1OUt (ORCPT
+        id S1731154AbgA1OUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:20:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45698 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:20:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731120AbgA1OUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:20:42 -0500
+        id S1731144AbgA1OUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:20:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E68DA2071E;
-        Tue, 28 Jan 2020 14:20:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 503B92071E;
+        Tue, 28 Jan 2020 14:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221241;
-        bh=rcoi9ILvqlhRpjOQ7wka7HxDzfxpSnWuFo6BYQtY0bg=;
+        s=default; t=1580221248;
+        bh=+cwP9XADjrvZI1b705EfYZDrZt+Y9lRU5CyBykThi80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IJuOyEdi/OWrV/+pnB56UjHn9aebock/tZVQZixgETYSR4/Z67snm8KfTqbAeWO+n
-         bKQRqjlfTy/3ClZ40mkKBKtERa7Jwk84ewZ1e2u/tc9KytDTJF2A5/HDZLPFvxE90E
-         EGlxleP4P90wcv0aF1cTsGxK/Dws82Igt7NJ2kY0=
+        b=wsIeirpNQRI2M3bEwMAfYx1+SJ/59sv0qkmZ/ItizwCy9pWmsTty1KAYUOLup+D2k
+         x4MQU4jkaGTld6SLoXSG6T47Kxw6SKwh7PbwPLd0+EwAXM/2rpFZG+Ligq+ygRnZjq
+         zrmr5bL6KH17ZWd72BEBPl2zoSJfhkm+q9185of0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 144/271] dmaengine: tegra210-adma: Fix crash during probe
-Date:   Tue, 28 Jan 2020 15:04:53 +0100
-Message-Id: <20200128135903.279221441@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Sperl <kernel@martin.sperl.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 112/271] spi: bcm2835aux: fix driver to not allow 65535 (=-1) cs-gpios
+Date:   Tue, 28 Jan 2020 15:04:21 +0100
+Message-Id: <20200128135900.913030359@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,90 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Martin Sperl <kernel@martin.sperl.org>
 
-[ Upstream commit b53611fb1ce9b1786bd18205473e0c1d6bfa8934 ]
+[ Upstream commit 509c583620e9053e43d611bf1614fc3d3abafa96 ]
 
-Commit f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
-added support to save and restore the DMA channel registers when runtime
-suspending the ADMA. This change is causing the kernel to crash when
-probing the ADMA, if the device is probed deferred when looking up the
-channel interrupts. The crash occurs because not all of the channel base
-addresses have been setup at this point and in the clean-up path of the
-probe, pm_runtime_suspend() is called invoking its callback which
-expects all the channel base addresses to be initialised.
+The original driver by default defines num_chipselects as -1.
+This actually allicates an array of 65535 entries in
+of_spi_register_master.
 
-Although this could be fixed by simply checking for a NULL address, on
-further review of the driver it seems more appropriate that we only call
-pm_runtime_get_sync() after all the channel interrupts and base
-addresses have been configured. Therefore, fix this crash by moving the
-calls to pm_runtime_enable(), pm_runtime_get_sync() and
-tegra_adma_init() after the DMA channels have been initialised.
+There is a side-effect for buggy device trees that (contrary to
+dt-binding documentation) have no cs-gpio defined.
 
-Fixes: f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
+This mode was never supported by the driver due to limitations
+of native cs and additional code complexity and is explicitly
+not stated to be implemented.
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+To keep backwards compatibility with such buggy DTs we limit
+the number of chip_selects to 1, as for all practical purposes
+it is only ever realistic to use a single chip select in
+native cs mode without negative side-effects.
+
+Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/spi/spi-bcm2835aux.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 8c3cab463354f..2d4aeba579f75 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -744,16 +744,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 		return PTR_ERR(tdma->ahub_clk);
- 	}
- 
--	pm_runtime_enable(&pdev->dev);
--
--	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
--		goto rpm_disable;
--
--	ret = tegra_adma_init(tdma);
--	if (ret)
--		goto rpm_put;
--
- 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
- 	for (i = 0; i < tdma->nr_channels; i++) {
- 		struct tegra_adma_chan *tdc = &tdma->channels[i];
-@@ -771,6 +761,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 		tdc->tdma = tdma;
- 	}
- 
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = pm_runtime_get_sync(&pdev->dev);
-+	if (ret < 0)
-+		goto rpm_disable;
-+
-+	ret = tegra_adma_init(tdma);
-+	if (ret)
-+		goto rpm_put;
-+
- 	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
-@@ -812,13 +812,13 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 
- dma_remove:
- 	dma_async_device_unregister(&tdma->dma_dev);
--irq_dispose:
--	while (--i >= 0)
--		irq_dispose_mapping(tdma->channels[i].irq);
- rpm_put:
- 	pm_runtime_put_sync(&pdev->dev);
- rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
-+irq_dispose:
-+	while (--i >= 0)
-+		irq_dispose_mapping(tdma->channels[i].irq);
- 
- 	return ret;
- }
+diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
+index 5c89bbb05441b..e075712c501e8 100644
+--- a/drivers/spi/spi-bcm2835aux.c
++++ b/drivers/spi/spi-bcm2835aux.c
+@@ -416,7 +416,18 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, master);
+ 	master->mode_bits = (SPI_CPOL | SPI_CS_HIGH | SPI_NO_CS);
+ 	master->bits_per_word_mask = SPI_BPW_MASK(8);
+-	master->num_chipselect = -1;
++	/* even though the driver never officially supported native CS
++	 * allow a single native CS for legacy DT support purposes when
++	 * no cs-gpio is configured.
++	 * Known limitations for native cs are:
++	 * * multiple chip-selects: cs0-cs2 are all simultaniously asserted
++	 *     whenever there is a transfer -  this even includes SPI_NO_CS
++	 * * SPI_CS_HIGH: is ignores - cs are always asserted low
++	 * * cs_change: cs is deasserted after each spi_transfer
++	 * * cs_delay_usec: cs is always deasserted one SCK cycle after
++	 *     a spi_transfer
++	 */
++	master->num_chipselect = 1;
+ 	master->transfer_one = bcm2835aux_spi_transfer_one;
+ 	master->handle_err = bcm2835aux_spi_handle_err;
+ 	master->prepare_message = bcm2835aux_spi_prepare_message;
 -- 
 2.20.1
 
