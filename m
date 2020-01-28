@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9628C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68874C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE2224694
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C17B24698
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220809;
-	bh=P8WDGV55YcmU/Rr49K1XQfZE/h0Lqzq8HkWQheqOrJ4=;
+	s=default; t=1580220813;
+	bh=EoCZegduvs6m+jj4UlGAqFHpvD2Z3fCOya/GVTD5pG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oX6Av8xde88k5/fVNwijLYK+QTNzUZ3jWK7WbegAfsuXqC3YnMixQZX7usgD8m6Rk
-	 TtTOp7d8sdql3AXhv+l2f/QGR+EvoR83njW+ZLTPwWucKFXKcyDcU3zqlc0+28pttk
-	 F309eSutuyq1+d0ArqolDTpMsQ54ZZntBnVEbtkE=
+	b=Cpc3KWw+0BxT9Qr0SV7bAkaaipzTxhlaxa3LsYHZKsGjlXWp5GBh38s7rYX/22urk
+	 OzSBN6v1Io+CXVf20qAz+iIO6/HKW5oS1WOH15P+2v1AqFNU0L/2LA8BoO3E0dr0wU
+	 blRdhvKdaPpL3m9RhBMKxloChxKZWnDe0PEM1UK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgA1ON2 (ORCPT
+        id S1729388AbgA1ONc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:13:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34972 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:13:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729667AbgA1ONW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:13:22 -0500
+        id S1727949AbgA1ON3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:13:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB7FA24688;
-        Tue, 28 Jan 2020 14:13:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A5922468F;
+        Tue, 28 Jan 2020 14:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220801;
-        bh=P8WDGV55YcmU/Rr49K1XQfZE/h0Lqzq8HkWQheqOrJ4=;
+        s=default; t=1580220808;
+        bh=EoCZegduvs6m+jj4UlGAqFHpvD2Z3fCOya/GVTD5pG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NJPkr9OmsDPuvN9eEgtKpa8qALJ04Qq/hlQA+rnkrWIjtICH7UmZBHlZyHM5e2o8+
-         9B294UHWn/4XyjVXLa7La4Kqig4/r/ybP2j1RMiz/ifpNoQ8FUu6XMf1jSYSk8NRqZ
-         iCzSj7T+Y9WHE8er3Ik4XW34nTEUygbZn6tmZf5E=
+        b=wtRoAHGF2L4+pJK5BtbBhYVDQqFUA/J6d68zQN2YmnZZMXlmrUcCG1+aSp8CyZPaP
+         AQnEHsGMfaZ41be6+g4dVzuWxnBxfm3G6g9AtmpvAZDahnTtgS4IdP1caSIDce8Ffu
+         1ALGQOMiXoGl7MGDvl7flkglj1hk8OJyLPlrSO8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 116/183] ALSA: aoa: onyx: always initialize register read value
-Date:   Tue, 28 Jan 2020 15:05:35 +0100
-Message-Id: <20200128135841.523083878@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 119/183] ext4: set error return correctly when ext4_htree_store_dirent fails
+Date:   Tue, 28 Jan 2020 15:05:38 +0100
+Message-Id: <20200128135841.833220521@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,41 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes@sipsolutions.net>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit f474808acb3c4b30552d9c59b181244e0300d218 ]
+[ Upstream commit 7a14826ede1d714f0bb56de8167c0e519041eeda ]
 
-A lot of places in the driver use onyx_read_register() without
-checking the return value, and it's been working OK for ~10 years
-or so, so probably never fails ... Rather than trying to check the
-return value everywhere, which would be relatively intrusive, at
-least make sure we don't use an uninitialized value.
+Currently when the call to ext4_htree_store_dirent fails the error return
+variable 'ret' is is not being set to the error code and variable count is
+instead, hence the error code is not being returned.  Fix this by assigning
+ret to the error return code.
 
-Fixes: f3d9478b2ce4 ("[ALSA] snd-aoa: add snd-aoa")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Johannes Berg <johannes@sipsolutions.net>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Addresses-Coverity: ("Unused value")
+Fixes: 8af0f0822797 ("ext4: fix readdir error in the case of inline_data+dir_index")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/aoa/codecs/onyx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/ext4/inline.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/aoa/codecs/onyx.c b/sound/aoa/codecs/onyx.c
-index a04edff8b729e..ae50d59fb810f 100644
---- a/sound/aoa/codecs/onyx.c
-+++ b/sound/aoa/codecs/onyx.c
-@@ -74,8 +74,10 @@ static int onyx_read_register(struct onyx *onyx, u8 reg, u8 *value)
- 		return 0;
- 	}
- 	v = i2c_smbus_read_byte_data(onyx->i2c, reg);
--	if (v < 0)
-+	if (v < 0) {
-+		*value = 0;
- 		return -1;
-+	}
- 	*value = (u8)v;
- 	onyx->cache[ONYX_REG_CONTROL-FIRSTREGISTER] = *value;
- 	return 0;
+diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
+index 0dcd33f626376..00f9433eea23a 100644
+--- a/fs/ext4/inline.c
++++ b/fs/ext4/inline.c
+@@ -1418,7 +1418,7 @@ int htree_inlinedir_to_tree(struct file *dir_file,
+ 		err = ext4_htree_store_dirent(dir_file, hinfo->hash,
+ 					      hinfo->minor_hash, de, &tmp_str);
+ 		if (err) {
+-			count = err;
++			ret = err;
+ 			goto out;
+ 		}
+ 		count++;
 -- 
 2.20.1
 
