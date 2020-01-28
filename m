@@ -2,52 +2,55 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419AEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84831C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACA424688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA3824688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221122;
-	bh=ycQ23ixeaeOqETre0ofxhlGMc8IkGjaBNi7nKZ5gf5c=;
+	s=default; t=1580221125;
+	bh=dZTUZ43rZtLVx6WjxbjKYrBOrk1kquAKKQ3mzcwZK8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KKgrJheM7hTDkOxeSPf9EvbszR/B5wVMJCD0rey7RMcz8KEK4w6fFQ0aGYg5VUhso
-	 I9giIZniL2Dhx5ltZZrPAUnRILMOgR8qLEvmMsElEukLY4ITJa6XOHuNhA0NoSwdvW
-	 /RYFI12LgUnNj1qGqylvZI7F1kfe74InMecWDXAw=
+	b=wv1FknYy1ewy3vHq/RfYLCVIWKzGWdpDeM0pTFlxN7GW88Q9vxBaclSrZNdtjmylz
+	 jZAMXSm8vSaj6zyPGzxSXgV+9YH2ruZDF/QqCLpnYCDtkhgZcqmu3WfJgURCwli9VK
+	 U3JLqYKC94l6ULIDgggdzyO6F2waE+73bBSRCAJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgA1OSl (ORCPT
+        id S1730728AbgA1OSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:18:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42742 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:18:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730497AbgA1OSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:18:40 -0500
+        id S1727673AbgA1OSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:18:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B6EF2468D;
-        Tue, 28 Jan 2020 14:18:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB9FF24688;
+        Tue, 28 Jan 2020 14:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221119;
-        bh=ycQ23ixeaeOqETre0ofxhlGMc8IkGjaBNi7nKZ5gf5c=;
+        s=default; t=1580221117;
+        bh=dZTUZ43rZtLVx6WjxbjKYrBOrk1kquAKKQ3mzcwZK8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fcV70F7xAT+z4hflFsG9tMHaFBkbXFLYy0PtproEiVH0/LWDyA3zYQS8k7IX5tO1K
-         ueBdo9c2oJLjDS1cjIFoSvHddKSyj8GEqbpa9M2ngNO06vkF/vaFDgDZOq1uXl4IDs
-         MaLvAfu9J8OnRxH7rxSnDY9iO02qFucwKIyAJXDM=
+        b=EEkzv1pbqMLUjPhsX+PoGF/gikgj80gfAWYC+ViYbjFJA9pZo0yC0gzwzwF7HVk0/
+         soe0KZfEsMs92OVL3vCR4EAhBprJT2Udd2TxLD3krY8lRhVgh2fsLGQvcQ4E+PrjfS
+         plLwqQJUhSabWmxFQXnm/zxE/EVXHI+S77/RKmHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alexandre.bounine@idt.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 096/271] xen, cpu_hotplug: Prevent an out of bounds access
-Date:   Tue, 28 Jan 2020 15:04:05 +0100
-Message-Id: <20200128135859.742312623@linuxfoundation.org>
+Subject: [PATCH 4.9 095/271] drivers/rapidio/rio_cm.c: fix potential oops in riocm_ch_listen()
+Date:   Tue, 28 Jan 2020 15:04:04 +0100
+Message-Id: <20200128135859.668659525@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -62,34 +65,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 201676095dda7e5b31a5e1d116d10fc22985075e ]
+[ Upstream commit 5ac188b12e7cbdd92dee60877d1fac913fc1d074 ]
 
-The "cpu" variable comes from the sscanf() so Smatch marks it as
-untrusted data.  We can't pass a higher value than "nr_cpu_ids" to
-cpu_possible() or it results in an out of bounds access.
+If riocm_get_channel() fails, then we should just return -EINVAL.
+Calling riocm_put_channel() will trigger a NULL dereference and
+generally we should call put() if the get() didn't succeed.
 
-Fixes: d68d82afd4c8 ("xen: implement CPU hotplugging")
+Link: http://lkml.kernel.org/r/20190110130230.GB27017@kadam
+Fixes: b6e8d4aa1110 ("rapidio: add RapidIO channelized messaging driver")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matt Porter <mporter@kernel.crashing.org>
+Cc: Alexandre Bounine <alexandre.bounine@idt.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/cpu_hotplug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rapidio/rio_cm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/xen/cpu_hotplug.c b/drivers/xen/cpu_hotplug.c
-index f4e59c445964d..17054d6954117 100644
---- a/drivers/xen/cpu_hotplug.c
-+++ b/drivers/xen/cpu_hotplug.c
-@@ -53,7 +53,7 @@ static int vcpu_online(unsigned int cpu)
- }
- static void vcpu_hotplug(unsigned int cpu)
- {
--	if (!cpu_possible(cpu))
-+	if (cpu >= nr_cpu_ids || !cpu_possible(cpu))
- 		return;
+diff --git a/drivers/rapidio/rio_cm.c b/drivers/rapidio/rio_cm.c
+index ef989a15aefc4..b29fc258eeba4 100644
+--- a/drivers/rapidio/rio_cm.c
++++ b/drivers/rapidio/rio_cm.c
+@@ -1215,7 +1215,9 @@ static int riocm_ch_listen(u16 ch_id)
+ 	riocm_debug(CHOP, "(ch_%d)", ch_id);
  
- 	switch (vcpu_online(cpu)) {
+ 	ch = riocm_get_channel(ch_id);
+-	if (!ch || !riocm_cmp_exch(ch, RIO_CM_CHAN_BOUND, RIO_CM_LISTEN))
++	if (!ch)
++		return -EINVAL;
++	if (!riocm_cmp_exch(ch, RIO_CM_CHAN_BOUND, RIO_CM_LISTEN))
+ 		ret = -EINVAL;
+ 	riocm_put_channel(ch);
+ 	return ret;
 -- 
 2.20.1
 
