@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3B9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC8DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB24521739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B9024681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221111;
-	bh=sBOmsTByakk8KKA7ILbP/W5S02VAFz9A7cTKeuS7gGE=;
+	s=default; t=1580221115;
+	bh=ruJhuPX5YT8xB86h9cdA6e549MQ5UbUT38xZLIPdo6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ubo/UgFnXxdKq9seMl50EJSuEe2o2ilUH8hfYcwdz8jcYdeWsEt9Dak9An6FehhT2
-	 1ltfKJNefnvZLWwtIJzHeJnCF0BYPX1qqZ7w6U19cX7GQRNLc/3XiCf9kQ4b5SDH4y
-	 EilsuaFWoBcNXbnRGhkMhtw8uwLMk8QL1xO++aQM=
+	b=eJY1SOU44eJFe2C+E6jl5qdzdon9xPzy42fgjsxNTjgtzcAYwTR3L9NIJIINw/CNn
+	 Z/bY2V6aOJiFmfyFI8T+8hq6z6J+731E0dUv7nbuj5o/1WFbDeudPv9KGpxeGa1SHN
+	 fDp901TNRmfUhj1y/qX2B87F0845A66molibm6D4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbgA1OSb (ORCPT
+        id S1730698AbgA1OSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:18:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42426 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:18:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730473AbgA1OS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:18:27 -0500
+        id S1730497AbgA1OS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:18:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E7012071E;
-        Tue, 28 Jan 2020 14:18:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBCDE24681;
+        Tue, 28 Jan 2020 14:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221106;
-        bh=sBOmsTByakk8KKA7ILbP/W5S02VAFz9A7cTKeuS7gGE=;
+        s=default; t=1580221109;
+        bh=ruJhuPX5YT8xB86h9cdA6e549MQ5UbUT38xZLIPdo6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=scwViIiRegJdJyyxZl2+PV7kK0dv8XxXaK0yXYUeSXM8sdWE2Wf0Zew7U91+2bfgy
-         Y01IlVid/+t1cQzlSFjaN5QR7XdfMl1KD0raZtoQoozbhOQKR1HOBEG/CZgr8YvxNy
-         10rNJgi5cWCb5W7d+ClRzyUTa93ubkE1yJPzAoow=
+        b=yqiid1q7Y69jZ8DJDXmKqqP0AtiL5C/n7PuSImbVOBZX2vTmfoqowvoNbuewbgaJR
+         YEmM2qvKcLX5dXpKfwpQJjxlojLDYwGgeFoDeGHiEzb0hgGQrMPgxUTrNC/HvG0QyU
+         oukI5/0ePfrDnYljruTUf8D67nQQqIBBEbFBXQbg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 091/271] ARM: 8848/1: virt: Align GIC version check with arm64 counterpart
-Date:   Tue, 28 Jan 2020 15:04:00 +0100
-Message-Id: <20200128135859.362889084@linuxfoundation.org>
+Subject: [PATCH 4.9 092/271] regulator: wm831x-dcdc: Fix list of wm831x_dcdc_ilim from mA to uA
+Date:   Tue, 28 Jan 2020 15:04:01 +0100
+Message-Id: <20200128135859.439342897@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,38 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 9db043d36bd379f4cc99054c079de0dabfc38d03 ]
+[ Upstream commit c25d47888f0fb3d836d68322d4aea2caf31a75a6 ]
 
-arm64 has got relaxation on GIC version check at early boot stage due
-to update of the GIC architecture let's align ARM with that.
+The wm831x_dcdc_ilim entries needs to be uA because it is used to compare
+with min_uA and max_uA.
+While at it also make the array const and change to use unsigned int.
 
-To help backports (even though the code was correct at the time of writing)
-Fixes: e59941b9b381 ("ARM: 8527/1: virt: enable GICv3 system registers")
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/hyp-stub.S | 4 ++--
+ drivers/regulator/wm831x-dcdc.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/kernel/hyp-stub.S b/arch/arm/kernel/hyp-stub.S
-index 15d073ae5da2a..f5e5e3e196592 100644
---- a/arch/arm/kernel/hyp-stub.S
-+++ b/arch/arm/kernel/hyp-stub.S
-@@ -179,8 +179,8 @@ ARM_BE8(orr	r7, r7, #(1 << 25))     @ HSCTLR.EE
- 	@ Check whether GICv3 system registers are available
- 	mrc	p15, 0, r7, c0, c1, 1	@ ID_PFR1
- 	ubfx	r7, r7, #28, #4
--	cmp	r7, #1
--	bne	2f
-+	teq	r7, #0
-+	beq	2f
+diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
+index 5a5bc4bb08d26..df591435d12a3 100644
+--- a/drivers/regulator/wm831x-dcdc.c
++++ b/drivers/regulator/wm831x-dcdc.c
+@@ -327,8 +327,8 @@ static int wm831x_buckv_get_voltage_sel(struct regulator_dev *rdev)
+ }
  
- 	@ Enable system register accesses
- 	mrc	p15, 4, r7, c12, c9, 5	@ ICC_HSRE
+ /* Current limit options */
+-static u16 wm831x_dcdc_ilim[] = {
+-	125, 250, 375, 500, 625, 750, 875, 1000
++static const unsigned int wm831x_dcdc_ilim[] = {
++	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
+ };
+ 
+ static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
 -- 
 2.20.1
 
