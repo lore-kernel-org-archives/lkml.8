@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660C8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568A5C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CFC207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B216207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222042;
-	bh=g98h9zgHGfmJG7qp7shi05vz6GMzSl3GulPJVilvKv0=;
+	s=default; t=1580222047;
+	bh=7Ra6XYIggFqUGPLCI3cb/b2nfYudOYiqxKkRdQa3n+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vg7nEzHggC76k/mTREUgRZVHP7M+VN6JSQbZl7PXd7orEuySwC8frsyOe4+DPIJ5w
-	 raiY10L4zGJ2it8WVTcvrysll+6m6UFRwFP3NETK/gg8Lo3ev62i35lCYn5wUCNVfR
-	 YiHEMG79sOKlV6jI/KVrX3GJPiyoU2NFXk48UDCA=
+	b=LMxUsI6MhOvZczglKiljQZ1Plhl4XD4I14vXGetkYxmcfHJ+wsJ73gk0I0kv0XBzY
+	 gHMSaWY89P3QuPrF/w0Lo5QVL8bkaYQKJPP0fjbMHarG75YFOWYYgsLN6PH1fOdVx8
+	 romv8JQhrcX0SqD4hgZl4bjLcB2xqkhOeyb8+M1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732601AbgA1OYf (ORCPT
+        id S1732137AbgA1OYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:24:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51286 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:24:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732572AbgA1OYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:24:33 -0500
+        id S1732541AbgA1OYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:24:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42AE12468A;
-        Tue, 28 Jan 2020 14:24:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A804A21739;
+        Tue, 28 Jan 2020 14:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221472;
-        bh=g98h9zgHGfmJG7qp7shi05vz6GMzSl3GulPJVilvKv0=;
+        s=default; t=1580221465;
+        bh=7Ra6XYIggFqUGPLCI3cb/b2nfYudOYiqxKkRdQa3n+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2OTe1qjwLxst8c287OfMfma93MvBqYw6+V30ii/hvrWuxeI/9MMP1LNILq/rbngc0
-         fu1+02X3uQOn47xQIHOAvLNvb6orrl8FxZsF21iSg0U3nWLDlGRrJnH0DnWwY+C/xT
-         pxx5mLW9uz2+tjb92w7+b2jQ4Z97mpnlOn+drRTc=
+        b=MlKuQXyBxZIKjYJ32jxaGC+UKHrDnw99dSbnD28sdIHSOFZBxC0GpzN+tCroH3t3/
+         PM24KITu0qiNrtDqFgwZXdHZ09eLJyGfXtSzKQWm+gK9cC0iJiMaJ1+9BEFmjusa3I
+         Mq05wBarpW0azUpVRrbtnnTy212krk5KLB2fCSQY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+2f07903a5b05e7f36410@syzkaller.appspotmail.com,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 239/271] net_sched: fix datalen for ematch
-Date:   Tue, 28 Jan 2020 15:06:28 +0100
-Message-Id: <20200128135910.335176711@linuxfoundation.org>
+        Ilja Van Sprundel <ivansprundel@ioactive.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 236/271] net: cxgb3_main: Add CAP_NET_ADMIN check to CHELSIO_GET_MEM
+Date:   Tue, 28 Jan 2020 15:06:25 +0100
+Message-Id: <20200128135910.120857970@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -64,47 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 61678d28d4a45ef376f5d02a839cc37509ae9281 ]
+[ Upstream commit 3546d8f1bbe992488ed91592cf6bf76e7114791a =
 
-syzbot reported an out-of-bound access in em_nbyte. As initially
-analyzed by Eric, this is because em_nbyte sets its own em->datalen
-in em_nbyte_change() other than the one specified by user, but this
-value gets overwritten later by its caller tcf_em_validate().
-We should leave em->datalen untouched to respect their choices.
+The cxgb3 driver for "Chelsio T3-based gigabit and 10Gb Ethernet
+adapters" implements a custom ioctl as SIOCCHIOCTL/SIOCDEVPRIVATE in
+cxgb_extension_ioctl().
 
-I audit all the in-tree ematch users, all of those implement
-->change() set em->datalen, so we can just avoid setting it twice
-in this case.
+One of the subcommands of the ioctl is CHELSIO_GET_MEM, which appears
+to read memory directly out of the adapter and return it to userspace.
+It's not entirely clear what the contents of the adapter memory
+contains, but the assumption is that it shouldn't be accessible to all
+users.
 
-Reported-and-tested-by: syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com
-Reported-by: syzbot+2f07903a5b05e7f36410@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+So add a CAP_NET_ADMIN check to the CHELSIO_GET_MEM case. Put it after
+the is_offload() check, which matches two of the other subcommands in
+the same function which also check for is_offload() and CAP_NET_ADMIN.
+
+Found by Ilja by code inspection, not tested as I don't have the
+required hardware.
+
+Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/ematch.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/sched/ematch.c
-+++ b/net/sched/ematch.c
-@@ -267,12 +267,12 @@ static int tcf_em_validate(struct tcf_pr
- 				}
- 				em->data = (unsigned long) v;
- 			}
-+			em->datalen = data_len;
- 		}
- 	}
+--- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+@@ -2440,6 +2440,8 @@ static int cxgb_extension_ioctl(struct n
  
- 	em->matchid = em_hdr->matchid;
- 	em->flags = em_hdr->flags;
--	em->datalen = data_len;
- 	em->net = net;
- 
- 	err = 0;
+ 		if (!is_offload(adapter))
+ 			return -EOPNOTSUPP;
++		if (!capable(CAP_NET_ADMIN))
++			return -EPERM;
+ 		if (!(adapter->flags & FULL_INIT_DONE))
+ 			return -EIO;	/* need the memory controllers */
+ 		if (copy_from_user(&t, useraddr, sizeof(t)))
 
 
