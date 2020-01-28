@@ -2,183 +2,188 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9282EC35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78216C35246
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6916224681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TCfsrCyr"
+	by mail.kernel.org (Postfix) with ESMTP id 57F5E24682
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:07:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbgA1GDW (ORCPT
+        id S1725867AbgA1GHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 01:03:22 -0500
-Received: from mail-eopbgr00083.outbound.protection.outlook.com ([40.107.0.83]:16770
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725774AbgA1GDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 01:03:21 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AlblF9/7WRdavX6zT489BUX6KVAVilfCw/2GQXMde9pBTcdRqoGLONPGZ1U4b6yprYTiGQWq7/hTvjMQAj15nCgFePCO3OYOABsPNZ6XlLqNCT35QyGpNaserD+tPMTXmreMuhUo8ga4wV3jgxBTntGW/cIIvF7qiFo0dl7J5t4ppwXOzzZV90Oa9Ut+Co8bWs2ADpnXPDiWrfSvbkkUcqnWhc3rL3t4W/07V27G/pMNsKPTCY3ZTq/CpqF8RvMR9kz/8HHoOYe4xNH2HuDZVuHjwlTj4IcowqExqGLHd1dzo7YQIio1UKRNqWfkgJrfUxIfFiDMdnVh7eWwd4hyjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=am3QQVO4A2Q8JSmD12ha7Qy1WjL/Iw3B8FFXaDsVf1Q=;
- b=jcZuIQyYsxTdUgsn3rXgAX0WpeYUewN3hKResN1w6JKKTAvlrt1j+744IMAK7lSeP5ZEJnjd1HCdWtKzO5lnhSdhxhPmimyD5dOKKkrCwDgy13B1EU3nenYjHGiIapImXbsfNQrGPXVxct/W3mn1JtrYXfcJRe7vBEUt5XFCT0Ueumhxiv6nNZVCJutoTlXKvMHPbrNYjT1rL/ZSZQOTSFEl3T+91hlM10UHX6NX2loiDIN18mUZYcvMLkHxFDWZsXfacJWKSkObepSVzTxJ9rywKLx0yVFIpwIDL3cAYF9gu9CTCogrxXPeGukhFoJ05bK+J5h4u1SDrdHGt3xJpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=am3QQVO4A2Q8JSmD12ha7Qy1WjL/Iw3B8FFXaDsVf1Q=;
- b=TCfsrCyrgSVzFftGDaUmKg30rOJjrVcmlUVwifxy+SoJw2tW0ZBLsuHW4ElnSAzlAID400cLptQICc8FAlucdbzL+eRGdI3wFZREGEpWS+A1vNj2gvVXw2SMhVkcsG4GT6BJVBobWi+ljIh2bjWxTa0PG8SQHGcOO5PMGBtbOY8=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5377.eurprd04.prod.outlook.com (20.178.113.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.24; Tue, 28 Jan 2020 06:03:18 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2665.026; Tue, 28 Jan 2020
- 06:03:18 +0000
-Received: from localhost.localdomain (119.31.174.66) by HK2PR04CA0087.apcprd04.prod.outlook.com (2603:1096:202:15::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2665.20 via Frontend Transport; Tue, 28 Jan 2020 06:03:14 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "arnd@arndb.de" <arnd@arndb.de>
-CC:     "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V3 2/2] soc: imx: increase build coverage for imx8m soc driver
-Thread-Topic: [PATCH V3 2/2] soc: imx: increase build coverage for imx8m soc
- driver
-Thread-Index: AQHV1aCigJa3dHmiEUaofW1PYvJuZA==
-Date:   Tue, 28 Jan 2020 06:03:17 +0000
-Message-ID: <1580191098-5886-3-git-send-email-peng.fan@nxp.com>
-References: <1580191098-5886-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1580191098-5886-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR04CA0087.apcprd04.prod.outlook.com
- (2603:1096:202:15::31) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b0f90412-cef8-4f46-3f89-08d7a3b7c51d
-x-ms-traffictypediagnostic: AM0PR04MB5377:|AM0PR04MB5377:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB537795F4F8D6B1D3FE0436EB880A0@AM0PR04MB5377.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 029651C7A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(136003)(39860400002)(366004)(189003)(199004)(2616005)(956004)(52116002)(86362001)(8936002)(8676002)(81156014)(81166006)(36756003)(64756008)(66446008)(66556008)(66476007)(44832011)(2906002)(16526019)(5660300002)(66946007)(478600001)(6486002)(110136005)(54906003)(26005)(316002)(71200400001)(6512007)(6506007)(69590400006)(186003)(4326008)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5377;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: D1mEfX4lIYF8GlVtFXkAdv3UUndh0I61K572ZNhaSAJrfoBQ7FS3kF6YOmWvlKYFOwiGuNyqCxBZfONNnUcpQNTPdtpPdOZb9fiQjAGmPpWl09Kf1M6TgxYOq6Hldmx6c+lTAeGXQTs44gYUS5vgJXIBMk2Et1RUFTe4bwU3BTL8jmLZOahZiwdSDz+HvvdfT+qsiOjidwO9uKDZbyJwAfOgvxccrA1hcy8fl+BAQc8NsZ1dP/tsPrDChtGFlo0SIkTTaSeJnGDX80LHYrQ5dtKtD/HbbsqVvIcQboYwfVOAHNtwSB+mzKH1+p1/i6ZX92wuJJm9DX/9V097qMAWKhwIDAQkh12SB1ZtaDqEjPy9p+4IwnS1LhFvrSpPjnlH8fa3ynJLTQKAE73fvB9rfUdoI188y82+m3l8tVk1KbA0O9ctxI0asH0CrbSsBsQSmfRjVHkbUxyPDt3Zf0K8dAAk6kt3yYXqdWgE1dyABTwqr8jH7Z5mPq8QptS3ZS/HOZLTPg/DNilO7+88jpjFa1EXDOdxw5IxAdbR/Xx06RkCZpEzUrGk1hmrEpVuGxyo
-x-ms-exchange-antispam-messagedata: 0Gn1R85pswAlGXV4jz4ura+j/drq60ka8VPxceP69Vxk26FX/ACqJk+O/CL0r42ZULAceSUcwWKM7xHVkI9Kv1zsPmkAXiF6pV0y2OvYyJd5Ll/qiNR9zuYM/5nrGVAsqMm9/5Kp3CN7jUweLx+xgA==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jan 2020 01:07:37 -0500
+Received: from mga01.intel.com ([192.55.52.88]:32143 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbgA1GHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 01:07:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 22:07:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,372,1574150400"; 
+   d="scan'208";a="308243616"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Jan 2020 22:07:35 -0800
+Received: from [10.252.25.124] (abudanko-mobl.ccr.corp.intel.com [10.252.25.124])
+        by linux.intel.com (Postfix) with ESMTP id 362C5580277;
+        Mon, 27 Jan 2020 22:07:27 -0800 (PST)
+Subject: [PATCH v6 01/10] capabilities: introduce CAP_PERFMON to kernel and
+ user space
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>, Will Deacon <will@kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        oprofile-list@lists.sf.net
+References: <74d524ab-ac11-a7b8-1052-eba10f117e09@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <62274abc-6067-9121-9397-c9b626ca5f7a@linux.intel.com>
+Date:   Tue, 28 Jan 2020 09:07:26 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0f90412-cef8-4f46-3f89-08d7a3b7c51d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 06:03:17.9117
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9+SqGCFqsDmT+rNIHl0d6jn+h3dnzrHL2WY2zpqYJsYCBb+nKo8bf/OrV59+VGI8zcMAHH6xsd4fnoFQrTLF7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5377
+In-Reply-To: <74d524ab-ac11-a7b8-1052-eba10f117e09@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
 
-The soc-imx8.c driver is actually for i.MX8M family, so rename it
-to soc-imx8m.c.
+Introduce CAP_PERFMON capability designed to secure system performance
+monitoring and observability operations so that CAP_PERFMON would assist
+CAP_SYS_ADMIN capability in its governing role for performance monitoring
+and observability subsystems.
 
-Use CONFIG_SOC_IMX8M as build gate, not CONFIG_ARCH_MXC, to control
-whether build this driver, also make it possible for compile test.
+CAP_PERFMON hardens system security and integrity during system performance
+monitoring and observability operations by decreasing attack surface that
+is available to a CAP_SYS_ADMIN privileged process [2]. Providing the access
+to system performance monitoring and observability operations under CAP_PERFMON
+capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes
+chances to misuse the credentials and makes the operation more secure.
+Thus, CAP_PERFMON implements the principal of least privilege for performance
+monitoring and observability operations (POSIX IEEE 1003.1e: 2.2.2.39 principle
+of least privilege: A security design principle that states that a process
+or program be granted only those privileges (e.g., capabilities) necessary
+to accomplish its legitimate function, and only for the time that such
+privileges are actually required)
 
-Default set it to y for ARCH_MXC && ARM64
+CAP_PERFMON meets the demand to secure system performance monitoring and
+observability operations for adoption in security sensitive, restricted,
+multiuser production environments (e.g. HPC clusters, cloud and virtual compute
+environments), where root or CAP_SYS_ADMIN credentials are not available to
+mass users of a system, and securely unblocks applicability and scalability
+of system performance monitoring and observability operations beyond root
+and CAP_SYS_ADMIN process use cases.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
+CAP_PERFMON takes over CAP_SYS_ADMIN credentials related to system performance
+monitoring and observability operations and balances amount of CAP_SYS_ADMIN
+credentials following the recommendations in the capabilities man page [1]
+for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to kernel
+developers, below." For backward compatibility reasons access to system
+performance monitoring and observability subsystems of the kernel remains
+open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN capability
+usage for secure system performance monitoring and observability operations
+is discouraged with respect to the designed CAP_PERFMON capability.
+
+Although the software running under CAP_PERFMON can not ensure avoidance
+of related hardware issues, the software can still mitigate these issues
+following the official embargoed hardware issues mitigation procedure [2].
+The bugs in the software itself can be fixed following the standard kernel
+development process [3] to maintain and harden security of system performance
+monitoring and observability operations.
+
+[1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+[2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
+[3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- drivers/soc/Makefile                        | 2 +-
- drivers/soc/imx/Kconfig                     | 9 +++++++++
- drivers/soc/imx/Makefile                    | 2 +-
- drivers/soc/imx/{soc-imx8.c =3D> soc-imx8m.c} | 0
- 4 files changed, 11 insertions(+), 2 deletions(-)
- rename drivers/soc/imx/{soc-imx8.c =3D> soc-imx8m.c} (100%)
+ include/linux/capability.h          | 4 ++++
+ include/uapi/linux/capability.h     | 8 +++++++-
+ security/selinux/include/classmap.h | 4 ++--
+ 3 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-index 2ec355003524..614986cd1713 100644
---- a/drivers/soc/Makefile
-+++ b/drivers/soc/Makefile
-@@ -11,7 +11,7 @@ obj-$(CONFIG_ARCH_DOVE)		+=3D dove/
- obj-$(CONFIG_MACH_DOVE)		+=3D dove/
- obj-y				+=3D fsl/
- obj-$(CONFIG_ARCH_GEMINI)	+=3D gemini/
--obj-$(CONFIG_ARCH_MXC)		+=3D imx/
-+obj-y				+=3D imx/
- obj-$(CONFIG_ARCH_IXP4XX)	+=3D ixp4xx/
- obj-$(CONFIG_SOC_XWAY)		+=3D lantiq/
- obj-y				+=3D mediatek/
-diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
-index 0281ef9a1800..70019cefa617 100644
---- a/drivers/soc/imx/Kconfig
-+++ b/drivers/soc/imx/Kconfig
-@@ -17,4 +17,13 @@ config IMX_SCU_SOC
- 	  Controller Unit SoC info module, it will provide the SoC info
- 	  like SoC family, ID and revision etc.
-=20
-+config SOC_IMX8M
-+	bool "i.MX8M SoC family support"
-+	depends on ARCH_MXC || COMPILE_TEST
-+	default ARCH_MXC && ARM64
-+	help
-+	  If you say yes here you get support for the NXP i.MX8M family
-+	  support, it will provide the SoC info like SoC family,
-+	  ID and revision etc.
+diff --git a/include/linux/capability.h b/include/linux/capability.h
+index ecce0f43c73a..027d7e4a853b 100644
+--- a/include/linux/capability.h
++++ b/include/linux/capability.h
+@@ -251,6 +251,10 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
+ extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
+ extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
+ extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
++static inline bool perfmon_capable(void)
++{
++	return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
++}
+ 
+ /* audit system wants to get cap info from files as well */
+ extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
+diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+index 240fdb9a60f6..8b416e5f3afa 100644
+--- a/include/uapi/linux/capability.h
++++ b/include/uapi/linux/capability.h
+@@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
+ 
+ #define CAP_AUDIT_READ		37
+ 
++/*
++ * Allow system performance and observability privileged operations
++ * using perf_events, i915_perf and other kernel subsystems
++ */
 +
- endmenu
-diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
-index cf9ca42ff739..103e2c93c342 100644
---- a/drivers/soc/imx/Makefile
-+++ b/drivers/soc/imx/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_HAVE_IMX_GPC) +=3D gpc.o
- obj-$(CONFIG_IMX_GPCV2_PM_DOMAINS) +=3D gpcv2.o
--obj-$(CONFIG_ARCH_MXC) +=3D soc-imx8.o
-+obj-$(CONFIG_SOC_IMX8M) +=3D soc-imx8m.o
- obj-$(CONFIG_IMX_SCU_SOC) +=3D soc-imx-scu.o
-diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8m.c
-similarity index 100%
-rename from drivers/soc/imx/soc-imx8.c
-rename to drivers/soc/imx/soc-imx8m.c
---=20
-2.16.4
++#define CAP_PERFMON		38
+ 
+-#define CAP_LAST_CAP         CAP_AUDIT_READ
++#define CAP_LAST_CAP         CAP_PERFMON
+ 
+ #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+ 
+diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+index 7db24855e12d..c599b0c2b0e7 100644
+--- a/security/selinux/include/classmap.h
++++ b/security/selinux/include/classmap.h
+@@ -27,9 +27,9 @@
+ 	    "audit_control", "setfcap"
+ 
+ #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
+-		"wake_alarm", "block_suspend", "audit_read"
++		"wake_alarm", "block_suspend", "audit_read", "perfmon"
+ 
+-#if CAP_LAST_CAP > CAP_AUDIT_READ
++#if CAP_LAST_CAP > CAP_PERFMON
+ #error New capability defined, please update COMMON_CAP2_PERMS.
+ #endif
+ 
+-- 
+2.20.1
 
