@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3BAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BB1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C624B2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26C120678
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220918;
-	bh=9SD/Nav36FxmSJaDLWEuY0FBvY4fKUVuarwje0XxRqY=;
+	s=default; t=1580220922;
+	bh=mMVHWPhGVr12UQgiIwOVH1+KWsDTW8eU+eNqwVQThDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qBcyfsUWoTFzy/M75WY64h1koaR5lso6D4n42KBRplyp8Sk3gv64WvZGKunreQ8xQ
-	 uarTMUl+lh49Loxihcxm45n4zRZglagQmld1FbvPmULpMpgl+92eYEsjKVHFFbiM6D
-	 066HIEP+2opGrF2u7KwSVjH1Www47b8jPKCI6nFY=
+	b=pMuQmtVz7pHOmW7KapgXL7sMpRedENVguEoR17w9tFxh/jsTK9+rDm0qhqceFAhvt
+	 yxBmr2tyImnUvdfPn+3JC+W8C4MQR6UPe0Yir8Hwadmd54nrKDy3lFPdJhogW2odGg
+	 y4y+FXd5jh3ZtVyvDJ22HkyQZLfOoS2JZs+kHKi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbgA1OPR (ORCPT
+        id S1730055AbgA1OPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:15:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37836 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:15:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729342AbgA1OPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:15:16 -0500
+        id S1730035AbgA1OPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:15:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68E0624690;
-        Tue, 28 Jan 2020 14:15:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFA6B24681;
+        Tue, 28 Jan 2020 14:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220915;
-        bh=9SD/Nav36FxmSJaDLWEuY0FBvY4fKUVuarwje0XxRqY=;
+        s=default; t=1580220908;
+        bh=mMVHWPhGVr12UQgiIwOVH1+KWsDTW8eU+eNqwVQThDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l6b1bSaZJn/rZJsWPeCtDHrtDcYCF6uArFlKZ6bhmO8R6YE+FVtzSoSfOjb3zOkiN
-         FNz0tS1X8dIMP0dWz1tv1Ycp8il8Os2MQiMWYPl0QFOabseXrMpxD5JmnaqpJyaMQH
-         IG41Z9MuI2qTDr9d68hM/z9ZfKdF1rBfSBM/BGXQ=
+        b=OoUeZNhXGO7pDLYgM0eBABOuOE/yvrkmRwR94tK/da4c5bEehU2Fdt7uWn3WC5qKT
+         o5WPzfJvlDvGD6hNEY5ZzqgNh8QigkG3joJyUu7pLC4qRwpr5tXit6Uhxu0QvS9/u3
+         KFIK18a7G+5q3Y5z3GdmCy3xfRwenD4i+tjJu5iQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 015/271] net: phy: Fix not to call phy_resume() if PHY is not attached
-Date:   Tue, 28 Jan 2020 15:02:44 +0100
-Message-Id: <20200128135853.637823282@linuxfoundation.org>
+Subject: [PATCH 4.9 012/271] pcrypt: use format specifier in kobject_add
+Date:   Tue, 28 Jan 2020 15:02:41 +0100
+Message-Id: <20200128135853.358753520@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,66 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit ef1b5bf506b1f0ee3edc98533e1f3ecb105eb46a ]
+[ Upstream commit b1e3874c75ab15288f573b3532e507c37e8e7656 ]
 
-This patch fixes an issue that mdio_bus_phy_resume() doesn't call
-phy_resume() if the PHY is not attached.
+Passing string 'name' as the format specifier is potentially hazardous
+because name could (although very unlikely to) have a format specifier
+embedded in it causing issues when parsing the non-existent arguments
+to these.  Follow best practice by using the "%s" format string for
+the string 'name'.
 
-Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cleans up clang warning:
+crypto/pcrypt.c:397:40: warning: format string is not a string literal
+(potentially insecure) [-Wformat-security]
+
+Fixes: a3fb1e330dd2 ("pcrypt: Added sysfs interface to pcrypt")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ crypto/pcrypt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 3289fd910c4a6..487d0372a4441 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -80,7 +80,7 @@ static LIST_HEAD(phy_fixup_list);
- static DEFINE_MUTEX(phy_fixup_lock);
- 
- #ifdef CONFIG_PM
--static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
-+static bool mdio_bus_phy_may_suspend(struct phy_device *phydev, bool suspend)
- {
- 	struct device_driver *drv = phydev->mdio.dev.driver;
- 	struct phy_driver *phydrv = to_phy_driver(drv);
-@@ -92,10 +92,11 @@ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
- 	/* PHY not attached? May suspend if the PHY has not already been
- 	 * suspended as part of a prior call to phy_disconnect() ->
- 	 * phy_detach() -> phy_suspend() because the parent netdev might be the
--	 * MDIO bus driver and clock gated at this point.
-+	 * MDIO bus driver and clock gated at this point. Also may resume if
-+	 * PHY is not attached.
- 	 */
- 	if (!netdev)
--		return !phydev->suspended;
-+		return suspend ? !phydev->suspended : phydev->suspended;
- 
- 	/* Don't suspend PHY if the attached netdev parent may wakeup.
- 	 * The parent may point to a PCI device, as in tg3 driver.
-@@ -125,7 +126,7 @@ static int mdio_bus_phy_suspend(struct device *dev)
- 	if (phydev->attached_dev && phydev->adjust_link)
- 		phy_stop_machine(phydev);
- 
--	if (!mdio_bus_phy_may_suspend(phydev))
-+	if (!mdio_bus_phy_may_suspend(phydev, true))
- 		return 0;
- 
- 	return phy_suspend(phydev);
-@@ -136,7 +137,7 @@ static int mdio_bus_phy_resume(struct device *dev)
- 	struct phy_device *phydev = to_phy_device(dev);
+diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
+index f8ec3d4ba4a80..a5718c0a3dc4e 100644
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -394,7 +394,7 @@ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
  	int ret;
  
--	if (!mdio_bus_phy_may_suspend(phydev))
-+	if (!mdio_bus_phy_may_suspend(phydev, false))
- 		goto no_resume;
+ 	pinst->kobj.kset = pcrypt_kset;
+-	ret = kobject_add(&pinst->kobj, NULL, name);
++	ret = kobject_add(&pinst->kobj, NULL, "%s", name);
+ 	if (!ret)
+ 		kobject_uevent(&pinst->kobj, KOBJ_ADD);
  
- 	ret = phy_resume(phydev);
 -- 
 2.20.1
 
