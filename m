@@ -2,105 +2,440 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8807EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD2CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDA621739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036052465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPLLbufU"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="FnXyND8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgA1RUS (ORCPT
+        id S1726383AbgA1RXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:20:18 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36325 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgA1RUS (ORCPT
+        Tue, 28 Jan 2020 12:23:22 -0500
+Received: from sonic314-19.consmr.mail.gq1.yahoo.com ([98.137.69.82]:38737
+        "EHLO sonic314-19.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726162AbgA1RXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:20:18 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k3so7318278pgc.3;
-        Tue, 28 Jan 2020 09:20:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=jf3QvTBtLBXkEUTUJ6dEyaixgm7RPtLRLhyBEDMajRM=;
-        b=CPLLbufURDm6a2I+e5yqSQa31hPHb6Z6iVXHANzSfE6mwte4IcdDCHSoosA5y38tdR
-         v6SDkrLCTZYuTLqBEIIjkkn0C0ceHnHn3y4ka6znW+EKcqQXl5n5UpHwUzbTilqxmcAz
-         Kn2oh6Q6nbOIAfsu4r6VBt0Dh0nKM7AU7O8ztAHxWZEWSXhoMW+UPnybyI+FMY4pam+Z
-         2yho40MOQJTkU6xmY+Xk/SezwWKZ8yubPpYr/WoDjeudSjqhPAXli6Tsxx1F0kuN5JOf
-         1EyHzLtRepzLVujQUWopEYqCDY6Eu6hKM+c4Fe6ZH47XDTFESizWTmG/BFGjTRumYhG5
-         Kqvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jf3QvTBtLBXkEUTUJ6dEyaixgm7RPtLRLhyBEDMajRM=;
-        b=pBZ7oLRfm/6gr8YN65/U3C/5ewMcdSrABegqDpirBOeccekymRxBswFL0uuhhXQ91Q
-         hpPfToEisC6rhm+0k8f9LcJvAQUX/hzJeabigFbuOFL7dj5FektBBu5ZwKP5UqahgFKZ
-         NkqfyfrgwmUKe1Z0/CuewfGn63YRF/ABNoffdMq8ewywFYtRqf9pQGxVK9uRYBp8gGT7
-         r1P+xHlTgpqJ+YrhiB1gk2UA/2kgp1wlOb2BpTPL9/qk0UrBQ9mDkXbSJKMt/nWo3uSw
-         qZ4d4an/pCBtTVlY0DpK47ahLRaQ/f54QkWQLiKSUODu7BTGXAvtuGrbB5JlNv0G15RD
-         5fmQ==
-X-Gm-Message-State: APjAAAVeiu/Y/DquPxb6YgrY7BPdAqN0SLGxDqYMqkKnYndUQ9qbu5QO
-        NEm36rC+J5hO5+ket9Lt4A==
-X-Google-Smtp-Source: APXvYqze9wR3ZSNvjNvbxyEc55dGBVFLhZEOOt3MVtGqsOWYO0pXeFv5/z2zgpaWXrdU3bkJWUqghw==
-X-Received: by 2002:a65:4b85:: with SMTP id t5mr20864227pgq.404.1580232017665;
-        Tue, 28 Jan 2020 09:20:17 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee4:f372:cc5e:c7d9:2a24:390])
-        by smtp.gmail.com with ESMTPSA id w26sm12959417pfj.119.2020.01.28.09.20.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 09:20:17 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     peterz@infradead.org, mingo@kernel.org, oleg@redhat.com,
-        christian.brauner@ubuntu.com, paulmck@kernel.org
-Cc:     linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        rcu@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] exit.c: Fix Sparse errors and warnings
-Date:   Tue, 28 Jan 2020 22:50:08 +0530
-Message-Id: <20200128172008.22665-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 28 Jan 2020 12:23:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1580232200; bh=jv9ZQYqEVkHjbwcvS1c5pz29gqIS0tACn1T9MhsYcRg=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=FnXyND8HxqKcW8SiFZ9ZuneMdx1KY/H2PxHNClaU+bIeX4p97lxy1wYhAkOyDVN56NjyafQprQWi5oqLMk90fCCkEhbNx9dgpOenPyQlHAIbKX24g8OdZkfuyLXEcJ48oXyaBYIW713MUrXtudqWJKKFS9D1pcSO6qU+fjpkOpC9uTVAn4PhNeJMBwTETop//sImoS/CIAS2Sw82tjkT5FQfd1SJHF39n82GcSvg7ZsJd/4BkYHLwi83NF7qEpj5Vfo04p0Jd+O8rUPFnR7/OD/O3F/eHqjEClmQCjSxTJ2g9vjQikRh5R3MRHsGf5R0wVkGxdyYpgWjuFMZYZcwdA==
+X-YMail-OSG: y26xjXYVM1mvXckOli.1pEYKlJEoTcLXzPMbHWgO6XQ4RhA1luNCK4m2sPXBW1b
+ 3ArB2KYMtE53Bl2RnXlntsp.q5txhvpvVYSfbwlOrIQRTEdWPJmXnayEvKsdjG0z0He_wz9AWOLt
+ 4QR2jKYpoXsKyHbVvJfc163I_2eoRHELegaO4nLOH8n79i1Ydd920JqIgZtMKS9kJdyB5XxBciXz
+ r0Oj2x_cc.pwBrahn8.ufpYZZ0XMataxPQ6mraXjVMYxJis1K.hjkKsRSEWn4_tGosYavzlGNzmi
+ DWBoJIoBEpk3s3lkTyf5ZUEdZJvdKDELRNavIcGVj5iEw2QjG4ayBh6TvFkWD8abgXHwomQRFa2T
+ ouJy68q2irpZymIbm9igF0pOtW4Qp3KtiSSy.hznxp.RJYJhuaGkzJyulglnjBQOcteS60i7771Q
+ A00bBeA6GG6soakrVG6jREQf_PCRCmkCMAlqzfyBT.R2CvgJ9zL63nuHi3ZVKxPCKV8nOd93gM4t
+ CfqCyp6GbxnMYOf1wusZ0LWYmsgUSO3x_uKEUtdPOKvlzwoWYJCXdZ6Sirf17LMHfAzijP_lpt8o
+ SHHxHJaoc35Gjzq4kZIGjzuPK1vQqAYoGLmjZZFDH5PHWQO1Rwy1CX3Z3XFfp2IQWnTrpbO7CQXF
+ tZpvkrF0QcyeWUkzg93lJZy.aq9boi4s6hSPUPnGFEx2FCvIYQF90StwV.CHiiEi6rzttWBvjCGX
+ p9N_Kx7Rihm73JkipfdOvtgzAo4Zw_PojeHqchvWf3pXfmBIeSj01M97jk1GJ9O_08koRUNJOLJj
+ Agn5D2Gmhj.NjBaPD0S50qruAmhPEMCmypNT_X5Nyn1a3Tx7ZWT2kX597HNPXdrDOjuJazyQgi_c
+ FjgvASTxVmtqhbssOCZE43EZN1hKfmTFQorEnaDj0riiR4UT_b69RlCqcL6t3FBwHbXIDYOKnoS5
+ qFuEAAnK.Is7T6ML123IZaUrELckMn8LeM44hmjMF6AAlFNHyMbTYUegWw95UMs099deNDdvSYay
+ vGFJoHfkopomt3TYqGEPBT6ChCmhiSkxflWnXx_9NSfD1elvdANxVO4s263k.VqgK5uZjU9rX2uT
+ 0vzn0rclkSG.H5aAtlzyVoY1JoxMNK7mlakCluNbl6MpDUlBfEENtUbBLqMsU5x8ivVu0lQzeAfT
+ YQIfGGOUte9H6kqXTAL_2JJTQXymG3INF3GRDRQ4rjG60oAIekGkx_Fknhtx4umCTtQvvd.OUyda
+ KUaqSNw_1bUeEUK2avwJy9yFpKt92tOAShaCShi3VsWjByEBRCCceylCvW5QkJSdNffdFpdNl62O
+ VahkzeKDuxTkmZBCq8o1rFD2_db1Bx1qMrT33zeD7u6se_iqgmQCAwpfwSlRSAevkex7dC5RDvGC
+ pNkXC7ye5QwkN9I0ov8_jzaW2UGaf.92zuPKR
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.gq1.yahoo.com with HTTP; Tue, 28 Jan 2020 17:23:20 +0000
+Received: by smtp402.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID b35008f9d0bc6937840df811e2953b65;
+          Tue, 28 Jan 2020 17:23:14 +0000 (UTC)
+Date:   Wed, 29 Jan 2020 01:23:06 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Chao Yu <yuchao0@huawei.com>, dhowells@redhat.com,
+        linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] erofs: convert to use the new mount fs_context api
+Message-ID: <20200128172304.GA7941@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20200102092556.38898-1-yuchao0@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102092556.38898-1-yuchao0@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.15116 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Hello Al,
 
-This patch fixes the following sparse error:
-kernel/exit.c:627:25: error: incompatible types in comparison expression
-caused due to accessing rcu protected pointer without using rcu primitives.
+Would you mind consider taking this patch into your working branch as well?
+And we could avoid legacy mount API since 5.6...
 
-And the following warning:
+Thank you very much,
+Gao Xiang
 
-kernel/exit.c:626:40: warning: incorrect type in assignment
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- kernel/exit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/exit.c b/kernel/exit.c
-index bcbd59888e67..c5a9d6360440 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -623,8 +623,8 @@ static void forget_original_parent(struct task_struct *father,
- 	reaper = find_new_reaper(father, reaper);
- 	list_for_each_entry(p, &father->children, sibling) {
- 		for_each_thread(p, t) {
--			t->real_parent = reaper;
--			BUG_ON((!t->ptrace) != (t->parent == father));
-+			rcu_assign_pointer(t->real_parent, reaper);
-+			BUG_ON((!t->ptrace) != (rcu_access_pointer(t->parent) == father));
- 			if (likely(!t->ptrace))
- 				t->parent = t->real_parent;
- 			if (t->pdeath_signal)
--- 
-2.17.1
-
+On Thu, Jan 02, 2020 at 05:25:56PM +0800, Chao Yu wrote:
+> Convert the erofs to use new internal mount API as the old one will
+> be obsoleted and removed.  This allows greater flexibility in
+> communication of mount parameters between userspace, the VFS and the
+> filesystem.
+> 
+> See Documentation/filesystems/mount_api.txt for more information.
+> 
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: David Howells <dhowells@redhat.com>
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> ---
+> v3:
+> - if acl or xattr feature is not supported in erofs, change error msg
+> a bit to indicate {,no}acl or {,no}user_xattr options are not supported.
+> 
+>  fs/erofs/internal.h |   2 +-
+>  fs/erofs/super.c    | 233 +++++++++++++++++++-------------------------
+>  2 files changed, 101 insertions(+), 134 deletions(-)
+> 
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 1ed5beff7d11..a5fac25db6af 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -102,13 +102,13 @@ struct erofs_sb_info {
+>  #define set_opt(sbi, option)	((sbi)->mount_opt |= EROFS_MOUNT_##option)
+>  #define test_opt(sbi, option)	((sbi)->mount_opt & EROFS_MOUNT_##option)
+>  
+> -#ifdef CONFIG_EROFS_FS_ZIP
+>  enum {
+>  	EROFS_ZIP_CACHE_DISABLED,
+>  	EROFS_ZIP_CACHE_READAHEAD,
+>  	EROFS_ZIP_CACHE_READAROUND
+>  };
+>  
+> +#ifdef CONFIG_EROFS_FS_ZIP
+>  #define EROFS_LOCKED_MAGIC     (INT_MIN | 0xE0F510CCL)
+>  
+>  /* basic unit of the workstation of a super_block */
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 057e6d7b5b7f..388e6b34c736 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -10,6 +10,8 @@
+>  #include <linux/parser.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/crc32c.h>
+> +#include <linux/fs_context.h>
+> +#include <linux/fs_parser.h>
+>  #include "xattr.h"
+>  
+>  #define CREATE_TRACE_POINTS
+> @@ -192,41 +194,6 @@ static int erofs_read_superblock(struct super_block *sb)
+>  	return ret;
+>  }
+>  
+> -#ifdef CONFIG_EROFS_FS_ZIP
+> -static int erofs_build_cache_strategy(struct super_block *sb,
+> -				      substring_t *args)
+> -{
+> -	struct erofs_sb_info *sbi = EROFS_SB(sb);
+> -	const char *cs = match_strdup(args);
+> -	int err = 0;
+> -
+> -	if (!cs) {
+> -		erofs_err(sb, "Not enough memory to store cache strategy");
+> -		return -ENOMEM;
+> -	}
+> -
+> -	if (!strcmp(cs, "disabled")) {
+> -		sbi->cache_strategy = EROFS_ZIP_CACHE_DISABLED;
+> -	} else if (!strcmp(cs, "readahead")) {
+> -		sbi->cache_strategy = EROFS_ZIP_CACHE_READAHEAD;
+> -	} else if (!strcmp(cs, "readaround")) {
+> -		sbi->cache_strategy = EROFS_ZIP_CACHE_READAROUND;
+> -	} else {
+> -		erofs_err(sb, "Unrecognized cache strategy \"%s\"", cs);
+> -		err = -EINVAL;
+> -	}
+> -	kfree(cs);
+> -	return err;
+> -}
+> -#else
+> -static int erofs_build_cache_strategy(struct super_block *sb,
+> -				      substring_t *args)
+> -{
+> -	erofs_info(sb, "EROFS compression is disabled, so cache strategy is ignored");
+> -	return 0;
+> -}
+> -#endif
+> -
+>  /* set up default EROFS parameters */
+>  static void erofs_default_options(struct erofs_sb_info *sbi)
+>  {
+> @@ -251,73 +218,61 @@ enum {
+>  	Opt_err
+>  };
+>  
+> -static match_table_t erofs_tokens = {
+> -	{Opt_user_xattr, "user_xattr"},
+> -	{Opt_nouser_xattr, "nouser_xattr"},
+> -	{Opt_acl, "acl"},
+> -	{Opt_noacl, "noacl"},
+> -	{Opt_cache_strategy, "cache_strategy=%s"},
+> -	{Opt_err, NULL}
+> +static const struct constant_table erofs_param_cache_strategy[] = {
+> +	{"disabled",	EROFS_ZIP_CACHE_DISABLED},
+> +	{"readahead",	EROFS_ZIP_CACHE_READAHEAD},
+> +	{"readaround",	EROFS_ZIP_CACHE_READAROUND},
+>  };
+>  
+> -static int erofs_parse_options(struct super_block *sb, char *options)
+> -{
+> -	substring_t args[MAX_OPT_ARGS];
+> -	char *p;
+> -	int err;
+> -
+> -	if (!options)
+> -		return 0;
+> -
+> -	while ((p = strsep(&options, ","))) {
+> -		int token;
+> +static const struct fs_parameter_spec erofs_fs_parameters[] = {
+> +	fsparam_flag_no("user_xattr",	Opt_user_xattr),
+> +	fsparam_flag_no("acl",		Opt_acl),
+> +	fsparam_enum("cache_strategy",	Opt_cache_strategy,
+> +		     erofs_param_cache_strategy),
+> +	{}
+> +};
+>  
+> -		if (!*p)
+> -			continue;
+> +static int erofs_fc_parse_param(struct fs_context *fc,
+> +				struct fs_parameter *param)
+> +{
+> +	struct erofs_sb_info *sbi __maybe_unused = fc->s_fs_info;
+> +	struct fs_parse_result result;
+> +	int opt;
+>  
+> -		args[0].to = args[0].from = NULL;
+> -		token = match_token(p, erofs_tokens, args);
+> +	opt = fs_parse(fc, erofs_fs_parameters, param, &result);
+> +	if (opt < 0)
+> +		return opt;
+>  
+> -		switch (token) {
+> +	switch (opt) {
+> +	case Opt_user_xattr:
+>  #ifdef CONFIG_EROFS_FS_XATTR
+> -		case Opt_user_xattr:
+> -			set_opt(EROFS_SB(sb), XATTR_USER);
+> -			break;
+> -		case Opt_nouser_xattr:
+> -			clear_opt(EROFS_SB(sb), XATTR_USER);
+> -			break;
+> +		if (result.boolean)
+> +			set_opt(sbi, XATTR_USER);
+> +		else
+> +			clear_opt(sbi, XATTR_USER);
+>  #else
+> -		case Opt_user_xattr:
+> -			erofs_info(sb, "user_xattr options not supported");
+> -			break;
+> -		case Opt_nouser_xattr:
+> -			erofs_info(sb, "nouser_xattr options not supported");
+> -			break;
+> +		errorfc(fc, "{,no}user_xattr options not supported");
+>  #endif
+> +		break;
+> +	case Opt_acl:
+>  #ifdef CONFIG_EROFS_FS_POSIX_ACL
+> -		case Opt_acl:
+> -			set_opt(EROFS_SB(sb), POSIX_ACL);
+> -			break;
+> -		case Opt_noacl:
+> -			clear_opt(EROFS_SB(sb), POSIX_ACL);
+> -			break;
+> +		if (result.boolean)
+> +			set_opt(sbi, POSIX_ACL);
+> +		else
+> +			clear_opt(sbi, POSIX_ACL);
+> +#else
+> +		errorfc(fc, "{,no}acl options not supported");
+> +#endif
+> +		break;
+> +	case Opt_cache_strategy:
+> +#ifdef CONFIG_EROFS_FS_ZIP
+> +		sbi->cache_strategy = result.uint_32;
+>  #else
+> -		case Opt_acl:
+> -			erofs_info(sb, "acl options not supported");
+> -			break;
+> -		case Opt_noacl:
+> -			erofs_info(sb, "noacl options not supported");
+> -			break;
+> +		errorfc(fc, "compression not supported, cache_strategy ignored");
+>  #endif
+> -		case Opt_cache_strategy:
+> -			err = erofs_build_cache_strategy(sb, args);
+> -			if (err)
+> -				return err;
+> -			break;
+> -		default:
+> -			erofs_err(sb, "Unrecognized mount option \"%s\" or missing value", p);
+> -			return -EINVAL;
+> -		}
+> +		break;
+> +	default:
+> +		return -ENOPARAM;
+>  	}
+>  	return 0;
+>  }
+> @@ -381,7 +336,7 @@ static int erofs_init_managed_cache(struct super_block *sb)
+>  static int erofs_init_managed_cache(struct super_block *sb) { return 0; }
+>  #endif
+>  
+> -static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+> +static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>  {
+>  	struct inode *inode;
+>  	struct erofs_sb_info *sbi;
+> @@ -394,11 +349,7 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>  		return -EINVAL;
+>  	}
+>  
+> -	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+> -	if (!sbi)
+> -		return -ENOMEM;
+> -
+> -	sb->s_fs_info = sbi;
+> +	sbi = sb->s_fs_info;
+>  	err = erofs_read_superblock(sb);
+>  	if (err)
+>  		return err;
+> @@ -412,12 +363,6 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>  #ifdef CONFIG_EROFS_FS_XATTR
+>  	sb->s_xattr = erofs_xattr_handlers;
+>  #endif
+> -	/* set erofs default mount options */
+> -	erofs_default_options(sbi);
+> -
+> -	err = erofs_parse_options(sb, data);
+> -	if (err)
+> -		return err;
+>  
+>  	if (test_opt(sbi, POSIX_ACL))
+>  		sb->s_flags |= SB_POSIXACL;
+> @@ -450,15 +395,61 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>  	if (err)
+>  		return err;
+>  
+> -	erofs_info(sb, "mounted with opts: %s, root inode @ nid %llu.",
+> -		   (char *)data, ROOT_NID(sbi));
+> +	erofs_info(sb, "mounted with root inode @ nid %llu.", ROOT_NID(sbi));
+> +	return 0;
+> +}
+> +
+> +static int erofs_fc_get_tree(struct fs_context *fc)
+> +{
+> +	return get_tree_bdev(fc, erofs_fc_fill_super);
+> +}
+> +
+> +static int erofs_fc_reconfigure(struct fs_context *fc)
+> +{
+> +	struct super_block *sb = fc->root->d_sb;
+> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
+> +
+> +	DBG_BUGON(!sb_rdonly(sb));
+> +
+> +	if (test_opt(sbi, POSIX_ACL))
+> +		fc->sb_flags |= SB_POSIXACL;
+> +	else
+> +		fc->sb_flags &= ~SB_POSIXACL;
+> +
+> +	fc->sb_flags |= SB_RDONLY;
+>  	return 0;
+>  }
+>  
+> -static struct dentry *erofs_mount(struct file_system_type *fs_type, int flags,
+> -				  const char *dev_name, void *data)
+> +static void erofs_fc_free(struct fs_context *fc)
+>  {
+> -	return mount_bdev(fs_type, flags, dev_name, data, erofs_fill_super);
+> +	/*
+> +	 * sbi stored in fs_context was cleaned after transferring
+> +	 * to corresponding superblock on a successful new mount,
+> +	 * or free it here.
+> +	 */
+> +	kfree(fc->s_fs_info);
+> +}
+> +
+> +static const struct fs_context_operations erofs_context_ops = {
+> +	.parse_param	= erofs_fc_parse_param,
+> +	.get_tree       = erofs_fc_get_tree,
+> +	.reconfigure    = erofs_fc_reconfigure,
+> +	.free		= erofs_fc_free,
+> +};
+> +
+> +static int erofs_init_fs_context(struct fs_context *fc)
+> +{
+> +	struct erofs_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+> +
+> +	if (!sbi)
+> +		return -ENOMEM;
+> +
+> +	/* set default mount options */
+> +	erofs_default_options(sbi);
+> +
+> +	fc->s_fs_info = sbi;
+> +	fc->ops = &erofs_context_ops;
+> +	return 0;
+>  }
+>  
+>  /*
+> @@ -497,7 +488,7 @@ static void erofs_put_super(struct super_block *sb)
+>  static struct file_system_type erofs_fs_type = {
+>  	.owner          = THIS_MODULE,
+>  	.name           = "erofs",
+> -	.mount          = erofs_mount,
+> +	.init_fs_context = erofs_init_fs_context,
+>  	.kill_sb        = erofs_kill_sb,
+>  	.fs_flags       = FS_REQUIRES_DEV,
+>  };
+> @@ -603,36 +594,12 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
+>  	return 0;
+>  }
+>  
+> -static int erofs_remount(struct super_block *sb, int *flags, char *data)
+> -{
+> -	struct erofs_sb_info *sbi = EROFS_SB(sb);
+> -	unsigned int org_mnt_opt = sbi->mount_opt;
+> -	int err;
+> -
+> -	DBG_BUGON(!sb_rdonly(sb));
+> -	err = erofs_parse_options(sb, data);
+> -	if (err)
+> -		goto out;
+> -
+> -	if (test_opt(sbi, POSIX_ACL))
+> -		sb->s_flags |= SB_POSIXACL;
+> -	else
+> -		sb->s_flags &= ~SB_POSIXACL;
+> -
+> -	*flags |= SB_RDONLY;
+> -	return 0;
+> -out:
+> -	sbi->mount_opt = org_mnt_opt;
+> -	return err;
+> -}
+> -
+>  const struct super_operations erofs_sops = {
+>  	.put_super = erofs_put_super,
+>  	.alloc_inode = erofs_alloc_inode,
+>  	.free_inode = erofs_free_inode,
+>  	.statfs = erofs_statfs,
+>  	.show_options = erofs_show_options,
+> -	.remount_fs = erofs_remount,
+>  };
+>  
+>  module_init(erofs_module_init);
+> -- 
+> 2.18.0.rc1
+> 
