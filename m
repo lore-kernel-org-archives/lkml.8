@@ -2,162 +2,103 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D6EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F96DC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2CF207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:44:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CATh8fg/"
+	by mail.kernel.org (Postfix) with ESMTP id 5C0DB207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580222663;
+	bh=aup8c8VAiXA2mmlBVw9VBciGQMmaaLaQFRAsPUaw8pg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OYbGD7RjCYwRoL47OPPaqH6u1k6QNcFj/NlN0fjNWZ5WQm/kJC0VNI0fyFaNlXCF+
+	 S2F9Llq7TLDwZQa3YSA6EW/o43lEzIsK9u243aJHWFHSdxEAAPPIydy7SausdqS6zb
+	 EnANy70Cdpk/iuUVz47PXEKThE+ZoYy46UlelZcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgA1OoT (ORCPT
+        id S1728273AbgA1OK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:44:19 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9947 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgA1OK3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:10:29 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3040c10000>; Tue, 28 Jan 2020 06:10:09 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 28 Jan 2020 06:10:28 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 28 Jan 2020 06:10:28 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan
- 2020 14:10:26 +0000
-Subject: Re: [PATCH v4 11/14] dmaengine: tegra-apb: Clean up suspend-resume
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-12-digetx@gmail.com>
- <7e0d2cfa-5570-93e6-e3dc-7d3f6902a528@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <831d5e28-72df-3175-bfb6-b33985d93a52@nvidia.com>
-Date:   Tue, 28 Jan 2020 14:10:24 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 28 Jan 2020 09:10:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729148AbgA1OKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:10:22 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8841E24693;
+        Tue, 28 Jan 2020 14:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580220622;
+        bh=aup8c8VAiXA2mmlBVw9VBciGQMmaaLaQFRAsPUaw8pg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zZ9nX9MFnCo4Ixt1oN+u+JUn+IZl2s4B1Re3XlKIdLYszHMIrP3QVKPGlpeAuJOVT
+         j65pkop37z9ms4xliCD511/V23ndjdwHDl8MI2lNHu520H+snFQwiBXNnTpjnHJf0G
+         W8Exue1Bd1y+b3vW6tPbSiRSwOrXJge0UOhO1PkU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 081/183] dmaengine: axi-dmac: Dont check the number of frames for alignment
+Date:   Tue, 28 Jan 2020 15:05:00 +0100
+Message-Id: <20200128135838.018128023@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
+References: <20200128135829.486060649@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <7e0d2cfa-5570-93e6-e3dc-7d3f6902a528@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580220609; bh=xangnqYvsjXB6uZCwVU6QEfMGdk7H6fMiwcZ4U+Wll0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CATh8fg/+NuOJ6Y6kBLaJZ4AMi/2jad+XiXGUA+DbDj7pJ/knJbOhoraiWgIM4FCb
-         55IlASAe8BQElryRSxQZfveKJrZ+XYFnKuVmChs4EkXUHu3rHZJsRRuh36t1ZBpT9v
-         H+muQ/RUvUVBRX6Q5g9Ok4+y+oqfsngRQs2PkIyf5eKUOsuyckYxxK0eJTmdnsUdMY
-         mAvNZxZnXyzXbAe3GFSiQk3Uycsj0S5y+iVoXlMimrM09rqjzTmaUFZGMnYxP0ljl2
-         kd5xIrp+RmVS8O7yePS9TEabvMlt88qHWsO/Gb96/dgm7cFq+H4NxmplF+UNFe91Tj
-         HsPuTEMbxqkFA==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-On 21/01/2020 21:23, Dmitry Osipenko wrote:
-> 12.01.2020 20:30, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> It is enough to check whether hardware is busy on suspend and to reset
->> it across of suspend-resume because channel's configuration is fully
->> re-programmed on each DMA transaction anyways and because save-restore
->> of an active channel won't end up well without pausing transfer prior to
->> saving of the state (note that all channels shall be idling at the time =
-of
->> suspend, so save-restore is not needed at all).
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/dma/tegra20-apb-dma.c | 131 +++++++++++++++++-----------------
->>  1 file changed, 67 insertions(+), 64 deletions(-)
->>
->> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma=
-.c
->> index b9d8e57eaf54..398a0e1d6506 100644
->> --- a/drivers/dma/tegra20-apb-dma.c
->> +++ b/drivers/dma/tegra20-apb-dma.c
->> @@ -1392,6 +1392,36 @@ static const struct tegra_dma_chip_data tegra148_=
-dma_chip_data =3D {
->>  	.support_separate_wcount_reg =3D true,
->>  };
->> =20
->> +static int tegra_dma_init_hw(struct tegra_dma *tdma)
->> +{
->> +	int err;
->> +
->> +	err =3D reset_control_assert(tdma->rst);
->> +	if (err) {
->> +		dev_err(tdma->dev, "failed to assert reset: %d\n", err);
->> +		return err;
->> +	}
->> +
->> +	err =3D clk_enable(tdma->dma_clk);
->> +	if (err) {
->> +		dev_err(tdma->dev, "failed to enable clk: %d\n", err);
->> +		return err;
->> +	}
->> +
->> +	/* reset DMA controller */
->> +	udelay(2);
->> +	reset_control_deassert(tdma->rst);
->> +
->> +	/* enable global DMA registers */
->> +	tdma_write(tdma, TEGRA_APBDMA_GENERAL, TEGRA_APBDMA_GENERAL_ENABLE);
->> +	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
->> +	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFF);
->> +
->> +	clk_disable(tdma->dma_clk);
->> +
->> +	return 0;
->> +}
->> +
->>  static int tegra_dma_probe(struct platform_device *pdev)
->>  {
->>  	const struct tegra_dma_chip_data *cdata;
->> @@ -1433,30 +1463,18 @@ static int tegra_dma_probe(struct platform_devic=
-e *pdev)
->>  	if (ret)
->>  		return ret;
->> =20
->> +	ret =3D tegra_dma_init_hw(tdma);
->> +	if (ret)
->> +		goto err_clk_unprepare;
->> +
->>  	pm_runtime_irq_safe(&pdev->dev);
->>  	pm_runtime_enable(&pdev->dev);
->>  	if (!pm_runtime_enabled(&pdev->dev)) {
->>  		ret =3D tegra_dma_runtime_resume(&pdev->dev);
->>  		if (ret)
->>  			goto err_clk_unprepare;
->=20
-> Jon, but isn't the RPM mandatory for all Tegra SoCs now and thus
-> guaranteed to be enabled? Maybe we should start to remove handling the
-> case of unavailable RPM from all Tegra drivers?
+[ Upstream commit 648865a79d8ee3d1aa64aab5eb2a9d12eeed14f9 ]
 
-Yes that's true, even ARCH_TEGRA selects PM now
+In 2D transfers (for the AXI DMAC), the number of frames (numf) represents
+Y_LENGTH, and the length of a frame is X_LENGTH. 2D transfers are useful
+for video transfers where screen resolutions ( X * Y ) are typically
+aligned for X, but not for Y.
 
-Cheers
-Jon
+There is no requirement for Y_LENGTH to be aligned to the bus-width (or
+anything), and this is also true for AXI DMAC.
 
---=20
-nvpublic
+Checking the Y_LENGTH for alignment causes false errors when initiating DMA
+transfers. This change fixes this by checking only that the Y_LENGTH is
+non-zero.
+
+Fixes: 0e3b67b348b8 ("dmaengine: Add support for the Analog Devices AXI-DMAC DMA controller")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/dma-axi-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 5b2395e7e04d8..6de3d2142c7d2 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -441,7 +441,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
+ 
+ 	if (chan->hw_2d) {
+ 		if (!axi_dmac_check_len(chan, xt->sgl[0].size) ||
+-		    !axi_dmac_check_len(chan, xt->numf))
++		    xt->numf == 0)
+ 			return NULL;
+ 		if (xt->sgl[0].size + dst_icg > chan->max_length ||
+ 		    xt->sgl[0].size + src_icg > chan->max_length)
+-- 
+2.20.1
+
+
+
