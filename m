@@ -2,52 +2,52 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0778C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F7BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A779421739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C382071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221467;
-	bh=yjiDfEnBImHmLBETyrn1Ft8yQxUTC7g8GV5oackgyF8=;
+	s=default; t=1580221474;
+	bh=U7KFAaLtlV+YU5BPWP95GtvN00quRSfQ7ja0XbUw8LA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fVWAjkZ58+PEm2Y6XqX5HrxfjUywdJ9OkG53ySzvIlSgdLRhVYdHoY8UHYqA9eJy+
-	 ++nZa/EY5/wDVuS6vGTQd3Pii0dg8Ma66f4s4J0yhlErsfSOAcNqoTsPNISjcx6f+/
-	 iPYaVVJjzNYAY7FDu1+mpIF7aEjL0e7lnRY3NoFI=
+	b=GTwTZDDCg/QBa0686WTjdQxrj36TjEEvKFdeHsSf6yUleRPbcpe1GMF/l6pF0cHwc
+	 zyAf5ovAfy/6t1WbxcYQmt+heh0lLyFtf8bnHqmRtezsXAKdjWjnlsyvJZ5eVkwTGT
+	 uZ8WsuW7hpga9MsjDlKIk+InfoDz/EF6zaLBt7Os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731467AbgA1OY0 (ORCPT
+        id S1728001AbgA1OYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:24:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51000 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:24:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731508AbgA1OYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:24:20 -0500
+        id S1730145AbgA1OY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:24:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1A7E2468A;
-        Tue, 28 Jan 2020 14:24:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B94724686;
+        Tue, 28 Jan 2020 14:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221460;
-        bh=yjiDfEnBImHmLBETyrn1Ft8yQxUTC7g8GV5oackgyF8=;
+        s=default; t=1580221467;
+        bh=U7KFAaLtlV+YU5BPWP95GtvN00quRSfQ7ja0XbUw8LA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KgHoQcG0w/AYrGwqgwdPyg9Uub/6VGeV5rth7cLdiTLsnBEUrBVqbqlbpXHHBFwhE
-         e9UBIP9sSWRINJGazHFIfrx3NkukBh687alSrQYnPma8SLDA7H3WVc0AoYjv9A/Qgz
-         f2Z1JORgsR8QPJ4cDz2DU2Y7dsnrsH9WBl1Lax5k=
+        b=08uIz6wFbmsYWecjIRQPFOUOns7Xrw5KOS0A0VoaTvvvAcCS4ua/ZDZ4GxH1S9LHW
+         p51GVBedYzkNmH9a5qDak2B6vUgj0Z4PgJRGekBU/k2lwIjykjSkF8DaJXDRPTBMEH
+         aGuse9UDepQX4FD5YLk0svfcHXziPH6q9aQlgwq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 186/271] mac80211: minstrel_ht: fix per-group max throughput rate initialization
-Date:   Tue, 28 Jan 2020 15:05:35 +0100
-Message-Id: <20200128135906.414211395@linuxfoundation.org>
+        stable@vger.kernel.org, William Dauchy <w.dauchy@criteo.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 237/271] net, ip6_tunnel: fix namespaces move
+Date:   Tue, 28 Jan 2020 15:06:26 +0100
+Message-Id: <20200128135910.191879594@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,37 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: William Dauchy <w.dauchy@criteo.com>
 
-[ Upstream commit 56dd918ff06e3ee24d8067e93ed12b2a39e71394 ]
+[ Upstream commit 5311a69aaca30fa849c3cc46fb25f75727fb72d0 ]
 
-The group number needs to be multiplied by the number of rates per group
-to get the full rate index
+in the same manner as commit d0f418516022 ("net, ip_tunnel: fix
+namespaces move"), fix namespace moving as it was broken since commit
+8d79266bc48c ("ip6_tunnel: add collect_md mode to IPv6 tunnel"), but for
+ipv6 this time; there is no reason to keep it for ip6_tunnel.
 
-Fixes: 5935839ad735 ("mac80211: improve minstrel_ht rate sorting by throughput & probability")
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Link: https://lore.kernel.org/r/20190820095449.45255-1-nbd@nbd.name
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 8d79266bc48c ("ip6_tunnel: add collect_md mode to IPv6 tunnel")
+Signed-off-by: William Dauchy <w.dauchy@criteo.com>
+Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mac80211/rc80211_minstrel_ht.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/ip6_tunnel.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
-index 593184d14b3ef..e1b0e26c1f174 100644
---- a/net/mac80211/rc80211_minstrel_ht.c
-+++ b/net/mac80211/rc80211_minstrel_ht.c
-@@ -547,7 +547,7 @@ minstrel_ht_update_stats(struct minstrel_priv *mp, struct minstrel_ht_sta *mi)
+--- a/net/ipv6/ip6_tunnel.c
++++ b/net/ipv6/ip6_tunnel.c
+@@ -1861,10 +1861,8 @@ static int ip6_tnl_dev_init(struct net_d
+ 	if (err)
+ 		return err;
+ 	ip6_tnl_link_config(t);
+-	if (t->parms.collect_md) {
+-		dev->features |= NETIF_F_NETNS_LOCAL;
++	if (t->parms.collect_md)
+ 		netif_keep_dst(dev);
+-	}
+ 	return 0;
+ }
  
- 		/* (re)Initialize group rate indexes */
- 		for(j = 0; j < MAX_THR_RATES; j++)
--			tmp_group_tp_rate[j] = group;
-+			tmp_group_tp_rate[j] = MCS_GROUP_RATES * group;
- 
- 		for (i = 0; i < MCS_GROUP_RATES; i++) {
- 			if (!(mg->supported & BIT(i)))
--- 
-2.20.1
-
 
 
