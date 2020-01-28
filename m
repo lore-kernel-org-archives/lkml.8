@@ -2,121 +2,201 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF89C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB08C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233D22051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231AC2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:45:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="JdrKv0mC"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="kRAT4hsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgA1PoD (ORCPT
+        id S1726751AbgA1PpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:44:03 -0500
-Received: from mail-mw2nam12on2107.outbound.protection.outlook.com ([40.107.244.107]:15200
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726558AbgA1PoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:44:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C6Ebnqp4KBuW82BTdGGNri3L+X0LZ6GdWQoR94NLE1DLxHM8oNGBrfg68G5+BmHx96eeU9ccfWizxHiEquJlWq1Ztu+kqEXt/4lHaCDp4qnfPNet4RH/FB5jxjpAAupm0C6ZCzgJp0hvZYYnOAYn3GHASvg9EnULDypBUQm3N6NH/SArXrt5feoz4EOUFmtnibNlUCf/kaVqIr4ORfnu08wHIlun7ahbsXcJhiaGP5akQlf5o1v2LFijUwRviLz8gdx2S2728aoudPMFlhdSpeRGInSt52AQUrPO6jEc3YbwYLPZjhDLeYwOnVaj8CwsRf9OIM4Cn7ONXvDLqDWkDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2nER1f4bp+odQlr0YsnDZhDALJMVefFX+nj+kVsJxFg=;
- b=bSRgoPLOZ6vJvNtF5Y3y4o/8s+kXQKCzgLG90TG9k9OJhYeL2yJM6E+SkKm1Hj3lG+u2B2TkSAr0CvIlcetliYw0GQoIcsC6NYiBAi/XQ5mAYZjx8C1fCc/mqOMKU+rY4rqQFwP4zkqGd9EGXkoXBBqfJ7Wh7RMoNmR3T0o+CAxPNHenilzDeLCzo9HmDDCObQVEOLvW8ran1HtR2tcy2NYOlzPP0r+gQKaejx/3oK4yBmmnNQMbapTAiKzxy+UjV+6P0vlTr3b9W/rlFSJcgvTgqf6la+6drU6HRWYB7txSInwiaEmxjnAYWdQnjABErT2QQGJQIugmo9NeIn83LA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2nER1f4bp+odQlr0YsnDZhDALJMVefFX+nj+kVsJxFg=;
- b=JdrKv0mCDCfDucnsGyED8vY941Fv4mlhHaj+XwsvhHrGU2Hf75P9Hf9Me/OzPvnZLZMQ14gkHzKWtisaU6Sby9JHIlgnQE3qfbZAzWWd1k0Wa2CyXFyzAYNq0nxbgTzyiuh1aZEgP71TiMABKy+5dR22nQvasV9tQs7Z47vCfi8=
-Received: from BN6PR1301MB2097.namprd13.prod.outlook.com (10.174.87.14) by
- BN6PR1301MB1889.namprd13.prod.outlook.com (10.174.89.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.15; Tue, 28 Jan 2020 15:44:00 +0000
-Received: from BN6PR1301MB2097.namprd13.prod.outlook.com
- ([fe80::40e1:9ff5:2b8c:38bf]) by BN6PR1301MB2097.namprd13.prod.outlook.com
- ([fe80::40e1:9ff5:2b8c:38bf%5]) with mapi id 15.20.2686.019; Tue, 28 Jan 2020
- 15:44:00 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "rmilkowski@gmail.com" <rmilkowski@gmail.com>
-CC:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v3] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Thread-Topic: [PATCH v3] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Thread-Index: AdXVs9KkXsilGD6+RnONAb8nbCW6uAAPe5oA
-Date:   Tue, 28 Jan 2020 15:44:00 +0000
-Message-ID: <27ccd9a19e663b083d5b8d3ded10a37dd316c2c6.camel@hammerspace.com>
-References: <000601d5d5b6$39065c60$ab131520$@gmail.com>
-In-Reply-To: <000601d5d5b6$39065c60$ab131520$@gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d59625ce-9dac-4eb7-2ab8-08d7a408e4fc
-x-ms-traffictypediagnostic: BN6PR1301MB1889:
-x-microsoft-antispam-prvs: <BN6PR1301MB188974D68EBADADC0ABED4C4B80A0@BN6PR1301MB1889.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-forefront-prvs: 029651C7A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(346002)(366004)(39830400003)(199004)(189003)(4326008)(76116006)(2906002)(36756003)(91956017)(81156014)(81166006)(478600001)(8936002)(8676002)(5660300002)(2616005)(86362001)(66446008)(110136005)(64756008)(316002)(66476007)(66946007)(66556008)(54906003)(26005)(71200400001)(186003)(6506007)(6486002)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1301MB1889;H:BN6PR1301MB2097.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OLY/CDbs2zNhX3dARgEdEnmZZothBv5Hdzc8TjCVHl3t6QWftImpLyO+QiFw3mpSH0vcrujGYAM1oriwt0gAt4tjNTZ6w7foViXSZHeLsinmTUeKWMZUfBP8jN+OZTDg7ERvF7qX/ZM5qaXjf5lKusqfBaFyayHBn5bmFe3YYD3Nio+NwI6Shz3pSD1GM2pq5iBQ15Mq77si0wfEyPjEbymrqfk0/KFX/iG+vfEV8UbCbptRw+6uucWL2J2WZhajqR/TEZHuy8ZDSfXqTu8xNMuUJWNGbj9GDG3qZ/uYgFjW2fdSpspmTemb90FNVfCm0BJYT9namnUCasz115mxWZhkBC97RPbSEE1lUNFo/GK5YOuF7e0BGduAnVCl9/gZoUm+Qt1bLFpF7YJSB2epzOWFdbbTGsf05b0w3+hPnY4PfnAfMtvP71Z4lPXk90PW
-x-ms-exchange-antispam-messagedata: jyR6eftAQrmMKPb3mCBTxdZtx9cBYiAcZMQ8kL3t6Y+Ho1yvWlc4YPnISiDvKFw+fGweQH1tuRzDHyHC8d+Uvd3Pa/EA5kSXQFHeU5XTQ5dTLoBPHrJzEQQ08PFRyzsPSZkOncgRHdmOxSFkZDjAxg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <541DD851845843488BCC81CDDF31B4BD@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 28 Jan 2020 10:45:20 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37360 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgA1PpU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:45:20 -0500
+Received: by mail-ed1-f67.google.com with SMTP id cy15so15181089edb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:45:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=85X9GHeVc4w641RnmcMhBwx63v1ZtyBTAYXogoHDpfQ=;
+        b=kRAT4hsqeY1G2RqpIvDJyOlRh+9IPwSvzJ/6s1rAVlOpPhCcFoGOjdkvx+lJIou22U
+         VVU9fyEDF9xoeFWlQgSJlLB9AFO7Po/f3AESKI1fIJY9o3c0h30JszruELCuVhqjQrtP
+         Bqthr8KemN93kQvyjwLMqQ+8/rVK2HzSj8qfZaxP/DgDKEJYsTliVTBvKvehdOpBNq1s
+         ZBjJIhTz5sJ7wJFoWUTveJIYUJ8+dsVYXACE71ZUPrvCJdqMBBGxFphYlq6Qu3QOPcys
+         dny8kA8WYCOGSTZRVu2v3VG14MqSM6tlTPAh9mCYr2lJmWtW75jGexV3+LEwvf0f89P8
+         wOZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=85X9GHeVc4w641RnmcMhBwx63v1ZtyBTAYXogoHDpfQ=;
+        b=WsorGQ+WV5PTQLu5AeXsx047/sNDqnk1KEdiojraILqOH6wNjQTFSSRQjuGZGwNiJz
+         1M+TBb1wcib04wLGim5cXXr7PDy8dxjPdlc90yacCm8Z9x6hS/R0n+kK9KDcrtKSdxo2
+         Q2m4lPT28jofgmb/xq5LKm4xcWg+q3H41nsWeprSF0YNdMYAg9S4pTzAs58TCMVspTyh
+         GFOOJp3V095I0ZtTWU11gagoT746ogPynbx7pxOeXiHCaTTURE9UVw6o23CQhgoZS4g0
+         9CLuGnPNyQm/EeaVQvhqjrLZmXrDGiLbQON2sOVP8mbvqEjZX7tC47BHQZP1ARtkutyK
+         RHKg==
+X-Gm-Message-State: APjAAAW8u2LeucVwFvXV/nwVS1BiOS6SiyFwlbAH65MLOqU2u7NC5O75
+        9dI9s7pHPwZs5kg/7/fEOdpfbRul2OkfQ1bzfL8+u17+ZA==
+X-Google-Smtp-Source: APXvYqxW2+QQA/TNUC70Hc/xwNtkpkqJcBLbjw6JiLi1VTz4Pd/sGtiHW49upzu1IC3E6RN0GzPW9dhwgOYYh7dUSj0=
+X-Received: by 2002:a50:e108:: with SMTP id h8mr3668227edl.196.1580226317332;
+ Tue, 28 Jan 2020 07:45:17 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d59625ce-9dac-4eb7-2ab8-08d7a408e4fc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 15:44:00.3410
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yh/dV2JfFdKwROW6O25bCqR14QlRotrPcEegKJur5aKscNyW86G/L580z+r1Z9rjC0rBOnPIm1oIkNYOecb7pw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1301MB1889
+References: <000000000000143de7059d2ba3e5@google.com> <000000000000fdbd71059d32a906@google.com>
+ <CAHC9VhS_Bfywhp+6H03bY7LrQsBz+io672pSS0DpiZKFiz4L6g@mail.gmail.com>
+ <850873b8-8a30-58e5-ad3c-86fb35296130@tycho.nsa.gov> <CAFqZXNuxFTKXVZDpPGCTHifn_AeCdVmP+PZrMDKDOYiLOWtsUA@mail.gmail.com>
+In-Reply-To: <CAFqZXNuxFTKXVZDpPGCTHifn_AeCdVmP+PZrMDKDOYiLOWtsUA@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 28 Jan 2020 10:45:05 -0500
+Message-ID: <CAHC9VhR9a1xEB3gXUkb4KRVkwXUAo-701ZumN2OTOmJ7r5ez8g@mail.gmail.com>
+Subject: Re: possible deadlock in sidtab_sid2str_put
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAxLTI4IGF0IDA4OjM3ICswMDAwLCBSb2JlcnQgTWlsa293c2tpIHdyb3Rl
-Og0KPiBGcm9tOiBSb2JlcnQgTWlsa293c2tpIDxybWlsa293c2tpQGdtYWlsLmNvbT4NCj4gDQo+
-IEN1cnJlbnRseSwgaWYgYW4gbmZzIHNlcnZlciByZXR1cm5zIE5GUzRFUlJfRVhQSVJFRCB0byBv
-cGVuKCksDQo+IHdlIHJldHVybiBFSU8gdG8gYXBwbGljYXRpb25zIHdpdGhvdXQgZXZlbiB0cnlp
-bmcgdG8gcmVjb3Zlci4NCj4gDQo+IEZpeGVzOiAyNzIyODlhM2RmNzIgKCJORlN2NDogbmZzNF9k
-b19oYW5kbGVfZXhjZXB0aW9uKCkgaGFuZGxlDQo+IHJldm9rZS9leHBpcnkgb2YgYSBzaW5nbGUg
-c3RhdGVpZCIpDQo+IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBNaWxrb3dza2kgPHJtaWxrb3dza2lA
-Z21haWwuY29tPg0KPiAtLS0NCj4gIGZzL25mcy9uZnM0cHJvYy5jIHwgNSArKysrKw0KPiAgMSBm
-aWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9u
-ZnM0cHJvYy5jIGIvZnMvbmZzL25mczRwcm9jLmMNCj4gaW5kZXggNzZkMzcxNi4uYjdjNDA0NCAx
-MDA2NDQNCj4gLS0tIGEvZnMvbmZzL25mczRwcm9jLmMNCj4gKysrIGIvZnMvbmZzL25mczRwcm9j
-LmMNCj4gQEAgLTMxODcsNiArMzE4NywxMSBAQCBzdGF0aWMgc3RydWN0IG5mczRfc3RhdGUgKm5m
-czRfZG9fb3BlbihzdHJ1Y3QNCj4gaW5vZGUgKmRpciwNCj4gIAkJCWV4Y2VwdGlvbi5yZXRyeSA9
-IDE7DQo+ICAJCQljb250aW51ZTsNCj4gIAkJfQ0KPiArCQlpZiAoc3RhdHVzID09IC1ORlM0RVJS
-X0VYUElSRUQpIHsNCj4gKwkJCW5mczRfc2NoZWR1bGVfbGVhc2VfcmVjb3Zlcnkoc2VydmVyLQ0K
-PiA+bmZzX2NsaWVudCk7DQo+ICsJCQlleGNlcHRpb24ucmV0cnkgPSAxOw0KPiArCQkJY29udGlu
-dWU7DQo+ICsJCX0NCj4gIAkJaWYgKHN0YXR1cyA9PSAtRUFHQUlOKSB7DQo+ICAJCQkvKiBXZSBt
-dXN0IGhhdmUgZm91bmQgYSBkZWxlZ2F0aW9uICovDQo+ICAJCQlleGNlcHRpb24ucmV0cnkgPSAx
-Ow0KDQpMb29rcyBnb29kLg0KDQpSZXZpZXdlZC1ieTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5t
-eWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tPg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXgg
-TkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1l
-cnNwYWNlLmNvbQ0KDQoNCg==
+On Tue, Jan 28, 2020 at 9:27 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> On Tue, Jan 28, 2020 at 2:44 PM Stephen Smalley <sds@tycho.nsa.gov> wrote:
+> > On 1/28/20 8:39 AM, Paul Moore wrote:
+> > > On Tue, Jan 28, 2020 at 7:50 AM syzbot
+> > > <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com> wrote:
+> > >>
+> > >> syzbot has found a reproducer for the following crash on:
+> > >>
+> > >> HEAD commit:    b0be0eff Merge tag 'x86-pti-2020-01-28' of git://git.kerne..
+> > >> git tree:       upstream
+> > >> console output: https://syzkaller.appspot.com/x/log.txt?x=1432aebee00000
+> > >> kernel config:  https://syzkaller.appspot.com/x/.config?x=9784e57c96a92f20
+> > >> dashboard link: https://syzkaller.appspot.com/bug?extid=61cba5033e2072d61806
+> > >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10088e95e00000
+> > >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13fa605ee00000
+> > >>
+> > >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > >> Reported-by: syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com
+> > >>
+> > >> =====================================================
+> > >> WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
+> > >> 5.5.0-syzkaller #0 Not tainted
+> > >> -----------------------------------------------------
+> > >> syz-executor305/10624 [HC0[0]:SC0[2]:HE1:SE0] is trying to acquire:
+> > >> ffff888098c14098 (&(&s->cache_lock)->rlock){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+> > >> ffff888098c14098 (&(&s->cache_lock)->rlock){+.+.}, at: sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
+> > >>
+> > >> and this task is already holding:
+> > >> ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+> > >> ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
+> > >> which would create a new lock dependency:
+> > >>   (&(&nf_conntrack_locks[i])->rlock){+.-.} -> (&(&s->cache_lock)->rlock){+.+.}
+> > >>
+> > >> but this new dependency connects a SOFTIRQ-irq-safe lock:
+> > >>   (&(&nf_conntrack_locks[i])->rlock){+.-.}
+> > >>
+> > >> ... which became SOFTIRQ-irq-safe at:
+> > >>    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+> > >>    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+> > >>    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+> > >>    spin_lock include/linux/spinlock.h:338 [inline]
+> > >>    nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
+> > >
+> > > ...
+> > >
+> > >> to a SOFTIRQ-irq-unsafe lock:
+> > >>   (&(&s->cache_lock)->rlock){+.+.}
+> > >>
+> > >> ... which became SOFTIRQ-irq-unsafe at:
+> > >> ...
+> > >>    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+> > >>    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+> > >>    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+> > >>    spin_lock include/linux/spinlock.h:338 [inline]
+> > >>    sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
+> > >>    sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
+> > >>    sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
+> > >>    sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
+> > >>    security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
+> > >>    security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
+> > >>    avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
+> > >>    common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
+> > >>    slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
+> > >>    avc_audit security/selinux/include/avc.h:140 [inline]
+> > >>    avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
+> > >>    inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
+> > >>    selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
+> > >>    security_mmap_file+0xa4/0x1e0 security/security.c:1482
+> > >>    vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
+> > >
+> > > ...
+> > >
+> > >> other info that might help us debug this:
+> > >>
+> > >>   Possible interrupt unsafe locking scenario:
+> > >>
+> > >>         CPU0                    CPU1
+> > >>         ----                    ----
+> > >>    lock(&(&s->cache_lock)->rlock);
+> > >>                                 local_irq_disable();
+> > >>                                 lock(&(&nf_conntrack_locks[i])->rlock);
+> > >>                                 lock(&(&s->cache_lock)->rlock);
+> > >>    <Interrupt>
+> > >>      lock(&(&nf_conntrack_locks[i])->rlock);
+> > >>
+> > >>   *** DEADLOCK ***
+> > >>
+> > >> 4 locks held by syz-executor305/10624:
+> > >>   #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnl_lock net/netfilter/nfnetlink.c:62 [inline]
+> > >>   #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnetlink_rcv_msg+0x9ee/0xfb0 net/netfilter/nfnetlink.c:224
+> > >>   #1: ffff8880836415d8 (nlk_cb_mutex-NETFILTER){+.+.}, at: netlink_dump+0xe7/0xfb0 net/netlink/af_netlink.c:2199
+> > >>   #2: ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+> > >>   #2: ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
+> > >>   #3: ffffffff8b7df008 (&selinux_ss.policy_rwlock){.+.?}, at: security_sid_to_context_core+0x1ca/0x3c0 security/selinux/ss/services.c:1344
+> > >
+> > > I think this is going to be tricky to fix due to the differing
+> > > contexts from which sidtab_sid2str_put() may be called.  We already
+> > > have a check for !in_task() in sidtab_sid2str_put(), do we want to add
+> > > a check for !in_serving_softirq() too?
+> >
+> > No, we should just use spin_lock_irqsave/unlock_irqrestore() IMHO, but
+> > that then means we need to re-evaluate the performance gain of this change.
+>
+> I just tested a patch that switches to the IRQ-disabling locking under
+> the systemd-journald scenario from [1] and the impact seems not that
+> bad - the security_secid_to_secctx() function only takes up 3.18% of
+> total run time vs. ~2% I reported in the original patch
+> (d97bd23c2d7d). I'll post the patch shortly.
+>
+> [1] https://bugzilla.redhat.com/show_bug.cgi?id=1733259, i.e.:
+>     cat /dev/urandom | base64 | logger &
+>     timeout 30s perf record -p $(pidof systemd-journald) -a -g
+
+I'm skeptical of the real world impact of disabling IRQs here,
+although I'm not sure off the top of my head how we could manage a
+cache (I'm thinking more about adding to, and evicting entries, from
+the cache) without some form of locking.  Perhaps we look into per-cpu
+caching?
+
+-- 
+paul moore
+www.paul-moore.com
