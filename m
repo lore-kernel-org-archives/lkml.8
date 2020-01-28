@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474A5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC21C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5DA21739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5A824685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221654;
-	bh=MO0ELrj1KzxjSS2xdC5JTxinYO/0bCr9wfQgQ9rxuBI=;
+	s=default; t=1580221666;
+	bh=3u7i2PABRGUI63UNQKFZtcB4+vK+wQotLxqYrkK/U8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=heN4d+xCHeSIwjsSFZGMSwwDTUA9MPDQWTF64YMMhDw9Z0T9HMqzNSX3NKbPTVlVP
-	 cFkyLHabNSf2zhdjbHcrfU2L5oX0Yq3TlSMXfD9HfHWgdm8a2Jj/7vohbBPskEo5rq
-	 opjv6GQU9qQ/4bUp8VmA9+F6UbRUUX54EpLRZV2s=
+	b=U5SLWpwV1Ara0ONk/LtruKWPFx72ibi+VcdBf64cHpkHpNavlgyHACittWnwlNcCB
+	 Gr/CVrZUMjLpwQZ3i+lGpq0DoBU7Q7jrDEkxYCPWiyxCcfw+R6Xf9G5sKwVoHHT9JE
+	 b7DxuomJDGmxBpxX8E+YMnGhApRVKl1V9uIvvZBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733178AbgA1O1d (ORCPT
+        id S2387409AbgA1O1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:27:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55158 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:27:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733171AbgA1O1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:27:25 -0500
+        id S1733306AbgA1O1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:27:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A807824690;
-        Tue, 28 Jan 2020 14:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E41520716;
+        Tue, 28 Jan 2020 14:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221645;
-        bh=MO0ELrj1KzxjSS2xdC5JTxinYO/0bCr9wfQgQ9rxuBI=;
+        s=default; t=1580221657;
+        bh=3u7i2PABRGUI63UNQKFZtcB4+vK+wQotLxqYrkK/U8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iqkTxVjhMeNXKk5odrrMCu1kMF8CRgXxaM3MQHAkM2NTRGfXEwv58NG7Ame57JZG1
-         EdW/Yc/glw4Y28WAG89HGxojVFYW6rCM3MjBsjvFa/D8e1zq5IbZlvxzm+8CpgpS9k
-         Ts3sdO9a1rOUHTEFhuhme9g9ympwdOO0eHRqrix8=
+        b=woSu0keoVwwFiZEJMuIl6eQM3xyHUQuY+WzMh41X1q8+4kUJqgCia3/kfeabkPopB
+         zot1XaqDVDC+5WMbEvvYAP9eJru51KZfDGKIDRm+cgOdblQ2YJEZJLDyE4aPoVlZms
+         W1VmJlBKkwWLD9fgIvmKRqpgGStNty1XXOwqV1II=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 33/92] Input: pm8xxx-vib - fix handling of separate enable register
-Date:   Tue, 28 Jan 2020 15:08:01 +0100
-Message-Id: <20200128135813.321985774@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com,
+        stable@kernel.org, David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 22/92] afs: Fix characters allowed into cell names
+Date:   Tue, 28 Jan 2020 15:07:50 +0100
+Message-Id: <20200128135811.978536058@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -59,44 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: David Howells <dhowells@redhat.com>
 
-commit 996d5d5f89a558a3608a46e73ccd1b99f1b1d058 upstream.
+commit a45ea48e2bcd92c1f678b794f488ca0bda9835b8 upstream.
 
-Setting the vibrator enable_mask is not implemented correctly:
+The afs filesystem needs to prohibit certain characters from cell names,
+such as '/', as these are used to form filenames in procfs, leading to
+the following warning being generated:
 
-For regmap_update_bits(map, reg, mask, val) we give in either
-regs->enable_mask or 0 (= no-op) as mask and "val" as value.
-But "val" actually refers to the vibrator voltage control register,
-which has nothing to do with the enable_mask.
+	WARNING: CPU: 0 PID: 3489 at fs/proc/generic.c:178
 
-So we usually end up doing nothing when we really wanted
-to enable the vibrator.
+Fix afs_alloc_cell() to disallow nonprintable characters, '/', '@' and
+names that begin with a dot.
 
-We want to set or clear the enable_mask (to enable/disable the vibrator).
-Therefore, change the call to always modify the enable_mask
-and set the bits only if we want to enable the vibrator.
+Remove the check for "@cell" as that is then redundant.
 
-Fixes: d4c7c5c96c92 ("Input: pm8xxx-vib - handle separate enable register")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200114183442.45720-1-stephan@gerhold.net
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This can be tested by running:
+
+	echo add foo/.bar 1.2.3.4 >/proc/fs/afs/cells
+
+Note that we will also need to deal with:
+
+ - Names ending in ".invalid" shouldn't be passed to the DNS.
+
+ - Names that contain non-valid domainname chars shouldn't be passed to
+   the DNS.
+
+ - DNS replies that say "your-dns-needs-immediate-attention.<gTLD>" and
+   replies containing A records that say 127.0.53.53 should be
+   considered invalid.
+   [https://www.icann.org/en/system/files/files/name-collision-mitigation-01aug14-en.pdf]
+
+but these need to be dealt with by the kafs-client DNS program rather
+than the kernel.
+
+Reported-by: syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com
+Cc: stable@kernel.org
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/misc/pm8xxx-vibrator.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/afs/cell.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/input/misc/pm8xxx-vibrator.c
-+++ b/drivers/input/misc/pm8xxx-vibrator.c
-@@ -98,7 +98,7 @@ static int pm8xxx_vib_set(struct pm8xxx_
+--- a/fs/afs/cell.c
++++ b/fs/afs/cell.c
+@@ -135,8 +135,17 @@ static struct afs_cell *afs_alloc_cell(s
+ 		_leave(" = -ENAMETOOLONG");
+ 		return ERR_PTR(-ENAMETOOLONG);
+ 	}
+-	if (namelen == 5 && memcmp(name, "@cell", 5) == 0)
++
++	/* Prohibit cell names that contain unprintable chars, '/' and '@' or
++	 * that begin with a dot.  This also precludes "@cell".
++	 */
++	if (name[0] == '.')
+ 		return ERR_PTR(-EINVAL);
++	for (i = 0; i < namelen; i++) {
++		char ch = name[i];
++		if (!isprint(ch) || ch == '/' || ch == '@')
++			return ERR_PTR(-EINVAL);
++	}
  
- 	if (regs->enable_mask)
- 		rc = regmap_update_bits(vib->regmap, regs->enable_addr,
--					on ? regs->enable_mask : 0, val);
-+					regs->enable_mask, on ? ~0 : 0);
+ 	_enter("%*.*s,%s", namelen, namelen, name, vllist);
  
- 	return rc;
- }
 
 
