@@ -2,101 +2,110 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D10C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3006C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E775A24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9873214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NUg4BVZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgA1Q4W (ORCPT
+        id S1726756AbgA1Q5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:56:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:60626 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbgA1Q4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:56:22 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29B78328;
-        Tue, 28 Jan 2020 08:56:21 -0800 (PST)
-Received: from [192.168.122.167] (unknown [10.118.28.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3DBC3F52E;
-        Tue, 28 Jan 2020 08:56:20 -0800 (PST)
-Subject: Re: [PATCH RFC 0/2] Add basic generic ACPI soc driver
-To:     John Garry <john.garry@huawei.com>, rjw@rjwysocki.net,
-        lenb@kernel.org
-Cc:     arnd@arndb.de, olof@lixom.net, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, guohanjun@huawei.com,
-        gregkh@linuxfoundation.org
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <bb87efe5-d0be-498a-25a1-008a7bebd452@arm.com>
-Date:   Tue, 28 Jan 2020 10:56:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 28 Jan 2020 11:57:02 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:42418 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgA1Q5B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 11:57:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xqLkdksTAn4mILhz/FZa+hmKnpwus5eIvV60Ofg9aS8=; b=NUg4BVZsRLcDW8vceLF6gpUIi
+        K1OUx/lu58nbCdAQAShaQzFYekDOd4diN9PmDPkPrmB0fAnagGqVimOATQD1esrt8wVO0qIpGIxkk
+        QZ6MR3liE953VMAIR/pKag6xTBer8R80wNDA3ZzRkUExDI+rs0cTw+Z/t5eZEHUCcwFY/xgHl60Cn
+        GSuv8er4ATv3T3gdEPLpExZ/0cy3i13pM7vk/z5x4w+bVCSktJlH0XMhXAMu/dIuRKrGkMpG0EDWG
+        n5a+MwKIXIlgZdzYn7IOvDqJ9e8eLAtXUUh8RV0v27SLIFGL+YAZmAQF6uk8SxFZKhjXzDl+lTIrr
+        Pdh+cnCVw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwUAa-0001KE-Ju; Tue, 28 Jan 2020 16:56:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 96E16302524;
+        Tue, 28 Jan 2020 17:55:12 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0CBB3201F06F7; Tue, 28 Jan 2020 17:56:55 +0100 (CET)
+Date:   Tue, 28 Jan 2020 17:56:55 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+Message-ID: <20200128165655.GM14914@hirez.programming.kicks-ass.net>
+References: <20200122165938.GA16974@willie-the-truck>
+ <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
+ <20200122223851.GA45602@google.com>
+ <A90E2B85-77CB-4743-AEC3-90D7836C4D47@lca.pw>
+ <20200123093905.GU14914@hirez.programming.kicks-ass.net>
+ <E722E6E0-26CB-440F-98D7-D182B57D1F43@lca.pw>
+ <CANpmjNNo6yW-y-Af7JgvWi3t==+=02hE4-pFU4OiH8yvbT3Byg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNNo6yW-y-Af7JgvWi3t==+=02hE4-pFU4OiH8yvbT3Byg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Jan 28, 2020 at 12:46:26PM +0100, Marco Elver wrote:
 
-On 1/28/20 5:14 AM, John Garry wrote:
-> A requirement has come up recently to be able to read system SoC packages
-> identifiers from userspace [0].
+> > Marco, any thought on improving KCSAN for this to reduce the false
+> > positives?
 > 
-> For device tree FW-based systems, this would be quite straightforward, in
-> that we could add a soc driver for that system and use the DT model
-> identifier as the soc id - that's how most soc drivers seem to do it.
-> 
-> For ACPI-based systems, the only place I know to get (put) such SoC
-> information is in the PPTT, specifically the ID Type Structure for a
-> processor package node. A processor package node describes a physical
-> boundary of a processor topology.
+> Define 'false positive'.
 
-Well presumably that is one of the use cases for DMI, which has fields 
-for the processor/socket as well as the machine vendor.
+I'll use it where the code as written is correct while the tool
+complains about it.
 
-But, quickly looking at the use case, I can't help but think you don't 
-really want any of the above, or the PPTT id. It seems the mapping 
-should actually be tied directly to the uncore PMU definition, rather 
-than a soc/machine/whatever identifier. Which would imply keying off one 
-of the ACPI object identifiers for the PMU itself.
+> From what I can tell, all 'false positives' that have come up are data
+> races where the consequences on the behaviour of the code is
+> inconsequential. In other words, all of them would require
+> understanding of the intended logic of the code, and understanding if
+> the worst possible outcome of a data race changes the behaviour of the
+> code in such a way that we may end up with an erroneously behaving
+> system.
+> 
+> As I have said before, KCSAN (or any data race detector) by definition
+> only works at the language level. Any semantic analysis, beyond simple
+> rules (such as ignore same-value stores) and annotations, is simply
+> impossible since the tool can't know about the logic that the
+> programmer intended.
+> 
+> That being said, if there are simple rules (like ignore same-value
+> stores) or other minimal annotations that can help reduce such 'false
+> positives', more than happy to add them.
 
+OK, so KCSAN knows about same-value-stores? If so, that ->cpu =
+smp_processor_id() case really doesn't need annotation, right?
 
-> 
-> The ACPI spec does not declare how the fields in this structure must be
-> used, however it does provide pretty clear examples, which I would expect
-> most implementers to follow. As such, I try to solve the problem in 2
-> parts:
-> - Add ACPI PPTT API to get opaque package structure
-> - Add basic ACPI generic soc driver, which can interpret the fields
->    for known platforms to fill in the ID Type Structure as per example
->    in the spec.
-> 
-> So I'm hoping here for some comments on this approach - hence the RFC.
-> I've cc'ed some folks which may have suggestions.
-> 
-> [0] https://lore.kernel.org/linux-arm-kernel/1579876505-113251-6-git-send-email-john.garry@huawei.com/ ,
->      https://lore.kernel.org/linux-arm-kernel/1579876505-113251-1-git-send-email-john.garry@huawei.com/
-> 
-> John Garry (2):
->    ACPI/PPTT: Add acpi_pptt_get_package_info() API
->    soc: Add a basic ACPI generic driver
-> 
->   drivers/acpi/pptt.c        |  81 +++++++++++++++++++++++++++++
->   drivers/soc/Makefile       |   1 +
->   drivers/soc/acpi_generic.c | 102 +++++++++++++++++++++++++++++++++++++
->   include/linux/acpi.h       |  13 +++++
->   4 files changed, 197 insertions(+)
->   create mode 100644 drivers/soc/acpi_generic.c
-> 
+> What to do about osq_lock here? If people agree that no further
+> annotations are wanted, and the reasoning above concludes there are no
+> bugs, we can blacklist the file. That would, however, miss new data
+> races in future.
 
+I'm still hoping to convince you that the other case is one of those
+'simple-rules' too :-)
