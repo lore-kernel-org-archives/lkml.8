@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522B3C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DADC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD642173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA64E24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222537;
-	bh=jWX4yRT6wWNhtg/Qm5ktJS7s58vdqoc6Q3ETV5KR6dA=;
+	s=default; t=1580222540;
+	bh=3FfHFvlKqbufPIlxQrPOqxE8ndyp//Hc9cm6l61ka98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dP4rjtdeIfNYGXepg3NjgzoTkVvnbD4LggRn3d4DCR6nH+niahAWcURJuYvjsAQ/R
-	 orVtj1XIWUjiOyzJqMgkzXpc8sENl+4hP0zE7gssmuiydlZLhnWD4thJmmT250OzO0
-	 sVmFeeR4ium0SSKM5kxiUOWoW6L4qyGN1nnCKkzM=
+	b=BvmFRghaOtm8qbHxhyL0LHcMDaqf2h1Hk4OwpXiKdKHJI+8Sox3LXFo98N1Bzv2R0
+	 CaWc7Cnvx1IRFtd4GI0MkzV4kRy/mMkOsAWz30DkQsz27acpkahnde9/0D8bVaODLt
+	 s0+nqLmjo80NRp1Nr2wREbj8YhAwRpGWc+XulSoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgA1OmQ (ORCPT
+        id S1729665AbgA1ONV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:42:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35002 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:13:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729673AbgA1ONY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:13:24 -0500
+        id S1728449AbgA1ONM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:13:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B5142468A;
-        Tue, 28 Jan 2020 14:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0E9F24688;
+        Tue, 28 Jan 2020 14:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220803;
-        bh=jWX4yRT6wWNhtg/Qm5ktJS7s58vdqoc6Q3ETV5KR6dA=;
+        s=default; t=1580220791;
+        bh=3FfHFvlKqbufPIlxQrPOqxE8ndyp//Hc9cm6l61ka98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gKJzqix7B+nPWm6iTDG3mKY8xCml1kjG02Q+SBMRb69KnE4Kl0O206EUle25QScIJ
-         qdawomnn2xyW/JDMNQhwTMQRz1/M5Fv9Io9MN3jLKAzb+Pbkv2xiyEkQTQYPVHCO3H
-         W8gqH2DyiZOOD0+ckJFFQK29TTzxcUV+zy56EPpE=
+        b=tSMnOtbpbMKwC+WoFuTVOMFVMOlSr6v3vjErIDqjcIbXLJrFlGaE3plF04Np0WMlj
+         T2nEhM1NF6T7xbFZwzB++lS+pIa9siA5Fyllpd4OZqlZls/Nb41RA5vUMMMU7nBtSF
+         eZGdnNaObqs5Mdp969F+qrrgGmk+uWuOEObcuAp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        stable@vger.kernel.org, Hai Li <hali@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Sean Paul <sean@poorly.run>, Sean Paul <seanpaul@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 117/183] cifs: fix rmmod regression in cifs.ko caused by force_sig changes
-Date:   Tue, 28 Jan 2020 15:05:36 +0100
-Message-Id: <20200128135841.627295546@linuxfoundation.org>
+Subject: [PATCH 4.4 147/183] drm/msm/dsi: Implement reset correctly
+Date:   Tue, 28 Jan 2020 15:06:06 +0100
+Message-Id: <20200128135844.431777653@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,36 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 247bc9470b1eeefc7b58cdf2c39f2866ba651509 ]
+[ Upstream commit 78e31c42261779a01bc73472d0f65f15378e9de3 ]
 
-Fixes: 72abe3bcf091 ("signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig")
+On msm8998, vblank timeouts are observed because the DSI controller is not
+reset properly, which ends up stalling the MDP.  This is because the reset
+logic is not correct per the hardware documentation.
 
-The global change from force_sig caused module unloading of cifs.ko
-to fail (since the cifsd process could not be killed, "rmmod cifs"
-now would always fail)
+The documentation states that after asserting reset, software should wait
+some time (no indication of how long), or poll the status register until it
+returns 0 before deasserting reset.
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-CC: Eric W. Biederman <ebiederm@xmission.com>
+wmb() is insufficient for this purpose since it just ensures ordering, not
+timing between writes.  Since asserting and deasserting reset occurs on the
+same register, ordering is already guaranteed by the architecture, making
+the wmb extraneous.
+
+Since we would define a timeout for polling the status register to avoid a
+possible infinite loop, lets just use a static delay of 20 ms, since 16.666
+ms is the time available to process one frame at 60 fps.
+
+Fixes: a689554ba6ed ("drm/msm: Initial add DSI connector support")
+Cc: Hai Li <hali@codeaurora.org>
+Cc: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Sean Paul <sean@poorly.run>
+[seanpaul renamed RESET_DELAY to DSI_RESET_TOGGLE_DELAY_MS]
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191011133939.16551-1-jeffrey.l.hugo@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/msm/dsi/dsi_host.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index b608ce741444f..f44281a5eb9ff 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -939,6 +939,7 @@ cifs_demultiplex_thread(void *p)
- 		mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+index 4c49868efcda2..12ddbbb531077 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -30,6 +30,8 @@
+ #include "dsi.xml.h"
+ #include "dsi_cfg.h"
  
- 	set_freezable();
-+	allow_signal(SIGKILL);
- 	while (server->tcpStatus != CifsExiting) {
- 		if (try_to_freeze())
- 			continue;
++#define DSI_RESET_TOGGLE_DELAY_MS 20
++
+ static int dsi_get_version(const void __iomem *base, u32 *major, u32 *minor)
+ {
+ 	u32 ver;
+@@ -764,7 +766,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
+ 	wmb(); /* clocks need to be enabled before reset */
+ 
+ 	dsi_write(msm_host, REG_DSI_RESET, 1);
+-	wmb(); /* make sure reset happen */
++	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
+ 	dsi_write(msm_host, REG_DSI_RESET, 0);
+ }
+ 
+@@ -1111,7 +1113,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
+ 
+ 	/* dsi controller can only be reset while clocks are running */
+ 	dsi_write(msm_host, REG_DSI_RESET, 1);
+-	wmb();	/* make sure reset happen */
++	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
+ 	dsi_write(msm_host, REG_DSI_RESET, 0);
+ 	wmb();	/* controller out of reset */
+ 	dsi_write(msm_host, REG_DSI_CTRL, data0);
 -- 
 2.20.1
 
