@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAD0C32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 01:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BE3C33CB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 01:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9AB12467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 01:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7DB2467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 01:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A76cGmot"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O72QWJxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgA1B67 (ORCPT
+        id S1727430AbgA1B7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 20:58:59 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36099 "EHLO
+        Mon, 27 Jan 2020 20:59:02 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39599 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgA1B66 (ORCPT
+        with ESMTP id S1726852AbgA1B7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 20:58:58 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 185so2031721pfv.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 17:58:57 -0800 (PST)
+        Mon, 27 Jan 2020 20:59:00 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q10so5806138pfs.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 17:58:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=13vsGtNjHBWNnGhQUQncdMYzMSFZ56Uehul7bwbcBIo=;
-        b=A76cGmotLM+qd5oIjZrrpVN7lIhqWOdmeIeYE1/uPdq7i0Q3+FIX1dnP6ZqXhYwRIr
-         ErEcrsDOjS+LjeaQFSwOYwy5jPPBzH9i8TRidSWfo2q8Treb4Nz0rXBYsEMX8UMZAcfs
-         QqHyG+bOlbqMdRY5jDSBOf6uiYn+Ct43ZMqCM=
+        bh=HKsS8qF05DpfZ/OvNtTJkkeAgQW+Ixfc27KHvW3AT9U=;
+        b=O72QWJxi2ZgaKY2GMQxX4LLxr1PU3ARd6gB+LGofhADsgwwJBS4kSQRYv4IBLayLtv
+         6SrKbQ86frya8w3wQcYE/5sYR8uJNZEREuML+E+LDgTcWwY52R98oMgaTWGXrxnq6qnk
+         NANAmc1R+dgxtDa1K4sAt9Whk3c3PZm+crFc8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=13vsGtNjHBWNnGhQUQncdMYzMSFZ56Uehul7bwbcBIo=;
-        b=VYIa0OE4tKOvLWxNfrOIx/nr/x9lP0jsdLgCbRGfvPnwwsvY/5a+w5WB2Z+nGTfy1H
-         odtfr2a9MDyhir20Ff/5TBtQ4NaF26um6y2hY+tClBVSb65v2zto2TVrOvjBAoLFq40M
-         Hw4pQcSg2yPhBXau/FwmgCfOUnoOMuB4YzPzAXAHAOaUzDcUwCXE7P5pPSjnrdGqKME6
-         f16flGtl58Xe1tmCI96B9WfLJpdjPkt3n2gs5vtcD1YlQXoafNHlGAohAYm8jmJngTmp
-         1hNpyX2qtH4OIdgxX4F8UoVL6KM2misBB+ISdbKuKyVc1BUdD7WVbYZGZl65UnhJxH4D
-         nUiA==
-X-Gm-Message-State: APjAAAWexwuMFvzM5+oilisG5uHY9tHew47PKY4iKCQlomuQFhqH68lA
-        qYAzUQCJlyTMisEY/1lrZPfNRg==
-X-Google-Smtp-Source: APXvYqx68WjSazvmPWjVZ+X9JuOR0iPabbUsn7PYJqogyAGNlYcJXGikjPoqlhjRLQhvCpBudJn2UQ==
-X-Received: by 2002:a63:348c:: with SMTP id b134mr4310357pga.197.1580176737484;
-        Mon, 27 Jan 2020 17:58:57 -0800 (PST)
+        bh=HKsS8qF05DpfZ/OvNtTJkkeAgQW+Ixfc27KHvW3AT9U=;
+        b=bFvkHBb8v2D9fe0ESzWDnxMU2Xb04mW5xbKxZoTTGNiDXjbiRJM5upKTTO2K6s6QXx
+         x8qIxEO86sko+F5lomw0xBhItSa+qL3KW3lMPSKEi39vU5nu6N4HEhtB19BRfpCTxmph
+         ATd/XIXUtsYIWNQTuATgALjXWzTS4XJdwAdDMUwDwPCyAJwfP0txcwLGk6Ve30Moeber
+         FUO9Ku5F+i7q8ZmJw6VcS2wMgoT2raLD3kScqOekTRGn0ZVYUH1LOa8gn/z0VTRm8efM
+         S6G0HTVrOxlksD5FkXOztvzqbCdMV+xxOgjCIYZ1BfjvAGHsG5T/uxF9fEMH0+h1fm0V
+         CYxQ==
+X-Gm-Message-State: APjAAAVBfWp6FdmXtXyzPJl7cTEmeei1XyFIGj0HbOc4fCJFVusjMpTW
+        BsKpqK/W2L2vkWnPGkT37QB8jA==
+X-Google-Smtp-Source: APXvYqxGkrOAfiBxFvxG8X97U6yS4/cdg9lZ7y7ewsWYU+hQV/cQnzUeWzvDWI1N9NS0m291XTzyvA==
+X-Received: by 2002:a65:68c8:: with SMTP id k8mr22660195pgt.216.1580176738597;
+        Mon, 27 Jan 2020 17:58:58 -0800 (PST)
 Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id a17sm364153pjv.6.2020.01.27.17.58.56
+        by smtp.gmail.com with ESMTPSA id a17sm364153pjv.6.2020.01.27.17.58.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 17:58:57 -0800 (PST)
+        Mon, 27 Jan 2020 17:58:58 -0800 (PST)
 From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 To:     marcel@holtmann.org, luiz.dentz@gmail.com, alainm@chromium.org
 Cc:     linux-bluetooth@vger.kernel.org,
@@ -62,9 +62,9 @@ Cc:     linux-bluetooth@vger.kernel.org,
         Johan Hedberg <johan.hedberg@gmail.com>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [RFC PATCH v2 1/4] Bluetooth: Add mgmt op set_wake_capable
-Date:   Mon, 27 Jan 2020 17:58:45 -0800
-Message-Id: <20200127175842.RFC.v2.1.I797e2f4cb824299043e771f3ab9cef86ee09f4db@changeid>
+Subject: [RFC PATCH v2 2/4] Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND
+Date:   Mon, 27 Jan 2020 17:58:46 -0800
+Message-Id: <20200127175842.RFC.v2.2.I62f17edc39370044c75ad43a55a7382b4b8a5ceb@changeid>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200128015848.226966-1-abhishekpandit@chromium.org>
 References: <20200128015848.226966-1-abhishekpandit@chromium.org>
@@ -75,137 +75,222 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the system is suspended, only some connected Bluetooth devices
-cause user input that should wake the system (mostly HID devices). Add
-a list to keep track of devices that can wake the system and add
-a management API to let userspace tell the kernel whether a device is
-wake capable or not.
+Register for PM_SUSPEND_PREPARE and PM_POST_SUSPEND to make sure the
+Bluetooth controller is prepared correctly for suspend/resume. Implement
+the registration, scheduling and task handling portions only in this
+patch.
 
 Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 ---
 
-Changes in v2: None
+Changes in v2:
+* Moved pm notifier registration into its own patch and moved params out
+  of separate suspend_state
 
- include/net/bluetooth/hci_core.h |  1 +
- include/net/bluetooth/mgmt.h     |  7 ++++++
- net/bluetooth/hci_core.c         |  1 +
- net/bluetooth/mgmt.c             | 40 ++++++++++++++++++++++++++++++++
- 4 files changed, 49 insertions(+)
+ include/net/bluetooth/hci_core.h | 21 ++++++++++
+ net/bluetooth/hci_core.c         | 70 ++++++++++++++++++++++++++++++++
+ net/bluetooth/hci_request.c      | 19 +++++++++
+ net/bluetooth/hci_request.h      |  2 +
+ 4 files changed, 112 insertions(+)
 
 diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 89ecf0a80aa1..ce4bebcb0265 100644
+index ce4bebcb0265..74d703e46fb4 100644
 --- a/include/net/bluetooth/hci_core.h
 +++ b/include/net/bluetooth/hci_core.h
-@@ -394,6 +394,7 @@ struct hci_dev {
- 	struct list_head	mgmt_pending;
- 	struct list_head	blacklist;
- 	struct list_head	whitelist;
-+	struct list_head	wakeable;
- 	struct list_head	uuids;
- 	struct list_head	link_keys;
- 	struct list_head	long_term_keys;
-diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgmt.h
-index a90666af05bd..283ba5320bdb 100644
---- a/include/net/bluetooth/mgmt.h
-+++ b/include/net/bluetooth/mgmt.h
-@@ -671,6 +671,13 @@ struct mgmt_cp_set_blocked_keys {
- } __packed;
- #define MGMT_OP_SET_BLOCKED_KEYS_SIZE 2
+@@ -88,6 +88,18 @@ struct discovery_state {
+ 	unsigned long		scan_duration;
+ };
  
-+#define MGMT_OP_SET_WAKE_CAPABLE	0x0047
-+#define MGMT_SET_WAKE_CAPABLE_SIZE	8
-+struct mgmt_cp_set_wake_capable {
-+	struct mgmt_addr_info addr;
-+	u8 wake_capable;
-+} __packed;
++#define SUSPEND_NOTIFIER_TIMEOUT	msecs_to_jiffies(2000) /* 2 seconds */
 +
- #define MGMT_EV_CMD_COMPLETE		0x0001
- struct mgmt_ev_cmd_complete {
- 	__le16	opcode;
++enum suspend_tasks {
++	SUSPEND_PREPARE_NOTIFIER,
++	__SUSPEND_NUM_TASKS
++};
++
++enum suspended_state {
++	BT_RUNNING = 0,
++	BT_SUSPENDED,
++};
++
+ struct hci_conn_hash {
+ 	struct list_head list;
+ 	unsigned int     acl_num;
+@@ -389,6 +401,15 @@ struct hci_dev {
+ 	void			*smp_bredr_data;
+ 
+ 	struct discovery_state	discovery;
++
++	struct notifier_block	suspend_notifier;
++	struct work_struct	suspend_prepare;
++	enum suspended_state	suspend_state_next;
++	enum suspended_state	suspend_state;
++
++	wait_queue_head_t	suspend_wait_q;
++	DECLARE_BITMAP(suspend_tasks, __SUSPEND_NUM_TASKS);
++
+ 	struct hci_conn_hash	conn_hash;
+ 
+ 	struct list_head	mgmt_pending;
 diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index cbbc34a006d1..2fceaf76644a 100644
+index 2fceaf76644a..6ca0aa8d30dd 100644
 --- a/net/bluetooth/hci_core.c
 +++ b/net/bluetooth/hci_core.c
-@@ -3299,6 +3299,7 @@ struct hci_dev *hci_alloc_dev(void)
- 	INIT_LIST_HEAD(&hdev->mgmt_pending);
- 	INIT_LIST_HEAD(&hdev->blacklist);
- 	INIT_LIST_HEAD(&hdev->whitelist);
-+	INIT_LIST_HEAD(&hdev->wakeable);
- 	INIT_LIST_HEAD(&hdev->uuids);
- 	INIT_LIST_HEAD(&hdev->link_keys);
- 	INIT_LIST_HEAD(&hdev->long_term_keys);
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 3074363c68df..58468dfa112f 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -107,6 +107,7 @@ static const u16 mgmt_commands[] = {
- 	MGMT_OP_READ_EXT_INFO,
- 	MGMT_OP_SET_APPEARANCE,
- 	MGMT_OP_SET_BLOCKED_KEYS,
-+	MGMT_OP_SET_WAKE_CAPABLE,
- };
+@@ -31,6 +31,8 @@
+ #include <linux/debugfs.h>
+ #include <linux/crypto.h>
+ #include <linux/property.h>
++#include <linux/suspend.h>
++#include <linux/wait.h>
+ #include <asm/unaligned.h>
  
- static const u16 mgmt_events[] = {
-@@ -4663,6 +4664,37 @@ static int set_fast_connectable(struct sock *sk, struct hci_dev *hdev,
- 	return err;
+ #include <net/bluetooth/bluetooth.h>
+@@ -3241,6 +3243,65 @@ void hci_copy_identity_address(struct hci_dev *hdev, bdaddr_t *bdaddr,
+ 	}
  }
  
-+static int set_wake_capable(struct sock *sk, struct hci_dev *hdev, void *data,
-+			    u16 len)
++static int hci_suspend_wait_event(struct hci_dev *hdev)
 +{
-+	int err;
-+	u8 status;
-+	struct mgmt_cp_set_wake_capable *cp = data;
-+	u8 addr_type = cp->addr.type == BDADDR_BREDR ?
-+			       cp->addr.type :
-+			       le_addr_type(cp->addr.type);
++#define WAKE_COND                                                              \
++	(find_first_bit(hdev->suspend_tasks, __SUSPEND_NUM_TASKS) ==           \
++	 __SUSPEND_NUM_TASKS)
 +
-+	BT_DBG("Set wake capable %pMR (type 0x%x) = 0x%x\n", &cp->addr.bdaddr,
-+	       addr_type, cp->wake_capable);
++	int i;
++	int ret = wait_event_timeout(hdev->suspend_wait_q,
++				     WAKE_COND, SUSPEND_NOTIFIER_TIMEOUT);
 +
-+	if (cp->wake_capable)
-+		err = hci_bdaddr_list_add(&hdev->wakeable, &cp->addr.bdaddr,
-+					  addr_type);
-+	else
-+		err = hci_bdaddr_list_del(&hdev->wakeable, &cp->addr.bdaddr,
-+					  addr_type);
++	if (ret == 0) {
++		BT_DBG("Timed out waiting for suspend");
++		for (i = 0; i < __SUSPEND_NUM_TASKS; ++i) {
++			if (test_bit(i, hdev->suspend_tasks))
++				BT_DBG("Bit %d is set", i);
++			clear_bit(i, hdev->suspend_tasks);
++		}
 +
-+	if (!err || err == -EEXIST || err == -ENOENT)
-+		status = MGMT_STATUS_SUCCESS;
-+	else
-+		status = MGMT_STATUS_FAILED;
++		ret = -ETIMEDOUT;
++	} else {
++		ret = 0;
++	}
 +
-+	err = mgmt_cmd_complete(sk, hdev->id, MGMT_OP_SET_WAKE_CAPABLE, status,
-+				cp, sizeof(*cp));
-+
-+	return err;
++	return ret;
 +}
 +
- static void set_bredr_complete(struct hci_dev *hdev, u8 status, u16 opcode)
- {
- 	struct mgmt_pending_cmd *cmd;
-@@ -5791,6 +5823,13 @@ static int remove_device(struct sock *sk, struct hci_dev *hdev,
- 			err = hci_bdaddr_list_del(&hdev->whitelist,
- 						  &cp->addr.bdaddr,
- 						  cp->addr.type);
++static void hci_prepare_suspend(struct work_struct *work)
++{
++	struct hci_dev *hdev =
++		container_of(work, struct hci_dev, suspend_prepare);
 +
-+			/* Don't check result since it either succeeds or device
-+			 * wasn't there (not wakeable or invalid params as
-+			 * covered by deleting from whitelist).
-+			 */
-+			hci_bdaddr_list_del(&hdev->wakeable, &cp->addr.bdaddr,
-+					    cp->addr.type);
- 			if (err) {
- 				err = mgmt_cmd_complete(sk, hdev->id,
- 							MGMT_OP_REMOVE_DEVICE,
-@@ -6990,6 +7029,7 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
- 	{ set_phy_configuration,   MGMT_SET_PHY_CONFIGURATION_SIZE },
- 	{ set_blocked_keys,	   MGMT_OP_SET_BLOCKED_KEYS_SIZE,
- 						HCI_MGMT_VAR_LEN },
-+	{ set_wake_capable,	   MGMT_SET_WAKE_CAPABLE_SIZE },
- };
++	hci_dev_lock(hdev);
++	hci_req_prepare_suspend(hdev, hdev->suspend_state_next);
++	hci_dev_unlock(hdev);
++}
++
++static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
++				void *data)
++{
++	struct hci_dev *hdev =
++		container_of(nb, struct hci_dev, suspend_notifier);
++	int ret = 0;
++
++	if (action == PM_SUSPEND_PREPARE) {
++		hdev->suspend_state_next = BT_SUSPENDED;
++		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
++		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
++
++		ret = hci_suspend_wait_event(hdev);
++	} else if (action == PM_POST_SUSPEND) {
++		hdev->suspend_state_next = BT_RUNNING;
++		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
++		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
++
++		ret = hci_suspend_wait_event(hdev);
++	}
++
++	return ret ? notifier_from_errno(-EBUSY) : NOTIFY_STOP;
++}
+ /* Alloc HCI device */
+ struct hci_dev *hci_alloc_dev(void)
+ {
+@@ -3319,6 +3380,7 @@ struct hci_dev *hci_alloc_dev(void)
+ 	INIT_WORK(&hdev->tx_work, hci_tx_work);
+ 	INIT_WORK(&hdev->power_on, hci_power_on);
+ 	INIT_WORK(&hdev->error_reset, hci_error_reset);
++	INIT_WORK(&hdev->suspend_prepare, hci_prepare_suspend);
  
- void mgmt_index_added(struct hci_dev *hdev)
+ 	INIT_DELAYED_WORK(&hdev->power_off, hci_power_off);
+ 
+@@ -3327,6 +3389,7 @@ struct hci_dev *hci_alloc_dev(void)
+ 	skb_queue_head_init(&hdev->raw_q);
+ 
+ 	init_waitqueue_head(&hdev->req_wait_q);
++	init_waitqueue_head(&hdev->suspend_wait_q);
+ 
+ 	INIT_DELAYED_WORK(&hdev->cmd_timer, hci_cmd_timeout);
+ 
+@@ -3438,6 +3501,11 @@ int hci_register_dev(struct hci_dev *hdev)
+ 	hci_sock_dev_event(hdev, HCI_DEV_REG);
+ 	hci_dev_hold(hdev);
+ 
++	hdev->suspend_notifier.notifier_call = hci_suspend_notifier;
++	error = register_pm_notifier(&hdev->suspend_notifier);
++	if (error)
++		goto err_wqueue;
++
+ 	queue_work(hdev->req_workqueue, &hdev->power_on);
+ 
+ 	return id;
+@@ -3471,6 +3539,8 @@ void hci_unregister_dev(struct hci_dev *hdev)
+ 
+ 	hci_dev_do_close(hdev);
+ 
++	unregister_pm_notifier(&hdev->suspend_notifier);
++
+ 	if (!test_bit(HCI_INIT, &hdev->flags) &&
+ 	    !hci_dev_test_flag(hdev, HCI_SETUP) &&
+ 	    !hci_dev_test_flag(hdev, HCI_CONFIG)) {
+diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+index 2a1b64dbf76e..08908469c043 100644
+--- a/net/bluetooth/hci_request.c
++++ b/net/bluetooth/hci_request.c
+@@ -918,6 +918,25 @@ static u8 get_adv_instance_scan_rsp_len(struct hci_dev *hdev, u8 instance)
+ 	return adv_instance->scan_rsp_len;
+ }
+ 
++/* Call with hci_dev_lock */
++void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
++{
++	int old_state;
++	struct hci_conn *conn;
++	struct hci_request req;
++
++	if (next == hdev->suspend_state) {
++		BT_DBG("Same state before and after: %d", next);
++		goto done;
++	}
++
++	hdev->suspend_state = next;
++
++done:
++	clear_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
++	wake_up(&hdev->suspend_wait_q);
++}
++
+ static u8 get_cur_adv_instance_scan_rsp_len(struct hci_dev *hdev)
+ {
+ 	u8 instance = hdev->cur_adv_instance;
+diff --git a/net/bluetooth/hci_request.h b/net/bluetooth/hci_request.h
+index a7019fbeadd3..0e81614d235e 100644
+--- a/net/bluetooth/hci_request.h
++++ b/net/bluetooth/hci_request.h
+@@ -68,6 +68,8 @@ void __hci_req_update_eir(struct hci_request *req);
+ void hci_req_add_le_scan_disable(struct hci_request *req);
+ void hci_req_add_le_passive_scan(struct hci_request *req);
+ 
++void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next);
++
+ void hci_req_reenable_advertising(struct hci_dev *hdev);
+ void __hci_req_enable_advertising(struct hci_request *req);
+ void __hci_req_disable_advertising(struct hci_request *req);
 -- 
 2.25.0.341.g760bfbb309-goog
 
