@@ -2,55 +2,51 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6810AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CEFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35008206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169D624696
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221547;
-	bh=MAl6iOkGqFidVtqHKpXauQzj8NI3g/vtUUpZCrgxORo=;
+	s=default; t=1580221550;
+	bh=WOzg1VHjGzAsOAm8nzNjjHEfGl3A5OKtibNtSXTdt2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=azUsCuMJHLxFabPfGLsX68/BvF2enUt53G+r8teMd60hTcD2FNfIvOeQbHnY1Y+bN
-	 Ii+YM7ACTRVolmhTw3F0HVYJZMiCk8JG9NpNLeMdKoot6FG8k6vV/b8Vhoc9haH5av
-	 cDtscWInujzTZZ7vU6rwKjvtaizn5ekemKRdredc=
+	b=MNtElY6dVl0Evd5zLr6ACIJRysJFTVwXVh7a6sB/6rb1e6n2E82yw0lK9BSa60V9f
+	 KXvfkEO6l2GLbhzOcBdCyRPEz98WveFmJfFg2H3p3Jb61LwVSR+aBlvqSCjcCzjFN1
+	 FWMtN8n2iFxujE50SmoF/4hyKI6ik2iHKrb4V4nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732231AbgA1OZq (ORCPT
+        id S1733087AbgA1OZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:25:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52774 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:25:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730811AbgA1OZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:43 -0500
+        id S1732685AbgA1OZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:25:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F0A62071E;
-        Tue, 28 Jan 2020 14:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47F692071E;
+        Tue, 28 Jan 2020 14:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221542;
-        bh=MAl6iOkGqFidVtqHKpXauQzj8NI3g/vtUUpZCrgxORo=;
+        s=default; t=1580221547;
+        bh=WOzg1VHjGzAsOAm8nzNjjHEfGl3A5OKtibNtSXTdt2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=raw+LoLDgXJPJSKvbY03yokoMrxkgwjh+4oS44IcCgtPluUZDA3jbJfxMQSL6igua
-         a1mp7SIxoN5X0doQf4X1HduzV+psbAc8IpDabQ2+ZiwijrTt3QDqn3joOngwIKvBPE
-         /e/YCUpuLcHbxefqyrg8h3r/xHzFAJG0G57bNFtI=
+        b=aBv57GNPBDP3i22SWn1pAf1+RJyYuW8vX9S+hH0Smewik03zpcNyAks91YKQ/IqTq
+         kbpJI5B1rvobdmsZhkBC1fePA37FgCMXOimdJ/NFFXgCtw4vAquRY1nelNpjJzDU5m
+         Q8dAs7y9mRTfdYCaAUUzGfJU7+WPMa43AumVeFg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 230/271] IB/iser: Fix dma_nents type definition
-Date:   Tue, 28 Jan 2020 15:06:19 +0100
-Message-Id: <20200128135909.696358742@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 232/271] net: ethtool: Add back transceiver type
+Date:   Tue, 28 Jan 2020 15:06:21 +0100
+Message-Id: <20200128135909.838035237@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -63,41 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit c1545f1a200f4adc4ef8dd534bf33e2f1aa22c2f ]
+commit 19cab8872692960535aa6d12e3a295ac51d1a648 upstream.
 
-The retured value from ib_dma_map_sg saved in dma_nents variable. To avoid
-future mismatch between types, define dma_nents as an integer instead of
-unsigned.
+Commit 3f1ac7a700d0 ("net: ethtool: add new ETHTOOL_xLINKSETTINGS API")
+deprecated the ethtool_cmd::transceiver field, which was fine in
+premise, except that the PHY library was actually using it to report the
+type of transceiver: internal or external.
 
-Fixes: 57b26497fabe ("IB/iser: Pass the correct number of entries for dma mapped SGL")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Israel Rukshin <israelr@mellanox.com>
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Acked-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Use the first word of the reserved field to put this __u8 transceiver
+field back in. It is made read-only, and we don't expect the
+ETHTOOL_xLINKSETTINGS API to be doing anything with this anyway, so this
+is mostly for the legacy path where we do:
+
+ethtool_get_settings()
+-> dev->ethtool_ops->get_link_ksettings()
+   -> convert_link_ksettings_to_legacy_settings()
+
+to have no information loss compared to the legacy get_settings API.
+
+Fixes: 3f1ac7a700d0 ("net: ethtool: add new ETHTOOL_xLINKSETTINGS API")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/ulp/iser/iscsi_iser.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/uapi/linux/ethtool.h |    6 +++++-
+ net/core/ethtool.c           |    2 ++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.h b/drivers/infiniband/ulp/iser/iscsi_iser.h
-index cb48e22afff72..a3614f7f00073 100644
---- a/drivers/infiniband/ulp/iser/iscsi_iser.h
-+++ b/drivers/infiniband/ulp/iser/iscsi_iser.h
-@@ -197,7 +197,7 @@ struct iser_data_buf {
- 	struct scatterlist *sg;
- 	int                size;
- 	unsigned long      data_len;
--	unsigned int       dma_nents;
-+	int                dma_nents;
- };
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -1687,6 +1687,8 @@ enum ethtool_reset_flags {
+  *	%ethtool_link_mode_bit_indices for the link modes, and other
+  *	link features that the link partner advertised through
+  *	autonegotiation; 0 if unknown or not applicable.  Read-only.
++ * @transceiver: Used to distinguish different possible PHY types,
++ *	reported consistently by PHYLIB.  Read-only.
+  *
+  * If autonegotiation is disabled, the speed and @duplex represent the
+  * fixed link mode and are writable if the driver supports multiple
+@@ -1738,7 +1740,9 @@ struct ethtool_link_settings {
+ 	__u8	eth_tp_mdix;
+ 	__u8	eth_tp_mdix_ctrl;
+ 	__s8	link_mode_masks_nwords;
+-	__u32	reserved[8];
++	__u8	transceiver;
++	__u8	reserved1[3];
++	__u32	reserved[7];
+ 	__u32	link_mode_masks[0];
+ 	/* layout of link_mode_masks fields:
+ 	 * __u32 map_supported[link_mode_masks_nwords];
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -514,6 +514,8 @@ convert_link_ksettings_to_legacy_setting
+ 		= link_ksettings->base.eth_tp_mdix;
+ 	legacy_settings->eth_tp_mdix_ctrl
+ 		= link_ksettings->base.eth_tp_mdix_ctrl;
++	legacy_settings->transceiver
++		= link_ksettings->base.transceiver;
+ 	return retval;
+ }
  
- /* fwd declarations */
--- 
-2.20.1
-
 
 
