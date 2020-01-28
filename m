@@ -2,129 +2,97 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780A3C32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014E9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A33B2467F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC69922527
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SKfoxij3"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="UCFUHmfc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgA1A2L (ORCPT
+        id S1726443AbgA1A3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 19:28:11 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56222 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgA1A2L (ORCPT
+        Mon, 27 Jan 2020 19:29:24 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39729 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgA1A3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 19:28:11 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00S0RJvu059947;
-        Mon, 27 Jan 2020 18:27:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580171239;
-        bh=W1EB64W45tmk/zMPnKEvQZ3k2ekG2mBDdjgBaVTmooE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SKfoxij3czRX498JAimlSsNcBJ2eS7JtvSDxNfs9A0J+Uu0U8D9aLr8WU/r5imFnn
-         I1j/F/CkTj/hTfSIITRpfJSQYfuk3Epr/3mq/1Kwmh61FQrOKMj0LfWBnLdvaf3s70
-         Sk5uWeTQb6W9LKodHGBdeGPDQBgkWJ6bdZWKhWAE=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00S0RJOt018928
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jan 2020 18:27:19 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 27
- Jan 2020 18:27:19 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 27 Jan 2020 18:27:19 -0600
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00S0RJUJ089082;
-        Mon, 27 Jan 2020 18:27:19 -0600
-Subject: Re: [PATCH v2] mfd: syscon: Use a unique name with regmap_config
-To:     David Lechner <david@lechnology.com>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>,
-        Roger Quadros <rogerq@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>
-References: <20200127231208.1443-1-s-anna@ti.com>
- <217993e5-5e1d-79a1-7684-c6bb964379f0@lechnology.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <448eeb87-9945-8a93-9231-6e2a22aa8342@ti.com>
-Date:   Mon, 27 Jan 2020 18:27:19 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 27 Jan 2020 19:29:23 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 4so6021333pgd.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:29:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=U91Hz0/lYI/n3Dw7PNbm4tKqVwXKnzCFxiEDM+SytAc=;
+        b=UCFUHmfc6v/JRX0Qb9ELA/2JIJTO8BSKgTwXqqkF76uAHJaJPYVpYvmZXJN8euqWb3
+         qFN77HQzxsZFMZVN1TZEaisb0t0eyYBTfZanth6pqlGx+y7toODk89yzbPATS0EKBxIb
+         Q/CEm4YtPy2IE2c66zfikoEqSqg1wUuTTDgPwdr0vLzMiw1xr616DqbuQGcDXiU71Nau
+         Jd52p0QPfl1mqcrst0QdhDzhZOJuezgKOV+fmwciHxyt4ISLmIFVzdGiy/HLNtLUd7Q3
+         2yk8hslrjU5XPr7ELisLNPHMuDP6ltxJ2ytIMn2+ECvGF2gHQ8PhCaTj+TJOBC5DGh0G
+         Z1NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U91Hz0/lYI/n3Dw7PNbm4tKqVwXKnzCFxiEDM+SytAc=;
+        b=QfyorUWKd1COC5UKp5hizTRy6uFP4/o451tgiDjuQ62OAylPfv6tMhRC6DLVRJDZY0
+         5KHY6B3W5NqvO+PS2s7VSvdGMf9SiVY1DM0/RYnR0c524jJbhp1ThZgSPbiMuGjEE6bd
+         xkRpIHiLTodermbhObCk53mjsDostZQ01xCh4Hi1Cn/x8+lKt4MbjBEwINpDbl54qpdM
+         zrsTtRSw6xPPEJpTnZOKvjfX/QCj8E4iDbs2a7IZ0MHcEozBAfwt4UhzLCd7hdtctfmi
+         INNFn5l6edlIOtC4wWznnpUMRIbrOmqREp7O0eF0l69oufyGHLbjK6yaynpNKTfcvpcI
+         lh7A==
+X-Gm-Message-State: APjAAAUhH+d5r54gXRqoknXmfNNLWUso6mMrfWi/lvJLClxZ9yZTCrDL
+        woGwnmPnLBecmK0bqRnDYwvaE0HUAvc=
+X-Google-Smtp-Source: APXvYqzemLISLBefJvaaqOU7JuquxtVC5RTyaiNPVjDMt+GGCIT5cZ287zomhRuum9B1VELnut4ctg==
+X-Received: by 2002:a63:450:: with SMTP id 77mr22257009pge.290.1580171362744;
+        Mon, 27 Jan 2020 16:29:22 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id 200sm17503369pfz.121.2020.01.27.16.29.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 16:29:22 -0800 (PST)
+Subject: Re: [PATCH v2 0/2] io-wq sharing
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1580169415.git.asml.silence@gmail.com>
+ <cover.1580170474.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2b1e23c3-71a3-2d5c-05c5-4aa393aee19b@kernel.dk>
+Date:   Mon, 27 Jan 2020 17:29:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <217993e5-5e1d-79a1-7684-c6bb964379f0@lechnology.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <cover.1580170474.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
-
-On 1/27/20 5:40 PM, David Lechner wrote:
-> On 1/27/20 5:12 PM, Suman Anna wrote:
->> The DT node full name is currently being used in regmap_config
->> which in turn is used to create the regmap debugfs directories.
->> This name however is not guaranteed to be unique and the regmap
->> debugfs registration can fail in the cases where the syscon nodes
->> have the same unit-address but are present in different DT node
->> hierarchies. Replace this logic using the syscon reg resource
->> address instead (inspired from logic used while creating platform
->> devices) to ensure a unique name is given for each syscon.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->> v2: Fix build warning reported by kbuild test bot
->> v1: https://patchwork.kernel.org/patch/11346363/
->>
->>   drivers/mfd/syscon.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
->> index e22197c832e8..f0815d8e6e95 100644
->> --- a/drivers/mfd/syscon.c
->> +++ b/drivers/mfd/syscon.c
->> @@ -101,12 +101,14 @@ static struct syscon *of_syscon_register(struct
->> device_node *np, bool check_clk)
->>           }
->>       }
->>   -    syscon_config.name = of_node_full_name(np);
->> +    syscon_config.name = kasprintf(GFP_KERNEL, "%pOFn@%llx", np,
->> +                       (u64)res.start);
+On 1/27/20 5:15 PM, Pavel Begunkov wrote:
+> rip-off of Jens io-wq sharing patches allowing multiple io_uring
+> instances to be bound to a single io-wq. The differences are:
+> - io-wq, which we would like to be shared, is passed as io_uring fd
+> - fail, if can't share. IMHO, it's always better to fail fast and loud
 > 
-> Would it make sense to also include the node name along with the
-> pointer address so that the name is still easily identifiable?
-
-I haven't dropped the node name, it is still there, the pOFn part. I am
-only replacing the DT unit-address with the bus address, I haven't
-changed the name style either.
-
-regards
-Suman
-
+> I didn't tested it after rebasing, but hopefully won't be a problem.
 > 
->>       syscon_config.reg_stride = reg_io_width;
->>       syscon_config.val_bits = reg_io_width * 8;
->>       syscon_config.max_register = resource_size(&res) - reg_io_width;
->>         regmap = regmap_init_mmio(NULL, base, &syscon_config);
->> +    kfree(syscon_config.name);
->>       if (IS_ERR(regmap)) {
->>           pr_err("regmap init failed\n");
->>           ret = PTR_ERR(regmap);
->>
-> 
+> p.s. on top of ("io_uring/io-wq: don't use static creds/mm assignments")
+
+Applied with the following changes:
+
+- Return -EINVAL for invalid ringfd when attach is specified
+- Remove the wq_fd check for attach not specified
+
+Tested here, works for me. Pushing out the updated test case.
+
+-- 
+Jens Axboe
 
