@@ -2,88 +2,150 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B65C35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB31C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F63120661
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B5020661
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgA1K0m (ORCPT
+        id S1726066AbgA1K1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:26:42 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:34520 "EHLO gloria.sntech.de"
+        Tue, 28 Jan 2020 05:27:09 -0500
+Received: from mga04.intel.com ([192.55.52.120]:17156 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgA1K0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:26:42 -0500
-Received: from p57b77a13.dip0.t-ipconnect.de ([87.183.122.19] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iwO4s-0008VL-DY; Tue, 28 Jan 2020 11:26:38 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mturquette@baylibre.com, christoph.muellner@theobroma-systems.com,
-        zhangqing@rock-chips.com
-Subject: Re: [PATCH] clk: rockchip: convert rk3036 pll type to use internal lock status
-Date:   Tue, 28 Jan 2020 11:26:37 +0100
-Message-ID: <3308363.gZKxoYc2QA@phil>
-In-Reply-To: <20200114050518.D3C40222C3@mail.kernel.org>
-References: <20200113152656.2313846-1-heiko@sntech.de> <20200114050518.D3C40222C3@mail.kernel.org>
+        id S1725903AbgA1K1J (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 05:27:09 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 02:27:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,373,1574150400"; 
+   d="scan'208";a="223502235"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.213.218]) ([10.254.213.218])
+  by fmsmga008.fm.intel.com with ESMTP; 28 Jan 2020 02:27:06 -0800
+Subject: Re: [PATCH v4 3/4] perf util: Flexible to set block info output
+ formats
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200115192904.16798-1-yao.jin@linux.intel.com>
+ <20200115192904.16798-3-yao.jin@linux.intel.com>
+ <20200120094737.GF608405@krava>
+ <6c35864b-e396-6865-12a9-2fd001b0f567@linux.intel.com>
+ <23bec83b-b55d-8e9f-5b74-f58f0cd4a618@linux.intel.com>
+ <20200128092151.GA1209308@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <073a0561-0e16-b4af-4678-fb211f81d9e5@linux.intel.com>
+Date:   Tue, 28 Jan 2020 18:27:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200128092151.GA1209308@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 14. Januar 2020, 06:05:18 CET schrieb Stephen Boyd:
-> Quoting Heiko Stuebner (2020-01-13 07:26:56)
-> > diff --git a/drivers/clk/rockchip/clk-pll.c b/drivers/clk/rockchip/clk-pll.c
-> > index 198417d56300..37378ded0993 100644
-> > --- a/drivers/clk/rockchip/clk-pll.c
-> > +++ b/drivers/clk/rockchip/clk-pll.c
-> > @@ -118,12 +118,30 @@ static int rockchip_pll_wait_lock(struct rockchip_clk_pll *pll)
-> >  #define RK3036_PLLCON1_REFDIV_SHIFT            0
-> >  #define RK3036_PLLCON1_POSTDIV2_MASK           0x7
-> >  #define RK3036_PLLCON1_POSTDIV2_SHIFT          6
-> > +#define RK3036_PLLCON1_LOCK_STATUS             BIT(10)
-> >  #define RK3036_PLLCON1_DSMPD_MASK              0x1
-> >  #define RK3036_PLLCON1_DSMPD_SHIFT             12
-> > +#define RK3036_PLLCON1_PWRDOWN                 BIT(13)
-> >  #define RK3036_PLLCON2_FRAC_MASK               0xffffff
-> >  #define RK3036_PLLCON2_FRAC_SHIFT              0
-> >  
-> > -#define RK3036_PLLCON1_PWRDOWN                 (1 << 13)
-> > +static int rockchip_rk3036_pll_wait_lock(struct rockchip_clk_pll *pll)
-> > +{
-> > +       u32 pllcon;
-> > +       int delay = 24000000;
-> > +
-> > +       /* poll check the lock status in rk3399 xPLLCON2 */
-> > +       while (delay > 0) {
-> > +               pllcon = readl_relaxed(pll->reg_base + RK3036_PLLCON(1));
-> > +               if (pllcon & RK3036_PLLCON1_LOCK_STATUS)
-> > +                       return 0;
-> > +
-> > +               delay--;
+
+
+On 1/28/2020 5:21 PM, Jiri Olsa wrote:
+> On Mon, Jan 27, 2020 at 08:31:23PM +0800, Jin, Yao wrote:
+>>
+>>
+>> On 1/20/2020 11:00 PM, Jin, Yao wrote:
+>>>
+>>>
+>>> On 1/20/2020 5:47 PM, Jiri Olsa wrote:
+>>>> On Thu, Jan 16, 2020 at 03:29:03AM +0800, Jin Yao wrote:
+>>>>
+>>>> SNIP
+>>>>
+>>>>> +                   block_hpps, nr_hpps);
+>>>>> -    perf_hpp_list__register_sort_field(&bh->block_list,
+>>>>> -        &block_fmts[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT].fmt);
+>>>>> +    /* Sort by the first fmt */
+>>>>> +    perf_hpp_list__register_sort_field(&bh->block_list,
+>>>>> &block_fmts[0].fmt);
+>>>>>    }
+>>>>> -static void process_block_report(struct hists *hists,
+>>>>> -                 struct block_report *block_report,
+>>>>> -                 u64 total_cycles)
+>>>>> +static int process_block_report(struct hists *hists,
+>>>>> +                struct block_report *block_report,
+>>>>> +                u64 total_cycles, int *block_hpps,
+>>>>> +                int nr_hpps)
+>>>>>    {
+>>>>>        struct rb_node *next = rb_first_cached(&hists->entries);
+>>>>>        struct block_hist *bh = &block_report->hist;
+>>>>>        struct hist_entry *he;
+>>>>> -    init_block_hist(bh, block_report->fmts);
+>>>>> +    if (nr_hpps > PERF_HPP_REPORT__BLOCK_MAX_INDEX)
+>>>>
+>>>> hum, should be '>=' above.. ?
+>>>>
+>>>> jirka
+>>>>
+>>>
+>>> '=' should be OK.
+>>>
+>>> enum {
+>>>       PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
+>>>       PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
+>>>       PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
+>>>       PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+>>>       PERF_HPP_REPORT__BLOCK_RANGE,
+>>>       PERF_HPP_REPORT__BLOCK_DSO,
+>>>       PERF_HPP_REPORT__BLOCK_MAX_INDEX
+>>> };
+>>>
+>>> PERF_HPP_REPORT__BLOCK_MAX_INDEX is 6.
+>>>
+>>> If nr_hpps is 6, for example, block_hpps[] is,
+>>>
+>>>           int block_hpps[6] = {
+>>>               PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
+>>>               PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
+>>>               PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
+>>>               PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+>>>               PERF_HPP_REPORT__BLOCK_RANGE,
+>>>               PERF_HPP_REPORT__BLOCK_DSO,
+>>>           };
+>>>
+>>>           block_info__create_report(session->evlist,
+>>>                         rep->total_cycles,
+>>>                                             block_hpps, 6,
+>>>                                             &rep->nr_block_reports);
+>>>
+>>> That should be legal.
+>>>
+>>> Thanks
+>>> Jin Yao
+>>
+>> Hi Jiri,
+>>
+>> Does this explanation make sense?
 > 
-> There isn't any udelay here. So the timeout is just as fast as the CPU
-> can churn through this? Why not use an actual time? Or use the
-> readl_poll_timeout() APIs?
+> ok, make sense
+> 
+> thanks,
+> jirka
+> 
 
-Done in 
-http://lore.kernel.org/r/20200128100204.1318450-3-heiko@sntech.de
+Thanks Jiri!
 
-and to keep things similar, I did a conversion to iopoll helpers for the
-other variants too.
+I will post v5 which only contains the change of dropping the 
+unnecessary release code.
 
-Heiko
-
+Thanks
+Jin Yao
 
