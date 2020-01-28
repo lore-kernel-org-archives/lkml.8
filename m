@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DB1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA00BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779EE2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C90024686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222168;
-	bh=2yTldlziUHYWNFg6KPuTlYPHjN0Cr21TjKkc0RitqoM=;
+	s=default; t=1580222178;
+	bh=j9S2qKhSSPN/dmy7/aYyfA0uPKzh15mX4b57tjNIpXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R3lDe9nza5jApIdVWH/f/GSs3qigrYfr4snp5ZmfKfDnNkK97M2y8BhW/Qz2f+/Kg
-	 0VOxKB82gp9W6KaFaxuDeBw3Nfvxx1ZVUU9ghTzcKoLWVfhojEhUcegTy0Onnq5DDv
-	 MPXc1JdS3bOPzEp0p5Zf7MfcqRlrHaNuR2SPB6LI=
+	b=ZWAdXQ9rwernB7i02lfjey9Y4IUXKHGhNAcTyYPoQWBW4tZvORo1I7ckidVZOo6Sb
+	 +CHzCM+pl2W9tgy9FTCks+3oeORB7iF2My/oxAd6PYYFuaYyPD6HAVhYMc4C/Esfhc
+	 Rb2YN4dLcjwWvrPzrJh/kF5/8pb4ex1Nm+gxWoAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731543AbgA1OWX (ORCPT
+        id S1731476AbgA1OgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:22:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48076 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:36:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbgA1OWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:22:19 -0500
+        id S1730974AbgA1OWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:22:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A37002469A;
-        Tue, 28 Jan 2020 14:22:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46EAE24681;
+        Tue, 28 Jan 2020 14:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221338;
-        bh=2yTldlziUHYWNFg6KPuTlYPHjN0Cr21TjKkc0RitqoM=;
+        s=default; t=1580221320;
+        bh=j9S2qKhSSPN/dmy7/aYyfA0uPKzh15mX4b57tjNIpXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OEZr0pXycSPMJhSLUoIpMYyy/ZBnDz0OIy9VjwiwF7qCdGbdV5Tz82dHoAPxbQCAN
-         N6ON8Vev7QGiaR10yOHD7OLqcvpwnY2TA3tToZs4dkQcLiFNdnw6chNchhUee2e0Ub
-         NpxA5Dgsz3knhahkk/BomK4BEKE6JXBWmpj0P4aU=
+        b=IYp9rjws9d8ml+AXkj6TfIekJoEVejsFuttX880/HnkgZG6yLWB83nDRjKPZT3tJ1
+         vFZOzXwAmGM1cMaAv7VUqumEbCsgGLbxkeW9UuOG8jYcWgrtnEsVvvg/R/sHFuNdMl
+         tyWFkTc3vigvppmZnqgt84Fyu99e5H+XImFYday8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ronnie sahlberg <ronniesahlberg@gmail.com>,
-        =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>,
+        stable@vger.kernel.org, Namjae Jeon <namjae.jeon@samsung.com>,
+        Jeff Layton <jlayton@primarydata.com>,
         Steve French <smfrench@gmail.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        David Laight <David.Laight@ACULAB.COM>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 183/271] signal: Allow cifs and drbd to receive their terminating signals
-Date:   Tue, 28 Jan 2020 15:05:32 +0100
-Message-Id: <20200128135906.176803329@linuxfoundation.org>
+Subject: [PATCH 4.9 150/271] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
+Date:   Tue, 28 Jan 2020 15:04:59 +0100
+Message-Id: <20200128135903.724858235@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -67,129 +64,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric W. Biederman <ebiederm@xmission.com>
 
-[ Upstream commit 33da8e7c814f77310250bb54a9db36a44c5de784 ]
+[ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
 
-My recent to change to only use force_sig for a synchronous events
-wound up breaking signal reception cifs and drbd.  I had overlooked
-the fact that by default kthreads start out with all signals set to
-SIG_IGN.  So a change I thought was safe turned out to have made it
-impossible for those kernel thread to catch their signals.
+The locking in force_sig_info is not prepared to deal with a task that
+exits or execs (as sighand may change).  The is not a locking problem
+in force_sig as force_sig is only built to handle synchronous
+exceptions.
 
-Reverting the work on force_sig is a bad idea because what the code
-was doing was very much a misuse of force_sig.  As the way force_sig
-ultimately allowed the signal to happen was to change the signal
-handler to SIG_DFL.  Which after the first signal will allow userspace
-to send signals to these kernel threads.  At least for
-wake_ack_receiver in drbd that does not appear actively wrong.
+Further the function force_sig_info changes the signal state if the
+signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
+delivery of the signal.  The signal SIGKILL can not be ignored and can
+not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
+delivered.
 
-So correct this problem by adding allow_kernel_signal that will allow
-signals whose siginfo reports they were sent by the kernel through,
-but will not allow userspace generated signals, and update cifs and
-drbd to call allow_kernel_signal in an appropriate place so that their
-thread can receive this signal.
+So using force_sig rather than send_sig for SIGKILL is confusing
+and pointless.
 
-Fixing things this way ensures that userspace won't be able to send
-signals and cause problems, that it is clear which signals the
-threads are expecting to receive, and it guarantees that nothing
-else in the system will be affected.
+Because it won't impact the sending of the signal and and because
+using force_sig is wrong, replace force_sig with send_sig.
 
-This change was partly inspired by similar cifs and drbd patches that
-added allow_signal.
-
-Reported-by: ronnie sahlberg <ronniesahlberg@gmail.com>
-Reported-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
-Tested-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
+Cc: Namjae Jeon <namjae.jeon@samsung.com>
+Cc: Jeff Layton <jlayton@primarydata.com>
 Cc: Steve French <smfrench@gmail.com>
-Cc: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: David Laight <David.Laight@ACULAB.COM>
-Fixes: 247bc9470b1e ("cifs: fix rmmod regression in cifs.ko caused by force_sig changes")
-Fixes: 72abe3bcf091 ("signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig")
-Fixes: fee109901f39 ("signal/drbd: Use send_sig not force_sig")
-Fixes: 3cf5d076fb4d ("signal: Remove task parameter from force_sig")
+Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
+Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_main.c |  2 ++
- fs/cifs/connect.c              |  2 +-
- include/linux/signal.h         | 15 ++++++++++++++-
- kernel/signal.c                |  5 +++++
- 4 files changed, 22 insertions(+), 2 deletions(-)
+ fs/cifs/connect.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index f5c24459fc5c1..daa9cef96ec66 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -332,6 +332,8 @@ static int drbd_thread_setup(void *arg)
- 		 thi->name[0],
- 		 resource->name);
- 
-+	allow_kernel_signal(DRBD_SIGKILL);
-+	allow_kernel_signal(SIGXCPU);
- restart:
- 	retval = thi->function(thi);
- 
 diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 7d46025d5e899..751bdde6515d5 100644
+index e43ba6db2bdd6..110febd697379 100644
 --- a/fs/cifs/connect.c
 +++ b/fs/cifs/connect.c
-@@ -885,7 +885,7 @@ cifs_demultiplex_thread(void *p)
- 		mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+@@ -2221,7 +2221,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
  
- 	set_freezable();
--	allow_signal(SIGKILL);
-+	allow_kernel_signal(SIGKILL);
- 	while (server->tcpStatus != CifsExiting) {
- 		if (try_to_freeze())
- 			continue;
-diff --git a/include/linux/signal.h b/include/linux/signal.h
-index 5308304993bea..ffa58ff53e225 100644
---- a/include/linux/signal.h
-+++ b/include/linux/signal.h
-@@ -313,6 +313,9 @@ extern void signal_setup_done(int failed, struct ksignal *ksig, int stepping);
- extern void exit_signals(struct task_struct *tsk);
- extern void kernel_sigaction(int, __sighandler_t);
- 
-+#define SIG_KTHREAD ((__force __sighandler_t)2)
-+#define SIG_KTHREAD_KERNEL ((__force __sighandler_t)3)
-+
- static inline void allow_signal(int sig)
- {
- 	/*
-@@ -320,7 +323,17 @@ static inline void allow_signal(int sig)
- 	 * know it'll be handled, so that they don't get converted to
- 	 * SIGKILL or just silently dropped.
- 	 */
--	kernel_sigaction(sig, (__force __sighandler_t)2);
-+	kernel_sigaction(sig, SIG_KTHREAD);
-+}
-+
-+static inline void allow_kernel_signal(int sig)
-+{
-+	/*
-+	 * Kernel threads handle their own signals. Let the signal code
-+	 * know signals sent by the kernel will be handled, so that they
-+	 * don't get silently dropped.
-+	 */
-+	kernel_sigaction(sig, SIG_KTHREAD_KERNEL);
+ 	task = xchg(&server->tsk, NULL);
+ 	if (task)
+-		force_sig(SIGKILL, task);
++		send_sig(SIGKILL, task, 1);
  }
  
- static inline void disallow_signal(int sig)
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 30914b3c76b21..57fadbe69c2e6 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -79,6 +79,11 @@ static int sig_task_ignored(struct task_struct *t, int sig, bool force)
- 	    handler == SIG_DFL && !(force && sig_kernel_only(sig)))
- 		return 1;
- 
-+	/* Only allow kernel generated signals to this kthread */
-+	if (unlikely((t->flags & PF_KTHREAD) &&
-+		     (handler == SIG_KTHREAD_KERNEL) && !force))
-+		return true;
-+
- 	return sig_handler_ignored(handler, sig);
- }
- 
+ static struct TCP_Server_Info *
 -- 
 2.20.1
 
