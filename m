@@ -2,154 +2,109 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D560FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E931C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8AC24686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:44:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580211894;
-	bh=E7sSxi9rEy9lj8TVZnfhNZG9e0AVuStsXP4sldUxT4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SRIWKzBvOY/s4QjVoGyGnyO5tekVsbsMveFeTc5G7iieIN9RhDUUH7KNZP6TYu8BU
-	 BFWpRLQHYPDaaEfKgJDPe3FJI592sMzrkLS8uZsQiOyUqb7iCvUpv6YwRiWG7wrBPj
-	 FA+E21ClJ9w2+shUhhrZSlHQsrLD/w5IwgeIoSqE=
+	by mail.kernel.org (Postfix) with ESMTP id EEF0524686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgA1Loy (ORCPT
+        id S1726233AbgA1LpM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 06:44:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbgA1Lox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 06:44:53 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0283224684;
-        Tue, 28 Jan 2020 11:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580211892;
-        bh=E7sSxi9rEy9lj8TVZnfhNZG9e0AVuStsXP4sldUxT4Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ijsPN1f6iteMPvBro/SwB7dEVl3seXEWeB2zfYTOVkE1nDJtOwJjS23a1CkDbQ3ZO
-         A7wtuCSmPJO2W0fJ08rbudp+K20sw0w0JIFUMtWNGYg+1Xqzk/zZb45aRAwF0GIxgO
-         KHKecvvnQLkBroKWsOysi+JR6xpIBT/6ApGqxrio=
-Date:   Tue, 28 Jan 2020 12:44:50 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Shaohua Li <shli@kernel.org>, linux-raid@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        mika.westerberg@linux.intel.com, Joe Perches <joe@perches.com>,
-        linux- stable <stable@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Subject: Re: [PATCH v4 3/5] bitmap: Add bitmap_alloc(), bitmap_zalloc() and
- bitmap_free()
-Message-ID: <20200128114450.GA2672297@kroah.com>
-References: <20180630201750.2588-1-andriy.shevchenko@linux.intel.com>
- <20180630201750.2588-4-andriy.shevchenko@linux.intel.com>
- <CA+G9fYs3GPid5fcHEWp2i9NKR1hQGc5h0zKaUK5xr1RGJ83xLg@mail.gmail.com>
+        Tue, 28 Jan 2020 06:45:12 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:55996 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725941AbgA1LpL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 06:45:11 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-64-KHUc3FscOs2MVf9cLzs1SQ-1; Tue, 28 Jan 2020 11:45:06 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 28 Jan 2020 11:45:05 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 28 Jan 2020 11:45:05 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Steven Rostedt' <rostedt@goodmis.org>
+CC:     'linux-kernel' <linux-kernel@vger.kernel.org>
+Subject: RE: sched/fair: Long delays starting RT processes on idle cpu.
+Thread-Topic: sched/fair: Long delays starting RT processes on idle cpu.
+Thread-Index: AQHV1SlucH1Za6AdTkOqbnnXEpKS/qf+tfxQgAAKfwCAASgewA==
+Date:   Tue, 28 Jan 2020 11:45:05 +0000
+Message-ID: <221f40db51b442aebb823e429e2b9de5@AcuMS.aculab.com>
+References: <13797bbe87b64f34877b89a5bbdb6d03@AcuMS.aculab.com>
+        <20200127104948.59eac75a@gandalf.local.home>
+        <a23fe4c769364ab49865e4c46aa73830@AcuMS.aculab.com>
+ <20200127121542.05a124d7@gandalf.local.home>
+In-Reply-To: <20200127121542.05a124d7@gandalf.local.home>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYs3GPid5fcHEWp2i9NKR1hQGc5h0zKaUK5xr1RGJ83xLg@mail.gmail.com>
+X-MC-Unique: KHUc3FscOs2MVf9cLzs1SQ-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 05:08:27PM +0530, Naresh Kamboju wrote:
-> On Sun, 1 Jul 2018 at 01:49, Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > A lot of code become ugly because of open coding allocations for bitmaps.
-> >
-> > Introduce three helpers to allow users be more clear of intention
-> > and keep their code neat.
-> >
-> > Note, due to multiple circular dependencies we may not provide
-> > the helpers as inliners. For now we keep them exported and, perhaps,
-> > at some point in the future we will sort out header inclusion and
-> > inheritance.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  include/linux/bitmap.h |  8 ++++++++
-> >  lib/bitmap.c           | 19 +++++++++++++++++++
-> >  2 files changed, 27 insertions(+)
-> >
-> > diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-> > index 1ee46f492267..acf5e8df3504 100644
-> > --- a/include/linux/bitmap.h
-> > +++ b/include/linux/bitmap.h
-> > @@ -104,6 +104,14 @@
-> >   * contain all bit positions from 0 to 'bits' - 1.
-> >   */
-> >
-> > +/*
-> > + * Allocation and deallocation of bitmap.
-> > + * Provided in lib/bitmap.c to avoid circular dependency.
-> > + */
-> > +extern unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags);
-> > +extern unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags);
-> > +extern void bitmap_free(const unsigned long *bitmap);
-> > +
-> >  /*
-> >   * lib/bitmap.c provides these functions:
-> >   */
-> > diff --git a/lib/bitmap.c b/lib/bitmap.c
-> > index 33e95cd359a2..09acf2fd6a35 100644
-> > --- a/lib/bitmap.c
-> > +++ b/lib/bitmap.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/bitops.h>
-> >  #include <linux/bug.h>
-> >  #include <linux/kernel.h>
-> > +#include <linux/slab.h>
-> >  #include <linux/string.h>
-> >  #include <linux/uaccess.h>
-> >
-> > @@ -1125,6 +1126,24 @@ void bitmap_copy_le(unsigned long *dst, const unsigned long *src, unsigned int n
-> >  EXPORT_SYMBOL(bitmap_copy_le);
-> >  #endif
-> >
-> > +unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags)
-> > +{
-> > +       return kmalloc_array(BITS_TO_LONGS(nbits), sizeof(unsigned long), flags);
-> > +}
-> > +EXPORT_SYMBOL(bitmap_alloc);
-> > +
-> > +unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags)
-> > +{
-> > +       return bitmap_alloc(nbits, flags | __GFP_ZERO);
-> > +}
-> > +EXPORT_SYMBOL(bitmap_zalloc);
-> > +
-> > +void bitmap_free(const unsigned long *bitmap)
-> > +{
-> > +       kfree(bitmap);
-> > +}
-> > +EXPORT_SYMBOL(bitmap_free);
-> > +
-> >  #if BITS_PER_LONG == 64
-> >  /**
-> >   * bitmap_from_arr32 - copy the contents of u32 array of bits to bitmap
+From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> On Behalf Of Steven Rostedt
+> Sent: 27 January 2020 17:16
+> On Mon, 27 Jan 2020 16:56:12 +0000
+> David Laight <David.Laight@ACULAB.COM> wrote:
 > 
-> stable-rc 4.14 build failed due to these build error,
+> > >From Steven Rostedt
+> > > Sent: 27 January 2020 15:50
+> > > On Mon, 27 Jan 2020 15:39:24 +0000
+> > > David Laight <David.Laight@ACULAB.COM> wrote:
+> > >
+> > > > I'd have thought that the processor should wake up much faster than that.
+> > > > I can't see the memory write that is paired with the monitor/mwait.
+> > > > Does it need a strong barrier?
+> > >
+> > > You may want to prevent the CPU from going into a deep C state. 90us is
+> > > something I would expect if the CPU is in a deep C state (I've seen
+> > > much longer wake up times due to deep C state).
+> > >
+> > > Boot the kernel with idle=poll and see if you can trigger the same
+> > > latency. If not, then you know it's the CPU going into a deep C state
+> > > that is causing your latency.
+> >
+> > With idle=poll the delays seem to be minimal.
+> >
+> > Is there any way to limit the C state entered by mwait?
+> 
+> I believe you can dynamically change C state. There's a pdf about it:
+> 
+>   https://wiki.ntb.ch/infoportal/_media/embedded_systems/ethercat/controlling_processor_c-state_usage_in_linux_v1.1_nov2013.pdf
 
-Yeah, sorry, I noticed this right before I had to leave for a few hours.
-I'll go fix this up now...
+Writing 20 to /dev/cpu_dma_latency (and holding the fd open) removes the excessive latency.
+The latency values (for my system) seem to be 0, 1, 10, 59, 80.
+I suspect the '10' - C1E (halt + energy saving) is not as bad as expected.
 
-greg k-h
+While it may well be that the cpu doesn't enter the C3/C6/C7 states if we
+are doing a reasonable amount of work, they are a PITA when you are
+trying to look at how a system behaves.
+
+While searching for 'cpu_dma_latency' in Documentation does give some info,
+it isn't entirely obvious that is what you need to look for.
+Even finding the intel_idle.c code doesn't help much.
+A reference from 'man setpriority'  might be a hint....
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
