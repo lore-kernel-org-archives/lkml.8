@@ -2,220 +2,110 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B3CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0778FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 023A721739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:16:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tj6pq6lI"
+	by mail.kernel.org (Postfix) with ESMTP id D9A7C24687
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgA1RQC (ORCPT
+        id S1726422AbgA1RRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:16:02 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29675 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725881AbgA1RQB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:16:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580231760;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=b9v4LRJ0X/zwC21iWprb3Pdxwg0r6oKyP3zn7Ik5Yc0=;
-        b=Tj6pq6lIMJ+mMvCAHhPwCPWsNCmzTDXfStHtmI5x0Gtr3DMdGhAlnET51V84nnevmW6EZr
-        d502Txc5sf5flfHAoh7OomO5BgD3qGIW7f3frwbeYYNzzCc7Rqjh/gXqHnzHL7BhLdQZ6P
-        5f/efP4JTMLdKoTWDxg5Pfqi4bgrclA=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-314-yR7DYb6JOaancgH1_fQIMQ-1; Tue, 28 Jan 2020 12:15:41 -0500
-X-MC-Unique: yR7DYb6JOaancgH1_fQIMQ-1
-Received: by mail-qv1-f69.google.com with SMTP id cn2so4891145qvb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 09:15:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=b9v4LRJ0X/zwC21iWprb3Pdxwg0r6oKyP3zn7Ik5Yc0=;
-        b=OnDWBQ2QCKZ7WlwwLfyKpmyFiqYd0OYz55gRMWECOwivEbrJNAkFpheQxLqOuHm7/B
-         dsCQH4oRDFBTUpu7UKvyO/N9VX9yYxRrTJOsK6JnMkqQb0UqJkA0ycZXLRQYs69NQ0+e
-         cRcYyS9DmdCs10cTYvjzWiX7GSrWklyInCKkWyrUyqEeG+b2ZbawQDRCPj74PlUZwaAY
-         FNt0SPqB2sO9BWee3Ln4lz05ApDYtR9zkfZBrxGQdvF91P2WoTmBpzgH5/tvbMXr3YjO
-         1cHkKFsQyqAN3bR/gq0Vr5JTcjD0BDY7xaMMWpY02NsmOJyyEbzrfACKb7GoTxaD0lLt
-         WerA==
-X-Gm-Message-State: APjAAAXeSySuMl8Oq6plaLotOb0WqsPIpswHrVt9D3JRn/tHQGOb34y2
-        5mIlrXMaIJedFHJsTr6913nwj6DgMOMcVSIyXH/nm+no3EtZb/MU+1dWA3w+SeJda7jBqzfDJUk
-        ZrJ9joRD8i7iywb5aOMcbJzlHCF407RJHUNRPNCjT
-X-Received: by 2002:a37:4702:: with SMTP id u2mr23056579qka.106.1580231741093;
-        Tue, 28 Jan 2020 09:15:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy12xK45XJ/S4v6FPIdibaw9orglTewXlm78OCE6+UYg4+e2OiLJb6k3g612FKAJA/XsK5i84ONxj8wE79oTsw=
-X-Received: by 2002:a37:4702:: with SMTP id u2mr23056525qka.106.1580231740587;
- Tue, 28 Jan 2020 09:15:40 -0800 (PST)
+        Tue, 28 Jan 2020 12:17:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:60876 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbgA1RRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:17:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E803328;
+        Tue, 28 Jan 2020 09:17:44 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E6273F52E;
+        Tue, 28 Jan 2020 09:17:42 -0800 (PST)
+Date:   Tue, 28 Jan 2020 17:17:36 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "lkml@metux.net" <lkml@metux.net>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "system-dt@lists.openampproject.org" 
+        <system-dt@lists.openampproject.org>,
+        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 0/7] Introduce bus firewall controller framework
+Message-ID: <20200128171639.GA36496@bogus>
+References: <20200128153806.7780-1-benjamin.gaignard@st.com>
+ <20200128163628.GB30489@bogus>
+ <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
 MIME-Version: 1.0
-References: <20200127164321.17468-1-lhenriques@suse.com> <CAOi1vP9RBBX9RtnZExk_9JX9-H-8B_2R6TQ6-iR3sRw047PfoQ@mail.gmail.com>
- <20200127185203.GC22545@suse.com>
-In-Reply-To: <20200127185203.GC22545@suse.com>
-From:   Gregory Farnum <gfarnum@redhat.com>
-Date:   Tue, 28 Jan 2020 18:15:29 +0100
-Message-ID: <CAJ4mKGYFg-phv1D=D9UxZPOB4FYN04Y=SYEr4AgQVzdWKGLCgw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] parallel 'copy-from' Ops in copy_file_range
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 7:52 PM Luis Henriques <lhenriques@suse.com> wrote:
+On Tue, Jan 28, 2020 at 04:46:41PM +0000, Benjamin GAIGNARD wrote:
 >
-> On Mon, Jan 27, 2020 at 07:16:17PM +0100, Ilya Dryomov wrote:
-> > On Mon, Jan 27, 2020 at 5:43 PM Luis Henriques <lhenriques@suse.com> wr=
-ote:
-> > >
-> > > Hi,
-> > >
-> > > As discussed here[1] I'm sending an RFC patchset that does the
-> > > parallelization of the requests sent to the OSDs during a copy_file_r=
-ange
-> > > syscall in CephFS.
-> > >
-> > >   [1] https://lore.kernel.org/lkml/20200108100353.23770-1-lhenriques@=
-suse.com/
-> > >
-> > > I've also some performance numbers that I wanted to share. Here's a
-> > > description of the very simple tests I've run:
-> > >
-> > >  - create a file with 200 objects in it
-> > >    * i.e. tests with different object sizes mean different file sizes
-> > >  - drop all caches and umount the filesystem
-> > >  - Measure:
-> > >    * mount filesystem
-> > >    * full file copy (with copy_file_range)
-> > >    * umount filesystem
-> > >
-> > > Tests were repeated several times and the average value was used for
-> > > comparison.
-> > >
-> > >   DISCLAIMER:
-> > >   These numbers are only indicative, and different clusters and clien=
-t
-> > >   configs will for sure show different performance!  More rigorous te=
-sts
-> > >   would be require to validate these results.
-> > >
-> > > Having as baseline a full read+write (basically, a copy_file_range
-> > > operation within a filesystem mounted without the 'copyfrom' option),
-> > > here's some values for different object sizes:
-> > >
-> > >                           8M      4M      1M      65k
-> > > read+write              100%    100%    100%     100%
-> > > sequential               51%     52%     83%    >100%
-> > > parallel (throttle=3D1)    51%     52%     83%    >100%
-> > > parallel (throttle=3D0)    17%     17%     83%    >100%
-> > >
-> > > Notes:
-> > >
-> > > - 'parallel (throttle=3D0)' was a test where *all* the requests (i.e.=
- 200
-> > >   requests to copy the 200 objects in the file) were sent to the OSDs=
- and
-> > >   the wait for requests completion is done at the end only.
-> > >
-> > > - 'parallel (throttle=3D1)' was just a control test, where the wait f=
-or
-> > >   completion is done immediately after a request is sent.  It was exp=
-ected
-> > >   to be very similar to the non-optimized ('sequential') tests.
-> > >
-> > > - These tests were executed on a cluster with 40 OSDs, spread across =
-5
-> > >   (bare-metal) nodes.
-> > >
-> > > - The tests with object size of 65k show that copy_file_range definit=
-ely
-> > >   doesn't scale to files with small object sizes.  '> 100%' actually =
-means
-> > >   more than 10x slower.
-> > >
-> > > Measuring the mount+copy+umount masks the actual difference between
-> > > different throttle values due to the time spent in mount+umount.  Thu=
-s,
-> > > there was no real difference between throttle=3D0 (send all and wait)=
- and
-> > > throttle=3D20 (send 20, wait, send 20, ...).  But here's what I obser=
-ved
-> > > when measuring only the copy operation (4M object size):
-> > >
-> > > read+write              100%
-> > > parallel (throttle=3D1)    56%
-> > > parallel (throttle=3D5)    23%
-> > > parallel (throttle=3D10)   14%
-> > > parallel (throttle=3D20)    9%
-> > > parallel (throttle=3D5)     5%
-> >
-> > Was this supposed to be throttle=3D50?
+> On 1/28/20 5:36 PM, Sudeep Holla wrote:
+> > On Tue, Jan 28, 2020 at 04:37:59PM +0100, Benjamin Gaignard wrote:
+> >> Bus firewall framework aims to provide a kernel API to set the configuration
+> >> of the harware blocks in charge of busses access control.
+> >>
+> >> Framework architecture is inspirated by pinctrl framework:
+> >> - a default configuration could be applied before bind the driver.
+> >>    If a configuration could not be applied the driver is not bind
+> >>    to avoid doing accesses on prohibited regions.
+> >> - configurations could be apllied dynamically by drivers.
+> >> - device node provides the bus firewall configurations.
+> >>
+> >> An example of bus firewall controller is STM32 ETZPC hardware block
+> >> which got 3 possible configurations:
+> >> - trust: hardware blocks are only accessible by software running on trust
+> >>    zone (i.e op-tee firmware).
+> >> - non-secure: hardware blocks are accessible by non-secure software (i.e.
+> >>    linux kernel).
+> >> - coprocessor: hardware blocks are only accessible by the coprocessor.
+> >> Up to 94 hardware blocks of the soc could be managed by ETZPC.
+> >>
+> > /me confused. Is ETZPC accessible from the non-secure kernel space to
+> > begin with ? If so, is it allowed to configure hardware blocks as secure
+> > or trusted ? I am failing to understand the overall design of a system
+> > with ETZPC controller.
 >
-> Ups, no it should be throttle=3D0 (i.e. no throttle).
->
-> > >
-> > > Anyway, I'll still need to revisit patch 0003 as it doesn't follow th=
-e
-> > > suggestion done by Jeff to *not* add another knob to fine-tune the
-> > > throttle value -- this patch adds a kernel parameter for a knob that =
-I
-> > > wanted to use in my testing to observe different values of this throt=
-tle
-> > > limit.
-> > >
-> > > The goal is to probably to drop this patch and do the throttling in p=
-atch
-> > > 0002.  I just need to come up with a decent heuristic.  Jeff's sugges=
-tion
-> > > was to use rsize/wsize, which are set to 64M by default IIRC.  Someho=
-w I
-> > > feel that it should be related to the number of OSDs in the cluster
-> > > instead, but I'm not sure how.  And testing these sort of heuristics =
-would
-> > > require different clusters, which isn't particularly easy to get.  An=
-yway,
-> > > comments are welcome!
-> >
-> > I agree with Jeff, this throttle is certainly not worth a module
-> > parameter (or a mount option).  I would start with something like
-> > C * (wsize / object size) and pick C between 1 and 4.
->
-> Sure, I also agree with not adding the new parameter or mount option.
-> It's just tricky to pick (and test!) the best formula to use.  From your
-> proposal the throttle value would be by default between 16 and 64; those
-> probably work fine in some situations (for example, in the cluster I used
-> for running my tests).  But for a really big cluster, with hundreds of
-> OSDs, it's difficult to say.
-
-We don't really need a single client to be capable of spraying the
-entire cluster in a single operation =E2=80=94 as the wsize is already an
-effective control over how parallel a single write is allowed to be, I
-think we're okay using it as the basis for copy_file_range as well
-without worrying about scaling it up!.
--Greg
-
->
-> Anyway, I'll come up with a proposal for the next revision.  And thanks a
-> lot for your feedback.
->
-> Cheers,
-> --
-> Lu=C3=ADs
+> Non-secure kernel could read the values set in ETZPC, if it doesn't match
+> with what is required by the device node the driver won't be probed.
 >
 
+OK, but I was under the impression that it was made clear that Linux is
+not firmware validation suite. The firmware need to ensure all the devices
+that are not accessible in the Linux kernel are marked as disabled and
+this needs to happen before entering the kernel. So if this is what this
+patch series achieves, then there is no need for it. Please stop pursuing
+this any further or provide any other reasons(if any) to have it. Until
+you have other reasons, NACK for this series.
+
+Note you haven't cc-ed 2 people who has comments earlier[1][2]
+--
+Regards,
+Sudeep
+
+[1] https://lkml.org/lkml/2018/2/27/512
+[2] https://lkml.org/lkml/2018/2/27/598
