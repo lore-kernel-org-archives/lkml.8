@@ -2,128 +2,130 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0592C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DE1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A038124686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBEC20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580217664;
+	bh=6yMPyzyzgayEIhWQisn5URP1nsUaexkHHx5nPCWZHxE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CLTPZQqJ6RuoVsR1gFeqeyb8RiCF6XIR8J73olXfwasyMSp38vKtuInCBrmJfY1uj
+	 jWM4DTS3M8KanfoQUDcDJ1ari9XZkZkuxF1TClyM6Ejr112Xm4N3UsXVW3ogSz2Ka5
+	 biPlWFCp3zWkoUUyNrHUCEa215DQjVzwe+6IYuXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgA1NRJ (ORCPT
+        id S1726141AbgA1NVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:17:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:32842 "EHLO mx2.suse.de"
+        Tue, 28 Jan 2020 08:21:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgA1NRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:17:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 18C54B246;
-        Tue, 28 Jan 2020 13:17:07 +0000 (UTC)
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-In-Reply-To: <88af0fca-90d1-58ff-406d-73f185eb8b7e@gmail.com>
-Date:   Tue, 28 Jan 2020 13:42:21 +0100
-Subject: Re: [PATCH] serial: 8250_early: Add earlycon for BCM2835 aux uart
-From:   "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
-To:     "Matthias Brugger" <matthias.bgg@gmail.com>,
-        "Lukas Wunner" <lukas@wunner.de>, <matthias.bgg@kernel.org>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        "Matthias Brugger" <mbrugger@suse.com>,
-        "Scott Branden" <sbranden@broadcom.com>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        "Ray Jui" <rjui@broadcom.com>,
-        "Stephen Boyd" <swboyd@chromium.org>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>, <jslaby@suse.com>,
-        <nsaenzjulienne@suse.de>
-Message-Id: <C07FL64L9QNN.357K7JAUOSNA2@linux-9qgx>
+        id S1725852AbgA1NVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:21:03 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 722502467B;
+        Tue, 28 Jan 2020 13:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580217662;
+        bh=6yMPyzyzgayEIhWQisn5URP1nsUaexkHHx5nPCWZHxE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=m/qnAjAWjKa7ujJV4+9bpIdnM8mieHm/wpjVEvkvRm9L3PYJnE5/FmP+1SvRPtqBR
+         Tr6tDlVON4RnWc0Q/zVwJ2TH8GGOHQ0Z/AQT2Zyb7H/gS7g2HcGKX1gUmwAPkHvQTu
+         b8olEF31GK411fPrGLjVPuPn58DV+ShN/oweXQ50=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1iwQnc-001ofc-Hp; Tue, 28 Jan 2020 13:21:00 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jan 2020 13:21:00 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        palmer@dabbelt.com, paul.walmsley@sifive.com, wesley@sifive.com,
+        atish.patra@wdc.com, linux-gpio@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sachin.ghadi@sifive.com
+Subject: Re: [PATCH] gpio/sifive: fix static checker warning
+In-Reply-To: <1580189061-14091-1-git-send-email-yash.shah@sifive.com>
+References: <1580189061-14091-1-git-send-email-yash.shah@sifive.com>
+Message-ID: <ecb0e9404a3f6256a7ba1fe48b5a1471@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, palmer@dabbelt.com, paul.walmsley@sifive.com, wesley@sifive.com, atish.patra@wdc.com, linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun Jan 26, 2020 at 9:20 PM, Matthias Brugger wrote:
->
->
-> On 26/01/2020 14:12, Lukas Wunner wrote:
-> > On Sun, Jan 26, 2020 at 01:33:14PM +0100, matthias.bgg@kernel.org wrote=
-:
-> >> +#ifdef CONFIG_SERIAL_8250_CONSOLE
-> >> +
-> >> +static int __init early_bcm2835aux_setup(struct earlycon_device *devi=
-ce,
-> >> +					const char *options)
-> >> +{
-> >> +	if (!device->port.membase)
-> >> +		return -ENODEV;
-> >> +
-> >> +	device->port.iotype =3D UPIO_MEM32;
-> >> +	device->port.regshift =3D 2;
-> >> +
-> >> +	return early_serial8250_setup(device, NULL);
-> >> +}
-> >> +
-> >> +OF_EARLYCON_DECLARE(bcm2835aux, "brcm,bcm2835-aux-uart",
-> >> +		    early_bcm2835aux_setup);
-> >> +#endif
-> >=20
-> > Does this really work?  I also tried to get it working recently and
-> > the system just hung on boot.  Looking at it with a JTAG debugger
-> > showed that the bcm2835aux registers were inaccessible because
-> > the mini UART wasn't enabled in the AUXENB register.
-> >=20
-> > Maybe if you use OF_EARLYCON_DECLARE, the firmware recognizes that
-> > serial1 is set as stdout-path and performs enablement of the mini UART?
-> > Or are you using U-Boot which perhaps does the enablement?
->
-> Yes I'm using U-Boot which enables the console for me. My understanding
-> is that
-> the early console is thought as a re-use of the console the boot FW used
-> for
-> logging. AFAIK for example it does not enable any needed clocks but
-> expects
-> these to be enabled already.
->
-> Looking on the source code of U-Boot [1] I don't see that the AUXENB is
-> written
-> somewhere, so I suppose that the FW should already has enabled the
-> aux-uart.
->
-> I any case if it's just to set one bit, I think we can do that in
-> early_bcm2835aux_setup().
->
-> [1]
-> https://gitlab.denx.de/u-boot/u-boot/blob/master/drivers/serial/serial_bc=
-m283x_mu.c
->
-> >=20
-> > I also saw in the JTAG debugger that the uartclk member contained
-> > an incorrect value, so I'd expect that it has to be set as well in
-> > early_bcm2835aux_setup().
->
-> In my case the clock was set by U-Boot already.
+On 2020-01-28 05:24, Yash Shah wrote:
+> Typcasting "irq_state" leads to the below static checker warning:
+> The fix is to declare "irq_state" as unsigned long instead of u32.
+> 
+> 	drivers/gpio/gpio-sifive.c:97 sifive_gpio_irq_enable()
+> 	warn: passing casted pointer '&chip->irq_state' to
+> 	'assign_bit()' 32 vs 64.
+> 
+> Fixes: 96868dce644d ("gpio/sifive: Add GPIO driver for SiFive SoCs")
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  drivers/gpio/gpio-sifive.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+> index 147a1bd..c54dd08 100644
+> --- a/drivers/gpio/gpio-sifive.c
+> +++ b/drivers/gpio/gpio-sifive.c
+> @@ -35,7 +35,7 @@ struct sifive_gpio {
+>  	void __iomem		*base;
+>  	struct gpio_chip	gc;
+>  	struct regmap		*regs;
+> -	u32			irq_state;
+> +	unsigned long		irq_state;
+>  	unsigned int		trigger[SIFIVE_GPIO_MAX];
+>  	unsigned int		irq_parent[SIFIVE_GPIO_MAX];
+>  };
+> @@ -94,7 +94,7 @@ static void sifive_gpio_irq_enable(struct irq_data 
+> *d)
+>  	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+> 
+>  	/* Enable interrupts */
+> -	assign_bit(offset, (unsigned long *)&chip->irq_state, 1);
+> +	assign_bit(offset, &chip->irq_state, 1);
+>  	sifive_gpio_set_ie(chip, offset);
+>  }
+> 
+> @@ -104,7 +104,7 @@ static void sifive_gpio_irq_disable(struct irq_data 
+> *d)
+>  	struct sifive_gpio *chip = gpiochip_get_data(gc);
+>  	int offset = irqd_to_hwirq(d) % SIFIVE_GPIO_MAX;
+> 
+> -	assign_bit(offset, (unsigned long *)&chip->irq_state, 0);
+> +	assign_bit(offset, &chip->irq_state, 0);
+>  	sifive_gpio_set_ie(chip, offset);
+>  	irq_chip_disable_parent(d);
+>  }
 
-I'm testing this by booting directly from RPi4's bootloader. And it
-works as long as I add this to config.txt:
+Yup, nice one. Should have spotted it.
 
-enable_uart=3D1
-gpu_freq=3D500
+Reviewed-by: Marc Zyngier <maz@kernel.org>
 
-Which AFAIK blocks frequency scalin on the GPU and fixes the clock to a
-point where the serial is set at 115200 bauds.
+Linus, do you want me to queue this via the irqchip tree (given that
+it is where the original bug came from)? Or would you rather take it?
 
-Ideally it'd be nice to be able to query the clock frequency, and
-recalculate the divisors based on that. But I don't know if it's
-feasible at that point in the boot process.
-
-We could maybe leave a comment explaining what is expected from the
-bootloader, given the different options around.
-
-Regards,
-Nicolas
+         M.
+-- 
+Jazz is not dead. It just smells funny...
