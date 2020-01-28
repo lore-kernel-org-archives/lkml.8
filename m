@@ -2,93 +2,121 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DAEC32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365E0C33CB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A8724656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051832467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XOxGeOfM"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nMH4Aix/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgA1Aim (ORCPT
+        id S1726743AbgA1Aiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 19:38:42 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35683 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgA1Aim (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 19:38:42 -0500
-Received: by mail-wr1-f67.google.com with SMTP id g17so13974934wro.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:38:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=BvCx+GGin1m9Xq7Oj/YFcqGJi/zTNFOV1E+5/BsLcV8=;
-        b=XOxGeOfM/jYivd+YFd6WlQpnRSlifN0chcYNtl+1Bahviwc0N1ArYy88KYynhnfnwJ
-         5aMBZc4JAS8zpfGP6u5kMpRH1/5lzgm97NR4WpbPqYG33F5Cw/IdHK+NbMFV2GpbzoBo
-         NSBaunbWoIgLs0c7UpC5TlGwNO9fss5eSR2TM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BvCx+GGin1m9Xq7Oj/YFcqGJi/zTNFOV1E+5/BsLcV8=;
-        b=IO3Iqz203D56zqGx2V+UUrTR33owodWNBblFsl8fAhhOV0OMjkeqStssLIIDcmm1ke
-         edoZAhPyTShZEmrCjpErEyw8M2fEJfKgAzaiZuv9ik6BI6JEsfDKinnT3qv9eiYLQ2WX
-         5DDq/qT2PxuGBrhuuVQUqR3J3Rsm/g0oki8mu0pmEsQ1D8JXsvpdqJ3iLOHa3dr4Pd7z
-         2E2WvkwwCxsliPGHfA/pJ0yS5DjdXOk50wTWk1QLpJU3tbXwWNmWJrmXy/HHXKF4TWlV
-         c1isz4IVUNftTiuqrKy2bsUIXI9vWyZlP0EsO+Kc+mW3L60hQ302iEcpY3DDBdCU0TSr
-         W9dw==
-X-Gm-Message-State: APjAAAUnDR4PoO0+SOw8IEghL78/CWiGSokrxc8pXkBROYKEAstilwy2
-        37sZas70ejLRitPfnd/Hb2uslA==
-X-Google-Smtp-Source: APXvYqz+T7/gzM41/abtTH9r6AoYnsKVJxrhCNkNFgKDrdKjW5d53iyNfSywkRM1kFINyWTmImx3Qw==
-X-Received: by 2002:adf:f10a:: with SMTP id r10mr24938413wro.202.1580171920707;
-        Mon, 27 Jan 2020 16:38:40 -0800 (PST)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id l7sm22659156wrq.61.2020.01.27.16.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 16:38:40 -0800 (PST)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH 1/1] net: phy: add default ARCH_BCM_IPROC for MDIO_BCM_IPROC
-Date:   Mon, 27 Jan 2020 16:38:28 -0800
-Message-Id: <20200128003828.20439-1-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 27 Jan 2020 19:38:54 -0500
+Received: from ozlabs.org ([203.11.71.1]:45491 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbgA1Aiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 19:38:54 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48675l5F8Kz9sPn;
+        Tue, 28 Jan 2020 11:38:51 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580171931;
+        bh=ZFt22swylBexWXxCjDtzrVb/gug9eg5TVHthriwijXo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nMH4Aix/KxRe2sNjxNdFXqhHR74+65e3ajN0W7sfcyZwNBlOES+n8fTqaMw3Wjk9X
+         8fzTyUMnuh3LCkofgKnhsMMSqQkrJ9iQRzPNqcEPn/WRufEWzPF5YGWM0BFePM5Ssh
+         MMc1ZBV24Ei3XzxMtarAKGHnYxTuUCrI8nYbF6dHoDIQGJZyIclM6/EyAvq9FF9PrK
+         azZ2rJ70YUCmnC7meN9wMFJ1iWhycsbMdO/VM6dR+zaLheGjyHbevzoUeid9PUjee2
+         uF9sc4qtyw2AIRKzhTBjtADDST0otF6u9w+LcI9/aW1XLf9Qebn/Y7rbLtX+YcZZaL
+         cS9j4pY1Vbg3g==
+Date:   Tue, 28 Jan 2020 11:38:51 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Subject: linux-next: manual merge of the block tree with Linus' tree
+Message-ID: <20200128113851.50161614@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/RfCmZvQZ3be/nInvFS6ReTJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add default MDIO_BCM_IPROC Kconfig setting such that it is default
-on for IPROC family of devices.
+--Sig_/RfCmZvQZ3be/nInvFS6ReTJ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- drivers/net/phy/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Hi all,
 
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 8dc461f7574b..b6315a01f36e 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -38,6 +38,7 @@ config MDIO_BCM_IPROC
- 	tristate "Broadcom iProc MDIO bus controller"
- 	depends on ARCH_BCM_IPROC || COMPILE_TEST
- 	depends on HAS_IOMEM && OF_MDIO
-+	default ARCH_BCM_IPROC
- 	help
- 	  This module provides a driver for the MDIO busses found in the
- 	  Broadcom iProc SoC's.
--- 
-2.17.1
+Today's linux-next merge of the block tree got a conflict in:
 
+  fs/io_uring.c
+
+between commit:
+
+  73e08e711d9c ("Revert "io_uring: only allow submit from owning task"")
+
+from Linus' tree and commit:
+
+  9ef4f124894b ("io_uring: clamp to_submit in io_submit_sqes()")
+
+from the block tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/io_uring.c
+index e54556b0fcc6,82fd87e3a6ca..000000000000
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@@ -5157,7 -6384,12 +6380,6 @@@ SYSCALL_DEFINE6(io_uring_enter, unsigne
+  	} else if (to_submit) {
+  		struct mm_struct *cur_mm;
+ =20
+- 		to_submit =3D min(to_submit, ctx->sq_entries);
+ -		if (current->mm !=3D ctx->sqo_mm ||
+ -		    current_cred() !=3D ctx->creds) {
+ -			ret =3D -EPERM;
+ -			goto out;
+ -		}
+ -
+  		mutex_lock(&ctx->uring_lock);
+  		/* already have mm, so io_submit_sqes() won't try to grab it */
+  		cur_mm =3D ctx->sqo_mm;
+
+--Sig_/RfCmZvQZ3be/nInvFS6ReTJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4vgpsACgkQAVBC80lX
+0Gwwtgf/YSTxRUUrIXexcc2DSII7iOPm5vAyA4dNTt6ggG9jWL8wmcYzvXcl+EkT
+xmGgk5L9jWuCn35CDARJReaYjIxidpgqYZp2ZYaH6FIzULWDAVicyuz2V3f/v5m2
+asjKS1bF8hvGPhXyXWYGhZHW1kNtOoImUdQRRtGWwl5EfZFrRw5C7mg+BN7uRULh
+wjxE0SLv7pYAXmEcMty/eAJ0Kc2pOuv3Uy812FeX9+N0q0iG9GM3DvBhBQu49+u+
+TV7r5dM2x+zcIT+wo5lCtebENkvRWrS0OxQra1QEghknIXbPCc1cOTuP3+07pqea
+0rg4OyxiWbqWebU8dnaWFoHWsuqrIw==
+=kpaS
+-----END PGP SIGNATURE-----
+
+--Sig_/RfCmZvQZ3be/nInvFS6ReTJ--
