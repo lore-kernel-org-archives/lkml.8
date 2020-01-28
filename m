@@ -1,198 +1,149 @@
 Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7402C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AE9C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B417E22522
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAC922522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EglEFcMY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mc3mUiwp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgA1F6y (ORCPT
+        id S1725852AbgA1GDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 00:58:54 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:45300 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgA1F6x (ORCPT
+        Tue, 28 Jan 2020 01:03:05 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44782 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgA1GDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 00:58:53 -0500
-Received: by mail-qv1-f65.google.com with SMTP id l14so5707945qvu.12;
-        Mon, 27 Jan 2020 21:58:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=c0h7rYcoZ0lnrGD/XxyJMfaoFLjp1NniklKakWoray4=;
-        b=EglEFcMYyd98Eida6AY+NMphbBS8kJsP0X0ApI59nOpqCn3Nl1Szl1bHShgwoferSf
-         1hZVx3Q5C0Q8xxWepxz1a4Ur3vT2JFINgCQ3nQ1oKHHE5tU/OE6EjD35QSPDEZlG/AZL
-         rD9qRyuv6VbbVu8EbRHGDQIV4Liim7MuRZU2tIUqbbdRModzVoa1JJDtra+JLMB2sB+5
-         HcOtgV2k0cRotMveWVwFwff8QtCBqjdDLfGs4BEQSU+iDmPNgoS2D7MI+BN6wpt7cmsM
-         7GNehJKcMqlwv4JIx123sDwt+fpYXTzFR9XNgP9s1g17k0NS+OhUSc50Fhgnw0d/mV2O
-         Jnmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=c0h7rYcoZ0lnrGD/XxyJMfaoFLjp1NniklKakWoray4=;
-        b=R/uhCHbuzkTL/7gMLF9N+yfDScya1y4BSJR9bxNbXKBdJVqI99ptDKQ6RXCuLU8Thx
-         Yn2xd58aBywm2nV1PN6rM5xOyo8c3mzlVzBUZnllufo4AYcymqLMvsWdhLBQpArqtXzN
-         7Tf7l54KtUcqk89qmoydf+mXf6OXPlTemR1rEV2+h0WIF6CwbpQFZ56UmtkPN2z0g7I1
-         NDQzBMhLZNYH3zwriUJ9EOFS1ibyXWSJn7Hfz33oJLuGx+FQHnTIUNh4BksEf150O5xT
-         EK+Q5VzndSuZRKFYg9CFkGBfyhaQtao4nkEOEW1hzRmAz7ll5NzynmsIsMfb5sDEcXUV
-         EVuQ==
-X-Gm-Message-State: APjAAAU0IEEBe5r/Z0p6JnJspaSVgK09SDwNa/v+2uidyyTNmpJMAmaF
-        8f8SLTNg9x82H8ApTh+QKY0=
-X-Google-Smtp-Source: APXvYqwzXesaPphmgkW9JDTlcbBg1qU7k/gLMQ7NBODzOVvGB7rzmf2XegdXu1cqnPdt8fItzyH+fA==
-X-Received: by 2002:a0c:8149:: with SMTP id 67mr20879339qvc.146.1580191131891;
-        Mon, 27 Jan 2020 21:58:51 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id q5sm11696534qkf.14.2020.01.27.21.58.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Jan 2020 21:58:51 -0800 (PST)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 2FF2B21F57;
-        Tue, 28 Jan 2020 00:58:49 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 28 Jan 2020 00:58:49 -0500
-X-ME-Sender: <xms:mM0vXhy1k0rqP3N2FaLwbZiAhUCyVZJmfcSWQVC-2TBHbkndq8QpYg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfeefgdeklecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomhgrih
-    hnpehkvghrnhgvlhdrohhrghenucfkphephedvrdduheehrdduuddurdejudenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvg
-    hsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheeh
-    hedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:mM0vXuMC-EZ8Dl0ZwftIanMJYfeundzl_Luiphfhne_U03f08rRpLw>
-    <xmx:mM0vXm9KXgJkqG7MmJvv0fAat9DncJoq77zQVi1J__F3fQ7hRbkPFw>
-    <xmx:mM0vXr75l8HEboSTz3ODhnZ7QNzbh0ZE-hr2kAuh1FRjJZxqJ3gF9g>
-    <xmx:mc0vXvc-5hiSbBlHUaXhTqglAifLLqbpCg6U9MDHPnWC4uq-yNKvoHqb1FY>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F2345306B27D;
-        Tue, 28 Jan 2020 00:58:47 -0500 (EST)
-Date:   Tue, 28 Jan 2020 13:58:46 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [RFC 0/6] vDSO support for Hyper-V guest on ARM64
-Message-ID: <20200128055846.GA83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20191216001922.23008-1-boqun.feng@gmail.com>
- <ef6cb7ba-b448-cfa5-abbb-1d99d1396ce5@arm.com>
- <20200124063215.GA93938@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <4cdf2188-8909-4b90-ca78-92cef520b23d@arm.com>
+        Tue, 28 Jan 2020 01:03:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=eiy4vZNsRLqD8F6sU+rjqr6HzK/2uGJED4ZdYTS3tUA=; b=Mc3mUiwpVUEDqWqbXFCUqIFFn
+        b2R2iWmVJSGoAbUQoPSdPEMSpYuDn0yzivIRExpce5dUHQT8Zex4H2ThoWQks4/2CLvjGr3DeAIxf
+        Suy8WqkEFjlIHA/jfLdcFY7jM5xcu4rzE2ycSfXo8a+w4dqRUMUaS8Dp/lqlfZ5has09IqpWhVpWo
+        o0V8OpDddhp86HH6bumobgCFEAnDwTyQVIA0cIVdefEHh52gYR2n+EU27jNohPuZVvxakjh3o2LEM
+        pIhu6oh6klPbfr2Cy1EFNkp3E1HIo+zTvnCGAihNOFQlWdrJbglsjGEcLgycUnw/4SguzKcgG0235
+        QHqasIYpg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwJxo-00072H-8O; Tue, 28 Jan 2020 06:03:04 +0000
+Date:   Mon, 27 Jan 2020 22:03:04 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Yang Shi <shy828301@gmail.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
+Message-ID: <20200128060304.GA6615@bombadil.infradead.org>
+References: <20200109225646.22983-1-xiyou.wangcong@gmail.com>
+ <20200110073822.GC29802@dhcp22.suse.cz>
+ <CAM_iQpVN4MNhcK0TXvhmxsCdkVOqQ4gZBzkDHykLocPC6Va7LQ@mail.gmail.com>
+ <20200121090048.GG29276@dhcp22.suse.cz>
+ <CAM_iQpU0p7JLyQ4mQ==Kd7+0ugmricsEAp1ST2ShAZar2BLAWg@mail.gmail.com>
+ <20200126233935.GA11536@bombadil.infradead.org>
+ <20200127150024.GN1183@dhcp22.suse.cz>
+ <20200127190653.GA8708@bombadil.infradead.org>
+ <CAHbLzkoiYKEEzek9=84jTB8QVgE=uNjvi+gHR2CwVo0yK0KpBQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4cdf2188-8909-4b90-ca78-92cef520b23d@arm.com>
+In-Reply-To: <CAHbLzkoiYKEEzek9=84jTB8QVgE=uNjvi+gHR2CwVo0yK0KpBQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 10:24:44AM +0000, Vincenzo Frascino wrote:
-> Hi Boqun Feng,
-> 
-> On 24/01/2020 06:32, Boqun Feng wrote:
-> > Hi Vincenzo,
-> > 
-> 
-> [...]
-> 
-> >>
-> >> I had a look to your patches and overall, I could not understand why we can't
-> >> use the arch_timer to do the same things you are doing with the one you
-> >> introduced in this series. What confuses me is that KVM works just fine with the
-> >> arch_timer which was designed with virtualization in mind. Why do we need
-> >> another one? Could you please explain?
-> >>
-> > 
-> > Please note that the guest VM on Hyper-V for ARM64 doesn't use
-> > arch_timer as the clocksource. See:
-> > 
-> > 	https://lore.kernel.org/linux-arm-kernel/1570129355-16005-7-git-send-email-mikelley@microsoft.com/
-> > 
-> > ,  ACPI_SIG_GTDT is used for setting up Hyper-V synthetic clocksource
-> > and other initialization work.
+On Mon, Jan 27, 2020 at 05:25:13PM -0800, Yang Shi wrote:
+> On Mon, Jan 27, 2020 at 11:06 AM Matthew Wilcox <willy@infradead.org> wrote:
 > >
+> > On Mon, Jan 27, 2020 at 04:00:24PM +0100, Michal Hocko wrote:
+> > > On Sun 26-01-20 15:39:35, Matthew Wilcox wrote:
+> > > > On Sun, Jan 26, 2020 at 11:53:55AM -0800, Cong Wang wrote:
+> > > > > I suspect the process gets stuck in the retry loop in try_charge(), as
+> > > > > the _shortest_ stacktrace of the perf samples indicated:
+> > > > >
+> > > > > cycles:ppp:
+> > > > >         ffffffffa72963db mem_cgroup_iter
+> > > > >         ffffffffa72980ca mem_cgroup_oom_unlock
+> > > > >         ffffffffa7298c15 try_charge
+> > > > >         ffffffffa729a886 mem_cgroup_try_charge
+> > > > >         ffffffffa720ec03 __add_to_page_cache_locked
+> > > > >         ffffffffa720ee3a add_to_page_cache_lru
+> > > > >         ffffffffa7312ddb iomap_readpages_actor
+> > > > >         ffffffffa73133f7 iomap_apply
+> > > > >         ffffffffa73135da iomap_readpages
+> > > > >         ffffffffa722062e read_pages
+> > > > >         ffffffffa7220b3f __do_page_cache_readahead
+> > > > >         ffffffffa7210554 filemap_fault
+> > > > >         ffffffffc039e41f __xfs_filemap_fault
+> > > > >         ffffffffa724f5e7 __do_fault
+> > > > >         ffffffffa724c5f2 __handle_mm_fault
+> > > > >         ffffffffa724cbc6 handle_mm_fault
+> > > > >         ffffffffa70a313e __do_page_fault
+> > > > >         ffffffffa7a00dfe page_fault
+> > > > >
+> > > > > But I don't see how it could be, the only possible case is when
+> > > > > mem_cgroup_oom() returns OOM_SUCCESS. However I can't
+> > > > > find any clue in dmesg pointing to OOM. These processes in the
+> > > > > same memcg are either running or sleeping (that is not exiting or
+> > > > > coredump'ing), I don't see how and why they could be selected as
+> > > > > a victim of OOM killer. I don't see any signal pending either from
+> > > > > their /proc/X/status.
+> > > >
+> > > > I think this is a situation where we might end up with a genuine deadlock
+> > > > if we're not trylocking the pages.  readahead allocates a batch of
+> > > > locked pages and adds them to the pagecache.  If it has allocated,
+> > > > say, 5 pages, successfully inserted the first three into i_pages, then
+> > > > needs to allocate memory to insert the fourth one into i_pages, and
+> > > > the process then attempts to migrate the pages which are still locked,
+> > > > they will never come unlocked because they haven't yet been submitted
+> > > > to the filesystem for reading.
+> > >
+> > > Just to make sure I understand. Do you mean this?
+> > > lock_page(A)
+> > > alloc_pages
+> > >   try_to_compact_pages
+> > >     compact_zone_order
+> > >       compact_zone(MIGRATE_SYNC_LIGHT)
+> > >         migrate_pages
+> > >         unmap_and_move
+> > >           __unmap_and_move
+> > >             lock_page(A)
+> >
+> > Yes.  There's a little more to it than that, eg slab is involved, but
+> > you have it in a nutshell.
 > 
-> I had a look a look at it and my question stands, why do we need another timer
-> on arm64?
+> But, how compact could get blocked for readahead page if it is not on LRU?
 > 
+> The page is charged before adding to LRU, so if kernel just retry
+> charge or reclaim forever, the page should be not on LRU, so it should
+> not block compaction.
 
-Sorry for the late response. It's weekend and Chinese New Year, so I got
-to spend some time making (and mostly eating) dumplings ;-)
+The five pages are allocated ABCDE, then they are added one at a time to
+both the LRU list and i_pages.  Once ABCDE have been added to the page
+cache, they are submitted to the filesystem in a batch.  The sceanrio
+here is that once ABC have been added, we need to allocate memory to
+add D.  The page migration code then attempts to migrate A.  Deadlock;
+it will never come unlocked.
 
-After discussion with Michael, here is some explanation why we need
-another timer:
+This kind of problem can occur in any filesystem in either readpages or
+readpage.  Once the page is locked and on the LRU list, if the filesystem
+attempts to allocate memory (and many do), this kind of deadlock can
+occur.  It's avoided if the filesystem uses a mempool to avoid memory
+allocation in this path, but they certainly don't all do that.
 
-The synthetic clocks that Hyper-V presents in a guest VM were originally
-created for the x86 architecture. They provide a level of abstraction
-that solves problems like continuity across live migrations where the
-hardware clock (i.e., TSC in the case x86) frequency may be different
-across the migration. When Hyper-V was brought to ARM64, this
-abstraction was maintained to provide consistency across the x86 and
-ARM64 architectures, and for both Windows and Linux guest VMs.   The
-core Linux code for the Hyper-V clocks (in
-drivers/clocksource/hyperv_timer.c) is architecture neutral and works on
-both x86 and ARM64. As you can see, this part is done in Michael's
-patchset.
-
-Arguably, Hyper-V for ARM64 should have optimized for consistency with
-the ARM64 community rather with the existing x86 implementation and
-existing guest code in Windows. But at this point, it is what it is,
-and the Hyper-V clocks do solve problems like migration that aren’t
-addressed in ARM64 until v8.4 of the architecture with the addition of
-the counter hardware scaling feature. Hyper-V doesn’t currently map the
-ARM arch timer interrupts into guest VMs, so we need to use the existing
-Hyper-V clocks and the common code that already exists.
-
-
-Does the above answer your question?
-
-Regards,
-Boqun
-
-> > So just to be clear, your suggestion is
-> > 
-> > 1) Hyper-V guest on ARM64 should use arch_timer as clocksource and vDSO
-> > will just work.
-> > 
-> > or
-> > 
-> > 2) Even though arch_timer is not used as the clocksource, we can still
-> > use it for vDSO.
-> > 
-> > ?
-> > 
-> 
-> Option #1 would be the preferred solution, unless there is a good reason against.
-> 
-> > Regards,
-> > Boqun
-> > 
-> 
-> -- 
-> Regards,
-> Vincenzo
-
-
+This specific deadlock can be avoided if we skip !PageUptodate pages.
+But I don't know what other situations there are where we allocate memory
+while holding a page locked that is on the LRU list.
