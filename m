@@ -2,545 +2,209 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71531C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AC1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C07F24686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C982122522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgA1NZR (ORCPT
+        id S1726299AbgA1NZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:25:17 -0500
-Received: from mga01.intel.com ([192.55.52.88]:59171 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbgA1NZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:25:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 05:25:12 -0800
-X-IronPort-AV: E=Sophos;i="5.70,374,1574150400"; 
-   d="scan'208";a="222105816"
-Received: from lodierna-mobl.ger.corp.intel.com (HELO [10.252.22.225]) ([10.252.22.225])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 28 Jan 2020 05:25:09 -0800
-Subject: Re: [Intel-gfx] [PATCH 1/2] drm/i915/gem: initial conversion to new
- logging macros using coccinelle
-To:     Wambui Karuga <wambui.karugax@gmail.com>,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20200122125750.9737-1-wambui.karugax@gmail.com>
- <20200122125750.9737-2-wambui.karugax@gmail.com>
-From:   Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Organization: Intel Corporation UK Plc
-Message-ID: <b97de5b8-b87f-3b2d-e8bc-942fc21b266e@linux.intel.com>
-Date:   Tue, 28 Jan 2020 13:25:07 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 28 Jan 2020 08:25:58 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:38037 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgA1NZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:25:57 -0500
+Received: from localhost.localdomain ([78.238.229.36]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MqJVd-1jJLER3DyF-00nTKY; Tue, 28 Jan 2020 14:25:45 +0100
+From:   Laurent Vivier <laurent@vivier.eu>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, YunQiang Su <ysu@wavecomp.com>,
+        YunQiang Su <syq@debian.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Laurent Vivier <laurent@vivier.eu>
+Subject: [PATCH v3] binfmt_misc: pass binfmt_misc flags to the interpreter
+Date:   Tue, 28 Jan 2020 14:25:39 +0100
+Message-Id: <20200128132539.782286-1-laurent@vivier.eu>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200122125750.9737-2-wambui.karugax@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:eWXb7aaroK86zzrWjK2j9vwjKnkAFyaw1v87qa/5v3cEHbTXQyv
+ +AojOiDa01l1slt9K7UtAdtfMB9l1rh1L9Dok9mJzXiPR67AACyxN3kf7RUMT/5gYHzm2wD
+ CMHdvPFD7j6o55bic4wFldgXjYLBN1TudIuHTfj5gwS9k1vBCNmb44arH0kdq59ELPQeYRs
+ HtSQ8o3mWAOQEZiqd+/WQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fqqHEZHmUuE=:DY0duXsJ3ymN7AM5TpJXL0
+ YtOpUUYESk/zIJVBwYkwgsHhiLm0GLWoq/UTxv58JBYfFrdPNHMq/N2vBAeV0pol8W+SYArqi
+ k742DwDiom8wq3wDCkHpoMHaaKzs77w9XU2EL6KeUu4pz1EtqgIbHFjpOF2AJ0qsRhaVahVbJ
+ 8i9vweNL7oql+4u/H/q8SKMfaDNKtMpD/9BPwWJqOznXo5QsUxe02Xa0BsJzdtxElw3tLd3dx
+ S8LAb38sVJtLfosPkD5YDDF2R6ahUYYdsYZqKK3+RU5Ee1pMsrKEvCyoQmkSgpboAs2/s4hvW
+ TI/7lAhLMdUK3lA58USZSr3S4faUowuShrfw6EEVMdBSnCElt7LUybrSw1TOb1uLyOREZEQxX
+ txwZ4cN8JayjMlSCFWD8cs9fHX1WVWS3Pfk369JpiXUqjUdse5QfUld1wSQb8BDVLh9lnOvpY
+ 5KW7s/KYNFpnIz4feqkt1OiiFqyysjKP6MExbKyV9ZAJCbF2X9gpw3VSlm8FLSh34xInsNCE4
+ L+EYTHSs/cy4a7oH7qW0kSsSHQQ6H1s5NTN0u55BkXFSACLGcDSxzX9R9S+7C8tZeI6g95A/3
+ bEvkfVBq5HoPUIVtGmKtHb07Z//H7QEEt5+DayNtjw34VX6pHesAi+zNcM9YLGGZrqUcPclwI
+ d9/AVdrFha5lpAgFaeG3xiietcpOAQf7NjrIBQpStWQsaKixM1DlvqH8y5eDOzZN2MIr58XvY
+ jt6nzrFYcsfWpKQye23wjcRsP5ywzdprUj6x0rwXF50J8NE7D1LggSDzphe9VVp0XfcaY1vpd
+ Hk6XtN5ymb75ZN9xH5wrBFRwVTYYNUD2CVwrks4fngzMQTMq41j6l4dcuxsT/A8dsvGl82o
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It can be useful to the interpreter to know which flags are in use.
 
-On 22/01/2020 12:57, Wambui Karuga wrote:
-> First pass of conversion to the new struct drm_based device logging
-> macros in the drm/i915/gem directory. This conversion was achieved using
-> the following coccinelle script that transforms based on the existence
-> of a straightforward struct drm_i915_private device:
-> 
-> @rule1@
-> identifier fn, T;
-> @@
-> 
-> fn(struct drm_i915_private *T,...) {
-> <+...
-> (
-> -DRM_INFO(
-> +drm_info(&T->drm,
-> ...)
-> |
-> -DRM_ERROR(
-> +drm_err(&T->drm,
-> ...)
-> |
-> -DRM_WARN(
-> +drm_warn(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG(
-> +drm_dbg(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG_DRIVER(
-> +drm_dbg(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG_KMS(
-> +drm_dbg_kms(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG_ATOMIC(
-> +drm_dbg_atomic(&T->drm,
-> ...)
-> )
-> ...+>
-> }
-> 
-> @rule2@
-> identifier fn, T;
-> @@
-> 
-> fn(...) {
-> ...
-> struct drm_i915_private *T = ...;
-> <+...
-> (
-> -DRM_INFO(
-> +drm_info(&T->drm,
-> ...)
-> |
-> -DRM_ERROR(
-> +drm_err(&T->drm,
-> ...)
-> |
-> -DRM_WARN(
-> +drm_warn(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG(
-> +drm_dbg(&T->drm,
+For instance, knowing if the preserve-argv[0] is in use would
+allow to skip the pathname argument.
 
-This changes DRM_UT_CORE to DRM_UT_DRIVER so our typical drm.debug=0xe 
-becomes much more spammy.
+This patch uses an unused auxiliary vector, AT_FLAGS, to add a
+flag to inform interpreter if the preserve-argv[0] is enabled.
 
-Regards,
+Signed-off-by: Laurent Vivier <laurent@vivier.eu>
+---
 
-Tvrtko
+Notes:
+    This can be tested with QEMU from my branch:
+    
+      https://github.com/vivier/qemu/commits/binfmt-argv0
+    
+    With something like:
+    
+      # cp ..../qemu-ppc /chroot/powerpc/jessie
+    
+      # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
+                            --persistent no --preserve-argv0 yes
+      # systemctl restart systemd-binfmt.service
+      # cat /proc/sys/fs/binfmt_misc/qemu-ppc
+      enabled
+      interpreter //qemu-ppc
+      flags: POC
+      offset 0
+      magic 7f454c4601020100000000000000000000020014
+      mask ffffffffffffff00fffffffffffffffffffeffff
+      # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
+      sh
+    
+      # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
+                            --persistent no --preserve-argv0 no
+      # systemctl restart systemd-binfmt.service
+      # cat /proc/sys/fs/binfmt_misc/qemu-ppc
+      enabled
+      interpreter //qemu-ppc
+      flags: OC
+      offset 0
+      magic 7f454c4601020100000000000000000000020014
+      mask ffffffffffffff00fffffffffffffffffffeffff
+      # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
+      /bin/sh
+    
+    v3: mix my patch with one from YunQiang Su and my comments on it
+        introduce a new flag in the uabi for the AT_FLAGS
+    v2: only pass special flags (remove Magic and Enabled flags)
 
-> ...)
-> |
-> -DRM_DEBUG_KMS(
-> +drm_dbg_kms(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG_DRIVER(
-> +drm_dbg(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG_ATOMIC(
-> +drm_dbg_atomic(&T->drm,
-> ...)
-> )
-> ...+>
-> }
-> 
-> Checkpatch warnings were addressed manually.
-> 
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> ---
->   drivers/gpu/drm/i915/gem/i915_gem_context.c   | 27 +++++----
->   .../gpu/drm/i915/gem/i915_gem_execbuffer.c    | 37 +++++++-----
->   drivers/gpu/drm/i915/gem/i915_gem_stolen.c    | 56 +++++++++++--------
->   3 files changed, 70 insertions(+), 50 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_context.c b/drivers/gpu/drm/i915/gem/i915_gem_context.c
-> index a2e57e62af30..5432da2abda0 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_context.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_context.c
-> @@ -708,8 +708,8 @@ i915_gem_create_context(struct drm_i915_private *i915, unsigned int flags)
->   
->   		ppgtt = i915_ppgtt_create(&i915->gt);
->   		if (IS_ERR(ppgtt)) {
-> -			DRM_DEBUG_DRIVER("PPGTT setup failed (%ld)\n",
-> -					 PTR_ERR(ppgtt));
-> +			drm_dbg(&i915->drm, "PPGTT setup failed (%ld)\n",
-> +				PTR_ERR(ppgtt));
->   			context_close(ctx);
->   			return ERR_CAST(ppgtt);
->   		}
-> @@ -751,9 +751,9 @@ static void init_contexts(struct i915_gem_contexts *gc)
->   void i915_gem_init__contexts(struct drm_i915_private *i915)
->   {
->   	init_contexts(&i915->gem.contexts);
-> -	DRM_DEBUG_DRIVER("%s context support initialized\n",
-> -			 DRIVER_CAPS(i915)->has_logical_contexts ?
-> -			 "logical" : "fake");
-> +	drm_dbg(&i915->drm, "%s context support initialized\n",
-> +		DRIVER_CAPS(i915)->has_logical_contexts ?
-> +		"logical" : "fake");
->   }
->   
->   void i915_gem_driver_release__contexts(struct drm_i915_private *i915)
-> @@ -1624,6 +1624,7 @@ static int
->   set_engines(struct i915_gem_context *ctx,
->   	    const struct drm_i915_gem_context_param *args)
->   {
-> +	struct drm_i915_private *i915 = ctx->i915;
->   	struct i915_context_param_engines __user *user =
->   		u64_to_user_ptr(args->value);
->   	struct set_engines set = { .ctx = ctx };
-> @@ -1645,8 +1646,8 @@ set_engines(struct i915_gem_context *ctx,
->   	BUILD_BUG_ON(!IS_ALIGNED(sizeof(*user), sizeof(*user->engines)));
->   	if (args->size < sizeof(*user) ||
->   	    !IS_ALIGNED(args->size, sizeof(*user->engines))) {
-> -		DRM_DEBUG("Invalid size for engine array: %d\n",
-> -			  args->size);
-> +		drm_dbg(&i915->drm, "Invalid size for engine array: %d\n",
-> +			args->size);
->   		return -EINVAL;
->   	}
->   
-> @@ -1682,8 +1683,9 @@ set_engines(struct i915_gem_context *ctx,
->   						  ci.engine_class,
->   						  ci.engine_instance);
->   		if (!engine) {
-> -			DRM_DEBUG("Invalid engine[%d]: { class:%d, instance:%d }\n",
-> -				  n, ci.engine_class, ci.engine_instance);
-> +			drm_dbg(&i915->drm,
-> +				"Invalid engine[%d]: { class:%d, instance:%d }\n",
-> +				n, ci.engine_class, ci.engine_instance);
->   			__free_engines(set.engines, n);
->   			return -ENOENT;
->   		}
-> @@ -2197,8 +2199,9 @@ int i915_gem_context_create_ioctl(struct drm_device *dev, void *data,
->   
->   	ext_data.fpriv = file->driver_priv;
->   	if (client_is_banned(ext_data.fpriv)) {
-> -		DRM_DEBUG("client %s[%d] banned from creating ctx\n",
-> -			  current->comm, task_pid_nr(current));
-> +		drm_dbg(&i915->drm,
-> +			"client %s[%d] banned from creating ctx\n",
-> +			current->comm, task_pid_nr(current));
->   		return -EIO;
->   	}
->   
-> @@ -2220,7 +2223,7 @@ int i915_gem_context_create_ioctl(struct drm_device *dev, void *data,
->   		goto err_ctx;
->   
->   	args->ctx_id = id;
-> -	DRM_DEBUG("HW context %d created\n", args->ctx_id);
-> +	drm_dbg(&i915->drm, "HW context %d created\n", args->ctx_id);
->   
->   	return 0;
->   
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> index 60c984e10c4a..61c0a837f163 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> @@ -420,6 +420,7 @@ eb_validate_vma(struct i915_execbuffer *eb,
->   		struct drm_i915_gem_exec_object2 *entry,
->   		struct i915_vma *vma)
->   {
-> +	struct drm_i915_private *i915 = eb->i915;
->   	if (unlikely(entry->flags & eb->invalid_flags))
->   		return -EINVAL;
->   
-> @@ -443,8 +444,9 @@ eb_validate_vma(struct i915_execbuffer *eb,
->   	}
->   
->   	if (unlikely(vma->exec_flags)) {
-> -		DRM_DEBUG("Object [handle %d, index %d] appears more than once in object list\n",
-> -			  entry->handle, (int)(entry - eb->exec));
-> +		drm_dbg(&i915->drm,
-> +			"Object [handle %d, index %d] appears more than once in object list\n",
-> +			entry->handle, (int)(entry - eb->exec));
->   		return -EINVAL;
->   	}
->   
-> @@ -1330,6 +1332,7 @@ eb_relocate_entry(struct i915_execbuffer *eb,
->   		  struct i915_vma *vma,
->   		  const struct drm_i915_gem_relocation_entry *reloc)
->   {
-> +	struct drm_i915_private *i915 = eb->i915;
->   	struct i915_vma *target;
->   	int err;
->   
-> @@ -1340,7 +1343,7 @@ eb_relocate_entry(struct i915_execbuffer *eb,
->   
->   	/* Validate that the target is in a valid r/w GPU domain */
->   	if (unlikely(reloc->write_domain & (reloc->write_domain - 1))) {
-> -		DRM_DEBUG("reloc with multiple write domains: "
-> +		drm_dbg(&i915->drm, "reloc with multiple write domains: "
->   			  "target %d offset %d "
->   			  "read %08x write %08x",
->   			  reloc->target_handle,
-> @@ -1351,7 +1354,7 @@ eb_relocate_entry(struct i915_execbuffer *eb,
->   	}
->   	if (unlikely((reloc->write_domain | reloc->read_domains)
->   		     & ~I915_GEM_GPU_DOMAINS)) {
-> -		DRM_DEBUG("reloc with read/write non-GPU domains: "
-> +		drm_dbg(&i915->drm, "reloc with read/write non-GPU domains: "
->   			  "target %d offset %d "
->   			  "read %08x write %08x",
->   			  reloc->target_handle,
-> @@ -1391,7 +1394,7 @@ eb_relocate_entry(struct i915_execbuffer *eb,
->   	/* Check that the relocation address is valid... */
->   	if (unlikely(reloc->offset >
->   		     vma->size - (eb->reloc_cache.use_64bit_reloc ? 8 : 4))) {
-> -		DRM_DEBUG("Relocation beyond object bounds: "
-> +		drm_dbg(&i915->drm, "Relocation beyond object bounds: "
->   			  "target %d offset %d size %d.\n",
->   			  reloc->target_handle,
->   			  (int)reloc->offset,
-> @@ -1399,7 +1402,7 @@ eb_relocate_entry(struct i915_execbuffer *eb,
->   		return -EINVAL;
->   	}
->   	if (unlikely(reloc->offset & 3)) {
-> -		DRM_DEBUG("Relocation not 4-byte aligned: "
-> +		drm_dbg(&i915->drm, "Relocation not 4-byte aligned: "
->   			  "target %d offset %d.\n",
->   			  reloc->target_handle,
->   			  (int)reloc->offset);
-> @@ -2075,6 +2078,7 @@ static int eb_parse_pipeline(struct i915_execbuffer *eb,
->   
->   static int eb_parse(struct i915_execbuffer *eb)
->   {
-> +	struct drm_i915_private *i915 = eb->i915;
->   	struct intel_engine_pool_node *pool;
->   	struct i915_vma *shadow, *trampoline;
->   	unsigned int len;
-> @@ -2090,7 +2094,8 @@ static int eb_parse(struct i915_execbuffer *eb)
->   		 * post-scan tampering
->   		 */
->   		if (!eb->context->vm->has_read_only) {
-> -			DRM_DEBUG("Cannot prevent post-scan tampering without RO capable vm\n");
-> +			drm_dbg(&i915->drm,
-> +				"Cannot prevent post-scan tampering without RO capable vm\n");
->   			return -EINVAL;
->   		}
->   	} else {
-> @@ -2371,8 +2376,9 @@ eb_select_legacy_ring(struct i915_execbuffer *eb,
->   
->   	if (user_ring_id != I915_EXEC_BSD &&
->   	    (args->flags & I915_EXEC_BSD_MASK)) {
-> -		DRM_DEBUG("execbuf with non bsd ring but with invalid "
-> -			  "bsd dispatch flags: %d\n", (int)(args->flags));
-> +		drm_dbg(&i915->drm,
-> +			"execbuf with non bsd ring but with invalid "
-> +			"bsd dispatch flags: %d\n", (int)(args->flags));
->   		return -1;
->   	}
->   
-> @@ -2386,8 +2392,9 @@ eb_select_legacy_ring(struct i915_execbuffer *eb,
->   			bsd_idx >>= I915_EXEC_BSD_SHIFT;
->   			bsd_idx--;
->   		} else {
-> -			DRM_DEBUG("execbuf with unknown bsd ring: %u\n",
-> -				  bsd_idx);
-> +			drm_dbg(&i915->drm,
-> +				"execbuf with unknown bsd ring: %u\n",
-> +				bsd_idx);
->   			return -1;
->   		}
->   
-> @@ -2395,7 +2402,8 @@ eb_select_legacy_ring(struct i915_execbuffer *eb,
->   	}
->   
->   	if (user_ring_id >= ARRAY_SIZE(user_ring_map)) {
-> -		DRM_DEBUG("execbuf with unknown ring: %u\n", user_ring_id);
-> +		drm_dbg(&i915->drm, "execbuf with unknown ring: %u\n",
-> +			user_ring_id);
->   		return -1;
->   	}
->   
-> @@ -2669,13 +2677,14 @@ i915_gem_do_execbuffer(struct drm_device *dev,
->   	}
->   
->   	if (unlikely(*eb.batch->exec_flags & EXEC_OBJECT_WRITE)) {
-> -		DRM_DEBUG("Attempting to use self-modifying batch buffer\n");
-> +		drm_dbg(&i915->drm,
-> +			"Attempting to use self-modifying batch buffer\n");
->   		err = -EINVAL;
->   		goto err_vma;
->   	}
->   	if (eb.batch_start_offset > eb.batch->size ||
->   	    eb.batch_len > eb.batch->size - eb.batch_start_offset) {
-> -		DRM_DEBUG("Attempting to use out-of-bounds batch\n");
-> +		drm_dbg(&i915->drm, "Attempting to use out-of-bounds batch\n");
->   		err = -EINVAL;
->   		goto err_vma;
->   	}
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_stolen.c b/drivers/gpu/drm/i915/gem/i915_gem_stolen.c
-> index 451f3078d60d..52c92f4fcb56 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_stolen.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_stolen.c
-> @@ -110,8 +110,11 @@ static int i915_adjust_stolen(struct drm_i915_private *i915,
->   
->   		if (stolen[0].start != stolen[1].start ||
->   		    stolen[0].end != stolen[1].end) {
-> -			DRM_DEBUG_DRIVER("GTT within stolen memory at %pR\n", &ggtt_res);
-> -			DRM_DEBUG_DRIVER("Stolen memory adjusted to %pR\n", dsm);
-> +			drm_dbg(&i915->drm,
-> +				"GTT within stolen memory at %pR\n",
-> +				&ggtt_res);
-> +			drm_dbg(&i915->drm, "Stolen memory adjusted to %pR\n",
-> +				dsm);
->   		}
->   	}
->   
-> @@ -142,8 +145,9 @@ static int i915_adjust_stolen(struct drm_i915_private *i915,
->   		 * range. Apparently this works.
->   		 */
->   		if (!r && !IS_GEN(i915, 3)) {
-> -			DRM_ERROR("conflict detected with stolen region: %pR\n",
-> -				  dsm);
-> +			drm_err(&i915->drm,
-> +				"conflict detected with stolen region: %pR\n",
-> +				dsm);
->   
->   			return -EBUSY;
->   		}
-> @@ -171,8 +175,8 @@ static void g4x_get_stolen_reserved(struct drm_i915_private *i915,
->   					ELK_STOLEN_RESERVED);
->   	resource_size_t stolen_top = i915->dsm.end + 1;
->   
-> -	DRM_DEBUG_DRIVER("%s_STOLEN_RESERVED = %08x\n",
-> -			 IS_GM45(i915) ? "CTG" : "ELK", reg_val);
-> +	drm_dbg(&i915->drm, "%s_STOLEN_RESERVED = %08x\n",
-> +		IS_GM45(i915) ? "CTG" : "ELK", reg_val);
->   
->   	if ((reg_val & G4X_STOLEN_RESERVED_ENABLE) == 0)
->   		return;
-> @@ -200,7 +204,7 @@ static void gen6_get_stolen_reserved(struct drm_i915_private *i915,
->   {
->   	u32 reg_val = intel_uncore_read(uncore, GEN6_STOLEN_RESERVED);
->   
-> -	DRM_DEBUG_DRIVER("GEN6_STOLEN_RESERVED = %08x\n", reg_val);
-> +	drm_dbg(&i915->drm, "GEN6_STOLEN_RESERVED = %08x\n", reg_val);
->   
->   	if (!(reg_val & GEN6_STOLEN_RESERVED_ENABLE))
->   		return;
-> @@ -234,7 +238,7 @@ static void vlv_get_stolen_reserved(struct drm_i915_private *i915,
->   	u32 reg_val = intel_uncore_read(uncore, GEN6_STOLEN_RESERVED);
->   	resource_size_t stolen_top = i915->dsm.end + 1;
->   
-> -	DRM_DEBUG_DRIVER("GEN6_STOLEN_RESERVED = %08x\n", reg_val);
-> +	drm_dbg(&i915->drm, "GEN6_STOLEN_RESERVED = %08x\n", reg_val);
->   
->   	if (!(reg_val & GEN6_STOLEN_RESERVED_ENABLE))
->   		return;
-> @@ -262,7 +266,7 @@ static void gen7_get_stolen_reserved(struct drm_i915_private *i915,
->   {
->   	u32 reg_val = intel_uncore_read(uncore, GEN6_STOLEN_RESERVED);
->   
-> -	DRM_DEBUG_DRIVER("GEN6_STOLEN_RESERVED = %08x\n", reg_val);
-> +	drm_dbg(&i915->drm, "GEN6_STOLEN_RESERVED = %08x\n", reg_val);
->   
->   	if (!(reg_val & GEN6_STOLEN_RESERVED_ENABLE))
->   		return;
-> @@ -289,7 +293,7 @@ static void chv_get_stolen_reserved(struct drm_i915_private *i915,
->   {
->   	u32 reg_val = intel_uncore_read(uncore, GEN6_STOLEN_RESERVED);
->   
-> -	DRM_DEBUG_DRIVER("GEN6_STOLEN_RESERVED = %08x\n", reg_val);
-> +	drm_dbg(&i915->drm, "GEN6_STOLEN_RESERVED = %08x\n", reg_val);
->   
->   	if (!(reg_val & GEN6_STOLEN_RESERVED_ENABLE))
->   		return;
-> @@ -323,7 +327,7 @@ static void bdw_get_stolen_reserved(struct drm_i915_private *i915,
->   	u32 reg_val = intel_uncore_read(uncore, GEN6_STOLEN_RESERVED);
->   	resource_size_t stolen_top = i915->dsm.end + 1;
->   
-> -	DRM_DEBUG_DRIVER("GEN6_STOLEN_RESERVED = %08x\n", reg_val);
-> +	drm_dbg(&i915->drm, "GEN6_STOLEN_RESERVED = %08x\n", reg_val);
->   
->   	if (!(reg_val & GEN6_STOLEN_RESERVED_ENABLE))
->   		return;
-> @@ -342,7 +346,7 @@ static void icl_get_stolen_reserved(struct drm_i915_private *i915,
->   {
->   	u64 reg_val = intel_uncore_read64(uncore, GEN6_STOLEN_RESERVED);
->   
-> -	DRM_DEBUG_DRIVER("GEN6_STOLEN_RESERVED = 0x%016llx\n", reg_val);
-> +	drm_dbg(&i915->drm, "GEN6_STOLEN_RESERVED = 0x%016llx\n", reg_val);
->   
->   	*base = reg_val & GEN11_STOLEN_RESERVED_ADDR_MASK;
->   
-> @@ -453,8 +457,9 @@ static int i915_gem_init_stolen(struct drm_i915_private *i915)
->   	 * it likely means we failed to read the registers correctly.
->   	 */
->   	if (!reserved_base) {
-> -		DRM_ERROR("inconsistent reservation %pa + %pa; ignoring\n",
-> -			  &reserved_base, &reserved_size);
-> +		drm_err(&i915->drm,
-> +			"inconsistent reservation %pa + %pa; ignoring\n",
-> +			&reserved_base, &reserved_size);
->   		reserved_base = stolen_top;
->   		reserved_size = 0;
->   	}
-> @@ -463,8 +468,9 @@ static int i915_gem_init_stolen(struct drm_i915_private *i915)
->   		(struct resource)DEFINE_RES_MEM(reserved_base, reserved_size);
->   
->   	if (!resource_contains(&i915->dsm, &i915->dsm_reserved)) {
-> -		DRM_ERROR("Stolen reserved area %pR outside stolen memory %pR\n",
-> -			  &i915->dsm_reserved, &i915->dsm);
-> +		drm_err(&i915->drm,
-> +			"Stolen reserved area %pR outside stolen memory %pR\n",
-> +			&i915->dsm_reserved, &i915->dsm);
->   		return 0;
->   	}
->   
-> @@ -472,9 +478,10 @@ static int i915_gem_init_stolen(struct drm_i915_private *i915)
->   	 * memory, so just consider the start. */
->   	reserved_total = stolen_top - reserved_base;
->   
-> -	DRM_DEBUG_DRIVER("Memory reserved for graphics device: %lluK, usable: %lluK\n",
-> -			 (u64)resource_size(&i915->dsm) >> 10,
-> -			 ((u64)resource_size(&i915->dsm) - reserved_total) >> 10);
-> +	drm_dbg(&i915->drm,
-> +		"Memory reserved for graphics device: %lluK, usable: %lluK\n",
-> +		(u64)resource_size(&i915->dsm) >> 10,
-> +		((u64)resource_size(&i915->dsm) - reserved_total) >> 10);
->   
->   	i915->stolen_usable_size =
->   		resource_size(&i915->dsm) - reserved_total;
-> @@ -690,8 +697,9 @@ i915_gem_object_create_stolen_for_preallocated(struct drm_i915_private *i915,
->   	if (!drm_mm_initialized(&i915->mm.stolen))
->   		return ERR_PTR(-ENODEV);
->   
-> -	DRM_DEBUG_DRIVER("creating preallocated stolen object: stolen_offset=%pa, gtt_offset=%pa, size=%pa\n",
-> -			 &stolen_offset, &gtt_offset, &size);
-> +	drm_dbg(&i915->drm,
-> +		"creating preallocated stolen object: stolen_offset=%pa, gtt_offset=%pa, size=%pa\n",
-> +		&stolen_offset, &gtt_offset, &size);
->   
->   	/* KISS and expect everything to be page-aligned */
->   	if (WARN_ON(size == 0) ||
-> @@ -709,14 +717,14 @@ i915_gem_object_create_stolen_for_preallocated(struct drm_i915_private *i915,
->   	ret = drm_mm_reserve_node(&i915->mm.stolen, stolen);
->   	mutex_unlock(&i915->mm.stolen_lock);
->   	if (ret) {
-> -		DRM_DEBUG_DRIVER("failed to allocate stolen space\n");
-> +		drm_dbg(&i915->drm, "failed to allocate stolen space\n");
->   		kfree(stolen);
->   		return ERR_PTR(ret);
->   	}
->   
->   	obj = __i915_gem_object_create_stolen(mem, stolen);
->   	if (IS_ERR(obj)) {
-> -		DRM_DEBUG_DRIVER("failed to allocate stolen object\n");
-> +		drm_dbg(&i915->drm, "failed to allocate stolen object\n");
->   		i915_gem_stolen_remove_node(i915, stolen);
->   		kfree(stolen);
->   		return obj;
-> @@ -746,7 +754,7 @@ i915_gem_object_create_stolen_for_preallocated(struct drm_i915_private *i915,
->   				   size, gtt_offset, obj->cache_level,
->   				   0);
->   	if (ret) {
-> -		DRM_DEBUG_DRIVER("failed to allocate stolen GTT space\n");
-> +		drm_dbg(&i915->drm, "failed to allocate stolen GTT space\n");
->   		mutex_unlock(&ggtt->vm.mutex);
->   		goto err_pages;
->   	}
-> 
+ fs/binfmt_elf.c              | 5 ++++-
+ fs/binfmt_elf_fdpic.c        | 5 ++++-
+ fs/binfmt_misc.c             | 4 +++-
+ include/linux/binfmts.h      | 4 ++++
+ include/uapi/linux/binfmts.h | 4 ++++
+ 5 files changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index ecd8d2698515..ff918042ceed 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -176,6 +176,7 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
+ 	unsigned char k_rand_bytes[16];
+ 	int items;
+ 	elf_addr_t *elf_info;
++	elf_addr_t flags = 0;
+ 	int ei_index = 0;
+ 	const struct cred *cred = current_cred();
+ 	struct vm_area_struct *vma;
+@@ -250,7 +251,9 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
+ 	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
+ 	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
+ 	NEW_AUX_ENT(AT_BASE, interp_load_addr);
+-	NEW_AUX_ENT(AT_FLAGS, 0);
++	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
++		flags |= AT_FLAGS_PRESERVE_ARGV0;
++	NEW_AUX_ENT(AT_FLAGS, flags);
+ 	NEW_AUX_ENT(AT_ENTRY, exec->e_entry);
+ 	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
+ 	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
+diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+index 240f66663543..abb90d82aa58 100644
+--- a/fs/binfmt_elf_fdpic.c
++++ b/fs/binfmt_elf_fdpic.c
+@@ -507,6 +507,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
+ 	char __user *u_platform, *u_base_platform, *p;
+ 	int loop;
+ 	int nr;	/* reset for each csp adjustment */
++	unsigned long flags = 0;
+ 
+ #ifdef CONFIG_MMU
+ 	/* In some cases (e.g. Hyper-Threading), we want to avoid L1 evictions
+@@ -647,7 +648,9 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
+ 	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
+ 	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
+ 	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
+-	NEW_AUX_ENT(AT_FLAGS,	0);
++	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
++		flags |= AT_FLAGS_PRESERVE_ARGV0;
++	NEW_AUX_ENT(AT_FLAGS,	flags);
+ 	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
+ 	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
+ 	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
+diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
+index cdb45829354d..b9acdd26a654 100644
+--- a/fs/binfmt_misc.c
++++ b/fs/binfmt_misc.c
+@@ -154,7 +154,9 @@ static int load_misc_binary(struct linux_binprm *bprm)
+ 	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
+ 		goto ret;
+ 
+-	if (!(fmt->flags & MISC_FMT_PRESERVE_ARGV0)) {
++	if (fmt->flags & MISC_FMT_PRESERVE_ARGV0) {
++		bprm->interp_flags |= BINPRM_FLAGS_PRESERVE_ARGV0;
++	} else {
+ 		retval = remove_arg_zero(bprm);
+ 		if (retval)
+ 			goto ret;
+diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+index b40fc633f3be..265b80d5fd6f 100644
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@ -78,6 +78,10 @@ struct linux_binprm {
+ #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
+ #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
+ 
++/* if preserve the argv0 for the interpreter  */
++#define BINPRM_FLAGS_PRESERVE_ARGV0_BIT 3
++#define BINPRM_FLAGS_PRESERVE_ARGV0 (1 << BINPRM_FLAGS_PRESERVE_ARGV0_BIT)
++
+ /* Function parameter for binfmt->coredump */
+ struct coredump_params {
+ 	const kernel_siginfo_t *siginfo;
+diff --git a/include/uapi/linux/binfmts.h b/include/uapi/linux/binfmts.h
+index 689025d9c185..a70747416130 100644
+--- a/include/uapi/linux/binfmts.h
++++ b/include/uapi/linux/binfmts.h
+@@ -18,4 +18,8 @@ struct pt_regs;
+ /* sizeof(linux_binprm->buf) */
+ #define BINPRM_BUF_SIZE 256
+ 
++/* if preserve the argv0 for the interpreter  */
++#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
++#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
++
+ #endif /* _UAPI_LINUX_BINFMTS_H */
+-- 
+2.24.1
+
