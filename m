@@ -2,100 +2,73 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0D9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28B0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104F324686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8338B24684
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgA1JYP (ORCPT
+        id S1726143AbgA1JYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:24:15 -0500
-Received: from ivanoab7.miniserver.com ([37.128.132.42]:40302 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgA1JYO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:24:14 -0500
-Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1iwN6P-00081e-UC; Tue, 28 Jan 2020 09:24:10 +0000
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1iwN6N-00056c-9c; Tue, 28 Jan 2020 09:24:09 +0000
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Subject: [GIT PULL] uml updates for 5.6-rc1
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-        johannes@sipsolutions.net, linux-um@lists.infradead.org
-Message-ID: <aaf07936-6fd2-be40-15dc-f87e8e84091d@cambridgegreys.com>
-Date:   Tue, 28 Jan 2020 09:24:07 +0000
+        Tue, 28 Jan 2020 04:24:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:54156 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbgA1JYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 04:24:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD23231B;
+        Tue, 28 Jan 2020 01:24:29 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 91EA43F52E;
+        Tue, 28 Jan 2020 01:24:28 -0800 (PST)
+Subject: Re: [PATCH v3 0/3] sched/fair: Capacity aware wakeup rework
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
+        morten.rasmussen@arm.com, qperret@google.com,
+        adharmap@codeaurora.org
+References: <20200126200934.18712-1-valentin.schneider@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <35c18eee-7e92-8a7d-c59d-11dfd2b053ff@arm.com>
+Date:   Tue, 28 Jan 2020 10:24:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200126200934.18712-1-valentin.schneider@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On 26/01/2020 21:09, Valentin Schneider wrote:
 
-I am sending this on behalf of Richard who is traveling.
+[...]
 
-Please pull the following uml updates for v5.6-rc1:
+> v2 -> v3
+> --------
+> o Added missing sync_entity_load_avg() (Quentin)
+> o Added fallback CPU selection (maximize capacity)
+> o Added special case for CPU hogs: task_fits_capacity() will always return 'false'
+>   for tasks that are simply too big, due to the margin.
 
-The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
+v3 fixes the Geekbench multicore regression I saw on Pixel4 (Android 10,
+Android Common Kernel v4.14 based, Snapdragon 855) running v1.
 
-   Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
+I changed the Pixel4 kernel a bit (PELT instead WALT, mainline
+select_idle_sibling() instead the csctate aware one), mainline
+task_fits_capacity()) for base, v1 & v3.
 
-are available in the Git repository at:
+Since it's not mainline kernel the results have to be taken with a pinch
+of salt but they probably show that the new condition:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git tags/for-linus-5.6-rc1
+if (rq->cpu_capacity_orig == READ_ONCE(rq->rd->max_cpu_capacity) && ...
+    return cpu;
 
-for you to fetch changes up to d65197ad52494bed3b5e64708281b8295f76c391:
-
-   um: Fix time-travel=inf-cpu with xor/raid6 (2020-01-19 22:42:06 +0100)
-
-----------------------------------------------------------------
-This pull request contains the following changes for UML:
-
-- Fix for time travel mode
-- Disable CONFIG_CONSTRUCTORS again
-- A new command line option to have an non-raw serial line
-- Preparations to remove obsolete UML network drivers
-
-----------------------------------------------------------------
-Brendan Higgins (1):
-       um: Mark non-vector net transports as obsolete
-
-Johannes Berg (3):
-       um: Add an option to make serial driver non-raw
-       Revert "um: Enable CONFIG_CONSTRUCTORS"
-       um: Fix time-travel=inf-cpu with xor/raid6
-
-  arch/um/Kconfig                  |  2 +
-  arch/um/drivers/Kconfig          | 81 ++++++++++++++++++++--------------------
-  arch/um/drivers/chan_user.h      |  2 +-
-  arch/um/drivers/ssl.c            |  8 ++++
-  arch/um/include/asm/Kbuild       |  1 -
-  arch/um/include/asm/common.lds.S |  2 +-
-  arch/um/include/asm/xor.h        |  7 ++++
-  arch/um/kernel/dyn.lds.S         |  1 +
-  init/Kconfig                     |  1 +
-  kernel/gcov/Kconfig              |  2 +-
-  10 files changed, 63 insertions(+), 44 deletions(-)
-  create mode 100644 arch/um/include/asm/xor.h
-
-
-
+has an effect when dealing with tasks with util_est values > 0.8 * 1024.
