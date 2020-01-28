@@ -2,58 +2,57 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE9AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FFEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0410A24685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F4E924692
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220446;
-	bh=N4bj3wWm2MzQ/QSbYY4EoGmJ+L24lq7RFP9c2ISdy7c=;
+	s=default; t=1580220450;
+	bh=+3GpBimjzAKPWV+KaOZccxvrUXDJ6S0eTN8o2EqLO5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z2ooAda72fUzkHTIVE/NkfUdPdn2xP4LznLIqD5Gsao5F8wOY4EegqzUvBa11+aZW
-	 XqCEYTiNQfcLMWDwm4vEgTYZzRRJiM+rAOjHZ93hUrcJ3NKfowlK3Weua9lJsRrQyP
-	 hNWhmMw/5/qpq5lanKzLkMEa+/yoMQVBp8gk0DP8=
+	b=vVsRZA4X+yhuhEwHsEpuOydwNbaRPLCucqS5cyojHmeQqSimk9o4IcA01H274tKwd
+	 Xefsl1uBcPzK0dxQgCL/vg4roFeVgHFyJjUaCimPbezR5SsEM76Xv8mNoe+GWLj9tg
+	 7Z6u81mYLbVGKr2c986P6cpeLbrSMC4b/mLbWLIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgA1OHY (ORCPT
+        id S1727993AbgA1OH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:07:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:07:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726402AbgA1OHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:07:22 -0500
+        id S1727934AbgA1OH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:07:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C97E824688;
-        Tue, 28 Jan 2020 14:07:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06EB24688;
+        Tue, 28 Jan 2020 14:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220442;
-        bh=N4bj3wWm2MzQ/QSbYY4EoGmJ+L24lq7RFP9c2ISdy7c=;
+        s=default; t=1580220447;
+        bh=+3GpBimjzAKPWV+KaOZccxvrUXDJ6S0eTN8o2EqLO5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V5aMBG1UpS0dOHXGA65Qy48F7RPvezORRJJtoJd1wJ17YC5TEUJ5yFaieBt4RG+YC
-         ekw7YfTBwT2GgizojrnXpsjqTRpHcPxp/rICOmutwo9oPhGZdzlNd0OsSMTNDr4NJt
-         fxePPRXI5zzuMehvHycP8k8Q2LIVQsHR6FD+X/7E=
+        b=1TxCXMeYbDVzn333uyokrs3LG/z4PSN9+rWpf5mSfMmG3PdDHIArByPS+es5uckXV
+         sx14Ee1ZNuT3ltpB5s3X8mKz/rY1qroHWN0lZaX6GaURJu8rG1z3XneXt7xkEPs7BW
+         nqoZ6h7r719EyekJnNHuBd/9VEAgLGkEoO7HILfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
-        Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: [PATCH 4.4 001/183] xfs: Sanity check flags of Q_XQUOTARM call
-Date:   Tue, 28 Jan 2020 15:03:40 +0100
-Message-Id: <20200128135829.661704638@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 011/183] pinctrl: sh-pfc: r8a7740: Add missing REF125CK pin to gether_gmii group
+Date:   Tue, 28 Jan 2020 15:03:50 +0100
+Message-Id: <20200128135830.823481791@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,36 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 3dd4d40b420846dd35869ccc8f8627feef2cff32 upstream.
+[ Upstream commit 1ebc589a7786f17f97b9e87b44e0fb4d0290d8f8 ]
 
-Flags passed to Q_XQUOTARM were not sanity checked for invalid values.
-Fix that.
+The gether_gmii_mux[] array contains the REF125CK pin mark, but the
+gether_gmii_pins[] array lacks the corresponding pin number.
 
-Fixes: 9da93f9b7cdf ("xfs: fix Q_XQUOTARM ioctl")
-Reported-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: bae11d30d0cafdc5 ("sh-pfc: r8a7740: Add GETHER pin groups and functions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_quotaops.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pinctrl/sh-pfc/pfc-r8a7740.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/xfs/xfs_quotaops.c
-+++ b/fs/xfs/xfs_quotaops.c
-@@ -214,6 +214,9 @@ xfs_fs_rm_xquota(
- 	if (XFS_IS_QUOTA_ON(mp))
- 		return -EINVAL;
- 
-+	if (uflags & ~(FS_USER_QUOTA | FS_GROUP_QUOTA | FS_PROJ_QUOTA))
-+		return -EINVAL;
-+
- 	if (uflags & FS_USER_QUOTA)
- 		flags |= XFS_DQ_USER;
- 	if (uflags & FS_GROUP_QUOTA)
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
+index 279e9dd442e44..aa7c346dff6d0 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
+@@ -1983,7 +1983,7 @@ static const unsigned int gether_gmii_pins[] = {
+ 	 */
+ 	185, 186, 187, 188, 189, 190, 191, 192, 174, 161, 204,
+ 	171, 170, 169, 168, 167, 166, 173, 172, 176, 184, 183, 203,
+-	205, 163, 206, 207,
++	205, 163, 206, 207, 158,
+ };
+ static const unsigned int gether_gmii_mux[] = {
+ 	ET_ERXD0_MARK, ET_ERXD1_MARK, ET_ERXD2_MARK, ET_ERXD3_MARK,
+-- 
+2.20.1
+
 
 
