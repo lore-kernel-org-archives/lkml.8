@@ -2,76 +2,92 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617AFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16585C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAAD2465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580201531;
-	bh=us07uZW8EJ9u1Hp+jw1ztONC0owP/dKwna4F23Rp9O0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d+FikogSO5Xy8bXnS++KEqQx+XzZkkj4VTI3zobP0EA9mtTEINusjFbYEXhL8/saT
-	 oRXxv1ednTgEbmmH3RMF0Wgu3ns6uPuudRNPfFwbJwEl1lhcGKr9ISOwBy+f2JEpek
-	 V/TlC2fhdi0bRw9sidTNQ64rESab27cL1HfCzNcQ=
+	by mail.kernel.org (Postfix) with ESMTP id CA2B62468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:53:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=blackhole.kfki.hu header.i=@blackhole.kfki.hu header.b="m/K75uwD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgA1IwK (ORCPT
+        id S1726034AbgA1Ixv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 03:52:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55170 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 03:53:51 -0500
+Received: from smtp-out.kfki.hu ([148.6.0.48]:39983 "EHLO smtp-out.kfki.hu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgA1IwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 03:52:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CEA9207FD;
-        Tue, 28 Jan 2020 08:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580201529;
-        bh=us07uZW8EJ9u1Hp+jw1ztONC0owP/dKwna4F23Rp9O0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nmf9FvANumFL5eGxuQ8NuY1/ZqMRyB2zwsiS2IQm709O1XK4uwudz1OEZv3ZeB1Gr
-         m2m3EG2wDYyApgJcZ9Imicra1rnIwXxtbRNjOCVjX3E+KApQm8c3r41K4ybGFMncKW
-         bCe0nhntIpSTjt39JSsUe228SXqH6mYSomPFjqwI=
-Date:   Tue, 28 Jan 2020 09:05:40 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     stable@vger.kernel.org, jeremy.linton@arm.com, sashal@kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH stable-4.9] Documentation: Document arm64 kpti control
-Message-ID: <20200128080540.GH2105706@kroah.com>
-References: <20200128015415.2276-1-f.fainelli@gmail.com>
+        id S1725903AbgA1Ixu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 03:53:50 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by smtp2.kfki.hu (Postfix) with ESMTP id C3A4ACC00F3;
+        Tue, 28 Jan 2020 09:53:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        blackhole.kfki.hu; h=mime-version:user-agent:references
+        :message-id:in-reply-to:from:from:date:date:received:received
+        :received; s=20151130; t=1580201626; x=1582016027; bh=aEm/fnpwIz
+        WLBFMzwB9RT2bfWnCXazD/1uWSPnX+jGU=; b=m/K75uwD9E6PxpckwbYoABDtqk
+        llryMXTa73E+TcBIeB5ABpidFTO6asepGDrlldSOfDx4JgEnIYlZm5aIoMaeSjDj
+        13lG1epV8GOvRQ3cWHiFYO2PjH3mx5ItQqjRtk5XsSVsqiEQTj3cq1gjgUHxtlP+
+        WNmga9TFXsshmBeDQ=
+X-Virus-Scanned: Debian amavisd-new at smtp2.kfki.hu
+Received: from smtp2.kfki.hu ([127.0.0.1])
+        by localhost (smtp2.kfki.hu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP; Tue, 28 Jan 2020 09:53:46 +0100 (CET)
+Received: from blackhole.kfki.hu (blackhole.kfki.hu [148.6.240.2])
+        by smtp2.kfki.hu (Postfix) with ESMTP id 68DDACC00F2;
+        Tue, 28 Jan 2020 09:53:45 +0100 (CET)
+Received: by blackhole.kfki.hu (Postfix, from userid 1000)
+        id 4211F21A72; Tue, 28 Jan 2020 09:53:45 +0100 (CET)
+Date:   Tue, 28 Jan 2020 09:53:45 +0100 (CET)
+From:   =?UTF-8?Q?Kadlecsik_J=C3=B3zsef?= <kadlec@blackhole.kfki.hu>
+To:     Hillf Danton <hdanton@sina.com>
+cc:     syzbot <syzbot+68a806795ac89df3aa1c@syzkaller.appspotmail.com>,
+        x86@kernel.org, tony.luck@intel.com, peterz@infradead.org,
+        netdev@vger.kernel.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        coreteam@netfilter.org, bp@alien8.de,
+        netfilter-devel@vger.kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, davem@davemloft.net
+Subject: Re: [netfilter-core] INFO: rcu detected stall in hash_ip4_gc
+In-Reply-To: <20200128022601.15116-1-hdanton@sina.com>
+Message-ID: <alpine.DEB.2.20.2001280948480.5190@blackhole.kfki.hu>
+References: <20200127042315.10456-1-hdanton@sina.com> <20200128022601.15116-1-hdanton@sina.com>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128015415.2276-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 05:54:14PM -0800, Florian Fainelli wrote:
-> From: Jeremy Linton <jeremy.linton@arm.com>
-> 
-> commit de19055564c8f8f9d366f8db3395836da0b2176c upstream
-> 
-> For a while Arm64 has been capable of force enabling
-> or disabling the kpti mitigations. Lets make sure the
-> documentation reflects that.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> [florian: patch the correct file]
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Tue, 28 Jan 2020, Hillf Danton wrote:
 
-Thanks for the backport, now applied.
+> 
+> On Mon, 27 Jan 2020 23:14:03 +0100 (CET) Kadlecsik Jozsef wrote:
+> > 
+> > Thanks for the patch, but it does not fix completely the issue: the same 
+> > error message can pop up in ip_set_uadd(), because it calls the gc 
+> > function as well when the set is full but there can be timed out entries. 
+> 
+> Why is trylock-based gc going to make hassle again?
 
-greg k-h
+Because mtype_expire() which scans the whole set to find and evict 
+expired entries is called not only from the gc function but from add as 
+well (to reclaim space since last gc) and list too (to get the number of 
+elements). One locks out the another and that reported in the error 
+message.
+
+> > I'm going to work on a solution with covers that case too.
+
+Region-locking seems to be the best way to go.
+
+Best regards,
+Jozsef
+-
+E-mail  : kadlec@blackhole.kfki.hu, kadlecsik.jozsef@wigner.mta.hu
+PGP key : http://www.kfki.hu/~kadlec/pgp_public_key.txt
+Address : Wigner Research Centre for Physics
+          H-1525 Budapest 114, POB. 49, Hungary
