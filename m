@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45DDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207CDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D5F2468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13BA2468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221733;
-	bh=tRcVvN46Y4RAgV5v44mhyVrXYUpFGZeT/y1UvAqhNxM=;
+	s=default; t=1580221736;
+	bh=bn24a8/KeY9ahi26l8TO/kBMSDDX9l2XaFDDGpwSNSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1sWnIg+QZYSBiKO6nzaQfmRvEx2mzeZZ0YTFmL80Hyk7MQUMwk8g5pJLf8AUf/FKn
-	 mG72FzUp9VkOTheB37r7NrkqXaxqnSKfXhuvCsLLW3zRS5fK0mQYrkARicaoUCRMps
-	 jHKnfZbyCRDGqoxE23CvTAwgkM19HbUhJ3HM3W+8=
+	b=01BgbO0pErtez7BVfpfenQ2D49zpWtTvnVkpanxdxu7br4GQX0bsijE/hD953DE4t
+	 rh2Lrnyq8FUBihcDXzFckYSRhu4lb/zrZ+nkFllDDRBmX61dFKdwQe75spLaIuyTJi
+	 UUnYO08e2EqhUqcI1gaunz2FmXQu4zDqbdh219Io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387560AbgA1O2w (ORCPT
+        id S2387571AbgA1O2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:28:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56856 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:28:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733193AbgA1O2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:28:46 -0500
+        id S2387551AbgA1O2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:28:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29F48207FD;
-        Tue, 28 Jan 2020 14:28:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7288820716;
+        Tue, 28 Jan 2020 14:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221725;
-        bh=tRcVvN46Y4RAgV5v44mhyVrXYUpFGZeT/y1UvAqhNxM=;
+        s=default; t=1580221727;
+        bh=bn24a8/KeY9ahi26l8TO/kBMSDDX9l2XaFDDGpwSNSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QNoAlV91LeyTif5vbf5HDqlBqRQZ+Aa9Tga73a5idAlAziAPd0RklIS2OhttOxqFR
-         6HuB03lT7DV8u+vXVdMcUHQVr+vduWN23ZLw1Vdv+7XkniqRbTvlbrRr8BnXC12wQt
-         cahPPtaWLi8D63XNyfDbhHepohqrQdy+CFIVLnb0=
+        b=u0FCSydaLkQ5qO4mzu2PY5+6PP/LFQvoZfyxYL/42CT4oMKhNU5xOPDliKk51PAuL
+         7zoZa7y+JUN5fabyWXdZ1khCtoTaNfsWYfKWIKc4mprlJO0qKKbIWFNwQIwl8s2Oe4
+         YAo+vopc+b8/fwKUCWUUYFQ7Sb8c2rpDm6xYM42k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bo Wu <wubo40@huawei.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Lee Duncan <lduncan@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 65/92] scsi: iscsi: Avoid potential deadlock in iscsi_if_rx func
-Date:   Tue, 28 Jan 2020 15:08:33 +0100
-Message-Id: <20200128135817.620117880@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fabca5cbf5e54f3fe2de@syzkaller.appspotmail.com,
+        syzbot+827ced406c9a1d9570ed@syzkaller.appspotmail.com,
+        syzbot+190d63957b22ef673ea5@syzkaller.appspotmail.com,
+        syzbot+dfccdb2bdb4a12ad425e@syzkaller.appspotmail.com,
+        syzbot+df0d0f5895ef1f41a65b@syzkaller.appspotmail.com,
+        syzbot+b08bd19bb37513357fd4@syzkaller.appspotmail.com,
+        syzbot+53cdd0ec0bbabd53370a@syzkaller.appspotmail.com,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 66/92] netfilter: ipset: use bitmap infrastructure completely
+Date:   Tue, 28 Jan 2020 15:08:34 +0100
+Message-Id: <20200128135817.744373093@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -61,109 +67,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bo Wu <wubo40@huawei.com>
+From: Kadlecsik József <kadlec@blackhole.kfki.hu>
 
-commit bba340c79bfe3644829db5c852fdfa9e33837d6d upstream.
+commit 32c72165dbd0e246e69d16a3ad348a4851afd415 upstream.
 
-In iscsi_if_rx func, after receiving one request through
-iscsi_if_recv_msg func, iscsi_if_send_reply will be called to try to
-reply to the request in a do-while loop.  If the iscsi_if_send_reply
-function keeps returning -EAGAIN, a deadlock will occur.
+The bitmap allocation did not use full unsigned long sizes
+when calculating the required size and that was triggered by KASAN
+as slab-out-of-bounds read in several places. The patch fixes all
+of them.
 
-For example, a client only send msg without calling recvmsg func, then
-it will result in the watchdog soft lockup.  The details are given as
-follows:
-
-	sock_fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ISCSI);
-	retval = bind(sock_fd, (struct sock addr*) & src_addr, sizeof(src_addr);
-	while (1) {
-		state_msg = sendmsg(sock_fd, &msg, 0);
-		//Note: recvmsg(sock_fd, &msg, 0) is not processed here.
-	}
-	close(sock_fd);
-
-watchdog: BUG: soft lockup - CPU#7 stuck for 22s! [netlink_test:253305] Sample time: 4000897528 ns(HZ: 250) Sample stat:
-curr: user: 675503481560, nice: 321724050, sys: 448689506750, idle: 4654054240530, iowait: 40885550700, irq: 14161174020, softirq: 8104324140, st: 0
-deta: user: 0, nice: 0, sys: 3998210100, idle: 0, iowait: 0, irq: 1547170, softirq: 242870, st: 0 Sample softirq:
-         TIMER:        992
-         SCHED:          8
-Sample irqstat:
-         irq    2: delta       1003, curr:    3103802, arch_timer
-CPU: 7 PID: 253305 Comm: netlink_test Kdump: loaded Tainted: G           OE
-Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-pstate: 40400005 (nZcv daif +PAN -UAO)
-pc : __alloc_skb+0x104/0x1b0
-lr : __alloc_skb+0x9c/0x1b0
-sp : ffff000033603a30
-x29: ffff000033603a30 x28: 00000000000002dd
-x27: ffff800b34ced810 x26: ffff800ba7569f00
-x25: 00000000ffffffff x24: 0000000000000000
-x23: ffff800f7c43f600 x22: 0000000000480020
-x21: ffff0000091d9000 x20: ffff800b34eff200
-x19: ffff800ba7569f00 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000000 x14: 0001000101000100
-x13: 0000000101010000 x12: 0101000001010100
-x11: 0001010101010001 x10: 00000000000002dd
-x9 : ffff000033603d58 x8 : ffff800b34eff400
-x7 : ffff800ba7569200 x6 : ffff800b34eff400
-x5 : 0000000000000000 x4 : 00000000ffffffff
-x3 : 0000000000000000 x2 : 0000000000000001
-x1 : ffff800b34eff2c0 x0 : 0000000000000300 Call trace:
-__alloc_skb+0x104/0x1b0
-iscsi_if_rx+0x144/0x12bc [scsi_transport_iscsi]
-netlink_unicast+0x1e0/0x258
-netlink_sendmsg+0x310/0x378
-sock_sendmsg+0x4c/0x70
-sock_write_iter+0x90/0xf0
-__vfs_write+0x11c/0x190
-vfs_write+0xac/0x1c0
-ksys_write+0x6c/0xd8
-__arm64_sys_write+0x24/0x30
-el0_svc_common+0x78/0x130
-el0_svc_handler+0x38/0x78
-el0_svc+0x8/0xc
-
-Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E3D4D2@dggeml505-mbx.china.huawei.com
-Signed-off-by: Bo Wu <wubo40@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: syzbot+fabca5cbf5e54f3fe2de@syzkaller.appspotmail.com
+Reported-by: syzbot+827ced406c9a1d9570ed@syzkaller.appspotmail.com
+Reported-by: syzbot+190d63957b22ef673ea5@syzkaller.appspotmail.com
+Reported-by: syzbot+dfccdb2bdb4a12ad425e@syzkaller.appspotmail.com
+Reported-by: syzbot+df0d0f5895ef1f41a65b@syzkaller.appspotmail.com
+Reported-by: syzbot+b08bd19bb37513357fd4@syzkaller.appspotmail.com
+Reported-by: syzbot+53cdd0ec0bbabd53370a@syzkaller.appspotmail.com
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/scsi_transport_iscsi.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ include/linux/netfilter/ipset/ip_set.h    |    7 -------
+ net/netfilter/ipset/ip_set_bitmap_gen.h   |    2 +-
+ net/netfilter/ipset/ip_set_bitmap_ip.c    |    6 +++---
+ net/netfilter/ipset/ip_set_bitmap_ipmac.c |    6 +++---
+ net/netfilter/ipset/ip_set_bitmap_port.c  |    6 +++---
+ 5 files changed, 10 insertions(+), 17 deletions(-)
 
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -37,6 +37,8 @@
+--- a/include/linux/netfilter/ipset/ip_set.h
++++ b/include/linux/netfilter/ipset/ip_set.h
+@@ -451,13 +451,6 @@ ip6addrptr(const struct sk_buff *skb, bo
+ 	       sizeof(*addr));
+ }
  
- #define ISCSI_TRANSPORT_VERSION "2.0-870"
+-/* Calculate the bytes required to store the inclusive range of a-b */
+-static inline int
+-bitmap_bytes(u32 a, u32 b)
+-{
+-	return 4 * ((((b - a + 8) / 8) + 3) / 4);
+-}
+-
+ #include <linux/netfilter/ipset/ip_set_timeout.h>
+ #include <linux/netfilter/ipset/ip_set_comment.h>
+ #include <linux/netfilter/ipset/ip_set_counter.h>
+--- a/net/netfilter/ipset/ip_set_bitmap_gen.h
++++ b/net/netfilter/ipset/ip_set_bitmap_gen.h
+@@ -79,7 +79,7 @@ mtype_flush(struct ip_set *set)
  
-+#define ISCSI_SEND_MAX_ALLOWED  10
-+
- static int dbg_session;
- module_param_named(debug_session, dbg_session, int,
- 		   S_IRUGO | S_IWUSR);
-@@ -3680,6 +3682,7 @@ iscsi_if_rx(struct sk_buff *skb)
- 		struct nlmsghdr	*nlh;
- 		struct iscsi_uevent *ev;
- 		uint32_t group;
-+		int retries = ISCSI_SEND_MAX_ALLOWED;
+ 	if (set->extensions & IPSET_EXT_DESTROY)
+ 		mtype_ext_cleanup(set);
+-	memset(map->members, 0, map->memsize);
++	bitmap_zero(map->members, map->elements);
+ 	set->elements = 0;
+ 	set->ext_size = 0;
+ }
+--- a/net/netfilter/ipset/ip_set_bitmap_ip.c
++++ b/net/netfilter/ipset/ip_set_bitmap_ip.c
+@@ -40,7 +40,7 @@ MODULE_ALIAS("ip_set_bitmap:ip");
  
- 		nlh = nlmsg_hdr(skb);
- 		if (nlh->nlmsg_len < sizeof(*nlh) + sizeof(*ev) ||
-@@ -3710,6 +3713,10 @@ iscsi_if_rx(struct sk_buff *skb)
- 				break;
- 			err = iscsi_if_send_reply(portid, nlh->nlmsg_type,
- 						  ev, sizeof(*ev));
-+			if (err == -EAGAIN && --retries < 0) {
-+				printk(KERN_WARNING "Send reply failed, error %d\n", err);
-+				break;
-+			}
- 		} while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
- 		skb_pull(skb, rlen);
- 	}
+ /* Type structure */
+ struct bitmap_ip {
+-	void *members;		/* the set members */
++	unsigned long *members;	/* the set members */
+ 	u32 first_ip;		/* host byte order, included in range */
+ 	u32 last_ip;		/* host byte order, included in range */
+ 	u32 elements;		/* number of max elements in the set */
+@@ -223,7 +223,7 @@ init_map_ip(struct ip_set *set, struct b
+ 	    u32 first_ip, u32 last_ip,
+ 	    u32 elements, u32 hosts, u8 netmask)
+ {
+-	map->members = ip_set_alloc(map->memsize);
++	map->members = bitmap_zalloc(elements, GFP_KERNEL | __GFP_NOWARN);
+ 	if (!map->members)
+ 		return false;
+ 	map->first_ip = first_ip;
+@@ -313,7 +313,7 @@ bitmap_ip_create(struct net *net, struct
+ 	if (!map)
+ 		return -ENOMEM;
+ 
+-	map->memsize = bitmap_bytes(0, elements - 1);
++	map->memsize = BITS_TO_LONGS(elements) * sizeof(unsigned long);
+ 	set->variant = &bitmap_ip;
+ 	if (!init_map_ip(set, map, first_ip, last_ip,
+ 			 elements, hosts, netmask)) {
+--- a/net/netfilter/ipset/ip_set_bitmap_ipmac.c
++++ b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
+@@ -46,7 +46,7 @@ enum {
+ 
+ /* Type structure */
+ struct bitmap_ipmac {
+-	void *members;		/* the set members */
++	unsigned long *members;	/* the set members */
+ 	u32 first_ip;		/* host byte order, included in range */
+ 	u32 last_ip;		/* host byte order, included in range */
+ 	u32 elements;		/* number of max elements in the set */
+@@ -303,7 +303,7 @@ static bool
+ init_map_ipmac(struct ip_set *set, struct bitmap_ipmac *map,
+ 	       u32 first_ip, u32 last_ip, u32 elements)
+ {
+-	map->members = ip_set_alloc(map->memsize);
++	map->members = bitmap_zalloc(elements, GFP_KERNEL | __GFP_NOWARN);
+ 	if (!map->members)
+ 		return false;
+ 	map->first_ip = first_ip;
+@@ -364,7 +364,7 @@ bitmap_ipmac_create(struct net *net, str
+ 	if (!map)
+ 		return -ENOMEM;
+ 
+-	map->memsize = bitmap_bytes(0, elements - 1);
++	map->memsize = BITS_TO_LONGS(elements) * sizeof(unsigned long);
+ 	set->variant = &bitmap_ipmac;
+ 	if (!init_map_ipmac(set, map, first_ip, last_ip, elements)) {
+ 		kfree(map);
+--- a/net/netfilter/ipset/ip_set_bitmap_port.c
++++ b/net/netfilter/ipset/ip_set_bitmap_port.c
+@@ -34,7 +34,7 @@ MODULE_ALIAS("ip_set_bitmap:port");
+ 
+ /* Type structure */
+ struct bitmap_port {
+-	void *members;		/* the set members */
++	unsigned long *members;	/* the set members */
+ 	u16 first_port;		/* host byte order, included in range */
+ 	u16 last_port;		/* host byte order, included in range */
+ 	u32 elements;		/* number of max elements in the set */
+@@ -208,7 +208,7 @@ static bool
+ init_map_port(struct ip_set *set, struct bitmap_port *map,
+ 	      u16 first_port, u16 last_port)
+ {
+-	map->members = ip_set_alloc(map->memsize);
++	map->members = bitmap_zalloc(map->elements, GFP_KERNEL | __GFP_NOWARN);
+ 	if (!map->members)
+ 		return false;
+ 	map->first_port = first_port;
+@@ -248,7 +248,7 @@ bitmap_port_create(struct net *net, stru
+ 		return -ENOMEM;
+ 
+ 	map->elements = elements;
+-	map->memsize = bitmap_bytes(0, map->elements);
++	map->memsize = BITS_TO_LONGS(elements) * sizeof(unsigned long);
+ 	set->variant = &bitmap_port;
+ 	if (!init_map_port(set, map, first_port, last_port)) {
+ 		kfree(map);
 
 
