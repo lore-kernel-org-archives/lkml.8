@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB192C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2798EC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6892468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D302468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220871;
-	bh=ViKLiKUsFLh8npdo0eFWdWYH7r9YeMZzDa3TMAqTyG0=;
+	s=default; t=1580220874;
+	bh=Kuk7ATdNCRy7wLCVOOlcJOkAmy/NY/D9SfnazNQMDaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zLKblggUesg6m59TuiEP1PFrphWSV4F835iNorH7dbB2E5ApBYm+luY8Cn+JPfn3Z
-	 UEsfoO+g7AgvBg/uuPoTXAHCs9UvJLYemEL/QNfdeq0BM6Pk/GAA4gVXcMeDitAoDj
-	 +d8F8scOk8wg6QzdMR+jqZ4NmVfsU4BrxPnZxBIU=
+	b=yLE5xP04UJL7xR5T/Ra8fgKqEG8iw7wE4GWBqqLsGdzZGdU1RIgULBZCU2UmFNbwK
+	 +kS7vsEkOJ2vcx67XsQlMvKsjaXegjalwtJy/RAXnW9u266tvu4ovkmY3yAyNsUHAf
+	 4LzvZZfNp/Sr7Qa///SimDCpktzXJKUrox0xE3Ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbgA1OOa (ORCPT
+        id S1729875AbgA1OOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:14:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36600 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:14:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729359AbgA1OO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:14:28 -0500
+        id S1729857AbgA1OOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:14:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9EB12468A;
-        Tue, 28 Jan 2020 14:14:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64C95246AA;
+        Tue, 28 Jan 2020 14:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220868;
-        bh=ViKLiKUsFLh8npdo0eFWdWYH7r9YeMZzDa3TMAqTyG0=;
+        s=default; t=1580220860;
+        bh=Kuk7ATdNCRy7wLCVOOlcJOkAmy/NY/D9SfnazNQMDaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oxuo9aZCv4JKSBkvsLsFG/r4ib6jU3fIekGwposE7P0DrAO+Gwir2Jz7HaZaV3cNO
-         DKRx9RzpEiJuxZZKNsuhkh4NWKxYeglH3qtOukBR478CNuIYmxX6nz7eeoSULWY2Vr
-         lhcW33HLYu6js3gziBiZ8xWjrpysv8TvGHJCWrF8=
+        b=oqccoILEVOpMoTVbadqjM/7u9zikrNu64AM8ej74RHqPT+S7zGOoxPm16yZYg1T4u
+         j0khNhB4aXqwVMwcSyhwEULtGQY/DYc3w0YkIS2E9TKCxBQHzNDc22WxbOF1W/1Aa/
+         hOm+PygVrVBrm7KgVmSCGpIIbrutJDEbInRQcd8A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shaohua Li <shli@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.4 179/183] md: Avoid namespace collision with bitmap API
-Date:   Tue, 28 Jan 2020 15:06:38 +0100
-Message-Id: <20200128135847.631280854@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 4.4 176/183] do_last(): fetch directory ->i_mode and ->i_uid before its too late
+Date:   Tue, 28 Jan 2020 15:06:35 +0100
+Message-Id: <20200128135847.326406099@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,64 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit e64e4018d572710c44f42c923d4ac059f0a23320 upstream.
+commit d0cb50185ae942b03c4327be322055d622dc79f6 upstream.
 
-bitmap API (include/linux/bitmap.h) has 'bitmap' prefix for its methods.
+may_create_in_sticky() call is done when we already have dropped the
+reference to dir.
 
-On the other hand MD bitmap API is special case.
-Adding 'md' prefix to it to avoid name space collision.
-
-No functional changes intended.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Shaohua Li <shli@kernel.org>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-[only take the bitmap_free change for stable - gregkh]
+Fixes: 30aba6656f61e (namei: allow restricted O_CREAT of FIFOs and regular files)
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bitmap.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/namei.c |   17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
---- a/drivers/md/bitmap.c
-+++ b/drivers/md/bitmap.c
-@@ -1671,7 +1671,7 @@ void bitmap_flush(struct mddev *mddev)
- /*
-  * free memory that was allocated
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -988,7 +988,8 @@ static int may_linkat(struct path *link)
+  * may_create_in_sticky - Check whether an O_CREAT open in a sticky directory
+  *			  should be allowed, or not, on files that already
+  *			  exist.
+- * @dir: the sticky parent directory
++ * @dir_mode: mode bits of directory
++ * @dir_uid: owner of directory
+  * @inode: the inode of the file to open
+  *
+  * Block an O_CREAT open of a FIFO (or a regular file) when:
+@@ -1004,18 +1005,18 @@ static int may_linkat(struct path *link)
+  *
+  * Returns 0 if the open is allowed, -ve on error.
   */
--static void bitmap_free(struct bitmap *bitmap)
-+static void md_bitmap_free(struct bitmap *bitmap)
+-static int may_create_in_sticky(struct dentry * const dir,
++static int may_create_in_sticky(umode_t dir_mode, kuid_t dir_uid,
+ 				struct inode * const inode)
  {
- 	unsigned long k, pages;
- 	struct bitmap_page *bp;
-@@ -1721,7 +1721,7 @@ void bitmap_destroy(struct mddev *mddev)
- 	if (bitmap->sysfs_can_clear)
- 		sysfs_put(bitmap->sysfs_can_clear);
+ 	if ((!sysctl_protected_fifos && S_ISFIFO(inode->i_mode)) ||
+ 	    (!sysctl_protected_regular && S_ISREG(inode->i_mode)) ||
+-	    likely(!(dir->d_inode->i_mode & S_ISVTX)) ||
+-	    uid_eq(inode->i_uid, dir->d_inode->i_uid) ||
++	    likely(!(dir_mode & S_ISVTX)) ||
++	    uid_eq(inode->i_uid, dir_uid) ||
+ 	    uid_eq(current_fsuid(), inode->i_uid))
+ 		return 0;
  
--	bitmap_free(bitmap);
-+	md_bitmap_free(bitmap);
- }
- 
- /*
-@@ -1805,7 +1805,7 @@ struct bitmap *bitmap_create(struct mdde
- 
- 	return bitmap;
-  error:
--	bitmap_free(bitmap);
-+	md_bitmap_free(bitmap);
- 	return ERR_PTR(err);
- }
- 
-@@ -1904,7 +1904,7 @@ int bitmap_copy_from_slot(struct mddev *
- 	*low = lo;
- 	*high = hi;
- err:
--	bitmap_free(bitmap);
-+	md_bitmap_free(bitmap);
- 	return rv;
- }
- EXPORT_SYMBOL_GPL(bitmap_copy_from_slot);
+-	if (likely(dir->d_inode->i_mode & 0002) ||
+-	    (dir->d_inode->i_mode & 0020 &&
++	if (likely(dir_mode & 0002) ||
++	    (dir_mode & 0020 &&
+ 	     ((sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) ||
+ 	      (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode))))) {
+ 		return -EACCES;
+@@ -3059,6 +3060,8 @@ static int do_last(struct nameidata *nd,
+ 		   int *opened)
+ {
+ 	struct dentry *dir = nd->path.dentry;
++	kuid_t dir_uid = dir->d_inode->i_uid;
++	umode_t dir_mode = dir->d_inode->i_mode;
+ 	int open_flag = op->open_flag;
+ 	bool will_truncate = (open_flag & O_TRUNC) != 0;
+ 	bool got_write = false;
+@@ -3211,7 +3214,7 @@ finish_open:
+ 		error = -EISDIR;
+ 		if (d_is_dir(nd->path.dentry))
+ 			goto out;
+-		error = may_create_in_sticky(dir,
++		error = may_create_in_sticky(dir_mode, dir_uid,
+ 					     d_backing_inode(nd->path.dentry));
+ 		if (unlikely(error))
+ 			goto out;
 
 
