@@ -2,238 +2,98 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EA9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EC4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F8B2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:01:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9pKAmpc"
+	by mail.kernel.org (Postfix) with ESMTP id 8FF4A24683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580223748;
+	bh=GLcMbDI+gfzPGzKyUngTVfxGFi9C1OuQc12EKClEHjQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Cd88CqXsE/oCBuT0SQX9Q/p5+wX8ddz1K0H6auUQTMsJKcqtg5JwtlV+J5UCZC5Pv
+	 2KF7iq+FutMus4L9b2WyCQl+sjbWfI6GVmOUWWdsi0h9v0EkEWX80fIYInFH+Un7YI
+	 /pD9JbUSuPJ8aDO/z/ss0yvAndtj95z8CLvynqkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgA1PBo (ORCPT
+        id S1726712AbgA1PC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:01:44 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35496 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbgA1PBm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:01:42 -0500
-Received: by mail-lf1-f67.google.com with SMTP id z18so9329540lfe.2;
-        Tue, 28 Jan 2020 07:01:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jxwyE4yCuJly/POgSDmd0mgjgoTTNrnCHPv8m1hThlw=;
-        b=r9pKAmpcGxCnJQHpeUV186FjMp6g8ZLFV0vbqprv6kdJ06k55bvT1gSajqUntVTSSj
-         /dBkeIqVll8OujXg80OGCegtmjpTelrjQ34GbYIJ/kWJ8v+Pe1nmicD+xBYekQuggSd0
-         T5zhu4wYNUF5tLHncUPdiR9qJCDeyoB1tjnWWCKqJzuw++TmtRoY46p61ZIaDkVM+Fw6
-         l+D/km54MrSWj65dv7z52suZ/YiOdwiPYz/HSG/FAfhuSWpHTDEQp5XSX2eO2BNOXGxG
-         Z4QEHFf5wtUvIzwh4kko0qen16g5eEfU95Shd+b0QF3rF1izob6S0iOXOKSgrxx1Y0s2
-         OMVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jxwyE4yCuJly/POgSDmd0mgjgoTTNrnCHPv8m1hThlw=;
-        b=Ctkj+Bkm4kRC90ur9aFKMkFKq9G4Nn1MJj9s77DdYbHzffyVg0LFjM8VPF4Fc/xDxl
-         PtzVV+p667c2p+zlw25wz0Qmk9iq8WIqzKsEHIywfW5VAJ3c1BRqbLOpVPdbKsANO9al
-         elptn4bF7FCBGx/pcNo7D9WQeDic4NhOJ2TpcROM63fwK7Yc1wuE9OxDQ86HLv19hpD9
-         g1gAJyQ1NF7XMtKv1CXuj2xdsGPP1PS5WA7ev8SMKFTiWscsaoNfK3TBOaW9EaO4Glb/
-         fB3Bd59sFBHxxCeZh+n/NMh4ii9EJPax21CIH9DnJDopI9m6z1p5Ub8WpmeTvl+DxOZX
-         36Bw==
-X-Gm-Message-State: APjAAAU1eAiEfgoK0GfPGC2JH2ORspjoUZs4OYxSxJ57VENxtlqI5Xp4
-        oTmoU/BwBDInCXyOf2ntECSbdd9h
-X-Google-Smtp-Source: APXvYqw3RsrE6AGKOzv0pZfEsLBAjHfve5tnkCmTy0TEA0qNwFJ2y1TSQdaqNO+CJhWKyHw5evw2WA==
-X-Received: by 2002:a19:c6cd:: with SMTP id w196mr2653759lff.79.1580223699796;
-        Tue, 28 Jan 2020 07:01:39 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u13sm9960229lfq.19.2020.01.28.07.01.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 07:01:39 -0800 (PST)
-Subject: Re: [PATCH v4 08/14] dmaengine: tegra-apb: Fix coding style problems
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-9-digetx@gmail.com>
- <844c4ace-d043-a908-823d-545b5b753008@nvidia.com>
- <134adcfb-83fb-4bb7-986e-65217bc4f821@gmail.com>
- <bab1eec0-8b1d-6005-e9eb-05e93da844aa@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a99ff711-22af-a377-9500-ab4b8644b0ff@gmail.com>
-Date:   Tue, 28 Jan 2020 18:01:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <bab1eec0-8b1d-6005-e9eb-05e93da844aa@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 28 Jan 2020 10:02:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbgA1PC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:02:27 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3FEA2467E;
+        Tue, 28 Jan 2020 15:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580223747;
+        bh=GLcMbDI+gfzPGzKyUngTVfxGFi9C1OuQc12EKClEHjQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yxsRYU9XsJ2ZYWezsuYg5pdJ6dmX3iGh/7GhjEnJG144INZW1JHui8EPxOM+f4ovQ
+         P5CDWepZ7rVcdRsx6Xk7sHFAN4pTfqhQAyoj1CejVdADOjUJhV670ERTdji1WMGGqH
+         JbEgX1QkEpWGlRbaEF9V9dlI7gHIZPqou95L/x5c=
+Date:   Wed, 29 Jan 2020 00:02:20 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Subject: Re: [RFC PATCH] tracing/kprobe: trace_kprobe_disabled_finished can
+ be static
+Message-Id: <20200129000220.81b363f3c5306eb054f91cdc@kernel.org>
+In-Reply-To: <20200127150243.bllddfobxryxagwd@f53c9c00458a>
+References: <157918590192.29301.6909688694265698678.stgit@devnote2>
+        <20200127150243.bllddfobxryxagwd@f53c9c00458a>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.01.2020 17:05, Jon Hunter пишет:
-> 
-> On 16/01/2020 17:37, Dmitry Osipenko wrote:
->> 15.01.2020 12:49, Jon Hunter пишет:
->>>
->>>
->>> On 12/01/2020 17:30, Dmitry Osipenko wrote:
->>>> This patch fixes few dozens of coding style problems reported by
->>>> checkpatch and prettifies code where makes sense.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/dma/tegra20-apb-dma.c | 276 ++++++++++++++++++----------------
->>>>  1 file changed, 144 insertions(+), 132 deletions(-)
->>>>
->>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>>> index dff21e80ffa4..7158bd3145c4 100644
->>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>> +++ b/drivers/dma/tegra20-apb-dma.c
->>>
->>> ...
->>>
->>>> @@ -1003,20 +1014,23 @@ static void tegra_dma_prep_wcount(struct tegra_dma_channel *tdc,
->>>>  		ch_regs->csr |= len_field;
->>>>  }
->>>>  
->>>> -static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
->>>> -	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
->>>> -	enum dma_transfer_direction direction, unsigned long flags,
->>>> -	void *context)
->>>> +static struct dma_async_tx_descriptor *
->>>> +tegra_dma_prep_slave_sg(struct dma_chan *dc,
->>>> +			struct scatterlist *sgl,
->>>> +			unsigned int sg_len,
->>>> +			enum dma_transfer_direction direction,
->>>> +			unsigned long flags,
->>>> +			void *context)
->>>>  {
->>>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
->>>> +	struct tegra_dma_sg_req *sg_req = NULL;
->>>> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
->>>> +	enum dma_slave_buswidth slave_bw;
->>>>  	struct tegra_dma_desc *dma_desc;
->>>> -	unsigned int i;
->>>> -	struct scatterlist *sg;
->>>> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
->>>>  	struct list_head req_list;
->>>> -	struct tegra_dma_sg_req  *sg_req = NULL;
->>>> -	u32 burst_size;
->>>> -	enum dma_slave_buswidth slave_bw;
->>>> +	struct scatterlist *sg;
->>>> +	unsigned int burst_size;
->>>> +	unsigned int i;
->>>
->>> This is not really consistent with the rest of the changes by having 'i'
->>> and 'burst_size' on separate lines.
->>
->> The goal wasn't to squash everything into a single line, but to make
->> code more readable. In this particular case the separated lines look
->> better to me.
->>
->>>>  
->>>>  	if (!tdc->config_init) {
->>>>  		dev_err(tdc2dev(tdc), "DMA channel is not configured\n");
->>>> @@ -1028,7 +1042,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
->>>>  	}
->>>>  
->>>>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
->>>> -				&burst_size, &slave_bw) < 0)
->>>> +			       &burst_size, &slave_bw) < 0)
->>>>  		return NULL;
->>>>  
->>>>  	INIT_LIST_HEAD(&req_list);
->>>> @@ -1074,7 +1088,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
->>>>  		len = sg_dma_len(sg);
->>>>  
->>>>  		if ((len & 3) || (mem & 3) ||
->>>> -				(len > tdc->tdma->chip_data->max_dma_count)) {
->>>> +		    len > tdc->tdma->chip_data->max_dma_count) {
->>>>  			dev_err(tdc2dev(tdc),
->>>>  				"DMA length/memory address is not supported\n");
->>>>  			tegra_dma_desc_put(tdc, dma_desc);
->>>> @@ -1126,20 +1140,21 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
->>>>  	return &dma_desc->txd;
->>>>  }
->>>>  
->>>> -static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
->>>> -	struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_len,
->>>> -	size_t period_len, enum dma_transfer_direction direction,
->>>> -	unsigned long flags)
->>>> +static struct dma_async_tx_descriptor *
->>>> +tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
->>>> +			  size_t buf_len,
->>>> +			  size_t period_len,
->>>> +			  enum dma_transfer_direction direction,
->>>> +			  unsigned long flags)
->>>>  {
->>>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
->>>> -	struct tegra_dma_desc *dma_desc = NULL;
->>>>  	struct tegra_dma_sg_req *sg_req = NULL;
->>>> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
->>>> -	int len;
->>>> -	size_t remain_len;
->>>> -	dma_addr_t mem = buf_addr;
->>>> -	u32 burst_size;
->>>> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
->>>>  	enum dma_slave_buswidth slave_bw;
->>>> +	struct tegra_dma_desc *dma_desc;
->>>> +	dma_addr_t mem = buf_addr;
->>>> +	unsigned int burst_size;
->>>> +	size_t len, remain_len;
->>>>  
->>>>  	if (!buf_len || !period_len) {
->>>>  		dev_err(tdc2dev(tdc), "Invalid buffer/period len\n");
->>>> @@ -1173,13 +1188,13 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
->>>>  
->>>>  	len = period_len;
->>>>  	if ((len & 3) || (buf_addr & 3) ||
->>>> -			(len > tdc->tdma->chip_data->max_dma_count)) {
->>>> +	    len > tdc->tdma->chip_data->max_dma_count) {
->>>>  		dev_err(tdc2dev(tdc), "Req len/mem address is not correct\n");
->>>>  		return NULL;
->>>>  	}
->>>>  
->>>>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
->>>> -				&burst_size, &slave_bw) < 0)
->>>> +			       &burst_size, &slave_bw) < 0)
->>>>  		return NULL;
->>>>  
->>>>  	ahb_seq = TEGRA_APBDMA_AHBSEQ_INTR_ENB;
->>>> @@ -1269,7 +1284,6 @@ static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
->>>>  	int ret;
->>>>  
->>>>  	dma_cookie_init(&tdc->dma_chan);
->>>> -	tdc->config_init = false;
->>>
->>> Why is this removed? Does not seem to belong in this patch.
->>
->> Because initially, on driver's probe, the tdc->config_init is false for
->> all channels and then tegra_dma_free_chan_resources() also sets it to
->> false. Thus there is no need to re-initilize the already initialized
->> variable. It's not a very good coding style if variables are
->> unnecessarily initialized, you probably noticed that there are few other
->> cases of removing the unneeded initializations of local variables in
->> this patch.
-> 
-> OK, but I don't really consider this coding-style and would prefer a
-> separate patch for this.
+On Mon, 27 Jan 2020 23:02:43 +0800
+kbuild test robot <lkp@intel.com> wrote:
 
-If if it's not a coding-style, then how would you name it? :)
+> 
+> Fixes: 3c794bf25a2b ("tracing/kprobe: Use call_rcu to defer freeing event_file_link")
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> ---
+>  trace_kprobe.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 1a5882bb77471..fba738aa458af 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -328,7 +328,7 @@ static inline int __enable_trace_kprobe(struct trace_kprobe *tk)
+>  	return ret;
+>  }
+>  
+> -atomic_t trace_kprobe_disabled_finished;
+> +static atomic_t trace_kprobe_disabled_finished;
+>  
+>  static void trace_kprobe_disabled_handlers_finish(void)
+>  {
+
+Oops, right. I forgot the static. I'll update it.
+
+Thanks,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
