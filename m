@@ -2,130 +2,119 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9ABC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245F4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E141E207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aKKGxSDs"
+	by mail.kernel.org (Postfix) with ESMTP id 042B5207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:07:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgA1NGw (ORCPT
+        id S1726243AbgA1NHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:06:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55068 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725283AbgA1NGw (ORCPT
+        Tue, 28 Jan 2020 08:07:31 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:39919 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgA1NHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:06:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580216812;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PVCZBoWITEVn0ar0L5LRVeQOwBalysgHCJ5R42wZfYg=;
-        b=aKKGxSDsN79xFOg8vcf9IlKtLbHaBK9ZrZSFYeOS0vv5m8Jaj5LCkJX2D/Ch7mV+6F0h12
-        3QoxANEWeopJcP2aO/L1XCAG+4TCBpUMMgTC/8BiVHdp+xRk0kEbygVP8h0koDe8B1LnUZ
-        y+raXxSb67A2zp4PiXerKmgndzn0nJ8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-341-PaIKuNKXNAyBk2kvY5Du7A-1; Tue, 28 Jan 2020 08:06:50 -0500
-X-MC-Unique: PaIKuNKXNAyBk2kvY5Du7A-1
-Received: by mail-wm1-f70.google.com with SMTP id b202so903284wmb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 05:06:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=PVCZBoWITEVn0ar0L5LRVeQOwBalysgHCJ5R42wZfYg=;
-        b=pvW8Wj6rxqAdLqlJNfJ2sdDxpFn11lVx89T3UnpqDdhsOl5mxFu74BURFgHUnGZk9K
-         lfzr2KMWjvMMlKxlaIcnlySj2Et+BAolxD1z8qgHQX9HdEIXUAkHRQoqofA1C4RbdfoD
-         T5cFlHaNTkEriQ+ZCSzS3I/J7ZcrmHoF8DMPZZvTloPHZw/FhmD2YAWvJSm3+MUz+E7E
-         ju/kx6MtueHwvo1k2UBA/8QarGn2oh00KBD6CozRBRtGmqSDRXu2TosJlV1vGjZVynlX
-         O3FkJSA6YnR30JTciokfgUFrpW274c+v5wzB9GuxuHQAxMJy+ha5KD8BRkIkgsgYwEzb
-         UrlQ==
-X-Gm-Message-State: APjAAAXLCOFE/e4ikL2iICl29DZFl3YpaHcGPBTyLZC+R//t3SLQLUz5
-        QA0IYN8HD7r0whKGzKCN1NEFCHx5tFBukt77x2S9yH1RuSh2igCDovdhFczvJF0OiKC+D7J2qec
-        +Rlvsmz9dwudKLkxg9zSZw7tY
-X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr30027650wru.220.1580216808937;
-        Tue, 28 Jan 2020 05:06:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzFnkEhBvvJuJtmNLUvHluChe4Bv8Ikr8QxAm5+P07CiOQneEKsGEiAF0zCN6YWxKDXkUk42Q==
-X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr30027618wru.220.1580216808670;
-        Tue, 28 Jan 2020 05:06:48 -0800 (PST)
-Received: from steredhat (85-207-217-101.static.bluetone.cz. [85.207.217.101])
-        by smtp.gmail.com with ESMTPSA id v17sm25046478wrt.91.2020.01.28.05.06.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 05:06:48 -0800 (PST)
-Date:   Tue, 28 Jan 2020 14:06:46 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH liburing 1/1] test: add epoll test case
-Message-ID: <20200128130646.n3x5co7n3m7gbyzy@steredhat>
-References: <20200127161701.153625-1-sgarzare@redhat.com>
- <20200127161701.153625-2-sgarzare@redhat.com>
- <b1b26e79-507a-b339-2850-d2686661e669@kernel.dk>
- <20200127182534.5ljsj53vzpj6kkru@steredhat>
- <646cbb04-9bef-0d99-64ec-322d1584abe7@kernel.dk>
+        Tue, 28 Jan 2020 08:07:30 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MnWx3-1jOJIF2sWT-00jah4; Tue, 28 Jan 2020 14:07:14 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Revert "drm/etnaviv: reject timeouts with tv_nsec >= NSEC_PER_SEC"
+Date:   Tue, 28 Jan 2020 14:06:13 +0100
+Message-Id: <20200128130710.4154835-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <646cbb04-9bef-0d99-64ec-322d1584abe7@kernel.dk>
+X-Provags-ID: V03:K1:jR2l1s+z5kbbpiXAPBoXFcIwZf1d5sfaUoAveWe7BXOdoM8VEhw
+ MgtLRbEvnZniSJSRMdkKtieu1Wa6lGggNCLlnV0B10jUud1mKAT2sWe+un4QvDtf5O/YXnH
+ ZaEARxTnOTBVv034KYNb033JOFXCxahqjlumSvV8INXhz+AWKX2L/FTQZJ3S2GqlJhR8T0z
+ 2SjvhbmJ66CsQEqxGKdxA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Gq/3jwAUlUk=:AkxXnmXnBxr4cx1PP6b973
+ oECszSyCfZmYjFBZJoggzjJoUCLupIKeZSPfvp3g1cIlqkJ6AecfG35as/vxqLhYd5RTDj8pW
+ z7qEp6rZNPfgcnteY5Koqf0zkh3hDXGuSywOz7BHNXsCyTLp+deCsM6MBUb9KE3vbE8w+wq+B
+ nByeZe2bw/O2mtsPitLFsyaqUBn7duQKwFdacxTiZw1e+T9jZoBo8/XkVwVYsMEv0vfCXq8et
+ 54SHmxnWwprOoim8Y9HZiQH4XZV7fPDSE1wvZzkcsQv7ZqVVtj6doUCZh1JtCTvxe8JWeHrN/
+ l0zc+nI3cIrPzuAi9eunD/bQDo4JMC4ZJZ06PllSuz7GsukujqCZ+8KLsisSvJT27yPJ2Fmm7
+ dhdyM4sP/IwHr5Jd8AyFb3Hb/3tv1wsjndnUCCdB71E2aT/MgOrWTa2JfXz/x1X6GCMQoCN1G
+ unZI+lEmQmVLfCip46hzCS6Z2EXChR/+p08d5CVQnl6AYBfd3SaegDjuqXsZDu+ygdNUEinEb
+ u6FR5gwEkRshKdkKYqDJCVXV0JM1hGKPxiId5H9CTRPYQWr6d27WbUtC/N1oIMOKKp04GOaLN
+ HmHw9lWM4h3K5PjgA0OUgpA/avrMED8JuzkeX+Fpa6uFqpaHk9eY8wTUwRlXDuLZe3v0KVIfG
+ Gri+3+0y2pMnHdaU+00hEw2O8i5FKEWp7Al0Og1E7AH0r/pL1H5LTBmJAULbaETlCIILGnTTm
+ mzMrK7tqEzN17l0yIIP2ZfcZFejU+E9E9zFfFzUep01XCMqbHUJFUmkOwhalysFNkG4LzfdFD
+ mxpLhu4wKFPy+NB0mzqhfLLZIqvQMXSivUv+4jrqitLSyxgqjs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 11:46:34AM -0700, Jens Axboe wrote:
-> On 1/27/20 11:25 AM, Stefano Garzarella wrote:
-> > On Mon, Jan 27, 2020 at 09:32:43AM -0700, Jens Axboe wrote:
-> >> On 1/27/20 9:17 AM, Stefano Garzarella wrote:
-> >>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> >>
-> >> You're not reaping CQ events, and hence you overflow the ring. Once
-> >> overflown, an attempt to submit new IO will returns in a -16/-EBUSY
-> >> return value. This is io_uring telling you that it won't submit more
-> >> IO until you've emptied the completion ring so io_uring can flush
-> >> the overflown entries to the ring.
-> > 
-> > How can I reaping CQ events? (I was hoping the epoll would help me with that)
-> > 
-> > What I'm seeing is that the producer (EPOLLOUT) can fill the SQ without issues,
-> > the consumer (read()) is receiving all the buffers produced, but the thread
-> > that frees the buffers (EPOLLIN) is not woken up.
-> > 
-> > I tried to set a timeout to the epoll_wait(), but the io_uring_peek_cqe()
-> > returns -EAGAIN.
-> > 
-> > If I'm using a ring with 16 entries, it seems to work better, but
-> > sometimes I lose events and the thread that frees the buffer doesn't wake up.
-> > 
-> > Maybe I'm missing something...
-> 
-> OK, so that helps in terms of understanding the issue you are seeing with
-> it. I'll take a look at this, but it'll probably be a few days. You can
-> try and enable tracing, I see events completed just fine. Maybe a race
-> with your epoll wait and event reaping?
+This reverts commit 172a216ff334ad869b0d74188a70763e4167fd9e.
 
-(discard previous email wrongly sent by my phone, sorry for the noise)
+Guido Günther reported issues with this patch that broke existing
+user space. Let's revert it for now and fix it properly later on.
 
-Okay, the issue was that my kernel doesn’t support IORING_FEAT_NODROP,
-so for this reason I missed the CQ events.
+Link: https://patchwork.kernel.org/patch/11291089/
+https://lore.kernel.org/lkml/20200121114553.2667556-1-arnd@arndb.de/
+Cc: Guido Günther <agx@sigxcpu.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+I've added this to my branch for inclusion in v5.6 to avoid the
+regression.
 
-Avoiding the CQ overflow keeping this condition true
-(submitted - completed < n_entries), solves the issue.
+ drivers/gpu/drm/etnaviv/etnaviv_drv.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-I’ll try with a mainline kernel, handling also the -EBUSY returned by
-io_uring_submit().
-
-Thanks,
-Stefano
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+index 3eb0f9223bea..ac26c084f30d 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+@@ -292,9 +292,6 @@ static int etnaviv_ioctl_gem_cpu_prep(struct drm_device *dev, void *data,
+ 	if (args->op & ~(ETNA_PREP_READ | ETNA_PREP_WRITE | ETNA_PREP_NOSYNC))
+ 		return -EINVAL;
+ 
+-	if (args->timeout.tv_nsec > NSEC_PER_SEC)
+-		return -EINVAL;
+-
+ 	obj = drm_gem_object_lookup(file, args->handle);
+ 	if (!obj)
+ 		return -ENOENT;
+@@ -358,9 +355,6 @@ static int etnaviv_ioctl_wait_fence(struct drm_device *dev, void *data,
+ 	if (args->flags & ~(ETNA_WAIT_NONBLOCK))
+ 		return -EINVAL;
+ 
+-	if (args->timeout.tv_nsec > NSEC_PER_SEC)
+-		return -EINVAL;
+-
+ 	if (args->pipe >= ETNA_MAX_PIPES)
+ 		return -EINVAL;
+ 
+@@ -412,9 +406,6 @@ static int etnaviv_ioctl_gem_wait(struct drm_device *dev, void *data,
+ 	if (args->flags & ~(ETNA_WAIT_NONBLOCK))
+ 		return -EINVAL;
+ 
+-	if (args->timeout.tv_nsec > NSEC_PER_SEC)
+-		return -EINVAL;
+-
+ 	if (args->pipe >= ETNA_MAX_PIPES)
+ 		return -EINVAL;
+ 
+-- 
+2.25.0
 
