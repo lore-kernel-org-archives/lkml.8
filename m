@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD42C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E751C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110682468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB2824681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220927;
-	bh=NkNf3aHS1upQgjgQ3AQuK+g2qELN1J0voucf72zHYP4=;
+	s=default; t=1580220931;
+	bh=PGmNPiL5hMFxFMpTlKmrdEz3b+5gbAEKuPO59Hgo7TQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xMAQhJ5x7EM1345YNGF33ohkLW13JuY5p7QpwGAsE4dhXHJfhf9xCpykirJbPUZHj
-	 g/eDKY7KZ/7+18Ku1j+pmjsd4umCpROfHliS/2iTPzuQRvJJ8nmomPDIzC9ODVNJOM
-	 kcBFY2rdsVTxQYhHYyBfhSboTN7gq7e4Q5miJ1jM=
+	b=L92k21qLgKo604JNV6sp36GZiilpX4ILwcpn8x/QBH+CSx4ziW+KS7eGVmsnfPVGF
+	 4uEk3n1MhpYDXRlyDjnLQIKMeD/FwKeUv4Ctilf4NLEl8fUH8/b25Ms4pu8/gNo6Mt
+	 YeeYUkXB6FD7K6DfSUwYqk4o9LFGa6lEvZ+DYHms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgA1OPZ (ORCPT
+        id S1730107AbgA1OPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:15:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37900 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:15:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbgA1OPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:15:18 -0500
+        id S1726384AbgA1OP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:15:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D197E24681;
-        Tue, 28 Jan 2020 14:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24BC120678;
+        Tue, 28 Jan 2020 14:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220918;
-        bh=NkNf3aHS1upQgjgQ3AQuK+g2qELN1J0voucf72zHYP4=;
+        s=default; t=1580220925;
+        bh=PGmNPiL5hMFxFMpTlKmrdEz3b+5gbAEKuPO59Hgo7TQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O2qAS/0FVJTe881U5/XbJ1F7WqM2bRdw1U7y/iKrxaB1D09d6iQaUff4eUWyJ0q35
-         LElyWFFcbWIeVy6ArbCD8pM9h2BsWD2z8ez7b+eTrS3oSpS2jGvIhfD7fuuI6j45VE
-         GsaihpxNhNvLugOvaCBWl3JphPWKXBCoXzopWSqE=
+        b=JRex3j7991Rx5WiICCHp2Gr+/9McbicHBfXybrOJrJLxWde8tcgNQhhoAtE/plshZ
+         IBVWzqhzeXeuytH1Jk85F94SqbaucBr3nybvc6VK6vQaubaF85RGvqvNaKVd9XUhmJ
+         frv5H/NtSRH7Z+HeWndTocW7ViecaHZYwdjatPpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 016/271] pinctrl: sh-pfc: r8a7740: Add missing REF125CK pin to gether_gmii group
-Date:   Tue, 28 Jan 2020 15:02:45 +0100
-Message-Id: <20200128135853.734034501@linuxfoundation.org>
+Subject: [PATCH 4.9 019/271] pinctrl: sh-pfc: r8a7791: Remove bogus marks from vin1_b_data18 group
+Date:   Tue, 28 Jan 2020 15:02:48 +0100
+Message-Id: <20200128135854.100891102@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -63,32 +63,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 1ebc589a7786f17f97b9e87b44e0fb4d0290d8f8 ]
+[ Upstream commit 0d6256cb880166a4111bebce35790019e56b6e1b ]
 
-The gether_gmii_mux[] array contains the REF125CK pin mark, but the
-gether_gmii_pins[] array lacks the corresponding pin number.
+The vin1_b_data18_mux[] arrays contains pin marks for the 2 LSB bits of
+the color components.  The vin1_b_data18_pins[] array rightfully does
+not include the corresponding pin numbers, as RGB18 is subset of RGB24,
+containing only the 6 MSB bits of each component.
 
-Fixes: bae11d30d0cafdc5 ("sh-pfc: r8a7740: Add GETHER pin groups and functions")
+Fixes: 8e32c9671f84acd8 ("pinctrl: sh-pfc: r8a7791: Add VIN pins")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7740.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
-index 35f436bcb8491..d8077065636e3 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
-@@ -1982,7 +1982,7 @@ static const unsigned int gether_gmii_pins[] = {
- 	 */
- 	185, 186, 187, 188, 189, 190, 191, 192, 174, 161, 204,
- 	171, 170, 169, 168, 167, 166, 173, 172, 176, 184, 183, 203,
--	205, 163, 206, 207,
-+	205, 163, 206, 207, 158,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+index fcf731994811f..1e7f32b5dce8c 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+@@ -4264,17 +4264,14 @@ static const unsigned int vin1_b_data18_pins[] = {
  };
- static const unsigned int gether_gmii_mux[] = {
- 	ET_ERXD0_MARK, ET_ERXD1_MARK, ET_ERXD2_MARK, ET_ERXD3_MARK,
+ static const unsigned int vin1_b_data18_mux[] = {
+ 	/* B */
+-	VI1_DATA0_B_MARK, VI1_DATA1_B_MARK,
+ 	VI1_DATA2_B_MARK, VI1_DATA3_B_MARK,
+ 	VI1_DATA4_B_MARK, VI1_DATA5_B_MARK,
+ 	VI1_DATA6_B_MARK, VI1_DATA7_B_MARK,
+ 	/* G */
+-	VI1_G0_B_MARK, VI1_G1_B_MARK,
+ 	VI1_G2_B_MARK, VI1_G3_B_MARK,
+ 	VI1_G4_B_MARK, VI1_G5_B_MARK,
+ 	VI1_G6_B_MARK, VI1_G7_B_MARK,
+ 	/* R */
+-	VI1_R0_B_MARK, VI1_R1_B_MARK,
+ 	VI1_R2_B_MARK, VI1_R3_B_MARK,
+ 	VI1_R4_B_MARK, VI1_R5_B_MARK,
+ 	VI1_R6_B_MARK, VI1_R7_B_MARK,
 -- 
 2.20.1
 
