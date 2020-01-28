@@ -2,216 +2,338 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82269C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D67BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565702468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580249304;
-	bh=JdEuxZDf0ro4RVyPSlg7zqseX/OLqyvKgF4b95e8xXc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NIb1sL5yUcIG5sgxLltuvlOjIp+lbYiZEP82tFqdY4xvzV3BrEE9sLbe1mViD3Unp
-	 0gPHLxbu74KS1+A4fsEyrHV+YLQlyiAcpdGbWBV2o8UR/J8qv6f/2TduUWyk1dz/JN
-	 1TuiyTupaUbAJmP1AARW9e0JcgF2zdcxiLjqCPS8=
+	by mail.kernel.org (Postfix) with ESMTP id 6BA472173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgA1WIX (ORCPT
+        id S1726389AbgA1WLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 17:08:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgA1WIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 17:08:23 -0500
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F8A42467E;
-        Tue, 28 Jan 2020 22:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580249302;
-        bh=JdEuxZDf0ro4RVyPSlg7zqseX/OLqyvKgF4b95e8xXc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=X/kGzDM2APsiXpo++m8tCdryIif7Y2FCZ+vlOp6GFLfpCxlI6DHlYoDbwHPCOXjk3
-         cV9yij5aPKwxYJd29Bv8ZAKlT/6veUYoOdk/W40BJrqZrFMXYgwXHLaM+iMEXQFolC
-         kRpfqwnPejmrObLrsstm3kpn9BDTlS1S8+1mOvjo=
-Received: by mail-qt1-f181.google.com with SMTP id l19so6038123qtq.8;
-        Tue, 28 Jan 2020 14:08:22 -0800 (PST)
-X-Gm-Message-State: APjAAAVhJ6PPEmdTtiPY6wXUcdxBbU6fZSSVfrB/84CwKEibI1g20i3s
-        wJYs1PmxTb5q4fklaeSuLpwlEz6r7CxE/hdqWw==
-X-Google-Smtp-Source: APXvYqwmWfwn77Hr3BX7qUfKz9G+Ld17fXrROOoEL/Gl0LFF5YNA/xHd0pf7rebUiGWGkqAZMRQtUuGEnSiq5u2YVDY=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr24048013qtj.300.1580249301182;
- Tue, 28 Jan 2020 14:08:21 -0800 (PST)
+        Tue, 28 Jan 2020 17:11:31 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63920 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726234AbgA1WLb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 17:11:31 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SM8g5n001921;
+        Tue, 28 Jan 2020 17:11:17 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrhv2a0fs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jan 2020 17:11:17 -0500
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 00SM8rjr003135;
+        Tue, 28 Jan 2020 17:11:16 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrhv2a0fa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jan 2020 17:11:16 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00SMB0uW000615;
+        Tue, 28 Jan 2020 22:11:15 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma03dal.us.ibm.com with ESMTP id 2xrda6mbxq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jan 2020 22:11:15 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00SMBEoK42533126
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jan 2020 22:11:14 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8541F1360C0;
+        Tue, 28 Jan 2020 22:11:14 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1873C1360C1;
+        Tue, 28 Jan 2020 22:11:13 +0000 (GMT)
+Received: from rascal.austin.ibm.com (unknown [9.41.179.32])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Jan 2020 22:11:13 +0000 (GMT)
+From:   Scott Cheloha <cheloha@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Nathan Fontenont <ndfont@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Rick Lindley <ricklind@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] powerpc/drmem: cache LMBs in xarray to accelerate lookup
+Date:   Tue, 28 Jan 2020 16:11:13 -0600
+Message-Id: <20200128221113.17158-1-cheloha@linux.ibm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200128082013.15951-1-benjamin.gaignard@st.com>
- <20200128120600.oagnindklixjyieo@gilmour.lan> <a7fa1b43-a188-9d06-73ec-16bcd4012207@st.com>
- <CAL_JsqJ80kSU7bHJt0_SeX5FVfxxjN5-ZKxt+tOfGy2cV62cbQ@mail.gmail.com> <676d7e79-c129-c13c-b804-25d41afdbef9@st.com>
-In-Reply-To: <676d7e79-c129-c13c-b804-25d41afdbef9@st.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 28 Jan 2020 16:08:10 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+rozrRb1embptEQrtpaxP5u9v8hH-WAfCrUZHXt7WYXQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+rozrRb1embptEQrtpaxP5u9v8hH-WAfCrUZHXt7WYXQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: display: Convert etnaviv to json-schema
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux+etnaviv@armlinux.org.uk" <linux+etnaviv@armlinux.org.uk>,
-        "christian.gmeiner@gmail.com" <christian.gmeiner@gmail.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_08:2020-01-28,2020-01-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=999 clxscore=1011 phishscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001280164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 1:58 PM Benjamin GAIGNARD
-<benjamin.gaignard@st.com> wrote:
->
->
-> On 1/28/20 8:35 PM, Rob Herring wrote:
-> > On Tue, Jan 28, 2020 at 6:31 AM Benjamin GAIGNARD
-> > <benjamin.gaignard@st.com> wrote:
-> >>
-> >> On 1/28/20 1:06 PM, Maxime Ripard wrote:
-> >>> Hi Benjamin,
-> >>>
-> >>> On Tue, Jan 28, 2020 at 09:20:13AM +0100, Benjamin Gaignard wrote:
-> >>>> Convert etnaviv bindings to yaml format.
-> >>>>
-> >>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> >>>> ---
-> >>>>    .../bindings/display/etnaviv/etnaviv-drm.txt       | 36 -----------
-> >>>>    .../devicetree/bindings/gpu/vivante,gc.yaml        | 72 ++++++++++++++++++++++
-> >>>>    2 files changed, 72 insertions(+), 36 deletions(-)
-> >>>>    delete mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> >>>>    create mode 100644 Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> >>>> deleted file mode 100644
-> >>>> index 8def11b16a24..000000000000
-> >>>> --- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> >>>> +++ /dev/null
-> >>>> @@ -1,36 +0,0 @@
-> >>>> -Vivante GPU core devices
-> >>>> -========================
-> >>>> -
-> >>>> -Required properties:
-> >>>> -- compatible: Should be "vivante,gc"
-> >>>> -  A more specific compatible is not needed, as the cores contain chip
-> >>>> -  identification registers at fixed locations, which provide all the
-> >>>> -  necessary information to the driver.
-> >>>> -- reg: should be register base and length as documented in the
-> >>>> -  datasheet
-> >>>> -- interrupts: Should contain the cores interrupt line
-> >>>> -- clocks: should contain one clock for entry in clock-names
-> >>>> -  see Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >>>> -- clock-names:
-> >>>> -   - "bus":    AXI/master interface clock
-> >>>> -   - "reg":    AHB/slave interface clock
-> >>>> -               (only required if GPU can gate slave interface independently)
-> >>>> -   - "core":   GPU core clock
-> >>>> -   - "shader": Shader clock (only required if GPU has feature PIPE_3D)
-> >>>> -
-> >>>> -Optional properties:
-> >>>> -- power-domains: a power domain consumer specifier according to
-> >>>> -  Documentation/devicetree/bindings/power/power_domain.txt
-> >>>> -
-> >>>> -example:
-> >>>> -
-> >>>> -gpu_3d: gpu@130000 {
-> >>>> -    compatible = "vivante,gc";
-> >>>> -    reg = <0x00130000 0x4000>;
-> >>>> -    interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
-> >>>> -    clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
-> >>>> -             <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> >>>> -             <&clks IMX6QDL_CLK_GPU3D_SHADER>;
-> >>>> -    clock-names = "bus", "core", "shader";
-> >>>> -    power-domains = <&gpc 1>;
-> >>>> -};
-> >>>> diff --git a/Documentation/devicetree/bindings/gpu/vivante,gc.yaml b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-> >>>> new file mode 100644
-> >>>> index 000000000000..c4f549c0d750
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-> >>>> @@ -0,0 +1,72 @@
-> >>>> +# SPDX-License-Identifier: GPL-2.0
-> >>>> +%YAML 1.2
-> >>>> +---
-> >>>> +$id: http://devicetree.org/schemas/gpu/vivante,gc.yaml#
-> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>>> +
-> >>>> +title: Vivante GPU Bindings
-> >>>> +
-> >>>> +description: Vivante GPU core devices
-> >>>> +
-> >>>> +maintainers:
-> >>>> +  -  Lucas Stach <l.stach@pengutronix.de>
-> >>>> +
-> >>>> +properties:
-> >>>> +  compatible:
-> >>>> +    const: vivante,gc
-> >>>> +
-> >>>> +  reg:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  interrupts:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  clocks:
-> >>>> +    items:
-> >>>> +      - description: AXI/master interface clock
-> >>>> +      - description: GPU core clock
-> >>>> +      - description: Shader clock (only required if GPU has feature PIPE_3D)
-> >>>> +      - description: AHB/slave interface clock (only required if GPU can gate slave interface independently)
-> >>> Can you have an AHB slave interface clock without a shader clock?
-> >> No because the items in the list are ordered so you need to have, in
-> >> order: "bus", "core", "shader", "reg"
-> >>
-> >> If it is needed to allow any number of clock in any order I could write
-> >> it like this:
-> > Yes, but I prefer we don't allow any order if we don't have to. Did
-> > you run this schema against dtbs_check or just audit the dts files
-> > with vivante?
->
-> Both, I found these mix of reg-names:
->
-> "core"
->
-> "bus","core"
->
-> "bus","core","shader"
+LMB lookup is currently an O(n) linear search.  This scales poorly when
+there are many LMBs.
 
-You missed a couple:
+If we cache each LMB by both its base address and its DRC index
+in an xarray we can cut lookups to O(log n), greatly accelerating
+drmem initialization and memory hotplug.
 
-arch/arc/boot/dts/hsdk.dts-                     clock-names = "bus",
-"reg", "core", "shader";
-arch/arm/boot/dts/dove.dtsi-                            clock-names = "core";
-arch/arm/boot/dts/imx6q.dtsi-                   clock-names = "bus", "core";
-arch/arm/boot/dts/imx6qdl.dtsi-                 clock-names = "bus",
-"core", "shader";
-arch/arm/boot/dts/imx6qdl.dtsi-                 clock-names = "bus", "core";
-arch/arm/boot/dts/imx6sl.dtsi-                  clock-names = "bus", "core";
-arch/arm/boot/dts/imx6sl.dtsi-                  clock-names = "bus", "core";
-arch/arm/boot/dts/imx6sx.dtsi-                  clock-names = "bus",
-"core", "shader";
-arch/arm/boot/dts/stm32mp157c.dtsi-                     clock-names =
-"bus" ,"core";
-arch/arm64/boot/dts/freescale/imx8mq.dtsi-
-clock-names = "core", "shader", "bus", "reg";
+This patch introduces two xarrays of of LMBs and fills them during
+drmem initialization.  The patch also adds two interfaces for LMB
+lookup.
 
-imx8mq is probably new enough to change if we wanted to.
+The first interface, drmem_find_lmb_by_base_addr(), is employed in
+hot_add_drconf_scn_to_nid() to replace a linear search.  This speeds up
+memory_add_physaddr_to_nid(), which is called by lmb_set_nid(), an
+interface used during drmem initialization and memory hotplug.
 
-I guess just do an enum...
+The second interface, drmem_find_lmb_by_drc_index(), is employed in
+get_lmb_range() to replace a linear search.  This speeds up
+dlpar_memory_add_by_ic() and dlpar_memory_remove_by_ic(), interfaces
+used during memory hotplug.
 
-Rob
+These substitutions yield significant improvements:
+
+1. A POWER9 VM with a maximum memory of 10TB and 256MB LMBs has
+   40960 LMBs.  With this patch it completes drmem_init() ~1138ms
+   faster.
+
+Before:
+[    0.542244] drmem: initializing drmem v1
+[    1.768787] drmem: initialized 40960 LMBs
+
+After:
+[    0.543611] drmem: initializing drmem v1
+[    0.631386] drmem: initialized 40960 LMBs
+
+2. A POWER9 VM with a maximum memory of 4TB and 256MB LMBs has
+   16384 LMBs.  Via the qemu monitor we can hot-add memory as
+   virtual DIMMs.  Each DIMM is 256 LMBs.  With this patch we
+   hot-add every possible LMB about 60 seconds faster.
+
+Before:
+[   17.422177] pseries-hotplug-mem: Attempting to hot-add 256 LMB(s) at index 80000100
+[...]
+[  167.285563] pseries-hotplug-mem: Memory at 3fff0000000 (drc index 80003fff) was hot-added
+
+After:
+[   14.753480] pseries-hotplug-mem: Attempting to hot-add 256 LMB(s) at index 80000100
+[...]
+[  103.934092] pseries-hotplug-mem: Memory at 3fff0000000 (drc index 80003fff) was hot-added
+
+Signed-off-by: Scott Cheloha <cheloha@linux.ibm.com>
+---
+These linear searches become a serious bottleneck as the machine
+approaches 64TB.  There are just too many LMBs to use a linear
+search.
+
+On a 60TB machine we recently saw the following soft lockup during
+drmem_init():
+
+[   60.602386] watchdog: BUG: soft lockup - CPU#9 stuck for 23s! [swapper/0:1]
+[   60.602414] Modules linked in:
+[   60.602417] Supported: No, Unreleased kernel
+[   60.602423] CPU: 9 PID: 1 Comm: swapper/0 Not tainted 5.3.18-2-default #1 SLE15-SP2 (unreleased)
+[   60.602426] NIP:  c000000000095c0c LR: c000000000095bb0 CTR: 0000000000000000
+[   60.602430] REGS: c00022c7fc497830 TRAP: 0901   Not tainted  (5.3.18-2-default)
+[   60.602432] MSR:  8000000002009033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 44000244  XER: 00000000
+[   60.602442] CFAR: c000000000095c18 IRQMASK: 0 
+               GPR00: c000000000095bb0 c00022c7fc497ac0 c00000000162cc00 c0003bffffff5e08 
+               GPR04: 0000000000000000 c000000000ea539a 000000000000002f 0000000010000000 
+               GPR08: c00007fc5f59ffb8 000014bc50000000 c00007fc5f1f1a30 c0000000014f2fb8 
+               GPR12: 0000000000000000 c00000001e980600 
+[   60.602464] NIP [c000000000095c0c] hot_add_scn_to_nid+0xbc/0x400
+[   60.602467] LR [c000000000095bb0] hot_add_scn_to_nid+0x60/0x400
+[   60.602470] Call Trace:
+[   60.602473] [c00022c7fc497ac0] [c000000000095bb0] hot_add_scn_to_nid+0x60/0x400 (unreliable)
+[   60.602478] [c00022c7fc497b20] [c00000000007a6a0] memory_add_physaddr_to_nid+0x20/0x60
+[   60.602483] [c00022c7fc497b40] [c0000000010235a4] drmem_init+0x258/0x2d8
+[   60.602485] [c00022c7fc497c10] [c000000000010694] do_one_initcall+0x64/0x300
+[   60.602489] [c00022c7fc497ce0] [c0000000010144f8] kernel_init_freeable+0x2e8/0x3fc
+[   60.602491] [c00022c7fc497db0] [c000000000010b0c] kernel_init+0x2c/0x160
+[   60.602497] [c00022c7fc497e20] [c00000000000b960] ret_from_kernel_thread+0x5c/0x7c
+[   60.602498] Instruction dump:
+[   60.602501] 7d0a4214 7faa4040 419d0328 e92a0010 71290088 2fa90008 409e001c e92a0000 
+[   60.602506] 7fbe4840 419c0010 7d274a14 7fbe4840 <419c00e4> 394a0018 7faa4040 409dffd0 
+
+This patch should eliminate the drmem_init() bottleneck during boot.
+
+One other important thing to note is that this only addresses part of
+the slowdown during memory hotplug when there are many LMBs.  A far larger
+part of it is caused by the linear memblock search in find_memory_block().
+That problem is addressed with this patch:
+
+https://lore.kernel.org/lkml/20200121231028.13699-1-cheloha@linux.ibm.com/
+
+which is in linux-next.  The numbers I quote here in the commit message
+for time improvements during hotplug are taken with that patch applied.
+
+Without it, hotplug is even slower.
+
+ arch/powerpc/include/asm/drmem.h              |  3 ++
+ arch/powerpc/mm/drmem.c                       | 33 +++++++++++++++++++
+ arch/powerpc/mm/numa.c                        | 30 +++++++----------
+ .../platforms/pseries/hotplug-memory.c        | 11 ++-----
+ 4 files changed, 50 insertions(+), 27 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/drmem.h b/arch/powerpc/include/asm/drmem.h
+index 3d76e1c388c2..a37cbe794cdd 100644
+--- a/arch/powerpc/include/asm/drmem.h
++++ b/arch/powerpc/include/asm/drmem.h
+@@ -88,6 +88,9 @@ static inline bool drmem_lmb_reserved(struct drmem_lmb *lmb)
+ 	return lmb->flags & DRMEM_LMB_RESERVED;
+ }
+ 
++struct drmem_lmb *drmem_find_lmb_by_base_addr(unsigned long);
++struct drmem_lmb *drmem_find_lmb_by_drc_index(unsigned long);
++
+ u64 drmem_lmb_memory_max(void);
+ void __init walk_drmem_lmbs(struct device_node *dn,
+ 			void (*func)(struct drmem_lmb *, const __be32 **));
+diff --git a/arch/powerpc/mm/drmem.c b/arch/powerpc/mm/drmem.c
+index 557d9080604d..7c464b0a256e 100644
+--- a/arch/powerpc/mm/drmem.c
++++ b/arch/powerpc/mm/drmem.c
+@@ -11,9 +11,12 @@
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
+ #include <linux/memblock.h>
++#include <linux/xarray.h>
+ #include <asm/prom.h>
+ #include <asm/drmem.h>
+ 
++static DEFINE_XARRAY(drmem_lmb_base_addr);
++static DEFINE_XARRAY(drmem_lmb_drc_index);
+ static struct drmem_lmb_info __drmem_info;
+ struct drmem_lmb_info *drmem_info = &__drmem_info;
+ 
+@@ -25,6 +28,31 @@ u64 drmem_lmb_memory_max(void)
+ 	return last_lmb->base_addr + drmem_lmb_size();
+ }
+ 
++struct drmem_lmb *drmem_find_lmb_by_base_addr(unsigned long base_addr)
++{
++	return xa_load(&drmem_lmb_base_addr, base_addr);
++}
++
++struct drmem_lmb *drmem_find_lmb_by_drc_index(unsigned long drc_index)
++{
++	return xa_load(&drmem_lmb_drc_index, drc_index);
++}
++
++static int drmem_lmb_cache_for_lookup(struct drmem_lmb *lmb)
++{
++	void *ret;
++
++	ret = xa_store(&drmem_lmb_base_addr, lmb->base_addr, lmb,  GFP_KERNEL);
++	if (xa_err(ret))
++		return xa_err(ret);
++
++	ret = xa_store(&drmem_lmb_drc_index, lmb->drc_index, lmb, GFP_KERNEL);
++	if (xa_err(ret))
++		return xa_err(ret);
++
++	return 0;
++}
++
+ static u32 drmem_lmb_flags(struct drmem_lmb *lmb)
+ {
+ 	/*
+@@ -364,6 +392,8 @@ static void __init init_drmem_v1_lmbs(const __be32 *prop)
+ 
+ 	for_each_drmem_lmb(lmb) {
+ 		read_drconf_v1_cell(lmb, &prop);
++		if (drmem_lmb_cache_for_lookup(lmb) != 0)
++			return;
+ 		lmb_set_nid(lmb);
+ 	}
+ }
+@@ -411,6 +441,9 @@ static void __init init_drmem_v2_lmbs(const __be32 *prop)
+ 			lmb->aa_index = dr_cell.aa_index;
+ 			lmb->flags = dr_cell.flags;
+ 
++			if (drmem_lmb_cache_for_lookup(lmb) != 0)
++				return;
++
+ 			lmb_set_nid(lmb);
+ 		}
+ 	}
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 50d68d21ddcc..23684d44549f 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -958,27 +958,21 @@ early_param("topology_updates", early_topology_updates);
+ static int hot_add_drconf_scn_to_nid(unsigned long scn_addr)
+ {
+ 	struct drmem_lmb *lmb;
+-	unsigned long lmb_size;
+-	int nid = NUMA_NO_NODE;
+-
+-	lmb_size = drmem_lmb_size();
+-
+-	for_each_drmem_lmb(lmb) {
+-		/* skip this block if it is reserved or not assigned to
+-		 * this partition */
+-		if ((lmb->flags & DRCONF_MEM_RESERVED)
+-		    || !(lmb->flags & DRCONF_MEM_ASSIGNED))
+-			continue;
+ 
+-		if ((scn_addr < lmb->base_addr)
+-		    || (scn_addr >= (lmb->base_addr + lmb_size)))
+-			continue;
++	lmb = drmem_find_lmb_by_base_addr(scn_addr);
++	if (lmb == NULL)
++		return NUMA_NO_NODE;
+ 
+-		nid = of_drconf_to_nid_single(lmb);
+-		break;
+-	}
++	/*
++	 * We can't use it if it is reserved or not assigned to
++	 * this partition.
++	 */
++	if (lmb->flags & DRCONF_MEM_RESERVED)
++		return NUMA_NO_NODE;
++	if (!(lmb->flags & DRCONF_MEM_ASSIGNED))
++		return NUMA_NO_NODE;
+ 
+-	return nid;
++	return of_drconf_to_nid_single(lmb);
+ }
+ 
+ /*
+diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+index c126b94d1943..29bd19831a9a 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -222,17 +222,10 @@ static int get_lmb_range(u32 drc_index, int n_lmbs,
+ 			 struct drmem_lmb **start_lmb,
+ 			 struct drmem_lmb **end_lmb)
+ {
+-	struct drmem_lmb *lmb, *start, *end;
++	struct drmem_lmb *start, *end;
+ 	struct drmem_lmb *last_lmb;
+ 
+-	start = NULL;
+-	for_each_drmem_lmb(lmb) {
+-		if (lmb->drc_index == drc_index) {
+-			start = lmb;
+-			break;
+-		}
+-	}
+-
++	start = drmem_find_lmb_by_drc_index(drc_index);
+ 	if (!start)
+ 		return -EINVAL;
+ 
+-- 
+2.24.1
+
