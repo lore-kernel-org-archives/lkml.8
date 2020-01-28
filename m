@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDC0C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86E7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C39324692
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A1024692
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221823;
-	bh=DGkn0T8um9aUZbLl16ewYz61FG8Hvju4fsmee5CFgaE=;
+	s=default; t=1580221829;
+	bh=SGN8Qz2eSMkSW3JyldVokWfkqjyn9HgNuVf/9HIHyfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ukzl3dptE9H2uNZljGx2LuN3wrbHvJcgOnQotIxkuu+qhCgSrhk6I1kfaHpnojsc9
-	 uNY9Scb8bDQeYyKxxE6qo8+jCFOuEJgNQ5YQCUYc4nPNMHc0JgQeNnON6JZ/wzEE7M
-	 H3RAPQxsMGvpbJpodZlUuaxQIzzjCTLxH690l7tE=
+	b=mbNJwXWz2+Ca3gK6Vv5lt+QU1XBm+FiVdAVyOQsml7XAIO72nwji1Ex09YVY8MtXr
+	 j7gdYGZVdcgBdfLecx+6NN7wq59Rs9xy+renCxqD/LkiPMTOFRjC0Q8zcIPt+yOzJk
+	 3pWsX4M+trZWDIPpg4PWO5TJ2ybAJl6cSm+YzWEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387435AbgA1O3Q (ORCPT
+        id S2387728AbgA1Oa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:29:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57578 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:30:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387601AbgA1O3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:29:13 -0500
+        id S2387614AbgA1O3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:29:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E6E724688;
-        Tue, 28 Jan 2020 14:29:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38B9721739;
+        Tue, 28 Jan 2020 14:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221753;
-        bh=DGkn0T8um9aUZbLl16ewYz61FG8Hvju4fsmee5CFgaE=;
+        s=default; t=1580221747;
+        bh=SGN8Qz2eSMkSW3JyldVokWfkqjyn9HgNuVf/9HIHyfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u+cuqlJbW0R1vcEVX4SnbYneB6p+TGqhS2mUAe86GlkdbH/fuM3kzX6IH7YVrZYIP
-         c1rxWJ5Sv1YZzG/u/YgoR+R6yFtVZY7lEM5mztdbCasVtt8rYotx+TAJXyjYaPE0CO
-         m7yw4u7DWVCq+t4Hr59oNnHOyetCv+qvLWlTcNmw=
+        b=GTr5YPyFB+GHvgTH7BPF1AE03Eau5vzUbiDj9iie/RTT009Ocxvfpbw+NRUOYfzV7
+         IoI5f0NEKMG0QRJNDd2QampI6K5B6xcF4Y7WpWfH6HcofZssJ8KjuhhW4w4TWU/sZT
+         XvJSlHx0k4jMHOM3FWVPRqDxkl7jPzp6um9inq3E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Florian Bezdeka <florian@bezdeka.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 60/92] crypto: geode-aes - switch to skcipher for cbc(aes) fallback
-Date:   Tue, 28 Jan 2020 15:08:28 +0100
-Message-Id: <20200128135816.937763211@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Zanuss <zanussi@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 58/92] tracing: Fix histogram code when expression has same var as value
+Date:   Tue, 28 Jan 2020 15:08:26 +0100
+Message-Id: <20200128135816.670214575@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,180 +59,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 504582e8e40b90b8f8c58783e2d1e4f6a2b71a3a upstream.
+commit 8bcebc77e85f3d7536f96845a0fe94b1dddb6af0 upstream.
 
-Commit 79c65d179a40e145 ("crypto: cbc - Convert to skcipher") updated
-the generic CBC template wrapper from a blkcipher to a skcipher algo,
-to get away from the deprecated blkcipher interface. However, as a side
-effect, drivers that instantiate CBC transforms using the blkcipher as
-a fallback no longer work, since skciphers can wrap blkciphers but not
-the other way around. This broke the geode-aes driver.
+While working on a tool to convert SQL syntex into the histogram language of
+the kernel, I discovered the following bug:
 
-So let's fix it by moving to the sync skcipher interface when allocating
-the fallback. At the same time, align with the generic API for ECB and
-CBC by rejecting inputs that are not a multiple of the AES block size.
+ # echo 'first u64 start_time u64 end_time pid_t pid u64 delta' >> synthetic_events
+ # echo 'hist:keys=pid:start=common_timestamp' > events/sched/sched_waking/trigger
+ # echo 'hist:keys=next_pid:delta=common_timestamp-$start,start2=$start:onmatch(sched.sched_waking).trace(first,$start2,common_timestamp,next_pid,$delta)' > events/sched/sched_switch/trigger
 
-Fixes: 79c65d179a40e145 ("crypto: cbc - Convert to skcipher")
-Cc: <stable@vger.kernel.org> # v4.20+ ONLY
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Florian Bezdeka <florian@bezdeka.de>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Florian Bezdeka <florian@bezdeka.de>
+Would not display any histograms in the sched_switch histogram side.
+
+But if I were to swap the location of
+
+  "delta=common_timestamp-$start" with "start2=$start"
+
+Such that the last line had:
+
+ # echo 'hist:keys=next_pid:start2=$start,delta=common_timestamp-$start:onmatch(sched.sched_waking).trace(first,$start2,common_timestamp,next_pid,$delta)' > events/sched/sched_switch/trigger
+
+The histogram works as expected.
+
+What I found out is that the expressions clear out the value once it is
+resolved. As the variables are resolved in the order listed, when
+processing:
+
+  delta=common_timestamp-$start
+
+The $start is cleared. When it gets to "start2=$start", it errors out with
+"unresolved symbol" (which is silent as this happens at the location of the
+trace), and the histogram is dropped.
+
+When processing the histogram for variable references, instead of adding a
+new reference for a variable used twice, use the same reference. That way,
+not only is it more efficient, but the order will no longer matter in
+processing of the variables.
+
+>From Tom Zanussi:
+
+ "Just to clarify some more about what the problem was is that without
+  your patch, we would have two separate references to the same variable,
+  and during resolve_var_refs(), they'd both want to be resolved
+  separately, so in this case, since the first reference to start wasn't
+  part of an expression, it wouldn't get the read-once flag set, so would
+  be read normally, and then the second reference would do the read-once
+  read and also be read but using read-once.  So everything worked and
+  you didn't see a problem:
+
+   from: start2=$start,delta=common_timestamp-$start
+
+  In the second case, when you switched them around, the first reference
+  would be resolved by doing the read-once, and following that the second
+  reference would try to resolve and see that the variable had already
+  been read, so failed as unset, which caused it to short-circuit out and
+  not do the trigger action to generate the synthetic event:
+
+   to: delta=common_timestamp-$start,start2=$start
+
+  With your patch, we only have the single resolution which happens
+  correctly the one time it's resolved, so this can't happen."
+
+Link: https://lore.kernel.org/r/20200116154216.58ca08eb@gandalf.local.home
+
+Cc: stable@vger.kernel.org
+Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist triggers")
+Reviewed-by: Tom Zanuss <zanussi@kernel.org>
+Tested-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/geode-aes.c |   57 ++++++++++++++++++++++++++-------------------
- drivers/crypto/geode-aes.h |    2 -
- 2 files changed, 35 insertions(+), 24 deletions(-)
+ kernel/trace/trace_events_hist.c |   22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
---- a/drivers/crypto/geode-aes.c
-+++ b/drivers/crypto/geode-aes.c
-@@ -14,6 +14,7 @@
- #include <linux/spinlock.h>
- #include <crypto/algapi.h>
- #include <crypto/aes.h>
-+#include <crypto/skcipher.h>
- 
- #include <linux/io.h>
- #include <linux/delay.h>
-@@ -170,13 +171,15 @@ static int geode_setkey_blk(struct crypt
- 	/*
- 	 * The requested key size is not supported by HW, do a fallback
- 	 */
--	op->fallback.blk->base.crt_flags &= ~CRYPTO_TFM_REQ_MASK;
--	op->fallback.blk->base.crt_flags |= (tfm->crt_flags & CRYPTO_TFM_REQ_MASK);
-+	crypto_skcipher_clear_flags(op->fallback.blk, CRYPTO_TFM_REQ_MASK);
-+	crypto_skcipher_set_flags(op->fallback.blk,
-+				  tfm->crt_flags & CRYPTO_TFM_REQ_MASK);
- 
--	ret = crypto_blkcipher_setkey(op->fallback.blk, key, len);
-+	ret = crypto_skcipher_setkey(op->fallback.blk, key, len);
- 	if (ret) {
- 		tfm->crt_flags &= ~CRYPTO_TFM_RES_MASK;
--		tfm->crt_flags |= (op->fallback.blk->base.crt_flags & CRYPTO_TFM_RES_MASK);
-+		tfm->crt_flags |= crypto_skcipher_get_flags(op->fallback.blk) &
-+				  CRYPTO_TFM_RES_MASK;
- 	}
- 	return ret;
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -49,6 +49,7 @@ struct hist_field {
+ 	struct ftrace_event_field	*field;
+ 	unsigned long			flags;
+ 	hist_field_fn_t			fn;
++	unsigned int			ref;
+ 	unsigned int			size;
+ 	unsigned int			offset;
+ 	unsigned int                    is_signed;
+@@ -2225,8 +2226,16 @@ static int contains_operator(char *str)
+ 	return field_op;
  }
-@@ -185,33 +188,28 @@ static int fallback_blk_dec(struct blkci
- 		struct scatterlist *dst, struct scatterlist *src,
- 		unsigned int nbytes)
+ 
++static void get_hist_field(struct hist_field *hist_field)
++{
++	hist_field->ref++;
++}
++
+ static void __destroy_hist_field(struct hist_field *hist_field)
  {
--	unsigned int ret;
--	struct crypto_blkcipher *tfm;
- 	struct geode_aes_op *op = crypto_blkcipher_ctx(desc->tfm);
-+	SKCIPHER_REQUEST_ON_STACK(req, op->fallback.blk);
- 
--	tfm = desc->tfm;
--	desc->tfm = op->fallback.blk;
--
--	ret = crypto_blkcipher_decrypt_iv(desc, dst, src, nbytes);
-+	skcipher_request_set_tfm(req, op->fallback.blk);
-+	skcipher_request_set_callback(req, 0, NULL, NULL);
-+	skcipher_request_set_crypt(req, src, dst, nbytes, desc->info);
- 
--	desc->tfm = tfm;
--	return ret;
-+	return crypto_skcipher_decrypt(req);
- }
++	if (--hist_field->ref > 1)
++		return;
 +
- static int fallback_blk_enc(struct blkcipher_desc *desc,
- 		struct scatterlist *dst, struct scatterlist *src,
- 		unsigned int nbytes)
+ 	kfree(hist_field->var.name);
+ 	kfree(hist_field->name);
+ 	kfree(hist_field->type);
+@@ -2268,6 +2277,8 @@ static struct hist_field *create_hist_fi
+ 	if (!hist_field)
+ 		return NULL;
+ 
++	hist_field->ref = 1;
++
+ 	hist_field->hist_data = hist_data;
+ 
+ 	if (flags & HIST_FIELD_FL_EXPR || flags & HIST_FIELD_FL_ALIAS)
+@@ -2463,6 +2474,17 @@ static struct hist_field *create_var_ref
  {
--	unsigned int ret;
--	struct crypto_blkcipher *tfm;
- 	struct geode_aes_op *op = crypto_blkcipher_ctx(desc->tfm);
-+	SKCIPHER_REQUEST_ON_STACK(req, op->fallback.blk);
- 
--	tfm = desc->tfm;
--	desc->tfm = op->fallback.blk;
--
--	ret = crypto_blkcipher_encrypt_iv(desc, dst, src, nbytes);
-+	skcipher_request_set_tfm(req, op->fallback.blk);
-+	skcipher_request_set_callback(req, 0, NULL, NULL);
-+	skcipher_request_set_crypt(req, src, dst, nbytes, desc->info);
- 
--	desc->tfm = tfm;
--	return ret;
-+	return crypto_skcipher_encrypt(req);
- }
- 
- static void
-@@ -311,6 +309,9 @@ geode_cbc_decrypt(struct blkcipher_desc
- 	struct blkcipher_walk walk;
- 	int err, ret;
- 
-+	if (nbytes % AES_BLOCK_SIZE)
-+		return -EINVAL;
+ 	unsigned long flags = HIST_FIELD_FL_VAR_REF;
+ 	struct hist_field *ref_field;
++	int i;
 +
- 	if (unlikely(op->keylen != AES_KEYSIZE_128))
- 		return fallback_blk_dec(desc, dst, src, nbytes);
++	/* Check if the variable already exists */
++	for (i = 0; i < hist_data->n_var_refs; i++) {
++		ref_field = hist_data->var_refs[i];
++		if (ref_field->var.idx == var_field->var.idx &&
++		    ref_field->var.hist_data == var_field->hist_data) {
++			get_hist_field(ref_field);
++			return ref_field;
++		}
++	}
  
-@@ -343,6 +344,9 @@ geode_cbc_encrypt(struct blkcipher_desc
- 	struct blkcipher_walk walk;
- 	int err, ret;
- 
-+	if (nbytes % AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
- 	if (unlikely(op->keylen != AES_KEYSIZE_128))
- 		return fallback_blk_enc(desc, dst, src, nbytes);
- 
-@@ -370,8 +374,9 @@ static int fallback_init_blk(struct cryp
- 	const char *name = crypto_tfm_alg_name(tfm);
- 	struct geode_aes_op *op = crypto_tfm_ctx(tfm);
- 
--	op->fallback.blk = crypto_alloc_blkcipher(name, 0,
--			CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK);
-+	op->fallback.blk = crypto_alloc_skcipher(name, 0,
-+						 CRYPTO_ALG_ASYNC |
-+						 CRYPTO_ALG_NEED_FALLBACK);
- 
- 	if (IS_ERR(op->fallback.blk)) {
- 		printk(KERN_ERR "Error allocating fallback algo %s\n", name);
-@@ -385,7 +390,7 @@ static void fallback_exit_blk(struct cry
- {
- 	struct geode_aes_op *op = crypto_tfm_ctx(tfm);
- 
--	crypto_free_blkcipher(op->fallback.blk);
-+	crypto_free_skcipher(op->fallback.blk);
- 	op->fallback.blk = NULL;
- }
- 
-@@ -424,6 +429,9 @@ geode_ecb_decrypt(struct blkcipher_desc
- 	struct blkcipher_walk walk;
- 	int err, ret;
- 
-+	if (nbytes % AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
- 	if (unlikely(op->keylen != AES_KEYSIZE_128))
- 		return fallback_blk_dec(desc, dst, src, nbytes);
- 
-@@ -454,6 +462,9 @@ geode_ecb_encrypt(struct blkcipher_desc
- 	struct blkcipher_walk walk;
- 	int err, ret;
- 
-+	if (nbytes % AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
- 	if (unlikely(op->keylen != AES_KEYSIZE_128))
- 		return fallback_blk_enc(desc, dst, src, nbytes);
- 
---- a/drivers/crypto/geode-aes.h
-+++ b/drivers/crypto/geode-aes.h
-@@ -64,7 +64,7 @@ struct geode_aes_op {
- 	u8 *iv;
- 
- 	union {
--		struct crypto_blkcipher *blk;
-+		struct crypto_skcipher *blk;
- 		struct crypto_cipher *cip;
- 	} fallback;
- 	u32 keylen;
+ 	ref_field = create_hist_field(var_field->hist_data, NULL, flags, NULL);
+ 	if (ref_field) {
 
 
