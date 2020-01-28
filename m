@@ -2,113 +2,78 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EAFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6851FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C79620716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:25:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VebU66qE"
+	by mail.kernel.org (Postfix) with ESMTP id 3A1BF22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580235986;
+	bh=9ewcN2O5qMb8PXgwQCNtPCHOqHJ2hu7wTnO6mYD83Bo=;
+	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
+	b=1J4ZDTWKMfYGMhasK9lG9Hz3FfhUrRjXUvIAo5J8AjkyMOqqAou27ve/BhsoCYszH
+	 N41D4hhjG7525Ls6S0ssNumrkE5Y1GjIbXdEKuTxFeySWAuDVP6lbkC7pxC38BLAnw
+	 9hLr1cNgegCJd0Shh8DFOXFLgoKMya9ovoG1c0iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgA1SZw (ORCPT
+        id S1726788AbgA1S0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:25:52 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:57408 "EHLO vps0.lunn.ch"
+        Tue, 28 Jan 2020 13:26:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgA1SZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:25:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=9rzg8pOQc/eaFdW99Vz4O3jHl+7pHiM7u4M/N2zjXkU=; b=VebU66qEXJs9WAZC/uirqsZ7mX
-        OeOrKJJw/KVKUhkMEVs/QGETVhl2qzSFUd3E/lV7hdBCotWajXxt6dvKTE9vVde4qW/MMN5mMOp3S
-        ZA1c5MLXkU2rC0fe7ztoIqt4Ohv3tPUiuPC8w1qtDw5vdx11umzbQlCyqmRrmTHhgoUk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iwVYU-0003W8-Ff; Tue, 28 Jan 2020 19:25:42 +0100
-Date:   Tue, 28 Jan 2020 19:25:42 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
- up without PHY
-Message-ID: <20200128182542.GB12180@lunn.ch>
-References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
- <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
- <20200127112102.GT25745@shell.armlinux.org.uk>
- <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200127114600.GU25745@shell.armlinux.org.uk>
- <20200127140038.GD13647@lunn.ch>
- <20200127140834.GW25745@shell.armlinux.org.uk>
- <20200127145107.GE13647@lunn.ch>
- <20200128180802.GD25745@shell.armlinux.org.uk>
+        id S1726486AbgA1S0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 13:26:25 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B435B20716;
+        Tue, 28 Jan 2020 18:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580235984;
+        bh=9ewcN2O5qMb8PXgwQCNtPCHOqHJ2hu7wTnO6mYD83Bo=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=tONrKzXYOyHaEZJhUhd6sC98+LKTUspFPj0ZXCVqVMCQ7v5uqKrThgHjjVxJ/SvT5
+         MDROXNhVdZDml8NtiqJiSdm7CVhKoL1YkGrvvc6UV8PgQy5pp9iufVQJObZqpXA0U8
+         bYWSTYBCIAzy6/gkuKOwYive1CSSy7IQxlH5K3h8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128180802.GD25745@shell.armlinux.org.uk>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200122134639.11735-1-dafna.hirschfeld@collabora.com>
+References: <20200122134639.11735-1-dafna.hirschfeld@collabora.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] dt-binding: fix compilation error of the example in qcom,gcc.yaml
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        linux-arm-msm@vger.kernel.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dafna.hirschfeld@collabora.com, helen.koike@collabora.com,
+        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com
+User-Agent: alot/0.8.1
+Date:   Tue, 28 Jan 2020 10:26:23 -0800
+Message-Id: <20200128182624.B435B20716@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 06:08:03PM +0000, Russell King - ARM Linux admin wrote:
-> On Mon, Jan 27, 2020 at 03:51:07PM +0100, Andrew Lunn wrote:
-> > I've also had issues with the DSA links, also being configured to
-> > 10/Half. That seems to be related to having a phy-mode property in
-> > device tree. I need to add a fixed-link property to set the correct
-> > speed. Something is broken here, previously the fixed-link was only
-> > needed if the speed needed to be lower than the ports maximum. I think
-> > that is a separate issue i need to dig into, not part of the PCS to
-> > MAC transfer.
-> 
-> I think I understand what is happening on this one more fully.
-> 
-> When DSA initialises, the DSA and CPU ports are initially configured to
-> maximum speed via mv88e6xxx_setup_port(), called via mv88e6xxx_setup(),
-> the .setup method, dsa_switch_setup(), and dsa_tree_setup_switches().
-> 
-> dsa_tree_setup_switches() then moves on to calling dsa_port_setup().
-> dsa_port_setup() calls dsa_port_link_register_of() for the DSA and CPU
-> ports, which calls into dsa_port_phylink_register().
-> 
-> That calls phylink_create(), and then attempts to attach a PHY using
-> phylink_of_phy_connect() - which itself is rather weird - since when
-> has a DSA or CPU port been allowed to have a PHY in its DT node?
+Quoting Dafna Hirschfeld (2020-01-22 05:46:39)
+> Running `make dt_binging_check`, gives the error:
+>=20
+> DTC     Documentation/devicetree/bindings/clock/qcom,gcc.example.dt.yaml
+> Error: Documentation/devicetree/bindings/clock/qcom,gcc.example.dts:111.2=
+8-29 syntax error
+> FATAL ERROR: Unable to parse input tree
+>=20
+> This is because the last example uses the macro RPM_SMD_XO_CLK_SRC which
+> is defined in qcom,rpmcc.h but the include of this header is missing.
+> Add the include to fix the error.
+>=20
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> ---
 
-Hi Russell
+Applied to clk-next
 
-There are some boards which have back to back PHYs between the SoC and
-the Switch. Most designs rely on strapping the PHYs to just work, no
-software configuration needed. But then came along a board with a PHY
-which needed a kick to make it work :-(
-
-> That hasn't changed in phylink yet - so it's a bug that dates back
-> to the phylink integration into the DSA core, and is a regression
-> resulting from that.
-
-And i think i probably did not notice it because nearly all the boards
-i test with connect to the FEC, which is Fast Ethernet only, so needs
-fixed-link properties.
-
-	   Andrew
