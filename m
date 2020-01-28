@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA371C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BB8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1AFC24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45CD924683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220342;
-	bh=p1bznxppQ8v2ql/W4sqG7SE5ypuX4taSUTHF6+WPVK8=;
+	s=default; t=1580220347;
+	bh=u8FEAMoac37zAG9ZH+8up4ADy+KrvFAr7q8E0WT9JOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XToIoHHXVdP3JxXgszVrENoE14+ilxVRRmitACfFwUaaVWAB94NVixVe/I9YZ19H7
-	 cmTU+GWqkLIx89mG7rmA3FxPVjr45tqaljRU3kv6yl/lyKPl0aKIXM/EiI0GmmdMxl
-	 6g/nIu/2twNU7uxFLmzODMExeTIUH8do/K4pxVI0=
+	b=K7M7GKNUPDKfpqrxsjI8tJ02dqhar6GkQF+KHsR99Y7FBAiWhJFzjfl1NxuP6qqVB
+	 TEdi2m5SM2ZYkJKkw3w1gAxLy9UBPlb/tL3ZuIxwJwAnBOLfbYhndq58qUKyHuHmI4
+	 /jQwKsRuk5LOU96I7FpW7TvROTXXI8OY0mbKwliE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgA1OFl (ORCPT
+        id S1726805AbgA1OFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:05:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53246 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:05:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727675AbgA1OFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:05:35 -0500
+        id S1727773AbgA1OFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:05:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D373724688;
-        Tue, 28 Jan 2020 14:05:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B294124688;
+        Tue, 28 Jan 2020 14:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220335;
-        bh=p1bznxppQ8v2ql/W4sqG7SE5ypuX4taSUTHF6+WPVK8=;
+        s=default; t=1580220340;
+        bh=u8FEAMoac37zAG9ZH+8up4ADy+KrvFAr7q8E0WT9JOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wNHqneGyX50fNqhA5lDbTLwMcJFiKrdnySG2A7WcW3kyrWTsD4KCNke9p8X9msE0l
-         3qeIlWl/2ipdS1GDF/Km3YdlMEeZ3p45cnaIK2TeVCCtzGIFr5SrVgw6N8K0iI6i6a
-         7RbSu5LrBb0bLA0Yvp+er8XM2qZFuaRCfuGW0dFQ=
+        b=VyiHY6du+n6LfUCr+Inx5LGaU5ZlyN9qzhng4nexT/1f3uGz1dzOXOpScLQFmyWjy
+         QzPJUGvYkuq7FKB12NHL9JUNcB9K/jAeCtBdOuWvBjQaF4pVxP/6aDNx2j8uyJKk4C
+         bbVVKCY4f026kz31vBw+xkfG9XG7BWMyzeYJJKoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 086/104] readdir: be more conservative with directory entry names
-Date:   Tue, 28 Jan 2020 15:00:47 +0100
-Message-Id: <20200128135829.029117938@linuxfoundation.org>
+        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 078/104] scsi: RDMA/isert: Fix a recently introduced regression related to logout
+Date:   Tue, 28 Jan 2020 15:00:39 +0100
+Message-Id: <20200128135827.989226960@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -59,58 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 2c6b7bcd747201441923a0d3062577a8d1fbd8f8 upstream.
+commit 04060db41178c7c244f2c7dcd913e7fd331de915 upstream.
 
-Commit 8a23eb804ca4 ("Make filldir[64]() verify the directory entry
-filename is valid") added some minimal validity checks on the directory
-entries passed to filldir[64]().  But they really were pretty minimal.
+iscsit_close_connection() calls isert_wait_conn(). Due to commit
+e9d3009cb936 both functions call target_wait_for_sess_cmds() although that
+last function should be called only once. Fix this by removing the
+target_wait_for_sess_cmds() call from isert_wait_conn() and by only calling
+isert_wait_conn() after target_wait_for_sess_cmds().
 
-This fleshes out at least the name length check: we used to disallow
-zero-length names, but really, negative lengths or oevr-long names
-aren't ok either.  Both could happen if there is some filesystem
-corruption going on.
-
-Now, most filesystems tend to use just an "unsigned char" or similar for
-the length of a directory entry name, so even with a corrupt filesystem
-you should never see anything odd like that.  But since we then use the
-name length to create the directory entry record length, let's make sure
-it actually is half-way sensible.
-
-Note how POSIX states that the size of a path component is limited by
-NAME_MAX, but we actually use PATH_MAX for the check here.  That's
-because while NAME_MAX is generally the correct maximum name length
-(it's 255, for the same old "name length is usually just a byte on
-disk"), there's nothing in the VFS layer that really cares.
-
-So the real limitation at a VFS layer is the total pathname length you
-can pass as a filename: PATH_MAX.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: e9d3009cb936 ("scsi: target: iscsi: Wait for all commands to finish before freeing a session").
+Link: https://lore.kernel.org/r/20200116044737.19507-1-bvanassche@acm.org
+Reported-by: Rahul Kundu <rahul.kundu@chelsio.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Acked-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/readdir.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/infiniband/ulp/isert/ib_isert.c |   12 ------------
+ drivers/target/iscsi/iscsi_target.c     |    6 +++---
+ 2 files changed, 3 insertions(+), 15 deletions(-)
 
---- a/fs/readdir.c
-+++ b/fs/readdir.c
-@@ -102,10 +102,14 @@ EXPORT_SYMBOL(iterate_dir);
-  * filename length, and the above "soft error" worry means
-  * that it's probably better left alone until we have that
-  * issue clarified.
-+ *
-+ * Note the PATH_MAX check - it's arbitrary but the real
-+ * kernel limit on a possible path component, not NAME_MAX,
-+ * which is the technical standard limit.
-  */
- static int verify_dirent_name(const char *name, int len)
- {
--	if (!len)
-+	if (len <= 0 || len >= PATH_MAX)
- 		return -EIO;
- 	if (memchr(name, '/', len))
- 		return -EIO;
+--- a/drivers/infiniband/ulp/isert/ib_isert.c
++++ b/drivers/infiniband/ulp/isert/ib_isert.c
+@@ -2575,17 +2575,6 @@ isert_wait4logout(struct isert_conn *ise
+ 	}
+ }
+ 
+-static void
+-isert_wait4cmds(struct iscsi_conn *conn)
+-{
+-	isert_info("iscsi_conn %p\n", conn);
+-
+-	if (conn->sess) {
+-		target_sess_cmd_list_set_waiting(conn->sess->se_sess);
+-		target_wait_for_sess_cmds(conn->sess->se_sess);
+-	}
+-}
+-
+ /**
+  * isert_put_unsol_pending_cmds() - Drop commands waiting for
+  *     unsolicitate dataout
+@@ -2633,7 +2622,6 @@ static void isert_wait_conn(struct iscsi
+ 
+ 	ib_drain_qp(isert_conn->qp);
+ 	isert_put_unsol_pending_cmds(conn);
+-	isert_wait4cmds(conn);
+ 	isert_wait4logout(isert_conn);
+ 
+ 	queue_work(isert_release_wq, &isert_conn->release_work);
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4151,9 +4151,6 @@ int iscsit_close_connection(
+ 	iscsit_stop_nopin_response_timer(conn);
+ 	iscsit_stop_nopin_timer(conn);
+ 
+-	if (conn->conn_transport->iscsit_wait_conn)
+-		conn->conn_transport->iscsit_wait_conn(conn);
+-
+ 	/*
+ 	 * During Connection recovery drop unacknowledged out of order
+ 	 * commands for this connection, and prepare the other commands
+@@ -4239,6 +4236,9 @@ int iscsit_close_connection(
+ 	target_sess_cmd_list_set_waiting(sess->se_sess);
+ 	target_wait_for_sess_cmds(sess->se_sess);
+ 
++	if (conn->conn_transport->iscsit_wait_conn)
++		conn->conn_transport->iscsit_wait_conn(conn);
++
+ 	ahash_request_free(conn->conn_tx_hash);
+ 	if (conn->conn_rx_hash) {
+ 		struct crypto_ahash *tfm;
 
 
