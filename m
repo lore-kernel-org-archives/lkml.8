@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25922C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183A5C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E309D2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4212468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220527;
-	bh=mMVHWPhGVr12UQgiIwOVH1+KWsDTW8eU+eNqwVQThDk=;
+	s=default; t=1580220533;
+	bh=NJ7xs43QwIvqL/GyfrBjI9MfIpNBCWxkCJxaSIUNzPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fag7gYeNL+T+K/sdjdKI6+XET9VW6hwH6fcq49E82mxJ+nmaMVnr3X8C1w3vjjCcQ
-	 61uk8bkeRAj9NOja402bSbIyZMY3NZr38wkIF3yMwCwt5rSFiPsnMi6BZzUeX6wPF+
-	 IOU5fTOKP0IGt3CQfNif1w9g/pV3pj2OMhL2rojQ=
+	b=I59SNCowjY8QDkkK2QeLCF6gSHAK4M9GPj8XAeBpMSkCX3nW9vF76wNz6nW9O911Z
+	 QSo7qtTNP4FRaCUzD9nUeBfMU/Yo4SevhmYVJu/zw5xdHZD6MrdXkuc4NYozUzv4s9
+	 sw1a9v+X2JNKg9e5GOGqoTiCxPIxgAI31EHFB+08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgA1OIp (ORCPT
+        id S1727581AbgA1OIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:08:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56616 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:08:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728539AbgA1OIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:08:32 -0500
+        id S1728575AbgA1OIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:08:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CA242468D;
-        Tue, 28 Jan 2020 14:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2FF22468A;
+        Tue, 28 Jan 2020 14:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220511;
-        bh=mMVHWPhGVr12UQgiIwOVH1+KWsDTW8eU+eNqwVQThDk=;
+        s=default; t=1580220519;
+        bh=NJ7xs43QwIvqL/GyfrBjI9MfIpNBCWxkCJxaSIUNzPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JGXfdCGNTN9nqIIAqGA9jM/y1yOibEtIQJt0HQAi0o/M1BLGl2G+8DoK1PYVHmYcB
-         Vg63mFg1I6LibAhYIJOMph0f65EXAUcoffsaRm3M/ntoSF4PJ6q3aSzZ0iBWTvWpWB
-         C0dwh82AU47U8uNDQUWyux3hx+Gc7SwVc12KocKg=
+        b=rfQfE1affEl6EHAapUummPm8o9xaCA9a2jhLhILWnWon8AEuzbqbE2UBGmmq0d19Y
+         NwXEUcFd7txJUoB5m/FeMllxMv+Z1C0GRyg2YhP4mQOQpUNFuHmQUltATfJDYi3dpB
+         TNEbd4oc5xNWkWFyiD7DunBVM1iQd6vSupQ6jlA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Gal Pressman <galpress@amazon.com>,
+        Parvi Kaustubhi <pkaustub@cisco.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 008/183] pcrypt: use format specifier in kobject_add
-Date:   Tue, 28 Jan 2020 15:03:47 +0100
-Message-Id: <20200128135830.459415522@linuxfoundation.org>
+Subject: [PATCH 4.4 032/183] IB/usnic: Fix out of bounds index check in query pkey
+Date:   Tue, 28 Jan 2020 15:04:11 +0100
+Message-Id: <20200128135833.219237145@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,41 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Gal Pressman <galpress@amazon.com>
 
-[ Upstream commit b1e3874c75ab15288f573b3532e507c37e8e7656 ]
+[ Upstream commit 4959d5da5737dd804255c75b8cea0a2929ce279a ]
 
-Passing string 'name' as the format specifier is potentially hazardous
-because name could (although very unlikely to) have a format specifier
-embedded in it causing issues when parsing the non-existent arguments
-to these.  Follow best practice by using the "%s" format string for
-the string 'name'.
+The pkey table size is one element, index should be tested for > 0 instead
+of > 1.
 
-Cleans up clang warning:
-crypto/pcrypt.c:397:40: warning: format string is not a string literal
-(potentially insecure) [-Wformat-security]
-
-Fixes: a3fb1e330dd2 ("pcrypt: Added sysfs interface to pcrypt")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: e3cf00d0a87f ("IB/usnic: Add Cisco VIC low-level hardware driver")
+Signed-off-by: Gal Pressman <galpress@amazon.com>
+Acked-by: Parvi Kaustubhi <pkaustub@cisco.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/pcrypt.c | 2 +-
+ drivers/infiniband/hw/usnic/usnic_ib_verbs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
-index f8ec3d4ba4a80..a5718c0a3dc4e 100644
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -394,7 +394,7 @@ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
- 	int ret;
+diff --git a/drivers/infiniband/hw/usnic/usnic_ib_verbs.c b/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
+index f8e3211689a34..8e18bfca55166 100644
+--- a/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
++++ b/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
+@@ -427,7 +427,7 @@ int usnic_ib_query_gid(struct ib_device *ibdev, u8 port, int index,
+ int usnic_ib_query_pkey(struct ib_device *ibdev, u8 port, u16 index,
+ 				u16 *pkey)
+ {
+-	if (index > 1)
++	if (index > 0)
+ 		return -EINVAL;
  
- 	pinst->kobj.kset = pcrypt_kset;
--	ret = kobject_add(&pinst->kobj, NULL, name);
-+	ret = kobject_add(&pinst->kobj, NULL, "%s", name);
- 	if (!ret)
- 		kobject_uevent(&pinst->kobj, KOBJ_ADD);
- 
+ 	*pkey = 0xffff;
 -- 
 2.20.1
 
