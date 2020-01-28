@@ -2,124 +2,82 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A25C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC46C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD15024681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B35622522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580235279;
+	bh=3k9NThVcfievCd4QOFK+JbiJi4/OisfJHuWL53IrZCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FUBnlP/JkhXt+wpsrxV2C4fyobas7DPZKEi442pmmGifPxH6eZEfwmHe5e4oilvmS
+	 AfRNwTX6MUa6en0t2ET3xz3Z87bVPOOyCvNIxs0elTOw5cXKoxaC3dfPv0vK0ToF3B
+	 ACDjhkr6TgX3OBEzLtkmgIvrITTSyhusoCuIUn+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgA1SNr (ORCPT
+        id S1726852AbgA1SOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:13:47 -0500
-Received: from gentwo.org ([3.19.106.255]:56214 "EHLO gentwo.org"
+        Tue, 28 Jan 2020 13:14:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgA1SNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:13:47 -0500
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 916443F25D; Tue, 28 Jan 2020 18:13:46 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 9043D3F25C;
-        Tue, 28 Jan 2020 18:13:46 +0000 (UTC)
-Date:   Tue, 28 Jan 2020 18:13:46 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     =?ISO-8859-15?Q?Michal_Koutn=FD?= <mkoutny@suse.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
-In-Reply-To: <20200128085107.GF17425@blackbody.suse.cz>
-Message-ID: <alpine.DEB.2.21.2001281813130.745@www.lameter.com>
-References: <alpine.DEB.2.21.1912041652410.29709@www.lameter.com> <20191204173224.GN25242@dhcp22.suse.cz> <20200106115733.GH12699@dhcp22.suse.cz> <alpine.DEB.2.21.2001061550270.23163@www.lameter.com> <20200109145236.GS4951@dhcp22.suse.cz>
- <20200109114415.cf01bd3ad30c5c4aec981653@linux-foundation.org> <20200117171331.GA17179@blackbody.suse.cz> <20200118161528.94dc18c074aeaa384200486b@linux-foundation.org> <20200127173336.GB17425@blackbody.suse.cz> <alpine.DEB.2.21.2001272304080.25307@www.lameter.com>
- <20200128085107.GF17425@blackbody.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1726682AbgA1SOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 13:14:38 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06D0214AF;
+        Tue, 28 Jan 2020 18:14:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580235278;
+        bh=3k9NThVcfievCd4QOFK+JbiJi4/OisfJHuWL53IrZCU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CeJ9qTzQMKHNUsLsf/UyKlWab+YinTdGW9HNAblML312r/SnSC23csHvuYaFwbbGT
+         kSJFWgS1JN1OpyGotJe2RL09SgpG1nHjuKXhbLFRBfddE/j0LO3GvWY+n8Uv3q7spB
+         n1qcbkNLuNu5li5xaGPTLAYDCNBcUEhcqhu5KSsE=
+Date:   Tue, 28 Jan 2020 19:14:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 000/183] 4.4.212-stable review
+Message-ID: <20200128181435.GB3673744@kroah.com>
+References: <20200128135829.486060649@linuxfoundation.org>
+ <20200128175119.GA8176@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="531401748-1203551302-1580235226=:745"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200128175119.GA8176@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Jan 28, 2020 at 09:51:19AM -0800, Guenter Roeck wrote:
+> On Tue, Jan 28, 2020 at 03:03:39PM +0100, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.4.212 release.
+> > There are 183 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
+> > Anything received after that time might be too late.
+> > 
+> 
+> v4.4.211-184-gc4e686398655:
+> 
+> arch/powerpc/kernel/cacheinfo.c: In function ‘cacheinfo_teardown’:
+> arch/powerpc/kernel/cacheinfo.c:875:2: error: implicit declaration of function ‘lockdep_assert_cpus_held’;
 
---531401748-1203551302-1580235226=:745
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+Ugh :(
 
-On Tue, 28 Jan 2020, Michal Koutn� wrote:
+Will go fix this in 4.4.y and 4.9.y and push out new -rc2 trees with
+that resolved, thanks for the quick turn-around.
 
-> On Mon, Jan 27, 2020 at 11:04:53PM +0000, Christopher Lameter <cl@linux.com> wrote:
-> > The patch exposes details of cgroup caches? Which patch are we talking
-> > about?
-> Sorry, that's misunderstanding. I mean the current state (sending
-> uevents) exposes the internals (creation of caches per cgroup). The
-> patch [1] removing uevent notifications is rectifying it.
-
-
-From: Christoph Lameter <cl@linux.com>
-Subject: slub: Remove userspace notifier for cache add/remove
-
-Kmem caches are internal kernel structures so it is strange that
-userspace notifiers would be needed. And I am not aware of any use
-of these notifiers. These notifiers may just exist because in the
-initial slub release the sysfs code was copied from another
-subsystem.
-
-Signed-off-by: Christoph Lameter <cl@linux.com>
-
-Index: linux/mm/slub.c
-===================================================================
---- linux.orig/mm/slub.c	2020-01-28 18:13:02.134506141 +0000
-+++ linux/mm/slub.c	2020-01-28 18:13:02.134506141 +0000
-@@ -5632,19 +5632,6 @@ static struct kobj_type slab_ktype = {
- 	.release = kmem_cache_release,
- };
-
--static int uevent_filter(struct kset *kset, struct kobject *kobj)
--{
--	struct kobj_type *ktype = get_ktype(kobj);
--
--	if (ktype == &slab_ktype)
--		return 1;
--	return 0;
--}
--
--static const struct kset_uevent_ops slab_uevent_ops = {
--	.filter = uevent_filter,
--};
--
- static struct kset *slab_kset;
-
- static inline struct kset *cache_kset(struct kmem_cache *s)
-@@ -5712,7 +5699,6 @@ static void sysfs_slab_remove_workfn(str
- #ifdef CONFIG_MEMCG
- 	kset_unregister(s->memcg_kset);
- #endif
--	kobject_uevent(&s->kobj, KOBJ_REMOVE);
- out:
- 	kobject_put(&s->kobj);
- }
-@@ -5770,7 +5756,6 @@ static int sysfs_slab_add(struct kmem_ca
- 	}
- #endif
-
--	kobject_uevent(&s->kobj, KOBJ_ADD);
- 	if (!unmergeable) {
- 		/* Setup first alias */
- 		sysfs_slab_alias(s, s->name);
-@@ -5851,7 +5836,7 @@ static int __init slab_sysfs_init(void)
-
- 	mutex_lock(&slab_mutex);
-
--	slab_kset = kset_create_and_add("slab", &slab_uevent_ops, kernel_kobj);
-+	slab_kset = kset_create_and_add("slab", NULL, kernel_kobj);
- 	if (!slab_kset) {
- 		mutex_unlock(&slab_mutex);
- 		pr_err("Cannot register slab subsystem.\n");
---531401748-1203551302-1580235226=:745--
+greg k-h
