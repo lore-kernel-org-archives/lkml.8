@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A42C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62030C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B422468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E82324691
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220012;
-	bh=TQM9MwrWosBxaOXUgZjjsrwBjU237+BVRe82b9oiL+Q=;
+	s=default; t=1580220015;
+	bh=jxyCRKHd0fDIu343tBn5ZNUxn+VXjYVhvW/u9UIssOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M+Yz/IfapLG1BgTmYMvKbMHamlcPZs4TgEkpjD8xdyBkB9r+wgxeGKZk3VgK2OX7P
-	 eTtsDqC5gLsJpSHfdru/5meKCyR8O9sMtABNYMAMiuVDW1Mvm1rRwUsAxIT+J7SG0c
-	 g7YVKifZ6307ihmwW3LZY59PGF7ioEEIxE5JW/aE=
+	b=lWRTkRSGnEknoFL4YYQhHL49zc8PEMQKz7tCsg7+cT3pMzgKkbr+bVAUnspLIrKDA
+	 n5ezz+gMxp/wh8kERBv3Dv4E8YTqAbb6P8D3yqqRgagKFPY+R0yZ+OEOtGfWJ7G461
+	 owkiuKyKbgK6omQznEkndxJay3guQOifLe17ja5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgA1OAL (ORCPT
+        id S1727238AbgA1OAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:00:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45752 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:00:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727202AbgA1OAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:00:07 -0500
+        id S1727202AbgA1OAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:00:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1DAC24688;
-        Tue, 28 Jan 2020 14:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAF0A24688;
+        Tue, 28 Jan 2020 14:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220007;
-        bh=TQM9MwrWosBxaOXUgZjjsrwBjU237+BVRe82b9oiL+Q=;
+        s=default; t=1580220012;
+        bh=jxyCRKHd0fDIu343tBn5ZNUxn+VXjYVhvW/u9UIssOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=galyqPihg/VAeKrNIItAb96d/lE3IEz8WdT9ft5EURtTuJ9UIe6YnxklmO3CXylac
-         EDmka039VNTrDoWCcYYKz4ZsOriFKaRcEZotyen83HEBaedvt2yg/hTqoL3T3vg14P
-         YvA0NcN2mqEUS8hcCgSOJg49eR+T01yCxd/vZoDo=
+        b=UcC4O/bjWMs4006a5T85213IOgyaZ0Tjo10FALq8KB/e/nTUVFQXFp6Iaxo5ETaHR
+         TQxQm48t0ryojwOmUtk2y9rQvbUbDX/odiYz1ahoTOgSwQmageGuUmusTyRSpDw6zZ
+         E6gop0JNeTx9ShXj3KFCatk5bNSJ3efJWkiX/WpU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Martin Kepplinger <martink@posteo.de>,
-        Vladis Dronov <vdronov@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 31/46] Input: pegasus_notetaker - fix endpoint sanity check
-Date:   Tue, 28 Jan 2020 14:58:05 +0100
-Message-Id: <20200128135754.058557685@linuxfoundation.org>
+        stable@vger.kernel.org, Gilles Buloz <gilles.buloz@kontron.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 33/46] hwmon: (nct7802) Fix voltage limits to wrong registers
+Date:   Tue, 28 Jan 2020 14:58:07 +0100
+Message-Id: <20200128135754.235618285@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -61,37 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Gilles Buloz <gilles.buloz@kontron.com>
 
-commit bcfcb7f9b480dd0be8f0df2df17340ca92a03b98 upstream.
+commit 7713e62c8623c54dac88d1fa724aa487a38c3efb upstream.
 
-The driver was checking the number of endpoints of the first alternate
-setting instead of the current one, something which could be used by a
-malicious device (or USB descriptor fuzzer) to trigger a NULL-pointer
-dereference.
+in0 thresholds are written to the in2 thresholds registers
+in2 thresholds to in3 thresholds
+in3 thresholds to in4 thresholds
+in4 thresholds to in0 thresholds
 
-Fixes: 1afca2b66aac ("Input: add Pegasus Notetaker tablet driver")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Martin Kepplinger <martink@posteo.de>
-Acked-by: Vladis Dronov <vdronov@redhat.com>
-Link: https://lore.kernel.org/r/20191210113737.4016-2-johan@kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Gilles Buloz <gilles.buloz@kontron.com>
+Link: https://lore.kernel.org/r/5de0f509.rc0oEvPOMjbfPW1w%gilles.buloz@kontron.com
+Fixes: 3434f3783580 ("hwmon: Driver for Nuvoton NCT7802Y")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/tablet/pegasus_notetaker.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/nct7802.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/input/tablet/pegasus_notetaker.c
-+++ b/drivers/input/tablet/pegasus_notetaker.c
-@@ -260,7 +260,7 @@ static int pegasus_probe(struct usb_inte
- 		return -ENODEV;
+--- a/drivers/hwmon/nct7802.c
++++ b/drivers/hwmon/nct7802.c
+@@ -32,8 +32,8 @@
+ static const u8 REG_VOLTAGE[5] = { 0x09, 0x0a, 0x0c, 0x0d, 0x0e };
  
- 	/* Sanity check that the device has an endpoint */
--	if (intf->altsetting[0].desc.bNumEndpoints < 1) {
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
- 		dev_err(&intf->dev, "Invalid number of endpoints\n");
- 		return -EINVAL;
- 	}
+ static const u8 REG_VOLTAGE_LIMIT_LSB[2][5] = {
+-	{ 0x40, 0x00, 0x42, 0x44, 0x46 },
+-	{ 0x3f, 0x00, 0x41, 0x43, 0x45 },
++	{ 0x46, 0x00, 0x40, 0x42, 0x44 },
++	{ 0x45, 0x00, 0x3f, 0x41, 0x43 },
+ };
+ 
+ static const u8 REG_VOLTAGE_LIMIT_MSB[5] = { 0x48, 0x00, 0x47, 0x47, 0x48 };
 
 
