@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32F9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A72C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A2B22522
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C35024685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220553;
-	bh=wdwwvVSenVt6N8xdd9g8pLjeeMvBztVrT/ceq7bgBaM=;
+	s=default; t=1580220558;
+	bh=/n7YcuZlOmzfYT8zxRWGW7Iz53ruotEq+5osQ/b2GX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q378gIdH9AzZRmRlxAwjSqdhak9puUTPtb+G3QfUtLbtMx/BzC3h3DouGR7LWvLLt
-	 p5eSmAE1CXENHTrf90CQAuspHRYnaMOvKJ+MMceKBhLAad+xES9yOcxnuGNmuwAaB7
-	 DKuYlk4pFc+YB3leIvuoDHFx96s8LSNeOTVwhH3g=
+	b=La4EV5xB9JW8XsAGXd1OZFjEb3vbvmub9S2SEEtTDgjXH9WtFr/yPBaKB+5rCwsEZ
+	 QaEEUoIRFesl3DbxNoFEEgg+u5N/clLIRG2VB4Rtqftnfrcx46cw8dEYEkGf+V37OG
+	 qCtPZFjUHGO7+Tw19hbwlAYVvb6Xg+fdMwSq/NU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgA1OJM (ORCPT
+        id S1728685AbgA1OJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:09:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57252 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:09:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728607AbgA1OI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:08:59 -0500
+        id S1728583AbgA1OJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:09:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D195922522;
-        Tue, 28 Jan 2020 14:08:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5D0022522;
+        Tue, 28 Jan 2020 14:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220539;
-        bh=wdwwvVSenVt6N8xdd9g8pLjeeMvBztVrT/ceq7bgBaM=;
+        s=default; t=1580220544;
+        bh=/n7YcuZlOmzfYT8zxRWGW7Iz53ruotEq+5osQ/b2GX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UfwPWkqSQUZoNUq7pB8rbUO1tZ0t8RUjhJCUl6obQJg/ZyjANagdLHNM0aUA8gViI
-         na1TIqtt0OMfqKCrmzNTt7mDelWQcf6CWpvf2tI3MsqQzhgu02lWaNWNafppYDr8ZJ
-         7eDhYD9GhT4Q9/zTzh7bdNPZ7nkQ+ixQfIgN/0zo=
+        b=eaxcTwzECMcnsbpKh3YzITdej7N9wTRu9XmldxckOKCwKJXqmUNtETXP8x/kwO4Xs
+         JFqY2jqxsPIYC67QPreju9qKBqGcVkwA9nhkn63ac5GrqoErKjT2yhVB+9QtZDknZZ
+         S6IiJmQqvrg3PdMu0RfVBStHV2ZqeoZWih5Mzslw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 048/183] vfio_pci: Enable memory accesses before calling pci_map_rom
-Date:   Tue, 28 Jan 2020 15:04:27 +0100
-Message-Id: <20200128135834.766684922@linuxfoundation.org>
+Subject: [PATCH 4.4 050/183] drm/nouveau/bios/ramcfg: fix missing parentheses when calculating RON
+Date:   Tue, 28 Jan 2020 15:04:29 +0100
+Message-Id: <20200128135834.941357934@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,67 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Auger <eric.auger@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 0cfd027be1d6def4a462cdc180c055143af24069 ]
+[ Upstream commit 13649101a25c53c87f4ab98a076dfe61f3636ab1 ]
 
-pci_map_rom/pci_get_rom_size() performs memory access in the ROM.
-In case the Memory Space accesses were disabled, readw() is likely
-to trigger a synchronous external abort on some platforms.
+Currently, the expression for calculating RON is always going to result
+in zero no matter the value of ram->mr[1] because the ! operator has
+higher precedence than the shift >> operator.  I believe the missing
+parentheses around the expression before appying the ! operator will
+result in the desired result.
 
-In case memory accesses were disabled, re-enable them before the
-call and disable them back again just after.
+[ Note, not tested ]
 
-Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Detected by CoveritScan, CID#1324005 ("Operands don't affect result")
+
+Fixes: c25bf7b6155c ("drm/nouveau/bios/ramcfg: Separate out RON pull value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 4b62eb3b59233..7a82735d53087 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -496,6 +496,7 @@ static long vfio_pci_ioctl(void *device_data,
- 		{
- 			void __iomem *io;
- 			size_t size;
-+			u16 orig_cmd;
- 
- 			info.offset = VFIO_PCI_INDEX_TO_OFFSET(info.index);
- 			info.flags = 0;
-@@ -505,15 +506,23 @@ static long vfio_pci_ioctl(void *device_data,
- 			if (!info.size)
- 				break;
- 
--			/* Is it really there? */
-+			/*
-+			 * Is it really there?  Enable memory decode for
-+			 * implicit access in pci_map_rom().
-+			 */
-+			pci_read_config_word(pdev, PCI_COMMAND, &orig_cmd);
-+			pci_write_config_word(pdev, PCI_COMMAND,
-+					      orig_cmd | PCI_COMMAND_MEMORY);
-+
- 			io = pci_map_rom(pdev, &size);
--			if (!io || !size) {
-+			if (io) {
-+				info.flags = VFIO_REGION_INFO_FLAG_READ;
-+				pci_unmap_rom(pdev, io);
-+			} else {
- 				info.size = 0;
--				break;
- 			}
--			pci_unmap_rom(pdev, io);
- 
--			info.flags = VFIO_REGION_INFO_FLAG_READ;
-+			pci_write_config_word(pdev, PCI_COMMAND, orig_cmd);
- 			break;
- 		}
- 		case VFIO_PCI_VGA_REGION_INDEX:
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
+index 60ece0a8a2e1b..1d2d6bae73cd1 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
+@@ -87,7 +87,7 @@ nvkm_gddr3_calc(struct nvkm_ram *ram)
+ 		WR  = (ram->next->bios.timing[2] & 0x007f0000) >> 16;
+ 		/* XXX: Get these values from the VBIOS instead */
+ 		DLL = !(ram->mr[1] & 0x1);
+-		RON = !(ram->mr[1] & 0x300) >> 8;
++		RON = !((ram->mr[1] & 0x300) >> 8);
+ 		break;
+ 	default:
+ 		return -ENOSYS;
 -- 
 2.20.1
 
