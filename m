@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F224C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77E7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 677F12468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE742468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220148;
-	bh=WJE/ToSye/BpOkb/xsxeZ5XGTMG5f6OnzrVhfE5y57Q=;
+	s=default; t=1580220151;
+	bh=uGwb690XcRRYmpaqN7R+SY+vxZZ7BfejGQQVQBgtTfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MJAffzb5MPQjWA/EjiUkyNtgDMGaEimbLvevxb9ArW+9T71LX3clGiQrs5s7C6wIg
-	 F8SgBN5qHXILVxyuMB3DXdf3Kiw75eGIFMN2XvD9sU8XDKvJVj9G1p78GpNLURMDk0
-	 t5DqukVrmZ1p3kPexotUthDV8DdaiyqGd7iNCtps=
+	b=fGJZ1NseIt989yt10iU7T50B7LG6TRoiz8T5zseXxn3++OuJI6azgQIGyU6N+Mgd4
+	 Myr65+nsrRMr7lAWljTJO2BWkXK5N5kQ3qzNsoaRANxOHQr3G2MCm4eCvB1xCtLgm0
+	 cOdW4v8Ul+Tyc3rYdhsUa7F/txj/LwJqHbLS6PvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbgA1OC1 (ORCPT
+        id S1727646AbgA1OCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:02:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48682 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:02:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbgA1OCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:02:24 -0500
+        id S1727630AbgA1OC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:02:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86C5A205F4;
-        Tue, 28 Jan 2020 14:02:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0608524685;
+        Tue, 28 Jan 2020 14:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220144;
-        bh=WJE/ToSye/BpOkb/xsxeZ5XGTMG5f6OnzrVhfE5y57Q=;
+        s=default; t=1580220146;
+        bh=uGwb690XcRRYmpaqN7R+SY+vxZZ7BfejGQQVQBgtTfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jcgj+GmGO2T+/Ju0dRtuKQFBWS4rl2SW8BbQZ5nCRRIm3kJ5PVLoOyxBQ1GW3EM6a
-         SZnxoBOsK/4FW45UxKUQ/A52G/WkvQ/Um9QpHQ9gcD9hb+QtBzFzK1Plyk7ut8dKJ2
-         I+ys66+euJRTNv8Rt6NdKDicEJbmK+FzERG9nhAE=
+        b=oydVqWlBEfGwInEifuzETK0OFPCzbSy7SaCmco6kK4ME/92ZGrXROCDoUvN5qL+43
+         9Rfh2FY6loUUUEB7VtYLLDxxkh8GgSIjQqwkOq283ih/qNbI4PBZacKKsnppfkYQku
+         XLtDk4ZIYsN+UZxGqJCJfd6MSblA1VYIDiSmJBpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niko Kortstrom <niko.kortstrom@nokia.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        William Tu <u9012063@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 007/104] net: ip6_gre: fix moving ip6gre between namespaces
-Date:   Tue, 28 Jan 2020 14:59:28 +0100
-Message-Id: <20200128135818.266470367@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com,
+        stable@kernel.org, David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 034/104] afs: Fix characters allowed into cell names
+Date:   Tue, 28 Jan 2020 14:59:55 +0100
+Message-Id: <20200128135822.012551775@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -61,52 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niko Kortstrom <niko.kortstrom@nokia.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 690afc165bb314354667f67157c1a1aea7dc797a ]
+commit a45ea48e2bcd92c1f678b794f488ca0bda9835b8 upstream.
 
-Support for moving IPv4 GRE tunnels between namespaces was added in
-commit b57708add314 ("gre: add x-netns support"). The respective change
-for IPv6 tunnels, commit 22f08069e8b4 ("ip6gre: add x-netns support")
-did not drop NETIF_F_NETNS_LOCAL flag so moving them from one netns to
-another is still denied in IPv6 case. Drop NETIF_F_NETNS_LOCAL flag from
-ip6gre tunnels to allow moving ip6gre tunnel endpoints between network
-namespaces.
+The afs filesystem needs to prohibit certain characters from cell names,
+such as '/', as these are used to form filenames in procfs, leading to
+the following warning being generated:
 
-Signed-off-by: Niko Kortstrom <niko.kortstrom@nokia.com>
-Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Acked-by: William Tu <u9012063@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	WARNING: CPU: 0 PID: 3489 at fs/proc/generic.c:178
+
+Fix afs_alloc_cell() to disallow nonprintable characters, '/', '@' and
+names that begin with a dot.
+
+Remove the check for "@cell" as that is then redundant.
+
+This can be tested by running:
+
+	echo add foo/.bar 1.2.3.4 >/proc/fs/afs/cells
+
+Note that we will also need to deal with:
+
+ - Names ending in ".invalid" shouldn't be passed to the DNS.
+
+ - Names that contain non-valid domainname chars shouldn't be passed to
+   the DNS.
+
+ - DNS replies that say "your-dns-needs-immediate-attention.<gTLD>" and
+   replies containing A records that say 127.0.53.53 should be
+   considered invalid.
+   [https://www.icann.org/en/system/files/files/name-collision-mitigation-01aug14-en.pdf]
+
+but these need to be dealt with by the kafs-client DNS program rather
+than the kernel.
+
+Reported-by: syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com
+Cc: stable@kernel.org
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/ip6_gre.c |    3 ---
- 1 file changed, 3 deletions(-)
 
---- a/net/ipv6/ip6_gre.c
-+++ b/net/ipv6/ip6_gre.c
-@@ -1466,7 +1466,6 @@ static int ip6gre_tunnel_init_common(str
- 		dev->mtu -= 8;
- 
- 	if (tunnel->parms.collect_md) {
--		dev->features |= NETIF_F_NETNS_LOCAL;
- 		netif_keep_dst(dev);
+---
+ fs/afs/cell.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+--- a/fs/afs/cell.c
++++ b/fs/afs/cell.c
+@@ -134,8 +134,17 @@ static struct afs_cell *afs_alloc_cell(s
+ 		_leave(" = -ENAMETOOLONG");
+ 		return ERR_PTR(-ENAMETOOLONG);
  	}
- 	ip6gre_tnl_init_features(dev);
-@@ -1894,7 +1893,6 @@ static void ip6gre_tap_setup(struct net_
- 	dev->needs_free_netdev = true;
- 	dev->priv_destructor = ip6gre_dev_free;
+-	if (namelen == 5 && memcmp(name, "@cell", 5) == 0)
++
++	/* Prohibit cell names that contain unprintable chars, '/' and '@' or
++	 * that begin with a dot.  This also precludes "@cell".
++	 */
++	if (name[0] == '.')
+ 		return ERR_PTR(-EINVAL);
++	for (i = 0; i < namelen; i++) {
++		char ch = name[i];
++		if (!isprint(ch) || ch == '/' || ch == '@')
++			return ERR_PTR(-EINVAL);
++	}
  
--	dev->features |= NETIF_F_NETNS_LOCAL;
- 	dev->priv_flags &= ~IFF_TX_SKB_SHARING;
- 	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
- 	netif_keep_dst(dev);
-@@ -2197,7 +2195,6 @@ static void ip6erspan_tap_setup(struct n
- 	dev->needs_free_netdev = true;
- 	dev->priv_destructor = ip6gre_dev_free;
+ 	_enter("%*.*s,%s", namelen, namelen, name, addresses);
  
--	dev->features |= NETIF_F_NETNS_LOCAL;
- 	dev->priv_flags &= ~IFF_TX_SKB_SHARING;
- 	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
- 	netif_keep_dst(dev);
 
 
