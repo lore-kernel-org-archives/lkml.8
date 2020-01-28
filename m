@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47620C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B3AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E862468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E683524691
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220311;
-	bh=jMh9yRbaa+TzKO4bYqKMD6D1FyrXnUEJEHjYr7s+1tE=;
+	s=default; t=1580220314;
+	bh=bucInDruqaGQKC1x8FrO5m2lqx7YtfBmjnFP0D1ziuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r8hWM0qC2HfNa5J/MEdzSx1ph4KK2LSL3VV+5fDzgTmsag1KR3AoA5Paz+aq1iaKX
-	 1XIv2J7WLvEiPTSyVi+sN48nHpnLm08TR9RYdatGiEIUu9DJO4mIMJV/eenOoPJQ0h
-	 NzTIonO6QDdwRz+jxlCnFFSDcto/Kz6Ab+xiL3lo=
+	b=y9C+O2SOigf1qzlSIn0ZZs7FQcNKqZCqYL94/4jX8v6r68R+f0EoPfjkoeiXNXfq0
+	 opefHqfMEmHaxL5avCZXGkBDhDFX2GsI36zy0Gx77H8e0ThOmDH7T+bCRxrTRxxqOP
+	 Z6p+SRmTpEKb8ZBbzD5eD+BHoC8pjh3XRB6q39Yk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgA1OFK (ORCPT
+        id S1728226AbgA1OFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:05:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:05:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728192AbgA1OFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:05:08 -0500
+        id S1727256AbgA1OFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:05:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4686205F4;
-        Tue, 28 Jan 2020 14:05:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B37A205F4;
+        Tue, 28 Jan 2020 14:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220307;
-        bh=jMh9yRbaa+TzKO4bYqKMD6D1FyrXnUEJEHjYr7s+1tE=;
+        s=default; t=1580220304;
+        bh=bucInDruqaGQKC1x8FrO5m2lqx7YtfBmjnFP0D1ziuI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SCrLOg0OigpbOTFzLTU/PwlTcB5nhAOwFaa/pRt3YDdZbVSkSbuUG+AXGZphjcfQ/
-         BllUbL+26lvOrKD+ta0LotvjRDvy48/OuRyCGZqiCD8iLaT6oWRGeULdAWkGjzwYkL
-         eUdzRZnlGRWeAeCbSgmdeI9gWhOl/czZ0csYqsbU=
+        b=SG3zzIiub4DYTYK1lcH+f2QWC6NoLuVxEzE9GXjvFQvBN05RYzqTMPd8Jsdhoizli
+         hzvXPJAwlE88T4qCb8THd2ME9ixEcei+q/LgJ24wA3F+ag/lsd2C3mFt0V/AuL2XBa
+         9jl3qYVJusSPIm0UHqMXHQ6pv78pX682xjK6YBgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Wen Huang <huangwenabc@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 099/104] libertas: Fix two buffer overflows at parsing bss descriptor
-Date:   Tue, 28 Jan 2020 15:01:00 +0100
-Message-Id: <20200128135830.616281930@linuxfoundation.org>
+        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 098/104] net/sonic: Prevent tx watchdog timeout
+Date:   Tue, 28 Jan 2020 15:00:59 +0100
+Message-Id: <20200128135830.489263558@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,68 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Huang <huangwenabc@gmail.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit e5e884b42639c74b5b57dc277909915c0aefc8bb upstream.
+commit 686f85d71d095f1d26b807e23b0f0bfd22042c45 upstream.
 
-add_ie_rates() copys rates without checking the length
-in bss descriptor from remote AP.when victim connects to
-remote attacker, this may trigger buffer overflow.
-lbs_ibss_join_existing() copys rates without checking the length
-in bss descriptor from remote IBSS node.when victim connects to
-remote attacker, this may trigger buffer overflow.
-Fix them by putting the length check before performing copy.
+Section 5.5.3.2 of the datasheet says,
 
-This fix addresses CVE-2019-14896 and CVE-2019-14897.
-This also fix build warning of mixed declarations and code.
+    If FIFO Underrun, Byte Count Mismatch, Excessive Collision, or
+    Excessive Deferral (if enabled) errors occur, transmission ceases.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Wen Huang <huangwenabc@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+In this situation, the chip asserts a TXER interrupt rather than TXDN.
+But the handler for the TXDN is the only way that the transmit queue
+gets restarted. Hence, an aborted transmission can result in a watchdog
+timeout.
+
+This problem can be reproduced on congested link, as that can result in
+excessive transmitter collisions. Another way to reproduce this is with
+a FIFO Underrun, which may be caused by DMA latency.
+
+In event of a TXER interrupt, prevent a watchdog timeout by restarting
+transmission.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/marvell/libertas/cfg.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/marvell/libertas/cfg.c
-+++ b/drivers/net/wireless/marvell/libertas/cfg.c
-@@ -273,6 +273,10 @@ add_ie_rates(u8 *tlv, const u8 *ie, int
- 	int hw, ap, ap_max = ie[1];
- 	u8 hw_rate;
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -415,10 +415,19 @@ static irqreturn_t sonic_interrupt(int i
+ 			lp->stats.rx_missed_errors += 65536;
  
-+	if (ap_max > MAX_RATES) {
-+		lbs_deb_assoc("invalid rates\n");
-+		return tlv;
-+	}
- 	/* Advance past IE header */
- 	ie += 2;
- 
-@@ -1717,6 +1721,9 @@ static int lbs_ibss_join_existing(struct
- 	struct cmd_ds_802_11_ad_hoc_join cmd;
- 	u8 preamble = RADIO_PREAMBLE_SHORT;
- 	int ret = 0;
-+	int hw, i;
-+	u8 rates_max;
-+	u8 *rates;
- 
- 	/* TODO: set preamble based on scan result */
- 	ret = lbs_set_radio(priv, preamble, 1);
-@@ -1775,9 +1782,12 @@ static int lbs_ibss_join_existing(struct
- 	if (!rates_eid) {
- 		lbs_add_rates(cmd.bss.rates);
- 	} else {
--		int hw, i;
--		u8 rates_max = rates_eid[1];
--		u8 *rates = cmd.bss.rates;
-+		rates_max = rates_eid[1];
-+		if (rates_max > MAX_RATES) {
-+			lbs_deb_join("invalid rates");
-+			goto out;
+ 		/* transmit error */
+-		if (status & SONIC_INT_TXER)
+-			if (SONIC_READ(SONIC_TCR) & SONIC_TCR_FU)
+-				netif_dbg(lp, tx_err, dev, "%s: tx fifo underrun\n",
+-					  __func__);
++		if (status & SONIC_INT_TXER) {
++			u16 tcr = SONIC_READ(SONIC_TCR);
++
++			netif_dbg(lp, tx_err, dev, "%s: TXER intr, TCR %04x\n",
++				  __func__, tcr);
++
++			if (tcr & (SONIC_TCR_EXD | SONIC_TCR_EXC |
++				   SONIC_TCR_FU | SONIC_TCR_BCM)) {
++				/* Aborted transmission. Try again. */
++				netif_stop_queue(dev);
++				SONIC_WRITE(SONIC_CMD, SONIC_CR_TXP);
++			}
 +		}
-+		rates = cmd.bss.rates;
- 		for (hw = 0; hw < ARRAY_SIZE(lbs_rates); hw++) {
- 			u8 hw_rate = lbs_rates[hw].bitrate / 5;
- 			for (i = 0; i < rates_max; i++) {
+ 
+ 		/* bus retry */
+ 		if (status & SONIC_INT_BR) {
 
 
