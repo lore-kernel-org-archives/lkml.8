@@ -2,187 +2,214 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79E3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3378C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86ABC24696
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580217786;
-	bh=3KFknNJuaH0QQIZYJFtTHB1ljL3O7Qft9dyWHDi6ej8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=DD6qgUIvmxA5FnS28u/Ctg4fyjeODo/gjK8fO471B2lJZWn5ycLsSLT4Okjo+JAMO
-	 Zeuq80CrgHZpQhjqDuu1FLWcd8Dk+86IbH8PjMzhLfWCq/Jqy6HXC3nHgbhyJ0z+qL
-	 obvmfEHT+j3DrI9JnbtYjic9daE4KjFZ6SMWk8Xg=
+	by mail.kernel.org (Postfix) with ESMTP id 843292468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgA1NXF (ORCPT
+        id S1726243AbgA1NZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:23:05 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35783 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbgA1NXE (ORCPT
+        Tue, 28 Jan 2020 08:25:13 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:10099 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725852AbgA1NZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:23:04 -0500
-Received: by mail-lf1-f67.google.com with SMTP id z18so9062999lfe.2;
-        Tue, 28 Jan 2020 05:23:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=LhZkJsFAE45iuiXTZCAvO5GLd86KmfP3egSUUi14+ew=;
-        b=WAAukqEtRflwe2nAyxTDtZ8BvTlqv0XesJsLDApUAqFN6wh2+bdZYiJMfr1aPn/cnq
-         Idg4/AUj6U4zWnZgKHTwHc9tUVmqFI8lZ2yKR3JT9pM2ymjOylx7PDbC0tTQCaxM+yEm
-         6YjJdSTQE/E5JhDs+BR8QmqXQvWgAUx8uyviwaewVbq/DQYoPdZTLwd181pmoOtNGc+r
-         cUXBndaafq15ZILKbcCmUx/AIArUScQ5CjfkXEQWjYwBHI704AceUmxzAZcESD4ppqLE
-         qCFIDFbUnVTKNUbkPXY99tWqHredyYRuwBw3kr0NOgkEwfrxz29DR1vxuwWQFg43w3rv
-         X98A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=LhZkJsFAE45iuiXTZCAvO5GLd86KmfP3egSUUi14+ew=;
-        b=I20j7BTxLDLNbm/JRCbs3LnPe9oj1qsXmDRjZiMUVBzouAq8cNqns6+s01MZdoMgiN
-         jvTTA1/i23tfxSzB6kmhDaYBhu/GSqIObf4d/nVA0oBgPrsjrWYli5hDerO6ISEUQI6e
-         LQJzPzQJE+v0sJzunwhQGxGDl+Ntc4QhDrDSLFaJ1Kp5aEGIKpHNx0SBnPXHGamPjgjV
-         U/nrfX4+8DwGnSiD9KOm+ildaYJl3c0efVpzA953oTq/MzmZKwiixlBEVVh1RXhB5nGC
-         lHWG4XKkQKMdzyD6shWPErmmQ2C7GWHogDDmiLT8vxMXaQWpJzvH+8TYxVhcVhKd/zx2
-         NMiQ==
-X-Gm-Message-State: APjAAAWpvEdcwuZ/nVNf7kf0VfqErFrBa4VET/0EZXp25YOhr8IYeOD1
-        daMXYsnl8R8+hi7/ka+zsLk=
-X-Google-Smtp-Source: APXvYqwybebkDe4WYK0TuVcF2LZXt0ZhsZwyc/V5TizRmzdPUM4k6OE2Hnzaz3ET8TPtyzgMQMd+DA==
-X-Received: by 2002:ac2:5964:: with SMTP id h4mr605146lfp.213.1580217780667;
-        Tue, 28 Jan 2020 05:23:00 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id a9sm9875977lfk.23.2020.01.28.05.22.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jan 2020 05:22:59 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v2] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
-In-Reply-To: <20200127193046.110258-1-john.stultz@linaro.org>
-References: <20200127193046.110258-1-john.stultz@linaro.org>
-Date:   Tue, 28 Jan 2020 15:22:54 +0200
-Message-ID: <87sgjz90lt.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Tue, 28 Jan 2020 08:25:13 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 28 Jan 2020 18:55:08 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 28 Jan 2020 18:54:48 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id D02882830; Tue, 28 Jan 2020 18:54:46 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: [v4] arm64: dts: sc7180: add display dt nodes
+Date:   Tue, 28 Jan 2020 18:54:44 +0530
+Message-Id: <1580217884-21932-1-git-send-email-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Add display, DSI hardware DT nodes for sc7180.
 
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+---
 
-Hi,
+Changes in v1:
+	-Added display DT nodes for sc7180
+Changes in v2:
+	-Renamed node names
+	-Corrected code alignments
+	-Removed extra new line
+	-Added DISP AHB clock for register access
+	under display_subsystem node for global settings
+Changes in v3:
+	-Modified node names
+	-Modified hard coded values
+	-Removed mdss reg entry
+Changes in v4:
+	-Reverting mdp node name
+	-Setting status to disabled in main SOC dtsi file
+	-Replacing _ to - for node names
+	-Adding clock dependency patch link
+	-Splitting idp dt file to a separate patch
 
-John Stultz <john.stultz@linaro.org> writes:
+This patch has dependency on the below series
+https://lkml.org/lkml/2019/12/27/73
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 128 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 128 insertions(+)
 
-> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
->
-> The current code in dwc3_gadget_ep_reclaim_completed_trb() will
-> check for IOC/LST bit in the event->status and returns if
-> IOC/LST bit is set. This logic doesn't work if multiple TRBs
-> are queued per request and the IOC/LST bit is set on the last
-> TRB of that request.
->
-> Consider an example where a queued request has multiple queued
-> TRBs and IOC/LST bit is set only for the last TRB. In this case,
-> the core generates XferComplete/XferInProgress events only for
-> the last TRB (since IOC/LST are set only for the last TRB). As
-> per the logic in dwc3_gadget_ep_reclaim_completed_trb()
-> event->status is checked for IOC/LST bit and returns on the
-> first TRB. This leaves the remaining TRBs left unhandled.
->
-> Similarly, if the gadget function enqueues an unaligned request
-> with sglist already in it, it should fail the same way, since we
-> will append another TRB to something that already uses more than
-> one TRB.
->
-> To aviod this, this patch changes the code to check for IOC/LST
-> bits in TRB->ctrl instead.
->
-> At a practical level, this patch resolves USB transfer stalls seen
-> with adb on dwc3 based HiKey960 after functionfs gadget added
-> scatter-gather support around v4.20.
->
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Yang Fei <fei.yang@intel.com>
-> Cc: Thinh Nguyen <thinhn@synopsys.com>
-> Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-> Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> Cc: Jack Pham <jackp@codeaurora.org>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Cc: Linux USB List <linux-usb@vger.kernel.org>
-> Cc: stable <stable@vger.kernel.org>
-> Tested-by: Tejas Joglekar <tejas.joglekar@synopsys.com>
-> Reviewed-by: Thinh Nguyen <thinhn@synopsys.com>
-> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> [jstultz: forward ported to mainline, reworded commit log, reworked
->  to only check trb->ctrl as suggested by Felipe]
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v2:
-> * Rework to only check trb->ctrl as suggested by Felipe
-> * Reword the commit message to include more of Felipe's assessment
-> ---
->  drivers/usb/dwc3/gadget.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index 154f3f3e8cff..9a085eee1ae3 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -2420,7 +2420,8 @@ static int dwc3_gadget_ep_reclaim_completed_trb(str=
-uct dwc3_ep *dep,
->  	if (event->status & DEPEVT_STATUS_SHORT && !chain)
->  		return 1;
->=20=20
-> -	if (event->status & DEPEVT_STATUS_IOC)
-> +	if ((trb->ctrl & DWC3_TRB_CTRL_IOC) ||
-> +	    (trb->ctrl & DWC3_TRB_CTRL_LST))
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 3bc3f64..c3883af 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1184,6 +1184,134 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		mdss: mdss@ae00000 {
++			compatible = "qcom,sc7180-mdss";
++			reg = <0 0x0ae00000 0 0x1000>;
++			reg-names = "mdss";
++
++			power-domains = <&dispcc MDSS_GDSC>;
++
++			clocks = <&gcc GCC_DISP_AHB_CLK>,
++				 <&gcc GCC_DISP_HF_AXI_CLK>,
++				 <&dispcc DISP_CC_MDSS_AHB_CLK>,
++				 <&dispcc DISP_CC_MDSS_MDP_CLK>;
++			clock-names = "iface", "gcc_bus", "ahb", "core";
++
++			assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
++			assigned-clock-rates = <300000000>;
++
++			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <1>;
++
++			iommus = <&apps_smmu 0x800 0x2>;
++
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			mdss_mdp: mdp@ae01000 {
++				compatible = "qcom,sc7180-dpu";
++				reg = <0 0x0ae01000 0 0x8f000>,
++				      <0 0x0aeb0000 0 0x2008>,
++				      <0 0x0af03000 0 0x16>;
++				reg-names = "mdp", "vbif", "disp_cc";
++
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&dispcc DISP_CC_MDSS_ROT_CLK>,
++					 <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
++					 <&dispcc DISP_CC_MDSS_MDP_CLK>,
++					 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
++				clock-names = "iface", "rot", "lut", "core",
++					      "vsync";
++				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
++						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
++				assigned-clock-rates = <300000000>,
++						       <19200000>;
++
++				interrupt-parent = <&mdss>;
++				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						dpu_intf1_out: endpoint {
++							remote-endpoint = <&dsi0_in>;
++						};
++					};
++				};
++			};
++
++			dsi_controller: dsi-controller@ae94000 {
++				compatible = "qcom,mdss-dsi-ctrl";
++				reg = <0 0x0ae94000 0 0x400>;
++				reg-names = "dsi_ctrl";
++
++				interrupt-parent = <&mdss>;
++				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
++
++				clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
++					 <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
++					 <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
++					 <&dispcc DISP_CC_MDSS_ESC0_CLK>,
++					 <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&gcc GCC_DISP_HF_AXI_CLK>;
++				clock-names = "byte",
++					      "byte_intf",
++					      "pixel",
++					      "core",
++					      "iface",
++					      "bus";
++
++				phys = <&dsi_phy>;
++				phy-names = "dsi";
++
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				status = "disabled";
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						dsi0_in: endpoint {
++							remote-endpoint = <&dpu_intf1_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						dsi0_out: endpoint {
++						};
++					};
++				};
++			};
++
++			dsi_phy: dsi-phy@ae94400 {
++				compatible = "qcom,dsi-phy-10nm";
++				reg = <0 0x0ae94400 0 0x200>,
++				      <0 0x0ae94600 0 0x280>,
++				      <0 0x0ae94a00 0 0x1e0>;
++				reg-names = "dsi_phy",
++					    "dsi_phy_lane",
++					    "dsi_pll";
++
++				#clock-cells = <1>;
++				#phy-cells = <0>;
++
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
++				clock-names = "iface";
++
++				status = "disabled";
++			};
++		};
++
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>;
+-- 
+2.7.4
 
-why the LST bit here? It wasn't there before. In fact, we never set LST
-in dwc3 anymore :-)
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4wNa8ACgkQzL64meEa
-mQZb7BAAmXPf4dz4rgNSd6F7EskOWnPTDig96416cMT8toKMH+wN+Gz/Dkjfl0/r
-Ll4+mU5DozR0pBQ7GMiqiyCNVZDkf+yXB4zSrmuHBY6mUGGu+MRmcOQ06dk85XFp
-Jv26A3gJyKmjx1YcORZCLlIgmuBQ9PSbPRaiOYA1JxRwmLW5vyxUdrqSN83/6Znb
-wiw2fHxOQqCQloiM611DuxvkoyV1JTDd3FQOwObBsMRqDORydRWHA1rWGAsE1DUP
-nCeG4aF0mtVKE2+GmP+ih6eDTsX9cFzJ9bqCJNqp3SpQFv67nse8v+vnZ+wARvAw
-8GxLLHW6SiCodmWMilWJT8ugFTdLLnJJMU1qFVvCSvCaXYbWwTUbpCAlGFbZJ5FA
-Nfm4Nv3ra/KXHwZxNqZxqBJXki80rAwaCAUjVPYwr9X0u2dWMzP4bg+YzFrzt5lK
-3SFZsy7OLUvDa3uAAdK6u/3Ra349G9nmgyicbArC0pRIAdqNIgXUqt25WC6fEFtU
-Q4YeykstP/A5u7TEFKnWeKEvH3VxgGW4J1QtQ+xerufv8H10SBFYjTCK58bNnHPa
-P6mrfLZairsbN0s4GDa0/6RCTJ9U9fXmo56eDfvYKcoKNbMcsb5rboX6kbscvVAP
-wU93kBdVCqVE1ab2dIwixEEDhO0QP491X75DU08adsibffcc/4U=
-=TNFV
------END PGP SIGNATURE-----
---=-=-=--
