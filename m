@@ -2,125 +2,101 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17534C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D10C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADD6214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:55:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RT/MqUsr"
+	by mail.kernel.org (Postfix) with ESMTP id E775A24683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgA1Qzk (ORCPT
+        id S1726721AbgA1Q4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:55:40 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33200 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgA1Qzj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:55:39 -0500
-Received: by mail-wm1-f65.google.com with SMTP id m10so2213801wmc.0;
-        Tue, 28 Jan 2020 08:55:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WCgG7MXtK+EadBs68VzLrnD51numFaQTp+Nf00N2Sac=;
-        b=RT/MqUsrLMJMTlJLSdTpe5SrIjHzDcNYhB65LuMHGbpgW5xF3y/8DJJMuX45zauCMJ
-         bM4sR7Worug+qMce3gtMcCYUWgxbClKOQNWiQPAQD8SgC1ivfBPxlAs2B++TNobJj0/m
-         gI94unUUlyNwlsqDUGu6BNMo9IJKNtNnVzlqk/tSVzd51Z8Zy+8+tL0ogx4j62PoOAuB
-         DJ25cWKO28c0OySBXqWSrlR/FqnbTh9ZLgGEsT5y4cZ3ovoBblD0M7+F47Sw9IjyL0FU
-         o1vQr3BqT8TFEHapR1Qrsd4sU/TAI0wzV/dD5XbgUsxGoAwV94g2ovrA78elVdZmGQvZ
-         rmVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WCgG7MXtK+EadBs68VzLrnD51numFaQTp+Nf00N2Sac=;
-        b=Y5h0bX/I8EyeYRpOeLBlevGTAhtRGlUqCMUDxdi6lD0UgjvKalKCqQbw8DJdPebqTP
-         T1sYuZEIg9qisYsDRgvncmI5nqK/Zh2Lz/N5qMqB51mjav8RGKguN+xFU132AdhOzC3h
-         +6qL1fAz/hyFNkFVnUVM2AdUggKElDcJsCR2pmtuqqtP/9nbzU8VZh41ly2Wdia85dSe
-         TtOaEcE/1rYnC8+0oCWtMfmsdPi2fF156TcL3GHPcJC3YgKSCa85rn2kdc4fnlUIxcbo
-         LQH7O3MGJXEbYgf8uPtPLzjiFgJmyUOyeNyY+YpBAxHzzSOGOaQXEfEa7dYJSCUqoGbQ
-         ewCA==
-X-Gm-Message-State: APjAAAUsrn/ptR8SF670icfTiVJDUIlSlwO7gHYrnuBVQ4HtRXR0SvpY
-        PwvWsLzZKJX9c6Y/FKyO6wE=
-X-Google-Smtp-Source: APXvYqxOIb8IvrpKKK65gJyI7ywFbGmllhSO+jZl55f0JV88LAgtEGsIIYILGXAMELx+9KCRr/8Ysw==
-X-Received: by 2002:a05:600c:2c08:: with SMTP id q8mr6221103wmg.45.1580230537494;
-        Tue, 28 Jan 2020 08:55:37 -0800 (PST)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id 16sm3745279wmi.0.2020.01.28.08.55.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 08:55:36 -0800 (PST)
-Date:   Tue, 28 Jan 2020 17:55:34 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-sunxi@googlegroups.com" <linux-sunxi@googlegroups.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/9] crypto: engine: workqueue can only be processed one
- by one
-Message-ID: <20200128165534.GA11610@Red>
-References: <20200122104528.30084-1-clabbe.montjoie@gmail.com>
- <20200122104528.30084-2-clabbe.montjoie@gmail.com>
- <VI1PR0402MB3485B787EA6BCDD5A5600BAA980A0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <20200128155800.GB17295@Red>
+        Tue, 28 Jan 2020 11:56:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:60626 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbgA1Q4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 11:56:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29B78328;
+        Tue, 28 Jan 2020 08:56:21 -0800 (PST)
+Received: from [192.168.122.167] (unknown [10.118.28.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3DBC3F52E;
+        Tue, 28 Jan 2020 08:56:20 -0800 (PST)
+Subject: Re: [PATCH RFC 0/2] Add basic generic ACPI soc driver
+To:     John Garry <john.garry@huawei.com>, rjw@rjwysocki.net,
+        lenb@kernel.org
+Cc:     arnd@arndb.de, olof@lixom.net, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, guohanjun@huawei.com,
+        gregkh@linuxfoundation.org
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <bb87efe5-d0be-498a-25a1-008a7bebd452@arm.com>
+Date:   Tue, 28 Jan 2020 10:56:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128155800.GB17295@Red>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 04:58:00PM +0100, Corentin Labbe wrote:
-> On Tue, Jan 28, 2020 at 03:50:14PM +0000, Horia Geanta wrote:
-> > On 1/22/2020 12:46 PM, Corentin Labbe wrote:
-> > > Some bykeshedding are unnecessary since a workqueue can only be executed
-> > > one by one.
-> > > This behaviour is documented in:
-> > > - kernel/kthread.c: comment of kthread_worker_fn()
-> > > - Documentation/core-api/workqueue.rst: the functions associated with the work items one after the other
-> > [...]
-> > > @@ -73,16 +73,6 @@ static void crypto_pump_requests(struct crypto_engine *engine,
-> > >  
-> > >  	spin_lock_irqsave(&engine->queue_lock, flags);
-> > >  
-> > > -	/* Make sure we are not already running a request */
-> > > -	if (engine->cur_req)
-> > > -		goto out;
-> > > -
-> > This check is here for a good reason, namely because crypto engine
-> > cannot currently handle multiple crypto requests being in "flight"
-> > in parallel.
-> > 
-> > More exactly, if this check is removed the following sequence could occur:
-> > crypto_pump_work() -> crypto_pump_requests() -> .do_one_request(areq1)
-> > crypto_pump_work() -> crypto_pump_requests() -> .do_one_request(areq2)
-> > crypto_finalize_request(areq1)
-> > crypto_finalize_request(areq2)
-> > 
+Hi,
+
+On 1/28/20 5:14 AM, John Garry wrote:
+> A requirement has come up recently to be able to read system SoC packages
+> identifiers from userspace [0].
 > 
-> As explained in the commitlog, crypto_pump_work() cannot be ran twice.
+> For device tree FW-based systems, this would be quite straightforward, in
+> that we could add a soc driver for that system and use the DT model
+> identifier as the soc id - that's how most soc drivers seem to do it.
+> 
+> For ACPI-based systems, the only place I know to get (put) such SoC
+> information is in the PPTT, specifically the ID Type Structure for a
+> processor package node. A processor package node describes a physical
+> boundary of a processor topology.
+
+Well presumably that is one of the use cases for DMI, which has fields 
+for the processor/socket as well as the machine vendor.
+
+But, quickly looking at the use case, I can't help but think you don't 
+really want any of the above, or the PPTT id. It seems the mapping 
+should actually be tied directly to the uncore PMU definition, rather 
+than a soc/machine/whatever identifier. Which would imply keying off one 
+of the ACPI object identifiers for the PMU itself.
+
+
+> 
+> The ACPI spec does not declare how the fields in this structure must be
+> used, however it does provide pretty clear examples, which I would expect
+> most implementers to follow. As such, I try to solve the problem in 2
+> parts:
+> - Add ACPI PPTT API to get opaque package structure
+> - Add basic ACPI generic soc driver, which can interpret the fields
+>    for known platforms to fill in the ID Type Structure as per example
+>    in the spec.
+> 
+> So I'm hoping here for some comments on this approach - hence the RFC.
+> I've cc'ed some folks which may have suggestions.
+> 
+> [0] https://lore.kernel.org/linux-arm-kernel/1579876505-113251-6-git-send-email-john.garry@huawei.com/ ,
+>      https://lore.kernel.org/linux-arm-kernel/1579876505-113251-1-git-send-email-john.garry@huawei.com/
+> 
+> John Garry (2):
+>    ACPI/PPTT: Add acpi_pptt_get_package_info() API
+>    soc: Add a basic ACPI generic driver
+> 
+>   drivers/acpi/pptt.c        |  81 +++++++++++++++++++++++++++++
+>   drivers/soc/Makefile       |   1 +
+>   drivers/soc/acpi_generic.c | 102 +++++++++++++++++++++++++++++++++++++
+>   include/linux/acpi.h       |  13 +++++
+>   4 files changed, 197 insertions(+)
+>   create mode 100644 drivers/soc/acpi_generic.c
 > 
 
-Sorry, I have misunderstood and wrongly answered.
-
-Right since some driver does not block on do_one_request(), crypto_pump_work() can be ran one after one and so launch two request.
-
-So this patch is bad.
-
-Regards
