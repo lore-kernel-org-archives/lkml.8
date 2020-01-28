@@ -2,168 +2,146 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CCFC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A5CC35246
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B18622522
+	by mail.kernel.org (Postfix) with ESMTP id CFFC724681
 	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/XLAZmE"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DDaD5e3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbgA1GDK (ORCPT
+        id S1725941AbgA1GDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 01:03:10 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50963 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgA1GDK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 01:03:10 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so1161157wmb.0;
-        Mon, 27 Jan 2020 22:03:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=uzw58AxJyROr8rcMN8+tQkKTP/GB1BTnbsoLW+T9bYk=;
-        b=U/XLAZmEa7FoBjgoyU8wMcZ5kvRPBBjiKtZOhlYZ3i50AyKGIhCme4LOTgNUES0zoh
-         DNsTA7p5hOqy9mpaE8Q/Z9vSC7iwRlelFsVCWaYkxc6KCkCCYQcqmB3/wpYq6iOOd+Vm
-         wRCrDdthL6nGdesnPUuxuLrV5lWHAXe6GBpZ/jypCVTGNSJkjZI3teQaFR0kys0adpFs
-         d2TkDOV0Sut3b3wmXMggXviARjCbAtsF3Ux+BHH/jQikGhJZY66CfdUdSjZvC+/4fFnQ
-         t4sfRbb6/DbFYLXMTPY98hoA72GXMlUn+ifhP5sPO0CjECVSzz4X/ddRarBwaMx2EEVg
-         FVLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=uzw58AxJyROr8rcMN8+tQkKTP/GB1BTnbsoLW+T9bYk=;
-        b=h0p9KQIQ+i8Us+Q+jqQ5U5dT6Yk7f2pR1CdWx4/KhPTuH5uk2UGYcV/LKtFDJI7n0y
-         e11OgyeKl9m149cqqpsxK6CmZNHDCbu90aUBAjJTYCbhyL5/qjPqaZGlBzAZBWYNWFzV
-         Zykm0bCzSRzvxINn9JHRL88BfB3NdLcRrFQXTrvmj3F7MdE6GPLhjYdV8ZX+ag6lW4jl
-         7vV5bsm/yxHEdttgHD70FB8MP6dHzTq9/AkyAu/YpfKOeJO38z99AkF3Kzj7utKMWuqj
-         c72QwdLt6/1qQmtIqQ7mzN1PcgLi+TegeUdy9tyEB3VRF/ODus1SixQeUfHmNUk/Oa4C
-         YM0g==
-X-Gm-Message-State: APjAAAX0qB4FLcV5xVP1cRTTuYcYCNdBFlYjoJvmiHxXh7wbrAnKaFjG
-        czDKKE5CW1AWagreCbrkMPA=
-X-Google-Smtp-Source: APXvYqzGz7ZuGFcI0BoC2X5Ts/w3Qvls5A/hK7yPgVcvXcHRKynQCnFsoiuBdQJgjo4rs+q/oVWTSQ==
-X-Received: by 2002:a05:600c:3d1:: with SMTP id z17mr2876527wmd.90.1580191387751;
-        Mon, 27 Jan 2020 22:03:07 -0800 (PST)
-Received: from localhost.localdomain ([2a02:2450:10d2:194d:841f:4795:9ca0:c33f])
-        by smtp.gmail.com with ESMTPSA id w13sm24781940wru.38.2020.01.27.22.03.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 22:03:07 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     SeongJae Park <sj38.park@gmail.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: Re: [PATCH] kunit/kunit_kernel: Rebuild .config if .kunitconfig is modified
-Date:   Tue, 28 Jan 2020 07:03:00 +0100
-Message-Id: <20200128060300.23989-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CAFd5g46v-RyNMP7GROn4bUEAATOPZ=w5AyO+tvuTG25aqt6oAg@mail.gmail.com> (raw)
+        Tue, 28 Jan 2020 01:03:13 -0500
+Received: from mail-eopbgr00088.outbound.protection.outlook.com ([40.107.0.88]:40943
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725774AbgA1GDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 01:03:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Baj5kaWn5zXKoS9MUQTeFryUI4+6iYfUL0F+fHFjC8ur66Fl0rrcVijW8WpWzjkdmoS6oMKpNOhytfnL7wiHx4KG0u/F/pTe51BmltUPnYpj/u6Oiil655dEnfLPz9x4/ctMFS2ZjuPeV63m73bDX/kxQYhkUv7fLuihFumoTuNDCOXcvzNjpwGYD0XK1TamTjdnaxUWQkoD8CR9n6Q6sdhGrjI3FpXZm740vukGlVE0iVlriNI6QAihvCf8Sojq0Ig81JkzZ/duxZ0jud1UF37qS/zeNuym4K7PCubeM/4H8g9V+/op5FIoTFAGhwzPAGzK/NvGBgONo0stk9isIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tETQvbBRX8v/xgVNT/oVUXPAuZoKQ+siTYO6sFH9zds=;
+ b=G2joecOdlnhsDmdnlItj7EVCf92oIHLhY7Y4jbh+hz6oIx4vBOdFCHFqcamLqn09ZKCaykpDyE4WGaZmp/frlKTrL4kqA7Um2fMvLruO+hf1W5HYvkWE3yrNmra+fKiIjJrqBnuPBb1dJMOlvj9I6vVVDQMnb71YDgB47CTtjwjxgRFW1gKU6qmxhlaKJPMpaqzZr92vecyU/QzykOzpYLgSWsNQN0kIANWhqfmjjXKB45QHWHuH5YWcV1YrQRRLMg4nMib7HT4H7l2uFcorqfKu/yf8pcJOpSktk41vg8Sif/qddwHKHBg35RbZBLoB4kA9yovL2FAl5FTLdfkMpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tETQvbBRX8v/xgVNT/oVUXPAuZoKQ+siTYO6sFH9zds=;
+ b=DDaD5e3qu2Bql7y4usn4/Sds46s+loieP1Gb43E+Ah0xeSPyzZi38PvI4E5/LBGe+8L1qMSVMnI4lQXMYY2oCvTKlCUeUrYdCIHFyF9yTSd9IyNMozl8ICpSqojF8sNcya5qgdkjp6AQTVPUvAWDI2Tzw4FOWKN6yfhkSVcIxKY=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5377.eurprd04.prod.outlook.com (20.178.113.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.24; Tue, 28 Jan 2020 06:03:09 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2665.026; Tue, 28 Jan 2020
+ 06:03:09 +0000
+Received: from localhost.localdomain (119.31.174.66) by HK2PR04CA0087.apcprd04.prod.outlook.com (2603:1096:202:15::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2665.20 via Frontend Transport; Tue, 28 Jan 2020 06:03:05 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "arnd@arndb.de" <arnd@arndb.de>
+CC:     "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V3 0/2] soc: imx: increase build coverage for imx8 soc driver
+Thread-Topic: [PATCH V3 0/2] soc: imx: increase build coverage for imx8 soc
+ driver
+Thread-Index: AQHV1aCdMkWgGrHEXE+1Qb5+U0XS6g==
+Date:   Tue, 28 Jan 2020 06:03:09 +0000
+Message-ID: <1580191098-5886-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR04CA0087.apcprd04.prod.outlook.com
+ (2603:1096:202:15::31) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 411ad249-2749-41ff-20a3-08d7a3b7bff0
+x-ms-traffictypediagnostic: AM0PR04MB5377:|AM0PR04MB5377:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5377AA02E141423604ED5080880A0@AM0PR04MB5377.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 029651C7A1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(136003)(39860400002)(366004)(189003)(199004)(2616005)(956004)(52116002)(86362001)(8936002)(8676002)(81156014)(81166006)(36756003)(64756008)(66446008)(66556008)(66476007)(44832011)(2906002)(16526019)(5660300002)(66946007)(478600001)(4744005)(6486002)(110136005)(54906003)(26005)(316002)(71200400001)(6512007)(6506007)(69590400006)(186003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5377;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VS3qdGvzNS5TLaT3wi0ptfQ92htU0iDmUHLUMlAEF/lR0lXgAEoBvFqUJYmhMXkHmvGByjwYScnPKpFHWQjVjBDPdQGLmh2DCBrTPlme0+ZwFXlQgFWW+TGW+z4mIW8F3i6khV7T7Itp92BjsFw0fZVJ/K6n3hU5shkQYwSbk9s655kSR+7XhqfTZcXiOLqVooR2Ds5UBb7ACyopDa0zQ+SWsfZfIgoJCdKhK1xh2xgbYRdUOu7ibMurXgImBL+YCW7erZ7/j7/7r2+caxQ/BsVBDQLNr3ncG6A0HLWm1RHD067NE/72XvtenAxFfeTYBRtWAuxieE1ASKeGImmqHOJ+sZ15yw23iYuP2R0R6xcJY/NevbUO0uNWBPdBpq2U2XvGKLE4wey/xqpkLxZgOVy+CU6dl5Bmeq9Y9sdheG1loQMq7gW0lo3u5BVxibr/4fVwR+ODBZTEdGZ9k7zRgTJfBGngqAEWwfePoAF42kSuqZIm20tKh0XojXAhrvWzzCWqDw+erptpod0Te+U00J2UqonLCX66X57xzxHxnnw=
+x-ms-exchange-antispam-messagedata: 0M5hLP6NFnEooB0fAhC9vrlOlbkzQLTlaY0CTQlaaS/94GSvD/a8nOwbkcEibprM7bKajanYN/IuVyLzGJa4I7TiBlOjArogD3RShUn12SDqYiIBz3kG88jpSgPXpv+55l0uVEBZ1zy3T7BL5vPhWg==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 411ad249-2749-41ff-20a3-08d7a3b7bff0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 06:03:09.4460
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EkKg65OVCUr3UvgAAF0TYmk90+89DAJi4GInkypp4xQYstJekFKBEjfdLOTICcDVDVBvmE9h8+C7jpZVGNQDMQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5377
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020 16:02:48 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
-
-> On Sat, Jan 25, 2020 at 5:59 PM <sj38.park@gmail.com> wrote:
-> >
-> > From: SeongJae Park <sjpark@amazon.de>
-> >
-> > Deletions of configs in the '.kunitconfig' is not applied because kunit
-> > rebuilds '.config' only if the '.config' is not a subset of the
-> > '.kunitconfig'.  To allow the deletions to applied, this commit modifies
-> > the '.config' rebuild condition to addtionally check the modified times
-> > of those files.
-> 
-> The reason it only checks that .kunitconfig is a subset of .config is
-> because we don't want the .kunitconfig to remove options just because
-> it doesn't recognize them.
-> 
-> It runs `make ARCH=um olddefconfig` on the .config that it generates
-> from the .kunitconfig, and most of the time that means you will get a
-> .config with lots of things in it that aren't in the .kunitconfig.
-> Consequently, nothing should ever be deleted from the .config just
-> because it was deleted in the .kunitconfig (unless, of course, you
-> change a =y to a =n or # ... is not set), so I don't see what this
-> change would do.
-> 
-> Can you maybe provide an example?
-
-Sorry for my insufficient explanation.  I added a kunit test
-(SYSCTL_KUNIT_TEST) to '.kunitconfig', ran the added test, and then removed it
-from the file.  However, '.config' is not generated again due to the condition
-and therefore the test still runs.
-
-For more detail:
-
-    $ ./tools/testing/kunit/kunit.py run --defconfig --build_dir ../kunit.out/
-    $ echo "CONFIG_SYSCTL_KUNIT_TEST=y" >> ../kunit.out/.kunitconfig
-    $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
-    $ sed -i '4d' ../kunit.out/.kunitconfig
-    $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
-
-The 2nd line command adds sysctl kunit test and the 3rd line shows it runs the
-added test as expected.  Because the default kunit config contains only 3
-lines, The 4th line command removes the sysctl kunit test from the
-.kunitconfig.  However, the 5th line still run the test.
-
-This patch is for such cases.  Of course, this might make more false positives
-but I believe it would not be a big problem because .config generation takes no
-long time.  If I missed something, please let me know.
+From: Peng Fan <peng.fan@nxp.com>
 
 
-Thanks,
-SeongJae Park
+V3:
+ Per Arnd's suggestions, merged Patch 2/3/4/5 into one patch
+ Dropped the defconfig change with a default Kconfig
 
-> 
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > ---
-> >  tools/testing/kunit/kunit_kernel.py | 17 +++++++++++------
-> >  1 file changed, 11 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-> > index cc5d844ecca1..a3a5d6c7e66d 100644
-> > --- a/tools/testing/kunit/kunit_kernel.py
-> > +++ b/tools/testing/kunit/kunit_kernel.py
-> > @@ -111,17 +111,22 @@ class LinuxSourceTree(object):
-> >                 return True
-> >
-> >         def build_reconfig(self, build_dir):
-> > -               """Creates a new .config if it is not a subset of the .kunitconfig."""
-> > +               """Creates a new .config if it is not a subset of, or older than the .kunitconfig."""
-> >                 kconfig_path = get_kconfig_path(build_dir)
-> >                 if os.path.exists(kconfig_path):
-> >                         existing_kconfig = kunit_config.Kconfig()
-> >                         existing_kconfig.read_from_file(kconfig_path)
-> > -                       if not self._kconfig.is_subset_of(existing_kconfig):
-> > -                               print('Regenerating .config ...')
-> > -                               os.remove(kconfig_path)
-> > -                               return self.build_config(build_dir)
-> > -                       else:
-> > +                       subset = self._kconfig.is_subset_of(existing_kconfig)
-> > +
-> > +                       kunitconfig_mtime = os.path.getmtime(kunitconfig_path)
-> > +                       kconfig_mtime = os.path.getmtime(kconfig_path)
-> > +                       older = kconfig_mtime < kunitconfig_mtime
-> > +
-> > +                       if subset and not older:
-> >                                 return True
-> > +                       print('Regenerating .config ...')
-> > +                       os.remove(kconfig_path)
-> > +                       return self.build_config(build_dir)
-> >                 else:
-> >                         print('Generating .config ...')
-> >                         return self.build_config(build_dir)
-> > --
-> > 2.17.1
-> >
+ Leonard, I dropped you R-b in V3 since the change.
+
+V2:
+ Include Leonard's patch to fix build break after enable compile test
+ Add Leonard's R-b tag
+
+Rename soc-imx8.c to soc-imx8m.c which is for i.MX8M family
+Add SOC_IMX8M for build gate soc-imx8m.c
+Increase build coverage for i.MX SoC driver
+
+Leonard Crestez (1):
+  soc: imx: gpcv2: include linux/sizes.h
+
+Peng Fan (1):
+  soc: imx: increase build coverage for imx8m soc driver
+
+ drivers/soc/Makefile                        | 2 +-
+ drivers/soc/imx/Kconfig                     | 9 +++++++++
+ drivers/soc/imx/Makefile                    | 2 +-
+ drivers/soc/imx/gpcv2.c                     | 1 +
+ drivers/soc/imx/{soc-imx8.c =3D> soc-imx8m.c} | 0
+ 5 files changed, 12 insertions(+), 2 deletions(-)
+ rename drivers/soc/imx/{soc-imx8.c =3D> soc-imx8m.c} (100%)
+
+--=20
+2.16.4
+
