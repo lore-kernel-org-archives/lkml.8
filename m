@@ -2,50 +2,52 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A4DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9028C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58CA424699
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC2C2468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221491;
-	bh=Jl/m6jnZp9jCJNCIyANC8hoEDN1lD6koiO7lkxw94EE=;
+	s=default; t=1580221495;
+	bh=krkpRTJjaq0aPRrGNgYXqjuGQlifAOUX/tNFEfRm/jU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dGDKgq0iEREmslRLtAb1Akvb+8ym+rY73qkw/tazvAdrPA9MKjBu3TGurpV4T9Dil
-	 wtnEFqXOG+Z5px8ccCCBPFMETW08RplwSVO5x5oXIa4ao9g7EUJ2Sh8aq9DUmcCw4l
-	 iamYKCpgSPvykEl73z45h56jb52NYCvKTVxnR8ZY=
+	b=TM2a+vgWsVJJOmh11YeRiTZC+Gf7jJtUOqDfuY9UA6jZWt6HFvUajwZfvZ0LCwmWF
+	 9YpysX2N86R3chJ5OnH8KwOprK3SjjKf8WCw1FiMGhhTtZdR5nBCcAoDQjO4v7qRmM
+	 quB5Z1+Fgx1NAgyLzIF6+8THc5fSDLsnTBZdWiy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732777AbgA1OYu (ORCPT
+        id S1731672AbgA1OYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:24:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51606 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:24:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732757AbgA1OYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:24:45 -0500
+        id S1732766AbgA1OYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:24:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8393124690;
-        Tue, 28 Jan 2020 14:24:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70D542468A;
+        Tue, 28 Jan 2020 14:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221485;
-        bh=Jl/m6jnZp9jCJNCIyANC8hoEDN1lD6koiO7lkxw94EE=;
+        s=default; t=1580221489;
+        bh=krkpRTJjaq0aPRrGNgYXqjuGQlifAOUX/tNFEfRm/jU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0YRoWhVoaVl7JodfndaXQceWJN06sOvrPDAqDGCbD94Mwoi1lg5wPJnZz6K27k78U
-         sU7Ff1ERyK/C2uW1EYm4dtCMX2pkuDrzZZveYb6P1OuOokjiNS4h6OJbCe+7lpQWNI
-         q7OxIyuygflyoJigAw+D07p/dIgBV7k32Oo4EG4k=
+        b=Fj9F/5kwalY8V1+oj8vzJqab96lw7EXIdnmlPNMFEWqsCUAtBJXiVPd0S8yL83cyM
+         o+QNpHbyVbZQpKh7O+VsAHIlfmyQOvn19zEEXM+0ucooVysKJRVoBGQAYKefVoqYRm
+         z+g8wO258hiE7nCGAoIEX0NoLiYe5Sq5GBdoGErQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 244/271] hwmon: (core) Simplify sysfs attribute name allocation
-Date:   Tue, 28 Jan 2020 15:06:33 +0100
-Message-Id: <20200128135910.690862660@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 228/271] drm/radeon: fix bad DMA from INTERRUPT_CNTL2
+Date:   Tue, 28 Jan 2020 15:06:17 +0100
+Message-Id: <20200128135909.551165717@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -58,68 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-commit 3a412d5e4a1c831723d0aaf305f1cf9a78ad9c90 upstream.
+[ Upstream commit 62d91dd2851e8ae2ca552f1b090a3575a4edf759 ]
 
-Allocating the sysfs attribute name only if needed and only with the
-required minimum length looks optimal, but does not take the additional
-overhead for both devm_ data structures and the allocation header itself
-into account. This also results in unnecessary memory fragmentation.
-Move the sysfs name string into struct hwmon_device_attribute and give it
-a sufficient length to reduce this overhead.
+The INTERRUPT_CNTL2 register expects a valid DMA address, but is
+currently set with a GPU MC address.  This can cause problems on
+systems that detect the resulting DMA read from an invalid address
+(found on a Power8 guest).
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Instead, use the DMA address of the dummy page because it will always
+be safe.
 
+Fixes: d8f60cfc9345 ("drm/radeon/kms: Add support for interrupts on r6xx/r7xx chips (v3)")
+Fixes: 25a857fbe973 ("drm/radeon/kms: add support for interrupts on SI")
+Fixes: a59781bbe528 ("drm/radeon: add support for interrupts on CIK (v5)")
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/hwmon.c |   17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/radeon/cik.c  | 4 ++--
+ drivers/gpu/drm/radeon/r600.c | 4 ++--
+ drivers/gpu/drm/radeon/si.c   | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/hwmon/hwmon.c
-+++ b/drivers/hwmon/hwmon.c
-@@ -38,12 +38,15 @@ struct hwmon_device {
- 
- #define to_hwmon_device(d) container_of(d, struct hwmon_device, dev)
- 
-+#define MAX_SYSFS_ATTR_NAME_LENGTH	32
-+
- struct hwmon_device_attribute {
- 	struct device_attribute dev_attr;
- 	const struct hwmon_ops *ops;
- 	enum hwmon_sensor_types type;
- 	u32 attr;
- 	int index;
-+	char name[MAX_SYSFS_ATTR_NAME_LENGTH];
- };
- 
- #define to_hwmon_attr(d) \
-@@ -232,20 +235,18 @@ static struct attribute *hwmon_genattr(s
- 	if ((mode & S_IWUGO) && !ops->write)
- 		return ERR_PTR(-EINVAL);
- 
-+	hattr = devm_kzalloc(dev, sizeof(*hattr), GFP_KERNEL);
-+	if (!hattr)
-+		return ERR_PTR(-ENOMEM);
-+
- 	if (type == hwmon_chip) {
- 		name = (char *)template;
- 	} else {
--		name = devm_kzalloc(dev, strlen(template) + 16, GFP_KERNEL);
--		if (!name)
--			return ERR_PTR(-ENOMEM);
--		scnprintf(name, strlen(template) + 16, template,
-+		scnprintf(hattr->name, sizeof(hattr->name), template,
- 			  index + hwmon_attr_base(type));
-+		name = hattr->name;
+diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
+index b99f3e59011c1..5fcb5869a4891 100644
+--- a/drivers/gpu/drm/radeon/cik.c
++++ b/drivers/gpu/drm/radeon/cik.c
+@@ -7026,8 +7026,8 @@ static int cik_irq_init(struct radeon_device *rdev)
  	}
  
--	hattr = devm_kzalloc(dev, sizeof(*hattr), GFP_KERNEL);
--	if (!hattr)
--		return ERR_PTR(-ENOMEM);
--
- 	hattr->type = type;
- 	hattr->attr = attr;
- 	hattr->index = index;
+ 	/* setup interrupt control */
+-	/* XXX this should actually be a bus address, not an MC address. same on older asics */
+-	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
++	/* set dummy read address to dummy page address */
++	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
+ 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
+ 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
+ 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
+diff --git a/drivers/gpu/drm/radeon/r600.c b/drivers/gpu/drm/radeon/r600.c
+index f2eac6b6c46a3..9569c35f8766a 100644
+--- a/drivers/gpu/drm/radeon/r600.c
++++ b/drivers/gpu/drm/radeon/r600.c
+@@ -3697,8 +3697,8 @@ int r600_irq_init(struct radeon_device *rdev)
+ 	}
+ 
+ 	/* setup interrupt control */
+-	/* set dummy read address to ring address */
+-	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
++	/* set dummy read address to dummy page address */
++	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
+ 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
+ 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
+ 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
+diff --git a/drivers/gpu/drm/radeon/si.c b/drivers/gpu/drm/radeon/si.c
+index b75d809c292e3..919d389869ceb 100644
+--- a/drivers/gpu/drm/radeon/si.c
++++ b/drivers/gpu/drm/radeon/si.c
+@@ -6018,8 +6018,8 @@ static int si_irq_init(struct radeon_device *rdev)
+ 	}
+ 
+ 	/* setup interrupt control */
+-	/* set dummy read address to ring address */
+-	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
++	/* set dummy read address to dummy page address */
++	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
+ 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
+ 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
+ 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
+-- 
+2.20.1
+
 
 
