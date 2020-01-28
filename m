@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F81FC35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1432DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD9624683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3400205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220354;
-	bh=p99L67TBU8jVHLId7ZCRFvMml//FY6jErV0aGLQrcvs=;
+	s=default; t=1580220358;
+	bh=Gf33xhZUdegBP6CVOaXaMATo4C5s7pCkop+/aO+GMzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ny3r5PKbmo64qt/w4yIhVwq8ljayKkIBPpYt0vti+RyfaKFV/cPO5A/LN66Kv3t36
-	 zQvzbthdhdj7swDaOi+N9Gq0D1K90q3JMILue2QhbzOYALeP+EhsKnm24wIKE0AR1t
-	 hXKzzA+YYz9YgxefSJ7exkHBcs8lFsW6IL1Nw0fg=
+	b=WlHiN8697W4WLtj18090ZZDLNVViDwNvH9dvQqiDUM7uDjW89foqSIEEi3jryk9di
+	 Mv67xj+JzxpnOjgxgy91B1icaDTeqeZqidGt8vfXB0/crHUATD8kTNg7M8KPMdcZNI
+	 nk73CkfwLVN8jSUINRIJIjRyVG0Rg02aFeV7Gv7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgA1OFc (ORCPT
+        id S1728263AbgA1OF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:05:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53102 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:05:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728274AbgA1OF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:05:28 -0500
+        id S1728239AbgA1OFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:05:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6762E2468A;
-        Tue, 28 Jan 2020 14:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF951205F4;
+        Tue, 28 Jan 2020 14:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220327;
-        bh=p99L67TBU8jVHLId7ZCRFvMml//FY6jErV0aGLQrcvs=;
+        s=default; t=1580220320;
+        bh=Gf33xhZUdegBP6CVOaXaMATo4C5s7pCkop+/aO+GMzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IvXGz8++l0i1lQXJ38AfJ7T3j54u5+wV/ele6oFsV8RQrKtjK6618ZC92hmYTaKRa
-         jErw6J1hHEYjcsxTbEjcwbCaJIy0rnUZfz9DFdgb0sCHthMbkMg1ptEUxaAqx2oL4l
-         8I3BEoksA/eIrWnwpMAN453jqv+l/sMqJLTWw2WI=
+        b=CCpvTQRxMVeasNNYPuHU2clCB22/2EJmy23Eg2GJpE8tpUPjN/h3bP6oQfuhkeqQn
+         VtohtBAgiAxj0iuIvAzIXn+GbCYSYmXwq1IhReGGAo7txYQAhvAMCNR2eaudMCvsuV
+         1V8s06oVdeysscy/0ns7JvkVCa3ZDXIKP0ldwpzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ulrich Weber <ulrich.weber@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.4 083/104] xfrm: support output_mark for offload ESP packets
-Date:   Tue, 28 Jan 2020 15:00:44 +0100
-Message-Id: <20200128135828.650597485@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
+        syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com,
+        syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 104/104] net/x25: fix nonblocking connect
+Date:   Tue, 28 Jan 2020 15:01:05 +0100
+Message-Id: <20200128135831.255154807@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -59,48 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulrich Weber <ulrich.weber@gmail.com>
+From: Martin Schiller <ms@dev.tdt.de>
 
-commit 4e4362d2bf2a49ff44dbbc9585207977ca3d71d0 upstream.
+commit e21dba7a4df4d93da237da65a096084b4f2e87b4 upstream.
 
-Commit 9b42c1f179a6 ("xfrm: Extend the output_mark") added output_mark
-support but missed ESP offload support.
+This patch fixes 2 issues in x25_connect():
 
-xfrm_smark_get() is not called within xfrm_input() for packets coming
-from esp4_gro_receive() or esp6_gro_receive(). Therefore call
-xfrm_smark_get() directly within these functions.
+1. It makes absolutely no sense to reset the neighbour and the
+connection state after a (successful) nonblocking call of x25_connect.
+This prevents any connection from being established, since the response
+(call accept) cannot be processed.
 
-Fixes: 9b42c1f179a6 ("xfrm: Extend the output_mark to support input direction and masking.")
-Signed-off-by: Ulrich Weber <ulrich.weber@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+2. Any further calls to x25_connect() while a call is pending should
+simply return, instead of creating new Call Request (on different
+logical channels).
+
+This patch should also fix the "KASAN: null-ptr-deref Write in
+x25_connect" and "BUG: unable to handle kernel NULL pointer dereference
+in x25_connect" bugs reported by syzbot.
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Reported-by: syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com
+Reported-by: syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/esp4_offload.c |    2 ++
- net/ipv6/esp6_offload.c |    2 ++
- 2 files changed, 4 insertions(+)
+ net/x25/af_x25.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/esp4_offload.c
-+++ b/net/ipv4/esp4_offload.c
-@@ -57,6 +57,8 @@ static struct sk_buff *esp4_gro_receive(
- 		if (!x)
- 			goto out_reset;
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -760,6 +760,10 @@ static int x25_connect(struct socket *so
+ 	if (sk->sk_state == TCP_ESTABLISHED)
+ 		goto out;
  
-+		skb->mark = xfrm_smark_get(skb->mark, x);
++	rc = -EALREADY;	/* Do nothing if call is already in progress */
++	if (sk->sk_state == TCP_SYN_SENT)
++		goto out;
 +
- 		sp->xvec[sp->len++] = x;
- 		sp->olen++;
+ 	sk->sk_state   = TCP_CLOSE;
+ 	sock->state = SS_UNCONNECTED;
  
---- a/net/ipv6/esp6_offload.c
-+++ b/net/ipv6/esp6_offload.c
-@@ -79,6 +79,8 @@ static struct sk_buff *esp6_gro_receive(
- 		if (!x)
- 			goto out_reset;
+@@ -806,7 +810,7 @@ static int x25_connect(struct socket *so
+ 	/* Now the loop */
+ 	rc = -EINPROGRESS;
+ 	if (sk->sk_state != TCP_ESTABLISHED && (flags & O_NONBLOCK))
+-		goto out_put_neigh;
++		goto out;
  
-+		skb->mark = xfrm_smark_get(skb->mark, x);
-+
- 		sp->xvec[sp->len++] = x;
- 		sp->olen++;
- 
+ 	rc = x25_wait_for_connection_establishment(sk);
+ 	if (rc)
 
 
