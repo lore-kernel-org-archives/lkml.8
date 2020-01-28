@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2F4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10814C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7032071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A1524681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221173;
-	bh=JKu0dhzvjzrLtzvtJGee9t8K2qFBno9QeXygxZ12YYs=;
+	s=default; t=1580221177;
+	bh=07CHsY02F5oVnFJd4YI45/MEKIfIKYkc+rgYTBg0unA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MFPxtf0jFTPWElOp1Y4n4g5nNn8MWPtHqaGI/uRRWJ2Zmk/ad2oLgwaI6CWqfhqix
-	 dpm2/4q6XeXHv2bmi4uk15VLM/JMOU3H0eCVbAZ+D7sBBdMWj+7QKs8daAEXIBkdsG
-	 8hanSaOKcZ0l073MXyxsoovuv2ttcXfytHs3DoiU=
+	b=nrIboHxl44ac/8uRwr3sLcF+10E5FdKa+GPDS/P7CCpdbh2SMTWyMmdmhiCelSZ1A
+	 /zs19IrnCV05EYF6msRaVs12AKEtyGNUlqAWiF8VOQvp5n6utK3+mNWcxvs6JFDKYm
+	 OwqygXL5nZ1Y/WAvNTc7e4Mo04JDmm692pOaHsfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730907AbgA1OTc (ORCPT
+        id S1730914AbgA1OTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:19:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43872 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:19:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730885AbgA1OT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:19:29 -0500
+        id S1730900AbgA1OTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:19:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A23D02468F;
-        Tue, 28 Jan 2020 14:19:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 211AA24695;
+        Tue, 28 Jan 2020 14:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221169;
-        bh=JKu0dhzvjzrLtzvtJGee9t8K2qFBno9QeXygxZ12YYs=;
+        s=default; t=1580221171;
+        bh=07CHsY02F5oVnFJd4YI45/MEKIfIKYkc+rgYTBg0unA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FvV8yJ8C9jOhZ5qUfn32BTaIeT49MlJR2sCNb5fBz1sjmqHXpDkPYGp/wIsXOvNuU
-         lc4kNyWM7c3FXyVxRJAVcfAyOmnnjefLum3zfkGsHq4IlEo+hRpSISPrsjhNtMipcX
-         /j66eUJaDbDfq1p4JcI8d1d+IlyUlYYjkzj3GdH8=
+        b=Z7iJVGmnhBGJR/Rw/YRum9uDgeMQYt5F3CDPQiZy84nEWVgiETg3JWKmmYzN0PPQs
+         7Xocq7gtXcFdQRt9gMPw72KD7AGxEExI43SHv6l8NA+j4SsGfbC1BSv45moEtpMu7o
+         FLNE4D4e6/2Kx55vX3uHLlsE264I4O8oTG9f8v+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 109/271] spi: tegra114: clear packed bit for unpacked mode
-Date:   Tue, 28 Jan 2020 15:04:18 +0100
-Message-Id: <20200128135900.691060975@linuxfoundation.org>
+Subject: [PATCH 4.9 118/271] powerpc: vdso: Make vdso32 installation conditional in vdso_install
+Date:   Tue, 28 Jan 2020 15:04:27 +0100
+Message-Id: <20200128135901.374763027@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,36 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-[ Upstream commit 7b3d10cdf54b8bc1dc0da21faed9789ac4da3684 ]
+[ Upstream commit ff6d27823f619892ab96f7461764840e0d786b15 ]
 
-Fixes: Clear packed bit when not using packed mode.
+The 32-bit vDSO is not needed and not normally built for 64-bit
+little-endian configurations.  However, the vdso_install target still
+builds and installs it.  Add the same config condition as is normally
+used for the build.
 
-Packed bit is not cleared when not using packed mode. This results
-in transfer timeouts for the unpacked mode transfers followed by the
-packed mode transfers.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: e0d005916994 ("powerpc/vdso: Disable building the 32-bit VDSO ...")
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 2 ++
+ arch/powerpc/Makefile | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 705f515863d4f..d98c502a9c478 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -730,6 +730,8 @@ static int tegra_spi_start_transfer_one(struct spi_device *spi,
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index a60c9c6e5cc17..de29b88c0e700 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -373,7 +373,9 @@ vdso_install:
+ ifeq ($(CONFIG_PPC64),y)
+ 	$(Q)$(MAKE) $(build)=arch/$(ARCH)/kernel/vdso64 $@
+ endif
++ifdef CONFIG_VDSO32
+ 	$(Q)$(MAKE) $(build)=arch/$(ARCH)/kernel/vdso32 $@
++endif
  
- 	if (tspi->is_packed)
- 		command1 |= SPI_PACKED;
-+	else
-+		command1 &= ~SPI_PACKED;
- 
- 	command1 &= ~(SPI_CS_SEL_MASK | SPI_TX_EN | SPI_RX_EN);
- 	tspi->cur_direction = 0;
+ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(boot)
 -- 
 2.20.1
 
