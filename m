@@ -2,96 +2,114 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1723EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D099C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F5024681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B0224683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P9nQR7VG"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ci/4U15Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgA1QGn (ORCPT
+        id S1726292AbgA1QJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:06:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59622 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbgA1QGn (ORCPT
+        Tue, 28 Jan 2020 11:09:45 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:23951 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgA1QJo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:06:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TC1JXRmVCDpfoX8tpOB7oJ8bDjUGxHzn4aFxhrwd/mc=; b=P9nQR7VG+b+ZF6H9cPXgLOYeZ
-        k2bJEqsVznKzChQkk+U189Ob58LBOrI5q1BqGdqKfD4zPUkB5ELezs0FnqifPi3LiGfJUZGZkHzFB
-        OdmjLsGhkWeaKVm3FM53fSZlu5tO62BsohOjwnCytMjzG3ECRYMKENlK+P0dvQ2dMC/5eEdckLTza
-        naO3+5yPhpuXOLaueebGOuKgczLqDiXeX2O2GApmpUOJXspJoJrvHerNy4YyYVIIAeduvswtJIHJi
-        c37+hgex0LKpF2eYd3v8Y8JRL3VCgFMfaxvY9pWsocfuCLH8bVc3IPVeq8ga/blLVgMDQneTwHiPf
-        M3iyN19ZA==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwTNw-0001bi-FA; Tue, 28 Jan 2020 16:06:40 +0000
-Subject: Re: [PATCH v2 1/9] mm: Introduce Data Access MONitor (DAMON)
-To:     sjpark@amazon.com, akpm@linux-foundation.org
-Cc:     SeongJae Park <sjpark@amazon.de>, sj38.park@gmail.com,
-        acme@kernel.org, amit@kernel.org, brendan.d.gregg@gmail.com,
-        corbet@lwn.net, dwmw@amazon.com, mgorman@suse.de,
-        rostedt@goodmis.org, kirill@shutemov.name,
-        brendanhiggins@google.com, colin.king@canonical.com,
-        minchan@kernel.org, vdavydov.dev@gmail.com, vdavydov@parallels.com,
-        linux-mm@kvack.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200128085742.14566-1-sjpark@amazon.com>
- <20200128085742.14566-2-sjpark@amazon.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <95f6d1e3-7052-252e-1c29-f320e84df302@infradead.org>
-Date:   Tue, 28 Jan 2020 08:06:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 28 Jan 2020 11:09:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1580227784; x=1611763784;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=UKZCaC+hnyao15bB/vOGmUC59yDB6b1Xjy94Qevzl9s=;
+  b=ci/4U15YQAQTxfUoYbPZQLcRESxcDBKqHjRTYp5u6eJ0pr5exoYx9a42
+   mhdkXFXDKM2nNM1mkmYjOGrpG8j6re+hFklHEJ3MsJdGGghqKO3pW8FkP
+   zVNzxSjUWFgVfxY9LG7f8Wra/DnLbOqD//9husj5R/bRd8kl6hAmtmSuu
+   0=;
+IronPort-SDR: hNv10iBD2veD9e759UD4yjagpQPOv0m0KnF6N1HHbgtxPLEGM7nSN8xlf6fpqw7qoLwEwIvvCy
+ lmwhefhCVHJA==
+X-IronPort-AV: E=Sophos;i="5.70,374,1574121600"; 
+   d="scan'208";a="13686278"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 28 Jan 2020 16:09:43 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id D7E57A21D1;
+        Tue, 28 Jan 2020 16:09:37 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Tue, 28 Jan 2020 16:09:37 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.133) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 28 Jan 2020 16:09:28 +0000
+From:   <sjpark@amazon.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+CC:     <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        SeongJae Park <sjpark@amazon.de>, <sj38.park@gmail.com>,
+        <acme@kernel.org>, <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
+        <corbet@lwn.net>, <dwmw@amazon.com>, <mgorman@suse.de>,
+        <rostedt@goodmis.org>, <kirill@shutemov.name>,
+        <brendanhiggins@google.com>, <colin.king@canonical.com>,
+        <minchan@kernel.org>, <vdavydov.dev@gmail.com>,
+        <vdavydov@parallels.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH v2 1/9] mm: Introduce Data Access MONitor (DAMON)
+Date:   Tue, 28 Jan 2020 17:09:15 +0100
+Message-ID: <20200128160915.25653-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <95f6d1e3-7052-252e-1c29-f320e84df302@infradead.org> (raw)
 MIME-Version: 1.0
-In-Reply-To: <20200128085742.14566-2-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.133]
+X-ClientProxiedBy: EX13D29UWA003.ant.amazon.com (10.43.160.253) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/28/20 12:57 AM, sjpark@amazon.com wrote:
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index ab80933be65f..144fb916aa8b 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -739,4 +739,16 @@ config ARCH_HAS_HUGEPD
->  config MAPPING_DIRTY_HELPERS
->          bool
->  
-> +config DAMON
-> +	tristate "Data Access Monitor"
-> +	depends on MMU
-> +	default y
+On Tue, 28 Jan 2020 08:06:38 -0800 Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Might be lightweight but still should not default to 'y'.
+> On 1/28/20 12:57 AM, sjpark@amazon.com wrote:
+> > diff --git a/mm/Kconfig b/mm/Kconfig
+> > index ab80933be65f..144fb916aa8b 100644
+> > --- a/mm/Kconfig
+> > +++ b/mm/Kconfig
+> > @@ -739,4 +739,16 @@ config ARCH_HAS_HUGEPD
+> >  config MAPPING_DIRTY_HELPERS
+> >          bool
+> >  
+> > +config DAMON
+> > +	tristate "Data Access Monitor"
+> > +	depends on MMU
+> > +	default y
+> 
+> Might be lightweight but still should not default to 'y'.
 
-> +	help
-> +	  Provides data access monitoring.
-> +
-> +	  DAMON is a kernel module that allows users to monitor the actual
-> +	  memory access pattern of specific user-space processes.  It aims to
-> +	  be 1) accurate enough to be useful for performance-centric domains,
-> +	  and 2) sufficiently light-weight so that it can be applied online.
-> +
->  endmenu
+Good point, will default to 'n' in next spin.
 
-thanks.
--- 
-~Randy
 
+Thanks,
+SeongJae Park
+
+> 
+> > +	help
+> > +	  Provides data access monitoring.
+> > +
+> > +	  DAMON is a kernel module that allows users to monitor the actual
+> > +	  memory access pattern of specific user-space processes.  It aims to
+> > +	  be 1) accurate enough to be useful for performance-centric domains,
+> > +	  and 2) sufficiently light-weight so that it can be applied online.
+> > +
+> >  endmenu
+> 
+> thanks.
+> -- 
+> ~Randy
+> 
