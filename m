@@ -7,367 +7,352 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B2FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29322C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 417D52468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FDC2468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qJfMuVY9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gN8jXqnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgA1NeV (ORCPT
+        id S1726723AbgA1Nej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:34:21 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:58912 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgA1NeS (ORCPT
+        Tue, 28 Jan 2020 08:34:39 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52373 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgA1NeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:34:18 -0500
+        Tue, 28 Jan 2020 08:34:21 -0500
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200128133416euoutp0100a66b203754566886d922f7d0f6e7e5~uEFBezb4y0195601956euoutp01J
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 13:34:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200128133416euoutp0100a66b203754566886d922f7d0f6e7e5~uEFBezb4y0195601956euoutp01J
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200128133420euoutp028f601197a818762cafb6643a3d8f59d3~uEFEyGBKp2862028620euoutp02G
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 13:34:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200128133420euoutp028f601197a818762cafb6643a3d8f59d3~uEFEyGBKp2862028620euoutp02G
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580218456;
-        bh=+nhl2QgmqdoNH5vOKvOoBGGKQG+7lMuwayVmJW3tto0=;
+        s=mail20170921; t=1580218460;
+        bh=pKCHxmLFgloCufJUhTXfQk8jti0gj8T4/UNwwnqUITk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qJfMuVY9ja+nGsnGXnyt2fAljvNE4D2tdtx6hbw+lM9B/yOZPER/tmjS7SBZLODqX
-         peiC7YlvssdiCvOJzz5/fBxLSbtXBlHFQTLaewC4ThXz3WE7E6TaWNwNHOz4HJj/LS
-         XlN2m1j7+9TMbWG4+upWgZJsKySnhUH4j60LTPCE=
+        b=gN8jXqnRa6fzxsZEBX/iQaa3vFFiYkrgqTN+eJA+ywGDy44Yx4w97yr+yZbD49OnB
+         wY5sscUaipnV6Z4rPa81b7lih28bryR88blY5ywgFDa/DDNofOfm7lMK1nkamr3C2d
+         upFRJ67LE2UZKd8KMWktxKyk2nwEctQR7BnKOvvQ=
 Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200128133416eucas1p279457a2cb05080fbee9c0a223a21eb07~uEFBRnDd70683706837eucas1p2H;
-        Tue, 28 Jan 2020 13:34:16 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id F3.5A.60679.858303E5; Tue, 28
-        Jan 2020 13:34:16 +0000 (GMT)
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200128133419eucas1p16e9f753f60812e80b51c2e968d6ed319~uEFEnhNF40714007140eucas1p1o;
+        Tue, 28 Jan 2020 13:34:19 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 68.5A.60679.B58303E5; Tue, 28
+        Jan 2020 13:34:19 +0000 (GMT)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200128133416eucas1p1eb121384be2323aed1fc63a6d1ebe14f~uEFA8EeCh0713407134eucas1p1u;
-        Tue, 28 Jan 2020 13:34:16 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200128133419eucas1p293e7f2e62e74c9208a30fd83650e8615~uEFEUJBW-0474204742eucas1p2Y;
+        Tue, 28 Jan 2020 13:34:19 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200128133416eusmtrp24985406fc97da71716c231976f5997ad~uEFA7h93J0330003300eusmtrp22;
-        Tue, 28 Jan 2020 13:34:16 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-51-5e3038581b88
+        20200128133419eusmtrp2fe02c5a35e93f939d087ea1b00cc047a~uEFETbAcc0330103301eusmtrp2_;
+        Tue, 28 Jan 2020 13:34:19 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-61-5e30385bfc93
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 04.92.08375.758303E5; Tue, 28
-        Jan 2020 13:34:15 +0000 (GMT)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 15.82.07950.B58303E5; Tue, 28
+        Jan 2020 13:34:19 +0000 (GMT)
 Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200128133415eusmtip26f0b06ff629847adfb1ecdfafdf3de9a~uEFAm5fAM0113601136eusmtip2F;
-        Tue, 28 Jan 2020 13:34:15 +0000 (GMT)
+        20200128133419eusmtip29a86a1b37f149255148f57a28935142c~uEFD1s7iJ0724907249eusmtip2B;
+        Tue, 28 Jan 2020 13:34:19 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Michael Schmitz <schmitzmic@gmail.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
         b.zolnierkie@samsung.com
-Subject: [PATCH 16/28] ata: move sata_down_spd_limit() to libata-core-sata.c
-Date:   Tue, 28 Jan 2020 14:33:31 +0100
-Message-Id: <20200128133343.29905-17-b.zolnierkie@samsung.com>
+Subject: [PATCH 26/28] ata: start separating SATA specific code from
+ libata-eh.c
+Date:   Tue, 28 Jan 2020 14:33:41 +0100
+Message-Id: <20200128133343.29905-27-b.zolnierkie@samsung.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200128133343.29905-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsWy7djPc7oRFgZxBj+2i1usvtvPZrFxxnpW
-        i2e39jJZHNvxiMni8q45bBZzW6ezO7B57Jx1l93j8tlSj0OHOxg9+rasYvT4vEkugDWKyyYl
-        NSezLLVI3y6BK+Pf0Q/MBT/sKy5cbmZuYFxn1MXIySEhYCIxu2UeSxcjF4eQwApGiVVfdzJC
-        OF8YJZ4t7oXKfGaU+LO3hRWmZeOz3ewQieWMEg8mH2eGa5l6fBsbSBWbgJXExPZVjCC2iICC
-        RM/vlWwgRcwCa4CWHG4CSwgL+EicnnWPCcRmEVCV6D40DczmFbCTWL31IRvEOnmJrd8+Aa3m
-        4OAEivfsNYcoEZQ4OfMJC4jNDFTSvHU22BESAu3sEr9//IA61UXi84kJLBC2sMSr41vYIWwZ
-        if875zNBNKxjlPjb8QKqezujxPLJ/6A2W0vcOfeLDWQzs4CmxPpd+iCmhICjxKfbghAmn8SN
-        t4IQN/BJTNo2nRkizCvR0SYEMUNNYsOyDWwwW7t2rmSGsD0kJlw4xjqBUXEWkm9mIflmFsLa
-        BYzMqxjFU0uLc9NTi43yUsv1ihNzi0vz0vWS83M3MQITzOl/x7/sYNz1J+kQowAHoxIP7wwV
-        gzgh1sSy4srcQ4wSHMxKIrydTEAh3pTEyqrUovz4otKc1OJDjNIcLErivMaLXsYKCaQnlqRm
-        p6YWpBbBZJk4OKUaGAMvi1QKq/FMvbtO5iKb76ep26a5vo5gts+6n7dIxFj4L8/nu4vuGx7q
-        mS2l9u7S0lMXHqr8YPgTJNup+vXrtgWSvuK32id1+V5eXZFUOe02u0WcZjWf5dP8gHVqAQ7h
-        hVvYHp0o6Vms/dnXz6WtS9zP6JHeuZAnd38tytn13Vv6xxEPzsqb2UosxRmJhlrMRcWJAC44
-        2a0sAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42I5/e/4Pd1wC4M4g/NvbCxW3+1ns9g4Yz2r
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOKsWRmVeSWpSXmKPExsWy7djP87rRFgZxBm23rC1W3+1ns9g4Yz2r
+        xbNbe5ksju14xGRxedccNou5rdPZHdg8ds66y+5x+Wypx6HDHYwefVtWMXp83iQXwBrFZZOS
+        mpNZllqkb5fAlXF8/0TWgrWWFbN3WDcwHtbtYuTkkBAwkTi24hhLFyMXh5DACkaJqY2z2CGc
+        L4wSbR0ToDKfGSXOdexkgmm5eeghI0RiOaPErxvbWeFapr6bDVbFJmAlMbF9FSOILSKgINHz
+        eyUbSBGzwBpGiVWHm8ASwgJBEtunPwSzWQRUJT5tPcMKYvMK2EmsXjGRHWKdvMTWb5+A4hwc
+        nEDxnr3mECWCEidnPmEBsZmBSpq3zmYGmS8h0M4u8ePcD2aIXheJM4e2QJ0tLPHq+BaomTIS
+        /3fOZ4JoWMco8bfjBVT3dkaJ5ZP/sUFUWUvcOfeLDWQzs4CmxPpd+iCmhICjxJ/p4RAmn8SN
+        t4IQN/BJTNo2nRkizCvR0SYEMUNNYsOyDWwwW7t2roQq8ZDYeJhtAqPiLCTPzELyzCyErQsY
+        mVcxiqeWFuempxYb5aWW6xUn5haX5qXrJefnbmIEJpfT/45/2cG460/SIUYBDkYlHt4ZKgZx
+        QqyJZcWVuYcYJTiYlUR4O5mAQrwpiZVVqUX58UWlOanFhxilOViUxHmNF72MFRJITyxJzU5N
+        LUgtgskycXBKNTBu2fLTN1HU33Dz+u3XDZqj9Pj3Nf2c33XBmEvo/KmcszVmnCdiLflyJjhP
+        ebva0bQ9Sifk3aN81WCxy26P6lNvOs+9GHlml2P55ideO9ZocBvOMp8xd+ufpKQTFcmGzIHS
+        aZ6Jv3muz7gwPT1/+4yFD16uaOpl+lj6Kc5uz+pEzbqSmBmqaeeVWIozEg21mIuKEwGxf1hn
+        KgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42I5/e/4Pd1oC4M4g+MblSxW3+1ns9g4Yz2r
         xbNbe5ksju14xGRxedccNou5rdPZHdg8ds66y+5x+Wypx6HDHYwefVtWMXp83iQXwBqlZ1OU
-        X1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl/Hv6Afmgh/2
-        FRcuNzM3MK4z6mLk5JAQMJHY+Gw3excjF4eQwFJGiemHJjF3MXIAJWQkjq8vg6gRlvhzrYsN
-        ouYTo8SMUxNZQRJsAlYSE9tXMYLYIgIKEj2/V4IVMQtsYJR4dfMLC0hCWMBH4vSse0wgNouA
-        qkT3oWlgNq+AncTqrQ/ZIDbIS2z99okVZDEnULxnrzlIWEjAVmL9maesEOWCEidnPgEbyQxU
-        3rx1NvMERoFZSFKzkKQWMDKtYhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIyDbcd+bt7BeGlj
-        8CFGAQ5GJR7eGSoGcUKsiWXFlbmHGCU4mJVEeDuZgEK8KYmVValF+fFFpTmpxYcYTYF+mMgs
-        JZqcD4zRvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjJWr9/K4
-        aYWItWhblL8V///h6teprhcuWucH//dewHlHe6Lfo0YeJp9tT0rXSJi5vuSbp+yTt/Hu3I39
-        pVV9C9bxPZ5bGPBPzXzZmqwFdk/exshsmnatVM5qtyXDxuNhoiuXF27qezPHgtF8wl+HDeVW
-        4qpfm1sXLrFvPqT3Ur1LVuMXg55RpRJLcUaioRZzUXEiAADOLQyZAgAA
-X-CMS-MailID: 20200128133416eucas1p1eb121384be2323aed1fc63a6d1ebe14f
+        X1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl3F8/0TWgrWW
+        FbN3WDcwHtbtYuTkkBAwkbh56CFjFyMXh5DAUkaJd1+PM3UxcgAlZCSOry+DqBGW+HOtiw2i
+        5hOjxN3LN5hBEmwCVhIT21cxgtgiAgoSPb9XghUxC2xglHh18wsLSEJYIEDiV9tjNhCbRUBV
+        4tPWM6wgNq+AncTqFRPZITbIS2z99okVZDEnULxnrzlIWEjAVmL9madQ5YISJ2c+ARvJDFTe
+        vHU28wRGgVlIUrOQpBYwMq1iFEktLc5Nzy020itOzC0uzUvXS87P3cQIjIJtx35u2cHY9S74
+        EKMAB6MSD6+DkkGcEGtiWXFl7iFGCQ5mJRHeTiagEG9KYmVValF+fFFpTmrxIUZToB8mMkuJ
+        JucDIzSvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAOj2BdvMXNh
+        VpsOw68PfyvMan2iqby8nOOjP4vqfhPG8s3vnhaWfExb/O958n69ZC43hpUl93Qq5XxXKTQL
+        F2rVnX66YZaEiKqgYtyLx9M/lG7q9k4+5VNnH8ZXebQo58TcjKTvXdcYmJR5Ih/ty3Wcl8Bm
+        PePfl1PlFytTFpwTN21m0NW+HqHEUpyRaKjFXFScCABvDXkWmAIAAA==
+X-CMS-MailID: 20200128133419eucas1p293e7f2e62e74c9208a30fd83650e8615
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200128133416eucas1p1eb121384be2323aed1fc63a6d1ebe14f
+X-RootMTR: 20200128133419eucas1p293e7f2e62e74c9208a30fd83650e8615
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200128133416eucas1p1eb121384be2323aed1fc63a6d1ebe14f
+X-CMS-RootMailID: 20200128133419eucas1p293e7f2e62e74c9208a30fd83650e8615
 References: <20200128133343.29905-1-b.zolnierkie@samsung.com>
-        <CGME20200128133416eucas1p1eb121384be2323aed1fc63a6d1ebe14f@eucas1p1.samsung.com>
+        <CGME20200128133419eucas1p293e7f2e62e74c9208a30fd83650e8615@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* move ata_sstatus_online() to libata.h and make it inline
+Start separating SATA specific code from libata-eh.c:
 
-* move sata_down_spd_limit() to libata-core-sata.c
+* move sata_async_notification() to libata-eh-sata.c:
 
-* add static inline for CONFIG_SATA_HOST=n case
+* cover sata_async_notification() with CONFIG_SATA_HOST ifdef
+  in <linux/libata.h>
+
+* include libata-eh-sata.c in the build when CONFIG_SATA_HOST=y
 
 Code size savings on m68k arch using atari_defconfig:
 
    text    data     bss     dec     hex filename
 before:
-  35276     572      40   35888    8c30 drivers/ata/libata-core.o
+  16889      18       0   16907    420b drivers/ata/libata-eh.o
 after:
-  34996     572      40   35608    8b18 drivers/ata/libata-core.o
+  16810      18       0   16828    41bc drivers/ata/libata-eh.o
 
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/ata/libata-core-sata.c | 80 ++++++++++++++++++++++++++++++++
- drivers/ata/libata-core.c      | 85 ----------------------------------
- drivers/ata/libata.h           | 11 ++++-
- 3 files changed, 90 insertions(+), 86 deletions(-)
+ drivers/ata/Makefile         |  3 +-
+ drivers/ata/libata-eh-sata.c | 85 ++++++++++++++++++++++++++++++++++++
+ drivers/ata/libata-eh.c      | 74 -------------------------------
+ include/linux/libata.h       |  8 +++-
+ 4 files changed, 94 insertions(+), 76 deletions(-)
+ create mode 100644 drivers/ata/libata-eh-sata.c
 
-diff --git a/drivers/ata/libata-core-sata.c b/drivers/ata/libata-core-sata.c
-index 8ad8f97660df..fb956c8aee9a 100644
---- a/drivers/ata/libata-core-sata.c
-+++ b/drivers/ata/libata-core-sata.c
-@@ -285,6 +285,86 @@ void sata_print_link_status(struct ata_link *link)
- 	}
- }
+diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
+index d6fb3d4a2ac5..6bdbbcce8fef 100644
+--- a/drivers/ata/Makefile
++++ b/drivers/ata/Makefile
+@@ -123,7 +123,8 @@ obj-$(CONFIG_PATA_LEGACY)	+= pata_legacy.o
  
+ libata-y	:= libata-core.o libata-scsi.o libata-eh.o \
+ 	libata-transport.o libata-trace.o
+-libata-$(CONFIG_SATA_HOST)	+= libata-core-sata.o libata-scsi-sata.o
++libata-$(CONFIG_SATA_HOST)	+= libata-core-sata.o libata-scsi-sata.o \
++	libata-eh-sata.o
+ libata-$(CONFIG_ATA_SFF)	+= libata-sff.o
+ libata-$(CONFIG_SATA_PMP)	+= libata-pmp.o
+ libata-$(CONFIG_ATA_ACPI)	+= libata-acpi.o
+diff --git a/drivers/ata/libata-eh-sata.c b/drivers/ata/libata-eh-sata.c
+new file mode 100644
+index 000000000000..4b6dc715629a
+--- /dev/null
++++ b/drivers/ata/libata-eh-sata.c
+@@ -0,0 +1,85 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  libata-eh.c - SATA specific part of libata error handling
++ *
++ *  Copyright 2006 Tejun Heo <htejun@gmail.com>
++ */
++
++#include <linux/kernel.h>
++#include <linux/libata.h>
++
++#include "libata.h"
++
 +/**
-+ *	sata_down_spd_limit - adjust SATA spd limit downward
-+ *	@link: Link to adjust SATA spd limit for
-+ *	@spd_limit: Additional limit
++ *	sata_async_notification - SATA async notification handler
++ *	@ap: ATA port where async notification is received
 + *
-+ *	Adjust SATA spd limit of @link downward.  Note that this
-+ *	function only adjusts the limit.  The change must be applied
-+ *	using sata_set_spd().
-+ *
-+ *	If @spd_limit is non-zero, the speed is limited to equal to or
-+ *	lower than @spd_limit if such speed is supported.  If
-+ *	@spd_limit is slower than any supported speed, only the lowest
-+ *	supported speed is allowed.
++ *	Handler to be called when async notification via SDB FIS is
++ *	received.  This function schedules EH if necessary.
 + *
 + *	LOCKING:
-+ *	Inherited from caller.
++ *	spin_lock_irqsave(host lock)
 + *
 + *	RETURNS:
-+ *	0 on success, negative errno on failure
++ *	1 if EH is scheduled, 0 otherwise.
 + */
-+int sata_down_spd_limit(struct ata_link *link, u32 spd_limit)
++int sata_async_notification(struct ata_port *ap)
 +{
-+	u32 sstatus, spd, mask;
-+	int rc, bit;
++	u32 sntf;
++	int rc;
 +
-+	if (!sata_scr_valid(link))
-+		return -EOPNOTSUPP;
++	if (!(ap->flags & ATA_FLAG_AN))
++		return 0;
 +
-+	/* If SCR can be read, use it to determine the current SPD.
-+	 * If not, use cached value in link->sata_spd.
-+	 */
-+	rc = sata_scr_read(link, SCR_STATUS, &sstatus);
-+	if (rc == 0 && ata_sstatus_online(sstatus))
-+		spd = (sstatus >> 4) & 0xf;
-+	else
-+		spd = link->sata_spd;
++	rc = sata_scr_read(&ap->link, SCR_NOTIFICATION, &sntf);
++	if (rc == 0)
++		sata_scr_write(&ap->link, SCR_NOTIFICATION, sntf);
 +
-+	mask = link->sata_spd_limit;
-+	if (mask <= 1)
-+		return -EINVAL;
++	if (!sata_pmp_attached(ap) || rc) {
++		/* PMP is not attached or SNTF is not available */
++		if (!sata_pmp_attached(ap)) {
++			/* PMP is not attached.  Check whether ATAPI
++			 * AN is configured.  If so, notify media
++			 * change.
++			 */
++			struct ata_device *dev = ap->link.device;
 +
-+	/* unconditionally mask off the highest bit */
-+	bit = fls(mask) - 1;
-+	mask &= ~(1 << bit);
-+
-+	/*
-+	 * Mask off all speeds higher than or equal to the current one.  At
-+	 * this point, if current SPD is not available and we previously
-+	 * recorded the link speed from SStatus, the driver has already
-+	 * masked off the highest bit so mask should already be 1 or 0.
-+	 * Otherwise, we should not force 1.5Gbps on a link where we have
-+	 * not previously recorded speed from SStatus.  Just return in this
-+	 * case.
-+	 */
-+	if (spd > 1)
-+		mask &= (1 << (spd - 1)) - 1;
-+	else
-+		return -EINVAL;
-+
-+	/* were we already at the bottom? */
-+	if (!mask)
-+		return -EINVAL;
-+
-+	if (spd_limit) {
-+		if (mask & ((1 << spd_limit) - 1))
-+			mask &= (1 << spd_limit) - 1;
-+		else {
-+			bit = ffs(mask) - 1;
-+			mask = 1 << bit;
++			if ((dev->class == ATA_DEV_ATAPI) &&
++			    (dev->flags & ATA_DFLAG_AN))
++				ata_scsi_media_change_notify(dev);
++			return 0;
++		} else {
++			/* PMP is attached but SNTF is not available.
++			 * ATAPI async media change notification is
++			 * not used.  The PMP must be reporting PHY
++			 * status change, schedule EH.
++			 */
++			ata_port_schedule_eh(ap);
++			return 1;
 +		}
++	} else {
++		/* PMP is attached and SNTF is available */
++		struct ata_link *link;
++
++		/* check and notify ATAPI AN */
++		ata_for_each_link(link, ap, EDGE) {
++			if (!(sntf & (1 << link->pmp)))
++				continue;
++
++			if ((link->device->class == ATA_DEV_ATAPI) &&
++			    (link->device->flags & ATA_DFLAG_AN))
++				ata_scsi_media_change_notify(link->device);
++		}
++
++		/* If PMP is reporting that PHY status of some
++		 * downstream ports has changed, schedule EH.
++		 */
++		if (sntf & (1 << SATA_PMP_CTRL_PORT)) {
++			ata_port_schedule_eh(ap);
++			return 1;
++		}
++
++		return 0;
 +	}
-+
-+	link->sata_spd_limit = mask;
-+
-+	ata_link_warn(link, "limiting SATA link speed to %s\n",
-+		      sata_spd_string(fls(mask)));
-+
-+	return 0;
 +}
-+
- /**
-  *	sata_link_scr_lpm - manipulate SControl IPM and SPM fields
-  *	@link: ATA link to manipulate SControl for
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 73f732a32261..1d0744f18754 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -167,11 +167,6 @@ MODULE_LICENSE("GPL");
- MODULE_VERSION(DRV_VERSION);
- 
- 
--static bool ata_sstatus_online(u32 sstatus)
--{
--	return (sstatus & 0xf) == 0x3;
--}
--
- /**
-  *	ata_link_next - link iteration helper
-  *	@link: the previous link, NULL to start
-@@ -2760,86 +2755,6 @@ struct ata_device *ata_dev_pair(struct ata_device *adev)
++EXPORT_SYMBOL_GPL(sata_async_notification);
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index 04275f4c8d36..201165955b90 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -1092,80 +1092,6 @@ int ata_port_freeze(struct ata_port *ap)
  }
- EXPORT_SYMBOL_GPL(ata_dev_pair);
+ EXPORT_SYMBOL_GPL(ata_port_freeze);
  
 -/**
-- *	sata_down_spd_limit - adjust SATA spd limit downward
-- *	@link: Link to adjust SATA spd limit for
-- *	@spd_limit: Additional limit
+- *	sata_async_notification - SATA async notification handler
+- *	@ap: ATA port where async notification is received
 - *
-- *	Adjust SATA spd limit of @link downward.  Note that this
-- *	function only adjusts the limit.  The change must be applied
-- *	using sata_set_spd().
-- *
-- *	If @spd_limit is non-zero, the speed is limited to equal to or
-- *	lower than @spd_limit if such speed is supported.  If
-- *	@spd_limit is slower than any supported speed, only the lowest
-- *	supported speed is allowed.
+- *	Handler to be called when async notification via SDB FIS is
+- *	received.  This function schedules EH if necessary.
 - *
 - *	LOCKING:
-- *	Inherited from caller.
+- *	spin_lock_irqsave(host lock)
 - *
 - *	RETURNS:
-- *	0 on success, negative errno on failure
+- *	1 if EH is scheduled, 0 otherwise.
 - */
--int sata_down_spd_limit(struct ata_link *link, u32 spd_limit)
+-int sata_async_notification(struct ata_port *ap)
 -{
--	u32 sstatus, spd, mask;
--	int rc, bit;
+-	u32 sntf;
+-	int rc;
 -
--	if (!sata_scr_valid(link))
--		return -EOPNOTSUPP;
+-	if (!(ap->flags & ATA_FLAG_AN))
+-		return 0;
 -
--	/* If SCR can be read, use it to determine the current SPD.
--	 * If not, use cached value in link->sata_spd.
--	 */
--	rc = sata_scr_read(link, SCR_STATUS, &sstatus);
--	if (rc == 0 && ata_sstatus_online(sstatus))
--		spd = (sstatus >> 4) & 0xf;
--	else
--		spd = link->sata_spd;
+-	rc = sata_scr_read(&ap->link, SCR_NOTIFICATION, &sntf);
+-	if (rc == 0)
+-		sata_scr_write(&ap->link, SCR_NOTIFICATION, sntf);
 -
--	mask = link->sata_spd_limit;
--	if (mask <= 1)
--		return -EINVAL;
+-	if (!sata_pmp_attached(ap) || rc) {
+-		/* PMP is not attached or SNTF is not available */
+-		if (!sata_pmp_attached(ap)) {
+-			/* PMP is not attached.  Check whether ATAPI
+-			 * AN is configured.  If so, notify media
+-			 * change.
+-			 */
+-			struct ata_device *dev = ap->link.device;
 -
--	/* unconditionally mask off the highest bit */
--	bit = fls(mask) - 1;
--	mask &= ~(1 << bit);
--
--	/*
--	 * Mask off all speeds higher than or equal to the current one.  At
--	 * this point, if current SPD is not available and we previously
--	 * recorded the link speed from SStatus, the driver has already
--	 * masked off the highest bit so mask should already be 1 or 0.
--	 * Otherwise, we should not force 1.5Gbps on a link where we have
--	 * not previously recorded speed from SStatus.  Just return in this
--	 * case.
--	 */
--	if (spd > 1)
--		mask &= (1 << (spd - 1)) - 1;
--	else
--		return -EINVAL;
--
--	/* were we already at the bottom? */
--	if (!mask)
--		return -EINVAL;
--
--	if (spd_limit) {
--		if (mask & ((1 << spd_limit) - 1))
--			mask &= (1 << spd_limit) - 1;
--		else {
--			bit = ffs(mask) - 1;
--			mask = 1 << bit;
+-			if ((dev->class == ATA_DEV_ATAPI) &&
+-			    (dev->flags & ATA_DFLAG_AN))
+-				ata_scsi_media_change_notify(dev);
+-			return 0;
+-		} else {
+-			/* PMP is attached but SNTF is not available.
+-			 * ATAPI async media change notification is
+-			 * not used.  The PMP must be reporting PHY
+-			 * status change, schedule EH.
+-			 */
+-			ata_port_schedule_eh(ap);
+-			return 1;
 -		}
+-	} else {
+-		/* PMP is attached and SNTF is available */
+-		struct ata_link *link;
+-
+-		/* check and notify ATAPI AN */
+-		ata_for_each_link(link, ap, EDGE) {
+-			if (!(sntf & (1 << link->pmp)))
+-				continue;
+-
+-			if ((link->device->class == ATA_DEV_ATAPI) &&
+-			    (link->device->flags & ATA_DFLAG_AN))
+-				ata_scsi_media_change_notify(link->device);
+-		}
+-
+-		/* If PMP is reporting that PHY status of some
+-		 * downstream ports has changed, schedule EH.
+-		 */
+-		if (sntf & (1 << SATA_PMP_CTRL_PORT)) {
+-			ata_port_schedule_eh(ap);
+-			return 1;
+-		}
+-
+-		return 0;
 -	}
--
--	link->sata_spd_limit = mask;
--
--	ata_link_warn(link, "limiting SATA link speed to %s\n",
--		      sata_spd_string(fls(mask)));
--
--	return 0;
 -}
+-EXPORT_SYMBOL_GPL(sata_async_notification);
 -
- static int __sata_set_spd_needed(struct ata_link *link, u32 *scontrol)
- {
- 	struct ata_link *host_link = &link->ap->link;
-diff --git a/drivers/ata/libata.h b/drivers/ata/libata.h
-index 909c2cae52a0..518a8e08a26d 100644
---- a/drivers/ata/libata.h
-+++ b/drivers/ata/libata.h
-@@ -64,7 +64,6 @@ extern int ata_dev_reread_id(struct ata_device *dev, unsigned int readid_flags);
- extern int ata_dev_revalidate(struct ata_device *dev, unsigned int new_class,
- 			      unsigned int readid_flags);
- extern int ata_dev_configure(struct ata_device *dev);
--extern int sata_down_spd_limit(struct ata_link *link, u32 spd_limit);
- extern int ata_down_xfermask_limit(struct ata_device *dev, unsigned int sel);
- extern unsigned int ata_dev_set_feature(struct ata_device *dev,
- 					u8 enable, u8 feature);
-@@ -87,6 +86,11 @@ extern void __ata_port_probe(struct ata_port *ap);
- extern unsigned int ata_read_log_page(struct ata_device *dev, u8 log,
- 				      u8 page, void *buf, unsigned int sectors);
+ /**
+  *	ata_eh_freeze_port - EH helper to freeze port
+  *	@ap: ATA port to freeze
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index eb2797c27547..d09997e2290b 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1335,7 +1335,6 @@ extern void ata_port_wait_eh(struct ata_port *ap);
+ extern int ata_link_abort(struct ata_link *link);
+ extern int ata_port_abort(struct ata_port *ap);
+ extern int ata_port_freeze(struct ata_port *ap);
+-extern int sata_async_notification(struct ata_port *ap);
  
-+static inline bool ata_sstatus_online(u32 sstatus)
-+{
-+	return (sstatus & 0xf) == 0x3;
-+}
+ extern void ata_eh_freeze_port(struct ata_port *ap);
+ extern void ata_eh_thaw_port(struct ata_port *ap);
+@@ -1352,6 +1351,13 @@ extern void ata_std_sched_eh(struct ata_port *ap);
+ extern void ata_std_end_eh(struct ata_port *ap);
+ extern int ata_link_nr_enabled(struct ata_link *link);
+ 
++/*
++ * SATA specific part of EH - drivers/ata/libata-eh-sata.c
++ */
++#ifdef CONFIG_SATA_HOST
++extern int sata_async_notification(struct ata_port *ap);
++#endif
 +
- static inline bool ata_log_supported(struct ata_device *dev, u8 log)
- {
- 	struct ata_port *ap = dev->link->ap;
-@@ -103,6 +107,7 @@ static inline bool ata_log_supported(struct ata_device *dev, u8 log)
- int ata_do_link_spd_horkage(struct ata_device *dev);
- int ata_dev_config_ncq(struct ata_device *dev, char *desc, size_t desc_sz);
- void sata_print_link_status(struct ata_link *link);
-+int sata_down_spd_limit(struct ata_link *link, u32 spd_limit);
- #else
- static inline int ata_do_link_spd_horkage(struct ata_device *dev) { return 0; }
- static inline int ata_dev_config_ncq(struct ata_device *dev, char *desc,
-@@ -112,6 +117,10 @@ static inline int ata_dev_config_ncq(struct ata_device *dev, char *desc,
- 	return 0;
- }
- static inline void sata_print_link_status(struct ata_link *link) { }
-+static inline int sata_down_spd_limit(struct ata_link *link, u32 spd_limit)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif
- 
- /* libata-acpi.c */
+ /*
+  * Base operations to inherit from and initializers for sht
+  *
 -- 
 2.24.1
 
