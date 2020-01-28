@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69597C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D67C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6AB2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F3C207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222025;
-	bh=FIIZiQrPCFTJOTi6y0n20X+dQYu6x1A+iUeRhJ0vEQI=;
+	s=default; t=1580222033;
+	bh=2AoDdejech8Pc1SzonmLabQ+qCGiH5x9p8y24qqZy0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QVu2HNFSvFFbz+8pwPY83yLpLTMZoNDHrOOpZgduvHBkQgRUIwiJp969RDBE0hhb5
-	 QF2XqdAJqrld/EEuKtUddujpyDgKppzY7MHG6dLapnLnjv1umnhIHCW3fVPB6x/C4O
-	 ZEcVHi9IshWhYFJ0/z8xLLE5OKVXS7wHgDj7mojE=
+	b=JRM3xyiU2fKQaCPnLrjOQpLMmvt47ftH85ruTM1nvrwKrgNvNF+Es1l8tJg65yFuy
+	 r0ieFlgE0zbGiGcYkp9UIg1ggfHgjjNybDUeKp6rByf2eCGsLguwThOOkq0MVtVdZj
+	 Lyw0s39Y7tZopkdGL4Hj2Cne7eIVACg/OLjwBSUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732827AbgA1OZD (ORCPT
+        id S1733256AbgA1Odw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:25:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51870 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:33:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732431AbgA1OY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:24:58 -0500
+        id S1729827AbgA1OYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:24:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33CCF2468A;
-        Tue, 28 Jan 2020 14:24:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 046B524696;
+        Tue, 28 Jan 2020 14:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221497;
-        bh=FIIZiQrPCFTJOTi6y0n20X+dQYu6x1A+iUeRhJ0vEQI=;
+        s=default; t=1580221487;
+        bh=2AoDdejech8Pc1SzonmLabQ+qCGiH5x9p8y24qqZy0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNQlTV/q8A0ccIYRy0VBHDHucPX7J+tiCH73Pu+d/r3f+rlsM7liZfs71OAYir2fd
-         UT/3cXh+0cgwv5an9KXYegi4xV4bb9hjSsSuMbpF8EQS6Chkgi2d5CXwnkBVUZuZGv
-         uagHB/e9XmdpNbCD2yiWkTl2/sEagTGz6YmHQ7D4=
+        b=pqSA7Eyo9BIPkvooVhNlx4ePmn6/1o6pYRdQMnAAKTiBBRcC+em63ORD0ZTyvcf9G
+         125h7/cPQubWI+Ii5Ep0Ag+OScvbssXeUZd2UfJjfHU/gh2VX5wINucCnnBSQapo6C
+         yzr0tWCL4sUnxm98seO9/VoHTyLCclRqzhOvdJwY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.9 248/271] Input: keyspan-remote - fix control-message timeouts
-Date:   Tue, 28 Jan 2020 15:06:37 +0100
-Message-Id: <20200128135911.000726358@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 245/271] hwmon: Deal with errors from the thermal subsystem
+Date:   Tue, 28 Jan 2020 15:06:34 +0100
+Message-Id: <20200128135910.760531414@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,63 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit ba9a103f40fc4a3ec7558ec9b0b97d4f92034249 upstream.
+commit 47c332deb8e89f6c59b0bb2615945c6e7fad1a60 upstream.
 
-The driver was issuing synchronous uninterruptible control requests
-without using a timeout. This could lead to the driver hanging on probe
-due to a malfunctioning (or malicious) device until the device is
-physically disconnected. While sleeping in probe the driver prevents
-other devices connected to the same hub from being added to (or removed
-from) the bus.
+If the thermal subsystem returne -EPROBE_DEFER or any other error
+when hwmon calls devm_thermal_zone_of_sensor_register(), this is
+silently ignored.
 
-The USB upper limit of five seconds per request should be more than
-enough.
+I ran into this with an incorrectly defined thermal zone, making
+it non-existing and thus this call failed with -EPROBE_DEFER
+assuming it would appear later. The sensor was still added
+which is incorrect: sensors must strictly be added after the
+thermal zones, so deferred probe must be respected.
 
-Fixes: 99f83c9c9ac9 ("[PATCH] USB: add driver for Keyspan Digital Remote")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable <stable@vger.kernel.org>     # 2.6.13
-Link: https://lore.kernel.org/r/20200113171715.30621-1-johan@kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: d560168b5d0f ("hwmon: (core) New hwmon registration API")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/misc/keyspan_remote.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/hwmon/hwmon.c |   21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
---- a/drivers/input/misc/keyspan_remote.c
-+++ b/drivers/input/misc/keyspan_remote.c
-@@ -344,7 +344,8 @@ static int keyspan_setup(struct usb_devi
- 	int retval = 0;
+--- a/drivers/hwmon/hwmon.c
++++ b/drivers/hwmon/hwmon.c
+@@ -143,6 +143,7 @@ static int hwmon_thermal_add_sensor(stru
+ 				    struct hwmon_device *hwdev, int index)
+ {
+ 	struct hwmon_thermal_data *tdata;
++	struct thermal_zone_device *tzd;
  
- 	retval = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
--				 0x11, 0x40, 0x5601, 0x0, NULL, 0, 0);
-+				 0x11, 0x40, 0x5601, 0x0, NULL, 0,
-+				 USB_CTRL_SET_TIMEOUT);
- 	if (retval) {
- 		dev_dbg(&dev->dev, "%s - failed to set bit rate due to error: %d\n",
- 			__func__, retval);
-@@ -352,7 +353,8 @@ static int keyspan_setup(struct usb_devi
+ 	tdata = devm_kzalloc(dev, sizeof(*tdata), GFP_KERNEL);
+ 	if (!tdata)
+@@ -151,8 +152,14 @@ static int hwmon_thermal_add_sensor(stru
+ 	tdata->hwdev = hwdev;
+ 	tdata->index = index;
+ 
+-	devm_thermal_zone_of_sensor_register(&hwdev->dev, index, tdata,
+-					     &hwmon_thermal_ops);
++	tzd = devm_thermal_zone_of_sensor_register(&hwdev->dev, index, tdata,
++						   &hwmon_thermal_ops);
++	/*
++	 * If CONFIG_THERMAL_OF is disabled, this returns -ENODEV,
++	 * so ignore that error but forward any other error.
++	 */
++	if (IS_ERR(tzd) && (PTR_ERR(tzd) != -ENODEV))
++		return PTR_ERR(tzd);
+ 
+ 	return 0;
+ }
+@@ -586,14 +593,20 @@ __hwmon_device_register(struct device *d
+ 				if (!chip->ops->is_visible(drvdata, hwmon_temp,
+ 							   hwmon_temp_input, j))
+ 					continue;
+-				if (info[i]->config[j] & HWMON_T_INPUT)
+-					hwmon_thermal_add_sensor(dev, hwdev, j);
++				if (info[i]->config[j] & HWMON_T_INPUT) {
++					err = hwmon_thermal_add_sensor(dev,
++								hwdev, j);
++					if (err)
++						goto free_device;
++				}
+ 			}
+ 		}
  	}
  
- 	retval = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
--				 0x44, 0x40, 0x0, 0x0, NULL, 0, 0);
-+				 0x44, 0x40, 0x0, 0x0, NULL, 0,
-+				 USB_CTRL_SET_TIMEOUT);
- 	if (retval) {
- 		dev_dbg(&dev->dev, "%s - failed to set resume sensitivity due to error: %d\n",
- 			__func__, retval);
-@@ -360,7 +362,8 @@ static int keyspan_setup(struct usb_devi
- 	}
+ 	return hdev;
  
- 	retval = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
--				 0x22, 0x40, 0x0, 0x0, NULL, 0, 0);
-+				 0x22, 0x40, 0x0, 0x0, NULL, 0,
-+				 USB_CTRL_SET_TIMEOUT);
- 	if (retval) {
- 		dev_dbg(&dev->dev, "%s - failed to turn receive on due to error: %d\n",
- 			__func__, retval);
++free_device:
++	device_unregister(hdev);
+ free_hwmon:
+ 	kfree(hwdev);
+ ida_remove:
 
 
