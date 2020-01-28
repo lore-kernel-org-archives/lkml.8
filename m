@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83713C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DCCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A1E24694
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8116424688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220822;
-	bh=QpXlaaWH6ZWk0u4zthffb44DZkzkZisi06gwOjkBMXc=;
+	s=default; t=1580220826;
+	bh=3EV1cCEzNwQ85JcrY+MvFis796hLJ0RVZ2eLTWX5+8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOiymhXhLRoAu0XUKX0NvZPUlK9rY+Vn5JCnI4d5naIwanU6kcMtyxN8+j3dhrSCa
-	 vQ+lhNAtZ6mpqtysVCl+fZKH69nyzvssHNns5f+gzPfuMXvyo2GwIGa94h1U5aSBPc
-	 NJ/fOptwn8NQ4KLF3ng0vUskeFpkB8lb+BY3JgMU=
+	b=KmIMh2F2yLzSqjP1EPqdHwkMQPL7eE4s8XF9wJPhPD0PwCCJikHkC96AfSW35QejY
+	 3jek/EodZ+6ThzS4EQHQzKdxOs9DBGaMpEGAucUes5k1VVCkrrpx7TOcYUkk61P94Y
+	 UUmX9zuZaV1LkKCnAjrhOUNIHz/o35DcfiQ7sA1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgA1ONl (ORCPT
+        id S1729464AbgA1ONo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:13:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35224 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:13:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729187AbgA1ONe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:13:34 -0500
+        id S1729705AbgA1ONh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:13:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A7972468F;
-        Tue, 28 Jan 2020 14:13:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CAD024688;
+        Tue, 28 Jan 2020 14:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220813;
-        bh=QpXlaaWH6ZWk0u4zthffb44DZkzkZisi06gwOjkBMXc=;
+        s=default; t=1580220816;
+        bh=3EV1cCEzNwQ85JcrY+MvFis796hLJ0RVZ2eLTWX5+8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WyMiTfXyuDfQU8k7nwvaSNnJ7sORjObPNhCTJLrnKa4/0Tq6T+adzhJRqS5kq70av
-         6hZ58jUbjlDb+zICR9aOCQwi/szNWGfjOp2twO5lAF6CxFVFJItl7y0N3ltPh9ngBh
-         bdpT21No3FqU/PyFGeWrBIe+QZiaiYH4738LG2xc=
+        b=eHsTRTKxtRbMgk4Ghuv3VlTLaf1svvyshGYhxXnI39w4D782f3LunyQ8JQm66Ir/C
+         /T4Locexpt1BpE8kGfsZnacmh0j/rf+1azC6EYquNgzPVvIgfVChWxDLLlv8ju2Amv
+         8/v894AcrQU4g2D79XMopZPOsIskKj030ffRwS1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 111/183] scsi: libfc: fix null pointer dereference on a null lport
-Date:   Tue, 28 Jan 2020 15:05:30 +0100
-Message-Id: <20200128135840.999965281@linuxfoundation.org>
+Subject: [PATCH 4.4 151/183] media: ov6650: Fix some format attributes not under control
+Date:   Tue, 28 Jan 2020 15:06:10 +0100
+Message-Id: <20200128135844.808139287@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,37 +61,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 41a6bf6529edd10a6def42e3b2c34a7474bcc2f5 ]
+[ Upstream commit 1c6a2b63095154bbf9e8f38d79487a728331bf65 ]
 
-Currently if lport is null then the null lport pointer is dereference when
-printing out debug via the FC_LPORT_DB macro. Fix this by using the more
-generic FC_LIBFC_DBG debug macro instead that does not use lport.
+User arguments passed to .get/set_fmt() pad operation callbacks may
+contain unsupported values.  The driver takes control over frame size
+and pixel code as well as colorspace and field attributes but has never
+cared for remainig format attributes, i.e., ycbcr_enc, quantization
+and xfer_func, introduced by commit 11ff030c7365 ("[media]
+v4l2-mediabus: improve colorspace support").  Fix it.
 
-Addresses-Coverity: ("Dereference after null check")
-Fixes: 7414705ea4ae ("libfc: Add runtime debugging with debug_logging module parameter")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Set up a static v4l2_mbus_framefmt structure with attributes
+initialized to reasonable defaults and use it for updating content of
+user provided arguments.  In case of V4L2_SUBDEV_FORMAT_ACTIVE,
+postpone frame size update, now performed from inside ov6650_s_fmt()
+helper, util the user argument is first updated in ov6650_set_fmt() with
+default frame format content.  For V4L2_SUBDEV_FORMAT_TRY, don't copy
+all attributes to pad config, only those handled by the driver, then
+fill the response with the default frame format updated with resulting
+pad config format code and frame size.
+
+Fixes: 11ff030c7365 ("[media] v4l2-mediabus: improve colorspace support")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_exch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/soc_camera/ov6650.c | 51 ++++++++++++++++++++-------
+ 1 file changed, 39 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/scsi/libfc/fc_exch.c b/drivers/scsi/libfc/fc_exch.c
-index 30f9ef0c0d4f8..b20c575564e43 100644
---- a/drivers/scsi/libfc/fc_exch.c
-+++ b/drivers/scsi/libfc/fc_exch.c
-@@ -2499,7 +2499,7 @@ void fc_exch_recv(struct fc_lport *lport, struct fc_frame *fp)
+diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
+index 7adbfc57cffa5..01f82c3fc1d1c 100644
+--- a/drivers/media/i2c/soc_camera/ov6650.c
++++ b/drivers/media/i2c/soc_camera/ov6650.c
+@@ -215,6 +215,17 @@ static u32 ov6650_codes[] = {
+ 	MEDIA_BUS_FMT_Y8_1X8,
+ };
  
- 	/* lport lock ? */
- 	if (!lport || lport->state == LPORT_ST_DISABLED) {
--		FC_LPORT_DBG(lport, "Receiving frames for an lport that "
-+		FC_LIBFC_DBG("Receiving frames for an lport that "
- 			     "has not been initialized correctly\n");
- 		fc_frame_free(fp);
- 		return;
++static const struct v4l2_mbus_framefmt ov6650_def_fmt = {
++	.width		= W_CIF,
++	.height		= H_CIF,
++	.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
++	.colorspace	= V4L2_COLORSPACE_SRGB,
++	.field		= V4L2_FIELD_NONE,
++	.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
++	.quantization	= V4L2_QUANTIZATION_DEFAULT,
++	.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
++};
++
+ /* read a register */
+ static int ov6650_reg_read(struct i2c_client *client, u8 reg, u8 *val)
+ {
+@@ -509,11 +520,13 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
+ 	if (format->pad)
+ 		return -EINVAL;
+ 
++	/* initialize response with default media bus frame format */
++	*mf = ov6650_def_fmt;
++
++	/* update media bus format code and frame size */
+ 	mf->width	= priv->rect.width >> priv->half_scale;
+ 	mf->height	= priv->rect.height >> priv->half_scale;
+ 	mf->code	= priv->code;
+-	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+-	mf->field	= V4L2_FIELD_NONE;
+ 
+ 	return 0;
+ }
+@@ -677,10 +690,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 	if (!ret)
+ 		priv->code = code;
+ 
+-	if (!ret) {
+-		mf->width = priv->rect.width >> half_scale;
+-		mf->height = priv->rect.height >> half_scale;
+-	}
+ 	return ret;
+ }
+ 
+@@ -699,9 +708,6 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
+ 		v4l_bound_align_image(&mf->width, 2, W_CIF, 1,
+ 				&mf->height, 2, H_CIF, 1, 0);
+ 
+-	mf->field = V4L2_FIELD_NONE;
+-	mf->colorspace = V4L2_COLORSPACE_SRGB;
+-
+ 	switch (mf->code) {
+ 	case MEDIA_BUS_FMT_Y10_1X10:
+ 		mf->code = MEDIA_BUS_FMT_Y8_1X8;
+@@ -717,10 +723,31 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
+ 		break;
+ 	}
+ 
+-	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+-		return ov6650_s_fmt(sd, mf);
+-	cfg->try_fmt = *mf;
++	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
++		/* store media bus format code and frame size in pad config */
++		cfg->try_fmt.width = mf->width;
++		cfg->try_fmt.height = mf->height;
++		cfg->try_fmt.code = mf->code;
+ 
++		/* return default mbus frame format updated with pad config */
++		*mf = ov6650_def_fmt;
++		mf->width = cfg->try_fmt.width;
++		mf->height = cfg->try_fmt.height;
++		mf->code = cfg->try_fmt.code;
++
++	} else {
++		/* apply new media bus format code and frame size */
++		int ret = ov6650_s_fmt(sd, mf);
++
++		if (ret)
++			return ret;
++
++		/* return default format updated with active size and code */
++		*mf = ov6650_def_fmt;
++		mf->width = priv->rect.width >> priv->half_scale;
++		mf->height = priv->rect.height >> priv->half_scale;
++		mf->code = priv->code;
++	}
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
