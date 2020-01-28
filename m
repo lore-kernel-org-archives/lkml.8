@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0417C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EC3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FE920678
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0381E24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220683;
-	bh=a3b8GTGMrmfY7nhd+ivfJZYIfMPdm75bJRxBWlYuFWQ=;
+	s=default; t=1580220689;
+	bh=a+NIG6AzKmTleUXeiCxW7L8Y3AcdZWcPX42BEzMNSOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTxf+VEy7xnPCmU30N8kfjikiief6E7oNoIh6zOddTBIqJ+hZdvZjS3hoY0nwBFy3
-	 zp0no1ZJGa+2dqufoG1CQM2GUuXKpjNF469vW/mqLjVzoUA+SjPYJbS8Dmj9qRSkh9
-	 Olv4GWuerEwi3tYNdekKwUrceeC0eCpTiHepcloE=
+	b=FixIe41yRTsEqzlBK9q2tw2eZW8k4+DhugJ56Fs6YnXbzWWg6uoGw7/fqSNV5Iwi7
+	 KTyyW4Hz+DoqIPpTfTmmBgScmf8y76jiQiM+ChQvQJLCGZDaCEOIDUBrY2LQ9YKPa/
+	 BonaTSDO0IKFZoGA0GoJQ8EYwEwENidf450KaY+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgA1OLW (ORCPT
+        id S1726696AbgA1OL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:11:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60406 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:11:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727659AbgA1OLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:11:17 -0500
+        id S1727659AbgA1OLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:11:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 887012468E;
-        Tue, 28 Jan 2020 14:11:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DADE32468D;
+        Tue, 28 Jan 2020 14:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220677;
-        bh=a3b8GTGMrmfY7nhd+ivfJZYIfMPdm75bJRxBWlYuFWQ=;
+        s=default; t=1580220682;
+        bh=a+NIG6AzKmTleUXeiCxW7L8Y3AcdZWcPX42BEzMNSOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YTYPRN2LMi7IiWYHnfjpbNo+CgR/kMl//NKShmX5g9pKzrVRlBn0o/5wuvyGw3BP7
-         PX+qQ/jAm8ruUNal9lfEC/y+4nx4v4wDMwQf2r6Bw8BgxFFoIlR6aNW+843Yjj1KWG
-         TsKtSo2WgFHYztGplg8vFjca8rAj0CLEatSW0baA=
+        b=OJAA3qS50/Fwnj/BFiO5FvbFgoYcUfSAldFL+e864/c7EyZBQDqcN2meRwBUjoRNo
+         NRmly3cssdhu2AnRuircDnRxye7T3GNx8fUNetEll0nNgUwRKX+7AeSY2ZEJWEJTlA
+         xZkisi18Q1w4An4roqW1/8/S7Z4ac6WeY81IxGSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 101/183] powerpc/cacheinfo: add cacheinfo_teardown, cacheinfo_rebuild
-Date:   Tue, 28 Jan 2020 15:05:20 +0100
-Message-Id: <20200128135840.116104290@linuxfoundation.org>
+Subject: [PATCH 4.4 103/183] net/af_iucv: always register net_device notifier
+Date:   Tue, 28 Jan 2020 15:05:22 +0100
+Message-Id: <20200128135840.285632281@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,69 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit d4aa219a074a5abaf95a756b9f0d190b5c03a945 ]
+[ Upstream commit 06996c1d4088a0d5f3e7789d7f96b4653cc947cc ]
 
-Allow external callers to force the cacheinfo code to release all its
-references to cache nodes, e.g. before processing device tree updates
-post-migration, and to rebuild the hierarchy afterward.
+Even when running as VM guest (ie pr_iucv != NULL), af_iucv can still
+open HiperTransport-based connections. For robust operation these
+connections require the af_iucv_netdev_notifier, so register it
+unconditionally.
 
-CPU online/offline must be blocked by callers; enforce this.
+Also handle any error that register_netdevice_notifier() returns.
 
-Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 9fbd87d41392 ("af_iucv: handle netdev events")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/cacheinfo.c | 21 +++++++++++++++++++++
- arch/powerpc/kernel/cacheinfo.h |  4 ++++
- 2 files changed, 25 insertions(+)
+ net/iucv/af_iucv.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/kernel/cacheinfo.c b/arch/powerpc/kernel/cacheinfo.c
-index c641983bbdd68..0122d5ce0637d 100644
---- a/arch/powerpc/kernel/cacheinfo.c
-+++ b/arch/powerpc/kernel/cacheinfo.c
-@@ -867,4 +867,25 @@ void cacheinfo_cpu_offline(unsigned int cpu_id)
- 	if (cache)
- 		cache_cpu_clear(cache, cpu_id);
+diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
+index 5984cc35d5088..3edffb7bf2a46 100644
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -2392,6 +2392,13 @@ out:
+ 	return err;
  }
-+
-+void cacheinfo_teardown(void)
-+{
-+	unsigned int cpu;
-+
-+	lockdep_assert_cpus_held();
-+
-+	for_each_online_cpu(cpu)
-+		cacheinfo_cpu_offline(cpu);
-+}
-+
-+void cacheinfo_rebuild(void)
-+{
-+	unsigned int cpu;
-+
-+	lockdep_assert_cpus_held();
-+
-+	for_each_online_cpu(cpu)
-+		cacheinfo_cpu_online(cpu);
-+}
-+
- #endif /* (CONFIG_PPC_PSERIES && CONFIG_SUSPEND) || CONFIG_HOTPLUG_CPU */
-diff --git a/arch/powerpc/kernel/cacheinfo.h b/arch/powerpc/kernel/cacheinfo.h
-index a7b74d36acd71..2cdee87a482c5 100644
---- a/arch/powerpc/kernel/cacheinfo.h
-+++ b/arch/powerpc/kernel/cacheinfo.h
-@@ -5,4 +5,8 @@
- extern void cacheinfo_cpu_online(unsigned int cpu_id);
- extern void cacheinfo_cpu_offline(unsigned int cpu_id);
  
-+/* Allow migration/suspend to tear down and rebuild the hierarchy. */
-+extern void cacheinfo_teardown(void);
-+extern void cacheinfo_rebuild(void);
++static void afiucv_iucv_exit(void)
++{
++	device_unregister(af_iucv_dev);
++	driver_unregister(&af_iucv_driver);
++	pr_iucv->iucv_unregister(&af_iucv_handler, 0);
++}
 +
- #endif /* _PPC_CACHEINFO_H */
+ static int __init afiucv_init(void)
+ {
+ 	int err;
+@@ -2425,11 +2432,18 @@ static int __init afiucv_init(void)
+ 		err = afiucv_iucv_init();
+ 		if (err)
+ 			goto out_sock;
+-	} else
+-		register_netdevice_notifier(&afiucv_netdev_notifier);
++	}
++
++	err = register_netdevice_notifier(&afiucv_netdev_notifier);
++	if (err)
++		goto out_notifier;
++
+ 	dev_add_pack(&iucv_packet_type);
+ 	return 0;
+ 
++out_notifier:
++	if (pr_iucv)
++		afiucv_iucv_exit();
+ out_sock:
+ 	sock_unregister(PF_IUCV);
+ out_proto:
+@@ -2443,12 +2457,11 @@ out:
+ static void __exit afiucv_exit(void)
+ {
+ 	if (pr_iucv) {
+-		device_unregister(af_iucv_dev);
+-		driver_unregister(&af_iucv_driver);
+-		pr_iucv->iucv_unregister(&af_iucv_handler, 0);
++		afiucv_iucv_exit();
+ 		symbol_put(iucv_if);
+-	} else
+-		unregister_netdevice_notifier(&afiucv_netdev_notifier);
++	}
++
++	unregister_netdevice_notifier(&afiucv_netdev_notifier);
+ 	dev_remove_pack(&iucv_packet_type);
+ 	sock_unregister(PF_IUCV);
+ 	proto_unregister(&iucv_proto);
 -- 
 2.20.1
 
