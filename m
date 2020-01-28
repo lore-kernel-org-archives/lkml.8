@@ -2,199 +2,134 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59787C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC8CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3079624687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6692468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580212594;
-	bh=cbY4qrepDwIPYuuvBAb/JcVe9z3yv1nJQYMwmA5VtU4=;
+	s=default; t=1580212700;
+	bh=8RCnYntLRumJXkxzL083Nr34DOd28mEmVE/NIbRTmqQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mdiM+bl54C0/SxGPwlj082pKeAxSycwJgcjgVHA/xnduzD9kxmVKw5HzoLm60cIGw
-	 oo25BGdrmb7nNMIetOeXmNgrlz851sazJ8dbMWOfJhnkz5t+DPj0qligOXLjKGIlGn
-	 dwtHKVtJI1m0FAaDqW2Ahqk6Fy/7MxSbXgFi5KzU=
+	b=n1fGp8vLzBmGKOOhoN/E3xo840AvXRRIqYWnjvfVZ59kDyoBltjK7bWM09FpEhDuu
+	 cfI0dVmGJryLQbS8c/xZdhxyCIwU5AJW13Ok65Wd4V2a1A79TLQF9z6Z7CCQ+BTQ9A
+	 HSMCt4yP7fxqK5BqeR6PB/HkUKVvlN1qEH21fMz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgA1L4d (ORCPT
+        id S1726141AbgA1L6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 06:56:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42900 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 06:58:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:55802 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgA1L4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 06:56:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A023D2173E;
-        Tue, 28 Jan 2020 11:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580212592;
-        bh=cbY4qrepDwIPYuuvBAb/JcVe9z3yv1nJQYMwmA5VtU4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=viTDkRB3SuwFFXB0GKABOuQzunieTBI6/i9ObGuRtbdMsW2YLYdo10WN1QWug2Ejt
-         yCyWEfx56KdFPt/iQ9o2i4YX7AfK0mhJnQbvbvuFN9vD/ZsIPz2VTO9H+vDKMrose5
-         OUbGbV9VeIck5belq6/xIRFawGDNRKhGZsAAfFms=
-Date:   Tue, 28 Jan 2020 12:56:29 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, jeremy.linton@arm.com,
-        arnd@arndb.de, olof@lixom.net, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, guohanjun@huawei.com
-Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
-Message-ID: <20200128115629.GB2680602@kroah.com>
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+        id S1725903AbgA1L6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 06:58:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AC31101E;
+        Tue, 28 Jan 2020 03:58:18 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D65B03F52E;
+        Tue, 28 Jan 2020 03:58:17 -0800 (PST)
+Date:   Tue, 28 Jan 2020 11:58:16 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Anshuman Khandual <Anshuman.Khandual@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+Message-ID: <20200128115816.GA4689@sirena.org.uk>
+References: <a7ba6d8a-6443-5994-6a34-2824aa9b054b@c-s.fr>
+ <144F3894-7934-4EC7-A9F9-C6A84CA08C65@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
 Content-Disposition: inline
-In-Reply-To: <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+In-Reply-To: <144F3894-7934-4EC7-A9F9-C6A84CA08C65@lca.pw>
+X-Cookie: Doing gets it done.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 07:14:19PM +0800, John Garry wrote:
-> Add a generic driver for platforms which populate their ACPI PPTT
-> processor package ID Type Structure according to suggestion in the ACPI
-> spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
-> 
-> The soc_id is from member LEVEL_2_ID.
-> 
-> For this, we need to use a whitelist of platforms which are known to
-> populate the structure as suggested.
-> 
-> For now, only the vendor and soc_id fields are exposed.
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
->  drivers/soc/Makefile       |   1 +
->  drivers/soc/acpi_generic.c | 102 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 103 insertions(+)
->  create mode 100644 drivers/soc/acpi_generic.c
-> 
-> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> index 8b49d782a1ab..2a59a30a22cd 100644
-> --- a/drivers/soc/Makefile
-> +++ b/drivers/soc/Makefile
-> @@ -3,6 +3,7 @@
->  # Makefile for the Linux Kernel SOC specific device drivers.
->  #
->  
-> +obj-$(CONFIG_ACPI_PPTT)		+= acpi_generic.o
->  obj-$(CONFIG_ARCH_ACTIONS)	+= actions/
->  obj-$(CONFIG_SOC_ASPEED)	+= aspeed/
->  obj-$(CONFIG_ARCH_AT91)		+= atmel/
-> diff --git a/drivers/soc/acpi_generic.c b/drivers/soc/acpi_generic.c
-> new file mode 100644
-> index 000000000000..34a1f5f8e063
-> --- /dev/null
-> +++ b/drivers/soc/acpi_generic.c
-> @@ -0,0 +1,102 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) John Garry, john.garry@huawei.com
-> + */
-> +
-> +#define pr_fmt(fmt) "SOC ACPI GENERIC: " fmt
 
-You have a device, why do you need pr_fmt()?
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/sys_soc.h>
-> +
-> +/*
-> + * Known platforms that fill in PPTT package ID structures according to
-> + * ACPI spec examples, that being:
-> + * - Custom driver attribute is in ID Type Structure VENDOR_ID member
-> + * - SoC id is in ID Type Structure LEVEL_2_ID member
-> + *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
-> + */
-> +static struct acpi_platform_list plat_list[] = {
-> +	{"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
-> +	{ } /* End */
-> +};
-> +
-> +struct acpi_generic_soc_struct {
-> +	struct soc_device_attribute dev_attr;
-> +	u32 vendor;
-> +};
-> +
-> +static ssize_t vendor_show(struct device *dev,
-> +			   struct device_attribute *attr,
-> +			   char *buf)
-> +{
-> +	struct acpi_generic_soc_struct *soc = dev_get_drvdata(dev);
-> +	u8 vendor_id[5] = {};
-> +
-> +	*(u32 *)vendor_id = soc->vendor;
-> +
-> +	return sprintf(buf, "%s\n", vendor_id);
-> +}
-> +
-> +static DEVICE_ATTR_RO(vendor);
-> +
-> +static __init int soc_acpi_generic_init(void)
-> +{
-> +	int index;
-> +
-> +	index = acpi_match_platform_list(plat_list);
-> +	if (index < 0)
-> +		return -ENOENT;
-> +
-> +	index = 0;
-> +	while (true) {
-> +		struct acpi_pptt_package_info info;
-> +
-> +		if (!acpi_pptt_get_package_info(index, &info)) {
-> +			struct soc_device_attribute *soc_dev_attr;
-> +			struct acpi_generic_soc_struct *soc;
-> +			struct soc_device *soc_dev;
-> +			u8 soc_id[9] = {};
-> +
-> +			*(u64 *)soc_id = info.LEVEL_2_ID;
-> +
-> +			soc = kzalloc(sizeof(*soc), GFP_KERNEL);
-> +			if (!soc)
-> +				return -ENOMEM;
-> +
-> +			soc_dev_attr = &soc->dev_attr;
-> +			soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s",
-> +							 soc_id);
-> +			if (!soc_dev_attr->soc_id) {
-> +				kfree(soc);
-> +				return -ENOMEM;
-> +			}
-> +			soc->vendor = info.vendor_id;
-> +
-> +			soc_dev = soc_device_register(soc_dev_attr);
-> +			if (IS_ERR(soc_dev)) {
-> +				int ret = PTR_ERR(soc_dev);
-> +
-> +				pr_info("could not register soc (%d) index=%d\n",
-> +					ret, index);
+On Tue, Jan 28, 2020 at 02:12:56AM -0500, Qian Cai wrote:
+> > On Jan 28, 2020, at 1:13 AM, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-pr_err()?
+> > ppc32 an indecent / legacy platform ? Are you kidying ?
 
-And shouldn't the core print out the error, not the person who calls it?
+> > Powerquicc II PRO for instance is fully supported by the
+> > manufacturer and widely used in many small networking devices.
 
+> Of course I forgot about embedded devices. The problem is that how
+> many developers are actually going to run this debug option on
+> embedded devices?
 
-> +				kfree(soc_dev_attr->soc_id);
-> +				kfree(soc);
-> +				return ret;
-> +			}
-> +			dev_set_drvdata(soc_device_to_device(soc_dev), soc);
-> +			device_create_file(soc_device_to_device(soc_dev),
-> +					   &dev_attr_vendor);
+Much fewer if the code isn't upstream than if it is.  This isn't
+something that every developer is going to enable all the time but that
+doesn't mean it's not useful, it's more for people doing work on the
+architectures or on memory management (or who suspect they're running
+into a relevant problem), and I'm sure some of the automated testing
+people will enable it.  The more barriers there are in place to getting
+the testsuite up and running the less likely it is that any of these
+groups will run it regularly.
 
-You just raced with userspace and lost.  Use the built-in api that I
-made _just_ because of SOC drivers to do this correctly.
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
 
-thanks,
+-----BEGIN PGP SIGNATURE-----
 
-greg k-h
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4wIdcACgkQJNaLcl1U
+h9Dslgf+KrZOvdjyO1AcLfLIlE2wA+hRmygG3Gh1YQ9wI6n+03XnA4v7f+7zZaQd
+9nylNBzkErkupokycsWYhTEFN7o/tfjVGWte16XdQ1QHQE7npjULPGC5NcVVPfyc
+qwaW2i5J5TeAuYArz3YCqLvUY6IAJefbxhZbLXTTBnwINIazuBDiAUzsAd/Uy27Y
+x0YHtX4gXucyNEepoozxS07544hKbMvjTO0tt7P8egTTGwNHz+Uz6sMfUA/Muri7
+hIJbxM03+cRn9ZKlTca/PzsXJN87ZLvWwcB0TGz+xI3Bjx2D2Q7Dn+OROr2O8e0z
+WXNLV2W9WAaBOwArY4IHdeORokpCzg==
+=j0+e
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
