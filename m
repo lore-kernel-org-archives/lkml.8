@@ -2,182 +2,92 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F56C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9275DC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA6620716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222245;
-	bh=+8X1MENOY7tI9xG5PPzTrYYKY96vWn3iZaaJ4qyL2kM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdGeISnyoAqpxhRkn+WLbCAY/vQKe5780Un9PkD0Wpf6ObAAPbi1a9xFa9pc+mzTc
-	 yce3LHHc4BTGhft+ouaWmdkleO0CDFSdIBt5YkANWKWeaIR5hAvQ+ZuSOoyMsVYJ0N
-	 bbhVCUfChj5UoJiBv1LYYR26oCRiyl+dGctyL+3k=
+	by mail.kernel.org (Postfix) with ESMTP id 69E5F20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731049AbgA1OUO (ORCPT
+        id S1730606AbgA1OUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:20:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730811AbgA1OUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:20:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Tue, 28 Jan 2020 09:20:10 -0500
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:58897 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730339AbgA1OUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:20:01 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D74DF2071E;
-        Tue, 28 Jan 2020 14:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221211;
-        bh=+8X1MENOY7tI9xG5PPzTrYYKY96vWn3iZaaJ4qyL2kM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7kKD7Q9z2AMB03Zp4+DYnWU1BldtH9I+3bKzvWTEwHuvqnZ/TipsJ+f/6QpSR5Nj
-         zCCOob/tNASEyCwnULcguHVLDX1cL9l7McLiNX88YS5wJCRsTfk+7gk9jbPj3mx/Rb
-         P5dBbpmuv1OLgR8QVB3oa9fKlrATof22bD5GG2tM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 133/271] dmaengine: tegra210-adma: restore channel status
-Date:   Tue, 28 Jan 2020 15:04:42 +0100
-Message-Id: <20200128135902.499662626@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
-References: <20200128135852.449088278@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id D4A1A2800BC20;
+        Tue, 28 Jan 2020 15:19:58 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 9B1141EB447; Tue, 28 Jan 2020 15:19:58 +0100 (CET)
+Date:   Tue, 28 Jan 2020 15:19:58 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>, matthias.bgg@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
+        jslaby@suse.com
+Subject: Re: [PATCH] serial: 8250_early: Add earlycon for BCM2835 aux uart
+Message-ID: <20200128141958.vwbxoqglt5gw4xj5@wunner.de>
+References: <88af0fca-90d1-58ff-406d-73f185eb8b7e@gmail.com>
+ <C07FL64L9QNN.357K7JAUOSNA2@linux-9qgx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C07FL64L9QNN.357K7JAUOSNA2@linux-9qgx>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameer Pujar <spujar@nvidia.com>
+On Tue, Jan 28, 2020 at 01:42:21PM +0100, Nicolas Saenz Julienne wrote:
+> I'm testing this by booting directly from RPi4's bootloader. And it
+> works as long as I add this to config.txt:
+> 
+> enable_uart=1
+> gpu_freq=500
+> 
+> Which AFAIK blocks frequency scalin on the GPU and fixes the clock to a
+> point where the serial is set at 115200 bauds.
+> 
+> Ideally it'd be nice to be able to query the clock frequency, and
+> recalculate the divisors based on that. But I don't know if it's
+> feasible at that point in the boot process.
 
-[ Upstream commit f33e7bb3eb922618612a90f0a828c790e8880773 ]
+Well, we don't even support adjusting the baudrate *after* the kernel
+has booted.
 
-Status of ADMA channel registers is not saved and restored during system
-suspend. During active playback if system enters suspend, this results in
-wrong state of channel registers during system resume and playback fails
-to resume properly. Fix this by saving following channel registers in
-runtime suspend and restore during runtime resume.
- * ADMA_CH_LOWER_SRC_ADDR
- * ADMA_CH_LOWER_TRG_ADDR
- * ADMA_CH_FIFO_CTRL
- * ADMA_CH_CONFIG
- * ADMA_CH_CTRL
- * ADMA_CH_CMD
- * ADMA_CH_TC
-Runtime PM calls will be inovked during system resume path if a playback
-or capture needs to be resumed. Hence above changes work fine for system
-suspend case.
+The problem is that in mainline, bcm2835_defconfig contains:
+CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE=y
 
-Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/tegra210-adma.c | 46 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+Likewise in the Foundation's downstream tree, bcmrpi_defconfig as well
+as bcm2711_defconfig and bcm2709_defconfig contain:
+CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE=y
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index e9e46a5207452..8c3cab463354f 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -98,6 +98,7 @@ struct tegra_adma_chan_regs {
- 	unsigned int src_addr;
- 	unsigned int trg_addr;
- 	unsigned int fifo_ctrl;
-+	unsigned int cmd;
- 	unsigned int tc;
- };
- 
-@@ -127,6 +128,7 @@ struct tegra_adma_chan {
- 	enum dma_transfer_direction	sreq_dir;
- 	unsigned int			sreq_index;
- 	bool				sreq_reserved;
-+	struct tegra_adma_chan_regs	ch_regs;
- 
- 	/* Transfer count and position info */
- 	unsigned int			tx_buf_count;
-@@ -635,8 +637,30 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
- static int tegra_adma_runtime_suspend(struct device *dev)
- {
- 	struct tegra_adma *tdma = dev_get_drvdata(dev);
-+	struct tegra_adma_chan_regs *ch_reg;
-+	struct tegra_adma_chan *tdc;
-+	int i;
- 
- 	tdma->global_cmd = tdma_read(tdma, ADMA_GLOBAL_CMD);
-+	if (!tdma->global_cmd)
-+		goto clk_disable;
-+
-+	for (i = 0; i < tdma->nr_channels; i++) {
-+		tdc = &tdma->channels[i];
-+		ch_reg = &tdc->ch_regs;
-+		ch_reg->cmd = tdma_ch_read(tdc, ADMA_CH_CMD);
-+		/* skip if channel is not active */
-+		if (!ch_reg->cmd)
-+			continue;
-+		ch_reg->tc = tdma_ch_read(tdc, ADMA_CH_TC);
-+		ch_reg->src_addr = tdma_ch_read(tdc, ADMA_CH_LOWER_SRC_ADDR);
-+		ch_reg->trg_addr = tdma_ch_read(tdc, ADMA_CH_LOWER_TRG_ADDR);
-+		ch_reg->ctrl = tdma_ch_read(tdc, ADMA_CH_CTRL);
-+		ch_reg->fifo_ctrl = tdma_ch_read(tdc, ADMA_CH_FIFO_CTRL);
-+		ch_reg->config = tdma_ch_read(tdc, ADMA_CH_CONFIG);
-+	}
-+
-+clk_disable:
- 	clk_disable_unprepare(tdma->ahub_clk);
- 
- 	return 0;
-@@ -645,7 +669,9 @@ static int tegra_adma_runtime_suspend(struct device *dev)
- static int tegra_adma_runtime_resume(struct device *dev)
- {
- 	struct tegra_adma *tdma = dev_get_drvdata(dev);
--	int ret;
-+	struct tegra_adma_chan_regs *ch_reg;
-+	struct tegra_adma_chan *tdc;
-+	int ret, i;
- 
- 	ret = clk_prepare_enable(tdma->ahub_clk);
- 	if (ret) {
-@@ -654,6 +680,24 @@ static int tegra_adma_runtime_resume(struct device *dev)
- 	}
- 	tdma_write(tdma, ADMA_GLOBAL_CMD, tdma->global_cmd);
- 
-+	if (!tdma->global_cmd)
-+		return 0;
-+
-+	for (i = 0; i < tdma->nr_channels; i++) {
-+		tdc = &tdma->channels[i];
-+		ch_reg = &tdc->ch_regs;
-+		/* skip if channel was not active earlier */
-+		if (!ch_reg->cmd)
-+			continue;
-+		tdma_ch_write(tdc, ADMA_CH_TC, ch_reg->tc);
-+		tdma_ch_write(tdc, ADMA_CH_LOWER_SRC_ADDR, ch_reg->src_addr);
-+		tdma_ch_write(tdc, ADMA_CH_LOWER_TRG_ADDR, ch_reg->trg_addr);
-+		tdma_ch_write(tdc, ADMA_CH_CTRL, ch_reg->ctrl);
-+		tdma_ch_write(tdc, ADMA_CH_FIFO_CTRL, ch_reg->fifo_ctrl);
-+		tdma_ch_write(tdc, ADMA_CH_CONFIG, ch_reg->config);
-+		tdma_ch_write(tdc, ADMA_CH_CMD, ch_reg->cmd);
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.20.1
+In contrast to this, we set the following on Revolution Pi devices:
+CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE=y
 
+Downclocking influences not only the uart1 baud rate but also the
+spi0 clock.  We attach Ethernet chips to spi0, throughput was
+significantly worse with the ondemand governor (which is what we
+used previously).  We felt that maximum Ethernet performance
+outweighs the relatively small powersaving gains.
 
+Thanks,
 
+Lukas
