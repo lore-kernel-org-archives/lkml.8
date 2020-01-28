@@ -2,309 +2,166 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3D8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D984C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9E824683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 175162467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vkgliyxq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cGm6L0Vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgA1SuL (ORCPT
+        id S1726533AbgA1SyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:50:11 -0500
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:40480 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgA1SuH (ORCPT
+        Tue, 28 Jan 2020 13:54:23 -0500
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:43312 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgA1SyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:50:07 -0500
-Received: by mail-pg1-f202.google.com with SMTP id 63so8479831pge.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 10:50:07 -0800 (PST)
+        Tue, 28 Jan 2020 13:54:20 -0500
+Received: by mail-pj1-f73.google.com with SMTP id i3so415889pjx.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 10:54:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=4B2WqvviuVIoria6yyW+igrLG0CrIUR2gBtuNcWMbWY=;
-        b=vkgliyxqZrMpNJTwrhsPMzEbgfwv1vjnCR67QMZLgaW1VXW1FAA6M+1lzkTjZjp3+3
-         5/63IuiKxwNe4XaxSzKrUeo0ZOvbk46FgniHwRnUsWtUBl6K9YIn4E9gaTw532bQUjlX
-         F+stxOYEfkCDKY1nfMpoUvTTxRVcnTXBf6Zprs68oTE6ZGSOPN2lOSA+ngZJRwvGDBeH
-         ld+sgPDMbMtcEzD8WBYCywJcV0dOb0dLYzXd31s1gldA35u2IXpmxX0LnHRKfflWp75D
-         mejuVaXbDjbajpqvr9vZCyAdHd3FaQlNxwOdFVWqs69+Lmi7mpPvA+BGY2k2Qc4RSZT4
-         7mpQ==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=D8ZUQ1iH7UYJdekJiQ43tyzlStAo9VsUap383J1XoBc=;
+        b=cGm6L0Vh2NeLo0SSDbWSjRCz3JHlt6hazZyyxnMfW5/XOJEAfHAM9e4P5T/4bjJ1vj
+         5W1/HlJUNLtPJggumIuwfXpCblGvLig+vI8bFGz8vQU2ad8pbpm29ekfW+Yp4wBxT7Ud
+         47qfHYp/WeHOyS2zvCJZwIbfzYgEL0pQv5fPzo0qc1lKCAAngkzPYctuaXa5H/CWk2xd
+         eKM2Jq2WkW91SFPraueCygjQO01pxxnAVhv6y7USTzZsHFVgpoa8k8jy2GjKKYWbyzJP
+         cF1ar47rmU6+Oc/nqz4ioMMq2Nh1SOUq2qmLP50SfsnHsgoNbC/uAcg7D+RzkqqMhaWk
+         TP7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=4B2WqvviuVIoria6yyW+igrLG0CrIUR2gBtuNcWMbWY=;
-        b=lLCa6zHjsxRgHg1Tjk5uhGN8FwTxxNFYOvBBFqbeLsEpMUkn/IMWH82e58CYirU04W
-         ZJku0wPRnV/ztMI5uMakvcpcp1xRZQFqUjvshELAjxdBlU9g/TXj5V8O1s9LE66zedlv
-         VXKpxqhlpD+Ug5WvheazH08Lkjsl5zXjva7l6cNpkoQRk8jAQXFfWD2Q7xCl4WVnSNnE
-         BRhQjOeqaaCvz0u3tFQuKrDBXZFU0YRGH9alv0OGLIwBZBdXvykUI3uCtGlULWapUp0H
-         PA+m6w0hfAFid8VA3wIbCUuwm0GiI5H/rVz6JUV57WD1NiDhjlk7wQ/f2tjfJ9AP+P+y
-         PPDw==
-X-Gm-Message-State: APjAAAUdJXn1hJKdyKxC6UNSqR9Yat9NgoR98+3nEkw/7bCMND4iqMje
-        yey4Rsb5scw9H8rkL8BHhVYUeWrSnDb5E0/RUXs=
-X-Google-Smtp-Source: APXvYqwiLTeDWlku/CgMgGakg8wO39Im1U1mYLjKGc5cZo9D+PiOhOdvkWeCN6nAASDOFa1SpyzkxSxXNNSu0ZyXbt8=
-X-Received: by 2002:a63:4b49:: with SMTP id k9mr26409444pgl.269.1580237406557;
- Tue, 28 Jan 2020 10:50:06 -0800 (PST)
-Date:   Tue, 28 Jan 2020 10:49:34 -0800
-In-Reply-To: <20200128184934.77625-1-samitolvanen@google.com>
-Message-Id: <20200128184934.77625-12-samitolvanen@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=D8ZUQ1iH7UYJdekJiQ43tyzlStAo9VsUap383J1XoBc=;
+        b=l8CenOSoHjCSiZMEVrN1KDP2LfJ9W4g0Y63EzfUqsw0oPnuBzwiOeVf3PqYBniTvSs
+         7YGD7jU5plQ8SJ+bXEHm0x18MQ+w+RjqfgkoL6WeUZC+To1AN0fGx1ZR4TXbFre/bMwa
+         zqsbnSO8YQ7Y2d0C6JTbemUsWTp/kWnSS5Zt2t06SAwBoWdlJNsXukW2z8CzA+RuvQnc
+         qjENkEj10MnNbPCxS2q1GbA1BaR/ORFA8SrPaEDeww1sB0y5OTMcHnisHcpwwu3sFQFO
+         4dSQ+o+mVuy+XGZQ0tsGP3cxCWtFZ/LQkivFebFfH2aIKhHe6o/IQEtblggsroBMewCQ
+         UVug==
+X-Gm-Message-State: APjAAAVaOuP4UqiMh2h+CV7Jq1kZbBQsEpRxLWCfJAPkstVvQPZpvQsS
+        bD/xtBunpzIkIg5+kYn8fDOnouR4lYO6YA==
+X-Google-Smtp-Source: APXvYqwMGIhNdBb1uhMfzbfgKURyoP+pBKSWsr0NxPReGsr8lCZ3ikSiKfSVKqp45vgaYbph8TlNQT/X06WtYw==
+X-Received: by 2002:a63:8f55:: with SMTP id r21mr4675275pgn.422.1580237659563;
+ Tue, 28 Jan 2020 10:54:19 -0800 (PST)
+Date:   Tue, 28 Jan 2020 10:54:13 -0800
+Message-Id: <20200128185414.158541-1-mmandlik@google.com>
 Mime-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com> <20200128184934.77625-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v7 11/11] arm64: scs: add shadow stacks for SDEI
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
+Subject: [PATCH 0/1] Bluetooth: Fix refcount use-after-free issue
+From:   Manish Mandlik <mmandlik@google.com>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Yoni Shavit <yshavit@chromium.org>,
+        linux-bluetooth@vger.kernel.org,
+        Alain Michaud <alainmichaud@google.com>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Manish Mandlik <mmandlik@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds per-CPU shadow call stacks for the SDEI handler.
-Similarly to how the kernel stacks are handled, we add separate shadow
-stacks for normal and critical events.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- arch/arm64/include/asm/scs.h |   2 +
- arch/arm64/kernel/entry.S    |  14 ++++-
- arch/arm64/kernel/scs.c      | 106 +++++++++++++++++++++++++++++------
- arch/arm64/kernel/sdei.c     |   7 +++
- 4 files changed, 112 insertions(+), 17 deletions(-)
+Hello Linux-Bluetooth,
 
-diff --git a/arch/arm64/include/asm/scs.h b/arch/arm64/include/asm/scs.h
-index c50d2b0c6c5f..8e327e14bc15 100644
---- a/arch/arm64/include/asm/scs.h
-+++ b/arch/arm64/include/asm/scs.h
-@@ -9,6 +9,7 @@
- #ifdef CONFIG_SHADOW_CALL_STACK
- 
- extern void scs_init_irq(void);
-+extern int scs_init_sdei(void);
- 
- static __always_inline void scs_save(struct task_struct *tsk)
- {
-@@ -27,6 +28,7 @@ static inline void scs_overflow_check(struct task_struct *tsk)
- #else /* CONFIG_SHADOW_CALL_STACK */
- 
- static inline void scs_init_irq(void) {}
-+static inline int scs_init_sdei(void) { return 0; }
- static inline void scs_save(struct task_struct *tsk) {}
- static inline void scs_overflow_check(struct task_struct *tsk) {}
- 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index f9370d768494..42183895fb84 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -1050,13 +1050,16 @@ ENTRY(__sdei_asm_handler)
- 
- 	mov	x19, x1
- 
-+#if defined(CONFIG_VMAP_STACK) || defined(CONFIG_SHADOW_CALL_STACK)
-+	ldrb	w4, [x19, #SDEI_EVENT_PRIORITY]
-+#endif
-+
- #ifdef CONFIG_VMAP_STACK
- 	/*
- 	 * entry.S may have been using sp as a scratch register, find whether
- 	 * this is a normal or critical event and switch to the appropriate
- 	 * stack for this CPU.
- 	 */
--	ldrb	w4, [x19, #SDEI_EVENT_PRIORITY]
- 	cbnz	w4, 1f
- 	ldr_this_cpu dst=x5, sym=sdei_stack_normal_ptr, tmp=x6
- 	b	2f
-@@ -1066,6 +1069,15 @@ ENTRY(__sdei_asm_handler)
- 	mov	sp, x5
- #endif
- 
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	/* Use a separate shadow call stack for normal and critical events */
-+	cbnz	w4, 3f
-+	ldr_this_cpu dst=x18, sym=sdei_shadow_call_stack_normal_ptr, tmp=x6
-+	b	4f
-+3:	ldr_this_cpu dst=x18, sym=sdei_shadow_call_stack_critical_ptr, tmp=x6
-+4:
-+#endif
-+
- 	/*
- 	 * We may have interrupted userspace, or a guest, or exit-from or
- 	 * return-to either of these. We can't trust sp_el0, restore it.
-diff --git a/arch/arm64/kernel/scs.c b/arch/arm64/kernel/scs.c
-index eaadf5430baa..dddb7c56518b 100644
---- a/arch/arm64/kernel/scs.c
-+++ b/arch/arm64/kernel/scs.c
-@@ -10,31 +10,105 @@
- #include <asm/pgtable.h>
- #include <asm/scs.h>
- 
--DEFINE_PER_CPU(unsigned long *, irq_shadow_call_stack_ptr);
-+#define DECLARE_SCS(name)						\
-+	DECLARE_PER_CPU(unsigned long *, name ## _ptr);			\
-+	DECLARE_PER_CPU(unsigned long [SCS_SIZE/sizeof(long)], name)
- 
--#ifndef CONFIG_SHADOW_CALL_STACK_VMAP
--DEFINE_PER_CPU(unsigned long [SCS_SIZE/sizeof(long)], irq_shadow_call_stack)
--	__aligned(SCS_SIZE);
-+#ifdef CONFIG_SHADOW_CALL_STACK_VMAP
-+#define DEFINE_SCS(name)						\
-+	DEFINE_PER_CPU(unsigned long *, name ## _ptr)
-+#else
-+/* Allocate a static per-CPU shadow stack */
-+#define DEFINE_SCS(name)						\
-+	DEFINE_PER_CPU(unsigned long *, name ## _ptr);			\
-+	DEFINE_PER_CPU(unsigned long [SCS_SIZE/sizeof(long)], name)	\
-+		__aligned(SCS_SIZE)
-+#endif /* CONFIG_SHADOW_CALL_STACK_VMAP */
-+
-+DECLARE_SCS(irq_shadow_call_stack);
-+DECLARE_SCS(sdei_shadow_call_stack_normal);
-+DECLARE_SCS(sdei_shadow_call_stack_critical);
-+
-+DEFINE_SCS(irq_shadow_call_stack);
-+#ifdef CONFIG_ARM_SDE_INTERFACE
-+DEFINE_SCS(sdei_shadow_call_stack_normal);
-+DEFINE_SCS(sdei_shadow_call_stack_critical);
- #endif
- 
-+static int scs_alloc_percpu(unsigned long * __percpu *ptr, int cpu)
-+{
-+	unsigned long *p;
-+
-+	p = __vmalloc_node_range(PAGE_SIZE, SCS_SIZE,
-+				 VMALLOC_START, VMALLOC_END,
-+				 GFP_SCS, PAGE_KERNEL,
-+				 0, cpu_to_node(cpu),
-+				 __builtin_return_address(0));
-+
-+	if (!p)
-+		return -ENOMEM;
-+	per_cpu(*ptr, cpu) = p;
-+
-+	return 0;
-+}
-+
-+static void scs_free_percpu(unsigned long * __percpu *ptr, int cpu)
-+{
-+	unsigned long *p = per_cpu(*ptr, cpu);
-+
-+	if (p) {
-+		per_cpu(*ptr, cpu) = NULL;
-+		vfree(p);
-+	}
-+}
-+
-+static void scs_free_sdei(void)
-+{
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		scs_free_percpu(&sdei_shadow_call_stack_normal_ptr, cpu);
-+		scs_free_percpu(&sdei_shadow_call_stack_critical_ptr, cpu);
-+	}
-+}
-+
- void scs_init_irq(void)
- {
- 	int cpu;
- 
- 	for_each_possible_cpu(cpu) {
--#ifdef CONFIG_SHADOW_CALL_STACK_VMAP
--		unsigned long *p;
-+		if (IS_ENABLED(CONFIG_SHADOW_CALL_STACK_VMAP))
-+			WARN_ON(scs_alloc_percpu(&irq_shadow_call_stack_ptr,
-+						 cpu));
-+		else
-+			per_cpu(irq_shadow_call_stack_ptr, cpu) =
-+				per_cpu(irq_shadow_call_stack, cpu);
-+	}
-+}
- 
--		p = __vmalloc_node_range(PAGE_SIZE, SCS_SIZE,
--					 VMALLOC_START, VMALLOC_END,
--					 GFP_SCS, PAGE_KERNEL,
--					 0, cpu_to_node(cpu),
--					 __builtin_return_address(0));
-+int scs_init_sdei(void)
-+{
-+	int cpu;
- 
--		per_cpu(irq_shadow_call_stack_ptr, cpu) = p;
--#else
--		per_cpu(irq_shadow_call_stack_ptr, cpu) =
--			per_cpu(irq_shadow_call_stack, cpu);
--#endif /* CONFIG_SHADOW_CALL_STACK_VMAP */
-+	if (!IS_ENABLED(CONFIG_ARM_SDE_INTERFACE))
-+		return 0;
-+
-+	for_each_possible_cpu(cpu) {
-+		if (IS_ENABLED(CONFIG_SHADOW_CALL_STACK_VMAP)) {
-+			if (scs_alloc_percpu(
-+				&sdei_shadow_call_stack_normal_ptr, cpu) ||
-+			    scs_alloc_percpu(
-+				&sdei_shadow_call_stack_critical_ptr, cpu)) {
-+				scs_free_sdei();
-+				return -ENOMEM;
-+			}
-+		} else {
-+			per_cpu(sdei_shadow_call_stack_normal_ptr, cpu) =
-+				per_cpu(sdei_shadow_call_stack_normal, cpu);
-+			per_cpu(sdei_shadow_call_stack_critical_ptr, cpu) =
-+				per_cpu(sdei_shadow_call_stack_critical, cpu);
-+		}
- 	}
-+
-+	return 0;
- }
-diff --git a/arch/arm64/kernel/sdei.c b/arch/arm64/kernel/sdei.c
-index d6259dac62b6..2854b9f7760a 100644
---- a/arch/arm64/kernel/sdei.c
-+++ b/arch/arm64/kernel/sdei.c
-@@ -13,6 +13,7 @@
- #include <asm/kprobes.h>
- #include <asm/mmu.h>
- #include <asm/ptrace.h>
-+#include <asm/scs.h>
- #include <asm/sections.h>
- #include <asm/stacktrace.h>
- #include <asm/sysreg.h>
-@@ -162,6 +163,12 @@ unsigned long sdei_arch_get_entry_point(int conduit)
- 			return 0;
- 	}
- 
-+	if (scs_init_sdei()) {
-+		if (IS_ENABLED(CONFIG_VMAP_STACK))
-+			free_sdei_stacks();
-+		return 0;
-+	}
-+
- 	sdei_exit_mode = (conduit == SMCCC_CONDUIT_HVC) ? SDEI_EXIT_HVC : SDEI_EXIT_SMC;
- 
- #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+   Sometimes after boot following kernel warning is observed:
+
+   [   62.793493] refcount_t: underflow; use-after-free.
+   [   62.799419] WARNING: CPU: 2 PID: 69 at /mnt/host/source/src/third_party/
+   kernel/v4.19/lib/refcount.c:187 refcount_sub_and_test_checked+0x80/0x8c
+   [   62.812298] Modules linked in: hidp rfcomm uinput hci_uart btqca
+   bluetooth ecdh_generic mtk_scp mtk_rpmsg mtk_scp_ipi rpmsg_core bridge
+   snd_seq_dummy stp llc snd_seq snd_seq_device lzo_rle lzo_compress
+   nf_nat_tftp nf_conntrack_tftp nf_nat_ftp nf_conntrack_ftp esp6 ah6
+   xfrm6_mode_tunnel xfrm6_mode_transport xfrm4_mode_tunnel
+   xfrm4_mode_transport ip6t_REJECT ip6t_ipv6header zram ipt_MASQUERADE fuse
+   ath10k_sdio ath10k_core ath mac80211 cfg80211 joydev
+   [   62.852227] CPU: 2 PID: 69 Comm: kworker/2:1 Tainted: G S    4.19.36 #344
+   [   62.860057] Hardware name: MediaTek kukui rev1 board (DT)
+   [   62.865510] Workqueue: events l2cap_chan_timeout [bluetooth]
+   [   62.871177] pstate: 60000005 (nZCv daif -PAN -UAO)
+   [   62.875973] pc : refcount_sub_and_test_checked+0x80/0x8c
+   [   62.881285] lr : refcount_sub_and_test_checked+0x7c/0x8c
+   [   62.886594] sp : ffffff8008533cc0
+   [   62.889907] x29: ffffff8008533cc0 x28: 0000000000000402
+   [   62.895227] x27: ffffffaf37f16000 x26: ffffffe33b342d80
+   [   62.900547] x25: ffffffe33aa2c210 x24: 0000000000000000
+   [   62.905867] x23: ffffffe3294ef910 x22: ffffffe3294efc68
+   [   62.911188] x21: ffffffe3294ef910 x20: ffffffe320fe3238
+   [   62.916516] x19: ffffffe3294ed000 x18: 0000464806a32cd4
+   [   62.921842] x17: 0000000000000400 x16: 0000000000000001
+   [   62.927162] x15: 0000000000000000 x14: 0000000000000001
+   [   62.932482] x13: 00000000000c001f x12: 0000000000000000
+   [   62.937802] x11: 0000000000000001 x10: 0000000000000007
+   [   62.943122] x9 : 97fe39c0a1baee00 x8 : 97fe39c0a1baee00
+   [   62.948442] x7 : ffffffaf36af114c x6 : 0000000000000000
+   [   62.953762] x5 : 0000000000000080 x4 : 0000000000000001
+   [   62.959081] x3 : ffffff8008533868 x2 : 0000000000000006
+   [   62.964401] x1 : ffffffe33b3436a0 x0 : 0000000000000000
+   [   62.969721] Call trace:
+   [   62.972176]  refcount_sub_and_test_checked+0x80/0x8c
+   [   62.977142]  refcount_dec_and_test_checked+0x14/0x20
+   [   62.982153]  l2cap_sock_kill+0x40/0x58 [bluetooth]
+   [   62.986974]  l2cap_sock_close_cb+0x1c/0x28 [bluetooth]
+   [   62.992140]  l2cap_chan_timeout+0x94/0xb4 [bluetooth]
+   [   62.997196]  process_one_work+0x330/0x65c
+   [   63.001206]  worker_thread+0x2c8/0x3ec
+   [   63.004957]  kthread+0x124/0x134
+   [   63.008197]  ret_from_fork+0x10/0x18
+   [   63.011784] irq event stamp: 50638
+   [   63.015203] hardirqs last  enabled at (50637): [<ffffffaf37404fa4>]
+   _raw_spin_unlock_irq+0x34/0x68
+   [   63.024165] hardirqs last disabled at (50638): [<ffffffaf36a80e4c>]
+   do_debug_exception+0x44/0x16c
+   [   63.033036] softirqs last  enabled at (50632): [<ffffffaf36a81634>]
+   __do_softirq+0x45c/0x4a4
+   [   63.041473] softirqs last disabled at (50613): [<ffffffaf36abcf80>]
+   irq_exit+0xd8/0xf8
+   [   63.049386] ---[ end trace 91fdf7b9eddd3bb0 ]---
+
+   After analyzing the code, we noticed that there is a race condition between
+   l2cap_chan_timeout() and l2cap_sock_release() while killing the socket.
+
+   There are few more places in l2cap code where this race condition will occur.
+   Issue is reproducible by writing a test which runs connect/disconnect of a
+   bluetooth device in loop. With the help of this test, issue is consistently
+   reproducible just within a couple of hours.
+
+   To fix this, protect teardown/sock_kill and orphan/sock_kill by adding
+   hold_lock on l2cap channel to ensure that the socket is killed only after
+   it is marked as zapped and orphan.
+
+   This change was tested by running the above test overnight and verifying that
+   issue is not observed.
+
+   There are places in sco and rfcomm code as well where similar race condition
+   may occur. We are planning to send separate patches for them as well. Please
+   let us know if this looks like a good generalized solution.
+
+Regards,
+Manish.
+
+
+Manish Mandlik (1):
+  Bluetooth: Fix refcount use-after-free issue
+
+ net/bluetooth/l2cap_core.c | 26 +++++++++++++++-----------
+ net/bluetooth/l2cap_sock.c | 16 +++++++++++++---
+ 2 files changed, 28 insertions(+), 14 deletions(-)
+
 -- 
 2.25.0.341.g760bfbb309-goog
 
