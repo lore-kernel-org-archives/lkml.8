@@ -2,72 +2,121 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75163C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1FBC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3A22469A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A2120716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222391;
-	bh=/EZ3fH8QcPNFqcjhEo4ZSfYy5je9d2qtTPI/ZMlLLC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=frDN2G5vTNaHVVXNYTb6cwKxqSSemRMoVbnov+53uEvOh5A62PCC3mzIm9md5jKNX
-	 uSs07qV66QrD5RnBzpE6v4z3n5kKwIq9D069kYXOUo4q8kv2uLyls4pWiwQ1KDPF36
-	 39iPCrrUc/LahtywOnmA6+qJVoCKLBfPEjUo8yMI=
+	s=default; t=1580222393;
+	bh=SgJWTW4n7ASg2yHjYEkALQkHjY6x8z5LrjxxF7dd860=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=apkU5DEy/y6OFRypkM5IFZ6BmZfGkmcfo1Ss+55Xb7+W07oRn9QjdxasyMJLK2J5M
+	 06D2Y3Ht2LXap9CKe/9DCWFtH/xgGNEh4hvL0sB6UetI1WFZSxKJKw7naQqZLVg8Fb
+	 I+EdgRVU2DmdJV0HiRU+/VXOgCW8xClek8OQ25U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbgA1Ojq (ORCPT
+        id S1730333AbgA1OQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:39:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40540 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:16:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727314AbgA1Ojo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:39:44 -0500
+        id S1730323AbgA1OQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:16:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEFA924688;
-        Tue, 28 Jan 2020 14:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2220021739;
+        Tue, 28 Jan 2020 14:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580222383;
-        bh=/EZ3fH8QcPNFqcjhEo4ZSfYy5je9d2qtTPI/ZMlLLC8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F+PwbUdQjuY+gFimVStbq1Y275PFsUiRMMQ9XZUgZkTeCOZsJxLpyZTw1oUQStfMK
-         OJNnzdoxGeEf16mOI1QgRMPNSGDEdl4EgO2zXnuR0/Wb0i+c/8gN6DPxkq9t/UKG/g
-         bR98NZQezTWSz4Ii7yHHf2ZUNKXXLgBHh+i9V8oc=
-Date:   Tue, 28 Jan 2020 15:39:40 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mircea Caprioru <mircea.caprioru@analog.com>
-Cc:     jic23@kernel.org, Michael.Hennerich@analog.com,
-        alexandru.ardelean@analog.com, lars@metafoo.de,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7124: Add direct reg access
-Message-ID: <20200128143940.GA3340676@kroah.com>
-References: <20200128142549.1370-1-mircea.caprioru@analog.com>
+        s=default; t=1580220992;
+        bh=SgJWTW4n7ASg2yHjYEkALQkHjY6x8z5LrjxxF7dd860=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zhYcfPJRX+7Lfye1XwMqlRKaXBk56BKCWkYK1a3eia7ysSqHM0/kZOhLJEvOsfu++
+         aXxR9Q0ww03N+UkZ9wSN6BpVevN58POv4FpOK2471AMTFeBk0Xp086g2dTNGXI0sUy
+         n2LZZKCAeDReh0HvHFSCjANOkFT0y+5Xfz4o3Cf8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 046/271] IB/iser: Pass the correct number of entries for dma mapped SGL
+Date:   Tue, 28 Jan 2020 15:03:15 +0100
+Message-Id: <20200128135856.072520674@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
+References: <20200128135852.449088278@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128142549.1370-1-mircea.caprioru@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 04:25:49PM +0200, Mircea Caprioru wrote:
-> From: Mircea <mircea.caprioru@analog.com>
-> 
-> This patch adds the posibility do read and write registers from userspace
-> using the kernel debug direct register access option.
-> 
-> Signed-off-by: Mircea <mircea.caprioru@analog.com>
+From: Israel Rukshin <israelr@mellanox.com>
 
-We need a "full" name here, like your "from:" line in your email says.
+[ Upstream commit 57b26497fabe1b9379b59fbc7e35e608e114df16 ]
 
-Please fix up and resend.
+ib_dma_map_sg() augments the SGL into a 'dma mapped SGL'. This process may
+change the number of entries and the lengths of each entry.
 
-thanks,
+Code that touches dma_address is iterating over the 'dma mapped SGL' and
+must use dma_nents which returned from ib_dma_map_sg().
 
-greg k-h
+ib_sg_to_pages() and ib_map_mr_sg() are using dma_address so they must use
+dma_nents.
+
+Fixes: 39405885005a ("IB/iser: Port to new fast registration API")
+Fixes: bfe066e256d5 ("IB/iser: Reuse ib_sg_to_pages")
+Signed-off-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Acked-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/ulp/iser/iser_memory.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/infiniband/ulp/iser/iser_memory.c b/drivers/infiniband/ulp/iser/iser_memory.c
+index 9c3e9ab53a415..759c2fe033e71 100644
+--- a/drivers/infiniband/ulp/iser/iser_memory.c
++++ b/drivers/infiniband/ulp/iser/iser_memory.c
+@@ -240,8 +240,8 @@ int iser_fast_reg_fmr(struct iscsi_iser_task *iser_task,
+ 	page_vec->npages = 0;
+ 	page_vec->fake_mr.page_size = SIZE_4K;
+ 	plen = ib_sg_to_pages(&page_vec->fake_mr, mem->sg,
+-			      mem->size, NULL, iser_set_page);
+-	if (unlikely(plen < mem->size)) {
++			      mem->dma_nents, NULL, iser_set_page);
++	if (unlikely(plen < mem->dma_nents)) {
+ 		iser_err("page vec too short to hold this SG\n");
+ 		iser_data_buf_dump(mem, device->ib_device);
+ 		iser_dump_page_vec(page_vec);
+@@ -450,10 +450,10 @@ static int iser_fast_reg_mr(struct iscsi_iser_task *iser_task,
+ 
+ 	ib_update_fast_reg_key(mr, ib_inc_rkey(mr->rkey));
+ 
+-	n = ib_map_mr_sg(mr, mem->sg, mem->size, NULL, SIZE_4K);
+-	if (unlikely(n != mem->size)) {
++	n = ib_map_mr_sg(mr, mem->sg, mem->dma_nents, NULL, SIZE_4K);
++	if (unlikely(n != mem->dma_nents)) {
+ 		iser_err("failed to map sg (%d/%d)\n",
+-			 n, mem->size);
++			 n, mem->dma_nents);
+ 		return n < 0 ? n : -EINVAL;
+ 	}
+ 
+-- 
+2.20.1
+
+
+
