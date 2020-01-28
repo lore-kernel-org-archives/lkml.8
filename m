@@ -2,133 +2,298 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F334FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A970C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10BD22522
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D0E2468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580220413;
+	bh=V2hyUtKtmBpeEvnFIAn2SdN6aD677gTdSswgSIWPcvM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xtFLDxrcLlrCJXagpb9kxoqupZNHSL3ovH+LWjZ/w0TGO8ypb+dwx/mddAT4FjhQJ
+	 MlSBA0Ws+NNIg5tVkAyQPwbphb3HXMtbEAp244GhRTxvpFrIO2ZyMf3vD/bYcLicif
+	 dR6Cw8llDv7OrnmcKJC/3rLpOkRTtBaYulwDuOrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgA1OGq (ORCPT
+        id S1728017AbgA1OEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:06:46 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2316 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728060AbgA1OEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:04:23 -0500
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 3EA43D9489E734582F3A;
-        Tue, 28 Jan 2020 14:04:21 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Jan 2020 14:04:20 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jan
- 2020 14:04:20 +0000
-Subject: Re: [PATCH RFC 1/2] ACPI/PPTT: Add acpi_pptt_get_package_info() API
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     <rjw@rjwysocki.net>, <lenb@kernel.org>, <jeremy.linton@arm.com>,
-        <arnd@arndb.de>, <olof@lixom.net>, <linux-kernel@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <guohanjun@huawei.com>,
-        <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        wanghuiqiang <wanghuiqiang@huawei.com>
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <1580210059-199540-2-git-send-email-john.garry@huawei.com>
- <20200128123415.GB36168@bogus>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <60c79aaa-4c49-71b1-11be-8e41a6bf3c1d@huawei.com>
-Date:   Tue, 28 Jan 2020 14:04:19 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 28 Jan 2020 09:04:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727240AbgA1OEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:04:05 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E58FC205F4;
+        Tue, 28 Jan 2020 14:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580220244;
+        bh=V2hyUtKtmBpeEvnFIAn2SdN6aD677gTdSswgSIWPcvM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p3MUxM7ZtJ7cdfvocdMrbf1tD2bxPpMNGC0u38io1xANeL4C+/dlxSlKE7MWO3Pai
+         gJG3Bja0Qz+K/j+F5FmWChD+OLrK/lixokCVUks81ePTUNyosSckwfYj8vpjzjsnIr
+         FRiyMcD8MgOD93/QLVLrhYpNsQVNtkRLojiiHOis=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 5.4 073/104] readdir: make user_access_begin() use the real access range
+Date:   Tue, 28 Jan 2020 15:00:34 +0100
+Message-Id: <20200128135827.387564443@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
+References: <20200128135817.238524998@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200128123415.GB36168@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/01/2020 12:34, Sudeep Holla wrote:
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-Hi Sudeep,
+commit 3c2659bd1db81ed6a264a9fc6262d51667d655ad upstream.
 
-> On Tue, Jan 28, 2020 at 07:14:18PM +0800, John Garry wrote:
->> The ACPI PPTT ID structure (see 6.2 spec, section 5.2.29.3) allows the
->> vendor to provide an identifier (or vendor specific part number) for a
->> particular processor hierarchy node structure. That may be a processor
->> identifier for a processor node, or some chip identifier for a processor
->> package node.
->>
-> 
-> Unfortunately, there were plans to deprecate this in favour of the new
-> SOC_ID SMCCC API[1]. I am not sure if you or anyone in your company have
-> access to UEFI ASWG mantis where you can look for the ECR for the PPTT
-> Type 2 deprecation.
+In commit 9f79b78ef744 ("Convert filldir[64]() from __put_user() to
+unsafe_put_user()") I changed filldir to not do individual __put_user()
+accesses, but instead use unsafe_put_user() surrounded by the proper
+user_access_begin/end() pair.
 
-I wasn't aware and I can't get access...
+That make them enormously faster on modern x86, where the STAC/CLAC
+games make individual user accesses fairly heavy-weight.
 
-Personally I would rather PPTT ID structure have a fixed field 
-definition in future spec versions, rather than deprecate.
+However, the user_access_begin() range was not really the exact right
+one, since filldir() has the unfortunate problem that it needs to not
+only fill out the new directory entry, it also needs to fix up the
+previous one to contain the proper file offset.
 
- From checking here, nobody has even used it (properly) for processor 
-package nodes:
-https://github.com/tianocore/edk2-platforms/tree/master/Platform
+It's unfortunate, but the "d_off" field in "struct dirent" is _not_ the
+file offset of the directory entry itself - it's the offset of the next
+one.  So we end up backfilling the offset in the previous entry as we
+walk along.
 
-  I understand it's not ideal, but we need to converge,
-> please take a look at both before further discussion.
+But since x86 didn't really care about the exact range, and used to be
+the only architecture that did anything fancy in user_access_begin() to
+begin with, the filldir[64]() changes did something lazy, and even
+commented on it:
 
-I can only check the SMCCC extension which you pointed me at.
+	/*
+	 * Note! This range-checks 'previous' (which may be NULL).
+	 * The real range was checked in getdents
+	 */
+	if (!user_access_begin(dirent, sizeof(*dirent)))
+		goto efault;
 
-> 
-> I personally would not prefer to add the support when I know it is getting
-> deprecated. I am not sure on kernel community policy on the same.
+and it all worked fine.
 
-So I need a generic solution for this, as my userspace tool requires a 
-generic solution.
+But now 32-bit ppc is starting to also implement user_access_begin(),
+and the fact that we faked the range to only be the (possibly not even
+valid) previous directory entry becomes a problem, because ppc32 will
+actually be using the range that is passed in for more than just "check
+that it's user space".
 
-> 
-> 
-> [...]
-> 
->>
->> The ID structure table has a number of fields, which are left open to
->> interpretation per implementation. However the spec does provide reference
->> examples of how the fields could be used. As such, just provide the
->> table fields directly in the API, which the caller may interpret (probably
->> as per spec example).
->>
-> 
-> The "open for interpretation" part is why it's not being favoured anymore
-> by silicon vendors as OEM/ODMs can override the same.
-> 
->> https://lore.kernel.org/linux-arm-kernel/1579876505-113251-6-git-send-email-john.garry@huawei.com/
->>
-> Ah, there's already quite a lot of dependency built for this feature :(
+This is a complete rewrite of Christophe's original patch.
 
-Not really. It's only an RFC ATM, and my requirement is a sysfs file to 
-read the SoC id(s) (under ACPI FW). So I would still expect to be able 
-to support this from the SMCCC extension method.
+By saving off the record length of the previous entry instead of a
+pointer to it in the filldir data structures, we can simplify the range
+check and the writing of the previous entry d_off field.  No need for
+any conditionals in the user accesses themselves, although we retain the
+conditional EINTR checking for the "was this the first directory entry"
+signal handling latency logic.
 
-> 
-> --
-> Regards,
-> Sudeep
-> 
-> [1] https://developer.arm.com/docs/den0028/c
-> .
-> 
+Fixes: 9f79b78ef744 ("Convert filldir[64]() from __put_user() to unsafe_put_user()")
+Link: https://lore.kernel.org/lkml/a02d3426f93f7eb04960a4d9140902d278cab0bb.1579697910.git.christophe.leroy@c-s.fr/
+Link: https://lore.kernel.org/lkml/408c90c4068b00ea8f1c41cca45b84ec23d4946b.1579783936.git.christophe.leroy@c-s.fr/
+Reported-and-tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cheers,
-John
+---
+ fs/readdir.c |   73 ++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 35 insertions(+), 38 deletions(-)
+
+--- a/fs/readdir.c
++++ b/fs/readdir.c
+@@ -206,7 +206,7 @@ struct linux_dirent {
+ struct getdents_callback {
+ 	struct dir_context ctx;
+ 	struct linux_dirent __user * current_dir;
+-	struct linux_dirent __user * previous;
++	int prev_reclen;
+ 	int count;
+ 	int error;
+ };
+@@ -214,12 +214,13 @@ struct getdents_callback {
+ static int filldir(struct dir_context *ctx, const char *name, int namlen,
+ 		   loff_t offset, u64 ino, unsigned int d_type)
+ {
+-	struct linux_dirent __user * dirent;
++	struct linux_dirent __user *dirent, *prev;
+ 	struct getdents_callback *buf =
+ 		container_of(ctx, struct getdents_callback, ctx);
+ 	unsigned long d_ino;
+ 	int reclen = ALIGN(offsetof(struct linux_dirent, d_name) + namlen + 2,
+ 		sizeof(long));
++	int prev_reclen;
+ 
+ 	buf->error = verify_dirent_name(name, namlen);
+ 	if (unlikely(buf->error))
+@@ -232,28 +233,24 @@ static int filldir(struct dir_context *c
+ 		buf->error = -EOVERFLOW;
+ 		return -EOVERFLOW;
+ 	}
+-	dirent = buf->previous;
+-	if (dirent && signal_pending(current))
++	prev_reclen = buf->prev_reclen;
++	if (prev_reclen && signal_pending(current))
+ 		return -EINTR;
+-
+-	/*
+-	 * Note! This range-checks 'previous' (which may be NULL).
+-	 * The real range was checked in getdents
+-	 */
+-	if (!user_access_begin(dirent, sizeof(*dirent)))
+-		goto efault;
+-	if (dirent)
+-		unsafe_put_user(offset, &dirent->d_off, efault_end);
+ 	dirent = buf->current_dir;
++	prev = (void __user *) dirent - prev_reclen;
++	if (!user_access_begin(prev, reclen + prev_reclen))
++		goto efault;
++
++	/* This might be 'dirent->d_off', but if so it will get overwritten */
++	unsafe_put_user(offset, &prev->d_off, efault_end);
+ 	unsafe_put_user(d_ino, &dirent->d_ino, efault_end);
+ 	unsafe_put_user(reclen, &dirent->d_reclen, efault_end);
+ 	unsafe_put_user(d_type, (char __user *) dirent + reclen - 1, efault_end);
+ 	unsafe_copy_dirent_name(dirent->d_name, name, namlen, efault_end);
+ 	user_access_end();
+ 
+-	buf->previous = dirent;
+-	dirent = (void __user *)dirent + reclen;
+-	buf->current_dir = dirent;
++	buf->current_dir = (void __user *)dirent + reclen;
++	buf->prev_reclen = reclen;
+ 	buf->count -= reclen;
+ 	return 0;
+ efault_end:
+@@ -267,7 +264,6 @@ SYSCALL_DEFINE3(getdents, unsigned int,
+ 		struct linux_dirent __user *, dirent, unsigned int, count)
+ {
+ 	struct fd f;
+-	struct linux_dirent __user * lastdirent;
+ 	struct getdents_callback buf = {
+ 		.ctx.actor = filldir,
+ 		.count = count,
+@@ -285,8 +281,10 @@ SYSCALL_DEFINE3(getdents, unsigned int,
+ 	error = iterate_dir(f.file, &buf.ctx);
+ 	if (error >= 0)
+ 		error = buf.error;
+-	lastdirent = buf.previous;
+-	if (lastdirent) {
++	if (buf.prev_reclen) {
++		struct linux_dirent __user * lastdirent;
++		lastdirent = (void __user *)buf.current_dir - buf.prev_reclen;
++
+ 		if (put_user(buf.ctx.pos, &lastdirent->d_off))
+ 			error = -EFAULT;
+ 		else
+@@ -299,7 +297,7 @@ SYSCALL_DEFINE3(getdents, unsigned int,
+ struct getdents_callback64 {
+ 	struct dir_context ctx;
+ 	struct linux_dirent64 __user * current_dir;
+-	struct linux_dirent64 __user * previous;
++	int prev_reclen;
+ 	int count;
+ 	int error;
+ };
+@@ -307,11 +305,12 @@ struct getdents_callback64 {
+ static int filldir64(struct dir_context *ctx, const char *name, int namlen,
+ 		     loff_t offset, u64 ino, unsigned int d_type)
+ {
+-	struct linux_dirent64 __user *dirent;
++	struct linux_dirent64 __user *dirent, *prev;
+ 	struct getdents_callback64 *buf =
+ 		container_of(ctx, struct getdents_callback64, ctx);
+ 	int reclen = ALIGN(offsetof(struct linux_dirent64, d_name) + namlen + 1,
+ 		sizeof(u64));
++	int prev_reclen;
+ 
+ 	buf->error = verify_dirent_name(name, namlen);
+ 	if (unlikely(buf->error))
+@@ -319,30 +318,27 @@ static int filldir64(struct dir_context
+ 	buf->error = -EINVAL;	/* only used if we fail.. */
+ 	if (reclen > buf->count)
+ 		return -EINVAL;
+-	dirent = buf->previous;
+-	if (dirent && signal_pending(current))
++	prev_reclen = buf->prev_reclen;
++	if (prev_reclen && signal_pending(current))
+ 		return -EINTR;
+-
+-	/*
+-	 * Note! This range-checks 'previous' (which may be NULL).
+-	 * The real range was checked in getdents
+-	 */
+-	if (!user_access_begin(dirent, sizeof(*dirent)))
+-		goto efault;
+-	if (dirent)
+-		unsafe_put_user(offset, &dirent->d_off, efault_end);
+ 	dirent = buf->current_dir;
++	prev = (void __user *)dirent - prev_reclen;
++	if (!user_access_begin(prev, reclen + prev_reclen))
++		goto efault;
++
++	/* This might be 'dirent->d_off', but if so it will get overwritten */
++	unsafe_put_user(offset, &prev->d_off, efault_end);
+ 	unsafe_put_user(ino, &dirent->d_ino, efault_end);
+ 	unsafe_put_user(reclen, &dirent->d_reclen, efault_end);
+ 	unsafe_put_user(d_type, &dirent->d_type, efault_end);
+ 	unsafe_copy_dirent_name(dirent->d_name, name, namlen, efault_end);
+ 	user_access_end();
+ 
+-	buf->previous = dirent;
+-	dirent = (void __user *)dirent + reclen;
+-	buf->current_dir = dirent;
++	buf->prev_reclen = reclen;
++	buf->current_dir = (void __user *)dirent + reclen;
+ 	buf->count -= reclen;
+ 	return 0;
++
+ efault_end:
+ 	user_access_end();
+ efault:
+@@ -354,7 +350,6 @@ int ksys_getdents64(unsigned int fd, str
+ 		    unsigned int count)
+ {
+ 	struct fd f;
+-	struct linux_dirent64 __user * lastdirent;
+ 	struct getdents_callback64 buf = {
+ 		.ctx.actor = filldir64,
+ 		.count = count,
+@@ -372,9 +367,11 @@ int ksys_getdents64(unsigned int fd, str
+ 	error = iterate_dir(f.file, &buf.ctx);
+ 	if (error >= 0)
+ 		error = buf.error;
+-	lastdirent = buf.previous;
+-	if (lastdirent) {
++	if (buf.prev_reclen) {
++		struct linux_dirent64 __user * lastdirent;
+ 		typeof(lastdirent->d_off) d_off = buf.ctx.pos;
++
++		lastdirent = (void __user *) buf.current_dir - buf.prev_reclen;
+ 		if (__put_user(d_off, &lastdirent->d_off))
+ 			error = -EFAULT;
+ 		else
+
 
