@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCCBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750B4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197D924681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E8624681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220960;
-	bh=1AE2Z7je6fHaZKtxxnoogY/Y797SKVl8mnTWazMwgy4=;
+	s=default; t=1580220963;
+	bh=Tmkx2iMyfBzMDsHXzxoDgDwJzf6OhDsj9P7OB2cIr4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SudpWtyKJ+sPHrPCEyddO279zZV/GCB7UMy0DD3pJWT6ed89zzGXdy0S62VkLi69v
-	 Dense/0TluiDGldM4RwLak8OX12QZ12OROXgV0xTgqnIlY8AJfkM4TpT97Zkt9RjVB
-	 y2FkJYJIwlez1FpwCE5S15aZYf0HFy3mrAYNRt6g=
+	b=XO5GsrWD6Q/54IZ1kGPysgV4l3LYzlb0KNep5rJx2hFwoOMZg2aFebyfsO2Ox6ftP
+	 +5OC/71vhOuA9lLDy2BgoQLGC8HKBdod3qZvffV5caa2/2uqtnM2fsumY0QagjS94c
+	 w4Bv244lGwVI6upZ22+nJjeEyyn4et8j37gaSsOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgA1OP7 (ORCPT
+        id S1730235AbgA1OQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:15:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:16:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729139AbgA1OPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:15:55 -0500
+        id S1729232AbgA1OP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:15:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C215C2070E;
-        Tue, 28 Jan 2020 14:15:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30BF824681;
+        Tue, 28 Jan 2020 14:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220955;
-        bh=1AE2Z7je6fHaZKtxxnoogY/Y797SKVl8mnTWazMwgy4=;
+        s=default; t=1580220957;
+        bh=Tmkx2iMyfBzMDsHXzxoDgDwJzf6OhDsj9P7OB2cIr4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hz8kvzctVkbJaa1E7C2grOYAYCeYsoBuGSSY6YkcpRmUxNV94JyPZ2PjjUH4LjJiC
-         JnxgrjzXPrSwwd7IB+4ap/M6eQEaueY0blCmZc6kN0sPQpyxm/57ChM462rnsT32WF
-         R0fgrpzXaygo93OuNIE2SRodwc9ZKQi78UCJ9pDk=
+        b=iGdQYl7ngzi+6o5QW2ZII4yba9EqTHR+sivQAVYFPfIpUzjvBkVx444p3YNEP/ikk
+         3eYk9Z7Jok3mz0XHWVXUUrfwCGHRreISqKp+Oy2+VUSxn3ST14Qr1O4cKVjqsw0GoU
+         patMw2sVc/lvf2p730XaBlK6bgY8GSB/tKpD8m4U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 005/271] drm/virtio: fix bounds check in virtio_gpu_cmd_get_capset()
-Date:   Tue, 28 Jan 2020 15:02:34 +0100
-Message-Id: <20200128135852.781358442@linuxfoundation.org>
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 006/271] ALSA: hda: fix unused variable warning
+Date:   Tue, 28 Jan 2020 15:02:35 +0100
+Message-Id: <20200128135852.850786903@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,53 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit 09c4b49457434fa74749ad6194ef28464d9f5df9 ]
+[ Upstream commit 5b03006d5c58ddd31caf542eef4d0269bcf265b3 ]
 
-This doesn't affect runtime because in the current code "idx" is always
-valid.
+When CONFIG_X86=n function azx_snoop doesn't use the variable chip it
+only returns true.
 
-First, we read from "vgdev->capsets[idx].max_size" before checking
-whether "idx" is within bounds.  And secondly the bounds check is off by
-one so we could end up reading one element beyond the end of the
-vgdev->capsets[] array.
+sound/pci/hda/hda_intel.c: In function ‘dma_alloc_pages’:
+sound/pci/hda/hda_intel.c:2002:14: warning: unused variable ‘chip’ [-Wunused-variable]
+  struct azx *chip = bus_to_azx(bus);
+              ^~~~
 
-Fixes: 62fb7a5e1096 ("virtio-gpu: add 3d/virgl support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20180704094250.m7sgvvzg3dhcvv3h@kili.mountain
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Create a inline function of azx_snoop.
+
+Fixes: a41d122449be ("ALSA: hda - Embed bus into controller object")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_vq.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/pci/hda/hda_controller.h | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index a1b3ea1ccb65b..772a5a3b0ce1a 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -681,11 +681,11 @@ int virtio_gpu_cmd_get_capset(struct virtio_gpu_device *vgdev,
- {
- 	struct virtio_gpu_get_capset *cmd_p;
- 	struct virtio_gpu_vbuffer *vbuf;
--	int max_size = vgdev->capsets[idx].max_size;
-+	int max_size;
- 	struct virtio_gpu_drv_cap_cache *cache_ent;
- 	void *resp_buf;
+diff --git a/sound/pci/hda/hda_controller.h b/sound/pci/hda/hda_controller.h
+index b83feecf1e40c..8f93869982703 100644
+--- a/sound/pci/hda/hda_controller.h
++++ b/sound/pci/hda/hda_controller.h
+@@ -171,11 +171,10 @@ struct azx {
+ #define azx_bus(chip)	(&(chip)->bus.core)
+ #define bus_to_azx(_bus)	container_of(_bus, struct azx, bus.core)
  
--	if (idx > vgdev->num_capsets)
-+	if (idx >= vgdev->num_capsets)
- 		return -EINVAL;
+-#ifdef CONFIG_X86
+-#define azx_snoop(chip)		((chip)->snoop)
+-#else
+-#define azx_snoop(chip)		true
+-#endif
++static inline bool azx_snoop(struct azx *chip)
++{
++	return !IS_ENABLED(CONFIG_X86) || chip->snoop;
++}
  
- 	if (version > vgdev->capsets[idx].max_version)
-@@ -695,6 +695,7 @@ int virtio_gpu_cmd_get_capset(struct virtio_gpu_device *vgdev,
- 	if (!cache_ent)
- 		return -ENOMEM;
- 
-+	max_size = vgdev->capsets[idx].max_size;
- 	cache_ent->caps_cache = kmalloc(max_size, GFP_KERNEL);
- 	if (!cache_ent->caps_cache) {
- 		kfree(cache_ent);
+ /*
+  * macros for easy use
 -- 
 2.20.1
 
