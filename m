@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2E2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB691C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9CB24685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A492468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220633;
-	bh=64tjRuPo32NZZurslVMyoDVjsRyc8RxmUOy72LQs6fE=;
+	s=default; t=1580220634;
+	bh=yWx+SyF8JNDr/KrEqZhljwIs9PAmmvfLfKF+FNV5/Gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KxTh5jgsYWHXvTXN6EtKLwfcrCqR+gT/Ue8XRAglUo03EFi4yVSMH+aYJgmLYtQNG
-	 /wV/FhAJdYGnPhRhSvOkmsolMA6d8fR8/BZWl3VeFCwupvDlnvRH3zUyi9Aqb4yNnl
-	 3RvG0TaMCrEPiWlgeQL88jTiyy7mFNuJlnFyNboQ=
+	b=ZBGC+ZuKpKKETA55JgMwUZjD+jmHLnDrbPE743wPUKrVkLn1M4nrPFzAbStiX4GQ/
+	 eiET+rbn3G9BMEWflFfztkXYs7IygRMpVcU7banTBSUZSBJ/HMCBEgkqPfc1nteqTr
+	 SDsh8OTJbW/cr1RJB64IQvVnLOyMWHJeg1t+U4mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbgA1OKc (ORCPT
+        id S1729162AbgA1OKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:10:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59344 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:10:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729151AbgA1OK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:10:29 -0500
+        id S1727923AbgA1OK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:10:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F236824685;
-        Tue, 28 Jan 2020 14:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7818522522;
+        Tue, 28 Jan 2020 14:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220629;
-        bh=64tjRuPo32NZZurslVMyoDVjsRyc8RxmUOy72LQs6fE=;
+        s=default; t=1580220626;
+        bh=yWx+SyF8JNDr/KrEqZhljwIs9PAmmvfLfKF+FNV5/Gk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z2dCgyrHIL+kjVwRX/ZDd0mWZbbp0RS11Q5OS8q7PIwnt0wQuy3MR2RT7mWRltxTL
-         TQJI6tK1OuhBiwer9q609kVSaWlQiy1aN0Idns9WykY9qyXw2gjRdoT6kckiyZuGwz
-         QXouOvtjJxGzRaMJIrQVDvo2syxEzZWj5XyA6l/E=
+        b=hB/pJ8aj1sbCkAP2Ktj6isP3jdgBFRAecl4RNqacfRuJPm+bkVLiMu8k2G55X9qcL
+         8BQYJ6I+ZkFTHrmHy9odFXkuCp7OuvHT67cBqSyaSj+epcjzoDzVCnS9s8vXp35oUk
+         Lb7C8bm6R3QIyXUTPgHTvuNvtdoI0dEgG3k1jyVw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, David Laight <David.Laight@aculab.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 084/183] ASoC: fix valid stream condition
-Date:   Tue, 28 Jan 2020 15:05:03 +0100
-Message-Id: <20200128135838.343775756@linuxfoundation.org>
+Subject: [PATCH 4.4 083/183] packet: in recvmsg msg_name return at least sizeof sockaddr_ll
+Date:   Tue, 28 Jan 2020 15:05:02 +0100
+Message-Id: <20200128135838.223490325@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,38 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 6a7c59c6d9f3b280e81d7a04bbe4e55e90152dce ]
+[ Upstream commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c ]
 
-A stream may specify a rate range using 'rate_min' and 'rate_max', so a
-stream may be valid and not specify any rates. However, as stream cannot
-be valid and not have any channel. Let's use this condition instead to
-determine if a stream is valid or not.
+Packet send checks that msg_name is at least sizeof sockaddr_ll.
+Packet recv must return at least this length, so that its output
+can be passed unmodified to packet send.
 
-Fixes: cde79035c6cf ("ASoC: Handle multiple codecs with split playback / capture")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This ceased to be true since adding support for lladdr longer than
+sll_addr. Since, the return value uses true address length.
+
+Always return at least sizeof sockaddr_ll, even if address length
+is shorter. Zero the padding bytes.
+
+Change v1->v2: do not overwrite zeroed padding again. use copy_len.
+
+Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
+Suggested-by: David Laight <David.Laight@aculab.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/packet/af_packet.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 78813057167d7..dbdea1975f90c 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -48,8 +48,8 @@ static bool snd_soc_dai_stream_valid(struct snd_soc_dai *dai, int stream)
- 	else
- 		codec_stream = &dai->driver->capture;
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 8b277658905f7..9de7e3e6edd30 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3309,20 +3309,29 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 	sock_recv_ts_and_drops(msg, sk, skb);
  
--	/* If the codec specifies any rate at all, it supports the stream. */
--	return codec_stream->rates;
-+	/* If the codec specifies any channels at all, it supports the stream */
-+	return codec_stream->channels_min;
- }
+ 	if (msg->msg_name) {
++		int copy_len;
++
+ 		/* If the address length field is there to be filled
+ 		 * in, we fill it in now.
+ 		 */
+ 		if (sock->type == SOCK_PACKET) {
+ 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
+ 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
++			copy_len = msg->msg_namelen;
+ 		} else {
+ 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
  
- /**
+ 			msg->msg_namelen = sll->sll_halen +
+ 				offsetof(struct sockaddr_ll, sll_addr);
++			copy_len = msg->msg_namelen;
++			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
++				memset(msg->msg_name +
++				       offsetof(struct sockaddr_ll, sll_addr),
++				       0, sizeof(sll->sll_addr));
++				msg->msg_namelen = sizeof(struct sockaddr_ll);
++			}
+ 		}
+-		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
+-		       msg->msg_namelen);
++		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
+ 	}
+ 
+ 	if (pkt_sk(sk)->auxdata) {
 -- 
 2.20.1
 
