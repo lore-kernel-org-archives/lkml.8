@@ -2,100 +2,80 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6301C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DC6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB5920716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222064;
-	bh=6k/RjgHS/mjwmTDdfUv3W8+OAbT0TmR5iHWMt2mOk7A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eu2Fb3NTcpHWG5pgw5/DtgBzPmDWT/w4TR6cTQf/xCloXNIHso3GHYEzmBrJQw59I
-	 zmex0uAXWotonwkcab080fyC4kNtP8HUsse8XLnH6XowQ972400sro4o8JW2zH8b7W
-	 1NOGrq5BlXIgNarApIR2eGh7TSpnxD9J8cqBElnA=
+	by mail.kernel.org (Postfix) with ESMTP id 087E620716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733284AbgA1OeX (ORCPT
+        id S2387411AbgA1Oeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:34:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50768 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:34:31 -0500
+Received: from mga04.intel.com ([192.55.52.120]:32996 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729604AbgA1OYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:24:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D471724686;
-        Tue, 28 Jan 2020 14:24:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221450;
-        bh=6k/RjgHS/mjwmTDdfUv3W8+OAbT0TmR5iHWMt2mOk7A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=co8iWEiVftwF23Bnv7LEx1S0xELYJHzELr6Jo9rglEj6MaXxjiqeXk2TwmOj40c4L
-         wEtEdF2sY6Ny7kvRvJDIxzeui+SF70vONHjTRUrro5QYB7JhfxofPM3tb8CJK64Nqk
-         FzZG1v67+iKXKFm/I+mD07K/uDrUUbcYd9m8fLDQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 192/271] x86, perf: Fix the dependency of the x86 insn decoder selftest
-Date:   Tue, 28 Jan 2020 15:05:41 +0100
-Message-Id: <20200128135906.873980222@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
-References: <20200128135852.449088278@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1733177AbgA1Oe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:34:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 06:34:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,374,1574150400"; 
+   d="scan'208";a="401673803"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 28 Jan 2020 06:34:27 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 89BF513F; Tue, 28 Jan 2020 16:34:26 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] MAINTAINERS: Sort entries in database for VSPRINTF
+Date:   Tue, 28 Jan 2020 16:34:25 +0200
+Message-Id: <20200128143425.47283-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+Run parse-maintainers.pl and choose VSPRINTF record. Fix it accordingly.
 
-[ Upstream commit 7720804a2ae46c90265a32c81c45fb6f8d2f4e8b ]
-
-Since x86 instruction decoder is not only for kprobes,
-it should be tested when the insn.c is compiled.
-(e.g. perf is enabled but kprobes is disabled)
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: cbe5c34c8c1f ("x86: Compile insn.c and inat.c only for KPROBES")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/Kconfig.debug | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ MAINTAINERS | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index 4386440fe4635..f09a192260f8e 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -192,7 +192,7 @@ config HAVE_MMIOTRACE_SUPPORT
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 211043d91cd0..4791757ba1ef 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17932,11 +17932,11 @@ M:	Steven Rostedt <rostedt@goodmis.org>
+ M:	Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+ R:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+ R:	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk.git
+ S:	Maintained
+-F:	lib/vsprintf.c
+-F:	lib/test_printf.c
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk.git
+ F:	Documentation/core-api/printk-formats.rst
++F:	lib/test_printf.c
++F:	lib/vsprintf.c
  
- config X86_DECODER_SELFTEST
- 	bool "x86 instruction decoder selftest"
--	depends on DEBUG_KERNEL && KPROBES
-+	depends on DEBUG_KERNEL && INSTRUCTION_DECODER
- 	depends on !COMPILE_TEST
- 	---help---
- 	 Perform x86 instruction decoder selftests at build time.
+ VT1211 HARDWARE MONITOR DRIVER
+ M:	Juerg Haefliger <juergh@gmail.com>
 -- 
-2.20.1
-
-
+2.24.1
 
