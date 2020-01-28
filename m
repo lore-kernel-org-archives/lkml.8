@@ -2,228 +2,217 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C61C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12D4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697BE2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:38:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yiq790IC"
+	by mail.kernel.org (Postfix) with ESMTP id 8FE6521739
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgA1WiS (ORCPT
+        id S1726422AbgA1Wjs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 17:38:18 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:45308 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgA1WiR (ORCPT
+        Tue, 28 Jan 2020 17:39:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50122 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgA1Wjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 17:38:17 -0500
-Received: by mail-yb1-f195.google.com with SMTP id x191so7700656ybg.12;
-        Tue, 28 Jan 2020 14:38:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O7xmyb6jnfc9R0rnlYaXfp6JweLB2qZ0tv8ttYlZWaI=;
-        b=Yiq790ICVfflbmBDXCHx7fAc4AXn7gZOQVxxmPvSETYiqpIwJtHoKtOKJlBzGQbZh+
-         nAbVVlXW1/Z0b7Kx62QM+jtfZK2b7wUakUhAdUO8Ju/6yCHPcyXJZjHOG/m1e54jRMey
-         1zYzpfmk+OGJu7s7j8ZaZhPG43HaTm7OIHxWmpk8TgFS87M3Q/fZC6Y01tl5ncpBUylv
-         SB77DxrvstsPY4ViOGEWJuk9ar6DhlHzaYq1fjp5Sc5coxdJ1zMOe2neDes3IePiv21z
-         5f7zXxdoOCa76fG/0wqoThEj4AECpPSwcELceem0wvvPJEesO0Tyo2ctPIKOaZSRSaja
-         0n1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O7xmyb6jnfc9R0rnlYaXfp6JweLB2qZ0tv8ttYlZWaI=;
-        b=NPKIPD2NjAdLAFed8ZKGDcfM+qccGQJRv529lxnba//6Ucqcd3jjRBobNtUEyTX/Mn
-         ELlbOw79qeeHIO90ncFa2GRjcmDeZtl0iaKKz6CAJAYDzacwOkA1kssiHw4Pc1q9jLE/
-         5PfJpU9gs8wEis5f6DD2guw8Yyi5UasHVaT+ICx/Tvpm+lcA4sLjaPmScMmgLkuhhkB/
-         xkKPC6x/F9LxASpMvjjxCd7fPYwC7RDAAkKUa8bpJluwKnm3vIDuI2XKYSbY9WU+Ame/
-         bbFwfrvEW11MaUgjEykoyN9JO6p34JsfhxP8nQc9RnAF9Y7X0baqYFJamoIsmxYj46Ud
-         oZjg==
-X-Gm-Message-State: APjAAAVbsCKPbdberHYoOnieGcxQiDSV2qToGygwnAzNbJtVOxpISwYl
-        hPrw9T0MEHYTq03Nv9RdD+PHke8x
-X-Google-Smtp-Source: APXvYqz97J5PR+zonI+J+7o3YKllvrHvngwUjs+tf74Q1y+Rba4nCk3X6WBMIXIC4jeDVilWrDinrA==
-X-Received: by 2002:a25:9b06:: with SMTP id y6mr18030659ybn.201.1580251096027;
-        Tue, 28 Jan 2020 14:38:16 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d137sm108571ywd.86.2020.01.28.14.38.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jan 2020 14:38:15 -0800 (PST)
-Date:   Tue, 28 Jan 2020 14:38:13 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Jones, Michael-A1" <Michael-A1.Jones@analog.com>
-Cc:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH 2/3] hwmon: (pmbus/ltc2978): Fix PMBus polling of
- MFR_COMMON definitions.
-Message-ID: <20200128223813.GA13354@roeck-us.net>
-References: <1580234400-2829-1-git-send-email-michael-a1.jones@analog.com>
- <1580234400-2829-2-git-send-email-michael-a1.jones@analog.com>
- <20200128191306.GA32672@roeck-us.net>
- <SN6PR03MB40329A1D480256447C4565CDF60A0@SN6PR03MB4032.namprd03.prod.outlook.com>
- <20200128213106.GA30571@roeck-us.net>
- <SN6PR03MB403294C0615C0FE2DF49F7DDF60A0@SN6PR03MB4032.namprd03.prod.outlook.com>
+        Tue, 28 Jan 2020 17:39:47 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iwZW5-0006jc-Dm; Tue, 28 Jan 2020 23:39:29 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 919CB101227; Tue, 28 Jan 2020 23:39:28 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        vipul kumar <vipulk0511@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        x86@kernel.org, Len Brown <len.brown@intel.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>
+Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on Intel Bay Trail SoC
+In-Reply-To: <30d49be8-67ad-6f32-37a8-0cdd26f0852e@redhat.com>
+References: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com> <87eevs7lfd.fsf@nanos.tec.linutronix.de> <CADdC98RJpsvu_zWehNGDDN=W11rD11NSPaodg-zuaXsHuOJYTQ@mail.gmail.com> <878slzeeim.fsf@nanos.tec.linutronix.de> <CADdC98TE4oNWZyEsqXzr+zJtfdTTOyeeuHqu1u04X_ktLHo-Hg@mail.gmail.com> <20200123144108.GU32742@smile.fi.intel.com> <df04f43d-8c6d-7602-cb50-535b85cf2aaa@redhat.com> <87iml11ccf.fsf@nanos.tec.linutronix.de> <c06260e3-bd19-bf3c-89f7-d36bdb9a5b20@redhat.com> <87ftg5131x.fsf@nanos.tec.linutronix.de> <30d49be8-67ad-6f32-37a8-0cdd26f0852e@redhat.com>
+Date:   Tue, 28 Jan 2020 23:39:28 +0100
+Message-ID: <87sgjz434v.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR03MB403294C0615C0FE2DF49F7DDF60A0@SN6PR03MB4032.namprd03.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+Hans,
 
-On Tue, Jan 28, 2020 at 09:35:49PM +0000, Jones, Michael-A1 wrote:
-> Guentar,
-> 
-> Yes, LTC3883. Slip of the finger.
-> 
-> I am happy as is. If LTC3883 starts selling like hotcakes, I'll update it later.
-> 
-> This is my first attempt at doing things the linux way, so if you see something I should do different, let me know. I left off Tested-by, assuming that Signed-off-by was good enough. But I do test the changes using a DLN-2 and demo boards.
-> 
+Hans de Goede <hdegoede@redhat.com> writes:
+> Ok, I have been testing this on various devices and I'm pretty sure now
+> that my initial hunch is correct. The problem is that the accuracy of
+> the FSB frequency as listed in the Intel docs is not so great:
 
-Don't top post, and split your lines at 80 columns. Tested-by: only makes
-sense if someone else tested your code; that you have tested it yourself
-is (or should be) implied in the Signed-off-by: tag (that people sometimes
-send patches which don't even compile is no excuse).
+Thanks for doing that.
+
+> The "Intel 64 and IA-32 Architectures Software Developer’s Manual Volume 4:
+> Model-Specific Registers" has the following table for the values from
+> freq_desc_byt:
+>
+>     000B: 083.3 MHz
+>     001B: 100.0 MHz
+>     010B: 133.3 MHz
+>     011B: 116.7 MHz
+>     100B: 080.0 MHz
+>
+> Notice how for e.g the 83.3 MHz value there are 3 significant digits,
+> which translates to an accuracy of a 1000 ppm, where as your typical
+> crystal oscillator is 20 - 100 ppm, so the accuracy of the frequency
+> format used in the Software Developer’s Manual is not really helpful.
+
+The SDM is not always helpful :)
+
+> So the 00 part of 83300 which I'm suggesting to replace with 33 in
+> essence is not specified and when the tsc_msr.c code was written /
+> Bay Trail support was added the value from the datasheet was simply
+> padded with zeros.
+>
+> There is already a hint that that likely is not correct in the values
+> from the Software Developer’s Manual, we have values ending at 3.3,
+> but also at 6.7, which to me feels like it is 6.66666666666667 rounded
+> up and thus the 3.3 likely is 3.33333333333333.
+>
+> Test 1: Intel(R) Celeron(R) CPU  N2840  @ 2.16GHz"
+> --------------------------------------------------
+>
+> As said I've also ran some tests. The first device I have tested is
+> a HP stream 11 x360 with an "Intel(R) Celeron(R) CPU  N2840  @ 2.16GHz"
+> (from /proc/cpuinfo) this is the "laptop' version of Bay Trail rather
+> then the tablet version, so like Vipul's case I can comment out the 2
+> lines setting the TSC_KNOWN_FREQ and TSC_RELIABLE flags and get
+> "Refined TSC clocksource calibration". I've also added the changes with
+> the extra pr_info calls which you requested. Here is the relevant output
+> from a kernel with the 2 flags commented out + your pr_info changes,
+> note I changed the REF_CLOCK format from %x to %d as that seems easier
+> to interpret to me.
+>
+> [    0.000000] MSR_PINFO: 0000060000001a00 -> 26
+> [    0.000000] MSR_FSBF: 0000000000000000
+> [    0.000000] REF_CLOCK: 83000
+> [    0.000000] tsc: Detected 2165.800 MHz processor
+> [    3.586805] tsc: Refined TSC clocksource calibration: 2166.666 MHz
+>
+> And with my suggested change:
+>
+> [    0.000000] MSR_PINFO: 0000060000001a00 -> 26
+> [    0.000000] MSR_FSBF: 0000000000000000
+> [    0.000000] REF_CLOCK: 83333
+> [    0.000000] tsc: Detected 2166.658 MHz processor
+> [    3.587326] tsc: Refined TSC clocksource calibration: 2166.667 MHz
+>
+> Note we are still 0.009 MHz of from the refined calibration, so my
+> suggestion to really fix this would be to change the freqs part
+> of struct freq_desc to be in Hz rather then KHz and then calculate
+> res as:
+>
+> res = DIV_ROUND_CLOSEST(freq * ratio, 1000); /* res is in KHz */
+
+That makes a log of sense.
+
+> Which would give us:
+>
+> [    0.000000] tsc: Detected 2166.667 MHz processor
+>
+>
+> Test 2: "Intel(R) Atom(TM) CPU  Z3736F @ 1.33GHz"
+> -------------------------------------------------
+>
+> Second device tested: HP Pavilion x2 Detachable 10" version
+> with Bay Trail SoC: "Intel(R) Atom(TM) CPU  Z3736F @ 1.33GHz".
+>
+> Relevant log messages, unpatched:
+> [    0.000000] MSR_PINFO: 0000060000001000 -> 16
+> [    0.000000] MSR_FSBF: 0000000000000000
+> [    0.000000] REF_CLOCK: 83000
+> [    0.000000] tsc: Detected 1332.800 MHz processor
+>
+> Patched:
+> [    0.000000] MSR_PINFO: 0000060000001000 -> 16
+> [    0.000000] MSR_FSBF: 0000000000000000
+> [    0.000000] REF_CLOCK: 83333
+> [    0.000000] tsc: Detected 1333.328 MHz processor
+>
+> Now since we do not have another clock source, we do not
+> know for sure that the 1333.328 MHz is better then the
+> original 1332.800, but it does seem to be a more logical
+> value; and from the N2840 @ 2.16GHz string, which runs
+> at 2166.667 MHz we have learned that the number in the
+> string is rounded down (at least for Bay Trail devices),
+> so if the 1332.800 MHz where correct then we would
+> expect the string to contain 1.32GHz, but it says 1.33GHz
+>
+>
+> Test 3: "Intel(R) Atom(TM) CPU  Z3775  @ 1.46GHz"
+> -------------------------------------------------
+>
+> Third device tested: Asus T200TA" with:
+> "Intel(R) Atom(TM) CPU  Z3775  @ 1.46GHz"
+> again this is the tablet version, so only one clocksource
+> and thus no "Refined TSC clocksource calibration"
+>
+> [    0.000000] MSR_PINFO: 0000040000000b00 -> 11
+> [    0.000000] MSR_FSBF: 0000000000000002
+> [    0.000000] REF_CLOCK: 133300
+> [    0.000000] tsc: Detected 1466.300 MHz processor
+>
+> Since we have no other clocksource, we cannot be
+> sure that this is wrong, unless we compare to say
+> the RTC using using the commands Vipul used to
+> test. So I'm leaving this device running for say
+> 12 hours and then I'll check.
+>
+> I have a hunch that in this case too we need to replace the
+> 00 with 33, so use 133333 as ref-clock, but we will see.
+
+Looking at the table again:
+
+>     000B: 083.3 MHz
+>     001B: 100.0 MHz
+>     010B: 133.3 MHz
+>     011B: 116.7 MHz
+>     100B: 080.0 MHz
+
+I don't know what the crystal frequency of this CPU is, but usually the
+frequencies are the same accross a SoC family. The E3800 baytrail
+definitely runs with a 25Mhz crystal.
+
+So using 25MHz as crystal frequency;
+
+000:   25 * 20 / 6  =  83.3333
+001:   25 *  4 / 1  = 100.0000
+010:   25 * 16 / 3  = 133.3333
+011:   25 * 28 / 6  = 116.6666
+100:   25 * 16 / 5  =  80.0000
+
+So the tables for the various SoCs should have the crystal frequency and
+the multiplier / divider pairs for each step. That makes the math simple
+and accurate.
+
+Typical crystal frequencies are 19.2, 24 and 25Mhz.
+
+And if you look at CPUID 15H, it provides the crystal frequency and the
+crystal to TSC ratio with a nominator / denominator pair. IOW a proper
+description of the PLL.
 
 Thanks,
-Guenter
 
-> Mike
-> 
-> -----Original Message-----
-> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
-> Sent: Tuesday, January 28, 2020 2:31 PM
-> To: Jones, Michael-A1 <Michael-A1.Jones@analog.com>
-> Cc: linux-hwmon@vger.kernel.org; devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; jdelvare@suse.com; robh+dt@kernel.org; corbet@lwn.net
-> Subject: Re: [PATCH 2/3] hwmon: (pmbus/ltc2978): Fix PMBus polling of MFR_COMMON definitions.
-> 
-> [External]
-> 
-> On Tue, Jan 28, 2020 at 09:16:39PM +0000, Jones, Michael-A1 wrote:
-> > Guenter,
-> > 
-> > The decision to not poll PEND was based on some other non-driver code based on /dev/i2c that looked like this:
-> > 
-> > // Set to 0 for LTC3883 which does not support PEND
-> > #define USE_PEND        1
-> > 
-> > #define NOT_BUSY        1 << 6
-> > #define NOT_TRANS       1 << 4
-> > #if (USE_PEND)
-> > #define NOT_PENDING     1 << 5
-> > #else
-> > #define NOT_PENDING     0
-> > #endif
-> > 
-> > My recollection is that came from the datasheet, many years ago.
-> > 
-> > I talked to the designer, and if the above is correct, it has not been correct since 2012. The designer was not interested in researching artifacts that far back in history. So we know it has been in the part for at least 8 years.
-> > 
-> > There seems to be two choices:
-> > 
-> > A) Leave it as is
-> > B) Poll the PEND bit and possibly break compatibility on ancient 
-> > hardware
-> > 
-> > Generally, unused status bits in this kind are high when reserved or not used. That is good for polling.
-> > 
-> > The shipping volume of LTC3888 has always been very low compared to other parts, so exposure is very small, certainly Cisco/Juniper type companies would not be effected.
-> > 
-> I assume you mean LTC3883, not LTC3888.
-> 
-> > I would feel ok with polling PEND on this part. Let me know your opinion.
-> > 
-> > On a related matter, bit 4 is asserted low when the output is changing value. Hwmon cannot cause this because it only performs telemetry.
-> > 
-> > A user application could change VOUT and cause this to happen. Telemetry would reflect the last measured value from a 100ms internal polling loop, which may be a before, after, or during value. I have always judged that checking this bit has no value, and it can be problematic. If the part is set to have a very long transition rate, like 5 seconds, this would hang the call for a long time. That seemed bad to me, and is why I did not poll this bit.
-> > 
-> 
-> Your call, really. My major concern was that bit 5 is no longer polled on LTC3883. From the above, it looks like it actually _is_ the pending bit (5) that isn't supported on LTC3883. With that in mind, I'll apply the series as-is and add the Fixes: tag myself; no need to resend.
-> 
-> Thanks,
-> Guenter
-> 
-> > Mike
-> > 
-> > -----Original Message-----
-> > From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
-> > Sent: Tuesday, January 28, 2020 12:13 PM
-> > To: Jones, Michael-A1 <Michael-A1.Jones@analog.com>
-> > Cc: linux-hwmon@vger.kernel.org; devicetree@vger.kernel.org; 
-> > linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; 
-> > jdelvare@suse.com; robh+dt@kernel.org; corbet@lwn.net
-> > Subject: Re: [PATCH 2/3] hwmon: (pmbus/ltc2978): Fix PMBus polling of MFR_COMMON definitions.
-> > 
-> > [External]
-> > 
-> > On Tue, Jan 28, 2020 at 10:59:59AM -0700, Mike Jones wrote:
-> > > Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to 
-> > > bits 6/5. This fixs a LTC297X family bug where polling always 
-> > > returns not busy even when the part is busy. This fixes a LTC388X 
-> > > and LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY 
-> > > was not polled, which can lead to NACKing of commands. LTC388X and 
-> > > LTM467X modules now poll BUSY and PEND, increasing reliability by 
-> > > eliminating NACKing of commands.
-> > > 
-> > > Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
-> > 
-> > Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips 
-> > requiring it")
-> > 
-> > > ---
-> > >  drivers/hwmon/pmbus/ltc2978.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/hwmon/pmbus/ltc2978.c 
-> > > b/drivers/hwmon/pmbus/ltc2978.c index f01f488..a91ed01 100644
-> > > --- a/drivers/hwmon/pmbus/ltc2978.c
-> > > +++ b/drivers/hwmon/pmbus/ltc2978.c
-> > > @@ -82,8 +82,8 @@ enum chips { ltc2974, ltc2975, ltc2977, ltc2978, 
-> > > ltc2980, ltc3880, ltc3882,
-> > >  
-> > >  #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
-> > >  
-> > > -#define LTC_NOT_BUSY			BIT(5)
-> > > -#define LTC_NOT_PENDING			BIT(4)
-> > > +#define LTC_NOT_BUSY			BIT(6)
-> > > +#define LTC_NOT_PENDING			BIT(5)
-> > >  
-> > 
-> > In ltc_wait_ready(), we have:
-> > 
-> > 	/*
-> >          * LTC3883 does not support LTC_NOT_PENDING, even though
-> >          * the datasheet claims that it does.
-> >          */
-> >         mask = LTC_NOT_BUSY;
-> >         if (data->id != ltc3883)
-> >                 mask |= LTC_NOT_PENDING;
-> > 
-> > The semantics of this code is now different: It means that on
-> > LTC3883 only bit 6 is checked; previously, it was bit 5. I agree that the above change makes sense, but it doesn't seem correct to drop the check for bit 5 on LTC3883. Maybe remove the if() above and always check for bit 5 and 6 ? Or should bit 4 be checked on parts other than LTC3883 ?
-> > 
-> > #define LTC_NOT_TRANSITIONING		BIT(4)
-> > ...
-> >         mask = LTC_NOT_BUSY | LTC_NOT_PENDING;
-> >         if (data->id != ltc3883)
-> >                 mask |= LTC_NOT_TRANSITIONING;
-> > 
-> > Thanks,
-> > Guenter
+        tglx
+
