@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E852AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B63C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794C520716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645A420716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222687;
-	bh=hGE2T1G6lPIGWI7NEOMKzgp80gd/lwiRHwpdPFENheY=;
+	s=default; t=1580222691;
+	bh=ycQ23ixeaeOqETre0ofxhlGMc8IkGjaBNi7nKZ5gf5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ml2hEBM4pSCVYzNQ9xK9ZmVQPswAWNsoY4c294zc2SzGWRAB2fGe0hIhuvhlANjdH
-	 knP2sJ+mqawyhh55tKfKI825fJ/hi5V1gmv+kF8lC3BoTB8t0BfSeRF8ft6fPzcdpq
-	 xFW9yPgeyT04DEq8QKiRRB2nGQiHZdrTcH3Fmr0U=
+	b=IbhMsU7ScWWMCVAB5z8S+Mca6hKaoEjZDXFsnYYPCLrOo6tHcOkt2Qp+yYstWKe7o
+	 KF9iGwVc/MXfOygAAXhaAAceZrnEr4E46g+fxsAy9hLNrQg/2uNI9ML4uXgA8jnTP9
+	 KU4w5Ip9PNGqWC+CovKUG2iHIo+VgsHKMlaTFdbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgA1OJp (ORCPT
+        id S1728931AbgA1OJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:09:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:09:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727414AbgA1OJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:09:42 -0500
+        id S1727982AbgA1OJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:09:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FFFA24695;
-        Tue, 28 Jan 2020 14:09:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB6AA24685;
+        Tue, 28 Jan 2020 14:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220581;
-        bh=hGE2T1G6lPIGWI7NEOMKzgp80gd/lwiRHwpdPFENheY=;
+        s=default; t=1580220569;
+        bh=ycQ23ixeaeOqETre0ofxhlGMc8IkGjaBNi7nKZ5gf5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PzyQmWuuPoR1NHNUE2EoCbisL5KUDr8gFrxbwZ7AsI1pAJa0fhvpQHX+RjsoTaoQO
-         slpCz3YN90RNDMaZV2hCDyfgpcr5IP3/nYhvMavsWAp1H4cvzZKRjEAE8QPR6YjzEK
-         0DgKhWXc0TbQ+Mw4rWjFJLaoi6HFwIXVtomgmJvI=
+        b=ZJ9PgiuF5y90cnjXapb2iM2EuTIM/sjT7lzudtbFOvZjND7/EHoGnGcXHJIjLKOzU
+         UO8uJ7nYigPzjFnkhZRPT0nHpNGMQsL6aKx1kiNihZxvhTDNwQSjRZ7zVT0EwBhxER
+         flh4CL+eI319X9otscAcxOMaUwbnacQhXCY9PFhE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 063/183] media: wl128x: Fix an error code in fm_download_firmware()
-Date:   Tue, 28 Jan 2020 15:04:42 +0100
-Message-Id: <20200128135836.297556746@linuxfoundation.org>
+Subject: [PATCH 4.4 059/183] xen, cpu_hotplug: Prevent an out of bounds access
+Date:   Tue, 28 Jan 2020 15:04:38 +0100
+Message-Id: <20200128135835.811982048@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -63,36 +62,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ef4bb63dc1f7213c08e13f6943c69cd27f69e4a3 ]
+[ Upstream commit 201676095dda7e5b31a5e1d116d10fc22985075e ]
 
-We forgot to set "ret" on this error path.
+The "cpu" variable comes from the sscanf() so Smatch marks it as
+untrusted data.  We can't pass a higher value than "nr_cpu_ids" to
+cpu_possible() or it results in an out of bounds access.
 
-Fixes: e8454ff7b9a4 ("[media] drivers:media:radio: wl128x: FM Driver Common sources")
-
+Fixes: d68d82afd4c8 ("xen: implement CPU hotplugging")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/radio/wl128x/fmdrv_common.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/xen/cpu_hotplug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/radio/wl128x/fmdrv_common.c b/drivers/media/radio/wl128x/fmdrv_common.c
-index 51639a3f7abe4..0cee10cca0e57 100644
---- a/drivers/media/radio/wl128x/fmdrv_common.c
-+++ b/drivers/media/radio/wl128x/fmdrv_common.c
-@@ -1278,8 +1278,9 @@ static int fm_download_firmware(struct fmdev *fmdev, const u8 *fw_name)
+diff --git a/drivers/xen/cpu_hotplug.c b/drivers/xen/cpu_hotplug.c
+index f4e59c445964d..17054d6954117 100644
+--- a/drivers/xen/cpu_hotplug.c
++++ b/drivers/xen/cpu_hotplug.c
+@@ -53,7 +53,7 @@ static int vcpu_online(unsigned int cpu)
+ }
+ static void vcpu_hotplug(unsigned int cpu)
+ {
+-	if (!cpu_possible(cpu))
++	if (cpu >= nr_cpu_ids || !cpu_possible(cpu))
+ 		return;
  
- 		switch (action->type) {
- 		case ACTION_SEND_COMMAND:	/* Send */
--			if (fmc_send_cmd(fmdev, 0, 0, action->data,
--						action->size, NULL, NULL))
-+			ret = fmc_send_cmd(fmdev, 0, 0, action->data,
-+					   action->size, NULL, NULL);
-+			if (ret)
- 				goto rel_fw;
- 
- 			cmd_cnt++;
+ 	switch (vcpu_online(cpu)) {
 -- 
 2.20.1
 
