@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E501DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F9BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA70B2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E7524685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220043;
-	bh=PI76T7wRktqWv/er7Vty22KqvtsQjMkIOvWAKnFroPg=;
+	s=default; t=1580220057;
+	bh=4Frap3mfnAk0X4wDUL7sCIA1V+NeYEp9Pkx5bPfq8GQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALqZsLN13daSoGGMj8Cy7JdsPEKGZh7ayKkpUIq9Jo96wIDsNWzA/SmXeMPyl7D6w
-	 TX7SkludjUbnrUXv0EC5N+E1OGM4Ca39toTca54RqtWqYJvI+x8qUKHZw2wYq5QvOg
-	 VR4wXMQ7rcqQwAIOOSGf6h7NRa/rWpacTsk8qb5s=
+	b=bV1GbeU4YSIXuPppNODkCjvV2WwMEKQ8CA+2GnQouDrDEUfrwjKKnSriLcm3S0XLw
+	 F1v8SrPaciGeUIEUeOd8JIXKJ5pArR7sz6D65OdZoC5UdLzKNJkgR82ZRo3avA8TLH
+	 m6gj18FM3MhvEhEZq00KnOicjxjRaRvdVB5YC5D4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbgA1OAm (ORCPT
+        id S1727332AbgA1OAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:00:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45442 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:00:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727142AbgA1N7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:59:55 -0500
+        id S1727091AbgA1N7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:59:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57A1824685;
-        Tue, 28 Jan 2020 13:59:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD8082468D;
+        Tue, 28 Jan 2020 13:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219994;
-        bh=PI76T7wRktqWv/er7Vty22KqvtsQjMkIOvWAKnFroPg=;
+        s=default; t=1580219985;
+        bh=4Frap3mfnAk0X4wDUL7sCIA1V+NeYEp9Pkx5bPfq8GQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jhtwNOXKkY71gNNreIXBJaIuezqBz3asdQe4BtvrPXAYa4C9fiOEVJWeGLWh71AvW
-         CeDo7caWJ2gYB7mE/5uUlFvIagF12QICNHKc4U3f2D4YlYnhNPVhKwkbVIFX3Nx+9J
-         pb+ODbWl0Q28W/h9A0wKq4fcDPdiEHI9P0smtJPU=
+        b=dfKz0wVEbnPJkFV0Vr/12u5p0WbLQm+5RplYDETjYS9txF5IsYKu0TZcBnyASW4Zc
+         ETmGjF55HQqCK1AQMhe/6lc+42S4sNWLPwRhYJ120Lsv0cq4oA4VNM7D0ndEF69UKg
+         905aAKRT63AMRuLOFk471/vegjNpIIcshfmywzWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 44/46] bitmap: Add bitmap_alloc(), bitmap_zalloc() and bitmap_free()
-Date:   Tue, 28 Jan 2020 14:58:18 +0100
-Message-Id: <20200128135755.490249079@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Wen Huang <huangwenabc@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 40/46] libertas: Fix two buffer overflows at parsing bss descriptor
+Date:   Tue, 28 Jan 2020 14:58:14 +0100
+Message-Id: <20200128135755.016374415@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -60,78 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Wen Huang <huangwenabc@gmail.com>
 
-commit c42b65e363ce97a828f81b59033c3558f8fa7f70 upstream.
+commit e5e884b42639c74b5b57dc277909915c0aefc8bb upstream.
 
-A lot of code become ugly because of open coding allocations for bitmaps.
+add_ie_rates() copys rates without checking the length
+in bss descriptor from remote AP.when victim connects to
+remote attacker, this may trigger buffer overflow.
+lbs_ibss_join_existing() copys rates without checking the length
+in bss descriptor from remote IBSS node.when victim connects to
+remote attacker, this may trigger buffer overflow.
+Fix them by putting the length check before performing copy.
 
-Introduce three helpers to allow users be more clear of intention
-and keep their code neat.
+This fix addresses CVE-2019-14896 and CVE-2019-14897.
+This also fix build warning of mixed declarations and code.
 
-Note, due to multiple circular dependencies we may not provide
-the helpers as inliners. For now we keep them exported and, perhaps,
-at some point in the future we will sort out header inclusion and
-inheritance.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Wen Huang <huangwenabc@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/bitmap.h |    8 ++++++++
- lib/bitmap.c           |   20 ++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+ drivers/net/wireless/marvell/libertas/cfg.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -87,6 +87,14 @@
-  */
+--- a/drivers/net/wireless/marvell/libertas/cfg.c
++++ b/drivers/net/wireless/marvell/libertas/cfg.c
+@@ -273,6 +273,10 @@ add_ie_rates(u8 *tlv, const u8 *ie, int
+ 	int hw, ap, ap_max = ie[1];
+ 	u8 hw_rate;
  
- /*
-+ * Allocation and deallocation of bitmap.
-+ * Provided in lib/bitmap.c to avoid circular dependency.
-+ */
-+extern unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags);
-+extern unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags);
-+extern void bitmap_free(const unsigned long *bitmap);
-+
-+/*
-  * lib/bitmap.c provides these functions:
-  */
++	if (ap_max > MAX_RATES) {
++		lbs_deb_assoc("invalid rates\n");
++		return tlv;
++	}
+ 	/* Advance past IE header */
+ 	ie += 2;
  
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -13,6 +13,7 @@
- #include <linux/bitops.h>
- #include <linux/bug.h>
- #include <linux/kernel.h>
-+#include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/uaccess.h>
+@@ -1720,6 +1724,9 @@ static int lbs_ibss_join_existing(struct
+ 	struct cmd_ds_802_11_ad_hoc_join cmd;
+ 	u8 preamble = RADIO_PREAMBLE_SHORT;
+ 	int ret = 0;
++	int hw, i;
++	u8 rates_max;
++	u8 *rates;
  
-@@ -1212,3 +1213,22 @@ void bitmap_copy_le(unsigned long *dst,
- }
- EXPORT_SYMBOL(bitmap_copy_le);
- #endif
-+
-+unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags)
-+{
-+	return kmalloc_array(BITS_TO_LONGS(nbits), sizeof(unsigned long),
-+			     flags);
-+}
-+EXPORT_SYMBOL(bitmap_alloc);
-+
-+unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags)
-+{
-+	return bitmap_alloc(nbits, flags | __GFP_ZERO);
-+}
-+EXPORT_SYMBOL(bitmap_zalloc);
-+
-+void bitmap_free(const unsigned long *bitmap)
-+{
-+	kfree(bitmap);
-+}
-+EXPORT_SYMBOL(bitmap_free);
+ 	/* TODO: set preamble based on scan result */
+ 	ret = lbs_set_radio(priv, preamble, 1);
+@@ -1778,9 +1785,12 @@ static int lbs_ibss_join_existing(struct
+ 	if (!rates_eid) {
+ 		lbs_add_rates(cmd.bss.rates);
+ 	} else {
+-		int hw, i;
+-		u8 rates_max = rates_eid[1];
+-		u8 *rates = cmd.bss.rates;
++		rates_max = rates_eid[1];
++		if (rates_max > MAX_RATES) {
++			lbs_deb_join("invalid rates");
++			goto out;
++		}
++		rates = cmd.bss.rates;
+ 		for (hw = 0; hw < ARRAY_SIZE(lbs_rates); hw++) {
+ 			u8 hw_rate = lbs_rates[hw].bitrate / 5;
+ 			for (i = 0; i < rates_max; i++) {
 
 
