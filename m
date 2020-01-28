@@ -2,100 +2,80 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF21AC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B47FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E0924681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:31:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="GWW/ZSow"
+	by mail.kernel.org (Postfix) with ESMTP id D292E24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgA1Lb6 (ORCPT
+        id S1726024AbgA1Le0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 06:31:58 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:45780 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725903AbgA1Lb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 06:31:57 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 12EAA464EF;
-        Tue, 28 Jan 2020 11:31:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:date:date:from:from:subject:subject
-        :message-id:received:received:received; s=mta-01; t=1580211114;
-         x=1582025515; bh=kNtMjE3vC+0DYD+Pb2uxNur78VcVYMeHBP9LyJFGWtY=; b=
-        GWW/ZSowr85oRGGu5NAd5kJcBGlS7UCxS4qYcqHFenUEpq9vMpDzDbi4ijEwda8H
-        +sGUJRiFAy+5aOr8coAfr63B9Tha0kC21LsJmzJN6FBBWfHQZ7qXrjY5hrWNy6RF
-        586fnTDLZBoM0Tma8p83yojR3PFXUcxGfCbOfSEAX08=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id t4NL9A0vtwcY; Tue, 28 Jan 2020 14:31:54 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id C0B2F464E4;
-        Tue, 28 Jan 2020 14:31:53 +0300 (MSK)
-Received: from localhost.localdomain (172.17.15.69) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Tue, 28 Jan 2020 14:31:53 +0300
-Message-ID: <cb21d1285e04a8a7a3817398629431f69aeebf2f.camel@yadro.com>
-Subject: vcnl3020 hwmon/proximity driver
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Date:   Tue, 28 Jan 2020 14:31:49 +0300
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 28 Jan 2020 06:34:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:55506 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgA1LeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 06:34:25 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 422A6101E;
+        Tue, 28 Jan 2020 03:34:23 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C8533F52E;
+        Tue, 28 Jan 2020 03:34:22 -0800 (PST)
+Subject: Re: [PATCH v3 0/3] sched/fair: Capacity aware wakeup rework
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
+        morten.rasmussen@arm.com, qperret@google.com,
+        adharmap@codeaurora.org
+References: <20200126200934.18712-1-valentin.schneider@arm.com>
+ <35c18eee-7e92-8a7d-c59d-11dfd2b053ff@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <9b6d0ea2-cf5e-ed89-6c08-6f43c345265f@arm.com>
+Date:   Tue, 28 Jan 2020 11:34:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <35c18eee-7e92-8a7d-c59d-11dfd2b053ff@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.15.69]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, I want to make driver for vcnl3020 but not sure where should I put it.
-It's similar to vcnl40xx series which is already in iio/light/vcnl4000.c
-but it perfectly fits with hwmon intrusion detection concept
-(intrusion[0-*]_alarm), so I'm a little bit confused.
+On 28/01/2020 09:24, Dietmar Eggemann wrote:
+> On 26/01/2020 21:09, Valentin Schneider wrote:
+> 
+> [...]
+> 
+>> v2 -> v3
+>> --------
+>> o Added missing sync_entity_load_avg() (Quentin)
+>> o Added fallback CPU selection (maximize capacity)
+>> o Added special case for CPU hogs: task_fits_capacity() will always return 'false'
+>>   for tasks that are simply too big, due to the margin.
+> 
+> v3 fixes the Geekbench multicore regression I saw on Pixel4 (Android 10,
+> Android Common Kernel v4.14 based, Snapdragon 855) running v1.
+> 
+> I changed the Pixel4 kernel a bit (PELT instead WALT, mainline
+> select_idle_sibling() instead the csctate aware one), mainline
+> task_fits_capacity()) for base, v1 & v3.
+> 
+> Since it's not mainline kernel the results have to be taken with a pinch
+> of salt but they probably show that the new condition:
+> 
+> if (rq->cpu_capacity_orig == READ_ONCE(rq->rd->max_cpu_capacity) && ...
+>     return cpu;
+> 
+> has an effect when dealing with tasks with util_est values > 0.8 * 1024.
+> 
 
-vcnl3020 - proximity sensor which mostly using for intrusion detection
-vcnl4020 - light and proximity sensor
-
-Doc's links:
-https://www.vishay.com/docs/84150/vcnl3020.pdf
-https://www.vishay.com/docs/83476/vcnl4020.pdf
-
-That's what I think about possible ways:
-
-1. just iio/proximity/vcnl3020.c
-2. extend functionality inside vcnl4000.c with ifdefs and dts stuff and maybe
-   rename it with generalization inside
-3. hwmon driver for intrusion detection inside drivers/hwmon
-4. both iio/proximity/vcnl3020.c and hwmon/vcnl3020.c
-   Example: hwmon/wm8350-hwmon.c + mfd/wm8350-core.c
-   So, just make proximity driver, do the depend in Kconfig for hwmon driver
-   on proximity driver and use proximity driver calls if would be needed.
-
-Maybe there any other good ways to deal with it? I'd be prefer 4.
-
-Thanks.
-
+Thanks for going through that hassle! I'm quite pleased with the results
+of that change - if you also look at e.g. the stddev for sysbench on Juno,
+runs are much more consistent now.
