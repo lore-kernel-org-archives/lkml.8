@@ -2,115 +2,221 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E64C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A70C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B37120716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0837020716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:51:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="f+NYoWYr";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="HeAZfQya"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="kjeTt6La"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgA1Rup (ORCPT
+        id S1726650AbgA1RvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:50:45 -0500
-Received: from pb-smtp20.pobox.com ([173.228.157.52]:51111 "EHLO
-        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgA1Rup (ORCPT
+        Tue, 28 Jan 2020 12:51:17 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34764 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgA1RvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:50:45 -0500
-Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id 4B8D3AF71F;
-        Tue, 28 Jan 2020 12:50:43 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:message-id:mime-version:content-type; s=sasl; bh=Q+/
-        6TsAi07c3WjpX7xvEfYiz/p0=; b=f+NYoWYrsNIzBLhr2MWYMAxkJ1qbDaozCJD
-        QmrUBOzYkBfTaAgaITbdmApZ6g76+pALRKuaHazXuIpVWbAw23PIuMRYBasFySdg
-        yeLWxtdoAjg4LueTDVj98VEjJF7izQEI2icP+w4srmTnFD9cLpw2rCLs/0RAiDD7
-        95aeZVUI=
-Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id 436F2AF71E;
-        Tue, 28 Jan 2020 12:50:43 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:message-id:mime-version:content-type;
- s=2016-12.pbsmtp; bh=QSzYoKchC8bAVwKEjJbgLQFSIOW5hbn3tY7WNGl53+0=;
- b=HeAZfQyauHikkz/pJy1a6oiqIOAmugWNSQNj04kpw13XJZw3nxkhBmxj8r1MQ5zlhBu+TA8ZLeE30MmbwG8KCTMW/cY2Ov5AZD9VbKE6i4MTmpY83eMCg+2gmVVlioIT1lKZNQksTQ2lEtGYfc3BswhtZLrL/O6vfKiNK7dc5iI=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id 3B531AF71D;
-        Tue, 28 Jan 2020 12:50:40 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 5DADC2DA00E3;
-        Tue, 28 Jan 2020 12:50:38 -0500 (EST)
-Date:   Tue, 28 Jan 2020 12:50:33 -0500 (EST)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc:     Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH] vt: fix scrollback flushing on background consoles
-Message-ID: <nycvar.YSQ.7.76.2001281205560.1655@knanqh.ubzr>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Tue, 28 Jan 2020 12:51:17 -0500
+Received: by mail-io1-f65.google.com with SMTP id z193so15360275iof.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 09:51:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yzboYpUm2NHrNXjdOkZz9gUvbP91cmk09HeOAkmzxck=;
+        b=kjeTt6Lae+yXJVpPn6kBnijTjViSXoHH/hn6rqj1xXt8ZDsqnsygPnw260Q0jrP1Ko
+         R56Jt8rpcHez0C8NeqRMmbWkZTkimEAgE3n+7hxA3XFz1iecXRVlFlopTB6nP3HfSotx
+         OJdiQ5EpMris9LSiDkRsFHNks1bcNUp50t603t38RzXr1n9OrdtnSrDrwq9gER64mPU9
+         9EGKuaQe/qAyr3ZA/Bi2BQ27hyGKzKliQGJD/jvjaOKUC4D0yi1+D8kazYFHjEH9HuR3
+         BsA8beTB9pgoGwejzT7c9qX98fsZzDPjqAqj+1m8/kYsGahJPaLsZikpu70R3uGJgbNK
+         C9KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yzboYpUm2NHrNXjdOkZz9gUvbP91cmk09HeOAkmzxck=;
+        b=tE05PFj8Cwn3LjCdrezPBq+/s+jtWirwdE5RIZA8IhHktZ7SDJq9n8uKRo5t5xUqxv
+         32SCum8snVtPr4gIcsIX++V8LgBoCuDumJ3YRsL9TJLQjPARDwj9ffs88hvl9XZn7e2g
+         iAYUWYfU/gzU+Z3IFivUx7wEcbKBPHbiJ3+ZWsrF57AFkMv5KCCGKItRsY2i4wVjxxmF
+         3kprsW1VCV5jCYV1Yaw72KmQEXAZL55ZjK8gDyRQ10FJX/WUJ9XiMygHfc9TONzo3c0d
+         N54zFOwQjRLWC5QF19ekmOBwKsLKSYcwB81A3Y75emhPSmp2Xxl8gNs8O3hXiFejH7oP
+         QeSQ==
+X-Gm-Message-State: APjAAAXohU4ZIMxF9IbwPi73BZ58s0fRMIobuetUpXZSYUNLFXv7OSv9
+        Xi8lBsNg4CbBjN3DOzA18zohju/KwvkKk8C2hW0lSw==
+X-Google-Smtp-Source: APXvYqwbEiJFE2jfQRGcTMflEcecZ9yJMLXO38LB9PmG0x1wyDZq2K6SaZ4NolfLhlBtezFUXdhnLmha9p7ITFn7YqY=
+X-Received: by 2002:a5d:9c8c:: with SMTP id p12mr17084437iop.72.1580233876063;
+ Tue, 28 Jan 2020 09:51:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: B29C772E-41F6-11EA-9629-B0405B776F7B-78420484!pb-smtp20.pobox.com
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com> <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Tue, 28 Jan 2020 09:51:04 -0800
+Message-ID: <CAOesGMiCVSvL8H+haLoz=xyiX1CxBSRL_pbCgx-DLhN+5xRn9g@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
+To:     John Garry <john.garry@huawei.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, jeremy.linton@arm.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit a6dbe4427559 ("vt: perform safe console erase in the right 
-order") provided fixes to an earlier commit by gathering all console
-scrollback flushing operations in a function of its own. This includes
-the invocation of vc_sw->con_switch() as previously done through a
-update_screen() call. That commit failed to carry over the 
-con_is_visible() conditional though, as well as cursor handling, which 
-caused problems when "\e[3J" was written to a background console.
+Hi,
 
-One could argue for preserving the call to update_screen(). However
-this does far more than we need, and it is best to remove scrollback 
-assumptions from it. Instead let's gather the minimum needed to actually
-perform scrollback flushing properly in that one place.
+On Tue, Jan 28, 2020 at 3:18 AM John Garry <john.garry@huawei.com> wrote:
+>
+> Add a generic driver for platforms which populate their ACPI PPTT
+> processor package ID Type Structure according to suggestion in the ACPI
+> spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
+>
+> The soc_id is from member LEVEL_2_ID.
+>
+> For this, we need to use a whitelist of platforms which are known to
+> populate the structure as suggested.
+>
+> For now, only the vendor and soc_id fields are exposed.
+>
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>  drivers/soc/Makefile       |   1 +
+>  drivers/soc/acpi_generic.c | 102 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 103 insertions(+)
+>  create mode 100644 drivers/soc/acpi_generic.c
+>
+> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> index 8b49d782a1ab..2a59a30a22cd 100644
+> --- a/drivers/soc/Makefile
+> +++ b/drivers/soc/Makefile
+> @@ -3,6 +3,7 @@
+>  # Makefile for the Linux Kernel SOC specific device drivers.
+>  #
+>
+> +obj-$(CONFIG_ACPI_PPTT)                += acpi_generic.o
+>  obj-$(CONFIG_ARCH_ACTIONS)     += actions/
+>  obj-$(CONFIG_SOC_ASPEED)       += aspeed/
+>  obj-$(CONFIG_ARCH_AT91)                += atmel/
 
-While at it, let's document the vc_sw->con_switch() side effect being
-relied upon.
+Based on everything I've seen so far, this should go under drivers/acpi instead.
 
-Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-Reported-and-tested-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org
+> diff --git a/drivers/soc/acpi_generic.c b/drivers/soc/acpi_generic.c
+> new file mode 100644
+> index 000000000000..34a1f5f8e063
+> --- /dev/null
+> +++ b/drivers/soc/acpi_generic.c
+> @@ -0,0 +1,102 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) John Garry, john.garry@huawei.com
+> + */
+> +
+> +#define pr_fmt(fmt) "SOC ACPI GENERIC: " fmt
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/sys_soc.h>
+> +
+> +/*
+> + * Known platforms that fill in PPTT package ID structures according to
+> + * ACPI spec examples, that being:
+> + * - Custom driver attribute is in ID Type Structure VENDOR_ID member
+> + * - SoC id is in ID Type Structure LEVEL_2_ID member
+> + *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
+> + */
+> +static struct acpi_platform_list plat_list[] = {
+> +       {"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
+> +       { } /* End */
+> +};
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 34aa39d1ae..3b4ccc2a30 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -936,10 +936,21 @@ static void flush_scrollback(struct vc_data *vc)
- 	WARN_CONSOLE_UNLOCKED();
- 
- 	set_origin(vc);
--	if (vc->vc_sw->con_flush_scrollback)
-+	if (vc->vc_sw->con_flush_scrollback) {
- 		vc->vc_sw->con_flush_scrollback(vc);
--	else
-+	} else if (con_is_visible(vc)) {
-+		/*
-+		 * When no con_flush_scrollback method is provided then the
-+		 * legacy way for flushing the scrollback buffer is to use
-+		 * a side effect of the con_switch method. We do it only on
-+		 * the foreground console as background consoles have no
-+		 * scrollback buffers in that case and we obviously don't
-+		 * want to switch to them.
-+		 */
-+		hide_cursor(vc);
- 		vc->vc_sw->con_switch(vc);
-+		set_cursor(vc);
-+	}
- }
- 
- /*
+As others have said, this will become a mess over time, and will
+require changes for every new platform. Which, unfortunately, is
+exactly what ACPI is supposed to provide relief from by making
+standardized platforms... standardized.
+
+> +
+> +struct acpi_generic_soc_struct {
+> +       struct soc_device_attribute dev_attr;
+> +       u32 vendor;
+> +};
+> +
+> +static ssize_t vendor_show(struct device *dev,
+> +                          struct device_attribute *attr,
+> +                          char *buf)
+> +{
+> +       struct acpi_generic_soc_struct *soc = dev_get_drvdata(dev);
+> +       u8 vendor_id[5] = {};
+> +
+> +       *(u32 *)vendor_id = soc->vendor;
+> +
+> +       return sprintf(buf, "%s\n", vendor_id);
+> +}
+> +
+> +static DEVICE_ATTR_RO(vendor);
+> +
+> +static __init int soc_acpi_generic_init(void)
+> +{
+> +       int index;
+> +
+> +       index = acpi_match_platform_list(plat_list);
+> +       if (index < 0)
+> +               return -ENOENT;
+> +
+> +       index = 0;
+> +       while (true) {
+> +               struct acpi_pptt_package_info info;
+> +
+> +               if (!acpi_pptt_get_package_info(index, &info)) {
+> +                       struct soc_device_attribute *soc_dev_attr;
+> +                       struct acpi_generic_soc_struct *soc;
+> +                       struct soc_device *soc_dev;
+> +                       u8 soc_id[9] = {};
+> +
+> +                       *(u64 *)soc_id = info.LEVEL_2_ID;
+> +
+> +                       soc = kzalloc(sizeof(*soc), GFP_KERNEL);
+> +                       if (!soc)
+> +                               return -ENOMEM;
+> +
+> +                       soc_dev_attr = &soc->dev_attr;
+> +                       soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s",
+> +                                                        soc_id);
+> +                       if (!soc_dev_attr->soc_id) {
+> +                               kfree(soc);
+> +                               return -ENOMEM;
+> +                       }
+> +                       soc->vendor = info.vendor_id;
+> +
+> +                       soc_dev = soc_device_register(soc_dev_attr);
+> +                       if (IS_ERR(soc_dev)) {
+> +                               int ret = PTR_ERR(soc_dev);
+> +
+> +                               pr_info("could not register soc (%d) index=%d\n",
+> +                                       ret, index);
+> +                               kfree(soc_dev_attr->soc_id);
+> +                               kfree(soc);
+> +                               return ret;
+> +                       }
+> +                       dev_set_drvdata(soc_device_to_device(soc_dev), soc);
+> +                       device_create_file(soc_device_to_device(soc_dev),
+> +                                          &dev_attr_vendor);
+
+Hmm, this doesn't look like much of a driver to me. This looks like
+the export of an attribute to userspace, and should probably be done
+by ACPI core instead of creating an empty driver for it.
+
+This would also solve the whitelist issue -- always export this
+property if it's set. If it's wrong, then the platform vendor needs to
+fix it up. That's the approach that is used for other aspects of the
+standardized platforms, right? We don't want to litter the kernel with
+white/blacklists -- that's not a net improvement.
+
+
+-Olof
