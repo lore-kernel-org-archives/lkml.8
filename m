@@ -2,101 +2,169 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682AFC35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCC6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A4B24685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0114924681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:36:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="IsbFVycJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725926AbgA1Idl (ORCPT
+        id S1725951AbgA1Ig4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 03:33:41 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42166 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgA1Idl (ORCPT
+        Tue, 28 Jan 2020 03:36:56 -0500
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:37401 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725867AbgA1Ig4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 03:33:41 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 66so11215657otd.9;
-        Tue, 28 Jan 2020 00:33:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kc0VoA99mH7cpDICaAlW5aG5aA2pYr3RLdiKmmW9Dbc=;
-        b=U5HYkf2siBP0VCn5ciV4U+9GFSGsss/YEJ+x4EJeex+vQIM3EpngQHOoQ9lY20c9dP
-         UpDj8WdOba281q0Uiq1BwkC7g5gDA7PG/d/r0/GG7aTfYmur1dWwLJgvqtF1tTD+zL5c
-         RioGpwGDtofn9YYn7G0TZElxYxXkGMiZGQxXzqRZ2gJMtTEjCR3OWVtLTeOh3dE58aBG
-         85YUjb1JmD3zEY+pvzGJ9OE6bnquOhY+CsCFh6CrOObXqgokTFW1yaKqoAqXqz8G/v7h
-         s4cKtbVx8iI3kvE0N/hT/hs6kROWJmex8Umk0bM/x/nlFgujUyGaGyHk5KHUbZPs1CDR
-         01Hw==
-X-Gm-Message-State: APjAAAVpsGyiXa2ZffgvH0ddFx+EGxaQPtNi7KG/5O/63vQZt3pG/Xu3
-        Jbs1/zIFvasWS+HH4mtSugMY2O5oOK5acPcp9Ug=
-X-Google-Smtp-Source: APXvYqxe3mRp7uhmTw1LXbcE50kCmrfg48p55fCdLL7DzsWNS+Aer4fw9Y7lO/VVZvgK1jbCD3X8l5Z4AkpTsfH2Qb8=
-X-Received: by 2002:a9d:8f1:: with SMTP id 104mr14685226otf.107.1580200419942;
- Tue, 28 Jan 2020 00:33:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20200112171349.22268-1-geert@linux-m68k.org> <20200127224549.GC3273@piout.net>
-In-Reply-To: <20200127224549.GC3273@piout.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 Jan 2020 09:33:28 +0100
-Message-ID: <CAMuHMdXFkcAn8c+rPixkN0W5G14j039shhOZcvtLP_RHA9CFtQ@mail.gmail.com>
-Subject: Re: [PATCH] rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Joe Perches <joe@perches.com>, linux-rtc@vger.kernel.org,
+        Tue, 28 Jan 2020 03:36:56 -0500
+Received: from [IPv6:2001:983:e9a7:1:6d16:ffdc:f7c6:fc6f]
+ ([IPv6:2001:983:e9a7:1:6d16:ffdc:f7c6:fc6f])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id wMMbiIkMxrNgywMMciSdAk; Tue, 28 Jan 2020 09:36:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1580200613; bh=JDgXT1/UYDKOslMoK/jUkusLlmz+32ELnmLpz3iIi18=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=IsbFVycJA3BpHiEd7PQhDchB2yUmWmjGGsa6qhXnrFwfEjwT34NP5OzTUe2Qn5PyQ
+         jMZ8gg/kQbSpsHdNDdQLnZinFAHZ3Zzs0qnMqg27j/KUQx783S/ayG1kYd169NRtZf
+         fxroHgpOlpQhEMzJFZea3hBVB9PcnHxXEydk89m7Gk9v0UbG6LD7kwyPzAOIk2QY60
+         1itOJwPCpmAd1sl7mhaadtVEC04aTnPxYO6uyF8Ts+kKXj3x5bkXttV2sOONrsWUB1
+         1ReQ2BVjXMUUWOmmlHhZw9z1416O9425qevuHSg9IWbGYWhX8FlfZU18ps+ur7mpPW
+         iQYsjc8YMRTLg==
+Subject: Re: [RFC][PATCH 12/15] videobuf2: add begin/end cpu_access callbacks
+ to dma-sg
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-13-senozhatsky@chromium.org>
+ <1c5198dc-db4e-47d6-0d8b-259fbbb6372f@xs4all.nl>
+ <CAAFQd5DN0FSJ=pXG3J32AXocnbkR+AB8yKKDk0tZS4s7K04Z9Q@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <560ba621-5396-1ea9-625e-a9f83622e052@xs4all.nl>
+Date:   Tue, 28 Jan 2020 09:36:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAAFQd5DN0FSJ=pXG3J32AXocnbkR+AB8yKKDk0tZS4s7K04Z9Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfHh9vFquUIeVQDbIEGUndWdmqS+f+pW//Hj6p2MJev0r34DL8qXdil99h/UwxH47ohe50ldTEeMYD6TijMy4o4jjL6MET60/+yvAIsQmr984wa8Movwe
+ B3C4vuZBBNqsdWk2FNO20XjFf/8w4SF55GDH1u6LXUhpkgXrGaTvkRnbMUJImXlneie8SSCvotaoTFqCL+r26gCvtQkqbj6KFvwbSZmnalxXT07mJFdtnaHM
+ B9DbbC5E4MN2Uw13yFOCG/ty0Q4k3AsQlFP98Pvk6QX88Wz2yvueslMrXhQexft5/8LE+4qWUduE7/eL/fvtKisn1Assltt1sIwamlzsgp8XEPIGEcw4RBXe
+ TJnj1OlMF4v/xSIM3JQGkc9LB4mK5cHC3nwpRo0ecIohJ9bIuXY8FO/Qtzz/vGniBmqQ9575O1cR8ZCRW1x5jaPvK1g5yxt2KJL/c/b4b6QY4NFkDYIK7+JW
+ lx+krq8klsnvzAXdl+ZBqposh+gOFEykDQWrZ5WVvNolfaN9CV5zBh8OJKgB0BMFEnjuIcWVl72mUznKpdHDfIMjIQ9gFCP1fHbC13wHD0gheUBCZPz4JXcg
+ atrhGbdnFby9K6jhbCR2QaQArAS2tZwG5dyEa7bQibdmyQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+On 1/28/20 5:38 AM, Tomasz Figa wrote:
+> On Fri, Jan 10, 2020 at 7:13 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>
+>> On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
+>>> Provide begin_cpu_access() and end_cpu_access() dma_buf_ops
+>>> callbacks for cache synchronisation on exported buffers.
+>>>
+>>> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+>>> ---
+>>>  .../media/common/videobuf2/videobuf2-dma-sg.c | 22 +++++++++++++++++++
+>>>  1 file changed, 22 insertions(+)
+>>>
+>>> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+>>> index 6db60e9d5183..bfc99a0cb7b9 100644
+>>> --- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+>>> +++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+>>> @@ -470,6 +470,26 @@ static void vb2_dma_sg_dmabuf_ops_release(struct dma_buf *dbuf)
+>>>       vb2_dma_sg_put(dbuf->priv);
+>>>  }
+>>>
+>>
+>> There is no corresponding vb2_sg_buffer_consistent function here.
+>>
+>> Looking more closely I see that vb2_dma_sg_alloc doesn't pass the dma_attrs
+>> argument to dma_map_sg_attrs, thus V4L2_FLAG_MEMORY_NON_CONSISTENT has no
+>> effect on dma-sg buffers.
+> 
+> videobuf2-dma-sg allocates the memory using the page allocator
+> directly, which means that there is no memory consistency guarantee.
+> 
+>>
+>> Is there a reason why dma_attrs isn't passed on to dma_map_sg_attrs()?
+>>
+> 
+> V4L2_FLAG_MEMORY_NON_CONSISTENT is a flag for dma_alloc_attrs(). It
+> isn't supposed to do anything for dma_map_sg_attrs(), which is only
+> supposed to create the device (e.g. IOMMU) mapping for already
+> allocated memory.
 
-On Mon, Jan 27, 2020 at 11:45 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
-> On 12/01/2020 18:13:49+0100, Geert Uytterhoeven wrote:
-> > Merely enabling I2C and RTC selects REGMAP_I2C and REGMAP_SPI, even when
-> > no driver needs it.  While the former can be moduler, the latter cannot,
-> > and thus becomes built-in.
-> >
-> > Fix this by moving the select statements for REGMAP_I2C and REGMAP_SPI
-> > from the RTC_I2C_AND_SPI helper to the individual drivers that depend on
-> > it.
-> >
-> > Note that the comment for RTC_I2C_AND_SPI refers to SND_SOC_I2C_AND_SPI
-> > for more information, but the latter does not select REGMAP_{I2C,SPI}
-> > itself, and defers that to the individual drivers, too.
-> >
-> > Fixes: 080481f54ef62121 ("rtc: merge ds3232 and ds3234")
-> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > ---
-> > Joe: When merging addresses, scripts/get_maintainer.pl replaces
-> >      Alexandre's authoritative email address from MAINTAINERS by the
-> >      obsolete address in the SoB-line of the commit referred to by the
-> >      Fixes-line.
-> >
-> >  drivers/rtc/Kconfig | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> Applied, thanks.
+Ah, right.
 
-According to the reports from kbuild test report, some drivers are still
-missing some selects, which is exposed by this patch.
-But perhaps you have already fixed those in your tree?
+But could vb2_dma_sg_alloc_compacted() be modified so that is uses
+dma_alloc_attrs() instead of alloc_pages()? Sorry, that might be a stupid
+question, I'm not an expert in this area. All I know is that I hate inconsistent
+APIs where something works for one thing, but not another.
 
-Gr{oetje,eeting}s,
+Regards,
 
-                        Geert
+	Hans
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+>> I suspect it was just laziness in the past, and that it should be wired
+>> up, just as for dma-contig.
+>>
+>> Regards,
+>>
+>>         Hans
+>>
+>>> +static int vb2_dma_sg_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
+>>> +                                     enum dma_data_direction direction)
+>>> +{
+>>> +     struct vb2_dma_sg_buf *buf = dbuf->priv;
+>>> +     struct sg_table *sgt = buf->dma_sgt;
+>>> +
+>>> +     dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int vb2_dma_sg_dmabuf_ops_end_cpu_access(struct dma_buf *dbuf,
+>>> +                                     enum dma_data_direction direction)
+>>> +{
+>>> +     struct vb2_dma_sg_buf *buf = dbuf->priv;
+>>> +     struct sg_table *sgt = buf->dma_sgt;
+>>> +
+>>> +     dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
+>>> +     return 0;
+>>> +}
+>>> +
+>>>  static void *vb2_dma_sg_dmabuf_ops_vmap(struct dma_buf *dbuf)
+>>>  {
+>>>       struct vb2_dma_sg_buf *buf = dbuf->priv;
+>>> @@ -488,6 +508,8 @@ static const struct dma_buf_ops vb2_dma_sg_dmabuf_ops = {
+>>>       .detach = vb2_dma_sg_dmabuf_ops_detach,
+>>>       .map_dma_buf = vb2_dma_sg_dmabuf_ops_map,
+>>>       .unmap_dma_buf = vb2_dma_sg_dmabuf_ops_unmap,
+>>> +     .begin_cpu_access = vb2_dma_sg_dmabuf_ops_begin_cpu_access,
+>>> +     .end_cpu_access = vb2_dma_sg_dmabuf_ops_end_cpu_access,
+>>>       .vmap = vb2_dma_sg_dmabuf_ops_vmap,
+>>>       .mmap = vb2_dma_sg_dmabuf_ops_mmap,
+>>>       .release = vb2_dma_sg_dmabuf_ops_release,
+>>>
+>>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
