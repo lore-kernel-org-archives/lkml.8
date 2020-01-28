@@ -2,268 +2,220 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA11C32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C8DC32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE64024656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580170633;
-	bh=7cMJqx0PP7A1csD2DU54er/wMFA73t+f4TWXCJNB4cM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oAHxuKcL7uY0YFe9GG6NSUcDT7XLYZbzvW2E1FznjTzNCcg5N/d7VIMSpWOWu/H33
-	 IgncU/uySsC/gTRfTMCzGDBaSYHhd8crYk1jcLA1h9T9Eq9qipTCZFFlHGsfu63LVf
-	 n6ElhYnWjWRkormfTtxkG5YPSqrL6lyLAfhD/jGo=
+	by mail.kernel.org (Postfix) with ESMTP id 2D6272173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:19:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEC1TdIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbgA1ARH (ORCPT
+        id S1726275AbgA1ATe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 19:17:07 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40297 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727349AbgA1ARG (ORCPT
+        Mon, 27 Jan 2020 19:19:34 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54472 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA1ATe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 19:17:06 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k25so6006336pgt.7;
-        Mon, 27 Jan 2020 16:17:05 -0800 (PST)
+        Mon, 27 Jan 2020 19:19:34 -0500
+Received: by mail-wm1-f65.google.com with SMTP id g1so592317wmh.4;
+        Mon, 27 Jan 2020 16:19:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DFddCGft10v2bQSudyfgAPH5BoTHwqkfOKU43Rs2xJE=;
-        b=aIehdGRAgVBVPEq2gRJ0LE0eSQ+ycX1FJyYgSNugQH/5B66O76XPt/VYuSGHHZMiKr
-         ZWqld+TqHK46psw2qThyQOFRl403+9ZdBIQSCMs6MqcEa8RvutS6hVC/nziwY4Ezx2lx
-         EM/4TnPC5ngC7rdFkyu3Tlc1F9rJ8P3N8rc+6YOVu6j+iAriWg9nvMt6GX1FtCqdN6bo
-         mJGS8yb0K0NzYHlX9ZgyYm2JdWYm+2Hb3QtTvWBYpfneNidSLKKv8Zg2edABy9ypSUuW
-         J4eECDCRfFC+7n80ls04tZFQ3bbzcMQjgvQdKWuBnU3qStV2u4byHtY2lNl1rysXY/Wf
-         I/bw==
+        h=subject:from:to:references:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=Fn/+CXxmCOcm78jUaAu0hb2CyqfENHRjzyg4/VOJJko=;
+        b=hEC1TdIFnxqhs0ABJ2ARw2RVxpgtFHBieNPASCx5pXHJDNQ98sKIULl4OenZA1Y90r
+         NdmqtAzNl/Bws6OeWt06c4wVgEQxU7NEqBDeOWGczJPzOWGDVxzRT9Sq3l2DQKiRUsnm
+         /yg4l/zoXOeUJ+C+VFzOLCBqwYKp+/2BIaZ8Q6GKr/rEofYXlFYmjPRnwaT1wEvNG3sx
+         FYthWkXvPrsoQkvUdd5pLwaWuN5QcPmLqZw+nQ4o0o5eyejf+rIRWowWHyfcdU7Ngya9
+         XhRklcUZUq8fMLWKNaj7fhO5azpuH3WbWhGtPaUbq/40b7RmU//NIko3HKchapqOx6J1
+         rDJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=DFddCGft10v2bQSudyfgAPH5BoTHwqkfOKU43Rs2xJE=;
-        b=lLzc01IGqbcMFD/oCV05wtxj6rtAgau7JSOQ5LKgPdGPsu7gegYSIskDLZluNznf3D
-         3+8mx0rFwJs5m53ImcH2rSqpXrRcshYLeXAHo19PcKV7XL3jYZCU5cG8MWyOnXKhjF0w
-         QDPEu9HSYUim8OTbqHh+J52Xg1jzwhPvD9+BeKZKn8Wvbys311ru0oijhsDc5DP1LPpt
-         hfLUNvsxF7YKT8FJ+f1x1lRFlHE33qhOzltekYhVGSikmcKOoERwsZsCUaj/+cn8fb6i
-         lH4+Licu8yAuguNdYOmRM5IVtEytoIx7kea1P8GLEvR1z/RUe0IwRrtei0YXGOwA+4O7
-         MbbQ==
-X-Gm-Message-State: APjAAAVRRhfLKMXOIYJJWoWsqJ8BH7y22GnqKxRVIzE6i4mr/2+29kqz
-        serKDpttIp4DiOGwn3ykse8=
-X-Google-Smtp-Source: APXvYqz072ZRCKWyoVYCQKz+MnVhFgtgIa6SRKQwU7Wnjg7uDw3D/Jd26+3lolr41UxLe9ftFCOCiA==
-X-Received: by 2002:aa7:81c7:: with SMTP id c7mr1235750pfn.203.1580170625323;
-        Mon, 27 Jan 2020 16:17:05 -0800 (PST)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id q28sm11301461pfl.153.2020.01.27.16.17.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 16:17:04 -0800 (PST)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Minchan Kim <minchan@kernel.org>
-Subject: [PATCH v3 5/5] mm: support both pid and pidfd for process_madvise
-Date:   Mon, 27 Jan 2020 16:16:41 -0800
-Message-Id: <20200128001641.5086-6-minchan@kernel.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200128001641.5086-1-minchan@kernel.org>
-References: <20200128001641.5086-1-minchan@kernel.org>
+        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=Fn/+CXxmCOcm78jUaAu0hb2CyqfENHRjzyg4/VOJJko=;
+        b=UUOaFN4LCOqiWs6nu3yPXPn1JNU19vbCB4Btb9yx61U/BZ9/M3qP/E79EVsy4ZrHJc
+         fCVnJwc/oup3o9JtchtbSfJKJhQ+CELSTeq9zYtGGY/Uc/B7JycBK14mviYH+RUVuug0
+         1XA7T2mUKtuCKAmv8PBKCc1XHIVRgUib1aZzV7buIOQKiYQKddK30W35NyXWFh5nI7Sc
+         FRS90aqoCb+masKlvlIjlijZiGl2+n8hU93Q3rDnkZM3dXPItpwzwqTHsvvhUapQLVSy
+         yumQb3ZRprQ8hXYSaZslwXDYbwIMTNS6wW5eLeu7UoZl1V/WBI1amgob/NqpPbO4sVse
+         AQ0w==
+X-Gm-Message-State: APjAAAVPoIb/jx7lQ1dUQwtGdxvyedy3gT+Vj4mLVrh0ZtXP6L6EzRc8
+        Z+gr2mBxgyE41kSyZpNJUhql75gx
+X-Google-Smtp-Source: APXvYqzoXVZJTMmEhsHzaG4+0NpKtS0q4ocnQ9C5sZzr3ZpQEnHs3Wz+JgYEWRZxI7+x4TMniGmTAw==
+X-Received: by 2002:a7b:c258:: with SMTP id b24mr1304122wmj.140.1580170770454;
+        Mon, 27 Jan 2020 16:19:30 -0800 (PST)
+Received: from [192.168.43.36] ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id e18sm23138099wrr.95.2020.01.27.16.19.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 16:19:29 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] io-wq: allow grabbing existing io-wq
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1580170474.git.asml.silence@gmail.com>
+ <af01e0ca2dcab907bc865a5ecdc0317c00bb059a.1580170474.git.asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <24432662-f6a5-99ef-2a73-e0917ecc8b07@gmail.com>
+Date:   Tue, 28 Jan 2020 03:18:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <af01e0ca2dcab907bc865a5ecdc0317c00bb059a.1580170474.git.asml.silence@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="FfRdXmBi7nvY5uwrh8e7tqJANyLwAqkOh"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a demand[1] to support pid as well pidfd for process_madvise
-to reduce unncessary syscall to get pidfd if the user has control of
-the targer process(ie, they could gaurantee the process is not gone
-or pid is not reused. Or, it might be okay to give a hint to wrong
-process).
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--FfRdXmBi7nvY5uwrh8e7tqJANyLwAqkOh
+Content-Type: multipart/mixed; boundary="fXTwj4OQraICVi2dOsu1ydsdQyVybOeib";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <24432662-f6a5-99ef-2a73-e0917ecc8b07@gmail.com>
+Subject: Re: [PATCH v2 1/2] io-wq: allow grabbing existing io-wq
+References: <cover.1580170474.git.asml.silence@gmail.com>
+ <af01e0ca2dcab907bc865a5ecdc0317c00bb059a.1580170474.git.asml.silence@gmail.com>
+In-Reply-To: <af01e0ca2dcab907bc865a5ecdc0317c00bb059a.1580170474.git.asml.silence@gmail.com>
 
-This patch aims for supporting both options like waitid(2). So, the
-syscall is currently,
+--fXTwj4OQraICVi2dOsu1ydsdQyVybOeib
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-	int process_madvise(int which, pid_t pid, void *addr,
-		size_t length, int advise, unsigned long flag);
+On 28/01/2020 03:15, Pavel Begunkov wrote:
+> If the id and user/creds match, return an existing io_wq if we can safe=
+ly
+> grab a reference to it.
 
-@which is actually idtype_t for userspace libray and currently,
-it supports P_PID and P_PIDFD.
+Missed the outdated comment. Apparently, it's too late for continue with =
+it today.
 
-[1]  https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
-Signed-off-by: Minchan Kim <minchan@kernel.org>
----
- include/linux/pid.h      |  1 +
- include/linux/syscalls.h |  3 ++-
- kernel/exit.c            | 17 -----------------
- kernel/pid.c             | 17 +++++++++++++++++
- mm/madvise.c             | 34 ++++++++++++++++++++++------------
- 5 files changed, 42 insertions(+), 30 deletions(-)
+>=20
+> Reported-by: Jens Axboe <axboe@kernel.dk>
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> ---
+>  fs/io-wq.c | 8 ++++++++
+>  fs/io-wq.h | 1 +
+>  2 files changed, 9 insertions(+)
+>=20
+> diff --git a/fs/io-wq.c b/fs/io-wq.c
+> index b45d585cdcc8..ee49e8852d39 100644
+> --- a/fs/io-wq.c
+> +++ b/fs/io-wq.c
+> @@ -1110,6 +1110,14 @@ struct io_wq *io_wq_create(unsigned bounded, str=
+uct io_wq_data *data)
+>  	return ERR_PTR(ret);
+>  }
+> =20
+> +bool io_wq_get(struct io_wq *wq, struct io_wq_data *data)
+> +{
+> +	if (data->get_work !=3D wq->get_work || data->put_work !=3D wq->put_w=
+ork)
+> +		return false;
+> +
+> +	return refcount_inc_not_zero(&wq->use_refs);
+> +}
+> +
+>  static bool io_wq_worker_wake(struct io_worker *worker, void *data)
+>  {
+>  	wake_up_process(worker->task);
+> diff --git a/fs/io-wq.h b/fs/io-wq.h
+> index 167316ad447e..c42602c58c56 100644
+> --- a/fs/io-wq.h
+> +++ b/fs/io-wq.h
+> @@ -99,6 +99,7 @@ struct io_wq_data {
+>  };
+> =20
+>  struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data);=
 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 998ae7d24450..023d9c3a8edc 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -75,6 +75,7 @@ extern const struct file_operations pidfd_fops;
- struct file;
- 
- extern struct pid *pidfd_pid(const struct file *file);
-+extern struct pid *pidfd_get_pid(unsigned int fd);
- 
- static inline struct pid *get_pid(struct pid *pid)
- {
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 1b58a11ff49f..27060e59db37 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -877,7 +877,8 @@ asmlinkage long sys_munlockall(void);
- asmlinkage long sys_mincore(unsigned long start, size_t len,
- 				unsigned char __user * vec);
- asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
--asmlinkage long sys_process_madvise(int pidfd, unsigned long start,
-+
-+asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
- 			size_t len, int behavior, unsigned long flags);
- asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
- 			unsigned long prot, unsigned long pgoff,
-diff --git a/kernel/exit.c b/kernel/exit.c
-index bcbd59888e67..7698843b1411 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -1466,23 +1466,6 @@ static long do_wait(struct wait_opts *wo)
- 	return retval;
- }
- 
--static struct pid *pidfd_get_pid(unsigned int fd)
--{
--	struct fd f;
--	struct pid *pid;
--
--	f = fdget(fd);
--	if (!f.file)
--		return ERR_PTR(-EBADF);
--
--	pid = pidfd_pid(f.file);
--	if (!IS_ERR(pid))
--		get_pid(pid);
--
--	fdput(f);
--	return pid;
--}
--
- static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
- 			  int options, struct rusage *ru)
- {
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 2278e249141d..a41a89d5dad2 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -496,6 +496,23 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
- 	return idr_get_next(&ns->idr, &nr);
- }
- 
-+struct pid *pidfd_get_pid(unsigned int fd)
-+{
-+	struct fd f;
-+	struct pid *pid;
-+
-+	f = fdget(fd);
-+	if (!f.file)
-+		return ERR_PTR(-EBADF);
-+
-+	pid = pidfd_pid(f.file);
-+	if (!IS_ERR(pid))
-+		get_pid(pid);
-+
-+	fdput(f);
-+	return pid;
-+}
-+
- /**
-  * pidfd_create() - Create a new pid file descriptor.
-  *
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 39c40cbb389e..ba3a9bd8ea27 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -1197,11 +1197,10 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
- 	return madvise_common(current, current->mm, start, len_in, behavior);
- }
- 
--SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
-+SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid, unsigned long, start,
- 		size_t, len_in, int, behavior, unsigned long, flags)
- {
- 	int ret;
--	struct fd f;
- 	struct pid *pid;
- 	struct task_struct *task;
- 	struct mm_struct *mm;
-@@ -1212,20 +1211,31 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
- 	if (!process_madvise_behavior_valid(behavior))
- 		return -EINVAL;
- 
--	f = fdget(pidfd);
--	if (!f.file)
--		return -EBADF;
-+	switch (which) {
-+	case P_PID:
-+		if (upid <= 0)
-+			return -EINVAL;
-+
-+		pid = find_get_pid(upid);
-+		if (!pid)
-+			return -ESRCH;
-+		break;
-+	case P_PIDFD:
-+		if (upid < 0)
-+			return -EINVAL;
- 
--	pid = pidfd_pid(f.file);
--	if (IS_ERR(pid)) {
--		ret = PTR_ERR(pid);
--		goto fdput;
-+		pid = pidfd_get_pid(upid);
-+		if (IS_ERR(pid))
-+			return PTR_ERR(pid);
-+		break;
-+	default:
-+		return -EINVAL;
- 	}
- 
- 	task = get_pid_task(pid, PIDTYPE_PID);
- 	if (!task) {
- 		ret = -ESRCH;
--		goto fdput;
-+		goto put_pid;
- 	}
- 
- 	mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
-@@ -1238,7 +1248,7 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
- 	mmput(mm);
- release_task:
- 	put_task_struct(task);
--fdput:
--	fdput(f);
-+put_pid:
-+	put_pid(pid);
- 	return ret;
- }
--- 
-2.25.0.341.g760bfbb309-goog
+> +bool io_wq_get(struct io_wq *wq, struct io_wq_data *data);
+>  void io_wq_destroy(struct io_wq *wq);
+> =20
+>  void io_wq_enqueue(struct io_wq *wq, struct io_wq_work *work);
+>=20
 
+--=20
+Pavel Begunkov
+
+
+--fXTwj4OQraICVi2dOsu1ydsdQyVybOeib--
+
+--FfRdXmBi7nvY5uwrh8e7tqJANyLwAqkOh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl4vfeMACgkQWt5b1Glr
++6X3AQ/+KlguvMT7sZeyuUII0wUqorB7kZsZbGzdJHsQv2ZBlu2w8nAMR/M25T7f
+UM3ph7zhisym14ynAnu+p9R8OYdr98VYqQ520Rb37ps7TKZDaR3IzGSn+uWhT0Fe
+gILIRKrRuPFOgMBcPuFWENXiGDhnpt048tU8myRc2qnk3Oyy82Uv8JnsDvX5Jl/L
+dbGbUCiTn7JXi/e/InmmvGmaLNscNAq3Vc2U23kJabs7OH+G7KVF6tQlOeyAGDpV
+w45EZhuanDzVyBiXpfSho0ODIgefmfWs+XG8RqWKXHxnF6Kz+LDEV1Y/v4RfJSnd
+0gxOAjD+6T0d5CHrvQjNzxMwAzJSCu7PktuFcohSkqpzHWqM3Q8Xurbq0umYbT/l
+OB5rcVit/pPGezccA9mKeMDDt14FfePR71YYmMTGTSTG/xcSCK1AL9tWIfaCSsGi
+bHeb1ZLLODzRxT21PLfofvBKeXqetnCB5Lf0URLNjNakKlyk3g8ULyG8xm+DwukG
+rrl4p2jWoANq8AkK0jlbik6GvWX4dvUD2Ursezmr+GgE+rtKstl0DsK4xWEyibKe
+oVSApS2le9OAdphPyfe6a137nrzlShpeMO+x2sALX2Cveru/lozQbkx3N3EVure/
+YsNTe2cffMJQjoKPB8cAVQxCL+S9LkXiQO1ZVLKKc6h9H2iIS6k=
+=C1V+
+-----END PGP SIGNATURE-----
+
+--FfRdXmBi7nvY5uwrh8e7tqJANyLwAqkOh--
