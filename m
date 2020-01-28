@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965DFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F18EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0ED24688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0355A24688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221128;
-	bh=B1qp81a6OQZ0yRws+WSx9Njv0sIKFJa6YhmnchQKWfI=;
+	s=default; t=1580221133;
+	bh=/s9ACbFT8qMDpDRwayydE1Jt32U6UwpIRX67EL52aKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eeK6M3C9ASWJCe+illOOeIN1yAzsgK4zoYzGR+Iqj92oxd2NpD8OnKuyvoX3olB+u
-	 GWBwaVeW0S1F536liFVVtSMdTKjeWAcipGRKNkv8A28g6rKFnOznTcwXlGQ5+JoGo3
-	 hdKjEpDR5FLRwBrjjTZ5e1LBEpkAbg+2fFFm5HAU=
+	b=FXmng13LAsKFY8CmJ4OqGb1AtRcNg/NzJhjzqAdINeDvs+XYkefuRbTMhcJhbwgyQ
+	 zVDcxZwUaxNz7n8WExYjoBEPJ5hwvAoGhvTNqQbrX4MPHHvuXlv8bbenozr5IA4QW5
+	 NVMHMKDw1Q4CQGKY9ZGcN2pXZyopW9//9byNWkrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbgA1OSr (ORCPT
+        id S1730755AbgA1OSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:18:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42830 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:18:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730343AbgA1OSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:18:42 -0500
+        id S1730740AbgA1OSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:18:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA7CB21739;
-        Tue, 28 Jan 2020 14:18:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49BA624690;
+        Tue, 28 Jan 2020 14:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221122;
-        bh=B1qp81a6OQZ0yRws+WSx9Njv0sIKFJa6YhmnchQKWfI=;
+        s=default; t=1580221129;
+        bh=/s9ACbFT8qMDpDRwayydE1Jt32U6UwpIRX67EL52aKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YBXsgOq2rojmPIInPpNO19IMaDNQOKhl4DpnJ5lEyxc/VFK+aCt5m4P5VLUSLk6KE
-         y+mEQX7ONKFAVVV4vqRVIwyNySanDCr41JueWMsfKFVt+ZJlo2s1XdpaUHSI3vRMhe
-         GOKd4FuD516HoczvKBLq+8NswN7ZC20jOc7g8Vm0=
+        b=CtHtVwrPVhW7H0l9uLiqqMuhYCZ2TaADYTbS0Se0LfXnWwF5Rv12e6U5soyTnuG2R
+         zMFhujCMasmRUTU10EKhnBhBoIsDPWLqaeKBL/V3WZ9lUeTXNJpUG30o58zUL8eIqW
+         N1Nqe++gDQxfUbat3BvyktZc8PNsFoAh0aL7A2sY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 097/271] net: sh_eth: fix a missing check of of_get_phy_mode
-Date:   Tue, 28 Jan 2020 15:04:06 +0100
-Message-Id: <20200128135859.818138891@linuxfoundation.org>
+Subject: [PATCH 4.9 099/271] media: cx18: update *pos correctly in cx18_read_pos()
+Date:   Tue, 28 Jan 2020 15:04:08 +0100
+Message-Id: <20200128135859.964229110@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -62,47 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 035a14e71f27eefa50087963b94cbdb3580d08bf ]
+[ Upstream commit 7afb0df554292dca7568446f619965fb8153085d ]
 
-of_get_phy_mode may fail and return a negative error code;
-the fix checks the return value of of_get_phy_mode and
-returns NULL of it fails.
+We should be updating *pos.  The current code is a no-op.
 
-Fixes: b356e978e92f ("sh_eth: add device tree support")
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1c1e45d17b66 ("V4L/DVB (7786): cx18: new driver for the Conexant CX23418 MPEG encoder chip")
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/sh_eth.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/pci/cx18/cx18-fileops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index 49300194d3f9f..6f8d4810ce979 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -2929,12 +2929,16 @@ static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
- 	struct device_node *np = dev->of_node;
- 	struct sh_eth_plat_data *pdata;
- 	const char *mac_addr;
-+	int ret;
+diff --git a/drivers/media/pci/cx18/cx18-fileops.c b/drivers/media/pci/cx18/cx18-fileops.c
+index df837408efd59..0171dc5b8809e 100644
+--- a/drivers/media/pci/cx18/cx18-fileops.c
++++ b/drivers/media/pci/cx18/cx18-fileops.c
+@@ -490,7 +490,7 @@ static ssize_t cx18_read_pos(struct cx18_stream *s, char __user *ubuf,
  
- 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata)
- 		return NULL;
+ 	CX18_DEBUG_HI_FILE("read %zd from %s, got %zd\n", count, s->name, rc);
+ 	if (rc > 0)
+-		pos += rc;
++		*pos += rc;
+ 	return rc;
+ }
  
--	pdata->phy_interface = of_get_phy_mode(np);
-+	ret = of_get_phy_mode(np);
-+	if (ret < 0)
-+		return NULL;
-+	pdata->phy_interface = ret;
- 
- 	mac_addr = of_get_mac_address(np);
- 	if (mac_addr)
 -- 
 2.20.1
 
