@@ -2,180 +2,292 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C171C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10501C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0655624688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10772467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:15:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z5/gue+J"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Urb2AZSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgA1KPK (ORCPT
+        id S1726264AbgA1KPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:15:10 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60652 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726028AbgA1KPJ (ORCPT
+        Tue, 28 Jan 2020 05:15:12 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:2814 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725926AbgA1KPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:15:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580206507;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=nDPXFzbEP/Nxy/Xa/0Tr/X9H77umfiTxr7GBaC3pa0Q=;
-        b=Z5/gue+JivsgEtyICPmOgSkS9BOGoCgKL3lRkAGneiuUZCtAIkoBbR/2aoLoEFa0BIDJ8u
-        LB98DUEjqY/slDUmEat21YiNHyWexQrpbFvqzTVw+QwTD1fxvAxsfO42VrozHRd8pZpZAB
-        5GDBJxER0NjXGXQJZyH25wnF3v26znE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-umsL6CbkO-Ww4VgMyYtuCg-1; Tue, 28 Jan 2020 05:14:59 -0500
-X-MC-Unique: umsL6CbkO-Ww4VgMyYtuCg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AD21107ACC5;
-        Tue, 28 Jan 2020 10:14:57 +0000 (UTC)
-Received: from [10.36.116.207] (ovpn-116-207.ams2.redhat.com [10.36.116.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 06CE85DA7E;
-        Tue, 28 Jan 2020 10:14:55 +0000 (UTC)
-Subject: Re: [Patch v2 2/4] mm/migrate.c: wrap do_move_pages_to_node() and
- store_status()
-To:     Wei Yang <richardw.yang@linux.intel.com>, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com,
-        yang.shi@linux.alibaba.com, rientjes@google.com
-References: <20200122011647.13636-1-richardw.yang@linux.intel.com>
- <20200122011647.13636-3-richardw.yang@linux.intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <15777c05-2f2c-b818-dacd-3ec31f83be8d@redhat.com>
+        Tue, 28 Jan 2020 05:15:10 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SA4Bsx006239;
+        Tue, 28 Jan 2020 11:15:01 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=XPDA0YgYv7szrLllt+wbRgbm7tyir48cuHVcJnA9Q/c=;
+ b=Urb2AZSyG2CvPWwNfyY6Ynk1ANzLuRA0K+Hlf3NPhAiStpTUdf3+05RVjgWyaQZMZ6fI
+ dlt5u7/kUeYb6j0JbgfSxseSUgvRRVEjDcztwPjx3PoKMxdIgXfXC1PUE9upBqXrZUwg
+ bvKXTUqaK+/u7WvYCy0Esmu7OxiH2Rb2oSOkYYuBjn4pj3css1H9F9iObU5xwVK+GUsF
+ Jxas4tMPpPlgoPByWFjAZ8JWZ+iG4sqF+vZsmT1vhRBZMDfhEZqMSlq329RiVvKR8V+q
+ 4AebQvCMm8dpnv405Rnm9HrchH6ewKJ1aG3ibq7QRNgCaIf6VqElVulIi4AS30RCIP+E Fg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrc1359ch-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jan 2020 11:15:01 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6A6F110002A;
+        Tue, 28 Jan 2020 11:15:00 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3A49F21ED06;
+        Tue, 28 Jan 2020 11:15:00 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 28 Jan 2020 11:14:59
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <megous@megous.com>,
+        <mylene.josserand@bootlin.com>
+CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] dt-bindings: touchscreen: Convert edt-ft5x06 to json-schema
 Date:   Tue, 28 Jan 2020 11:14:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+Message-ID: <20200128101455.4635-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-In-Reply-To: <20200122011647.13636-3-richardw.yang@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.01.20 02:16, Wei Yang wrote:
-> Usually do_move_pages_to_node() and store_status() is a pair. There are
-> three places call this pair of functions with almost the same form.
+Convert the EDT-FT5x06 to DT schema using json-schema.
 
-I'd suggest
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ .../bindings/input/touchscreen/edt-ft5x06.txt      |  75 -------------
+ .../bindings/input/touchscreen/edt-ft5x06.yaml     | 119 +++++++++++++++++++++
+ 2 files changed, 119 insertions(+), 75 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
 
-"
-Usually, do_move_pages_to_node() and store_status() are used in
-combination. We have three similar call sites.
-
-Let's provide a wrapper for both function calls -
-move_pages_and_store_status - to make the calling code easier to
-maintain and fix (as noted by Yang Shi, the return value handling of
-do_move_pages_to_node() has a flaw).
-"
-
-> 
-> This patch just wrap it to make it friendly to audience and also
-> consolidate the move and store action into one place. Also mentioned by
-> Yang Shi, the handling of do_move_pages_to_node()'s return value is not
-> proper. Now we can fix it in one place.
-> 
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/migrate.c | 30 +++++++++++++++++++-----------
->  1 file changed, 19 insertions(+), 11 deletions(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 4c2a21856717..a4d3bd6475e1 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1583,6 +1583,19 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->  	return err;
->  }
->  
-> +static int move_pages_and_store_status(struct mm_struct *mm, int node,
-> +		struct list_head *pagelist, int __user *status,
-> +		int start, int nr)
-
-nit: indentation
-
-> +{
-> +	int err;
-> +
-> +	err = do_move_pages_to_node(mm, pagelist, node);
-> +	if (err)
-> +		return err;
-> +	err = store_status(status, start, node, nr);
-> +	return err;
-
-return store_status(status, start, node, nr);
-
-directly
-
-
-
-Apart from that (and some more indentation nits)
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
-
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+deleted file mode 100644
+index 0f6950073d6f..000000000000
+--- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
++++ /dev/null
+@@ -1,75 +0,0 @@
+-FocalTech EDT-FT5x06 Polytouch driver
+-=====================================
+-
+-There are 5 variants of the chip for various touch panel sizes
+-FT5206GE1  2.8" .. 3.8"
+-FT5306DE4  4.3" .. 7"
+-FT5406EE8  7"   .. 8.9"
+-FT5506EEG  7"   .. 8.9"
+-FT5726NEI  5.7” .. 11.6"
+-
+-The software interface is identical for all those chips, so that
+-currently there is no need for the driver to distinguish between the
+-different chips. Nevertheless distinct compatible strings are used so
+-that a distinction can be added if necessary without changing the DT
+-bindings.
+-
+-
+-Required properties:
+- - compatible:  "edt,edt-ft5206"
+-           or:  "edt,edt-ft5306"
+-           or:  "edt,edt-ft5406"
+-           or:  "edt,edt-ft5506"
+-           or:  "evervision,ev-ft5726"
+-           or:  "focaltech,ft6236"
+-
+- - reg:         I2C slave address of the chip (0x38)
+- - interrupts:       interrupt specification for the touchdetect
+-                     interrupt
+-
+-Optional properties:
+- - reset-gpios: GPIO specification for the RESET input
+- - wake-gpios:  GPIO specification for the WAKE input
+- - vcc-supply:  Regulator that supplies the touchscreen
+-
+- - pinctrl-names: should be "default"
+- - pinctrl-0:   a phandle pointing to the pin settings for the
+-                control gpios
+-
+- - threshold:   allows setting the "click"-threshold in the range
+-                from 0 to 80.
+-
+- - gain:        allows setting the sensitivity in the range from 0 to
+-                31. Note that lower values indicate higher
+-                sensitivity.
+-
+- - offset:      allows setting the edge compensation in the range from
+-                0 to 31.
+-
+- - offset-x:    Same as offset, but applies only to the horizontal position.
+-                Range from 0 to 80, only supported by evervision,ev-ft5726
+-                devices.
+-
+- - offset-y:    Same as offset, but applies only to the vertical position.
+-                Range from 0 to 80, only supported by evervision,ev-ft5726
+-                devices.
+-
+- - touchscreen-size-x	   : See touchscreen.txt
+- - touchscreen-size-y	   : See touchscreen.txt
+- - touchscreen-fuzz-x      : See touchscreen.txt
+- - touchscreen-fuzz-y      : See touchscreen.txt
+- - touchscreen-inverted-x  : See touchscreen.txt
+- - touchscreen-inverted-y  : See touchscreen.txt
+- - touchscreen-swapped-x-y : See touchscreen.txt
+-
+-Example:
+-	polytouch: edt-ft5x06@38 {
+-		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
+-		reg = <0x38>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&edt_ft5x06_pins>;
+-		interrupt-parent = <&gpio2>;
+-		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+-		reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
+-		wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
+-	};
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+new file mode 100644
+index 000000000000..178b7aea0f83
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+@@ -0,0 +1,119 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/touchscreen/edt-ft5x06.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: FocalTech EDT-FT5x06 Polytouch Bindings
++
++description: There are 5 variants of the chip for various touch panel sizes
++             FT5206GE1  2.8" .. 3.8"
++             FT5306DE4  4.3" .. 7"
++             FT5406EE8  7"   .. 8.9"
++             FT5506EEG  7"   .. 8.9"
++             FT5726NEI  5.7” .. 11.6"
++
++maintainers:
++  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
++
++allOf:
++  - $ref: touchscreen.yaml#
++  - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - evervision,ev-ft5726
++
++    then:
++      properties:
++        offset-x: true
++        offset-y: true
++
++properties:
++  compatible:
++    enum:
++      - edt,edt-ft5206
++      - edt,edt-ft5306
++      - edt,edt-ft5406
++      - edt,edt-ft5506
++      - evervision,ev-ft5726
++      - focaltech,ft6236
++
++  reg:
++    enum: [ 0x38 ]
++
++  interrupts:
++    maxItems: 1
++
++  reset-gpios:
++    maxItems: 1
++
++  wake-gpios:
++    maxItems: 1
++
++  vcc-supply:
++    maxItems: 1
++
++  gain:
++    description: Allows setting the sensitivity in the range from 0 to 31.
++                 Note that lower values indicate higher sensitivity.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 31
++
++  offset:
++    description: Allows setting the edge compensation in the range from 0 to 31.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 31
++
++  offset-x:
++    description: Same as offset, but applies only to the horizontal position.
++                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 80
++
++  offset-y:
++    description: Same as offset, but applies only to the vertical position.
++                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 80
++
++  touchscreen-size-x: true
++  touchscreen-size-y: true
++  touchscreen-fuzz-x: true
++  touchscreen-fuzz-y: true
++  touchscreen-inverted-x: true
++  touchscreen-inverted-y: true
++  touchscreen-swapped-x-y: true
++  interrupt-controller: true
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    i2c@00000000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      edt-ft5x06@38 {
++        compatible = "edt,edt-ft5406";
++        reg = <0x38>;
++        interrupt-parent = <&gpio2>;
++        interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
++        reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
++        wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
++      };
++    };
++
++...
++
 -- 
-Thanks,
-
-David / dhildenb
+2.15.0
 
