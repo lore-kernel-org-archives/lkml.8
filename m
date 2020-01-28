@@ -2,216 +2,142 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0A4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD9FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF11E24699
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:06:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ALls1Hha";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xQCuMAW0"
+	by mail.kernel.org (Postfix) with ESMTP id 5066A24688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgA1MGI (ORCPT
+        id S1726143AbgA1MKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:06:08 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:34503 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725965AbgA1MGH (ORCPT
+        Tue, 28 Jan 2020 07:10:18 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51056 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726063AbgA1MKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:06:07 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 26C568001;
-        Tue, 28 Jan 2020 07:06:04 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 28 Jan 2020 07:06:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=C7BP0Zni9pKQ6yYB1hCeGZ1I8NU
-        lPigOIZFHlEK44jg=; b=ALls1HhagVexqLTH/h6HfQDmb56kWRV3I2CWddueYyp
-        zcoHkuQocJfc3iJD64htrx9UVO03xUON3tzcfq2iZvR3v+sjX4rcevVgt3EKNqSO
-        SY+XDJtBR0zuliU1m93mZW5D9C8X3YM5Ih4zKqsr+C6Hyf5vcpKGUOu8pFI3WoYP
-        8NPR2977Bg/W3z2tJi4T7uz3oju0mVcypU14Em2qM53+Fco6SQYzxtitvotctNQH
-        cHDhIe76gWf+ObHCvyiGAX510l/8CJXUxo2gzJFKks2+OBqZhU2VpIIo5DXISjG2
-        /ZOEyXSZdpDqsW3XneCgkMM+/KCyRxelw3KryCdaLSA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=C7BP0Z
-        ni9pKQ6yYB1hCeGZ1I8NUlPigOIZFHlEK44jg=; b=xQCuMAW0jfCmQEQunw8ckc
-        gdQOD7TaUzimD2QZmoSE2J8mMZDngHwkFi/QZdOOS5se5YfkcS3kMKvRtmS7ZxtP
-        YLKZNZXSGQjNnbK+IhbFO5zQCUoRir2bHI9LaW/+tt8OhdID4tsdn5SsS7+BktPI
-        Y9ZyvuDKA5OtRuZjfcPCU6AvFPowN5FflZwMjsR/nICvHKIUHHjI62ODis1vFsdA
-        XXuo3dmib2gMDa26Ccio6x2/KAEceLpTJ4L9xyC8QIE1UpLIWr9BKXsHhpHPdBDa
-        ZtVEMbhLkJxTZ10y9IE18jsbvrwRDyzKAemU1LQQynwRCE3bHOTzZTQjv193yJiQ
-        ==
-X-ME-Sender: <xms:qiMwXjz4XFjhNuzZIlFMMXXas_QkCht5qVWi1dvzwypJoCFkYYzkTA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfeeggdefhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
-    gtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:qiMwXnZpF_sOX1hrns5RV2xfBvHmpj8vam49Sd80LHfMyPCFZ7ArSA>
-    <xmx:qiMwXjTjxhmPWPtyucRLlIoVwEEsXatcNZb8BpdO-c171B_mKqvmMg>
-    <xmx:qiMwXq2RVZj3swcotL-KDtfy-AxtgxApnCbVyogSW44bSWpYEccXhw>
-    <xmx:rCMwXlLbckjvPmc6vxiUVBC3jMhpTn_n7BUh9PG94jaLIHH_dTYubw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5D0F73280059;
-        Tue, 28 Jan 2020 07:06:02 -0500 (EST)
-Date:   Tue, 28 Jan 2020 13:06:00 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     l.stach@pengutronix.de, linux+etnaviv@armlinux.org.uk,
-        christian.gmeiner@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        philippe.cornu@st.com, pierre-yves.mordret@st.com
-Subject: Re: [PATCH v2] dt-bindings: display: Convert etnaviv to json-schema
-Message-ID: <20200128120600.oagnindklixjyieo@gilmour.lan>
-References: <20200128082013.15951-1-benjamin.gaignard@st.com>
+        Tue, 28 Jan 2020 07:10:18 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SC7HD9078765
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:10:16 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xrg63bene-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:10:15 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Tue, 28 Jan 2020 12:10:12 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 Jan 2020 12:10:02 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00SCA17u41681050
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jan 2020 12:10:01 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A00D11C04A;
+        Tue, 28 Jan 2020 12:10:01 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B8F411C050;
+        Tue, 28 Jan 2020 12:09:58 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.59.112])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 28 Jan 2020 12:09:57 +0000 (GMT)
+Date:   Tue, 28 Jan 2020 14:09:56 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
+ <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
+ <214c0d53-eb34-9b0c-2e4e-1aa005146331@arm.com>
+ <016A776F-EFD9-4D2B-A3A9-788008617D95@lca.pw>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vfnmhiqen3omgibi"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200128082013.15951-1-benjamin.gaignard@st.com>
+In-Reply-To: <016A776F-EFD9-4D2B-A3A9-788008617D95@lca.pw>
+X-TM-AS-GCONF: 00
+x-cbid: 20012812-0028-0000-0000-000003D5276E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012812-0029-0000-0000-000024996EC2
+Message-Id: <20200128120956.GB6363@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_03:2020-01-24,2020-01-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=843
+ malwarescore=0 suspectscore=56 phishscore=0 adultscore=0 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001280098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Qian,
 
---vfnmhiqen3omgibi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Jan 27, 2020 at 10:33:08PM -0500, Qian Cai wrote:
+> 
+> > On Jan 27, 2020, at 10:06 PM, Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> >
+> > enablement of this test (for the moment) but then the goal is to integrate all
+> > of them going forward. The test not only validates platform's adherence to the
+> > expected semantics from generic MM but also helps in keeping it that way during
+> > code changes in future as well.
+> 
+> Another option maybe to get some decent arches on board first before merging this
+> thing, so it have more changes to catch regressions for developers who might run this. 
 
-Hi Benjamin,
+Aren't x86 and arm64 not decent enough?
+Even if this test could be used to detect regressions only on these two
+platforms, the test is valuable.
+ 
 
-On Tue, Jan 28, 2020 at 09:20:13AM +0100, Benjamin Gaignard wrote:
-> Convert etnaviv bindings to yaml format.
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../bindings/display/etnaviv/etnaviv-drm.txt       | 36 -----------
->  .../devicetree/bindings/gpu/vivante,gc.yaml        | 72 ++++++++++++++++++++++
->  2 files changed, 72 insertions(+), 36 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
->  create mode 100644 Documentation/devicetree/bindings/gpu/vivante,gc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> deleted file mode 100644
-> index 8def11b16a24..000000000000
-> --- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -Vivante GPU core devices
-> -========================
-> -
-> -Required properties:
-> -- compatible: Should be "vivante,gc"
-> -  A more specific compatible is not needed, as the cores contain chip
-> -  identification registers at fixed locations, which provide all the
-> -  necessary information to the driver.
-> -- reg: should be register base and length as documented in the
-> -  datasheet
-> -- interrupts: Should contain the cores interrupt line
-> -- clocks: should contain one clock for entry in clock-names
-> -  see Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -- clock-names:
-> -   - "bus":    AXI/master interface clock
-> -   - "reg":    AHB/slave interface clock
-> -               (only required if GPU can gate slave interface independently)
-> -   - "core":   GPU core clock
-> -   - "shader": Shader clock (only required if GPU has feature PIPE_3D)
-> -
-> -Optional properties:
-> -- power-domains: a power domain consumer specifier according to
-> -  Documentation/devicetree/bindings/power/power_domain.txt
-> -
-> -example:
-> -
-> -gpu_3d: gpu@130000 {
-> -	compatible = "vivante,gc";
-> -	reg = <0x00130000 0x4000>;
-> -	interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
-> -	clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
-> -	         <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> -	         <&clks IMX6QDL_CLK_GPU3D_SHADER>;
-> -	clock-names = "bus", "core", "shader";
-> -	power-domains = <&gpc 1>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/gpu/vivante,gc.yaml b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-> new file mode 100644
-> index 000000000000..c4f549c0d750
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/vivante,gc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Vivante GPU Bindings
-> +
-> +description: Vivante GPU core devices
-> +
-> +maintainers:
-> +  -  Lucas Stach <l.stach@pengutronix.de>
-> +
-> +properties:
-> +  compatible:
-> +    const: vivante,gc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: AXI/master interface clock
-> +      - description: GPU core clock
-> +      - description: Shader clock (only required if GPU has feature PIPE_3D)
-> +      - description: AHB/slave interface clock (only required if GPU can gate slave interface independently)
+-- 
+Sincerely yours,
+Mike.
 
-Can you have an AHB slave interface clock without a shader clock?
-
-> +    minItems: 2
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +      - const: core
-> +      - const: shader
-> +      - const: reg
-> +    minItems: 2
-> +    maxItems: 4
-
-If so, that check will fail, since it would expect a clock named
-shader on the 3rd item.
-
-It looks good otherwise, thanks!
-Maxime
-
---vfnmhiqen3omgibi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXjAjowAKCRDj7w1vZxhR
-xS1pAP9nJlkJxokUnmjQfMA6kE2uPIq7zZYoUdYbHV7tme0HaAD+OTNnxQ/8usOY
-eEVLroHRRxQBaSRsdwgCM0WebKkj3AQ=
-=Hfql
------END PGP SIGNATURE-----
-
---vfnmhiqen3omgibi--
