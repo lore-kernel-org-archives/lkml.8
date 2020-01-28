@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98CFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B605DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20DD20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FCA20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222703;
-	bh=BUju0Wx30sPMwP56BcCcBb6OikCck+XYZB+oJtZUH1s=;
+	s=default; t=1580222779;
+	bh=W9vJxPU7+5XYWboOQx6gDHeCsUyBYgBvmGMsPlzeYfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jvwAz7hISoEWO/MOyQ73madbxDr1wAOE4FPsEqMCZw7ClEuTs0QNrAt0bmmaiADGw
-	 +E8/N8dJmjsTGhtF4sKABblKDoAEeIRH4wcHGg+TAlxmnstOQBc0D3PNYhdXrQuYjW
-	 soRK4xfWe9oT3nRZK0rwXF/RLY0O5IgzKgYG1OjU=
+	b=xrXKzMvDmbWTLcnj2d57W1SU6+5Jw7kCU2f7f5NqRkAz3W6MewX+HjMh4nX7liOpS
+	 LVYB5k8mw5TQBSjN6jZsPXMZjYpsa6uaUSnAEO+PWaGj0XnVdQFLzwqeGi01hoxdk0
+	 cJ5RCgBPs25I9/WcNcirwly6VEzjF8miVHlxxyHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgA1OpC (ORCPT
+        id S1728140AbgA1OpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:45:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57796 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728760AbgA1OJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:09:25 -0500
+        id S1728708AbgA1OJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:09:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C00F24688;
-        Tue, 28 Jan 2020 14:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F1AD2468F;
+        Tue, 28 Jan 2020 14:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220564;
-        bh=BUju0Wx30sPMwP56BcCcBb6OikCck+XYZB+oJtZUH1s=;
+        s=default; t=1580220562;
+        bh=W9vJxPU7+5XYWboOQx6gDHeCsUyBYgBvmGMsPlzeYfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aQ8N7V7VNlJBJuWfi17EdQVpY7NBqA5dI94MakU7yy3RZBH+Lo01JVyQNKFUOR5Gr
-         Y1FXneJ2CYtFD1H9G+4NHK2MnlUxKon6DSpalXlq54fDmcd6NV6rNFYyCetyQeMrOD
-         q4bXa/PxDQjcdSsPI2gU3NObfEIxKifI3UBSPJnA=
+        b=CWi662vThjd6bJlFGximcJLIOl8Su2Qv053jZ7mmeuNbPid+Y75w0WB2C8F4EIDqq
+         50MCEX6N5RpjLSg2P/JfzPaOTyPItJYNdadXF14nEXyWspJOzILZw0OYbWER9oHiyO
+         HoXO11jsLuk6q6fVuY6PUmK6DJOSukGPd/exowzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 057/183] nios2: ksyms: Add missing symbol exports
-Date:   Tue, 28 Jan 2020 15:04:36 +0100
-Message-Id: <20200128135835.572720682@linuxfoundation.org>
+Subject: [PATCH 4.4 056/183] regulator: wm831x-dcdc: Fix list of wm831x_dcdc_ilim from mA to uA
+Date:   Tue, 28 Jan 2020 15:04:35 +0100
+Message-Id: <20200128135835.473799236@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,65 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 0f8ed994575429d6042cf5d7ef70081c94091587 ]
+[ Upstream commit c25d47888f0fb3d836d68322d4aea2caf31a75a6 ]
 
-Building nios2:allmodconfig fails as follows (each symbol is only listed
-once).
+The wm831x_dcdc_ilim entries needs to be uA because it is used to compare
+with min_uA and max_uA.
+While at it also make the array const and change to use unsigned int.
 
-ERROR: "__ashldi3" [drivers/md/dm-writecache.ko] undefined!
-ERROR: "__ashrdi3" [fs/xfs/xfs.ko] undefined!
-ERROR: "__ucmpdi2" [drivers/media/i2c/adv7842.ko] undefined!
-ERROR: "__lshrdi3" [drivers/md/dm-zoned.ko] undefined!
-ERROR: "flush_icache_range" [drivers/misc/lkdtm/lkdtm.ko] undefined!
-ERROR: "empty_zero_page" [drivers/md/dm-mod.ko] undefined!
-
-The problem is seen with gcc 7.3.0.
-
-Export the missing symbols.
-
-Fixes: 2fc8483fdcde ("nios2: Build infrastructure")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/nios2/kernel/nios2_ksyms.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/regulator/wm831x-dcdc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/nios2/kernel/nios2_ksyms.c b/arch/nios2/kernel/nios2_ksyms.c
-index bf2f55d10a4d8..4e704046a150c 100644
---- a/arch/nios2/kernel/nios2_ksyms.c
-+++ b/arch/nios2/kernel/nios2_ksyms.c
-@@ -9,12 +9,20 @@
- #include <linux/export.h>
- #include <linux/string.h>
+diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
+index 8cbb82ceec405..fad424e20bd5b 100644
+--- a/drivers/regulator/wm831x-dcdc.c
++++ b/drivers/regulator/wm831x-dcdc.c
+@@ -327,8 +327,8 @@ static int wm831x_buckv_get_voltage_sel(struct regulator_dev *rdev)
+ }
  
-+#include <asm/cacheflush.h>
-+#include <asm/pgtable.h>
-+
- /* string functions */
+ /* Current limit options */
+-static u16 wm831x_dcdc_ilim[] = {
+-	125, 250, 375, 500, 625, 750, 875, 1000
++static const unsigned int wm831x_dcdc_ilim[] = {
++	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
+ };
  
- EXPORT_SYMBOL(memcpy);
- EXPORT_SYMBOL(memset);
- EXPORT_SYMBOL(memmove);
- 
-+/* memory management */
-+
-+EXPORT_SYMBOL(empty_zero_page);
-+EXPORT_SYMBOL(flush_icache_range);
-+
- /*
-  * libgcc functions - functions that are used internally by the
-  * compiler...  (prototypes are not correct though, but that
-@@ -31,3 +39,7 @@ DECLARE_EXPORT(__udivsi3);
- DECLARE_EXPORT(__umoddi3);
- DECLARE_EXPORT(__umodsi3);
- DECLARE_EXPORT(__muldi3);
-+DECLARE_EXPORT(__ucmpdi2);
-+DECLARE_EXPORT(__lshrdi3);
-+DECLARE_EXPORT(__ashldi3);
-+DECLARE_EXPORT(__ashrdi3);
+ static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
 -- 
 2.20.1
 
