@@ -2,108 +2,100 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5499C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0D9C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46EE24684
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104F324686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:24:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726032AbgA1JXh (ORCPT
+        id S1726067AbgA1JYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:23:37 -0500
-Received: from mga05.intel.com ([192.55.52.43]:38327 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgA1JXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:23:36 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 01:22:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,373,1574150400"; 
-   d="scan'208";a="429274093"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Jan 2020 01:22:34 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iwN4t-00077h-Td; Tue, 28 Jan 2020 11:22:35 +0200
-Date:   Tue, 28 Jan 2020 11:22:35 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] console: Avoid positive return code from
- unregister_console()
-Message-ID: <20200128092235.GX32742@smile.fi.intel.com>
-References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
- <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
- <20200128044332.GA115889@google.com>
+        Tue, 28 Jan 2020 04:24:15 -0500
+Received: from ivanoab7.miniserver.com ([37.128.132.42]:40302 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgA1JYO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 04:24:14 -0500
+Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1iwN6P-00081e-UC; Tue, 28 Jan 2020 09:24:10 +0000
+Received: from jain.kot-begemot.co.uk ([192.168.3.3])
+        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1iwN6N-00056c-9c; Tue, 28 Jan 2020 09:24:09 +0000
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Subject: [GIT PULL] uml updates for 5.6-rc1
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        johannes@sipsolutions.net, linux-um@lists.infradead.org
+Message-ID: <aaf07936-6fd2-be40-15dc-f87e8e84091d@cambridgegreys.com>
+Date:   Tue, 28 Jan 2020 09:24:07 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128044332.GA115889@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 01:43:32PM +0900, Sergey Senozhatsky wrote:
-> On (20/01/27 13:47), Andy Shevchenko wrote:
-> [..]
-> >  	res = _braille_unregister_console(console);
-> > -	if (res)
-> > +	if (res < 0)
-> >  		return res;
-> > +	if (res > 0)
-> > +		return 0;
-> >  
-> > -	res = 1;
-> > +	res = -ENODEV;
-> >  	console_lock();
-> >  	if (console_drivers == console) {
-> >  		console_drivers=console->next;
-> > @@ -2838,6 +2840,9 @@ int unregister_console(struct console *console)
-> >  	if (!res && (console->flags & CON_EXTENDED))
-> >  		nr_ext_console_drivers--;
-> >  
-> > +	if (res && !(console->flags & CON_ENABLED))
-> > +		res = 0;
-> 
-> Console is not on the console_drivers list. Why does !ENABLED case
-> require extra handling?
+Linus,
 
-It's mirroring (to some extend) the register_console() abort conditions.
+I am sending this on behalf of Richard who is traveling.
 
-> What about the case when console is ENABLED
-> but still not registered?
+Please pull the following uml updates for v5.6-rc1:
 
-What about when console is ENABLED and we call register_console()?
-I think you can tell me what to do in these corner cases (however,
-that's not the point of this series).
+The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
 
-> I think that if the console is not on the list (was never registered)
-> then we can just bail out, without console_sysfs_notify(), etc. IOW,
-> 
-> 	if (res) {
-> 		console->flags &= ~CON_ENABLED; /* just in case */
-> 		console_unlock();
-> 		return res;
-> 	}
+   Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
 
-Perhaps. But see above. I would rather drop this condition for now
-for sake of this series being to the point.
+are available in the Git repository at:
 
--- 
-With Best Regards,
-Andy Shevchenko
+   git://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git tags/for-linus-5.6-rc1
+
+for you to fetch changes up to d65197ad52494bed3b5e64708281b8295f76c391:
+
+   um: Fix time-travel=inf-cpu with xor/raid6 (2020-01-19 22:42:06 +0100)
+
+----------------------------------------------------------------
+This pull request contains the following changes for UML:
+
+- Fix for time travel mode
+- Disable CONFIG_CONSTRUCTORS again
+- A new command line option to have an non-raw serial line
+- Preparations to remove obsolete UML network drivers
+
+----------------------------------------------------------------
+Brendan Higgins (1):
+       um: Mark non-vector net transports as obsolete
+
+Johannes Berg (3):
+       um: Add an option to make serial driver non-raw
+       Revert "um: Enable CONFIG_CONSTRUCTORS"
+       um: Fix time-travel=inf-cpu with xor/raid6
+
+  arch/um/Kconfig                  |  2 +
+  arch/um/drivers/Kconfig          | 81 ++++++++++++++++++++--------------------
+  arch/um/drivers/chan_user.h      |  2 +-
+  arch/um/drivers/ssl.c            |  8 ++++
+  arch/um/include/asm/Kbuild       |  1 -
+  arch/um/include/asm/common.lds.S |  2 +-
+  arch/um/include/asm/xor.h        |  7 ++++
+  arch/um/kernel/dyn.lds.S         |  1 +
+  init/Kconfig                     |  1 +
+  kernel/gcov/Kconfig              |  2 +-
+  10 files changed, 63 insertions(+), 44 deletions(-)
+  create mode 100644 arch/um/include/asm/xor.h
+
 
 
