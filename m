@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 635B6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B04C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DD924688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624B524688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221646;
-	bh=UDOslw//HU9T3CyQRE952D+mST3b7MPfW+u9hhNdxtw=;
+	s=default; t=1580221650;
+	bh=P4toyX1phPD8DHkO7o7ZqzgsPhOtbkIHQOc2UTMIMZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h9lIpMAoOzFZc19p0XB9hEWaq7D9I/SoMhqVRbmSXFvVbGdaBqiS7o2ea03r2vTjb
-	 nWv+QwknrndvvRNnD/E+nekhDdNAluYduG4C/LV0+Hc0k+Q69gQhtDHzZXUSOstpRQ
-	 VwFIVXaw/w/FdvD1vZYJI93T9SpMU7VVmudqB0+A=
+	b=vQZBNry6awo/w4o4ixiTRY8V6rlQpKfQ3yKqvfZaNgClVpapng3XsT5FheXeudrXK
+	 GwFx5KmlYmdpA+Dpt07DWDrAKizZwKRY48FkzRF5yG6q7+x8lA724Y1HQdPYwj5zAn
+	 F1U2b19VV1wWDRoIKkIgWo19E4URkJcuWaYsA5oc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733172AbgA1O1Z (ORCPT
+        id S1730828AbgA1O13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:27:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54974 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:27:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733279AbgA1O1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:27:18 -0500
+        id S1728419AbgA1O1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:27:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49C3124688;
-        Tue, 28 Jan 2020 14:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3982624688;
+        Tue, 28 Jan 2020 14:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221637;
-        bh=UDOslw//HU9T3CyQRE952D+mST3b7MPfW+u9hhNdxtw=;
+        s=default; t=1580221642;
+        bh=P4toyX1phPD8DHkO7o7ZqzgsPhOtbkIHQOc2UTMIMZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f0KKTc7Xq2QtHWyd/hmjcH+DjZmPTqSWJpVUE9Ij++pMBuMD5d0KfAUFRjctgYL/0
-         itTaBIPdmGSSVLwVaMpe56tJxIyw6GuolQkNoyKgpwG3XShCzrzDU5wxeO3hvAmhsh
-         tFd/Dt5z7EOuz1rIi1wy5JEErE4brdyc7MjcATVU=
+        b=mr7CH5GFayI4lA3C4jleah37dfDNkWg/FvWDjVB/BuMvW1YPpnmv6iNLjT3/DMkcA
+         5ei72aUxqMXxxcf2yOJgf23+PVU8uADjPmDcuCB/ONJXSvM0cSGMWNTqQigEjQ2+L+
+         gDNwAlB8zHYyryUP155C2j4GAU/eheq/X4RgxP+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Thierry Reding <treding@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 30/92] mmc: tegra: fix SDR50 tuning override
-Date:   Tue, 28 Jan 2020 15:07:58 +0100
-Message-Id: <20200128135812.918879042@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 4.19 32/92] Documentation: Document arm64 kpti control
+Date:   Tue, 28 Jan 2020 15:08:00 +0100
+Message-Id: <20200128135813.180124998@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -61,37 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Jeremy Linton <jeremy.linton@arm.com>
 
-commit f571389c0b015e76f91c697c4c1700aba860d34f upstream.
+commit de19055564c8f8f9d366f8db3395836da0b2176c upstream.
 
-Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
-broke SDR50 tuning override. Use correct NVQUIRK_ name.
+For a while Arm64 has been capable of force enabling
+or disabling the kpti mitigations. Lets make sure the
+documentation reflects that.
 
-Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
-Cc: <stable@vger.kernel.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-Tested-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Link: https://lore.kernel.org/r/9aff1d859935e59edd81e4939e40d6c55e0b55f6.1578390388.git.mirq-linux@rere.qmqm.pl
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-tegra.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/admin-guide/kernel-parameters.txt |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -177,7 +177,7 @@ static void tegra_sdhci_reset(struct sdh
- 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_DDR50;
- 		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR104)
- 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_SDR104;
--		if (soc_data->nvquirks & SDHCI_MISC_CTRL_ENABLE_SDR50)
-+		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR50)
- 			clk_ctrl |= SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE;
- 	}
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1946,6 +1946,12 @@
+ 			Built with CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF=y,
+ 			the default is off.
+ 
++	kpti=		[ARM64] Control page table isolation of user
++			and kernel address spaces.
++			Default: enabled on cores which need mitigation.
++			0: force disabled
++			1: force enabled
++
+ 	kvm.ignore_msrs=[KVM] Ignore guest accesses to unhandled MSRs.
+ 			Default is 0 (don't ignore, but inject #GP)
  
 
 
