@@ -2,293 +2,235 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49333C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDBBC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B852467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205772467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580221955;
+	bh=3mlZLHZFkhx/YE2zSXCVmEdAOaZRIqJhOWjIUbtyln0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kB98wAm6t6tlysXNaoq5EoocBEl6vfYdeaL5xT2wGYaev+od3ionjmMWDxvA03aBz
+	 wDkemq8d8vWY+D5SPpPFbRgV1ZUmAjh3qtUVCvAx+yyqRPI9o5GRTkOvfHe/k+w9vC
+	 hUKq/+xaInAP/dTu01THSS1qT8pDuGdg3zyvU7uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387635AbgA1Oc2 (ORCPT
+        id S1729791AbgA1O0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:32:28 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:58573 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgA1Oc0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:32:26 -0500
-Received: from 1.general.smb.uk.vpn ([10.172.193.28])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <stefan.bader@canonical.com>)
-        id 1iwRuf-0000U8-Nr; Tue, 28 Jan 2020 14:32:21 +0000
-Subject: Re: [PATCH 1/1] blk/core: Gracefully handle unset make_request_fn
-To:     Mike Snitzer <snitzer@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        dm-devel@redhat.com, Tyler Hicks <tyler.hicks@canonical.com>,
-        Alasdair Kergon <agk@redhat.com>
-References: <20200123091713.12623-1-stefan.bader@canonical.com>
- <20200123091713.12623-2-stefan.bader@canonical.com>
- <20200123103541.GA28102@redhat.com> <20200123172816.GA31063@redhat.com>
- <81055166-37fb-ad65-6a53-11c22c626ab1@kernel.dk>
- <20200127193225.GA5065@redhat.com>
-From:   Stefan Bader <stefan.bader@canonical.com>
-Autocrypt: addr=stefan.bader@canonical.com; prefer-encrypt=mutual; keydata=
- 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
- 2Iat+yfjuNhlNAJs
-Message-ID: <e0475dae-a55f-f30e-a82f-ee35cdb171c4@canonical.com>
-Date:   Tue, 28 Jan 2020 15:32:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 28 Jan 2020 09:26:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732878AbgA1O02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:26:28 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 483A224686;
+        Tue, 28 Jan 2020 14:26:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580221587;
+        bh=3mlZLHZFkhx/YE2zSXCVmEdAOaZRIqJhOWjIUbtyln0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0Y7hXPGf+MEmowwcm2h44hXsTG4WjH31BeRLeSO6Als8Ij8yfc+JwJ5BlkI0/3hmY
+         MImDNBdUM5gwanxbgLsgjIl4TxFe0ox135p0T+fawjPLorflqUu4ArwMyENhxoWHar
+         sSY4ItSDLggycmHpRnTNbWsEn9nuh3wjPIXUhs1s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 10/92] net: rtnetlink: validate IFLA_MTU attribute in rtnl_create_link()
+Date:   Tue, 28 Jan 2020 15:07:38 +0100
+Message-Id: <20200128135810.511448336@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
+References: <20200128135809.344954797@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200127193225.GA5065@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="QoMqDKtowBAHCBPOeuuP2rKfGv2dipUh6"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---QoMqDKtowBAHCBPOeuuP2rKfGv2dipUh6
-Content-Type: multipart/mixed; boundary="HBI1GOJsjgBEKnldT5vqQi19oKb4RQWqA"
+From: Eric Dumazet <edumazet@google.com>
 
---HBI1GOJsjgBEKnldT5vqQi19oKb4RQWqA
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit d836f5c69d87473ff65c06a6123e5b2cf5e56f5b ]
 
-On 27.01.20 20:32, Mike Snitzer wrote:
-> On Thu, Jan 23 2020 at  1:52pm -0500,
-> Jens Axboe <axboe@kernel.dk> wrote:
->=20
->> On 1/23/20 10:28 AM, Mike Snitzer wrote:
->>> On Thu, Jan 23 2020 at  5:35am -0500,
->>> Mike Snitzer <snitzer@redhat.com> wrote:
->>>
->>>> On Thu, Jan 23 2020 at  4:17am -0500,
->>>> Stefan Bader <stefan.bader@canonical.com> wrote:
->>>>
->>>>> When device-mapper adapted for multi-queue functionality, they
->>>>> also re-organized the way the make-request function was set.
->>>>> Before, this happened when the device-mapper logical device was
->>>>> created. Now it is done once the mapping table gets loaded the
->>>>> first time (this also decides whether the block device is request
->>>>> or bio based).
->>>>>
->>>>> However in generic_make_request(), the request function gets used
->>>>> without further checks and this happens if one tries to mount such
->>>>> a partially set up device.
->>>>>
->>>>> This can easily be reproduced with the following steps:
->>>>>  - dmsetup create -n test
->>>>>  - mount /dev/dm-<#> /mnt
->>>>>
->>>>> This maybe is something which also should be fixed up in device-
->>>>> mapper.
->>>>
->>>> I'll look closer at other options.
->>>>
->>>>> But given there is already a check for an unset queue
->>>>> pointer and potentially there could be other drivers which do or
->>>>> might do the same, it sounds like a good move to add another check
->>>>> to generic_make_request_checks() and to bail out if the request
->>>>> function has not been set, yet.
->>>>>
->>>>> BugLink: https://bugs.launchpad.net/bugs/1860231
->>>>
->>>> >From that bug;
->>>> "The currently proposed fix introduces no chance of stability
->>>> regressions. There is a chance of a very small performance regressio=
-n
->>>> since an additional pointer comparison is performed on each block la=
-yer
->>>> request but this is unlikely to be noticeable."
->>>>
->>>> This captures my immediate concern: slowing down everyone for this D=
-M
->>>> edge-case isn't desirable.
->>>
->>> SO I had a look and there isn't anything easier than adding the propo=
-sed
->>> NULL check in generic_make_request_checks().  Given the many
->>> conditionals in that  function.. what's one more? ;)
->>>
->>> I looked at marking the queue frozen to prevent IO via
->>> blk_queue_enter()'s existing cheeck -- but that quickly felt like an
->>> abuse, especially in that there isn't a queue unfreeze for bio-based.=
+rtnl_create_link() needs to apply dev->min_mtu and dev->max_mtu
+checks that we apply in do_setlink()
 
->>>
->>> Jens, I'll defer to you to judge this patch further.  If you're OK wi=
-th
->>> it: cool.  If not, I'm open to suggestions for how to proceed. =20
->>>
->>
->> It does kinda suck... The generic_make_request_checks() is a mess, and=
+Otherwise malicious users can crash the kernel, for example after
+an integer overflow :
 
->> this doesn't make it any better. Any reason why we can't solve this
->> two step setup in a clean fashion instead of patching around it like
->> this? Feels like a pretty bad hack, tbh.
->=20
-> I just staged the following DM fix:
-> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.=
-git/commit/?h=3Ddm-5.6&id=3D28a101d6b344f5a38d482a686d18b1205bc92333
+BUG: KASAN: use-after-free in memset include/linux/string.h:365 [inline]
+BUG: KASAN: use-after-free in __alloc_skb+0x37b/0x5e0 net/core/skbuff.c:238
+Write of size 32 at addr ffff88819f20b9c0 by task swapper/0/0
 
-Thanks Mike,
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+ memset+0x24/0x40 mm/kasan/common.c:108
+ memset include/linux/string.h:365 [inline]
+ __alloc_skb+0x37b/0x5e0 net/core/skbuff.c:238
+ alloc_skb include/linux/skbuff.h:1049 [inline]
+ alloc_skb_with_frags+0x93/0x590 net/core/skbuff.c:5664
+ sock_alloc_send_pskb+0x7ad/0x920 net/core/sock.c:2242
+ sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2259
+ mld_newpack+0x1d7/0x7f0 net/ipv6/mcast.c:1609
+ add_grhead.isra.0+0x299/0x370 net/ipv6/mcast.c:1713
+ add_grec+0x7db/0x10b0 net/ipv6/mcast.c:1844
+ mld_send_cr net/ipv6/mcast.c:1970 [inline]
+ mld_ifc_timer_expire+0x3d3/0x950 net/ipv6/mcast.c:2477
+ call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
+ __do_softirq+0x262/0x98c kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
+Code: 98 6b ea f9 eb 8a cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d 44 1c 60 00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d 34 1c 60 00 fb f4 <c3> cc 55 48 89 e5 41 57 41 56 41 55 41 54 53 e8 4e 5d 9a f9 e8 79
+RSP: 0018:ffffffff89807ce8 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
+RAX: 1ffffffff13266ae RBX: ffffffff8987a1c0 RCX: 0000000000000000
+RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffffffff8987aa54
+RBP: ffffffff89807d18 R08: ffffffff8987a1c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffffffff8a799980 R14: 0000000000000000 R15: 0000000000000000
+ arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:690
+ default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x3c8/0x6e0 kernel/sched/idle.c:269
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:361
+ rest_init+0x23b/0x371 init/main.c:451
+ arch_call_rest_init+0xe/0x1b
+ start_kernel+0x904/0x943 init/main.c:784
+ x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+ x86_64_start_kernel+0x77/0x7b arch/x86/kernel/head64.c:471
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
 
-yeah this looks like it resolves the problem without adding any impact on=
- the
-generic I/O path. We certainly had thought about that but felt uncertain =
-whether
-it would not open other risks. Like something adding requests just before=
- the
-table load. Could this cause some I/O be handled by one function and the =
-rest by
-another? And would that really matter?
+The buggy address belongs to the page:
+page:ffffea00067c82c0 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0
+raw: 057ffe0000000000 ffffea00067c82c8 ffffea00067c82c8 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
-The other thing that was a bit strange but maybe someone else's problem i=
-s that
-mount generated I/O requests to start with. The device size should be 0 s=
-till.
+Memory state around the buggy address:
+ ffff88819f20b880: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff88819f20b900: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>ffff88819f20b980: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                           ^
+ ffff88819f20ba00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff88819f20ba80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+
+Fixes: 61e84623ace3 ("net: centralize net_device min/max MTU checking")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/linux/netdevice.h |    2 ++
+ net/core/dev.c            |   29 +++++++++++++++++++----------
+ net/core/rtnetlink.c      |   13 +++++++++++--
+ 3 files changed, 32 insertions(+), 12 deletions(-)
+
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -3579,6 +3579,8 @@ int dev_set_alias(struct net_device *, c
+ int dev_get_alias(const struct net_device *, char *, size_t);
+ int dev_change_net_namespace(struct net_device *, struct net *, const char *);
+ int __dev_set_mtu(struct net_device *, int);
++int dev_validate_mtu(struct net_device *dev, int mtu,
++		     struct netlink_ext_ack *extack);
+ int dev_set_mtu_ext(struct net_device *dev, int mtu,
+ 		    struct netlink_ext_ack *extack);
+ int dev_set_mtu(struct net_device *, int);
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -7752,6 +7752,22 @@ int __dev_set_mtu(struct net_device *dev
+ }
+ EXPORT_SYMBOL(__dev_set_mtu);
+ 
++int dev_validate_mtu(struct net_device *dev, int new_mtu,
++		     struct netlink_ext_ack *extack)
++{
++	/* MTU must be positive, and in range */
++	if (new_mtu < 0 || new_mtu < dev->min_mtu) {
++		NL_SET_ERR_MSG(extack, "mtu less than device minimum");
++		return -EINVAL;
++	}
++
++	if (dev->max_mtu > 0 && new_mtu > dev->max_mtu) {
++		NL_SET_ERR_MSG(extack, "mtu greater than device maximum");
++		return -EINVAL;
++	}
++	return 0;
++}
++
+ /**
+  *	dev_set_mtu_ext - Change maximum transfer unit
+  *	@dev: device
+@@ -7768,16 +7784,9 @@ int dev_set_mtu_ext(struct net_device *d
+ 	if (new_mtu == dev->mtu)
+ 		return 0;
+ 
+-	/* MTU must be positive, and in range */
+-	if (new_mtu < 0 || new_mtu < dev->min_mtu) {
+-		NL_SET_ERR_MSG(extack, "mtu less than device minimum");
+-		return -EINVAL;
+-	}
+-
+-	if (dev->max_mtu > 0 && new_mtu > dev->max_mtu) {
+-		NL_SET_ERR_MSG(extack, "mtu greater than device maximum");
+-		return -EINVAL;
+-	}
++	err = dev_validate_mtu(dev, new_mtu, extack);
++	if (err)
++		return err;
+ 
+ 	if (!netif_device_present(dev))
+ 		return -ENODEV;
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -2875,8 +2875,17 @@ struct net_device *rtnl_create_link(stru
+ 	dev->rtnl_link_ops = ops;
+ 	dev->rtnl_link_state = RTNL_LINK_INITIALIZING;
+ 
+-	if (tb[IFLA_MTU])
+-		dev->mtu = nla_get_u32(tb[IFLA_MTU]);
++	if (tb[IFLA_MTU]) {
++		u32 mtu = nla_get_u32(tb[IFLA_MTU]);
++		int err;
++
++		err = dev_validate_mtu(dev, mtu, NULL);
++		if (err) {
++			free_netdev(dev);
++			return ERR_PTR(err);
++		}
++		dev->mtu = mtu;
++	}
+ 	if (tb[IFLA_ADDRESS]) {
+ 		memcpy(dev->dev_addr, nla_data(tb[IFLA_ADDRESS]),
+ 				nla_len(tb[IFLA_ADDRESS]));
 
 
->=20
-> From: Mike Snitzer <snitzer@redhat.com>
-> Date: Mon, 27 Jan 2020 14:07:23 -0500
-> Subject: [PATCH] dm: fix potential for q->make_request_fn NULL pointer
->=20
-> Move blk_queue_make_request() to dm.c:alloc_dev() so that
-> q->make_request_fn is never NULL during the lifetime of a DM device
-> (even one that is created without a DM table).
->=20
-> Otherwise generic_make_request() will crash simply by doing:
->   dmsetup create -n test
->   mount /dev/dm-N /mnt
->=20
-> While at it, move ->congested_data initialization out of
-> dm.c:alloc_dev() and into the bio-based specific init method.
->=20
-> Reported-by: Stefan Bader <stefan.bader@canonical.com>
-> BugLink: https://bugs.launchpad.net/bugs/1860231
-> Fixes: ff36ab34583a ("dm: remove request-based logic from make_request_=
-fn wrapper")
-> Depends-on: c12c9a3c3860c ("dm: various cleanups to md->queue initializ=
-ation code")
-> Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-> ---
->  drivers/md/dm.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-> index e8f9661a10a1..b89f07ee2eff 100644
-> --- a/drivers/md/dm.c
-> +++ b/drivers/md/dm.c
-> @@ -1859,6 +1859,7 @@ static void dm_init_normal_md_queue(struct mapped=
-_device *md)
->  	/*
->  	 * Initialize aspects of queue that aren't relevant for blk-mq
->  	 */
-> +	md->queue->backing_dev_info->congested_data =3D md;
->  	md->queue->backing_dev_info->congested_fn =3D dm_any_congested;
->  }
-> =20
-> @@ -1949,7 +1950,12 @@ static struct mapped_device *alloc_dev(int minor=
-)
->  	if (!md->queue)
->  		goto bad;
->  	md->queue->queuedata =3D md;
-> -	md->queue->backing_dev_info->congested_data =3D md;
-> +	/*
-> +	 * default to bio-based required ->make_request_fn until DM
-> +	 * table is loaded and md->type established. If request-based
-> +	 * table is loaded: blk-mq will override accordingly.
-> +	 */
-> +	blk_queue_make_request(md->queue, dm_make_request);
-> =20
->  	md->disk =3D alloc_disk_node(1, md->numa_node_id);
->  	if (!md->disk)
-> @@ -2264,7 +2270,6 @@ int dm_setup_md_queue(struct mapped_device *md, s=
-truct dm_table *t)
->  	case DM_TYPE_DAX_BIO_BASED:
->  	case DM_TYPE_NVME_BIO_BASED:
->  		dm_init_normal_md_queue(md);
-> -		blk_queue_make_request(md->queue, dm_make_request);
->  		break;
->  	case DM_TYPE_NONE:
->  		WARN_ON_ONCE(true);
->=20
-
-
-
---HBI1GOJsjgBEKnldT5vqQi19oKb4RQWqA--
-
---QoMqDKtowBAHCBPOeuuP2rKfGv2dipUh6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE2118yvOZTjOV2k0+6Gdd7svuzqMFAl4wRe4ACgkQ6Gdd7svu
-zqN2qw//bBrpllkwHJsA1CMT6kaPx5+mSENn7s/AIdQpsTMTTkP7rKPJQq5mx0yz
-ZGG5yfJWZYitxNlnhMBIYfc0HzZJt69tZ8lBmfdloit3Uj4rdODY2VQqcqXGQ1zw
-gBdaCAyP3pRCAYRKk7TERNGXO6+Q/xQP6neEbbnWT9AwGL80YfwlEZmP+WAPq3im
-D5eCn4/zAv+4GTA13YBhNjozdm/I2+TSsjVhDhLaU780bIXMnyatB82yltYYEbSb
-Hwo0OxqHw5nZdoO9VgK5m1rraHMCWKKhErm7GzUFyO8zFpSUsfhv7hVucbQgXIIF
-Se89YPf+q2um1Yz77F1SkzVvLh3/rDRw3ACFSoAo1d22nXC02EfwASdvGw9OlJIz
-+ffi0DVY9nUyaVXKz7f+C3FxwzldWMvNmrgoteLjNJ3jJ5Of0jBIq/nwxqTDVrny
-oZ3el+F8VzUkuf5Nx8buYarX1ov1M1as/qlE9jlVGTzK63mgC9OOKEyn60+luUyf
-hsZjQFrOncc3a8yhW82nyushl3pxdj93N55XdYEKHeikPTeLKd61TKKx0j0Pty2k
-gT+ZiH3UjHLEZJAPbc94F6q3r1nh+q8KvUDRKjMbMz5B8IfZl9Cco3BxAYEpH/cf
-mC+PnV1xFOMkwJZSwyLHl4bwf02sTMG+aPBVZiZyXqQNOGHr8XU=
-=W0r0
------END PGP SIGNATURE-----
-
---QoMqDKtowBAHCBPOeuuP2rKfGv2dipUh6--
