@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8D6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CD6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B632173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60EE2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220027;
-	bh=8JpFQ3NofESOkuHFqaDPypBoczwv8Ujt9h1/c4Jearc=;
+	s=default; t=1580220033;
+	bh=C80hO95fUlhePgToChD8CSc4I8Aj6cloQwLGUMaNs+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GeUA2QFjQXnsAxItHujKOMyxVDL/lUh6bvIkNHCHq06Zjo6XZ9ELoT+RBcI8HGCHd
-	 rVtri/DV+Hd7Jbje+TPyoCRytJiKAM75IpkJPlwGXyCtz5ZBoDwHYlJZ6E4HFFSelx
-	 6OUBSuO6wcub962RaPe5q6+v/ej3NxLASxUgAqX4=
+	b=uPSmzMX6xOosjXNNpQjuWuk+fwC9isuv77tpvWyPsKF1cJBdp9KpGi4ZtL0cBWqcc
+	 sq1ySMxOG0RItKp3KB/Dl7T+NS7kCHNWO+XHo0wgTJBg70DdNzZLQV+gySzhBLAkPY
+	 k5nxDVqz7MevN2GBYbPHL2HvvOEX2DKoujxglkn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgA1OAW (ORCPT
+        id S1727201AbgA1OAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:00:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46056 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:00:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726692AbgA1OAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:00:20 -0500
+        id S1726520AbgA1OAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:00:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C00124694;
-        Tue, 28 Jan 2020 14:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE94324688;
+        Tue, 28 Jan 2020 14:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220019;
-        bh=8JpFQ3NofESOkuHFqaDPypBoczwv8Ujt9h1/c4Jearc=;
+        s=default; t=1580220002;
+        bh=C80hO95fUlhePgToChD8CSc4I8Aj6cloQwLGUMaNs+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p5zvJCuil/3q0ZOHQk6q0Xxx4EMKwuJq2Ng0hNCR2rTuDdVBAZksHgZtm6xzV+j8w
-         r27z1T/EP7tcN9Z8l05ny4ghFMyBGA27ImasQJdyCxwpsUII+nH6XgrhNwweYoT4fg
-         E4FG1W7Z5dGdhTa70Zd5/mrBWYRChgZaOfbDejHk=
+        b=P1VSoDzfLfmQzjIYJ4gN1CJ0KJhcTiMyAOVaWaLQk8yXd+CiTZxWtv6V8PDy3S4bf
+         9kAbU+GFyZAwa4StAQQVf8LjKx6pN0vamK35pMbCsQKiLOjh5Ca3af1/AmTnsjIDU+
+         AUw5zBDBYfXoberAjJyLeoTzJ0cfm3GzmZaFVpA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.14 36/46] do_last(): fetch directory ->i_mode and ->i_uid before its too late
-Date:   Tue, 28 Jan 2020 14:58:10 +0100
-Message-Id: <20200128135754.563268564@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Vladis Dronov <vdronov@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 29/46] Input: gtco - fix endpoint sanity check
+Date:   Tue, 28 Jan 2020 14:58:03 +0100
+Message-Id: <20200128135753.817028576@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -58,74 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Johan Hovold <johan@kernel.org>
 
-commit d0cb50185ae942b03c4327be322055d622dc79f6 upstream.
+commit a8eeb74df5a6bdb214b2b581b14782c5f5a0cf83 upstream.
 
-may_create_in_sticky() call is done when we already have dropped the
-reference to dir.
+The driver was checking the number of endpoints of the first alternate
+setting instead of the current one, something which could lead to the
+driver binding to an invalid interface.
 
-Fixes: 30aba6656f61e (namei: allow restricted O_CREAT of FIFOs and regular files)
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+This in turn could cause the driver to misbehave or trigger a WARN() in
+usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: 162f98dea487 ("Input: gtco - fix crash on detecting device without endpoints")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Vladis Dronov <vdronov@redhat.com>
+Link: https://lore.kernel.org/r/20191210113737.4016-5-johan@kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/namei.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/input/tablet/gtco.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1023,7 +1023,8 @@ static int may_linkat(struct path *link)
-  * may_create_in_sticky - Check whether an O_CREAT open in a sticky directory
-  *			  should be allowed, or not, on files that already
-  *			  exist.
-- * @dir: the sticky parent directory
-+ * @dir_mode: mode bits of directory
-+ * @dir_uid: owner of directory
-  * @inode: the inode of the file to open
-  *
-  * Block an O_CREAT open of a FIFO (or a regular file) when:
-@@ -1039,18 +1040,18 @@ static int may_linkat(struct path *link)
-  *
-  * Returns 0 if the open is allowed, -ve on error.
-  */
--static int may_create_in_sticky(struct dentry * const dir,
-+static int may_create_in_sticky(umode_t dir_mode, kuid_t dir_uid,
- 				struct inode * const inode)
- {
- 	if ((!sysctl_protected_fifos && S_ISFIFO(inode->i_mode)) ||
- 	    (!sysctl_protected_regular && S_ISREG(inode->i_mode)) ||
--	    likely(!(dir->d_inode->i_mode & S_ISVTX)) ||
--	    uid_eq(inode->i_uid, dir->d_inode->i_uid) ||
-+	    likely(!(dir_mode & S_ISVTX)) ||
-+	    uid_eq(inode->i_uid, dir_uid) ||
- 	    uid_eq(current_fsuid(), inode->i_uid))
- 		return 0;
+--- a/drivers/input/tablet/gtco.c
++++ b/drivers/input/tablet/gtco.c
+@@ -875,18 +875,14 @@ static int gtco_probe(struct usb_interfa
+ 	}
  
--	if (likely(dir->d_inode->i_mode & 0002) ||
--	    (dir->d_inode->i_mode & 0020 &&
-+	if (likely(dir_mode & 0002) ||
-+	    (dir_mode & 0020 &&
- 	     ((sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) ||
- 	      (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode))))) {
- 		return -EACCES;
-@@ -3265,6 +3266,8 @@ static int do_last(struct nameidata *nd,
- 		   int *opened)
- {
- 	struct dentry *dir = nd->path.dentry;
-+	kuid_t dir_uid = dir->d_inode->i_uid;
-+	umode_t dir_mode = dir->d_inode->i_mode;
- 	int open_flag = op->open_flag;
- 	bool will_truncate = (open_flag & O_TRUNC) != 0;
- 	bool got_write = false;
-@@ -3400,7 +3403,7 @@ finish_open:
- 		error = -EISDIR;
- 		if (d_is_dir(nd->path.dentry))
- 			goto out;
--		error = may_create_in_sticky(dir,
-+		error = may_create_in_sticky(dir_mode, dir_uid,
- 					     d_backing_inode(nd->path.dentry));
- 		if (unlikely(error))
- 			goto out;
+ 	/* Sanity check that a device has an endpoint */
+-	if (usbinterface->altsetting[0].desc.bNumEndpoints < 1) {
++	if (usbinterface->cur_altsetting->desc.bNumEndpoints < 1) {
+ 		dev_err(&usbinterface->dev,
+ 			"Invalid number of endpoints\n");
+ 		error = -EINVAL;
+ 		goto err_free_urb;
+ 	}
+ 
+-	/*
+-	 * The endpoint is always altsetting 0, we know this since we know
+-	 * this device only has one interrupt endpoint
+-	 */
+-	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
++	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
+ 
+ 	/* Some debug */
+ 	dev_dbg(&usbinterface->dev, "gtco # interfaces: %d\n", usbinterface->num_altsetting);
+@@ -973,7 +969,7 @@ static int gtco_probe(struct usb_interfa
+ 	input_dev->dev.parent = &usbinterface->dev;
+ 
+ 	/* Setup the URB, it will be posted later on open of input device */
+-	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
++	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
+ 
+ 	usb_fill_int_urb(gtco->urbinfo,
+ 			 udev,
 
 
