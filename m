@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10629C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9C4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC922468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0AF9205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220361;
-	bh=GJg9d1r4pYUfl27AEWO0u5jB0pOqYWZhP3ZhkRWf2ms=;
+	s=default; t=1580220365;
+	bh=AdAeuX5VP2SyqUHm1TIqwAL6nRijuMWGMN9OphXvM6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YKtPQ5OcC8yfFGrVXdTq7+oRB1WRbkvaJPil55g1ZW32Yw047L7fj8rOsNutVQnZW
-	 PQ9QpEsg2rMKLHKVhDhcIjXyLSTP5OXaHrUT7yzx8lOMxU/RH5LIKS3+mSX1nR+kOv
-	 /wz8msc3wNWn2U4nXtlhf2KzOaRi+ewTiGyAmQls=
+	b=mRyD169QzKzpagLmOj4Md2CznS9y4VbLOBDTMlAqA3YLFUTFhqgPH6T4+7R4HVmRW
+	 6J8Cye/9P7epnE7UeJmU6md9Zu5eGlwMWMUqnCGgHBTVbXnkcnopx2fyxpdN6FrDz+
+	 sBUI+89qtbl9lC8P7G7qqicczXLJAVmrK8gIEtwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbgA1OGA (ORCPT
+        id S1727830AbgA1OGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:06:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52966 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:06:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728254AbgA1OFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:05:24 -0500
+        id S1728234AbgA1OFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:05:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 590F124691;
-        Tue, 28 Jan 2020 14:05:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CD86205F4;
+        Tue, 28 Jan 2020 14:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220322;
-        bh=GJg9d1r4pYUfl27AEWO0u5jB0pOqYWZhP3ZhkRWf2ms=;
+        s=default; t=1580220315;
+        bh=AdAeuX5VP2SyqUHm1TIqwAL6nRijuMWGMN9OphXvM6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lsv0WtS+z6cdmVnj6Ku5Arsa80eWY/FUNDGddrmsIrFdVXUzyBlcus37bDAW5CnoE
-         lnJfiT6oUdw6J2J+gHfdFmlR6/nu0TJsa9K8Ri0rcsXCmf+R5jt6LYZOgiL7v31o7m
-         nVLjyr9R+J1bVF66mgV+O2L/DdUV8MeFvCj8YLVU=
+        b=x3jwBmRQoBreWsjVFgmMi8oqUXnqjqWpe/gHzAYLKgXlsiV5HBTR7BnrptQU5hKqQ
+         PfsnhpQyn5OaHsWYdCVP1nmYlMQAHX96tr1B0bMO7sFSOY1jRuENQMkanbqLW7Ieyu
+         mQGSsMl+tOoR1ungB0TJULGZtlx79VZKRmB5aYAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 5.4 081/104] iwlwifi: mvm: fix potential SKB leak on TXQ TX
-Date:   Tue, 28 Jan 2020 15:00:42 +0100
-Message-Id: <20200128135828.374903351@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+156a04714799b1d480bc@syzkaller.appspotmail.com,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 102/104] netfilter: nf_tables: add __nft_chain_type_get()
+Date:   Tue, 28 Jan 2020 15:01:03 +0100
+Message-Id: <20200128135831.012305689@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -59,104 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit df2378ab0f2a9dd4cf4501268af1902cc4ebacd8 upstream.
+commit 826035498ec14b77b62a44f0cb6b94d45530db6f upstream.
 
-When we transmit after TXQ dequeue, we aren't paying attention to
-the return value of the transmit functions, leading to a potential
-SKB leak.
+This new helper function validates that unknown family and chain type
+coming from userspace do not trigger an out-of-bound array access. Bail
+out in case __nft_chain_type_get() returns NULL from
+nft_chain_parse_hook().
 
-Refactor the code a bit (and rename ..._tx to ..._tx_sta) to check
-for this happening.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Fixes: cfbc6c4c5b91 ("iwlwifi: mvm: support mac80211 TXQs model")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: 9370761c56b6 ("netfilter: nf_tables: convert built-in tables/chains to chain types")
+Reported-by: syzbot+156a04714799b1d480bc@syzkaller.appspotmail.com
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c |   28 ++++++++++++----------
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h      |    4 +--
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c       |    4 +--
- 3 files changed, 20 insertions(+), 16 deletions(-)
+ net/netfilter/nf_tables_api.c |   29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -742,6 +742,20 @@ int iwl_mvm_mac_setup_register(struct iw
- 	return ret;
- }
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -489,14 +489,27 @@ static inline u64 nf_tables_alloc_handle
+ static const struct nft_chain_type *chain_type[NFPROTO_NUMPROTO][NFT_CHAIN_T_MAX];
  
-+static void iwl_mvm_tx_skb(struct iwl_mvm *mvm, struct sk_buff *skb,
-+			   struct ieee80211_sta *sta)
+ static const struct nft_chain_type *
++__nft_chain_type_get(u8 family, enum nft_chain_types type)
 +{
-+	if (likely(sta)) {
-+		if (likely(iwl_mvm_tx_skb_sta(mvm, skb, sta) == 0))
-+			return;
-+	} else {
-+		if (likely(iwl_mvm_tx_skb_non_sta(mvm, skb) == 0))
-+			return;
-+	}
++	if (family >= NFPROTO_NUMPROTO ||
++	    type >= NFT_CHAIN_T_MAX)
++		return NULL;
 +
-+	ieee80211_free_txskb(mvm->hw, skb);
++	return chain_type[family][type];
 +}
 +
- static void iwl_mvm_mac_tx(struct ieee80211_hw *hw,
- 			   struct ieee80211_tx_control *control,
- 			   struct sk_buff *skb)
-@@ -785,14 +799,7 @@ static void iwl_mvm_mac_tx(struct ieee80
- 		}
- 	}
- 
--	if (sta) {
--		if (iwl_mvm_tx_skb(mvm, skb, sta))
--			goto drop;
--		return;
--	}
--
--	if (iwl_mvm_tx_skb_non_sta(mvm, skb))
--		goto drop;
-+	iwl_mvm_tx_skb(mvm, skb, sta);
- 	return;
-  drop:
- 	ieee80211_free_txskb(hw, skb);
-@@ -842,10 +849,7 @@ void iwl_mvm_mac_itxq_xmit(struct ieee80
- 				break;
- 			}
- 
--			if (!txq->sta)
--				iwl_mvm_tx_skb_non_sta(mvm, skb);
--			else
--				iwl_mvm_tx_skb(mvm, skb, txq->sta);
-+			iwl_mvm_tx_skb(mvm, skb, txq->sta);
- 		}
- 	} while (atomic_dec_return(&mvmtxq->tx_request));
- 	rcu_read_unlock();
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@ -1508,8 +1508,8 @@ int __must_check iwl_mvm_send_cmd_status
- int __must_check iwl_mvm_send_cmd_pdu_status(struct iwl_mvm *mvm, u32 id,
- 					     u16 len, const void *data,
- 					     u32 *status);
--int iwl_mvm_tx_skb(struct iwl_mvm *mvm, struct sk_buff *skb,
--		   struct ieee80211_sta *sta);
-+int iwl_mvm_tx_skb_sta(struct iwl_mvm *mvm, struct sk_buff *skb,
-+		       struct ieee80211_sta *sta);
- int iwl_mvm_tx_skb_non_sta(struct iwl_mvm *mvm, struct sk_buff *skb);
- void iwl_mvm_set_tx_cmd(struct iwl_mvm *mvm, struct sk_buff *skb,
- 			struct iwl_tx_cmd *tx_cmd,
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -1203,8 +1203,8 @@ drop:
- 	return -1;
- }
- 
--int iwl_mvm_tx_skb(struct iwl_mvm *mvm, struct sk_buff *skb,
--		   struct ieee80211_sta *sta)
-+int iwl_mvm_tx_skb_sta(struct iwl_mvm *mvm, struct sk_buff *skb,
-+		       struct ieee80211_sta *sta)
++static const struct nft_chain_type *
+ __nf_tables_chain_type_lookup(const struct nlattr *nla, u8 family)
  {
- 	struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
- 	struct ieee80211_tx_info info;
++	const struct nft_chain_type *type;
+ 	int i;
+ 
+ 	for (i = 0; i < NFT_CHAIN_T_MAX; i++) {
+-		if (chain_type[family][i] != NULL &&
+-		    !nla_strcmp(nla, chain_type[family][i]->name))
+-			return chain_type[family][i];
++		type = __nft_chain_type_get(family, i);
++		if (!type)
++			continue;
++		if (!nla_strcmp(nla, type->name))
++			return type;
+ 	}
+ 	return NULL;
+ }
+@@ -1095,11 +1108,8 @@ static void nf_tables_table_destroy(stru
+ 
+ void nft_register_chain_type(const struct nft_chain_type *ctype)
+ {
+-	if (WARN_ON(ctype->family >= NFPROTO_NUMPROTO))
+-		return;
+-
+ 	nfnl_lock(NFNL_SUBSYS_NFTABLES);
+-	if (WARN_ON(chain_type[ctype->family][ctype->type] != NULL)) {
++	if (WARN_ON(__nft_chain_type_get(ctype->family, ctype->type))) {
+ 		nfnl_unlock(NFNL_SUBSYS_NFTABLES);
+ 		return;
+ 	}
+@@ -1551,7 +1561,10 @@ static int nft_chain_parse_hook(struct n
+ 	hook->num = ntohl(nla_get_be32(ha[NFTA_HOOK_HOOKNUM]));
+ 	hook->priority = ntohl(nla_get_be32(ha[NFTA_HOOK_PRIORITY]));
+ 
+-	type = chain_type[family][NFT_CHAIN_T_DEFAULT];
++	type = __nft_chain_type_get(family, NFT_CHAIN_T_DEFAULT);
++	if (!type)
++		return -EOPNOTSUPP;
++
+ 	if (nla[NFTA_CHAIN_TYPE]) {
+ 		type = nf_tables_chain_type_lookup(net, nla[NFTA_CHAIN_TYPE],
+ 						   family, autoload);
 
 
