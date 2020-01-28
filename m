@@ -2,138 +2,92 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0CDC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7667C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A4F214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4A0214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:29:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="H2uoDT+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgA1R2h (ORCPT
+        id S1726564AbgA1R3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:28:37 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2322 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726066AbgA1R2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:28:36 -0500
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id A5F7E907644890621BA9;
-        Tue, 28 Jan 2020 17:28:34 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Jan 2020 17:28:34 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jan
- 2020 17:28:33 +0000
-Subject: Re: [PATCH RFC 0/2] Add basic generic ACPI soc driver
-To:     Jeremy Linton <jeremy.linton@arm.com>, <rjw@rjwysocki.net>,
-        <lenb@kernel.org>
-CC:     <arnd@arndb.de>, <olof@lixom.net>, <linux-kernel@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <guohanjun@huawei.com>,
-        <gregkh@linuxfoundation.org>
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <bb87efe5-d0be-498a-25a1-008a7bebd452@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <5ab3a97d-bbc4-6d5a-fd06-f8da324339ab@huawei.com>
-Date:   Tue, 28 Jan 2020 17:28:33 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 28 Jan 2020 12:29:33 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46388 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgA1R3c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:29:32 -0500
+Received: by mail-ed1-f67.google.com with SMTP id m8so15497420edi.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 09:29:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Itubj3wCd88V9nT3tAeTBYkE6xJQ1VQ9eREikhnfNPg=;
+        b=H2uoDT+Nsm1ldbsEWOxGoUe35NmZeaFL4LxspAArXM0Xj3hpzBum4DJdPdXrGTJ1C6
+         Ib651SmRSgy+ksTu8zaIMU2/EbNVxBALV829asZ12twYZMS2ZASk5eE+F7vyfdPs5tzm
+         hPMZ36r/i7VtmPFwutMON7ZgAlct9m2v78KPqzYKmHYNHISnPAb3ak7ebXpWIsF99abG
+         G8OlXKGkbRni6O8+b2U6BEHI8gM1aJ1DXE9ZdSxJ4MQ5wsJZegtBACqrl0lWN2QLXMMo
+         ylqTZ6SEJ1IyEjoZ90E7IZfh+WzFDMqYGecqft0VQ4a6hvB/KZrd72qusvs85SOfCAu+
+         WDZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Itubj3wCd88V9nT3tAeTBYkE6xJQ1VQ9eREikhnfNPg=;
+        b=OdI8597olT/eCjqcmfNOb7joiQK3grgu+FEZ+gsqXbAWUEykAFrSwT3KnbBZDu4CP8
+         iooje9q457fkUOAud9vie+NC0KtABFR4fC5nhEN4awTioBVB36NwmZtDRjs1gdlv/c/x
+         5fk/DnhFlIPuWOnJTnd/R9PTQAk/zePr8FLpqTMrvTOsBNmZNvByAN7o/oK5imUogYlz
+         cbqHCANy6rHcxROT0nDECQSCR7I7caUx5YuIdmzs9nGrCb06re5cpYcjb+fApSw+u9j+
+         aeu5B3LiZcmMkHaiOqWB9eh+vVPR6iaoQuus/AF3caoZ9XzcRlejvhLUFlD4IJGOgUQ1
+         ewyA==
+X-Gm-Message-State: APjAAAWVYO5PvrvZ0mpjSuYzx9TJpC3cTFHALy8L1FGbkupN5Zux+qBb
+        I9DHp7Iqfdx1n2Z0ZsVvt1/rtH5VjqaRITrkryu8
+X-Google-Smtp-Source: APXvYqx104uBSDEa7X9PfMB9Iz+fOAlx7B3tbnc3c+sO//QfUCyZIxfw2j7nC0XklgQFi+l6TYCx07io1GQgQEavEpY=
+X-Received: by 2002:a50:ec1a:: with SMTP id g26mr4313343edr.164.1580232570877;
+ Tue, 28 Jan 2020 09:29:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <bb87efe5-d0be-498a-25a1-008a7bebd452@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <000000000000143de7059d2ba3e5@google.com> <000000000000fdbd71059d32a906@google.com>
+ <CAHC9VhS_Bfywhp+6H03bY7LrQsBz+io672pSS0DpiZKFiz4L6g@mail.gmail.com>
+ <850873b8-8a30-58e5-ad3c-86fb35296130@tycho.nsa.gov> <CAFqZXNuxFTKXVZDpPGCTHifn_AeCdVmP+PZrMDKDOYiLOWtsUA@mail.gmail.com>
+ <CAHC9VhR9a1xEB3gXUkb4KRVkwXUAo-701ZumN2OTOmJ7r5ez8g@mail.gmail.com> <CAFqZXNv77JHa-6BPzEomZaj2uJqGrBRXrK68cTL0N0--Kz_PkA@mail.gmail.com>
+In-Reply-To: <CAFqZXNv77JHa-6BPzEomZaj2uJqGrBRXrK68cTL0N0--Kz_PkA@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 28 Jan 2020 12:29:19 -0500
+Message-ID: <CAHC9VhTHUjdYujta-bOd=AG+XLic6rAZbp2sEpC86vVnpkmBVA@mail.gmail.com>
+Subject: Re: possible deadlock in sidtab_sid2str_put
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/01/2020 16:56, Jeremy Linton wrote:
-> Hi,
-> 
+On Tue, Jan 28, 2020 at 11:31 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> ... the current rawhide 5.5.0-1 kernel seems to have some bug
+> that prevents it from booting on anything with more than one core.
+> I'll see if I can work around it somehow...
 
-Hi Jeremy,
+I'm not sure how you are building your kernels, but gcc v10 is causing
+a lot of problems, I would suggest compiling with an earlier gcc for
+the near future until things get sorted (I'm doing the kernel-secnext
+builds on stable Fedora, not Rawhide, for now).
 
-> On 1/28/20 5:14 AM, John Garry wrote:
->> A requirement has come up recently to be able to read system SoC packages
->> identifiers from userspace [0].
->>
->> For device tree FW-based systems, this would be quite straightforward, in
->> that we could add a soc driver for that system and use the DT model
->> identifier as the soc id - that's how most soc drivers seem to do it.
->>
->> For ACPI-based systems, the only place I know to get (put) such SoC
->> information is in the PPTT, specifically the ID Type Structure for a
->> processor package node. A processor package node describes a physical
->> boundary of a processor topology.
-> 
-> Well presumably that is one of the use cases for DMI, which has fields 
-> for the processor/socket as well as the machine vendor.
-
-I did consider DMI, but I want something more generic, i.e. could cover 
-embedded/DT systems also.
-
-And I need to double check if DMI really has the info I require. Last 
-time I checked, it didn't for my dev board, but I know that some fields 
-are simply not filled in.
-
-> 
-> But, quickly looking at the use case, I can't help but think you don't 
-> really want any of the above, or the PPTT id. It seems the mapping 
-> should actually be tied directly to the uncore PMU definition, rather 
-> than a soc/machine/whatever identifier. Which would imply keying off one 
-> of the ACPI object identifiers for the PMU itself.
-
-So a PMU device (/sys/bus/event_source/devices) does not have a link to 
-the ACPI object identifiers or uncore PMU platform device etc.
-
-And even if it did, there is no clear link between that ACPI object and 
-the events it supports for that implementation.
-
-Cheers,
-John
-
-> 
-> 
->>
->> The ACPI spec does not declare how the fields in this structure must be
->> used, however it does provide pretty clear examples, which I would expect
->> most implementers to follow. As such, I try to solve the problem in 2
->> parts:
->> - Add ACPI PPTT API to get opaque package structure
->> - Add basic ACPI generic soc driver, which can interpret the fields
->>    for known platforms to fill in the ID Type Structure as per example
->>    in the spec.
->>
->> So I'm hoping here for some comments on this approach - hence the RFC.
->> I've cc'ed some folks which may have suggestions.
->>
->> [0] 
->> https://lore.kernel.org/linux-arm-kernel/1579876505-113251-6-git-send-email-john.garry@huawei.com/ 
->> ,
->>      
->> https://lore.kernel.org/linux-arm-kernel/1579876505-113251-1-git-send-email-john.garry@huawei.com/ 
->>
->>
->> John Garry (2):
->>    ACPI/PPTT: Add acpi_pptt_get_package_info() API
->>    soc: Add a basic ACPI generic driver
->>
->>   drivers/acpi/pptt.c        |  81 +++++++++++++++++++++++++++++
->>   drivers/soc/Makefile       |   1 +
->>   drivers/soc/acpi_generic.c | 102 +++++++++++++++++++++++++++++++++++++
->>   include/linux/acpi.h       |  13 +++++
->>   4 files changed, 197 insertions(+)
->>   create mode 100644 drivers/soc/acpi_generic.c
->>
-> 
-> .
-
+-- 
+paul moore
+www.paul-moore.com
