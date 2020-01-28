@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB5AC35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEADC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5F2F2468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 267842468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220861;
-	bh=RveP2AS/iKcVPMq1ERSDiF78WIZr+C8ZI51rpXIf7B4=;
+	s=default; t=1580220864;
+	bh=vRgmqPjzXZxTazayl2hBXX8S1fu0Gnzq5eN1LZUL/FU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sCSvR/9ycAmKgLrZ7C/XlmQKlDgHSv3ftc2krSmdN2mqH5dzTCCXjnT1Ub90CAlz1
-	 A4YjkCmcidpN2/4HsiIMBLrp3FGe8LqRc4OfhV/B6PCXaRxAz+4V7sA5D/5fEXxSeE
-	 2L9xdCuwpDzCJz+A4o5CizNRgAtM0IBIgvuV2rVY=
+	b=teXcc1K/2/uXwGB0QgLIEL7NWMg3cimCngZfPq73vJlOrktlP+pLyPjDLlDZHOa2r
+	 9XUMkhK8dg3l7PH8HmqPoyWYeGpiOqqDD3u75Mk+6ywZsFWXRARU96/GW3eX338utn
+	 55WuKx7VI3zQPO7jtsGIcObZiUY+zh/2cYar8COA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgA1OOV (ORCPT
+        id S1727490AbgA1OOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:14:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36258 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:14:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729832AbgA1OOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:14:17 -0500
+        id S1729843AbgA1OOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:14:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84B052468A;
-        Tue, 28 Jan 2020 14:14:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00B4924681;
+        Tue, 28 Jan 2020 14:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220856;
-        bh=RveP2AS/iKcVPMq1ERSDiF78WIZr+C8ZI51rpXIf7B4=;
+        s=default; t=1580220858;
+        bh=vRgmqPjzXZxTazayl2hBXX8S1fu0Gnzq5eN1LZUL/FU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LgW2/AY/RNF68QYj7lP9euVjouXp3idiFYZkNerIP3HAl6RdwUeuu3b1eFep4Vh0N
-         847PvliLQ2ZVskwe9PKfv+M5Fh/vDY3mIlScdv+nkP9uteK53AS1H0O3UoNKvmB0Cg
-         j+ks4+hOpUuzTFZqlh6AjXjLC0hlnPPpCYrG8T+A=
+        b=IQVLuVmxcgepMk4ujLJPPUftMtmi4B79yvYbQhcAsxSb+NBcO1JyloW00Q7gML38M
+         VmALhs2FwN99TTp7X8eI03hDnmu/cXYPchQfaMG/zAaoovqXRGSHwjxJ00+WOuCGqd
+         kFhKX5tUJDRieLBdqECNonGDj2LxF3bDtQuIMAMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 174/183] scsi: RDMA/isert: Fix a recently introduced regression related to logout
-Date:   Tue, 28 Jan 2020 15:06:33 +0100
-Message-Id: <20200128135847.122148240@linuxfoundation.org>
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.4 175/183] tracing: xen: Ordered comparison of function pointers
+Date:   Tue, 28 Jan 2020 15:06:34 +0100
+Message-Id: <20200128135847.222285466@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -62,79 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Changbin Du <changbin.du@gmail.com>
 
-commit 04060db41178c7c244f2c7dcd913e7fd331de915 upstream.
+commit d0695e2351102affd8efae83989056bc4b275917 upstream.
 
-iscsit_close_connection() calls isert_wait_conn(). Due to commit
-e9d3009cb936 both functions call target_wait_for_sess_cmds() although that
-last function should be called only once. Fix this by removing the
-target_wait_for_sess_cmds() call from isert_wait_conn() and by only calling
-isert_wait_conn() after target_wait_for_sess_cmds().
+Just as commit 0566e40ce7 ("tracing: initcall: Ordered comparison of
+function pointers"), this patch fixes another remaining one in xen.h
+found by clang-9.
 
-Fixes: e9d3009cb936 ("scsi: target: iscsi: Wait for all commands to finish before freeing a session").
-Link: https://lore.kernel.org/r/20200116044737.19507-1-bvanassche@acm.org
-Reported-by: Rahul Kundu <rahul.kundu@chelsio.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Acked-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+In file included from arch/x86/xen/trace.c:21:
+In file included from ./include/trace/events/xen.h:475:
+In file included from ./include/trace/define_trace.h:102:
+In file included from ./include/trace/trace_events.h:473:
+./include/trace/events/xen.h:69:7: warning: ordered comparison of function \
+pointers ('xen_mc_callback_fn_t' (aka 'void (*)(void *)') and 'xen_mc_callback_fn_t') [-Wordered-compare-function-pointers]
+                    __field(xen_mc_callback_fn_t, fn)
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/trace/trace_events.h:421:29: note: expanded from macro '__field'
+                                ^
+./include/trace/trace_events.h:407:6: note: expanded from macro '__field_ext'
+                                 is_signed_type(type), filter_type);    \
+                                 ^
+./include/linux/trace_events.h:554:44: note: expanded from macro 'is_signed_type'
+                                              ^
+
+Fixes: c796f213a6934 ("xen/trace: add multicall tracing")
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/isert/ib_isert.c |   12 ------------
- drivers/target/iscsi/iscsi_target.c     |    6 +++---
- 2 files changed, 3 insertions(+), 15 deletions(-)
+ include/trace/events/xen.h |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/ulp/isert/ib_isert.c
-+++ b/drivers/infiniband/ulp/isert/ib_isert.c
-@@ -3278,17 +3278,6 @@ isert_wait4logout(struct isert_conn *ise
- }
- 
- static void
--isert_wait4cmds(struct iscsi_conn *conn)
--{
--	isert_info("iscsi_conn %p\n", conn);
--
--	if (conn->sess) {
--		target_sess_cmd_list_set_waiting(conn->sess->se_sess);
--		target_wait_for_sess_cmds(conn->sess->se_sess);
--	}
--}
--
--static void
- isert_wait4flush(struct isert_conn *isert_conn)
- {
- 	struct ib_recv_wr *bad_wr;
-@@ -3361,7 +3350,6 @@ static void isert_wait_conn(struct iscsi
- 
- 	isert_wait4flush(isert_conn);
- 	isert_put_unsol_pending_cmds(conn);
--	isert_wait4cmds(conn);
- 	isert_wait4logout(isert_conn);
- 
- 	queue_work(isert_release_wq, &isert_conn->release_work);
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4309,9 +4309,6 @@ int iscsit_close_connection(
- 	iscsit_stop_nopin_response_timer(conn);
- 	iscsit_stop_nopin_timer(conn);
- 
--	if (conn->conn_transport->iscsit_wait_conn)
--		conn->conn_transport->iscsit_wait_conn(conn);
--
- 	/*
- 	 * During Connection recovery drop unacknowledged out of order
- 	 * commands for this connection, and prepare the other commands
-@@ -4397,6 +4394,9 @@ int iscsit_close_connection(
- 	target_sess_cmd_list_set_waiting(sess->se_sess);
- 	target_wait_for_sess_cmds(sess->se_sess);
- 
-+	if (conn->conn_transport->iscsit_wait_conn)
-+		conn->conn_transport->iscsit_wait_conn(conn);
-+
- 	if (conn->conn_rx_hash.tfm)
- 		crypto_free_hash(conn->conn_rx_hash.tfm);
- 	if (conn->conn_tx_hash.tfm)
+--- a/include/trace/events/xen.h
++++ b/include/trace/events/xen.h
+@@ -63,7 +63,11 @@ TRACE_EVENT(xen_mc_callback,
+ 	    TP_PROTO(xen_mc_callback_fn_t fn, void *data),
+ 	    TP_ARGS(fn, data),
+ 	    TP_STRUCT__entry(
+-		    __field(xen_mc_callback_fn_t, fn)
++		    /*
++		     * Use field_struct to avoid is_signed_type()
++		     * comparison of a function pointer.
++		     */
++		    __field_struct(xen_mc_callback_fn_t, fn)
+ 		    __field(void *, data)
+ 		    ),
+ 	    TP_fast_assign(
 
 
