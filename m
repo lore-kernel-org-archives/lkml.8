@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EC4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA68C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A64DC2468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FDE24686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222118;
-	bh=ekdJKSY213rrBSgGE32mQdGAsL2Tc03YxMWSFqu5LVU=;
+	s=default; t=1580222121;
+	bh=uU60ciiTrDJ9OmBJPBS8Wl7CIQw1suWbyJQyUdYfXqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=voTIhkTp0yW27o/V+BYdcRldzEN2uYPk6nvr8nsfTlgILbrFyh8hPj0KrO2KdQHQk
-	 Rpwja66xy8hQQTkzLOR6SqoyhXCdRVJbgpZsjdRHqmHXdBMZDUb1zTwgftdyJs21wZ
-	 LLhU4wG15bkCDZpyxKo0nvp2ehb27DP//puQ85Vg=
+	b=LuRob4i6zOBnBRoyZD+c/zOGKIWgKWCl9qCvApCFUwfnNLZEalwqkxHbosekwXR3D
+	 UaBvpcZQwuc6LzrLyVCx6+hqtruriM6vvfizTWhpZbsljH5dVvvnDSUcGXf17TuoiL
+	 pPlLcKk1gr68pwbMxGlqe6xyPwRfi53PsJJMTtZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbgA1OXD (ORCPT
+        id S1733189AbgA1OfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:23:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48984 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:35:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731830AbgA1OW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:22:58 -0500
+        id S1726346AbgA1OfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:35:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B17882468F;
-        Tue, 28 Jan 2020 14:22:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DA712469A;
+        Tue, 28 Jan 2020 14:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221378;
-        bh=ekdJKSY213rrBSgGE32mQdGAsL2Tc03YxMWSFqu5LVU=;
+        s=default; t=1580222115;
+        bh=uU60ciiTrDJ9OmBJPBS8Wl7CIQw1suWbyJQyUdYfXqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C06S8D5WRoXow+jy/FGvs/NXqztBGFBRGlH/WCLc6AaWWpVsK5AERGfFKf3+dk57n
-         dpdHvHoQKxQ89+clbtoQ1K5HiAdi5NgizTZ+nrBFO2wLRHg1DJHfmiyCkVbzKaPLP4
-         zwuQHy4G+AO6evCDeXSUVof7ylt970gwHQCDotWE=
+        b=yaLB2y0z7lbJCRs+bbJIiwZvODQW1w9jvpmI+FmMT2XOV8W6MmiFkg0bI/cCBackX
+         MXeLHyGM5fK6Eh2sslqqgjLZXxaNgrnWocjPywUYfctpLxDSwF+h0cq/JK866z/R6i
+         XSStsXujQZAXIs6j265Inuw6xHRROkj4t+5ZePc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gerd Rausch <gerd.rausch@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 201/271] net/rds: Fix ib_evt_handler_call element in rds_ib_stat_names
-Date:   Tue, 28 Jan 2020 15:05:50 +0100
-Message-Id: <20200128135907.533936274@linuxfoundation.org>
+Subject: [PATCH 4.4 068/183] media: davinci-isif: avoid uninitialized variable use
+Date:   Tue, 28 Jan 2020 15:04:47 +0100
+Message-Id: <20200128135836.824989053@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
-References: <20200128135852.449088278@linuxfoundation.org>
+In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
+References: <20200128135829.486060649@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,38 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Rausch <gerd.rausch@oracle.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 05a82481a3024b94db00b8c816bb3d526b5209e0 ]
+[ Upstream commit 0e633f97162c1c74c68e2eb20bbd9259dce87cd9 ]
 
-All entries in 'rds_ib_stat_names' are stringified versions
-of the corresponding "struct rds_ib_statistics" element
-without the "s_"-prefix.
+clang warns about a possible variable use that gcc never
+complained about:
 
-Fix entry 'ib_evt_handler_call' to do the same.
+drivers/media/platform/davinci/isif.c:982:32: error: variable 'frame_size' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                dm365_vpss_set_pg_frame_size(frame_size);
+                                             ^~~~~~~~~~
+drivers/media/platform/davinci/isif.c:887:2: note: variable 'frame_size' is declared here
+        struct vpss_pg_frame_size frame_size;
+        ^
+1 error generated.
 
-Fixes: f4f943c958a2 ("RDS: IB: ack more receive completions to improve performance")
-Signed-off-by: Gerd Rausch <gerd.rausch@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+There is no initialization for this variable at all, and there
+has never been one in the mainline kernel, so we really should
+not put that stack data into an mmio register.
+
+On the other hand, I suspect that gcc checks the condition
+more closely and notices that the global
+isif_cfg.bayer.config_params.test_pat_gen flag is initialized
+to zero and never written to from any code path, so anything
+depending on it can be eliminated.
+
+To shut up the clang warning, just remove the dead code manually,
+it has probably never been used because any attempt to do so
+would have resulted in undefined behavior.
+
+Fixes: 63e3ab142fa3 ("V4L/DVB: V4L - vpfe capture - source for ISIF driver on DM365")
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rds/ib_stats.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/davinci/isif.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/net/rds/ib_stats.c b/net/rds/ib_stats.c
-index 7e78dca1f252c..aaf4b3d102039 100644
---- a/net/rds/ib_stats.c
-+++ b/net/rds/ib_stats.c
-@@ -42,7 +42,7 @@ DEFINE_PER_CPU_SHARED_ALIGNED(struct rds_ib_statistics, rds_ib_stats);
- static const char *const rds_ib_stat_names[] = {
- 	"ib_connect_raced",
- 	"ib_listen_closed_stale",
--	"s_ib_evt_handler_call",
-+	"ib_evt_handler_call",
- 	"ib_tasklet_call",
- 	"ib_tx_cq_event",
- 	"ib_tx_ring_full",
+diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
+index 78e37cf3470f2..b51b875c5a612 100644
+--- a/drivers/media/platform/davinci/isif.c
++++ b/drivers/media/platform/davinci/isif.c
+@@ -890,9 +890,7 @@ static int isif_set_hw_if_params(struct vpfe_hw_if_param *params)
+ static int isif_config_ycbcr(void)
+ {
+ 	struct isif_ycbcr_config *params = &isif_cfg.ycbcr;
+-	struct vpss_pg_frame_size frame_size;
+ 	u32 modeset = 0, ccdcfg = 0;
+-	struct vpss_sync_pol sync;
+ 
+ 	dev_dbg(isif_cfg.dev, "\nStarting isif_config_ycbcr...");
+ 
+@@ -980,13 +978,6 @@ static int isif_config_ycbcr(void)
+ 		/* two fields are interleaved in memory */
+ 		regw(0x00000249, SDOFST);
+ 
+-	/* Setup test pattern if enabled */
+-	if (isif_cfg.bayer.config_params.test_pat_gen) {
+-		sync.ccdpg_hdpol = params->hd_pol;
+-		sync.ccdpg_vdpol = params->vd_pol;
+-		dm365_vpss_set_sync_pol(sync);
+-		dm365_vpss_set_pg_frame_size(frame_size);
+-	}
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
