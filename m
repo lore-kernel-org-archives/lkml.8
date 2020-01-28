@@ -2,53 +2,51 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15582C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8ECC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04E924681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E73324688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221525;
-	bh=t5GZ5N/LopTk45JDVCHyBPgByYjTUsskcBljJRjATUE=;
+	s=default; t=1580221527;
+	bh=TWHetQeApuPwWwnFAnNwR4s/mLNZZaOaZdJP3JYknWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K+XEEcAjnD94Mc731N2LqweyWOYXJv22UU+lbc2bcualLeJS0kzZC69igZFaeJisV
-	 dutEyACkBGl1P2Vn6R6qgahn0id3HWDLDyMWnWeUu+74RDi2Yk9+erkHDJL4yPSySO
-	 wKTCvQYxaPlKRarZEcN/oKI+xIiMiW4dzpO9iJ6M=
+	b=FeBlmzAOuhcWPqnsRCnWkeKjwveYcIQBg1cYR6+LmSExBpJccbexERawzxXi9EbEs
+	 JjfFeHgL38ad44E/P8XqNFN2IbzJ5u0INCGf1ueQNe6RowWi82/DO7rTJU+XJTuXHm
+	 kYo+YtQTkVYbCHhLT7HupQ89g15277SK80KxsSqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732903AbgA1OZY (ORCPT
+        id S1731157AbgA1OZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:25:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52240 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:25:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732896AbgA1OZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:18 -0500
+        id S1730319AbgA1OZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:25:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4952A24688;
-        Tue, 28 Jan 2020 14:25:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B942B2071E;
+        Tue, 28 Jan 2020 14:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221517;
-        bh=t5GZ5N/LopTk45JDVCHyBPgByYjTUsskcBljJRjATUE=;
+        s=default; t=1580221520;
+        bh=TWHetQeApuPwWwnFAnNwR4s/mLNZZaOaZdJP3JYknWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qMjIQBcAxOS1ifX4WLUIv9afxsYMuRxcCEJxL6I+lPl7ZGH6JSYoXM17mKHB9AXDX
-         QAEoUR/GwEr3WU7eAJxKpFRyip7cb/ZgMPlKy3PSzgF2stZZ+9KGFcjZdnm21gJjWi
-         5/nxZdAEOA55M9Nk1PebcGVxIHhAiIHD88F3k46c=
+        b=tD0dLBHLukXBfJHm20haALZgHf3jJ1nxpBK55Ok9RgcCjDlcYxrYAY2ijMJiYaz1/
+         RtmA6ivv7k+T9053J0aU7TgeXgfZuYHnVyXbPjrj5fBtJsySZG2NQ708yu47u0Bh6y
+         J6hhi+2wSSoQD4U0B9wKkwFYeJDIZigPW6n7UxC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 229/271] arm64: dts: juno: Fix UART frequency
-Date:   Tue, 28 Jan 2020 15:06:18 +0100
-Message-Id: <20200128135909.624406632@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.9 256/271] Input: sun4i-ts - add a check for devm_thermal_zone_of_sensor_register
+Date:   Tue, 28 Jan 2020 15:06:45 +0100
+Message-Id: <20200128135911.651962121@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,54 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 39a1a8941b27c37f79508426e27a2ec29829d66c ]
+commit 97e24b095348a15ec08c476423c3b3b939186ad7 upstream.
 
-Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
-source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
-correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
-our DT.
+The driver misses a check for devm_thermal_zone_of_sensor_register().
+Add a check to fix it.
 
-Doing a prime factorisation, a modulo divide by 115200 and trying
-to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
-that the old value was actually a typo. The actual UART clock is driven
-by a PLL, configured via a parameter in some board.txt file in the
-firmware, which reads 7.37 MHz (sic!).
+Fixes: e28d0c9cd381 ("input: convert sun4i-ts to use devm_thermal_zone_of_sensor_register")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fix this to correct the baud rate divisor calculation on the Juno board.
-
-[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b.b/DDI0515B_b_juno_arm_development_platform_soc_trm.pdf
-[2] http://infocenter.arm.com/help/topic/com.arm.doc.100113_0000_07_en/arm_versatile_express_juno_development_platform_(v2m_juno)_technical_reference_manual_100113_0000_07_en.pdf
-
-Fixes: 71f867ec130e ("arm64: Add Juno board device tree.")
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/arm/juno-clocks.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/touchscreen/sun4i-ts.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/arm/juno-clocks.dtsi b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-index 25352ed943e6e..00bcbf7688c77 100644
---- a/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-@@ -8,10 +8,10 @@
-  */
+--- a/drivers/input/touchscreen/sun4i-ts.c
++++ b/drivers/input/touchscreen/sun4i-ts.c
+@@ -246,6 +246,7 @@ static int sun4i_ts_probe(struct platfor
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+ 	struct device *hwmon;
++	struct thermal_zone_device *thermal;
+ 	int error;
+ 	u32 reg;
+ 	bool ts_attached;
+@@ -365,7 +366,10 @@ static int sun4i_ts_probe(struct platfor
+ 	if (IS_ERR(hwmon))
+ 		return PTR_ERR(hwmon);
  
- 	/* SoC fixed clocks */
--	soc_uartclk: refclk7273800hz {
-+	soc_uartclk: refclk7372800hz {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
--		clock-frequency = <7273800>;
-+		clock-frequency = <7372800>;
- 		clock-output-names = "juno:uartclk";
- 	};
+-	devm_thermal_zone_of_sensor_register(ts->dev, 0, ts, &sun4i_ts_tz_ops);
++	thermal = devm_thermal_zone_of_sensor_register(ts->dev, 0, ts,
++						       &sun4i_ts_tz_ops);
++	if (IS_ERR(thermal))
++		return PTR_ERR(thermal);
  
--- 
-2.20.1
-
+ 	writel(TEMP_IRQ_EN(1), ts->base + TP_INT_FIFOC);
+ 
 
 
