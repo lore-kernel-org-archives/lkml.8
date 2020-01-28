@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFA0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1788BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F13324685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE02C24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220200;
-	bh=9Sm+flpQdlt6PE5fnJb5EtoJPc00tHUtzqOPCeg4qdU=;
+	s=default; t=1580220204;
+	bh=oy2iftS7DJSxdsxwckMnlgJV8VjM796hczIrIhIMpS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wvqBNUoZei9HGtDDq8FdUSHbhj4ExWEUMp4B2kCeIndiF7HfcjwCOG/Xj0BEUC0No
-	 7ZhnQ7e8RwQOuZvVbL7KuVue5AYql0IUkleaiqsQU9bC/RRd5r97V7M26+DX/IhWJT
-	 GuozJ+ba1xzOqcXGM/bZpqiW6kTdC/sFLyhoysnc=
+	b=qsB21g3H4xG27YTI9MTjqWcT3PrZ3NU7ppah3BH/OtH+zN8qBLvLaQA9ddH2I60Rb
+	 e23wtDnz49HsZpUMvvUVXcRi0KkEP/nMONT79KbcpNo3ybTP5u40IbXW0NE0pl6O+V
+	 MVIWiYbLIGSUuk01ol/osT1rWvtYcw5A2IjlibpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgA1ODT (ORCPT
+        id S1727864AbgA1ODX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:03:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49974 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:03:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgA1ODR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:03:17 -0500
+        id S1727834AbgA1ODU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:03:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C8C424685;
-        Tue, 28 Jan 2020 14:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEFBB2468F;
+        Tue, 28 Jan 2020 14:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220197;
-        bh=9Sm+flpQdlt6PE5fnJb5EtoJPc00tHUtzqOPCeg4qdU=;
+        s=default; t=1580220199;
+        bh=oy2iftS7DJSxdsxwckMnlgJV8VjM796hczIrIhIMpS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Y/8p2fCaPImVOXUgkB0N+pIpU/3KMNaIhP8mdYSgOMBuQm50eEWBQ5bbhz1oEuU9
-         r/q3cO+95ijeNO0/xQjBUm5LGgxWBje9FbGeEUmmQ0/GxsTIrNbUO/kmj/euhKcykX
-         repKopTlSR09rXaKxQJG0+YWo8OrmGgld5Aam0UM=
+        b=KjJQZBN8W4wBQ4XZhWBNQrpMZgm5ZreM6eefxKOHzSi0/reR45ilIKp30oB6epxtp
+         DHE1T/rjBKgFPp/44gbI9EUUjmrP05vgRzco3BEyI79m+ZtZvnb7FDZGffR4113dht
+         +W4gq8cVCIKaRwBoD4IPPBn94og9chNleNKP9HpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Timo Kaufmann <timokau@zoho.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.4 056/104] Revert "Input: synaptics-rmi4 - dont increment rmiaddr for SMBus transfers"
-Date:   Tue, 28 Jan 2020 15:00:17 +0100
-Message-Id: <20200128135825.342670569@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 5.4 057/104] ARM: 8950/1: ftrace/recordmcount: filter relocation types
+Date:   Tue, 28 Jan 2020 15:00:18 +0100
+Message-Id: <20200128135825.505242345@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,50 +61,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Alex Sverdlin <alexander.sverdlin@nokia.com>
 
-commit 8ff771f8c8d55d95f102cf88a970e541a8bd6bcf upstream.
+commit 927d780ee371d7e121cea4fc7812f6ef2cea461c upstream.
 
-This reverts commit a284e11c371e446371675668d8c8120a27227339.
+Scenario 1, ARMv7
+=================
 
-This causes problems (drifting cursor) with at least the F11 function that
-reads more than 32 bytes.
+If code in arch/arm/kernel/ftrace.c would operate on mcount() pointer
+the following may be generated:
 
-The real issue is in the F54 driver, and so this should be fixed there, and
-not in rmi_smbus.c.
+00000230 <prealloc_fixed_plts>:
+ 230:   b5f8            push    {r3, r4, r5, r6, r7, lr}
+ 232:   b500            push    {lr}
+ 234:   f7ff fffe       bl      0 <__gnu_mcount_nc>
+                        234: R_ARM_THM_CALL     __gnu_mcount_nc
+ 238:   f240 0600       movw    r6, #0
+                        238: R_ARM_THM_MOVW_ABS_NC      __gnu_mcount_nc
+ 23c:   f8d0 1180       ldr.w   r1, [r0, #384]  ; 0x180
 
-So first revert this bad commit, then fix the real problem in F54 in another
-patch.
+FTRACE currently is not able to deal with it:
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: Timo Kaufmann <timokau@zoho.com>
-Fixes: a284e11c371e ("Input: synaptics-rmi4 - don't increment rmiaddr for SMBus transfers")
+WARNING: CPU: 0 PID: 0 at .../kernel/trace/ftrace.c:1979 ftrace_bug+0x1ad/0x230()
+...
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.4.116-... #1
+...
+[<c0314e3d>] (unwind_backtrace) from [<c03115e9>] (show_stack+0x11/0x14)
+[<c03115e9>] (show_stack) from [<c051a7f1>] (dump_stack+0x81/0xa8)
+[<c051a7f1>] (dump_stack) from [<c0321c5d>] (warn_slowpath_common+0x69/0x90)
+[<c0321c5d>] (warn_slowpath_common) from [<c0321cf3>] (warn_slowpath_null+0x17/0x1c)
+[<c0321cf3>] (warn_slowpath_null) from [<c038ee9d>] (ftrace_bug+0x1ad/0x230)
+[<c038ee9d>] (ftrace_bug) from [<c038f1f9>] (ftrace_process_locs+0x27d/0x444)
+[<c038f1f9>] (ftrace_process_locs) from [<c08915bd>] (ftrace_init+0x91/0xe8)
+[<c08915bd>] (ftrace_init) from [<c0885a67>] (start_kernel+0x34b/0x358)
+[<c0885a67>] (start_kernel) from [<00308095>] (0x308095)
+---[ end trace cb88537fdc8fa200 ]---
+ftrace failed to modify [<c031266c>] prealloc_fixed_plts+0x8/0x60
+ actual: 44:f2:e1:36
+ftrace record flags: 0
+ (0)   expected tramp: c03143e9
+
+Scenario 2, ARMv4T
+==================
+
+ftrace: allocating 14435 entries in 43 pages
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 0 at kernel/trace/ftrace.c:2029 ftrace_bug+0x204/0x310
+CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.5 #1
+Hardware name: Cirrus Logic EDB9302 Evaluation Board
+[<c0010a24>] (unwind_backtrace) from [<c000ecb0>] (show_stack+0x20/0x2c)
+[<c000ecb0>] (show_stack) from [<c03c72e8>] (dump_stack+0x20/0x30)
+[<c03c72e8>] (dump_stack) from [<c0021c18>] (__warn+0xdc/0x104)
+[<c0021c18>] (__warn) from [<c0021d7c>] (warn_slowpath_null+0x4c/0x5c)
+[<c0021d7c>] (warn_slowpath_null) from [<c0095360>] (ftrace_bug+0x204/0x310)
+[<c0095360>] (ftrace_bug) from [<c04dabac>] (ftrace_init+0x3b4/0x4d4)
+[<c04dabac>] (ftrace_init) from [<c04cef4c>] (start_kernel+0x20c/0x410)
+[<c04cef4c>] (start_kernel) from [<00000000>] (  (null))
+---[ end trace 0506a2f5dae6b341 ]---
+ftrace failed to modify
+[<c000c350>] perf_trace_sys_exit+0x5c/0xe8
+ actual:   1e:ff:2f:e1
+Initializing ftrace call sites
+ftrace record flags: 0
+ (0)
+ expected tramp: c000fb24
+
+The analysis for this problem has been already performed previously,
+refer to the link below.
+
+Fix the above problems by allowing only selected reloc types in
+__mcount_loc. The list itself comes from the legacy recordmcount.pl
+script.
+
+Link: https://lore.kernel.org/lkml/56961010.6000806@pengutronix.de/
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200115124819.3191024-2-hverkuil-cisco@xs4all.nl
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: ed60453fa8f8 ("ARM: 6511/1: ftrace: add ARM support for C version of recordmcount")
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/rmi4/rmi_smbus.c |    2 ++
- 1 file changed, 2 insertions(+)
+ scripts/recordmcount.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
---- a/drivers/input/rmi4/rmi_smbus.c
-+++ b/drivers/input/rmi4/rmi_smbus.c
-@@ -163,6 +163,7 @@ static int rmi_smb_write_block(struct rm
- 		/* prepare to write next block of bytes */
- 		cur_len -= SMB_MAX_COUNT;
- 		databuff += SMB_MAX_COUNT;
-+		rmiaddr += SMB_MAX_COUNT;
- 	}
- exit:
- 	mutex_unlock(&rmi_smb->page_mutex);
-@@ -214,6 +215,7 @@ static int rmi_smb_read_block(struct rmi
- 		/* prepare to read next block of bytes */
- 		cur_len -= SMB_MAX_COUNT;
- 		databuff += SMB_MAX_COUNT;
-+		rmiaddr += SMB_MAX_COUNT;
- 	}
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -38,6 +38,10 @@
+ #define R_AARCH64_ABS64	257
+ #endif
  
- 	retval = 0;
++#define R_ARM_PC24		1
++#define R_ARM_THM_CALL		10
++#define R_ARM_CALL		28
++
+ static int fd_map;	/* File descriptor for file being modified. */
+ static int mmap_failed; /* Boolean flag. */
+ static char gpfx;	/* prefix for global symbol name (sometimes '_') */
+@@ -418,6 +422,18 @@ static char const *already_has_rel_mcoun
+ #define RECORD_MCOUNT_64
+ #include "recordmcount.h"
+ 
++static int arm_is_fake_mcount(Elf32_Rel const *rp)
++{
++	switch (ELF32_R_TYPE(w(rp->r_info))) {
++	case R_ARM_THM_CALL:
++	case R_ARM_CALL:
++	case R_ARM_PC24:
++		return 0;
++	}
++
++	return 1;
++}
++
+ /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
+  * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
+  * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
+@@ -523,6 +539,7 @@ static int do_file(char const *const fna
+ 		altmcount = "__gnu_mcount_nc";
+ 		make_nop = make_nop_arm;
+ 		rel_type_nop = R_ARM_NONE;
++		is_fake_mcount32 = arm_is_fake_mcount;
+ 		gpfx = 0;
+ 		break;
+ 	case EM_AARCH64:
 
 
