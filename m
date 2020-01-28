@@ -2,228 +2,173 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85260C35248
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC51C32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52BA32467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11B624656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t6Fkbs2B"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="hIa5Ahvf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgA1CPJ (ORCPT
+        id S1726323AbgA1C2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 21:15:09 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42977 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727773AbgA1CPF (ORCPT
+        Mon, 27 Jan 2020 21:28:08 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:43151 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgA1C2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 21:15:05 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p9so4473838plk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 18:15:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=subject:date:message-id:mime-version:content-transfer-encoding:cc
-         :from:to:in-reply-to:references;
-        bh=LUiKWI3Cf+9+n0Mf0T0uSDtpI14DkFl6R/zPz6oE4kA=;
-        b=t6Fkbs2B6XQQ1FJjHeJszTkGjc450EaIRq1KZfmbn8O4NYMZcq6AXMS7pmHbUboObC
-         +++s+jeLdsA6RQB08P9Q5Ack/z09JhMpcwAH9ll/D/MNh2PF/l8bN+H59x2KdWIZQaGJ
-         V6rLY45e1nmA4dzti6zKLzfbfSQH01wh1Pq+jqMqsvZxpHPcSUIN8yopf38iePTDe4Fn
-         PnNN2/5p6w6AcizSaS4T/xDwCmkQr+gZ6sexRbfAK34zFGsth0Z8GT9lZrcVKfKxscsF
-         FNGp79tHt13MmqPXpQkiJlgMycGe4X09ATmdUeh59o7i1ed82t9JibgA5r1Fh0RysWRj
-         6HTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:message-id:mime-version
-         :content-transfer-encoding:cc:from:to:in-reply-to:references;
-        bh=LUiKWI3Cf+9+n0Mf0T0uSDtpI14DkFl6R/zPz6oE4kA=;
-        b=rbPkP+bjkvskL3m6aEeRC2pQ/9jGhwUsJIoC1YTA3F9LJQunLZKX8RJpLmW6a/4XOa
-         p2nH7XW5Occ1f0seozGT9nY0Wt+fN3IR5prrI9Csf/3iN0crCfoon7xlrwxdyvsJ3VBT
-         SieqmCGkJsVBGAI8mEwL0zbu+Ttnur2NrhAdoASz5WPNYqxmo6l5CtDrFrltTmrTHLON
-         TZodYhM6c+i84HgpLNup2otou6MrnL4vpiiAgVBihouQzkEGgDI4UvL+PwxxbwYXGzaW
-         ltiCLZZwj2qJI4UaANgDE0nczTzXdwOh9uD+tqeb/8Cg/39i8basfpFfNwellXKyfopQ
-         QqHA==
-X-Gm-Message-State: APjAAAXab1VB+QoeA8AmIgm36fPV3ojEuhk3VX3hlfRbgU9xyjmuSLlX
-        igdm1pYv4610vyNWMGs+VJa82A==
-X-Google-Smtp-Source: APXvYqxlXoEawlGrjKe7Dg0dTNaImpBzNfwMgpu5Qd3tYpex5PzlG+tN2FelRoSSzPaUPamCbr5Lgw==
-X-Received: by 2002:a17:902:9a09:: with SMTP id v9mr19976280plp.341.1580177704696;
-        Mon, 27 Jan 2020 18:15:04 -0800 (PST)
-Received: from localhost ([216.9.110.11])
-        by smtp.gmail.com with ESMTPSA id o17sm393828pjq.1.2020.01.27.18.15.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 18:15:04 -0800 (PST)
-Subject: [PATCH 4/4] arm64: bpf: Elide some moves to a0 after calls
-Date:   Mon, 27 Jan 2020 18:11:45 -0800
-Message-Id: <20200128021145.36774-5-palmerdabbelt@google.com>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+        Mon, 27 Jan 2020 21:28:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1580178488; x=1611714488;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2nWGxJNu5AaNrPUR9Ax2z2U4KExulXxbW7We38PzOCE=;
+  b=hIa5AhvfGmBeEB8Ljnf7PcTfrPdMZUwV1dmHROxDDzQUokJz03GGqWnk
+   oQ4wKvwslWenHyG7coiZ1q9ae8Eh9DafHHbuVcpSCY/pxTsOoiytb99vm
+   mAUiWFiIo0q9rrun/sznpvxFMJHspxoYTTCplVRgmz3p//+Qcu3/YjFCT
+   5bEEMLn0iWxn1m4FSOFd670ZbG1rJmWDnq0XrE1SPONQ5AHxjk0Q1kxjl
+   kypt/DYzXww+Ams5BD0ckSVikrdBEtQb6GEzblUc0pnbrAMa1KJNH7Cfv
+   ay1XYMfsUBSbOYoimCEyJi3gTO2y5dIsEk74ny1cB/RGCIseezau9MM9Q
+   A==;
+IronPort-SDR: CdBLYpEvVbZhbWXdOgESpkOB/uRHq1FdV3gZEZCha4MR83bKi5u/kJBC+l1U3yfq+Q3mKj78+j
+ fmQprAkiR8LCOervpsfwfiAT51Acv6+diyQYNjkGorP53ign1Jy8sDf5vAfN7jhz2TL954fbeA
+ 26A5Gf8bfIPI4dBhBnnrhLlKftHPAJP+JNMV7XM5i1xuXnjIySd0Z5ZllkX7+anrYKh00o8Xoh
+ /g9FqnpJo2yrkQsFeY5hftITbQBGenS7qvJlPx1NcC/+fwMV150tHBtIJyCMfSX28Lb7oxDsGE
+ QOk=
+X-IronPort-AV: E=Sophos;i="5.70,372,1574092800"; 
+   d="scan'208";a="132899358"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 28 Jan 2020 10:28:07 +0800
+IronPort-SDR: XzwBdj0DuqDhxTv5WzgXqqZ7kouJ1jjjauXCX6WKMVEQfViKoRV6KceSStoAY57ILEKQU708IQ
+ kCh5kbRvqBVhMuguE1BxzDnfRINokbAsVkRBSjtI+eeGnXtymn8La9BDRu03VsDpjE7D5MOvjV
+ IS8+6TTvjEciu5yh+rUjWKmbq1vqwBVmwAC/Pq3jVD0deqqZ8dO5t4awsGGazi9ItwhlwJQb18
+ Km3EBjNgiGofxn1dR6z69u2NRW6WwjRjno/iiEIqlOhnNtK6+/NgI2ImZDyuof5nF5azIjQyuk
+ H5+butDMq3aXgFamz5MqqyOM
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 18:21:22 -0800
+IronPort-SDR: 34puJ9SRsX/BV5rJp7+tSp1HSuXrV64X9EzBR/aH2/qxzQo7VHZYIgTjcmYQVPq7DmptsyF5CX
+ zyK7biyrpqgd3yx9MAdeQPA7r1KYCciJRAkLxzb4KZZ2NY83A5V6woAC1bj9Pb23frcDLTCCfl
+ BkEvKftbbaEdN86TIlmI0fbh+ivOizrvm09IFWYcznEi8CORqANXu0UhJOtSA8yqOFGsd2M9YQ
+ GNlI8/0SghWhwwq+2QJR4kKRrMXxFdYOBrO2ROLhwuyap6cCawgS1D2t2G3bsZeDOGJZ1hAKyB
+ cFs=
+WDCIronportException: Internal
+Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
+  by uls-op-cesaip01.wdc.com with ESMTP; 27 Jan 2020 18:28:07 -0800
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>, Borislav Petkov <bp@suse.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <vincent.chen@sifive.com>, abner.chang@hpe.com,
+        clin@suse.com, nickhu@andestech.com,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: [PATCH v7 00/10] Add support for SBI v0.2 and CPU hotplug
+Date:   Mon, 27 Jan 2020 18:27:27 -0800
+Message-Id: <20200128022737.15371-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Cc:     daniel@iogearbox.net, ast@kernel.org, zlim.lnx@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        shuah@kernel.org, Palmer Dabbelt <palmerdabbelt@google.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com, kernel-team@android.com
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-To:     Bjorn Topel <bjorn.topel@gmail.com>
-In-Reply-To: <20200128021145.36774-1-palmerdabbelt@google.com>
-References: <20200128021145.36774-1-palmerdabbelt@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On arm64, the BPF function ABI doesn't match the C function ABI.  Specifically,
-arm64 encodes calls as `a0 = f(a0, a1, ...)` while BPF encodes calls as
-`BPF_REG_0 = f(BPF_REG_1, BPF_REG_2, ...)`.  This discrepancy results in
-function calls being encoded as a two operations sequence that first does a C
-ABI calls and then moves the return register into the right place.  This
-results in one extra instruction for every function call.
+The Supervisor Binary Interface(SBI) specification[1] now defines a
+base extension that provides extendability to add future extensions
+while maintaining backward compatibility with previous versions.
+The new version is defined as 0.2 and older version is marked as 0.1.
 
-This patch adds an optimization to the arm64 BPF JIT backend that aims to avoid
-some of these moves.
+This series adds support v0.2 and a unified calling convention
+implementation between 0.1 and 0.2. It also add other SBI v0.2
+functionality defined in [2]. The base support for SBI v0.2 is already
+available in OpenSBI v0.5. It also adds SBI HSM extension and cpu-hotplug
+support for RISC-V which requires additional patches[3] in OpenSBI.
 
-I've done no benchmarking to determine if this is correct.  I ran the BPF
-selftests before and after the change on arm64 in QEMU and found that I had a
-single failure both before and after.  I'm not at all confident this code
-actually works as it's my first time doing anything with both ARM64 and BPF and
-I didn't even open the documentation for either of these.  I was particularly
-surprised that the code didn't fail any tests -- I was kind of assuming this
-would fail the tests, get put on the backburner, sit long enough for me to stop
-caring, and then get deleted.
+[1] https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
+[2] https://github.com/riscv/riscv-sbi-doc/pull/27
+[3] http://lists.infradead.org/pipermail/opensbi/2020-January/001050.html
 
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
----
- arch/arm64/net/bpf_jit_comp.c | 71 +++++++++++++++++++++++++++++++++--
- 1 file changed, 68 insertions(+), 3 deletions(-)
+The patches are also available in following github repositery.
 
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index fba5b1b00cd7..48d900cc7258 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -58,10 +58,14 @@ struct jit_ctx {
- 	int *offset;
- 	__le32 *image;
- 	u32 stack_size;
-+	int reg0_in_reg1;
- };
- 
- static inline int bpf2a64(struct jit_ctx *ctx, int bpf_reg)
- {
-+	if (ctx->reg0_in_reg1 && bpf_reg == BPF_REG_0)
-+		bpf_reg = BPF_REG_1;
-+
- 	return bpf2a64_default[bpf_reg];
- }
- 
-@@ -338,6 +342,47 @@ static void build_epilogue(struct jit_ctx *ctx)
- 	emit(A64_RET(A64_LR), ctx);
- }
- 
-+static int dead_register(const struct jit_ctx *ctx, int offset, int bpf_reg)
-+{
-+	const struct bpf_prog *prog = ctx->prog;
-+	int i;
-+
-+	for (i = offset; i < prog->len; ++i) {
-+		const struct bpf_insn *insn = &prog->insnsi[i];
-+		const u8 code = insn->code;
-+		const u8 bpf_dst = insn->dst_reg;
-+		const u8 bpf_src = insn->src_reg;
-+		const int writes_dst = !((code & BPF_ST) || (code & BPF_STX)
-+					 || (code & BPF_JMP32) || (code & BPF_JMP));
-+		const int reads_dst  = !((code & BPF_LD));
-+		const int reads_src  = true;
-+
-+		/* Calls are a bit special in that they clobber a bunch of regisers. */
-+		if ((code & (BPF_JMP | BPF_CALL)) || (code & (BPF_JMP | BPF_TAIL_CALL)))
-+			if ((bpf_reg >= BPF_REG_0) && (bpf_reg <= BPF_REG_5))
-+				return false;
-+
-+		/* Registers that are read before they're written are alive.
-+		 * Most opcodes are of the form DST = DEST op SRC, but there
-+		 * are some exceptions.*/
-+		if (bpf_src == bpf_reg && reads_src)
-+			return false;
-+
-+		if (bpf_dst == bpf_reg && reads_dst)
-+			return false;
-+		
-+		if (bpf_dst == bpf_reg && writes_dst)
-+			return true;
-+
-+		/* Most BPF instructions are 8 bits long, but some ar 16 bits
-+		 * long. */
-+		if (code & (BPF_LD | BPF_IMM | BPF_DW))
-+			++i;
-+	}
-+
-+	return true;
-+}
-+
- /* JITs an eBPF instruction.
-  * Returns:
-  * 0  - successfully JITed an 8-byte eBPF instruction.
-@@ -348,7 +393,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
- 		      bool extra_pass)
- {
- 	const u8 code = insn->code;
--	const u8 dstw = bpf2a64(ctx, insn->dst_reg);
-+	u8 dstw;
- 	const u8 dstr = bpf2a64(ctx, insn->dst_reg);
- 	const u8 src = bpf2a64(ctx, insn->src_reg);
- 	const u8 tmp = bpf2a64(ctx, TMP_REG_1);
-@@ -374,6 +419,27 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
- #define check_imm19(imm) check_imm(19, imm)
- #define check_imm26(imm) check_imm(26, imm)
- 
-+	/* Handle BPF_REG_0, which may be in the wrong place because the ARM64
-+	 * ABI doesn't match the BPF ABI for function calls. */
-+	if (ctx->reg0_in_reg1) {
-+		/* If we're writing BPF_REG_0 then we don't need to do any
-+		 * extra work to get the registers back in their correct
-+		 * locations. */
-+		if (insn->dst_reg == BPF_REG_0)
-+			ctx->reg0_in_reg1 = false;
-+
-+		/* If we're writing to BPF_REG_1 then we need to save BPF_REG_0
-+		 * into the correct location if it's still alive, as otherwise
-+		 * it will be clobbered. */
-+		if (insn->dst_reg == BPF_REG_1) {
-+			if (!dead_register(ctx, off + 1, BPF_REG_0))
-+				emit(A64_MOV(1, A64_R(7), A64_R(0)), ctx);
-+			ctx->reg0_in_reg1 = false;
-+		}
-+	}
-+
-+	dstw = bpf2a64(ctx, insn->dst_reg);
-+
- 	switch (code) {
- 	/* dst = src */
- 	case BPF_ALU | BPF_MOV | BPF_X:
-@@ -640,7 +706,6 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
- 	/* function call */
- 	case BPF_JMP | BPF_CALL:
- 	{
--		const u8 r0 = bpf2a64(ctx, BPF_REG_0);
- 		bool func_addr_fixed;
- 		u64 func_addr;
- 		int ret;
-@@ -651,7 +716,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
- 			return ret;
- 		emit_addr_mov_i64(tmp, func_addr, ctx);
- 		emit(A64_BLR(tmp), ctx);
--		emit(A64_MOV(1, r0, A64_R(0)), ctx);
-+		ctx->reg0_in_reg1 = true;
- 		break;
- 	}
- 	/* tail call */
--- 
-2.25.0.341.g760bfbb309-goog
+OpenSBI     : https://github.com/atishp04/opensbi/tree/sbi_hsm_v1
+Linux Kernel: https://github.com/atishp04/linux/tree/sbi_v0.2_v7
+
+Changes from v6-v7:
+1. Rebased on v5.5
+2. Fixed few compilation issues for !CONFIG_SMP and !CONFIG_RISCV_SBI
+3. Added SBI HSM extension
+4. Add CPU hotplug support
+
+Changes from v5->v6
+1. Fixed few compilation issues around config.
+2. Fixed hart mask generation issues for RFENCE & IPI extensions.
+
+Changes from v4->v5
+1. Fixed few minor comments related to static & inline.
+2. Make sure that every patch is boot tested individually.
+
+Changes from v3->v4.
+1. Rebased on for-next.
+2. Fixed issuses with checkpatch --strict.
+3. Unfied all IPI/fence related functions.
+4. Added Hfence related SBI calls.
+
+Changes from v2->v3.
+1. Moved v0.1 extensions to a new config.
+2. Added support for relacement extensions of v0.1 extensions.
+
+Changes from v1->v2
+1. Removed the legacy calling convention.
+2. Moved all SBI related calls to sbi.c.
+3. Moved all SBI related macros to uapi.
+
+Atish Patra (10):
+RISC-V: Mark existing SBI as 0.1 SBI.
+RISC-V: Add basic support for SBI v0.2
+RISC-V: Add SBI v0.2 extension definitions
+RISC-V: Introduce a new config for SBI v0.1
+RISC-V: Implement new SBI v0.2 extensions
+RISC-V: Add cpu_ops and modify default booting method
+RISC-V: Move relocate and few other functions out of __init
+RISC-V: Add SBI HSM extension
+RISC-V: Add supported for ordered booting method using HSM
+RISC-V: Support cpu hotplug
+
+arch/riscv/Kconfig               |  18 +-
+arch/riscv/include/asm/cpu_ops.h |  36 ++
+arch/riscv/include/asm/sbi.h     | 197 +++++++----
+arch/riscv/include/asm/smp.h     |  14 +
+arch/riscv/kernel/Makefile       |   2 +
+arch/riscv/kernel/cpu-hotplug.c  |  84 +++++
+arch/riscv/kernel/cpu_ops.c      | 134 ++++++++
+arch/riscv/kernel/head.S         |  98 ++++--
+arch/riscv/kernel/sbi.c          | 574 ++++++++++++++++++++++++++++++-
+arch/riscv/kernel/setup.c        |  34 +-
+arch/riscv/kernel/smpboot.c      |  54 +--
+arch/riscv/kernel/traps.c        |   2 +-
+arch/riscv/kernel/vmlinux.lds.S  |   9 +-
+13 files changed, 1128 insertions(+), 128 deletions(-)
+create mode 100644 arch/riscv/include/asm/cpu_ops.h
+create mode 100644 arch/riscv/kernel/cpu-hotplug.c
+create mode 100644 arch/riscv/kernel/cpu_ops.c
+
+--
+2.24.0
 
