@@ -2,910 +2,570 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF699C47409
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C250EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A753E24682
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FC42467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZKyeTZD"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="ZOSAjo5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgA1ETL (ORCPT
+        id S1726485AbgA1EZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 23:19:11 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41578 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgA1ETK (ORCPT
+        Mon, 27 Jan 2020 23:25:51 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45394 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgA1EZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 23:19:10 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x8so6272628pgk.8;
-        Mon, 27 Jan 2020 20:19:10 -0800 (PST)
+        Mon, 27 Jan 2020 23:25:51 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j42so14351526wrj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 20:25:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DQqJDwi8JAnYlPe0AP3+twBeiN8w57IBjgavGn6oRs8=;
-        b=oZKyeTZDPb2TzDFmk2SJfrFjOeSNUPu0ViTbsNckoXGVKOMHwtWoac5bOUBJp8QRiR
-         +lzrGykASDkKChb066au4up75cnR2gzbvqFKcaZg7bkrbfWsgxRQucLiH+oy9Ykc+BTe
-         8k3TEi3xik5V4dS022SmvzA0Txsgk8QJ8egNAmfCwVo4sNfP05SIRPCXtHqXhDlD6qF7
-         Gp9p7R5yrmSYvOZ0qihSpdb9d5li7u2T6RPBar1nm3/mMjxHvqTJHtSdgF3TZC2wvGWD
-         Al4cHmkxqwadzwrXKz4FrHqfhWuZKTVFpXxsmDM4/Jb9kB6Fj7apDRFemI0dSnRtIL5h
-         TMdg==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9mFJWSbzrRVj1wpnjWBEHIvVyt1MQVAUUzacG96iVbI=;
+        b=ZOSAjo5NLl06VbFXCli9Ti5O08iG7vY4MlW8OiLcMBlOLEgSJkQI6t2W66yYjbjPVx
+         91zALo+10VDNIEBtutuXR7fmiFnaxqT5AGCXQnvbKK9CwMh2sQOx7nnnzowXx/IgaKph
+         MaWvzd2vTCMNtiZiBSQcU9Tr+umOwCDIYyirtvr2gLzHCD0+pqbrKX0LIz8+Ju5sbCwB
+         T35eVQYil9YgjPR3pSYbh4PSI1R/zBKI/yZIvffGAFdAWRolYfwa07IIlqG7WFoMoSxt
+         +YrGseqR69ESk9SvCLnf4adObu4YEqWoWZ3rfeNjQG3NWsHX5gGdM9SoWyIJbgkz7qdH
+         CRDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DQqJDwi8JAnYlPe0AP3+twBeiN8w57IBjgavGn6oRs8=;
-        b=E8YI92aaaSZ5ctsl1xmtyrP7EjMbnrCg5hNWhtbLQNizjt0EfBxRnbVHGEf0RNB02k
-         FN5sMPup/Xx3ENXoVL6o1lVkb+IRKb5ebTm9pT4AOEO8MmkoRR9JJNeoH5my79rAD0WM
-         Pn7cFgpU0878PsHlbCrsweJI4Dd2j3AVS3cOfAIdU89pvu5km5afcP33tZ7ig4yZJZIV
-         c/K+3jykXZH4nuQ5biI2XO3l7TBCaPgto19ot81XouE3HVPWxq61hLyX9Hcm3dB5Ia5n
-         PMfZhxKI88fsQkhmnfvSEVgzNrCREF6Aiu1SMWun+Z+TqFzAzmur0ehFdq+8kbJEhyoC
-         5k8A==
-X-Gm-Message-State: APjAAAXY5fJQ//7IxXat+TpVgW/DF/0FjYexRp5WsNnA0Xpqykv4RbNe
-        1uWIKI+p0zE68MjbH70M9ys=
-X-Google-Smtp-Source: APXvYqyV7RiLbs8i+dY56iFioCREH2l2U3A2vkvy0wLNpAnDRui6DmgxlSrcZ49rEs13eAXUK1cQXQ==
-X-Received: by 2002:a65:640b:: with SMTP id a11mr13484942pgv.418.1580185149597;
-        Mon, 27 Jan 2020 20:19:09 -0800 (PST)
-Received: from localhost.localdomain ([49.207.57.63])
-        by smtp.gmail.com with ESMTPSA id w131sm17858439pfc.16.2020.01.27.20.19.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 27 Jan 2020 20:19:09 -0800 (PST)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        wsa+renesas@sang-engineering.com
-Cc:     gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH v3] HID: mcp2221: add usb to i2c-smbus host bridge
-Date:   Tue, 28 Jan 2020 09:48:57 +0530
-Message-Id: <1580185137-11255-1-git-send-email-gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9mFJWSbzrRVj1wpnjWBEHIvVyt1MQVAUUzacG96iVbI=;
+        b=snSRCMTSxsGN+QNHi7GpFtZ+WxBkpRBC9aYbPmPDtzvly2k4jhb65EOVU05ostlIP5
+         YnJbicz/0hxxggVPWDrQSqax6BUhSHohkGbqHWpUB474ccluPpaAP5EQGrdVO5/WPrAO
+         T1UnW03IF+ONDVD1LJZHRHzJp//rrj4QNJWlrFNlr9yqKxFVvZ0XimO3JgnUBtXVAswt
+         t84CbvaririjZN1cwyr6VypomkSPBon8o7P+G+e3ZwtU91hcTcsq+V070cSg8r1Cu9tC
+         98jkvvMWbMi09ZhiEns7jQu2knneJhe/o2UFAJbyoxSDRkmeOz/kYWqAWKYxxDBFzdNf
+         62UQ==
+X-Gm-Message-State: APjAAAUU4Ms9qb+PwQh7tturNdCWbl5L3GXdz5nUapTU39pZtKKSY2Z8
+        KXmoYtvwLwxqgEA/mABnkcmebJookfJpDyDmHvXMMw==
+X-Google-Smtp-Source: APXvYqxblacANPnYcFPv0bOmj0DvRO+7HCpAzXmo3Y3NdRqeAGMeLieVLGc6cxeDkIn4gz7Y+10av0DDvUb0uKXjOEE=
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr26849738wrv.358.1580185546929;
+ Mon, 27 Jan 2020 20:25:46 -0800 (PST)
+MIME-Version: 1.0
+References: <20200128022737.15371-1-atish.patra@wdc.com> <20200128022737.15371-3-atish.patra@wdc.com>
+In-Reply-To: <20200128022737.15371-3-atish.patra@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 28 Jan 2020 09:55:35 +0530
+Message-ID: <CAAhSdy3J=NSHCAKW+17twGxTFj=JQUcBx8uTXg3GNU9oW8AOTQ@mail.gmail.com>
+Subject: Re: [PATCH v7 02/10] RISC-V: Add basic support for SBI v0.2
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Borislav Petkov <bp@suse.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Mao Han <han_mao@c-sky.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Abner Chang <abner.chang@hpe.com>, Chester Lin <clin@suse.com>,
+        nickhu@andestech.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MCP2221 is a USB HID to I2C/SMbus host bridge device. This
-commit implements i2c and smbus host adapter support. 7-bit
-address and i2c multi-message transaction is also supported.
+On Tue, Jan 28, 2020 at 7:58 AM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> The SBI v0.2 introduces a base extension which is backward compatible
+> with v0.1. Implement all helper functions and minimum required SBI
+> calls from v0.2 for now. All other base extension function will be
+> added later as per need.
+> As v0.2 calling convention is backward compatible with v0.1, remove
+> the v0.1 helper functions and just use v0.2 calling convention.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> ---
+>  arch/riscv/include/asm/sbi.h | 140 ++++++++++----------
+>  arch/riscv/kernel/sbi.c      | 243 ++++++++++++++++++++++++++++++++++-
+>  arch/riscv/kernel/setup.c    |   4 +
+>  3 files changed, 313 insertions(+), 74 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+> index b38bc36f7429..fbdb7443784a 100644
+> --- a/arch/riscv/include/asm/sbi.h
+> +++ b/arch/riscv/include/asm/sbi.h
+> @@ -10,93 +10,88 @@
+>  #include <linux/types.h>
+>
+>  #ifdef CONFIG_RISCV_SBI
+> -#define SBI_EXT_0_1_SET_TIMER 0x0
+> -#define SBI_EXT_0_1_CONSOLE_PUTCHAR 0x1
+> -#define SBI_EXT_0_1_CONSOLE_GETCHAR 0x2
+> -#define SBI_EXT_0_1_CLEAR_IPI 0x3
+> -#define SBI_EXT_0_1_SEND_IPI 0x4
+> -#define SBI_EXT_0_1_REMOTE_FENCE_I 0x5
+> -#define SBI_EXT_0_1_REMOTE_SFENCE_VMA 0x6
+> -#define SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID 0x7
+> -#define SBI_EXT_0_1_SHUTDOWN 0x8
+> +enum sbi_ext_id {
+> +       SBI_EXT_0_1_SET_TIMER = 0x0,
+> +       SBI_EXT_0_1_CONSOLE_PUTCHAR = 0x1,
+> +       SBI_EXT_0_1_CONSOLE_GETCHAR = 0x2,
+> +       SBI_EXT_0_1_CLEAR_IPI = 0x3,
+> +       SBI_EXT_0_1_SEND_IPI = 0x4,
+> +       SBI_EXT_0_1_REMOTE_FENCE_I = 0x5,
+> +       SBI_EXT_0_1_REMOTE_SFENCE_VMA = 0x6,
+> +       SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID = 0x7,
+> +       SBI_EXT_0_1_SHUTDOWN = 0x8,
+> +       SBI_EXT_BASE = 0x10,
+> +};
+>
+> -#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({             \
+> -       register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);   \
+> -       register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);   \
+> -       register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);   \
+> -       register uintptr_t a3 asm ("a3") = (uintptr_t)(arg3);   \
+> -       register uintptr_t a7 asm ("a7") = (uintptr_t)(which);  \
+> -       asm volatile ("ecall"                                   \
+> -                     : "+r" (a0)                               \
+> -                     : "r" (a1), "r" (a2), "r" (a3), "r" (a7)  \
+> -                     : "memory");                              \
+> -       a0;                                                     \
+> -})
+> +enum sbi_ext_base_fid {
+> +       SBI_EXT_BASE_GET_SPEC_VERSION = 0,
+> +       SBI_EXT_BASE_GET_IMP_ID,
+> +       SBI_EXT_BASE_GET_IMP_VERSION,
+> +       SBI_EXT_BASE_PROBE_EXT,
+> +       SBI_EXT_BASE_GET_MVENDORID,
+> +       SBI_EXT_BASE_GET_MARCHID,
+> +       SBI_EXT_BASE_GET_MIMPID,
+> +};
+>
+> -/* Lazy implementations until SBI is finalized */
+> -#define SBI_CALL_0(which) SBI_CALL(which, 0, 0, 0, 0)
+> -#define SBI_CALL_1(which, arg0) SBI_CALL(which, arg0, 0, 0, 0)
+> -#define SBI_CALL_2(which, arg0, arg1) SBI_CALL(which, arg0, arg1, 0, 0)
+> -#define SBI_CALL_3(which, arg0, arg1, arg2) \
+> -               SBI_CALL(which, arg0, arg1, arg2, 0)
+> -#define SBI_CALL_4(which, arg0, arg1, arg2, arg3) \
+> -               SBI_CALL(which, arg0, arg1, arg2, arg3)
+> +#define SBI_SPEC_VERSION_DEFAULT       0x1
+> +#define SBI_SPEC_VERSION_MAJOR_SHIFT   24
+> +#define SBI_SPEC_VERSION_MAJOR_MASK    0x7f
+> +#define SBI_SPEC_VERSION_MINOR_MASK    0xffffff
+>
+> -static inline void sbi_console_putchar(int ch)
+> -{
+> -       SBI_CALL_1(SBI_EXT_0_1_CONSOLE_PUTCHAR, ch);
+> -}
+> +/* SBI return error codes */
+> +#define SBI_SUCCESS            0
+> +#define SBI_ERR_FAILURE                -1
+> +#define SBI_ERR_NOT_SUPPORTED  -2
+> +#define SBI_ERR_INVALID_PARAM   -3
+> +#define SBI_ERR_DENIED         -4
+> +#define SBI_ERR_INVALID_ADDRESS -5
+>
+> -static inline int sbi_console_getchar(void)
+> -{
+> -       return SBI_CALL_0(SBI_EXT_0_1_CONSOLE_GETCHAR);
+> -}
+> +extern unsigned long sbi_spec_version;
+> +struct sbiret {
+> +       long error;
+> +       long value;
+> +};
+>
+> -static inline void sbi_set_timer(uint64_t stime_value)
+> -{
+> -#if __riscv_xlen == 32
+> -       SBI_CALL_2(SBI_EXT_0_1_SET_TIMER, stime_value,
+> -                         stime_value >> 32);
+> -#else
+> -       SBI_CALL_1(SBI_EXT_0_1_SET_TIMER, stime_value);
+> -#endif
+> -}
+> -
+> -static inline void sbi_shutdown(void)
+> -{
+> -       SBI_CALL_0(SBI_EXT_0_1_SHUTDOWN);
+> -}
+> +int sbi_init(void);
+> +struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
+> +                       unsigned long arg1, unsigned long arg2,
+> +                       unsigned long arg3, unsigned long arg4,
+> +                       unsigned long arg5);
+>
+> -static inline void sbi_clear_ipi(void)
+> -{
+> -       SBI_CALL_0(SBI_EXT_0_1_CLEAR_IPI);
+> -}
+> +void sbi_console_putchar(int ch);
+> +int sbi_console_getchar(void);
+> +void sbi_set_timer(uint64_t stime_value);
+> +void sbi_shutdown(void);
+> +void sbi_clear_ipi(void);
+> +void sbi_send_ipi(const unsigned long *hart_mask);
+> +void sbi_remote_fence_i(const unsigned long *hart_mask);
+> +void sbi_remote_sfence_vma(const unsigned long *hart_mask,
+> +                          unsigned long start,
+> +                          unsigned long size);
+>
+> -static inline void sbi_send_ipi(const unsigned long *hart_mask)
+> -{
+> -       SBI_CALL_1(SBI_EXT_0_1_SEND_IPI, hart_mask);
+> -}
+> +void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+> +                               unsigned long start,
+> +                               unsigned long size,
+> +                               unsigned long asid);
+> +int sbi_probe_extension(int ext);
+>
+> -static inline void sbi_remote_fence_i(const unsigned long *hart_mask)
+> +/* Check if current SBI specification version is 0.1 or not */
+> +static inline int sbi_spec_is_0_1(void)
+>  {
+> -       SBI_CALL_1(SBI_EXT_0_1_REMOTE_FENCE_I, hart_mask);
+> +       return (sbi_spec_version == SBI_SPEC_VERSION_DEFAULT) ? 1 : 0;
+>  }
+>
+> -static inline void sbi_remote_sfence_vma(const unsigned long *hart_mask,
+> -                                        unsigned long start,
+> -                                        unsigned long size)
+> +/* Get the major version of SBI */
+> +static inline unsigned long sbi_major_version(void)
+>  {
+> -       SBI_CALL_3(SBI_EXT_0_1_REMOTE_SFENCE_VMA, hart_mask,
+> -                         start, size);
+> +       return (sbi_spec_version >> SBI_SPEC_VERSION_MAJOR_SHIFT) &
+> +               SBI_SPEC_VERSION_MAJOR_MASK;
+>  }
+>
+> -static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+> -                                             unsigned long start,
+> -                                             unsigned long size,
+> -                                             unsigned long asid)
+> +/* Get the minor version of SBI */
+> +static inline unsigned long sbi_minor_version(void)
+>  {
+> -       SBI_CALL_4(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, hart_mask,
+> -                         start, size, asid);
+> +       return sbi_spec_version & SBI_SPEC_VERSION_MINOR_MASK;
+>  }
+>  #else /* CONFIG_RISCV_SBI */
+>  /* stubs for code that is only reachable under IS_ENABLED(CONFIG_RISCV_SBI): */
+> @@ -104,5 +99,6 @@ void sbi_set_timer(uint64_t stime_value);
+>  void sbi_clear_ipi(void);
+>  void sbi_send_ipi(const unsigned long *hart_mask);
+>  void sbi_remote_fence_i(const unsigned long *hart_mask);
+> +void sbi_init(void);
+>  #endif /* CONFIG_RISCV_SBI */
+>  #endif /* _ASM_RISCV_SBI_H */
+> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+> index f6c7c3e82d28..33632e7f91da 100644
+> --- a/arch/riscv/kernel/sbi.c
+> +++ b/arch/riscv/kernel/sbi.c
+> @@ -1,17 +1,256 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * SBI initialilization and all extension implementation.
+> + *
+> + * Copyright (c) 2019 Western Digital Corporation or its affiliates.
+> + */
+>
+>  #include <linux/init.h>
+>  #include <linux/pm.h>
+>  #include <asm/sbi.h>
+>
+> +/* default SBI version is 0.1 */
+> +unsigned long sbi_spec_version = SBI_SPEC_VERSION_DEFAULT;
+> +EXPORT_SYMBOL(sbi_spec_version);
+> +
+> +struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
+> +                       unsigned long arg1, unsigned long arg2,
+> +                       unsigned long arg3, unsigned long arg4,
+> +                       unsigned long arg5)
+> +{
+> +       struct sbiret ret;
+> +
+> +       register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);
+> +       register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);
+> +       register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);
+> +       register uintptr_t a3 asm ("a3") = (uintptr_t)(arg3);
+> +       register uintptr_t a4 asm ("a4") = (uintptr_t)(arg4);
+> +       register uintptr_t a5 asm ("a5") = (uintptr_t)(arg5);
+> +       register uintptr_t a6 asm ("a6") = (uintptr_t)(fid);
+> +       register uintptr_t a7 asm ("a7") = (uintptr_t)(ext);
+> +       asm volatile ("ecall"
+> +                     : "+r" (a0), "+r" (a1)
+> +                     : "r" (a2), "r" (a3), "r" (a4), "r" (a5), "r" (a6), "r" (a7)
+> +                     : "memory");
+> +       ret.error = a0;
+> +       ret.value = a1;
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL(sbi_ecall);
+> +
+> +static int sbi_err_map_linux_errno(int err)
+> +{
+> +       switch (err) {
+> +       case SBI_SUCCESS:
+> +               return 0;
+> +       case SBI_ERR_DENIED:
+> +               return -EPERM;
+> +       case SBI_ERR_INVALID_PARAM:
+> +               return -EINVAL;
+> +       case SBI_ERR_INVALID_ADDRESS:
+> +               return -EFAULT;
+> +       case SBI_ERR_NOT_SUPPORTED:
+> +       case SBI_ERR_FAILURE:
+> +       default:
+> +               return -ENOTSUPP;
+> +       };
+> +}
+> +
+> +/**
+> + * sbi_console_putchar() - Writes given character to the console device.
+> + * @ch: The data to be written to the console.
+> + *
+> + * Return: None
+> + */
+> +void sbi_console_putchar(int ch)
+> +{
+> +       sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, ch, 0, 0, 0, 0, 0);
+> +}
+> +EXPORT_SYMBOL(sbi_console_putchar);
+> +
+> +/**
+> + * sbi_console_getchar() - Reads a byte from console device.
+> + *
+> + * Returns the value read from console.
+> + */
+> +int sbi_console_getchar(void)
+> +{
+> +       struct sbiret ret;
+> +
+> +       ret = sbi_ecall(SBI_EXT_0_1_CONSOLE_GETCHAR, 0, 0, 0, 0, 0, 0, 0);
+> +
+> +       return ret.error;
+> +}
+> +EXPORT_SYMBOL(sbi_console_getchar);
+> +
+> +/**
+> + * sbi_set_timer() - Program the timer for next timer event.
+> + * @stime_value: The value after which next timer event should fire.
+> + *
+> + * Return: None
+> + */
+> +void sbi_set_timer(uint64_t stime_value)
+> +{
+> +#if __riscv_xlen == 32
+> +       sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value,
+> +                         stime_value >> 32, 0, 0, 0, 0);
+> +#else
+> +       sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value, 0, 0, 0, 0, 0);
+> +#endif
+> +}
+> +EXPORT_SYMBOL(sbi_set_timer);
+> +
+> +/**
+> + * sbi_shutdown() - Remove all the harts from executing supervisor code.
+> + *
+> + * Return: None
+> + */
+> +void sbi_shutdown(void)
+> +{
+> +       sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0);
+> +}
+> +EXPORT_SYMBOL(sbi_shutdown);
+> +
+> +/**
+> + * sbi_clear_ipi() - Clear any pending IPIs for the calling hart.
+> + *
+> + * Return: None
+> + */
+> +void sbi_clear_ipi(void)
+> +{
+> +       sbi_ecall(SBI_EXT_0_1_CLEAR_IPI, 0, 0, 0, 0, 0, 0, 0);
+> +}
+> +
+> +/**
+> + * sbi_send_ipi() - Send an IPI to any hart.
+> + * @hart_mask: A cpu mask containing all the target harts.
+> + *
+> + * Return: None
+> + */
+> +void sbi_send_ipi(const unsigned long *hart_mask)
+> +{
+> +       sbi_ecall(SBI_EXT_0_1_SEND_IPI, 0, (unsigned long)hart_mask,
+> +                       0, 0, 0, 0, 0);
+> +}
+> +EXPORT_SYMBOL(sbi_send_ipi);
+> +
+> +/**
+> + * sbi_remote_fence_i() - Execute FENCE.I instruction on given remote harts.
+> + * @hart_mask: A cpu mask containing all the target harts.
+> + *
+> + * Return: None
+> + */
+> +void sbi_remote_fence_i(const unsigned long *hart_mask)
+> +{
+> +       sbi_ecall(SBI_EXT_0_1_REMOTE_FENCE_I, 0, (unsigned long)hart_mask,
+> +                       0, 0, 0, 0, 0);
+> +}
+> +EXPORT_SYMBOL(sbi_remote_fence_i);
+> +
+> +/**
+> + * sbi_remote_sfence_vma() - Execute SFENCE.VMA instructions on given remote
+> + *                          harts for the specified virtual address range.
+> + * @hart_mask: A cpu mask containing all the target harts.
+> + * @start: Start of the virtual address
+> + * @size: Total size of the virtual address range.
+> + *
+> + * Return: None
+> + */
+> +void sbi_remote_sfence_vma(const unsigned long *hart_mask,
+> +                                        unsigned long start,
+> +                                        unsigned long size)
+> +{
+> +       sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA, 0,
+> +                       (unsigned long)hart_mask, start, size, 0, 0, 0);
+> +}
+> +EXPORT_SYMBOL(sbi_remote_sfence_vma);
+> +
+> +/**
+> + * sbi_remote_sfence_vma_asid() - Execute SFENCE.VMA instructions on given
+> + * remote harts for a virtual address range belonging to a specific ASID.
+> + *
+> + * @hart_mask: A cpu mask containing all the target harts.
+> + * @start: Start of the virtual address
+> + * @size: Total size of the virtual address range.
+> + * @asid: The value of address space identifier (ASID).
+> + *
+> + * Return: None
+> + */
+> +void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+> +                                             unsigned long start,
+> +                                             unsigned long size,
+> +                                             unsigned long asid)
+> +{
+> +       sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, 0,
+> +                       (unsigned long)hart_mask, start, size, asid, 0, 0);
+> +}
+> +EXPORT_SYMBOL(sbi_remote_sfence_vma_asid);
+> +
+> +/**
+> + * sbi_probe_extension() - Check if an SBI extension ID is supported or not.
+> + * @extid: The extension ID to be probed.
+> + *
+> + * Return: Extension specific nonzero value f yes, -ENOTSUPP otherwise.
+> + */
+> +int sbi_probe_extension(int extid)
+> +{
+> +       struct sbiret ret;
+> +
+> +       ret = sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_PROBE_EXT, extid,
+> +                       0, 0, 0, 0, 0);
+> +       if (!ret.error)
+> +               if (ret.value)
+> +                       return ret.value;
+> +
+> +       return -ENOTSUPP;
+> +}
+> +EXPORT_SYMBOL(sbi_probe_extension);
+> +
+> +static long __sbi_base_ecall(int fid)
+> +{
+> +       struct sbiret ret;
+> +
+> +       ret = sbi_ecall(SBI_EXT_BASE, fid, 0, 0, 0, 0, 0, 0);
+> +       if (!ret.error)
+> +               return ret.value;
+> +       else
+> +               return sbi_err_map_linux_errno(ret.error);
+> +}
+> +
+> +static inline long sbi_get_spec_version(void)
+> +{
+> +       return __sbi_base_ecall(SBI_EXT_BASE_GET_SPEC_VERSION);
+> +}
+> +
+> +static inline long sbi_get_firmware_id(void)
+> +{
+> +       return __sbi_base_ecall(SBI_EXT_BASE_GET_IMP_ID);
+> +}
+> +
+> +static inline long sbi_get_firmware_version(void)
+> +{
+> +       return __sbi_base_ecall(SBI_EXT_BASE_GET_IMP_VERSION);
+> +}
+> +
+>  static void sbi_power_off(void)
+>  {
+>         sbi_shutdown();
+>  }
+>
+> -static int __init sbi_init(void)
+> +int __init sbi_init(void)
+>  {
+> +       int ret;
+> +
+>         pm_power_off = sbi_power_off;
+> +       ret = sbi_get_spec_version();
+> +       if (ret > 0)
+> +               sbi_spec_version = ret;
+> +
+> +       pr_info("SBI specification v%lu.%lu detected\n",
+> +               sbi_major_version(), sbi_minor_version());
+> +       if (!sbi_spec_is_0_1())
+> +               pr_info("SBI implementation ID=0x%lx Version=0x%lx\n",
+> +                       sbi_get_firmware_id(), sbi_get_firmware_version());
+>         return 0;
+>  }
+> -early_initcall(sbi_init);
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index 365ff8420bfe..de3e65dae83a 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -22,6 +22,7 @@
+>  #include <asm/sections.h>
+>  #include <asm/pgtable.h>
+>  #include <asm/smp.h>
+> +#include <asm/sbi.h>
+>  #include <asm/tlbflush.h>
+>  #include <asm/thread_info.h>
+>
+> @@ -74,6 +75,9 @@ void __init setup_arch(char **cmdline_p)
+>         swiotlb_init(1);
+>  #endif
+>
+> +       if (IS_ENABLED(CONFIG_RISCV_SBI))
+> +               sbi_init();
+> +
 
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
----
+This has to "#if IS_ENABLED(CONFIG_RISCV_SBI)" instead of
+"if ()".
 
-Changes in v3:
-* Removed all direct USB related references
-* Replaced defines with enum
-* Replaced HID_CONNECT_DEFAULT with HID_CONNECT_HIDRAW
-* Removed depends on HIDRAW in Kconfig
-* Used memset wherever possible
-* Emit more clear log - unsupported multi-msg i2c transaction
-* Removed mcp2221 entry from hid-quirk.c
-* Removed module parameter to set i2c bus speed
+Regards,
+Anup
 
- MAINTAINERS               |   7 +
- drivers/hid/Kconfig       |  10 +
- drivers/hid/Makefile      |   1 +
- drivers/hid/hid-ids.h     |   1 +
- drivers/hid/hid-mcp2221.c | 742 ++++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 761 insertions(+)
- create mode 100644 drivers/hid/hid-mcp2221.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 141b8d3..bfcdd55 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10160,6 +10160,13 @@ F:	drivers/net/can/m_can/m_can.c
- F:	drivers/net/can/m_can/m_can.h
- F:	drivers/net/can/m_can/m_can_platform.c
- 
-+MCP2221A MICROCHIP USB-HID TO I2C BRIDGE DRIVER
-+M:	Rishi Gupta <gupt21@gmail.com>
-+L:	linux-i2c@vger.kernel.org
-+L:	linux-input@vger.kernel.org
-+S:	Maintained
-+F:	drivers/hid/hid-mcp2221.c
-+
- MCP4018 AND MCP4531 MICROCHIP DIGITAL POTENTIOMETER DRIVERS
- M:	Peter Rosin <peda@axentia.se>
- L:	linux-iio@vger.kernel.org
-diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index 494a39e..5db6e6a 100644
---- a/drivers/hid/Kconfig
-+++ b/drivers/hid/Kconfig
-@@ -1145,6 +1145,16 @@ config HID_ALPS
- 	Say Y here if you have a Alps touchpads over i2c-hid or usbhid
- 	and want support for its special functionalities.
- 
-+config HID_MCP2221
-+	tristate "Microchip MCP2221 HID USB-to-I2C/SMbus host support"
-+	depends on USB_HID && I2C
-+	---help---
-+	Provides I2C and SMBUS host adapter functionality over USB-HID
-+	through MCP2221 device.
-+
-+	To compile this driver as a module, choose M here: the module
-+	will be called hid-mcp2221.ko.
-+
- endmenu
- 
- endif # HID
-diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-index bfefa36..21052a7 100644
---- a/drivers/hid/Makefile
-+++ b/drivers/hid/Makefile
-@@ -70,6 +70,7 @@ obj-$(CONFIG_HID_LOGITECH_HIDPP)	+= hid-logitech-hidpp.o
- obj-$(CONFIG_HID_MACALLY)	+= hid-macally.o
- obj-$(CONFIG_HID_MAGICMOUSE)	+= hid-magicmouse.o
- obj-$(CONFIG_HID_MALTRON)	+= hid-maltron.o
-+obj-$(CONFIG_HID_MCP2221)	+= hid-mcp2221.o
- obj-$(CONFIG_HID_MAYFLASH)	+= hid-mf.o
- obj-$(CONFIG_HID_MICROSOFT)	+= hid-microsoft.o
- obj-$(CONFIG_HID_MONTEREY)	+= hid-monterey.o
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 3a400ce..53236ac 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -819,6 +819,7 @@
- #define USB_DEVICE_ID_PICK16F1454	0x0042
- #define USB_DEVICE_ID_PICK16F1454_V2	0xf2f7
- #define USB_DEVICE_ID_LUXAFOR		0xf372
-+#define USB_DEVICE_ID_MCP2221		0x00dd
- 
- #define USB_VENDOR_ID_MICROSOFT		0x045e
- #define USB_DEVICE_ID_SIDEWINDER_GV	0x003b
-diff --git a/drivers/hid/hid-mcp2221.c b/drivers/hid/hid-mcp2221.c
-new file mode 100644
-index 0000000..d958475
---- /dev/null
-+++ b/drivers/hid/hid-mcp2221.c
-@@ -0,0 +1,742 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * MCP2221A - Microchip USB to I2C Host Protocol Bridge
-+ *
-+ * Copyright (c) 2020, Rishi Gupta <gupt21@gmail.com>
-+ *
-+ * Datasheet: http://ww1.microchip.com/downloads/en/DeviceDoc/20005565B.pdf
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/err.h>
-+#include <linux/mutex.h>
-+#include <linux/completion.h>
-+#include <linux/delay.h>
-+#include <linux/hid.h>
-+#include <linux/hidraw.h>
-+#include <linux/i2c.h>
-+#include "hid-ids.h"
-+
-+/* Commands codes in a raw output report */
-+enum {
-+	MCP2221_I2C_WR_DATA = 0x90,
-+	MCP2221_I2C_WR_NO_STOP = 0x94,
-+	MCP2221_I2C_RD_DATA = 0x91,
-+	MCP2221_I2C_RD_RPT_START = 0x93,
-+	MCP2221_I2C_GET_DATA = 0x40,
-+	MCP2221_I2C_PARAM_OR_STATUS	= 0x10,
-+	MCP2221_I2C_SET_SPEED = 0x20,
-+	MCP2221_I2C_CANCEL = 0x10,
-+};
-+
-+/* Response codes in a raw input report */
-+enum {
-+	MCP2221_SUCCESS = 0x00,
-+	MCP2221_I2C_ENG_BUSY = 0x01,
-+	MCP2221_I2C_START_TOUT = 0x12,
-+	MCP2221_I2C_STOP_TOUT = 0x62,
-+	MCP2221_I2C_WRADDRL_TOUT = 0x23,
-+	MCP2221_I2C_WRDATA_TOUT = 0x44,
-+	MCP2221_I2C_WRADDRL_NACK = 0x25,
-+	MCP2221_I2C_MASK_ADDR_NACK = 0x40,
-+	MCP2221_I2C_WRADDRL_SEND = 0x21,
-+	MCP2221_I2C_ADDR_NACK = 0x25,
-+	MCP2221_I2C_READ_COMPL = 0x55,
-+};
-+
-+/*
-+ * There is no way to distinguish responses. Therefore next command
-+ * is sent only after response to previous has been received. Mutex
-+ * lock is used for this purpose mainly.
-+ */
-+struct mcp2221 {
-+	struct hid_device *hdev;
-+	struct i2c_adapter adapter;
-+	struct mutex lock;
-+	struct completion wait_in_report;
-+	u8 *rxbuf;
-+	u8 txbuf[64];
-+	int rxbuf_idx;
-+	int status;
-+	u8 cur_i2c_clk_div;
-+};
-+
-+/*
-+ * Default i2c bus clock frequency 400 kHz. Modify this if you
-+ * want to set some other frequency (min 50 kHz - max 400 kHz).
-+ */
-+static uint i2c_clk_freq = 400;
-+
-+/* Synchronously send output report to the device */
-+static int mcp_send_report(struct mcp2221 *mcp,
-+					u8 *out_report, size_t len)
-+{
-+	u8 *buf;
-+	int ret;
-+
-+	buf = kmemdup(out_report, len, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	/* mcp2221 uses interrupt endpoint for out reports */
-+	ret = hid_hw_output_report(mcp->hdev, buf, len);
-+	kfree(buf);
-+
-+	if (ret < 0)
-+		return ret;
-+	return 0;
-+}
-+
-+/*
-+ * Send o/p report to the device and wait for i/p report to be
-+ * received from the device. If the device does not respond,
-+ * we timeout.
-+ */
-+static int mcp_send_data_req_status(struct mcp2221 *mcp,
-+			u8 *out_report, int len)
-+{
-+	int ret;
-+	unsigned long t;
-+
-+	reinit_completion(&mcp->wait_in_report);
-+
-+	ret = mcp_send_report(mcp, out_report, len);
-+	if (ret)
-+		return ret;
-+
-+	t = wait_for_completion_timeout(&mcp->wait_in_report,
-+							msecs_to_jiffies(4000));
-+	if (!t)
-+		return -ETIMEDOUT;
-+
-+	return mcp->status;
-+}
-+
-+/* Check pass/fail for actual communication with i2c slave */
-+static int mcp_chk_last_cmd_status(struct mcp2221 *mcp)
-+{
-+	memset(mcp->txbuf, 0, 8);
-+	mcp->txbuf[0] = MCP2221_I2C_PARAM_OR_STATUS;
-+
-+	return mcp_send_data_req_status(mcp, mcp->txbuf, 8);
-+}
-+
-+/* Cancels last command releasing i2c bus just in case occupied */
-+static int mcp_cancel_last_cmd(struct mcp2221 *mcp)
-+{
-+	memset(mcp->txbuf, 0, 8);
-+	mcp->txbuf[0] = MCP2221_I2C_PARAM_OR_STATUS;
-+	mcp->txbuf[2] = MCP2221_I2C_CANCEL;
-+
-+	return mcp_send_data_req_status(mcp, mcp->txbuf, 8);
-+}
-+
-+static int mcp_set_i2c_speed(struct mcp2221 *mcp)
-+{
-+	int ret;
-+
-+	memset(mcp->txbuf, 0, 8);
-+	mcp->txbuf[0] = MCP2221_I2C_PARAM_OR_STATUS;
-+	mcp->txbuf[3] = MCP2221_I2C_SET_SPEED;
-+	mcp->txbuf[4] = mcp->cur_i2c_clk_div;
-+
-+	ret = mcp_send_data_req_status(mcp, mcp->txbuf, 8);
-+	if (ret) {
-+		/* Small delay is needed here */
-+		usleep_range(980, 1000);
-+		mcp_cancel_last_cmd(mcp);
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * An output report can contain minimum 1 and maximum 60 user data
-+ * bytes. If the number of data bytes is more then 60, we send it
-+ * in chunks of 60 bytes. Last chunk may contain exactly 60 or less
-+ * bytes. Total number of bytes is informed in very first report to
-+ * mcp2221, from that point onwards it first collect all the data
-+ * from host and then send to i2c slave device.
-+ */
-+static int mcp_i2c_write(struct mcp2221 *mcp,
-+				struct i2c_msg *msg, int type, u8 last_status)
-+{
-+	int ret, len, idx, sent;
-+
-+	idx = 0;
-+	sent  = 0;
-+	if (msg->len < 60)
-+		len = msg->len;
-+	else
-+		len = 60;
-+
-+	do {
-+		mcp->txbuf[0] = type;
-+		mcp->txbuf[1] = msg->len & 0xff;
-+		mcp->txbuf[2] = msg->len >> 8;
-+		mcp->txbuf[3] = (u8)(msg->addr << 1);
-+
-+		memcpy(&mcp->txbuf[4], &msg->buf[idx], len);
-+
-+		ret = mcp_send_data_req_status(mcp, mcp->txbuf, len + 4);
-+		if (ret)
-+			return ret;
-+
-+		usleep_range(980, 1000);
-+
-+		if (last_status) {
-+			ret = mcp_chk_last_cmd_status(mcp);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		sent = sent + len;
-+		if (sent >= msg->len)
-+			break;
-+
-+		idx = idx + len;
-+		if ((msg->len - sent) < 60)
-+			len = msg->len - sent;
-+		else
-+			len = 60;
-+
-+		/*
-+		 * Testing shows delay is needed between successive writes
-+		 * otherwise next write fails on first-try from i2c core.
-+		 * This value is obtained through automated stress testing.
-+		 */
-+		usleep_range(980, 1000);
-+	} while (len > 0);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Device reads all data (0 - 65535 bytes) from i2c slave device and
-+ * stores it in device itself. This data is read back from device to
-+ * host in multiples of 60 bytes using input reports.
-+ */
-+static int mcp_i2c_smbus_read(struct mcp2221 *mcp,
-+				struct i2c_msg *msg, int type, u16 smbus_addr,
-+				u8 smbus_len, u8 *smbus_buf)
-+{
-+	int ret;
-+	u16 total_len;
-+
-+	mcp->txbuf[0] = type;
-+	if (msg) {
-+		mcp->txbuf[1] = msg->len & 0xff;
-+		mcp->txbuf[2] = msg->len >> 8;
-+		mcp->txbuf[3] = (u8)(msg->addr << 1);
-+		total_len = msg->len;
-+		mcp->rxbuf = msg->buf;
-+	} else {
-+		mcp->txbuf[1] = smbus_len;
-+		mcp->txbuf[2] = 0;
-+		mcp->txbuf[3] = (u8)(smbus_addr << 1);
-+		total_len = smbus_len;
-+		mcp->rxbuf = smbus_buf;
-+	}
-+
-+	ret = mcp_send_data_req_status(mcp, mcp->txbuf, 4);
-+	if (ret)
-+		return ret;
-+
-+	mcp->rxbuf_idx = 0;
-+
-+	do {
-+		memset(mcp->txbuf, 0, 4);
-+		mcp->txbuf[0] = MCP2221_I2C_GET_DATA;
-+
-+		ret = mcp_send_data_req_status(mcp, mcp->txbuf, 1);
-+		if (ret)
-+			return ret;
-+
-+		ret = mcp_chk_last_cmd_status(mcp);
-+		if (ret)
-+			return ret;
-+
-+		usleep_range(980, 1000);
-+	} while (mcp->rxbuf_idx < total_len);
-+
-+	return ret;
-+}
-+
-+static int mcp_i2c_xfer(struct i2c_adapter *adapter,
-+				struct i2c_msg msgs[], int num)
-+{
-+	int ret;
-+	struct mcp2221 *mcp = i2c_get_adapdata(adapter);
-+
-+	hid_hw_power(mcp->hdev, PM_HINT_FULLON);
-+
-+	mutex_lock(&mcp->lock);
-+
-+	/* Setting speed before every transaction is required for mcp2221 */
-+	ret = mcp_set_i2c_speed(mcp);
-+	if (ret)
-+		goto exit;
-+
-+	if (num == 1) {
-+		if (msgs->flags & I2C_M_RD) {
-+			ret = mcp_i2c_smbus_read(mcp, msgs, MCP2221_I2C_RD_DATA,
-+							0, 0, NULL);
-+		} else {
-+			ret = mcp_i2c_write(mcp, msgs, MCP2221_I2C_WR_DATA, 1);
-+		}
-+		if (ret)
-+			goto exit;
-+		ret = num;
-+	} else if (num == 2) {
-+		/* Ex transaction; send reg address and read its contents */
-+		if (msgs[0].addr == msgs[1].addr &&
-+			!(msgs[0].flags & I2C_M_RD) &&
-+			 (msgs[1].flags & I2C_M_RD)) {
-+
-+			ret = mcp_i2c_write(mcp, &msgs[0],
-+						MCP2221_I2C_WR_NO_STOP, 0);
-+			if (ret)
-+				goto exit;
-+
-+			ret = mcp_i2c_smbus_read(mcp, &msgs[1],
-+						MCP2221_I2C_RD_RPT_START,
-+						0, 0, NULL);
-+			if (ret)
-+				goto exit;
-+			ret = num;
-+		} else {
-+			dev_err(&adapter->dev,
-+				"unsupported multi-msg i2c transaction\n");
-+			ret = -EOPNOTSUPP;
-+		}
-+	} else {
-+		dev_err(&adapter->dev,
-+			"unsupported multi-msg i2c transaction\n");
-+		ret = -EOPNOTSUPP;
-+	}
-+
-+exit:
-+	hid_hw_power(mcp->hdev, PM_HINT_NORMAL);
-+	mutex_unlock(&mcp->lock);
-+	return ret;
-+}
-+
-+static int mcp_smbus_write(struct mcp2221 *mcp, u16 addr,
-+				u8 command, u8 *buf, u8 len, int type,
-+				u8 last_status)
-+{
-+	int data_len, ret;
-+
-+	mcp->txbuf[0] = type;
-+	mcp->txbuf[1] = len + 1; /* 1 is due to command byte itself */
-+	mcp->txbuf[2] = 0;
-+	mcp->txbuf[3] = (u8)(addr << 1);
-+	mcp->txbuf[4] = command;
-+
-+	switch (len) {
-+	case 0:
-+		data_len = 5;
-+		break;
-+	case 1:
-+		mcp->txbuf[5] = buf[0];
-+		data_len = 6;
-+		break;
-+	case 2:
-+		mcp->txbuf[5] = buf[0];
-+		mcp->txbuf[6] = buf[1];
-+		data_len = 7;
-+		break;
-+	default:
-+		memcpy(&mcp->txbuf[5], buf, len);
-+		data_len = len + 5;
-+	}
-+
-+	ret = mcp_send_data_req_status(mcp, mcp->txbuf, data_len);
-+	if (ret)
-+		return ret;
-+
-+	if (last_status) {
-+		usleep_range(980, 1000);
-+
-+		ret = mcp_chk_last_cmd_status(mcp);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static int mcp_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
-+				unsigned short flags, char read_write,
-+				u8 command, int size,
-+				union i2c_smbus_data *data)
-+{
-+	int ret;
-+	struct mcp2221 *mcp = i2c_get_adapdata(adapter);
-+
-+	hid_hw_power(mcp->hdev, PM_HINT_FULLON);
-+
-+	mutex_lock(&mcp->lock);
-+
-+	ret = mcp_set_i2c_speed(mcp);
-+	if (ret)
-+		goto exit;
-+
-+	switch (size) {
-+
-+	case I2C_SMBUS_QUICK:
-+		if (read_write == I2C_SMBUS_READ)
-+			ret = mcp_i2c_smbus_read(mcp, NULL, MCP2221_I2C_RD_DATA,
-+						addr, 0, &data->byte);
-+		else
-+			ret = mcp_smbus_write(mcp, addr, command, NULL,
-+						0, MCP2221_I2C_WR_DATA, 1);
-+		break;
-+	case I2C_SMBUS_BYTE:
-+		if (read_write == I2C_SMBUS_READ)
-+			ret = mcp_i2c_smbus_read(mcp, NULL, MCP2221_I2C_RD_DATA,
-+						addr, 1, &data->byte);
-+		else
-+			ret = mcp_smbus_write(mcp, addr, command, NULL,
-+						0, MCP2221_I2C_WR_DATA, 1);
-+		break;
-+	case I2C_SMBUS_BYTE_DATA:
-+		if (read_write == I2C_SMBUS_READ) {
-+			ret = mcp_smbus_write(mcp, addr, command, NULL,
-+						0, MCP2221_I2C_WR_NO_STOP, 0);
-+			if (ret)
-+				goto exit;
-+
-+			ret = mcp_i2c_smbus_read(mcp, NULL,
-+						MCP2221_I2C_RD_RPT_START,
-+						addr, 1, &data->byte);
-+		} else {
-+			ret = mcp_smbus_write(mcp, addr, command, &data->byte,
-+						1, MCP2221_I2C_WR_DATA, 1);
-+		}
-+		break;
-+	case I2C_SMBUS_WORD_DATA:
-+		if (read_write == I2C_SMBUS_READ) {
-+			ret = mcp_smbus_write(mcp, addr, command, NULL,
-+						0, MCP2221_I2C_WR_NO_STOP, 0);
-+			if (ret)
-+				goto exit;
-+
-+			ret = mcp_i2c_smbus_read(mcp, NULL,
-+						MCP2221_I2C_RD_RPT_START,
-+						addr, 2, (u8 *)&data->word);
-+		} else {
-+			ret = mcp_smbus_write(mcp, addr, command,
-+						(u8 *)&data->word, 2,
-+						MCP2221_I2C_WR_DATA, 1);
-+		}
-+		break;
-+	case I2C_SMBUS_BLOCK_DATA:
-+		if (read_write == I2C_SMBUS_READ) {
-+			ret = mcp_smbus_write(mcp, addr, command, NULL,
-+						0, MCP2221_I2C_WR_NO_STOP, 1);
-+			if (ret)
-+				goto exit;
-+
-+			mcp->rxbuf_idx = 0;
-+			mcp->rxbuf = data->block;
-+			mcp->txbuf[0] = MCP2221_I2C_GET_DATA;
-+			ret = mcp_send_data_req_status(mcp, mcp->txbuf, 1);
-+			if (ret)
-+				goto exit;
-+		} else {
-+			if (!data->block[0]) {
-+				ret = -EINVAL;
-+				goto exit;
-+			}
-+			ret = mcp_smbus_write(mcp, addr, command, data->block,
-+						data->block[0] + 1,
-+						MCP2221_I2C_WR_DATA, 1);
-+		}
-+		break;
-+	case I2C_SMBUS_I2C_BLOCK_DATA:
-+		if (read_write == I2C_SMBUS_READ) {
-+			ret = mcp_smbus_write(mcp, addr, command, NULL,
-+						0, MCP2221_I2C_WR_NO_STOP, 1);
-+			if (ret)
-+				goto exit;
-+
-+			mcp->rxbuf_idx = 0;
-+			mcp->rxbuf = data->block;
-+			mcp->txbuf[0] = MCP2221_I2C_GET_DATA;
-+			ret = mcp_send_data_req_status(mcp, mcp->txbuf, 1);
-+			if (ret)
-+				goto exit;
-+		} else {
-+			if (!data->block[0]) {
-+				ret = -EINVAL;
-+				goto exit;
-+			}
-+			ret = mcp_smbus_write(mcp, addr, command,
-+						&data->block[1], data->block[0],
-+						MCP2221_I2C_WR_DATA, 1);
-+		}
-+		break;
-+	case I2C_SMBUS_PROC_CALL:
-+		ret = mcp_smbus_write(mcp, addr, command,
-+						(u8 *)&data->word,
-+						2, MCP2221_I2C_WR_NO_STOP, 0);
-+		if (ret)
-+			goto exit;
-+
-+		ret = mcp_i2c_smbus_read(mcp, NULL,
-+						MCP2221_I2C_RD_RPT_START,
-+						addr, 2, (u8 *)&data->word);
-+		break;
-+	case I2C_SMBUS_BLOCK_PROC_CALL:
-+		ret = mcp_smbus_write(mcp, addr, command, data->block,
-+						data->block[0] + 1,
-+						MCP2221_I2C_WR_NO_STOP, 0);
-+		if (ret)
-+			goto exit;
-+
-+		ret = mcp_i2c_smbus_read(mcp, NULL,
-+						MCP2221_I2C_RD_RPT_START,
-+						addr, I2C_SMBUS_BLOCK_MAX,
-+						data->block);
-+		break;
-+	default:
-+		dev_err(&mcp->adapter.dev,
-+			"unsupported smbus transaction size:%d\n", size);
-+		ret = -EOPNOTSUPP;
-+	}
-+
-+exit:
-+	hid_hw_power(mcp->hdev, PM_HINT_NORMAL);
-+	mutex_unlock(&mcp->lock);
-+	return ret;
-+}
-+
-+static u32 mcp_i2c_func(struct i2c_adapter *adapter)
-+{
-+	return I2C_FUNC_I2C |
-+			I2C_FUNC_SMBUS_READ_BLOCK_DATA |
-+			I2C_FUNC_SMBUS_BLOCK_PROC_CALL |
-+			(I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_PEC);
-+}
-+
-+static const struct i2c_algorithm mcp_i2c_algo = {
-+	.master_xfer = mcp_i2c_xfer,
-+	.smbus_xfer = mcp_smbus_xfer,
-+	.functionality = mcp_i2c_func,
-+};
-+
-+/* Gives current state of i2c engine inside mcp2221 */
-+static int mcp_get_i2c_eng_state(struct mcp2221 *mcp,
-+				u8 *data, u8 idx)
-+{
-+	int ret;
-+
-+	switch (data[idx]) {
-+	case MCP2221_I2C_WRADDRL_NACK:
-+	case MCP2221_I2C_WRADDRL_SEND:
-+		ret = -ENXIO;
-+		break;
-+	case MCP2221_I2C_START_TOUT:
-+	case MCP2221_I2C_STOP_TOUT:
-+	case MCP2221_I2C_WRADDRL_TOUT:
-+	case MCP2221_I2C_WRDATA_TOUT:
-+		ret = -ETIMEDOUT;
-+		break;
-+	case MCP2221_I2C_ENG_BUSY:
-+		ret = -EAGAIN;
-+		break;
-+	case MCP2221_SUCCESS:
-+		ret = 0x00;
-+		break;
-+	default:
-+		ret = -EIO;
-+	}
-+
-+	return ret;
-+}
-+
-+/*
-+ * MCP2221 uses interrupt endpoint for input reports. This function
-+ * is called by HID layer when it receives i/p report from mcp2221,
-+ * which is actually a response to the previously sent command.
-+ *
-+ * MCP2221A firmware specific return codes are parsed and 0 or
-+ * appropriate negative error code is returned. Delayed response
-+ * results in timeout error and stray reponses results in -EIO.
-+ */
-+static int mcp2221_raw_event(struct hid_device *hdev,
-+				struct hid_report *report, u8 *data, int size)
-+{
-+	u8 *buf;
-+	struct mcp2221 *mcp = hid_get_drvdata(hdev);
-+
-+	switch (data[0]) {
-+
-+	case MCP2221_I2C_WR_DATA:
-+	case MCP2221_I2C_WR_NO_STOP:
-+	case MCP2221_I2C_RD_DATA:
-+	case MCP2221_I2C_RD_RPT_START:
-+		switch (data[1]) {
-+		case MCP2221_SUCCESS:
-+			mcp->status = 0;
-+			break;
-+		default:
-+			mcp->status = mcp_get_i2c_eng_state(mcp, data, 2);
-+		}
-+		complete(&mcp->wait_in_report);
-+		break;
-+
-+	case MCP2221_I2C_PARAM_OR_STATUS:
-+		switch (data[1]) {
-+		case MCP2221_SUCCESS:
-+			if ((mcp->txbuf[3] == MCP2221_I2C_SET_SPEED) &&
-+				(data[3] != MCP2221_I2C_SET_SPEED)) {
-+				mcp->status = -EAGAIN;
-+				break;
-+			}
-+			if (data[20] & MCP2221_I2C_MASK_ADDR_NACK) {
-+				mcp->status = -ENXIO;
-+				break;
-+			}
-+			mcp->status = mcp_get_i2c_eng_state(mcp, data, 8);
-+			break;
-+		default:
-+			mcp->status = -EIO;
-+		}
-+		complete(&mcp->wait_in_report);
-+		break;
-+
-+	case MCP2221_I2C_GET_DATA:
-+		switch (data[1]) {
-+		case MCP2221_SUCCESS:
-+			if (data[2] == MCP2221_I2C_ADDR_NACK) {
-+				mcp->status = -ENXIO;
-+				break;
-+			}
-+			if (!mcp_get_i2c_eng_state(mcp, data, 2)
-+				&& (data[3] == 0)) {
-+				mcp->status = 0;
-+				break;
-+			}
-+			if (data[3] == 127) {
-+				mcp->status = -EIO;
-+				break;
-+			}
-+			if (data[2] == MCP2221_I2C_READ_COMPL) {
-+				buf = mcp->rxbuf;
-+				memcpy(&buf[mcp->rxbuf_idx], &data[4], data[3]);
-+				mcp->rxbuf_idx = mcp->rxbuf_idx + data[3];
-+				mcp->status = 0;
-+				break;
-+			}
-+			mcp->status = -EIO;
-+			break;
-+		default:
-+			mcp->status = -EIO;
-+		}
-+		complete(&mcp->wait_in_report);
-+		break;
-+
-+	default:
-+		mcp->status = -EIO;
-+		complete(&mcp->wait_in_report);
-+	}
-+
-+	return 1;
-+}
-+
-+static int mcp2221_probe(struct hid_device *hdev,
-+					const struct hid_device_id *id)
-+{
-+	int ret;
-+	struct mcp2221 *mcp;
-+
-+	mcp = devm_kzalloc(&hdev->dev, sizeof(*mcp), GFP_KERNEL);
-+	if (!mcp)
-+		return -ENOMEM;
-+
-+	ret = hid_parse(hdev);
-+	if (ret) {
-+		hid_err(hdev, "can't parse reports\n");
-+		return ret;
-+	}
-+
-+	ret = hid_hw_start(hdev, HID_CONNECT_HIDRAW);
-+	if (ret) {
-+		hid_err(hdev, "can't start hardware\n");
-+		return ret;
-+	}
-+
-+	ret = hid_hw_open(hdev);
-+	if (ret) {
-+		hid_err(hdev, "can't open device\n");
-+		goto err_hstop;
-+	}
-+
-+	mutex_init(&mcp->lock);
-+	init_completion(&mcp->wait_in_report);
-+	hid_set_drvdata(hdev, mcp);
-+	mcp->hdev = hdev;
-+
-+	/* Set I2C bus clock diviser */
-+	if (i2c_clk_freq > 400)
-+		i2c_clk_freq = 400;
-+	if (i2c_clk_freq < 50)
-+		i2c_clk_freq = 50;
-+	mcp->cur_i2c_clk_div = (12000000 / (i2c_clk_freq * 1000)) - 3;
-+
-+	mcp->adapter.owner = THIS_MODULE;
-+	mcp->adapter.class = I2C_CLASS_HWMON;
-+	mcp->adapter.algo = &mcp_i2c_algo;
-+	mcp->adapter.retries = 1;
-+	mcp->adapter.dev.parent = &hdev->dev;
-+	snprintf(mcp->adapter.name, sizeof(mcp->adapter.name),
-+			"MCP2221 usb-i2c bridge on hidraw%d",
-+			((struct hidraw *)hdev->hidraw)->minor);
-+
-+	ret = i2c_add_adapter(&mcp->adapter);
-+	if (ret) {
-+		hid_err(hdev, "can't add usb-i2c adapter: %d\n", ret);
-+		goto err_i2c;
-+	}
-+	i2c_set_adapdata(&mcp->adapter, mcp);
-+
-+	return 0;
-+
-+err_i2c:
-+	hid_hw_close(mcp->hdev);
-+err_hstop:
-+	hid_hw_stop(mcp->hdev);
-+	return ret;
-+}
-+
-+static void mcp2221_remove(struct hid_device *hdev)
-+{
-+	struct mcp2221 *mcp = hid_get_drvdata(hdev);
-+
-+	i2c_del_adapter(&mcp->adapter);
-+	hid_hw_close(mcp->hdev);
-+	hid_hw_stop(mcp->hdev);
-+}
-+
-+static const struct hid_device_id mcp2221_devices[] = {
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROCHIP, USB_DEVICE_ID_MCP2221) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(hid, mcp2221_devices);
-+
-+static struct hid_driver mcp2221_driver = {
-+	.name		= "mcp2221",
-+	.id_table	= mcp2221_devices,
-+	.probe		= mcp2221_probe,
-+	.remove		= mcp2221_remove,
-+	.raw_event	= mcp2221_raw_event,
-+};
-+
-+/* Register with HID core */
-+module_hid_driver(mcp2221_driver);
-+
-+MODULE_AUTHOR("Rishi Gupta <gupt21@gmail.com>");
-+MODULE_DESCRIPTION("MCP2221 Microchip HID USB to I2C master bridge");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
-
+>  #ifdef CONFIG_SMP
+>         setup_smp();
+>  #endif
+> --
+> 2.24.0
+>
