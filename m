@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AD4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE33EC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4ED724696
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B92924686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221341;
-	bh=YBo4URw0WTkmn86vVl865SELQwwuNf/MkRaLaF5h8d4=;
+	s=default; t=1580221347;
+	bh=96SgEAgr6ueX9E0YESGVCFy9dx3Ny4bQ+JLx/imZpLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YLPLb5BLnhc+nw7mFzIRltsRkQSXBRD0wYGCqk5vA14JUruqNY20QaZYjX/NaFJVO
-	 9ubO9YOFvlnFff+F282j7Fwq3hbtbal1LOLftiF2Tgjri7iiwSzdnYWjXaI0DxN4en
-	 5bw6vbelghkFof/qw7FXEEPYqhc5vDE1P/y5cTLA=
+	b=SIJLreEsDI4u51JRo6JhJ5Fg3gRI81WmaLHmeY4arsO4zKDs6u095Y4/goBok4ztg
+	 djQpsetL5TALAdN5MzZjwWHWJD1CZLpN9t8BMGf9l51Wl6MrtaJ0kJb27HEpxGTQoP
+	 Zz7wHfNwbrnjUgZqJ+iq+Tjl8uuYSn1qR5zIDhCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbgA1OWT (ORCPT
+        id S1731257AbgA1OW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:22:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48012 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:22:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbgA1OWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:22:16 -0500
+        id S1727549AbgA1OWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:22:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39B5424696;
-        Tue, 28 Jan 2020 14:22:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19A1524693;
+        Tue, 28 Jan 2020 14:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221335;
-        bh=YBo4URw0WTkmn86vVl865SELQwwuNf/MkRaLaF5h8d4=;
+        s=default; t=1580221340;
+        bh=96SgEAgr6ueX9E0YESGVCFy9dx3Ny4bQ+JLx/imZpLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qGe/aYODL7q2WZno+8/EVFKXlIHv9j1TbBQMzndsmfmg7+2ac19eC8xqbt/HrQcVh
-         tEVsvWPwvsNQC1ZpMsPphaymXvhsn9pbwW1JVs6EYIinh8L9bQul9/yvpC6M40V73l
-         teaHCSi8ff28kGB2TDXtm0NYioE0dc6DgDR7PFzs=
+        b=V5yMpRtjGCaq9LBhk8eS6b9Nuzhl7qx3WIN7NzD0pT2FpdfHbR59ocKSi1iJ/Tv13
+         NuP8Ly+IzC/bOY8VVeUL5gZnGJwVHBqiHOuRqyHfTfSkkIL2alOwUOkf1ZX00cdwWV
+         hC2hfwqfsb8d6pBq9j1T5IqxDKaC2hT+5KEf4QvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 182/271] ASoC: wm8737: Fix copy-paste error in wm8737_snd_controls
-Date:   Tue, 28 Jan 2020 15:05:31 +0100
-Message-Id: <20200128135906.088214623@linuxfoundation.org>
+Subject: [PATCH 4.9 184/271] ASoC: sun4i-i2s: RX and TX counter registers are swapped
+Date:   Tue, 28 Jan 2020 15:05:33 +0100
+Message-Id: <20200128135906.265270066@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -62,39 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit 554b75bde64bcad9662530726d1483f7ef012069 ]
+[ Upstream commit cf2c0e1ce9544df42170fb921f12da82dc0cc8d6 ]
 
-sound/soc/codecs/wm8737.c:112:29: warning:
- high_3d defined but not used [-Wunused-const-variable=]
+The RX and TX counters registers offset have been swapped, fix that.
 
-'high_3d' should be used for 3D High Cut-off.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 2a9ae13a2641 ("ASoC: Add initial WM8737 driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20190815091920.64480-1-yuehaibing@huawei.com
+Fixes: fa7c0d13cb26 ("ASoC: sunxi: Add Allwinner A10 Digital Audio driver")
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://lore.kernel.org/r/8b26477560ad5fd8f69e037b167c5e61de5c26a3.1566242458.git-series.maxime.ripard@bootlin.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8737.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sunxi/sun4i-i2s.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8737.c b/sound/soc/codecs/wm8737.c
-index f0cb1c4afe3ce..c5a8d758f58b8 100644
---- a/sound/soc/codecs/wm8737.c
-+++ b/sound/soc/codecs/wm8737.c
-@@ -170,7 +170,7 @@ SOC_DOUBLE("Polarity Invert Switch", WM8737_ADC_CONTROL, 5, 6, 1, 0),
- SOC_SINGLE("3D Switch", WM8737_3D_ENHANCE, 0, 1, 0),
- SOC_SINGLE("3D Depth", WM8737_3D_ENHANCE, 1, 15, 0),
- SOC_ENUM("3D Low Cut-off", low_3d),
--SOC_ENUM("3D High Cut-off", low_3d),
-+SOC_ENUM("3D High Cut-off", high_3d),
- SOC_SINGLE_TLV("3D ADC Volume", WM8737_3D_ENHANCE, 7, 1, 1, adc_tlv),
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index 15c92400cea42..02c373c65e194 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -78,8 +78,8 @@
+ #define SUN4I_I2S_CLK_DIV_MCLK_MASK		GENMASK(3, 0)
+ #define SUN4I_I2S_CLK_DIV_MCLK(mclk)			((mclk) << 0)
  
- SOC_SINGLE("Noise Gate Switch", WM8737_NOISE_GATE, 0, 1, 0),
+-#define SUN4I_I2S_RX_CNT_REG		0x28
+-#define SUN4I_I2S_TX_CNT_REG		0x2c
++#define SUN4I_I2S_TX_CNT_REG		0x28
++#define SUN4I_I2S_RX_CNT_REG		0x2c
+ 
+ #define SUN4I_I2S_TX_CHAN_SEL_REG	0x30
+ #define SUN4I_I2S_TX_CHAN_SEL(num_chan)		(((num_chan) - 1) << 0)
 -- 
 2.20.1
 
