@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDD1C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAF4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE8824693
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB63D24686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221303;
-	bh=Sfmb2ZdL6ft6NwPcDPR+ZaOaJpdV1GTSVQsBMSNrpCg=;
+	s=default; t=1580221308;
+	bh=PRU01EUuxoblUUE0ichFBT6WZLwA1/nEWu7P9H/aSGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AxElalvm3RBQhaNnCwIN/C9I/xTay+E4NGOv0SQ0dfbftCsY8SzNfT6QwkbZLgicL
-	 Y3AjcO0PCOugzTmpcjX6pQcH1qD5tDjOsdZb+NFugdnxVsx/adTJ62JF49+m0JNajr
-	 7xGdDkFTiuOf/pXmRWYBhIOv/+zIvZXyNX6QJX1U=
+	b=xEtGKIqiBc3B0GoXxwrYk599BzcUiUgU3WPN6UYFiTN1Q0GneaQppwWlMXPhmVVWf
+	 62RZBOM61GIA7HYb3D5C2TcS4x8rtS80oy6b05SlhivDseQfHRytXtvB7SjcHAe7JZ
+	 +crGL3vxM6TH9hu4SpneGOO1AASapBElADc+JBvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbgA1OVm (ORCPT
+        id S1731404AbgA1OVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:21:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47060 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:21:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731342AbgA1OVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:21:39 -0500
+        id S1731384AbgA1OVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:21:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D7B124698;
-        Tue, 28 Jan 2020 14:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AFBF24686;
+        Tue, 28 Jan 2020 14:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221298;
-        bh=Sfmb2ZdL6ft6NwPcDPR+ZaOaJpdV1GTSVQsBMSNrpCg=;
+        s=default; t=1580221306;
+        bh=PRU01EUuxoblUUE0ichFBT6WZLwA1/nEWu7P9H/aSGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZM/RK3bQBvzhps2avMxtnbLv+TrCZB/ufuLLYSlqboJo8ItFqw5EW0LuQhl4l/cjn
-         LeaFTfmgeT4VQGGyAscOKpLQPRm1vUjcwoNA6ES3/qWiluDyVdh5tDYLxI5sMEiKNC
-         dhWZ/8webtVTZ/PDWfJoZIPR+9RPFzTmJARcRB9c=
+        b=QZPcZg/wP6Ee7yqAS9BkdugemrYG8BGYpei7nIU3Nkpjrd8Z1qJepXC9LCLso87MI
+         /f0cfoQLkduN3phvLehEzoP8loXdJwp7CcpAZ4OnSlgsOsyuhUMCKFv++mg6k0t2hx
+         Kfxc5Gno/voy6h4Wtf+IluGoWuxpGiGoNIHdKqys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 168/271] net: pasemi: fix an use-after-free in pasemi_mac_phy_init()
-Date:   Tue, 28 Jan 2020 15:05:17 +0100
-Message-Id: <20200128135905.085190126@linuxfoundation.org>
+Subject: [PATCH 4.9 171/271] qed: reduce maximum stack frame size
+Date:   Tue, 28 Jan 2020 15:05:20 +0100
+Message-Id: <20200128135905.298521806@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -63,47 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit faf5577f2498cea23011b5c785ef853ded22700b ]
+[ Upstream commit 7c116e02a4a7575c8c62bfd2106e3e3ec8fb99dc ]
 
-The phy_dn variable is still being used in of_phy_connect() after the
-of_node_put() call, which may result in use-after-free.
+clang warns about an overly large stack frame in one function
+when it decides to inline all __qed_get_vport_*() functions into
+__qed_get_vport_stats():
 
-Fixes: 1dd2d06c0459 ("net: Rework pasemi_mac driver to use of_mdio infrastructure")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+drivers/net/ethernet/qlogic/qed/qed_l2.c:1889:13: error: stack frame size of 1128 bytes in function '_qed_get_vport_stats' [-Werror,-Wframe-larger-than=]
+
+Use a noinline_for_stack annotation to prevent clang from inlining
+these, which keeps the maximum stack usage at around half of that
+in the worst case, similar to what we get with gcc.
+
+Fixes: 86622ee75312 ("qed: Move statistics to L2 code")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/pasemi/pasemi_mac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qed/qed_l2.c | 34 +++++++++++-------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
-index 2f4a837f0d6ad..dcd56ac687482 100644
---- a/drivers/net/ethernet/pasemi/pasemi_mac.c
-+++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
-@@ -1053,7 +1053,6 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+index 715776e2cfe50..2d198f6ee21d9 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+@@ -1328,10 +1328,9 @@ static void __qed_get_vport_pstats_addrlen(struct qed_hwfn *p_hwfn,
+ 	}
+ }
  
- 	dn = pci_device_to_OF_node(mac->pdev);
- 	phy_dn = of_parse_phandle(dn, "phy-handle", 0);
--	of_node_put(phy_dn);
+-static void __qed_get_vport_pstats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack void
++__qed_get_vport_pstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++		       struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct eth_pstorm_per_queue_stat pstats;
+ 	u32 pstats_addr = 0, pstats_len = 0;
+@@ -1351,10 +1350,9 @@ static void __qed_get_vport_pstats(struct qed_hwfn *p_hwfn,
+ 	p_stats->tx_err_drop_pkts += HILO_64_REGPAIR(pstats.error_drop_pkts);
+ }
  
- 	mac->link = 0;
- 	mac->speed = 0;
-@@ -1062,6 +1061,7 @@ static int pasemi_mac_phy_init(struct net_device *dev)
- 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
- 				PHY_INTERFACE_MODE_SGMII);
+-static void __qed_get_vport_tstats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack void
++__qed_get_vport_tstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++		       struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct tstorm_per_port_stat tstats;
+ 	u32 tstats_addr, tstats_len;
+@@ -1397,10 +1395,9 @@ static void __qed_get_vport_ustats_addrlen(struct qed_hwfn *p_hwfn,
+ 	}
+ }
  
-+	of_node_put(phy_dn);
- 	if (!phydev) {
- 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
- 		return -ENODEV;
+-static void __qed_get_vport_ustats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack
++void __qed_get_vport_ustats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++			    struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct eth_ustorm_per_queue_stat ustats;
+ 	u32 ustats_addr = 0, ustats_len = 0;
+@@ -1436,10 +1433,9 @@ static void __qed_get_vport_mstats_addrlen(struct qed_hwfn *p_hwfn,
+ 	}
+ }
+ 
+-static void __qed_get_vport_mstats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack void
++__qed_get_vport_mstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++		       struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct eth_mstorm_per_queue_stat mstats;
+ 	u32 mstats_addr = 0, mstats_len = 0;
+@@ -1463,9 +1459,9 @@ static void __qed_get_vport_mstats(struct qed_hwfn *p_hwfn,
+ 		HILO_64_REGPAIR(mstats.tpa_coalesced_bytes);
+ }
+ 
+-static void __qed_get_vport_port_stats(struct qed_hwfn *p_hwfn,
+-				       struct qed_ptt *p_ptt,
+-				       struct qed_eth_stats *p_stats)
++static noinline_for_stack void
++__qed_get_vport_port_stats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++			   struct qed_eth_stats *p_stats)
+ {
+ 	struct port_stats port_stats;
+ 	int j;
 -- 
 2.20.1
 
