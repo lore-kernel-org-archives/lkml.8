@@ -2,91 +2,157 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D58BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853F1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140792467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526A9214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:58:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cAoClRy3"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KUk3wyK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgA1O6L (ORCPT
+        id S1726648AbgA1O6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 28 Jan 2020 09:58:11 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40214 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbgA1O6L (ORCPT
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:58643 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgA1O6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jan 2020 09:58:11 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q8so6741252pfh.7;
-        Tue, 28 Jan 2020 06:58:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xVg7yvmtWgmr43KxLTmI3D7lMD6VbKHeVc6c1ksu9WU=;
-        b=cAoClRy3JAZUhXmD5tD9S6sAgFkmXeMAWWyZj4AyoV+mQvhmXqkmysZ/PpYCpQMh4q
-         8URdcdKQjwDsls1KxHWOxtxJs9XXcM5qF6IluaXDwPXEre3psp1G3a+T5Szjt/gPDOKg
-         Lba5C4uWOILvq46slE+w3i+qqsxfGe3CwCTqQiHcKGjPEjd8qBGPadaQPhkAeRmusLf4
-         YMCDIEgpzRKl9cBTa1EYKwF+HoBNNiOxh9VdbuT8aai/yBMXWC5DtJnnWKy5kVEqwA2U
-         wF4V2/UN70Gq8OEmZd7yA+tb5TMmL6/imGvzthSSzdfv7+0L916YpT4Axr0cgaJrPDjA
-         HI2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xVg7yvmtWgmr43KxLTmI3D7lMD6VbKHeVc6c1ksu9WU=;
-        b=mzUx85DuAa1DI4wWFvUvecT9d9lUxqcEk6TELwEnjsaVyqafocH21WcTZt4AXClyYs
-         6uuP7rgxDOoPbhsUwyCFR2nGgFVuQI4Jao1hOyQUvJGHmHx3FzU91Lqqg47EtVfIF0lM
-         IHtm8jQ7OjQ5KKeRUwUVjgqBmXNOifGvxi2DPpMk79OkFvLSAB5+P0b/7HWkdoF+9PdD
-         sVBIr3XKuQVFSf150eXcNyVMlfKkD6FvaLWsNF1rG+IxrdLFmXSPnruO3Ovg10z0himG
-         oEjdeI5Z+VAO4CTQHYHLDK/G+djpDpwcGfbv/JUdKRXw7R7RAHul0/b/Fd4tvcAWrZZ8
-         x1Iw==
-X-Gm-Message-State: APjAAAXd4NMJlB+izLHv9X5L48It0QdXs0D4HHAe4Df7d9sHa0gcFDOK
-        5jSoesoEINDl2z/SacvPnaA=
-X-Google-Smtp-Source: APXvYqxNf1EXoNBaASlV1mmB+s43Ce4o89OK8f/drmebdoVYbgswj1SeuD+turU5RtHfze5RRLx7Qw==
-X-Received: by 2002:a65:4b89:: with SMTP id t9mr11059341pgq.102.1580223490422;
-        Tue, 28 Jan 2020 06:58:10 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id x7sm20743774pfp.93.2020.01.28.06.58.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 06:58:09 -0800 (PST)
-Date:   Tue, 28 Jan 2020 06:58:07 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        davidgow@google.com, heidifahim@google.com, netdev@vger.kernel.org
-Subject: Re: [PATCH v1 4/5] ptp: 1588_clock_ines: add unspecified HAS_IOMEM
- dependency
-Message-ID: <20200128145807.GA2492@localhost>
-References: <20200127235356.122031-1-brendanhiggins@google.com>
- <20200127235356.122031-5-brendanhiggins@google.com>
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200128145808euoutp0228d07cec8c86e7c58f3906ec37a52de8~uFOP-qiih1915619156euoutp02P
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 14:58:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200128145808euoutp0228d07cec8c86e7c58f3906ec37a52de8~uFOP-qiih1915619156euoutp02P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1580223488;
+        bh=NoGRo3q31xRJmf8hvOu7cNIzqn2A9IS+PVrSFMvLol0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=KUk3wyK9raVpE6GHjfIiVNwrDoqMgnSrwafNqa97zrKYN5RNCody7bFHF7/36CLLY
+         287Fnx5kn192hCzndOJ0D73DdZ2GWxXpc4DDvh7cMY95apjGiDQoWdgJ2UVwyIJCA8
+         dy62VGaKo3k8cWWVt8Ag64sISWvNIP+wfobPSr/4=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200128145808eucas1p29c5b0b3fa0a09c8fb0bef3746ea47b3b~uFOP0P5NC1328213282eucas1p2q;
+        Tue, 28 Jan 2020 14:58:08 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 39.68.60679.00C403E5; Tue, 28
+        Jan 2020 14:58:08 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200128145808eucas1p2e0de9fc3d007c682251ce1a320b6906d~uFOPZJD_j1335013350eucas1p2j;
+        Tue, 28 Jan 2020 14:58:08 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200128145808eusmtrp1a11fb64eb06bfbdff6dd5a5544a335b1~uFOPYa9551035610356eusmtrp1_;
+        Tue, 28 Jan 2020 14:58:08 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-7f-5e304c00e71d
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id B2.2F.07950.FFB403E5; Tue, 28
+        Jan 2020 14:58:08 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200128145807eusmtip15afd24a045c541970b6de3867ad42202~uFOO8Xsfb3227432274eusmtip1W;
+        Tue, 28 Jan 2020 14:58:07 +0000 (GMT)
+Subject: Re: KASAN: slab-out-of-bounds Write in vgacon_scroll
+To:     Petr Mladek <pmladek@suse.com>, anon anon <742991625abc@gmail.com>
+Cc:     wangkefeng.wang@huawei.com, sergey.senozhatsky@gmail.com,
+        syzkaller@googlegroups.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <4ab69855-6112-52f4-bee2-3358664d0c20@samsung.com>
+Date:   Tue, 28 Jan 2020 15:58:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127235356.122031-5-brendanhiggins@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200128124912.chttagasucdpydhk@pathway.suse.cz>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGKsWRmVeSWpSXmKPExsWy7djP87oMPgZxBt/3Sls87O1htbjy9T2b
+        xYm+D6wWl3fNYbP4//grq8Xaz4/ZLY686Wa2aPx8n9GBw2PnrLvsHnsmnmTzaDnyltXjfvdx
+        Jo/1W66yeHzeJBfAFsVlk5Kak1mWWqRvl8CVcXetc8EWroq+2cvZGxjXc3QxcnJICJhIzP3X
+        ydTFyMUhJLCCUWJKy0Q2COcLo8SPwyugnM+MEm+fLWSCaXnZtYQVIrGcUWLy+1NQVW8ZJc4/
+        +MAIUiUsYCtxsKmBGcQWEXCT2PGmA6yDWWAHo8Su/zfBitgErCQmtq8Cs3kF7CQOrzgAtoJF
+        QFVi4tceNhBbVCBC4tODw6wQNYISJ2c+YQGxOYHqX896B2YzC4hL3HoynwnClpfY/nYOM8gy
+        CYFD7BJ7ft5ihrjbReLl9QUsELawxKvjW9ghbBmJ05N7WCAa1jFK/O14AdW9nVFi+eR/bBBV
+        1hJ3zv0CsjmAVmhKrN+lDxF2lNjVMBEsLCHAJ3HjrSDEEXwSk7ZNZ4YI80p0tAlBVKtJbFi2
+        gQ1mbdfOlcwTGJVmIXltFpJ3ZiF5ZxbC3gWMLKsYxVNLi3PTU4uN8lLL9YoTc4tL89L1kvNz
+        NzECU9Ppf8e/7GDc9SfpEKMAB6MSD+8MFYM4IdbEsuLK3EOMEhzMSiK8nUxAId6UxMqq1KL8
+        +KLSnNTiQ4zSHCxK4rzGi17GCgmkJ5akZqemFqQWwWSZODilGhjXrLwYxP4qvEvpuc7l9w19
+        8/deMTA4d2jahcL6/M1KPRteyn7x2WXHoDBrmXvWp0ennmcYc060+qUYteiJbSjH1TlyIvGJ
+        x/7aZXkbVwVUh79dln0xeJm5+t8ve/Z+OjY//uGu1d6FMou54nrLFD/u2bz5Q9fiy9rRGz9d
+        q3q+Ilp6U1sfh95tJZbijERDLeai4kQA9rYmqUkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsVy+t/xu7oMPgZxBvNjLR729rBaXPn6ns3i
+        RN8HVovLu+awWfx//JXVYu3nx+wWR950M1s0fr7P6MDhsXPWXXaPPRNPsnm0HHnL6nG/+ziT
+        x/otV1k8Pm+SC2CL0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3J
+        LEst0rdL0Mu4u9a5YAtXRd/s5ewNjOs5uhg5OSQETCRedi1hBbGFBJYySvzZytPFyAEUl5E4
+        vr4MokRY4s+1LrYuRi6gkteMEnsXfwGrFxawlTjY1MAMYosIuEnseNPBClLELLCDUeJHxyEW
+        iI4bjBIrb68A62ATsJKY2L6KEcTmFbCTOLziABOIzSKgKjHxaw8biC0qECFxeMcsqBpBiZMz
+        n7CA2JxA9a9nvQOzmQXUJf7Mu8QMYYtL3HoynwnClpfY/nYO8wRGoVlI2mchaZmFpGUWkpYF
+        jCyrGEVSS4tz03OLjfSKE3OLS/PS9ZLzczcxAqNw27GfW3Ywdr0LPsQowMGoxMProGQQJ8Sa
+        WFZcmXuIUYKDWUmEt5MJKMSbklhZlVqUH19UmpNafIjRFOi5icxSosn5wASRVxJvaGpobmFp
+        aG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qBsfftHNkTtdqqTzNu8KWpCi5+0Do3
+        ZIug7r6levtMjvm+EFnjkfh1tVe8zYG5U75eXefe/mu204l8Z22JBZ+33WHgfnbI9Eey0rX7
+        3QstRZcUsZ5aWMKj7H1R5E2HBAf3l2Pm3vWTm057pj3UOG+/Tueg3Mqfz1/PfeMY9LjsmmyL
+        ofJyz2dPDyuxFGckGmoxFxUnAgCwvaoz2AIAAA==
+X-CMS-MailID: 20200128145808eucas1p2e0de9fc3d007c682251ce1a320b6906d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200128124918eucas1p1f0ce2b2b7b33a5d63d33f876ef30f454
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200128124918eucas1p1f0ce2b2b7b33a5d63d33f876ef30f454
+References: <CAA=061EoW8AmjUrBLsJy5nTDz-1jeArLeB+z6HJuyZud0zZXug@mail.gmail.com>
+        <CGME20200128124918eucas1p1f0ce2b2b7b33a5d63d33f876ef30f454@eucas1p1.samsung.com>
+        <20200128124912.chttagasucdpydhk@pathway.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 03:53:55PM -0800, Brendan Higgins wrote:
-> Currently CONFIG_PTP_1588_CLOCK_INES=y implicitly depends on
-> CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
-> the following build error:
-> 
-> /usr/bin/ld: drivers/ptp/ptp_ines.o: in function `ines_ptp_ctrl_probe':
-> drivers/ptp/ptp_ines.c:795: undefined reference to `devm_ioremap_resource'
-> 
-> Fix the build error by adding the unspecified dependency.
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+On 1/28/20 1:49 PM, Petr Mladek wrote:
+> On Tue 2020-01-28 18:23:46, anon anon wrote:
+>> Dear Linux kernel developers,
+>>
+>> I found the crash "KASAN: slab-out-of-bounds Write in vgacon_scroll"
+>> when running syzkaller, hope it's unknown:
+>>
+>> Linux version: Linux v4.17-rc4 (75bc37fefc44)
+>> Branch: master
+>>
+>> This crash still exists on the latest linux kernel Linux v5.5-rc6.
+>> Please get C repo and crash log generated by syzkaller, as well as the
+>> .config I used for linux kernel from the attachment. Thanks.
+> 
+> The out-of-bound access seems to be in vgacon_scroll() and thus
+> in vgacon code.
+> 
+> Unfortunately, most people in CC are printk-guys. They were mentioned
+> by ./scripts/get_maintainer.pl -f drivers/video/console/vgacon.c
+> just because the very last comment (tree wide pr_warning() clean up).
+> 
+> Bartolomej seems to be the only relevant name.
+> 
+> Bartolomej,
+> 
+> are you going to look at it? Or should we add more people or some list
+
+Help is welcomed as I'm not going to look at it in the foreseeable future
+(I'm busy enough with other things).
+
+> (dri-devel@lists.freedesktop.org or linux-fbdev@vger.kernel.org) into CC?
+
+Added to Cc:, thanks.
+
+> Thanks,
+> Petr
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
