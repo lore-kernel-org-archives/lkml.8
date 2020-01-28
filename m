@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D329C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B0EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF27D20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E30120716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580223014;
-	bh=g98h9zgHGfmJG7qp7shi05vz6GMzSl3GulPJVilvKv0=;
+	s=default; t=1580223026;
+	bh=sWoF9hko6XibnWvONH+6UswkDcJ+wiVAoNYyJHi8Cyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eo2uQECDvct8kD0sycxVA44KvM+J67t2bIStlo692ltLtYTFTdwPYVwHs/xGnahRT
-	 /ptwPuTyUJr4t6BXenviyRTGBbHiXFq8RwqcjnStwaNObuHq8cfFaOJwF7aIBxOrhh
-	 s0wzhsacWF1FOBDutYXwUMctJaMSUN7LCSFUBFTw=
+	b=GPm4srPLcby/dSNoteo/6odXauwrxJLtROCS2hxOXYGLEzeKj0aqRG0uDIBWobQKA
+	 LPGSiVSMJYlYvEuqpzFUO7jaUHj3a7n202gkqtIOq7Hv9snVQejbiXTrAOAfTR1ARf
+	 8pQXV87iIvoKtoZ/Z4QaKg1yjTfcVKerhZFRA8k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbgA1OuN (ORCPT
+        id S1727140AbgA1OuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:50:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44970 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:50:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgA1N7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:59:33 -0500
+        id S1726802AbgA1N7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:59:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B3132173E;
-        Tue, 28 Jan 2020 13:59:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20AE424685;
+        Tue, 28 Jan 2020 13:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219972;
-        bh=g98h9zgHGfmJG7qp7shi05vz6GMzSl3GulPJVilvKv0=;
+        s=default; t=1580219955;
+        bh=sWoF9hko6XibnWvONH+6UswkDcJ+wiVAoNYyJHi8Cyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U69OnotkKaUaRp8rjRvDEU4Mk8MpQrxZXKcdfrD3hb0poUoGjXVrpbhcPL1TtvHKG
-         I9O60+LhanuSDh1NVgbvAs6p8812Xez5naKrzbyI1WZxQffp8i+C7nqyJl/dvu0Pat
-         MrX0IoYfV/8rTL5+JSQnkttMhIwiivnsGF7spOLU=
+        b=UpzZh9dkqR3H+OW07YpUQ5lmUFMuVqMhn7cNzxX4LzRInHJs1fACjZf61N7otK4ZK
+         1HGQy5CZ7NVGUU28ScsiuqVBTw7VfNzlZqRYK7zL6DQ4Y7TNUB8rU0j/2a2LSmp6RH
+         yijbVGqm9ztGk5VpEXfvDGfLMLStCIv8Xu2+1ru0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+2f07903a5b05e7f36410@syzkaller.appspotmail.com,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 08/46] net_sched: fix datalen for ematch
-Date:   Tue, 28 Jan 2020 14:57:42 +0100
-Message-Id: <20200128135751.237908634@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        David Miller <davem@davemloft.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH 4.14 11/46] net-sysfs: Call dev_hold always in netdev_queue_add_kobject
+Date:   Tue, 28 Jan 2020 14:57:45 +0100
+Message-Id: <20200128135751.545271071@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -64,47 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit 61678d28d4a45ef376f5d02a839cc37509ae9281 ]
+commit e0b60903b434a7ee21ba8d8659f207ed84101e89 upstream.
 
-syzbot reported an out-of-bound access in em_nbyte. As initially
-analyzed by Eric, this is because em_nbyte sets its own em->datalen
-in em_nbyte_change() other than the one specified by user, but this
-value gets overwritten later by its caller tcf_em_validate().
-We should leave em->datalen untouched to respect their choices.
+Dev_hold has to be called always in netdev_queue_add_kobject.
+Otherwise usage count drops below 0 in case of failure in
+kobject_init_and_add.
 
-I audit all the in-tree ematch users, all of those implement
-->change() set em->datalen, so we can just avoid setting it twice
-in this case.
-
-Reported-and-tested-by: syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com
-Reported-by: syzbot+2f07903a5b05e7f36410@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: David Miller <davem@davemloft.net>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/ematch.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sched/ematch.c
-+++ b/net/sched/ematch.c
-@@ -267,12 +267,12 @@ static int tcf_em_validate(struct tcf_pr
- 				}
- 				em->data = (unsigned long) v;
- 			}
-+			em->datalen = data_len;
- 		}
- 	}
+---
+ net/core/net-sysfs.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1324,14 +1324,17 @@ static int netdev_queue_add_kobject(stru
+ 	struct kobject *kobj = &queue->kobj;
+ 	int error = 0;
  
- 	em->matchid = em_hdr->matchid;
- 	em->flags = em_hdr->flags;
--	em->datalen = data_len;
- 	em->net = net;
++	/* Kobject_put later will trigger netdev_queue_release call
++	 * which decreases dev refcount: Take that reference here
++	 */
++	dev_hold(queue->dev);
++
+ 	kobj->kset = dev->queues_kset;
+ 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
+ 				     "tx-%u", index);
+ 	if (error)
+ 		goto err;
  
- 	err = 0;
+-	dev_hold(queue->dev);
+-
+ #ifdef CONFIG_BQL
+ 	error = sysfs_create_group(kobj, &dql_group);
+ 	if (error)
 
 
