@@ -2,80 +2,112 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11CBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3203BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73318207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DBC24687
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580225302;
+	bh=PQHnL6aU/KfqN7PEUbK2n33KLsCnNyWL05OqeO6lBn4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RHG0qlcICn1rq+aGaLz5hkCw/RTRJSUQhHaA3Aw24JqvOdiRZ/SNgYJ1UWAylkb3p
+	 viG54K9UDlEgK5vb9Nu/wK86E6MC4XQgO62mswrSR7KVCvzjk9HTc9BlwUDSHwk+9g
+	 V0WJ0N5DdyzjmXkgB8SsIQal8fSvWp5GVB4O9o1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgA1P2C (ORCPT
+        id S1726703AbgA1P2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:28:02 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:37386 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgA1P2C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:28:02 -0500
-Received: by mail-il1-f197.google.com with SMTP id z79so10618631ilf.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:28:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=kf/2DSY+al5mumI7h2ryUV9LTBu1iYUGw9WEv/U1Od0=;
-        b=DJ0Y9StjAwEVgMFt0hLVFrqxUqItrtCeT/ysjZCkmeHcNuSb9ZNN9huWVeR47GUO1O
-         1lb7BrP/iXWawf4TQ3EOhVU9Tg4gqbQUfdHOZG/cGd85EAV8EzTVphv5G9ZInxjlbNdg
-         eQxhRNoDNha4lPQ8s90eZtHejHkRoH16RF+zjK22whpEd1HiLG/qLmfKiKW7X16sXl3y
-         45Iwa6EMPG43bQKa2oKQMIIbiX5uVhEtwtSsDntmcuQktvwla9+wyxy3Al7zGeZjer1F
-         qiCGdFNtxhb3twr0OIQWNIlGS2LV/5iBR9Em3YXhEVDBc/+QnfM59bUFbM/DuTa8GAFo
-         svOA==
-X-Gm-Message-State: APjAAAW1RMU0sIINkK/qYSTPRm6DCAIWqju7Z3BaoPOBPM9QZyvIk+ym
-        qH4SzNAGoBAfVHB8U8xbuk+LlY+rCzDAhlJkV8jZ4/D0fiiB
-X-Google-Smtp-Source: APXvYqzy6PuA/euamEwBFqw/3xbkW5eZ7eJtHmPMU8+qYVEZwoaLB9/5JQSjUbtttEgIfBh11ag2qJBuLsLKwxJ0j/I3YKO5m9cE
+        Tue, 28 Jan 2020 10:28:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726391AbgA1P2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:28:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46782207FD;
+        Tue, 28 Jan 2020 15:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580225300;
+        bh=PQHnL6aU/KfqN7PEUbK2n33KLsCnNyWL05OqeO6lBn4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Jsskb7ILBAwlgTuG3MlnGlxigTi0HH8XpIm9EUmLnYeLRt0kXU0CghSGRnsDelofj
+         xnqTcH3sT9FYnvkdiD923daXUZVkcHTZhtBpMkdGy2QqviQGfsQW2Detu96t6ERoIT
+         /A3skskvqGAo+paVd5kg7TFGn8Mer7BbscVkmr54=
+Date:   Tue, 28 Jan 2020 16:28:18 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports
+ hub property
+Message-ID: <20200128152818.GB3437093@kroah.com>
+References: <20200124152504.23411-1-mans@mansr.com>
+ <20200127153506.GA4589@bogus>
+ <yw1xy2tsvnww.fsf@mansr.com>
+ <20200128134745.GA3048749@kroah.com>
+ <yw1xpnf3vchs.fsf@mansr.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9ad9:: with SMTP id x25mr15534203ion.253.1580225281799;
- Tue, 28 Jan 2020 07:28:01 -0800 (PST)
-Date:   Tue, 28 Jan 2020 07:28:01 -0800
-In-Reply-To: <000000000000143de7059d2ba3e5@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000963c75059d34ded7@google.com>
-Subject: Re: possible deadlock in sidtab_sid2str_put
-From:   syzbot <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com>
-To:     eparis@parisplace.org, jannh@google.com, jeffv@google.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        omosnace@redhat.com, paul@paul-moore.com, paulmck@kernel.org,
-        sds@tycho.nsa.gov, selinux@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <yw1xpnf3vchs.fsf@mansr.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Tue, Jan 28, 2020 at 03:15:11PM +0000, Måns Rullgård wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> 
+> > On Mon, Jan 27, 2020 at 04:56:15PM +0000, Måns Rullgård wrote:
+> >> Rob Herring <robh@kernel.org> writes:
+> >> 
+> >> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
+> >> >> Add a non-removable-ports property that lists the hardwired downstream
+> >> >> ports of a hub.  Although hubs can provide this information, they are
+> >> >> not always configured correctly.  An alternate means of indicating this
+> >> >> for built-in USB devices is thus useful.
+> >> >> 
+> >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> >> >
+> >> > I reviewed this already, but since you didn't add my reviewed-by, I'm 
+> >> > looking at it again and having 2nd thoughts.
+> >> >
+> >> >> ---
+> >> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+> >> >>  1 file changed, 4 insertions(+)
+> >> >> 
+> >> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> >> >> index 036be172b1ae..92d863cc96b6 100644
+> >> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> >> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> >> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
+> >> >>  - #size-cells: shall be 0
+> >> >>  
+> >> >>  
+> >> >> +Optional properties for hub and host-controller nodes:
+> >> >> +- non-removable-ports: list of hardwired downstream ports
+> >> >
+> >> > If you have a hardwired device and need to know that, doesn't that imply 
+> >> > there's some other stuff you need to describe beyond what a standard USB 
+> >> > device has. Such as a power supply that's not Vbus from the hub.
+> >> 
+> >> I suppose there could be, but there isn't in my actual situation.
+> >> 
+> >> > At a minimum, I think this should be a per port property.
+> >> 
+> >> That's what I suggested first.  Greg told me to do it like this instead.
+> >
+> > I said that?  I do not remember discussing this at all, when did that
+> > happen?
+> 
+> https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
 
-commit d97bd23c2d7d866e99eb3a927c742715c85a90ef
-Author: Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Tue Nov 26 13:57:00 2019 +0000
-
-    selinux: cache the SID -> context string translation
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13fe5f69e00000
-start commit:   b0be0eff Merge tag 'x86-pti-2020-01-28' of git://git.kerne..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=10015f69e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17fe5f69e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9784e57c96a92f20
-dashboard link: https://syzkaller.appspot.com/bug?extid=61cba5033e2072d61806
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10088e95e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13fa605ee00000
-
-Reported-by: syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com
-Fixes: d97bd23c2d7d ("selinux: cache the SID -> context string translation")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Almost a full year ago!  Hah, I can't remember what I wrote last week.
