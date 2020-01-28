@@ -7,235 +7,462 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04788C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF49C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AB32468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7492468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ft/2pzy0"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="B8Ot9Ehl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgA1Nfb (ORCPT
+        id S1726916AbgA1Nfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:35:31 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:52353 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgA1NeQ (ORCPT
+        Tue, 28 Jan 2020 08:35:40 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:58899 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgA1NeP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:34:16 -0500
+        Tue, 28 Jan 2020 08:34:15 -0500
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200128133415euoutp0297c6fbcf0e9e1ea4941760c4024f2908~uEFAvirhX2858228582euoutp02-
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 13:34:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200128133415euoutp0297c6fbcf0e9e1ea4941760c4024f2908~uEFAvirhX2858228582euoutp02-
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200128133412euoutp0142ca05324efadd9f2c982e29bb36d45a~uEE9oNdEN0286702867euoutp01Q
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 13:34:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200128133412euoutp0142ca05324efadd9f2c982e29bb36d45a~uEE9oNdEN0286702867euoutp01Q
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580218455;
-        bh=Ark+fkMgLf1ZNUCc5wzMzdsqKRNjN891oQ1Cqnnqj+0=;
+        s=mail20170921; t=1580218452;
+        bh=RLgi3xyOZziUdWyXtNMjMVsiVYVnGbMcgDPO7LvqSCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ft/2pzy0E7qOKRZOjsk3Me2pJ2sFjHHzuDiwI5RmuiGaHzr/YjOOk9z9Xzk5xRCDx
-         7bjjfYYL345fCfbjt5ezb8rk5oWezkygkQbfPOxrQxXOiiqv6uFgvuImPwe2D7H4dY
-         IJ/A0zD3wIgZf6r2xC5UC+wDWAmaoERc8hGJCq2E=
+        b=B8Ot9EhlHE9lNHBQm5Hu8knSmfv66dwjI3/znCy/Z/j98wsqSxZJ5Eue/aaYzFDQL
+         MDixy7ThEh81In2ONh68JaqccDnnTA4EvmmABFT6r9tI2vu/qJvua66vTer2mKXqAl
+         HpOaSJV1Ogd6XobnsWBuIjcv+ADvHEZQcGZeFTeM=
 Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200128133415eucas1p21456bb04fd2cbfdd63f1d9ade02c6b66~uEFAVY3xO1867618676eucas1p2c;
-        Tue, 28 Jan 2020 13:34:15 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id BE.CA.61286.758303E5; Tue, 28
-        Jan 2020 13:34:15 +0000 (GMT)
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200128133412eucas1p16bb8d8118a38e262142c0f84e9a39985~uEE9Wkm5v0713407134eucas1p1m;
+        Tue, 28 Jan 2020 13:34:12 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 8B.CA.61286.458303E5; Tue, 28
+        Jan 2020 13:34:12 +0000 (GMT)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200128133415eucas1p258c0d5c313e2ae42a05508b67eec16ef~uEFABo90w1871818718eucas1p2I;
-        Tue, 28 Jan 2020 13:34:15 +0000 (GMT)
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200128133411eucas1p1671c280eb6f5d2ca2d10743eea6c96e5~uEE827OfJ0680006800eucas1p1m;
+        Tue, 28 Jan 2020 13:34:11 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200128133415eusmtrp248656553bccf58a04aa8f5a33d7a6b05~uEFABHKpH0330003300eusmtrp20;
-        Tue, 28 Jan 2020 13:34:15 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-80-5e3038571d9a
+        20200128133411eusmtrp21fea6dacd033589ada9357901e954c37~uEE82Uhv_0330103301eusmtrp2n;
+        Tue, 28 Jan 2020 13:34:11 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-75-5e303854d09f
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id E0.82.07950.658303E5; Tue, 28
-        Jan 2020 13:34:14 +0000 (GMT)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 5D.72.07950.358303E5; Tue, 28
+        Jan 2020 13:34:11 +0000 (GMT)
 Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200128133414eusmtip2ac44a4cec89001bf562317e2180daeb9~uEE-rYOv10657406574eusmtip2f;
-        Tue, 28 Jan 2020 13:34:14 +0000 (GMT)
+        20200128133411eusmtip20abd6e2f6735eb7b31e252fa758dff9e~uEE8bflkm0685506855eusmtip2T;
+        Tue, 28 Jan 2020 13:34:11 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Michael Schmitz <schmitzmic@gmail.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com
-Subject: [PATCH 13/28] ata: move ata_do_link_spd_horkage() to
- libata-core-sata.c
-Date:   Tue, 28 Jan 2020 14:33:28 +0100
-Message-Id: <20200128133343.29905-14-b.zolnierkie@samsung.com>
+        b.zolnierkie@samsung.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 03/28] ata: make SATA_PMP option selectable only if any SATA
+ host driver is enabled
+Date:   Tue, 28 Jan 2020 14:33:18 +0100
+Message-Id: <20200128133343.29905-4-b.zolnierkie@samsung.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200128133343.29905-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRmVeSWpSXmKPExsWy7djPc7rhFgZxBpvniVmsvtvPZrFxxnpW
-        i2e39jJZHNvxiMni8q45bBZzW6ezO7B57Jx1l93j8tlSj0OHOxg9+rasYvT4vEkugDWKyyYl
-        NSezLLVI3y6BK+P/rSdsBTvlKpb+usnUwHhFoouRk0NCwESif8kv1i5GLg4hgRWMEm07X7FD
-        OF8YJdbseMcI4XxmlHjw+DgzTMuMFX3MEInljBLXNlxihmv5v/UfG0gVm4CVxMT2VYwgtoiA
-        gkTP75VsIEXMAmsYJVYdbgJLCAsESXyatBHMZhFQlejsessCYvMK2El8eP+eEWKdvMTWb5+A
-        LuTg4ASK9+w1hygRlDg58wlYOTNQSfPW2WBHSAi0s0ssWjudFaLXReLT+/0sELawxKvjW9gh
-        bBmJ/zvnM0E0rGOU+NvxAqp7O6PE8skQL0gIWEvcOfeLDWQzs4CmxPpd+hBhR4nvG2aDhSUE
-        +CRuvBWEOIJPYtK26cwQYV6JjjYhiGo1iQ3LNrDBrO3auRIaih4ST2ZdYpzAqDgLyTuzkLwz
-        C2HvAkbmVYziqaXFuempxYZ5qeV6xYm5xaV56XrJ+bmbGIEp5vS/4592MH69lHSIUYCDUYmH
-        d4aKQZwQa2JZcWXuIUYJDmYlEd5OJqAQb0piZVVqUX58UWlOavEhRmkOFiVxXuNFL2OFBNIT
-        S1KzU1MLUotgskwcnFINjFo+dy61XvplE2QqIfvI+FTMrG9Xms/scfq3/dOl36VsL/mWeUwz
-        rVu/q8XNZdMch8WRNQuCNzQZrP59ZeWnR41B8tOu9Tf4fg/9kLXtyoUTRcHageXfzY/w3Jf5
-        MMtMNXV9VIJNo/qtabsuWjJfd9bYVHzinuzf7dv47d9tPiPFv939qHgvV5MSS3FGoqEWc1Fx
-        IgDGwjdCLQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42I5/e/4Pd0wC4M4g5+Nthar7/azWWycsZ7V
-        4tmtvUwWx3Y8YrK4vGsOm8Xc1unsDmweO2fdZfe4fLbU49DhDkaPvi2rGD0+b5ILYI3SsynK
-        Ly1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy/h/6wlbwU65
-        iqW/bjI1MF6R6GLk5JAQMJGYsaKPuYuRi0NIYCmjRPO6RsYuRg6ghIzE8fVlEDXCEn+udbFB
-        1HxilHjStpIJJMEmYCUxsX0VI4gtIqAg0fN7JVgRs8AGRolXN7+wgCSEBQIkzjWfB7NZBFQl
-        Orvegtm8AnYSH96/Z4TYIC+x9dsnVpDFnEDxnr3mIGEhAVuJ9WeeskKUC0qcnPkErJUZqLx5
-        62zmCYwCs5CkZiFJLWBkWsUoklpanJueW2ykV5yYW1yal66XnJ+7iREYB9uO/dyyg7HrXfAh
-        RgEORiUeXgclgzgh1sSy4srcQ4wSHMxKIrydTEAh3pTEyqrUovz4otKc1OJDjKZAP0xklhJN
-        zgfGaF5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBkbza/Nb+Xm2
-        5RtMXuZz4J31IhW3bTwV/y9Frzkh1596Yp7O6ntx1xdOTurJ+j7RKT730+0DB0/fX90ss7b+
-        9+cL116+PW8X6GJxctutqTmMu1cFzrS5s9umtUfzR7Z/aK69rmlF6On051Kx86TS9dJND+pW
-        du4pPP1BL3XfwlXlf3p63Q8sLl6rxFKckWioxVxUnAgARIMkgpkCAAA=
-X-CMS-MailID: 20200128133415eucas1p258c0d5c313e2ae42a05508b67eec16ef
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djP87ohFgZxBu87uCxW3+1ns9g4Yz2r
+        xbNbe5ksFt3YxmRxbMcjJovLu+awWSw//o/JYm7rdHYHDo+ds+6ye1w+W+px6HAHo8eERQcY
+        PT4+vcXi0bdlFaPH501yAexRXDYpqTmZZalF+nYJXBnNV3YyFzwLqfg+9xpjA+N0py5GTg4J
+        AROJGROvM3YxcnEICaxglDi8bgUrhPOFUeLJyk4o5zOjxJUjS5i6GDnAWqZtEIeIL2eUmHah
+        GaGj59NudpC5bAJWEhPbVzGC2CICChI9v1eygRQxC0xgkviyfgULSEJYIFVia08bM4jNIqAq
+        cWX/QiYQm1fAVmLt/EZWiAPlJbZ++8QKsplTwE6iZ685RImgxMmZT8DGMAOVNG+dzQwyX0Jg
+        GbvE/dsL2SF6XSSWzp/MBGELS7w6vgUqLiPxf+d8JoiGdYwSfzteQHVvZ5RYPvkfG0SVtcSd
+        c7/YQDYzC2hKrN+lDxF2lFi+cxorJCj4JG68FYQ4gk9i0rbpzBBhXomONiGIajWJDcs2sMGs
+        7dq5khnC9pDYvGgF0wRGxVlI3pmF5J1ZCHsXMDKvYhRPLS3OTU8tNsxLLdcrTswtLs1L10vO
+        z93ECExEp/8d/7SD8eulpEOMAhyMSjy8M1QM4oRYE8uKK3MPMUpwMCuJ8HYyAYV4UxIrq1KL
+        8uOLSnNSiw8xSnOwKInzGi96GSskkJ5YkpqdmlqQWgSTZeLglGpg3Nj8+sIeY409k56t2Ce4
+        TJhbhzNyVeX3iqRGo4xFuSU2njt8DObeW/r30r/MDQoHs/5z2JyYWOoZwcUk+UxbPft0xqHq
+        lfryyz6WsZ2J3HhtfbFmVJ29UM/qd+nigTquFoaph8Qflr40X6EyRfPRfZ4y4WIR9iXabeW7
+        /KNzDC7GiixTsz6pxFKckWioxVxUnAgAyvjPYkADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsVy+t/xe7rBFgZxBgevK1usvtvPZrFxxnpW
+        i2e39jJZLLqxjcni2I5HTBaXd81hs1h+/B+TxdzW6ewOHB47Z91l97h8ttTj0OEORo8Jiw4w
+        enx8eovFo2/LKkaPz5vkAtij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX0
+        7WxSUnMyy1KL9O0S9DKar+xkLngWUvF97jXGBsbpTl2MHBwSAiYS0zaIdzFycggJLGWUOPcq
+        AiIsI3F8fRlIWEJAWOLPtS62LkYuoJJPjBJ39p1nA0mwCVhJTGxfxQhiiwgoSPT8XglWxCww
+        hUli4vtrYEXCAskSk9onsoPYLAKqElf2L2QCsXkFbCXWzm9khdggL7H12ydWkMWcAnYSPXvN
+        Ie6xlVh/5ikrRLmgxMmZT1hAbGag8uats5knMArMQpKahSS1gJFpFaNIamlxbnpusZFecWJu
+        cWleul5yfu4mRmCsbDv2c8sOxq53wYcYBTgYlXh4HZQM4oRYE8uKK3MPMUpwMCuJ8HYyAYV4
+        UxIrq1KL8uOLSnNSiw8xmgL9MJFZSjQ5HxjHeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNIT
+        S1KzU1MLUotg+pg4OKUaGONvCk/4lsAgKW74fOldGeV8yysbVk+5ftZQULj6cOjX7DqrRL2y
+        eXeCzqs+kH2ao8CytGupSrHuq+K68/snvHxskKiRVKu3f9avzriPy6S29p1s6JF87TTvvJWI
+        ZtyXOYcjFOWWPX6il3FSz7rWTdzxgNyET7ZlD77YbtLKkxG27PJj/BxTpMRSnJFoqMVcVJwI
+        AHvSQlqrAgAA
+X-CMS-MailID: 20200128133411eucas1p1671c280eb6f5d2ca2d10743eea6c96e5
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200128133415eucas1p258c0d5c313e2ae42a05508b67eec16ef
+X-RootMTR: 20200128133411eucas1p1671c280eb6f5d2ca2d10743eea6c96e5
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200128133415eucas1p258c0d5c313e2ae42a05508b67eec16ef
+X-CMS-RootMailID: 20200128133411eucas1p1671c280eb6f5d2ca2d10743eea6c96e5
 References: <20200128133343.29905-1-b.zolnierkie@samsung.com>
-        <CGME20200128133415eucas1p258c0d5c313e2ae42a05508b67eec16ef@eucas1p2.samsung.com>
+        <CGME20200128133411eucas1p1671c280eb6f5d2ca2d10743eea6c96e5@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* move ata_do_link_spd_horkage() to libata-core-sata.c
+There is no reason to expose SATA_PMP config option when no SATA
+host drivers are enabled. To fix it add SATA_HOST config option,
+make all SATA host drivers select it and finally make SATA_PMP
+config options depend on it.
 
-* add static inline for CONFIG_SATA_HOST=n case
+This also serves as a preparation for the future changes which
+optimize libata core code size on PATA only setups.
 
-Code size savings on m68k arch using atari_defconfig:
-
-   text    data     bss     dec     hex filename
-before:
-  36762     572      40   37374    91fe drivers/ata/libata-core.o
-after:
-  36627     572      40   37239    9177 drivers/ata/libata-core.o
-
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/ata/libata-core-sata.c | 33 +++++++++++++++++++++++++++++++++
- drivers/ata/libata-core.c      | 33 ---------------------------------
- drivers/ata/libata.h           |  7 +++++++
- 3 files changed, 40 insertions(+), 33 deletions(-)
+ drivers/ata/Kconfig         | 40 +++++++++++++++++++++++++++++++++++++
+ drivers/scsi/Kconfig        |  1 +
+ drivers/scsi/libsas/Kconfig |  1 +
+ 3 files changed, 42 insertions(+)
 
-diff --git a/drivers/ata/libata-core-sata.c b/drivers/ata/libata-core-sata.c
-index 8b939d2db0a6..fed8009981c0 100644
---- a/drivers/ata/libata-core-sata.c
-+++ b/drivers/ata/libata-core-sata.c
-@@ -87,6 +87,39 @@ void ata_tf_from_fis(const u8 *fis, struct ata_taskfile *tf)
- }
- EXPORT_SYMBOL_GPL(ata_tf_from_fis);
+diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+index a6beb2c5a692..ad7760656f71 100644
+--- a/drivers/ata/Kconfig
++++ b/drivers/ata/Kconfig
+@@ -34,6 +34,9 @@ if ATA
+ config ATA_NONSTANDARD
+        bool
  
-+int ata_do_link_spd_horkage(struct ata_device *dev)
-+{
-+	struct ata_link *plink = ata_dev_phys_link(dev);
-+	u32 target, target_limit;
++config SATA_HOST
++	bool
 +
-+	if (!sata_scr_valid(plink))
-+		return 0;
-+
-+	if (dev->horkage & ATA_HORKAGE_1_5_GBPS)
-+		target = 1;
-+	else
-+		return 0;
-+
-+	target_limit = (1 << target) - 1;
-+
-+	/* if already on stricter limit, no need to push further */
-+	if (plink->sata_spd_limit <= target_limit)
-+		return 0;
-+
-+	plink->sata_spd_limit = target_limit;
-+
-+	/* Request another EH round by returning -EAGAIN if link is
-+	 * going faster than the target speed.  Forward progress is
-+	 * guaranteed by setting sata_spd_limit to target_limit above.
-+	 */
-+	if (plink->sata_spd > target) {
-+		ata_dev_info(dev, "applying link speed limit horkage to %s\n",
-+			     sata_spd_string(target));
-+		return -EAGAIN;
-+	}
-+	return 0;
-+}
-+
- /**
-  *	sata_link_scr_lpm - manipulate SControl IPM and SPM fields
-  *	@link: ATA link to manipulate SControl for
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 24b8ee668e6f..52bd81bad484 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -2074,39 +2074,6 @@ static bool ata_identify_page_supported(struct ata_device *dev, u8 page)
- 	return false;
- }
+ config ATA_VERBOSE_ERROR
+ 	bool "Verbose ATA error reporting"
+ 	default y
+@@ -73,6 +76,7 @@ config SATA_ZPODD
  
--static int ata_do_link_spd_horkage(struct ata_device *dev)
--{
--	struct ata_link *plink = ata_dev_phys_link(dev);
--	u32 target, target_limit;
--
--	if (!sata_scr_valid(plink))
--		return 0;
--
--	if (dev->horkage & ATA_HORKAGE_1_5_GBPS)
--		target = 1;
--	else
--		return 0;
--
--	target_limit = (1 << target) - 1;
--
--	/* if already on stricter limit, no need to push further */
--	if (plink->sata_spd_limit <= target_limit)
--		return 0;
--
--	plink->sata_spd_limit = target_limit;
--
--	/* Request another EH round by returning -EAGAIN if link is
--	 * going faster than the target speed.  Forward progress is
--	 * guaranteed by setting sata_spd_limit to target_limit above.
--	 */
--	if (plink->sata_spd > target) {
--		ata_dev_info(dev, "applying link speed limit horkage to %s\n",
--			     sata_spd_string(target));
--		return -EAGAIN;
--	}
--	return 0;
--}
--
- static inline u8 ata_dev_knobble(struct ata_device *dev)
- {
- 	struct ata_port *ap = dev->link->ap;
-diff --git a/drivers/ata/libata.h b/drivers/ata/libata.h
-index cd8090ad43e5..9eebe4e0be39 100644
---- a/drivers/ata/libata.h
-+++ b/drivers/ata/libata.h
-@@ -87,6 +87,13 @@ extern unsigned int ata_read_log_page(struct ata_device *dev, u8 log,
+ config SATA_PMP
+ 	bool "SATA Port Multiplier support"
++	depends on SATA_HOST
+ 	default y
+ 	help
+ 	  This option adds support for SATA Port Multipliers
+@@ -85,6 +89,7 @@ comment "Controllers with non-SFF native interface"
+ config SATA_AHCI
+ 	tristate "AHCI SATA support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for AHCI Serial ATA.
  
- #define to_ata_port(d) container_of(d, struct ata_port, tdev)
+@@ -111,6 +116,7 @@ config SATA_MOBILE_LPM_POLICY
  
-+/* libata-core-sata.c */
-+#ifdef CONFIG_SATA_HOST
-+int ata_do_link_spd_horkage(struct ata_device *dev);
-+#else
-+static inline int ata_do_link_spd_horkage(struct ata_device *dev) { return 0; }
-+#endif
-+
- /* libata-acpi.c */
- #ifdef CONFIG_ATA_ACPI
- extern unsigned int ata_acpi_gtf_filter;
+ config SATA_AHCI_PLATFORM
+ 	tristate "Platform AHCI SATA support"
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Platform AHCI Serial ATA
+ 	  controllers.
+@@ -121,6 +127,7 @@ config AHCI_BRCM
+ 	tristate "Broadcom AHCI SATA support"
+ 	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP || \
+ 		   ARCH_BCM_63XX
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the AHCI SATA3 controller found on
+ 	  Broadcom SoC's.
+@@ -130,6 +137,7 @@ config AHCI_BRCM
+ config AHCI_DA850
+ 	tristate "DaVinci DA850 AHCI SATA support"
+ 	depends on ARCH_DAVINCI_DA850
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the DaVinci DA850 SoC's
+ 	  onboard AHCI SATA.
+@@ -139,6 +147,7 @@ config AHCI_DA850
+ config AHCI_DM816
+ 	tristate "DaVinci DM816 AHCI SATA support"
+ 	depends on ARCH_OMAP2PLUS
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the DaVinci DM816 SoC's
+ 	  onboard AHCI SATA controller.
+@@ -148,6 +157,7 @@ config AHCI_DM816
+ config AHCI_ST
+ 	tristate "ST AHCI SATA support"
+ 	depends on ARCH_STI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for ST AHCI SATA controller.
+ 
+@@ -157,6 +167,7 @@ config AHCI_IMX
+ 	tristate "Freescale i.MX AHCI SATA support"
+ 	depends on MFD_SYSCON && (ARCH_MXC || COMPILE_TEST)
+ 	depends on (HWMON && (THERMAL || !THERMAL_OF)) || !HWMON
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the Freescale i.MX SoC's
+ 	  onboard AHCI SATA.
+@@ -166,6 +177,7 @@ config AHCI_IMX
+ config AHCI_CEVA
+ 	tristate "CEVA AHCI SATA support"
+ 	depends on OF
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the CEVA AHCI SATA.
+ 	  It can be found on the Xilinx Zynq UltraScale+ MPSoC.
+@@ -176,6 +188,7 @@ config AHCI_MTK
+ 	tristate "MediaTek AHCI SATA support"
+ 	depends on ARCH_MEDIATEK
+ 	select MFD_SYSCON
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the MediaTek SoC's
+ 	  onboard AHCI SATA controller.
+@@ -185,6 +198,7 @@ config AHCI_MTK
+ config AHCI_MVEBU
+ 	tristate "Marvell EBU AHCI SATA support"
+ 	depends on ARCH_MVEBU
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the Marvebu EBU SoC's
+ 	  onboard AHCI SATA.
+@@ -203,6 +217,7 @@ config AHCI_OCTEON
+ config AHCI_SUNXI
+ 	tristate "Allwinner sunxi AHCI SATA support"
+ 	depends on ARCH_SUNXI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the Allwinner sunxi SoC's
+ 	  onboard AHCI SATA.
+@@ -212,6 +227,7 @@ config AHCI_SUNXI
+ config AHCI_TEGRA
+ 	tristate "NVIDIA Tegra AHCI SATA support"
+ 	depends on ARCH_TEGRA
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the NVIDIA Tegra SoC's
+ 	  onboard AHCI SATA.
+@@ -221,12 +237,14 @@ config AHCI_TEGRA
+ config AHCI_XGENE
+ 	tristate "APM X-Gene 6.0Gbps AHCI SATA host controller support"
+ 	depends on PHY_XGENE
++	select SATA_HOST
+ 	help
+ 	 This option enables support for APM X-Gene SoC SATA host controller.
+ 
+ config AHCI_QORIQ
+ 	tristate "Freescale QorIQ AHCI SATA support"
+ 	depends on OF
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the Freescale QorIQ AHCI SoC's
+ 	  onboard AHCI SATA.
+@@ -236,6 +254,7 @@ config AHCI_QORIQ
+ config SATA_FSL
+ 	tristate "Freescale 3.0Gbps SATA support"
+ 	depends on FSL_SOC
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Freescale 3.0Gbps SATA controller.
+ 	  It can be found on MPC837x and MPC8315.
+@@ -245,6 +264,7 @@ config SATA_FSL
+ config SATA_GEMINI
+ 	tristate "Gemini SATA bridge support"
+ 	depends on ARCH_GEMINI || COMPILE_TEST
++	select SATA_HOST
+ 	default ARCH_GEMINI
+ 	help
+ 	  This enabled support for the FTIDE010 to SATA bridge
+@@ -255,6 +275,7 @@ config SATA_GEMINI
+ config SATA_AHCI_SEATTLE
+ 	tristate "AMD Seattle 6.0Gbps AHCI SATA host controller support"
+ 	depends on ARCH_SEATTLE
++	select SATA_HOST
+ 	help
+ 	 This option enables support for AMD Seattle SATA host controller.
+ 
+@@ -263,12 +284,14 @@ config SATA_AHCI_SEATTLE
+ config SATA_INIC162X
+ 	tristate "Initio 162x SATA support (Very Experimental)"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Initio 162x Serial ATA.
+ 
+ config SATA_ACARD_AHCI
+ 	tristate "ACard AHCI variant (ATP 8620)"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Acard.
+ 
+@@ -277,6 +300,7 @@ config SATA_ACARD_AHCI
+ config SATA_SIL24
+ 	tristate "Silicon Image 3124/3132 SATA support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Silicon Image 3124/3132 Serial ATA.
+ 
+@@ -326,6 +350,7 @@ config PATA_OCTEON_CF
+ config SATA_QSTOR
+ 	tristate "Pacific Digital SATA QStor support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Pacific Digital Serial ATA QStor.
+ 
+@@ -334,6 +359,7 @@ config SATA_QSTOR
+ config SATA_SX4
+ 	tristate "Promise SATA SX4 support (Experimental)"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Promise Serial ATA SX4.
+ 
+@@ -357,6 +383,7 @@ comment "SATA SFF controllers with BMDMA"
+ config ATA_PIIX
+ 	tristate "Intel ESB, ICH, PIIX3, PIIX4 PATA/SATA support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for ICH5/6/7/8 Serial ATA
+ 	  and support for PATA on the Intel ESB/ICH/PIIX3/PIIX4 series
+@@ -368,6 +395,7 @@ config SATA_DWC
+ 	tristate "DesignWare Cores SATA support"
+ 	depends on DMADEVICES
+ 	select GENERIC_PHY
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the on-chip SATA controller of the
+ 	  AppliedMicro processor 460EX.
+@@ -398,6 +426,7 @@ config SATA_DWC_VDEBUG
+ config SATA_HIGHBANK
+ 	tristate "Calxeda Highbank SATA support"
+ 	depends on ARCH_HIGHBANK || COMPILE_TEST
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the Calxeda Highbank SoC's
+ 	  onboard SATA.
+@@ -409,6 +438,7 @@ config SATA_MV
+ 	depends on PCI || ARCH_DOVE || ARCH_MV78XX0 || \
+ 		   ARCH_MVEBU || ARCH_ORION5X || COMPILE_TEST
+ 	select GENERIC_PHY
++	select SATA_HOST
+ 	help
+ 	  This option enables support for the Marvell Serial ATA family.
+ 	  Currently supports 88SX[56]0[48][01] PCI(-X) chips,
+@@ -419,6 +449,7 @@ config SATA_MV
+ config SATA_NV
+ 	tristate "NVIDIA SATA support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for NVIDIA Serial ATA.
+ 
+@@ -427,6 +458,7 @@ config SATA_NV
+ config SATA_PROMISE
+ 	tristate "Promise SATA TX2/TX4 support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Promise Serial ATA TX2/TX4.
+ 
+@@ -435,6 +467,7 @@ config SATA_PROMISE
+ config SATA_RCAR
+ 	tristate "Renesas R-Car SATA support"
+ 	depends on ARCH_RENESAS || COMPILE_TEST
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Renesas R-Car Serial ATA.
+ 
+@@ -443,6 +476,7 @@ config SATA_RCAR
+ config SATA_SIL
+ 	tristate "Silicon Image SATA support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Silicon Image Serial ATA.
+ 
+@@ -452,6 +486,7 @@ config SATA_SIS
+ 	tristate "SiS 964/965/966/180 SATA support"
+ 	depends on PCI
+ 	select PATA_SIS
++	select SATA_HOST
+ 	help
+ 	  This option enables support for SiS Serial ATA on
+ 	  SiS 964/965/966/180 and Parallel ATA on SiS 180.
+@@ -462,6 +497,7 @@ config SATA_SIS
+ config SATA_SVW
+ 	tristate "ServerWorks Frodo / Apple K2 SATA support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Broadcom/Serverworks/Apple K2
+ 	  SATA support.
+@@ -471,6 +507,7 @@ config SATA_SVW
+ config SATA_ULI
+ 	tristate "ULi Electronics SATA support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for ULi Electronics SATA.
+ 
+@@ -479,6 +516,7 @@ config SATA_ULI
+ config SATA_VIA
+ 	tristate "VIA SATA support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for VIA Serial ATA.
+ 
+@@ -487,6 +525,7 @@ config SATA_VIA
+ config SATA_VITESSE
+ 	tristate "VITESSE VSC-7174 / INTEL 31244 SATA support"
+ 	depends on PCI
++	select SATA_HOST
+ 	help
+ 	  This option enables support for Vitesse VSC7174 and Intel 31244 Serial ATA.
+ 
+@@ -1113,6 +1152,7 @@ config PATA_ACPI
+ config ATA_GENERIC
+ 	tristate "Generic ATA support"
+ 	depends on PCI && ATA_BMDMA
++	select SATA_HOST
+ 	help
+ 	  This option enables support for generic BIOS configured
+ 	  ATA controllers via the new ATA layer
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index a7881f8eb05e..1b6eaf8da5fa 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -989,6 +989,7 @@ config SCSI_SYM53C8XX_MMIO
+ config SCSI_IPR
+ 	tristate "IBM Power Linux RAID adapter support"
+ 	depends on PCI && SCSI && ATA
++	select SATA_HOST
+ 	select FW_LOADER
+ 	select IRQ_POLL
+ 	select SGL_ALLOC
+diff --git a/drivers/scsi/libsas/Kconfig b/drivers/scsi/libsas/Kconfig
+index 5c6a5eff2f8e..052ee3a26f6e 100644
+--- a/drivers/scsi/libsas/Kconfig
++++ b/drivers/scsi/libsas/Kconfig
+@@ -19,6 +19,7 @@ config SCSI_SAS_ATA
+ 	bool "ATA support for libsas (requires libata)"
+ 	depends on SCSI_SAS_LIBSAS
+ 	depends on ATA = y || ATA = SCSI_SAS_LIBSAS
++	select SATA_HOST
+ 	help
+ 		Builds in ATA support into libsas.  Will necessitate
+ 		the loading of libata along with libsas.
 -- 
 2.24.1
 
