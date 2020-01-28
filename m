@@ -2,150 +2,87 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475AFC4741C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 23:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8403C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 23:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4B32087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 23:02:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SLEtsTXM"
+	by mail.kernel.org (Postfix) with ESMTP id 82A0E2465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 23:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580252584;
+	bh=IeMfbkutZAogA7eAlwxihfRzKsK7Qwov9+XSngb0Wfc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=0ddFRA9ho24k1GW265afIGiYEE12YcNyx8v4HNzxxCkDuKd9H8szyWIJe7OFeENUy
+	 jQwbtPdIHwVia5NhKHl1H4+bJu2+FuTykG4DXb0DTQhk58/gCBT5xxINY57YpkCPZq
+	 kuhhN6LIcxL3SC42FWdmhSSe+ZQoOctT4qoJ01xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgA1XB5 (ORCPT
+        id S1726508AbgA1XDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 18:01:57 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43660 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgA1XB4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 18:01:56 -0500
-Received: by mail-pf1-f196.google.com with SMTP id s1so6822378pfh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 15:01:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+dg91h5BizLIOhJtrfPoQX1PBXFzRkzG/EccKIP5g+k=;
-        b=SLEtsTXM5HHL6KRx3hcUWmwHu6WOPgN0CNP8fHNTI+FAT+8rXdOFNHQ4Yag2eY0oom
-         MxIjkObrnioymch5q5MyrzGbWNjwhgMUswCx/M+MVBVQAe23jccXfrAxinTI930p2387
-         D9bys2Kwzdd099/FcXPhmwL9QuGCzxCyDD8ZA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+dg91h5BizLIOhJtrfPoQX1PBXFzRkzG/EccKIP5g+k=;
-        b=ESuosxL5QXsi0oYSk6khrjAN68979UeIXlOY0fDgN2nK/lAl4LHrlZ5ol7XGLuTzsP
-         o0Rr62fMTghojYbRcn5F/h8QEnAXHcYUMDQhuDJHGy5lQUVZspkuCuSsxeMQ00B6GjmO
-         GOLaFqREWxiuhHshbknjqDydy5Bwi+raSX+Fo1nXi9WBT4S8EgBpiWWgvjUQbNBq6Y4T
-         EkMgIiYTJ6JHrGIPhwBIfukC1vSHeV46JzlpHKYSe4R1CSHctPPAsVvBhwo+o3SAWnja
-         +D6+uUX8VUFS9XMq3byxrb9IULG732DImOPhJIJvMcNvIxBBfwBobNqWzRfNb1Ht49Ba
-         fgig==
-X-Gm-Message-State: APjAAAW+A3nlRStvP9Iw1pQZceaW+cxcs/lFIbDFywZ6AFUQAXsD5OBt
-        1qabupeHoC1ZNRMe6TWw8JPhaw==
-X-Google-Smtp-Source: APXvYqxW3ZrU4wM0/mAVtxUyqtcw5VzYRKNT21IpKIlpAgs8GJ04bta0GGU8Rs7byefZaonYLylsnQ==
-X-Received: by 2002:aa7:82d5:: with SMTP id f21mr6360681pfn.245.1580252515843;
-        Tue, 28 Jan 2020 15:01:55 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k21sm136324pgt.22.2020.01.28.15.01.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 15:01:54 -0800 (PST)
-Date:   Tue, 28 Jan 2020 15:01:53 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Jiri Slaby <jslaby@suse.cz>, Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, David Windsor <dave@nullcore.net>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christoph Lameter <cl@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Christoffer Dall <christoffer.dall@linaro.org>,
-        Dave Kleikamp <dave.kleikamp@oracle.com>,
-        Jan Kara <jack@suse.cz>,
-        Luis de Bethencourt <luisbg@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rik van Riel <riel@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-        netdev@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Kubecek <mkubecek@suse.cz>
-Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches
- as usercopy caches
-Message-ID: <202001281457.FA11CC313A@keescook>
-References: <1515636190-24061-1-git-send-email-keescook@chromium.org>
- <1515636190-24061-10-git-send-email-keescook@chromium.org>
- <9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz>
- <201911121313.1097D6EE@keescook>
- <201911141327.4DE6510@keescook>
- <bfca96db-bbd0-d958-7732-76e36c667c68@suse.cz>
- <202001271519.AA6ADEACF0@keescook>
- <5861936c-1fe1-4c44-d012-26efa0c8b6e7@de.ibm.com>
+        Tue, 28 Jan 2020 18:03:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbgA1XDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 18:03:03 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5AD62087F;
+        Tue, 28 Jan 2020 23:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580252583;
+        bh=IeMfbkutZAogA7eAlwxihfRzKsK7Qwov9+XSngb0Wfc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dPWaxQ4MAK2FN80Yv5KDDt7fcPbFaFMV2wFZdw/Q294b+oOdD/juiCgRI9eFEqqss
+         /O5tMmeDCiCS9TnG7vR4lhAgOsejIfSXV/3YrCfe/CEimggkJvluTn+vC9SAPF7eJw
+         Td3xPwsxGafSyJ634a9yWEASQ2Lg2eqmbocfYPgw=
+Subject: Re: [PATCH 4.19 00/92] 4.19.100-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200128135809.344954797@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <17978d4b-8445-ec38-ebd0-1d3d4daade30@kernel.org>
+Date:   Tue, 28 Jan 2020 16:03:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5861936c-1fe1-4c44-d012-26efa0c8b6e7@de.ibm.com>
+In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 08:58:31AM +0100, Christian Borntraeger wrote:
+On 1/28/20 7:07 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.100 release.
+> There are 92 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
+> Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
+> Anything received after that time might be too late.
 > 
-> On 28.01.20 00:19, Kees Cook wrote:
-> > On Thu, Jan 23, 2020 at 09:14:20AM +0100, Jiri Slaby wrote:
-> >> On 14. 11. 19, 22:27, Kees Cook wrote:
-> >>> On Tue, Nov 12, 2019 at 01:21:54PM -0800, Kees Cook wrote:
-> >>>> How is iucv the only network protocol that has run into this? Do others
-> >>>> use a bounce buffer?
-> >>>
-> >>> Another solution would be to use a dedicated kmem cache (instead of the
-> >>> shared kmalloc dma one)?
-> >>
-> >> Has there been any conclusion to this thread yet? For the time being, we
-> >> disabled HARDENED_USERCOPY on s390...
-> >>
-> >> https://lore.kernel.org/kernel-hardening/9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz/
-> > 
-> > I haven't heard anything new. What did people think of a separate kmem
-> > cache?
-> > 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.100-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
 > 
-> Adding Julian and Ursula. A separate kmem cache for iucv might be indeed
-> a solution for the user hardening issue.
-
-It should be very clean -- any existing kmallocs already have to be
-"special" in the sense that they're marked with the DMA flag. So
-converting these to a separate cache should be mostly mechanical.
-
-> On the other hand not marking the DMA caches still seems questionable.
-
-My understanding is that exposing DMA memory to userspace copies can
-lead to unexpected results, especially for misbehaving hardware, so I'm
-not convinced this is a generically bad hardening choice.
-
--Kees
-
+> thanks,
 > 
-> For reference
-> https://bugzilla.suse.com/show_bug.cgi?id=1156053
-> the kernel hardening now triggers a warning.
+> greg k-h
 > 
 
--- 
-Kees Cook
+Compiled and booted on my test system. No dmesg regressions.
+
+thanks,
+-- Shuah
