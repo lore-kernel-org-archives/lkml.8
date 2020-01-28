@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFB4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3370CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED2FE20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22DD24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220717;
-	bh=C+pc8y2pEMMfOnYaCwAgQSs53kmqKNheVu3WOtWPoJQ=;
+	s=default; t=1580220720;
+	bh=Xw9YztzTE2/FOpzeBm47CYzucRq34DUyKjvMFYOZgkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ZIEKwUZuJI61bPO5Q96deE12phP59iKHaybHFC13mjfxejFFDCAYwfVKx3FnDwkx
-	 ZzqhcVZd1i1CTOV6HAcekRsnnGEbC3dir47Xr7Tx2PtfYUavvgGcLxBURgUyu6umBi
-	 UAFST/sEyim7ZfRX9iGtWdUJ1NOkyKWw6yRMPVFk=
+	b=CY2V7z5USLe+JVhB2cceLp7wg3+lXQhSKfa9AT/Ko0jsnd9V2YDwSn2hbPSl0Vzu2
+	 VrSSu2aeawLuDr9oW0C6pFJW7T4o6+9bQKuQ9HdcW33yobLGt2FDNrnXqqLF9SqdtZ
+	 7PEKQPhR+e/Rczh5tW17ag1JiaolXfBCs1UnNDyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgA1OL4 (ORCPT
+        id S1727582AbgA1OL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:11:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32806 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:11:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729361AbgA1OLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:11:50 -0500
+        id S1726986AbgA1OLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:11:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2950424685;
-        Tue, 28 Jan 2020 14:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CE4120678;
+        Tue, 28 Jan 2020 14:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220709;
-        bh=C+pc8y2pEMMfOnYaCwAgQSs53kmqKNheVu3WOtWPoJQ=;
+        s=default; t=1580220714;
+        bh=Xw9YztzTE2/FOpzeBm47CYzucRq34DUyKjvMFYOZgkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y1Wfb8eaYV2wA4RYySgugp3tlaz7x8A87M/udf64/JWUL5bHxzzbZn2+7eQI0WZKT
-         Q+y7TSzAT4aHkM1+vPcrze/dRNLBl7tGsRcJ8P/PMftlFiEZ9RiaFPTiBRQm/9xwZg
-         o02FAjlAOnjmdgBqI/zBu4xDSM2BF+iogA1Rvoos=
+        b=WUcxpjkiZKN73/ukEsR/9BoAmMyiBaxxsmdMLzIEp1gapqE67ExeXL8A+zBHm5PPx
+         0ZTxl7VR3vJcLZHWOsPkllM2iZQvKd4isTquIZzit5X/HQHQ8ffSRiDamaDiICmKam
+         v9VA7bmVkOVt0DG0A1FGp/9yDdzi6Or/pWmUW95U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
+        Alexander Aring <aring@mojatatu.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 078/183] powerpc: vdso: Make vdso32 installation conditional in vdso_install
-Date:   Tue, 28 Jan 2020 15:04:57 +0100
-Message-Id: <20200128135837.727519035@linuxfoundation.org>
+Subject: [PATCH 4.4 080/183] 6lowpan: Off by one handling ->nexthdr
+Date:   Tue, 28 Jan 2020 15:04:59 +0100
+Message-Id: <20200128135837.913039714@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,37 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ff6d27823f619892ab96f7461764840e0d786b15 ]
+[ Upstream commit f57c4bbf34439531adccd7d3a4ecc14f409c1399 ]
 
-The 32-bit vDSO is not needed and not normally built for 64-bit
-little-endian configurations.  However, the vdso_install target still
-builds and installs it.  Add the same config condition as is normally
-used for the build.
+NEXTHDR_MAX is 255.  What happens here is that we take a u8 value
+"hdr->nexthdr" from the network and then look it up in
+lowpan_nexthdr_nhcs[].  The problem is that if hdr->nexthdr is 0xff then
+we read one element beyond the end of the array so the array needs to
+be one element larger.
 
-Fixes: e0d005916994 ("powerpc/vdso: Disable building the 32-bit VDSO ...")
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 92aa7c65d295 ("6lowpan: add generic nhc layer interface")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Jukka Rissanen <jukka.rissanen@linux.intel.com>
+Acked-by: Alexander Aring <aring@mojatatu.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ net/6lowpan/nhc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index d7eb035a9c960..65cb22541c660 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -350,7 +350,9 @@ vdso_install:
- ifeq ($(CONFIG_PPC64),y)
- 	$(Q)$(MAKE) $(build)=arch/$(ARCH)/kernel/vdso64 $@
- endif
-+ifdef CONFIG_VDSO32
- 	$(Q)$(MAKE) $(build)=arch/$(ARCH)/kernel/vdso32 $@
-+endif
+diff --git a/net/6lowpan/nhc.c b/net/6lowpan/nhc.c
+index 7008d53e455c5..e61679bf09085 100644
+--- a/net/6lowpan/nhc.c
++++ b/net/6lowpan/nhc.c
+@@ -18,7 +18,7 @@
+ #include "nhc.h"
  
- archclean:
- 	$(Q)$(MAKE) $(clean)=$(boot)
+ static struct rb_root rb_root = RB_ROOT;
+-static struct lowpan_nhc *lowpan_nexthdr_nhcs[NEXTHDR_MAX];
++static struct lowpan_nhc *lowpan_nexthdr_nhcs[NEXTHDR_MAX + 1];
+ static DEFINE_SPINLOCK(lowpan_nhc_lock);
+ 
+ static int lowpan_nhc_insert(struct lowpan_nhc *nhc)
 -- 
 2.20.1
 
