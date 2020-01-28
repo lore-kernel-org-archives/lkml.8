@@ -2,122 +2,148 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8740FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEC8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9AE22522
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F4222522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnImthP+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ns6+GodD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgA1Rly (ORCPT
+        id S1726565AbgA1RnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:41:54 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39624 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbgA1Rly (ORCPT
+        Tue, 28 Jan 2020 12:43:06 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44626 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbgA1RnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:41:54 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so3513916wme.4;
-        Tue, 28 Jan 2020 09:41:52 -0800 (PST)
+        Tue, 28 Jan 2020 12:43:05 -0500
+Received: by mail-pg1-f195.google.com with SMTP id x7so7351901pgl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 09:43:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=iS/CGYsUuq2LbHaMd6R2ad+3itHZhgE21jnTyoHb+Zo=;
-        b=UnImthP+L/q0uWa7EyUm7P9KMZN8Tl4VJvuspRZeLQNWDjgVovtY6MB1jdauJiEWhi
-         V/N53RdIDtxdflyxHnbAmWxbWxqMcbhaokEaQl3KQdSRlwelTNCheBGCCmErDltRm+hl
-         wuHHy2DdlIiqW35eLci35WpY6NUxYJkbOl6U9GKmZmYw7TLeOR4CePA5WbuQnrrKfeug
-         QsFb/xvfQQQGRa6KDVWSG44Os9awgCdFLMlk8fJLkQ2+GWhHSsISjGoijHgY3+Mzq9wj
-         DJ5vef25stxvpVhymh6PyUnv4qtdI8VK3SnM2k0JYZIJUbEu1ss+iZgeA2GHsjkmuDdR
-         5N1Q==
+        bh=G04x8476nlRwMoS791EOJ6boBhRRBrF1hDA0bU861cc=;
+        b=ns6+GodDmZj1qux8lOkolFF0tVvlWwySGfBojg6+kBcxRXz1b7A403EwYW+tjaNOGr
+         tkspoCr3bftdSCnD7Bx62QqXmXJHqTwk5DIDQ1VH1IKdqWUzqQzBNfqqhFslObS6lZrn
+         QHujz5wRSR3Fp3cYjsNHNSUY5C6gTc8LKCIlU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iS/CGYsUuq2LbHaMd6R2ad+3itHZhgE21jnTyoHb+Zo=;
-        b=A4Mlvk1NrdjVUIK2OFSbpuN+4781UttSsrX6Na8Fk4uV+7pNR/xOJpf5qtMx9lpX1d
-         SiQ7ImutYbmR6XtLEQaNc15hb/2KB8gVWOsZjz3l2gP5f9vuisGIfyUgQ5r4KSA1cCTy
-         w+qusQ233qUwfggE/kWZ2CW4yRcnzKuQEMWtpRGjZKqpC/LxI1IKU4j8/x9VPuaxNFA2
-         IECpEcuQoG/RuARqN7yh7RX4XlOpvF7ElQPZy2fyL19NGGPrOqi8sbWraAcVPDVLe9o2
-         w9ZHIPB3+/4mtcSn9+EqF8iEAEz0SDBq36XhYb1kAKnk6p4DrLAzIYvsvsLn+ER06UVw
-         xHqA==
-X-Gm-Message-State: APjAAAXouK1XUTd6aZAt3yC+KPcVyZGSlSOV5puXt0FLAS9SSLUkXDSH
-        it0azVpKI+uOMlufol3gR5Y=
-X-Google-Smtp-Source: APXvYqw/7CsfcTWV6CDMWX8q3FKbGO2fpdvTe33+eNMrNvrZouGCO28i2ItZlK5EpC6tYnSaQDbgug==
-X-Received: by 2002:a1c:a404:: with SMTP id n4mr6273720wme.186.1580233311940;
-        Tue, 28 Jan 2020 09:41:51 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id i204sm4126181wma.44.2020.01.28.09.41.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 09:41:50 -0800 (PST)
-Date:   Tue, 28 Jan 2020 18:41:49 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V3 06/18] phy: tegra: xusb: Add set_mode support for USB
- 2 phy on Tegra210
-Message-ID: <20200128174149.GD2293590@ulmo>
-References: <1577704195-2535-1-git-send-email-nkristam@nvidia.com>
- <1577704195-2535-7-git-send-email-nkristam@nvidia.com>
+        bh=G04x8476nlRwMoS791EOJ6boBhRRBrF1hDA0bU861cc=;
+        b=sCcuMisVkNYLwOlVr8SK7886u0YHtvC2kCQqS89QaIAS2kBbp1RJ8iXynnjvB5nd+W
+         nTqzQeTd85v0we5HPjz+P6HEU57fJR7hMaR5STDCfY3hJTUsSy2NblGIrYG0rjqQMD68
+         eTeDxszej2FJUAQie0xz59BYZpeOjqbiew73nnwzpi5Q0Y5uhnLum0TzjxulPDBoqlms
+         guR/x0ZiCSU4d1hwOQM0VxKBivvqEPAuNfv2t6JR6lEr3ryAhtMUhogXA2tRdA9xXzWJ
+         ujAhGKFdfAd4fQHqcHR717PuKnwulVpmOKY8Wqd5m6d0pTqt+jWF2i+5JSaJ4CNNiA/7
+         0DQw==
+X-Gm-Message-State: APjAAAUqnDgnI/xXydtgHapP4DEGMwpHF6j8pxIxFJU1IHXIcKAmv0q7
+        4YuV/jKTDO9CxaEMG4vnZM32dw==
+X-Google-Smtp-Source: APXvYqxSOemF9qw2kW6ZxPefKrBcxmuZ0GN4JhdOH+GB/inoDCy3xQvLMlT5IKP/XRBqjrpTP/1jqg==
+X-Received: by 2002:a62:2ca:: with SMTP id 193mr5074976pfc.137.1580233384989;
+        Tue, 28 Jan 2020 09:43:04 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id h128sm20716988pfe.172.2020.01.28.09.43.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 09:43:04 -0800 (PST)
+Date:   Tue, 28 Jan 2020 09:43:02 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, harigovi@codeaurora.org,
+        kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-clk@vger.kernel.org, hoegsberg@chromium.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/10] clk: qcom: rcg2: Don't crash if our parent
+ can't be found; return an error
+Message-ID: <20200128174302.GA46072@google.com>
+References: <20200124224225.22547-1-dianders@chromium.org>
+ <20200124144154.v2.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8w3uRX/HFJGApMzv"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1577704195-2535-7-git-send-email-nkristam@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200124144154.v2.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---8w3uRX/HFJGApMzv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Dec 30, 2019 at 04:39:43PM +0530, Nagarjuna Kristam wrote:
-> Add support for set_mode on USB 2 phy. This allow XUSB host/device mode
-> drivers to configure the hardware to corresponding modes.
->=20
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+On Fri, Jan 24, 2020 at 02:42:16PM -0800, Douglas Anderson wrote:
+> When I got my clock parenting slightly wrong I ended up with a crash
+> that looked like this:
+> 
+>   Unable to handle kernel NULL pointer dereference at virtual
+>   address 0000000000000000
+>   ...
+>   pc : clk_hw_get_rate+0x14/0x44
+>   ...
+>   Call trace:
+>    clk_hw_get_rate+0x14/0x44
+>    _freq_tbl_determine_rate+0x94/0xfc
+>    clk_rcg2_determine_rate+0x2c/0x38
+>    clk_core_determine_round_nolock+0x4c/0x88
+>    clk_core_round_rate_nolock+0x6c/0xa8
+>    clk_core_round_rate_nolock+0x9c/0xa8
+>    clk_core_set_rate_nolock+0x70/0x180
+>    clk_set_rate+0x3c/0x6c
+>    of_clk_set_defaults+0x254/0x360
+>    platform_drv_probe+0x28/0xb0
+>    really_probe+0x120/0x2dc
+>    driver_probe_device+0x64/0xfc
+>    device_driver_attach+0x4c/0x6c
+>    __driver_attach+0xac/0xc0
+>    bus_for_each_dev+0x84/0xcc
+>    driver_attach+0x2c/0x38
+>    bus_add_driver+0xfc/0x1d0
+>    driver_register+0x64/0xf8
+>    __platform_driver_register+0x4c/0x58
+>    msm_drm_register+0x5c/0x60
+>    ...
+> 
+> It turned out that clk_hw_get_parent_by_index() was returning NULL and
+> we weren't checking.  Let's check it so that we don't crash.
+> 
+> Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
-> V2-V3:
->  - No changes in this version
-> ---
->  drivers/phy/tegra/xusb-tegra210.c | 126 ++++++++++++++++++++++++++++++--=
-------
->  1 file changed, 99 insertions(+), 27 deletions(-)
+> I haven't gone back and tried to reproduce this same crash on older
+> kernels, but I'll put the blame on commit ac269395cdd8 ("clk: qcom:
+> Convert to clk_hw based provider APIs").  Before that if we got a NULL
+> parent back it was fine and dandy since a NULL "struct clk" is valid
+> to use but a NULL "struct clk_hw" is not.
+> 
+> Changes in v2:
+> - Patch ("clk: qcom: rcg2: Don't crash...") new for v2.
+> 
+>  drivers/clk/qcom/clk-rcg2.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+> index da045b200def..9098001ac805 100644
+> --- a/drivers/clk/qcom/clk-rcg2.c
+> +++ b/drivers/clk/qcom/clk-rcg2.c
+> @@ -218,6 +218,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
+>  
+>  	clk_flags = clk_hw_get_flags(hw);
+>  	p = clk_hw_get_parent_by_index(hw, index);
+> +	if (!p)
+> +		return -EINVAL;
+> +
+>  	if (clk_flags & CLK_SET_RATE_PARENT) {
+>  		rate = f->freq;
+>  		if (f->pre_div) {
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---8w3uRX/HFJGApMzv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4wcl0ACgkQ3SOs138+
-s6Gzdw//T0TzStcx4Ls9rs7glP6lCDnKHC7MT3T3R3bCcl+5lfRhw57519KSLJ08
-tnZN7R5VikD552BdU4rx7Az5Xc2WyMD75FC46BlJaYB5J2+EBep405gs3chsT5c6
-a0BLT1tibvdeO1iE2Bkf4EaP3k2Mh4vkZ+mDeHaxMtsYARi80asTTnFZ9S43YUh9
-EmVZXguUi+Nc9qbPpCGabyCxzBUDU+uvi2itwVL8pk+STjiLmfV0LAlIxycBmw77
-CEaRP7xEy4f9QjibvRs45UmgkVFZybvQoOi3M2Rs3Katzdsl1vgXlQP1yIvhaT6P
-r/eUNQSx2Jt1e8FIjDEdK7LPmJvfRV2sqbPTYK1o281dvSi8ip8bQm28WT02fdnz
-OvSG/cub4k7mk4XIP3MQliz3pIsT31AUPWCJ3Cx4pU2+Duu65oy2JfKQ2Le0qI+l
-oYYS/oO7cxBlVVaFnFPKXWNd8HbRyjbmlMWPTXgXWluxaDqDEDBDy+Q7Eqr/nxOV
-1qAEFwFlPve6s6Vz/HW2wiOiaBUS206WsqodwH+ymGD197bwagDpAKy4a4mpNJUS
-4Dg7xkVHpLePFMTSRsM2OcJ2y7zEdNajimnwtrcPtTUc4PhG0uijp4Ple52t1moT
-WWRSMfNRkUDBrb4V7ftmJg7/HTuCCge154ywzlzeFPQrWeDZjvE=
-=CMq6
------END PGP SIGNATURE-----
-
---8w3uRX/HFJGApMzv--
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
