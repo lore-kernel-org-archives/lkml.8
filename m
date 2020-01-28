@@ -2,445 +2,295 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A881FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C351C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6909124681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:33:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IzbxpbA6"
+	by mail.kernel.org (Postfix) with ESMTP id 13D3424685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:34:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgA1Qd5 (ORCPT
+        id S1726590AbgA1Qe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:33:57 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:43841 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgA1Qd4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:33:56 -0500
-Received: by mail-vk1-f194.google.com with SMTP id m195so2618563vkh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 08:33:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eZVtOBWzUTGUnixBKq8VG1mtg7KIRKYQrWYx+EU4+ew=;
-        b=IzbxpbA6dwqrLY7ZW6n4Vjb1sLDeNpe5BpAn80OZwkzG1+1eJREceM74zOiZSpIEhJ
-         zAkkpLPv/hfn0jas0xsYcMpdYnNILfhtyIRpbFP2Rh0POHMyQrKTNuBij5LU0W17rvpk
-         +GwvReBnReCdFeRIxTfY35JduXcozp/JyS2lQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eZVtOBWzUTGUnixBKq8VG1mtg7KIRKYQrWYx+EU4+ew=;
-        b=kD7QDQ6+blB+02GzzintWaD7G7lpb1ZGQEUm9gHo/XIuwqFHNnoa8GpG5qZ9G+unnO
-         OFBveRiMWD29oY9EQlQD4km7FHUEMj8YxUAdaPlcJB1zrVi9rhFQDaiQugTpJle8ISBC
-         Bhamd1E6FHaXw9oKg7LNg2YNFahYsJ10u2JKsFL7YQlMFkKjcOR/5WuuffujVrWPxhiR
-         PAa6hGTv48YK2CuMsmgjU/kTwazomdVgB8R+Kg3IryYzBBw+9+AkizJ5o4bbN1AmHh1t
-         rcRZf6XjfKsEQfPz95DdUzl+O9iWfuurQoxzswEPECYq886JNJKCx4ac1i5nR+HY2cJF
-         04Bw==
-X-Gm-Message-State: APjAAAXDMQwVpFDcumvnZclKRwpTCD/4v6XqMMhg3dCom40qwmC+2b9o
-        yd8DBlEm3VKa3jiuhycfnxBG/kAlOPA=
-X-Google-Smtp-Source: APXvYqwCgOB2M5Tt0MGR6mhrd6bF3wvdVrOYdBi5/GGhNM6LrQ5JmSAeTJQ7Uc5scInfsLWtyiiqKA==
-X-Received: by 2002:a1f:29c4:: with SMTP id p187mr13015633vkp.99.1580229233866;
-        Tue, 28 Jan 2020 08:33:53 -0800 (PST)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id h187sm5519941vkb.40.2020.01.28.08.33.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 08:33:53 -0800 (PST)
-Received: by mail-ua1-f49.google.com with SMTP id u17so5036031uap.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 08:33:52 -0800 (PST)
-X-Received: by 2002:ab0:30c2:: with SMTP id c2mr13571036uam.8.1580229231280;
- Tue, 28 Jan 2020 08:33:51 -0800 (PST)
+        Tue, 28 Jan 2020 11:34:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:60278 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbgA1Qe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 11:34:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39BEB1FB;
+        Tue, 28 Jan 2020 08:34:27 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A2B03F68E;
+        Tue, 28 Jan 2020 08:34:25 -0800 (PST)
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v2 1/6] arm64: add support for the AMU extension v1
+To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        sudeep.holla@arm.com, dietmar.eggemann@arm.com
+Cc:     peterz@infradead.org, mingo@redhat.com, ggherdovich@suse.cz,
+        vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191218182607.21607-1-ionela.voinescu@arm.com>
+ <20191218182607.21607-2-ionela.voinescu@arm.com>
+Message-ID: <2b62c575-3396-3332-2e39-1c3cce2c4bf0@arm.com>
+Date:   Tue, 28 Jan 2020 16:34:24 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200124224225.22547-1-dianders@chromium.org> <20200124144154.v2.5.If590c468722d2985cea63adf60c0d2b3098f37d9@changeid>
- <149394fe-b726-15da-1c6f-a223d57a009f@codeaurora.org>
-In-Reply-To: <149394fe-b726-15da-1c6f-a223d57a009f@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 28 Jan 2020 08:33:36 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XFFCPj8S7-WPjPLFe=iygpkYiyMqbneY0DMXsMz+j73w@mail.gmail.com>
-Message-ID: <CAD=FV=XFFCPj8S7-WPjPLFe=iygpkYiyMqbneY0DMXsMz+j73w@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] clk: qcom: Fix sc7180 dispcc parent data
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>, kalyan_t@codeaurora.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191218182607.21607-2-ionela.voinescu@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 18/12/2019 18:26, Ionela Voinescu wrote:
+> The activity monitors extension is an optional extension introduced
+> by the ARMv8.4 CPU architecture. This implements basic support for
+> version 1 of the activity monitors architecture, AMUv1.
+> 
+> This support includes:
+> - Extension detection on each CPU (boot, secondary, hotplugged)
+> - Register interface for AMU aarch64 registers
+> - (while here) create defines for ID_PFR0_EL1 fields when adding
+>    the AMU field information.
+> 
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> ---
+>   arch/arm64/Kconfig                  | 27 ++++++++++
+>   arch/arm64/include/asm/cpucaps.h    |  3 +-
+>   arch/arm64/include/asm/cpufeature.h |  4 ++
+>   arch/arm64/include/asm/sysreg.h     | 44 ++++++++++++++++
+>   arch/arm64/kernel/cpufeature.c      | 81 +++++++++++++++++++++++++++--
+>   5 files changed, 154 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index ac31ed6184d0..6ae7bfa5812e 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1485,6 +1485,33 @@ config ARM64_PTR_AUTH
+>   
+>   endmenu
+>   
+> +menu "ARMv8.4 architectural features"
+> +
+> +config ARM64_AMU_EXTN
+> +	bool "Enable support for the Activity Monitors Unit CPU extension"
+> +	default y
+> +	help
+> +          The activity monitors extension is an optional extension introduced
+> +          by the ARMv8.4 CPU architecture. This enables support for version 1
+> +          of the activity monitors architecture, AMUv1.
+> +
+> +          To enable the use of this extension on CPUs that implement it, say Y.
+> +
+> +          Note that for architectural reasons, firmware _must_ implement AMU
+> +          support when running on CPUs that present the activity monitors
+> +          extension. The required support is present in:
+> +            * Version 1.5 and later of the ARM Trusted Firmware
+> +
+> +          For kernels that have this configuration enabled but boot with broken
+> +          firmware, you may need to say N here until the firmware is fixed.
+> +          Otherwise you may experience firmware panics or lockups when
+> +          accessing the counter registers. Even if you are not observing these
+> +          symptoms, the values returned by the register reads might not
+> +          correctly reflect reality. Most commonly, the value read will be 0,
+> +          indicating that the counter is not enabled.
+> +
+> +endmenu
+> +
+>   config ARM64_SVE
+>   	bool "ARM Scalable Vector Extension support"
+>   	default y
+> diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+> index b92683871119..7dde890bde50 100644
+> --- a/arch/arm64/include/asm/cpucaps.h
+> +++ b/arch/arm64/include/asm/cpucaps.h
+> @@ -56,7 +56,8 @@
+>   #define ARM64_WORKAROUND_CAVIUM_TX2_219_PRFM	46
+>   #define ARM64_WORKAROUND_1542419		47
+>   #define ARM64_WORKAROUND_1319367		48
+> +#define ARM64_HAS_AMU_EXTN			49
+>   
+> -#define ARM64_NCAPS				49
+> +#define ARM64_NCAPS				50
+>   
+>   #endif /* __ASM_CPUCAPS_H */
+> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+> index 4261d55e8506..b89e799d6972 100644
+> --- a/arch/arm64/include/asm/cpufeature.h
+> +++ b/arch/arm64/include/asm/cpufeature.h
+> @@ -673,6 +673,10 @@ static inline bool cpu_has_hw_af(void)
+>   						ID_AA64MMFR1_HADBS_SHIFT);
+>   }
+>   
+> +#ifdef CONFIG_ARM64_AMU_EXTN
+> +extern inline bool cpu_has_amu_feat(void);
+> +#endif
+> +
+>   #endif /* __ASSEMBLY__ */
+>   
+>   #endif
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index 6e919fafb43d..bfcc87953a68 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -382,6 +382,42 @@
+>   #define SYS_TPIDR_EL0			sys_reg(3, 3, 13, 0, 2)
+>   #define SYS_TPIDRRO_EL0			sys_reg(3, 3, 13, 0, 3)
+>   
+> +/* Definitions for system register interface to AMU for ARMv8.4 onwards */
+> +#define SYS_AM_EL0(crm, op2)		sys_reg(3, 3, 13, crm, op2)
+> +#define SYS_AMCR_EL0			SYS_AM_EL0(2, 0)
+> +#define SYS_AMCFGR_EL0			SYS_AM_EL0(2, 1)
+> +#define SYS_AMCGCR_EL0			SYS_AM_EL0(2, 2)
+> +#define SYS_AMUSERENR_EL0		SYS_AM_EL0(2, 3)
+> +#define SYS_AMCNTENCLR0_EL0		SYS_AM_EL0(2, 4)
+> +#define SYS_AMCNTENSET0_EL0		SYS_AM_EL0(2, 5)
+> +#define SYS_AMCNTENCLR1_EL0		SYS_AM_EL0(3, 0)
+> +#define SYS_AMCNTENSET1_EL0		SYS_AM_EL0(3, 1)
+> +
+> +/*
+> + * Group 0 of activity monitors (architected):
+> + *                op0 CRn   op1   op2     CRm
+> + * Counter:       11  1101  011   n<2:0>  010:n<3>
+> + * Type:          11  1101  011   n<2:0>  011:n<3>
+> + * n: 0-3
+> + *
+> + * Group 1 of activity monitors (auxiliary):
+> + *                op0 CRn   op1   op2     CRm
+> + * Counter:       11  1101  011   n<2:0>  110:n<3>
+> + * Type:          11  1101  011   n<2:0>  111:n<3>
+> + * n: 0-15
+> + */
+> +
+> +#define SYS_AMEVCNTR0_EL0(n)            SYS_AM_EL0(4 + ((n) >> 3), (n) & 0x7)
+> +#define SYS_AMEVTYPE0_EL0(n)            SYS_AM_EL0(6 + ((n) >> 3), (n) & 0x7)
+> +#define SYS_AMEVCNTR1_EL0(n)            SYS_AM_EL0(12 + ((n) >> 3), (n) & 0x7)
+> +#define SYS_AMEVTYPE1_EL0(n)            SYS_AM_EL0(14 + ((n) >> 3), (n) & 0x7)
+> +
+> +/* V1: Fixed (architecturally defined) activity monitors */
+> +#define SYS_AMEVCNTR0_CORE_EL0          SYS_AMEVCNTR0_EL0(0)
+> +#define SYS_AMEVCNTR0_CONST_EL0         SYS_AMEVCNTR0_EL0(1)
+> +#define SYS_AMEVCNTR0_INST_RET_EL0      SYS_AMEVCNTR0_EL0(2)
+> +#define SYS_AMEVCNTR0_MEM_STALL         SYS_AMEVCNTR0_EL0(3)
+> +
+>   #define SYS_CNTFRQ_EL0			sys_reg(3, 3, 14, 0, 0)
+>   
+>   #define SYS_CNTP_TVAL_EL0		sys_reg(3, 3, 14, 2, 0)
+> @@ -577,6 +613,7 @@
+>   #define ID_AA64PFR0_CSV3_SHIFT		60
+>   #define ID_AA64PFR0_CSV2_SHIFT		56
+>   #define ID_AA64PFR0_DIT_SHIFT		48
+> +#define ID_AA64PFR0_AMU_SHIFT		44
+>   #define ID_AA64PFR0_SVE_SHIFT		32
+>   #define ID_AA64PFR0_RAS_SHIFT		28
+>   #define ID_AA64PFR0_GIC_SHIFT		24
+> @@ -587,6 +624,7 @@
+>   #define ID_AA64PFR0_EL1_SHIFT		4
+>   #define ID_AA64PFR0_EL0_SHIFT		0
+>   
+> +#define ID_AA64PFR0_AMU			0x1
+>   #define ID_AA64PFR0_SVE			0x1
+>   #define ID_AA64PFR0_RAS_V1		0x1
+>   #define ID_AA64PFR0_FP_NI		0xf
+> @@ -709,6 +747,12 @@
+>   #define ID_AA64MMFR0_TGRAN16_NI		0x0
+>   #define ID_AA64MMFR0_TGRAN16_SUPPORTED	0x1
+>   
+> +#define ID_PFR0_AMU_SHIFT		20
+> +#define ID_PFR0_STATE3_SHIFT		12
+> +#define ID_PFR0_STATE2_SHIFT		8
+> +#define ID_PFR0_STATE1_SHIFT		4
+> +#define ID_PFR0_STATE0_SHIFT		0
+> +
+>   #if defined(CONFIG_ARM64_4K_PAGES)
+>   #define ID_AA64MMFR0_TGRAN_SHIFT	ID_AA64MMFR0_TGRAN4_SHIFT
+>   #define ID_AA64MMFR0_TGRAN_SUPPORTED	ID_AA64MMFR0_TGRAN4_SUPPORTED
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 04cf64e9f0c9..c639b3e052d7 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -156,6 +156,7 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
+>   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_CSV3_SHIFT, 4, 0),
+>   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_CSV2_SHIFT, 4, 0),
+>   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_DIT_SHIFT, 4, 0),
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_AMU_SHIFT, 4, 0),
+>   	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
+>   				   FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_SVE_SHIFT, 4, 0),
+>   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_RAS_SHIFT, 4, 0),
+> @@ -314,10 +315,11 @@ static const struct arm64_ftr_bits ftr_id_mmfr4[] = {
+>   };
+>   
+>   static const struct arm64_ftr_bits ftr_id_pfr0[] = {
+> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),		/* State3 */
+> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),		/* State2 */
+> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),		/* State1 */
+> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),		/* State0 */
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_AMU_SHIFT, 4, 0),
 
-On Mon, Jan 27, 2020 at 9:53 PM Taniya Das <tdas@codeaurora.org> wrote:
->
-> Hi Doug,
->
-> Thanks for the patch.
->
-> On 1/25/2020 4:12 AM, Douglas Anderson wrote:
-> > The bindings file (qcom,dispcc.yaml) says that the two clocks that
-> > dispcc is a client of are named "xo" and "gpll0".  That means we have
-> > to refer to them by those names.  We weren't referring to "xo"
-> > properly in the driver.
-> >
-> > Then, in the patch ("dt-bindings: clock: Fix qcom,dispcc bindings for
-> > sdm845/sc7180") we clarify the names for all of the clocks that we are
-> > a client of.  Fix all those too, also getting rid of the "fallback"
-> > names for them.  Since sc7180 is still in infancy there is no reason
-> > to specify a fallback name.  People should just get the device tree
-> > right.
-> >
-> > Since we didn't add the "test" clock to the bindings (apparently it's
-> > never used), kill it from the driver.  If someone has a use for it we
-> > should add it to the bindings and bring it back.
-> >
-> > Instead of updating all of the sizes of the arrays now that the test
-> > clock is gone, switch to using the less error-prone ARRAY_SIZE.  Not
-> > sure why it didn't always use that.
-> >
-> > Fixes: dd3d06622138 ("clk: qcom: Add display clock controller driver for SC7180")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> > Changes in v2:
-> > - Patch ("clk: qcom: Fix sc7180 dispcc parent data") new for v2.
-> >
-> >   drivers/clk/qcom/dispcc-sc7180.c | 63 ++++++++++++--------------------
-> >   1 file changed, 24 insertions(+), 39 deletions(-)
-> >
-> > diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
-> > index 30c1e25d3edb..380eca3f847d 100644
-> > --- a/drivers/clk/qcom/dispcc-sc7180.c
-> > +++ b/drivers/clk/qcom/dispcc-sc7180.c
-> > @@ -43,7 +43,7 @@ static struct clk_alpha_pll disp_cc_pll0 = {
-> >               .hw.init = &(struct clk_init_data){
-> >                       .name = "disp_cc_pll0",
-> >                       .parent_data = &(const struct clk_parent_data){
-> > -                             .fw_name = "bi_tcxo",
-> > +                             .fw_name = "xo",
->
-> These clock names are as per our HW design and we would not like to
-> update them as they require lot of hand-coding. These codes are all
-> auto-generated.
+Why is this STRICT while the aa64pfr0 field is NON_STRICT ? On the other
+hand, do we need this entry ? Do we plan to support 32bit guests using
+AMU counters ? If we do, we may need to cap this field for the guests.
 
-The names in your HW design are global names.  These are local names.
-That means that these names are only used in the context of this one
-clock driver.  As I understand it the way moving forward is that all
-clocks that are inputs to this clock driver should be specified via
-local names and that these local names should be somewhat stable
-between different SoCs.  They should also, ideally, be more human
-readable.
+Also, fyi, please note that there may be conflicts with another series 
+from Anshuman which cleans up the tables and "naming" the shifts. [1].
+[1] purposefully hides the AMU from ID_PFR0 due to the above reasoning.
 
-The mapping between local names and global names happens in the device
-tree.  Specifically in the 10th patch in this series [1].
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE3_SHIFT, 4, 0),
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE2_SHIFT, 4, 0),
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE1_SHIFT, 4, 0),
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE0_SHIFT, 4, 0),
+>   	ARM64_FTR_END,
+>   };
+>   
+> @@ -1150,6 +1152,59 @@ static bool has_hw_dbm(const struct arm64_cpu_capabilities *cap,
+>   
+>   #endif
+>   
+> +#ifdef CONFIG_ARM64_AMU_EXTN
+> +
+> +/*
+> + * This per cpu variable only signals that the CPU implementation supports
+> + * the Activity Monitors Unit (AMU) but does not provide information
+> + * regarding all the events that it supports.
+> + * When this amu_feat per CPU variable is true, the user of this feature
+> + * can only rely on the presence of the 4 fixed counters. But this does
+> + * not guarantee that the counters are enabled or access to these counters
+> + * is provided by code executed at higher exception levels.
+> + *
+> + * Also, to ensure the safe use of this per_cpu variable, the following
+> + * accessor is defined to allow a read of amu_feat for the current cpu only
+> + * from the current cpu.
+> + *  - cpu_has_amu_feat()
+> + */
+> +static DEFINE_PER_CPU_READ_MOSTLY(u8, amu_feat);
+> +
+> +inline bool cpu_has_amu_feat(void)
+> +{
+> +	return !!this_cpu_read(amu_feat);
+> +}
+> +
 
-You can see that the clock "xo" (which is a local name) maps to
-<&rpmhcc RPMH_CXO_CLK>.
+minor nit: Or you may use a cpumask_t set of CPUs where AMU is
+available. But if you plan to extend this for the future AMU version
+tracking the mask may not be sufficient.
 
-It is OK that the global name for this clock in Linux is "bi_tcxo".
-The string "xo" is _only_ used to look in the device tree to find the
-clock this refers to.
-
-
-A) If you are saying that the local clock name should have been
-referred to as "bi_tcxo", then we need to go and change the bindings.
-The bindings already say that the input clock is called "xo" and this
-is true even without my series.  If we wanted to change this we'd also
-need to go change some existing device tree files.  I don't think this
-is the right way to go.
-
-B) If you are saying that you don't like the idea of local names and
-you'd rather use the old way of matching (relying on a global lookup
-of a clock named "bi_tcxo"), I don't personally think that's right.
-...but if the common clock maintainers say that's the way to jump then
-I will.
-
-
-Summary: I'm pretty sure it should be "xo" and you will have to update
-your auto-generation code to handle the concept of local names.
-
-
-> >                       },
-> >                       .num_parents = 1,
-> >                       .ops = &clk_alpha_pll_fabia_ops,
-> > @@ -76,40 +76,32 @@ static struct clk_alpha_pll_postdiv disp_cc_pll0_out_even = {
-> >
-> >   static const struct parent_map disp_cc_parent_map_0[] = {
-> >       { P_BI_TCXO, 0 },
-> > -     { P_CORE_BI_PLL_TEST_SE, 7 },
-> >   };
-> >
-> >   static const struct clk_parent_data disp_cc_parent_data_0[] = {
-> > -     { .fw_name = "bi_tcxo" },
-> > -     { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-> > +     { .fw_name = "xo" },
-> >   };
-> >
-> >   static const struct parent_map disp_cc_parent_map_1[] = {
-> >       { P_BI_TCXO, 0 },
-> >       { P_DP_PHY_PLL_LINK_CLK, 1 },
-> >       { P_DP_PHY_PLL_VCO_DIV_CLK, 2 },
-> > -     { P_CORE_BI_PLL_TEST_SE, 7 },
-> >   };
-> >
-> >   static const struct clk_parent_data disp_cc_parent_data_1[] = {
-> > -     { .fw_name = "bi_tcxo" },
-> > -     { .fw_name = "dp_phy_pll_link_clk", .name = "dp_phy_pll_link_clk" },
-> > -     { .fw_name = "dp_phy_pll_vco_div_clk",
-> > -                             .name = "dp_phy_pll_vco_div_clk"},
-> > -     { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-> > +     { .fw_name = "xo" },
-> > +     { .fw_name = "dp_phy_pll_link" },
-> > +     { .fw_name = "dp_phy_pll_vco_div" },
->
-> similar comments for these too. They would conflict with our HW design
-> clock names.
-
-By using ".fw_name" you are asserting that these are _local names_ for
-the clocks.  Yet, they are missing from the binding.  As per above
-argument, the right answer is _not_ to move back to the old global
-name matching, so we definitely need to addthis to the binding.  When
-thinking about adding the clocks to the binding, I think can hear
-Rob's voice whispering into my ear that if I'm adding the name of a
-clock to the binding I don't need the name to end with "_clk".  Again,
-I think you need to update your auto-generation tools.
-
-
-Summary: I think my change is correct here.
-
-
-> >   };
-> >
-> >   static const struct parent_map disp_cc_parent_map_2[] = {
-> >       { P_BI_TCXO, 0 },
-> >       { P_DSI0_PHY_PLL_OUT_BYTECLK, 1 },
-> > -     { P_CORE_BI_PLL_TEST_SE, 7 },
-> >   };
-> >
-> >   static const struct clk_parent_data disp_cc_parent_data_2[] = {
-> > -     { .fw_name = "bi_tcxo" },
-> > -     { .fw_name = "dsi0_phy_pll_out_byteclk",
-> > -                             .name = "dsi0_phy_pll_out_byteclk" },
-> > -     { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-> > +     { .fw_name = "xo" },
-> > +     { .fw_name = "dsi_phy_pll_byte" },
-> >   };
-> >
-> >   static const struct parent_map disp_cc_parent_map_3[] = {
-> > @@ -117,40 +109,33 @@ static const struct parent_map disp_cc_parent_map_3[] = {
-> >       { P_DISP_CC_PLL0_OUT_MAIN, 1 },
-> >       { P_GPLL0_OUT_MAIN, 4 },
-> >       { P_DISP_CC_PLL0_OUT_EVEN, 5 },
-> > -     { P_CORE_BI_PLL_TEST_SE, 7 },
-> >   };
-> >
-> >   static const struct clk_parent_data disp_cc_parent_data_3[] = {
-> > -     { .fw_name = "bi_tcxo" },
-> > +     { .fw_name = "xo" },
-> >       { .hw = &disp_cc_pll0.clkr.hw },
-> > -     { .fw_name = "gcc_disp_gpll0_clk_src" },
-> > +     { .fw_name = "gpll0" },
->
-> This is not the correct clock, we have a child/branch clock which
-> requires to be turned ON "gcc_disp_gpll0_clk_src" when we switch to this
-> source.
-
-Whether or not it is the right clock depends on patch #10.  In patch
-10 you can see that I specify that "gpll0" is:
-
-<&gcc GCC_DISP_GPLL0_CLK_SRC>,
-
-...which means that we end up with the same clock as before.  So I
-think it is the correct clock.
-
-Then we can have a debate about whether the binding should have called
-this local clock something different.  I will say that the bindings
-already describe an input clock that is called "gpll0".  Should this
-have been called something else in the bindings?
-
-
-Summary: I think my change is correct unless we want to change the
-existing bindings to call this something other than "gpll0".
-
-
-> >       { .hw = &disp_cc_pll0_out_even.clkr.hw },
-> > -     { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-> >   };
-> >
-> >   static const struct parent_map disp_cc_parent_map_4[] = {
-> >       { P_BI_TCXO, 0 },
-> >       { P_GPLL0_OUT_MAIN, 4 },
-> > -     { P_CORE_BI_PLL_TEST_SE, 7 },
-> >   };
-> >
-> >   static const struct clk_parent_data disp_cc_parent_data_4[] = {
-> > -     { .fw_name = "bi_tcxo" },
-> > -     { .fw_name = "gcc_disp_gpll0_clk_src" },
-> > -     { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-> > +     { .fw_name = "xo" },
-> > +     { .fw_name = "gpll0" },
->
-> same comment as above.
->
-> >   };
-> >
-> >   static const struct parent_map disp_cc_parent_map_5[] = {
-> >       { P_BI_TCXO, 0 },
-> >       { P_DSI0_PHY_PLL_OUT_DSICLK, 1 },
-> > -     { P_CORE_BI_PLL_TEST_SE, 7 },
-> >   };
-> >
-> >   static const struct clk_parent_data disp_cc_parent_data_5[] = {
-> > -     { .fw_name = "bi_tcxo" },
-> > -     { .fw_name = "dsi0_phy_pll_out_dsiclk",
-> > -                             .name = "dsi0_phy_pll_out_dsiclk" },
-> > -     { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-> > +     { .fw_name = "xo" },
-> > +     { .fw_name = "dsi_phy_pll_pixel" },
-> >   };
-> >
-> >   static const struct freq_tbl ftbl_disp_cc_mdss_ahb_clk_src[] = {
-> > @@ -169,7 +154,7 @@ static struct clk_rcg2 disp_cc_mdss_ahb_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_ahb_clk_src",
-> >               .parent_data = disp_cc_parent_data_4,
-> > -             .num_parents = 3,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_4),
-> >               .flags = CLK_SET_RATE_PARENT,
-> >               .ops = &clk_rcg2_shared_ops,
-> >       },
-> > @@ -183,7 +168,7 @@ static struct clk_rcg2 disp_cc_mdss_byte0_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_byte0_clk_src",
-> >               .parent_data = disp_cc_parent_data_2,
-> > -             .num_parents = 3,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_2),
-> >               .flags = CLK_SET_RATE_PARENT,
-> >               .ops = &clk_byte2_ops,
-> >       },
-> > @@ -203,7 +188,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_aux_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_dp_aux_clk_src",
-> >               .parent_data = disp_cc_parent_data_0,
-> > -             .num_parents = 2,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
-> >               .ops = &clk_rcg2_ops,
-> >       },
-> >   };
-> > @@ -216,7 +201,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_crypto_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_dp_crypto_clk_src",
-> >               .parent_data = disp_cc_parent_data_1,
-> > -             .num_parents = 4,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
-> >               .flags = CLK_SET_RATE_PARENT,
-> >               .ops = &clk_byte2_ops,
-> >       },
-> > @@ -230,7 +215,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_link_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_dp_link_clk_src",
-> >               .parent_data = disp_cc_parent_data_1,
-> > -             .num_parents = 4,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
-> >               .flags = CLK_SET_RATE_PARENT,
-> >               .ops = &clk_byte2_ops,
-> >       },
-> > @@ -244,7 +229,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_pixel_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_dp_pixel_clk_src",
-> >               .parent_data = disp_cc_parent_data_1,
-> > -             .num_parents = 4,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
-> >               .flags = CLK_SET_RATE_PARENT,
-> >               .ops = &clk_dp_ops,
-> >       },
-> > @@ -259,7 +244,7 @@ static struct clk_rcg2 disp_cc_mdss_esc0_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_esc0_clk_src",
-> >               .parent_data = disp_cc_parent_data_2,
-> > -             .num_parents = 3,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_2),
-> >               .ops = &clk_rcg2_ops,
-> >       },
-> >   };
-> > @@ -282,7 +267,7 @@ static struct clk_rcg2 disp_cc_mdss_mdp_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_mdp_clk_src",
-> >               .parent_data = disp_cc_parent_data_3,
-> > -             .num_parents = 5,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_3),
-> >               .ops = &clk_rcg2_shared_ops,
-> >       },
-> >   };
-> > @@ -295,7 +280,7 @@ static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_pclk0_clk_src",
-> >               .parent_data = disp_cc_parent_data_5,
-> > -             .num_parents = 3,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_5),
-> >               .flags = CLK_SET_RATE_PARENT,
-> >               .ops = &clk_pixel_ops,
-> >       },
-> > @@ -310,7 +295,7 @@ static struct clk_rcg2 disp_cc_mdss_rot_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_rot_clk_src",
-> >               .parent_data = disp_cc_parent_data_3,
-> > -             .num_parents = 5,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_3),
-> >               .ops = &clk_rcg2_shared_ops,
-> >       },
-> >   };
-> > @@ -324,7 +309,7 @@ static struct clk_rcg2 disp_cc_mdss_vsync_clk_src = {
-> >       .clkr.hw.init = &(struct clk_init_data){
-> >               .name = "disp_cc_mdss_vsync_clk_src",
-> >               .parent_data = disp_cc_parent_data_0,
-> > -             .num_parents = 2,
-> > +             .num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
-> >               .ops = &clk_rcg2_shared_ops,
-> >       },
-> >   };
-> >
->
-> All the above code are auto-generated and we really do not want to
-> hand-code.
-
-This is about ARRAY_SIZE()?  Maybe you can update your auto-generation
-script.  I think it's cleaner / more readable and it would have
-prevented a previous problem I would have had to debug.  See commit
-74c31ff9c84a ("clk: qcom: gpu_cc_gmu_clk_src has 5 parents, not 6").
-
-...or is this about the removal of the test clock?  I removed the test
-clock at Stephen's request.  Once I have done that then I will not
-match your auto-generated code anyway, so you probably need to update
-them.  If you can convince Stephen that we should add the test clock
-back in then I have no objections, though we'd need to add it as an
-optional clock to the bindings (or accept that fact that it uses a
-global name lookup to match).
+[1] 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2020-January/708287.html
 
 
-Summary: I think my change is correct, but if you and Stephen come to
-some different agreement about the test clock I can change.
+The rest looks fine to me.
 
-
-[1] https://lore.kernel.org/r/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid
-
--Doug
+Suzuki
