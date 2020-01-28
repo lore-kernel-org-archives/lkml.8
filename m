@@ -2,152 +2,122 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35A6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0881EC35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 982A82467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580192900;
-	bh=Nror/33/FGHsPj3Lk3bq4hBaWkgAkgSHit0ACqP5MQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zMDVWjzlRObn6R/vhgFMw/Z9kXxMJzOsZummFRKiRw0yD+N8ggKkzUctqkoBisUqN
-	 cxg9H7zBZEZEiCPm4Rqi8PNdqgSmYXEQdIwKoLFUz5BPUhlNmOnQoQOuonr/gQDzOK
-	 /80tH32Bgn4NAbODyA9Av0KfXz+iBcuisa7QidZo=
+	by mail.kernel.org (Postfix) with ESMTP id CE79824681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:37:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="dX5ri6JW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725853AbgA1G2U (ORCPT
+        id S1725901AbgA1GhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 01:28:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbgA1G2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 01:28:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E6C2205F4;
-        Tue, 28 Jan 2020 06:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580192898;
-        bh=Nror/33/FGHsPj3Lk3bq4hBaWkgAkgSHit0ACqP5MQE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Odt/CmZwnxY0FSSxYEi8g01nJTEMq0T60weZ9XLx/Hsot8/uLNqQrsY+FSnrA6Sjk
-         LakYOZSNQNtghd4fsZxnu96m/QqzYqWp7d/vJCml8t+qcZe1h1adZPEOCBaDDlmwBW
-         uWwapxJiRkKYOn6mLCUuvUPy3AGPks2TVQ5z0RKY=
-Date:   Tue, 28 Jan 2020 07:28:14 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jolly Shah <JOLLYS@xilinx.com>
-Cc:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Michal Simek <michals@xilinx.com>,
-        Rajan Vaja <RAJANV@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
-Message-ID: <20200128062814.GA2097606@kroah.com>
-References: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
- <1578527663-10243-2-git-send-email-jolly.shah@xilinx.com>
- <20200114145257.GA1910108@kroah.com>
- <BYAPR02MB5992FC37E0D2AD9946414417B80F0@BYAPR02MB5992.namprd02.prod.outlook.com>
- <20200124060339.GB2906795@kroah.com>
- <2D4B924A-D10C-4A90-A8E6-507BF6C30654@xilinx.com>
-MIME-Version: 1.0
+        Tue, 28 Jan 2020 01:37:00 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:40183 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgA1Gg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 01:36:59 -0500
+Received: by mail-qv1-f66.google.com with SMTP id dp13so5752623qvb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 22:36:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=0abVuQRiEoEWLaCFKSSRqYpNWOPktE+d1wvOzU3Y5QQ=;
+        b=dX5ri6JWeqf2OD9HUY9VaB/KwNs/qrzPVG/Mkk6o9PIOqw2H/gbYXWgmg5n/T9sQZi
+         Iu9x9L3POLnl1YchVinwocuu9ounpYF8/kx5Kl6xkZvkINd+J3VgmAAsMM4XdNmOQpGF
+         n/A6miYs2pl1z68bmOVHF16tPK0qb+EWBTpkY/wDARN4JMfLDfXWnSNw6qljowznZeLw
+         nC2mDCu/xZdzLMzffrfLowRJu9L4pvo4bnAdA6EAug7bCreb8yqSCB9NBnvi8MDOIkJC
+         NhZM5PfIKH0yrTiGcHzwETXhAcZRM4FxAKgtCYb9TW9qoZDA0+sfnlblbnN56jONvpa4
+         1ytQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=0abVuQRiEoEWLaCFKSSRqYpNWOPktE+d1wvOzU3Y5QQ=;
+        b=fg1SG2PS7lIzKMBh4DaC6b2ZwegZp3ta+bJnBhH4a7nxeyHvPrH7CEyMdBKafQyS6Q
+         ssPAB4kRrAJI8m+xFAtqJAMsr8whN8OYnVJWgdLdYp1Sq35sn9c4rGI0iJnc47egy5iN
+         8N0ZjsEbU12vmH8Cig4WdPDh+Vbub7Um0lk+2PT/p2exkSIcHzXXmU347JsK6Qrzqvsz
+         pkFup2/pWi+KY+Kgfe+7XIxlUVe0PiNVrlpiBtrZtqLHmd0u+xzojwVF4uoTHnRC2sop
+         0KH06yidSiegTKvS+Z7bMrdbD//CJtu0qB6AO8LKl3PLpd7NVZDvbnwIQc17z904/TXG
+         RKBA==
+X-Gm-Message-State: APjAAAVpZPLFdi3w1EeHTweOTVxZOPoP/ySMhaw2Yb4FL4oSAUZq4npT
+        YbH2FoGjLTNWAeEC7jzaGZUtkA==
+X-Google-Smtp-Source: APXvYqyOYFD97tfKGnmPwPmfp2w3pbVQzr1Mc0RjmsOaGaxOYR1oH4beASJJ2LsvEzXBpFE4wXV4hg==
+X-Received: by 2002:a05:6214:1189:: with SMTP id t9mr20389607qvv.153.1580193418367;
+        Mon, 27 Jan 2020 22:36:58 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id z126sm11703882qka.34.2020.01.27.22.36.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 22:36:57 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2D4B924A-D10C-4A90-A8E6-507BF6C30654@xilinx.com>
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page table helpers
+Date:   Tue, 28 Jan 2020 01:36:56 -0500
+Message-Id: <F90DA0AA-4D27-4346-8D8D-D9A7871E2C07@lca.pw>
+References: <115c187b-73ce-30b2-0694-999db1f2183b@c-s.fr>
+Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <115c187b-73ce-30b2-0694-999db1f2183b@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 11:01:27PM +0000, Jolly Shah wrote:
->     > > > +	ret = kstrtol(tok, 16, &value);
->     > > > +	if (ret) {
->     > > > +		ret = -EFAULT;
->     > > > +		goto err;
->     > > > +	}
->     > > > +
->     > > > +	ret = eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
->     > > 
->     > > This feels "tricky", if you tie this to the device you have your driver
->     > > bound to, will this make it easier instead of having to go through the
->     > > ioctl callback?
->     > > 
->     > 
->     > GGS(general global storage) registers are in PMU space and linux doesn't have access to it 
->     > Hence ioctl is used.
->     
->     Why not just a "real" call to the driver to make this type of reading?
->     You don't have ioctls within the kernel for other drivers to call,
->     that's not needed at all.
-> 
-> these registers are for users  and for special needs where users wants
-> to retain values over resets. but as they belong to PMU address space,
-> these interface APIs are provided. They don’t allow access to any
-> other registers.
 
-That's not the issue here.  The issue is you are using an "internal"
-ioctl, instead just make a "real" call.
 
->     > > > +int zynqmp_pm_ggs_init(struct kobject *parent_kobj)
->     > > > +{
->     > > > +	return sysfs_create_group(parent_kobj, zynqmp_ggs_groups[0]);
->     > > 
->     > > You might be racing userspace here and loosing :(
->     > 
->     > Prob is called before user space is notified about sysfs so racing shouldn't happen.
->     
->     "shouldn't"?  How do you know this?
-> 
-> Since firmware driver is always built-in (we don't provide support to
-> use as module), user space won't be available before prob is complete.
-> Correct if I am wrong.
+> On Jan 28, 2020, at 1:17 AM, Christophe Leroy <christophe.leroy@c-s.fr> wr=
+ote:
+>=20
+> It is 'default y' so there is no much risk that it is forgotten, at least a=
+ll test suites run with 'allyes_defconfig' will trigger the test, so I think=
+ it is really a good feature.
 
-Userspace starts earlier than you think, and also, use the correct
-interfaces for this type of thing, that is why it is there.  Don't
-create purposfully-incorrect code :)
-
->     > > > diff --git a/drivers/firmware/xilinx/zynqmp.c
->     > > b/drivers/firmware/xilinx/zynqmp.c
->     > > > index 75bdfaa..4c1117d 100644
->     > > > --- a/drivers/firmware/xilinx/zynqmp.c
->     > > > +++ b/drivers/firmware/xilinx/zynqmp.c
->     > > > @@ -473,6 +473,10 @@ static inline int zynqmp_is_valid_ioctl(u32 ioctl_id)
->     > > >  	case IOCTL_GET_PLL_FRAC_MODE:
->     > > >  	case IOCTL_SET_PLL_FRAC_DATA:
->     > > >  	case IOCTL_GET_PLL_FRAC_DATA:
->     > > > +	case IOCTL_WRITE_GGS:
->     > > > +	case IOCTL_READ_GGS:
->     > > > +	case IOCTL_WRITE_PGGS:
->     > > > +	case IOCTL_READ_PGGS:
->     > > 
->     > > Huh???
->     > 
->     > Sorry not sure about your concern here. These registers are in PMU space and hence
->     > Ioctl is needed to let linux access them.
->     
->     userspace or kernelspace?
->     
->     You seem to be mixing them both here.
-> 
-> They are in Platform Management Unit register address space so it
-> allows only secure access. Hence for linux to access it, interface
-> APIs are provided. 
-
-Again, that's fine, but why are you creating an "internal ioctl"?  Just
-make a real function call.
-
-thanks,
-
-greg k-h
+This thing depends on DEBUG_VM which I don=E2=80=99t see it is selected by a=
+ny defconfig. Am I missing anything?=
