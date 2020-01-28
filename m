@@ -2,87 +2,52 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A654FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA65EC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CF324690
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A856224695
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221783;
-	bh=pEWNEU613W1ALMtaKMRV8+3gIoFyt9Req6PIyTF6j1k=;
+	s=default; t=1580221787;
+	bh=WDEqqVHpmjTaWCXdgUoLsTdZaPyCrws2lmy+k6Hx9BE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WjleDkGLRGRFlNbdt1mwNHS8HCiPZg5k9aFmgeAR7E9O36aSouoT3QaeNS9HBYrY8
-	 vzPoRiptD3xgAXwhkELkOjHX0UkAOBhmbHjC9N84A91VD0i3k35XH21vbnarg4NnJc
-	 abhmYBMryuRPeksHxp/DHm4g0HRiPNUcnpkF40EM=
+	b=sZIdjDkqPEi8xzMmDfkmjdmtsd3sxWfuctdtn28+ZQlh5GxkqqpB+XHIxFD8ZehnF
+	 uY0W18958ZPwF4JEerj2QEJqHVKV4EsUqPEbhq5NvOBsZE/3dVbwsczU9KF5b7sWCO
+	 H2piqyUh3QiKNN0SmGsNXdfRTUhtWDwrTHv23m2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387689AbgA1O3n (ORCPT
+        id S2387691AbgA1O3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:29:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58318 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:29:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733167AbgA1O3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:29:39 -0500
+        id S2387511AbgA1O3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:29:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A57682468F;
-        Tue, 28 Jan 2020 14:29:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 508EA2468D;
+        Tue, 28 Jan 2020 14:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221778;
-        bh=pEWNEU613W1ALMtaKMRV8+3gIoFyt9Req6PIyTF6j1k=;
+        s=default; t=1580221782;
+        bh=WDEqqVHpmjTaWCXdgUoLsTdZaPyCrws2lmy+k6Hx9BE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bH2/sSTqzzT0pxfPQzTdz/5wuUDImKrZpeiIDAWXnsWg2BX8Ia9xwwKxd/H8IvCoO
-         XUr3CeJ5OlJvWAfXJkKQQDCzf40QpkUx4PNrDitfXXW+wXSkppxs39z1xtWxxYj5tA
-         c67wD4qabY1LMTksMZVQEqDNqKWRlXIErCRLlI9c=
+        b=eZeUw7VjxsRZybmdiLSbJvW9PWTDzLe0lHs54eiaA5NvdR918Mw/SjaIvWRiSrDtc
+         FDUNeLOBULRE3hqMHaeL+MWVzJhAPcg9bb9iUBTI6xP3HO/v6ENZqA40bStf0QNB5f
+         scg7GRjkEko2M6JMaqPtvHceYYDLgDiOOhH6v1kE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Banman <andrew.banman@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Wei Yang <richard.weiyang@gmail.com>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rich Felker <dalias@libc.org>, Rob Herring <robh@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 77/92] mm/memory_hotplug: make unregister_memory_section() never fail
-Date:   Tue, 28 Jan 2020 15:08:45 +0100
-Message-Id: <20200128135819.304741793@linuxfoundation.org>
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH 4.19 79/92] powerpc/mm: Fix section mismatch warning
+Date:   Tue, 28 Jan 2020 15:08:47 +0100
+Message-Id: <20200128135819.605560942@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -95,128 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-commit cb7b3a3685b20d3b5900ff24b2cb96d002960189 upstream.
+commit 26ad26718dfaa7cf49d106d212ebf2370076c253 upstream.
 
-Failing while removing memory is mostly ignored and cannot really be
-handled.  Let's treat errors in unregister_memory_section() in a nice way,
-warning, but continuing.
+This patch fix the below section mismatch warnings.
 
-Link: http://lkml.kernel.org/r/20190409100148.24703-3-david@redhat.com
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Banman <andrew.banman@hpe.com>
-Cc: Mike Travis <mike.travis@hpe.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Arun KS <arunks@codeaurora.org>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Oscar Salvador <osalvador@suse.com>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+WARNING: vmlinux.o(.text+0x2d1f44): Section mismatch in reference from the function devm_memremap_pages_release() to the function .meminit.text:arch_remove_memory()
+WARNING: vmlinux.o(.text+0x2d265c): Section mismatch in reference from the function devm_memremap_pages() to the function .meminit.text:arch_add_memory()
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/base/memory.c  |   16 +++++-----------
- include/linux/memory.h |    2 +-
- mm/memory_hotplug.c    |    4 +---
- 3 files changed, 7 insertions(+), 15 deletions(-)
+ arch/powerpc/mm/mem.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -743,15 +743,18 @@ unregister_memory(struct memory_block *m
- {
- 	BUG_ON(memory->dev.bus != &memory_subsys);
- 
--	/* drop the ref. we got in remove_memory_section() */
-+	/* drop the ref. we got via find_memory_block() */
- 	put_device(&memory->dev);
- 	device_unregister(&memory->dev);
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -118,8 +118,8 @@ int __weak remove_section_mapping(unsign
+ 	return -ENODEV;
  }
  
--static int remove_memory_section(struct mem_section *section)
-+void unregister_memory_section(struct mem_section *section)
+-int __meminit arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+-		bool want_memblock)
++int __ref arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
++			  bool want_memblock)
  {
- 	struct memory_block *mem;
- 
-+	if (WARN_ON_ONCE(!present_section(section)))
-+		return;
-+
- 	mutex_lock(&mem_sysfs_mutex);
- 
- 	/*
-@@ -772,15 +775,6 @@ static int remove_memory_section(struct
- 
- out_unlock:
- 	mutex_unlock(&mem_sysfs_mutex);
--	return 0;
--}
--
--int unregister_memory_section(struct mem_section *section)
--{
--	if (!present_section(section))
--		return -EINVAL;
--
--	return remove_memory_section(section);
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+@@ -140,8 +140,8 @@ int __meminit arch_add_memory(int nid, u
  }
- #endif /* CONFIG_MEMORY_HOTREMOVE */
  
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -113,7 +113,7 @@ extern int register_memory_isolate_notif
- extern void unregister_memory_isolate_notifier(struct notifier_block *nb);
- int hotplug_memory_register(int nid, struct mem_section *section);
  #ifdef CONFIG_MEMORY_HOTREMOVE
--extern int unregister_memory_section(struct mem_section *);
-+extern void unregister_memory_section(struct mem_section *);
- #endif
- extern int memory_dev_init(void);
- extern int memory_notify(unsigned long val, void *v);
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -488,9 +488,7 @@ static int __remove_section(struct zone
- 	if (!valid_section(ms))
- 		return ret;
- 
--	ret = unregister_memory_section(ms);
--	if (ret)
--		return ret;
-+	unregister_memory_section(ms);
- 
- 	scn_nr = __section_nr(ms);
- 	start_pfn = section_nr_to_pfn((unsigned long)scn_nr);
+-int __meminit arch_remove_memory(int nid, u64 start, u64 size,
+-					struct vmem_altmap *altmap)
++int __ref arch_remove_memory(int nid, u64 start, u64 size,
++			     struct vmem_altmap *altmap)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
 
 
