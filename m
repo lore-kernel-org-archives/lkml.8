@@ -2,122 +2,140 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E79E8C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5666CC35246
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA612173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEF424682
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o/Mt99aL"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Hma1sjKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725848AbgA1FgO (ORCPT
+        id S1725867AbgA1Fsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 00:36:14 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46929 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgA1FgN (ORCPT
+        Tue, 28 Jan 2020 00:48:33 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46096 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbgA1Fsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 00:36:13 -0500
-Received: by mail-pf1-f196.google.com with SMTP id k29so3533887pfp.13;
-        Mon, 27 Jan 2020 21:36:13 -0800 (PST)
+        Tue, 28 Jan 2020 00:48:32 -0500
+Received: by mail-qk1-f196.google.com with SMTP id g195so12192449qke.13
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 21:48:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ETtmj92dMxQ/nDAdyiV4y6n6dPMRnfeIUJGrUNEUib8=;
-        b=o/Mt99aLf84cqRfH/lrRWLwIrv4xFzF0dkz+MI/gWtAWj59gg+wqMwNozt7Um0x9p7
-         wpXD0IHhQzBldl83LOckx42e2tN5EnkLL7pAyY2nypg4XTIxMRpIrrfdHjmTV3ntE5sM
-         +6eYJ+cXkt1pRI3hg0AHL+2C6I7VOl7U6oAf/C232oh04RZ461AY/6leVNxBVCKC2FtD
-         Syfzav51zspiPWi5zvoiHVhww/StEBY1WmMkTyRYWCjjtkMFyZfRzf/HVZ9Zcumygwoz
-         EwJCGvA/paOTO/CofZBqNPl6N78nhwTMKAQz2L4f0AnicxSs/jaLxjWoNJp39ATWItuL
-         jupA==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=LCR4yoPyKXUQ+V6Rzx8Vr1pGJBzG7ybCO5xmGhWVO2E=;
+        b=Hma1sjKpCAmCNDeQeafPYa2ae6jBDESB1PCm6wfy4m1d7M9+BWh8FVkywYWY7ykCiy
+         SzQx25lgeC+4duHJWx6KqUIh8QXTw8di5MeaGwQuHHn89Nhc7uYjdWvvsMbKeA7vFD83
+         eZ0ttxqv+O0UBv0Q1ELfjNP83to7CnSAWkh7s2C27oDB+u7jHIZRBxLZHGidOdsQf1JK
+         mEEo4/yiVKjxGyBlmRHpRnDqvkuHhNTxRoPqy1Zumzpfc60DAz3G+S+hPw5+FUChoT/q
+         bS0YqS6g/Diq0QYdhlCFXqUUyepH5ufSRHLX0WMtxLjOyn6wC8W9mPq32swU9Z657Mb6
+         aYdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ETtmj92dMxQ/nDAdyiV4y6n6dPMRnfeIUJGrUNEUib8=;
-        b=ROvyLhXQz2yh3/xhk8uFa476YV9IVv9ngaQfogXdWHqJkPQpdax1dcAV8SDBHUiJxb
-         08IpAg46Cu1VFaXFRxhr8OF9M2U9S82GdzoumhtkTfHJw+U3bW84RTsNEvHueIiHEbp5
-         5SbDl5c0ZOUn17/Se4nDmbHv0Y6/MHqA3z5uNdN894ZkfOvIANg1CyE1EuATFo0lXJxj
-         CGhwKx7E6a3XHzlrLiwiO1kBpMgS7ISNEgM3smQMUI5SspcBU2GxJo+AYNYkRd9Aa3Ik
-         8wadQahUl2LVXosll1lvTa5a808GngyDcUhm2eDP/6DnBVnI0HCiNQDXKrHm2pTccGtH
-         oTXg==
-X-Gm-Message-State: APjAAAWerRmpUXTK4Rer39PE1oF9M5uRqEda2PSA9XnstYPx/oVpKDQ3
-        5jRtEinlnNenhG6StciCezw=
-X-Google-Smtp-Source: APXvYqw94ejRRZ6gTfNBUySlYzSPB5npM08i5FiOQEro9XpE55diLSQ51nYy7td/jfmwrJUKAYG9uQ==
-X-Received: by 2002:aa7:8f3d:: with SMTP id y29mr2337488pfr.183.1580189772955;
-        Mon, 27 Jan 2020 21:36:12 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id z30sm18792569pfq.154.2020.01.27.21.36.11
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 27 Jan 2020 21:36:12 -0800 (PST)
-From:   qiwuchen55@gmail.com
-To:     vkoul@kernel.org, dan.j.williams@intel.com, allison@lohutok.net,
-        peter.ujfalusi@ti.com, kstewart@linuxfoundation.org
-Cc:     tglx@linutronix.de, wenwen@cs.uga.edu, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
-Subject: [PATCH] dma: ti: dma-crossbar: convert to devm_platform_ioremap_resource()
-Date:   Tue, 28 Jan 2020 13:35:46 +0800
-Message-Id: <1580189746-2864-1-git-send-email-qiwuchen55@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=LCR4yoPyKXUQ+V6Rzx8Vr1pGJBzG7ybCO5xmGhWVO2E=;
+        b=oQz+qiO82Y6KdiB0D2WgL6TLKRm4j0bwssukByvulJf4VCKRzJ1eLk5Ft55GssEj9n
+         yM0HKNSG+LgC2WvHYRVxALXXEH5wioj9rP6NDkPfpOXAwNmgftfQzr+WURUes1jwCCVg
+         qgV3mIS890CQwA44D9ZCHjyftOH1lnp8ZdzA2vv2/1AHiQyXIjAWcT5qn26cD9SWYL4x
+         sVzZAXhEnHkTYFm2hzlw5yar6ztSSsNxVwS5fbg6sAGYN4H6aS8iscQsyj5xiPmNt8aG
+         ygOYi61HTW5RUvqZ1L2UPaLSG7I/QuNWxmWRWrFRp9RUPblZRpwEsnINg3EUsvlGtEN/
+         RwLA==
+X-Gm-Message-State: APjAAAVUHd25BgoLx9oTqsRQNW1PbILarfOx3ZZVavzia60lwhgcq/bV
+        zqAq9I3hkAicTjWRayVHxT8OoA==
+X-Google-Smtp-Source: APXvYqwn3oHOOTfkm4bMswvjR/8+st1VKZNpzuQd0q1CmHzfURBt8o3+PL4pjZF1Mk5vBV26vMgvyQ==
+X-Received: by 2002:ae9:edc8:: with SMTP id c191mr20758894qkg.227.1580190511462;
+        Mon, 27 Jan 2020 21:48:31 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 8sm11519536qkm.92.2020.01.27.21.48.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 21:48:30 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page table helpers
+Date:   Tue, 28 Jan 2020 00:48:30 -0500
+Message-Id: <EE5B936C-121E-4322-A285-603D82D59B3A@lca.pw>
+References: <012158b7-a40e-050f-cd1b-d6ce7faf042f@arm.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <012158b7-a40e-050f-cd1b-d6ce7faf042f@arm.com>
+To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
 
-Use a new API devm_platform_ioremap_resource() to simplify code.
 
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
----
- drivers/dma/ti/dma-crossbar.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+> On Jan 27, 2020, at 11:58 PM, Anshuman Khandual <Anshuman.Khandual@arm.com=
+> wrote:
+>=20
+> As I had mentioned before, the test attempts to formalize page table helpe=
+r semantics
+> as expected from generic MM code paths and intend to catch deviations when=
+ enabled on
+> a given platform. How else should we test semantics errors otherwise ? The=
+re are past
+> examples of usefulness for this procedure on arm64 and on s390. I am wonde=
+ring how
+> else to prove the usefulness of a debug feature if these references are no=
+t enough.
 
-diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
-index f255056..4ba8fa5 100644
---- a/drivers/dma/ti/dma-crossbar.c
-+++ b/drivers/dma/ti/dma-crossbar.c
-@@ -133,7 +133,6 @@ static int ti_am335x_xbar_probe(struct platform_device *pdev)
- 	const struct of_device_id *match;
- 	struct device_node *dma_node;
- 	struct ti_am335x_xbar_data *xbar;
--	struct resource *res;
- 	void __iomem *iomem;
- 	int i, ret;
- 
-@@ -173,8 +172,7 @@ static int ti_am335x_xbar_probe(struct platform_device *pdev)
- 		xbar->xbar_events = TI_AM335X_XBAR_LINES;
- 	}
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	iomem = devm_ioremap_resource(&pdev->dev, res);
-+	iomem = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(iomem))
- 		return PTR_ERR(iomem);
- 
-@@ -323,7 +321,6 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
- 	struct device_node *dma_node;
- 	struct ti_dra7_xbar_data *xbar;
- 	struct property *prop;
--	struct resource *res;
- 	u32 safe_val;
- 	int sz;
- 	void __iomem *iomem;
-@@ -403,8 +400,7 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
- 		kfree(rsv_events);
- 	}
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	iomem = devm_ioremap_resource(&pdev->dev, res);
-+	iomem = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(iomem))
- 		return PTR_ERR(iomem);
- 
--- 
-1.9.1
+Not saying it will not be useful. As you mentioned it actually found a bug o=
+r two in the past. The problem is that there is always a cost to maintain so=
+mething like this, and nobody knew how things could be broken even for the i=
+solated code you mentioned in the future given how complicated the kernel co=
+de base is. I am not so positive that many developers would enable this debu=
+g feature and use it on a regular basis from the information you gave so far=
+.=20
 
+On the other hand, it might just be good at maintaining this thing out of tr=
+ee by yourself anyway, because if there isn=E2=80=99t going to be used by ma=
+ny developers, few people is going to contribute to this and even noticed wh=
+en it is broken. What=E2=80=99s the point of getting this merged apart from b=
+eing getting some meaningless credits?=
