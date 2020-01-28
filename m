@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25C4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8651BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A31205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 579CF24683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220290;
-	bh=Nvp3bUGtgP1P4W8Mlre5TyRP6RPYKSUv8nTLTNx+zXY=;
+	s=default; t=1580220294;
+	bh=ucy6aDnLkTe3c9JgK6Gvzan9sG52oKX0HFs/wQaWOqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u74UMHa4KSMducJEpAUNL9j6WfG3EOqgCuI1L4bPulrydxUcvr++9WRsOleKj65E6
-	 U4dKYP+V7kwu5Fh31f8P1zTbKTVid03TQ1J4k72/vw+VmQ5R0F9EziWFyjTo4K2+EM
-	 KYZEbxIZbPfPWyGcLXFPIPgzxbD+oqkDxWtIPweI=
+	b=iOKXrANttjSGko5Cre62/wjTzecmXtrrf8d0O2mT8udjb+a1bIHdfFuVg3Fj6VV4Z
+	 rGO8smjRJMz2+++EIBL0YNMyJgKc1ckXDcyOOjKwfvopVqSuwgmNiuFD5cNLhS/8la
+	 m3OPiOvtcW+caiBMBN9sjBBxsHwmxRiNTg4NZBQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgA1OEt (ORCPT
+        id S1727566AbgA1OEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:04:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52024 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:04:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727244AbgA1OEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:04:43 -0500
+        id S1728150AbgA1OEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:04:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC5ED24683;
-        Tue, 28 Jan 2020 14:04:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 112DB2468E;
+        Tue, 28 Jan 2020 14:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220282;
-        bh=Nvp3bUGtgP1P4W8Mlre5TyRP6RPYKSUv8nTLTNx+zXY=;
+        s=default; t=1580220287;
+        bh=ucy6aDnLkTe3c9JgK6Gvzan9sG52oKX0HFs/wQaWOqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ku1QJO0hqIkmwGWY8Bc5xvZUJoA54PWBqZEBBMP0WU6GG0fiV+WPYe7DfAkP3Odkk
-         oSx04sDczWZsaqmjek+BP+veiKHfyeTzQuIlpKt6SKrxa2marPgAITT50qEQifjUTW
-         Jra7HBSGo+JfEaMs75yYKPbc9SrmB5PcOdMuMYck=
+        b=NivYduP2uvETLQXv2FfcFioFefAZjLfJRTaSuPey77T4S6eHeL4W3+sN+wpMsL8X0
+         y80A5YXxb5PRNG0sy6qwzjjTn1XO9KEf7jtIqZrBCv9NbcDv1B3KZCGy5V0/B7U9Ve
+         Dc356/A59WSo/cUGpdr9bvaHUaxLLHy3xDJ5UlPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
         Finn Thain <fthain@telegraphics.com.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 090/104] net/sonic: Fix interface error stats collection
-Date:   Tue, 28 Jan 2020 15:00:51 +0100
-Message-Id: <20200128135829.519792131@linuxfoundation.org>
+Subject: [PATCH 5.4 092/104] net/sonic: Avoid needless receive descriptor EOL flag updates
+Date:   Tue, 28 Jan 2020 15:00:53 +0100
+Message-Id: <20200128135829.747224815@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -62,105 +62,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 427db97df1ee721c20bdc9a66db8a9e1da719855 upstream.
+commit eaabfd19b2c787bbe88dc32424b9a43d67293422 upstream.
 
-The tx_aborted_errors statistic should count packets flagged with EXD,
-EXC, FU, or BCM bits because those bits denote an aborted transmission.
-That corresponds to the bitmask 0x0446, not 0x0642. Use macros for these
-constants to avoid mistakes. Better to leave out FIFO Underruns (FU) as
-there's a separate counter for that purpose.
+The while loop in sonic_rx() traverses the rx descriptor ring. It stops
+when it reaches a descriptor that the SONIC has not used. Each iteration
+advances the EOL flag so the SONIC can keep using more descriptors.
+Therefore, the while loop has no definite termination condition.
 
-Don't lump all these errors in with the general tx_errors counter as
-that's used for tx timeout events.
+The algorithm described in the National Semiconductor literature is quite
+different. It consumes descriptors up to the one with its EOL flag set
+(which will also have its "in use" flag set). All freed descriptors are
+then returned to the ring at once, by adjusting the EOL flags (and link
+pointers).
 
-On the rx side, don't count RDE and RBAE interrupts as dropped packets.
-These interrupts don't indicate a lost packet, just a lack of resources.
-When a lack of resources results in a lost packet, this gets reported
-in the rx_missed_errors counter (along with RFO events).
+Adopt the algorithm from datasheet as it's simpler, terminates quickly
+and avoids a lot of pointless descriptor EOL flag changes.
 
-Don't double-count rx_frame_errors and rx_crc_errors.
-
-Don't use the general rx_errors counter for events that already have
-special counters.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/natsemi/sonic.c |   21 +++++++--------------
- drivers/net/ethernet/natsemi/sonic.h |    1 +
- 2 files changed, 8 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
 --- a/drivers/net/ethernet/natsemi/sonic.c
 +++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -330,18 +330,19 @@ static irqreturn_t sonic_interrupt(int i
- 				if ((td_status = sonic_tda_get(dev, entry, SONIC_TD_STATUS)) == 0)
- 					break;
+@@ -436,6 +436,7 @@ static void sonic_rx(struct net_device *
+ 	struct sonic_local *lp = netdev_priv(dev);
+ 	int status;
+ 	int entry = lp->cur_rx;
++	int prev_entry = lp->eol_rx;
  
--				if (td_status & 0x0001) {
-+				if (td_status & SONIC_TCR_PTX) {
- 					lp->stats.tx_packets++;
- 					lp->stats.tx_bytes += sonic_tda_get(dev, entry, SONIC_TD_PKTSIZE);
- 				} else {
--					lp->stats.tx_errors++;
--					if (td_status & 0x0642)
-+					if (td_status & (SONIC_TCR_EXD |
-+					    SONIC_TCR_EXC | SONIC_TCR_BCM))
- 						lp->stats.tx_aborted_errors++;
--					if (td_status & 0x0180)
-+					if (td_status &
-+					    (SONIC_TCR_NCRS | SONIC_TCR_CRLS))
- 						lp->stats.tx_carrier_errors++;
--					if (td_status & 0x0020)
-+					if (td_status & SONIC_TCR_OWC)
- 						lp->stats.tx_window_errors++;
--					if (td_status & 0x0004)
-+					if (td_status & SONIC_TCR_FU)
- 						lp->stats.tx_fifo_errors++;
- 				}
- 
-@@ -371,17 +372,14 @@ static irqreturn_t sonic_interrupt(int i
- 		if (status & SONIC_INT_RFO) {
- 			netif_dbg(lp, rx_err, dev, "%s: rx fifo overrun\n",
- 				  __func__);
--			lp->stats.rx_fifo_errors++;
- 		}
- 		if (status & SONIC_INT_RDE) {
- 			netif_dbg(lp, rx_err, dev, "%s: rx descriptors exhausted\n",
- 				  __func__);
--			lp->stats.rx_dropped++;
- 		}
- 		if (status & SONIC_INT_RBAE) {
- 			netif_dbg(lp, rx_err, dev, "%s: rx buffer area exceeded\n",
- 				  __func__);
--			lp->stats.rx_dropped++;
- 		}
- 
- 		/* counter overruns; all counters are 16bit wide */
-@@ -473,11 +471,6 @@ static void sonic_rx(struct net_device *
- 			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_H, bufadr_h);
- 		} else {
- 			/* This should only happen, if we enable accepting broken packets. */
--			lp->stats.rx_errors++;
--			if (status & SONIC_RCR_FAER)
--				lp->stats.rx_frame_errors++;
--			if (status & SONIC_RCR_CRCR)
--				lp->stats.rx_crc_errors++;
- 		}
- 		if (status & SONIC_RCR_LPKT) {
- 			/*
---- a/drivers/net/ethernet/natsemi/sonic.h
-+++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -175,6 +175,7 @@
- #define SONIC_TCR_NCRS          0x0100
- #define SONIC_TCR_CRLS          0x0080
- #define SONIC_TCR_EXC           0x0040
-+#define SONIC_TCR_OWC           0x0020
- #define SONIC_TCR_PMB           0x0008
- #define SONIC_TCR_FU            0x0004
- #define SONIC_TCR_BCM           0x0002
+ 	while (sonic_rda_get(dev, entry, SONIC_RD_IN_USE) == 0) {
+ 		struct sk_buff *used_skb;
+@@ -516,13 +517,21 @@ static void sonic_rx(struct net_device *
+ 		/*
+ 		 * give back the descriptor
+ 		 */
+-		sonic_rda_put(dev, entry, SONIC_RD_LINK,
+-			sonic_rda_get(dev, entry, SONIC_RD_LINK) | SONIC_EOL);
+ 		sonic_rda_put(dev, entry, SONIC_RD_IN_USE, 1);
+-		sonic_rda_put(dev, lp->eol_rx, SONIC_RD_LINK,
+-			sonic_rda_get(dev, lp->eol_rx, SONIC_RD_LINK) & ~SONIC_EOL);
+-		lp->eol_rx = entry;
+-		lp->cur_rx = entry = (entry + 1) & SONIC_RDS_MASK;
++
++		prev_entry = entry;
++		entry = (entry + 1) & SONIC_RDS_MASK;
++	}
++
++	lp->cur_rx = entry;
++
++	if (prev_entry != lp->eol_rx) {
++		/* Advance the EOL flag to put descriptors back into service */
++		sonic_rda_put(dev, prev_entry, SONIC_RD_LINK, SONIC_EOL |
++			      sonic_rda_get(dev, prev_entry, SONIC_RD_LINK));
++		sonic_rda_put(dev, lp->eol_rx, SONIC_RD_LINK, ~SONIC_EOL &
++			      sonic_rda_get(dev, lp->eol_rx, SONIC_RD_LINK));
++		lp->eol_rx = prev_entry;
+ 	}
+ 	/*
+ 	 * If any worth-while packets have been received, netif_rx()
 
 
