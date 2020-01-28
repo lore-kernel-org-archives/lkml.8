@@ -2,205 +2,147 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B908C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76F0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02BB124687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA0C24684
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:20:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="HXFaUv5v"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xBh/qDSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725974AbgA1IUd (ORCPT
+        id S1726027AbgA1IUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 03:20:33 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:43514 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725848AbgA1IUd (ORCPT
+        Tue, 28 Jan 2020 03:20:41 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40426 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgA1IUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 03:20:33 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S8CWBu018839;
-        Tue, 28 Jan 2020 09:20:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=7sMqxWd5lXQvkypn4E66JYHlpZmXuZ2B+QHR4mmj7Pk=;
- b=HXFaUv5vV7USw0zoakjnap62XQMcoyu7oaPnAodi0BgwVr9IIrBhtSphazQS5y1ZFKKK
- 469m2LIlQoJdqXgHFBL43k/kpyK1YWH+O/GAIWtnGmXkDktHJ0wkBncQ+5U/Z3TPeAya
- +L37FuUuSHDDO3ibuznp010X8RRGIC3tI1qD4NfubS7tdJpyRbO6vbRnHRFj2uFMoche
- fM64xCF/8ShJGoly3PAtRY34MysEGw1pBebJ+lntcFFCDRsUBG0bcbpSZOQfZgluqO2C
- fGYqCJ6eA4iKzlo9hZLHFw2mzQggwT5fXr5SKHtdj1FfmFx/kC/i+FPLdT+Irp9/pxaL oA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrdekcmhk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 09:20:17 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0EEEA100034;
-        Tue, 28 Jan 2020 09:20:16 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA4922116D8;
-        Tue, 28 Jan 2020 09:20:15 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 28 Jan 2020 09:20:15
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <l.stach@pengutronix.de>, <linux+etnaviv@armlinux.org.uk>,
-        <christian.gmeiner@gmail.com>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <etnaviv@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <philippe.cornu@st.com>, <pierre-yves.mordret@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2] dt-bindings: display: Convert etnaviv to json-schema
-Date:   Tue, 28 Jan 2020 09:20:13 +0100
-Message-ID: <20200128082013.15951-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Tue, 28 Jan 2020 03:20:41 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00S8KNjt028638;
+        Tue, 28 Jan 2020 02:20:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580199623;
+        bh=8puorSS2DhVQd8TswvusYCRWiQHEdCmIblxq5NzEfKY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xBh/qDShAxxjP942ORw04g8URKhIt3mOedUwGR10rZangDQIWSIxfKgKHsUeiTtNL
+         s2wC1w79g1NmvLGND9S0f+qydHhXamX6gRMx+E88rXwn1BdWZ9eMKk55ft7xNuPUi2
+         xJJe6jsgZHPAxy3Ag3cxjrVWW9w+e4D4bz8Mbo0A=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00S8KN84033053
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jan 2020 02:20:23 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 28
+ Jan 2020 02:20:23 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 28 Jan 2020 02:20:23 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00S8KKnV104334;
+        Tue, 28 Jan 2020 02:20:21 -0600
+Subject: Re: [PATCH] arm64: defconfig: Enable Texas Instruments UDMA driver
+To:     Olof Johansson <olof@lixom.net>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Vinod Koul <vkoul@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>, SoC Team <soc@kernel.org>
+References: <20200124092359.12429-1-peter.ujfalusi@ti.com>
+ <20200124200811.ytgs66cg5qpugi5c@localhost>
+ <12f40648-fec6-9179-1f62-0a648996ed20@ti.com>
+ <CAOesGMiFw2V6fdbGCOfgsVq+WK-4ijdzivDdX3hbS2E=bO4zkg@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <a81fa6b0-811c-82af-4cf6-e2f4ac3c0ded@ti.com>
+Date:   Tue, 28 Jan 2020 10:21:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
+In-Reply-To: <CAOesGMiFw2V6fdbGCOfgsVq+WK-4ijdzivDdX3hbS2E=bO4zkg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert etnaviv bindings to yaml format.
+Hi Olof,
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../bindings/display/etnaviv/etnaviv-drm.txt       | 36 -----------
- .../devicetree/bindings/gpu/vivante,gc.yaml        | 72 ++++++++++++++++++++++
- 2 files changed, 72 insertions(+), 36 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/vivante,gc.yaml
+On 27/01/2020 17.30, Olof Johansson wrote:
+>>> I also see that this is statically enabling this driver -- we try to keep as
+>>> many drivers as possible as modules to avoid the static kernel from growing too
+>>> large. Would that be a suitable approach here, or is the driver needed to reach
+>>> rootfs for further module loading?
+>>
+>> We would need built in DMA for nfs rootfs, SD/MMC has it's own buit-in
+>> ADMA. We do not have network drivers upstream as they depend on the DMA.
+> 
+> Ok, so that can either be turned into a ramdisk argument, or into a
+> "we really want to enable non-ramdisk rootfs boots on this hardware
+> because it's a common use case".
 
-diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-deleted file mode 100644
-index 8def11b16a24..000000000000
---- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--Vivante GPU core devices
--========================
--
--Required properties:
--- compatible: Should be "vivante,gc"
--  A more specific compatible is not needed, as the cores contain chip
--  identification registers at fixed locations, which provide all the
--  necessary information to the driver.
--- reg: should be register base and length as documented in the
--  datasheet
--- interrupts: Should contain the cores interrupt line
--- clocks: should contain one clock for entry in clock-names
--  see Documentation/devicetree/bindings/clock/clock-bindings.txt
--- clock-names:
--   - "bus":    AXI/master interface clock
--   - "reg":    AHB/slave interface clock
--               (only required if GPU can gate slave interface independently)
--   - "core":   GPU core clock
--   - "shader": Shader clock (only required if GPU has feature PIPE_3D)
--
--Optional properties:
--- power-domains: a power domain consumer specifier according to
--  Documentation/devicetree/bindings/power/power_domain.txt
--
--example:
--
--gpu_3d: gpu@130000 {
--	compatible = "vivante,gc";
--	reg = <0x00130000 0x4000>;
--	interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
--	         <&clks IMX6QDL_CLK_GPU3D_CORE>,
--	         <&clks IMX6QDL_CLK_GPU3D_SHADER>;
--	clock-names = "bus", "core", "shader";
--	power-domains = <&gpc 1>;
--};
-diff --git a/Documentation/devicetree/bindings/gpu/vivante,gc.yaml b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-new file mode 100644
-index 000000000000..c4f549c0d750
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/vivante,gc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Vivante GPU Bindings
-+
-+description: Vivante GPU core devices
-+
-+maintainers:
-+  -  Lucas Stach <l.stach@pengutronix.de>
-+
-+properties:
-+  compatible:
-+    const: vivante,gc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: AXI/master interface clock
-+      - description: GPU core clock
-+      - description: Shader clock (only required if GPU has feature PIPE_3D)
-+      - description: AHB/slave interface clock (only required if GPU can gate slave interface independently)
-+    minItems: 2
-+    maxItems: 4
-+
-+  clock-names:
-+    items:
-+      - const: bus
-+      - const: core
-+      - const: shader
-+      - const: reg
-+    minItems: 2
-+    maxItems: 4
-+
-+  resets:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6qdl-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    gpu@130000 {
-+      compatible = "vivante,gc";
-+      reg = <0x00130000 0x4000>;
-+      interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
-+               <&clks IMX6QDL_CLK_GPU3D_CORE>,
-+               <&clks IMX6QDL_CLK_GPU3D_SHADER>;
-+      clock-names = "bus", "core", "shader";
-+      power-domains = <&gpc 1>;
-+    };
-+
-+...
--- 
-2.15.0
+SD/MMC does not need slave DMA, it is self containing with it's own
+built-in DMA.
+I'm not sure if it is enabled in defconfig. It is not enabled at all in
+defconfig atm.
 
+Normally I would use nfs rootfs, but we don't have network drivers
+upstream for K3 platform.
+
+I think having the UDMA stack as module should be fine when I have the
+dependencies in to be able to build them as modules.
+
+> I find it useful to challenge most of the =y drivers to make people
+> think about it, and at some point we'll enough overhead of cruft in
+> the static superset kernel that defconfig today is used for such that
+> we need to prune more =y -> =m,
+
+Sure, I fully agree on this, we should have non boot needed drivers as
+modules.
+
+> but this particular driver is probably
+> OK (it's also not large).
+
+Well, it depends how you look at it ;)
+
+UDMA stack is not enabled in defconfig (w/o this patch):
+$ size vmlinux
+text      data     bss     dec       hex      filename
+17853717  9221872  469288  27544877  1a44d2d  vmlinux
+
+UDMA stack is enabled in defconfig (w this patch):
+$ size vmlinux
+text      data     bss     dec       hex      filename
+17890970  9237544  469288  27597802  1a51bea  vmlinux
+
+It would be nice for other driver to enable the DMA if it is acceptable
+to have it built in for start and when I can build it as module we can
+switch it to module?
+
+>> Imho module would be fine for the DMA stack, but neither ringacc or the
+>> UDMA driver can be built as module atm until the following patches got
+>> merged:
+>> https://lore.kernel.org/lkml/20200122104723.16955-1-peter.ujfalusi@ti.com/
+>> https://lore.kernel.org/lkml/20200122104031.15733-1-peter.ujfalusi@ti.com/
+>>
+>> I have the patches to add back module support, but waiting on these
+>> currently.
+> 
+> -Olof
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
