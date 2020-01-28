@@ -2,98 +2,119 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29737C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C025EC35246
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E996424686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:26:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="snQkQloV"
+	by mail.kernel.org (Postfix) with ESMTP id 97FB624684
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgA1J0B (ORCPT
+        id S1726072AbgA1J2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:26:01 -0500
-Received: from mail-pf1-f182.google.com ([209.85.210.182]:40427 "EHLO
-        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgA1J0A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:26:00 -0500
-Received: by mail-pf1-f182.google.com with SMTP id q8so6320295pfh.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 01:26:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pI2FaxZxfMgvAjpHH70HxA2BLNDvcKHeNnWfplF3/f4=;
-        b=snQkQloVebSLjGU/YXBhGzPG5LnFdLUrZ6d/buzRrvwsfGMxMwMmSD1FDBzkUA5uL3
-         12cAt8iMU8JcINxWjqmTOZz3I1kP69JK5jNQbhQiwEBs0W0b+IzrvbjTYA3L2WqFonYP
-         d5b+ENxEMl99gSSArop04JBGAQ7HdPIG8qPkcLSWeEbP0zwMNBcOcUNeKHSWZlfE95tQ
-         I6ThcPXrE91ZXYJvO/xIipkI/S+2nwaPUr1FpL4zizFVO4gpgdiN7iluy33ZZszqdRn7
-         yq0vQI11qnAbjTu8+9+U+SLl48MXX39f3TgagSuQTsaE526GBtQUXHcoLGIsTZe3nt6D
-         rrAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pI2FaxZxfMgvAjpHH70HxA2BLNDvcKHeNnWfplF3/f4=;
-        b=qAMaaMHCJ1uw5NU8m93AYAGl4LZkbYcxqzgYrC6wUAiZwcDgWK5vGFe57EC0AEOK2q
-         vDwRxI1rXdoQ0VTVf/nn6B9IYLCrOK4Cr9qgvFC19JKihalFcPBH6gEGvZzT0DIf3AW1
-         eeG1DrDa62xBpAhges8d/GbF6f9cp1ncW0IWpJKeQA+OUYvu6RP0IJIBG9uBl71fXaPX
-         NAS4cUmfHsgj6k+3C4A/FbwdiSK3sdgBlKH4LtxqX3nzBj84secK+ux6gcEuzS4LwxOP
-         jSZluqxQsu0gthUOTYr81HsVMjpZ1MSD/Yc8bMwclskJ/8wl4Xgdmv6AsdAKsbPbKTuv
-         8BDQ==
-X-Gm-Message-State: APjAAAXC8fetz58qPKQzSs6tsrD7GoMY7lXXn/ISw5g7H/4TfRPHhexY
-        0VfLmlBGFpvthvMJCTg/v3Q=
-X-Google-Smtp-Source: APXvYqziQH9rbicB1k5YzkLoq9jbUTfkV1rDV0gL67buxnZulnw6F/JE8K5asv7JWcQL4BX+WI/HAg==
-X-Received: by 2002:aa7:8007:: with SMTP id j7mr3013905pfi.71.1580203559991;
-        Tue, 28 Jan 2020 01:25:59 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id h126sm19024978pfe.19.2020.01.28.01.25.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 01:25:59 -0800 (PST)
-Date:   Tue, 28 Jan 2020 18:25:57 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Tue, 28 Jan 2020 04:28:13 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33168 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbgA1J2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 04:28:13 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3B8B7ADA1;
+        Tue, 28 Jan 2020 09:28:10 +0000 (UTC)
+Date:   Tue, 28 Jan 2020 10:28:07 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] console: Avoid positive return code from
- unregister_console()
-Message-ID: <20200128092557.GD115889@google.com>
-References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
- <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
- <20200128044332.GA115889@google.com>
- <20200128092235.GX32742@smile.fi.intel.com>
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+In-Reply-To: <20200122214239.ivnebi7hiabi5tbs@treble>
+Message-ID: <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
+References: <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com> <20191015153120.GA21580@linux-8ccs> <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com> <20191015182705.1aeec284@gandalf.local.home> <20191016074217.GL2328@hirez.programming.kicks-ass.net>
+ <20191021150549.bitgqifqk2tbd3aj@treble> <20200120165039.6hohicj5o52gdghu@treble> <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz> <20200121161045.dhihqibnpyrk2lsu@treble> <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
+ <20200122214239.ivnebi7hiabi5tbs@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128092235.GX32742@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/28 11:22), Andy Shevchenko wrote:
-[..]
-> > Console is not on the console_drivers list. Why does !ENABLED case
-> > require extra handling?
-> 
-> It's mirroring (to some extend) the register_console() abort conditions.
-> 
-> > What about the case when console is ENABLED
-> > but still not registered?
-> 
-> What about when console is ENABLED and we call register_console()?
+On Wed, 22 Jan 2020, Josh Poimboeuf wrote:
 
-I think that ENABLED bit makes sense only when console is on the list.
-Otherwise, I suspect, nothing will be able to access the console.
+> On Wed, Jan 22, 2020 at 11:09:56AM +0100, Miroslav Benes wrote:
+> > 
+> > > > > At this point, I only see downsides of -flive-patching, at least until
+> > > > > we actually have real upstream code which needs it.
+> > > > 
+> > > > Can you explain this? The option makes GCC to avoid optimizations which 
+> > > > are difficult to detect and would make live patching unsafe. I consider it 
+> > > > useful as it is, so if you shared the other downsides and what you meant 
+> > > > by real upstream code, we could discuss it.
+> > > 
+> > > Only SLES needs it right?  Why inflict it on other livepatch users?  By
+> > > "real upstream code" I mean there's no (documented) way to create live
+> > > patches using the method which relies on this flag.  So I don't see any
+> > > upstream benefits for having it enabled.
+> > 
+> > I'd put it differently. SLES and upstream need it, RHEL does not need it. 
+> > Or anyone using kpatch-build.
+> 
+> I'm confused about why you think upstream needs it.
+> 
+> Is all the tooling available somewhere?  Is there documentation
+> available which describes how to build patches using that method from
+> start to finish?  Are there actual users other than SUSE?
+> 
+> BTW, kpatch-build has a *lot* of users other than RHEL.  All its tooling
+> and documentation are available on Github.
+> 
+> > It is perfectly fine to prepare live patches just from the source code
+> > using upstream live patching infrastructure. 
+> 
+> Do you mean the dangerous method used by the livepatch sample code which
+> completely ignores interprocedural optimizations?  I wouldn't call that
+> perfectly fine.
+> 
+> > After all, SLES is nothing else than upstream here. We were creating live 
+> > patches manually for quite a long time and only recently we have been 
+> > using Nicolai's klp-ccp automation (https://github.com/SUSE/klp-ccp).
+> > 
+> > So, everyone using upstream directly relies on the flag, which seems to be 
+> > a clear benefit to me. Reverting the patch would be a step back.
+> 
+> Who exactly is "everyone using upstream"?
+> 
+> >From what I can tell, kpatch-build is the only known way (to those
+> outside of SUSE) to make safe patches for an upstream kernel.  And it
+> doesn't need this flag and the problems associated with it: performance,
+> LTO incompatibility, clang incompatibility (I think?), the GCC dead code
+> issue.
 
-	-ss
+I don't think we have something special at SUSE not generally available...
+
+...and I don't think it is really important to discuss that and replying 
+to the above, because there is a legitimate use case which relies on the 
+flag. We decided to support different use cases right at the beginning.
+
+I understand it currently complicates things for objtool, but objtool is 
+sensitive to GCC code generation by definition. "Issues" appear with every 
+new GCC version. I see no difference here and luckily it is not so 
+difficult to fix it.
+
+I am happy to help with acting on those objtool warning reports you 
+mentioned in the other email. Just Cc me where appropriate. We will take a 
+look.
+
+Regards
+Miroslav
