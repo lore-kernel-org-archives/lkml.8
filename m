@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 786DCC35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6036C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8BE207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7AA207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222100;
-	bh=xAXZtDYlOlILeGtjxh9GRlm/T1K2DnWjZ7gl8/6GPJw=;
+	s=default; t=1580222104;
+	bh=CBaszSDNlm5NoSx/zARR8prZi4DXJ4Y5llwvvqesr1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JNh/5gz61GTd+6F1fRF43GCwPixLPg/xAE1JKuoSjEwQ7ErWpvDs9HwigTprA8AHJ
-	 9J9erJWYwdLtiY3A8y+rxhgqphfagYWF50e/dFKdORxgT9xEtQ/bx60syH6mpEQ3ZX
-	 Gaqf1EmStQO5qmGbYqw8C5gWYqwD5OkxA6l+IdPw=
+	b=i8jIwyJwzMq/yRlQ+HLwfi4obatP5Fa62z17ZK17jDert73/iRLczOWZotQtPs2/c
+	 vChGe/wU3W2YzkgGP4UVdGjAm85tOl85VJ3QSCGHWe02HgV6coKd/EvnE3EFtPvzkE
+	 Ren0+oZxQCrquZhmralTkx038rw7WT3q1JZxj2UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbgA1OXc (ORCPT
+        id S1731078AbgA1OXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:23:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49608 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:23:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732231AbgA1OX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:23:29 -0500
+        id S1731005AbgA1OXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:23:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2DF824690;
-        Tue, 28 Jan 2020 14:23:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D690521739;
+        Tue, 28 Jan 2020 14:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221408;
-        bh=xAXZtDYlOlILeGtjxh9GRlm/T1K2DnWjZ7gl8/6GPJw=;
+        s=default; t=1580221398;
+        bh=CBaszSDNlm5NoSx/zARR8prZi4DXJ4Y5llwvvqesr1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZbtC8NHwMLYnZ+8Mtfp2xBGkPIrDozIb4yqBsg9Oku6aOqKm/ygdOV0eTshH3BeWF
-         ir0qZl0pKsuBoKrCbLtYFbtnYmImyIyc9JLJGTUNNWU3AkSYL6HnPpwB0vRfKzOSgw
-         gFl6mv7IeItj6zI1eOy7uZAJMZ8wG0vLIeb41Fyw=
+        b=Cp8JPPY/oQGF4HleYDubjK5g8RTJSxDg6NLrCiEF4LS12vDZ8r0i8gQVik74Ix2/k
+         /++iN5wrLYZMheD9cmCaniE/RD85K+cMeApGf9f0IPwTDQW7U1WJ1qvzAz8R60XmOq
+         uPyZ8ZRwOcd+GQPu6OVuj04tvJqxcVWKiul5VkFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 212/271] llc: fix sk_buff refcounting in llc_conn_state_process()
-Date:   Tue, 28 Jan 2020 15:06:01 +0100
-Message-Id: <20200128135908.310315429@linuxfoundation.org>
+Subject: [PATCH 4.9 208/271] nvme: retain split access workaround for capability reads
+Date:   Tue, 28 Jan 2020 15:05:57 +0100
+Message-Id: <20200128135908.029090090@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,123 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit 36453c852816f19947ca482a595dffdd2efa4965 ]
+[ Upstream commit 3a8ecc935efabdad106b5e06d07b150c394b4465 ]
 
-If llc_conn_state_process() sees that llc_conn_service() put the skb on
-a list, it will drop one fewer references to it.  This is wrong because
-the current behavior is that llc_conn_service() never consumes a
-reference to the skb.
+Commit 7fd8930f26be4
 
-The code also makes the number of skb references being dropped
-conditional on which of ind_prim and cfm_prim are nonzero, yet neither
-of these affects how many references are *acquired*.  So there is extra
-code that tries to fix this up by sometimes taking another reference.
+  "nvme: add a common helper to read Identify Controller data"
 
-Remove the unnecessary/broken refcounting logic and instead just add an
-skb_get() before the only two places where an extra reference is
-actually consumed.
+has re-introduced an issue that we have attempted to work around in the
+past, in commit a310acd7a7ea ("NVMe: use split lo_hi_{read,write}q").
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+The problem is that some PCIe NVMe controllers do not implement 64-bit
+outbound accesses correctly, which is why the commit above switched
+to using lo_hi_[read|write]q for all 64-bit BAR accesses occuring in
+the code.
+
+In the mean time, the NVMe subsystem has been refactored, and now calls
+into the PCIe support layer for NVMe via a .reg_read64() method, which
+fails to use lo_hi_readq(), and thus reintroduces the problem that the
+workaround above aimed to address.
+
+Given that, at the moment, .reg_read64() is only used to read the
+capability register [which is known to tolerate split reads], let's
+switch .reg_read64() to lo_hi_readq() as well.
+
+This fixes a boot issue on some ARM boxes with NVMe behind a Synopsys
+DesignWare PCIe host controller.
+
+Fixes: 7fd8930f26be4 ("nvme: add a common helper to read Identify Controller data")
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/llc/llc_conn.c | 33 ++++++---------------------------
- 1 file changed, 6 insertions(+), 27 deletions(-)
+ drivers/nvme/host/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
-index 2689e95471dc4..1bdbd134bd7a8 100644
---- a/net/llc/llc_conn.c
-+++ b/net/llc/llc_conn.c
-@@ -64,12 +64,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	struct llc_sock *llc = llc_sk(skb->sk);
- 	struct llc_conn_state_ev *ev = llc_conn_ev(skb);
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 1ac4cec5f4f7c..e2bce9385eda6 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1863,7 +1863,7 @@ static int nvme_pci_reg_write32(struct nvme_ctrl *ctrl, u32 off, u32 val)
  
--	/*
--	 * We have to hold the skb, because llc_conn_service will kfree it in
--	 * the sending path and we need to look at the skb->cb, where we encode
--	 * llc_conn_state_ev.
--	 */
--	skb_get(skb);
- 	ev->ind_prim = ev->cfm_prim = 0;
- 	/*
- 	 * Send event to state machine
-@@ -77,21 +71,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	rc = llc_conn_service(skb->sk, skb);
- 	if (unlikely(rc != 0)) {
- 		printk(KERN_ERR "%s: llc_conn_service failed\n", __func__);
--		goto out_kfree_skb;
--	}
--
--	if (unlikely(!ev->ind_prim && !ev->cfm_prim)) {
--		/* indicate or confirm not required */
--		if (!skb->next)
--			goto out_kfree_skb;
- 		goto out_skb_put;
- 	}
+ static int nvme_pci_reg_read64(struct nvme_ctrl *ctrl, u32 off, u64 *val)
+ {
+-	*val = readq(to_nvme_dev(ctrl)->bar + off);
++	*val = lo_hi_readq(to_nvme_dev(ctrl)->bar + off);
+ 	return 0;
+ }
  
--	if (unlikely(ev->ind_prim && ev->cfm_prim)) /* Paranoia */
--		skb_get(skb);
--
- 	switch (ev->ind_prim) {
- 	case LLC_DATA_PRIM:
-+		skb_get(skb);
- 		llc_save_primitive(sk, skb, LLC_DATA_PRIM);
- 		if (unlikely(sock_queue_rcv_skb(sk, skb))) {
- 			/*
-@@ -108,6 +93,7 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		 * skb->sk pointing to the newly created struct sock in
- 		 * llc_conn_handler. -acme
- 		 */
-+		skb_get(skb);
- 		skb_queue_tail(&sk->sk_receive_queue, skb);
- 		sk->sk_state_change(sk);
- 		break;
-@@ -123,7 +109,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 				sk->sk_state_change(sk);
- 			}
- 		}
--		kfree_skb(skb);
- 		sock_put(sk);
- 		break;
- 	case LLC_RESET_PRIM:
-@@ -132,14 +117,11 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		 * RESET is not being notified to upper layers for now
- 		 */
- 		printk(KERN_INFO "%s: received a reset ind!\n", __func__);
--		kfree_skb(skb);
- 		break;
- 	default:
--		if (ev->ind_prim) {
-+		if (ev->ind_prim)
- 			printk(KERN_INFO "%s: received unknown %d prim!\n",
- 				__func__, ev->ind_prim);
--			kfree_skb(skb);
--		}
- 		/* No indication */
- 		break;
- 	}
-@@ -181,15 +163,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		printk(KERN_INFO "%s: received a reset conf!\n", __func__);
- 		break;
- 	default:
--		if (ev->cfm_prim) {
-+		if (ev->cfm_prim)
- 			printk(KERN_INFO "%s: received unknown %d prim!\n",
- 					__func__, ev->cfm_prim);
--			break;
--		}
--		goto out_skb_put; /* No confirmation */
-+		/* No confirmation */
-+		break;
- 	}
--out_kfree_skb:
--	kfree_skb(skb);
- out_skb_put:
- 	kfree_skb(skb);
- 	return rc;
 -- 
 2.20.1
 
