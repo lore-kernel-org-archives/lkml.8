@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0001CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5733CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAAC024683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2122468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220280;
-	bh=mGJZeLJHhubC4r9HA3jWOxvIkBc2ESlia8YEN8x+d50=;
+	s=default; t=1580220283;
+	bh=QcOGFUpY3hWY8zDwR2VWP52YZ7ia1a6l2UUSsYDmnYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iThJdlsUBNWwA/epPygrZ8QK8Dp/AYqg4Cz0mNFGD65jLCbauVRuRFT8B6A9TPV+H
-	 v5fLlNgELTlF1SCM90NrLCvj7qpwpxVelha1pFBm50LsrxuwaBLnzR0oaZGB1oA4kR
-	 WExC+8gmr5mb5wkPkeWT755z8xRqy7WsPXQbi3lc=
+	b=JoFxv1mhqGMj7CsgV97Ad0ipYwDja5ZPduaos4eifeBDZ2ChprkZ5/h6W8s9J+jwZ
+	 MBJ3EI64ZifmayreGfUqgvDO/vbWD/koIVQn+8JU0zpAygaEPjx1/PHj66Y+LMOYG5
+	 /g7To8+dcDElYNb7md/0So5U7KQS23kEYelf15ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgA1OEk (ORCPT
+        id S1728142AbgA1OEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:04:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51780 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:04:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728106AbgA1OEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:04:32 -0500
+        id S1728112AbgA1OEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:04:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF2F42468F;
-        Tue, 28 Jan 2020 14:04:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5851F205F4;
+        Tue, 28 Jan 2020 14:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220272;
-        bh=mGJZeLJHhubC4r9HA3jWOxvIkBc2ESlia8YEN8x+d50=;
+        s=default; t=1580220274;
+        bh=QcOGFUpY3hWY8zDwR2VWP52YZ7ia1a6l2UUSsYDmnYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSgK8HDqr+++kXNDCouzUB9snUiy96DOXbHPnslOiJsOH2DgmeOeIbSeyGqYNc1qN
-         IJpwR74gT2EaIVWBQAoWLP+89BdMq+boJcchTbvzeyw9YJ6UgUxXuDl5G1PIVmllJR
-         VaF+HQAetdpm++Lj+37NyJbn9Ne1UP2Zyo5Mj8x4=
+        b=jmvr4q/1N0R8PsdATDsdRMAY1O7jXZTqNUAtnzgphrwe8tp5T/vIAWVHJYcQ4AzHI
+         jDJuf4+BT0JmHFLO7VTVK5yWkEs6KG1gIQN6cGAlRHYy+vYkIUEMLHafS0FasJbfW2
+         Ye+rHb5TiqsVw3voGJvUAsNffTctmY4uOUArzYvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.4 038/104] PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken
-Date:   Tue, 28 Jan 2020 14:59:59 +0100
-Message-Id: <20200128135822.801192122@linuxfoundation.org>
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4 079/104] tracing: xen: Ordered comparison of function pointers
+Date:   Tue, 28 Jan 2020 15:00:40 +0100
+Message-Id: <20200128135828.115414354@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -59,69 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Changbin Du <changbin.du@gmail.com>
 
-commit 5e89cd303e3a4505752952259b9f1ba036632544 upstream.
+commit d0695e2351102affd8efae83989056bc4b275917 upstream.
 
-To account for parts of the chip that are "harvested" (disabled) due to
-silicon flaws, caches on some AMD GPUs must be initialized before ATS is
-enabled.
+Just as commit 0566e40ce7 ("tracing: initcall: Ordered comparison of
+function pointers"), this patch fixes another remaining one in xen.h
+found by clang-9.
 
-ATS is normally enabled by the IOMMU driver before the GPU driver loads, so
-this cache initialization would have to be done in a quirk, but that's too
-complex to be practical.
+In file included from arch/x86/xen/trace.c:21:
+In file included from ./include/trace/events/xen.h:475:
+In file included from ./include/trace/define_trace.h:102:
+In file included from ./include/trace/trace_events.h:473:
+./include/trace/events/xen.h:69:7: warning: ordered comparison of function \
+pointers ('xen_mc_callback_fn_t' (aka 'void (*)(void *)') and 'xen_mc_callback_fn_t') [-Wordered-compare-function-pointers]
+                    __field(xen_mc_callback_fn_t, fn)
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/trace/trace_events.h:421:29: note: expanded from macro '__field'
+                                ^
+./include/trace/trace_events.h:407:6: note: expanded from macro '__field_ext'
+                                 is_signed_type(type), filter_type);    \
+                                 ^
+./include/linux/trace_events.h:554:44: note: expanded from macro 'is_signed_type'
+                                              ^
 
-For Navi14 (device ID 0x7340), this initialization is done by the VBIOS,
-but apparently some boards went to production with an older VBIOS that
-doesn't do it.  Disable ATS for those boards.
-
-Link: https://lore.kernel.org/r/20200114205523.1054271-3-alexander.deucher@amd.com
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/1015
-See-also: d28ca864c493 ("PCI: Mark AMD Stoney Radeon R7 GPU ATS as broken")
-See-also: 9b44b0b09dec ("PCI: Mark AMD Stoney GPU ATS as broken")
-[bhelgaas: squash into one patch, simplify slightly, commit log]
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org
+Fixes: c796f213a6934 ("xen/trace: add multicall tracing")
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |   19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ include/trace/events/xen.h |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5021,18 +5021,25 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SE
- 
- #ifdef CONFIG_PCI_ATS
- /*
-- * Some devices have a broken ATS implementation causing IOMMU stalls.
-- * Don't use ATS for those devices.
-+ * Some devices require additional driver setup to enable ATS.  Don't use
-+ * ATS for those devices as ATS will be enabled before the driver has had a
-+ * chance to load and configure the device.
-  */
--static void quirk_no_ats(struct pci_dev *pdev)
-+static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
- {
--	pci_info(pdev, "disabling ATS (broken on this device)\n");
-+	if (pdev->device == 0x7340 && pdev->revision != 0xc5)
-+		return;
-+
-+	pci_info(pdev, "disabling ATS\n");
- 	pdev->ats_cap = 0;
- }
- 
- /* AMD Stoney platform GPU */
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_no_ats);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_no_ats);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_amd_harvest_no_ats);
-+/* AMD Iceland dGPU */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
-+/* AMD Navi14 dGPU */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
- #endif /* CONFIG_PCI_ATS */
- 
- /* Freescale PCIe doesn't support MSI in RC mode */
+--- a/include/trace/events/xen.h
++++ b/include/trace/events/xen.h
+@@ -66,7 +66,11 @@ TRACE_EVENT(xen_mc_callback,
+ 	    TP_PROTO(xen_mc_callback_fn_t fn, void *data),
+ 	    TP_ARGS(fn, data),
+ 	    TP_STRUCT__entry(
+-		    __field(xen_mc_callback_fn_t, fn)
++		    /*
++		     * Use field_struct to avoid is_signed_type()
++		     * comparison of a function pointer.
++		     */
++		    __field_struct(xen_mc_callback_fn_t, fn)
+ 		    __field(void *, data)
+ 		    ),
+ 	    TP_fast_assign(
 
 
