@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCD9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8026AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B6520716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAF324685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222293;
-	bh=bxsM9wkTKbbaw5X9lfoDF/LZA8vY4wzEaVce2Y8TZNs=;
+	s=default; t=1580222299;
+	bh=DTzS7/xMcw4MB5IeIYo9NeKjeT4fBH68jiJAbPCx9Ms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tnQahuCcygyJ2UDEGjNs7edeJA5pVUlWbZLPSscHjV0YpxMKJkRDTFO4N1t2Kn3gm
-	 nnlgqgH3bbiwyqjpdJhENrEa+ZfpTtsk7H7tn3Rgcf/I4pPPkCycdaaPpMNybrK+RS
-	 BXzv09KSfDqrJv1cFpT/GrioRhBdimJtykOjJyds=
+	b=VKyUEwrm8ZRodTjnEq6J9bZTxZ2CoChWiFv3eJpwxOklLBBMuOHV7Xy0XniP+dsyt
+	 jLJ4trUaEsqtx8rVajOLzVBk+kGIki3Jqc9riOygQMbJs1Z++tiR8ZXvqlqGSohlP+
+	 nFI63plFZmOLxldsycOwgOlwIVzjVTmDi3D1/DGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730772AbgA1OTE (ORCPT
+        id S1730744AbgA1OSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:19:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43234 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:18:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730787AbgA1OTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:19:00 -0500
+        id S1730736AbgA1OSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:18:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BCC32071E;
-        Tue, 28 Jan 2020 14:18:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAD2B21739;
+        Tue, 28 Jan 2020 14:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221139;
-        bh=bxsM9wkTKbbaw5X9lfoDF/LZA8vY4wzEaVce2Y8TZNs=;
+        s=default; t=1580221127;
+        bh=DTzS7/xMcw4MB5IeIYo9NeKjeT4fBH68jiJAbPCx9Ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NPcR1Q48mmKTA1wXyGorJ4pFkEanFnMUxFwmVuOPVJauOyYUcIIwKjDI0jVsDWieg
-         vISBK/BE0pht1jdGUPPH8yjTjf/g+WEAv6GubI+g/TwRngz8C7iEfpinrTqWi3mv63
-         +IZPdoMG9sT2Ic95/97gGxrOR1w+npaCFhutY5r8=
+        b=VjqGrnKzm5FT2fNDCy4J5j0+DBfDeqYTPTKbkWKDVJ1z6KpZZdNjxDms1rlzkT4k6
+         lLhKPbTvT9IPoaIy7H6XtbagTAGJqn/2BtiLbaDFHo8VS0WlCSy7cVsrbQ1GkK9wVR
+         nCCQ932wx1pSN9TTV9l72jeDtfIRG11v1D2IbMTQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 103/271] jfs: fix bogus variable self-initialization
-Date:   Tue, 28 Jan 2020 15:04:12 +0100
-Message-Id: <20200128135900.258014976@linuxfoundation.org>
+Subject: [PATCH 4.9 098/271] media: ivtv: update *pos correctly in ivtv_read_pos()
+Date:   Tue, 28 Jan 2020 15:04:07 +0100
+Message-Id: <20200128135859.891888384@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,43 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit a5fdd713d256887b5f012608701149fa939e5645 ]
+[ Upstream commit f8e579f3ca0973daef263f513da5edff520a6c0d ]
 
-A statement was originally added in 2006 to shut up a gcc warning,
-now but now clang warns about it:
+We had intended to update *pos, but the current code is a no-op.
 
-fs/jfs/jfs_txnmgr.c:1932:15: error: variable 'pxd' is uninitialized when used within its own initialization
-      [-Werror,-Wuninitialized]
-                pxd_t pxd = pxd;        /* truncated extent of xad */
-                      ~~~   ^~~
+Fixes: 1a0adaf37c30 ("V4L/DVB (5345): ivtv driver for Conexant cx23416/cx23415 MPEG encoder/decoder")
 
-Modern versions of gcc are fine without the silly assignment, so just
-drop it. Tested with gcc-4.6 (released 2011), 4.7, 4.8, and 4.9.
-
-Fixes: c9e3ad6021e5 ("JFS: Get rid of "may be used uninitialized" warnings")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Dave Kleikamp <dave.kleikamp@oracle.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jfs/jfs_txnmgr.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/pci/ivtv/ivtv-fileops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
-index 4d973524c8879..224ef034004b7 100644
---- a/fs/jfs/jfs_txnmgr.c
-+++ b/fs/jfs/jfs_txnmgr.c
-@@ -1928,8 +1928,7 @@ static void xtLog(struct jfs_log * log, struct tblock * tblk, struct lrd * lrd,
- 	 * header ?
- 	 */
- 	if (tlck->type & tlckTRUNCATE) {
--		/* This odd declaration suppresses a bogus gcc warning */
--		pxd_t pxd = pxd;	/* truncated extent of xad */
-+		pxd_t pxd;	/* truncated extent of xad */
- 		int twm;
+diff --git a/drivers/media/pci/ivtv/ivtv-fileops.c b/drivers/media/pci/ivtv/ivtv-fileops.c
+index c9bd018e53de6..e2b19c3eaa876 100644
+--- a/drivers/media/pci/ivtv/ivtv-fileops.c
++++ b/drivers/media/pci/ivtv/ivtv-fileops.c
+@@ -420,7 +420,7 @@ static ssize_t ivtv_read_pos(struct ivtv_stream *s, char __user *ubuf, size_t co
  
- 		/*
+ 	IVTV_DEBUG_HI_FILE("read %zd from %s, got %zd\n", count, s->name, rc);
+ 	if (rc > 0)
+-		pos += rc;
++		*pos += rc;
+ 	return rc;
+ }
+ 
 -- 
 2.20.1
 
