@@ -2,195 +2,139 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883D2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A9EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6079B24681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD62E24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:20:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j8Uvap6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgA1MQ4 (ORCPT
+        id S1726114AbgA1MUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:16:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57378 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbgA1MQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:16:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 95B15AEFF;
-        Tue, 28 Jan 2020 12:16:53 +0000 (UTC)
-Date:   Tue, 28 Jan 2020 13:16:53 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [POC 02/23] livepatch: Split livepatch modules per livepatched
- object
-Message-ID: <20200128121653.72mhdqnfwtw7kifr@pathway.suse.cz>
-References: <20200117150323.21801-1-pmladek@suse.com>
- <20200117150323.21801-3-pmladek@suse.com>
- <af90531e-219c-3515-1dc8-d86191902ea4@redhat.com>
+        Tue, 28 Jan 2020 07:20:25 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39906 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgA1MUY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 07:20:24 -0500
+Received: by mail-oi1-f194.google.com with SMTP id z2so10078949oih.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 04:20:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hdMgsrTiGncdYOgcbUb9mlCe9olQ7xYagcxpFIcd6+E=;
+        b=j8Uvap6kQWXoH1g7T0rcgZ04DrKktnfIlbnAjWMfP6Xff15gUkzPDQyaJudmsL1yDt
+         Pb+vDR13QDZ1Ao2bxVflMcVglbNMcWn9vAZMCrxHoLBYDoD6bY2lDG7asXPOG50omDI8
+         dk5DIW0lN8yO+3QsjLezBreSJU6k/SztMUCNHfHgKIc2Cg5MDJi/GcJ/7WIZcrVJi1kh
+         0zHT2ERZ9mrZaEMn2TbChsjOz7VewVpcBB1/Yf2BzW2fvghPbhLKD4ANgvNUlOkS8sa8
+         /8X4lSS3iRshCXuyTobDjzOHPqKpmwm1o88j0yDlyTev/lDOnbA4duQ/Ybwk7zHH2N3s
+         UmpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hdMgsrTiGncdYOgcbUb9mlCe9olQ7xYagcxpFIcd6+E=;
+        b=k5Rxh+su/EZ7gey4bnjY723gVPz94CzlM6oXdH8+jiMkq1MN03Gh1CYCCm/ORjNfb5
+         SsifWrUl/BigYLZeeN0FhoF4Czrcb6jH0qg8lns07vfyx3DGVeGOXTwBaFIfii8zI3R7
+         S8d/2aQpmCt+FeBb1dVX0W9fUzLyW9dUb8jfAiO2tI/UdmRaIuaSuyUYE6KMB5+5rkPf
+         dla+pEKXjlwoJgmSpLtOIkfUTboesJ4ddxFHJH2RIlhGo0q2x8rp6k6QJOvZowuWVP/P
+         srBU6kZ9S+XDk9lYfj8fm/m2gW+29v7aDweIOrYsdrOqS2o3A87xvCTtLeJ2anSiLBXy
+         cbkA==
+X-Gm-Message-State: APjAAAWGw66yYLrZ1ICRa55n/r75Ww0J9nujW/+G8BjRpDzjeXNUwIpq
+        0NHBbG0NsUrlhau+/KEY3nKlizD61e/hLGRj/DrI2w==
+X-Google-Smtp-Source: APXvYqwwSdhkpILefSxxqrnVL+VKYNPBwrpZU6sJ2/ZVOmEzczQj7qFdKeGZ86K4BmlSR3uvTKTfV/rKVZTC9oqDg/Y=
+X-Received: by 2002:a54:4716:: with SMTP id k22mr2625237oik.39.1580214023416;
+ Tue, 28 Jan 2020 04:20:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af90531e-219c-3515-1dc8-d86191902ea4@redhat.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <20200128072740.21272-1-frextrite@gmail.com> <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
+ <20200128114818.GA17943@redhat.com>
+In-Reply-To: <20200128114818.GA17943@redhat.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 28 Jan 2020 13:19:56 +0100
+Message-ID: <CAG48ez2rJZGQyhOcgWe7NwLOxk-CBJugUFMM0Oa9JyuPamRwCg@mail.gmail.com>
+Subject: Re: [PATCH] cred: Use RCU primitives to access RCU pointers
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Amol Grover <frextrite@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-01-21 11:11:45, Julien Thierry wrote:
-> Hi Petr,
-> 
-> On 1/17/20 3:03 PM, Petr Mladek wrote:
-> > One livepatch module allows to fix vmlinux and any number of modules
-> > while providing some guarantees defined by the consistency model.
-> > 
-> > The solution is to split the livepatch module per livepatched
-> > object (vmlinux or module). Then both livepatch module and
-> > the livepatched modules could get loaded and removed at the
-> > same time.
-> > 
-> > The livepatches for modules are put into separate source files
-> > that define only struct klp_object() and call the new klp_add_object()
-> > in the init() callback. The name of the module follows the pattern:
-> > 
-> >    <patch_name>__<object_name>
-> > 
-> 
-> Is that a requirement? Or is it just the convention followed for the current
-> tests?
+On Tue, Jan 28, 2020 at 12:48 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> On 01/28, Jann Horn wrote:
+> > On Tue, Jan 28, 2020 at 8:28 AM Amol Grover <frextrite@gmail.com> wrote:
+> > > task_struct.cred and task_struct.real_cred are annotated by __rcu,
+> >
+> > task_struct.cred doesn't actually have RCU semantics though, see
+> > commit d7852fbd0f0423937fa287a598bfde188bb68c22. For task_struct.cred,
+> > it would probably be more correct to remove the __rcu annotation?
+>
+> Yes, but get_task_cred() assumes it has RCU semantics...
 
-This naming pattern is enforced by the code. The reason is to
-distinguish the purpose of each livepatch module.
-
-   + Livepatch module for "vmlinux" and the related livepatch modules
-     for other objects.
-
-   + Different livepatches (versions) that might be installed at the
-     same time. This happens even with cumulative livepatches.
+Oh, huh. AFAICS get_task_cred() makes no sense semantically, and I
+think it ought to be deleted.
 
 
-It is important for the functionality:
+There are the following users at the moment:
 
-   + Consistency checks that all and right livepatch modules are
-     loaded.
+rdtgroup_task_write_permission() - uses it for acting on a task as
+object, should be using objective credentials instead.
 
-   + Automatic loading of livepatch modules for modules when the patched
-     module is being loaded.
+__cgroup1_procs_write() - same thing.
 
-But it should be "clear" even for humans because the livepatch modules are
-listed by lsmod, ...
+task_state() - should also be using objective credentials instead, you
+wouldn't want a task to show up as belonging to root in there just
+because it's in the middle of some overlayfs filesystem method or
+something like that.
 
-Of course, we could talk about other naming scheme, another approach.
+apparmor_getprocattr() - same thing as for task_state()
 
+rpcauth_bind_root_cred() - should also be using objective credentials
+instead, if init is in overlayfs or whatever, you probably wouldn't
+want that to have an effect here
 
-> > @@ -844,21 +822,7 @@ static int klp_init_patch_early(struct klp_patch *patch)
-> >   	INIT_WORK(&patch->free_work, klp_free_patch_work_fn);
-> >   	init_completion(&patch->finish);
-> > -	klp_for_each_object_static(patch, obj) {
-> 
-> I think we can get rid of klp_for_each_object_static(), no? Now the
-> klp_patch is only associated to a single klp_object, so everything will be
-> dynamic. Is this correct?
+prepare_kernel_cred() - most callers pass NULL and don't hit this
+codepath, and those that don't pass NULL use `current`, so there can
+be no concurrent modification. Maybe this could be rewritten to
+something like this:
 
-Yes, the macro klp_for_each_object_static() is not longer needed.
+if (daemon) {
+  BUG_ON(daemon != current);
+  old = get_current_cred();
+} else {
+ ...
+}
 
-Just to be sure. It would be better to say that all klp_object
-structures will be in the linked lists only.
+or maybe it could just use the objective creds, it shouldn't matter
+here, I think.
 
-Most structures are still defined statically. The name "dynamic" is
-used for the dynamically allocated structures. They are used for
-"nop" functions that might be needed when doing atomic replace
-of cumulative patches and functions that are not longer patched.
-See obj->dynamic and func->nop.
+> To be honest I didn't know we have this helper.
 
+Same here.
 
-> > @@ -991,12 +958,12 @@ int klp_enable_patch(struct klp_patch *patch)
-> >   {
-> >   	int ret;
-> > -	if (!patch || !patch->mod)
-> > +	if (!patch || !patch->obj || !patch->obj->mod)
-> >   		return -EINVAL;
-> > -	if (!is_livepatch_module(patch->mod)) {
-> > +	if (!is_livepatch_module(patch->obj->mod)) {
-> >   		pr_err("module %s is not marked as a livepatch module\n",
-> > -		       patch->mod->name);
-> > +		       patch->obj->patch_name);
-> 
-> Shouldn't that be "patch->obj->mod->name" ?
+> Can't it race with revert_creds() in
+> do_faccessat() ?
 
-They are actually the same. Note that it is redundant only in
-struct klp_object that is in the livepatch module for vmlinux.
-
-Hmm, it might be possible to get rid of it after I added the array
-patch->obj_names. But I would prefer to keep it as a consistency
-check.
-
-One big drawback of the split modules approach is that there are
-suddenly many more livepatch modules. The kernel code has to make
-sure always the right ones are loaded. It is great to have some
-cross-checks.
-
-
-> >   		return -EINVAL;
-> >   	}
-
-> > diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
-> > index f6310f848f34..78e3280560cd 100644
-> > --- a/kernel/livepatch/transition.c
-> > +++ b/kernel/livepatch/transition.c
-> > @@ -147,7 +145,7 @@ void klp_cancel_transition(void)
-> >   		return;
-> >   	pr_debug("'%s': canceling patching transition, going to unpatch\n",
-> > -		 klp_transition_patch->mod->name);
-> > +		 klp_transition_patch->obj->patch_name);
-> >   	klp_target_state = KLP_UNPATCHED;
-> >   	klp_complete_transition();
-> > @@ -468,7 +466,7 @@ void klp_start_transition(void)
-> >   	WARN_ON_ONCE(klp_target_state == KLP_UNDEFINED);
-> >   	pr_notice("'%s': starting %s transition\n",
-> > -		  klp_transition_patch->mod->name,
-> > +		  klp_transition_patch->obj->patch_name,
-> 
-> Isn't the transition per livepatched module rather than per-patch now?
-> If so, would it make more sense to display also the name of the module being
-> patched/unpatched?
-
-The transition still happens for the entire livepatch defined by
-struct klp_patch. All needed livepatch modules for the other objects
-are loaded before the transition starts, see the patch 17/24
-("livepatch: Load livepatches for modules when loading the main
-livepatch").
-
-> >   		  klp_target_state == KLP_PATCHED ? "patching" : "unpatching");
-> >   	/*
-
-Best Regards,
-Petr
-
-PS: Julien,
-
-first, thanks a lot for looking at the patchset.
-
-I am going to answer questions and comments that are related to
-the overall design. The most important question is if the split
-livepatch modules are the way to go. I hope that this patchset
-shows possible wins and catches so that we could decide if it
-is worth the effort.
-
-Anyway, feel free to comment even details when you notice
-a mistake. There might be some catches that I missed, ...
-
-Best Regards,
-Petr
+Yeah, I think you can probably trigger use-after-free reads with that.
+I also remember seeing something fishy in Smack at some point that had
+similar issues... smack_file_send_sigiotask() does
+smk_of_task(smack_cred(tsk->cred)), which looks very wrong.
