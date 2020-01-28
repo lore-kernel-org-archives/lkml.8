@@ -2,95 +2,154 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545D9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECDCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6D4206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:45:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGVP89oL"
+	by mail.kernel.org (Postfix) with ESMTP id 1386C214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:52:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580241137;
+	bh=SbyOG7cvW7ZLtAUVL89GtKsbgtdLZWiTOY160LF4WRk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nOQ8JbJNAKV8oCLvdN6/BXCFFx9JmJsiUIbmBdW2PblKhXmkX5ksXkMqpRXZ6vRnN
+	 3UXiVkx3rHllQt/XWjHn+QEZbq9d2vK/aU4zhzp0J8Eax2eY89I6UTciJLPQ1imJtm
+	 Zu2+UdYYpY7K17M7Zj3gFxFp/1LuEeicHuOxYD4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgA1To7 (ORCPT
+        id S1726340AbgA1TwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 14:44:59 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36415 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgA1To7 (ORCPT
+        Tue, 28 Jan 2020 14:52:16 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42273 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgA1TwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 14:44:59 -0500
-Received: by mail-ot1-f67.google.com with SMTP id g15so13243171otp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:44:58 -0800 (PST)
+        Tue, 28 Jan 2020 14:52:16 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y4so15978055ljj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:52:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tB1X5GZ3lNFRYYLOCNfnT00dak9jJkkikUMx2JtvOc0=;
-        b=HGVP89oL7SSzneYqHDzdZz/Zpoh17+c9v96GSV3RQTTo1hx7E+Z0TJHLbZX1hYL/Po
-         u1ZTS8bAWqUtNHOmDND6QBWQQCY7x/G5z7kt+fTaqciRs8SOMeS7t1IRnb9NlTJzsbwB
-         OZrdMqBzXuQH357Vb/RoiMWfOOlZb37+GG/mpyEPi840IglpwDSqZHb0tQpgduS6PmD9
-         khqK06mRBtaSL5620BrakSCwp6npOvP8zVHK+vAOS8IekbgMjRJttbo8Q0taLKRyvMKS
-         bj3QGUeL2CAPGM3tpJGFOdKKhzc8dgrH8WTeuJKtU3qA2LTAcZjt/hkzQHkhUfrfTcyj
-         Fppg==
+        bh=iyik5rYQjUugRWXOhS91wMvUPz7Kgd9tYhKH8VVIVRY=;
+        b=ExwhayKlEf7Bfgv9eqGWXilHEdU7XISxBPCehCpR45dam0NkLcmg21/yMfF+WYxJ1q
+         NH73D6YQ8j6ssVoWLhhf7598l4vaKJFGcwmXOjz8/EzAv0WZ3qLIHbZtiDiV8lct6SaL
+         DnsfmlutMeOKWC1ZGIrU+ID/EVX0teHv0zlS8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tB1X5GZ3lNFRYYLOCNfnT00dak9jJkkikUMx2JtvOc0=;
-        b=Nahvi7EUbgzij2jIB61/1i7FG5xS/BnqXjIf8mMok1mBB8uC2XBJfR74UcufH/3KKZ
-         K1uMZXmAclF6qbhsryUzw7hQUqnC1nRm51YGMx2cAtSclq84LD/pHqEGILPj8fEZ6xs1
-         ZNMWfKTl/PCtdzOblfOMMgcg9V0+swp4HyCHXc41I9VpKR7al4oke2VIsBkOy8yHK1GA
-         TGui1F/iSG4shmrGpQkWJXouJHczaD7peN22w7sBSnOoVawiv66X3gpXbQr02G7rQ79F
-         5lYpmBEqf4CVlxFNTx5A4KVBqnMv68pYXdyzbC45JpUgRd0bA0ZSyA5zrPJjKXgfrGK0
-         /D1Q==
-X-Gm-Message-State: APjAAAVYaEBhwvlSKia9FhGeRumPfPqd620rwvlgb5SV7N5SqODoRVdQ
-        pbi73JSPu5eqm6GfxMvV8bbNGzAk0cnQlqFEoYUkgXzDtY0=
-X-Google-Smtp-Source: APXvYqycNX8hyGUcq8BEr10UFy/BXIYuqrwDx8M+n7cAUqFKCeosbDnRGTPWIymYdYSdoXi2d1d9j80LqP5m1ix2FgA=
-X-Received: by 2002:a9d:7559:: with SMTP id b25mr1783817otl.189.1580240698297;
- Tue, 28 Jan 2020 11:44:58 -0800 (PST)
+        bh=iyik5rYQjUugRWXOhS91wMvUPz7Kgd9tYhKH8VVIVRY=;
+        b=csYnE9jd2p6IgZLo55Pr6fQnCHgZXAJa6HasFbWUZdWgYARFxLAn9MgTPeKWj6/Jc/
+         CgFH0pLsPy28AP6ru9TK5FygPbimPLNTsuAM34BvF3pGqXi3xwxOS8G7GVAQ1kgvGSlI
+         tcnNczVMoMGvbj/Cu3ikZmzDwc6ce9zz2EAC5gUw1U6U/CGaqJX3jo/Ssz8TZjiLjhGe
+         A+rCEoVOZ6dG5AFi2u5QCdv1f1wMf0qaG+F4Z94NL2W42rufyC69hUWSrKBcJLsQPiOD
+         MKTfJ2wLAawf695oFLLih76P5eWLYNR50Z3NozJlK3KL1WDMOUiurPoaGI+XDAH4aPbg
+         jpKg==
+X-Gm-Message-State: APjAAAWtbIJyk5gOlqbG2MEPQI8UC1+1dsALlgKPVF8Gj3fizJCx3K1p
+        mQJlbGl/i1aiwklwd1geDJpk1hH357M=
+X-Google-Smtp-Source: APXvYqzOjcEc9t35j03cRCMa10YEPebtbXINzUZU4+aPPk2f+dr8TTIQ0ZAnbAf95Z15zxmO9kLAhw==
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr14563802ljm.233.1580241133648;
+        Tue, 28 Jan 2020 11:52:13 -0800 (PST)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id w19sm10223670lfl.55.2020.01.28.11.52.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 11:52:12 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id h23so15995144ljc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:52:12 -0800 (PST)
+X-Received: by 2002:a2e:3a13:: with SMTP id h19mr14478575lja.16.1580241132023;
+ Tue, 28 Jan 2020 11:52:12 -0800 (PST)
 MIME-Version: 1.0
-References: <CAM_iQpVN4MNhcK0TXvhmxsCdkVOqQ4gZBzkDHykLocPC6Va7LQ@mail.gmail.com>
- <20200121090048.GG29276@dhcp22.suse.cz> <CAM_iQpU0p7JLyQ4mQ==Kd7+0ugmricsEAp1ST2ShAZar2BLAWg@mail.gmail.com>
- <20200126233935.GA11536@bombadil.infradead.org> <20200127150024.GN1183@dhcp22.suse.cz>
- <20200127190653.GA8708@bombadil.infradead.org> <20200128081712.GA18145@dhcp22.suse.cz>
- <20200128083044.GB6615@bombadil.infradead.org> <20200128091352.GC18145@dhcp22.suse.cz>
- <20200128104857.GC6615@bombadil.infradead.org> <20200128113953.GA24244@dhcp22.suse.cz>
-In-Reply-To: <20200128113953.GA24244@dhcp22.suse.cz>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 28 Jan 2020 11:44:47 -0800
-Message-ID: <CAM_iQpVjiui0xb7wTfF2HOME=cuk7M2SCBa7O_RVebk04qMs4w@mail.gmail.com>
-Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+References: <20200128165906.GA67781@gmail.com>
+In-Reply-To: <20200128165906.GA67781@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 28 Jan 2020 11:51:56 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
+Message-ID: <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/asm changes for v5.6
+To:     Ingo Molnar <mingo@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@suse.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: multipart/mixed; boundary="00000000000055d6b2059d388f19"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 3:39 AM Michal Hocko <mhocko@kernel.org> wrote:
+--00000000000055d6b2059d388f19
+Content-Type: text/plain; charset="UTF-8"
+
+On Tue, Jan 28, 2020 at 8:59 AM Ingo Molnar <mingo@kernel.org> wrote:
 >
-> On Tue 28-01-20 02:48:57, Matthew Wilcox wrote:
-> > Doesn't the stack trace above indicate that we're doing migration as
-> > the result of an allocation in add_to_page_cache_lru()?
->
-> Which stack trace do you refer to? Because the one above doesn't show
-> much more beyond mem_cgroup_iter and likewise others in this email
-> thread. I do not really remember any stack with lock_page on the trace.
+>  - Add support for "Fast Short Rep Mov", which is available starting with
+>    Ice Lake Intel CPUs - and make the x86 assembly version of memmove()
+>    use REP MOV for all sizes when FSRM is available.
 
-I think the page is locked in add_to_page_cache_lru() by
-__SetPageLocked(), as the stack trace shows __add_to_page_cache_locked().
-It is not yet unlocked, as it is still looping inside try_charge().
+Pulled. However, this seems rather non-optimal:
 
-I will write a script to see if I can find the longest time spent in reclaim
-as you suggested.
+        ALTERNATIVE "cmp $0x20, %rdx; jb 1f", "", X86_FEATURE_FSRM
+        ALTERNATIVE "", "movq %rdx, %rcx; rep movsb; retq", X86_FEATURE_ERMS
 
-Thanks.
+in that it leaves unnecessary NOP's there as alternatives.
+
+We have "ALTERNATIVE_2", so we can do the above in one thing, _and_
+move the rep-movsq testing code into there too:
+
+        ALTERNATIVE_2 \
+                "cmp  $680, %rdx ; jb 3f ; cmpb %dil, %sil; je 4f", \
+                "movq %rdx, %rcx ; rep movsb; retq", X86_FEATURE_FSRM, \
+                "cmp $0x20, %rdx; jb 1f; movq %rdx, %rcx; rep movsb;
+retq", X86_FEATURE_ERMS
+
+which avoids unnecessary nops.
+
+I dunno.  It doesn't much matter, but we _do_ have things to do for
+all three cases, and it actually makes sense to move all the three
+"use rep movs" cases into the ALTERNATIVE. No?
+
+UNTESTED patch attached, but visually it seems to generate better code
+and less unnecessary nops (I get just two bytes of nop with this for
+the nonFSRM/ERMS case)
+
+If somebody tests this out and commits it and writes a commit message,
+they can claim authorship. Or add my sign-off.
+
+              Linus
+
+--00000000000055d6b2059d388f19
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k5yap2xj0>
+X-Attachment-Id: f_k5yap2xj0
+
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2xpYi9tZW1tb3ZlXzY0LlMgYi9hcmNoL3g4Ni9saWIvbWVt
+bW92ZV82NC5TCmluZGV4IDdmZjAwZWE2NGU0Zi4uZTQyYmYzNWI5YjYyIDEwMDY0NAotLS0gYS9h
+cmNoL3g4Ni9saWIvbWVtbW92ZV82NC5TCisrKyBiL2FyY2gveDg2L2xpYi9tZW1tb3ZlXzY0LlMK
+QEAgLTM5LDIzICszOSwxOSBAQCBTWU1fRlVOQ19TVEFSVChfX21lbW1vdmUpCiAJY21wICVyZGks
+ICVyOAogCWpnIDJmCiAKLQkvKiBGU1JNIGltcGxpZXMgRVJNUyA9PiBubyBsZW5ndGggY2hlY2tz
+LCBkbyB0aGUgY29weSBkaXJlY3RseSAqLworCS8qCisJICogVGhyZWUgcmVwLXN0cmluZyBhbHRl
+cm5hdGl2ZXM6CisJICogIC0gZ28gdG8gIm1vdnNxIiBmb3IgbGFyZ2UgcmVnaW9ucyB3aGVyZSBz
+b3VyY2UgYW5kIGRlc3QgYXJlCisJICogICAgbXV0dWFsbHkgYWxpZ25lZCAoc2FtZSBpbiBsb3cg
+OCBiaXRzKS4gImxhYmVsIDQiCisJICogIC0gcGxhaW4gcmVwLW1vdnNiIGZvciBGU1JNCisJICog
+IC0gcmVwLW1vdnMgZm9yID4gMzIgYnl0ZSBmb3IgRVJNUy4KKwkgKi8KIC5MbWVtbW92ZV9iZWdp
+bl9mb3J3YXJkOgotCUFMVEVSTkFUSVZFICJjbXAgJDB4MjAsICVyZHg7IGpiIDFmIiwgIiIsIFg4
+Nl9GRUFUVVJFX0ZTUk0KLQlBTFRFUk5BVElWRSAiIiwgIm1vdnEgJXJkeCwgJXJjeDsgcmVwIG1v
+dnNiOyByZXRxIiwgWDg2X0ZFQVRVUkVfRVJNUworCUFMVEVSTkFUSVZFXzIgXAorCQkiY21wICAk
+NjgwLCAlcmR4IDsgamIgM2YgOyBjbXBiICVkaWwsICVzaWw7IGplIDRmIiwgXAorCQkibW92cSAl
+cmR4LCAlcmN4IDsgcmVwIG1vdnNiOyByZXRxIiwgWDg2X0ZFQVRVUkVfRlNSTSwgXAorCQkiY21w
+ICQweDIwLCAlcmR4OyBqYiAxZjsgbW92cSAlcmR4LCAlcmN4OyByZXAgbW92c2I7IHJldHEiLCBY
+ODZfRkVBVFVSRV9FUk1TCiAKLQkvKgotCSAqIG1vdnNxIGluc3RydWN0aW9uIGhhdmUgbWFueSBz
+dGFydHVwIGxhdGVuY3kKLQkgKiBzbyB3ZSBoYW5kbGUgc21hbGwgc2l6ZSBieSBnZW5lcmFsIHJl
+Z2lzdGVyLgotCSAqLwotCWNtcCAgJDY4MCwgJXJkeAotCWpiCTNmCi0JLyoKLQkgKiBtb3ZzcSBp
+bnN0cnVjdGlvbiBpcyBvbmx5IGdvb2QgZm9yIGFsaWduZWQgY2FzZS4KLQkgKi8KLQotCWNtcGIg
+JWRpbCwgJXNpbAotCWplIDRmCiAzOgogCXN1YiAkMHgyMCwgJXJkeAogCS8qCg==
+--00000000000055d6b2059d388f19--
