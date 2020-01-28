@@ -2,164 +2,109 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7028CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F70C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A9C2468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hCgUzPZf"
+	by mail.kernel.org (Postfix) with ESMTP id 4C0D824685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580220170;
+	bh=UYePmV8CUdNFim5tIHubVgaS5KfCFYt1aT7JaIs8DwA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fy4U9GilXDNDGDZbRp0QjyvOK4W1lm2rcgjh+qRIr88EePewWMmijbZfH5eclodRN
+	 OSylWFo+iJmw2Ib1PxQSbH5YUOTJweIZ+agT3Z7gVlGY3cCAx2TaSoSeTTk/wwOR6K
+	 W1T3wr37DLkG6VcE/3zdXfGzes9DFflu2u0bbDzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgA1OCp (ORCPT
+        id S1727732AbgA1OCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Jan 2020 09:02:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727706AbgA1OCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jan 2020 09:02:45 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3868 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727697AbgA1OCo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:02:44 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e303ed00000>; Tue, 28 Jan 2020 06:01:53 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 28 Jan 2020 06:02:42 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 28 Jan 2020 06:02:42 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan
- 2020 14:02:40 +0000
-Subject: Re: [PATCH v4 01/14] dmaengine: tegra-apb: Fix use-after-free
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-2-digetx@gmail.com>
- <4c1b9e48-5468-0c03-2108-158ee814eea8@nvidia.com>
- <1327bb21-0364-da26-e6ed-ff6c19df03e6@gmail.com>
- <e39ef31d-4cff-838a-0fc1-73a39a8d6120@nvidia.com>
- <b0c85ca7-d8ac-5f9d-2c57-79543c1f9b5d@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <5bbe9e3e-a64f-53be-e7f6-63e36cbae77d@nvidia.com>
-Date:   Tue, 28 Jan 2020 14:02:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE18F2468D;
+        Tue, 28 Jan 2020 14:02:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580220164;
+        bh=UYePmV8CUdNFim5tIHubVgaS5KfCFYt1aT7JaIs8DwA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mJBlfvo0tlv+raspp27FnaRoZErjwJrrZPT52Ler72pPh+5IIkCDvSibD3J5555K5
+         dFMULclQquJl+ZHtXsHpOonhqFLCS3k5ty7k54ZC5vTAx8U2EWBzWqtTKHAdpEQbDT
+         n0MxN8ct3tW9vQqUdYUGpaPnZmnUvjAow8ontWP0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+2f07903a5b05e7f36410@syzkaller.appspotmail.com,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 011/104] net_sched: fix datalen for ematch
+Date:   Tue, 28 Jan 2020 14:59:32 +0100
+Message-Id: <20200128135818.800068165@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
+References: <20200128135817.238524998@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <b0c85ca7-d8ac-5f9d-2c57-79543c1f9b5d@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580220113; bh=e88101xURco7N8b2552wZD76BEtwzmum1j/J+iogzf4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=hCgUzPZfdk3rkBcA/XYgsDFdtwoXICKJxbQxxi54uG8pMCemvx2Ob2aCJEdVw/PB+
-         SrevcGflaEXa2tvwIMHkXyPldcUBK1AwLgXyUK6rKxTZUlbW3p5jzh+Ri7taJWWKXC
-         pPBqH+j+Y48XLUmGpAYZ39haiWtp+4zx6qSxFug0ZhB6hSt5uWiOM5y4g7Zf/isndj
-         aFcoFXVMN3tJIg62ddjIAs/g/kAKCCJsS9y9YwLGqZDnBci5bNU7PsRrPIYyP/K1Um
-         KidfDp+/0CZ3Y98FUr5KBmtAr8LzUqU9o1YIaKsYKDgSKtUoNfcllmf1DlQvRVQpgd
-         sjuA6afJcYSRg==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-On 16/01/2020 20:10, Dmitry Osipenko wrote:
-> 15.01.2020 12:00, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 14/01/2020 20:33, Dmitry Osipenko wrote:
->>> 14.01.2020 18:09, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>
->>>> On 12/01/2020 17:29, Dmitry Osipenko wrote:
->>>>> I was doing some experiments with I2C and noticed that Tegra APB DMA
->>>>> driver crashes sometime after I2C DMA transfer termination. The crash
->>>>> happens because tegra_dma_terminate_all() bails out immediately if pe=
-nding
->>>>> list is empty, thus it doesn't release the half-completed descriptors
->>>>> which are getting re-used before ISR tasklet kicks-in.
->>>>
->>>> Can you elaborate a bit more on how these are getting re-used? What is
->>>> the sequence of events which results in the panic? I believe that this
->>>> was also reported in the past [0] and so I don't doubt there is an iss=
-ue
->>>> here, but would like to completely understand this.
->>>>
->>>> Thanks!
->>>> Jon
->>>>
->>>> [0] https://lore.kernel.org/patchwork/patch/675349/
->>>>
->>>
->>> In my case it happens in the touchscreen driver during of the
->>> touchscreen's interrupt handling (in a threaded IRQ handler) + CPU is
->>> under load and there is other interrupts activity. So what happens here
->>> is that the TS driver issues one I2C transfer, which fails with
->>> (apparently bogus) timeout (because DMA descriptor is completed and
->>> removed from the pending list, but tasklet not executed yet), and then
->>> TS immediately issues another I2C transfer that re-uses the
->>> yet-incompleted descriptor. That's my understanding.
->>
->> OK, but what is the exact sequence that it allowing it to re-use the
->> incompleted descriptor?
->=20
->    TDMA driver                      DMA Client
->=20
-> 1.
->                                     dmaengine_prep()
->=20
-> 2.
->    tegra_dma_desc_get()
->    dma_desc =3D kzalloc()
->    ...
->    tegra_dma_prep_slave_sg()
->    INIT_LIST_HEAD(&dma_desc->tx_list);
->    INIT_LIST_HEAD(&dma_desc->cb_node);
->    list_add_tail(sgreq->node,
->                  dma_desc->tx_list)
->=20
-> 3.
->                                     dma_async_issue_pending()
->=20
-> 4.
->    tegra_dma_tx_submit()
->    list_splice_tail_init(dma_desc->tx_list,
->                          tdc->pending_sg_req)
->=20
-> 5.
->    tegra_dma_isr()
->    ...
->    handle_once_dma_done()
->    ...
->    sgreq =3D list_first_entry(tdc->pending_sg_req)
->    list_del(sgreq->node);
->    ...
->    list_add_tail(dma_desc->cb_node,
->                  tdc->cb_desc);
->    list_add_tail(dma_desc->node,
->                  tdc->free_dma_desc);
+[ Upstream commit 61678d28d4a45ef376f5d02a839cc37509ae9281 ]
 
-Isn't this the problem here, that we have placed this on the free list
-before we are actually done?
+syzbot reported an out-of-bound access in em_nbyte. As initially
+analyzed by Eric, this is because em_nbyte sets its own em->datalen
+in em_nbyte_change() other than the one specified by user, but this
+value gets overwritten later by its caller tcf_em_validate().
+We should leave em->datalen untouched to respect their choices.
 
-It seems to me that there could still be a potential race condition
-between the ISR and the tasklet running.
+I audit all the in-tree ematch users, all of those implement
+->change() set em->datalen, so we can just avoid setting it twice
+in this case.
 
-Jon
+Reported-and-tested-by: syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com
+Reported-by: syzbot+2f07903a5b05e7f36410@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/sched/ematch.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---=20
-nvpublic
+--- a/net/sched/ematch.c
++++ b/net/sched/ematch.c
+@@ -263,12 +263,12 @@ static int tcf_em_validate(struct tcf_pr
+ 				}
+ 				em->data = (unsigned long) v;
+ 			}
++			em->datalen = data_len;
+ 		}
+ 	}
+ 
+ 	em->matchid = em_hdr->matchid;
+ 	em->flags = em_hdr->flags;
+-	em->datalen = data_len;
+ 	em->net = net;
+ 
+ 	err = 0;
+
+
