@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081CAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DF4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C6F2468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEAC624691
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221454;
-	bh=PSD4RbVSO0zobmFR8fcfHskmIxH8NTErBAtGouN9zxM=;
+	s=default; t=1580221457;
+	bh=5YYtm9ma19c214WP3Vz1E0GoAaNZU29FxW2eDLaO3UI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LKTDegw5/nOE2H1Cz2CMS7xRAqmHNsQd9sqpFjnDgdspInscM0UzNonQnDIewoFEl
-	 8T1j3Yzjrqc5Ct41My35Hp5Vsn0tR35dN7bWdpcGg5RrIoELF/EWM4xFX6Rmgka2l/
-	 BrQFSAJdf7fO3Nr1gJoAtNUDt/pwG9fIhBHbqaN4=
+	b=TD2YaGSsy8KSrdKTDzS9/kJ83unlIeYgytguJHwzUF150xcoOVKKnuw9sOM8aOMC1
+	 aU8LLVzKs+3K+2LumHD1PyBgPs1bWML3y8+HzY9F+9XHoA1oPhuorqqEA9aj0RN8yY
+	 UpTZ1r8/dzdFzohd5ET4v03vu7Z8wMi4BSbAnBJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731897AbgA1OYN (ORCPT
+        id S1728057AbgA1OYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:24:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50666 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:24:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732478AbgA1OYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:24:08 -0500
+        id S1731405AbgA1OYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:24:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69DB92468A;
-        Tue, 28 Jan 2020 14:24:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4860621739;
+        Tue, 28 Jan 2020 14:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221447;
-        bh=PSD4RbVSO0zobmFR8fcfHskmIxH8NTErBAtGouN9zxM=;
+        s=default; t=1580221452;
+        bh=5YYtm9ma19c214WP3Vz1E0GoAaNZU29FxW2eDLaO3UI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtZR/VQ4IZBD13k+KanoXpX7BXsFk0koMWGsP+fBxRVI0awS765JBR3/y6pVpYlJL
-         LORzQhYT/WcSF/syQCwRoCHlvSc932kXvd5oEG/vPqr71+9lf2doR8u8NVLUCPoreN
-         kDpJeXgBaiYZHYErCvgUhW5MjRTyTkZVTuszU3UU=
+        b=Ov0VIQwndMtRm4q57rK1Yu386ySAeoukLXNPavYY4HAaCcXaP/8tDYZUlel+Dh2DW
+         b1JDUi0Yl+hVgJi7Yzi11bqVy5Om79P5hRPU1IOiCm/h6JKHdr245KlCzMVL95mnUw
+         YfD3Ec9SSQX6lTRMS7idC7ZzTEJ7qOFv3D6zIQpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tri Vo <trong@android.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 191/271] power: supply: Init device wakeup after device_add()
-Date:   Tue, 28 Jan 2020 15:05:40 +0100
-Message-Id: <20200128135906.797802182@linuxfoundation.org>
+Subject: [PATCH 4.9 193/271] staging: greybus: light: fix a couple double frees
+Date:   Tue, 28 Jan 2020 15:05:42 +0100
+Message-Id: <20200128135906.949065403@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -65,67 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 8288022284859acbcc3cf1a073a1e2692d6c2543 ]
+[ Upstream commit 329101244f214952606359d254ae883b7109e1a5 ]
 
-We may want to use the device pointer in device_init_wakeup() with
-functions that expect the device to already be added with device_add().
-For example, if we were to link the device initializing wakeup to
-something in sysfs such as a class for wakeups we'll run into an error.
-It looks like this code was written with the assumption that the device
-would be added before initializing wakeup due to the order of operations
-in power_supply_unregister().
+The problem is in gb_lights_request_handler().  If we get a request to
+change the config then we release the light with gb_lights_light_release()
+and re-allocated it.  However, if the allocation fails part way through
+then we call gb_lights_light_release() again.  This can lead to a couple
+different double frees where we haven't cleared out the original values:
 
-Let's change the order of operations so we don't run into problems here.
+	gb_lights_light_v4l2_unregister(light);
+	...
+	kfree(light->channels);
+	kfree(light->name);
 
-Fixes: 948dcf966228 ("power_supply: Prevent suspend until power supply events are processed")
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tri Vo <trong@android.com>
-Cc: Kalesh Singh <kaleshsingh@google.com>
-Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+I also made a small change to how we set "light->channels_count = 0;".
+The original code handled this part fine and did not cause a use after
+free but it was sort of complicated to read.
+
+Fixes: 2870b52bae4c ("greybus: lights: add lights implementation")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Link: https://lore.kernel.org/r/20190829122839.GA20116@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/power_supply_core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/staging/greybus/light.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 9e05ae0430a99..cb0b3d3d132fc 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -764,14 +764,14 @@ __power_supply_register(struct device *parent,
- 	}
+diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+index 9f01427f35f91..1cb82cc28aa76 100644
+--- a/drivers/staging/greybus/light.c
++++ b/drivers/staging/greybus/light.c
+@@ -1102,21 +1102,21 @@ static void gb_lights_channel_release(struct gb_channel *channel)
+ static void gb_lights_light_release(struct gb_light *light)
+ {
+ 	int i;
+-	int count;
  
- 	spin_lock_init(&psy->changed_lock);
--	rc = device_init_wakeup(dev, ws);
--	if (rc)
--		goto wakeup_init_failed;
+ 	light->ready = false;
+ 
+-	count = light->channels_count;
 -
- 	rc = device_add(dev);
- 	if (rc)
- 		goto device_add_failed;
+ 	if (light->has_flash)
+ 		gb_lights_light_v4l2_unregister(light);
++	light->has_flash = false;
  
-+	rc = device_init_wakeup(dev, ws);
-+	if (rc)
-+		goto wakeup_init_failed;
+-	for (i = 0; i < count; i++) {
++	for (i = 0; i < light->channels_count; i++)
+ 		gb_lights_channel_release(&light->channels[i]);
+-		light->channels_count--;
+-	}
++	light->channels_count = 0;
 +
- 	rc = psy_register_thermal(psy);
- 	if (rc)
- 		goto register_thermal_failed;
-@@ -808,8 +808,8 @@ register_cooler_failed:
- 	psy_unregister_thermal(psy);
- register_thermal_failed:
- 	device_del(dev);
--device_add_failed:
- wakeup_init_failed:
-+device_add_failed:
- check_supplies_failed:
- dev_set_name_failed:
- 	put_device(dev);
+ 	kfree(light->channels);
++	light->channels = NULL;
+ 	kfree(light->name);
++	light->name = NULL;
+ }
+ 
+ static void gb_lights_release(struct gb_lights *glights)
 -- 
 2.20.1
 
