@@ -2,73 +2,71 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AE3C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8E7C35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538E92467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9277A22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:53:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FpVMB2ha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725926AbgA1Fw0 (ORCPT
+        id S1725937AbgA1Fxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 00:52:26 -0500
-Received: from mga05.intel.com ([192.55.52.43]:27093 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgA1Fw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 00:52:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 21:52:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,372,1574150400"; 
-   d="scan'208";a="277101581"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 Jan 2020 21:52:23 -0800
-Received: from [10.252.25.124] (abudanko-mobl.ccr.corp.intel.com [10.252.25.124])
-        by linux.intel.com (Postfix) with ESMTP id 63AD1580277;
-        Mon, 27 Jan 2020 21:52:15 -0800 (PST)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v6 00/10] Introduce CAP_PERFMON to secure system performance
- monitoring and observability
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>, Will Deacon <will@kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        oprofile-list@lists.sf.net
-Organization: Intel Corp.
-Message-ID: <74d524ab-ac11-a7b8-1052-eba10f117e09@linux.intel.com>
-Date:   Tue, 28 Jan 2020 08:52:13 +0300
+        Tue, 28 Jan 2020 00:53:51 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:13682 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725795AbgA1Fxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 00:53:51 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580190830; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=X3kHMnYi5p9NsrX0pm8Pjhgyo6Dck8w6nOS+KLJtcPI=; b=FpVMB2haj9h90TiEGM4owkaJTOVAjyuAUGpGYOJKxRFpzONHyHxDUKFOwlG+YZbtmIa+olEy
+ iV9rIrnUdvTHRRQac7pvPjFXp1WIMHWWwsk3In+e2jgOPLx+qDaE9AFEZLVLJxiztW6gBY/O
+ QvdADtAmgy5MZ0TvnMws+AXtlFM=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2fcc6c.7f0607407df8-smtp-out-n01;
+ Tue, 28 Jan 2020 05:53:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9FDE5C433A2; Tue, 28 Jan 2020 05:53:48 +0000 (UTC)
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0492C43383;
+        Tue, 28 Jan 2020 05:53:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0492C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 05/10] clk: qcom: Fix sc7180 dispcc parent data
+To:     Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@codeaurora.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, harigovi@codeaurora.org,
+        mka@chromium.org, kalyan_t@codeaurora.org,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        hoegsberg@chromium.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+References: <20200124224225.22547-1-dianders@chromium.org>
+ <20200124144154.v2.5.If590c468722d2985cea63adf60c0d2b3098f37d9@changeid>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <149394fe-b726-15da-1c6f-a223d57a009f@codeaurora.org>
+Date:   Tue, 28 Jan 2020 11:23:39 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200124144154.v2.5.If590c468722d2985cea63adf60c0d2b3098f37d9@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,193 +74,270 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Doug,
 
-Currently access to perf_events, i915_perf and other performance monitoring and
-observability subsystems of the kernel is open only for a privileged process [1]
-with CAP_SYS_ADMIN capability enabled in the process effective set [2].
+Thanks for the patch.
 
-This patch set introduces CAP_PERFMON capability designed to secure system
-performance monitoring and observability operations so that CAP_PERFMON would
-assist CAP_SYS_ADMIN capability in its governing role for performance monitoring
-and observability subsystems of the kernel.
+On 1/25/2020 4:12 AM, Douglas Anderson wrote:
+> The bindings file (qcom,dispcc.yaml) says that the two clocks that
+> dispcc is a client of are named "xo" and "gpll0".  That means we have
+> to refer to them by those names.  We weren't referring to "xo"
+> properly in the driver.
+> 
+> Then, in the patch ("dt-bindings: clock: Fix qcom,dispcc bindings for
+> sdm845/sc7180") we clarify the names for all of the clocks that we are
+> a client of.  Fix all those too, also getting rid of the "fallback"
+> names for them.  Since sc7180 is still in infancy there is no reason
+> to specify a fallback name.  People should just get the device tree
+> right.
+> 
+> Since we didn't add the "test" clock to the bindings (apparently it's
+> never used), kill it from the driver.  If someone has a use for it we
+> should add it to the bindings and bring it back.
+> 
+> Instead of updating all of the sizes of the arrays now that the test
+> clock is gone, switch to using the less error-prone ARRAY_SIZE.  Not
+> sure why it didn't always use that.
+> 
+> Fixes: dd3d06622138 ("clk: qcom: Add display clock controller driver for SC7180")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+> Changes in v2:
+> - Patch ("clk: qcom: Fix sc7180 dispcc parent data") new for v2.
+> 
+>   drivers/clk/qcom/dispcc-sc7180.c | 63 ++++++++++++--------------------
+>   1 file changed, 24 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
+> index 30c1e25d3edb..380eca3f847d 100644
+> --- a/drivers/clk/qcom/dispcc-sc7180.c
+> +++ b/drivers/clk/qcom/dispcc-sc7180.c
+> @@ -43,7 +43,7 @@ static struct clk_alpha_pll disp_cc_pll0 = {
+>   		.hw.init = &(struct clk_init_data){
+>   			.name = "disp_cc_pll0",
+>   			.parent_data = &(const struct clk_parent_data){
+> -				.fw_name = "bi_tcxo",
+> +				.fw_name = "xo",
 
-CAP_PERFMON intends to harden system security and integrity during system
-performance monitoring and observability operations by decreasing attack surface
-that is available to a CAP_SYS_ADMIN privileged process [2]. Providing the access
-to system performance monitoring and observability operations under CAP_PERFMON
-capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes chances
-to misuse the credentials and makes the operation more secure. Thus, CAP_PERFMON
-implements the principal of least privilege for performance monitoring and
-observability operations (POSIX IEEE 1003.1e: 2.2.2.39 principle of least
-privilege: A security design principle that states that a process or program be
-granted only those privileges (e.g., capabilities) necessary to accomplish its
-legitimate function, and only for the time that such privileges are actually
-required)
+These clock names are as per our HW design and we would not like to 
+update them as they require lot of hand-coding. These codes are all 
+auto-generated.
 
-CAP_PERFMON intends to meet the demand to secure system performance monitoring
-and observability operations for adoption in security sensitive, restricted,
-multiuser production environments (e.g. HPC clusters, cloud and virtual compute
-environments), where root or CAP_SYS_ADMIN credentials are not available to mass
-users of a system, and securely unblock applicability and scalability of system
-performance monitoring and observability operations beyond root or CAP_SYS_ADMIN
-process use cases.
+>   			},
+>   			.num_parents = 1,
+>   			.ops = &clk_alpha_pll_fabia_ops,
+> @@ -76,40 +76,32 @@ static struct clk_alpha_pll_postdiv disp_cc_pll0_out_even = {
+>   
+>   static const struct parent_map disp_cc_parent_map_0[] = {
+>   	{ P_BI_TCXO, 0 },
+> -	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>   };
+>   
+>   static const struct clk_parent_data disp_cc_parent_data_0[] = {
+> -	{ .fw_name = "bi_tcxo" },
+> -	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
+> +	{ .fw_name = "xo" },
+>   };
+>   
+>   static const struct parent_map disp_cc_parent_map_1[] = {
+>   	{ P_BI_TCXO, 0 },
+>   	{ P_DP_PHY_PLL_LINK_CLK, 1 },
+>   	{ P_DP_PHY_PLL_VCO_DIV_CLK, 2 },
+> -	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>   };
+>   
+>   static const struct clk_parent_data disp_cc_parent_data_1[] = {
+> -	{ .fw_name = "bi_tcxo" },
+> -	{ .fw_name = "dp_phy_pll_link_clk", .name = "dp_phy_pll_link_clk" },
+> -	{ .fw_name = "dp_phy_pll_vco_div_clk",
+> -				.name = "dp_phy_pll_vco_div_clk"},
+> -	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
+> +	{ .fw_name = "xo" },
+> +	{ .fw_name = "dp_phy_pll_link" },
+> +	{ .fw_name = "dp_phy_pll_vco_div" },
 
-CAP_PERFMON intends to take over CAP_SYS_ADMIN credentials related to system
-performance monitoring and observability operations and balance amount of
-CAP_SYS_ADMIN credentials following the recommendations in the capabilities man
-page [2] for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to
-kernel developers, below." For backward compatibility reasons access to system
-performance monitoring and observability subsystems of the kernel remains open
-for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN capability usage for
-secure system performance monitoring and observability operations is discouraged
-with respect to the designed CAP_PERFMON capability.
+similar comments for these too. They would conflict with our HW design 
+clock names.
+>   };
+>   
+>   static const struct parent_map disp_cc_parent_map_2[] = {
+>   	{ P_BI_TCXO, 0 },
+>   	{ P_DSI0_PHY_PLL_OUT_BYTECLK, 1 },
+> -	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>   };
+>   
+>   static const struct clk_parent_data disp_cc_parent_data_2[] = {
+> -	{ .fw_name = "bi_tcxo" },
+> -	{ .fw_name = "dsi0_phy_pll_out_byteclk",
+> -				.name = "dsi0_phy_pll_out_byteclk" },
+> -	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
+> +	{ .fw_name = "xo" },
+> +	{ .fw_name = "dsi_phy_pll_byte" },
+>   };
+>   
+>   static const struct parent_map disp_cc_parent_map_3[] = {
+> @@ -117,40 +109,33 @@ static const struct parent_map disp_cc_parent_map_3[] = {
+>   	{ P_DISP_CC_PLL0_OUT_MAIN, 1 },
+>   	{ P_GPLL0_OUT_MAIN, 4 },
+>   	{ P_DISP_CC_PLL0_OUT_EVEN, 5 },
+> -	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>   };
+>   
+>   static const struct clk_parent_data disp_cc_parent_data_3[] = {
+> -	{ .fw_name = "bi_tcxo" },
+> +	{ .fw_name = "xo" },
+>   	{ .hw = &disp_cc_pll0.clkr.hw },
+> -	{ .fw_name = "gcc_disp_gpll0_clk_src" },
+> +	{ .fw_name = "gpll0" },
 
-Possible alternative solution to this system security hardening, capabilities
-balancing task of making performance monitoring and observability operations
-more accessible could be to use the existing CAP_SYS_PTRACE capability to govern
-system performance monitoring and observability subsystems. However CAP_SYS_PTRACE
-capability still provides users with more credentials than are required for secure
-performance monitoring and observability operations and this excess is avoided by
-the designed CAP_PERFMON capability.
+This is not the correct clock, we have a child/branch clock which 
+requires to be turned ON "gcc_disp_gpll0_clk_src" when we switch to this 
+source.
 
-Although software running under CAP_PERFMON can not ensure avoidance of related
-hardware issues, the software can still mitigate those issues following the official
-embargoed hardware issues mitigation procedure [3]. The bugs in the software itself
-can be fixed following the standard kernel development process [4] to maintain and
-harden security of system performance monitoring and observability operations.
-Finally, the patch set is shaped in the way that simplifies backtracking procedure
-of possible induced issues [5] as much as possible.
+>   	{ .hw = &disp_cc_pll0_out_even.clkr.hw },
+> -	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
+>   };
+>   
+>   static const struct parent_map disp_cc_parent_map_4[] = {
+>   	{ P_BI_TCXO, 0 },
+>   	{ P_GPLL0_OUT_MAIN, 4 },
+> -	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>   };
+>   
+>   static const struct clk_parent_data disp_cc_parent_data_4[] = {
+> -	{ .fw_name = "bi_tcxo" },
+> -	{ .fw_name = "gcc_disp_gpll0_clk_src" },
+> -	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
+> +	{ .fw_name = "xo" },
+> +	{ .fw_name = "gpll0" },
 
-The patch set is for tip perf/core repository:
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip perf/core
-sha1: 56ee04aa63285d6bc8a995a26e2441ae3d419bcd
+same comment as above.
 
----
-Changes in v6:
-- avoided noaudit checks in perfmon_capable() to explicitly advertise CAP_PERFMON
-  usage thru audit logs to secure system performance monitoring and observability
-Changes in v5:
-- renamed CAP_SYS_PERFMON to CAP_PERFMON
-- extended perfmon_capable() with noaudit checks
-Changes in v4:
-- converted perfmon_capable() into an inline function
-- made perf_events kprobes, uprobes, hw breakpoints and namespaces data available
-  to CAP_SYS_PERFMON privileged processes
-- applied perfmon_capable() to drivers/perf and drivers/oprofile
-- extended __cmd_ftrace() with support of CAP_SYS_PERFMON
-Changes in v3:
-- implemented perfmon_capable() macros aggregating required capabilities checks
-Changes in v2:
-- made perf_events trace points available to CAP_SYS_PERFMON privileged processes
-- made perf_event_paranoid_check() treat CAP_SYS_PERFMON equally to CAP_SYS_ADMIN
-- applied CAP_SYS_PERFMON to i915_perf, bpf_trace, powerpc and parisc system
-  performance monitoring and observability related subsystems
+>   };
+>   
+>   static const struct parent_map disp_cc_parent_map_5[] = {
+>   	{ P_BI_TCXO, 0 },
+>   	{ P_DSI0_PHY_PLL_OUT_DSICLK, 1 },
+> -	{ P_CORE_BI_PLL_TEST_SE, 7 },
+>   };
+>   
+>   static const struct clk_parent_data disp_cc_parent_data_5[] = {
+> -	{ .fw_name = "bi_tcxo" },
+> -	{ .fw_name = "dsi0_phy_pll_out_dsiclk",
+> -				.name = "dsi0_phy_pll_out_dsiclk" },
+> -	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
+> +	{ .fw_name = "xo" },
+> +	{ .fw_name = "dsi_phy_pll_pixel" },
+>   };
+>   
+>   static const struct freq_tbl ftbl_disp_cc_mdss_ahb_clk_src[] = {
+> @@ -169,7 +154,7 @@ static struct clk_rcg2 disp_cc_mdss_ahb_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_ahb_clk_src",
+>   		.parent_data = disp_cc_parent_data_4,
+> -		.num_parents = 3,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_4),
+>   		.flags = CLK_SET_RATE_PARENT,
+>   		.ops = &clk_rcg2_shared_ops,
+>   	},
+> @@ -183,7 +168,7 @@ static struct clk_rcg2 disp_cc_mdss_byte0_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_byte0_clk_src",
+>   		.parent_data = disp_cc_parent_data_2,
+> -		.num_parents = 3,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_2),
+>   		.flags = CLK_SET_RATE_PARENT,
+>   		.ops = &clk_byte2_ops,
+>   	},
+> @@ -203,7 +188,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_aux_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_dp_aux_clk_src",
+>   		.parent_data = disp_cc_parent_data_0,
+> -		.num_parents = 2,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
+>   		.ops = &clk_rcg2_ops,
+>   	},
+>   };
+> @@ -216,7 +201,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_crypto_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_dp_crypto_clk_src",
+>   		.parent_data = disp_cc_parent_data_1,
+> -		.num_parents = 4,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
+>   		.flags = CLK_SET_RATE_PARENT,
+>   		.ops = &clk_byte2_ops,
+>   	},
+> @@ -230,7 +215,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_link_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_dp_link_clk_src",
+>   		.parent_data = disp_cc_parent_data_1,
+> -		.num_parents = 4,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
+>   		.flags = CLK_SET_RATE_PARENT,
+>   		.ops = &clk_byte2_ops,
+>   	},
+> @@ -244,7 +229,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_pixel_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_dp_pixel_clk_src",
+>   		.parent_data = disp_cc_parent_data_1,
+> -		.num_parents = 4,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
+>   		.flags = CLK_SET_RATE_PARENT,
+>   		.ops = &clk_dp_ops,
+>   	},
+> @@ -259,7 +244,7 @@ static struct clk_rcg2 disp_cc_mdss_esc0_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_esc0_clk_src",
+>   		.parent_data = disp_cc_parent_data_2,
+> -		.num_parents = 3,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_2),
+>   		.ops = &clk_rcg2_ops,
+>   	},
+>   };
+> @@ -282,7 +267,7 @@ static struct clk_rcg2 disp_cc_mdss_mdp_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_mdp_clk_src",
+>   		.parent_data = disp_cc_parent_data_3,
+> -		.num_parents = 5,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_3),
+>   		.ops = &clk_rcg2_shared_ops,
+>   	},
+>   };
+> @@ -295,7 +280,7 @@ static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_pclk0_clk_src",
+>   		.parent_data = disp_cc_parent_data_5,
+> -		.num_parents = 3,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_5),
+>   		.flags = CLK_SET_RATE_PARENT,
+>   		.ops = &clk_pixel_ops,
+>   	},
+> @@ -310,7 +295,7 @@ static struct clk_rcg2 disp_cc_mdss_rot_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_rot_clk_src",
+>   		.parent_data = disp_cc_parent_data_3,
+> -		.num_parents = 5,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_3),
+>   		.ops = &clk_rcg2_shared_ops,
+>   	},
+>   };
+> @@ -324,7 +309,7 @@ static struct clk_rcg2 disp_cc_mdss_vsync_clk_src = {
+>   	.clkr.hw.init = &(struct clk_init_data){
+>   		.name = "disp_cc_mdss_vsync_clk_src",
+>   		.parent_data = disp_cc_parent_data_0,
+> -		.num_parents = 2,
+> +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
+>   		.ops = &clk_rcg2_shared_ops,
+>   	},
+>   };
+> 
 
----
-Alexey Budankov (10):
-  capabilities: introduce CAP_PERFMON to kernel and user space
-  perf/core: open access to the core for CAP_PERFMON privileged process
-  perf/core: open access to probes for CAP_PERFMON privileged process
-  perf tool: extend Perf tool with CAP_PERFMON capability support
-  drm/i915/perf: open access for CAP_PERFMON privileged process
-  trace/bpf_trace: open access for CAP_PERFMON privileged process
-  powerpc/perf: open access for CAP_PERFMON privileged process
-  parisc/perf: open access for CAP_PERFMON privileged process
-  drivers/perf: open access for CAP_PERFMON privileged process
-  drivers/oprofile: open access for CAP_PERFMON privileged process
-
- arch/parisc/kernel/perf.c           |  2 +-
- arch/powerpc/perf/imc-pmu.c         |  4 ++--
- drivers/gpu/drm/i915/i915_perf.c    | 13 ++++++-------
- drivers/oprofile/event_buffer.c     |  2 +-
- drivers/perf/arm_spe_pmu.c          |  4 ++--
- include/linux/capability.h          |  4 ++++
- include/linux/perf_event.h          |  6 +++---
- include/uapi/linux/capability.h     |  8 +++++++-
- kernel/events/core.c                |  6 +++---
- kernel/trace/bpf_trace.c            |  2 +-
- security/selinux/include/classmap.h |  4 ++--
- tools/perf/builtin-ftrace.c         |  5 +++--
- tools/perf/design.txt               |  3 ++-
- tools/perf/util/cap.h               |  4 ++++
- tools/perf/util/evsel.c             | 10 +++++-----
- tools/perf/util/util.c              |  1 +
- 16 files changed, 47 insertions(+), 31 deletions(-)
-
----
-Testing and validation (Intel Skylake, 8 cores, Fedora 29, 5.5.0-rc3+, x86_64):
-
-libcap library [6], [7], [8] and Perf tool can be used to apply CAP_PERFMON 
-capability for secure system performance monitoring and observability beyond the
-scope permitted by the system wide perf_event_paranoid kernel setting [9] and
-below are the steps for evaluation:
-
-  - patch, build and boot the kernel
-  - patch, build Perf tool e.g. to /home/user/perf
-  ...
-  # git clone git://git.kernel.org/pub/scm/libs/libcap/libcap.git libcap
-  # pushd libcap
-  # patch libcap/include/uapi/linux/capabilities.h with [PATCH 1]
-  # make
-  # pushd progs
-  # ./setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
-  # ./setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
-  /home/user/perf: OK
-  # ./getcap /home/user/perf
-  /home/user/perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
-  # echo 2 > /proc/sys/kernel/perf_event_paranoid
-  # cat /proc/sys/kernel/perf_event_paranoid 
-  2
-  ...
-  $ /home/user/perf top
-    ... works as expected ...
-  $ cat /proc/`pidof perf`/status
-  Name:	perf
-  Umask:	0002
-  State:	S (sleeping)
-  Tgid:	2958
-  Ngid:	0
-  Pid:	2958
-  PPid:	9847
-  TracerPid:	0
-  Uid:	500	500	500	500
-  Gid:	500	500	500	500
-  FDSize:	256
-  ...
-  CapInh:	0000000000000000
-  CapPrm:	0000004400080000
-  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
-                                     cap_perfmon,cap_sys_ptrace,cap_syslog
-  CapBnd:	0000007fffffffff
-  CapAmb:	0000000000000000
-  NoNewPrivs:	0
-  Seccomp:	0
-  Speculation_Store_Bypass:	thread vulnerable
-  Cpus_allowed:	ff
-  Cpus_allowed_list:	0-7
-  ...
-
-Usage of cap_perfmon effectively avoids unused credentials excess:
-
-- with cap_sys_admin:
-  CapEff:	0000007fffffffff => 01111111 11111111 11111111 11111111 11111111
-
-- with cap_perfmon:
-  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
-                                    38   34               19
-                               perfmon   syslog           sys_ptrace
-
----
-[1] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-[2] http://man7.org/linux/man-pages/man7/capabilities.7.html
-[3] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
-[4] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
-[5] https://www.kernel.org/doc/html/latest/process/management-style.html#decisions
-[6] http://man7.org/linux/man-pages/man8/setcap.8.html
-[7] https://git.kernel.org/pub/scm/libs/libcap/libcap.git
-[8] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
-[9] http://man7.org/linux/man-pages/man2/perf_event_open.2.html
+All the above code are auto-generated and we really do not want to 
+hand-code.
 
 -- 
-2.20.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
+--
