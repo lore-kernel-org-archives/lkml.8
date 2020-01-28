@@ -2,172 +2,114 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D9EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA2DC35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D922467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B038B2468B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GGRf+pJA"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nTDNH8XY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgA1Kt6 (ORCPT
+        id S1726162AbgA1KuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:49:58 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18568 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgA1Kt6 (ORCPT
+        Tue, 28 Jan 2020 05:50:11 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:37368 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgA1KuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:49:58 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3011c20000>; Tue, 28 Jan 2020 02:49:38 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 28 Jan 2020 02:49:57 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 28 Jan 2020 02:49:57 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan
- 2020 10:49:52 +0000
-CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
-Subject: Re: [PATCH 0/9] add ASoC components for AHUB
-To:     <perex@perex.cz>, <tiwai@suse.com>, <robh+dt@kernel.org>
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <81db77b5-a65a-eafe-d42d-947c38ea1d3c@nvidia.com>
-Date:   Tue, 28 Jan 2020 16:19:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 28 Jan 2020 05:50:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1580208609; x=1611744609;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=WYtCBgBVN8ObAntGrLP9PSwj39O1B410LMI+5OpI30E=;
+  b=nTDNH8XYvUKl0hzaXfJUaJG7iblk5gCxNUulLYXN2goLXts0pgEpZlFz
+   xpoUdDptLQ6d3NdcRvX66fHJIDz470gq997a2s8jwnNETxOzqU3uSlONQ
+   +jOl2EQSJEuBKOGD4nfrGlbUeKCgZS6h0HW1w5j8MrhzVABWQLP4TQ29u
+   A=;
+IronPort-SDR: 0Hsb+qv42wSiM41C93C4a1LfhcjySaLvJzM+hKrBuLySIDMN7FQIj68NhS/Pw2n8brqfJ6m+/6
+ U5kUDS2M0P6g==
+X-IronPort-AV: E=Sophos;i="5.70,373,1574121600"; 
+   d="scan'208";a="14547675"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 28 Jan 2020 10:50:06 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com (Postfix) with ESMTPS id 3B6FFA24EE;
+        Tue, 28 Jan 2020 10:50:05 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Tue, 28 Jan 2020 10:50:04 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.74) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 28 Jan 2020 10:49:56 +0000
+From:   <sjpark@amazon.com>
+To:     Qian Cai <cai@lca.pw>
+CC:     <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        SeongJae Park <sjpark@amazon.de>, <sj38.park@gmail.com>,
+        <acme@kernel.org>, <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
+        <corbet@lwn.net>, <dwmw@amazon.com>, <mgorman@suse.de>,
+        <rostedt@goodmis.org>, <kirill@shutemov.name>,
+        <brendanhiggins@google.com>, <colin.king@canonical.com>,
+        <minchan@kernel.org>, <vdavydov.dev@gmail.com>,
+        <vdavydov@parallels.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH v2 0/9] Introduce Data Access MONitor (DAMON)
+Date:   Tue, 28 Jan 2020 11:49:42 +0100
+Message-ID: <20200128104942.11419-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <D20B234E-04EE-4410-9B27-FF63AB3E1808@lca.pw> (raw)
 MIME-Version: 1.0
-In-Reply-To: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580208578; bh=YJZpPWHErsEBxHrNnw+7ltmiDCP3p5OqwD9FoVMZl8s=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=GGRf+pJA/37DUqeFZZ+QEJAPVLUqv0jNTBrKfmNf2YcNL+Plv90d/EUA2GyQ0WlkJ
-         2gBm2anH62Us1wy83XjvFWA3paGGD6+vvwTYy3ob0Z3lDvUzYXJgpi76hGZdstJLNY
-         TlKFdvAWxlEzRTniUUxcuCSqS5zxSpeb8YyacEN/j5YP6An8on6/mGvET9KigdUUuP
-         q4BJMP7gjbjFaBCIZpzBYvrVmW7vz50OVO0ESrYLWAa7y/spVPoDWQEnIyTNI5Kj2U
-         SWRXxbY3aplmFUi1+S/Q68oq281voufJaXEz3W7MYJgp4ADF6IIawhM3N3zf5eXnld
-         gn9sOBGfTPjnA==
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.74]
+X-ClientProxiedBy: EX13D39UWA001.ant.amazon.com (10.43.160.54) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 28 Jan 2020 05:20:35 -0500 Qian Cai <cai@lca.pw> wrote:
 
+> 
+> 
+> > On Jan 28, 2020, at 3:58 AM, sjpark@amazon.com wrote:
+> > 
+> > This patchset introduces a new kernel module for practical monitoring of data
+> > accesses, namely DAMON.
+> > 
+> > The patches are organized in the following sequence.  The first four patches
+> > implements the core logic of DAMON one by one.  After that, the fifth patch
+> > implements DAMON's debugfs interface for users.  To provide a minimal reference
+> > to the low level interface and for more convenient use/tests of the DAMON, the
+> > sixth patch implements an user space tool.  The seventh patch adds a document
+> > for administrators of DAMON, and the eightth patch provides DAMON's kunit
+> > tests.  Finally, the ninth patch implements a tracepoint for DAMON.  As the
+> > tracepoint prints every monitoring results, it will be easily integrated with
+> > other tracers supporting tracepoints including perf.
+> 
+> I am a bit surprised that this patchset did not include perf maintainers which makes me wonder if there is any attempt to discuss first if we actually need a whole new subsystem for it or a existing tool can be enhanced.
 
-On 1/20/2020 7:53 PM, Sameer Pujar wrote:
-> Overview
-> ========
-> The Audio Hub (AHUB) is part of the Audio Processing Engine (APE) which
-> comprises a collection of hardware accelerators for audio pre-processing
-> and post-processing. It also includes a programmable full crossbar for
-> routing audio data across these accelerators.
->
-> This series exposes some of these below mentioned HW devices as ASoC
-> components for Tegra platforms from Tegra210 onwards.
->   * ADMAIF : The interface between ADMA and AHUB
->   * XBAR   : Crossbar for routing audio samples across various modules
->   * I2S    : Inter-IC Sound Controller
->   * DMIC   : Digital Microphone
->   * DSPK   : Digital Speaker
->
-> Following is the summary of current series.
->   1. Add YAML DT binding documentation for above mentioned modules.
->   2. ACIF programming is same for Tegra generations and hence it is moved
->      to a common file.
->   3. Add ASoC driver components for each of the above modules.
->   4. Add DT entries for above components for Tegra210, Tegra186 and
->      Tegra194.
->   5. Enable these components for Jetson-Tx1, Jetson-Tx2 and
->      Jetson-Xavier.
->
-> Machine driver series will be sent separately.
->
-> Sameer Pujar (9):
->    dt-bindings: sound: tegra: add DT binding for AHUB
->    ASoC: tegra: add support for CIF programming
->    ASoC: tegra: add Tegra210 based DMIC driver
->    ASoC: tegra: add Tegra210 based I2S driver
->    ASoC: tegra: add Tegra210 based AHUB driver
->    ASoC: tegra: add Tegra186 based DSPK driver
->    ASoC: tegra: add Tegra210 based ADMAIF driver
->    arm64: tegra: add AHUB components for few Tegra chips
->    arm64: tegra: enable AHUB modules for few Tegra chips
+For the comments from perf maintainers, I added Steven Rostedt and Arnaldo
+Carvalho de Melo first, but I might missed someone.  If you recommend some more
+people, I will add them to recipients.
 
-If any comments on the series, please let me know.
-I am planning to publish v2 based on the discussion we had in v1.
+I made DAMON as a new subsystem because I think no existing subsystem fits well
+to be a base of DAMON, due to DAMON's unique goals and mechanisms described
+below in the original cover letter.
+
+The existing subsystem that most similar to DAMON might be 'mm/page_idle.c'.
+However, there are many conceptual differences with DAMON.  One biggest
+difference I think is the target.  'page_idle' deals with physical page frames
+while DAMON deals with virtual address of specific processes.
+
+Nevertheless, if you have some different opinion, please let me know.
+
 
 Thanks,
-Sameer.
->
->   .../bindings/sound/nvidia,tegra186-dspk.yaml       | 105 +++
->   .../bindings/sound/nvidia,tegra210-admaif.yaml     | 165 ++++
->   .../bindings/sound/nvidia,tegra210-ahub.yaml       | 130 +++
->   .../bindings/sound/nvidia,tegra210-dmic.yaml       | 105 +++
->   .../bindings/sound/nvidia,tegra210-i2s.yaml        | 112 +++
->   arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  48 ++
->   arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 231 ++++-
->   arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts |  36 +
->   arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 239 +++++-
->   arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts |  40 +
->   arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 145 ++++
->   sound/soc/tegra/Kconfig                            |  56 ++
->   sound/soc/tegra/Makefile                           |  12 +
->   sound/soc/tegra/tegra186_dspk.c                    | 516 +++++++++++
->   sound/soc/tegra/tegra186_dspk.h                    |  73 ++
->   sound/soc/tegra/tegra210_admaif.c                  | 896 ++++++++++++++++++++
->   sound/soc/tegra/tegra210_admaif.h                  | 164 ++++
->   sound/soc/tegra/tegra210_ahub.c                    | 667 +++++++++++++++
->   sound/soc/tegra/tegra210_ahub.h                    | 125 +++
->   sound/soc/tegra/tegra210_dmic.c                    | 522 ++++++++++++
->   sound/soc/tegra/tegra210_dmic.h                    |  85 ++
->   sound/soc/tegra/tegra210_i2s.c                     | 941 +++++++++++++++++++++
->   sound/soc/tegra/tegra210_i2s.h                     | 132 +++
->   sound/soc/tegra/tegra30_ahub.c                     |  94 +-
->   sound/soc/tegra/tegra30_ahub.h                     | 129 ---
->   sound/soc/tegra/tegra30_i2s.c                      |  35 +-
->   sound/soc/tegra/tegra30_i2s.h                      |   7 -
->   sound/soc/tegra/tegra_cif.c                        |  34 +
->   sound/soc/tegra/tegra_cif.h                        |  50 ++
->   sound/soc/tegra/tegra_pcm.c                        | 224 ++++-
->   sound/soc/tegra/tegra_pcm.h                        |  23 +-
->   31 files changed, 5897 insertions(+), 244 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
->   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
->   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
->   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
->   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
->   create mode 100644 sound/soc/tegra/tegra186_dspk.c
->   create mode 100644 sound/soc/tegra/tegra186_dspk.h
->   create mode 100644 sound/soc/tegra/tegra210_admaif.c
->   create mode 100644 sound/soc/tegra/tegra210_admaif.h
->   create mode 100644 sound/soc/tegra/tegra210_ahub.c
->   create mode 100644 sound/soc/tegra/tegra210_ahub.h
->   create mode 100644 sound/soc/tegra/tegra210_dmic.c
->   create mode 100644 sound/soc/tegra/tegra210_dmic.h
->   create mode 100644 sound/soc/tegra/tegra210_i2s.c
->   create mode 100644 sound/soc/tegra/tegra210_i2s.h
->   create mode 100644 sound/soc/tegra/tegra_cif.c
->   create mode 100644 sound/soc/tegra/tegra_cif.h
->
-
+SeongJae Park
