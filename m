@@ -2,141 +2,125 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C94C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC55C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F562173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A442173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:41:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g7Y1ZJ7x"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wJaerqNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgA1QkV (ORCPT
+        id S1726478AbgA1Qlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:40:21 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:45067 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgA1QkU (ORCPT
+        Tue, 28 Jan 2020 11:41:51 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:47306 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725881AbgA1Qlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:40:20 -0500
-Received: by mail-vs1-f68.google.com with SMTP id v141so4845913vsv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 08:40:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dZPnlKwuM4FAz94w/wTgs9ztHjlDWDu7abUtUf/0TNY=;
-        b=g7Y1ZJ7xc9te/oiwLwAst1C/S6DT7qk70e9sQ2tkGD45oeiloTH8UFUxEbsmy5S9D+
-         OUmrTYVC+RIsMWaP1pzTEPyHTVHVnHbUzZRtKqx3sNMLD9+6cBnlq+kVYdboPhlxpYRP
-         fxVqUgqfYh30gHjir50S8jj9dVmigWcAkKgf8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dZPnlKwuM4FAz94w/wTgs9ztHjlDWDu7abUtUf/0TNY=;
-        b=VryKR9cdLRCfXRVK3lZ8dpBoejvKZR+UD0GL4EzBf7WIxXYRrFs5b53z4bLObf7/ip
-         YLaRb0kz4/fPvjLFiVP0qxJESffsrOqPOET8u6PQ5/7e4scOxzOzAcnBIO2dV118UaZG
-         tRAuNQKtkzJox4l7qY33FS6EsTSQJ3iqshBkQxrgPDwAqEGepfcWuaOlj38YD+Xz+7of
-         ANjG119G0Qu+/8n4H0Bui8+Z8dPwoGKu8x89t0v6xoC+pTKgQZXDlJFb7d52NAPkysMA
-         6yF7A0ThBynT5GX91CkZhbXkRL4aWKaQEYqIBzw4An7m0rG7h/ZQJu/iyUdicEKRMsji
-         FBMw==
-X-Gm-Message-State: APjAAAW1nMjsG/hQ+wRAJNRyT/3Gt2VkUkOj+lQdlmqq52hLROiG7dWe
-        /50OQ608b71NUKZkoxyz3CrLl8ETfbo=
-X-Google-Smtp-Source: APXvYqzjtAZUojMCDZLxn/13MscUjF+KyKmIf5QIwe2C84LdoLWHKPvXhcERuS2AvcoeYc17NO6zZw==
-X-Received: by 2002:a67:5e45:: with SMTP id s66mr5036696vsb.200.1580229619410;
-        Tue, 28 Jan 2020 08:40:19 -0800 (PST)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id o26sm4755611vsq.17.2020.01.28.08.40.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 08:40:18 -0800 (PST)
-Received: by mail-vs1-f44.google.com with SMTP id x123so8500093vsc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 08:40:18 -0800 (PST)
-X-Received: by 2002:a67:fa1a:: with SMTP id i26mr1696397vsq.169.1580229618200;
- Tue, 28 Jan 2020 08:40:18 -0800 (PST)
+        Tue, 28 Jan 2020 11:41:51 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SGWbJd004416;
+        Tue, 28 Jan 2020 17:41:34 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=X6unbUqYU6R+TSthYBHa+4O1CSkYj4znlr55hHsVQV8=;
+ b=wJaerqNHP+JqtLXcMJpzcCM4s0C2tAyEdrX1+ACeGQ6wY/iljHyc7xnerXaACfVp1L35
+ ID0nEdDN5DxOvNzq9as2e7+BHYii6Xih+qV+eNYCdU1xf8u5LSR6l7ABA4Hnwgisr8Fj
+ NfNVEFhwmLaVzyPrHdAKJAKNJKCiFiL2Epm6Zl/Yz2SjRkqTmsIX9fljyD6CKI/Pvr6w
+ byJZzNyEZS+djW3p8IUKVR3mfgOg5qnPyhku6ooLOfxyByG7s6+Ggpy+2LKq5mquwWEh
+ QAZZ5I21dmmMZdpElPbuPXI9VhV1xRGD7LhPJANmiGi/PZbJbxxZx+IRVjmSOIdZtEnA tQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrdekeutu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jan 2020 17:41:34 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BB283100038;
+        Tue, 28 Jan 2020 17:41:29 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag7node3.st.com [10.75.127.21])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9A1D52FF5FB;
+        Tue, 28 Jan 2020 17:41:29 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG7NODE3.st.com
+ (10.75.127.21) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan
+ 2020 17:41:29 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Tue, 28 Jan 2020 17:41:29 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "broonie@kernel.org" <broonie@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "lkml@metux.net" <lkml@metux.net>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "system-dt@lists.openampproject.org" 
+        <system-dt@lists.openampproject.org>,
+        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>
+Subject: Re: [PATCH v2 2/7] bus: Introduce firewall controller framework
+Thread-Topic: [PATCH v2 2/7] bus: Introduce firewall controller framework
+Thread-Index: AQHV1fD3WqS5xyjWNkazyajQl95bjqgAKU6AgAANnwA=
+Date:   Tue, 28 Jan 2020 16:41:29 +0000
+Message-ID: <0dd9dc95-1329-0ad4-d03d-99899ea4f574@st.com>
+References: <20200128153806.7780-1-benjamin.gaignard@st.com>
+ <20200128153806.7780-3-benjamin.gaignard@st.com>
+ <20200128155243.GC3438643@kroah.com>
+In-Reply-To: <20200128155243.GC3438643@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.51]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BDCF163FFEDC9E4EA7E20A7087EB997E@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200124224225.22547-1-dianders@chromium.org> <20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid>
- <eeef68f4-127e-6d28-4a79-c1464a10c7db@codeaurora.org>
-In-Reply-To: <eeef68f4-127e-6d28-4a79-c1464a10c7db@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 28 Jan 2020 08:40:02 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WtkX0XFSKvzvGBBjoqRwWfJowJrowkp74vfXawgt3aKw@mail.gmail.com>
-Message-ID: <CAD=FV=WtkX0XFSKvzvGBBjoqRwWfJowJrowkp74vfXawgt3aKw@mail.gmail.com>
-Subject: Re: [PATCH v2 10/10] arm64: dts: sc7180: Add clock controller nodes
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>, kalyan_t@codeaurora.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_05:2020-01-28,2020-01-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Jan 27, 2020 at 9:58 PM Taniya Das <tdas@codeaurora.org> wrote:
->
-> Hi Doug,
->
-> Thanks for the patch.
->
-> On 1/25/2020 4:12 AM, Douglas Anderson wrote:
-> > From: Taniya Das <tdas@codeaurora.org>
-> >
-> > Add the display, video & graphics clock controller nodes supported on
-> > SC7180.
-> >
-> > NOTE: the dispcc needs input clocks from various PHYs that aren't in
-> > the device tree yet.  For now we'll leave these stubbed out with <0>,
-> > which is apparently the magic way to do this.  These clocks aren't
-> > really "optional" and this stubbing out method is apparently the best
-> > way to handle it.
-> >
-> > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> > Changes in v2:
-> > - Added includes
-> > - Changed various parent names to match bindings / driver
-> >
-> >   arch/arm64/boot/dts/qcom/sc7180.dtsi | 41 ++++++++++++++++++++++++++++
-> >   1 file changed, 41 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > index 8011c5fe2a31..ee3b4bade66b 100644
-> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > @@ -5,7 +5,9 @@
-> >    * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> >    */
-> >
-> > +#include <dt-bindings/clock/qcom,dispcc-sc7180.h>
-> >   #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-> > +#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
->
-> My bad, but we are still missing the videocc header. I could send across
-> the new patch.
-
-Good point, thanks for noticing!  I won't spin with this right away as
-we continue to discuss the driver / bindings patches.  If it turns out
-that the rest of the series doesn't need to be spun I will be content
-if Bjorn / Andy wants to make that fix when applying the patch, or I'm
-happy to send a new patch.
-
--Doug
+DQpPbiAxLzI4LzIwIDQ6NTIgUE0sIEdyZWcgS0ggd3JvdGU6DQo+IE9uIFR1ZSwgSmFuIDI4LCAy
+MDIwIGF0IDA0OjM4OjAxUE0gKzAxMDAsIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOg0KPj4gVGhl
+IGdvYWwgb2YgdGhpcyBmcmFtZXdvcmsgaXMgdG8gb2ZmZXIgYW4gaW50ZXJmYWNlIGZvciB0aGUN
+Cj4+IGhhcmR3YXJlIGJsb2NrcyBjb250cm9sbGluZyBidXMgYWNjZXNzZXMgcmlnaHRzLg0KPj4N
+Cj4+IEJ1cyBmaXJld2FsbCBjb250cm9sbGVycyBhcmUgdHlwaWNhbGx5IHVzZWQgdG8gY29udHJv
+bCBpZiBhDQo+PiBoYXJkd2FyZSBibG9jayBjYW4gcGVyZm9ybSByZWFkIG9yIHdyaXRlIG9wZXJh
+dGlvbnMgb24gYnVzLg0KPiBTbyBwdXQgdGhpcyBpbiB0aGUgYnVzLXNwZWNpZmljIGNvZGUgdGhh
+dCBjb250cm9scyB0aGUgYnVzIHRoYXQgdGhlc2UNCj4gZGV2aWNlcyBsaXZlIG9uLiAgV2h5IHB1
+dCBpdCBpbiB0aGUgZHJpdmVyIGNvcmUgd2hlbiB0aGlzIGlzIG9ubHkgb24gb25lDQo+ICJidXMi
+IChpLmUuIHRoZSBjYXRjaC1hbGwtYW5kLWEtYmFnLW9mLWNoaXBzIHBsYXRmb3JtIGJ1cyk/DQoN
+Ckl0IGlzIHJlYWxseSBzaW1pbGFyIHRvIHdoYXQgcGluIGNvbnRyb2xsZXIgZG9lcywgY29uZmln
+dXJpbmcgYW4gDQpoYXJkd2FyZSBibG9jayBnaXZlbiBEVCBpbmZvcm1hdGlvbi4NCg0KSSBjb3Vs
+ZCBhcmd1ZSB0aGF0IGZpcmV3YWxscyBhcmUgbm90IGJ1cyB0aGVtc2VsdmVzIHRoZXkgb25seSBp
+bnRlcmFjdCANCndpdGggaXQuDQoNCkJ1cyBmaXJld2FsbHMgZXhpc3Qgb24gb3RoZXIgU29DLCBJ
+IGhvcGUgc29tZSBvdGhlcnMgY291bGQgYmUgYWRkZWQgaW4gDQp0aGlzIGZyYW1ld29yay4gRVRa
+UEMgaXMgb25seSB0aGUgZmlyc3QuDQoNCj4NCj4gQW5kIHJlYWxseSwgdGhpcyBzaG91bGQganVz
+dCBiZSBhIHRvdGFsbHkgbmV3IGJ1cyB0eXBlLCByaWdodD8gIEFuZCBhbnkNCj4gZGV2aWNlcyBv
+biB0aGlzIGJ1cyBzaG91bGQgYmUgY2hhbmdlZCB0byBiZSBvbiB0aGlzIG5ldyBidXMsIGFuZCB0
+aGUNCj4gZHJpdmVycyBjaGFuZ2VkIHRvIHN1cHBvcnQgdGhlbSwgaW5zdGVhZCBvZiB0cnlpbmcg
+dG8gb3ZlcmxvYWQgdGhlDQo+IHBsYXRmb3JtIGJ1cyB3aXRoIG1vcmUgc3R1ZmYuDQoNCkkgaGF2
+ZSB0cmllZCB0byB1c2UgdGhlIGJ1cyBub3RpZmllciB0byBhdm9pZCB0byBhZGQgdGhpcyBjb2Rl
+IGF0IHByb2JlIA0KdGltZSBidXQgd2l0aG91dCBzdWNjZXNzOg0KDQpodHRwczovL2xrbWwub3Jn
+L2xrbWwvMjAxOC8yLzI3LzMwMA0KDQpJIGhhdmUgYWxzbyB0cmllZCB0byBkaXNhYmxlIHRoZSBu
+b2RlcyBhdCBydW50aW1lIGFuZCBNYXJrIFJ1dGxhbmQgDQpleHBsYWluIG1lIHdoeSBpdCB3YXMg
+d3JvbmcuDQoNCkJlbmphbWluDQoNCj4NCj4gdGhhbmtzLA0KPg0KPiBncmVnIGstaA==
