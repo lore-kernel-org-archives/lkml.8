@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750B4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AEDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E8624681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B8E24698
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220963;
-	bh=Tmkx2iMyfBzMDsHXzxoDgDwJzf6OhDsj9P7OB2cIr4c=;
+	s=default; t=1580220967;
+	bh=8WqQeYXdv994NDxEeRcOODSCB/ugc9gN/IVH9Pbf19A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XO5GsrWD6Q/54IZ1kGPysgV4l3LYzlb0KNep5rJx2hFwoOMZg2aFebyfsO2Ox6ftP
-	 +5OC/71vhOuA9lLDy2BgoQLGC8HKBdod3qZvffV5caa2/2uqtnM2fsumY0QagjS94c
-	 w4Bv244lGwVI6upZ22+nJjeEyyn4et8j37gaSsOg=
+	b=LqILwJJVYDusbHyGzn39ezGV3yViqsOqn2m8WnhSlby8t8MpXeDMCTvd44dHcg1LV
+	 cRmCdH/4s6kKjT+QGH4L1t6wxc/xhJzaiNt+AMEE77mD2/q5LitPhUB0/6TzWnUT/J
+	 K92KlUGlF2QQl9qwpdHkN9SEAIWP5gfixXD8zlRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbgA1OQC (ORCPT
+        id S1730252AbgA1OQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:16:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:16:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729232AbgA1OP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:15:58 -0500
+        id S1730236AbgA1OQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:16:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30BF824681;
-        Tue, 28 Jan 2020 14:15:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FFE12468E;
+        Tue, 28 Jan 2020 14:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220957;
-        bh=Tmkx2iMyfBzMDsHXzxoDgDwJzf6OhDsj9P7OB2cIr4c=;
+        s=default; t=1580220962;
+        bh=8WqQeYXdv994NDxEeRcOODSCB/ugc9gN/IVH9Pbf19A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iGdQYl7ngzi+6o5QW2ZII4yba9EqTHR+sivQAVYFPfIpUzjvBkVx444p3YNEP/ikk
-         3eYk9Z7Jok3mz0XHWVXUUrfwCGHRreISqKp+Oy2+VUSxn3ST14Qr1O4cKVjqsw0GoU
-         patMw2sVc/lvf2p730XaBlK6bgY8GSB/tKpD8m4U=
+        b=f7tCoqYfNlm2igXvn1+OECm+WtA4exjYTmrqhy/ZBtroeCkUdJ6SsEJo96d/rnOzc
+         rMqjM3+32+qqwWOSZ+esjawOISPfdV7KKwJwz6JLToslrvsg7VB1duruQYNtDnvG62
+         ab1CXVvMES7375f7eVLsAjxZs8zt1WxaW+LoGYcQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        stable@vger.kernel.org, Nicolas Huaman <nicolas@herochao.de>,
         Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 006/271] ALSA: hda: fix unused variable warning
-Date:   Tue, 28 Jan 2020 15:02:35 +0100
-Message-Id: <20200128135852.850786903@linuxfoundation.org>
+Subject: [PATCH 4.9 008/271] ALSA: usb-audio: update quirk for B&W PX to remove microphone
+Date:   Tue, 28 Jan 2020 15:02:37 +0100
+Message-Id: <20200128135853.009032099@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,48 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anders Roxell <anders.roxell@linaro.org>
+From: Nicolas Huaman <nicolas@herochao.de>
 
-[ Upstream commit 5b03006d5c58ddd31caf542eef4d0269bcf265b3 ]
+[ Upstream commit c369c8db15d51fa175d2ba85928f79d16af6b562 ]
 
-When CONFIG_X86=n function azx_snoop doesn't use the variable chip it
-only returns true.
+A quirk in snd-usb-audio was added to automate setting sample rate to
+4800k and remove the previously exposed nonfunctional microphone for
+the Bowers & Wilkins PX:
+commit 240a8af929c7c57dcde28682725b29cf8474e8e5
+https://lore.kernel.org/patchwork/patch/919689/
 
-sound/pci/hda/hda_intel.c: In function ‘dma_alloc_pages’:
-sound/pci/hda/hda_intel.c:2002:14: warning: unused variable ‘chip’ [-Wunused-variable]
-  struct azx *chip = bus_to_azx(bus);
-              ^~~~
+However the headphones where updated shortly after that to remove the
+unintentional microphone functionality. I guess because of this the
+headphones now crash when connecting them via USB while the quirk is
+active. Dmesg:
 
-Create a inline function of azx_snoop.
+snd-usb-audio: probe of 2-3:1.0 failed with error -22
+usb 2-3: 2:1: cannot get min/max values for control 2 (id 2)
 
-Fixes: a41d122449be ("ALSA: hda - Embed bus into controller object")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+This patch removes the microfone and allows the headphones to connect
+and work out of the box. It is based on the current mainline kernel
+ and successfully applied an tested on my machine (4.18.10.arch1-1).
+
+Fixes: 240a8af929c7 ("ALSA: usb-audio: Add a quirck for B&W PX headphones")
+Signed-off-by: Nicolas Huaman <nicolas@herochao.de>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_controller.h | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ sound/usb/quirks-table.h | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/sound/pci/hda/hda_controller.h b/sound/pci/hda/hda_controller.h
-index b83feecf1e40c..8f93869982703 100644
---- a/sound/pci/hda/hda_controller.h
-+++ b/sound/pci/hda/hda_controller.h
-@@ -171,11 +171,10 @@ struct azx {
- #define azx_bus(chip)	(&(chip)->bus.core)
- #define bus_to_azx(_bus)	container_of(_bus, struct azx, bus.core)
- 
--#ifdef CONFIG_X86
--#define azx_snoop(chip)		((chip)->snoop)
--#else
--#define azx_snoop(chip)		true
--#endif
-+static inline bool azx_snoop(struct azx *chip)
-+{
-+	return !IS_ENABLED(CONFIG_X86) || chip->snoop;
-+}
- 
- /*
-  * macros for easy use
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index d32727c74a168..c892b4d1e733f 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3293,19 +3293,14 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
+ 				.ifnum = 0,
+ 				.type = QUIRK_AUDIO_STANDARD_MIXER,
+ 			},
+-			/* Capture */
+-			{
+-				.ifnum = 1,
+-				.type = QUIRK_IGNORE_INTERFACE,
+-			},
+ 			/* Playback */
+ 			{
+-				.ifnum = 2,
++				.ifnum = 1,
+ 				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
+ 				.data = &(const struct audioformat) {
+ 					.formats = SNDRV_PCM_FMTBIT_S16_LE,
+ 					.channels = 2,
+-					.iface = 2,
++					.iface = 1,
+ 					.altsetting = 1,
+ 					.altset_idx = 1,
+ 					.attributes = UAC_EP_CS_ATTR_FILL_MAX |
 -- 
 2.20.1
 
