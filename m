@@ -2,80 +2,108 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE194C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C6EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85FDD2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C7B2467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580198893;
-	bh=IQrFgVNc1B4IPrCk+m5OMuVQaRx7YDEOKWXm/35raU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cRok9SZjs8PtXk+1G3O1Y73LzPNQjQXxnyLU6sezAp0esVnNibMmqUmIhTfvt60Ai
-	 f0cmqvuvVKEZA6cgjuLeshbtcAX1HTaQ3jvOYVr+Vovy4eR0dAt3y0E+6lo0vO0Fys
-	 XCAKja7Jsy1WsHWbOmWiQRXbO/ES7fUBF2Kp/u7Q=
+	s=default; t=1580198940;
+	bh=aV67ENHN8dC/CJwfv5vLFhh4K9vIsUsqIvG22EYGVvw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=njKJlZk6t9zGTZAiYx+zn7l16IzwZ01yl60P7n383gv2c9f2QVw6fus71FKVjgV+X
+	 dXg73ib4Egvc9nsZE9l4Fv3idkOFEpTRs+k0xFSegcrPAHOFDWIJtlyLesG1WbAtuV
+	 bhuPNCsa08I+jn1TBt94NFszO5/ImktDhONs8wo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgA1IIN (ORCPT
+        id S1725997AbgA1II7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 03:08:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbgA1IIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 03:08:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8491B2467B;
-        Tue, 28 Jan 2020 08:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580198892;
-        bh=IQrFgVNc1B4IPrCk+m5OMuVQaRx7YDEOKWXm/35raU8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vYH7VZGGdsNcxxeXIwG/T0w6wSXO+zCOqd3sXgjHrITJtLPbzkvzU18Cgd5lUMCrB
-         2ywUksWgU8qOAQf4Fr3Yxb8m8i+6LNiwY8h0vw3xMFW+iFf1azI39YeaKrYI5eRtq3
-         EANie1McZ1qXHhIfInh60M9AkRMAENjUtnIJFTJ0=
-Date:   Tue, 28 Jan 2020 09:08:07 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, will@kernel.org,
-        stable@vger.kernel.org, sashal@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH stable 4.9] arm64: kpti: Whitelist Cortex-A CPUs that
- don't implement the CSV3 field
-Message-ID: <20200128080807.GJ2105706@kroah.com>
-References: <20200124200820.18272-1-f.fainelli@gmail.com>
+        Tue, 28 Jan 2020 03:08:59 -0500
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:33891 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgA1II7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 03:08:59 -0500
+Received: by mail-wr1-f48.google.com with SMTP id t2so14866805wrr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 00:08:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7lIcQfWVmCBP6bQ4+rU2Pi10xllyLCUnOsAfZ2ytPfM=;
+        b=YaVyiAbaWy5ecroOYJh3XirYEvqtTxo67kgJEwXvyMz2XiRnAT43UkHEckTxOrNxm2
+         7SFzNNNOy6lzCs949AeZ4YlPMhaMX80poxW1zpFQdf+PHb7/KCHX77IHFsll4I1edRQ8
+         mjEoXn9tkFS+O9PQOZQm8/IEs6I4dxbAiRZmGMboEvKbCaJCDXKvIB8WRzXGlI3wAit1
+         jWbzlZ/s3aDDi/KM0pv7eKr9w6NssyZMri8FiDX45my86xwdwFWSe0mvtkmSLbnFBY5F
+         C8W0iIqICYiuMFL9i1cFOhNxTVidNdu5mgH0Teu04YIEH9nbJr2JrUFpa/MC/vzw75sN
+         uUoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=7lIcQfWVmCBP6bQ4+rU2Pi10xllyLCUnOsAfZ2ytPfM=;
+        b=i3xR0FajMvGN/OrhvYr0KF/cUIbHHLDdMEY6B1VyIxTuxLq/Vk3/6nP99umzjnu7TM
+         /uiFYdT7Nz//hmjUGCsMygCL6R2tRB1tnQ8Fr2CjRTVVIcNvAuHKkmVEqeNeAs0GO6Pg
+         pk8Ds3ipr+U5Oal8bkrB1WRJbu+knN/Usqp4UArZKqJHJDkZsxGPkljHPXuTpSVdG+MW
+         sBpRYWkYWuGc2jeDqwI2HJPYE39OisAxlJXsFpACywtUijfQOHRh/bZ6nUzpsrDN1jl4
+         aB9iNUp2a3ZrHrfu4CINjTtueM5rZPyQeVzETn3jGZwGX7/4UKmeO8dAS9ddHNzCcwCD
+         oUtg==
+X-Gm-Message-State: APjAAAXXUSWGM+C8gRfYIW5kVLlvgEN6qKrA/mUSAJqw1ZzjM97pZ/yC
+        Ex8RKjf4uBALo/Kqe8c4MTeByvzi
+X-Google-Smtp-Source: APXvYqxvv1Ht+0eKgyFuBeOjd8Txi9emYdB08zjq7SUuP3sXzlU/v+kyXn7+lg5yDhqZccp30BKQLw==
+X-Received: by 2002:a05:6000:1044:: with SMTP id c4mr28685986wrx.204.1580198937576;
+        Tue, 28 Jan 2020 00:08:57 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id n12sm2028171wmi.18.2020.01.28.00.08.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2020 00:08:57 -0800 (PST)
+Date:   Tue, 28 Jan 2020 09:08:55 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] locking changes for v5.6
+Message-ID: <20200128080855.GA105098@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200124200820.18272-1-f.fainelli@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 12:08:20PM -0800, Florian Fainelli wrote:
-> From: Will Deacon <will.deacon@arm.com>
-> 
-> commit 2a355ec25729053bb9a1a89b6c1d1cdd6c3b3fb1 upstream.
-> 
-> While the CSV3 field of the ID_AA64_PFR0 CPU ID register can be checked
-> to see if a CPU is susceptible to Meltdown and therefore requires kpti
-> to be enabled, existing CPUs do not implement this field.
-> 
-> We therefore whitelist all unaffected Cortex-A CPUs that do not implement
-> the CSV3 field.
-> 
-> Signed-off-by: Will Deacon <will.deacon@arm.com>
-> [florian: adjust whilelist location and table to stable-4.9.y]
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Linus,
 
-Thanks for the backport, now applied.
+Please pull the latest locking-core-for-linus git tree from:
 
-greg k-h
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-core-for-linus
+
+   # HEAD: f5bfdc8e3947a7ae489cf8ae9cfd6b3fb357b952 locking/osq: Use optimized spinning loop for arm64
+
+Just a handful of changes in this cycle: an ARM64 performance 
+optimization, a comment fix and a debug output fix.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Waiman Long (3):
+      locking/lockdep: Fix lockdep_stats indentation problem
+      locking/qspinlock: Fix inaccessible URL of MCS lock paper
+      locking/osq: Use optimized spinning loop for arm64
+
+
+ arch/arm64/include/asm/spinlock.h |  9 +++++++++
+ kernel/locking/lockdep_proc.c     |  4 ++--
+ kernel/locking/osq_lock.c         | 23 ++++++++++-------------
+ kernel/locking/qspinlock.c        | 13 +++++++------
+ 4 files changed, 28 insertions(+), 21 deletions(-)
+
