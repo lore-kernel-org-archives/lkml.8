@@ -2,53 +2,52 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615FBC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C09C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDDC20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84022173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222451;
-	bh=aC5VW/qKkn4kh3r7S9fZ8bjjN6fXPJxaeVna9gSpC8k=;
+	s=default; t=1580222457;
+	bh=N0+TqitR6x8SaBnWZM8XYV12zZUenDlfzoRwwjLj6Ag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VqumEHUEdMYZPdoW1+K6XqgJ3kPofe9iFBByeIpSMOenSuUqGWmtt6qJY6rImhepT
-	 v10KMmIxnGtAlYMUbZp94x6iw0Ob/EZRPVbVks11ARHPlJNuUSh0Ds4nEZW8uVQiZS
-	 ROq1i3xhGBcSzeeoE79sm17YJbbcliiV0pQDXa9o=
+	b=K3uAXSGxh6Xil/zpZf4G1gCdbU0aCOMpMy0QOmlkfl1nOLEwOTvL+2AEcfwggAiya
+	 pVkmNOpOmjoKU216XLhthuaEvnRFtl4dzrq3ru+mx1xG9U7N68v+Mz0yFcv6MtnysZ
+	 0qkjNCHvrn+4pXf57Cfz/K8RHv0ASANPf3eItcRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbgA1OO7 (ORCPT
+        id S1729946AbgA1OOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:14:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37288 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:14:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729987AbgA1OO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:14:56 -0500
+        id S1728183AbgA1OOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:14:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D4A624681;
-        Tue, 28 Jan 2020 14:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 131F224693;
+        Tue, 28 Jan 2020 14:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220895;
-        bh=aC5VW/qKkn4kh3r7S9fZ8bjjN6fXPJxaeVna9gSpC8k=;
+        s=default; t=1580220880;
+        bh=N0+TqitR6x8SaBnWZM8XYV12zZUenDlfzoRwwjLj6Ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MvLjK41/eNvMvhW7n2pTiTYcRxS0aUJ5yBVqbDkamHjL30XyYe6tu3gpE/VX0TyCH
-         4X84kdpElbZR49ZYY8zONJApdp6HYmdwfoJrhxa3+/1jXWG9mO04vLelqILkWjwbaU
-         8cmPbX38A/8+7kPBU7s5liNbuu7cqTZncGffQOLc=
+        b=hLvFb1dWZ3KEKqdFEexmrL9nIanxNKDHdGOVZi2bImuLT5W32BgqyQpbDXpLZBpLE
+         n8nw90ngzBcHwMCELZLooPLplT52VW0+YSghx22GjF0bcljcsQrwEY55FI/1L15Lv5
+         3q9JQIh/RBK+xB7yg9kbCsFM/RH2zHp6INeZoybA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 159/183] m68k: Call timer_interrupt() with interrupts disabled
-Date:   Tue, 28 Jan 2020 15:06:18 +0100
-Message-Id: <20200128135845.601422176@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Wen Huang <huangwenabc@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.4 183/183] libertas: Fix two buffer overflows at parsing bss descriptor
+Date:   Tue, 28 Jan 2020 15:06:42 +0100
+Message-Id: <20200128135847.988935436@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,422 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Wen Huang <huangwenabc@gmail.com>
 
-[ Upstream commit 1efdd4bd254311498123a15fa0acd565f454da97 ]
+commit e5e884b42639c74b5b57dc277909915c0aefc8bb upstream.
 
-Some platforms execute their timer handler with the interrupt priority
-level set below 6. That means the handler could be interrupted by another
-driver and this could lead to re-entry of the timer core.
+add_ie_rates() copys rates without checking the length
+in bss descriptor from remote AP.when victim connects to
+remote attacker, this may trigger buffer overflow.
+lbs_ibss_join_existing() copys rates without checking the length
+in bss descriptor from remote IBSS node.when victim connects to
+remote attacker, this may trigger buffer overflow.
+Fix them by putting the length check before performing copy.
 
-Avoid this by use of local_irq_save/restore for timer interrupt dispatch.
-This provides mutual exclusion around the timer interrupt flag access
-which is needed later in this series for the clocksource conversion.
+This fix addresses CVE-2019-14896 and CVE-2019-14897.
+This also fix build warning of mixed declarations and code.
 
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1811131407120.2697@nanos.tec.linutronix.de
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Wen Huang <huangwenabc@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/m68k/amiga/cia.c       |  9 +++++++++
- arch/m68k/atari/ataints.c   |  4 ++--
- arch/m68k/atari/time.c      | 15 ++++++++++++++-
- arch/m68k/bvme6000/config.c | 20 ++++++++++----------
- arch/m68k/hp300/time.c      | 10 ++++++++--
- arch/m68k/mac/via.c         | 17 +++++++++++++++++
- arch/m68k/mvme147/config.c  | 18 ++++++++++--------
- arch/m68k/mvme16x/config.c  | 21 +++++++++++----------
- arch/m68k/q40/q40ints.c     | 19 +++++++++++--------
- arch/m68k/sun3/sun3ints.c   |  3 +++
- arch/m68k/sun3x/time.c      | 16 ++++++++++------
- 11 files changed, 105 insertions(+), 47 deletions(-)
+ drivers/net/wireless/libertas/cfg.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/arch/m68k/amiga/cia.c b/arch/m68k/amiga/cia.c
-index 2081b8cd5591c..b9aee983e6f4c 100644
---- a/arch/m68k/amiga/cia.c
-+++ b/arch/m68k/amiga/cia.c
-@@ -88,10 +88,19 @@ static irqreturn_t cia_handler(int irq, void *dev_id)
- 	struct ciabase *base = dev_id;
- 	int mach_irq;
- 	unsigned char ints;
-+	unsigned long flags;
+--- a/drivers/net/wireless/libertas/cfg.c
++++ b/drivers/net/wireless/libertas/cfg.c
+@@ -272,6 +272,10 @@ add_ie_rates(u8 *tlv, const u8 *ie, int
+ 	int hw, ap, ap_max = ie[1];
+ 	u8 hw_rate;
  
-+	/* Interrupts get disabled while the timer irq flag is cleared and
-+	 * the timer interrupt serviced.
-+	 */
- 	mach_irq = base->cia_irq;
-+	local_irq_save(flags);
- 	ints = cia_set_irq(base, CIA_ICR_ALL);
- 	amiga_custom.intreq = base->int_mask;
-+	if (ints & 1)
-+		generic_handle_irq(mach_irq);
-+	local_irq_restore(flags);
-+	mach_irq++, ints >>= 1;
- 	for (; ints; mach_irq++, ints >>= 1) {
- 		if (ints & 1)
- 			generic_handle_irq(mach_irq);
-diff --git a/arch/m68k/atari/ataints.c b/arch/m68k/atari/ataints.c
-index 3d2b63bedf058..56f02ea2c248d 100644
---- a/arch/m68k/atari/ataints.c
-+++ b/arch/m68k/atari/ataints.c
-@@ -142,7 +142,7 @@ struct mfptimerbase {
- 	.name		= "MFP Timer D"
- };
- 
--static irqreturn_t mfptimer_handler(int irq, void *dev_id)
-+static irqreturn_t mfp_timer_d_handler(int irq, void *dev_id)
- {
- 	struct mfptimerbase *base = dev_id;
- 	int mach_irq;
-@@ -344,7 +344,7 @@ void __init atari_init_IRQ(void)
- 	st_mfp.tim_ct_cd = (st_mfp.tim_ct_cd & 0xf0) | 0x6;
- 
- 	/* request timer D dispatch handler */
--	if (request_irq(IRQ_MFP_TIMD, mfptimer_handler, IRQF_SHARED,
-+	if (request_irq(IRQ_MFP_TIMD, mfp_timer_d_handler, IRQF_SHARED,
- 			stmfp_base.name, &stmfp_base))
- 		pr_err("Couldn't register %s interrupt\n", stmfp_base.name);
- 
-diff --git a/arch/m68k/atari/time.c b/arch/m68k/atari/time.c
-index c549b48174ec8..972181c1fe4b7 100644
---- a/arch/m68k/atari/time.c
-+++ b/arch/m68k/atari/time.c
-@@ -24,6 +24,18 @@
- DEFINE_SPINLOCK(rtc_lock);
- EXPORT_SYMBOL_GPL(rtc_lock);
- 
-+static irqreturn_t mfp_timer_c_handler(int irq, void *dev_id)
-+{
-+	irq_handler_t timer_routine = dev_id;
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	timer_routine(0, NULL);
-+	local_irq_restore(flags);
-+
-+	return IRQ_HANDLED;
-+}
-+
- void __init
- atari_sched_init(irq_handler_t timer_routine)
- {
-@@ -32,7 +44,8 @@ atari_sched_init(irq_handler_t timer_routine)
-     /* start timer C, div = 1:100 */
-     st_mfp.tim_ct_cd = (st_mfp.tim_ct_cd & 15) | 0x60;
-     /* install interrupt service routine for MFP Timer C */
--    if (request_irq(IRQ_MFP_TIMC, timer_routine, 0, "timer", timer_routine))
-+    if (request_irq(IRQ_MFP_TIMC, mfp_timer_c_handler, 0, "timer",
-+                    timer_routine))
- 	pr_err("Couldn't register timer interrupt\n");
- }
- 
-diff --git a/arch/m68k/bvme6000/config.c b/arch/m68k/bvme6000/config.c
-index 478623dbb2092..62054c01ecb45 100644
---- a/arch/m68k/bvme6000/config.c
-+++ b/arch/m68k/bvme6000/config.c
-@@ -46,11 +46,6 @@ extern int bvme6000_set_clock_mmss (unsigned long);
- extern void bvme6000_reset (void);
- void bvme6000_set_vectors (void);
- 
--/* Save tick handler routine pointer, will point to xtime_update() in
-- * kernel/timer/timekeeping.c, called via bvme6000_process_int() */
--
--static irq_handler_t tick_handler;
--
- 
- int __init bvme6000_parse_bootinfo(const struct bi_record *bi)
- {
-@@ -160,12 +155,18 @@ irqreturn_t bvme6000_abort_int (int irq, void *dev_id)
- 
- static irqreturn_t bvme6000_timer_int (int irq, void *dev_id)
- {
-+    irq_handler_t timer_routine = dev_id;
-+    unsigned long flags;
-     volatile RtcPtr_t rtc = (RtcPtr_t)BVME_RTC_BASE;
--    unsigned char msr = rtc->msr & 0xc0;
-+    unsigned char msr;
- 
-+    local_irq_save(flags);
-+    msr = rtc->msr & 0xc0;
-     rtc->msr = msr | 0x20;		/* Ack the interrupt */
-+    timer_routine(0, NULL);
-+    local_irq_restore(flags);
- 
--    return tick_handler(irq, dev_id);
-+    return IRQ_HANDLED;
- }
- 
- /*
-@@ -184,9 +185,8 @@ void bvme6000_sched_init (irq_handler_t timer_routine)
- 
-     rtc->msr = 0;	/* Ensure timer registers accessible */
- 
--    tick_handler = timer_routine;
--    if (request_irq(BVME_IRQ_RTC, bvme6000_timer_int, 0,
--				"timer", bvme6000_timer_int))
-+    if (request_irq(BVME_IRQ_RTC, bvme6000_timer_int, 0, "timer",
-+                    timer_routine))
- 	panic ("Couldn't register timer int");
- 
-     rtc->t1cr_omr = 0x04;	/* Mode 2, ext clk */
-diff --git a/arch/m68k/hp300/time.c b/arch/m68k/hp300/time.c
-index 749543b425a4b..03c83b8f90328 100644
---- a/arch/m68k/hp300/time.c
-+++ b/arch/m68k/hp300/time.c
-@@ -37,13 +37,19 @@
- 
- static irqreturn_t hp300_tick(int irq, void *dev_id)
- {
-+	irq_handler_t timer_routine = dev_id;
-+	unsigned long flags;
- 	unsigned long tmp;
--	irq_handler_t vector = dev_id;
-+
-+	local_irq_save(flags);
- 	in_8(CLOCKBASE + CLKSR);
- 	asm volatile ("movpw %1@(5),%0" : "=d" (tmp) : "a" (CLOCKBASE));
-+	timer_routine(0, NULL);
-+	local_irq_restore(flags);
-+
- 	/* Turn off the network and SCSI leds */
- 	blinken_leds(0, 0xe0);
--	return vector(irq, NULL);
-+	return IRQ_HANDLED;
- }
- 
- u32 hp300_gettimeoffset(void)
-diff --git a/arch/m68k/mac/via.c b/arch/m68k/mac/via.c
-index 2d687518c76fe..49f9fa4529a83 100644
---- a/arch/m68k/mac/via.c
-+++ b/arch/m68k/mac/via.c
-@@ -397,6 +397,8 @@ void via_nubus_irq_shutdown(int irq)
-  * via6522.c :-), disable/pending masks added.
-  */
- 
-+#define VIA_TIMER_1_INT BIT(6)
-+
- void via1_irq(struct irq_desc *desc)
- {
- 	int irq_num;
-@@ -406,6 +408,21 @@ void via1_irq(struct irq_desc *desc)
- 	if (!events)
- 		return;
- 
-+	irq_num = IRQ_MAC_TIMER_1;
-+	irq_bit = VIA_TIMER_1_INT;
-+	if (events & irq_bit) {
-+		unsigned long flags;
-+
-+		local_irq_save(flags);
-+		via1[vIFR] = irq_bit;
-+		generic_handle_irq(irq_num);
-+		local_irq_restore(flags);
-+
-+		events &= ~irq_bit;
-+		if (!events)
-+			return;
++	if (ap_max > MAX_RATES) {
++		lbs_deb_assoc("invalid rates\n");
++		return tlv;
 +	}
-+
- 	irq_num = VIA1_SOURCE_BASE;
- 	irq_bit = 1;
- 	do {
-diff --git a/arch/m68k/mvme147/config.c b/arch/m68k/mvme147/config.c
-index e6a3b56c6481d..152fbde234243 100644
---- a/arch/m68k/mvme147/config.c
-+++ b/arch/m68k/mvme147/config.c
-@@ -47,11 +47,6 @@ extern void mvme147_reset (void);
+ 	/* Advance past IE header */
+ 	ie += 2;
  
- static int bcd2int (unsigned char b);
+@@ -1783,6 +1787,9 @@ static int lbs_ibss_join_existing(struct
+ 	struct cmd_ds_802_11_ad_hoc_join cmd;
+ 	u8 preamble = RADIO_PREAMBLE_SHORT;
+ 	int ret = 0;
++	int hw, i;
++	u8 rates_max;
++	u8 *rates;
  
--/* Save tick handler routine pointer, will point to xtime_update() in
-- * kernel/time/timekeeping.c, called via mvme147_process_int() */
--
--irq_handler_t tick_handler;
--
+ 	lbs_deb_enter(LBS_DEB_CFG80211);
  
- int __init mvme147_parse_bootinfo(const struct bi_record *bi)
- {
-@@ -107,16 +102,23 @@ void __init config_mvme147(void)
- 
- static irqreturn_t mvme147_timer_int (int irq, void *dev_id)
- {
-+	irq_handler_t timer_routine = dev_id;
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
- 	m147_pcc->t1_int_cntrl = PCC_TIMER_INT_CLR;
- 	m147_pcc->t1_int_cntrl = PCC_INT_ENAB|PCC_LEVEL_TIMER1;
--	return tick_handler(irq, dev_id);
-+	timer_routine(0, NULL);
-+	local_irq_restore(flags);
-+
-+	return IRQ_HANDLED;
- }
- 
- 
- void mvme147_sched_init (irq_handler_t timer_routine)
- {
--	tick_handler = timer_routine;
--	if (request_irq(PCC_IRQ_TIMER1, mvme147_timer_int, 0, "timer 1", NULL))
-+	if (request_irq(PCC_IRQ_TIMER1, mvme147_timer_int, 0, "timer 1",
-+			timer_routine))
- 		pr_err("Couldn't register timer interrupt\n");
- 
- 	/* Init the clock with a value */
-diff --git a/arch/m68k/mvme16x/config.c b/arch/m68k/mvme16x/config.c
-index a53803cc66cde..0d43bfb3324d7 100644
---- a/arch/m68k/mvme16x/config.c
-+++ b/arch/m68k/mvme16x/config.c
-@@ -52,11 +52,6 @@ extern void mvme16x_reset (void);
- 
- int bcd2int (unsigned char b);
- 
--/* Save tick handler routine pointer, will point to xtime_update() in
-- * kernel/time/timekeeping.c, called via mvme16x_process_int() */
--
--static irq_handler_t tick_handler;
--
- 
- unsigned short mvme16x_config;
- EXPORT_SYMBOL(mvme16x_config);
-@@ -355,8 +350,15 @@ static irqreturn_t mvme16x_abort_int (int irq, void *dev_id)
- 
- static irqreturn_t mvme16x_timer_int (int irq, void *dev_id)
- {
--    *(volatile unsigned char *)0xfff4201b |= 8;
--    return tick_handler(irq, dev_id);
-+	irq_handler_t timer_routine = dev_id;
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	*(volatile unsigned char *)0xfff4201b |= 8;
-+	timer_routine(0, NULL);
-+	local_irq_restore(flags);
-+
-+	return IRQ_HANDLED;
- }
- 
- void mvme16x_sched_init (irq_handler_t timer_routine)
-@@ -364,14 +366,13 @@ void mvme16x_sched_init (irq_handler_t timer_routine)
-     uint16_t brdno = be16_to_cpu(mvme_bdid.brdno);
-     int irq;
- 
--    tick_handler = timer_routine;
-     /* Using PCCchip2 or MC2 chip tick timer 1 */
-     *(volatile unsigned long *)0xfff42008 = 0;
-     *(volatile unsigned long *)0xfff42004 = 10000;	/* 10ms */
-     *(volatile unsigned char *)0xfff42017 |= 3;
-     *(volatile unsigned char *)0xfff4201b = 0x16;
--    if (request_irq(MVME16x_IRQ_TIMER, mvme16x_timer_int, 0,
--				"timer", mvme16x_timer_int))
-+    if (request_irq(MVME16x_IRQ_TIMER, mvme16x_timer_int, 0, "timer",
-+                    timer_routine))
- 	panic ("Couldn't register timer int");
- 
-     if (brdno == 0x0162 || brdno == 0x172)
-diff --git a/arch/m68k/q40/q40ints.c b/arch/m68k/q40/q40ints.c
-index 513f9bb17b9cf..60b51f5b9cfc0 100644
---- a/arch/m68k/q40/q40ints.c
-+++ b/arch/m68k/q40/q40ints.c
-@@ -126,10 +126,10 @@ void q40_mksound(unsigned int hz, unsigned int ticks)
- 	sound_ticks = ticks << 1;
- }
- 
--static irq_handler_t q40_timer_routine;
--
--static irqreturn_t q40_timer_int (int irq, void * dev)
-+static irqreturn_t q40_timer_int(int irq, void *dev_id)
- {
-+	irq_handler_t timer_routine = dev_id;
-+
- 	ql_ticks = ql_ticks ? 0 : 1;
- 	if (sound_ticks) {
- 		unsigned char sval=(sound_ticks & 1) ? 128-SVOL : 128+SVOL;
-@@ -138,8 +138,13 @@ static irqreturn_t q40_timer_int (int irq, void * dev)
- 		*DAC_RIGHT=sval;
- 	}
- 
--	if (!ql_ticks)
--		q40_timer_routine(irq, dev);
-+	if (!ql_ticks) {
-+		unsigned long flags;
-+
-+		local_irq_save(flags);
-+		timer_routine(0, NULL);
-+		local_irq_restore(flags);
-+	}
- 	return IRQ_HANDLED;
- }
- 
-@@ -147,11 +152,9 @@ void q40_sched_init (irq_handler_t timer_routine)
- {
- 	int timer_irq;
- 
--	q40_timer_routine = timer_routine;
- 	timer_irq = Q40_IRQ_FRAME;
- 
--	if (request_irq(timer_irq, q40_timer_int, 0,
--				"timer", q40_timer_int))
-+	if (request_irq(timer_irq, q40_timer_int, 0, "timer", timer_routine))
- 		panic("Couldn't register timer int");
- 
- 	master_outb(-1, FRAME_CLEAR_REG);
-diff --git a/arch/m68k/sun3/sun3ints.c b/arch/m68k/sun3/sun3ints.c
-index 6bbca30c91884..a5824abb4a39c 100644
---- a/arch/m68k/sun3/sun3ints.c
-+++ b/arch/m68k/sun3/sun3ints.c
-@@ -61,8 +61,10 @@ static irqreturn_t sun3_int7(int irq, void *dev_id)
- 
- static irqreturn_t sun3_int5(int irq, void *dev_id)
- {
-+	unsigned long flags;
- 	unsigned int cnt;
- 
-+	local_irq_save(flags);
- #ifdef CONFIG_SUN3
- 	intersil_clear();
- #endif
-@@ -76,6 +78,7 @@ static irqreturn_t sun3_int5(int irq, void *dev_id)
- 	cnt = kstat_irqs_cpu(irq, 0);
- 	if (!(cnt % 20))
- 		sun3_leds(led_pattern[cnt % 160 / 20]);
-+	local_irq_restore(flags);
- 	return IRQ_HANDLED;
- }
- 
-diff --git a/arch/m68k/sun3x/time.c b/arch/m68k/sun3x/time.c
-index c8eb08add6b08..7a195313ff4ff 100644
---- a/arch/m68k/sun3x/time.c
-+++ b/arch/m68k/sun3x/time.c
-@@ -77,15 +77,19 @@ u32 sun3x_gettimeoffset(void)
- }
- 
- #if 0
--static void sun3x_timer_tick(int irq, void *dev_id, struct pt_regs *regs)
-+static irqreturn_t sun3x_timer_tick(int irq, void *dev_id)
- {
--    void (*vector)(int, void *, struct pt_regs *) = dev_id;
-+	irq_handler_t timer_routine = dev_id;
-+	unsigned long flags;
- 
--    /* Clear the pending interrupt - pulse the enable line low */
--    disable_irq(5);
--    enable_irq(5);
-+	local_irq_save(flags);
-+	/* Clear the pending interrupt - pulse the enable line low */
-+	disable_irq(5);
-+	enable_irq(5);
-+	timer_routine(0, NULL);
-+	local_irq_restore(flags);
- 
--    vector(irq, NULL, regs);
-+	return IRQ_HANDLED;
- }
- #endif
- 
--- 
-2.20.1
-
+@@ -1843,9 +1850,12 @@ static int lbs_ibss_join_existing(struct
+ 	if (!rates_eid) {
+ 		lbs_add_rates(cmd.bss.rates);
+ 	} else {
+-		int hw, i;
+-		u8 rates_max = rates_eid[1];
+-		u8 *rates = cmd.bss.rates;
++		rates_max = rates_eid[1];
++		if (rates_max > MAX_RATES) {
++			lbs_deb_join("invalid rates");
++			goto out;
++		}
++		rates = cmd.bss.rates;
+ 		for (hw = 0; hw < ARRAY_SIZE(lbs_rates); hw++) {
+ 			u8 hw_rate = lbs_rates[hw].bitrate / 5;
+ 			for (i = 0; i < rates_max; i++) {
 
 
