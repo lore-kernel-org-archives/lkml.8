@@ -2,109 +2,126 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454D2C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B3FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26063207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2FA207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:29:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oudfIJtO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgA1P2t (ORCPT
+        id S1726687AbgA1P34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:28:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:59464 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbgA1P2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:28:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 286EB31B;
-        Tue, 28 Jan 2020 07:28:48 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC3383F68E;
-        Tue, 28 Jan 2020 07:28:46 -0800 (PST)
-Subject: Re: [PATCH 1/3] clk: rockchip: convert rk3399 pll type to use
- readl_poll_timeout
-To:     Heiko Stuebner <heiko@sntech.de>, linux-clk@vger.kernel.org
-Cc:     sboyd@kernel.org,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        mturquette@baylibre.com, zhangqing@rock-chips.com,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        christoph.muellner@theobroma-systems.com
-References: <20200128100204.1318450-1-heiko@sntech.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f8001dbb-ebbc-ebe3-d1db-c75d3888fd38@arm.com>
-Date:   Tue, 28 Jan 2020 15:28:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 28 Jan 2020 10:29:56 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:52776 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgA1P3z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:29:55 -0500
+Received: by mail-pj1-f68.google.com with SMTP id a6so1139461pjh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:29:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gYDQt040okirqe50Lrh3CEKmMOXPeZIYhDIO12JRm+M=;
+        b=oudfIJtO2XN4XvD+DQ8Ec3GIHqxMMk6ogkt8jzO33dudjAqdner4DPznSzh1Y7XrBd
+         ezD2ltpelFCHW3JRZgyfZqHAfW3s8KrKPaSSHQbDDQ7OXq3O+jtATKp0lwiThA4nB0uC
+         BigxCmlYdVAHdBtxBc59/KBRJsff1bIIF2ifAGCQEx7s/wndc9NORpanY5iLzy/VqDpT
+         Ja69ofWRIG1rsaAVpLA39lPLIkPyHjgG2/lirDlSXtlepON3OBYI/vPcMNV1OVcd5Maf
+         8hFcwuDd5SEU+oue9keSK6X4vxGhivjKuT3Hz03+l8HEs3uZw+qK8Vd992Nm4wuWg47y
+         MbWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gYDQt040okirqe50Lrh3CEKmMOXPeZIYhDIO12JRm+M=;
+        b=A+s6wicuBVjcyP6oBJZcS0KkG8ps96rhnWKHa1DiKP6idYSTKnhlUlbHwRDnS45vY3
+         EylYoM/iamGhD0lwUkgXn9y092J/xDRX81UC0xAivoh2XSrJ5QMoS26yAlLo+F6U7e97
+         uYE2j5To+D+SwSdy78AwCLhcUALkraL7+IKkuLepgQ9CRqslm2ucLbMlsfen4ur6HzGv
+         hnGYhhI5Vr3RzUX/UYsfwMiT+klZsgtaKiXLiG/N+uKRPVbkfRYAA9jyv5EY9vtZHcMX
+         erWdta535FrzMEzbh1DSLezGLCbppqrpyRa48xixZSCwty4lZyD/lQ5GiGc2Eb6OBpH5
+         yXJA==
+X-Gm-Message-State: APjAAAWM554O6B18uKkyZR8xnKm0z5Pkt4u46QfadBN1BW++FYYtNsS/
+        If4S1DoJJuqU2CuBGLwTQNk=
+X-Google-Smtp-Source: APXvYqwBUq02rMUM31o3VOkfKkq08ooJejdl8gGvivEbHXaXtorSAN7XrAd3mphmADoU5Yi8R+kxTw==
+X-Received: by 2002:a17:902:aa0b:: with SMTP id be11mr22410567plb.181.1580225394577;
+        Tue, 28 Jan 2020 07:29:54 -0800 (PST)
+Received: from localhost.localdomain ([149.248.6.217])
+        by smtp.gmail.com with ESMTPSA id y6sm20632148pgc.10.2020.01.28.07.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2020 07:29:54 -0800 (PST)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH] perf: Make perf able to build with latest libbfd
+Date:   Tue, 28 Jan 2020 23:29:38 +0800
+Message-Id: <20200128152938.31413-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200128100204.1318450-1-heiko@sntech.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/01/2020 10:02 am, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> Instead of open coding the polling of the lock status, use the
-> handy readl_poll_timeout for this. As the pll locking is normally
-> blazingly fast and we don't want to incur additional delays, we're
-> not doing any sleeps similar to for example the imx clk-pllv4
-> and define a very safe but still short timeout of 1ms.
-> 
-> Suggested-by: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> ---
->   drivers/clk/rockchip/clk-pll.c | 21 ++++++++++-----------
->   1 file changed, 10 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/clk/rockchip/clk-pll.c b/drivers/clk/rockchip/clk-pll.c
-> index 198417d56300..43c9fd0086a2 100644
-> --- a/drivers/clk/rockchip/clk-pll.c
-> +++ b/drivers/clk/rockchip/clk-pll.c
-> @@ -585,19 +585,18 @@ static const struct clk_ops rockchip_rk3066_pll_clk_ops = {
->   static int rockchip_rk3399_pll_wait_lock(struct rockchip_clk_pll *pll)
->   {
->   	u32 pllcon;
-> -	int delay = 24000000;
-> +	int ret;
->   
-> -	/* poll check the lock status in rk3399 xPLLCON2 */
-> -	while (delay > 0) {
-> -		pllcon = readl_relaxed(pll->reg_base + RK3399_PLLCON(2));
-> -		if (pllcon & RK3399_PLLCON2_LOCK_STATUS)
-> -			return 0;
-> +	/*
-> +	 * Lock time typical 250, max 500 input clock cycles @24MHz
-> +	 * So define a very safe maximum of 1000us, meaning 24000 cycles.
-> +	 */
-> +	ret = readl_poll_timeout(pll->reg_base + RK3399_PLLCON(2), pllcon,
-> +				 pllcon & RK3399_PLLCON2_LOCK_STATUS, 0, 1000);
+libbfd has changed the bfd_section_* macros to inline functions
+bfd_section_<field> since 2019-09-18. See below two commits:
+  o http://www.sourceware.org/ml/gdb-cvs/2019-09/msg00064.html
+  o https://www.sourceware.org/ml/gdb-cvs/2019-09/msg00072.html
 
-Note that the existing I/O accessor was readl_relaxed(), but using plain 
-readl_poll_timeout() switches it to regular readl(). It may well not 
-matter, but since it's not noted as an intentional change it seemed 
-worth pointing out.
+This fix make perf able to build with both old and new libbfd.
 
-Robin.
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+---
+ tools/perf/util/srcline.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-> +	if (ret)
-> +		pr_err("%s: timeout waiting for pll to lock\n", __func__);
->   
-> -		delay--;
-> -	}
-> -
-> -	pr_err("%s: timeout waiting for pll to lock\n", __func__);
-> -	return -ETIMEDOUT;
-> +	return ret;
->   }
->   
->   static void rockchip_rk3399_pll_get_params(struct rockchip_clk_pll *pll,
-> 
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index 6ccf6f6d09df..5b7d6c16d33f 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -193,16 +193,30 @@ static void find_address_in_section(bfd *abfd, asection *section, void *data)
+ 	bfd_vma pc, vma;
+ 	bfd_size_type size;
+ 	struct a2l_data *a2l = data;
++	flagword flags;
+ 
+ 	if (a2l->found)
+ 		return;
+ 
+-	if ((bfd_get_section_flags(abfd, section) & SEC_ALLOC) == 0)
++#ifdef bfd_get_section_flags
++	flags = bfd_get_section_flags(abfd, section);
++#else
++	flags = bfd_section_flags(section);
++#endif
++	if ((flags & SEC_ALLOC) == 0)
+ 		return;
+ 
+ 	pc = a2l->addr;
++#ifdef bfd_get_section_vma
+ 	vma = bfd_get_section_vma(abfd, section);
++#else
++	vma = bfd_section_vma(section);
++#endif
++#ifdef bfd_get_section_size
+ 	size = bfd_get_section_size(section);
++#else
++	size = bfd_section_size(section);
++#endif
+ 
+ 	if (pc < vma || pc >= vma + size)
+ 		return;
+-- 
+2.24.0
+
