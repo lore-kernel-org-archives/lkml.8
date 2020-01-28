@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B98C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45DDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D766421739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D5F2468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221730;
-	bh=PnHa2WGSZC8bHIeiKA3V/Rz/XwU6jjMLe5BcD4Ce28o=;
+	s=default; t=1580221733;
+	bh=tRcVvN46Y4RAgV5v44mhyVrXYUpFGZeT/y1UvAqhNxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tXm4M+imvn7Pe+42aJAW0PquBB+xZjfs6esZdPVjK+g8LicVydiWwSXWsvoHAVCG0
-	 lLY0E/5GDzd6627IkS18HnKFJ554yeq/Bm0UWDXFvmkMRdAtwaskTF4UE4LUNmiqqA
-	 L92/HeIjAeDdsbeSdbAMwMea4BnIW6rNdStukWJM=
+	b=1sWnIg+QZYSBiKO6nzaQfmRvEx2mzeZZ0YTFmL80Hyk7MQUMwk8g5pJLf8AUf/FKn
+	 mG72FzUp9VkOTheB37r7NrkqXaxqnSKfXhuvCsLLW3zRS5fK0mQYrkARicaoUCRMps
+	 jHKnfZbyCRDGqoxE23CvTAwgkM19HbUhJ3HM3W+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733203AbgA1O2s (ORCPT
+        id S2387560AbgA1O2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:28:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56690 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:28:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733300AbgA1O2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:28:38 -0500
+        id S1733193AbgA1O2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:28:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9412920716;
-        Tue, 28 Jan 2020 14:28:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29F48207FD;
+        Tue, 28 Jan 2020 14:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221718;
-        bh=PnHa2WGSZC8bHIeiKA3V/Rz/XwU6jjMLe5BcD4Ce28o=;
+        s=default; t=1580221725;
+        bh=tRcVvN46Y4RAgV5v44mhyVrXYUpFGZeT/y1UvAqhNxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EFNIG9qUk0iI1YnB4Pk9mZgSdp7fHGRnwyx7l1aVKZwzoVCPpoxY49DdBu5/r9v8+
-         NjRfiq3e75hGDv2U/9QN9krJLcY22yyhjfu/6pPWBl88VSYSUAlGddA2EFE3Zfh7Py
-         sZV8hS/SzHfRaz2F/S+Ciea4bKwk3SsLwyMNIAJ4=
+        b=QNoAlV91LeyTif5vbf5HDqlBqRQZ+Aa9Tga73a5idAlAziAPd0RklIS2OhttOxqFR
+         6HuB03lT7DV8u+vXVdMcUHQVr+vduWN23ZLw1Vdv+7XkniqRbTvlbrRr8BnXC12wQt
+         cahPPtaWLi8D63XNyfDbhHepohqrQdy+CFIVLnb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Vladis Dronov <vdronov@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 36/92] Input: aiptek - fix endpoint sanity check
-Date:   Tue, 28 Jan 2020 15:08:04 +0100
-Message-Id: <20200128135813.723853753@linuxfoundation.org>
+        stable@vger.kernel.org, Bo Wu <wubo40@huawei.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 65/92] scsi: iscsi: Avoid potential deadlock in iscsi_if_rx func
+Date:   Tue, 28 Jan 2020 15:08:33 +0100
+Message-Id: <20200128135817.620117880@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,47 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Bo Wu <wubo40@huawei.com>
 
-commit 3111491fca4f01764e0c158c5e0f7ced808eef51 upstream.
+commit bba340c79bfe3644829db5c852fdfa9e33837d6d upstream.
 
-The driver was checking the number of endpoints of the first alternate
-setting instead of the current one, something which could lead to the
-driver binding to an invalid interface.
+In iscsi_if_rx func, after receiving one request through
+iscsi_if_recv_msg func, iscsi_if_send_reply will be called to try to
+reply to the request in a do-while loop.  If the iscsi_if_send_reply
+function keeps returning -EAGAIN, a deadlock will occur.
 
-This in turn could cause the driver to misbehave or trigger a WARN() in
-usb_submit_urb() that kernels with panic_on_warn set would choke on.
+For example, a client only send msg without calling recvmsg func, then
+it will result in the watchdog soft lockup.  The details are given as
+follows:
 
-Fixes: 8e20cf2bce12 ("Input: aiptek - fix crash on detecting device without endpoints")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Vladis Dronov <vdronov@redhat.com>
-Link: https://lore.kernel.org/r/20191210113737.4016-3-johan@kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+	sock_fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ISCSI);
+	retval = bind(sock_fd, (struct sock addr*) & src_addr, sizeof(src_addr);
+	while (1) {
+		state_msg = sendmsg(sock_fd, &msg, 0);
+		//Note: recvmsg(sock_fd, &msg, 0) is not processed here.
+	}
+	close(sock_fd);
+
+watchdog: BUG: soft lockup - CPU#7 stuck for 22s! [netlink_test:253305] Sample time: 4000897528 ns(HZ: 250) Sample stat:
+curr: user: 675503481560, nice: 321724050, sys: 448689506750, idle: 4654054240530, iowait: 40885550700, irq: 14161174020, softirq: 8104324140, st: 0
+deta: user: 0, nice: 0, sys: 3998210100, idle: 0, iowait: 0, irq: 1547170, softirq: 242870, st: 0 Sample softirq:
+         TIMER:        992
+         SCHED:          8
+Sample irqstat:
+         irq    2: delta       1003, curr:    3103802, arch_timer
+CPU: 7 PID: 253305 Comm: netlink_test Kdump: loaded Tainted: G           OE
+Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+pstate: 40400005 (nZcv daif +PAN -UAO)
+pc : __alloc_skb+0x104/0x1b0
+lr : __alloc_skb+0x9c/0x1b0
+sp : ffff000033603a30
+x29: ffff000033603a30 x28: 00000000000002dd
+x27: ffff800b34ced810 x26: ffff800ba7569f00
+x25: 00000000ffffffff x24: 0000000000000000
+x23: ffff800f7c43f600 x22: 0000000000480020
+x21: ffff0000091d9000 x20: ffff800b34eff200
+x19: ffff800ba7569f00 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000000 x14: 0001000101000100
+x13: 0000000101010000 x12: 0101000001010100
+x11: 0001010101010001 x10: 00000000000002dd
+x9 : ffff000033603d58 x8 : ffff800b34eff400
+x7 : ffff800ba7569200 x6 : ffff800b34eff400
+x5 : 0000000000000000 x4 : 00000000ffffffff
+x3 : 0000000000000000 x2 : 0000000000000001
+x1 : ffff800b34eff2c0 x0 : 0000000000000300 Call trace:
+__alloc_skb+0x104/0x1b0
+iscsi_if_rx+0x144/0x12bc [scsi_transport_iscsi]
+netlink_unicast+0x1e0/0x258
+netlink_sendmsg+0x310/0x378
+sock_sendmsg+0x4c/0x70
+sock_write_iter+0x90/0xf0
+__vfs_write+0x11c/0x190
+vfs_write+0xac/0x1c0
+ksys_write+0x6c/0xd8
+__arm64_sys_write+0x24/0x30
+el0_svc_common+0x78/0x130
+el0_svc_handler+0x38/0x78
+el0_svc+0x8/0xc
+
+Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E3D4D2@dggeml505-mbx.china.huawei.com
+Signed-off-by: Bo Wu <wubo40@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/tablet/aiptek.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/scsi_transport_iscsi.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/input/tablet/aiptek.c
-+++ b/drivers/input/tablet/aiptek.c
-@@ -1815,14 +1815,14 @@ aiptek_probe(struct usb_interface *intf,
- 	input_set_abs_params(inputdev, ABS_WHEEL, AIPTEK_WHEEL_MIN, AIPTEK_WHEEL_MAX - 1, 0, 0);
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -37,6 +37,8 @@
  
- 	/* Verify that a device really has an endpoint */
--	if (intf->altsetting[0].desc.bNumEndpoints < 1) {
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
- 		dev_err(&intf->dev,
- 			"interface has %d endpoints, but must have minimum 1\n",
--			intf->altsetting[0].desc.bNumEndpoints);
-+			intf->cur_altsetting->desc.bNumEndpoints);
- 		err = -EINVAL;
- 		goto fail3;
+ #define ISCSI_TRANSPORT_VERSION "2.0-870"
+ 
++#define ISCSI_SEND_MAX_ALLOWED  10
++
+ static int dbg_session;
+ module_param_named(debug_session, dbg_session, int,
+ 		   S_IRUGO | S_IWUSR);
+@@ -3680,6 +3682,7 @@ iscsi_if_rx(struct sk_buff *skb)
+ 		struct nlmsghdr	*nlh;
+ 		struct iscsi_uevent *ev;
+ 		uint32_t group;
++		int retries = ISCSI_SEND_MAX_ALLOWED;
+ 
+ 		nlh = nlmsg_hdr(skb);
+ 		if (nlh->nlmsg_len < sizeof(*nlh) + sizeof(*ev) ||
+@@ -3710,6 +3713,10 @@ iscsi_if_rx(struct sk_buff *skb)
+ 				break;
+ 			err = iscsi_if_send_reply(portid, nlh->nlmsg_type,
+ 						  ev, sizeof(*ev));
++			if (err == -EAGAIN && --retries < 0) {
++				printk(KERN_WARNING "Send reply failed, error %d\n", err);
++				break;
++			}
+ 		} while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
+ 		skb_pull(skb, rlen);
  	}
--	endpoint = &intf->altsetting[0].endpoint[0].desc;
-+	endpoint = &intf->cur_altsetting->endpoint[0].desc;
- 
- 	/* Go set up our URB, which is called when the tablet receives
- 	 * input.
 
 
