@@ -2,81 +2,109 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83864C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF37FC35246
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5722467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66AE24684
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:17:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="VKXqwFjm"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="lgZskWmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgA1GPZ (ORCPT
+        id S1725901AbgA1GRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 01:15:25 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43686 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgA1GPZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 01:15:25 -0500
-Received: by mail-qk1-f195.google.com with SMTP id j20so12259034qka.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 22:15:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=IX6vC1lqC7B6QSvzPSA4RSu0dRAbEMHe13lqUpG29i8=;
-        b=VKXqwFjmNXdB/wJW5knEKaf8vqMoxWZxZenXmtRbHfj2GkPH84URj6RIU7kuu9br/n
-         cO100UpGyUFr7n85BLlnvIKAGP009/Hcaf4XQmBvgCO4s5t20dg0E/x5WFuF1JfPexca
-         qKucwEcgFyhAQqLSQGzAgwSYxg/Krp1wdD+33iDC3XcjfzHjLG/WmY7kCH57ovDlVBWy
-         CInbxtz0nSTJ/aPX70647beyykTi1bIki7ecWq/g+4KVqa/PF299NRyKANNx082/SYZg
-         a66f6lAnlak0GqZDiNdAB9xuMjwBEyXfJgmNT0Lq1U8INg0B+xHSCqmhtit3iHj6blvY
-         73tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=IX6vC1lqC7B6QSvzPSA4RSu0dRAbEMHe13lqUpG29i8=;
-        b=ZABCNmSwxHpjaWGjtAZ6pHFsKyQc4cjd/6uePLw5bhZaLU8HfayLeoh6ONTnCDGby1
-         OpEMusGNCMHbQ8bEvV2/2JAlDsA1XRBVJLk+UTv4EE1W8jscVkbcQGmKnUdiBAhuzIKD
-         naqvcr7Kx2qHRwqfVtKMCQWfNnMePJn3r/a3OCk52xujTNL63N2wCapZOmbtAlfF65m2
-         B1ixy6rdgJM23D1ylxMcGNd/gDBoXI3jeJEW0WJO23NJGoOkmmGHi12ajGo3OV0qPOv7
-         2IJPn2qgGuM28B4VlPFy5Eea7Ox6fjeZhVM4kcbmr8TuTNIqN8cll2mczPeL5bkdnA4B
-         froA==
-X-Gm-Message-State: APjAAAVNOPG8/rG1xhU5Pi31ttCgrqwNXklBypa8fSDaz5NGFdJJ0cCQ
-        6LKqT6X8zbtvJKds2oDZ4bxXBA==
-X-Google-Smtp-Source: APXvYqz7X3XsotDyp2Rkn3xurztaEfQuChOv10+xbCcj0AINYcjgBapre5/9nAD2nqzDixYkJRy09Q==
-X-Received: by 2002:a37:814:: with SMTP id 20mr20434739qki.314.1580192124338;
-        Mon, 27 Jan 2020 22:15:24 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id e16sm11951755qtc.85.2020.01.27.22.15.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 22:15:23 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: mmotm 2020-01-23-21-12 uploaded (efi)
-Date:   Tue, 28 Jan 2020 01:15:22 -0500
-Message-Id: <E600649B-A8CA-48D3-AD86-A2BAAE0BCA25@lca.pw>
-References: <CAKv+Gu8ZcO3jRMuMJL_eTmWtuzJ+=qEA9muuN5DpdpikFLwamg@mail.gmail.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Tue, 28 Jan 2020 01:17:40 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:56701 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbgA1GRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 01:17:39 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 486Gcc0WVCz9v22Q;
+        Tue, 28 Jan 2020 07:17:36 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=lgZskWmS; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id UkHPZqpb554O; Tue, 28 Jan 2020 07:17:35 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 486Gcb627Gz9v22N;
+        Tue, 28 Jan 2020 07:17:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580192255; bh=+DPt49RKHi9mO1gnM2058SFaj+Fq0ceAMy7haYJU1NM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=lgZskWmSj1VA5v5b98S9ZEmr7USU9rrof5MnKymq+rXgWJyl99vDSXQIZX47bFjeC
+         /6k5GZov6uOPE4UU+Xi9hVhZlNd3ZPIeokTTE6E9eAr6ycFttvMUe986W6/vBNtjV8
+         Ykd6Kd6ETlhEILSsCQYi5j6eBswWvSBhAxwf3fzs=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8873F8B7C2;
+        Tue, 28 Jan 2020 07:17:36 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id RqoGVOoiJ5M4; Tue, 28 Jan 2020 07:17:36 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DC9498B75B;
+        Tue, 28 Jan 2020 07:17:33 +0100 (CET)
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Qian Cai <cai@lca.pw>,
+        Anshuman Khandual <Anshuman.Khandual@arm.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mark Brown <broonie@kernel.org>, linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        mhocko@suse.cz, mm-commits@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-In-Reply-To: <CAKv+Gu8ZcO3jRMuMJL_eTmWtuzJ+=qEA9muuN5DpdpikFLwamg@mail.gmail.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-X-Mailer: iPhone Mail (17C54)
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <012158b7-a40e-050f-cd1b-d6ce7faf042f@arm.com>
+ <EE5B936C-121E-4322-A285-603D82D59B3A@lca.pw>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <115c187b-73ce-30b2-0694-999db1f2183b@c-s.fr>
+Date:   Tue, 28 Jan 2020 07:17:33 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <EE5B936C-121E-4322-A285-603D82D59B3A@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -84,15 +112,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On Jan 25, 2020, at 2:06 AM, Ard Biesheuvel <ard.biesheuvel@linaro.org> wr=
-ote:
->=20
-> Should be fixed by
->=20
-> https://lore.kernel.org/linux-efi/20200121093912.5246-1-ardb@kernel.org/
+Le 28/01/2020 à 06:48, Qian Cai a écrit :
+> 
+> 
+>> On Jan 27, 2020, at 11:58 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
+>>
+>> As I had mentioned before, the test attempts to formalize page table helper semantics
+>> as expected from generic MM code paths and intend to catch deviations when enabled on
+>> a given platform. How else should we test semantics errors otherwise ? There are past
+>> examples of usefulness for this procedure on arm64 and on s390. I am wondering how
+>> else to prove the usefulness of a debug feature if these references are not enough.
+> 
+> Not saying it will not be useful. As you mentioned it actually found a bug or two in the past. The problem is that there is always a cost to maintain something like this, and nobody knew how things could be broken even for the isolated code you mentioned in the future given how complicated the kernel code base is. I am not so positive that many developers would enable this debug feature and use it on a regular basis from the information you gave so far.
+> 
+> On the other hand, it might just be good at maintaining this thing out of tree by yourself anyway, because if there isn’t going to be used by many developers, few people is going to contribute to this and even noticed when it is broken. What’s the point of getting this merged apart from being getting some meaningless credits?
+> 
 
-Cc kasan-devel@
+It is 'default y' so there is no much risk that it is forgotten, at 
+least all test suites run with 'allyes_defconfig' will trigger the test, 
+so I think it is really a good feature.
 
-If everyone has to disable KASAN for the whole subdirectories like this, I a=
-m worried about we are losing testing coverage fairly quickly. Is there a bu=
-g in compiler?=
+Christophe
