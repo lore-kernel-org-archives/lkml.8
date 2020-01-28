@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66045C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E45C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3252173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CEF207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222941;
-	bh=intayEvlwG5iSgRRqpJXqWohS2b+wWvz59B9dftJtAE=;
+	s=default; t=1580222943;
+	bh=kvKXTCNphan1+FsgLSajrygmMUgSdUAfETnu5I/AWwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVEp85nERBWl9lEtyTUSCM5nQbS3N+pvyjLFoBec63ko+b2gKpCq6XXoKsTwJv+nJ
-	 kPtLmpI8BQH7jfmH6jC4XVtzKyqPSxGbVGMu0wTml827bnn8JfuiFRkCfvP7TaCk2U
-	 rC37a8RrlrozWByLp8W0oDtN3G8eD9X2tzWhFnQY=
+	b=ff7aEFBX0CzlCC+AYB7czm92n5hc3/cNnUhB/4Qjn1wXoAK45HVP18i3AelPfuCsW
+	 w4rjDCSljUhPnuXNZmOGSizkzcoQJ36rWfj2DmcMSy4c5HWgqmwbhyWb8je237Cg4H
+	 H9lSn5tm/WHrWeEmd0MkJZePHRhgnzhVckWOjE8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbgA1OtA (ORCPT
+        id S1727511AbgA1OBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:49:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48026 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:01:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727210AbgA1OBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:01:52 -0500
+        id S1727164AbgA1OBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:01:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7234E24685;
-        Tue, 28 Jan 2020 14:01:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A082B24688;
+        Tue, 28 Jan 2020 14:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220111;
-        bh=intayEvlwG5iSgRRqpJXqWohS2b+wWvz59B9dftJtAE=;
+        s=default; t=1580220102;
+        bh=kvKXTCNphan1+FsgLSajrygmMUgSdUAfETnu5I/AWwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0zg391c7GFC62/t3Y80OajSf5lrzWlONcZfwC03dZbBso2BA6j9xQfIqc2rIHGK50
-         6BByKj3yy0Tj/4jI5dBJ6S6XH6tdjYXrDB1PJUUO4H+zwePWnLBvuDRi38sdt6Jknl
-         sjNnuBjgnqUYhUj2ez10/Ia/s/T90AqXCfUIqc00=
+        b=bh9l4gqfc/DkV+SCuPvbXv3QCYEqF3ngvLeSFMZaPevYWWK0PzGFgKQmbWENjUd1w
+         ZV4HTMbsIMydkFZJhlq1gKZ26JseEbpYTVWpH8ibLN9eiJMOKg2CZWYMXMegncjkwk
+         wc3ocZvHWYcA0uIvcOYXBB1KVEfWehm7aPjjdc6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Kristian Evensen <kristian.evensen@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 022/104] fou: Fix IPv6 netlink policy
-Date:   Tue, 28 Jan 2020 14:59:43 +0100
-Message-Id: <20200128135820.333512491@linuxfoundation.org>
+Subject: [PATCH 5.4 018/104] tun: add mutex_unlock() call and napi.skb clearing in tun_get_user()
+Date:   Tue, 28 Jan 2020 14:59:39 +0100
+Message-Id: <20200128135819.762305010@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,37 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kristian Evensen <kristian.evensen@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit bb48eb9b12a95db9d679025927269d4adda6dbd1 ]
+[ Upstream commit 1efba987c48629c0c64703bb4ea76ca1a3771d17 ]
 
-When submitting v2 of "fou: Support binding FoU socket" (1713cb37bf67),
-I accidentally sent the wrong version of the patch and one fix was
-missing. In the initial version of the patch, as well as the version 2
-that I submitted, I incorrectly used ".type" for the two V6-attributes.
-The correct is to use ".len".
+If both IFF_NAPI_FRAGS mode and XDP are enabled, and the XDP program
+consumes the skb, we need to clear the napi.skb (or risk
+a use-after-free) and release the mutex (or risk a deadlock)
 
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Fixes: 1713cb37bf67 ("fou: Support binding FoU socket")
-Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
+WARNING: lock held when returning to user space!
+5.5.0-rc6-syzkaller #0 Not tainted
+------------------------------------------------
+syz-executor.0/455 is leaving the kernel with locks still held!
+1 lock held by syz-executor.0/455:
+ #0: ffff888098f6e748 (&tfile->napi_mutex){+.+.}, at: tun_get_user+0x1604/0x3fc0 drivers/net/tun.c:1835
+
+Fixes: 90e33d459407 ("tun: enable napi_gro_frags() for TUN/TAP driver")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Petar Penkov <ppenkov@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/fou.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/tun.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/ipv4/fou.c
-+++ b/net/ipv4/fou.c
-@@ -662,8 +662,8 @@ static const struct nla_policy fou_nl_po
- 	[FOU_ATTR_REMCSUM_NOPARTIAL]	= { .type = NLA_FLAG, },
- 	[FOU_ATTR_LOCAL_V4]		= { .type = NLA_U32, },
- 	[FOU_ATTR_PEER_V4]		= { .type = NLA_U32, },
--	[FOU_ATTR_LOCAL_V6]		= { .type = sizeof(struct in6_addr), },
--	[FOU_ATTR_PEER_V6]		= { .type = sizeof(struct in6_addr), },
-+	[FOU_ATTR_LOCAL_V6]		= { .len = sizeof(struct in6_addr), },
-+	[FOU_ATTR_PEER_V6]		= { .len = sizeof(struct in6_addr), },
- 	[FOU_ATTR_PEER_PORT]		= { .type = NLA_U16, },
- 	[FOU_ATTR_IFINDEX]		= { .type = NLA_S32, },
- };
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1936,6 +1936,10 @@ drop:
+ 			if (ret != XDP_PASS) {
+ 				rcu_read_unlock();
+ 				local_bh_enable();
++				if (frags) {
++					tfile->napi.skb = NULL;
++					mutex_unlock(&tfile->napi_mutex);
++				}
+ 				return total_len;
+ 			}
+ 		}
 
 
