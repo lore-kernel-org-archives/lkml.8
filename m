@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFC4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E734C35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C71207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9923207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222966;
-	bh=Myq/2LXMUhGE3pjb10aTlx+MjlltmjfFKNnQMy3pbgE=;
+	s=default; t=1580223009;
+	bh=hEAUIpxUOVjreXovR7iHITQ4p9Qc0eBRwWEAJz+fPqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uaPk2ulIcZ57653HciV0RjrwWSa0zgMpxuZyh+Wa+GeOTZ9huWn4M3S46wzQY1Llg
-	 eg4H+y69Ch/Y8JL1JZOPa/46Zrda/I1CU8ny48lKt6d4aTctgrPWw8e84LOREm5K0f
-	 z1i8VVDr6ZXbrZYugxDU4G3/mVI0++YwTC38hseQ=
+	b=cntaMplY5VUnwt/xv0I9jRoSTPv1gNLUc7r+O+TBLGjCmYQh+fBegO7DdSmR/wjRF
+	 MIEsJzudjvn1LegVcofBqwjkIrUdGc10i06NWvIIFFta/ku51g8xySK6X4+tt3dBnZ
+	 UWigFrSBSkQxAwGAhUmosdaXcxjLaiaS7ne3u7As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgA1OtZ (ORCPT
+        id S1727066AbgA1N7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:49:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 08:59:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727453AbgA1OB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:01:29 -0500
+        id S1727024AbgA1N7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:59:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 021CB24685;
-        Tue, 28 Jan 2020 14:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BBBB2173E;
+        Tue, 28 Jan 2020 13:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220089;
-        bh=Myq/2LXMUhGE3pjb10aTlx+MjlltmjfFKNnQMy3pbgE=;
+        s=default; t=1580219977;
+        bh=hEAUIpxUOVjreXovR7iHITQ4p9Qc0eBRwWEAJz+fPqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QGTf9OUS8z1QsagHaHHjl1g/E4fac7VIb0TzhnVPEutXbWvAvOycyNZYEKUpTRfX4
-         Mw18Ocf3B7zBTfVFKKIvi6ezYKXrBW8+Q0kTtKxOGY4trMSuEV23zyZApZzD9Dsj0P
-         Unpj6yyRQSl0LoQvLJO460/+Mv5eCjKwMbVieucY=
+        b=s2b3l/azqfpLk0xf/QM8IxhCrAfGCHpPSatP5QBq8mS87iIeeU9p7QtVxHuSsLQIS
+         iBZJPZFXyqi6c7XMyR8W0mobb+Gg5QtR6nZfLgynngLn021Bto43+BABxcPGXpZS1Z
+         nG76H3zQWkVIQaRP4o7Fn2Wyv+zYSU/eth4WjSUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 005/104] net: bcmgenet: Use netif_tx_napi_add() for TX NAPI
-Date:   Tue, 28 Jan 2020 14:59:26 +0100
-Message-Id: <20200128135817.984598636@linuxfoundation.org>
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Masato Suzuki <masato.suzuki@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 37/46] sd: Fix REQ_OP_ZONE_REPORT completion handling
+Date:   Tue, 28 Jan 2020 14:58:11 +0100
+Message-Id: <20200128135754.683895075@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
-References: <20200128135817.238524998@linuxfoundation.org>
+In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
+References: <20200128135749.822297911@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,36 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Masato Suzuki <masato.suzuki@wdc.com>
 
-[ Upstream commit 148965df1a990af98b2c84092c2a2274c7489284 ]
 
-Before commit 7587935cfa11 ("net: bcmgenet: move NAPI initialization to
-ring initialization") moved the code, this used to be
-netif_tx_napi_add(), but we lost that small semantic change in the
-process, restore that.
+ZBC/ZAC report zones command may return less bytes than requested if the
+number of matching zones for the report request is small. However, unlike
+read or write commands, the remainder of incomplete report zones commands
+cannot be automatically requested by the block layer: the start sector of
+the next report cannot be known, and the report reply may not be 512B
+aligned for SAS drives (a report zone reply size is always a multiple of
+64B). The regular request completion code executing bio_advance() and
+restart of the command remainder part currently causes invalid zone
+descriptor data to be reported to the caller if the report zone size is
+smaller than 512B (a case that can happen easily for a report of the last
+zones of a SAS drive for example).
 
-Fixes: 7587935cfa11 ("net: bcmgenet: move NAPI initialization to ring initialization")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Since blkdev_report_zones() handles report zone command processing in a
+loop until completion (no more zones are being reported), we can safely
+avoid that the block layer performs an incorrect bio_advance() call and
+restart of the remainder of incomplete report zone BIOs. To do so, always
+indicate a full completion of REQ_OP_ZONE_REPORT by setting good_bytes to
+the request buffer size and by setting the command resid to 0. This does
+not affect the post processing of the report zone reply done by
+sd_zbc_complete() since the reply header indicates the number of zones
+reported.
+
+Fixes: 89d947561077 ("sd: Implement support for ZBC devices")
+Cc: <stable@vger.kernel.org> # 4.19
+Cc: <stable@vger.kernel.org> # 4.14
+Signed-off-by: Masato Suzuki <masato.suzuki@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2164,8 +2164,8 @@ static void bcmgenet_init_tx_ring(struct
- 				  DMA_END_ADDR);
- 
- 	/* Initialize Tx NAPI */
--	netif_napi_add(priv->dev, &ring->napi, bcmgenet_tx_poll,
--		       NAPI_POLL_WEIGHT);
-+	netif_tx_napi_add(priv->dev, &ring->napi, bcmgenet_tx_poll,
-+			  NAPI_POLL_WEIGHT);
- }
- 
- /* Initialize a RDMA ring */
+---
+ drivers/scsi/sd.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1981,9 +1981,13 @@ static int sd_done(struct scsi_cmnd *SCp
+ 		}
+ 		break;
+ 	case REQ_OP_ZONE_REPORT:
++		/* To avoid that the block layer performs an incorrect
++		 * bio_advance() call and restart of the remainder of
++		 * incomplete report zone BIOs, always indicate a full
++		 * completion of REQ_OP_ZONE_REPORT.
++		 */
+ 		if (!result) {
+-			good_bytes = scsi_bufflen(SCpnt)
+-				- scsi_get_resid(SCpnt);
++			good_bytes = scsi_bufflen(SCpnt);
+ 			scsi_set_resid(SCpnt, 0);
+ 		} else {
+ 			good_bytes = 0;
 
 
