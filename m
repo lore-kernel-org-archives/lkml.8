@@ -2,135 +2,123 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2568C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEE3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEFF24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A385F20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:26:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="UE1JPMiC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fC2DVCpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgA1QZz (ORCPT
+        id S1726487AbgA1Q0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:25:55 -0500
-Received: from mout.web.de ([212.227.15.3]:33989 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbgA1QZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:25:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1580228693;
-        bh=5zEqEcZAWVjGp8xkcQEhydEZ+GyThYQytTy9UD6ojXA=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=UE1JPMiCsCDfislzMWPYW+KkuOCy8pafU3ju0CIluG40j2yTx5sEdms6mkaWs5Lj9
-         4uPYN2UIGIHu5mmeWsT2GwEGl678rQoz4AhqDKrNgQDklxRKKvPs+EHkVJbM0FGFmS
-         dHcIhcj+GEi7EGVBnTZ6ieqtiH3397Z9X9XgHTxU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.131.179]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lj2XW-1jZg6d0OoI-00dIzo; Tue, 28
- Jan 2020 17:24:53 +0100
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>
-Subject: Re: [PATCH v9 1/2] fs: New zonefs file system
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Message-ID: <1928f213-f6c8-156f-a968-6d0603a7656c@web.de>
-Date:   Tue, 28 Jan 2020 17:24:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 28 Jan 2020 11:26:43 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30247 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726111AbgA1Q0m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 11:26:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580228801;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eqVtRSzkoJjQLEgbdqSGEvfYPpwwOebXPgY4TxBNfDM=;
+        b=fC2DVCpPpNE6N08v7efcXeKu6GYAj+Sj8vjEUP9Cb85RfFNNZZZl3RXY/k9c+rWyR+2U2g
+        qdRH3tfjPJ5V+VE0jE3Ufv9ctZ4dFswZvtQ1sTGvW1s5iDwGIiGtgY7ul7+h4O3Lh7Akvo
+        X/saqig9dNbjaM4uFsAAt+k5yUk45Vk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-82-BRPZhQCpNfWq0jyeUaDVNA-1; Tue, 28 Jan 2020 11:26:17 -0500
+X-MC-Unique: BRPZhQCpNfWq0jyeUaDVNA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB3A48C05D2;
+        Tue, 28 Jan 2020 16:26:16 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A189863DE;
+        Tue, 28 Jan 2020 16:26:11 +0000 (UTC)
+Date:   Tue, 28 Jan 2020 11:26:10 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Stefan Bader <stefan.bader@canonical.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Tyler Hicks <tyler.hicks@canonical.com>,
+        Alasdair Kergon <agk@redhat.com>
+Subject: Re: [PATCH 1/1] blk/core: Gracefully handle unset make_request_fn
+Message-ID: <20200128162610.GA15575@redhat.com>
+References: <20200123091713.12623-1-stefan.bader@canonical.com>
+ <20200123091713.12623-2-stefan.bader@canonical.com>
+ <20200123103541.GA28102@redhat.com>
+ <20200123172816.GA31063@redhat.com>
+ <81055166-37fb-ad65-6a53-11c22c626ab1@kernel.dk>
+ <20200127193225.GA5065@redhat.com>
+ <e0475dae-a55f-f30e-a82f-ee35cdb171c4@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:F3L4Sg8wKTShzAEVuteP5QIgWQ5qNzSUMXawHy2itbq8+p+oRcd
- BTerA7YNbX9/H6xgQBmQhcNimuKGD55s+Kb1CgxVuVwyoPYqZIKT2Bg4ewIGU8BBaAoabJN
- /otvC7i33lMk8FV8RJIzU9UjnvmMPLUtc68CXwktyJz7ycIchN/WM39i32jZW45uQ00DaVO
- MeHanePewzYxYlUIE/0ZA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KFn36JFlvnE=:RqeyIl5POgkPWZc6l224tm
- Yk0tzgN0G0KT1Lv+5upqzRJGkBf7x1uLtDROA6miqU0N4733kyk9E9CJ/8InB+gcR7auma5is
- q+nrTgHzwPIdpPWSgX+r+RAnpkwwFus9sxsSylFHVWZvUnYV34SR3n3UrmuHUVoGpbGJmsZNR
- uQVFgOGRwNUzkRI4PBbKFoROhEbRFoHjK6w5MVfVGceUTCJ0Uhki4P4A7rAwQgbazaw7JCVML
- D7RjfrBVvTP3gIkrJSsqNHQLIP3jXCl/wLeSXJFZnx05jcOwbBK/enNz9FbyyHykDa15zZ2FL
- /KUYJTNcEjhH98LvdCgx4BIK8tYk4Rg2aOd82OdE4FkTI/dkcKQd/adecDqDPpjQUzl/sWgqw
- ZClvTod8RiMbN1mx0WGQ5FILur9FG0q4iACqNj+e2npTdPmSpUuWK+xEU3nzhnnYBCx1838Is
- KD3af2mJZg2BDvJiCiB1hEWWhx1kjoTTWq5bqA/CMUQZtsspqVeL/aZ2diOLETW1ptf+FU8s2
- qvSVc2fVkHC/M3mG4IUFmVB02IudIx+OKDkBtxwkpqyP5Zss1zLx2qyyiAryMSDeNxp98dFWy
- Pu0KJSrP41jLV19BwADyuk+s5yY4VE4kDXsL7yAegy90TyEFhZ1J9RD8QfxnJukGWzO06sLk3
- ObxjmICYb9vVcECnVRmuj5QCX0yBEStmTkVU62uwFnQyMQXKZnEy79z/4CvG8hMs0qv95icKP
- PyD0cKv4eFEzsyNAysvYX+XxSffQZLeT798S/UOenwwRgyPyeK/q7N5EpXmrOCXYXSRzPCFu3
- Qf6y/oxSk1oHee2be/l/PWkSuT45UXdfRskP1h4nArTmtepcDjUIAfVQNc7lQisfA/55iTANQ
- BiV2JAy0xBX/6WMn7iNDlXK2luO2X3kdOcjojQvszRuZIhxCLfqbBeMcsXDfqi7YsD4cJyQ6A
- HAU0rE1MZERX2fDmbPgFK1wK+wKZMCZPFSeq+D8ZTIBT5wWQ0O5+rxmhPArotgRc/IZeagvjY
- OZ78y/wSDHcfJ9eq729A3zxWKt9tF6B7teda9pOolYxLO+jhCZ1uwPd+qt+cTHuyMQ5FYcM2P
- ziEzjf7yf4UCT2gyljh/5VuB7Z+hNY3OPJGSzDJnOjCBthkfOlHsz7BhZ4/n0GsFXYu94hXli
- xNQJhj+tIDwl6JJP+eFWvhu20WBAkua9uzH9uro/PE8LU36P9mt1oHIQWcOjhKOAs9mHASjV9
- glXEB8W8Q7hi+jkYk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e0475dae-a55f-f30e-a82f-ee35cdb171c4@canonical.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/zonefs/Kconfig
-=E2=80=A6
-> +	help
-> +	  zonefs is a simple File System which exposes zones of a zoned block
+On Tue, Jan 28 2020 at  9:32am -0500,
+Stefan Bader <stefan.bader@canonical.com> wrote:
 
-Does the capitalisation matter here?
-Would the spelling =E2=80=9CZonefs is a simple file system which =E2=80=A6=
-=E2=80=9D be appropriate?
+> On 27.01.20 20:32, Mike Snitzer wrote:
+> > 
+> > I just staged the following DM fix:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.6&id=28a101d6b344f5a38d482a686d18b1205bc92333
+> 
+> Thanks Mike,
+> 
+> yeah this looks like it resolves the problem without adding any impact on the
+> generic I/O path. We certainly had thought about that but felt uncertain whether
+> it would not open other risks. Like something adding requests just before the
+> table load. Could this cause some I/O be handled by one function and the rest by
+> another? And would that really matter?
 
-Regards,
-Markus
+I considered this too.  Any IO issued to the device before it is "ready"
+won't matter anyway (no where to send the IO due to not having a DM
+table -- such IO should result in an error (from dm.c:dm_process_bio's
+!map check).  But given the device has no size, a simple write will hit
+-ENOSPC before.
+
+And the only way to get the DM device to have a proper destination for
+its IO is to load a table, which requires a sequence like:
+
+# dmsetup create -n test
+# dmsetup table
+test:
+# echo "0 20971520 linear 259:0 2048" | dmsetup load test
+# dmsetup table --inactive
+test: 0 20971520 linear 259:0 2048
+# dmsetup suspend test
+# dmsetup resume test
+# dmsetup table
+test: 0 20971520 linear 259:0 2048
+
+And once a table is loaded there will be accompanying change
+uevents that trigger udev, blkid, etc.
+
+(NOTE: the suspend phase implies a flush of all outstanding IO, but even
+if 'dmsetup suspend --noflush test' were used the IO would just get
+pushed onto a list in DM core and it would be issued after the new table
+is in place).
+
+> The other thing that was a bit strange but maybe someone else's problem is that
+> mount generated I/O requests to start with. The device size should be 0 still.
+
+That's just mount not having a negative check for device size being 0.
+
+Mike
+
