@@ -2,151 +2,146 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49784C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F5FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E03E24686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580211598;
-	bh=kmf5D6RKZUxlp3g7H60rO0uBNfp2fqdARa08eJtYZqM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MLUCael8Ocqi5yHpQoVGXwMBq+2LpCt6WluCvZTGBJlBOkZvrzwlCIQoXmiyWj2FZ
-	 Akbt+frMk1G68BYJZnK9UBZf+EOKwABRs7XXvLvrYcnhJTlrvbPvjspe4yRgXNMGUv
-	 sg3rGAg0zbTYjzbyrn90cyHk0jJl+LAh5kvkkeZg=
+	by mail.kernel.org (Postfix) with ESMTP id 88A4824684
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:40:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="K087k7CV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgA1Lj5 (ORCPT
+        id S1726143AbgA1Lkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 06:39:57 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40325 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgA1Lj5 (ORCPT
+        Tue, 28 Jan 2020 06:40:42 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:13351 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgA1Lkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 06:39:57 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c14so15632728wrn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 03:39:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=T3Wbgf30Ii+VOg2FGlTD1Ulg3uZcieH89u7q/gSMF7Q=;
-        b=b2ke8Tb8inNAk094ut1CQvIywQNw2arDJ9gFUncf6F3JZf6IDiUawbauNAij/hqy0F
-         T7yzXhmayuXVjjBA5+6os1ewu8qYnm8cYdIA36XepvwARk/DnyWlAigAAtFZi+Fxo+fO
-         hC7vgirRV58aeG7NhDEzKzXIW3bUq//I7lg222gvvzlsB3f65T12+5vMht0p/BxbsiTV
-         HVHKKK1a50tewrlq7dprwOMNxZxssAulsGxXpIIQpDqCK6rsMqw+lm849gpnf8THbdqq
-         PC1aAHfTRMEvw19XOHBH2mNOy3WJEuDqphiTusZGzdw6VleMkVRWjQcPMMO0CLnQEk3R
-         eMOA==
-X-Gm-Message-State: APjAAAVevgZ6/WZ/tFVxWa1dsSwfx3CTRvRffv7BsGqcmU8muF7juDUK
-        R91UBohO1EfAdNR5W5EXdcA=
-X-Google-Smtp-Source: APXvYqzgecilxTYzirylIKzVzYuY4fsPh3O0daKMkdvqtSLa+z+JrNZ6MnR+WnRBbY9ZDtMGNtZvHw==
-X-Received: by 2002:a5d:56ca:: with SMTP id m10mr29266505wrw.313.1580211595104;
-        Tue, 28 Jan 2020 03:39:55 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id r6sm25656024wrq.92.2020.01.28.03.39.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 03:39:54 -0800 (PST)
-Date:   Tue, 28 Jan 2020 12:39:53 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
-Message-ID: <20200128113953.GA24244@dhcp22.suse.cz>
-References: <CAM_iQpVN4MNhcK0TXvhmxsCdkVOqQ4gZBzkDHykLocPC6Va7LQ@mail.gmail.com>
- <20200121090048.GG29276@dhcp22.suse.cz>
- <CAM_iQpU0p7JLyQ4mQ==Kd7+0ugmricsEAp1ST2ShAZar2BLAWg@mail.gmail.com>
- <20200126233935.GA11536@bombadil.infradead.org>
- <20200127150024.GN1183@dhcp22.suse.cz>
- <20200127190653.GA8708@bombadil.infradead.org>
- <20200128081712.GA18145@dhcp22.suse.cz>
- <20200128083044.GB6615@bombadil.infradead.org>
- <20200128091352.GC18145@dhcp22.suse.cz>
- <20200128104857.GC6615@bombadil.infradead.org>
+        Tue, 28 Jan 2020 06:40:42 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200128114039epoutp0233d276028c9b78818c36fd713ffc75c5~uCh0fb7Yc1031410314epoutp02V
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:40:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200128114039epoutp0233d276028c9b78818c36fd713ffc75c5~uCh0fb7Yc1031410314epoutp02V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1580211639;
+        bh=QMDrmWXt12RXGyvNEtNunXcHhgnQQMkNaxgiR4Sx83o=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=K087k7CVlKB371XpMFsggZ68YnnPh8x424lPBI3vKR3oplADSySFl/qmFh0ZfetZq
+         xktPEhaZafN7Y7S8kaNhMI8gcpDC1Av3RZqIkkfEqHNdSqdJwKSxdwLANN0KUGkMZV
+         JLYwzTOZ8FcbQ5JMlEa8sP+SsahFWqjZa3iKWc1c=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200128114038epcas1p47e7a3ab1d06ad20f9843406e6050f122~uCh0AaOIS2730027300epcas1p45;
+        Tue, 28 Jan 2020 11:40:38 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 486PnJ5KHSzMqYkV; Tue, 28 Jan
+        2020 11:40:36 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        66.99.57028.4BD103E5; Tue, 28 Jan 2020 20:40:36 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200128114036epcas1p2fa1cce9a08f35b1857f21c830f62c499~uChxjRILF0279102791epcas1p2J;
+        Tue, 28 Jan 2020 11:40:36 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200128114036epsmtrp14a4f00ec90c70195b97b889fe421f1dc~uChxiS5h51860118601epsmtrp1j;
+        Tue, 28 Jan 2020 11:40:36 +0000 (GMT)
+X-AuditID: b6c32a35-974d39c00001dec4-09-5e301db4b7da
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6C.2C.10238.4BD103E5; Tue, 28 Jan 2020 20:40:36 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200128114036epsmtip1472fc24ea5995afcbc8a91c9c0aa4336~uChxV3tk30196101961epsmtip18;
+        Tue, 28 Jan 2020 11:40:36 +0000 (GMT)
+Subject: Re: [PATCH] PM / devfreq: use constant name of userspace governor
+To:     pierre Kuo <vichy.kuo@gmail.com>, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <33eac5f8-4cdd-3315-cf82-c5f859dffce7@samsung.com>
+Date:   Tue, 28 Jan 2020 20:48:15 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128104857.GC6615@bombadil.infradead.org>
+In-Reply-To: <20200123155912.22160-1-vichy.kuo@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjk+LIzCtJLcpLzFFi42LZdlhTT3eLrEGcwdz56hZnm96wW1zeNYfN
+        4nPvEUaL240r2CxezlvB6sDqsXPWXXaPvi2rGD0+b5ILYI7KtslITUxJLVJIzUvOT8nMS7dV
+        8g6Od443NTMw1DW0tDBXUshLzE21VXLxCdB1y8wBWqmkUJaYUwoUCkgsLlbSt7Mpyi8tSVXI
+        yC8usVVKLUjJKbAs0CtOzC0uzUvXS87PtTI0MDAyBSpMyM6YtF6i4Ah7xdGZF9kbGBexdTFy
+        ckgImEj82bOcpYuRi0NIYAejxJxPX9kgnE+MEptefgarEhL4xijx7YslTMekC4/ZIYr2Mkps
+        m9HBBFH0HsjZowNiCwt4SWw8/JgRxBYRiJb4ce4KC4jNLGAl8fpjNzuIzSagJbH/xQ2wBfwC
+        ihJXf0DU8wrYSWz5dR0sziKgKvFu5XWwelGBMImT21qgagQlTs58AjSTg4NTwFLi4ctYiPHi
+        EreezGeCsOUltr+dwwxyp4TAGTaJ7vMvmSAecJH4d2ExlC0s8er4FnYIW0riZX8blF0tsfLk
+        ETaI5g5GiS37L7BCJIwl9i+dzASymFlAU2L9Ln2IsKLEzt9zGSEW80m8+9rDClIiIcAr0dEm
+        BFGiLHH5wV2otZISi9s72SYwKs1C8s0sJC/MQvLCLIRlCxhZVjGKpRYU56anFhsWGCJH9SZG
+        cFrUMt3BOOWczyFGAQ5GJR5eict6cUKsiWXFlbmHGCU4mJVEeDuZDOKEeFMSK6tSi/Lji0pz
+        UosPMZoCA3sis5Rocj4wZeeVxBuaGhkbG1uYGJqZGhoqifM+jNSMExJITyxJzU5NLUgtgulj
+        4uCUamBcGXDf4Dav15LDr32VLoq/36CYquA5YX/Q9Ut2W2PWxax4vCDk6rfX/Zx1rXO0lv75
+        2Jx1ZcpVs9NfVt9b0aLC+ItRX7fDNnFb0SOrp4xb9q07l2IstJTv2fc1Jw4VJy9gzPiwb9lB
+        Zk1ZO5/eXU0/NmmKbNNZ+T6QY0X4gd4VVxQvHDfYZnBDXomlOCPRUIu5qDgRAHvsFyShAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJLMWRmVeSWpSXmKPExsWy7bCSnO4WWYM4g0mHOC3ONr1ht7i8aw6b
+        xefeI4wWtxtXsFm8nLeC1YHVY+esu+wefVtWMXp83iQXwBzFZZOSmpNZllqkb5fAlTFpvUTB
+        EfaKozMvsjcwLmLrYuTkkBAwkZh04TF7FyMXh5DAbkaJA+uvsUMkJCWmXTzK3MXIAWQLSxw+
+        XAxR85ZRYtHk5YwgNcICXhIbDz8Gs0UEoiXWTZjKCmIzC1hJvP7YDTZHSKCHUeL8DzCbTUBL
+        Yv+LG2CL+QUUJa7+gOjlFbCT2PLrOlicRUBV4t3K62D1ogJhEjuXPGaCqBGUODnzCQvIPZwC
+        lhIPX8ZCrFKX+DPvEjOELS5x68l8JghbXmL72znMExiFZyHpnoWkZRaSlllIWhYwsqxilEwt
+        KM5Nzy02LDDMSy3XK07MLS7NS9dLzs/dxAiOEC3NHYyXl8QfYhTgYFTi4ZW4rBcnxJpYVlyZ
+        e4hRgoNZSYS3k8kgTog3JbGyKrUoP76oNCe1+BCjNAeLkjjv07xjkUIC6YklqdmpqQWpRTBZ
+        Jg5OqQbGiuoM8/PNu89/Nv52SaHaZ8LS05Yptv/P8Xxf8o7ZUW7u7AkS9XZRO5OsV13w5933
+        786xjWcd3qnuMjW4bM3T4OEXsnGx8ly9A3Kfp5W87Y0wi555SFfk/7zoiaxq6ScPsR1teqqV
+        /ryxouIII/vFghePHgjcPTJ37VNu0dTpXZtvpS8WVZ7+WImlOCPRUIu5qDgRAMB//CiMAgAA
+X-CMS-MailID: 20200128114036epcas1p2fa1cce9a08f35b1857f21c830f62c499
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200123155931epcas1p21de0db0e53438c6f326a5b75bbb69307
+References: <CGME20200123155931epcas1p21de0db0e53438c6f326a5b75bbb69307@epcas1p2.samsung.com>
+        <20200123155912.22160-1-vichy.kuo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-01-20 02:48:57, Matthew Wilcox wrote:
-> On Tue, Jan 28, 2020 at 10:13:52AM +0100, Michal Hocko wrote:
-> > On Tue 28-01-20 00:30:44, Matthew Wilcox wrote:
-> > > On Tue, Jan 28, 2020 at 09:17:12AM +0100, Michal Hocko wrote:
-> > > > On Mon 27-01-20 11:06:53, Matthew Wilcox wrote:
-> > > > > On Mon, Jan 27, 2020 at 04:00:24PM +0100, Michal Hocko wrote:
-> > > > > > On Sun 26-01-20 15:39:35, Matthew Wilcox wrote:
-> > > > > > > On Sun, Jan 26, 2020 at 11:53:55AM -0800, Cong Wang wrote:
-> > > > > > > > I suspect the process gets stuck in the retry loop in try_charge(), as
-> > > > > > > > the _shortest_ stacktrace of the perf samples indicated:
-> > > > > > > > 
-> > > > > > > > cycles:ppp:
-> > > > > > > >         ffffffffa72963db mem_cgroup_iter
-> > > > > > > >         ffffffffa72980ca mem_cgroup_oom_unlock
-> > > > > > > >         ffffffffa7298c15 try_charge
-> > > > > > > >         ffffffffa729a886 mem_cgroup_try_charge
-> > > > > > > >         ffffffffa720ec03 __add_to_page_cache_locked
-> > > > > > > >         ffffffffa720ee3a add_to_page_cache_lru
-> > > > > > > >         ffffffffa7312ddb iomap_readpages_actor
-> > > > > > > >         ffffffffa73133f7 iomap_apply
-> > > > > > > >         ffffffffa73135da iomap_readpages
-> > > > > > > >         ffffffffa722062e read_pages
-> > > > > > > >         ffffffffa7220b3f __do_page_cache_readahead
-> > > > > > > >         ffffffffa7210554 filemap_fault
-> > > > > > > >         ffffffffc039e41f __xfs_filemap_fault
-> > > > > > > >         ffffffffa724f5e7 __do_fault
-> > > > > > > >         ffffffffa724c5f2 __handle_mm_fault
-> > > > > > > >         ffffffffa724cbc6 handle_mm_fault
-> > > > > > > >         ffffffffa70a313e __do_page_fault
-> > > > > > > >         ffffffffa7a00dfe page_fault
-> > > > 
-> > > > I am not deeply familiar with the readahead code. But is there really a
-> > > > high oerder allocation (order > 1) that would trigger compaction in the
-> > > > phase when pages are locked?
-> > > 
-> > > Thanks to sl*b, yes:
-> > > 
-> > > radix_tree_node    80890 102536    584   28    4 : tunables    0    0    0 : slabdata   3662   3662      0
-> > > 
-> > > so it's allocating 4 pages for an allocation of a 576 byte node.
-> > 
-> > I am not really sure that we do sync migration for costly orders.
+On 1/24/20 12:59 AM, pierre Kuo wrote:
+> Based on commit aa7c352f9841 ("PM / devfreq: Define the constant governor
+> name"), use constant name for userspace governor.
 > 
-> Doesn't the stack trace above indicate that we're doing migration as
-> the result of an allocation in add_to_page_cache_lru()?
+> Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
+> ---
+>  drivers/devfreq/governor_userspace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/devfreq/governor_userspace.c b/drivers/devfreq/governor_userspace.c
+> index af94942fcf95..0fd6c4851071 100644
+> --- a/drivers/devfreq/governor_userspace.c
+> +++ b/drivers/devfreq/governor_userspace.c
+> @@ -131,7 +131,7 @@ static int devfreq_userspace_handler(struct devfreq *devfreq,
+>  }
+>  
+>  static struct devfreq_governor devfreq_userspace = {
+> -	.name = "userspace",
+> +	.name = DEVFREQ_GOV_USERSPACE,
+>  	.get_target_freq = devfreq_userspace_func,
+>  	.event_handler = devfreq_userspace_handler,
+>  };
+> 
 
-Which stack trace do you refer to? Because the one above doesn't show
-much more beyond mem_cgroup_iter and likewise others in this email
-thread. I do not really remember any stack with lock_page on the trace.
-> 
-> > > > Btw. the compaction rejects to consider file backed pages when __GFP_FS
-> > > > is not present AFAIR.
-> > > 
-> > > Ah, that would save us.
-> > 
-> > So the NOFS comes from the mapping GFP mask, right? That is something I
-> > was hoping to get rid of eventually :/ Anyway it would be better to have
-> > an explicit NOFS with a comment explaining why we need that. If for
-> > nothing else then for documentation.
-> 
-> I'd also like to see the mapping GFP mask go away, but rather than seeing
-> an explicit GFP_NOFS here, I'd rather see the memalloc_nofs API used.
-
-Completely agreed agree here. The proper place for the scope would be
-the place where pages are locked with an explanation that there are
-other allocations down the line which might invoke sync migration and
-that would be dangerous. Having that explicitly documented is clearly an
-improvement.
+Applied it. Thanks.
 
 -- 
-Michal Hocko
-SUSE Labs
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
