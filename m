@@ -2,105 +2,153 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236DDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 23:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1D7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 23:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96942173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 23:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E223C2087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 23:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LpOh1pel"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GDX/C/OS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgA1XDN (ORCPT
+        id S1726427AbgA1XEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 18:03:13 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36002 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgA1XDM (ORCPT
+        Tue, 28 Jan 2020 18:04:23 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:48633 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgA1XEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 18:03:12 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 185so3650419pfv.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 15:03:12 -0800 (PST)
+        Tue, 28 Jan 2020 18:04:23 -0500
+Received: by mail-pf1-f202.google.com with SMTP id u13so9519315pfl.15
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 15:04:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BQHjrKsw3mb8tLLCYB49BaKjx4tgpI3Vuluj4gny7rU=;
-        b=LpOh1pelzzXYfkGWr73OW4OXkP6vJ+5tlOVGIrXHH0liSRTIYgs16JDRT8lIHZPSo+
-         dzMCo+fDtdEyrfdhSOgOsUdx/PTzY7tK1vgYVxJyhCk5zIwDZ+SJOlUmyOxrOKqHkHUP
-         +3y3cfByRw61fUuuU8kUXR2LYkUe4oaI/7WYY=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=4wthl79HWP0T/o9zvBpWHIzpNLIBPxOPJx5PymHVG6Q=;
+        b=GDX/C/OSuHuMeBJ1ahgPZL1VVGEdTJy/yP3LL9+inyqMwkRHK7dFp/+xG9iD5I3Wye
+         R8FtJLFJ0eV70EjeSjg0U5qKk8bSzCa1QbG+lL0sub2v+jXGlXmnUJiDQTieWdmoJRZV
+         aEnhZYhnDWVpjcVBM8BKswB2TVHRR/Zw2QhMO3zPPcBHrLgbdTdvsKjAa5dI1XUBjCHL
+         spmbAHxV0hBMSAK/CaKKdUNumnezHwIPqNO1a9JQZ9rUo5YhVBh1WYO9WyquZ7bULg08
+         P/qSWjuqXIzcKanpjDIRuMerEfswNe+d9wkqs/hJKIaTCfLoyJCRVC1TZ7x8bQnI9TV9
+         rJQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BQHjrKsw3mb8tLLCYB49BaKjx4tgpI3Vuluj4gny7rU=;
-        b=AcsxCc8PpfEv3Owndw6ecte0iWP8cHDxuQpSofp4cvcKCMYDmBRiSjKwtY8xD4uvsJ
-         e3na22yhsJ9MT2LnSvdT2va04xCXWaP8ev9jLzAU7MWUrhM44ONW79BkYHIO8IwOeNQ2
-         OfzRha+vVHFdn1OcE5tNnORmMpMjlMFPcs4flw0njlv2J6/XDdQpcTwpzN6ENjDMGKP5
-         IkgRt6kxRwP3ik+UlT7Kk+GzLDCegjau+ofI9SlQXc2YVfPHr0L65NXTHNtDoDh/0/RX
-         u8f2mnenis/w8A5DGOh96Wo/I3IPN2fiwaTTDMUNsoY7DONS3BxRqwucEboWpPcCbCNx
-         aj+A==
-X-Gm-Message-State: APjAAAXJVJp62qEUKPy4QhO+uZd/V1OqjkkyjvqXEZiKMF05xzrV6sdX
-        dNtdZiAwrC+rsAKYfNPLE2DO4Q==
-X-Google-Smtp-Source: APXvYqxBE8zXnn4hcAXUvWOJwzaIofY8dogyTxZvG7W0vNnGypJIVDDTWkGEDLgwKSxuwL6sc71RNw==
-X-Received: by 2002:aa7:9796:: with SMTP id o22mr6119730pfp.101.1580252592170;
-        Tue, 28 Jan 2020 15:03:12 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a19sm3926515pju.11.2020.01.28.15.03.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 15:03:11 -0800 (PST)
-Date:   Tue, 28 Jan 2020 15:03:10 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Popov <alex.popov@linux.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        notify@kernel.org
-Subject: Re: [PATCH v2 1/1] lkdtm/stackleak: Make the test more verbose
-Message-ID: <202001281502.F4977FD279@keescook>
-References: <20200102234907.585508-1-alex.popov@linux.com>
- <e8f1b3e9-50ae-2482-3e10-32b21cd7ebb4@linux.com>
- <202001271514.345A5CC9C@keescook>
- <20200128075050.GC2105706@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128075050.GC2105706@kroah.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=4wthl79HWP0T/o9zvBpWHIzpNLIBPxOPJx5PymHVG6Q=;
+        b=Dq8Qg4dSf77YOutgGfj07Onr9JBd/OSZ4uDOhjpcMoFV3wsengqxDx8RvA6pZ432Or
+         Cjt4NeJiB8kmAqfBq4OCzXLv4d9C7EQwhtgTQ0Yk37VgKnU1BnbPAqCDSeB0DMNkLStO
+         kK+MgLHLkn6v20TqJabWFp4mn23t/uPE8F+GeMme8E26Vqn8zzQ8Jc40gY/ITObNVXax
+         6tuPkYeHRvk9jKKZxESAEGKUJsTNwqz7Edun3g6hTpXdFCMC73RFa6qo0EY1zjzp0Kdi
+         fQTbVNp4sO5r2fEcc0tfmlZXhg7EKud2TUbioEOhr3qknUknsS9QI0kLEGn7gl+4J9tz
+         oTiQ==
+X-Gm-Message-State: APjAAAUEKyfpkFZETJINGxGP4KJ0N9lKVLco0ZPYK4ElBy4ribcpd1JY
+        M6QLlZJ8O1apoTbZFw98XN/fzVvHfo0=
+X-Google-Smtp-Source: APXvYqw5NZo8NAG4OMkcKqlZwD1DRl7BGD/ZEL4QespRsfp8h2gjJpR5FGRTvo86dDcfrVlQ5mEeoeJD/MY=
+X-Received: by 2002:a63:1c1d:: with SMTP id c29mr27636876pgc.14.1580252662083;
+ Tue, 28 Jan 2020 15:04:22 -0800 (PST)
+Date:   Tue, 28 Jan 2020 15:03:23 -0800
+Message-Id: <20200128230328.183524-1-drosen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH v6 0/5] Support fof Casefolding and Encryption
+From:   Daniel Rosenberg <drosen@google.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>
+Cc:     linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 08:50:50AM +0100, Greg Kroah-Hartman wrote:
-> On Mon, Jan 27, 2020 at 03:15:08PM -0800, Kees Cook wrote:
-> > On Wed, Jan 22, 2020 at 02:58:44PM +0300, Alexander Popov wrote:
-> > > On 03.01.2020 02:49, Alexander Popov wrote:
-> > > > Make the stack erasing test more verbose about the errors that it
-> > > > can detect.
-> > > > 
-> > > > Signed-off-by: Alexander Popov <alex.popov@linux.com>
-> > > > ---
-> > > >  drivers/misc/lkdtm/stackleak.c | 25 +++++++++++++++++--------
-> > > >  1 file changed, 17 insertions(+), 8 deletions(-)
-> > > 
-> > > Hello!
-> > > 
-> > > Pinging about this version of the patch.
-> > > 
-> > > Kees, it uses dump_stack() instead of BUG(), as we negotiated.
-> > 
-> > Yup, this is in my queue -- I've just gotten back from travelling and
-> > will get to it shortly. :)
-> > 
-> > Greg, feel free to take this directly if you want, too.
-> 
-> If I were to take it, it would have to wait until after 5.6-rc1, sorry.
+These patches are all on top of fscrypt's development branch
 
-Well, it has to go via drivers/misc anyway, so I think timing is no
-different. I would consider this a feature patch, not a bug fix, too.
+Ext4 and F2FS currently both support casefolding and encryption, but not at
+the same time. These patches aim to rectify that.
+
+I moved the identical casefolding dcache operations for ext4 and f2fs into
+fs/unicode, as all filesystems using casefolded names will want them.
+
+I've also adjust fscrypt to not set it's d_revalidate operation during it's
+prepare lookup, instead having the calling filesystem set it up. This is
+done to that the filesystem may have it's own dentry_operations.
+
+For Ext4, since the hash for encrypted casefolded directory names cannot be
+computed without the key, we need to store the hash on disk. We only do so
+for encrypted and casefolded directories to avoid on disk format changes.
+Previously encryption and casefolding could not be on the same filesystem,
+and we're relaxing that requirement. F2fs is a bit more straightforward
+since it already stores hashes on disk.
+
+I've updated the related tools with just enough to enable the feature. I
+still need to adjust ext4's fsck's, although without access to the keys,
+neither fsck will be able to verify the hashes of casefolded and encrypted
+names.
+
+v6 changes:
+Went back to using dentry_operations for casefolding. Provided standard
+implementations in fs/unicode, avoiding extra allocation in d_hash op.
+Moved fscrypt d_ops setting to be filesystem's responsibility to maintain
+compatibility with casefolding and overlayfs if casefolding is not used
+fixes some f2fs error handling
+
+v4-5: patches submitted on fscrypt
+
+v3 changes:
+fscrypt patch only creates hash key if it will be needed.
+Rebased on top of fscrypt branch, reconstified match functions in ext4/f2fs
+
+v2 changes:
+fscrypt moved to separate thread to rebase on fscrypt dev branch
+addressed feedback, plus some minor fixes
+
+
+Daniel Rosenberg (5):
+  unicode: Add standard casefolded d_ops
+  fscrypt: Have filesystems handle their d_ops
+  f2fs: Handle casefolding with Encryption
+  ext4: Hande casefolding with encryption
+  ext4: Optimize match for casefolded encrypted dirs
+
+ Documentation/filesystems/ext4/directory.rst |  27 ++
+ fs/crypto/fname.c                            |   7 +-
+ fs/crypto/fscrypt_private.h                  |   1 -
+ fs/crypto/hooks.c                            |   1 -
+ fs/ext4/dir.c                                | 102 +++---
+ fs/ext4/ext4.h                               |  86 +++--
+ fs/ext4/hash.c                               |  26 +-
+ fs/ext4/ialloc.c                             |   5 +-
+ fs/ext4/inline.c                             |  41 ++-
+ fs/ext4/namei.c                              | 325 ++++++++++++-------
+ fs/ext4/super.c                              |  21 +-
+ fs/f2fs/dir.c                                | 151 +++++----
+ fs/f2fs/f2fs.h                               |  16 +-
+ fs/f2fs/hash.c                               |  25 +-
+ fs/f2fs/inline.c                             |   9 +-
+ fs/f2fs/namei.c                              |   1 +
+ fs/f2fs/super.c                              |  17 +-
+ fs/f2fs/sysfs.c                              |   8 +-
+ fs/ubifs/dir.c                               |  18 +
+ fs/unicode/utf8-core.c                       |  61 ++++
+ include/linux/fs.h                           |  10 +
+ include/linux/fscrypt.h                      |   6 +-
+ include/linux/unicode.h                      |  17 +
+ 23 files changed, 644 insertions(+), 337 deletions(-)
 
 -- 
-Kees Cook
+2.25.0.341.g760bfbb309-goog
+
