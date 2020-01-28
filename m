@@ -2,116 +2,130 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066B4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D6EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEA324686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4B524686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rZzl+qEA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgA1TER (ORCPT
+        id S1727193AbgA1THQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 14:04:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:33906 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgA1TEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 14:04:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CBA6328;
-        Tue, 28 Jan 2020 11:04:16 -0800 (PST)
-Received: from [192.168.122.167] (unknown [10.118.28.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E15503F52E;
-        Tue, 28 Jan 2020 11:04:15 -0800 (PST)
-Subject: Re: [PATCH RFC 0/2] Add basic generic ACPI soc driver
-To:     John Garry <john.garry@huawei.com>, rjw@rjwysocki.net,
-        lenb@kernel.org
-Cc:     arnd@arndb.de, olof@lixom.net, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, guohanjun@huawei.com,
-        gregkh@linuxfoundation.org
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <bb87efe5-d0be-498a-25a1-008a7bebd452@arm.com>
- <5ab3a97d-bbc4-6d5a-fd06-f8da324339ab@huawei.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <6be8d175-477d-d163-3fe0-3ab562874ce4@arm.com>
-Date:   Tue, 28 Jan 2020 13:04:15 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <5ab3a97d-bbc4-6d5a-fd06-f8da324339ab@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 28 Jan 2020 14:07:16 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34316 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgA1THO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 14:07:14 -0500
+Received: by mail-qt1-f194.google.com with SMTP id h12so11170043qtu.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:07:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=ZSIv5JurPysNixS3YWSkJ+cqh/2vHLB/JAVHcGR/4Zo=;
+        b=rZzl+qEAYLTBtMp9ssPK9Ejc0IQXfIjcMlCwc8RZJ/Poapm8WZnOmSKjpPGU/CRTsz
+         s49j6egQsNv+bATXo82MSoiXpQi3N3QHvgnyq6VfzcooOemBU6djud+xflwQG7RGqoPc
+         L5M9+QbKcXOUUg0U09rJgFyuy4M0BvZq0fS3S49pfbq8xDC/uRvuAV9T3NJ2dNoyS3t+
+         r0VLb2Wpo+pntt9bwsRP15mZe1cOZg5vc4u8F4VRwv/pqDLOhfKGv0d7nyNY7llsOI2p
+         sOz+jYkbLFQ6oe89WgJeyG/Pa023GcDt5lsRxS1gRMmySONFqvaE1MUA5AHjPWyKvzIK
+         /yww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=ZSIv5JurPysNixS3YWSkJ+cqh/2vHLB/JAVHcGR/4Zo=;
+        b=UltJMbDNMVz1SZJoQ5bKkqiILU20WAlsR6l82x8LYzUfEhNNqm2wuq1aG8W+Ek9ajf
+         xgo83x85XjY57j+7H4gIUl22jfxBdQELiHJAZJND4GY5Bd4XT8QinjuUCVdqtnampb1K
+         ZLHXJBQ1YePUeogeUiZAW69f1wxtjF7dd/Qry3ypqnDhqHK70RCZFHiIhSkwjbOd6IWg
+         GbRNybaboSdaTf1wQYS5IgeGmrhybDs/5zSuk0J/4kfTAjg4adO138GcjkHN4DG7a80k
+         IpiAbgxKSBg3a6axW2WOCd76KyYQrnUyWTZE8SDKsWoT7Rv2w6F+5ebWQp9xbH7BNjHV
+         7HKw==
+X-Gm-Message-State: APjAAAVycd+slaLX5HjCI6Boj0QxLNWEngfK9pxVB6+CBBqTqt+JEiIj
+        5vOJimvge7D5ABZqfAelNR8DDQ==
+X-Google-Smtp-Source: APXvYqwfcEAdtsZ+rCamZtj0MvoXkHQbqikImH2K21Z7lN9o0ZlEjUgJncOajxaQBGEujZOyMJYZkQ==
+X-Received: by 2002:ac8:2b86:: with SMTP id m6mr23384923qtm.190.1580238432152;
+        Tue, 28 Jan 2020 11:07:12 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id f7sm13273329qtp.86.2020.01.28.11.07.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 11:07:10 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page table helpers
+Date:   Tue, 28 Jan 2020 14:07:10 -0500
+Message-Id: <69091BA4-18C4-4425-A5E2-31FBE4654AF9@lca.pw>
+References: <20200128174709.GK655507@arrakis.emea.arm.com>
+Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        James Hogan <jhogan@kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+In-Reply-To: <20200128174709.GK655507@arrakis.emea.arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 1/28/20 11:28 AM, John Garry wrote:
-> On 28/01/2020 16:56, Jeremy Linton wrote:
->> Hi,
->>
-> 
-> Hi Jeremy,
-> 
->> On 1/28/20 5:14 AM, John Garry wrote:
->>> A requirement has come up recently to be able to read system SoC 
->>> packages
->>> identifiers from userspace [0].
->>>
->>> For device tree FW-based systems, this would be quite 
->>> straightforward, in
->>> that we could add a soc driver for that system and use the DT model
->>> identifier as the soc id - that's how most soc drivers seem to do it.
->>>
->>> For ACPI-based systems, the only place I know to get (put) such SoC
->>> information is in the PPTT, specifically the ID Type Structure for a
->>> processor package node. A processor package node describes a physical
->>> boundary of a processor topology.
->>
->> Well presumably that is one of the use cases for DMI, which has fields 
->> for the processor/socket as well as the machine vendor.
-> 
-> I did consider DMI, but I want something more generic, i.e. could cover 
-> embedded/DT systems also.
-> 
-> And I need to double check if DMI really has the info I require. Last 
-> time I checked, it didn't for my dev board, but I know that some fields 
-> are simply not filled in.
-
-Well the info is probably there, but that doesn't mean it should be used 
-programmatically. As your board shows, its not that reliable. And 
-looking at the linked patch I see you mention that.
 
 
-> 
->>
->> But, quickly looking at the use case, I can't help but think you don't 
->> really want any of the above, or the PPTT id. It seems the mapping 
->> should actually be tied directly to the uncore PMU definition, rather 
->> than a soc/machine/whatever identifier. Which would imply keying off 
->> one of the ACPI object identifiers for the PMU itself.
-> 
-> So a PMU device (/sys/bus/event_source/devices) does not have a link to 
-> the ACPI object identifiers or uncore PMU platform device etc.
-> 
-> And even if it did, there is no clear link between that ACPI object and 
-> the events it supports for that implementation.
+> On Jan 28, 2020, at 12:47 PM, Catalin Marinas <catalin.marinas@arm.com> wr=
+ote:
+>=20
+> The primary goal here is not finding regressions but having clearly
+> defined semantics of the page table accessors across architectures. x86
+> and arm64 are a good starting point and other architectures will be
+> enabled as they are aligned to the same semantics.
 
-Having a direct link isn't ideal either. It seems you do mention the pmu 
-naming conventions, which can be controlled based on ACPI object 
-identifiers. Something like "uncore_dmc_hsi1" where the appended bits 
-could for example vary on _CID+_UID or DT name.
+This still does not answer the fundamental question. If this test is simply i=
+nefficient to find bugs, who wants to spend time to use it regularly?  If th=
+is is just one off test that may get running once in a few years (when intro=
+ducing a new arch), how does it justify the ongoing cost to maintain it?
 
-Not sure that is a particularly good suggestion either, but I do think 
-its a better idea to tie the mapping to the pmu type/man/version concept 
-than the SOC it appears in. The sysfs-bus-event_source-devices-* ABI 
-docs are noticeably silent on the format of the pmu name (is that 
-somewhere else?).
-
-
-
+I do agree there could be a need to clearly define this thing but that belon=
+gs to documentation rather than testing purpose. It is confusing to mix this=
+ with other config options which have somewhat a different purpose, it will t=
+hen be a waste of time for people who mistakenly enable this for regular aut=
+omatic testing and never found any bug from it.=
