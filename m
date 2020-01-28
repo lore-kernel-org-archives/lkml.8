@@ -2,110 +2,105 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0778FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8807EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A7C24687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDA621739
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:20:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPLLbufU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgA1RRp (ORCPT
+        id S1726307AbgA1RUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:17:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:60876 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbgA1RRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:17:45 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E803328;
-        Tue, 28 Jan 2020 09:17:44 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E6273F52E;
-        Tue, 28 Jan 2020 09:17:42 -0800 (PST)
-Date:   Tue, 28 Jan 2020 17:17:36 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     "broonie@kernel.org" <broonie@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
-        "lkml@metux.net" <lkml@metux.net>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "system-dt@lists.openampproject.org" 
-        <system-dt@lists.openampproject.org>,
-        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 0/7] Introduce bus firewall controller framework
-Message-ID: <20200128171639.GA36496@bogus>
-References: <20200128153806.7780-1-benjamin.gaignard@st.com>
- <20200128163628.GB30489@bogus>
- <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 28 Jan 2020 12:20:18 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36325 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgA1RUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:20:18 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k3so7318278pgc.3;
+        Tue, 28 Jan 2020 09:20:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jf3QvTBtLBXkEUTUJ6dEyaixgm7RPtLRLhyBEDMajRM=;
+        b=CPLLbufURDm6a2I+e5yqSQa31hPHb6Z6iVXHANzSfE6mwte4IcdDCHSoosA5y38tdR
+         v6SDkrLCTZYuTLqBEIIjkkn0C0ceHnHn3y4ka6znW+EKcqQXl5n5UpHwUzbTilqxmcAz
+         Kn2oh6Q6nbOIAfsu4r6VBt0Dh0nKM7AU7O8ztAHxWZEWSXhoMW+UPnybyI+FMY4pam+Z
+         2yho40MOQJTkU6xmY+Xk/SezwWKZ8yubPpYr/WoDjeudSjqhPAXli6Tsxx1F0kuN5JOf
+         1EyHzLtRepzLVujQUWopEYqCDY6Eu6hKM+c4Fe6ZH47XDTFESizWTmG/BFGjTRumYhG5
+         Kqvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jf3QvTBtLBXkEUTUJ6dEyaixgm7RPtLRLhyBEDMajRM=;
+        b=pBZ7oLRfm/6gr8YN65/U3C/5ewMcdSrABegqDpirBOeccekymRxBswFL0uuhhXQ91Q
+         hpPfToEisC6rhm+0k8f9LcJvAQUX/hzJeabigFbuOFL7dj5FektBBu5ZwKP5UqahgFKZ
+         NkqfyfrgwmUKe1Z0/CuewfGn63YRF/ABNoffdMq8ewywFYtRqf9pQGxVK9uRYBp8gGT7
+         r1P+xHlTgpqJ+YrhiB1gk2UA/2kgp1wlOb2BpTPL9/qk0UrBQ9mDkXbSJKMt/nWo3uSw
+         qZ4d4an/pCBtTVlY0DpK47ahLRaQ/f54QkWQLiKSUODu7BTGXAvtuGrbB5JlNv0G15RD
+         5fmQ==
+X-Gm-Message-State: APjAAAVeiu/Y/DquPxb6YgrY7BPdAqN0SLGxDqYMqkKnYndUQ9qbu5QO
+        NEm36rC+J5hO5+ket9Lt4A==
+X-Google-Smtp-Source: APXvYqze9wR3ZSNvjNvbxyEc55dGBVFLhZEOOt3MVtGqsOWYO0pXeFv5/z2zgpaWXrdU3bkJWUqghw==
+X-Received: by 2002:a65:4b85:: with SMTP id t5mr20864227pgq.404.1580232017665;
+        Tue, 28 Jan 2020 09:20:17 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee4:f372:cc5e:c7d9:2a24:390])
+        by smtp.gmail.com with ESMTPSA id w26sm12959417pfj.119.2020.01.28.09.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2020 09:20:17 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     peterz@infradead.org, mingo@kernel.org, oleg@redhat.com,
+        christian.brauner@ubuntu.com, paulmck@kernel.org
+Cc:     linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        rcu@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] exit.c: Fix Sparse errors and warnings
+Date:   Tue, 28 Jan 2020 22:50:08 +0530
+Message-Id: <20200128172008.22665-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 04:46:41PM +0000, Benjamin GAIGNARD wrote:
->
-> On 1/28/20 5:36 PM, Sudeep Holla wrote:
-> > On Tue, Jan 28, 2020 at 04:37:59PM +0100, Benjamin Gaignard wrote:
-> >> Bus firewall framework aims to provide a kernel API to set the configuration
-> >> of the harware blocks in charge of busses access control.
-> >>
-> >> Framework architecture is inspirated by pinctrl framework:
-> >> - a default configuration could be applied before bind the driver.
-> >>    If a configuration could not be applied the driver is not bind
-> >>    to avoid doing accesses on prohibited regions.
-> >> - configurations could be apllied dynamically by drivers.
-> >> - device node provides the bus firewall configurations.
-> >>
-> >> An example of bus firewall controller is STM32 ETZPC hardware block
-> >> which got 3 possible configurations:
-> >> - trust: hardware blocks are only accessible by software running on trust
-> >>    zone (i.e op-tee firmware).
-> >> - non-secure: hardware blocks are accessible by non-secure software (i.e.
-> >>    linux kernel).
-> >> - coprocessor: hardware blocks are only accessible by the coprocessor.
-> >> Up to 94 hardware blocks of the soc could be managed by ETZPC.
-> >>
-> > /me confused. Is ETZPC accessible from the non-secure kernel space to
-> > begin with ? If so, is it allowed to configure hardware blocks as secure
-> > or trusted ? I am failing to understand the overall design of a system
-> > with ETZPC controller.
->
-> Non-secure kernel could read the values set in ETZPC, if it doesn't match
-> with what is required by the device node the driver won't be probed.
->
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-OK, but I was under the impression that it was made clear that Linux is
-not firmware validation suite. The firmware need to ensure all the devices
-that are not accessible in the Linux kernel are marked as disabled and
-this needs to happen before entering the kernel. So if this is what this
-patch series achieves, then there is no need for it. Please stop pursuing
-this any further or provide any other reasons(if any) to have it. Until
-you have other reasons, NACK for this series.
+This patch fixes the following sparse error:
+kernel/exit.c:627:25: error: incompatible types in comparison expression
+caused due to accessing rcu protected pointer without using rcu primitives.
 
-Note you haven't cc-ed 2 people who has comments earlier[1][2]
---
-Regards,
-Sudeep
+And the following warning:
 
-[1] https://lkml.org/lkml/2018/2/27/512
-[2] https://lkml.org/lkml/2018/2/27/598
+kernel/exit.c:626:40: warning: incorrect type in assignment
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ kernel/exit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/exit.c b/kernel/exit.c
+index bcbd59888e67..c5a9d6360440 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -623,8 +623,8 @@ static void forget_original_parent(struct task_struct *father,
+ 	reaper = find_new_reaper(father, reaper);
+ 	list_for_each_entry(p, &father->children, sibling) {
+ 		for_each_thread(p, t) {
+-			t->real_parent = reaper;
+-			BUG_ON((!t->ptrace) != (t->parent == father));
++			rcu_assign_pointer(t->real_parent, reaper);
++			BUG_ON((!t->ptrace) != (rcu_access_pointer(t->parent) == father));
+ 			if (likely(!t->ptrace))
+ 				t->parent = t->real_parent;
+ 			if (t->pdeath_signal)
+-- 
+2.17.1
+
