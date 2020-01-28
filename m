@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC28C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4F4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40012467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCC920716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222013;
-	bh=jxyCRKHd0fDIu343tBn5ZNUxn+VXjYVhvW/u9UIssOc=;
+	s=default; t=1580222018;
+	bh=C80hO95fUlhePgToChD8CSc4I8Aj6cloQwLGUMaNs+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0jH03d8dPaJdiRjrsCg/Db6/xAZ/zbmdMCxRopxNHiImiYTO2uCkZkkk/9TRemk32
-	 9W2HBOOBGLtsNM+Wm7M5SAzHDLO9N+0w0cG+v8EQ20AykLZnA+zwxtt3Ldi9NkiJWn
-	 DP9CMjPL2a27SXgp9hjYD767VYOYH7JcGTD/s1eg=
+	b=AKwnsH/uYY3nd+OLxrKBCdIkxT44JrUWfDzyhg2AhQuBWNn12jZ/PWGHzf347RAB/
+	 qe8eZEqiKgCX4uwwBEU1+VEuPWBn211BbRyXKIftND4JxsXqBT6ks9lXvNteZS2fMg
+	 zGGuWydzuON48MDXbjC7S/L/PGnqwT2OKCE4hu5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732914AbgA1Odc (ORCPT
+        id S1731074AbgA1Odg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:33:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52312 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:33:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731809AbgA1OZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:23 -0500
+        id S1732869AbgA1OZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:25:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 318242071E;
-        Tue, 28 Jan 2020 14:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D14D121739;
+        Tue, 28 Jan 2020 14:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221522;
-        bh=jxyCRKHd0fDIu343tBn5ZNUxn+VXjYVhvW/u9UIssOc=;
+        s=default; t=1580221510;
+        bh=C80hO95fUlhePgToChD8CSc4I8Aj6cloQwLGUMaNs+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f5gunr2solUcwoXkzMItHYM1m7D8SD2IB4ZF2wHJ4csYuGKMPc5SzJpgJYn6780M2
-         li/ugcrDZG5t0Cmw3XY1HXn0vBB2KX50dItCYYyLAI2tfI1MacwJHnHUztzVBgiH8Q
-         5etZRyTtkQb/zdNM7wxCgEJlMWOqbO0oidekNw1E=
+        b=DyyRYAlEw7hxIGLGSb0ZEkRxpnQoes8dIU+2sIfRjgdEw856q2f4dsdV6AjwMYjqu
+         x+9CmW/a9TawulEnXH3vSwWAmQMCsrJqVBEkHiWmbn+dXOpKc6g4tPqnRhNPGpb9rk
+         2KWKpV3XLXdNr5pqevsuNdCcqWMqhAjKa3/Xl/5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilles Buloz <gilles.buloz@kontron.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 257/271] hwmon: (nct7802) Fix voltage limits to wrong registers
-Date:   Tue, 28 Jan 2020 15:06:46 +0100
-Message-Id: <20200128135911.727902491@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Vladis Dronov <vdronov@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.9 253/271] Input: gtco - fix endpoint sanity check
+Date:   Tue, 28 Jan 2020 15:06:42 +0100
+Message-Id: <20200128135911.409469855@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,37 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilles Buloz <gilles.buloz@kontron.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 7713e62c8623c54dac88d1fa724aa487a38c3efb upstream.
+commit a8eeb74df5a6bdb214b2b581b14782c5f5a0cf83 upstream.
 
-in0 thresholds are written to the in2 thresholds registers
-in2 thresholds to in3 thresholds
-in3 thresholds to in4 thresholds
-in4 thresholds to in0 thresholds
+The driver was checking the number of endpoints of the first alternate
+setting instead of the current one, something which could lead to the
+driver binding to an invalid interface.
 
-Signed-off-by: Gilles Buloz <gilles.buloz@kontron.com>
-Link: https://lore.kernel.org/r/5de0f509.rc0oEvPOMjbfPW1w%gilles.buloz@kontron.com
-Fixes: 3434f3783580 ("hwmon: Driver for Nuvoton NCT7802Y")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+This in turn could cause the driver to misbehave or trigger a WARN() in
+usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: 162f98dea487 ("Input: gtco - fix crash on detecting device without endpoints")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Vladis Dronov <vdronov@redhat.com>
+Link: https://lore.kernel.org/r/20191210113737.4016-5-johan@kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/nct7802.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/tablet/gtco.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/drivers/hwmon/nct7802.c
-+++ b/drivers/hwmon/nct7802.c
-@@ -32,8 +32,8 @@
- static const u8 REG_VOLTAGE[5] = { 0x09, 0x0a, 0x0c, 0x0d, 0x0e };
+--- a/drivers/input/tablet/gtco.c
++++ b/drivers/input/tablet/gtco.c
+@@ -875,18 +875,14 @@ static int gtco_probe(struct usb_interfa
+ 	}
  
- static const u8 REG_VOLTAGE_LIMIT_LSB[2][5] = {
--	{ 0x40, 0x00, 0x42, 0x44, 0x46 },
--	{ 0x3f, 0x00, 0x41, 0x43, 0x45 },
-+	{ 0x46, 0x00, 0x40, 0x42, 0x44 },
-+	{ 0x45, 0x00, 0x3f, 0x41, 0x43 },
- };
+ 	/* Sanity check that a device has an endpoint */
+-	if (usbinterface->altsetting[0].desc.bNumEndpoints < 1) {
++	if (usbinterface->cur_altsetting->desc.bNumEndpoints < 1) {
+ 		dev_err(&usbinterface->dev,
+ 			"Invalid number of endpoints\n");
+ 		error = -EINVAL;
+ 		goto err_free_urb;
+ 	}
  
- static const u8 REG_VOLTAGE_LIMIT_MSB[5] = { 0x48, 0x00, 0x47, 0x47, 0x48 };
+-	/*
+-	 * The endpoint is always altsetting 0, we know this since we know
+-	 * this device only has one interrupt endpoint
+-	 */
+-	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
++	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
+ 
+ 	/* Some debug */
+ 	dev_dbg(&usbinterface->dev, "gtco # interfaces: %d\n", usbinterface->num_altsetting);
+@@ -973,7 +969,7 @@ static int gtco_probe(struct usb_interfa
+ 	input_dev->dev.parent = &usbinterface->dev;
+ 
+ 	/* Setup the URB, it will be posted later on open of input device */
+-	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
++	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
+ 
+ 	usb_fill_int_urb(gtco->urbinfo,
+ 			 udev,
 
 
