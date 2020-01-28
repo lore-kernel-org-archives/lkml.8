@@ -2,57 +2,64 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C780C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76581C35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E319C24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3155124683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580219935;
-	bh=5sVxnb408V3TlrbZLrj+UKz2T8LnaptQoJmh3OJCdHg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4RDhK9XqDR8ehNBE98bMNePS45DUQYJf+4c5ejxg5ON4h9vaymGe2xEaN00k03bg
-	 5SDvNWtZ1R7YbvaQgUrZyANrcVecR9O0R0jpPpb4wgCmEkYfcAE8N1pX29b7voaLrY
-	 Sf44xlKYGzkS+W7PimcMm5ithVDSWUizOJlJn3cI=
+	s=default; t=1580219937;
+	bh=uthAP0MDuwUFeHHH/Y4h57UbLH+kOnjJ8oWss2mj8uU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cxsuaQ7WZfRzHGEIZ1a2zYVFbxb/7qTBKKIPo8/fcwXFzDfwFhyDPKMu7MntdFLNJ
+	 hdf14/1SBgcnvgpTxvqihTWnRb7j5s7Zh4a2hy6zcJoCl1K6vFqBFLzZ6ZCaA0fYQI
+	 wLqOm5bkIzwz8kczpgBN5GzkntFpAnV9HvTcqOoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgA1N6y (ORCPT
+        id S1726694AbgA1N64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:58:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43878 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 08:58:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgA1N6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:58:49 -0500
+        id S1726636AbgA1N6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:58:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B2092469C;
-        Tue, 28 Jan 2020 13:58:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABF2E24691;
+        Tue, 28 Jan 2020 13:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219928;
-        bh=5sVxnb408V3TlrbZLrj+UKz2T8LnaptQoJmh3OJCdHg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WHML3wz1sem+pTQ+sICE7uupTsnIZq+HxUp5tI10iDGJCUULWoUTsl0SJIk7FBmWW
-         hhZFT7WM0mIvIdlwbrMk+lp0zV6MmV18JBa/xdPRENo/K9sFP2Escft9YXjhqLRoq8
-         UUDRrrsKLOuSBMB9YAaQAqa3TKm086jJ4fKo5+60=
+        s=default; t=1580219926;
+        bh=uthAP0MDuwUFeHHH/Y4h57UbLH+kOnjJ8oWss2mj8uU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=f0By4RDetnkz3sB5/9SI+L8qQGTp25unJFXp0nAil/aaZpixPURMzPVD22uGI0F53
+         qgGY87s6UnDGTxG7sPv2x3jvWDgDa6bnckDvf7Zzg4HoGUPrVBsRckcU8ooFLyoYVk
+         ZiveMdzVVBnj7kQZQRmYq23ZtTcP+OK6zF1GM/W8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>
-Subject: [PATCH 4.14 09/46] net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
-Date:   Tue, 28 Jan 2020 14:57:43 +0100
-Message-Id: <20200128135751.353517865@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/46] 4.14.169-stable review
+Date:   Tue, 28 Jan 2020 14:57:34 +0100
+Message-Id: <20200128135749.822297911@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
-References: <20200128135749.822297911@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.169-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.169-rc1
+X-KernelTest-Deadline: 2020-01-30T13:57+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,106 +67,225 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+This is the start of the stable review cycle for the 4.14.169 release.
+There are 46 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit b8eb718348b8fb30b5a7d0a8fce26fb3f4ac741b upstream.
+Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
+Anything received after that time might be too late.
 
-kobject_init_and_add takes reference even when it fails. This has
-to be given up by the caller in error handling. Otherwise memory
-allocated by kobject_init_and_add is never freed. Originally found
-by Syzkaller:
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.169-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-BUG: memory leak
-unreferenced object 0xffff8880679f8b08 (size 8):
-  comm "netdev_register", pid 269, jiffies 4294693094 (age 12.132s)
-  hex dump (first 8 bytes):
-    72 78 2d 30 00 36 20 d4                          rx-0.6 .
-  backtrace:
-    [<000000008c93818e>] __kmalloc_track_caller+0x16e/0x290
-    [<000000001f2e4e49>] kvasprintf+0xb1/0x140
-    [<000000007f313394>] kvasprintf_const+0x56/0x160
-    [<00000000aeca11c8>] kobject_set_name_vargs+0x5b/0x140
-    [<0000000073a0367c>] kobject_init_and_add+0xd8/0x170
-    [<0000000088838e4b>] net_rx_queue_update_kobjects+0x152/0x560
-    [<000000006be5f104>] netdev_register_kobject+0x210/0x380
-    [<00000000e31dab9d>] register_netdevice+0xa1b/0xf00
-    [<00000000f68b2465>] __tun_chr_ioctl+0x20d5/0x3dd0
-    [<000000004c50599f>] tun_chr_ioctl+0x2f/0x40
-    [<00000000bbd4c317>] do_vfs_ioctl+0x1c7/0x1510
-    [<00000000d4c59e8f>] ksys_ioctl+0x99/0xb0
-    [<00000000946aea81>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000038d946e5>] do_syscall_64+0x16f/0x580
-    [<00000000e0aa5d8f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<00000000285b3d1a>] 0xffffffffffffffff
+thanks,
 
-Cc: David Miller <davem@davemloft.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+greg k-h
 
----
- net/core/net-sysfs.c |   24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+-------------
+Pseudo-Shortlog of commits:
 
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -915,21 +915,23 @@ static int rx_queue_add_kobject(struct n
- 	error = kobject_init_and_add(kobj, &rx_queue_ktype, NULL,
- 				     "rx-%u", index);
- 	if (error)
--		return error;
-+		goto err;
- 
- 	dev_hold(queue->dev);
- 
- 	if (dev->sysfs_rx_queue_group) {
- 		error = sysfs_create_group(kobj, dev->sysfs_rx_queue_group);
--		if (error) {
--			kobject_put(kobj);
--			return error;
--		}
-+		if (error)
-+			goto err;
- 	}
- 
- 	kobject_uevent(kobj, KOBJ_ADD);
- 
- 	return error;
-+
-+err:
-+	kobject_put(kobj);
-+	return error;
- }
- #endif /* CONFIG_SYSFS */
- 
-@@ -1326,21 +1328,21 @@ static int netdev_queue_add_kobject(stru
- 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
- 				     "tx-%u", index);
- 	if (error)
--		return error;
-+		goto err;
- 
- 	dev_hold(queue->dev);
- 
- #ifdef CONFIG_BQL
- 	error = sysfs_create_group(kobj, &dql_group);
--	if (error) {
--		kobject_put(kobj);
--		return error;
--	}
-+	if (error)
-+		goto err;
- #endif
- 
- 	kobject_uevent(kobj, KOBJ_ADD);
- 
--	return 0;
-+err:
-+	kobject_put(kobj);
-+	return error;
- }
- #endif /* CONFIG_SYSFS */
- 
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.169-rc1
+
+Martin Schiller <ms@dev.tdt.de>
+    net/x25: fix nonblocking connect
+
+Kadlecsik József <kadlec@blackhole.kfki.hu>
+    netfilter: ipset: use bitmap infrastructure completely
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    bitmap: Add bitmap_alloc(), bitmap_zalloc() and bitmap_free()
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    md: Avoid namespace collision with bitmap API
+
+Bo Wu <wubo40@huawei.com>
+    scsi: iscsi: Avoid potential deadlock in iscsi_if_rx func
+
+Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    media: v4l2-ioctl.c: zero reserved fields for S/TRY_FMT
+
+Wen Huang <huangwenabc@gmail.com>
+    libertas: Fix two buffer overflows at parsing bss descriptor
+
+Suzuki K Poulose <suzuki.poulose@arm.com>
+    coresight: tmc-etf: Do not call smp_processor_id from preemptible
+
+Suzuki K Poulose <suzuki.poulose@arm.com>
+    coresight: etb10: Do not call smp_processor_id from preemptible
+
+Masato Suzuki <masato.suzuki@wdc.com>
+    sd: Fix REQ_OP_ZONE_REPORT completion handling
+
+Al Viro <viro@zeniv.linux.org.uk>
+    do_last(): fetch directory ->i_mode and ->i_uid before it's too late
+
+Changbin Du <changbin.du@gmail.com>
+    tracing: xen: Ordered comparison of function pointers
+
+Bart Van Assche <bvanassche@acm.org>
+    scsi: RDMA/isert: Fix a recently introduced regression related to logout
+
+Gilles Buloz <gilles.buloz@kontron.com>
+    hwmon: (nct7802) Fix voltage limits to wrong registers
+
+Chuhong Yuan <hslester96@gmail.com>
+    Input: sun4i-ts - add a check for devm_thermal_zone_of_sensor_register
+
+Johan Hovold <johan@kernel.org>
+    Input: pegasus_notetaker - fix endpoint sanity check
+
+Johan Hovold <johan@kernel.org>
+    Input: aiptek - fix endpoint sanity check
+
+Johan Hovold <johan@kernel.org>
+    Input: gtco - fix endpoint sanity check
+
+Johan Hovold <johan@kernel.org>
+    Input: sur40 - fix interface sanity checks
+
+Stephan Gerhold <stephan@gerhold.net>
+    Input: pm8xxx-vib - fix handling of separate enable register
+
+Jeremy Linton <jeremy.linton@arm.com>
+    Documentation: Document arm64 kpti control
+
+Michał Mirosław <mirq-linux@rere.qmqm.pl>
+    mmc: sdhci: fix minimum clock rate for v3 controller
+
+Michał Mirosław <mirq-linux@rere.qmqm.pl>
+    mmc: tegra: fix SDR50 tuning override
+
+Alex Sverdlin <alexander.sverdlin@nokia.com>
+    ARM: 8950/1: ftrace/recordmcount: filter relocation types
+
+Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    Revert "Input: synaptics-rmi4 - don't increment rmiaddr for SMBus transfers"
+
+Johan Hovold <johan@kernel.org>
+    Input: keyspan-remote - fix control-message timeouts
+
+Guenter Roeck <linux@roeck-us.net>
+    hwmon: (core) Do not use device managed functions for memory allocations
+
+Dmitry Osipenko <digetx@gmail.com>
+    hwmon: (core) Fix double-free in __hwmon_device_register()
+
+Linus Walleij <linus.walleij@linaro.org>
+    hwmon: Deal with errors from the thermal subsystem
+
+Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
+    hwmon: (adt7475) Make volt2reg return same reg as reg2volt input
+
+Eric Dumazet <edumazet@google.com>
+    net: rtnetlink: validate IFLA_MTU attribute in rtnl_create_link()
+
+Wen Yang <wenyang@linux.alibaba.com>
+    tcp_bbr: improve arithmetic division in bbr_update_bw()
+
+James Hughes <james.hughes@raspberrypi.org>
+    net: usb: lan78xx: Add .ndo_features_check
+
+Jouni Hogander <jouni.hogander@unikie.com>
+    net-sysfs: Fix reference count leak
+
+Jouni Hogander <jouni.hogander@unikie.com>
+    net-sysfs: Call dev_hold always in rx_queue_add_kobject
+
+Jouni Hogander <jouni.hogander@unikie.com>
+    net-sysfs: Call dev_hold always in netdev_queue_add_kobject
+
+Eric Dumazet <edumazet@google.com>
+    net-sysfs: fix netdev_queue_add_kobject() breakage
+
+Jouni Hogander <jouni.hogander@unikie.com>
+    net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net_sched: fix datalen for ematch
+
+William Dauchy <w.dauchy@criteo.com>
+    net, ip_tunnel: fix namespaces move
+
+William Dauchy <w.dauchy@criteo.com>
+    net, ip6_tunnel: fix namespaces move
+
+Michael Ellerman <mpe@ellerman.id.au>
+    net: cxgb3_main: Add CAP_NET_ADMIN check to CHELSIO_GET_MEM
+
+Yuki Taguchi <tagyounit@gmail.com>
+    ipv6: sr: remove SKB_GSO_IPXIP6 on End.D* actions
+
+Eric Dumazet <edumazet@google.com>
+    gtp: make sure only SOCK_DGRAM UDP sockets are accepted
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    firestream: fix memory leaks
+
+Richard Palethorpe <rpalethorpe@suse.com>
+    can, slip: Protect tty->disc_data in write_wakeup and close with RCU
+
+
+-------------
+
+Diffstat:
+
+ Documentation/admin-guide/kernel-parameters.txt |  6 ++
+ Makefile                                        |  4 +-
+ drivers/atm/firestream.c                        |  3 +
+ drivers/hwmon/adt7475.c                         |  5 +-
+ drivers/hwmon/hwmon.c                           | 83 ++++++++++++++++---------
+ drivers/hwmon/nct7802.c                         |  4 +-
+ drivers/hwtracing/coresight/coresight-etb10.c   |  4 +-
+ drivers/hwtracing/coresight/coresight-tmc-etf.c |  4 +-
+ drivers/infiniband/ulp/isert/ib_isert.c         | 12 ----
+ drivers/input/misc/keyspan_remote.c             |  9 ++-
+ drivers/input/misc/pm8xxx-vibrator.c            |  2 +-
+ drivers/input/rmi4/rmi_smbus.c                  |  2 +
+ drivers/input/tablet/aiptek.c                   |  6 +-
+ drivers/input/tablet/gtco.c                     | 10 +--
+ drivers/input/tablet/pegasus_notetaker.c        |  2 +-
+ drivers/input/touchscreen/sun4i-ts.c            |  6 +-
+ drivers/input/touchscreen/sur40.c               |  2 +-
+ drivers/md/bitmap.c                             | 10 +--
+ drivers/md/bitmap.h                             |  2 +-
+ drivers/md/md-cluster.c                         |  6 +-
+ drivers/media/v4l2-core/v4l2-ioctl.c            | 24 +++----
+ drivers/mmc/host/sdhci-tegra.c                  |  2 +-
+ drivers/mmc/host/sdhci.c                        | 10 +--
+ drivers/net/can/slcan.c                         | 12 +++-
+ drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c |  2 +
+ drivers/net/gtp.c                               | 10 +--
+ drivers/net/slip/slip.c                         | 12 +++-
+ drivers/net/usb/lan78xx.c                       | 15 +++++
+ drivers/net/wireless/marvell/libertas/cfg.c     | 16 ++++-
+ drivers/scsi/scsi_transport_iscsi.c             |  7 +++
+ drivers/scsi/sd.c                               |  8 ++-
+ drivers/target/iscsi/iscsi_target.c             |  6 +-
+ fs/namei.c                                      | 17 ++---
+ include/linux/bitmap.h                          |  8 +++
+ include/linux/netdevice.h                       |  1 +
+ include/linux/netfilter/ipset/ip_set.h          |  7 ---
+ include/trace/events/xen.h                      |  6 +-
+ lib/bitmap.c                                    | 20 ++++++
+ net/core/dev.c                                  | 36 +++++++----
+ net/core/net-sysfs.c                            | 39 +++++++-----
+ net/core/rtnetlink.c                            | 13 +++-
+ net/ipv4/ip_tunnel.c                            |  4 +-
+ net/ipv4/tcp_bbr.c                              |  3 +-
+ net/ipv6/ip6_tunnel.c                           |  4 +-
+ net/ipv6/seg6_local.c                           |  4 +-
+ net/netfilter/ipset/ip_set_bitmap_gen.h         |  2 +-
+ net/netfilter/ipset/ip_set_bitmap_ip.c          |  6 +-
+ net/netfilter/ipset/ip_set_bitmap_ipmac.c       |  6 +-
+ net/netfilter/ipset/ip_set_bitmap_port.c        |  6 +-
+ net/sched/ematch.c                              |  2 +-
+ net/x25/af_x25.c                                |  6 +-
+ scripts/recordmcount.c                          | 17 +++++
+ 52 files changed, 336 insertions(+), 177 deletions(-)
 
 
