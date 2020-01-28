@@ -2,101 +2,124 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0DCC35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A25C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448B2214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD15024681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgA1SNE (ORCPT
+        id S1726801AbgA1SNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:13:04 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56402 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbgA1SNE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:13:04 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 8DC231C25FD; Tue, 28 Jan 2020 19:13:02 +0100 (CET)
-Date:   Tue, 28 Jan 2020 19:13:01 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+156a04714799b1d480bc@syzkaller.appspotmail.com,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: Re: [PATCH 4.19 67/92] netfilter: nf_tables: add
- __nft_chain_type_get()
-Message-ID: <20200128181301.GB11577@amd>
-References: <20200128135809.344954797@linuxfoundation.org>
- <20200128135817.894498379@linuxfoundation.org>
+        Tue, 28 Jan 2020 13:13:47 -0500
+Received: from gentwo.org ([3.19.106.255]:56214 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726318AbgA1SNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 13:13:47 -0500
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 916443F25D; Tue, 28 Jan 2020 18:13:46 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 9043D3F25C;
+        Tue, 28 Jan 2020 18:13:46 +0000 (UTC)
+Date:   Tue, 28 Jan 2020 18:13:46 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     =?ISO-8859-15?Q?Michal_Koutn=FD?= <mkoutny@suse.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
+In-Reply-To: <20200128085107.GF17425@blackbody.suse.cz>
+Message-ID: <alpine.DEB.2.21.2001281813130.745@www.lameter.com>
+References: <alpine.DEB.2.21.1912041652410.29709@www.lameter.com> <20191204173224.GN25242@dhcp22.suse.cz> <20200106115733.GH12699@dhcp22.suse.cz> <alpine.DEB.2.21.2001061550270.23163@www.lameter.com> <20200109145236.GS4951@dhcp22.suse.cz>
+ <20200109114415.cf01bd3ad30c5c4aec981653@linux-foundation.org> <20200117171331.GA17179@blackbody.suse.cz> <20200118161528.94dc18c074aeaa384200486b@linux-foundation.org> <20200127173336.GB17425@blackbody.suse.cz> <alpine.DEB.2.21.2001272304080.25307@www.lameter.com>
+ <20200128085107.GF17425@blackbody.suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="RASg3xLB4tUQ4RcS"
-Content-Disposition: inline
-In-Reply-To: <20200128135817.894498379@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: multipart/mixed; boundary="531401748-1203551302-1580235226=:745"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---RASg3xLB4tUQ4RcS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+--531401748-1203551302-1580235226=:745
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
-Hi!
+On Tue, 28 Jan 2020, Michal Koutný wrote:
 
-> From: Pablo Neira Ayuso <pablo@netfilter.org>
->=20
-> commit 826035498ec14b77b62a44f0cb6b94d45530db6f upstream.
->=20
-> This new helper function validates that unknown family and chain type
-> coming from userspace do not trigger an out-of-bound array access. Bail
-> out in case __nft_chain_type_get() returns NULL from
-> nft_chain_parse_hook().
+> On Mon, Jan 27, 2020 at 11:04:53PM +0000, Christopher Lameter <cl@linux.com> wrote:
+> > The patch exposes details of cgroup caches? Which patch are we talking
+> > about?
+> Sorry, that's misunderstanding. I mean the current state (sending
+> uevents) exposes the internals (creation of caches per cgroup). The
+> patch [1] removing uevent notifications is rectifying it.
 
-> +++ b/net/netfilter/nf_tables_api.c
-> @@ -472,14 +472,27 @@ static inline u64 nf_tables_alloc_handle
->  static const struct nft_chain_type *chain_type[NFPROTO_NUMPROTO][NFT_CHA=
-IN_T_MAX];
-> =20
->  static const struct nft_chain_type *
-> +__nft_chain_type_get(u8 family, enum nft_chain_types type)
-> +{
-> +	if (family >=3D NFPROTO_NUMPROTO ||
-> +	    type >=3D NFT_CHAIN_T_MAX)
-> +		return NULL;
-> +
-> +	return chain_type[family][type];
-> +}
 
-Are enum types guaranteed to be unsigned on all compilers we care
-about? Google says they can be signed, too. So, should the test be
-"((unsigned int) type) >=3D ..." ?
+From: Christoph Lameter <cl@linux.com>
+Subject: slub: Remove userspace notifier for cache add/remove
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Kmem caches are internal kernel structures so it is strange that
+userspace notifiers would be needed. And I am not aware of any use
+of these notifiers. These notifiers may just exist because in the
+initial slub release the sysfs code was copied from another
+subsystem.
 
---RASg3xLB4tUQ4RcS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Signed-off-by: Christoph Lameter <cl@linux.com>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Index: linux/mm/slub.c
+===================================================================
+--- linux.orig/mm/slub.c	2020-01-28 18:13:02.134506141 +0000
++++ linux/mm/slub.c	2020-01-28 18:13:02.134506141 +0000
+@@ -5632,19 +5632,6 @@ static struct kobj_type slab_ktype = {
+ 	.release = kmem_cache_release,
+ };
 
-iEYEARECAAYFAl4wea0ACgkQMOfwapXb+vJzmACgpi7GdZGQUmNUC33lmbEt/vZo
-pecAnjMmeEu7IiNTeQXeZK4UccuQ0lhK
-=/wSs
------END PGP SIGNATURE-----
+-static int uevent_filter(struct kset *kset, struct kobject *kobj)
+-{
+-	struct kobj_type *ktype = get_ktype(kobj);
+-
+-	if (ktype == &slab_ktype)
+-		return 1;
+-	return 0;
+-}
+-
+-static const struct kset_uevent_ops slab_uevent_ops = {
+-	.filter = uevent_filter,
+-};
+-
+ static struct kset *slab_kset;
 
---RASg3xLB4tUQ4RcS--
+ static inline struct kset *cache_kset(struct kmem_cache *s)
+@@ -5712,7 +5699,6 @@ static void sysfs_slab_remove_workfn(str
+ #ifdef CONFIG_MEMCG
+ 	kset_unregister(s->memcg_kset);
+ #endif
+-	kobject_uevent(&s->kobj, KOBJ_REMOVE);
+ out:
+ 	kobject_put(&s->kobj);
+ }
+@@ -5770,7 +5756,6 @@ static int sysfs_slab_add(struct kmem_ca
+ 	}
+ #endif
+
+-	kobject_uevent(&s->kobj, KOBJ_ADD);
+ 	if (!unmergeable) {
+ 		/* Setup first alias */
+ 		sysfs_slab_alias(s, s->name);
+@@ -5851,7 +5836,7 @@ static int __init slab_sysfs_init(void)
+
+ 	mutex_lock(&slab_mutex);
+
+-	slab_kset = kset_create_and_add("slab", &slab_uevent_ops, kernel_kobj);
++	slab_kset = kset_create_and_add("slab", NULL, kernel_kobj);
+ 	if (!slab_kset) {
+ 		mutex_unlock(&slab_mutex);
+ 		pr_err("Cannot register slab subsystem.\n");
+--531401748-1203551302-1580235226=:745--
