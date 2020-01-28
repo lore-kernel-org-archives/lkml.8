@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4FDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47620C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E92D24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E862468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220308;
-	bh=cEY9Csq2IFQ1dLpeGxnxbWt/b8IdDawC5oUSWrgUMaA=;
+	s=default; t=1580220311;
+	bh=jMh9yRbaa+TzKO4bYqKMD6D1FyrXnUEJEHjYr7s+1tE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kmTKWxA4yIzHK46qvlrjnWXaPddFeUK0wRn9tG8ZrbReLeyr0QfRxqC7pa+o4wmzN
-	 LW2RcW6SCzmIahjp0zfU+ix1iTgiYEn2x2A5lEvtbu2oL4kzJWXzpKGaGnvKccwO5q
-	 9b42AiXLpp2a65vlqwhWjqY6Ga09L7S1nUIDGTE0=
+	b=r8hWM0qC2HfNa5J/MEdzSx1ph4KK2LSL3VV+5fDzgTmsag1KR3AoA5Paz+aq1iaKX
+	 1XIv2J7WLvEiPTSyVi+sN48nHpnLm08TR9RYdatGiEIUu9DJO4mIMJV/eenOoPJQ0h
+	 NzTIonO6QDdwRz+jxlCnFFSDcto/Kz6Ab+xiL3lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgA1OFH (ORCPT
+        id S1728219AbgA1OFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:05:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52504 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:05:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728192AbgA1OFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:05:02 -0500
+        id S1728192AbgA1OFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:05:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8542205F4;
-        Tue, 28 Jan 2020 14:05:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4686205F4;
+        Tue, 28 Jan 2020 14:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220302;
-        bh=cEY9Csq2IFQ1dLpeGxnxbWt/b8IdDawC5oUSWrgUMaA=;
+        s=default; t=1580220307;
+        bh=jMh9yRbaa+TzKO4bYqKMD6D1FyrXnUEJEHjYr7s+1tE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XPRierrFvbrIbW1jN0hUZAtdtIOnHargfliL7qObkiHgiQDTAKyETSx5rJrJRELEt
-         D1hkeF/prSk/7n7U9JJ2G0BLis57dg7tAxUn7ld4tT9BeLtc8fnMGSS9bKMtx+S1Mp
-         CK+IEL7PeyAaI/u0E/uKLW9Q7fVbNIXBkJrRYjY4=
+        b=SCrLOg0OigpbOTFzLTU/PwlTcB5nhAOwFaa/pRt3YDdZbVSkSbuUG+AXGZphjcfQ/
+         BllUbL+26lvOrKD+ta0LotvjRDvy48/OuRyCGZqiCD8iLaT6oWRGeULdAWkGjzwYkL
+         eUdzRZnlGRWeAeCbSgmdeI9gWhOl/czZ0csYqsbU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 5.4 080/104] iwlwifi: mvm: fix SKB leak on invalid queue
-Date:   Tue, 28 Jan 2020 15:00:41 +0100
-Message-Id: <20200128135828.240592538@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Wen Huang <huangwenabc@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 099/104] libertas: Fix two buffer overflows at parsing bss descriptor
+Date:   Tue, 28 Jan 2020 15:01:00 +0100
+Message-Id: <20200128135830.616281930@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -59,38 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Wen Huang <huangwenabc@gmail.com>
 
-commit b9f726c94224e863d4d3458dfec2e7e1284a39ce upstream.
+commit e5e884b42639c74b5b57dc277909915c0aefc8bb upstream.
 
-It used to be the case that if we got here, we wouldn't warn
-but instead allocate the queue (DQA). With using the mac80211
-TXQs model this changed, and we really have nothing to do with
-the frame here anymore, hence the warning now.
+add_ie_rates() copys rates without checking the length
+in bss descriptor from remote AP.when victim connects to
+remote attacker, this may trigger buffer overflow.
+lbs_ibss_join_existing() copys rates without checking the length
+in bss descriptor from remote IBSS node.when victim connects to
+remote attacker, this may trigger buffer overflow.
+Fix them by putting the length check before performing copy.
 
-However, clearly we missed in coding & review that this is now
-a pure error path and leaks the SKB if we return 0 instead of
-an indication that the SKB needs to be freed. Fix this.
+This fix addresses CVE-2019-14896 and CVE-2019-14897.
+This also fix build warning of mixed declarations and code.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Fixes: cfbc6c4c5b91 ("iwlwifi: mvm: support mac80211 TXQs model")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Wen Huang <huangwenabc@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/libertas/cfg.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -1151,7 +1151,7 @@ static int iwl_mvm_tx_mpdu(struct iwl_mv
- 	if (WARN_ONCE(txq_id == IWL_MVM_INVALID_QUEUE, "Invalid TXQ id")) {
- 		iwl_trans_free_tx_cmd(mvm->trans, dev_cmd);
- 		spin_unlock(&mvmsta->lock);
--		return 0;
-+		return -1;
- 	}
+--- a/drivers/net/wireless/marvell/libertas/cfg.c
++++ b/drivers/net/wireless/marvell/libertas/cfg.c
+@@ -273,6 +273,10 @@ add_ie_rates(u8 *tlv, const u8 *ie, int
+ 	int hw, ap, ap_max = ie[1];
+ 	u8 hw_rate;
  
- 	if (!iwl_mvm_has_new_tx_api(mvm)) {
++	if (ap_max > MAX_RATES) {
++		lbs_deb_assoc("invalid rates\n");
++		return tlv;
++	}
+ 	/* Advance past IE header */
+ 	ie += 2;
+ 
+@@ -1717,6 +1721,9 @@ static int lbs_ibss_join_existing(struct
+ 	struct cmd_ds_802_11_ad_hoc_join cmd;
+ 	u8 preamble = RADIO_PREAMBLE_SHORT;
+ 	int ret = 0;
++	int hw, i;
++	u8 rates_max;
++	u8 *rates;
+ 
+ 	/* TODO: set preamble based on scan result */
+ 	ret = lbs_set_radio(priv, preamble, 1);
+@@ -1775,9 +1782,12 @@ static int lbs_ibss_join_existing(struct
+ 	if (!rates_eid) {
+ 		lbs_add_rates(cmd.bss.rates);
+ 	} else {
+-		int hw, i;
+-		u8 rates_max = rates_eid[1];
+-		u8 *rates = cmd.bss.rates;
++		rates_max = rates_eid[1];
++		if (rates_max > MAX_RATES) {
++			lbs_deb_join("invalid rates");
++			goto out;
++		}
++		rates = cmd.bss.rates;
+ 		for (hw = 0; hw < ARRAY_SIZE(lbs_rates); hw++) {
+ 			u8 hw_rate = lbs_rates[hw].bitrate / 5;
+ 			for (i = 0; i < rates_max; i++) {
 
 
