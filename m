@@ -2,54 +2,52 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECBBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D08FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C4A20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB77320702
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222199;
-	bh=OTeWlAW6PZtaqRBtsNH6XkHqXJ96und1zA/mIcCi+T4=;
+	s=default; t=1580222207;
+	bh=9//9jm4pWVGERH43Lx+MZL03EgoWFR1cNNWMMyCf+Tk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=guG3LK+0KpEV+5uFutfZkWrt2T54g39+EtBvDG5xPXfOPX/lr9DBlNwNKhDg3YgDf
-	 skQsqu6LKG1xDYzvMkJCtSYVSVB16Fv56UboXfI4gMZGjWREqAJpI74NoQo7TbT+nm
-	 lAiq63IdBBw9C73HIx4CzSI11IOY71BqgoNAqfpQ=
+	b=IJ57XErlYGUm9cHgs9rdW7rk9Cr/IkinFagZC7caG3EYELVN4gvMhV6cbTgGgMeW3
+	 STQwt3RbLNw7zJed8lBX8w3lhwTdOpp06wGuKJmmBcjiwJjQc7AlLH2oGkTF1AI3Dh
+	 agm4+3Z/ekh8gB8b9E0N8d7dPhDSPLLo9DmCJaeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731284AbgA1OVY (ORCPT
+        id S1730942AbgA1OVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:21:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46656 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:21:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731263AbgA1OVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:21:21 -0500
+        id S1731216AbgA1OVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:21:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B37C24688;
-        Tue, 28 Jan 2020 14:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB65D2071E;
+        Tue, 28 Jan 2020 14:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221281;
-        bh=OTeWlAW6PZtaqRBtsNH6XkHqXJ96und1zA/mIcCi+T4=;
+        s=default; t=1580221271;
+        bh=9//9jm4pWVGERH43Lx+MZL03EgoWFR1cNNWMMyCf+Tk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ro9Lt6n8gDJVCPkNaIGhN2y1TGVCXQ57JVcy5gu67zYCXYDEYqr+lrmbJoC69ZQEZ
-         YBQ2I6o+wslnB8mdOow6bYIP9sqX/HosZY9YGueEncsOvsVdhJmmk/15j9sq73Nw7H
-         8vUsZb0B18ywKp332RBgDYFTpofKRdonbLjDY4vw=
+        b=QNQOawIwCof5CORujAG+i4PpHAuADd2GpHLrjxxviwMP/nXS/VJr+tFzLhqmo/MgO
+         WLIogA/z7kj4ZBOfWYXKKyHffWK+zVCI72pbHh6IeFiMAFK5RyiN399HXPPW0GouXr
+         KUj/iWDk63k8KG4Q+nwEKPCJVgr+Gg6YQ95kmJuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 162/271] clk: qcom: Fix -Wunused-const-variable
-Date:   Tue, 28 Jan 2020 15:05:11 +0100
-Message-Id: <20200128135904.640096317@linuxfoundation.org>
+Subject: [PATCH 4.9 158/271] rtc: pcf8563: Clear event flags and disable interrupts before requesting irq
+Date:   Tue, 28 Jan 2020 15:05:07 +0100
+Message-Id: <20200128135904.333711550@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -62,96 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Huckleberry <nhuck@google.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit da642427bd7710ec4f4140f693f59aa8521a358c ]
+[ Upstream commit 3572e8aea3bf925dac1dbf86127657c39fe5c254 ]
 
-Clang produces the following warning
+Besides the alarm, the PCF8563 also has a timer triggered interrupt.
+In cases where the previous system left the timer and interrupts on,
+or somehow the bits got enabled, the interrupt would keep triggering
+as the kernel doesn't know about it.
 
-drivers/clk/qcom/gcc-msm8996.c:133:32: warning: unused variable
-'gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map' [-Wunused-const-variable]
-static const struct
-parent_map gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map[] =
-{ ^drivers/clk/qcom/gcc-msm8996.c:141:27: warning: unused variable
-'gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div' [-Wunused-const-variable] static
-const char * const gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div[] = { ^
-drivers/clk/qcom/gcc-msm8996.c:187:32: warning: unused variable
-'gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map'
-[-Wunused-const-variable] static const struct parent_map
-gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map[] = { ^
-drivers/clk/qcom/gcc-msm8996.c:197:27: warning: unused variable
-'gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div'
-[-Wunused-const-variable] static const char * const
-gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div[] = {
+Clear both the alarm and timer event flags, and disable the interrupts,
+before requesting the interrupt line.
 
-It looks like these were never used.
-
-Fixes: b1e010c0730a ("clk: qcom: Add MSM8996 Global Clock Control (GCC) driver")
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/518
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: ede3e9d47cca ("drivers/rtc/rtc-pcf8563.c: add alarm support")
+Fixes: a45d528aab8b ("rtc: pcf8563: clear expired alarm at boot time")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-msm8996.c | 36 ----------------------------------
- 1 file changed, 36 deletions(-)
+ drivers/rtc/rtc-pcf8563.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-msm8996.c b/drivers/clk/qcom/gcc-msm8996.c
-index fe03e6fbc7df5..ea6c227331fcf 100644
---- a/drivers/clk/qcom/gcc-msm8996.c
-+++ b/drivers/clk/qcom/gcc-msm8996.c
-@@ -140,22 +140,6 @@ static const char * const gcc_xo_gpll0_gpll4_gpll0_early_div[] = {
- 	"gpll0_early_div"
- };
+diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
+index a4b8b603c807d..533fb7027f0cc 100644
+--- a/drivers/rtc/rtc-pcf8563.c
++++ b/drivers/rtc/rtc-pcf8563.c
+@@ -563,7 +563,6 @@ static int pcf8563_probe(struct i2c_client *client,
+ 	struct pcf8563 *pcf8563;
+ 	int err;
+ 	unsigned char buf;
+-	unsigned char alm_pending;
  
--static const struct parent_map gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map[] = {
--	{ P_XO, 0 },
--	{ P_GPLL0, 1 },
--	{ P_GPLL2, 2 },
--	{ P_GPLL3, 3 },
--	{ P_GPLL0_EARLY_DIV, 6 }
--};
--
--static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div[] = {
--	"xo",
--	"gpll0",
--	"gpll2",
--	"gpll3",
--	"gpll0_early_div"
--};
--
- static const struct parent_map gcc_xo_gpll0_gpll1_early_div_gpll1_gpll4_gpll0_early_div_map[] = {
- 	{ P_XO, 0 },
- 	{ P_GPLL0, 1 },
-@@ -194,26 +178,6 @@ static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll2_early_gpll0_early
- 	"gpll0_early_div"
- };
+ 	dev_dbg(&client->dev, "%s\n", __func__);
  
--static const struct parent_map gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map[] = {
--	{ P_XO, 0 },
--	{ P_GPLL0, 1 },
--	{ P_GPLL2, 2 },
--	{ P_GPLL3, 3 },
--	{ P_GPLL1, 4 },
--	{ P_GPLL4, 5 },
--	{ P_GPLL0_EARLY_DIV, 6 }
--};
--
--static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div[] = {
--	"xo",
--	"gpll0",
--	"gpll2",
--	"gpll3",
--	"gpll1",
--	"gpll4",
--	"gpll0_early_div"
--};
--
- static struct clk_fixed_factor xo = {
- 	.mult = 1,
- 	.div = 1,
+@@ -587,13 +586,13 @@ static int pcf8563_probe(struct i2c_client *client,
+ 		return err;
+ 	}
+ 
+-	err = pcf8563_get_alarm_mode(client, NULL, &alm_pending);
+-	if (err) {
+-		dev_err(&client->dev, "%s: read error\n", __func__);
++	/* Clear flags and disable interrupts */
++	buf = 0;
++	err = pcf8563_write_block_data(client, PCF8563_REG_ST2, 1, &buf);
++	if (err < 0) {
++		dev_err(&client->dev, "%s: write error\n", __func__);
+ 		return err;
+ 	}
+-	if (alm_pending)
+-		pcf8563_set_alarm_mode(client, 0);
+ 
+ 	pcf8563->rtc = devm_rtc_device_register(&client->dev,
+ 				pcf8563_driver.driver.name,
 -- 
 2.20.1
 
