@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2983C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EA0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE13A24688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4A521739
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221007;
-	bh=48INwzqSoZjyu+5KRe05uD1SrCXF3yGRKmKXqLV/Nvo=;
+	s=default; t=1580221010;
+	bh=9MKGgbGkktR6LgpRauOiAnZovKnboxbvvj4O2cBM3+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ocVaL+7aJD/5C6oAcM1Uu6enTS8Jp9dP4ImhcPBc1u1ZELxuVvdvphJsh8z6YirdF
-	 Sa3+Szd2YEcdTeMyBhxoPLrOiTImCqz2MgRI0MSjpmW7gGo1sno13hsMWiIhhrdLhX
-	 Sie/dlNpuhZJhXxpkqi1wb8MI/J+rFrIQASsy1v0=
+	b=VrqhQGxOkaR7fIF9r8hIWGaAsFAFgXLk0Uh3PnuEAcCu8gcaYZK37CMrHtUeQweV6
+	 JCYC/6oVv0yWHyR2TzJH9SlnSFB9RuZ8syZXQjcbervbNgm+G3By0HktK2j5JELeE6
+	 HP1bLFm3KwsTQEm5bDk9etH0APU91ITuc4DB2rZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgA1OQr (ORCPT
+        id S1730392AbgA1OQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:16:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40258 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:16:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729724AbgA1OQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:16:45 -0500
+        id S1726143AbgA1OQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:16:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B633221739;
-        Tue, 28 Jan 2020 14:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D1F224681;
+        Tue, 28 Jan 2020 14:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221005;
-        bh=48INwzqSoZjyu+5KRe05uD1SrCXF3yGRKmKXqLV/Nvo=;
+        s=default; t=1580221007;
+        bh=9MKGgbGkktR6LgpRauOiAnZovKnboxbvvj4O2cBM3+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FZcteJ+6UWjKNnRqDnu0b95emYH/KUoJiWpoHbua4DVHn+JnTNqNmfSJw7v4xeY2O
-         h7TJtuOYkV7JuLPfNsKvlnmGtBxHfFYWjy2s/m0+O47siqbsdJcXLZdMdL/luox5tV
-         McETs0G09oyckmq53P0+Ef28gutsNUvICrpXCchg=
+        b=HyGN6oEBExH7UmA+VuGjBlNQwa/hJ4GjlxT4wP4L0+qiy0qbZ+PRAW3Fao+sJy9Jf
+         QknK+uPMj6znWnEGmeSCBsrLJnjTlEEDvOYDcH4UVopTFm5zqcCIPd8K4C8md3X3O6
+         eVOP7ZuVweRnXUTPfF5BkN1eZgpLc3yh8xXIAJRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 050/271] tty: ipwireless: Fix potential NULL pointer dereference
-Date:   Tue, 28 Jan 2020 15:03:19 +0100
-Message-Id: <20200128135856.365386031@linuxfoundation.org>
+Subject: [PATCH 4.9 051/271] crypto: crypto4xx - Fix wrong ppc4xx_trng_probe()/ppc4xx_trng_remove() arguments
+Date:   Tue, 28 Jan 2020 15:03:20 +0100
+Message-Id: <20200128135856.440129336@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,34 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Corentin Labbe <clabbe@baylibre.com>
 
-[ Upstream commit 7dd50e205b3348dc7784efbdf85723551de64a25 ]
+[ Upstream commit 6e88098ca43a3d80ae86908f7badba683c8a0d84 ]
 
-There is a potential NULL pointer dereference in case
-alloc_ctrl_packet() fails and returns NULL.
+When building without CONFIG_HW_RANDOM_PPC4XX, I hit the following build failure:
+drivers/crypto/amcc/crypto4xx_core.c: In function 'crypto4xx_probe':
+drivers/crypto/amcc/crypto4xx_core.c:1407:20: error: passing argument 1 of 'ppc4xx_trng_probe' from incompatible pointer type [-Werror=incompatible-pointer-types]
+In file included from drivers/crypto/amcc/crypto4xx_core.c:50:0:
+drivers/crypto/amcc/crypto4xx_trng.h:28:20: note: expected 'struct crypto4xx_device *' but argument is of type 'struct crypto4xx_core_device *'
+drivers/crypto/amcc/crypto4xx_core.c: In function 'crypto4xx_remove':
+drivers/crypto/amcc/crypto4xx_core.c:1434:21: error: passing argument 1 of 'ppc4xx_trng_remove' from incompatible pointer type [-Werror=incompatible-pointer-types]
+In file included from drivers/crypto/amcc/crypto4xx_core.c:50:0:
+drivers/crypto/amcc/crypto4xx_trng.h:30:20: note: expected 'struct crypto4xx_device *' but argument is of type 'struct crypto4xx_core_device *'
 
-Fixes: 099dc4fb6265 ("ipwireless: driver for PC Card 3G/UMTS modem")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch fix the needed argument of ppc4xx_trng_probe()/ppc4xx_trng_remove() in that case.
+
+Fixes: 5343e674f32f ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/ipwireless/hardware.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/amcc/crypto4xx_trng.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/ipwireless/hardware.c b/drivers/tty/ipwireless/hardware.c
-index df0204b6148fb..4417f75684221 100644
---- a/drivers/tty/ipwireless/hardware.c
-+++ b/drivers/tty/ipwireless/hardware.c
-@@ -1515,6 +1515,8 @@ static void ipw_send_setup_packet(struct ipw_hardware *hw)
- 			sizeof(struct ipw_setup_get_version_query_packet),
- 			ADDR_SETUP_PROT, TL_PROTOCOLID_SETUP,
- 			TL_SETUP_SIGNO_GET_VERSION_QRY);
-+	if (!ver_packet)
-+		return;
- 	ver_packet->header.length = sizeof(struct tl_setup_get_version_qry);
+diff --git a/drivers/crypto/amcc/crypto4xx_trng.h b/drivers/crypto/amcc/crypto4xx_trng.h
+index 931d22531f515..7bbda51b7337c 100644
+--- a/drivers/crypto/amcc/crypto4xx_trng.h
++++ b/drivers/crypto/amcc/crypto4xx_trng.h
+@@ -26,9 +26,9 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev);
+ void ppc4xx_trng_remove(struct crypto4xx_core_device *core_dev);
+ #else
+ static inline void ppc4xx_trng_probe(
+-	struct crypto4xx_device *dev __maybe_unused) { }
++	struct crypto4xx_core_device *dev __maybe_unused) { }
+ static inline void ppc4xx_trng_remove(
+-	struct crypto4xx_device *dev __maybe_unused) { }
++	struct crypto4xx_core_device *dev __maybe_unused) { }
+ #endif
  
- 	/*
+ #endif
 -- 
 2.20.1
 
