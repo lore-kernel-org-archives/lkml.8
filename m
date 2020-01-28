@@ -2,193 +2,133 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A69C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1DEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF31024685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221562;
-	bh=1EACH4F58ZD1tdnCTIw6HDtVwy8XumsZjIIU30TsouU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ts8JbN2gjRR1/usWdw/CSPSyiImFmku1kKVztBGKYGcYY/ctr40qyv6leaykLuHdT
-	 obv3I4Mc8cyfRDJI/Nze6tfj7desAuAEm0dqhe5t1PQvv1Muixl5+mzIIJk2Dho+Cx
-	 D0xYlXsnVKVhd8rSN3jKp/dVv/6UewM4wOjiTCU0=
+	by mail.kernel.org (Postfix) with ESMTP id AEFF424691
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733117AbgA1O0C (ORCPT
+        id S1733134AbgA1O0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Jan 2020 09:26:04 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:59696 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733098AbgA1O0C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jan 2020 09:26:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729663AbgA1OZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:58 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8355824685;
-        Tue, 28 Jan 2020 14:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221558;
-        bh=1EACH4F58ZD1tdnCTIw6HDtVwy8XumsZjIIU30TsouU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NNnvQd5ta9WIS6mp9yhO9ac9fyfGpOObt8XY51EgQr4TNufYQmm4wNf/FbZnEdNMB
-         5xvmKuNzmYXH9KkRAyJ3INpe8Jl6HrbBbHv0MV5cvYt4s6CSLFKYRet/UtJzzNyf3q
-         4P+7Ie1wBoh5TDivnPjTe8URwstUf5CNzvDIjs/k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 226/271] packet: fix data-race in fanout_flow_is_huge()
-Date:   Tue, 28 Jan 2020 15:06:15 +0100
-Message-Id: <20200128135909.384939014@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
-References: <20200128135852.449088278@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SEHZhb008962;
+        Tue, 28 Jan 2020 09:25:48 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xrkfah3e8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jan 2020 09:25:47 -0500
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00SEPkJo028606
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 28 Jan 2020 09:25:46 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 28 Jan
+ 2020 09:25:45 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 28 Jan 2020 06:25:45 -0800
+Received: from mircea-Precision-5530-2-in-1.ad.analog.com ([10.48.65.114])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00SEPgIx007832;
+        Tue, 28 Jan 2020 09:25:42 -0500
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Mircea <mircea.caprioru@analog.com>
+Subject: [PATCH] iio: adc: ad7124: Add direct reg access
+Date:   Tue, 28 Jan 2020 16:25:49 +0200
+Message-ID: <20200128142549.1370-1-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_03:2020-01-28,2020-01-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=1 mlxlogscore=818 clxscore=1011 phishscore=0 spamscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001280115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Mircea <mircea.caprioru@analog.com>
 
-[ Upstream commit b756ad928d98e5ef0b74af7546a6a31a8dadde00 ]
+This patch adds the posibility do read and write registers from userspace
+using the kernel debug direct register access option.
 
-KCSAN reported the following data-race [1]
-
-Adding a couple of READ_ONCE()/WRITE_ONCE() should silence it.
-
-Since the report hinted about multiple cpus using the history
-concurrently, I added a test avoiding writing on it if the
-victim slot already contains the desired value.
-
-[1]
-
-BUG: KCSAN: data-race in fanout_demux_rollover / fanout_demux_rollover
-
-read to 0xffff8880b01786cc of 4 bytes by task 18921 on cpu 1:
- fanout_flow_is_huge net/packet/af_packet.c:1303 [inline]
- fanout_demux_rollover+0x33e/0x3f0 net/packet/af_packet.c:1353
- packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
- deliver_skb net/core/dev.c:1888 [inline]
- dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
- xmit_one net/core/dev.c:3195 [inline]
- dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
- __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
- ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
- udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
- udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
- inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
- ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
- __sys_sendmmsg+0x123/0x350 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-write to 0xffff8880b01786cc of 4 bytes by task 18922 on cpu 0:
- fanout_flow_is_huge net/packet/af_packet.c:1306 [inline]
- fanout_demux_rollover+0x3a4/0x3f0 net/packet/af_packet.c:1353
- packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
- deliver_skb net/core/dev.c:1888 [inline]
- dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
- xmit_one net/core/dev.c:3195 [inline]
- dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
- __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
- ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
- udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
- udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
- inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
- ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
- __sys_sendmmsg+0x123/0x350 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 18922 Comm: syz-executor.3 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: 3b3a5b0aab5b ("packet: rollover huge flows before small flows")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Mircea <mircea.caprioru@analog.com>
 ---
- net/packet/af_packet.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/iio/adc/ad7124.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 47a862cc7b349..fb643945e4244 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -1332,15 +1332,21 @@ static void packet_sock_destruct(struct sock *sk)
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index 52f45b13da4a..38e67e08a79a 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -93,6 +93,14 @@ static const unsigned int ad7124_gain[8] = {
+ 	1, 2, 4, 8, 16, 32, 64, 128
+ };
  
- static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
- {
--	u32 rxhash;
-+	u32 *history = po->rollover->history;
-+	u32 victim, rxhash;
- 	int i, count = 0;
- 
- 	rxhash = skb_get_hash(skb);
- 	for (i = 0; i < ROLLOVER_HLEN; i++)
--		if (po->rollover->history[i] == rxhash)
-+		if (READ_ONCE(history[i]) == rxhash)
- 			count++;
- 
--	po->rollover->history[prandom_u32() % ROLLOVER_HLEN] = rxhash;
-+	victim = prandom_u32() % ROLLOVER_HLEN;
++static const unsigned int ad7124_reg_size[] = {
++	1, 2, 3, 3, 2, 1, 3, 3, 1, 2, 2, 2, 2,
++	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
++	2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3,
++	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
++	3, 3, 3, 3, 3
++};
 +
-+	/* Avoid dirtying the cache line if possible */
-+	if (READ_ONCE(history[victim]) != rxhash)
-+		WRITE_ONCE(history[victim], rxhash);
-+
- 	return count > (ROLLOVER_HLEN >> 1);
+ static const int ad7124_master_clk_freq_hz[3] = {
+ 	[AD7124_LOW_POWER] = 76800,
+ 	[AD7124_MID_POWER] = 153600,
+@@ -360,6 +368,25 @@ static int ad7124_write_raw(struct iio_dev *indio_dev,
+ 	}
  }
  
++static int ad7124_reg_access(struct iio_dev *indio_dev,
++			     unsigned int reg,
++			     unsigned int writeval,
++			     unsigned int *readval)
++{
++	struct ad7124_state *st = iio_priv(indio_dev);
++	int ret;
++
++
++	if (readval)
++		ret = ad_sd_read_reg(&st->sd, reg, ad7124_reg_size[reg],
++				     readval);
++	else
++		ret = ad_sd_write_reg(&st->sd, reg, ad7124_reg_size[reg],
++				      writeval);
++
++	return ret;
++}
++
+ static IIO_CONST_ATTR(in_voltage_scale_available,
+ 	"0.000001164 0.000002328 0.000004656 0.000009313 0.000018626 0.000037252 0.000074505 0.000149011 0.000298023");
+ 
+@@ -375,6 +402,7 @@ static const struct attribute_group ad7124_attrs_group = {
+ static const struct iio_info ad7124_info = {
+ 	.read_raw = ad7124_read_raw,
+ 	.write_raw = ad7124_write_raw,
++	.debugfs_reg_access = &ad7124_reg_access,
+ 	.validate_trigger = ad_sd_validate_trigger,
+ 	.attrs = &ad7124_attrs_group,
+ };
 -- 
-2.20.1
-
-
+2.17.1
 
