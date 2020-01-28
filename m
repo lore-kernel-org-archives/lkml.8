@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C260FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBFFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE952173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AD732173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222813;
-	bh=cPEmQ8PSkG3gHp0isK5MwvQ+vtEACJ8Ijg0XjouAvIw=;
+	s=default; t=1580222818;
+	bh=qXFHyagZQJJ02Cz9JquvBpRRwE6uzT1EcKIHtHk7zMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EZBe97r4lWEqMLTDbBCrinBo6MoK0sJsOMZCWsqRVCSkxcFnsTB5LOGPdJtbxwsmd
-	 reIkOEIq8LeXjsS8Wpw9KgLxdwZVCcIekWljFj048QJS/GkF74VsAm5KvbOgr2WEhN
-	 HEcwX6tkRe1w6MqLgKtLHqWulSCo50nSGjAwiuqM=
+	b=1hrtAVOuTSAHhGvp+mnLnlb1VljSaXNyhHPs9eyqo6FuSEEJynvP5xWp5iS7t4hLI
+	 fKoI4l4gJ8kIlqbQA4rioWE5wuAfp7qicstgq1UbsQHqQJ+Lo/9QC3QiHRNFQ9XRii
+	 gqzNsb/a1ZCpJzu7QWRyxxAWM9t0+XDsZyRZz9fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgA1Oqw (ORCPT
+        id S1728494AbgA1OI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:46:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56950 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:08:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727992AbgA1OIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:08:47 -0500
+        id S1727215AbgA1OIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:08:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D62424681;
-        Tue, 28 Jan 2020 14:08:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C840522522;
+        Tue, 28 Jan 2020 14:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220527;
-        bh=cPEmQ8PSkG3gHp0isK5MwvQ+vtEACJ8Ijg0XjouAvIw=;
+        s=default; t=1580220504;
+        bh=qXFHyagZQJJ02Cz9JquvBpRRwE6uzT1EcKIHtHk7zMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZC4f9MdGrlkDW4pnHJzR04huTo93DK9GJ37fgtM+TNm1ZPK7HnPKJ8UkDVAUGbit
-         a1zqI+szVBUvSVJfCZKicWdMPuptnviD7HahVohnmyPkWAIuBgctTDAHLUKADUev1Z
-         88MfFpq7Do+g44fc2uDjTEscamLN7cQL3XlGknvA=
+        b=xhz3cCJXF12P9pJhh0/kO9CG5KZDURq0u/2bhpSl3w3BEX0ThmL6MfwnAeEOwyd7F
+         pMDXB+egHs1GGfg91l2Ba621oJ4Awyx68XtMELF+sj3J6jt2e62RC2lwyV1NO5tyPB
+         V6Q8NBcD8E0UUVBxUwP3xL8V/OOB5wAYmUKC0AcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 043/183] fbdev: chipsfb: remove set but not used variable size
-Date:   Tue, 28 Jan 2020 15:04:22 +0100
-Message-Id: <20200128135834.285580347@linuxfoundation.org>
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 005/183] ALSA: hda: fix unused variable warning
+Date:   Tue, 28 Jan 2020 15:03:44 +0100
+Message-Id: <20200128135830.096429661@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -63,49 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit 8e71fa5e4d86bedfd26df85381d65d6b4c860020 ]
+[ Upstream commit 5b03006d5c58ddd31caf542eef4d0269bcf265b3 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+When CONFIG_X86=n function azx_snoop doesn't use the variable chip it
+only returns true.
 
-drivers/video/fbdev/chipsfb.c: In function 'chipsfb_pci_init':
-drivers/video/fbdev/chipsfb.c:352:22: warning:
- variable 'size' set but not used [-Wunused-but-set-variable]
+sound/pci/hda/hda_intel.c: In function ‘dma_alloc_pages’:
+sound/pci/hda/hda_intel.c:2002:14: warning: unused variable ‘chip’ [-Wunused-variable]
+  struct azx *chip = bus_to_azx(bus);
+              ^~~~
 
-Fixes: 8c8709334cec ("[PATCH] ppc32: Remove CONFIG_PMAC_PBOOK").
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-[b.zolnierkie: minor commit summary and description fixups]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Create a inline function of azx_snoop.
+
+Fixes: a41d122449be ("ALSA: hda - Embed bus into controller object")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/chipsfb.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/pci/hda/hda_controller.h | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/video/fbdev/chipsfb.c b/drivers/video/fbdev/chipsfb.c
-index 59abdc6a97f66..314b7eceb81c5 100644
---- a/drivers/video/fbdev/chipsfb.c
-+++ b/drivers/video/fbdev/chipsfb.c
-@@ -350,7 +350,7 @@ static void init_chips(struct fb_info *p, unsigned long addr)
- static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
- {
- 	struct fb_info *p;
--	unsigned long addr, size;
-+	unsigned long addr;
- 	unsigned short cmd;
- 	int rc = -ENODEV;
+diff --git a/sound/pci/hda/hda_controller.h b/sound/pci/hda/hda_controller.h
+index 55ec4470f6b69..499873d29cc18 100644
+--- a/sound/pci/hda/hda_controller.h
++++ b/sound/pci/hda/hda_controller.h
+@@ -164,11 +164,10 @@ struct azx {
+ #define azx_bus(chip)	(&(chip)->bus.core)
+ #define bus_to_azx(_bus)	container_of(_bus, struct azx, bus.core)
  
-@@ -362,7 +362,6 @@ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
- 	if ((dp->resource[0].flags & IORESOURCE_MEM) == 0)
- 		goto err_disable;
- 	addr = pci_resource_start(dp, 0);
--	size = pci_resource_len(dp, 0);
- 	if (addr == 0)
- 		goto err_disable;
+-#ifdef CONFIG_X86
+-#define azx_snoop(chip)		((chip)->snoop)
+-#else
+-#define azx_snoop(chip)		true
+-#endif
++static inline bool azx_snoop(struct azx *chip)
++{
++	return !IS_ENABLED(CONFIG_X86) || chip->snoop;
++}
  
+ /*
+  * macros for easy use
 -- 
 2.20.1
 
