@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D980C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E96C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274BE24698
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAC762468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221290;
-	bh=fbz50UvltV7L5z12zkYmwND53mguKXWQP2DHuEXL1A0=;
+	s=default; t=1580221293;
+	bh=Y/54ylXk+kowQjlt5npb6YUIY/T5vb4IJIiawlYtIOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RL8GPgKrfsMnsQcTv7OpfN661yVXY2FjUW8TDfAUziVYWPmBjis825IEiyptT12ic
-	 VlgmFHCX5dniDngpro/3chh1zMXm7kJCD6HRvW+bXQU43CgCfuRTudKT0ARGBEnUo4
-	 tDRGmx1JxYm8FRWttow8jxSfVcJBpekDNVuwAK9Q=
+	b=KUBmIir7b3x93kSr2t+jhH7djS0nEXROnPVbGBBzKbVLBw4+3VBWT8MDC/xmgCnsR
+	 GZJGB6Y8s9zMSz0pT138UuNdknxDMHk0bofiYZL/7Yi03Y5T7BoJKf8UxSz8GL9xZI
+	 IcMZS7fB/KhqiBxHK5joWt/928n/sZG06ksSzGQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbgA1OV3 (ORCPT
+        id S1731324AbgA1OVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:21:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46768 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:21:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731272AbgA1OV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:21:26 -0500
+        id S1731311AbgA1OVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:21:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BC7124681;
-        Tue, 28 Jan 2020 14:21:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A53B924688;
+        Tue, 28 Jan 2020 14:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221285;
-        bh=fbz50UvltV7L5z12zkYmwND53mguKXWQP2DHuEXL1A0=;
+        s=default; t=1580221291;
+        bh=Y/54ylXk+kowQjlt5npb6YUIY/T5vb4IJIiawlYtIOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CyyOO+nknEpeRNPTNpK5zCQ8306YyoP8fSBSJlj/7dhYtrwiFBTI9yAOlGri4QV6a
-         FpThsW0ZBMmBdoOAxfnKzZHvcDI8IO1ueGb3IoP5kMcvRkBrak11yUJz7vSfM4qAJ3
-         kXWXwF5JOXfabTyZbeCy8spkvNazPVTur0AHAwn4=
+        b=XHCorElULhyG1qVNLuas+j+keVR5BNb3c6biD7KeOUnPkKtKkbfGIP5PeUudzWYcO
+         jRqawUWRUmMNlqmTjqiWKW0C4svZu0vrV8xwnTwXRXlndem1xezp2McuEH/nin9Q8L
+         e7bFhjGDtipxU3BHYP6q98Kcr1WsSHyYjbHLUo4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 164/271] mfd: intel-lpss: Release IDA resources
-Date:   Tue, 28 Jan 2020 15:05:13 +0100
-Message-Id: <20200128135904.792844046@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: [PATCH 4.9 166/271] devres: allow const resource arguments
+Date:   Tue, 28 Jan 2020 15:05:15 +0100
+Message-Id: <20200128135904.938533884@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,34 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 02f36911c1b41fcd8779fa0c135aab0554333fa5 ]
+[ Upstream commit 9dea44c91469512d346e638694c22c30a5273992 ]
 
-ida instances allocate some internal memory for ->free_bitmap
-in addition to the base 'struct ida'. Use ida_destroy() to release
-that memory at module_exit().
+devm_ioremap_resource() does not currently take 'const' arguments,
+which results in a warning from the first driver trying to do it
+anyway:
 
-Fixes: 4b45efe85263 ("mfd: Add support for Intel Sunrisepoint LPSS devices")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+drivers/gpio/gpio-amd-fch.c: In function 'amd_fch_gpio_probe':
+drivers/gpio/gpio-amd-fch.c:171:49: error: passing argument 2 of 'devm_ioremap_resource' discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+  priv->base = devm_ioremap_resource(&pdev->dev, &amd_fch_gpio_iores);
+                                                 ^~~~~~~~~~~~~~~~~~~
+
+Change the prototype to allow it, as there is no real reason not to.
+
+Fixes: 9bb2e0452508 ("gpio: amd: Make resource struct const")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20190628150049.1108048-1-arnd@arndb.de
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviwed-By: Enrico Weigelt <info@metux.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/device.h | 3 ++-
+ lib/devres.c           | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
-index 22dd8c055048c..71cecd7aeea0c 100644
---- a/drivers/mfd/intel-lpss.c
-+++ b/drivers/mfd/intel-lpss.c
-@@ -533,6 +533,7 @@ module_init(intel_lpss_init);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 8d732965fab77..eb865b461acc4 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -682,7 +682,8 @@ extern unsigned long devm_get_free_pages(struct device *dev,
+ 					 gfp_t gfp_mask, unsigned int order);
+ extern void devm_free_pages(struct device *dev, unsigned long addr);
  
- static void __exit intel_lpss_exit(void)
+-void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
++void __iomem *devm_ioremap_resource(struct device *dev,
++				    const struct resource *res);
+ 
+ /* allows to add/remove a custom action to devres stack */
+ int devm_add_action(struct device *dev, void (*action)(void *), void *data);
+diff --git a/lib/devres.c b/lib/devres.c
+index cb1464c411a2b..38912892053c0 100644
+--- a/lib/devres.c
++++ b/lib/devres.c
+@@ -131,7 +131,8 @@ EXPORT_SYMBOL(devm_iounmap);
+  *	if (IS_ERR(base))
+  *		return PTR_ERR(base);
+  */
+-void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
++void __iomem *devm_ioremap_resource(struct device *dev,
++				    const struct resource *res)
  {
-+	ida_destroy(&intel_lpss_devid_ida);
- 	debugfs_remove(intel_lpss_debugfs);
- }
- module_exit(intel_lpss_exit);
+ 	resource_size_t size;
+ 	const char *name;
 -- 
 2.20.1
 
