@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E99FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635B6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300C824690
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DD924688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221643;
-	bh=hNUuSpR/k3+mdub8eIuCkfnODaICqkGo37Nmkd2O/UM=;
+	s=default; t=1580221646;
+	bh=UDOslw//HU9T3CyQRE952D+mST3b7MPfW+u9hhNdxtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M6Vl8VAqUhnoh1l8tXmP1us8NTozjW4rPnfX+EZBpM3u+C1ZA4E4LvNEjSL/8X2Ok
-	 /jfZJ5xwAf1qeGZhDhXMdbVY/DqGo489B4d9LZ2pUwF5va1St0phbFx2QMO+1RLLlz
-	 rZewv3K37ohnDJ4Si/63Fm0JlajsbNRd/US3Nnjk=
+	b=h9lIpMAoOzFZc19p0XB9hEWaq7D9I/SoMhqVRbmSXFvVbGdaBqiS7o2ea03r2vTjb
+	 nWv+QwknrndvvRNnD/E+nekhDdNAluYduG4C/LV0+Hc0k+Q69gQhtDHzZXUSOstpRQ
+	 VwFIVXaw/w/FdvD1vZYJI93T9SpMU7VVmudqB0+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733173AbgA1O1W (ORCPT
+        id S1733172AbgA1O1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:27:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:27:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733097AbgA1O1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:27:11 -0500
+        id S1733279AbgA1O1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:27:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E099720716;
-        Tue, 28 Jan 2020 14:27:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49C3124688;
+        Tue, 28 Jan 2020 14:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221630;
-        bh=hNUuSpR/k3+mdub8eIuCkfnODaICqkGo37Nmkd2O/UM=;
+        s=default; t=1580221637;
+        bh=UDOslw//HU9T3CyQRE952D+mST3b7MPfW+u9hhNdxtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ISWilGkufwaUfniMpPdGShuokXNScvrpGCxHT5bGwl2qszlgZcyppQEy1G5oV/BOh
-         n+K5muT33rBJAlc5PZxw8YbcyaxLU+Wv2pe3qdlpGaIa9oNGvn9fRILXsje/7YxuIU
-         2erTQkjaQXgQZoewh7aBrbuhjinJnU/sarEEMy8w=
+        b=f0KKTc7Xq2QtHWyd/hmjcH+DjZmPTqSWJpVUE9Ij++pMBuMD5d0KfAUFRjctgYL/0
+         itTaBIPdmGSSVLwVaMpe56tJxIyw6GuolQkNoyKgpwG3XShCzrzDU5wxeO3hvAmhsh
+         tFd/Dt5z7EOuz1rIi1wy5JEErE4brdyc7MjcATVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org
-Subject: [PATCH 4.19 19/92] tcp_bbr: improve arithmetic division in bbr_update_bw()
-Date:   Tue, 28 Jan 2020 15:07:47 +0100
-Message-Id: <20200128135811.615398397@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 30/92] mmc: tegra: fix SDR50 tuning override
+Date:   Tue, 28 Jan 2020 15:07:58 +0100
+Message-Id: <20200128135812.918879042@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -63,39 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-[ Upstream commit 5b2f1f3070b6447b76174ea8bfb7390dc6253ebd ]
+commit f571389c0b015e76f91c697c4c1700aba860d34f upstream.
 
-do_div() does a 64-by-32 division. Use div64_long() instead of it
-if the divisor is long, to avoid truncation to 32-bit.
-And as a nice side effect also cleans up the function a bit.
+Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
+broke SDR50 tuning override. Use correct NVQUIRK_ name.
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
+Cc: <stable@vger.kernel.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+Tested-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/9aff1d859935e59edd81e4939e40d6c55e0b55f6.1578390388.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/tcp_bbr.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/ipv4/tcp_bbr.c
-+++ b/net/ipv4/tcp_bbr.c
-@@ -680,8 +680,7 @@ static void bbr_update_bw(struct sock *s
- 	 * bandwidth sample. Delivered is in packets and interval_us in uS and
- 	 * ratio will be <<1 for most connections. So delivered is first scaled.
- 	 */
--	bw = (u64)rs->delivered * BW_UNIT;
--	do_div(bw, rs->interval_us);
-+	bw = div64_long((u64)rs->delivered * BW_UNIT, rs->interval_us);
+---
+ drivers/mmc/host/sdhci-tegra.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -177,7 +177,7 @@ static void tegra_sdhci_reset(struct sdh
+ 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_DDR50;
+ 		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR104)
+ 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_SDR104;
+-		if (soc_data->nvquirks & SDHCI_MISC_CTRL_ENABLE_SDR50)
++		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR50)
+ 			clk_ctrl |= SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE;
+ 	}
  
- 	/* If this sample is application-limited, it is likely to have a very
- 	 * low delivered count that represents application behavior rather than
 
 
