@@ -2,25 +2,25 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B183BC32771
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EB1C33CB7
 	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A3F24682
+	by mail.kernel.org (Postfix) with ESMTP id AF39224686
 	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:28:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Xt++/MG3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="J1rUlN9O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgA1C2M (ORCPT
+        id S1727747AbgA1C2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 21:28:12 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:43171 "EHLO
+        Mon, 27 Jan 2020 21:28:13 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:43178 "EHLO
         esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbgA1C2L (ORCPT
+        with ESMTP id S1727221AbgA1C2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jan 2020 21:28:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
@@ -28,38 +28,38 @@ DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   t=1580178491; x=1611714491;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wOT0GpSheCPVLbOmRrlnI5gyIs5vHfMHgSdRZXC7csg=;
-  b=Xt++/MG37b4/Fci7+gwAWrpoIjUSVZQcie9O90oL2JB9TxBqPniUKugD
-   R0Mc1dGtwBekZlw+Tcfg4L94L2IPVUf34qmXIEoYAJPOkNZB8zDsbx+vL
-   4thBxJZm/d9gAR3fSSnzJWgyeMqDpezwXp86R+BzeIT76ldyEHqZLXBbz
-   4YQzJrGZFeK4xL5mBlOOcmlx1rLKMO7wXlucFagYnmAXdFyuwi+UoCMBl
-   37OlbWz/uw+8McwMxAHqmuYiDCUY/uOZCVWm41odUcwQmMa2sgDdw4Nht
-   46TDkwoWN38J2YtAuxNuwpdxHSNPtBdrJB2hCtt9oZHMkyBsh5r4oZb+N
-   g==;
-IronPort-SDR: mQ1LlaevmqKTejr43j8v8pxEdPATWgl7cCFt7/fbirYGD60xO3d4ELbYICoBg3m311fRf/tzkw
- /6n3AjIn+tmn3RmFJul69oLjmcrlBm+RY3UWh0SGBn6YJYgREJm57pJhfCau/NNPKgp0S8MeYf
- uofOiDTy9xZolYwC9yY6BvFA5N7VHyrdyzQBe1+uQWoKXUFUQrkvXoYHV1PmKb3DeLOpv99IPN
- XM/IV8I9mEzBD3N7IDZiwqzBgjQFI82/VZ6P6bKENYfYOu07M43GUV3nbY27TATah1XRv0hcVd
- QlA=
+  bh=Aa/KOay4NXW/kCM7QuDcS3Px0MPY5o5nqFvm1/cPYf4=;
+  b=J1rUlN9O1guWRkt4S0mZpknl/pvuE7UGQ7IHS3yVtutfmi0JDhsfi7M2
+   J3eFJVpGOHK4sAH5MEpWw6X0VfVX9Vs/rhiKSp2EguA63Z3qgS0lGjE9V
+   xIRLMwdb0oHqgCynNoe9AITPNqRxp0NyDmg53ZXawQPy959IvkTXtolvZ
+   NWLFk3mPYW4Cyc5TFoA0cEUnBOueaxqSl2DelnQhMjF+SNcBhPyEBuBvy
+   dm3fCDluD3DRTI95GNIfLiac+przGGRo4YKpow+TR3EPeN1DZ0o1cU1y5
+   xCZzYpiTxIuux49X8l2slz/rEnoPgFa0gWnjkIVVc6/mSCrWDCPVLsaqe
+   w==;
+IronPort-SDR: Z4vslOSjeBGqeXXS2eDylp9QcZTjSXLS9meWH1V4q6uOWUZwP8JlL4u9qP29cITQpkWKIsW0wX
+ pn0KQN6RT9Df83MW56e4OqOwmO0QsQBX+/tf24zqzWEP0ix/G1Dd843kHNdMLDzx+d6z6LgU3b
+ FLBBkbeJz0LuwkODPXkI2xzg+Aj2o7fTkrXknoZZb7RsGmVLsU1SUth05yK7kwFtoYSoTMN47i
+ +C5id4NbzFB5XcZXsVerOIRdc7KkLslcANJOaY/lpk/lWXgCvIPallSbKAAOWAxgxHd7CCHyMg
+ G9w=
 X-IronPort-AV: E=Sophos;i="5.70,372,1574092800"; 
-   d="scan'208";a="132899426"
+   d="scan'208";a="132899422"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Jan 2020 10:28:11 +0800
-IronPort-SDR: QWZE+bZ9YQRIjzvkMwLTKeQ9LXwNroPVuPzVZJDrfq9RK7JLABqSDLJQBui9RB4bhdgtmvtrEw
- vdzD230X1STHK70F3Ztr98lsww8QvMZMZnC6GZBCTZiLFNzjgA3/XKqMJFfHPWVy+Z7wprvqLN
- wN9tN1w0Dezrt4+Z+QYVAG8VNn42MNK31V6JzENr2r+uW+9tvqaVRl3u+ebpWxD2S6rS9ZYMtR
- O/gAeyZF494uxsdjQ19WjO4UVJNxNvRGLAHyTjlz110PvPbE2St7ATzq5PvfMsU+QE5WqKMt/3
- OXUmCZI9D7/P3Lm1ij7NUjiu
+  by ob1.hgst.iphmx.com with ESMTP; 28 Jan 2020 10:28:10 +0800
+IronPort-SDR: V1Mkqq2q0qebWbF2TgBg/CA+WcqdFMU4lUVTY8ysTnXbEQxnOr7lJ9wPHvYXJudcYWrUs7Sgg4
+ GOw2d2afMaPkpZJbN6Dkzrd/HGNk7MvYZqn/kD+/Cs4Fn/txCkKrFIfXXe8tWKczRnwahEmUBE
+ iv/+mlnita1tQmuqa1cUMiog/MZy6yuHeC/cZeRbPTBd3o3mLCaNbqYmp7WzFjSIq5BZKzZui2
+ E/fVegU6eS27rnX+WFNjRNbaZRSS0Q7c6URLQXHUY9SOXrDpCA2g8G8aoeFA1Wfpw1F2h16Ekp
+ pM/MGh4GqzLs6VSBkAidh8SF
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 18:21:26 -0800
-IronPort-SDR: KmBB4o+GAva8xuNpVPdKmg65LCOZCD/n8DiFz2BxNyWv3O6SWMjKzwx94nCo2d3GXdUotTm5YN
- OOCOjBieAvzw8XA4Z5yUk3+wKeNW8uXXAD/uujTEogCOh9P7ICby1x/t06efknvXq/Dyn2GNm9
- Ewc5cNkS4ubdzlVCa47lbpNZpiT9CrzHfgjHQiduuHmeipXr0fiGJl69Rg45Bjc0tYQoJNt7Mn
- PKFt6QjdUnW/U2Yq3dfDk4KDhLUOCyi/dqbkVP2MxlByk4YYdBIVIC2gdTo63hw0lSxoU0i63S
- zus=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 18:21:25 -0800
+IronPort-SDR: xjtXdnYD68EmEyMnqmzrTVMrZxbCZwVJb/v6gC9WAN9oAsky/IKHwA201FTIcsJTdBvH1w0Qhr
+ h5n/SIRg6lE+KJmdIsn2eTQdholBnvKykXfZQpvQwMDn1XTQq0sJ8qd6vfqd/DpaEBZBfaomta
+ 0lsfxNW3l/pvmf+SvH8dcg5zesILijyXiPdhFWxBNBMdV9sZnv37bVD9E1liae5PtlgHid56Ua
+ LdVuMPclvkT+UIiv1DIUJaUzIfHltfLqrLfMEiNs3SP0kXegVKVw2H54lsbbYhV9jGFdptTJI9
+ CZg=
 WDCIronportException: Internal
 Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip01.wdc.com with ESMTP; 27 Jan 2020 18:28:11 -0800
+  by uls-op-cesaip01.wdc.com with ESMTP; 27 Jan 2020 18:28:10 -0800
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Atish Patra <atish.patra@wdc.com>,
@@ -79,9 +79,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Vincent Chen <vincent.chen@sifive.com>, abner.chang@hpe.com,
         clin@suse.com, nickhu@andestech.com,
         Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH v7 08/10] RISC-V: Add SBI HSM extension
-Date:   Mon, 27 Jan 2020 18:27:35 -0800
-Message-Id: <20200128022737.15371-9-atish.patra@wdc.com>
+Subject: [PATCH v7 07/10] RISC-V: Move relocate and few other functions out of __init
+Date:   Mon, 27 Jan 2020 18:27:34 -0800
+Message-Id: <20200128022737.15371-8-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200128022737.15371-1-atish.patra@wdc.com>
 References: <20200128022737.15371-1-atish.patra@wdc.com>
@@ -92,156 +92,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SBI specification defines HSM extension that allows to start/stop a hart
-by a supervisor anytime. The specification is available at
+The secondary hart booting and relocation code are under .init section.
+As a result, it will be freed once kernel booting is done. However,
+ordered booting protocol and CPU hotplug always requires these sections
+to be present to bringup harts after initial kernel boot.
 
-https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
-
-Implement SBI HSM extension.
+Move the required sections to a different section and make sure that
+they are in memory within first 2MB offset as trampoline page directory
+only maps first 2MB.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/riscv/include/asm/sbi.h | 22 ++++++++++++++++
- arch/riscv/kernel/sbi.c      | 51 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 73 insertions(+)
+ arch/riscv/kernel/head.S        | 73 +++++++++++++++++++--------------
+ arch/riscv/kernel/vmlinux.lds.S |  9 +++-
+ 2 files changed, 50 insertions(+), 32 deletions(-)
 
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index d55d8090ab5c..bed6fa26ec84 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -26,6 +26,7 @@ enum sbi_ext_id {
- 	SBI_EXT_TIME = 0x54494D45,
- 	SBI_EXT_IPI = 0x735049,
- 	SBI_EXT_RFENCE = 0x52464E43,
-+	SBI_EXT_HSM = 0x48534D,
- };
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index a4242be66966..9d7f084a50cc 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -14,7 +14,7 @@
+ #include <asm/hwcap.h>
+ #include <asm/image.h>
  
- enum sbi_ext_base_fid {
-@@ -56,6 +57,12 @@ enum sbi_ext_rfence_fid {
- 	SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
- };
+-__INIT
++__HEAD
+ ENTRY(_start)
+ 	/*
+ 	 * Image header expected by Linux boot-loaders. The image header data
+@@ -44,9 +44,10 @@ ENTRY(_start)
+ 	.balign 4
+ 	.ascii RISCV_IMAGE_MAGIC2
+ 	.word 0
++END(_start)
  
-+enum sbi_ext_hsm_fid {
-+	SBI_EXT_HSM_HART_START = 0,
-+	SBI_EXT_HSM_HART_STOP,
-+	SBI_EXT_HSM_HART_STATUS,
-+};
-+
- #define SBI_SPEC_VERSION_DEFAULT	0x1
- #define SBI_SPEC_VERSION_MAJOR_SHIFT	24
- #define SBI_SPEC_VERSION_MAJOR_MASK	0x7f
-@@ -70,6 +77,7 @@ enum sbi_ext_rfence_fid {
- #define SBI_ERR_INVALID_ADDRESS -5
+-.global _start_kernel
+-_start_kernel:
++	__INIT
++ENTRY(_start_kernel)
+ 	/* Mask all interrupts */
+ 	csrw CSR_IE, zero
+ 	csrw CSR_IP, zero
+@@ -125,6 +126,37 @@ clear_bss_done:
+ 	call parse_dtb
+ 	tail start_kernel
  
- extern unsigned long sbi_spec_version;
-+extern bool sbi_hsm_avail;
- struct sbiret {
- 	long error;
- 	long value;
-@@ -110,8 +118,18 @@ int sbi_remote_hfence_vvma_asid(const unsigned long *hart_mask,
- 				unsigned long start,
- 				unsigned long size,
- 				unsigned long asid);
-+int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
-+		       unsigned long priv);
-+int sbi_hsm_hart_stop(void);
-+int sbi_hsm_hart_get_status(unsigned long hartid);
++.Lsecondary_start:
++#ifdef CONFIG_SMP
++	/* Set trap vector to spin forever to help debug */
++	la a3, .Lsecondary_park
++	csrw CSR_TVEC, a3
 +
- int sbi_probe_extension(int ext);
++	slli a3, a0, LGREG
++	la a1, __cpu_up_stack_pointer
++	la a2, __cpu_up_task_pointer
++	add a1, a3, a1
++	add a2, a3, a2
++
++	/*
++	 * This hart didn't win the lottery, so we wait for the winning hart to
++	 * get far enough along the boot process that it should continue.
++	 */
++.Lwait_for_cpu_up:
++	/* FIXME: We should WFI to save some energy here. */
++	REG_L sp, (a1)
++	REG_L tp, (a2)
++	beqz sp, .Lwait_for_cpu_up
++	beqz tp, .Lwait_for_cpu_up
++	fence
++
++	tail secondary_start_common
++#endif
++
++END(_start_kernel)
++
++.section ".noinit.text","ax",@progbits
++.align 2
+ #ifdef CONFIG_MMU
+ relocate:
+ 	/* Relocate return address */
+@@ -177,41 +209,27 @@ relocate:
  
-+static inline bool sbi_hsm_is_available(void)
-+{
-+	return sbi_hsm_avail;
-+}
-+
- /* Check if current SBI specification version is 0.1 or not */
- static inline int sbi_spec_is_0_1(void)
- {
-@@ -137,5 +155,9 @@ void sbi_clear_ipi(void);
- void sbi_send_ipi(const unsigned long *hart_mask);
- void sbi_remote_fence_i(const unsigned long *hart_mask);
- void sbi_init(void);
-+static inline bool sbi_hsm_is_available(void)
-+{
-+	return false;
-+}
- #endif /* CONFIG_RISCV_SBI */
- #endif /* _ASM_RISCV_SBI_H */
-diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-index 3c34aba30f6f..9bdc9801784d 100644
---- a/arch/riscv/kernel/sbi.c
-+++ b/arch/riscv/kernel/sbi.c
-@@ -12,6 +12,8 @@
+ 	ret
+ #endif /* CONFIG_MMU */
+-
+-.Lsecondary_start:
+ #ifdef CONFIG_SMP
+ 	/* Set trap vector to spin forever to help debug */
+ 	la a3, .Lsecondary_park
+ 	csrw CSR_TVEC, a3
  
- /* default SBI version is 0.1 */
- unsigned long sbi_spec_version = SBI_SPEC_VERSION_DEFAULT;
-+bool sbi_hsm_avail;
-+
- EXPORT_SYMBOL(sbi_spec_version);
+ 	slli a3, a0, LGREG
+-	la a1, __cpu_up_stack_pointer
+-	la a2, __cpu_up_task_pointer
+-	add a1, a3, a1
+-	add a2, a3, a2
+-
+-	/*
+-	 * This hart didn't win the lottery, so we wait for the winning hart to
+-	 * get far enough along the boot process that it should continue.
+-	 */
+-.Lwait_for_cpu_up:
+-	/* FIXME: We should WFI to save some energy here. */
+-	REG_L sp, (a1)
+-	REG_L tp, (a2)
+-	beqz sp, .Lwait_for_cpu_up
+-	beqz tp, .Lwait_for_cpu_up
+-	fence
++	.global secondary_start_common
++secondary_start_common:
  
- static void (*__sbi_set_timer)(uint64_t stime);
-@@ -496,6 +498,54 @@ static void sbi_power_off(void)
- 	sbi_shutdown();
- }
+ #ifdef CONFIG_MMU
+ 	/* Enable virtual memory and relocate to virtual address */
+ 	la a0, swapper_pg_dir
+ 	call relocate
+ #endif
+-
+ 	tail smp_callin
+-#endif
++#endif /* CONFIG_SMP */
  
-+int sbi_hsm_hart_stop(void)
-+{
-+	struct sbiret ret;
-+
-+	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
-+
-+	if (!ret.error)
-+		return ret.value;
-+	else
-+		return sbi_err_map_linux_errno(ret.error);
-+}
-+EXPORT_SYMBOL(sbi_hsm_hart_stop);
-+
-+int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
-+		       unsigned long priv)
-+{
-+	struct sbiret ret;
-+
-+	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
-+			      hartid, saddr, priv, 0, 0, 0);
-+	if (!ret.error)
-+		return ret.value;
-+	else
-+		return sbi_err_map_linux_errno(ret.error);
-+}
-+EXPORT_SYMBOL(sbi_hsm_hart_start);
-+
-+int sbi_hsm_hart_get_status(unsigned long hartid)
-+{
-+	struct sbiret ret;
-+
-+	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
-+			      hartid, 0, 0, 0, 0, 0);
-+	if (!ret.error)
-+		return ret.value;
-+	else
-+		return sbi_err_map_linux_errno(ret.error);
-+}
-+EXPORT_SYMBOL(sbi_hsm_hart_get_status);
-+
-+void __init sbi_hsm_ext_init(void)
-+{
-+	if (sbi_probe_extension(SBI_EXT_HSM) > 0) {
-+		pr_info("SBI v0.2 HSM extension detected\n");
-+		sbi_hsm_avail = true;
+-END(_start)
++.Lsecondary_park:
++	/* We lack SMP support or have too many harts, so park this hart */
++	wfi
++	j .Lsecondary_park
+ 
+ #ifdef CONFIG_RISCV_M_MODE
+ ENTRY(reset_regs)
+@@ -292,13 +310,6 @@ ENTRY(reset_regs)
+ END(reset_regs)
+ #endif /* CONFIG_RISCV_M_MODE */
+ 
+-.section ".text", "ax",@progbits
+-.align 2
+-.Lsecondary_park:
+-	/* We lack SMP support or have too many harts, so park this hart */
+-	wfi
+-	j .Lsecondary_park
+-
+ __PAGE_ALIGNED_BSS
+ 	/* Empty zero page */
+ 	.balign PAGE_SIZE
+diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+index 12f42f96d46e..c8a88326df9e 100644
+--- a/arch/riscv/kernel/vmlinux.lds.S
++++ b/arch/riscv/kernel/vmlinux.lds.S
+@@ -10,6 +10,7 @@
+ #include <asm/cache.h>
+ #include <asm/thread_info.h>
+ 
++#include <linux/sizes.h>
+ OUTPUT_ARCH(riscv)
+ ENTRY(_start)
+ 
+@@ -20,8 +21,14 @@ SECTIONS
+ 	/* Beginning of code and text segment */
+ 	. = LOAD_OFFSET;
+ 	_start = .;
+-	__init_begin = .;
+ 	HEAD_TEXT_SECTION
++	.noinit.text :
++	{
++		*(.noinit.text)
 +	}
-+}
++	. = ALIGN(SZ_4K);
 +
- int __init sbi_init(void)
- {
- 	int ret;
-@@ -532,5 +582,6 @@ int __init sbi_init(void)
- 		__sbi_rfence	= __sbi_rfence_v01;
- 	}
- 
-+	sbi_hsm_ext_init();
- 	return 0;
- }
++	__init_begin = .;
+ 	INIT_TEXT_SECTION(PAGE_SIZE)
+ 	INIT_DATA_SECTION(16)
+ 	/* we have to discard exit text and such at runtime, not link time */
 -- 
 2.24.0
 
