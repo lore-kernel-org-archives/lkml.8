@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DEFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B653C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713AE2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B7D21739
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221068;
-	bh=6Fz8xjv9nZBw1/1d96jNOMkJO+3yPvlTXHgJXrMglNI=;
+	s=default; t=1580221072;
+	bh=HJTSdxSXE3y+qH72vPnmbrNx69BkL7Zw3zo9k9sjUPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gCFwtfE0UXR1BGBZt7w0RUGbfcF3wRUOGhoHW5g40XFmn6Wp0nzVyoMxsexzo9+wm
-	 XWGUrGwdrukNOtLuPrtk2e2HXP24KBFh5Sv4LPJMCDL4qlk2afKoBpJiC4lUu9jLms
-	 kmMDs4heMntSOcpa9kIAi/EjXJs1dEYPJ4vXlDqE=
+	b=0qBuiRhhzakmNiUihBemihJVlg7CfkKaaXgYlC6N3iCEYb2OcVkpWAv4b07PHJsDv
+	 PxWNZsgIq5TMH8QTGeCp4uOL0Pn5n36skcbegRNjUKMKtNQyBm7BiLlr/n3E2MCrW/
+	 Lf4QGmPTVl1tt0kFKbEVmOegWe7K1EdXB+77p4fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbgA1ORr (ORCPT
+        id S1730575AbgA1ORv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:17:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41512 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:17:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730314AbgA1ORm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:17:42 -0500
+        id S1730555AbgA1ORk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:17:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B85E62071E;
-        Tue, 28 Jan 2020 14:17:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B4DE24681;
+        Tue, 28 Jan 2020 14:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221062;
-        bh=6Fz8xjv9nZBw1/1d96jNOMkJO+3yPvlTXHgJXrMglNI=;
+        s=default; t=1580221059;
+        bh=HJTSdxSXE3y+qH72vPnmbrNx69BkL7Zw3zo9k9sjUPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LGGKhPHsA0/Z1nQaj7gELFyj1P62phJOVdfkVyIlwQCds6NY8ZfVl//t9jWSzouoa
-         f4+3+p7h7YbYRWWeyJR9tAsY24DvZhQUpUXNH0w4pCTC4JPsTHTo9oH+SFEs0csCLz
-         Jcv+bWW7MLcJy6tqAWmc45ZKG+FEi1n7Uz3+q9wc=
+        b=GWyYzAUtOIsvBidEvMjKW4LISnMnPHSe7TmNTWYJBj1okSVZG3qpzmh0mmFvz0ZoR
+         SgSutxkJms8b4AXGbknGqMEtMJfRegHNNsGRXqLXYlSbpKdCj+CVwVbYnNXu2ULwOG
+         nKE3wc0RNWEXIl6zpF8wdTUfVawXDeqczGqdUZpU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Gregory CLEMENT <gregory.clement@bootlin.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 036/271] clk: armada-xp: fix refcount leak in axp_clk_init()
-Date:   Tue, 28 Jan 2020 15:03:05 +0100
-Message-Id: <20200128135855.365455374@linuxfoundation.org>
+Subject: [PATCH 4.9 035/271] clk: kirkwood: fix refcount leak in kirkwood_clk_init()
+Date:   Tue, 28 Jan 2020 15:03:04 +0100
+Message-Id: <20200128135855.292545938@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -63,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit db20a90a4b6745dad62753f8bd2f66afdd5abc84 ]
+[ Upstream commit e7beeab9c61591cd0e690d8733d534c3f4278ff8 ]
 
 The of_find_compatible_node() returns a node pointer with refcount
 incremented, but there is the lack of use of the of_node_put() when
@@ -71,28 +71,26 @@ done. Add the missing of_node_put() to release the refcount.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Fixes: 0a11a6ae9437 ("clk: mvebu: armada-xp: maintain clock init order")
+Fixes: 58d516ae95cb ("clk: mvebu: kirkwood: maintain clock init order")
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mvebu/armada-xp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/mvebu/kirkwood.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/mvebu/armada-xp.c b/drivers/clk/mvebu/armada-xp.c
-index b3094315a3c0f..2fa15a2747190 100644
---- a/drivers/clk/mvebu/armada-xp.c
-+++ b/drivers/clk/mvebu/armada-xp.c
-@@ -202,7 +202,9 @@ static void __init axp_clk_init(struct device_node *np)
- 
- 	mvebu_coreclk_setup(np, &axp_coreclks);
- 
--	if (cgnp)
-+	if (cgnp) {
- 		mvebu_clk_gating_setup(cgnp, axp_gating_desc);
+diff --git a/drivers/clk/mvebu/kirkwood.c b/drivers/clk/mvebu/kirkwood.c
+index a2a8d614039da..890ebf623261b 100644
+--- a/drivers/clk/mvebu/kirkwood.c
++++ b/drivers/clk/mvebu/kirkwood.c
+@@ -333,6 +333,8 @@ static void __init kirkwood_clk_init(struct device_node *np)
+ 	if (cgnp) {
+ 		mvebu_clk_gating_setup(cgnp, kirkwood_gating_desc);
+ 		kirkwood_clk_muxing_setup(cgnp, kirkwood_mux_desc);
++
 +		of_node_put(cgnp);
-+	}
+ 	}
  }
- CLK_OF_DECLARE(axp_clk, "marvell,armada-xp-core-clock", axp_clk_init);
+ CLK_OF_DECLARE(kirkwood_clk, "marvell,kirkwood-core-clock",
 -- 
 2.20.1
 
