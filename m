@@ -2,126 +2,118 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B3FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3F3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2FA207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0711207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oudfIJtO"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="VgQQzQTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgA1P34 (ORCPT
+        id S1726632AbgA1PcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:29:56 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:52776 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgA1P3z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:29:55 -0500
-Received: by mail-pj1-f68.google.com with SMTP id a6so1139461pjh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:29:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gYDQt040okirqe50Lrh3CEKmMOXPeZIYhDIO12JRm+M=;
-        b=oudfIJtO2XN4XvD+DQ8Ec3GIHqxMMk6ogkt8jzO33dudjAqdner4DPznSzh1Y7XrBd
-         ezD2ltpelFCHW3JRZgyfZqHAfW3s8KrKPaSSHQbDDQ7OXq3O+jtATKp0lwiThA4nB0uC
-         BigxCmlYdVAHdBtxBc59/KBRJsff1bIIF2ifAGCQEx7s/wndc9NORpanY5iLzy/VqDpT
-         Ja69ofWRIG1rsaAVpLA39lPLIkPyHjgG2/lirDlSXtlepON3OBYI/vPcMNV1OVcd5Maf
-         8hFcwuDd5SEU+oue9keSK6X4vxGhivjKuT3Hz03+l8HEs3uZw+qK8Vd992Nm4wuWg47y
-         MbWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gYDQt040okirqe50Lrh3CEKmMOXPeZIYhDIO12JRm+M=;
-        b=A+s6wicuBVjcyP6oBJZcS0KkG8ps96rhnWKHa1DiKP6idYSTKnhlUlbHwRDnS45vY3
-         EylYoM/iamGhD0lwUkgXn9y092J/xDRX81UC0xAivoh2XSrJ5QMoS26yAlLo+F6U7e97
-         uYE2j5To+D+SwSdy78AwCLhcUALkraL7+IKkuLepgQ9CRqslm2ucLbMlsfen4ur6HzGv
-         hnGYhhI5Vr3RzUX/UYsfwMiT+klZsgtaKiXLiG/N+uKRPVbkfRYAA9jyv5EY9vtZHcMX
-         erWdta535FrzMEzbh1DSLezGLCbppqrpyRa48xixZSCwty4lZyD/lQ5GiGc2Eb6OBpH5
-         yXJA==
-X-Gm-Message-State: APjAAAWM554O6B18uKkyZR8xnKm0z5Pkt4u46QfadBN1BW++FYYtNsS/
-        If4S1DoJJuqU2CuBGLwTQNk=
-X-Google-Smtp-Source: APXvYqwBUq02rMUM31o3VOkfKkq08ooJejdl8gGvivEbHXaXtorSAN7XrAd3mphmADoU5Yi8R+kxTw==
-X-Received: by 2002:a17:902:aa0b:: with SMTP id be11mr22410567plb.181.1580225394577;
-        Tue, 28 Jan 2020 07:29:54 -0800 (PST)
-Received: from localhost.localdomain ([149.248.6.217])
-        by smtp.gmail.com with ESMTPSA id y6sm20632148pgc.10.2020.01.28.07.29.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 07:29:54 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] perf: Make perf able to build with latest libbfd
-Date:   Tue, 28 Jan 2020 23:29:38 +0800
-Message-Id: <20200128152938.31413-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 28 Jan 2020 10:32:00 -0500
+Received: from mta-02.yadro.com ([89.207.88.252]:33294 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725881AbgA1PcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:32:00 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 49805469A5;
+        Tue, 28 Jan 2020 15:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1580225516; x=1582039917; bh=zX3JraCJjM8GqTVE6B2fpMsNV
+        P+nHqDWarEnSG7AUxw=; b=VgQQzQTSS4TGqHu2ko+0X3y7/ZMCaZ79Vl2KfX42f
+        0Kl/hKJq882hX5QfXpye3omQ9UZfqZM3a9Nq73twG6KxXAR8zc4OwQBCjCiAIzup
+        2FFqdL+fmrwmEO+XUcj/ENZLtZeSU6xb/hPF0RUdrEzdmp1GcZYiaIDUhYmcVpiL
+        Jc=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bf9BSzGqZSmV; Tue, 28 Jan 2020 18:31:56 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 54999469A1;
+        Tue, 28 Jan 2020 18:31:56 +0300 (MSK)
+Received: from localhost.localdomain (172.17.15.69) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Tue, 28 Jan 2020 18:31:55 +0300
+Message-ID: <347fa610ef61d311486fa9eed66be3a4243a4459.camel@yadro.com>
+Subject: Re: vcnl3020 hwmon/proximity driver
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        <linux-hwmon@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Tue, 28 Jan 2020 18:31:55 +0300
+In-Reply-To: <0e2f88e3-b7d3-9dd2-50ce-011be09d53c9@roeck-us.net>
+References: <cb21d1285e04a8a7a3817398629431f69aeebf2f.camel@yadro.com>
+         <0e2f88e3-b7d3-9dd2-50ce-011be09d53c9@roeck-us.net>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.17.15.69]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-libbfd has changed the bfd_section_* macros to inline functions
-bfd_section_<field> since 2019-09-18. See below two commits:
-  o http://www.sourceware.org/ml/gdb-cvs/2019-09/msg00064.html
-  o https://www.sourceware.org/ml/gdb-cvs/2019-09/msg00072.html
+On Tue, 2020-01-28 at 05:22 -0800, Guenter Roeck wrote:
+> On 1/28/20 3:31 AM, Ivan Mikhaylov wrote:
+> > Hello, I want to make driver for vcnl3020 but not sure where should I put
+> > it.
+> > It's similar to vcnl40xx series which is already in iio/light/vcnl4000.c
+> > but it perfectly fits with hwmon intrusion detection concept
+> > (intrusion[0-*]_alarm), so I'm a little bit confused.
+> > 
+> > vcnl3020 - proximity sensor which mostly using for intrusion detection
+> > vcnl4020 - light and proximity sensor
+> > 
+> > Doc's links:
+> > https://www.vishay.com/docs/84150/vcnl3020.pdf
+> > https://www.vishay.com/docs/83476/vcnl4020.pdf
+> > 
+> > That's what I think about possible ways:
+> > 
+> > 1. just iio/proximity/vcnl3020.c
+> > 2. extend functionality inside vcnl4000.c with ifdefs and dts stuff and
+> > maybe
+> >     rename it with generalization inside
+> > 3. hwmon driver for intrusion detection inside drivers/hwmon
+> > 4. both iio/proximity/vcnl3020.c and hwmon/vcnl3020.c
+> >     Example: hwmon/wm8350-hwmon.c + mfd/wm8350-core.c
+> >     So, just make proximity driver, do the depend in Kconfig for hwmon
+> > driver
+> >     on proximity driver and use proximity driver calls if would be needed.
+> > 
+> 
+> "intrusion" in the context of hardware monitoring is for chassis intrusion,
+> not for intrusion into an area. This driver should reside in iio.
+> 
+> Thanks,
+> Guenter
 
-This fix make perf able to build with both old and new libbfd.
+Guenter,
+that's what I meant about intrusion, sorry for being inaccurate. This proximity
+sensor can be used as chassis intrusion detector, that's why I mentioned about
+hwmon and possible interface for such thing.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- tools/perf/util/srcline.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Thanks.
 
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 6ccf6f6d09df..5b7d6c16d33f 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -193,16 +193,30 @@ static void find_address_in_section(bfd *abfd, asection *section, void *data)
- 	bfd_vma pc, vma;
- 	bfd_size_type size;
- 	struct a2l_data *a2l = data;
-+	flagword flags;
- 
- 	if (a2l->found)
- 		return;
- 
--	if ((bfd_get_section_flags(abfd, section) & SEC_ALLOC) == 0)
-+#ifdef bfd_get_section_flags
-+	flags = bfd_get_section_flags(abfd, section);
-+#else
-+	flags = bfd_section_flags(section);
-+#endif
-+	if ((flags & SEC_ALLOC) == 0)
- 		return;
- 
- 	pc = a2l->addr;
-+#ifdef bfd_get_section_vma
- 	vma = bfd_get_section_vma(abfd, section);
-+#else
-+	vma = bfd_section_vma(section);
-+#endif
-+#ifdef bfd_get_section_size
- 	size = bfd_get_section_size(section);
-+#else
-+	size = bfd_section_size(section);
-+#endif
- 
- 	if (pc < vma || pc >= vma + size)
- 		return;
--- 
-2.24.0
 
