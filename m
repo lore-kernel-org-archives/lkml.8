@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0A1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C674FC35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B3920716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D36C20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221997;
-	bh=47W4q7AmdlxRLf2E1aFmx2eD2JLU1vA6j0yeFfY5Y1o=;
+	s=default; t=1580222011;
+	bh=j3dOkO7BzEnopBMaA6mmgyr9Jea+DWcgOpZMXirfMnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jIqvgaSaj63oaEt7yQtj5HGvBTUGs1J4klzfislGvGR0jmY6Tlp1/yAmUMHPDvY9Z
-	 W9IYYCFOjKZnmrN8C5xlpRIPvGC4OpTUUdwBG7qiTNKBfUYyydpmWN08virr8CVSzX
-	 NpnBD87tG/OD1J1seDL/gnQGkBQRvkaJYCxJ0mxw=
+	b=zk0l785FqmOPnTltOv7fcYPCYncpwUEW7yN12rssa1ZDJorQ92XtjhWb/Vu1L7YdF
+	 2qA1jxV+zYngpv/59VNbTqV6lA+LkHVuARUuSPestGS6RiM4jIAoq7PkREzt6fu+ut
+	 ip3Zw4DPtjFc/SG8fVDuNS7gjYukYV+nRi4u09Hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732971AbgA1OZh (ORCPT
+        id S1732867AbgA1OZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:25:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52484 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:25:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732925AbgA1OZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:30 -0500
+        id S1732835AbgA1OZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:25:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C27A721739;
-        Tue, 28 Jan 2020 14:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5A3E21739;
+        Tue, 28 Jan 2020 14:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221530;
-        bh=47W4q7AmdlxRLf2E1aFmx2eD2JLU1vA6j0yeFfY5Y1o=;
+        s=default; t=1580221505;
+        bh=j3dOkO7BzEnopBMaA6mmgyr9Jea+DWcgOpZMXirfMnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QkMrmzV2RkSfpHQl4hGHWxbvSgu4lI2E0UeNUTs9LjPgbfGeFolt7GJNIMILOJCC2
-         X2rmpw9RXcvv0ZRtoPtcm/NkwjskOcb2ucK4c5s+jiifYN+EiCQWA15G7Uon5TTkoW
-         qp/nbR3CvIxhMUrrzmuCtkhhu9Yk1kT0n1yBBUj0=
+        b=b2PHh8CFp+4gY+CvLDMNlNK5aG0bumMNkwdrh9FYXq46p3yfpMZX879eOb0Q6Sb12
+         mIOcCqotOqaNr/HXBntctfnFeBFvWTsznklHS1cv6tfTB89KLfrTcvPDfksmB/fZ7C
+         OgmK+4Ioe9lX3Nx4noFvEFzYbZgAca3KLAKxmOm8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.9 260/271] do_last(): fetch directory ->i_mode and ->i_uid before its too late
-Date:   Tue, 28 Jan 2020 15:06:49 +0100
-Message-Id: <20200128135911.951103077@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 251/271] mmc: sdhci: fix minimum clock rate for v3 controller
+Date:   Tue, 28 Jan 2020 15:06:40 +0100
+Message-Id: <20200128135911.255683005@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -58,74 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit d0cb50185ae942b03c4327be322055d622dc79f6 upstream.
+commit 2a187d03352086e300daa2044051db00044cd171 upstream.
 
-may_create_in_sticky() call is done when we already have dropped the
-reference to dir.
+For SDHCIv3+ with programmable clock mode, minimal clock frequency is
+still base clock / max(divider). Minimal programmable clock frequency is
+always greater than minimal divided clock frequency. Without this patch,
+SDHCI uses out-of-spec initial frequency when multiplier is big enough:
 
-Fixes: 30aba6656f61e (namei: allow restricted O_CREAT of FIFOs and regular files)
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
+[for 480 MHz source clock divided by 1024]
+
+The code in sdhci_calc_clk() already chooses a correct SDCLK clock mode.
+
+Fixes: c3ed3877625f ("mmc: sdhci: add support for programmable clock mode")
+Cc: <stable@vger.kernel.org> # 4f6aa3264af4: mmc: tegra: Only advertise UHS modes if IO regulator is present
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/ffb489519a446caffe7a0a05c4b9372bd52397bb.1579082031.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/namei.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/mmc/host/sdhci.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1011,7 +1011,8 @@ static int may_linkat(struct path *link)
-  * may_create_in_sticky - Check whether an O_CREAT open in a sticky directory
-  *			  should be allowed, or not, on files that already
-  *			  exist.
-- * @dir: the sticky parent directory
-+ * @dir_mode: mode bits of directory
-+ * @dir_uid: owner of directory
-  * @inode: the inode of the file to open
-  *
-  * Block an O_CREAT open of a FIFO (or a regular file) when:
-@@ -1027,18 +1028,18 @@ static int may_linkat(struct path *link)
-  *
-  * Returns 0 if the open is allowed, -ve on error.
-  */
--static int may_create_in_sticky(struct dentry * const dir,
-+static int may_create_in_sticky(umode_t dir_mode, kuid_t dir_uid,
- 				struct inode * const inode)
- {
- 	if ((!sysctl_protected_fifos && S_ISFIFO(inode->i_mode)) ||
- 	    (!sysctl_protected_regular && S_ISREG(inode->i_mode)) ||
--	    likely(!(dir->d_inode->i_mode & S_ISVTX)) ||
--	    uid_eq(inode->i_uid, dir->d_inode->i_uid) ||
-+	    likely(!(dir_mode & S_ISVTX)) ||
-+	    uid_eq(inode->i_uid, dir_uid) ||
- 	    uid_eq(current_fsuid(), inode->i_uid))
- 		return 0;
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -3243,11 +3243,13 @@ int sdhci_setup_host(struct sdhci_host *
+ 	if (host->ops->get_min_clock)
+ 		mmc->f_min = host->ops->get_min_clock(host);
+ 	else if (host->version >= SDHCI_SPEC_300) {
+-		if (host->clk_mul) {
+-			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
++		if (host->clk_mul)
+ 			max_clk = host->max_clk * host->clk_mul;
+-		} else
+-			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
++		/*
++		 * Divided Clock Mode minimum clock rate is always less than
++		 * Programmable Clock Mode minimum clock rate.
++		 */
++		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
+ 	} else
+ 		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
  
--	if (likely(dir->d_inode->i_mode & 0002) ||
--	    (dir->d_inode->i_mode & 0020 &&
-+	if (likely(dir_mode & 0002) ||
-+	    (dir_mode & 0020 &&
- 	     ((sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) ||
- 	      (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode))))) {
- 		return -EACCES;
-@@ -3259,6 +3260,8 @@ static int do_last(struct nameidata *nd,
- 		   int *opened)
- {
- 	struct dentry *dir = nd->path.dentry;
-+	kuid_t dir_uid = dir->d_inode->i_uid;
-+	umode_t dir_mode = dir->d_inode->i_mode;
- 	int open_flag = op->open_flag;
- 	bool will_truncate = (open_flag & O_TRUNC) != 0;
- 	bool got_write = false;
-@@ -3401,7 +3404,7 @@ finish_open:
- 		error = -EISDIR;
- 		if (d_is_dir(nd->path.dentry))
- 			goto out;
--		error = may_create_in_sticky(dir,
-+		error = may_create_in_sticky(dir_mode, dir_uid,
- 					     d_backing_inode(nd->path.dentry));
- 		if (unlikely(error))
- 			goto out;
 
 
