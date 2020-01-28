@@ -2,207 +2,126 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7EFC35249
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448AAC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD1624687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10EC820CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:37:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GoSERuOn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGA10LSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbgA1Jf5 (ORCPT
+        id S1725974AbgA1Jha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:35:57 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57722 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725271AbgA1Jf5 (ORCPT
+        Tue, 28 Jan 2020 04:37:30 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40358 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgA1Jh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:35:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580204155;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=2unjbYVQFq3ilMGQwALjLOUy/DfYMkS2idTcgLWVsuY=;
-        b=GoSERuOnnn6zktQSzs9J2voTGZao5ok449JKOLIdr9yrXLpwe0sX1AG7NLd4zhV2Vx2sov
-        RXh4cmmPe7oG++/fQCwU8drf2y31Ivr36T7HAT6YOMMh0OqfMSO2m0ot0TjHCPEOvo4H+D
-        /3l+gxa6PqGXJzkDqf05ZCC2dLEsRLY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-u0stzb-rOxypxIhNZYKoZQ-1; Tue, 28 Jan 2020 04:35:50 -0500
-X-MC-Unique: u0stzb-rOxypxIhNZYKoZQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADCB31005513;
-        Tue, 28 Jan 2020 09:35:48 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-116-207.ams2.redhat.com [10.36.116.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 11E1A89D13;
-        Tue, 28 Jan 2020 09:35:42 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        powerpc-utils-devel@googlegroups.com, util-linux@vger.kernel.org,
-        Badari Pulavarty <pbadari@us.ibm.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Robert Jennings <rcj@linux.vnet.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Karel Zak <kzak@redhat.com>
-Subject: [PATCH v1] drivers/base/memory.c: indicate all memory blocks as removable
-Date:   Tue, 28 Jan 2020 10:35:42 +0100
-Message-Id: <20200128093542.6908-1-david@redhat.com>
+        Tue, 28 Jan 2020 04:37:29 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k25so6675617pgt.7
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 01:37:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+cWPpo+JboGnintSd8zwFs8NMb29/E+sQ20smaqzcvA=;
+        b=PGA10LSXyDmz2JOek4Re1Jt1c27N7Xn1opWiQHVC+oCL+YGlHWlQEmQGK9xOopi0a/
+         RCBDMO5u06EPDogTd8NLWuH412lPsX4/I6z3TFYlUAfw5oYKOGn5AOw1NlGtjmReXoNs
+         3lcrX5ANvY4IJVx5SMky+y2lOn0kLfANp7fzNzf0kCDp+/dTMG+2BEXRJ9+W69QykHNr
+         hFRJpqy0ab/zBoDcKHR/lP4mXAiW2icCUVgM3050nyehzSfBXa1mce3J9igGmWAYakzs
+         RjHsMOgxJszzArYpyxQfiGDnfH0thk8yc/RnjYXiTPthN21GlSXbqfpC//gg3qn4z4Af
+         TWWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+cWPpo+JboGnintSd8zwFs8NMb29/E+sQ20smaqzcvA=;
+        b=QzCCCQzaE+6YvT/+ijxCmt6McRErGqo+guImShAP0hKTPecEVfel+6iQXNHL24bGqS
+         5mgYjcHfNOojghRL+GsYaMlKGCWzsKnwfEBiJrd4Nbh9DHuIAy7P5tX0cy1mRtbwLcX9
+         tXCxsqOdpbw1FujKoOKXmE5tOLwk2Y9jeajEWaA4t4yyHh3Hd4XwICg8UpeCowLUv2rK
+         v+FH0xsbY56eDVsIQqYOj20AetkBtoBhVGoLLjtaVc1nJKMkxJ9Q4HjXqY0/TJzjeUnV
+         VbP0dam5CMmaquMlIWPmYeUf+enLRrdeQKlhNCzwB11Idw+RqBnKlu8J3GH+vGQ3hblB
+         3e/A==
+X-Gm-Message-State: APjAAAVYz3JJRIr/qw6fe0IXVo66IOWYvu3Qz8Dno63NLcklL84rol2r
+        oyEJs9LhM7ESmQfnzPDx6C4vRPC6
+X-Google-Smtp-Source: APXvYqz7EI8uZApqRo9ucWVFVd9sQLcWFN3yQwep9F1+ZWwCJo0/RcYc+wUzrBeMRNpVRU09nKjjFw==
+X-Received: by 2002:a63:447:: with SMTP id 68mr25029230pge.364.1580204249251;
+        Tue, 28 Jan 2020 01:37:29 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id d22sm18955568pgg.52.2020.01.28.01.37.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2020 01:37:28 -0800 (PST)
+Date:   Tue, 28 Jan 2020 18:37:26 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] console: Avoid positive return code from
+ unregister_console()
+Message-ID: <20200128093726.GE115889@google.com>
+References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
+ <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
+ <20200128044332.GA115889@google.com>
+ <20200128092235.GX32742@smile.fi.intel.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128092235.GX32742@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We see multiple issues with the implementation/interface to compute
-whether a memory block can be offlined (exposed via
-/sys/devices/system/memory/memoryX/removable) and would like to simplify
-it (remove the implementation).
+On (20/01/28 11:22), Andy Shevchenko wrote:
+> On Tue, Jan 28, 2020 at 01:43:32PM +0900, Sergey Senozhatsky wrote:
+> > On (20/01/27 13:47), Andy Shevchenko wrote:
+> > [..]
+> > >  	res = _braille_unregister_console(console);
+> > > -	if (res)
+> > > +	if (res < 0)
+> > >  		return res;
+> > > +	if (res > 0)
+> > > +		return 0;
+> > >  
+> > > -	res = 1;
+> > > +	res = -ENODEV;
+> > >  	console_lock();
+> > >  	if (console_drivers == console) {
+> > >  		console_drivers=console->next;
+> > > @@ -2838,6 +2840,9 @@ int unregister_console(struct console *console)
+> > >  	if (!res && (console->flags & CON_EXTENDED))
+> > >  		nr_ext_console_drivers--;
+> > >  
+> > > +	if (res && !(console->flags & CON_ENABLED))
+> > > +		res = 0;
+> > 
+> > Console is not on the console_drivers list. Why does !ENABLED case
+> > require extra handling?
+> 
+> It's mirroring (to some extend) the register_console() abort conditions.
 
-1. It runs basically lockless. While this might be good for performance,
-   we see possible races with memory offlining that will require at least
-   some sort of locking to fix.
+Could you please explain?
 
-2. Nowadays, more false positives are possible. No arch-specific checks
-   are performed that validate if memory offlining will not be denied
-   right away (and such check will require locking). For example, arm64
-   won't allow to offline any memory block that was added during boot -
-   which will imply a very high error rate. Other archs have other
-   constraints.
+I see the "newcon->flags & CON_ENABLED" error out path. I'm guessing,
+that the expectation is that this is how we filter out consoles which
+were not matched (there is that "newcon->flags |= CON_ENABLED" several
+lines earlier.) So this looks like the assumption is that consoles don't
+have CON_ENABLED bit set prior to register_console(), as far as I understand.
 
-3. The interface is inherently racy. E.g., if a memory block is
-   detected to be removable (and was not a false positive at that time),
-   there is still no guarantee that offlining will actually succeed. So
-   any caller already has to deal with false positives.
+Well, look at these
+...
+drivers/net/netconsole.c:       .flags  = CON_ENABLED,
+drivers/tty/ehv_bytechan.c:     .flags  = CON_PRINTBUFFER | CON_ENABLED,
+drivers/tty/serial/mux.c:	.flags = CON_ENABLED | CON_PRINTBUFFER,
+...
 
-4. It is unclear which performance benefit this interface actually
-   provides. The introducing commit 5c755e9fd813 ("memory-hotplug: add
-   sysfs removable attribute for hotplug memory remove") mentioned
-	"A user-level agent must be able to identify which sections of
-	 memory are likely to be removable before attempting the
-	 potentially expensive operation."
-   However, no actual performance comparison was included.
-
-Known users:
-- lsmem: Will group memory blocks based on the "removable" property. [1]
-- chmem: Indirect user. It has a RANGE mode where one can specify
-	 removable ranges identified via lsmem to be offlined. However, it
-	 also has a "SIZE" mode, which allows a sysadmin to skip the manual
-	 "identify removable blocks" step. [2]
-- powerpc-utils: Uses the "removable" attribute to skip some memory
-		 blocks right away when trying to find some to
-		 offline+remove. However, with ballooning enabled, it
-		 already skips this information completely (because it
-		 once resulted in many false negatives). Therefore, the
-		 implementation can deal with false positives properly
-		 already. [3]
-
-According to Nathan Fontenot, DLPAR on powerpc is nowadays no longer
-driven from userspace via the drmgr command (powerpc-utils). Nowadays
-it's managed in the kernel - including onlining/offlining of memory
-blocks - triggered by drmgr writing to /sys/kernel/dlpar. So the
-affected legacy userspace handling is only active on old kernels. Only ve=
-ry
-old versions of drmgr on a new kernel (unlikely) might execute slower -
-totally acceptable.
-
-With CONFIG_MEMORY_HOTREMOVE, always indicating "removable" should not
-break any user space tool. We implement a very bad heuristic now.  Withou=
-t
-CONFIG_MEMORY_HOTREMOVE we cannot offline anything, so report
-"not removable" as before.
-
-Original discussion can be found in [4] ("[PATCH RFC v1] mm:
-is_mem_section_removable() overhaul").
-
-Other users of is_mem_section_removable() will be removed next, so that
-we can remove is_mem_section_removable() completely.
-
-[1] http://man7.org/linux/man-pages/man1/lsmem.1.html
-[2] http://man7.org/linux/man-pages/man8/chmem.8.html
-[3] https://github.com/ibm-power-utilities/powerpc-utils
-[4] https://lkml.kernel.org/r/20200117105759.27905-1-david@redhat.com
-
-Suggested-by: Michal Hocko <mhocko@kernel.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: powerpc-utils-devel@googlegroups.com
-Cc: util-linux@vger.kernel.org
-Cc: Badari Pulavarty <pbadari@us.ibm.com>
-Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Cc: Robert Jennings <rcj@linux.vnet.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Karel Zak <kzak@redhat.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-
-RFC -> v1:
-- Use IS_ENABLED() instead of ifdefs
-- Add information from Nathan (thanks!)
-
----
- drivers/base/memory.c | 23 +++--------------------
- 1 file changed, 3 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 6503f5d0b749..9664be00a4de 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -105,30 +105,13 @@ static ssize_t phys_index_show(struct device *dev,
- }
-=20
- /*
-- * Show whether the memory block is likely to be offlineable (or is alre=
-ady
-- * offline). Once offline, the memory block could be removed. The return
-- * value does, however, not indicate that there is a way to remove the
-- * memory block.
-+ * Legacy interface that we cannot remove. Always indicate "removable"
-+ * with CONFIG_MEMORY_HOTREMOVE - bad heuristic.
-  */
- static ssize_t removable_show(struct device *dev, struct device_attribut=
-e *attr,
- 			      char *buf)
- {
--	struct memory_block *mem =3D to_memory_block(dev);
--	unsigned long pfn;
--	int ret =3D 1, i;
--
--	if (mem->state !=3D MEM_ONLINE)
--		goto out;
--
--	for (i =3D 0; i < sections_per_block; i++) {
--		if (!present_section_nr(mem->start_section_nr + i))
--			continue;
--		pfn =3D section_nr_to_pfn(mem->start_section_nr + i);
--		ret &=3D is_mem_section_removable(pfn, PAGES_PER_SECTION);
--	}
--
--out:
--	return sprintf(buf, "%d\n", ret);
-+	return sprintf(buf, "%d\n", (int)IS_ENABLED(CONFIG_MEMORY_HOTREMOVE));
- }
-=20
- /*
---=20
-2.24.1
-
+	-ss
