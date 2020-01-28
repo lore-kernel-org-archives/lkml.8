@@ -2,186 +2,382 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954F2C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92717C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F0D24686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500642467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:13:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="TFJXKIdU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UhZ6J8AW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgA1KNl (ORCPT
+        id S1726143AbgA1KN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:13:41 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.6]:39239 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725881AbgA1KNj (ORCPT
+        Tue, 28 Jan 2020 05:13:56 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55753 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgA1KN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:13:39 -0500
-Received: from [46.226.52.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-6.bemta.az-a.eu-west-1.aws.symcld.net id 5A/0E-06138-F49003E5; Tue, 28 Jan 2020 10:13:35 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEJsWRWlGSWpSXmKPExsWSoc9rouvPaRB
-  nsOELp8WqqTtZLC7vmsNmcWPdPnaLJwvPMFl82HWV2YHVo/+vgcfO7w3sHp83yQUwR7Fm5iXl
-  VySwZrQuecVWcIK/4s7KX6wNjN95uhi5OBgFljJL7D70ggnCOcYicWvfF2YIZzOjxO/en2wgD
-  ovACWaJ47d2MoI4QgKTmCROtp1ihnDuMkrMb25l72Lk5GATsJCYfOIBWIuIwDtGiZav+8EmMw
-  tsZ5Q4vnsiM0iVsIC7xMfFb9lAbBEBD4kH13+xQNhGEqd/fQCbxCKgKrFlynRWEJtXIFai628
-  DWFxIwEbi955nYL2cArYSR5ffZwKxGQVkJb40rgabzywgLnHryXywuISAgMSSPeeZIWxRiZeP
-  /7FC1KdKnGy6wQgR15E4e/0JlK0ksezGLFYIW1bi0vxuqLivxIdl/9khbC2J9aevQtkWEku6W
-  4Hu5wCyVST+HaqECOdI/DoyE2qMmsT2a+ehzpGReLx7CTgYJQRmsUjs+jOTbQKjwSwkZ0PYOh
-  ILdn9ig7C1JZYtfM08CxwUghInZz5hWcDIsorRIqkoMz2jJDcxM0fX0MBA19DQSNfQ0gTINtR
-  LrNJN1Est1S1PLS7RBXLLi/WKK3OTc1L08lJLNjECk1NKwaHUHYxH177XO8QoycGkJMrb+U4/
-  TogvKT+lMiOxOCO+qDQntfgQowwHh5IE7252gzghwaLU9NSKtMwcYKKESUtw8CiJ8MqApHmLC
-  xJzizPTIVKnGHU5Jrycu4hZiCUvPy9VSpw3BqRIAKQoozQPbgQsaV9ilJUS5mVkYGAQ4ilILc
-  rNLEGVf8UozsGoJMz7CGQKT2ZeCdymV0BHMAEd8UZMD+SIkkSElFQDU6P/1Suhrl7qRzfJLp7
-  r+estF1et2Fb7+ynW39YduvUtZIvZwa9Lv23eonvA8Pjh44udl/S8+PskT9dOPiuq5/i5hoVe
-  k72+vyjSk3Gavr0oRHr3ZFuHpsLp9/ftmbRhV1lQ0cegw9n+vRYfX8k/nP3xaYnygSvrujekr
-  rh7N+PmYkHRz7r6aUEvPWb+Mlw6m/Euy+Fw2S23AjTX6Sm+vPn99Oy0xNrLu5uus/QsFU7TaA
-  8suz7l0faNhqE6606UvszYFXE3SLTKqd3+6wf309JPlu/8c+vS6Ufs/E7WT5S2rbPaeUPI6ef
-  lEk1B5c1LfJWfHpytIu38ed5LcbannCUnZ1trd8YdsC/kiik+wuCnxFKckWioxVxUnAgACLPo
-  QlUEAAA=
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-6.tower-262.messagelabs.com!1580206414!751277!1
-X-Originating-IP: [104.47.13.52]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.25; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 27997 invoked from network); 28 Jan 2020 10:13:35 -0000
-Received: from mail-he1eur04lp2052.outbound.protection.outlook.com (HELO EUR04-HE1-obe.outbound.protection.outlook.com) (104.47.13.52)
-  by server-6.tower-262.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 28 Jan 2020 10:13:35 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BtZgfjaqNpBJeRZSXxRAN9btTRm7mH8B7fAYg542Ef6VAD9qQoHVPCrI+4Y4e09VtuB3kDkAKbKIc11iHPivZ9Vxc/NKNJEMEgIDsR8MpimclVejdmyPLG+7k35mxWnOWrPAe2KN8ipqFTEADDujgfPTkzifbuPjW+zIPg/IeZXYmkDCV2pBT2CG6viASeYn6X5qHKrvPQkjpGT571uaAzMW83+Pqa/aH9yMHz9MnCwWTAop+eXtosBneI4PAqoxWlzLyXB6npKbQJyUFeLvVPekUrcGYChRpzP22eYqWlCCpfI4m8g+pRtJ/eczEO897+UYsiEKRnRaVLs6yLQPxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7xAu82TKH4blLOHxci5k6teCgEF0JdNiDyMPxo4S3+8=;
- b=CKIcUlcxiKWrhUl3DB5+HmVuZ+NTu8OAluQWlblIXUq0d6pz3q8rTPEr6BB9THZpmlwVHzUDA4SmghRw+yjLsF/rcoCeX8nfr4t9QvEYJPM8HqZbuwKTNd4Hfx4HcZiGtQxfaWUU7wpjCu0lFZd33/h/EbYSp701dgeFlv8g1g1jXkmlfds24CeZ/uRGADFPL94mu/WE7CtPGDmPhB8LtSccoqw392GQW5F9XSdX6n+YGT6FkahD6ht7J64CfWnBydMBUJqtRexXNkCrZZVUy9uEcFZdRbWagT/ik0pRmP/dOnwsglx8H3AJRywEM1RDXkk5v6um9hoVQ9NZcZcYog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
+        Tue, 28 Jan 2020 05:13:56 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so1822450wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 02:13:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7xAu82TKH4blLOHxci5k6teCgEF0JdNiDyMPxo4S3+8=;
- b=TFJXKIdUO2ly3WGGdcuj85geePLp8/ZqCKyn3tMt/gFCkGmGoKC3BWLs8wj0o6PgqibDoE+cxpKd1mjkV9n+gkQiSsLXV4d3uMhjp6eAq+u9iouNxP7bpUaDm/oeNQlpMXICn9vUG5Syp09nw7j3MFEWMwrvLGRwZyO37oCGbYc=
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
- AM6PR10MB2902.EURPRD10.PROD.OUTLOOK.COM (10.255.121.214) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.20; Tue, 28 Jan 2020 10:13:33 +0000
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::9be:9fca:6def:97c3]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::9be:9fca:6def:97c3%5]) with mapi id 15.20.2665.026; Tue, 28 Jan 2020
- 10:13:33 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-CC:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [PATCH] watchdog: da9062: do not ping the hw during stop()
-Thread-Topic: [PATCH] watchdog: da9062: do not ping the hw during stop()
-Thread-Index: AQHVz3J0N/2psq1VGU68MqLs/CX6Pqf/54WA
-Date:   Tue, 28 Jan 2020 10:13:33 +0000
-Message-ID: <AM6PR10MB2263D6F62A45568D5671377D800A0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-References: <20200120091729.16256-1-m.felsch@pengutronix.de>
-In-Reply-To: <20200120091729.16256-1-m.felsch@pengutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.240.73.196]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 99734c7f-c049-4054-16b7-08d7a3dabb10
-x-ms-traffictypediagnostic: AM6PR10MB2902:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR10MB2902ACB5150ABB15A8F7BE0FA70A0@AM6PR10MB2902.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 029651C7A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(39850400004)(346002)(396003)(199004)(189003)(110136005)(54906003)(2906002)(5660300002)(186003)(8676002)(316002)(52536014)(6506007)(33656002)(53546011)(26005)(7696005)(86362001)(66476007)(71200400001)(81156014)(81166006)(8936002)(55016002)(478600001)(66446008)(66556008)(9686003)(4326008)(64756008)(76116006)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2902;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PkDUbhiPh7rusFcpha5Zger+qL3IeiZJflTuvZ0dsiOdC0hz8GDG0/bSl5anDm7dUTa+CzntWSQKFA3BDJ1RwSVjCDyU7FkSJ0tWmiQ3sFiTVqclhkeuSSUkJGKU93cgTyGyxPxmz7KED6MwNKe57NlgtvPW46JrwR0dWOllHgj+jZeUNw5UqdwN8681uiaXMCHj77Iz0xTXg6XQBdEfqdbJu/60DI0MSf8nygzD96hrpl1mYIInkqzC1WaTG83d1CMN68hIdxAZn+OciS/JfWbz3AJoOkpeZ7GIiWFXGfH/7SfHpNYwCnPp2iNLlnDITJ9kKagVVRAjVehBI9BbF4OOPizjbzYTm0KRXNNBOuK1wLFDZNMx9BLCQeq74S8D8h6ADjey+2ebc2EPf9sc5Y49UZ+Px661izeVoqd77mj4dlaFw1voD6KaoYUhitUI
-x-ms-exchange-antispam-messagedata: UHwxE1p8upZFwlyMtu/FWLt+4M28OAf44HKsDjJa3sWXaFjfo1TFra2os9Aunwgqz0ZxEZHFc3xLdS5uDl/nSxaO07wfLJ57KTWqZOacIV3pNYpE4RQikJ6V1uGRSBmj+6P1tcA5lHNEkMugRG969w==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=to:cc:from:subject:autocrypt:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=r3C3Y0IJstOFY21HYumFx0TAFpm3BHwTb33PtAff3GA=;
+        b=UhZ6J8AWMcmbhT5+fVS+gWVBDEn87tEUDhojdj2ODQo05aVppMPYehF8WbohhpyTH/
+         XlUHyidxY1ud+DWxTJNbeUPCS2EKAC/b3OFs6VzYBQ0F+S6XIl3hS9i57DPvgYnqxzjg
+         4Bzk3vjk6ds4g+fEaoFcsIiNU7kuIu4ADZXzYMWHbojvuA7NC1I/OMw4tQvLtBDXE55j
+         AXpp/eYsD+Qn0VFhMeLHJaIrmfbcZAqqKKZnUCTspAkKb5F3BFSwln9XDy5lTSNJhk5Y
+         8uMBIQUG73af2WWAAGEssW+GWX7pYhv5uDH4ty59sZTG6rB8yjwEP0iBuREWyGFDcYT4
+         fPHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:autocrypt:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=r3C3Y0IJstOFY21HYumFx0TAFpm3BHwTb33PtAff3GA=;
+        b=WBuY0DRfT60aLgIV8abPt3HKYRJd48BARF5oZMFj8p+rnEKc781p9DO/NfC/HqcsjZ
+         NAygtbuewI8rCLp29ESFKXL86HA39mu/69NmQNPRMZFL2OJ/7JwIIvpJb4OBRBlPI7fn
+         vWvMuD3dVLby2H2Hp+eYQnb+o6M920x9mQGoSS1v+IcSZfP+N6UPgDrG5ryZTlPGi1Kp
+         kxKtR9Fy8+rht2A8a0IwZJtg7jZdiy360rTvpkwBUlEUS737X/UuYSSziZUELXq4XQ8e
+         qVox230UsJmXCEFLVMHqCBxaxiA5eBn7Qnt5m5Lakz0leja4Z4asa9q8Oi3mc40H8sQ0
+         NeEQ==
+X-Gm-Message-State: APjAAAU1jjsBaNaQF9eCzcG8GYfzyVN0qBsPB7KoAYzEvJkw1YZNuBjv
+        gk1KxUHWoO/HnmmrfZ35Dr/wfA==
+X-Google-Smtp-Source: APXvYqxBwDLLhK98zySunj4zT8h2AhT62rsflVivfX968eEv/WjPSFvv7qBJuJGDgmQ1GLW9HO+56Q==
+X-Received: by 2002:a1c:de55:: with SMTP id v82mr4068532wmg.48.1580206433136;
+        Tue, 28 Jan 2020 02:13:53 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f4af:286:d323:b6e2? ([2a01:e34:ed2f:f020:f4af:286:d323:b6e2])
+        by smtp.googlemail.com with ESMTPSA id n3sm23429584wrs.8.2020.01.28.02.13.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 02:13:52 -0800 (PST)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [GIT PULL] Thermal for v5.6-rc1
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <288933ba-a1fd-5954-df09-edaa4ea24abc@linaro.org>
+Date:   Tue, 28 Jan 2020 11:13:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99734c7f-c049-4054-16b7-08d7a3dabb10
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 10:13:33.1773
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7h668s7OThrqGOTPzV8BBKP+H+SWDWKgLG7Wf5S/ayNEHE6B5lIps+cEaPBDlvSAC3Apfhv4oTZtFb34Ynt+RxCvh/RsbtAe6Ca3laVcRgA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2902
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20 January 2020 09:17, Marco Felsch wrote:
 
-> The da9062 hw has a minimum ping cool down phase of at least 200ms. The
-> driver takes that into account by setting the min_hw_heartbeat_ms to
-> 300ms and the core guarantees that the hw limit is observed for the
-> ping() calls. But the core can't guarantees the required minimum ping
-> cool down phase if a stop() command is send immediately after the ping()
-> command. So it is not allowed to ping the watchdog within the stop()
-> command as the driver do. Remove the ping can be done without doubts
-> because the watchdog gets disabled anyway and a (re)start reset the
-> watchdog counter too.
->=20
+Hi Linus,
 
-Good spot. Thanks for this. Am wondering if this might also be an issue for
-da9062_wdt_set_timeout() which calls down to
-da9062_wdt_update_timeout_register() which in turn pings the watchdog first
-before disabling it and then setting the new timeout value. I think it make=
-s
-sense to remove the ping from da9062_wdt_update_timeout_register() as well =
-to
-avoid any possible issues where a ping() is called and then immediately aft=
-er
-there's a call to adjust the timeout. If you can double check my hypothesis
-that would be good though.
+The following changes since commit d5226fa6dbae0569ee43ecfc08bdcd6770fc4755:
 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->  drivers/watchdog/da9062_wdt.c | 7 -------
->  1 file changed, 7 deletions(-)
->=20
-> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.=
-c
-> index 77b6b5336067..0ad15d55071c 100644
-> --- a/drivers/watchdog/da9062_wdt.c
-> +++ b/drivers/watchdog/da9062_wdt.c
-> @@ -97,13 +97,6 @@ static int da9062_wdt_stop(struct watchdog_device *wdd=
-)
->  	struct da9062_watchdog *wdt =3D watchdog_get_drvdata(wdd);
->  	int ret;
->=20
-> -	ret =3D da9062_reset_watchdog_timer(wdt);
-> -	if (ret) {
-> -		dev_err(wdt->hw->dev, "Failed to ping the watchdog (err =3D
-> %d)\n",
-> -			ret);
-> -		return ret;
-> -	}
-> -
->  	ret =3D regmap_update_bits(wdt->hw->regmap,
->  				 DA9062AA_CONTROL_D,
->  				 DA9062AA_TWDSCALE_MASK,
-> --
-> 2.20.1
+  Linux 5.5 (2020-01-26 16:23:03 -0800)
+
+are available in the Git repository at:
+
+
+ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
+tags/thermal-v5.6-rc1
+
+for you to fetch changes up to 2f23e319b133c7392493e77f515a237c8e1e6dd6:
+
+  thermal: stm32: Fix low threshold interrupt flood (2020-01-27 15:40:26
++0100)
+
+Thanks!
+
+----------------------------------------------------------------
+- Depromote debug print on the db8500 platform (Linus Walleij)
+
+- Fix compilation warning when compiling with make W=1 (Amit Kucheria)
+
+- Code cleanup and refactoring, regmap conversion and add hwmon
+  support on Qoriq (Andrey Smirnov)
+
+- Add an idle injection cpu cooling device and its documentation,
+  rename the cpu_cooling device to cpufreq_cooling device (Daniel
+  Lezcano)
+
+- Convert unexported functions to static, add the __init annotation in
+  the thermal-of code and remove the pointless wrapper functions
+  (Daniel Lezcano)
+
+- Fix register offset for Armada XP and register reset bit
+  initialization (Zak Hays)
+
+- Enable hwmon on the rockchip (Stefan Schaeckeler)
+
+- Add the thermal sensor for the H6/H5/H3/A64/A83T/R40 sun8i platform
+  and their device tree bindings, followed by a fix for the ths number
+  and the sparse warnings (Yangtao Li)
+
+- Code cleanup for the sun8i and hwmon support (Yangtao Li)
+
+- Silent some messages which are misleading given the changes made in
+  the previous version on generic-adc (Martin Blumenstingl)
+
+- Rename exynos to Exynos (Krzysztof Kozlowski)
+
+- Add the bcm2711 thermal driver with the device tree bindings (Stefan
+  Wahren)
+
+- Use usleep_range() instead of udelay() as the call is always done in
+  a sleep-able context (Geert Uytterhoeven)
+
+- Do code cleanup and re-organization to set the scene for a new
+  process for the brcmstb (Florian Fainelli)
+
+- Fix bindings check issues on brcm (Stefan Wahren)
+
+- Add Jasper Lake support on int340x (Nivedita Swaminathan)
+
+- Add Comet Lake support on intel pch (Gayatri Kammela)
+
+- Fix unmatched pci_release_region() on x86 (Chuhong Yuan)
+
+- Remove temperature boundaries for rcar and rcar3 (Niklas Söderlund)
+
+- Fix return value to -ENODEV when thermal_zone_of_sensor_register()
+  is called with the of-node is missing (Peter Mamonov)
+
+- Code cleanup, interrupt bouncing, and better support on stm32
+  (Pascal Paillet)
+
+----------------------------------------------------------------
+Amit Kucheria (11):
+      thermal: of-thermal: Appease the kernel-doc deity
+      thermal: cpu_cooling: Appease the kernel-doc deity
+      thermal: step_wise: Appease the kernel-doc deity
+      thermal: devfreq_cooling: Appease the kernel-doc deity
+      thermal: max77620: Appease the kernel-doc deity
+      thermal: mediatek: Appease the kernel-doc deity
+      thermal: rockchip: Appease the kernel-doc deity
+      thermal: samsung: Appease the kernel-doc deity
+      thermal: tegra: Appease the kernel-doc deity
+      thermal: amlogic: Appease the kernel-doc deity
+      thermal: zx2967: Appease the kernel-doc deity
+
+Andrey Smirnov (12):
+      thermal: qoriq: Add local struct device pointer
+      thermal: qoriq: Don't store struct thermal_zone_device reference
+      thermal: qoriq: Add local struct qoriq_sensor pointer
+      thermal: qoriq: Embed per-sensor data into struct qoriq_tmu_data
+      thermal: qoriq: Pass data to qoriq_tmu_register_tmu_zone() directly
+      thermal: qoriq: Pass data to qoriq_tmu_calibration() directly
+      thermal: qoriq: Drop unnecessary drvdata cleanup
+      thermal: qoriq: Convert driver to use regmap API
+      thermal: qoriq: Enable all sensors before registering them
+      thermal: qoriq: Do not report invalid temperature reading
+      thermal_hwmon: Add devres wrapper for thermal_add_hwmon_sysfs()
+      thermal: qoriq: Add hwmon support
+
+Chuhong Yuan (1):
+      thermal: intel: Fix unmatched pci_release_region
+
+Daniel Lezcano (6):
+      thermal/drivers/Kconfig: Convert the CPU cooling device to a choice
+      thermal/drivers/cpu_cooling: Add idle cooling device documentation
+      thermal/drivers/cpu_cooling: Introduce the cpu idle cooling driver
+      thermal/drivers/cpu_cooling: Rename to cpufreq_cooling
+      thermal/drivers/of-thermal: Make of_thermal_destroy_zones static
+      thermal/drivers/of-thermal: Move the of_thermal_free_zone() to the
+init section
+
+Florian Fainelli (6):
+      thermal: brcmstb_thermal: Do not use DT coefficients
+      thermal: brcmstb_thermal: Prepare to support a different process
+      dt-bindings: thermal: Define BCM7216 thermal sensor compatible
+      thermal: brcmstb_thermal: Add 16nm process thermal parameters
+      thermal: brcmstb_thermal: Restructure interrupt registration
+      thermal: brcmstb_thermal: Register different ops per process
+
+Gayatri Kammela (1):
+      thermal: intel: intel_pch_thermal: Add Comet Lake (CML) platform
+support
+
+Geert Uytterhoeven (1):
+      thermal: rcar_thermal: Use usleep_range() instead of udelay()
+
+Krzysztof Kozlowski (1):
+      thermal: exynos: Rename Samsung and Exynos to lowercase
+
+Linus Walleij (1):
+      thermal: db8500: Depromote debug print
+
+Martin Blumenstingl (2):
+      thermal: generic-adc: silence "no lookup table" on deferred probe
+      thermal: generic-adc: silence info message for IIO_TEMP channels
+
+Niklas Söderlund (2):
+      thermal: rcar_thermal: Remove temperature bound
+      thermal: rcar_gen3_thermal: Remove temperature bound
+
+Pascal Paillet (6):
+      thermal: stm32: Fix icifr register name
+      thermal: stm32: Rework sensor mode management
+      thermal: stm32: Disable interrupts at probe
+      thermal: stm32: Handle multiple trip points
+      thermal: stm32: Improve temperature computing
+      thermal: stm32: Fix low threshold interrupt flood
+
+Peter Mamonov (1):
+      thermal: of: Make thermal_zone_of_sensor_register return -ENODEV
+if a sensor OF node is missing
+
+Stefan Schaeckeler (1):
+      thermal: rockchip: Enable hwmon
+
+Stefan Wahren (5):
+      dt-bindings: Add Broadcom AVS RO thermal
+      thermal: Add BCM2711 thermal driver
+      ARM: dts: bcm2711: Enable thermal
+      ARM: configs: Build BCM2711 thermal as module
+      dt-bindings: brcm,avs-ro-thermal: Fix binding check issues
+
+Swaminathan, Nivedita (1):
+      thermal: int340x: processor_thermal: Add Jasper Lake support
+
+Yangtao Li (6):
+      thermal/drivers/sun8i: Add thermal driver for H6/H5/H3/A64/A83T/R40
+      dt-bindings: thermal: Add YAML schema for sun8i-thermal driver
+bindings
+      thermal: sun8i: Fix r40 ths number
+      thermal: sun8i: Fix using plain integer as NULL pointer in
+sun8i_ths_resource_init
+      thermal: sun8i: Remove unused variable and unneeded macros
+      thermal: sun8i: Add hwmon support
+
+Zak Hays (2):
+      thermal: armada: Fix register offsets for AXP
+      thermal: armada: Clear reset in armadaxp_init
+
+ .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml | 160 ++++++
+ .../bindings/thermal/brcm,avs-ro-thermal.yaml      |  48 ++
+ .../devicetree/bindings/thermal/brcm,avs-tmon.txt  |   8 +-
+ .../driver-api/thermal/cpu-idle-cooling.rst        | 189 ++++++
+ .../driver-api/thermal/exynos_thermal.rst          |   8 +-
+ MAINTAINERS                                        |  13 +-
+ arch/arm/boot/dts/bcm2711.dtsi                     |  12 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/thermal/Kconfig                            |  35 +-
+ drivers/thermal/Makefile                           |   4 +-
+ drivers/thermal/amlogic_thermal.c                  |   6 +-
+ drivers/thermal/armada_thermal.c                   |   5 +-
+ drivers/thermal/broadcom/Kconfig                   |   7 +
+ drivers/thermal/broadcom/Makefile                  |   1 +
+ drivers/thermal/broadcom/bcm2711_thermal.c         | 123 ++++
+ drivers/thermal/broadcom/brcmstb_thermal.c         |  96 ++--
+ drivers/thermal/clock_cooling.c                    |   2 +-
+ .../thermal/{cpu_cooling.c => cpufreq_cooling.c}   |   7 +-
+ drivers/thermal/cpuidle_cooling.c                  | 232 ++++++++
+ drivers/thermal/db8500_thermal.c                   |   4 +-
+ drivers/thermal/devfreq_cooling.c                  |   3 +-
+ drivers/thermal/fair_share.c                       |   4 +-
+ drivers/thermal/gov_bang_bang.c                    |   4 +-
+ .../int340x_thermal/processor_thermal_device.c     |   4 +
+ drivers/thermal/intel/intel_pch_thermal.c          |  10 +-
+ drivers/thermal/max77620_thermal.c                 |   2 +-
+ drivers/thermal/mtk_thermal.c                      |  12 +-
+ drivers/thermal/of-thermal.c                       |  70 +--
+ drivers/thermal/qoriq_thermal.c                    | 337 ++++++-----
+ drivers/thermal/rcar_gen3_thermal.c                |   4 +-
+ drivers/thermal/rcar_thermal.c                     |   9 +-
+ drivers/thermal/rockchip_thermal.c                 |  34 +-
+ drivers/thermal/samsung/Kconfig                    |   2 +-
+ drivers/thermal/samsung/exynos_tmu.c               |   9 +-
+ drivers/thermal/st/stm_thermal.c                   | 388 ++++---------
+ drivers/thermal/step_wise.c                        |   4 +-
+ drivers/thermal/sun8i_thermal.c                    | 639
++++++++++++++++++++++
+ drivers/thermal/tegra/soctherm.c                   |  15 +-
+ drivers/thermal/thermal-generic-adc.c              |  20 +-
+ drivers/thermal/thermal_core.h                     |   2 -
+ drivers/thermal/thermal_hwmon.c                    |  28 +
+ drivers/thermal/thermal_hwmon.h                    |   7 +
+ drivers/thermal/user_space.c                       |   4 +-
+ drivers/thermal/zx2967_thermal.c                   |   1 +
+ include/dt-bindings/thermal/thermal_exynos.h       |   2 +-
+ include/linux/clock_cooling.h                      |   2 +-
+ include/linux/cpu_cooling.h                        |  24 +-
+ 48 files changed, 2012 insertions(+), 590 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+ create mode 100644
+Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
+ create mode 100644 Documentation/driver-api/thermal/cpu-idle-cooling.rst
+ create mode 100644 drivers/thermal/broadcom/bcm2711_thermal.c
+ rename drivers/thermal/{cpu_cooling.c => cpufreq_cooling.c} (98%)
+ create mode 100644 drivers/thermal/cpuidle_cooling.c
+ create mode 100644 drivers/thermal/sun8i_thermal.c
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
