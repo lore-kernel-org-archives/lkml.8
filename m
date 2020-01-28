@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C469C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC010C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E335C24693
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B073C2468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220331;
-	bh=tAkXsxBhVJ/xUwlOx9WXZde1RHbuiUeq54zWGgXD+Yg=;
+	s=default; t=1580220335;
+	bh=tGDZBRoshrw5xaOaC8h89pZSKcEEwCnkWWYwTwUhhgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BX4416RZL4cl1VtnWy51UKVohiG7R/v/2JXHjowlzsvnvBqEqAAWxRiGJM8XBa6u/
-	 nvl/d/VLMQ1dyH7U9mlqw2REMVu8QMZbIQq0Y1xQiwWo0jpFYn64XtijaFkn5tojDN
-	 ihVPlPuQdSB1RXure4uU4KU8lGQg6MS7sdWvsC5A=
+	b=hUpr8mtPzS4F2a9vNr5mvFkDZlKUuEY+x4A4wx187YmRYx49Zcdmus0BQdFZew7yr
+	 4CFo9NuPxdFS1GLFQ1LkC9bQxREWzGNs65OW9TgUbAAzmC4GUQlKXMv6I0M6U6RCqs
+	 A1AAOnIh7jjxH1bya2GQC6ROw0weN5Jx1bCXGgDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgA1OF3 (ORCPT
+        id S1728303AbgA1OFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:05:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53062 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:05:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727717AbgA1OF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:05:26 -0500
+        id S1727675AbgA1OFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:05:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99ED2468E;
-        Tue, 28 Jan 2020 14:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAC602468E;
+        Tue, 28 Jan 2020 14:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220325;
-        bh=tAkXsxBhVJ/xUwlOx9WXZde1RHbuiUeq54zWGgXD+Yg=;
+        s=default; t=1580220330;
+        bh=tGDZBRoshrw5xaOaC8h89pZSKcEEwCnkWWYwTwUhhgU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IZxSotJS06nB3azFT2j1ZjtdO5MT5JPdD44X6WwHoXIjifu5InVMa18dBGYvRCfEB
-         ZmvwPu3kKJHpOEwQ3Ly11W90nBGJRoDWSjJtmhlorMm46QZh2s+SJPZt2aHehBNjhu
-         cVmvTucDCmb2W366ASTjQKBQLrkncWQCd/i6Vb8o=
+        b=JIhFCeRAiT9PbeUHTHHTp3Mlcr1qfU7hGqmdi3RSXi/Psu4VjwfB2nLmOaQdILQ8G
+         tXEQxVXtDoMVTBeDwrWO/z5ibe/GlCWHibgiK7T+iowyqFs6fqPqTXlJ8FzZ2259+P
+         +/ifHnrxUkNOPHGrrpm4Z0gg/kzsm7W/rBWSYjiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Auld <matthew.auld@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.4 082/104] drm/i915/userptr: fix size calculation
-Date:   Tue, 28 Jan 2020 15:00:43 +0100
-Message-Id: <20200128135828.513738490@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d73682fcf7fee6982fe3@syzkaller.appspotmail.com,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 084/104] net, sk_msg: Dont check if sock is locked when tearing down psock
+Date:   Tue, 28 Jan 2020 15:00:45 +0100
+Message-Id: <20200128135828.791836526@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,86 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Auld <matthew.auld@intel.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-commit ecc4d2a52df65479de5e333a9065ed02202a400f upstream.
+commit 58c8db929db1c1d785a6f5d8f8692e5dbcc35e84 upstream.
 
-If we create a rather large userptr object(e.g 1ULL << 32) we might
-shift past the type-width of num_pages: (int)num_pages << PAGE_SHIFT,
-resulting in a totally bogus sg_table, which fortunately will eventually
-manifest as:
+As John Fastabend reports [0], psock state tear-down can happen on receive
+path *after* unlocking the socket, if the only other psock user, that is
+sockmap or sockhash, releases its psock reference before tcp_bpf_recvmsg
+does so:
 
-gen8_ppgtt_insert_huge:463 GEM_BUG_ON(iter->sg->length < page_size)
-kernel BUG at drivers/gpu/drm/i915/gt/gen8_ppgtt.c:463!
+ tcp_bpf_recvmsg()
+  psock = sk_psock_get(sk)                         <- refcnt 2
+  lock_sock(sk);
+  ...
+                                  sock_map_free()  <- refcnt 1
+  release_sock(sk)
+  sk_psock_put()                                   <- refcnt 0
 
-v2: more unsigned long
-    prefer I915_GTT_PAGE_SIZE
+Remove the lockdep check for socket lock in psock tear-down that got
+introduced in 7e81a3530206 ("bpf: Sockmap, ensure sock lock held during
+tear down").
 
-Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
-Signed-off-by: Matthew Auld <matthew.auld@intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200117132413.1170563-2-matthew.auld@intel.com
-(cherry picked from commit 8e78871bc1e5efec22c950d3fd24ddb63d4ff28a)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+[0] https://lore.kernel.org/netdev/5e25dc995d7d_74082aaee6e465b441@john-XPS-13-9370.notmuch/
+
+Fixes: 7e81a3530206 ("bpf: Sockmap, ensure sock lock held during tear down")
+Reported-by: syzbot+d73682fcf7fee6982fe3@syzkaller.appspotmail.com
+Suggested-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gem/i915_gem_userptr.c |    9 +++++----
- drivers/gpu/drm/i915/i915_gem_gtt.c         |    2 ++
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ net/core/skmsg.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-@@ -427,7 +427,7 @@ struct get_pages_work {
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -594,8 +594,6 @@ EXPORT_SYMBOL_GPL(sk_psock_destroy);
  
- static struct sg_table *
- __i915_gem_userptr_alloc_pages(struct drm_i915_gem_object *obj,
--			       struct page **pvec, int num_pages)
-+			       struct page **pvec, unsigned long num_pages)
+ void sk_psock_drop(struct sock *sk, struct sk_psock *psock)
  {
- 	unsigned int max_segment = i915_sg_segment_size();
- 	struct sg_table *st;
-@@ -473,9 +473,10 @@ __i915_gem_userptr_get_pages_worker(stru
- {
- 	struct get_pages_work *work = container_of(_work, typeof(*work), work);
- 	struct drm_i915_gem_object *obj = work->obj;
--	const int npages = obj->base.size >> PAGE_SHIFT;
-+	const unsigned long npages = obj->base.size >> PAGE_SHIFT;
-+	unsigned long pinned;
- 	struct page **pvec;
--	int pinned, ret;
-+	int ret;
+-	sock_owned_by_me(sk);
+-
+ 	sk_psock_cork_free(psock);
+ 	sk_psock_zap_ingress(psock);
  
- 	ret = -ENOMEM;
- 	pinned = 0;
-@@ -578,7 +579,7 @@ __i915_gem_userptr_get_pages_schedule(st
- 
- static int i915_gem_userptr_get_pages(struct drm_i915_gem_object *obj)
- {
--	const int num_pages = obj->base.size >> PAGE_SHIFT;
-+	const unsigned long num_pages = obj->base.size >> PAGE_SHIFT;
- 	struct mm_struct *mm = obj->userptr.mm->mm;
- 	struct page **pvec;
- 	struct sg_table *pages;
---- a/drivers/gpu/drm/i915/i915_gem_gtt.c
-+++ b/drivers/gpu/drm/i915/i915_gem_gtt.c
-@@ -1178,6 +1178,7 @@ gen8_ppgtt_insert_pte(struct i915_ppgtt
- 	pd = i915_pd_entry(pdp, gen8_pd_index(idx, 2));
- 	vaddr = kmap_atomic_px(i915_pt_entry(pd, gen8_pd_index(idx, 1)));
- 	do {
-+		GEM_BUG_ON(iter->sg->length < I915_GTT_PAGE_SIZE);
- 		vaddr[gen8_pd_index(idx, 0)] = pte_encode | iter->dma;
- 
- 		iter->dma += I915_GTT_PAGE_SIZE;
-@@ -1657,6 +1658,7 @@ static void gen6_ppgtt_insert_entries(st
- 
- 	vaddr = kmap_atomic_px(i915_pt_entry(pd, act_pt));
- 	do {
-+		GEM_BUG_ON(iter.sg->length < I915_GTT_PAGE_SIZE);
- 		vaddr[act_pte] = pte_encode | GEN6_PTE_ADDR_ENCODE(iter.dma);
- 
- 		iter.dma += I915_GTT_PAGE_SIZE;
 
 
