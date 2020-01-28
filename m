@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BB1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C05C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A26C120678
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76962468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220922;
-	bh=mMVHWPhGVr12UQgiIwOVH1+KWsDTW8eU+eNqwVQThDk=;
+	s=default; t=1580220924;
+	bh=J9xdiexDnbfP4mXnoHksP2MxI4ujTRjA2sXWOlhlv8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pMuQmtVz7pHOmW7KapgXL7sMpRedENVguEoR17w9tFxh/jsTK9+rDm0qhqceFAhvt
-	 yxBmr2tyImnUvdfPn+3JC+W8C4MQR6UPe0Yir8Hwadmd54nrKDy3lFPdJhogW2odGg
-	 y4y+FXd5jh3ZtVyvDJ22HkyQZLfOoS2JZs+kHKi4=
+	b=uDuMbX4XivsVnHGeoW+0kx6zJ4+SXyQxBUkuQ6uQ68ffiKoFOGElxX71gwEiBJTSS
+	 1on8xrswrtcuksr81f3amdZaYz9ntdINERGkVncAUmhpyJk+MpEg14SDf94KThl5kR
+	 pY8ivUKYD8xJ4F6TrUrdUE+MsLzwI6tbdt/alc7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730055AbgA1OPL (ORCPT
+        id S1730092AbgA1OPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:15:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:15:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730035AbgA1OPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:15:08 -0500
+        id S1726777AbgA1OPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:15:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFA6B24681;
-        Tue, 28 Jan 2020 14:15:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40F7F24688;
+        Tue, 28 Jan 2020 14:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220908;
-        bh=mMVHWPhGVr12UQgiIwOVH1+KWsDTW8eU+eNqwVQThDk=;
+        s=default; t=1580220920;
+        bh=J9xdiexDnbfP4mXnoHksP2MxI4ujTRjA2sXWOlhlv8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OoUeZNhXGO7pDLYgM0eBABOuOE/yvrkmRwR94tK/da4c5bEehU2Fdt7uWn3WC5qKT
-         o5WPzfJvlDvGD6hNEY5ZzqgNh8QigkG3joJyUu7pLC4qRwpr5tXit6Uhxu0QvS9/u3
-         KFIK18a7G+5q3Y5z3GdmCy3xfRwenD4i+tjJu5iQ=
+        b=YCDO6dYyLY0PUjVknzubX3TKySDJb4aM5tGdWG37N5VLza1sbifQIr1/Lbeb7iXcl
+         voE2EopnjDjBU0NDfsVWv58JTKRHLvvQgx+/d9baaqgDdqsQ3VDuxGQdFI2Jig5jCZ
+         sn3Xh0DJKTmYwYT8s1Hk6vETgsiLxaRYGhpkEU/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 012/271] pcrypt: use format specifier in kobject_add
-Date:   Tue, 28 Jan 2020 15:02:41 +0100
-Message-Id: <20200128135853.358753520@linuxfoundation.org>
+Subject: [PATCH 4.9 017/271] pinctrl: sh-pfc: r8a7740: Add missing LCD0 marks to lcd0_data24_1 group
+Date:   Tue, 28 Jan 2020 15:02:46 +0100
+Message-Id: <20200128135853.955768159@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,41 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit b1e3874c75ab15288f573b3532e507c37e8e7656 ]
+[ Upstream commit 96bb2a6ab4eca10e5b6490b3f0738e9f7ec22c2b ]
 
-Passing string 'name' as the format specifier is potentially hazardous
-because name could (although very unlikely to) have a format specifier
-embedded in it causing issues when parsing the non-existent arguments
-to these.  Follow best practice by using the "%s" format string for
-the string 'name'.
+The lcd0_data24_1_pins[] array contains the LCD0 D1[2-5] pin numbers,
+but the lcd0_data24_1_mux[] array lacks the corresponding pin marks.
 
-Cleans up clang warning:
-crypto/pcrypt.c:397:40: warning: format string is not a string literal
-(potentially insecure) [-Wformat-security]
-
-Fixes: a3fb1e330dd2 ("pcrypt: Added sysfs interface to pcrypt")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 06c7dd866da70f6c ("sh-pfc: r8a7740: Add LCDC0 and LCDC1 pin groups and functions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/pcrypt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7740.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
-index f8ec3d4ba4a80..a5718c0a3dc4e 100644
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -394,7 +394,7 @@ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
- 	int ret;
- 
- 	pinst->kobj.kset = pcrypt_kset;
--	ret = kobject_add(&pinst->kobj, NULL, name);
-+	ret = kobject_add(&pinst->kobj, NULL, "%s", name);
- 	if (!ret)
- 		kobject_uevent(&pinst->kobj, KOBJ_ADD);
- 
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
+index d8077065636e3..e9739dbcb356e 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
+@@ -2154,6 +2154,7 @@ static const unsigned int lcd0_data24_1_mux[] = {
+ 	LCD0_D0_MARK, LCD0_D1_MARK, LCD0_D2_MARK, LCD0_D3_MARK,
+ 	LCD0_D4_MARK, LCD0_D5_MARK, LCD0_D6_MARK, LCD0_D7_MARK,
+ 	LCD0_D8_MARK, LCD0_D9_MARK, LCD0_D10_MARK, LCD0_D11_MARK,
++	LCD0_D12_MARK, LCD0_D13_MARK, LCD0_D14_MARK, LCD0_D15_MARK,
+ 	LCD0_D16_MARK, LCD0_D17_MARK, LCD0_D18_PORT163_MARK,
+ 	LCD0_D19_PORT162_MARK, LCD0_D20_PORT161_MARK, LCD0_D21_PORT158_MARK,
+ 	LCD0_D22_PORT160_MARK, LCD0_D23_PORT159_MARK,
 -- 
 2.20.1
 
