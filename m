@@ -2,97 +2,95 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
+	INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E97C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A34BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A6B214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D650214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgA1QR7 (ORCPT
+        id S1726303AbgA1QUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:17:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:60090 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbgA1QR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:17:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50D0F1FB;
-        Tue, 28 Jan 2020 08:17:58 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DACAD3F68E;
-        Tue, 28 Jan 2020 08:17:56 -0800 (PST)
-Date:   Tue, 28 Jan 2020 16:17:51 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, jeremy.linton@arm.com,
-        arnd@arndb.de, olof@lixom.net, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, guohanjun@huawei.com,
-        gregkh@linuxfoundation.org, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
-Message-ID: <20200128161751.GA30489@bogus>
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <1580210059-199540-3-git-send-email-john.garry@huawei.com>
- <20200128152040.GC47557@bogus>
- <ff2ebe43-639d-085b-d043-55c402513390@huawei.com>
+        Tue, 28 Jan 2020 11:20:19 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49350 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgA1QUT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 11:20:19 -0500
+Received: from [5.158.153.53] (helo=g2noscherz.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1iwTap-0001xK-7S; Tue, 28 Jan 2020 17:19:59 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] printk: replace ringbuffer
+Date:   Tue, 28 Jan 2020 17:25:46 +0106
+Message-Id: <20200128161948.8524-1-john.ogness@linutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ff2ebe43-639d-085b-d043-55c402513390@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 03:59:15PM +0000, John Garry wrote:
-> On 28/01/2020 15:20, Sudeep Holla wrote:
->
+Hello,
 
-[...]
+After several RFC series [0][1][2][3][4], here is the first set of
+patches to rework the printk subsystem. This first set of patches
+only replace the existing ringbuffer implementation. No locking is
+removed. No semantics/behavior of printk are changed.
 
-> Hi Sudeep,
->
-> > What do you want to match this ? The same silicon can end up with
-> > different OEMs and this list just blows up soon for single SoC if
-> > used by different OEM/ODMs. I assume we get all the required info
-> > from the Type 2 table entry and hence can just rely on that. If
-> > PPTT has type 2 entry, just initialise this soc driver and expose
-> > the relevant information from the table entry.
->
-> As before, the LEVEL_1_ID and LEVEL_2_ID table members are too open to
-> interpretation in the spec to generate a consistent form soc_id and
-> family_id for all platforms.
->
+The VMCOREINFO is updated, which will require changes to the
+external crash [5] tool. I will be preparing a patch to add support
+for the new VMCOREINFO.
 
-One of the argument I was making during evolution of SOC_ID is to have
-IDs like LEVEL_1_ID and LEVEL_2_ID in PPTT as they are 8 bytes long and
-can just be a string that is self-sufficient and can be exposed to user
-space as is instead of having to do some interpretation in the kernel.
-Remember this is ACPI table entry and is designed to work with multiple
-OS, we can at-least expect the strings to be as self-explanatory and
-need no further decoding in the kernel.
+This series is in line with the agreements [6] made at the meeting
+during LPC2019 in Lisbon, with 1 exception: support for dictionaries
+will _not_ be discontinued [7]. Dictionaries are stored in a separate
+buffer so that they cannot interfere with the human-readable buffer.
 
-> As such, I was trying to limit to known PPTT implementations and how they
-> should be interpreted. Obviously that's *far* from ideal.
->
+John Ogness
 
-I am saying not to take that path and just throw the strings as is at
-the user. If OEM/ODMs are serious about suggesting user-space to make
-use of it, they better put sane value there and don't expect kernel to
-do interpretation for them.
+[0] https://lkml.kernel.org/r/20190212143003.48446-1-john.ogness@linutronix.de
+[1] https://lkml.kernel.org/r/20190607162349.18199-1-john.ogness@linutronix.de
+[2] https://lkml.kernel.org/r/20190727013333.11260-1-john.ogness@linutronix.de
+[3] https://lkml.kernel.org/r/20190807222634.1723-1-john.ogness@linutronix.de
+[4] https://lkml.kernel.org/r/20191128015235.12940-1-john.ogness@linutronix.de
+[5] https://github.com/crash-utility/crash
+[6] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
+[7] https://lkml.kernel.org/r/20191007120134.ciywr3wale4gxa6v@pathway.suse.cz
 
-> So what's your idea? Just always put LEVEL_1_ID and LEVEL_2_ID in soc driver
-> family_id and soc_id fields, respectively?
->
+John Ogness (2):
+  printk: add lockless buffer
+  printk: use the lockless ringbuffer
 
-Yes, that's my opinion. It gets messy soon if kernel tries to interpret
-this for OEM/ODM, they must better get it right if they are serious about
-it.
+ include/linux/kmsg_dump.h         |    2 -
+ kernel/printk/Makefile            |    1 +
+ kernel/printk/printk.c            |  836 +++++++++---------
+ kernel/printk/printk_ringbuffer.c | 1370 +++++++++++++++++++++++++++++
+ kernel/printk/printk_ringbuffer.h |  328 +++++++
+ 5 files changed, 2114 insertions(+), 423 deletions(-)
+ create mode 100644 kernel/printk/printk_ringbuffer.c
+ create mode 100644 kernel/printk/printk_ringbuffer.h
 
---
-Regards,
-Sudeep
+-- 
+2.20.1
+
