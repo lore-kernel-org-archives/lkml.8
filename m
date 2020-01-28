@@ -6,96 +6,85 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA96C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987C1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95922467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A74C24686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:10:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oKQEN7YR"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="YRoQng0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgA1KGi (ORCPT
+        id S1725953AbgA1KKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:06:38 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38019 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgA1KGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:06:37 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 486Mhq4nfcz9sNx;
-        Tue, 28 Jan 2020 21:06:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580205995;
-        bh=l/ocmuSwqhgFJhi93Wf9ycxzSqcALOQnU2DzUcJuyvA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oKQEN7YR6d2BvLVRjXFRmmnwqNSZ6BtAVkzio0Qrzngq4J/1oiwoAbHVkCnAlMtMs
-         KUcNmbkVdK54xQy63hQiB949YTZMHIkGiQaZLBgTtntRxQnC6Latfd6SLfAQeTQa97
-         2pZrrh9iNo99bxv/LlLCCVck/q6wUOmBaftKScOEmjdd0n7NPJu5UfvA20j20hNASL
-         WKSk3ztj8AziAp5Ng1VXfxOeW+xeEWLyAQxZ99LzevEiLsx58ZxUAJ8mfb7QRXm76i
-         xOefaSxKSbprg5/yIXKQlAi2HczzUFjBgS62JxwKsqMwAbc5HJsbosiefCncY3Cnh4
-         GtQ2iUHLCb7sQ==
-Date:   Tue, 28 Jan 2020 21:06:15 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>, Christoph Hellwig <hch@lst.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Tue, 28 Jan 2020 05:10:09 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35200 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbgA1KKJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 05:10:09 -0500
+Received: by mail-qk1-f194.google.com with SMTP id q15so6315771qki.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 02:10:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=wwPnc/z0vFoENe41dHkv8XLHnCHQXdvCpY8VfuCLBtA=;
+        b=YRoQng0UgKXHYur22BX4pE7ckr9a8UqOeKda27MTcYcCLRNOm7FEdh4rkMGippkEFu
+         QfikVd+H+JBJ9mHXILQViSgCrj7J3odhXqmOonF3IQL6M02ezpab4t8cElz5R02tV6kW
+         J204JQHN/+XL0fsP+t8JzjGPrvnPXd1plH1YZufFA4XlSvjW+raJewbElU97D3KygW/1
+         3KDJRcYYUd0nce4q2+Tb3I/Zxk0CbX00QAoV0atiGt5nsJ4Goa9LWg7TQrxsP2aVr43H
+         chCioDXxf7zEa0FvEOcJ0A6Qusx5Q3B5TCBsqfllUP+1036KE9HFRqoLMF73AnoaO4mn
+         a4qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=wwPnc/z0vFoENe41dHkv8XLHnCHQXdvCpY8VfuCLBtA=;
+        b=iF8JTwUoOv9KTzqIl/0ZqBl6ZQ/5JG7n56okTeryuZstZ50QDPZRZDnGG4y4A6IARQ
+         /tDVlupdpc+xzbDf0XxcYlKDzfMmaXw6s2MGx+0+18DNMXw0E+ogGPYOVUKm5fl1jHTo
+         QOUpuILL+Ms+oSgiugS56d0eEZqop++CBn1iK6D4qVog3Fq0nYbBpqy2NOfUFVMiunYc
+         OoSP/hEcFLRkB0wuMIUM8xxOrTopdnyBaBrORZDDPiCwW1BKe2Doum6DVHQy0+Gxnrhc
+         NoWh2b1We+iD+nBIEpkY00qB1f150PuFlbYKJ9HWp0eroQxYSoQs1Ddz0G3k1HRnwP1j
+         5Ybg==
+X-Gm-Message-State: APjAAAUroHPfSRNvK05n5/0YAh5TfiTLuOaDfWxWyw4krMhjB/hpDD4Z
+        BBDD2XaOBqfmq6YrBnCd9Nk1jvDuutvi1g==
+X-Google-Smtp-Source: APXvYqz+aIb6RWCxNUE3UTnWuhjgN+0ZbX2OBJk/o0aHvDd0xFFbAWnjRuLU5/ucLCnXZFah8dPOJQ==
+X-Received: by 2002:a37:aacc:: with SMTP id t195mr13812676qke.462.1580206207866;
+        Tue, 28 Jan 2020 02:10:07 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id v80sm8756447qka.15.2020.01.28.02.10.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 02:10:07 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+Date:   Tue, 28 Jan 2020 05:10:06 -0500
+Message-Id: <E65D0BFC-719A-4CF9-A934-55ACFF663F98@lca.pw>
+References: <CANpmjNMzvcrQWpGWVgNRxvZroecAEZYYa2yYAtm5+ekcK=H3OQ@mail.gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: linux-next: manual merge of the generic-ioremap tree with the
- drivers-x86 tree
-Message-ID: <20200128210615.4347a362@canb.auug.org.au>
-In-Reply-To: <CAHp75VctM6DBpDFj0eXUo4ipawCpfDgqexBHwjQGQpomjY2YDQ@mail.gmail.com>
-References: <20200124161558.7cbb88c9@canb.auug.org.au>
-        <20200128100311.3ca81231@canb.auug.org.au>
-        <CAHp75VctM6DBpDFj0eXUo4ipawCpfDgqexBHwjQGQpomjY2YDQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/HET=K3uTDM3=NSfpCKooC/p";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        "paul E. McKenney" <paulmck@kernel.org>
+In-Reply-To: <CANpmjNMzvcrQWpGWVgNRxvZroecAEZYYa2yYAtm5+ekcK=H3OQ@mail.gmail.com>
+To:     Marco Elver <elver@google.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/HET=K3uTDM3=NSfpCKooC/p
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
 
-On Tue, 28 Jan 2020 11:11:32 +0200 Andy Shevchenko <andy.shevchenko@gmail.c=
-om> wrote:
->
-> I can't reproduce this. Linus already pulled PR for PDx86,
+> On Jan 28, 2020, at 3:18 AM, Marco Elver <elver@google.com> wrote:
 >=20
-> $ git checkout -b test-xxx origin/master
-> Branch 'test-xxx' set up to track remote branch 'master' from 'origin'.
-> Switched to a new branch 'test-xxx'
-> $ git merge for-next
-> Already up to date.
+> This should be an instance of same-value-store, since the node->cpu is
+> per-CPU and smp_processor_id() should always be the same, at least
+> once it's published. I believe the data race I observed here before
+> KCSAN had KCSAN_REPORT_VALUE_CHANGE_ONLY on syzbot, and hasn't been
+> observed since. For the most part, that should deal with this case.
 
-Thanks for letting me know.  Sorry about the noise.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/HET=K3uTDM3=NSfpCKooC/p
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4wB5cACgkQAVBC80lX
-0GxKcgf+OcXzZTagjmWdoc22VxMX1g1xQ7bVFyt39+TFqI14zUuvwPUJ2Usmqhok
-DuMAd3fZbYu3mOymlbi56YqkfR/8pJt3o+fgFY2d8blzg93EWeOzBjzUCbxnME9H
-aYdxMSJ+JlNVgNbElIWd6bmcAlxMAros5a1IpxaHaont/XGXawGijqnR/1zzcam3
-TXrmvVBi75bg8PTRkVmdXDDojRZ3sb6w/HcfudURA8bh8JNc2C6E0rb25YHjXTE+
-T7jhlicIffomQvQD8j5IJjdXtPyHVm8m4h/C6GlwKy97kCZgq7aT9W+rEUnCfO0J
-k5/ozsCR/Dr7Eaq5rgUdwaiyJb8aHg==
-=i1+i
------END PGP SIGNATURE-----
-
---Sig_/HET=K3uTDM3=NSfpCKooC/p--
+Are you sure? I had KCSAN_REPORT_VALUE_CHANGE_ONLY=3Dy here and saw somethin=
+g similar a splat. I=E2=80=99ll also double check on my side and provide the=
+ decoding.=
