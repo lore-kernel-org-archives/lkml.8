@@ -2,98 +2,110 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EC4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565C6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF4A24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580223748;
-	bh=GLcMbDI+gfzPGzKyUngTVfxGFi9C1OuQc12EKClEHjQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Cd88CqXsE/oCBuT0SQX9Q/p5+wX8ddz1K0H6auUQTMsJKcqtg5JwtlV+J5UCZC5Pv
-	 2KF7iq+FutMus4L9b2WyCQl+sjbWfI6GVmOUWWdsi0h9v0EkEWX80fIYInFH+Un7YI
-	 /pD9JbUSuPJ8aDO/z/ss0yvAndtj95z8CLvynqkw=
+	by mail.kernel.org (Postfix) with ESMTP id 276ED207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:08:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Po/tjph2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgA1PC2 (ORCPT
+        id S1726556AbgA1PH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:02:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbgA1PC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:02:27 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3FEA2467E;
-        Tue, 28 Jan 2020 15:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580223747;
-        bh=GLcMbDI+gfzPGzKyUngTVfxGFi9C1OuQc12EKClEHjQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yxsRYU9XsJ2ZYWezsuYg5pdJ6dmX3iGh/7GhjEnJG144INZW1JHui8EPxOM+f4ovQ
-         P5CDWepZ7rVcdRsx6Xk7sHFAN4pTfqhQAyoj1CejVdADOjUJhV670ERTdji1WMGGqH
-         JbEgX1QkEpWGlRbaEF9V9dlI7gHIZPqou95L/x5c=
-Date:   Wed, 29 Jan 2020 00:02:20 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Subject: Re: [RFC PATCH] tracing/kprobe: trace_kprobe_disabled_finished can
- be static
-Message-Id: <20200129000220.81b363f3c5306eb054f91cdc@kernel.org>
-In-Reply-To: <20200127150243.bllddfobxryxagwd@f53c9c00458a>
-References: <157918590192.29301.6909688694265698678.stgit@devnote2>
-        <20200127150243.bllddfobxryxagwd@f53c9c00458a>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 28 Jan 2020 10:07:59 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36746 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgA1PH7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:07:59 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00SF7oWR034095;
+        Tue, 28 Jan 2020 09:07:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580224070;
+        bh=jbYsyBATnWNLSVZAeRBkfyc/NJi7c27Wjd5pbcwonRY=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=Po/tjph2LFzrkh67QNSTb4Zl8k+0+x35YOglAw8MXAvWO4hbhV/rmjXe2APC9YsaY
+         D9hjuhQnC9O5O6Wa1ufLmweB2rpeWhG/DyAgnCUe951B2Za07HLGz+63XXKId7iPga
+         IbFPlYChy6Uu5XVSezZSxBIXESFrCPIIiMulV6CM=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00SF7osj098670
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jan 2020 09:07:50 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 28
+ Jan 2020 09:07:50 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 28 Jan 2020 09:07:50 -0600
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id 00SF7oqN010472;
+        Tue, 28 Jan 2020 09:07:50 -0600
+Date:   Tue, 28 Jan 2020 09:11:56 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v1] MAINTAINERS: Sort entries in database for TI VPE/CAL
+Message-ID: <20200128151156.jk4oxl3ts3sdeg23@ti.com>
+References: <20200128145828.74161-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200128145828.74161-1-andriy.shevchenko@linux.intel.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020 23:02:43 +0800
-kbuild test robot <lkp@intel.com> wrote:
-
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote on Tue [2020-Jan-28 16:58:28 +0200]:
+> Run parse-maintainers.pl and choose TI VPE/CAL record. Fix it accordingly.
 > 
-> Fixes: 3c794bf25a2b ("tracing/kprobe: Use call_rcu to defer freeing event_file_link")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
+> Note, this is urgent fix, without which parse-maintainers.pl throws
+> an exception:
+> 
+> Odd non-pattern line '  Documentation/devicetree/bindings/media/ti,cal.yaml
+> ' for 'TI VPE/CAL DRIVERS' at scripts/parse-maintainers.pl line 147, <$file> line 16770.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Acked-by: Benoit Parrot <bparrot@ti.com>
+
 > ---
->  trace_kprobe.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  MAINTAINERS | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 1a5882bb77471..fba738aa458af 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -328,7 +328,7 @@ static inline int __enable_trace_kprobe(struct trace_kprobe *tk)
->  	return ret;
->  }
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9fbe2a19b8a3..f04b1c6508fe 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16761,12 +16761,12 @@ F:	sound/soc/codecs/twl4030*
+>  TI VPE/CAL DRIVERS
+>  M:	Benoit Parrot <bparrot@ti.com>
+>  L:	linux-media@vger.kernel.org
+> +S:	Maintained
+>  W:	http://linuxtv.org/
+>  Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+> -S:	Maintained
+> -F:	drivers/media/platform/ti-vpe/
+> +F:	Documentation/devicetree/bindings/media/ti,cal.yaml
+>  F:	Documentation/devicetree/bindings/media/ti,vpe.yaml
+> -	Documentation/devicetree/bindings/media/ti,cal.yaml
+> +F:	drivers/media/platform/ti-vpe/
 >  
-> -atomic_t trace_kprobe_disabled_finished;
-> +static atomic_t trace_kprobe_disabled_finished;
->  
->  static void trace_kprobe_disabled_handlers_finish(void)
->  {
-
-Oops, right. I forgot the static. I'll update it.
-
-Thanks,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+>  TI WILINK WIRELESS DRIVERS
+>  L:	linux-wireless@vger.kernel.org
+> -- 
+> 2.24.1
+> 
