@@ -2,132 +2,135 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045E6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2568C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66E524683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AEFF24683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:25:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XTLx96RM"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="UE1JPMiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgA1QYg (ORCPT
+        id S1726393AbgA1QZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:24:36 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:46736 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgA1QYg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:24:36 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00SGEEiZ038187;
-        Tue, 28 Jan 2020 16:24:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=ZWdf7sG5Xw7ejFplB1oAzj7ALcivlmGZ3sLaK7nXF7U=;
- b=XTLx96RMtWLPWR1Mfszf621kniFGf/Svj9QHnW5RD6RJ7lB0a7ZGc+1Xo6jePDsHv1bO
- MKzaVgXId9G6x4Nk7cFzT1emmIW9o6sQc6P8JdctbvGjo5ADSfKjdyN6B6HfhwIqcGgz
- NoJUTckWMlXNDuFcNWXBNjFeCVc6dJa5KyxV8aFgdb+9iBueBZtj5cKN/i8Z8Ny8gBTG
- RwFZvhSMahTCPAIxSPEbgJIm2LHkCwritMQ/AKIiGjecv83+F6yX7NgBVgcYrBdSy5+z
- awR+9RorLo7dj+fcjbSEmk9gnYnt/U4l8Wcbf2AO6Ig62/pGi4I66X5I2n9oQR1TW5M8 jg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xrd3u7eet-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 16:24:20 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00SGEKaq191045;
-        Tue, 28 Jan 2020 16:24:19 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xta8j2tyk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 16:24:19 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00SGOG3B026765;
-        Tue, 28 Jan 2020 16:24:17 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Jan 2020 08:24:16 -0800
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-To:     xen-devel@lists.xenproject.org
-Cc:     jgg@mellanox.com, jgross@suse.com, linux-kernel@vger.kernel.org,
-        ilpo.jarvinen@cs.helsinki.fi, stable@vger.kernel.org
-Subject: [PATCH] xen/gntdev: Do not use mm notifiers with autotranslating guests
-Date:   Tue, 28 Jan 2020 11:24:19 -0500
-Message-Id: <1580228659-6086-1-git-send-email-boris.ostrovsky@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 28 Jan 2020 11:25:55 -0500
+Received: from mout.web.de ([212.227.15.3]:33989 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726007AbgA1QZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 11:25:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1580228693;
+        bh=5zEqEcZAWVjGp8xkcQEhydEZ+GyThYQytTy9UD6ojXA=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=UE1JPMiCsCDfislzMWPYW+KkuOCy8pafU3ju0CIluG40j2yTx5sEdms6mkaWs5Lj9
+         4uPYN2UIGIHu5mmeWsT2GwEGl678rQoz4AhqDKrNgQDklxRKKvPs+EHkVJbM0FGFmS
+         dHcIhcj+GEi7EGVBnTZ6ieqtiH3397Z9X9XgHTxU=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.131.179]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lj2XW-1jZg6d0OoI-00dIzo; Tue, 28
+ Jan 2020 17:24:53 +0100
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>
+Subject: Re: [PATCH v9 1/2] fs: New zonefs file system
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
+Message-ID: <1928f213-f6c8-156f-a968-6d0603a7656c@web.de>
+Date:   Tue, 28 Jan 2020 17:24:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001280126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001280126
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:F3L4Sg8wKTShzAEVuteP5QIgWQ5qNzSUMXawHy2itbq8+p+oRcd
+ BTerA7YNbX9/H6xgQBmQhcNimuKGD55s+Kb1CgxVuVwyoPYqZIKT2Bg4ewIGU8BBaAoabJN
+ /otvC7i33lMk8FV8RJIzU9UjnvmMPLUtc68CXwktyJz7ycIchN/WM39i32jZW45uQ00DaVO
+ MeHanePewzYxYlUIE/0ZA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KFn36JFlvnE=:RqeyIl5POgkPWZc6l224tm
+ Yk0tzgN0G0KT1Lv+5upqzRJGkBf7x1uLtDROA6miqU0N4733kyk9E9CJ/8InB+gcR7auma5is
+ q+nrTgHzwPIdpPWSgX+r+RAnpkwwFus9sxsSylFHVWZvUnYV34SR3n3UrmuHUVoGpbGJmsZNR
+ uQVFgOGRwNUzkRI4PBbKFoROhEbRFoHjK6w5MVfVGceUTCJ0Uhki4P4A7rAwQgbazaw7JCVML
+ D7RjfrBVvTP3gIkrJSsqNHQLIP3jXCl/wLeSXJFZnx05jcOwbBK/enNz9FbyyHykDa15zZ2FL
+ /KUYJTNcEjhH98LvdCgx4BIK8tYk4Rg2aOd82OdE4FkTI/dkcKQd/adecDqDPpjQUzl/sWgqw
+ ZClvTod8RiMbN1mx0WGQ5FILur9FG0q4iACqNj+e2npTdPmSpUuWK+xEU3nzhnnYBCx1838Is
+ KD3af2mJZg2BDvJiCiB1hEWWhx1kjoTTWq5bqA/CMUQZtsspqVeL/aZ2diOLETW1ptf+FU8s2
+ qvSVc2fVkHC/M3mG4IUFmVB02IudIx+OKDkBtxwkpqyP5Zss1zLx2qyyiAryMSDeNxp98dFWy
+ Pu0KJSrP41jLV19BwADyuk+s5yY4VE4kDXsL7yAegy90TyEFhZ1J9RD8QfxnJukGWzO06sLk3
+ ObxjmICYb9vVcECnVRmuj5QCX0yBEStmTkVU62uwFnQyMQXKZnEy79z/4CvG8hMs0qv95icKP
+ PyD0cKv4eFEzsyNAysvYX+XxSffQZLeT798S/UOenwwRgyPyeK/q7N5EpXmrOCXYXSRzPCFu3
+ Qf6y/oxSk1oHee2be/l/PWkSuT45UXdfRskP1h4nArTmtepcDjUIAfVQNc7lQisfA/55iTANQ
+ BiV2JAy0xBX/6WMn7iNDlXK2luO2X3kdOcjojQvszRuZIhxCLfqbBeMcsXDfqi7YsD4cJyQ6A
+ HAU0rE1MZERX2fDmbPgFK1wK+wKZMCZPFSeq+D8ZTIBT5wWQ0O5+rxmhPArotgRc/IZeagvjY
+ OZ78y/wSDHcfJ9eq729A3zxWKt9tF6B7teda9pOolYxLO+jhCZ1uwPd+qt+cTHuyMQ5FYcM2P
+ ziEzjf7yf4UCT2gyljh/5VuB7Z+hNY3OPJGSzDJnOjCBthkfOlHsz7BhZ4/n0GsFXYu94hXli
+ xNQJhj+tIDwl6JJP+eFWvhu20WBAkua9uzH9uro/PE8LU36P9mt1oHIQWcOjhKOAs9mHASjV9
+ glXEB8W8Q7hi+jkYk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d3eeb1d77c5d ("xen/gntdev: use mmu_interval_notifier_insert")
-missed a test for use_ptemod when calling mmu_interval_read_begin(). Fix
-that.
+=E2=80=A6
+> +++ b/fs/zonefs/Kconfig
+=E2=80=A6
+> +	help
+> +	  zonefs is a simple File System which exposes zones of a zoned block
 
-Fixes: d3eeb1d77c5d ("xen/gntdev: use mmu_interval_notifier_insert")
-CC: stable@vger.kernel.org # 5.5
-Reported-by: Ilpo Järvinen <ilpo.jarvinen@cs.helsinki.fi>
-Tested-by: Ilpo Järvinen <ilpo.jarvinen@cs.helsinki.fi>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
----
- drivers/xen/gntdev.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+Does the capitalisation matter here?
+Would the spelling =E2=80=9CZonefs is a simple file system which =E2=80=A6=
+=E2=80=9D be appropriate?
 
-diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-index 4fc83e3f5ad3..0258415ca0b2 100644
---- a/drivers/xen/gntdev.c
-+++ b/drivers/xen/gntdev.c
-@@ -1006,19 +1006,19 @@ static int gntdev_mmap(struct file *flip, struct vm_area_struct *vma)
- 	}
- 	mutex_unlock(&priv->lock);
- 
--	/*
--	 * gntdev takes the address of the PTE in find_grant_ptes() and passes
--	 * it to the hypervisor in gntdev_map_grant_pages(). The purpose of
--	 * the notifier is to prevent the hypervisor pointer to the PTE from
--	 * going stale.
--	 *
--	 * Since this vma's mappings can't be touched without the mmap_sem,
--	 * and we are holding it now, there is no need for the notifier_range
--	 * locking pattern.
--	 */
--	mmu_interval_read_begin(&map->notifier);
--
- 	if (use_ptemod) {
-+		/*
-+		 * gntdev takes the address of the PTE in find_grant_ptes() and
-+		 * passes it to the hypervisor in gntdev_map_grant_pages(). The
-+		 * purpose of the notifier is to prevent the hypervisor pointer
-+		 * to the PTE from going stale.
-+		 *
-+		 * Since this vma's mappings can't be touched without the
-+		 * mmap_sem, and we are holding it now, there is no need for
-+		 * the notifier_range locking pattern.
-+		 */
-+		mmu_interval_read_begin(&map->notifier);
-+
- 		map->pages_vm_start = vma->vm_start;
- 		err = apply_to_page_range(vma->vm_mm, vma->vm_start,
- 					  vma->vm_end - vma->vm_start,
--- 
-2.17.1
-
+Regards,
+Markus
