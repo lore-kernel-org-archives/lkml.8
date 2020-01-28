@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9E6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FE8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9CD24694
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199092468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220649;
-	bh=l07XCe/oxXK/c04wZGvYfw/u7E6/X9kNKUUESywN4cM=;
+	s=default; t=1580220653;
+	bh=5Z6EN6VJq3DfDOLKKD91wpew8hlqtMfujy9PSyL+YbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZTX8rP6TCOkUxk/ZVK4k94mvZwyU2j0dTvulTU5ZGGkgZEbs57nJ0d15K6f49S91A
-	 iq/56BxiKMfkFch7Hvnhu2QqF12DM9znxqCQprQuuNPgFHvGkbNjUQfiIhNvWKX3et
-	 86Gu33gv+G6rvCO2lIKUi37+S7tzhsoQo3RVEWOc=
+	b=U6GvmhQ1Q2bUCMYBUi/7h07CrGNycjwMvBR93V+zjUXCwtLnlm2QffY5iyn51iddg
+	 uASbBwECPK/CV0wMfxAzWmzSQTUsiy4Mx39Wq1jfda8G6Dgogka4OzRtUk6sDALgi9
+	 B+qTw7sm8jQrRGofPxOtaX17gtqNE6+AfV0+zd2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgA1OKs (ORCPT
+        id S1728564AbgA1OKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:10:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59658 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:10:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729213AbgA1OKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:10:44 -0500
+        id S1726797AbgA1OKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:10:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBBAE22522;
-        Tue, 28 Jan 2020 14:10:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C02A2468F;
+        Tue, 28 Jan 2020 14:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220644;
-        bh=l07XCe/oxXK/c04wZGvYfw/u7E6/X9kNKUUESywN4cM=;
+        s=default; t=1580220649;
+        bh=5Z6EN6VJq3DfDOLKKD91wpew8hlqtMfujy9PSyL+YbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZS3DC5zqxVdXFcgZQg0T55rxyriBannjpPnje/OshFB50xc6/os/EDhS++97D4x3
-         Oax8RbLEgEZx8/HBlUwveIABdGO7FEBKqx3Rz6rjn1wqLgqrFyr64x7/SRWsRrqMSV
-         FDTMUxonDj8mi6ufXtFzYZtSAE0IFYFjinHk9AOA=
+        b=IpGAUMlTnpMYV9/tdBCh+nytvQY2OtZeJLbMs8Hjz3pehQOCRPzma8bqeVOeG6t2H
+         Q02uSrqeBIe/Aaa1BSNHQlOa4+HeFrIqw+2rayp271Oo7xGnG8PW66iiIK790XBYz8
+         oyHy3PptaouQN3aq48lbX0ubBZ6iGRpKb65tk5Ag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 090/183] netfilter: ebtables: CONFIG_COMPAT: reject trailing data after last rule
-Date:   Tue, 28 Jan 2020 15:05:09 +0100
-Message-Id: <20200128135839.103845982@linuxfoundation.org>
+Subject: [PATCH 4.4 091/183] ARM: riscpc: fix lack of keyboard interrupts after irq conversion
+Date:   Tue, 28 Jan 2020 15:05:10 +0100
+Message-Id: <20200128135839.199485314@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -62,41 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 680f6af5337c98d116e4f127cea7845339dba8da ]
+[ Upstream commit 63a0666bca9311f35017be454587f3ba903644b8 ]
 
-If userspace provides a rule blob with trailing data after last target,
-we trigger a splat, then convert ruleset to 64bit format (with trailing
-data), then pass that to do_replace_finish() which then returns -EINVAL.
+Fix lack of keyboard interrupts for RiscPC due to incorrect conversion.
 
-Erroring out right away avoids the splat plus unneeded translation and
-error unwind.
-
-Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: e8d36d5dbb6a ("ARM: kill off set_irq_flags usage")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/mach-rpc/irq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index fd1af7cb960d5..e7c170949b210 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2174,7 +2174,9 @@ static int compat_copy_entries(unsigned char *data, unsigned int size_user,
- 	if (ret < 0)
- 		return ret;
+diff --git a/arch/arm/mach-rpc/irq.c b/arch/arm/mach-rpc/irq.c
+index 66502e6207fea..fce7fecbd8fa4 100644
+--- a/arch/arm/mach-rpc/irq.c
++++ b/arch/arm/mach-rpc/irq.c
+@@ -117,7 +117,7 @@ extern unsigned char rpc_default_fiq_start, rpc_default_fiq_end;
  
--	WARN_ON(size_remaining);
-+	if (size_remaining)
-+		return -EINVAL;
-+
- 	return state->buf_kern_offset;
- }
+ void __init rpc_init_irq(void)
+ {
+-	unsigned int irq, clr, set = 0;
++	unsigned int irq, clr, set;
  
+ 	iomd_writeb(0, IOMD_IRQMASKA);
+ 	iomd_writeb(0, IOMD_IRQMASKB);
+@@ -129,6 +129,7 @@ void __init rpc_init_irq(void)
+ 
+ 	for (irq = 0; irq < NR_IRQS; irq++) {
+ 		clr = IRQ_NOREQUEST;
++		set = 0;
+ 
+ 		if (irq <= 6 || (irq >= 9 && irq <= 15))
+ 			clr |= IRQ_NOPROBE;
 -- 
 2.20.1
 
