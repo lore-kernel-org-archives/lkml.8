@@ -2,111 +2,111 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D56C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCE6C35246
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAEC12467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F8C2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:11:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnmbRH7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgA1JKR (ORCPT
+        id S1725953AbgA1JLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:10:17 -0500
-Received: from outbound-smtp23.blacknight.com ([81.17.249.191]:35456 "EHLO
-        outbound-smtp23.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725879AbgA1JKQ (ORCPT
+        Tue, 28 Jan 2020 04:11:41 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45273 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgA1JLk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:10:16 -0500
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp23.blacknight.com (Postfix) with ESMTPS id 27685B8BCF
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 09:10:14 +0000 (GMT)
-Received: (qmail 20507 invoked from network); 28 Jan 2020 09:10:14 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 28 Jan 2020 09:10:14 -0000
-Date:   Tue, 28 Jan 2020 09:10:12 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
- stack on the same CPU
-Message-ID: <20200128091012.GZ3466@techsingularity.net>
-References: <20200127143608.GX3466@techsingularity.net>
- <20200127223256.GA18610@dread.disaster.area>
- <20200128011936.GY3466@techsingularity.net>
+        Tue, 28 Jan 2020 04:11:40 -0500
+Received: by mail-pl1-f194.google.com with SMTP id b22so4838277pls.12;
+        Tue, 28 Jan 2020 01:11:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=unMfPG99T1AKKHKiItdEAt564JyG03P4dOBDlwaWG6U=;
+        b=UnmbRH7ZXXMNOcrYNw144+NVTSNLDm4TEzmTiHQ4kjMV6/zMNfWuqhT1GmeFpHWF6d
+         rlRqCpAWNyTmEtsnyUYcOMe070tCPaqqepgLaWGi2KG1tGdriEfRchqnSaIUlh5ZOkhS
+         h4lcxsCXNK3wnch8ay6sCSlLo5Ks9fub8jErvRE7KT2r/QDLFyp0jscAKFEwCAvRcLUg
+         vEOTSO37MuaKrue0pnp1NbdEOL7ufgZVSyqkP/+XyJ8mSpw0H+mJR26IDrGsclMR8LdO
+         FVwPxQoIrsxhTwwb15fSP8d0tnFGaxL0G99+lsqJL1U0tfuu4C7Jxj7UFSi+ya+CLSwY
+         +4Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=unMfPG99T1AKKHKiItdEAt564JyG03P4dOBDlwaWG6U=;
+        b=t3/bypwIiYB0BSgkKgCIMvwF/f8jcgKxXy2nsuhuh4PfXT1N9tKMpqvcwMXhwFsJXF
+         nUmvzgVbUdIh/+J66kyWYgaL59st8HxbGgpeJKEbtQfTm3jUYud7e3sf+c3EvLEL6XcT
+         nAjFgf8uHwmjAmaExOjZLWRLYScsnIk18AXp8SbBjC6+SVWEVPKzmFQgji6J0NMb4uku
+         RS+SolNQaiHbZuHyeEv60dYpbsPc1U+H41HLjUVfzg5CyxnP5N8FLqUdfkd1MMC0elpq
+         K+kR2luAJa4NZApqCY/SId4dRR11K1FYbNXyLpzUnRYo2doi7eQgkw/j2sQwu/alxl8Q
+         sgxw==
+X-Gm-Message-State: APjAAAWM49fQJHLdteATe1Rg/C0hi9A/TbZyfXJVOsRUccI9Qc2eiDcz
+        NB1BPKxAUoiCJBlOcKoAvVHvMWzHilIuEF3MOqNzfFLr524Jrw==
+X-Google-Smtp-Source: APXvYqweRolvFWVz18/sM7wnKCMsZZnHBdEwDqKRPeZ/wvUcduW6V8RHCRetRsDXKNvvy1iEh2A07CmEOANF0U+2tug=
+X-Received: by 2002:a17:902:d20c:: with SMTP id t12mr22509768ply.18.1580202700174;
+ Tue, 28 Jan 2020 01:11:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20200128011936.GY3466@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200124161558.7cbb88c9@canb.auug.org.au> <20200128100311.3ca81231@canb.auug.org.au>
+In-Reply-To: <20200128100311.3ca81231@canb.auug.org.au>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 28 Jan 2020 11:11:32 +0200
+Message-ID: <CAHp75VctM6DBpDFj0eXUo4ipawCpfDgqexBHwjQGQpomjY2YDQ@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the generic-ioremap tree with the
+ drivers-x86 tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Darren Hart <dvhart@infradead.org>, Christoph Hellwig <hch@lst.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 01:19:36AM +0000, Mel Gorman wrote:
-> > <SNIP>
-> > After all this, I have two questions that would help me understand
-> > if this is what you are seeing:
-> > 
-> > 1. to confirm: does removing just the WQ_UNBOUND from the CIL push
-> > workqueue (as added in 8ab39f11d974) make the regression go away?
-> > 
-> 
-> I'll have to check in the morning. Around the v5.4 development timeframe,
-> I'm definite that reverting the patch helped but that was not an option
-> given that it's fixing a correctness issue.
-> 
+On Tue, Jan 28, 2020 at 1:03 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> On Fri, 24 Jan 2020 16:15:58 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Today's linux-next merge of the generic-ioremap tree got a conflict in:
+> >
+> >   drivers/platform/x86/intel_scu_ipc.c
+> >
+> > between commit:
+> >
+> >   74e9748b9b21 ("platform/x86: intel_scu_ipc: Drop intel_scu_ipc_i2c_cntrl()")
+> >
+> > from the drivers-x86 tree and commit:
+> >
+> >   4bdc0d676a64 ("remove ioremap_nocache and devm_ioremap_nocache")
+> >
+> > from the generic-ioremap tree.
+> >
+> > I fixed it up (the former removed the code updated by the latter, so I
+> > just did that) and can carry the fix as necessary. This is now fixed as
+> > far as linux-next is concerned, but any non trivial conflicts should be
+> > mentioned to your upstream maintainer when your tree is submitted for
+> > merging.  You may also want to consider cooperating with the maintainer
+> > of the conflicting tree to minimise any particularly complex conflicts.
+>
+> This is now a conflict between the driver-x86 tree and Linus' tree.
 
-This is a comparison of the baseline kernel (tip at the time I started),
-the proposed fix and a revert. The revert was not clean but I do not
-believe it matters
+I can't reproduce this. Linus already pulled PR for PDx86,
 
-dbench4 Loadfile Execution Time
-                           5.5.0-rc7              5.5.0-rc7              5.5.0-rc7
-                   tipsched-20200124      kworkerstack-v1r2     revert-XFS-wq-v1r2
-Amean     1         58.69 (   0.00%)       30.21 *  48.53%*       47.48 *  19.10%*
-Amean     2         60.90 (   0.00%)       35.29 *  42.05%*       51.13 *  16.04%*
-Amean     4         66.77 (   0.00%)       46.55 *  30.28%*       59.54 *  10.82%*
-Amean     8         81.41 (   0.00%)       68.46 *  15.91%*       77.25 *   5.11%*
-Amean     16       113.29 (   0.00%)      107.79 *   4.85%*      112.33 *   0.85%*
-Amean     32       199.10 (   0.00%)      198.22 *   0.44%*      200.31 *  -0.61%*
-Amean     64       478.99 (   0.00%)      477.06 *   0.40%*      482.17 *  -0.66%*
-Amean     128     1345.26 (   0.00%)     1372.64 *  -2.04%*     1368.94 *  -1.76%*
-Stddev    1          2.64 (   0.00%)        4.17 ( -58.08%)        5.01 ( -89.89%)
-Stddev    2          4.35 (   0.00%)        5.38 ( -23.73%)        4.48 (  -2.90%)
-Stddev    4          6.77 (   0.00%)        6.56 (   3.00%)        7.40 (  -9.40%)
-Stddev    8         11.61 (   0.00%)       10.91 (   6.04%)       11.62 (  -0.05%)
-Stddev    16        18.63 (   0.00%)       19.19 (  -3.01%)       19.12 (  -2.66%)
-Stddev    32        38.71 (   0.00%)       38.30 (   1.06%)       38.82 (  -0.28%)
-Stddev    64       100.28 (   0.00%)       91.24 (   9.02%)       95.68 (   4.59%)
-Stddev    128      186.87 (   0.00%)      160.34 (  14.20%)      170.85 (   8.57%)
+$ git checkout -b test-xxx origin/master
+Branch 'test-xxx' set up to track remote branch 'master' from 'origin'.
+Switched to a new branch 'test-xxx'
+$ git merge for-next
+Already up to date.
 
-According to this, commit 8ab39f11d974 ("xfs: prevent CIL push holdoff
-in log recovery") did introduce some unintended behaviour. The fix
-actually performs better than a revert with the obvious benefit that it
-does not reintroduce the functional breakage (log starvation) that the
-commit originally fixed.
 
-I still think that XFS is not the problem here, it's just the
-messenger. The functional fix, delegating work to kworkers running on the
-same CPU and blk-mq delivering IO completions to the same CPU as the IO
-issuer are all sane decisions IMO. I do not think that adjusting any of
-them to wakeup the task on a new CPU is sensible due to the loss of data
-cache locality and potential snags with power management when waking a
-CPU from idle state.
-
-Peter, Ingo and Vincent -- I know the timing is bad due to the merge
-window but do you have any thoughts on allowing select_idle_sibling to
-stack a wakee task on the same CPU as a waker in this specific case?
 
 -- 
-Mel Gorman
-SUSE Labs
+With Best Regards,
+Andy Shevchenko
