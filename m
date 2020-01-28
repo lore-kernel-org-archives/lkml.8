@@ -2,238 +2,266 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCD4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDDCC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722E922522
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195072467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:23:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SUdYEEX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgA1SWI (ORCPT
+        id S1726754AbgA1SXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:22:08 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2323 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726276AbgA1SWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:22:08 -0500
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id BBBB14C99F5943C6C623;
-        Tue, 28 Jan 2020 18:22:05 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Jan 2020 18:22:05 +0000
-Received: from [127.0.0.1] (10.210.167.110) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jan
- 2020 18:22:04 +0000
-Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
-To:     Olof Johansson <olof@lixom.net>
-CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, <jeremy.linton@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, Hanjun Guo <guohanjun@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <1580210059-199540-3-git-send-email-john.garry@huawei.com>
- <CAOesGMiCVSvL8H+haLoz=xyiX1CxBSRL_pbCgx-DLhN+5xRn9g@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <4c6462e3-e368-bd9f-260f-e8351c85bcc2@huawei.com>
-Date:   Tue, 28 Jan 2020 18:22:02 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 28 Jan 2020 13:23:32 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1455 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgA1SXc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 13:23:32 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e307c140000>; Tue, 28 Jan 2020 10:23:16 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 28 Jan 2020 10:23:30 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 28 Jan 2020 10:23:30 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan
+ 2020 18:23:30 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 28 Jan 2020 18:23:30 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.164.115]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e307c1d0001>; Tue, 28 Jan 2020 10:23:29 -0800
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH v1 0/5] Add Tegra driver for video capture
+Date:   Tue, 28 Jan 2020 10:23:16 -0800
+Message-ID: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <CAOesGMiCVSvL8H+haLoz=xyiX1CxBSRL_pbCgx-DLhN+5xRn9g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.167.110]
-X-ClientProxiedBy: lhreml712-chm.china.huawei.com (10.201.108.63) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580235796; bh=Elsu1D65X4Evxza1MBTSUAm3LvDEhyy3UpMB56w6m48=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=SUdYEEX/bYAwxa541VvpGj+O05qa69B1SFGygfeCcGLpWo/SjL0ddyRcQxjLdUhDF
+         KJd8SQF5q4/9cs+g5BpA1rb4u07H+LhvmogvoX7BsfAU1OrR8dF/VlGWOcJm9fJdqz
+         WlzQ+goU/aU3aHimOv49UMNRYYelJiRoNQnCOYSJEeZqN9JeMfM5hwpTmVbamU6C0S
+         rQegw1u+vsEkNjRgk/yo0o8UVXCeJCGBOiUhu91rwn0xdUoCCOV4qvK77TA5fxYyAU
+         lZPmsAgW6PYBaGRjR20f3+UNdT8FNw1qePmkUgCCNvu3QpZiKmV25uQi6ltg9OVCEG
+         aU302WAxeu5Wg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/01/2020 17:51, Olof Johansson wrote:
-> Hi,
-> 
-> On Tue, Jan 28, 2020 at 3:18 AM John Garry <john.garry@huawei.com> wrote:
->>
+This series adds Tegra210 VI and CSI driver for built-in test pattern
+generator (TPG) capture.
 
-Hi Olof,
+Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+CSI port is one-to-one mapped to VI channel for video capture.
 
->> Add a generic driver for platforms which populate their ACPI PPTT
->> processor package ID Type Structure according to suggestion in the ACPI
->> spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
->>
->> The soc_id is from member LEVEL_2_ID.
->>
->> For this, we need to use a whitelist of platforms which are known to
->> populate the structure as suggested.
->>
->> For now, only the vendor and soc_id fields are exposed.
->>
->> Signed-off-by: John Garry <john.garry@huawei.com>
->> ---
->>   drivers/soc/Makefile       |   1 +
->>   drivers/soc/acpi_generic.c | 102 +++++++++++++++++++++++++++++++++++++
->>   2 files changed, 103 insertions(+)
->>   create mode 100644 drivers/soc/acpi_generic.c
->>
->> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
->> index 8b49d782a1ab..2a59a30a22cd 100644
->> --- a/drivers/soc/Makefile
->> +++ b/drivers/soc/Makefile
->> @@ -3,6 +3,7 @@
->>   # Makefile for the Linux Kernel SOC specific device drivers.
->>   #
->>
->> +obj-$(CONFIG_ACPI_PPTT)                += acpi_generic.o
->>   obj-$(CONFIG_ARCH_ACTIONS)     += actions/
->>   obj-$(CONFIG_SOC_ASPEED)       += aspeed/
->>   obj-$(CONFIG_ARCH_AT91)                += atmel/
-> 
-> Based on everything I've seen so far, this should go under drivers/acpi instead.
+This series has TPG support only where it creates hard media links
+between CSI subdevice and VI video device without device graphs.
 
-soc drivers seem to live in drivers/soc (non-arm32, anyway), so I 
-decided on this location. But drivers/acpi would also seem reasonable now.
+v4l2-compliance results are available below the patch diff.
 
-> 
->> diff --git a/drivers/soc/acpi_generic.c b/drivers/soc/acpi_generic.c
->> new file mode 100644
->> index 000000000000..34a1f5f8e063
->> --- /dev/null
->> +++ b/drivers/soc/acpi_generic.c
->> @@ -0,0 +1,102 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) John Garry, john.garry@huawei.com
->> + */
->> +
->> +#define pr_fmt(fmt) "SOC ACPI GENERIC: " fmt
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/sys_soc.h>
->> +
->> +/*
->> + * Known platforms that fill in PPTT package ID structures according to
->> + * ACPI spec examples, that being:
->> + * - Custom driver attribute is in ID Type Structure VENDOR_ID member
->> + * - SoC id is in ID Type Structure LEVEL_2_ID member
->> + *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
->> + */
->> +static struct acpi_platform_list plat_list[] = {
->> +       {"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
->> +       { } /* End */
->> +};
-> 
-> As others have said, this will become a mess over time, and will
-> require changes for every new platform. Which, unfortunately, is
-> exactly what ACPI is supposed to provide relief from by making
-> standardized platforms... standardized.
-> 
+[v0]:	Includes,
+	- Adds CSI TPG clock to Tegra210 clock driver
+	- Host1x video driver with VI and CSI clients.
+	- Support for Tegra210 only.
+	- VI CSI TPG support with hard media links in driver.
+	- Video formats supported by Tegra210 VI
+	- CSI TPG supported video formats
 
-Right, and I think that it can be dropped. As discussed with Sudeep, I 
-was concerned how this PPTT ID structure could be interpreted, and had a 
-whitelist as a conservative approach.
 
->> +
->> +struct acpi_generic_soc_struct {
->> +       struct soc_device_attribute dev_attr;
->> +       u32 vendor;
->> +};
->> +
->> +static ssize_t vendor_show(struct device *dev,
->> +                          struct device_attribute *attr,
->> +                          char *buf)
->> +{
->> +       struct acpi_generic_soc_struct *soc = dev_get_drvdata(dev);
->> +       u8 vendor_id[5] = {};
->> +
->> +       *(u32 *)vendor_id = soc->vendor;
->> +
->> +       return sprintf(buf, "%s\n", vendor_id);
->> +}
->> +
->> +static DEVICE_ATTR_RO(vendor);
->> +
->> +static __init int soc_acpi_generic_init(void)
->> +{
->> +       int index;
->> +
->> +       index = acpi_match_platform_list(plat_list);
->> +       if (index < 0)
->> +               return -ENOENT;
->> +
->> +       index = 0;
->> +       while (true) {
->> +               struct acpi_pptt_package_info info;
->> +
->> +               if (!acpi_pptt_get_package_info(index, &info)) {
->> +                       struct soc_device_attribute *soc_dev_attr;
->> +                       struct acpi_generic_soc_struct *soc;
->> +                       struct soc_device *soc_dev;
->> +                       u8 soc_id[9] = {};
->> +
->> +                       *(u64 *)soc_id = info.LEVEL_2_ID;
->> +
->> +                       soc = kzalloc(sizeof(*soc), GFP_KERNEL);
->> +                       if (!soc)
->> +                               return -ENOMEM;
->> +
->> +                       soc_dev_attr = &soc->dev_attr;
->> +                       soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s",
->> +                                                        soc_id);
->> +                       if (!soc_dev_attr->soc_id) {
->> +                               kfree(soc);
->> +                               return -ENOMEM;
->> +                       }
->> +                       soc->vendor = info.vendor_id;
->> +
->> +                       soc_dev = soc_device_register(soc_dev_attr);
->> +                       if (IS_ERR(soc_dev)) {
->> +                               int ret = PTR_ERR(soc_dev);
->> +
->> +                               pr_info("could not register soc (%d) index=%d\n",
->> +                                       ret, index);
->> +                               kfree(soc_dev_attr->soc_id);
->> +                               kfree(soc);
->> +                               return ret;
->> +                       }
->> +                       dev_set_drvdata(soc_device_to_device(soc_dev), soc);
->> +                       device_create_file(soc_device_to_device(soc_dev),
->> +                                          &dev_attr_vendor);
-> 
-> Hmm, this doesn't look like much of a driver to me. This looks like
-> the export of an attribute to userspace, and should probably be done
-> by ACPI core instead of creating an empty driver for it.
+Sowjanya Komatineni (5):
+  dt-bindings: clock: tegra: Add clk id for CSI TPG clock
+  clk: tegra: Add Tegra210 CSI TPG clock gate
+  dt-binding: tegra: Add VI and CSI bindings
+  media: tegra: Add Tegra Video input driver for Tegra210
+  arm64: tegra: Add Tegra VI CSI suppport in device tree
 
-OK, but I'm thinking that having a soc driver can be useful as it is 
-common to DT, and so userspace only has to check a single location. And 
-the soc driver can also cover multiple-chip systems without have to 
-reinvent that code for ACPI core. And it saves adding a new ABI.
+ .../display/tegra/nvidia,tegra20-host1x.txt        |  10 +-
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   8 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  31 +-
+ drivers/clk/tegra/clk-tegra210.c                   |   7 +
+ drivers/staging/media/Kconfig                      |   2 +
+ drivers/staging/media/Makefile                     |   1 +
+ drivers/staging/media/tegra/Kconfig                |  12 +
+ drivers/staging/media/tegra/Makefile               |  11 +
+ drivers/staging/media/tegra/TODO                   |  10 +
+ drivers/staging/media/tegra/csi.h                  | 111 ++++
+ drivers/staging/media/tegra/csi2_fops.c            | 335 +++++++++++
+ drivers/staging/media/tegra/csi2_fops.h            |  15 +
+ drivers/staging/media/tegra/host1x-video.c         | 120 ++++
+ drivers/staging/media/tegra/host1x-video.h         |  33 ++
+ drivers/staging/media/tegra/mc_common.h            | 131 +++++
+ drivers/staging/media/tegra/tegra-channel.c        | 628 +++++++++++++++++++++
+ drivers/staging/media/tegra/tegra-core.c           | 111 ++++
+ drivers/staging/media/tegra/tegra-core.h           | 125 ++++
+ drivers/staging/media/tegra/tegra-csi.c            | 380 +++++++++++++
+ drivers/staging/media/tegra/tegra-vi.c             | 351 ++++++++++++
+ drivers/staging/media/tegra/tegra-vi.h             | 101 ++++
+ drivers/staging/media/tegra/vi2_fops.c             | 364 ++++++++++++
+ drivers/staging/media/tegra/vi2_fops.h             |  15 +
+ drivers/staging/media/tegra/vi2_formats.h          | 119 ++++
+ drivers/staging/media/tegra/vi2_registers.h        | 194 +++++++
+ include/dt-bindings/clock/tegra210-car.h           |   2 +-
+ 26 files changed, 3224 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/staging/media/tegra/Kconfig
+ create mode 100644 drivers/staging/media/tegra/Makefile
+ create mode 100644 drivers/staging/media/tegra/TODO
+ create mode 100644 drivers/staging/media/tegra/csi.h
+ create mode 100644 drivers/staging/media/tegra/csi2_fops.c
+ create mode 100644 drivers/staging/media/tegra/csi2_fops.h
+ create mode 100644 drivers/staging/media/tegra/host1x-video.c
+ create mode 100644 drivers/staging/media/tegra/host1x-video.h
+ create mode 100644 drivers/staging/media/tegra/mc_common.h
+ create mode 100644 drivers/staging/media/tegra/tegra-channel.c
+ create mode 100644 drivers/staging/media/tegra/tegra-core.c
+ create mode 100644 drivers/staging/media/tegra/tegra-core.h
+ create mode 100644 drivers/staging/media/tegra/tegra-csi.c
+ create mode 100644 drivers/staging/media/tegra/tegra-vi.c
+ create mode 100644 drivers/staging/media/tegra/tegra-vi.h
+ create mode 100644 drivers/staging/media/tegra/vi2_fops.c
+ create mode 100644 drivers/staging/media/tegra/vi2_fops.h
+ create mode 100644 drivers/staging/media/tegra/vi2_formats.h
+ create mode 100644 drivers/staging/media/tegra/vi2_registers.h
 
-> 
-> This would also solve the whitelist issue -- always export this
-> property if it's set. If it's wrong, then the platform vendor needs to
-> fix it up. That's the approach that is used for other aspects of the
-> standardized platforms, right? We don't want to litter the kernel with
-> white/blacklists -- that's not a net improvement.
 
-Agreed.
+v4l2-compliance SHA: e7402fb758fd106955c3b7d5a5e961d1cb606f4a, 32 bits, 32-bit time_t
 
-> 
-> 
-> -Olof
-> .
+Compliance test for tegra-video device /dev/video0:
 
-Thanks,
-John
+Driver Info:
+        Driver name      : tegra-video
+        Card type        : 54080000.vi-output-0
+        Bus info         : platform:54080000.vi:0
+        Driver version   : 5.5.0
+        Capabilities     : 0x85200001
+                Video Capture
+                Read/Write
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps      : 0x05200001
+                Video Capture
+                Read/Write
+                Streaming
+                Extended Pix Format
+Media Driver Info:
+        Driver name      : host1x_video
+        Model            : NVIDIA Tegra Video Input Device
+        Serial           :
+        Bus info         :
+        Media version    : 5.5.0
+        Hardware revision: 0x00000003 (3)
+        Driver version   : 5.5.0
+Interface Info:
+        ID               : 0x03000003
+        Type             : V4L Video
+Entity Info:
+        ID               : 0x00000001 (1)
+        Name             : 54080000.vi-output-0
+        Function         : V4L2 I/O
+        Pad 0x01000002   : 0: Sink
+          Link 0x0200001b: from remote pad 0x100001a of entity 'tpg-0': Data, Enabled
 
-> 
+Required ioctls:
+        test MC information (see 'Media Driver Info' above): OK
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second /dev/video0 open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+        test invalid ioctls: OK
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+        test VIDIOC_QUERYCTRL: OK
+        test VIDIOC_G/S_CTRL: OK
+        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+        Standard Controls: 2 Private Controls: 0
+
+Format ioctls (Input 0):
+        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+        test VIDIOC_G/S_PARM: OK (Not Supported)
+        test VIDIOC_G_FBUF: OK (Not Supported)
+        test VIDIOC_G_FMT: OK
+        test VIDIOC_TRY_FMT: OK
+        test VIDIOC_S_FMT: OK
+        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+        test Cropping: OK (Not Supported)
+        test Composing: OK (Not Supported)
+        test Scaling: OK (Not Supported)
+
+Codec ioctls (Input 0):
+        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+        test VIDIOC_EXPBUF: OK
+        test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+        test read/write: OK
+        test blocking wait: OK
+        test MMAP (no poll): OK
+        test MMAP (select): OK
+        test MMAP (epoll): OK
+        test USERPTR (no poll): OK (Not Supported)
+        test USERPTR (select): OK (Not Supported)
+        test DMABUF: Cannot test, specify --expbuf-device
+
+Total for tegra-video device /dev/video0: 53, Succeeded: 53, Failed: 0, Warnings: 0
+
+-- 
+2.7.4
 
