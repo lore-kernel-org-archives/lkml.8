@@ -2,111 +2,187 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF02C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79E3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1534B24688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:23:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewsejym0"
+	by mail.kernel.org (Postfix) with ESMTP id 86ABC24696
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580217786;
+	bh=3KFknNJuaH0QQIZYJFtTHB1ljL3O7Qft9dyWHDi6ej8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=DD6qgUIvmxA5FnS28u/Ctg4fyjeODo/gjK8fO471B2lJZWn5ycLsSLT4Okjo+JAMO
+	 Zeuq80CrgHZpQhjqDuu1FLWcd8Dk+86IbH8PjMzhLfWCq/Jqy6HXC3nHgbhyJ0z+qL
+	 obvmfEHT+j3DrI9JnbtYjic9daE4KjFZ6SMWk8Xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgA1NXA (ORCPT
+        id S1726275AbgA1NXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:23:00 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:43543 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbgA1NXA (ORCPT
+        Tue, 28 Jan 2020 08:23:05 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35783 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgA1NXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:23:00 -0500
-Received: by mail-yw1-f68.google.com with SMTP id v126so6445129ywc.10;
-        Tue, 28 Jan 2020 05:22:59 -0800 (PST)
+        Tue, 28 Jan 2020 08:23:04 -0500
+Received: by mail-lf1-f67.google.com with SMTP id z18so9062999lfe.2;
+        Tue, 28 Jan 2020 05:23:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XkZYELoimGvZaAW5RBxWL7cGk2TFSREoOSfJlXIP9Vg=;
-        b=ewsejym0mCr1Ke8POn4UD4mjF5wH29knENLueIwwvPdcbt+amzwmgCS3Zi0IDJaq0B
-         yZfZF1/mznPPZOAxeL5C3Uw3ifQwUQh/pthk52IqTIUBdsuAVceDf9qzgBhuL6S3jtFh
-         cT/FmyCtooXdfCOtYUxgjm5KapidE9WeFVxsuhu2VvnkFQXUChV3F1lRtAnscstgTXhS
-         6J502JETrdA7ub9FfFGunvuYx7rSAs9MP/g/G1X0ofFynmPEdLp1TbKP+R0fMxm0lgI2
-         kc/7g5KrbU3aT/6i1/5Po7a4Jl6rOEgnWaP85W4hbywy8YHT9tZPMBGS7dRvkk0x6Zlo
-         Rhcw==
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=LhZkJsFAE45iuiXTZCAvO5GLd86KmfP3egSUUi14+ew=;
+        b=WAAukqEtRflwe2nAyxTDtZ8BvTlqv0XesJsLDApUAqFN6wh2+bdZYiJMfr1aPn/cnq
+         Idg4/AUj6U4zWnZgKHTwHc9tUVmqFI8lZ2yKR3JT9pM2ymjOylx7PDbC0tTQCaxM+yEm
+         6YjJdSTQE/E5JhDs+BR8QmqXQvWgAUx8uyviwaewVbq/DQYoPdZTLwd181pmoOtNGc+r
+         cUXBndaafq15ZILKbcCmUx/AIArUScQ5CjfkXEQWjYwBHI704AceUmxzAZcESD4ppqLE
+         qCFIDFbUnVTKNUbkPXY99tWqHredyYRuwBw3kr0NOgkEwfrxz29DR1vxuwWQFg43w3rv
+         X98A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XkZYELoimGvZaAW5RBxWL7cGk2TFSREoOSfJlXIP9Vg=;
-        b=NxVH6rdW1gjVzYONtdJQB47mP+nJQKrgwfXVMjNkYUo3LAhI2LTGQL1l1WlLR3kCMq
-         Y0bJJNwkNzaZDpfNdHg8x3TgxVpwIjv1zZL1aRVJ//sOoi1zETUt/L3jNq0uvmObr0ay
-         wEmwv2AaCzuCp52+sFn6Ls5iW8wyqGvTy7hSSg7UCndkxuaLqEdr4t6nLXaUNKZEHRMM
-         fSOFdsRTTTsJDzgRjsLqAtm8rqCQUNozY31wRJBvyVSZxE7WEZViFHBKvWSifTUp8Zey
-         ggte5YbV5DNvPoP8UaOE8ZUvaL+lgIlX7rrb/S69LO3ikiNPsRX7GHtUhaVaAqLCPsgS
-         LRsg==
-X-Gm-Message-State: APjAAAVU6WAJ77N2EIVnrIQAyl4HIMkHsQuubi1QfpqtRRWgSRUPrpD5
-        UsbMUrQ4pd/2noPmc0Qr4oAhQKhr
-X-Google-Smtp-Source: APXvYqwUR5d09oL3MsIocx1dJ/ALYSnzLGEzt90SxTJDw3vrlpABD1JdKOJR+9gyt9+3SAPBZ4Kh4Q==
-X-Received: by 2002:a81:1889:: with SMTP id 131mr14998832ywy.277.1580217778469;
-        Tue, 28 Jan 2020 05:22:58 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9sm8364217ywh.55.2020.01.28.05.22.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 05:22:57 -0800 (PST)
-Subject: Re: vcnl3020 hwmon/proximity driver
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cb21d1285e04a8a7a3817398629431f69aeebf2f.camel@yadro.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <0e2f88e3-b7d3-9dd2-50ce-011be09d53c9@roeck-us.net>
-Date:   Tue, 28 Jan 2020 05:22:55 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=LhZkJsFAE45iuiXTZCAvO5GLd86KmfP3egSUUi14+ew=;
+        b=I20j7BTxLDLNbm/JRCbs3LnPe9oj1qsXmDRjZiMUVBzouAq8cNqns6+s01MZdoMgiN
+         jvTTA1/i23tfxSzB6kmhDaYBhu/GSqIObf4d/nVA0oBgPrsjrWYli5hDerO6ISEUQI6e
+         LQJzPzQJE+v0sJzunwhQGxGDl+Ntc4QhDrDSLFaJ1Kp5aEGIKpHNx0SBnPXHGamPjgjV
+         U/nrfX4+8DwGnSiD9KOm+ildaYJl3c0efVpzA953oTq/MzmZKwiixlBEVVh1RXhB5nGC
+         lHWG4XKkQKMdzyD6shWPErmmQ2C7GWHogDDmiLT8vxMXaQWpJzvH+8TYxVhcVhKd/zx2
+         NMiQ==
+X-Gm-Message-State: APjAAAWpvEdcwuZ/nVNf7kf0VfqErFrBa4VET/0EZXp25YOhr8IYeOD1
+        daMXYsnl8R8+hi7/ka+zsLk=
+X-Google-Smtp-Source: APXvYqwybebkDe4WYK0TuVcF2LZXt0ZhsZwyc/V5TizRmzdPUM4k6OE2Hnzaz3ET8TPtyzgMQMd+DA==
+X-Received: by 2002:ac2:5964:: with SMTP id h4mr605146lfp.213.1580217780667;
+        Tue, 28 Jan 2020 05:23:00 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id a9sm9875977lfk.23.2020.01.28.05.22.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jan 2020 05:22:59 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Yang Fei <fei.yang@intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v2] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
+In-Reply-To: <20200127193046.110258-1-john.stultz@linaro.org>
+References: <20200127193046.110258-1-john.stultz@linaro.org>
+Date:   Tue, 28 Jan 2020 15:22:54 +0200
+Message-ID: <87sgjz90lt.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <cb21d1285e04a8a7a3817398629431f69aeebf2f.camel@yadro.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/28/20 3:31 AM, Ivan Mikhaylov wrote:
-> Hello, I want to make driver for vcnl3020 but not sure where should I put it.
-> It's similar to vcnl40xx series which is already in iio/light/vcnl4000.c
-> but it perfectly fits with hwmon intrusion detection concept
-> (intrusion[0-*]_alarm), so I'm a little bit confused.
-> 
-> vcnl3020 - proximity sensor which mostly using for intrusion detection
-> vcnl4020 - light and proximity sensor
-> 
-> Doc's links:
-> https://www.vishay.com/docs/84150/vcnl3020.pdf
-> https://www.vishay.com/docs/83476/vcnl4020.pdf
-> 
-> That's what I think about possible ways:
-> 
-> 1. just iio/proximity/vcnl3020.c
-> 2. extend functionality inside vcnl4000.c with ifdefs and dts stuff and maybe
->     rename it with generalization inside
-> 3. hwmon driver for intrusion detection inside drivers/hwmon
-> 4. both iio/proximity/vcnl3020.c and hwmon/vcnl3020.c
->     Example: hwmon/wm8350-hwmon.c + mfd/wm8350-core.c
->     So, just make proximity driver, do the depend in Kconfig for hwmon driver
->     on proximity driver and use proximity driver calls if would be needed.
-> 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-"intrusion" in the context of hardware monitoring is for chassis intrusion,
-not for intrusion into an area. This driver should reside in iio.
 
-Thanks,
-Guenter
+Hi,
+
+John Stultz <john.stultz@linaro.org> writes:
+
+> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+>
+> The current code in dwc3_gadget_ep_reclaim_completed_trb() will
+> check for IOC/LST bit in the event->status and returns if
+> IOC/LST bit is set. This logic doesn't work if multiple TRBs
+> are queued per request and the IOC/LST bit is set on the last
+> TRB of that request.
+>
+> Consider an example where a queued request has multiple queued
+> TRBs and IOC/LST bit is set only for the last TRB. In this case,
+> the core generates XferComplete/XferInProgress events only for
+> the last TRB (since IOC/LST are set only for the last TRB). As
+> per the logic in dwc3_gadget_ep_reclaim_completed_trb()
+> event->status is checked for IOC/LST bit and returns on the
+> first TRB. This leaves the remaining TRBs left unhandled.
+>
+> Similarly, if the gadget function enqueues an unaligned request
+> with sglist already in it, it should fail the same way, since we
+> will append another TRB to something that already uses more than
+> one TRB.
+>
+> To aviod this, this patch changes the code to check for IOC/LST
+> bits in TRB->ctrl instead.
+>
+> At a practical level, this patch resolves USB transfer stalls seen
+> with adb on dwc3 based HiKey960 after functionfs gadget added
+> scatter-gather support around v4.20.
+>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Yang Fei <fei.yang@intel.com>
+> Cc: Thinh Nguyen <thinhn@synopsys.com>
+> Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+> Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> Cc: Jack Pham <jackp@codeaurora.org>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Greg KH <gregkh@linuxfoundation.org>
+> Cc: Linux USB List <linux-usb@vger.kernel.org>
+> Cc: stable <stable@vger.kernel.org>
+> Tested-by: Tejas Joglekar <tejas.joglekar@synopsys.com>
+> Reviewed-by: Thinh Nguyen <thinhn@synopsys.com>
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> [jstultz: forward ported to mainline, reworded commit log, reworked
+>  to only check trb->ctrl as suggested by Felipe]
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> v2:
+> * Rework to only check trb->ctrl as suggested by Felipe
+> * Reword the commit message to include more of Felipe's assessment
+> ---
+>  drivers/usb/dwc3/gadget.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 154f3f3e8cff..9a085eee1ae3 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -2420,7 +2420,8 @@ static int dwc3_gadget_ep_reclaim_completed_trb(str=
+uct dwc3_ep *dep,
+>  	if (event->status & DEPEVT_STATUS_SHORT && !chain)
+>  		return 1;
+>=20=20
+> -	if (event->status & DEPEVT_STATUS_IOC)
+> +	if ((trb->ctrl & DWC3_TRB_CTRL_IOC) ||
+> +	    (trb->ctrl & DWC3_TRB_CTRL_LST))
+
+why the LST bit here? It wasn't there before. In fact, we never set LST
+in dwc3 anymore :-)
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4wNa8ACgkQzL64meEa
+mQZb7BAAmXPf4dz4rgNSd6F7EskOWnPTDig96416cMT8toKMH+wN+Gz/Dkjfl0/r
+Ll4+mU5DozR0pBQ7GMiqiyCNVZDkf+yXB4zSrmuHBY6mUGGu+MRmcOQ06dk85XFp
+Jv26A3gJyKmjx1YcORZCLlIgmuBQ9PSbPRaiOYA1JxRwmLW5vyxUdrqSN83/6Znb
+wiw2fHxOQqCQloiM611DuxvkoyV1JTDd3FQOwObBsMRqDORydRWHA1rWGAsE1DUP
+nCeG4aF0mtVKE2+GmP+ih6eDTsX9cFzJ9bqCJNqp3SpQFv67nse8v+vnZ+wARvAw
+8GxLLHW6SiCodmWMilWJT8ugFTdLLnJJMU1qFVvCSvCaXYbWwTUbpCAlGFbZJ5FA
+Nfm4Nv3ra/KXHwZxNqZxqBJXki80rAwaCAUjVPYwr9X0u2dWMzP4bg+YzFrzt5lK
+3SFZsy7OLUvDa3uAAdK6u/3Ra349G9nmgyicbArC0pRIAdqNIgXUqt25WC6fEFtU
+Q4YeykstP/A5u7TEFKnWeKEvH3VxgGW4J1QtQ+xerufv8H10SBFYjTCK58bNnHPa
+P6mrfLZairsbN0s4GDa0/6RCTJ9U9fXmo56eDfvYKcoKNbMcsb5rboX6kbscvVAP
+wU93kBdVCqVE1ab2dIwixEEDhO0QP491X75DU08adsibffcc/4U=
+=TNFV
+-----END PGP SIGNATURE-----
+--=-=-=--
