@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFEDC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC46EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CED624688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFE924698
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221749;
-	bh=eycd+sZi3O1twm6Uaq9slvBCns8jEhQ/fIQWbP71Iwk=;
+	s=default; t=1580221753;
+	bh=IsbXFGWERoVF4z0Lvb9M0YfgBy8HjSeZ2bGvR2Jhedc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OYslEEOXJuXXh/K33OIiZl7fQ7cI7kZNDQZ5AuziPktTDEZNgZlbxaJcKwuhLCMBv
-	 dXFsJIAlrtJm19QSP8lb5QvY9zWqP18BzJnol5nQmkOeNeJZCNBzljPpmOoLMezJ4p
-	 xJgZh4PRPhS+dsouTt4K5bQx9LSkVxDktHEPYRYQ=
+	b=Spe+6rUxmrnLAYqQi83W+4aiJCpATjI3Uf1NC3PG9f6b/ekXDcBUoqLZO7AOi6UIi
+	 NfH3ivGikGg9qPgiMsVksMcXyq5KWLUZ6M1YiANvXIeMj0OnmRd+ZWo8QLEWEmd1iu
+	 CAdSAp8DKX73Eh7qGPFF5/VJZjScZryYxU2n6NNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387616AbgA1O3I (ORCPT
+        id S2387625AbgA1O3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:29:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57384 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:29:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387593AbgA1O3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:29:06 -0500
+        id S2387601AbgA1O3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:29:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D8F424691;
-        Tue, 28 Jan 2020 14:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AF6E2468F;
+        Tue, 28 Jan 2020 14:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221745;
-        bh=eycd+sZi3O1twm6Uaq9slvBCns8jEhQ/fIQWbP71Iwk=;
+        s=default; t=1580221742;
+        bh=IsbXFGWERoVF4z0Lvb9M0YfgBy8HjSeZ2bGvR2Jhedc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5gg3suAv6Ix25ZR3iKKX8J7TbVpcjLdkc5uYDJj3Je5z1TdfbbmPI9bzKpAzB0en
-         AVYALrvbUntoTojf6TbrSoDEknz5MyRjdRZgv43CoAyM+lVSxjalDmEpxS2qjw5kul
-         d6LaT89vFBAEOY2mViFtlmhmSYE3IRkqU5unCo6o=
+        b=L3xzrODhimWEJypTQNnRlj009Sq+LabgrJqAJmg+3UQfVSoUciA1zgQEK5wGK+UCE
+         dUO4FV7D4Ao3NI9Ny+FTVGSSe3lcItXspGcwSZkmunGkBe8241t274XtCdLTmQLyue
+         vxEJITfOT/martZv8iF8cFcOQbjGFfg+iN89LGCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 57/92] tracing: Remove open-coding of hist trigger var_ref management
-Date:   Tue, 28 Jan 2020 15:08:25 +0100
-Message-Id: <20200128135816.530516255@linuxfoundation.org>
+Subject: [PATCH 4.19 56/92] tracing: Use hist triggers var_ref array to destroy var_refs
+Date:   Tue, 28 Jan 2020 15:08:24 +0100
+Message-Id: <20200128135816.390761744@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -63,16 +63,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-commit de40f033d4e84e843d6a12266e3869015ea9097c upstream.
+commit 656fe2ba85e81d00e4447bf77b8da2be3c47acb2 upstream.
 
-Have create_var_ref() manage the hist trigger's var_ref list, rather
-than having similar code doing it in multiple places.  This cleans up
-the code and makes sure var_refs are always accounted properly.
+Since every var ref for a trigger has an entry in the var_ref[] array,
+use that to destroy the var_refs, instead of piecemeal via the field
+expressions.
 
-Also, document the var_ref-related functions to make what their
-purpose clearer.
+This allows us to avoid having to keep and treat differently separate
+lists for the action-related references, which future patches will
+remove.
 
-Link: http://lkml.kernel.org/r/05ddae93ff514e66fc03897d6665231892939913.1545161087.git.tom.zanussi@linux.intel.com
+Link: http://lkml.kernel.org/r/fad1a164f0e257c158e70d6eadbf6c586e04b2a2.1545161087.git.tom.zanussi@linux.intel.com
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
@@ -81,190 +82,58 @@ Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_hist.c |   93 +++++++++++++++++++++++++++++++--------
- 1 file changed, 75 insertions(+), 18 deletions(-)
+ kernel/trace/trace_events_hist.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
 --- a/kernel/trace/trace_events_hist.c
 +++ b/kernel/trace/trace_events_hist.c
-@@ -1274,6 +1274,17 @@ static u64 hist_field_cpu(struct hist_fi
- 	return cpu;
+@@ -2175,6 +2175,15 @@ static int contains_operator(char *str)
+ 	return field_op;
  }
  
-+/**
-+ * check_field_for_var_ref - Check if a VAR_REF field references a variable
-+ * @hist_field: The VAR_REF field to check
-+ * @var_data: The hist trigger that owns the variable
-+ * @var_idx: The trigger variable identifier
-+ *
-+ * Check the given VAR_REF field to see whether or not it references
-+ * the given variable associated with the given trigger.
-+ *
-+ * Return: The VAR_REF field if it does reference the variable, NULL if not
-+ */
- static struct hist_field *
- check_field_for_var_ref(struct hist_field *hist_field,
- 			struct hist_trigger_data *var_data,
-@@ -1324,6 +1335,18 @@ check_field_for_var_refs(struct hist_tri
- 	return found;
- }
- 
-+/**
-+ * find_var_ref - Check if a trigger has a reference to a trigger variable
-+ * @hist_data: The hist trigger that might have a reference to the variable
-+ * @var_data: The hist trigger that owns the variable
-+ * @var_idx: The trigger variable identifier
-+ *
-+ * Check the list of var_refs[] on the first hist trigger to see
-+ * whether any of them are references to the variable on the second
-+ * trigger.
-+ *
-+ * Return: The VAR_REF field referencing the variable if so, NULL if not
-+ */
- static struct hist_field *find_var_ref(struct hist_trigger_data *hist_data,
- 				       struct hist_trigger_data *var_data,
- 				       unsigned int var_idx)
-@@ -1350,6 +1373,20 @@ static struct hist_field *find_var_ref(s
- 	return found;
- }
- 
-+/**
-+ * find_any_var_ref - Check if there is a reference to a given trigger variable
-+ * @hist_data: The hist trigger
-+ * @var_idx: The trigger variable identifier
-+ *
-+ * Check to see whether the given variable is currently referenced by
-+ * any other trigger.
-+ *
-+ * The trigger the variable is defined on is explicitly excluded - the
-+ * assumption being that a self-reference doesn't prevent a trigger
-+ * from being removed.
-+ *
-+ * Return: The VAR_REF field referencing the variable if so, NULL if not
-+ */
- static struct hist_field *find_any_var_ref(struct hist_trigger_data *hist_data,
- 					   unsigned int var_idx)
- {
-@@ -1368,6 +1405,19 @@ static struct hist_field *find_any_var_r
- 	return found;
- }
- 
-+/**
-+ * check_var_refs - Check if there is a reference to any of trigger's variables
-+ * @hist_data: The hist trigger
-+ *
-+ * A trigger can define one or more variables.  If any one of them is
-+ * currently referenced by any other trigger, this function will
-+ * determine that.
++static void __destroy_hist_field(struct hist_field *hist_field)
++{
++	kfree(hist_field->var.name);
++	kfree(hist_field->name);
++	kfree(hist_field->type);
 +
-+ * Typically used to determine whether or not a trigger can be removed
-+ * - if there are any references to a trigger's variables, it cannot.
-+ *
-+ * Return: True if there is a reference to any of trigger's variables
-+ */
- static bool check_var_refs(struct hist_trigger_data *hist_data)
- {
- 	struct hist_field *field;
-@@ -2392,7 +2442,23 @@ static int init_var_ref(struct hist_fiel
- 	goto out;
- }
- 
--static struct hist_field *create_var_ref(struct hist_field *var_field,
-+/**
-+ * create_var_ref - Create a variable reference and attach it to trigger
-+ * @hist_data: The trigger that will be referencing the variable
-+ * @var_field: The VAR field to create a reference to
-+ * @system: The optional system string
-+ * @event_name: The optional event_name string
-+ *
-+ * Given a variable hist_field, create a VAR_REF hist_field that
-+ * represents a reference to it.
-+ *
-+ * This function also adds the reference to the trigger that
-+ * now references the variable.
-+ *
-+ * Return: The VAR_REF field if successful, NULL if not
-+ */
-+static struct hist_field *create_var_ref(struct hist_trigger_data *hist_data,
-+					 struct hist_field *var_field,
- 					 char *system, char *event_name)
- {
- 	unsigned long flags = HIST_FIELD_FL_VAR_REF;
-@@ -2404,6 +2470,9 @@ static struct hist_field *create_var_ref
- 			destroy_hist_field(ref_field, 0);
- 			return NULL;
- 		}
++	kfree(hist_field);
++}
 +
-+		hist_data->var_refs[hist_data->n_var_refs] = ref_field;
-+		ref_field->var_ref_idx = hist_data->n_var_refs++;
- 	}
- 
- 	return ref_field;
-@@ -2477,7 +2546,8 @@ static struct hist_field *parse_var_ref(
- 
- 	var_field = find_event_var(hist_data, system, event_name, var_name);
- 	if (var_field)
--		ref_field = create_var_ref(var_field, system, event_name);
-+		ref_field = create_var_ref(hist_data, var_field,
-+					   system, event_name);
- 
- 	if (!ref_field)
- 		hist_err_event("Couldn't find variable: $",
-@@ -2597,8 +2667,6 @@ static struct hist_field *parse_atom(str
- 	if (!s) {
- 		hist_field = parse_var_ref(hist_data, ref_system, ref_event, ref_var);
- 		if (hist_field) {
--			hist_data->var_refs[hist_data->n_var_refs] = hist_field;
--			hist_field->var_ref_idx = hist_data->n_var_refs++;
- 			if (var_name) {
- 				hist_field = create_alias(hist_data, hist_field, var_name);
- 				if (!hist_field) {
-@@ -3376,7 +3444,6 @@ static int onmax_create(struct hist_trig
- 	unsigned int var_ref_idx = hist_data->n_var_refs;
- 	struct field_var *field_var;
- 	char *onmax_var_str, *param;
--	unsigned long flags;
- 	unsigned int i;
- 	int ret = 0;
- 
-@@ -3393,18 +3460,10 @@ static int onmax_create(struct hist_trig
- 		return -EINVAL;
- 	}
- 
--	flags = HIST_FIELD_FL_VAR_REF;
--	ref_field = create_hist_field(hist_data, NULL, flags, NULL);
-+	ref_field = create_var_ref(hist_data, var_field, NULL, NULL);
- 	if (!ref_field)
- 		return -ENOMEM;
- 
--	if (init_var_ref(ref_field, var_field, NULL, NULL)) {
--		destroy_hist_field(ref_field, 0);
--		ret = -ENOMEM;
--		goto out;
--	}
--	hist_data->var_refs[hist_data->n_var_refs] = ref_field;
--	ref_field->var_ref_idx = hist_data->n_var_refs++;
- 	data->onmax.var = ref_field;
- 
- 	data->fn = onmax_save;
-@@ -3595,9 +3654,6 @@ static void save_synth_var_ref(struct hi
- 			 struct hist_field *var_ref)
+ static void destroy_hist_field(struct hist_field *hist_field,
+ 			       unsigned int level)
  {
- 	hist_data->synth_var_refs[hist_data->n_synth_var_refs++] = var_ref;
+@@ -2186,14 +2195,13 @@ static void destroy_hist_field(struct hi
+ 	if (!hist_field)
+ 		return;
+ 
++	if (hist_field->flags & HIST_FIELD_FL_VAR_REF)
++		return; /* var refs will be destroyed separately */
++
+ 	for (i = 0; i < HIST_FIELD_OPERANDS_MAX; i++)
+ 		destroy_hist_field(hist_field->operands[i], level + 1);
+ 
+-	kfree(hist_field->var.name);
+-	kfree(hist_field->name);
+-	kfree(hist_field->type);
 -
--	hist_data->var_refs[hist_data->n_var_refs] = var_ref;
--	var_ref->var_ref_idx = hist_data->n_var_refs++;
+-	kfree(hist_field);
++	__destroy_hist_field(hist_field);
  }
  
- static int check_synth_field(struct synth_event *event,
-@@ -3752,7 +3808,8 @@ static int onmatch_create(struct hist_tr
+ static struct hist_field *create_hist_field(struct hist_trigger_data *hist_data,
+@@ -2320,6 +2328,12 @@ static void destroy_hist_fields(struct h
+ 			hist_data->fields[i] = NULL;
  		}
+ 	}
++
++	for (i = 0; i < hist_data->n_var_refs; i++) {
++		WARN_ON(!(hist_data->var_refs[i]->flags & HIST_FIELD_FL_VAR_REF));
++		__destroy_hist_field(hist_data->var_refs[i]);
++		hist_data->var_refs[i] = NULL;
++	}
+ }
  
- 		if (check_synth_field(event, hist_field, field_pos) == 0) {
--			var_ref = create_var_ref(hist_field, system, event_name);
-+			var_ref = create_var_ref(hist_data, hist_field,
-+						 system, event_name);
- 			if (!var_ref) {
- 				kfree(p);
- 				ret = -ENOMEM;
+ static int init_var_ref(struct hist_field *ref_field,
 
 
