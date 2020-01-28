@@ -2,87 +2,82 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423FBC35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970D0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192D92465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633E62465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="srujTkRl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cBBOlTfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbgA1HTj (ORCPT
+        id S1725922AbgA1HUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 02:19:39 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34762 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgA1HTj (ORCPT
+        Tue, 28 Jan 2020 02:20:07 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36101 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgA1HUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 02:19:39 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i6so6175267pfc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 23:19:38 -0800 (PST)
+        Tue, 28 Jan 2020 02:20:07 -0500
+Received: by mail-ed1-f68.google.com with SMTP id j17so13616866edp.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 23:20:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3k6NKPH7fR4pIU1iDhzXIE3sCOzlwL1ZN9ZIEkKxkCM=;
-        b=srujTkRlXcMYfFAU4ajeK8XzFxdSFdtymlFDHFWwtjl6RYYdXfct49yGfp0R3Ft/Gk
-         b21LQneptyAycuw/QTxfkxRds7UsDs0nOcvfIjhPf5kg6HG/fumf1p+SOyhPDP/nWgeP
-         N5AwCoyysSHeNcp/4iev4K0SThnflmL0sS9bNw5CfETHliSa70QE6XwKZ6Bfqiixt3vq
-         zSUjHO7HdXpF/GNVk0WVWL+Zc6eaGXSoDWtvFQJdB+9aFEzKZ4wrtQexneK+aEI716Ld
-         KNu+IVGouW2wF3H1iVqEscIlzXyahFYpfZmS4xEkSoV7/uFbghBbqV5xBi32Vua8xClE
-         x64Q==
+        bh=Sb+8J/7DuRGfGudhsScfamBXEMs+Mce/hybB6WnCHb0=;
+        b=cBBOlTfYKE9YToJ7LwFQXUs38A+ojqRBnM0kt+rHMyNahEoDFA6easCZ0aFYOPtke3
+         92ch4PzsGSCY5aLRhqTT/Efcfd4whgm9Naygy4kaj/kYGeA0+wOB21kgR8n0MWKNEDG5
+         1uI51gw21EMHkPLWo/gWWMfXNCjXDlc2AC+1s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3k6NKPH7fR4pIU1iDhzXIE3sCOzlwL1ZN9ZIEkKxkCM=;
-        b=YY+kX0u1kfVOlLnnxUlRlHT/NZlwNj5brDEhCuNDLCeNlsAXlODLHlWCwYs1/Ti0D5
-         V9ySXzmdyNzTtJj5tNjrWkencwrildBlPtENAkaJWMJpD4L/9mjGsAFn4KQ/1qygYMt8
-         VEMar5oeBOWagrvBhOdHkfyrSHYdapKKFai3PwMQIWMkFgGdNaxCLpdDw1Phz+AF9qne
-         KFLDmQF3qvsMngadKxiuRE/7RaV+pMjEIhfvrDE0yEwjIT860LR4sEiAXduUDohJJECI
-         B8HEVrSYX8UCJxzeY/sZe2obnsnLop5r/2rurqpsyHNq72YNhTfkAA0JgOm248LYvss9
-         NzUQ==
-X-Gm-Message-State: APjAAAVC5yQ+arAZUrRUexQBeTGBHYXDwvtRAruEKLb68HGBDo0kbC+/
-        TBkg1dGkVgBCoOXzKDAYTaUMGY5chj7d3mCuvioFWA==
-X-Google-Smtp-Source: APXvYqy6yh7GNcB6s7imvcW4J3ThOHyV8BHpXsRpcDoPYs5OW9TxXs3eEbw4y8pGn08q7d0OirpiVqtM1t8RAzdN/Q8=
-X-Received: by 2002:a63:597:: with SMTP id 145mr22603404pgf.384.1580195978166;
- Mon, 27 Jan 2020 23:19:38 -0800 (PST)
+        bh=Sb+8J/7DuRGfGudhsScfamBXEMs+Mce/hybB6WnCHb0=;
+        b=b06Ee+0mojvBns3jSBeKEbVOzPtWHcW7IxsH82PG3yhMbBIzEuFxU3QKvIg7ajhJun
+         QXAWgT27SM4Eyoi5UwQl603aQ9GkGRS050taOlQhOVzrxBzWbSsxvCEdtia46bXwUcEg
+         wQQgM3wHh3yZBFeXKE9yfS1WDfwEnSRKFetLR7rojKRps7x7679JDeMx1Zfoj4wB2aSw
+         tyYzaqs5Rf1z6LxHjsiIEhHTgESvVLjXDrowD/jPt8ED/snN8e1muf6RpOGC9Lu/UCZv
+         PED1RDHYqbns8x+f4F9AcaUevrqKziExghMiAutaowWlxb/CvnbU27fAREQ5qmQcAlUw
+         86fA==
+X-Gm-Message-State: APjAAAXeCeixzMUAeYAgE0rPhBCDghbLV4JO6UQmZ9DnhWWkQsK8fxNu
+        oHb5mJ0nCytp6IaB/wfgnahx58RZSR3IAg==
+X-Google-Smtp-Source: APXvYqx+DCa/mVzHJX9RIUHASmsoPwzllGj4qx61ZF+o9UrkCqSlJwpXqfLivvylG5YHpr7yaiLqGg==
+X-Received: by 2002:a05:6402:74a:: with SMTP id p10mr1943618edy.377.1580196004421;
+        Mon, 27 Jan 2020 23:20:04 -0800 (PST)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com. [209.85.128.41])
+        by smtp.gmail.com with ESMTPSA id qh18sm339052ejb.23.2020.01.27.23.20.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 23:20:02 -0800 (PST)
+Received: by mail-wm1-f41.google.com with SMTP id t14so1282224wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 23:20:01 -0800 (PST)
+X-Received: by 2002:a05:600c:294a:: with SMTP id n10mr3195790wmd.11.1580196001394;
+ Mon, 27 Jan 2020 23:20:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20191216220555.245089-1-brendanhiggins@google.com>
- <20200106224022.GX11244@42.do-not-panic.com> <CAFd5g456c2Zs7rCvRPgio83G=SrtPGi25zbqAUyTBHspHwtu4w@mail.gmail.com>
- <594b7815-0611-34ea-beb5-0642114b5d82@gmail.com>
-In-Reply-To: <594b7815-0611-34ea-beb5-0642114b5d82@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 27 Jan 2020 23:19:27 -0800
-Message-ID: <CAFd5g469TWzrLKmQNR2i0HACJ3FEu-=4-Rk005g9szB5UsZAcw@mail.gmail.com>
-Subject: Re: [RFC v1 0/6] kunit: create a centralized executor to dispatch all
- KUnit tests
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-14-senozhatsky@chromium.org> <2d0e1a9b-6c5e-ff70-9862-32c8b8aaf65f@xs4all.nl>
+ <20200122050515.GB49953@google.com> <57f711a0-6183-74f6-ab24-ebe414cb6881@xs4all.nl>
+In-Reply-To: <57f711a0-6183-74f6-ab24-ebe414cb6881@xs4all.nl>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 28 Jan 2020 16:19:50 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5Dbw=B7kb-p8nkPN3GxwL0O-5q=y1HRAVUVOwv4eEAv-Q@mail.gmail.com>
+Message-ID: <CAAFQd5Dbw=B7kb-p8nkPN3GxwL0O-5q=y1HRAVUVOwv4eEAv-Q@mail.gmail.com>
+Subject: Re: [RFC][PATCH 13/15] videobuf2: do not sync buffers for DMABUF queues
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -90,48 +85,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 9:40 AM Frank Rowand <frowand.list@gmail.com> wrote:
+On Thu, Jan 23, 2020 at 8:35 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
 >
-> On 1/23/20 4:40 PM, Brendan Higgins wrote:
-> > Sorry for the late reply. I am still catching up from being on vacation.
-> >> > On Mon, Jan 6, 2020 at 2:40 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> >> It does beg the question if this means kunit is happy to not be a tool
-> >> to test pre basic setup stuff (terminology used in init.c, meaning prior
-> >> to running all init levels). I suspect this is the case.
+> On 1/22/20 6:05 AM, Sergey Senozhatsky wrote:
+> > On (20/01/10 11:30), Hans Verkuil wrote:
+> > [..]
+> >>> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> >>> index 1762849288ae..2b9d3318e6fb 100644
+> >>> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> >>> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> >>> @@ -341,8 +341,22 @@ static void set_buffer_cache_hints(struct vb2_queue *q,
+> >>>                                struct vb2_buffer *vb,
+> >>>                                struct v4l2_buffer *b)
+> >>>  {
+> >>> -   vb->need_cache_sync_on_prepare = 1;
+> >>> +   /*
+> >>> +    * DMA exporter should take care of cache syncs, so we can avoid
+> >>> +    * explicit ->prepare()/->finish() syncs.
+> >>> +    */
+> >>> +   if (q->memory == VB2_MEMORY_DMABUF) {
+> >>> +           vb->need_cache_sync_on_finish = 0;
+> >>> +           vb->need_cache_sync_on_prepare = 0;
+> >>> +           return;
+> >>> +   }
+> >>>
+> >>> +   /*
+> >>> +    * For other ->memory types we always need ->prepare() cache
+> >>> +    * sync. ->finish() cache sync, however, can be avoided when queue
+> >>> +    * direction is TO_DEVICE.
+> >>> +    */
+> >>> +   vb->need_cache_sync_on_prepare = 1;
+> >>
+> >> I'm trying to remember: what needs to be done in prepare()
+> >> for a capture buffer? I thought that for capture you only
+> >> needed to invalidate the cache in finish(), but nothing needs
+> >> to be done in the prepare().
 > >
-> > Not sure. I still haven't seen any cases where this is necessary, so I
-> > am not super worried about it. Regardless, I don't think this patchset
-> > really changes anything in that regard, we are moving from late_init
-> > to after late_init, so it isn't that big of a change for most use
-> > cases.
+> > Hmm. Not sure. A precaution in case if user-space wrote to that buffer?
+>
+> But whatever was written in the buffer is going to be overwritten anyway.
+>
+> Unless I am mistaken the current situation is that the cache syncs are done
+> in both prepare and finish, regardless of the DMA direction.
+>
+> I would keep that behavior to avoid introducing any unexpected regressions.
+>
+
+It wouldn't be surprising if the buffer was first filled with default
+values (e.g. all zeroes) on the CPU. That would make the cache lines
+dirty and they could overwrite what the device writes. So we need to
+flush (aka clean) the write-back caches on prepare for CAPTURE
+buffers.
+
+> Then, if q->allow_cache_hint is set, then default to a cache sync (cache clean)
+> in the prepare for OUTPUT buffers and a cache sync (cache invalidate) in the
+> finish for CAPTURE buffers.
+
+I'd still default to the existing behavior even if allow_cache_hint is
+set, because of what I wrote above. Then if the userspace doesn't ever
+write to the buffers, it can request no flush/clean by setting the
+V4L2_BUF_FLAG_NO_CACHE_CLEAN flag when queuing the buffer.
+
+>
+> This also means that any drivers that want to access a buffer in between the
+> prepare...finish calls will need to do a begin/end_cpu_access. But that's a
+> separate matter.
+
+AFAIR with current design of the series, the drivers can opt-in for
+userspace cache sync hints, so by default even if the userspace
+requests sync to be skipped, it wouldn't have any effect unless the
+driver allows so. Then I'd imagine migrating all the drivers to
+request clean/invalidate explicitly. Note that the DMA-buf
+begin/end_cpu_access isn't enough here. We'd need something like
+vb2_begin/end_cpu_access() which also takes care of syncing
+inconsistent MMAP and USERPTR buffers.
+
+>
+> Regards,
+>
+>         Hans
+>
 > >
-> > Please share if you can think of some things that need to be tested in
-> > early init.
+> > +     if (q->dma_dir == DMA_FROM_DEVICE)
+> > +             q->need_cache_sync_on_prepare = 0;
+> >
+> > ?
+> >
+> >       -ss
+> >
 >
-> I don't have a specific need for this right now.  I had not thought about
-> how the current kunit implementation forces all kunit tests to run at a
-> specific initcall level before reading this email thread.
->
-> I can see the value of being able to have some tests run at different
-> initcall levels to verify what functionality is available and working
-> at different points in the boot sequence.
-
-Let's cross that bridge when we get there. It should be fairly easy to
-add that functionality.
-
-> But more important than early initcall levels, I do not want the
-> framework to prevent using or testing code and data that are marked
-> as '__init'.  So it is important to retain a way to invoke the tests
-> while __init code and data are available, if there is also a change
-> to generally invoke the tests later.
-
-Definitely. For now that still works as long as you don't build KUnit
-as a module, but I think Alan's new patches which allow KUnit to be
-run at runtime via debugfs could cause some difficulty there. Again,
-we could add Kconfigs to control this, but the compiler nevertheless
-complains because it doesn't know what phase KUnit runs in.
-
-Is there any way to tell the compiler that it is okay for non __init
-code to call __init code? I would prefer not to have a duplicate
-version of all the KUnit libraries with all the symbols marked __init.
-Thoughts?
