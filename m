@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BDDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB784C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530A6207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56D624683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222612;
-	bh=E2V+C8zIRFAMXdmYAylFrU6KBTlqSKmy3/QxbVXgaME=;
+	s=default; t=1580222617;
+	bh=Ekt26GqXBR+jWRpdcUNz9K5xx5ZngRbrZi1OmJsPBTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HMUrIUFSZ4zdrkMKDBmF8t6QY/lAHNMN1XfLjgWZLrEMn5tKiAVNNK4cCs0ekHgIT
-	 DKzn6BuM0/mwWy1XQ6PVDJJoZoDUB9CRZ25/giC0cVDVMMcivEuK42zZKAqGkmMbge
-	 uZb38S9LTL6FES/A4lVv2LbApAFgvvYM8ovx40MY=
+	b=ZI+0rtg/zkRyt3KahnQdlrvNT1Zk7xII40ajMB0X/B4wsYk9xoWwfCoCWgw19zhWr
+	 9IObCo+PnYMLfiO95OlbMWQRD7Uy3Lw1V08K9t+Pu9P6ln5mRwOuftwbeZwSEQFUFV
+	 09N6j3KtKWtAZb0sZDoz8eg3skZ5AaELl/ixvKhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgA1OLe (ORCPT
+        id S1729325AbgA1OLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:11:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:11:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727187AbgA1OL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:11:27 -0500
+        id S1727629AbgA1OLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:11:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C55520678;
-        Tue, 28 Jan 2020 14:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A872468F;
+        Tue, 28 Jan 2020 14:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220687;
-        bh=E2V+C8zIRFAMXdmYAylFrU6KBTlqSKmy3/QxbVXgaME=;
+        s=default; t=1580220679;
+        bh=Ekt26GqXBR+jWRpdcUNz9K5xx5ZngRbrZi1OmJsPBTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AWs1RDXZ01mPm4HAX14KPuQ0dM7974LkPRcw1w1dfZ192xZdw7m9meHlBWbsFRaED
-         pJHGlkTOYo5li8eSBRJVmxIX9q6hktpfNOQz6RhHh0xBeTfkNNGjh4huvvyr9gZ9ci
-         iz1KGKGWcsqiuwvFTjf9aJ8sY4zSuKTNIfviHMtk=
+        b=ZVunoVvHOxpG7f22Do60HvEu6s9DZCD2MTn7MOb4DGmbJprsZQkPgWSsTifurrJQH
+         PThb4QhPrKtPo934GJYJyDdZc39R5fXNeZZgG8SDOEbqF+pxQuOQLazEzJwEI0LCE7
+         AgG+0jcMnuxSb924v0DYt10bhtCs7jx092EKdAcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 105/183] rtc: pcf8563: Clear event flags and disable interrupts before requesting irq
-Date:   Tue, 28 Jan 2020 15:05:24 +0100
-Message-Id: <20200128135840.459076942@linuxfoundation.org>
+Subject: [PATCH 4.4 102/183] drm/msm/mdp5: Fix mdp5_cfg_init error return
+Date:   Tue, 28 Jan 2020 15:05:21 +0100
+Message-Id: <20200128135840.202089390@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,58 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 3572e8aea3bf925dac1dbf86127657c39fe5c254 ]
+[ Upstream commit fc19cbb785d7bbd1a1af26229b5240a3ab332744 ]
 
-Besides the alarm, the PCF8563 also has a timer triggered interrupt.
-In cases where the previous system left the timer and interrupts on,
-or somehow the bits got enabled, the interrupt would keep triggering
-as the kernel doesn't know about it.
+If mdp5_cfg_init fails because of an unknown major version, a null pointer
+dereference occurs.  This is because the caller of init expects error
+pointers, but init returns NULL on error.  Fix this by returning the
+expected values on error.
 
-Clear both the alarm and timer event flags, and disable the interrupts,
-before requesting the interrupt line.
-
-Fixes: ede3e9d47cca ("drivers/rtc/rtc-pcf8563.c: add alarm support")
-Fixes: a45d528aab8b ("rtc: pcf8563: clear expired alarm at boot time")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf8563.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
-index 45b5a3d47ccf0..1982eec0a3eac 100644
---- a/drivers/rtc/rtc-pcf8563.c
-+++ b/drivers/rtc/rtc-pcf8563.c
-@@ -568,7 +568,6 @@ static int pcf8563_probe(struct i2c_client *client,
- 	struct pcf8563 *pcf8563;
- 	int err;
- 	unsigned char buf;
--	unsigned char alm_pending;
+diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
+index bb1225aa2f75b..89305ad3cde29 100644
+--- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
++++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
+@@ -547,7 +547,7 @@ fail:
+ 	if (cfg_handler)
+ 		mdp5_cfg_destroy(cfg_handler);
  
- 	dev_dbg(&client->dev, "%s\n", __func__);
+-	return NULL;
++	return ERR_PTR(ret);
+ }
  
-@@ -594,13 +593,13 @@ static int pcf8563_probe(struct i2c_client *client,
- 		return err;
- 	}
- 
--	err = pcf8563_get_alarm_mode(client, NULL, &alm_pending);
--	if (err) {
--		dev_err(&client->dev, "%s: read error\n", __func__);
-+	/* Clear flags and disable interrupts */
-+	buf = 0;
-+	err = pcf8563_write_block_data(client, PCF8563_REG_ST2, 1, &buf);
-+	if (err < 0) {
-+		dev_err(&client->dev, "%s: write error\n", __func__);
- 		return err;
- 	}
--	if (alm_pending)
--		pcf8563_set_alarm_mode(client, 0);
- 
- 	pcf8563->rtc = devm_rtc_device_register(&client->dev,
- 				pcf8563_driver.driver.name,
+ static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
 -- 
 2.20.1
 
