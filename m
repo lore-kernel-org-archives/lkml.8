@@ -2,98 +2,167 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF649C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE8EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D08B214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580223114;
-	bh=H8gV40MUF4wX28yO9j3qAumV1vhdC0yOeApCL0d5jGg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0joSaOwt/sUzCxaT/MTirGgGaTwZqQxhHPT7wohTScJmowL3qCte+UnjdAyas/ZfN
-	 A7FvbguHa04yIJfqleusaM4Rdj18TyG494XPHUupqJG9O8Gn2/RycztNwCJQM8q9rg
-	 P1uIUWrCsa7JP73J9swY8G5LEVZP5PvAkpFZJ4Ds=
+	by mail.kernel.org (Postfix) with ESMTP id D87D3214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:53:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hodtc920"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgA1Ovx (ORCPT
+        id S1726569AbgA1OxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:51:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgA1N6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:58:44 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F292224683;
-        Tue, 28 Jan 2020 13:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219923;
-        bh=H8gV40MUF4wX28yO9j3qAumV1vhdC0yOeApCL0d5jGg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDRHg2edQu7/QpdMtrfUFA1e1swfzlFXtkGJ7rkXsMd9nUn+KQBRy8ynr6hmMsTPf
-         vz1xnr2hCq9/EMG6rU9VjkrVI/xrjH/vi9rxvVHCU/iGsIEuat9HWQmU1/rPzDIRKn
-         H7492W0WEZRCHchca7imIfv1iruU2FBaxg64FusE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, William Dauchy <w.dauchy@criteo.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 07/46] net, ip_tunnel: fix namespaces move
-Date:   Tue, 28 Jan 2020 14:57:41 +0100
-Message-Id: <20200128135751.118463219@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
-References: <20200128135749.822297911@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 28 Jan 2020 09:53:10 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37272 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgA1OxJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:53:09 -0500
+Received: by mail-lj1-f195.google.com with SMTP id v17so15023379ljg.4;
+        Tue, 28 Jan 2020 06:53:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U/Ya9HgJWhgUTwQZYe1oiJhltZSo1E2iHMK7KNQPMfY=;
+        b=Hodtc920lvy8sd8TOTlPdC/iSYLKAGwpRDk06V/01Ur3aQ4XL1ivGkNnH84m2XjAn1
+         gGLP60qux/AnellnnVvVspIXPaLRsziphTxCBokG4OTCtZ37vGJY3/YoQ2fa9RmNWcuw
+         ZV86MylNds9Suufer9RChI2yJlqms8dr4wV4zQwlHVmMfjWRHPNtMMtWIgY981nuxJsS
+         4tdkUc+CqcFdlyhyvWbWqu3IjfoNzIVRRtQvsxGCcRsUqvsNlvo1NMi0Af120Fi5YKK+
+         BxdcmSxZWWgyU7tyEmQ0FOuBXEVAgcxCB1ZjL7J/Dy0tCkLWHON44PcYQozxI1tzq6Xo
+         O5GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U/Ya9HgJWhgUTwQZYe1oiJhltZSo1E2iHMK7KNQPMfY=;
+        b=fl33GQHmo6O1cXOiJbcka+vqgWU/3ZBCV8Htmy7j1Is6VidKNr/qbqr0oXoz06HZlj
+         kcbcuEifTCpLjiR26BB1MqiXf5TtL8ZZnFqwgH/QqS5bpMFunyFocT9ZFR7hyDpr45uE
+         RgMeosSH6xw68mnjDxCFSxlWrgHYRDLTEAf2nBCTUeDnLS5Uub/481Mo3RKW5TfzOJRS
+         UY/Haq15GHLyNGHv3fWmS/oFHRWYN0prtSCGwO5QQoAO3U4CFK+8h3UuqMyw+0msKsGN
+         8fp8dPFg7DJn1vmdPCA1JZkpJ4eDt91QLVqCwRZtF1eYbKRHweECBIYhpQu0Th42nWl9
+         Lqdw==
+X-Gm-Message-State: APjAAAXwMvA+lX1A1rUHrmjZI6b/sDpCJ/at+PkHd4LAhmLlDkvTB7fO
+        foku411XUvG3HhsBpvC8qdhcJLXg
+X-Google-Smtp-Source: APXvYqw9Pp2WA7B96iEHSu67EpIA7RH2scmzETdUu6IFWu6gJGRHjOAtKCEWC03WfutzAH5DvVqD2w==
+X-Received: by 2002:a2e:7009:: with SMTP id l9mr13222873ljc.96.1580223186894;
+        Tue, 28 Jan 2020 06:53:06 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id j19sm12072651lfb.90.2020.01.28.06.53.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 06:53:06 -0800 (PST)
+Subject: Re: [PATCH v4 11/14] dmaengine: tegra-apb: Clean up suspend-resume
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-12-digetx@gmail.com>
+ <7e0d2cfa-5570-93e6-e3dc-7d3f6902a528@gmail.com>
+ <831d5e28-72df-3175-bfb6-b33985d93a52@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e245618c-6ae9-18d9-5671-1d6c0cf47a39@gmail.com>
+Date:   Tue, 28 Jan 2020 17:53:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <831d5e28-72df-3175-bfb6-b33985d93a52@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: William Dauchy <w.dauchy@criteo.com>
+28.01.2020 17:10, Jon Hunter пишет:
+> 
+> On 21/01/2020 21:23, Dmitry Osipenko wrote:
+>> 12.01.2020 20:30, Dmitry Osipenko пишет:
+>>> It is enough to check whether hardware is busy on suspend and to reset
+>>> it across of suspend-resume because channel's configuration is fully
+>>> re-programmed on each DMA transaction anyways and because save-restore
+>>> of an active channel won't end up well without pausing transfer prior to
+>>> saving of the state (note that all channels shall be idling at the time of
+>>> suspend, so save-restore is not needed at all).
+>>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  drivers/dma/tegra20-apb-dma.c | 131 +++++++++++++++++-----------------
+>>>  1 file changed, 67 insertions(+), 64 deletions(-)
+>>>
+>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>> index b9d8e57eaf54..398a0e1d6506 100644
+>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>> @@ -1392,6 +1392,36 @@ static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
+>>>  	.support_separate_wcount_reg = true,
+>>>  };
+>>>  
+>>> +static int tegra_dma_init_hw(struct tegra_dma *tdma)
+>>> +{
+>>> +	int err;
+>>> +
+>>> +	err = reset_control_assert(tdma->rst);
+>>> +	if (err) {
+>>> +		dev_err(tdma->dev, "failed to assert reset: %d\n", err);
+>>> +		return err;
+>>> +	}
+>>> +
+>>> +	err = clk_enable(tdma->dma_clk);
+>>> +	if (err) {
+>>> +		dev_err(tdma->dev, "failed to enable clk: %d\n", err);
+>>> +		return err;
+>>> +	}
+>>> +
+>>> +	/* reset DMA controller */
+>>> +	udelay(2);
+>>> +	reset_control_deassert(tdma->rst);
+>>> +
+>>> +	/* enable global DMA registers */
+>>> +	tdma_write(tdma, TEGRA_APBDMA_GENERAL, TEGRA_APBDMA_GENERAL_ENABLE);
+>>> +	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
+>>> +	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFF);
+>>> +
+>>> +	clk_disable(tdma->dma_clk);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  static int tegra_dma_probe(struct platform_device *pdev)
+>>>  {
+>>>  	const struct tegra_dma_chip_data *cdata;
+>>> @@ -1433,30 +1463,18 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>>>  	if (ret)
+>>>  		return ret;
+>>>  
+>>> +	ret = tegra_dma_init_hw(tdma);
+>>> +	if (ret)
+>>> +		goto err_clk_unprepare;
+>>> +
+>>>  	pm_runtime_irq_safe(&pdev->dev);
+>>>  	pm_runtime_enable(&pdev->dev);
+>>>  	if (!pm_runtime_enabled(&pdev->dev)) {
+>>>  		ret = tegra_dma_runtime_resume(&pdev->dev);
+>>>  		if (ret)
+>>>  			goto err_clk_unprepare;
+>>
+>> Jon, but isn't the RPM mandatory for all Tegra SoCs now and thus
+>> guaranteed to be enabled? Maybe we should start to remove handling the
+>> case of unavailable RPM from all Tegra drivers?
+> 
+> Yes that's true, even ARCH_TEGRA selects PM now
 
-[ Upstream commit d0f418516022c32ecceaf4275423e5bd3f8743a9 ]
-
-in the same manner as commit 690afc165bb3 ("net: ip6_gre: fix moving
-ip6gre between namespaces"), fix namespace moving as it was broken since
-commit 2e15ea390e6f ("ip_gre: Add support to collect tunnel metadata.").
-Indeed, the ip6_gre commit removed the local flag for collect_md
-condition, so there is no reason to keep it for ip_gre/ip_tunnel.
-
-this patch will fix both ip_tunnel and ip_gre modules.
-
-Fixes: 2e15ea390e6f ("ip_gre: Add support to collect tunnel metadata.")
-Signed-off-by: William Dauchy <w.dauchy@criteo.com>
-Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/ip_tunnel.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -1202,10 +1202,8 @@ int ip_tunnel_init(struct net_device *de
- 	iph->version		= 4;
- 	iph->ihl		= 5;
- 
--	if (tunnel->collect_md) {
--		dev->features |= NETIF_F_NETNS_LOCAL;
-+	if (tunnel->collect_md)
- 		netif_keep_dst(dev);
--	}
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(ip_tunnel_init);
-
-
+I already sent out v5 with the !RPM handling removed from the code,
+please take a look at it.
