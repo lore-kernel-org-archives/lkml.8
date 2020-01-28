@@ -2,294 +2,236 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DAFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6C1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CB524683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6082D24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:29:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="YboDIDpT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TttHCO4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgA1T2s (ORCPT
+        id S1726515AbgA1T3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 14:28:48 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41571 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgA1T2s (ORCPT
+        Tue, 28 Jan 2020 14:29:37 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43783 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgA1T3h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 14:28:48 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c9so17427266wrw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:28:45 -0800 (PST)
+        Tue, 28 Jan 2020 14:29:37 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d18so11214659qtj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:29:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mH5y6YiIyxSkei3AW5LWOH5PaZMdK9wtI99Lnamilso=;
-        b=YboDIDpTYXjirb8Va1F68jVcJv6OSokeWZ+CO2/E3ACUlT+N2hkMdTe4wH8u3PlYdU
-         ZveBW0hY05cboYjStAr9Y874ew34lBTln+mrysJtmvFpFAQjt5lojuGNNrjfYVoFSzLh
-         gtNLn24rNz5DY+fK3GU6c54G/ZRATD1eyme1Mk/PMz5vnBl1ZzfoiSKXmAmJg5vT6qzk
-         68c9b8KAXq1M3/9CAEqmUuI9sI8KeGRP/w+nQ8e8SuAng7xghqlFyQOHYoAWcyCoEaig
-         zFUD3tEAs9HzNYnN27bew/Ddn78RT3N9oxNFRzkCAcnZAhJ8d3bYWXyMlcFgG9G3xa8J
-         5GVQ==
+        bh=rIGTDXTMwZVIk0j4Pnp5yw8E7GChdfa6ttfmwVUbyDc=;
+        b=TttHCO4GJS2WuR1u4Qb3prVm0lwQqeG4zgTw3cAn07Exc0/ytH3MW42D+pcZbAddKc
+         cnk3LPNP8IVfSuhjxp5E7ouBj67ETrF7xJ1I8KNu4dzIm06787zHn17Q0KQmh/Zcb1pN
+         +fvkAPNhCiaLz4c0Q42mGF22KSW7UlcOtKC+8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mH5y6YiIyxSkei3AW5LWOH5PaZMdK9wtI99Lnamilso=;
-        b=lVOybardzARFwlNXpGsLjkE45HcTFoSHBgCXWLLk+qVMz9x+K5zrMi/tj327IcAHSE
-         zFoAnZK9WSLBwy1VoXs/aTXxgx4cPR37S5Fjupljn0pdQNjfUDETf3CphbkSWa4vgdeo
-         Kvj8N/zj3RNu4OctQgHKX5W3PIg35kQEATG/MpxoU3hgfDKmTiuWUopBzjl/EaihNzwY
-         7M5g5nJkoGpwdt56Uf4g+icrLNTtDcXFheaFmrSHsdqUmplzFI83AihV4SYZQe6jrOxd
-         Ir8emYzoBj3PQDh3TUZdaCROCoZUckPcCb70/QfSOO2FaYOKrzRgRVQG4QW8ryDPlwbV
-         fdTg==
-X-Gm-Message-State: APjAAAVCQHwd4cZ63KIaYiK/sehibvpXUD1FSiisKp18TqeU5YcZQS+B
-        0Z+MH9pMjFNcTiGw4KCx7lkMLfqU5BAHtmYaooae
-X-Google-Smtp-Source: APXvYqwdE3ea5URqzv7jLRqdTvSN3ycHh5DckOm0CA07+G0BD6Gu7n9QZy6qBSoKfS2LslIVbTFFak2PQaLfxerkZuk=
-X-Received: by 2002:a5d:534d:: with SMTP id t13mr31828062wrv.77.1580239724973;
- Tue, 28 Jan 2020 11:28:44 -0800 (PST)
+        bh=rIGTDXTMwZVIk0j4Pnp5yw8E7GChdfa6ttfmwVUbyDc=;
+        b=hqc3GDV4CjdMN8TNZeoq/0QxVEv8QuAk7WdkDKdf2Ncz4Ql8s02Db38zSjk6tKgsYQ
+         9YP5/H+sc5BJsXyRtDaLCJsEKzwnJURPc5Kxbb6DNReoSvNd9jGcvqsh8a2qiedfqd6l
+         ZMiF8WIfH6gW1gVjj7/WFZZmNcVpDZa9JByVbVenDbFnk9TRevBB0V722jDYjWGwijGn
+         6e95PSMhZFRdgRiXSqx+fey3dCC9LOxi9RIfXhta7S/mvTnkKJoFWdZ2iG+RniyBpsmM
+         KxANKN+1On50NHa7haR+qOeGv1N1giCVjjWXyvk3qFDc3h+oEpcW+6o8XLEv/hL/dIWz
+         KB1A==
+X-Gm-Message-State: APjAAAVk4el1dbVOd9XlMkndwFgj+7AZIRdCuP37bVabHoA52WyvddIq
+        AV1/6H+WarHvOeTFIFqPWAuXvE+peyj9a2OVJFqO+w==
+X-Google-Smtp-Source: APXvYqxo/vFoSP4gKZ2mo+kpOyveZb4rK43JIpY0Djlg0PFJ6KnUGZFGxCfVxKHLmBv7aiMugtknzzB7UUO3aSkKz8k=
+X-Received: by 2002:ac8:5457:: with SMTP id d23mr21778065qtq.93.1580239775657;
+ Tue, 28 Jan 2020 11:29:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20200128022737.15371-1-atish.patra@wdc.com> <20200128022737.15371-8-atish.patra@wdc.com>
- <CAAhSdy3oktrDNZ01Um5wE8cy2PC5SZdeNDMWjRTmm7k1aHkk_A@mail.gmail.com>
-In-Reply-To: <CAAhSdy3oktrDNZ01Um5wE8cy2PC5SZdeNDMWjRTmm7k1aHkk_A@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Tue, 28 Jan 2020 11:28:34 -0800
-Message-ID: <CAOnJCUKy+Nya-grseL+6Etkmzy=PGfRHJR53+vAhe7Ne5Ur1ig@mail.gmail.com>
-Subject: Re: [PATCH v7 07/10] RISC-V: Move relocate and few other functions
- out of __init
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Abner Chang <abner.chang@hpe.com>, nickhu@andestech.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Chester Lin <clin@suse.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Borislav Petkov <bp@suse.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Mao Han <han_mao@c-sky.com>
+References: <20200125012105.59903-1-pmalani@chromium.org> <20200125012105.59903-2-pmalani@chromium.org>
+ <feb0ef4d-0f03-9bbc-807e-c385c03ffa71@collabora.com> <CACeCKae4O+MKx3COh=u=28tk21rb4BrzFZgYpnc=tRkigqSP5Q@mail.gmail.com>
+ <CAFqH_51agDMFV0xBU_63176TYq0Es0FkCBzBZFoyoCUjwHMSxg@mail.gmail.com>
+In-Reply-To: <CAFqH_51agDMFV0xBU_63176TYq0Es0FkCBzBZFoyoCUjwHMSxg@mail.gmail.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Tue, 28 Jan 2020 11:29:24 -0800
+Message-ID: <CACeCKadjmqbaZgOZRnugNOYjusW-jJ0FfF_FN2r+Dg=AJOb9TQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] platform/chrome: Add EC command msg wrapper
+To:     Enric Balletbo Serra <eballetbo@gmail.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 8:38 PM Anup Patel <anup@brainfault.org> wrote:
->
-> On Tue, Jan 28, 2020 at 7:58 AM Atish Patra <atish.patra@wdc.com> wrote:
-> >
-> > The secondary hart booting and relocation code are under .init section.
-> > As a result, it will be freed once kernel booting is done. However,
-> > ordered booting protocol and CPU hotplug always requires these sections
-> > to be present to bringup harts after initial kernel boot.
-> >
-> > Move the required sections to a different section and make sure that
-> > they are in memory within first 2MB offset as trampoline page directory
-> > only maps first 2MB.
-> >
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > ---
-> >  arch/riscv/kernel/head.S        | 73 +++++++++++++++++++--------------
-> >  arch/riscv/kernel/vmlinux.lds.S |  9 +++-
-> >  2 files changed, 50 insertions(+), 32 deletions(-)
-> >
-> > diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> > index a4242be66966..9d7f084a50cc 100644
-> > --- a/arch/riscv/kernel/head.S
-> > +++ b/arch/riscv/kernel/head.S
-> > @@ -14,7 +14,7 @@
-> >  #include <asm/hwcap.h>
-> >  #include <asm/image.h>
-> >
-> > -__INIT
-> > +__HEAD
-> >  ENTRY(_start)
-> >         /*
-> >          * Image header expected by Linux boot-loaders. The image header data
-> > @@ -44,9 +44,10 @@ ENTRY(_start)
-> >         .balign 4
-> >         .ascii RISCV_IMAGE_MAGIC2
-> >         .word 0
-> > +END(_start)
-> >
-> > -.global _start_kernel
-> > -_start_kernel:
-> > +       __INIT
-> > +ENTRY(_start_kernel)
-> >         /* Mask all interrupts */
-> >         csrw CSR_IE, zero
-> >         csrw CSR_IP, zero
-> > @@ -125,6 +126,37 @@ clear_bss_done:
-> >         call parse_dtb
-> >         tail start_kernel
-> >
-> > +.Lsecondary_start:
-> > +#ifdef CONFIG_SMP
-> > +       /* Set trap vector to spin forever to help debug */
-> > +       la a3, .Lsecondary_park
-> > +       csrw CSR_TVEC, a3
-> > +
-> > +       slli a3, a0, LGREG
-> > +       la a1, __cpu_up_stack_pointer
-> > +       la a2, __cpu_up_task_pointer
-> > +       add a1, a3, a1
-> > +       add a2, a3, a2
-> > +
-> > +       /*
-> > +        * This hart didn't win the lottery, so we wait for the winning hart to
-> > +        * get far enough along the boot process that it should continue.
-> > +        */
-> > +.Lwait_for_cpu_up:
-> > +       /* FIXME: We should WFI to save some energy here. */
-> > +       REG_L sp, (a1)
-> > +       REG_L tp, (a2)
-> > +       beqz sp, .Lwait_for_cpu_up
-> > +       beqz tp, .Lwait_for_cpu_up
-> > +       fence
-> > +
-> > +       tail secondary_start_common
-> > +#endif
-> > +
-> > +END(_start_kernel)
-> > +
-> > +.section ".noinit.text","ax",@progbits
-> > +.align 2
->
-> Try to use __HEAD here (if possible).
->
+Hi Enric,
 
-
-> >  #ifdef CONFIG_MMU
-> >  relocate:
-> >         /* Relocate return address */
-> > @@ -177,41 +209,27 @@ relocate:
-> >
-> >         ret
-> >  #endif /* CONFIG_MMU */
-> > -
-> > -.Lsecondary_start:
-> >  #ifdef CONFIG_SMP
-> >         /* Set trap vector to spin forever to help debug */
-> >         la a3, .Lsecondary_park
-> >         csrw CSR_TVEC, a3
-> >
-> >         slli a3, a0, LGREG
-> > -       la a1, __cpu_up_stack_pointer
-> > -       la a2, __cpu_up_task_pointer
-> > -       add a1, a3, a1
-> > -       add a2, a3, a2
-> > -
-> > -       /*
-> > -        * This hart didn't win the lottery, so we wait for the winning hart to
-> > -        * get far enough along the boot process that it should continue.
-> > -        */
-> > -.Lwait_for_cpu_up:
-> > -       /* FIXME: We should WFI to save some energy here. */
-> > -       REG_L sp, (a1)
-> > -       REG_L tp, (a2)
-> > -       beqz sp, .Lwait_for_cpu_up
-> > -       beqz tp, .Lwait_for_cpu_up
-> > -       fence
-> > +       .global secondary_start_common
-> > +secondary_start_common:
-> >
-> >  #ifdef CONFIG_MMU
-> >         /* Enable virtual memory and relocate to virtual address */
-> >         la a0, swapper_pg_dir
-> >         call relocate
-> >  #endif
-> > -
-> >         tail smp_callin
-> > -#endif
-> > +#endif /* CONFIG_SMP */
-> >
-> > -END(_start)
-> > +.Lsecondary_park:
-> > +       /* We lack SMP support or have too many harts, so park this hart */
-> > +       wfi
-> > +       j .Lsecondary_park
-> >
-> >  #ifdef CONFIG_RISCV_M_MODE
-> >  ENTRY(reset_regs)
-> > @@ -292,13 +310,6 @@ ENTRY(reset_regs)
-> >  END(reset_regs)
-> >  #endif /* CONFIG_RISCV_M_MODE */
-> >
-> > -.section ".text", "ax",@progbits
-> > -.align 2
-> > -.Lsecondary_park:
-> > -       /* We lack SMP support or have too many harts, so park this hart */
-> > -       wfi
-> > -       j .Lsecondary_park
-> > -
-> >  __PAGE_ALIGNED_BSS
-> >         /* Empty zero page */
-> >         .balign PAGE_SIZE
-> > diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> > index 12f42f96d46e..c8a88326df9e 100644
-> > --- a/arch/riscv/kernel/vmlinux.lds.S
-> > +++ b/arch/riscv/kernel/vmlinux.lds.S
-> > @@ -10,6 +10,7 @@
-> >  #include <asm/cache.h>
-> >  #include <asm/thread_info.h>
-> >
-> > +#include <linux/sizes.h>
-> >  OUTPUT_ARCH(riscv)
-> >  ENTRY(_start)
-> >
-> > @@ -20,8 +21,14 @@ SECTIONS
-> >         /* Beginning of code and text segment */
-> >         . = LOAD_OFFSET;
-> >         _start = .;
-> > -       __init_begin = .;
-> >         HEAD_TEXT_SECTION
-> > +       .noinit.text :
-> > +       {
-> > +               *(.noinit.text)
-> > +       }
+On Mon, Jan 27, 2020 at 12:36 PM Enric Balletbo Serra
+<eballetbo@gmail.com> wrote:
 >
-> Can we try using HEAD_TEXT_SECTION for SMP booting
-> related functions instead of new ".noinit.text" section ??
+> Hi Prashant,
 >
-
-Yeah. That is much cleaner as well. I will update it in v2.
-
-> > +       . = ALIGN(SZ_4K);
->
-> Change this to PAGE aligned:
->     . = ALIGN(PAGE_SIZE)
->
-
-Sure. Will do that.
-
-> > +
-> > +       __init_begin = .;
-> >         INIT_TEXT_SECTION(PAGE_SIZE)
-> >         INIT_DATA_SECTION(16)
-> >         /* we have to discard exit text and such at runtime, not link time */
-> > --
-> > 2.24.0
+> Missatge de Prashant Malani <pmalani@chromium.org> del dia dl., 27 de
+> gen. 2020 a les 18:13:
+> >
+> > Hi Enric,
+> >
+> > On Mon, Jan 27, 2020 at 7:29 AM Enric Balletbo i Serra
+> > <enric.balletbo@collabora.com> wrote:
+> > >
+> > > Hi Prashant,
+> > >
+> > > Many thanks for this patch.
+> > >
+> > > On 25/1/20 2:21, Prashant Malani wrote:
+> > > > Many callers of cros_ec_cmd_xfer_status() use a similar set up of
+> > > > allocating and filling a message buffer and then copying any received
+> > > > data to a target buffer.
+> > > >
+> > >
+> > > cros_ec_cmd_xfer_status is already a wrapper, I dislike the idea of having three
+> > > ways to do the same (cros_ec_cmd_xfer, cros_ec_cmd_xfer_status and this new
+> > > one). I like the idea of have a wrapper that embeds the message allocation but
+> > > we should not confuse users with different calls that does the same.
+> > Yes, my intention was to eventually replace all the xfer_status()
+> > call-sites to use the new wrapper, and then get rid of xfer_status
+> > completely.
+> > >
+> > > So, I am for a change like this but I'd like to have all the users calling the
+> > > same wrapper (unless there is a good reason to not use it). A proposed roadmap
+> > > (to be discussed) for this would be.
+> > >
+> > > 1. Replace all the remaining "cros_ec_cmd_xfer" calls with
+> > > "cros_ec_cmd_xfer_status".
+> > > 2. Modify cros_ec_cmd_xfer_status to embed the message allocation.
+> >
+> > How about the following alteration the the roadmap:
+> > - Introducing the new wrapper.
+> > - Replacing all remaining cros_ec_cmd_xfer/cros_ec_cmd_xfer_status to
+> > use the new wrapper.
+> > - Deleting cros_ec_cmd_xfer and cros_ec_cmd_xfer_status ?
+> > My thinking is that this would mean fewer changes at the call-sites
+> > compared to the original roadmap (in the original roadmap, one would
+> > first have to modify calls to use cros_ec_cmd_xfer_status(), and then
+> > modify them again when cros_ec_cmd_xfer_status() itself is modified to
+> > include message allocation).
 > >
 >
-> Regards,
-> Anup
+> Sounds like we have a plan, looks good to me.
 >
-
-
--- 
-Regards,
-Atish
+Great. Can we use the current series as a starting point for this ?
+I've identified some of the other places which use
+cros_ec_cmd_xfer_status() so can submit subsequent series to convert
+those.
+> Cheers,
+>  Enric
+>
+> > That said I don't have any strong preference, so either would work.
+> >
+> > Best regards,
+> > >
+> > > Thanks,
+> > >  Enric
+> > >
+> > >
+> > > > Create a utility function that performs this setup so that callers can
+> > > > use this function instead.
+> > > >
+> > > > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> > > > ---
+> > > >  drivers/platform/chrome/cros_ec_proto.c     | 53 +++++++++++++++++++++
+> > > >  include/linux/platform_data/cros_ec_proto.h |  5 ++
+> > > >  2 files changed, 58 insertions(+)
+> > > >
+> > > > diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> > > > index da1b1c4504333..8ef3b7d27d260 100644
+> > > > --- a/drivers/platform/chrome/cros_ec_proto.c
+> > > > +++ b/drivers/platform/chrome/cros_ec_proto.c
+> > > > @@ -5,6 +5,7 @@
+> > > >
+> > > >  #include <linux/delay.h>
+> > > >  #include <linux/device.h>
+> > > > +#include <linux/mfd/cros_ec.h>
+> > > >  #include <linux/module.h>
+> > > >  #include <linux/platform_data/cros_ec_commands.h>
+> > > >  #include <linux/platform_data/cros_ec_proto.h>
+> > > > @@ -570,6 +571,58 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> > > >  }
+> > > >  EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
+> > > >
+> > > > +/**
+> > > > + * cros_ec_send_cmd_msg() - Utility function to send commands to ChromeOS EC.
+> > > > + * @ec: EC device struct.
+> > > > + * @version: Command version number (often 0).
+> > > > + * @command: Command ID including offset.
+> > > > + * @outdata: Data to be sent to the EC.
+> > > > + * @outsize: Size of the &outdata buffer.
+> > > > + * @indata: Data to be received from the EC.
+> > > > + * @insize: Size of the &indata buffer.
+> > > > + *
+> > > > + * This function is a wrapper around &cros_ec_cmd_xfer_status, and performs
+> > > > + * some of the common work involved with sending a command to the EC. This
+> > > > + * includes allocating and filling up a &struct cros_ec_command message buffer,
+> > > > + * and copying the received data to another buffer.
+> > > > + *
+> > > > + * Return: The number of bytes transferred on success or negative error code.
+> > > > + */
+> > > > +int cros_ec_send_cmd_msg(struct cros_ec_device *ec, unsigned int version,
+> > > > +                      unsigned int command, void *outdata,
+> > > > +                      unsigned int outsize, void *indata,
+> > > > +                      unsigned int insize)
+> > > > +{
+> > > > +     struct cros_ec_command *msg;
+> > > > +     int ret;
+> > > > +
+> > > > +     msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
+> > > > +     if (!msg)
+> > > > +             return -ENOMEM;
+> > > > +
+> > > > +     msg->version = version;
+> > > > +     msg->command = command;
+> > > > +     msg->outsize = outsize;
+> > > > +     msg->insize = insize;
+> > > > +
+> > > > +     if (outdata && outsize > 0)
+> > > > +             memcpy(msg->data, outdata, outsize);
+> > > > +
+> > > > +     ret = cros_ec_cmd_xfer_status(ec, msg);
+> > > > +     if (ret < 0) {
+> > > > +             dev_warn(ec->dev, "Command failed: %d\n", msg->result);
+> > > > +             goto cleanup;
+> > > > +     }
+> > > > +
+> > > > +     if (insize)
+> > > > +             memcpy(indata, msg->data, insize);
+> > > > +
+> > > > +cleanup:
+> > > > +     kfree(msg);
+> > > > +     return ret;
+> > > > +}
+> > > > +EXPORT_SYMBOL(cros_ec_send_cmd_msg);
+> > > > +
+> > > >  static int get_next_event_xfer(struct cros_ec_device *ec_dev,
+> > > >                              struct cros_ec_command *msg,
+> > > >                              struct ec_response_get_next_event_v1 *event,
+> > > > diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> > > > index 30098a5515231..166ce26bdd79e 100644
+> > > > --- a/include/linux/platform_data/cros_ec_proto.h
+> > > > +++ b/include/linux/platform_data/cros_ec_proto.h
+> > > > @@ -201,6 +201,11 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+> > > >  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> > > >                           struct cros_ec_command *msg);
+> > > >
+> > > > +int cros_ec_send_cmd_msg(struct cros_ec_device *ec_dev, unsigned int version,
+> > > > +                      unsigned int command, void *outdata,
+> > > > +                      unsigned int outsize, void *indata,
+> > > > +                      unsigned int insize);
+> > > > +
+> > > >  int cros_ec_register(struct cros_ec_device *ec_dev);
+> > > >
+> > > >  int cros_ec_unregister(struct cros_ec_device *ec_dev);
+> > > >
