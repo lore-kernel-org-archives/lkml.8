@@ -2,95 +2,98 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24585C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FC0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F259820716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:51:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VF6Ud0uW"
+	by mail.kernel.org (Postfix) with ESMTP id 60A1E2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgA1RvX (ORCPT
+        id S1726700AbgA1Rw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:51:23 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:44149 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgA1RvW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:51:22 -0500
-Received: by mail-yb1-f196.google.com with SMTP id f136so7113583ybg.11;
-        Tue, 28 Jan 2020 09:51:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=e0Vmq5myNp7ihPvBRUAeOgRf8OdwgEjv50BOJEfcsKQ=;
-        b=VF6Ud0uW3qlDx672C6ALMuR1N1MC/e7Qdmx1j+JktY3spfncODviUk1vumE7+F8wMQ
-         xO1u/RjbjFwP23DFpNIEoadkrKR09lTnjADiwqUYNGGcEbOJTroPb+P9XmDNoxR8DgqS
-         sPd5W4ScMScbEOps9u3U5F+9hiPdTcrNdipT1GGozrsRoAouc9fLalIcVyltQGzdaftP
-         BkXXRrIbw9BOg7CZXFcSTe0q4N5KfbkooLucniT/sigUY+frk0edPCPZPz4PpJo7WIDo
-         58ClvjqZEG3vXmt6iNmP+w8JgkkJxnePn+ynnH32F/s2YG8JIE5Ajhba3mMQVrFXEyEW
-         b7Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=e0Vmq5myNp7ihPvBRUAeOgRf8OdwgEjv50BOJEfcsKQ=;
-        b=Huiw+MN+CkWZcQGEB1jcVYm9/4VBw8sy4LrK834SLrgpR6w6yPrDDMgvseu06e+jDF
-         AuXpbSkjwK0dSDi+Cc9otEAEfxKoQmBC88bCOnP2Ir/o9uiNuDjw9nh943+7WkfH0rzG
-         gb4Ark9efi3rKZU1Ks++CIO6qOxrNdat3N/EZpapLDnNfu7jwpC1zrIGWl5F14O18uc/
-         mXz7fSiro1Lwc3kkjlYwSW9UdFitXszL4O7cJLw+fCuMozXfzmA5qIc4UZYrErvySVWU
-         zEMjumH7yF7lHe7L3PtOTm+HjQ01hZMXn9CAWyMmSPDvEYRk7JI1Lcki+RiV8dH4wWAE
-         LTHQ==
-X-Gm-Message-State: APjAAAWHdWJt4/Kpxr06kNACUHRGIQR0lX0mAgnZAZwRFN6GiRdFlihq
-        lHcZP3jv9d6GKb5oZnNRG+RzG+4o
-X-Google-Smtp-Source: APXvYqzr6GlaMeayKFIxHSgbHgwi9qkzV7MMFfGK4UVzy3avojFvZx/ld3NCFd1vP8L+sD/AlXw+uQ==
-X-Received: by 2002:a5b:80a:: with SMTP id x10mr16474089ybp.385.1580233881796;
-        Tue, 28 Jan 2020 09:51:21 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d186sm8678005ywe.0.2020.01.28.09.51.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jan 2020 09:51:21 -0800 (PST)
-Date:   Tue, 28 Jan 2020 09:51:19 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 000/183] 4.4.212-stable review
-Message-ID: <20200128175119.GA8176@roeck-us.net>
-References: <20200128135829.486060649@linuxfoundation.org>
+        Tue, 28 Jan 2020 12:52:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:33116 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbgA1Rw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:52:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C69B1FEC;
+        Tue, 28 Jan 2020 09:52:25 -0800 (PST)
+Received: from localhost (unknown [10.1.198.81])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 683E73F52E;
+        Tue, 28 Jan 2020 09:52:25 -0800 (PST)
+Date:   Tue, 28 Jan 2020 17:52:23 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>,
+        catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, sudeep.holla@arm.com, dietmar.eggemann@arm.com,
+        peterz@infradead.org, mingo@redhat.com, ggherdovich@suse.cz,
+        vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+Subject: Re: [PATCH v2 3/6] arm64/kvm: disable access to AMU registers from
+ kvm guests
+Message-ID: <20200128175223.GA31241@arm.com>
+References: <20191218182607.21607-1-ionela.voinescu@arm.com>
+ <20191218182607.21607-4-ionela.voinescu@arm.com>
+ <bc3f582c-9aed-8052-d0cb-b39c76c8ce73@arm.com>
+ <0690745f-fa38-f623-30a5-42d0eadfb668@arm.com>
+ <5de3d3c7-2d78-9d18-f3ca-7cb6cf9ce36c@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
+In-Reply-To: <5de3d3c7-2d78-9d18-f3ca-7cb6cf9ce36c@arm.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 03:03:39PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.212 release.
-> There are 183 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tuesday 28 Jan 2020 at 17:37:04 (+0000), Valentin Schneider wrote:
+> Hi Suzuki,
 > 
-> Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
-> Anything received after that time might be too late.
+> On 28/01/2020 17:26, Suzuki Kuruppassery Poulose wrote:
+> >> So, providing I didn't get completely lost on the way, I have to ask:
+> >> why do we use CPACR_EL1 here? Couldn't we use CPTR_EL2 directly?
+> > 
+> > Part of the reason is, CPTR_EL2 has different layout depending on
+> > whether HCR_EL2.E2H == 1. e.g, CPTR_EL2.TTA move from Bit[28] to Bit[20].
+> > 
+> > So, to keep it simple, CPTR_EL2 is used for non-VHE code with the shifts
+> > as defined by the "CPTR_EL2 when E2H=0"
+> > 
+> > if E2H == 1, CPTR_EL2 takes the layout of CPACR_EL1 and "overrides" some
+> > of the RES0 bits in CPACR_EL1 with EL2 controls (e.g: TAM, TCPAC).
+> > Thus we use CPACR_EL1 to keep the "shifts" non-conflicting (e.g, ZEN)
+> > and is the right thing to do.
+> > 
+> > It is a bit confusing, but we are doing the right thing. May be we could improve the comment like :
+> > 
+> >     /*
+> >      * With VHE (HCR.E2H == 1), CPTR_EL2 has the same layout as
+> >      * CPACR_EL1, except for some missing controls, such as TAM.
+> >      * And accesses to CPACR_EL1 are routed to CPTR_EL2.
+> >      * Also CPTR_EL2.TAM has the same position with or without
+> >      * HCR.E2H == 1. Therefore, use CPTR_EL2.TAM here for
+> >      * trapping the AMU accesses.
+> >      */
+> >
+
+Thanks Suzuki, this makes sense!
+
+Ionela.
+
 > 
-
-v4.4.211-184-gc4e686398655:
-
-arch/powerpc/kernel/cacheinfo.c: In function ‘cacheinfo_teardown’:
-arch/powerpc/kernel/cacheinfo.c:875:2: error: implicit declaration of function ‘lockdep_assert_cpus_held’;
-
-Guenter
+> Thanks for clearing this up! I also bothered MarcZ in the meantime who
+> also cleared up some of my confusion (including which layout takes effect).
+> 
+> So yeah, I think what we want here is to keep using CPTR_EL2_TAM but have a
+> comment that explains why (which you just provided!).
+> 
+> > Suzuki
