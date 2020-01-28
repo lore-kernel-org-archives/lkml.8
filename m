@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DADC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E890EC35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA64E24685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06EF24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222540;
-	bh=3FfHFvlKqbufPIlxQrPOqxE8ndyp//Hc9cm6l61ka98=;
+	s=default; t=1580222541;
+	bh=cXhWVoe8l7SesCfbvpKHyaadgu/BrM44Hjki1zDwezM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BvmFRghaOtm8qbHxhyL0LHcMDaqf2h1Hk4OwpXiKdKHJI+8Sox3LXFo98N1Bzv2R0
-	 CaWc7Cnvx1IRFtd4GI0MkzV4kRy/mMkOsAWz30DkQsz27acpkahnde9/0D8bVaODLt
-	 s0+nqLmjo80NRp1Nr2wREbj8YhAwRpGWc+XulSoE=
+	b=aaINGecEd4xSUIZOtnhUUf3Pt5qCR+7hEyWwJolj+NZGo3bJINk5qUCDYFV6TPz8H
+	 8B3mN+RWLwzkiT/ddq9JjT8d1Yc+5fLTkv/Twq3N8EiCoNgDDNtUwvJYHAsFR+sKc1
+	 FX+HvQr/Eu5UNQl767Boi5hO9mmd75TFnGP3n8T8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgA1ONV (ORCPT
+        id S1729196AbgA1ONT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:13:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34774 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:13:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728449AbgA1ONM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:13:12 -0500
+        id S1729113AbgA1ONJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:13:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E9F24688;
-        Tue, 28 Jan 2020 14:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4292A2468A;
+        Tue, 28 Jan 2020 14:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220791;
-        bh=3FfHFvlKqbufPIlxQrPOqxE8ndyp//Hc9cm6l61ka98=;
+        s=default; t=1580220788;
+        bh=cXhWVoe8l7SesCfbvpKHyaadgu/BrM44Hjki1zDwezM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tSMnOtbpbMKwC+WoFuTVOMFVMOlSr6v3vjErIDqjcIbXLJrFlGaE3plF04Np0WMlj
-         T2nEhM1NF6T7xbFZwzB++lS+pIa9siA5Fyllpd4OZqlZls/Nb41RA5vUMMMU7nBtSF
-         eZGdnNaObqs5Mdp969F+qrrgGmk+uWuOEObcuAp8=
+        b=zL2TP4ug485Eueab8DY7W+BV89oLPJu+dL/ZTBe9AJ7SchYvyey/5PLE6eXbZKXmP
+         Mocji6R4iHTkig83YSTdsVSuw0Etmc5POs/wfGCj8Lg5xLR39dFZIY2wuBKZ3kpBlI
+         jGBERp3/TciZM076lSSpL64ST5WDVMdepEUkA2pw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hai Li <hali@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Sean Paul <sean@poorly.run>, Sean Paul <seanpaul@chromium.org>,
+        stable@vger.kernel.org, Antonio Borneo <antonio.borneo@st.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 147/183] drm/msm/dsi: Implement reset correctly
-Date:   Tue, 28 Jan 2020 15:06:06 +0100
-Message-Id: <20200128135844.431777653@linuxfoundation.org>
+Subject: [PATCH 4.4 146/183] net: stmmac: fix length of PTP clocks name string
+Date:   Tue, 28 Jan 2020 15:06:05 +0100
+Message-Id: <20200128135844.326536543@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -62,71 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Antonio Borneo <antonio.borneo@st.com>
 
-[ Upstream commit 78e31c42261779a01bc73472d0f65f15378e9de3 ]
+[ Upstream commit 5da202c88f8c355ad79bc2e8eb582e6d433060e7 ]
 
-On msm8998, vblank timeouts are observed because the DSI controller is not
-reset properly, which ends up stalling the MDP.  This is because the reset
-logic is not correct per the hardware documentation.
+The field "name" in struct ptp_clock_info has a fixed size of 16
+chars and is used as zero terminated string by clock_name_show()
+in drivers/ptp/ptp_sysfs.c
+The current initialization value requires 17 chars to fit also the
+null termination, and this causes overflow to the next bytes in
+the struct when the string is read as null terminated:
+	hexdump -C /sys/class/ptp/ptp0/clock_name
+	00000000  73 74 6d 6d 61 63 5f 70  74 70 5f 63 6c 6f 63 6b  |stmmac_ptp_clock|
+	00000010  a0 ac b9 03 0a                                    |.....|
+where the extra 4 bytes (excluding the newline) after the string
+represent the integer 0x03b9aca0 = 62500000 assigned to the field
+"max_adj" that follows "name" in the same struct.
 
-The documentation states that after asserting reset, software should wait
-some time (no indication of how long), or poll the status register until it
-returns 0 before deasserting reset.
+There is no strict requirement for the "name" content and in the
+comment in ptp_clock_kernel.h it's reported it should just be 'A
+short "friendly name" to identify the clock'.
+Replace it with "stmmac ptp".
 
-wmb() is insufficient for this purpose since it just ensures ordering, not
-timing between writes.  Since asserting and deasserting reset occurs on the
-same register, ordering is already guaranteed by the architecture, making
-the wmb extraneous.
-
-Since we would define a timeout for polling the status register to avoid a
-possible infinite loop, lets just use a static delay of 20 ms, since 16.666
-ms is the time available to process one frame at 60 fps.
-
-Fixes: a689554ba6ed ("drm/msm: Initial add DSI connector support")
-Cc: Hai Li <hali@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Sean Paul <sean@poorly.run>
-[seanpaul renamed RESET_DELAY to DSI_RESET_TOGGLE_DELAY_MS]
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191011133939.16551-1-jeffrey.l.hugo@gmail.com
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
+Fixes: 92ba6888510c ("stmmac: add the support for PTP hw clock driver")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_host.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index 4c49868efcda2..12ddbbb531077 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -30,6 +30,8 @@
- #include "dsi.xml.h"
- #include "dsi_cfg.h"
- 
-+#define DSI_RESET_TOGGLE_DELAY_MS 20
-+
- static int dsi_get_version(const void __iomem *base, u32 *major, u32 *minor)
- {
- 	u32 ver;
-@@ -764,7 +766,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
- 	wmb(); /* clocks need to be enabled before reset */
- 
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb(); /* make sure reset happen */
-+	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
- }
- 
-@@ -1111,7 +1113,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
- 
- 	/* dsi controller can only be reset while clocks are running */
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb();	/* make sure reset happen */
-+	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
- 	wmb();	/* controller out of reset */
- 	dsi_write(msm_host, REG_DSI_CTRL, data0);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
+index 170a18b61281d..147c9f8cee7f7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
+@@ -157,7 +157,7 @@ static int stmmac_enable(struct ptp_clock_info *ptp,
+ /* structure describing a PTP hardware clock */
+ static struct ptp_clock_info stmmac_ptp_clock_ops = {
+ 	.owner = THIS_MODULE,
+-	.name = "stmmac_ptp_clock",
++	.name = "stmmac ptp",
+ 	.max_adj = 62500000,
+ 	.n_alarm = 0,
+ 	.n_ext_ts = 0,
 -- 
 2.20.1
 
