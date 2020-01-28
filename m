@@ -2,107 +2,95 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328E8C33CB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDACC32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033A024685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:40:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="yGh81KlD"
+	by mail.kernel.org (Postfix) with ESMTP id 79A9E24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580172119;
+	bh=lsGiniElf7t1vQe/yeZPYjWpHBZUL0oj3j1WyfVYCKw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hyrh2d/2zcDyg544F7Vx1945bp0TTm2alKhYkhB5anG+60eMcyb1vmvA+EoGWYF9g
+	 iApElx1dGlpmjDotWLaE03D1xKEMLSOaxg2LwrfxA3z5lgAmFyIEsF8rPvI5urDITw
+	 OyP8uaGIcSvDLA0bTMBhgZY6kF0GmG7uBuXHJWuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgA1AkS (ORCPT
+        id S1726442AbgA1Al6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 19:40:18 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37354 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgA1AkR (ORCPT
+        Mon, 27 Jan 2020 19:41:58 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39587 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA1Al6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 19:40:17 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q127so6044954pga.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:40:17 -0800 (PST)
+        Mon, 27 Jan 2020 19:41:58 -0500
+Received: by mail-lj1-f196.google.com with SMTP id o11so12907908ljc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:41:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+On2tA/f8+YdYPWTvyMv08OUAQi3vZn4p7ABbJv61Bs=;
-        b=yGh81KlDw0d7lEqifSeG0JkuzitPcS3k3L8txM1JudaN1u5W977obyNTj4DSzVkQAV
-         d8veFrIhKya6w37e79V5fegku6Rz2ivJV7KA8ZCCY4cy3aQSA0tOtCvukKddz97RSqP5
-         otrQb66lp5X97kb9xUipxQQvtLO2qE8UG30eH5M+nnOQeGcqMxHvjl0zgMik6EbwCGDo
-         imz9wO3N5v7MhqMzvRYRdU5TSmlkCwj1tJyIRzrvW+0jO0mbUImx1rYbf1/ljS5m0X5c
-         jeFvtTy3mc06oNvQIX4Q5oyf67ekNQ30DI2eJ8c1Ru5b66FjN+1rqRIjRldKOUKSZyMg
-         36cg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WT6OQboDqDdBVguxGZPI8tN+5N4G/SkgccbL5p+tTyg=;
+        b=G2AO03J+N/TYYht42zHBkx3+WSJwntkNO580Grzbw1f3GZCm33p2lDW6SJyd65pai2
+         pyCuD9Sjiapd/Cg8Kh0j3fXE8aryjYxbBedl4B25FMu9X6rrH5YsZBffYXhwmrZaGhEY
+         vp3YDWhWn2ofDOnXD3z+MRi1229Q4CuUsiHFw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+On2tA/f8+YdYPWTvyMv08OUAQi3vZn4p7ABbJv61Bs=;
-        b=CNquV1Ny0UI0uPDg6zAX00TusceSP1QbzJBI1XOtnbyRrzJ8poFKAbr7EDm9VVs4VK
-         r/ZH3g8HI/DabSdMdOl0Wsb6Y4eEGcTxpcSlM8FCjakYVfGQttDS/BhQ5J2MjJxGGcz4
-         RG07hTkbcV/fMNhy/DxVyXofLSm7myeKWEbyndqmsd+Do/fwnD2laU/i871NprZ2Ndyx
-         YM2FJFpc79snWH0Io0piuYVEKb2lSANIloiXj44NDkif7rTWG4QMzE7PxN9WlHPJDcJC
-         T1sDwucYMEh9EXpqJMVIUVkfBgNSbtZX0eIkMmlpnp/FtTSmWUkruG/v1YNfrjq/yE9w
-         gnXg==
-X-Gm-Message-State: APjAAAUyR5b7/uthgMjKTTzFVsQ99/7+fwWIA/eMo6+de2Yz1e5OVhKE
-        sD0NV3/eZtCAW5cmz8NT+CdKig==
-X-Google-Smtp-Source: APXvYqw/DMu1v7VrWyJz1LLZdBZ0TeXl4k1M2PToZKF1Y53WiM9U9r5NXJ6Qk/ekjAP74F9ERPfSAQ==
-X-Received: by 2002:a63:1346:: with SMTP id 6mr22263434pgt.111.1580172017306;
-        Mon, 27 Jan 2020 16:40:17 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id a19sm266073pju.11.2020.01.27.16.40.16
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WT6OQboDqDdBVguxGZPI8tN+5N4G/SkgccbL5p+tTyg=;
+        b=CcfIp+pQx6QODiV+U/Dv5E8zHcjhc68BCjdoh/eZTZxMionspPCe2kqPEioIh52xFX
+         457yVtdB10bdfb20d0jXiafZ8gsK3Ij7xzJftp9K83tDmNh4yYm/JCRLitqKQitkDjaX
+         YqnnlKdQd863BnV//6XMG0zQeZl6MJLoBF8psiB7zm1/Lw5my8SEHFNf/4W58hxO/3L7
+         FpIo8s9xiAYY8bUQGYfoD1Id8+EQJBdwArHptCqFLIyLvx1XZRx+AMyGNEukqlydtOd8
+         V5hZHElylILMpV8H9L5pXUU1DAUiqVpmgW8ooUZyhyWpR3+WjX1PFDi8ZRyd60keg0zD
+         4fJA==
+X-Gm-Message-State: APjAAAVbl7aMymb8f8KvauFtCy8/Ea2J1ImNlt5WRKMvcxsNngw9yzxw
+        QhV+LlGxytBzyPlhVD3e/gM8+OMW/j8=
+X-Google-Smtp-Source: APXvYqy/6tD1cttuKKQf+pmsQ/aeD4E+mN++WAuJNQ+D7wQ/OvR9JZDDHTh7GNCpGAsR6dMD0VciLg==
+X-Received: by 2002:a2e:6815:: with SMTP id c21mr2921lja.10.1580172115166;
+        Mon, 27 Jan 2020 16:41:55 -0800 (PST)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id u19sm8804298lfu.68.2020.01.27.16.41.54
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2020 16:40:16 -0800 (PST)
-Subject: Re: linux-next: manual merge of the block tree with Linus' tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pavel Begunkov <asml.silence@gmail.com>
-References: <20200128113851.50161614@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c8ab123b-b984-0024-2727-53d900a0f5ed@kernel.dk>
-Date:   Mon, 27 Jan 2020 17:40:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 27 Jan 2020 16:41:54 -0800 (PST)
+Received: by mail-lf1-f43.google.com with SMTP id 203so7707255lfa.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:41:54 -0800 (PST)
+X-Received: by 2002:a19:4849:: with SMTP id v70mr779881lfa.30.1580172113744;
+ Mon, 27 Jan 2020 16:41:53 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200128113851.50161614@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <158016896586.31887.7695979159638645055.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <158016896586.31887.7695979159638645055.tglx@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 27 Jan 2020 16:41:37 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjQYcq=tFqGDm7HVHozrf4ijWyCBWqT61NJ9DYcHVKZjg@mail.gmail.com>
+Message-ID: <CAHk-=wjQYcq=tFqGDm7HVHozrf4ijWyCBWqT61NJ9DYcHVKZjg@mail.gmail.com>
+Subject: Re: [GIT pull 0/7] Various tip branches
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/27/20 5:38 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the block tree got a conflict in:
-> 
->   fs/io_uring.c
-> 
-> between commit:
-> 
->   73e08e711d9c ("Revert "io_uring: only allow submit from owning task"")
-> 
-> from Linus' tree and commit:
-> 
->   9ef4f124894b ("io_uring: clamp to_submit in io_submit_sqes()")
-> 
-> from the block tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+On Mon, Jan 27, 2020 at 4:06 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> the following pull request are my first attempt of using signed
+> tags. Please double check and yell if something went wrong.
 
-Thanks, looks good to me. I'll try cooperating better with myself ;-)
+Well, the first one looked fine, but the subject lines were a bit odd
+on most of them.
 
--- 
-Jens Axboe
+They say "[GIT pull] xyz for" without saying what they are for.  So
+there's a missing "5.6-rc1" there ;)
 
+Not a big deal, and I don't think it has anything to do with the
+tagging, which looked fine in at least the timer fixes case.
+
+              Linus
