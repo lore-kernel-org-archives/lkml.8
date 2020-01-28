@@ -2,98 +2,93 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0FBC35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 03:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32013C35249
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0AC24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 03:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA92424688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aVeruAWm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IW+3XxEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgA1Dxo (ORCPT
+        id S1726438AbgA1EAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 22:53:44 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57712 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgA1Dxo (ORCPT
+        Mon, 27 Jan 2020 23:00:17 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37270 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgA1EAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 22:53:44 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00S3nMUO175514;
-        Tue, 28 Jan 2020 03:53:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=jf6o1qVdeu9loigwrRoxvlvoZlkKnYmsOaE3jQ1ohnM=;
- b=aVeruAWmfSCNiZKw/BwFher+/RRrq6W610GtjbUoebQX0ia3q+PP3Bdj2rmgY1qkQ1D6
- hj7GpRkXaRA8skSZ+EjDilAFt13fcR6m3c7zuFN++hSb2lgQTQt3n7ehbqtK9LzWX4NH
- DaFsjRIPWRJgnSEwdwwGdRivpWRsAeZp4iBkgUxqqnMtk5yKCdeyqvClHai12dLXsNf5
- 4d5ccSs38T7FT7TqCvw8j5q+S+9Gp1b54gZZQcPswbP/JDwfpU5cPDT/4JBzCn3/l4dy
- pFuHhUGzH9Y7PXf518yywQ7d+gsCnBFOUM41tskuQWLImPKLrLPLq9WLYUisGv4HDWad Eg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xrdmqbett-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 03:53:39 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00S3nO41043561;
-        Tue, 28 Jan 2020 03:53:39 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2xry4vqfv6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 03:53:38 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00S3rb3x007110;
-        Tue, 28 Jan 2020 03:53:37 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Jan 2020 19:53:37 -0800
-To:     Colin King <colin.king@canonical.com>
-Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: megaraid_sas: fix indentation issue
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200126154757.42530-1-colin.king@canonical.com>
-Date:   Mon, 27 Jan 2020 22:53:34 -0500
-In-Reply-To: <20200126154757.42530-1-colin.king@canonical.com> (Colin King's
-        message of "Sun, 26 Jan 2020 15:47:57 +0000")
-Message-ID: <yq1r1zk9qyp.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 27 Jan 2020 23:00:16 -0500
+Received: by mail-pg1-f193.google.com with SMTP id q127so6264974pga.4;
+        Mon, 27 Jan 2020 20:00:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jeb7c9R5os4FhU0ngzBICJpqeLgUbo3fqd+rMCyfI9k=;
+        b=IW+3XxEtSxZB0jg2Zmo34BOWXi8x9EFk6y1X8o91SJHDfx9P+h4z02/iXKzyLfDV2G
+         2PI2HZYgIbGSOKfoyhZwcKCldaOh2qK3GtvZBFGHyS5dhbCaMugiele3BcuUdhEccr8R
+         9LO+7BfGF0BZLpdzTMstpR54lqLRDD4YMHOzXNcH/I62cRLV8ygRrUG1JRaYd6rmBgbU
+         e+z503oSx2K4jKhPGcdtmMJO2Swxpm0xik/gjtyOexEb+hf4RAo1GFCHBzN6oTbw4hGc
+         ztOf0ACL9lzYwsV8LX71FDr0EvfB18k7R2FYCt0JN6oQ0Q75/sukRYlhqESM1qFYY3EA
+         7wag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jeb7c9R5os4FhU0ngzBICJpqeLgUbo3fqd+rMCyfI9k=;
+        b=VpvufCaHa36JLIhcYDtF+d4LcXHOlE1XQBdO5jnirgT+3l7wPIfuTR/LDRp2VT8qLD
+         aYBhw2pNgLPW4v3HTVShM2SZStezgT/IBJNHfm1dW7RD6pC3wKGcb1fCc9c0eYHyalY0
+         rql+rBf1AJUeJTkWndg+CDqiYeKdnaKeh4Ddc7q8BH+Pf+jfbecc0svsFKuvz9kZa4G4
+         o50D2dnrMybME3mGA87Lnhf4JArAHQ7Yy1U1QXDgw0VSYeZXGIrvnpyGKIuzjQHdYPM1
+         +615nrNnOeXst4j9ebZf0M1tjYoxqTYicln5INBOxilS9JWq8Zdmlk8oGPWi0WZep3wW
+         Og3Q==
+X-Gm-Message-State: APjAAAUgEepZ8c4hfqiAFRHxDXP3CscSeWtdpZpkGX27Iz9M103YVTnT
+        /IsjmnJoqflTihovoxYPMMw=
+X-Google-Smtp-Source: APXvYqyofZu1ouR4g/MgaA/VG2UwbEgLz/RWa+yyqBaKFqeaEMLSelMHmWqxmxcgxGpum/I4Tts+Ew==
+X-Received: by 2002:a63:fc01:: with SMTP id j1mr24047658pgi.220.1580184016303;
+        Mon, 27 Jan 2020 20:00:16 -0800 (PST)
+Received: from s15.smythies.com (mail.smythies.com. [173.180.45.4])
+        by smtp.gmail.com with ESMTPSA id d22sm17464489pgg.52.2020.01.27.20.00.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 20:00:15 -0800 (PST)
+From:   Doug Smythies <doug.smythies@gmail.com>
+X-Google-Original-From: Doug Smythies <dsmythies@telus.net>
+To:     dsmythies@telus.net, srinivas.pandruvada@linux.intel.com,
+        rjw@rjwysocki.net, len.brown@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH 0/2] tools/power/x86/intel_pstate_tracer: changes for pyhton 3 and newer processors
+Date:   Mon, 27 Jan 2020 19:59:55 -0800
+Message-Id: <20200128035957.2577561-1-dsmythies@telus.net>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9513 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=997
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001280029
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9513 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001280029
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some distributions are deleting python 3 support.
+A backward compatible minor syntax change is needed for
+use with python 3.
 
-Colin,
+Processors have exceeded some of the fixed y-axis scale maximum values.
+Change them to autoscale the y-axis.
 
-> There are two statments that are indented one level too deeply, remove
-> the extraneous tabs.
+Tested with python 2.7 and 3.7.
 
-Fixed typo and applied to 5.7/scsi-queue. Thanks.
+Doug Smythies (2):
+  tools/power/x86/intel_pstate_tracer: changes for python 3
+    compatibility
+  tools/power/x86/intel_pstate_tracer: change several graphs to
+    autoscale y-axis
+
+ .../intel_pstate_tracer.py                    | 38 +++++++++----------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.24.0
