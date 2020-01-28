@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB169C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E12C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC7320702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D81B207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222313;
-	bh=wv8d0sWLvqxJnPwnlkGz32Ljic2ruvb1/RyLPI+NbkQ=;
+	s=default; t=1580222317;
+	bh=HTlTTX6byxaENqBs/X3KWYtVPgzTy5YNeeF8bU7W29c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ec1QvNC3S+sbFGMZXiSB7bFhEOLNtg2kETntLlym97cNvqYNkVkhV81kjXjT1D11k
-	 VeoxGJB/OyImiG7oG9gCabuoXBPc7LrLi6LqrcDpmxgOJVY+ACxckUs81ajnzPv2z9
-	 3qNcllNAZUXhVQzKbfHkvGeuJbVIAQGFUqtmj7vY=
+	b=CmVC/T+X321/L8mP2bXXlitdUevLcwrvHOUT5erZ3+evHYkxcu55KwdKS1nLWR8v6
+	 esliJRhEvF6Rmsn2nmhQ78Z+BM0fp/4Euu7Bcz0I08KgBTpIx+vyD5rUyNqai2mDUy
+	 WmYAFqPo21SvpS/q7hytPsubDOEcBoF5nmMGOUYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbgA1OSZ (ORCPT
+        id S1731238AbgA1Oif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:18:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:38:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730003AbgA1OSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:18:17 -0500
+        id S1730660AbgA1OSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:18:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9478F24690;
-        Tue, 28 Jan 2020 14:18:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D471821739;
+        Tue, 28 Jan 2020 14:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221097;
-        bh=wv8d0sWLvqxJnPwnlkGz32Ljic2ruvb1/RyLPI+NbkQ=;
+        s=default; t=1580221104;
+        bh=HTlTTX6byxaENqBs/X3KWYtVPgzTy5YNeeF8bU7W29c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PuifOm16Uf4/uDcZanvvBhHWsnkc/b1N7RVQhFE5yR3aJN7b3DxFzeV505K6J67pU
-         OWIvXI8r6WaQGIl2HElgwkbKG7ejQlTjfg2Kw5U+TnB9x/jInjpi0RyGqNdzs1R3a4
-         fJnlbCY9TnMMKyKpllF5n3mxT3K0lipVtYV50VHA=
+        b=dGu8Ohw8MG8HEw2kvA8e8Z1GrboV85MpkyQip5s8qZ3KBDrpwJm12+f23bvlf78sZ
+         iXO02LbEeTf7TrTbpPPjo8QnQSI97MDh+JIhMV839CXjyuB3dr3c/d9hQI/ZpnDbRH
+         VumEcyRH8ncGt/8BPzsnkyc33CXzPmpvRGPbYHy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Anand Moon <linux.amoon@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 070/271] pinctrl: sh-pfc: r8a7792: Fix vin1_data18_b pin group
-Date:   Tue, 28 Jan 2020 15:03:39 +0100
-Message-Id: <20200128135857.802230940@linuxfoundation.org>
+Subject: [PATCH 4.9 090/271] ARM: 8847/1: pm: fix HYP/SVC mode mismatch when MCPM is used
+Date:   Tue, 28 Jan 2020 15:03:59 +0100
+Message-Id: <20200128135859.284646622@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,33 +63,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit b9fd50488b4939ce5b3a026d29e752e17c2d1800 ]
+[ Upstream commit ca70ea43f80c98582f5ffbbd1e6f4da2742da0c4 ]
 
-The vin1_data18_b pin group itself is present, but it is not listed in
-the VIN1 pin group array, and thus cannot be selected.
+MCPM does a soft reset of the CPUs and uses common cpu_resume() routine to
+perform low-level platform initialization. This results in a try to install
+HYP stubs for the second time for each CPU and results in false HYP/SVC
+mode mismatch detection. The HYP stubs are already installed at the
+beginning of the kernel initialization on the boot CPU (head.S) or in the
+secondary_startup() for other CPUs. To fix this issue MCPM code should use
+a cpu_resume() routine without HYP stubs installation.
 
-Fixes: 7dd74bb1f058786e ("pinctrl: sh-pfc: r8a7792: Add VIN pin groups")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+This change fixes HYP/SVC mode mismatch on Samsung Exynos5422-based Odroid
+XU3/XU4/HC1 boards.
+
+Fixes: 3721924c8154 ("ARM: 8081/1: MCPM: provide infrastructure to allow for MCPM loopback")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Nicolas Pitre <nico@linaro.org>
+Tested-by: Anand Moon <linux.amoon@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7792.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/common/mcpm_entry.c   |  2 +-
+ arch/arm/include/asm/suspend.h |  1 +
+ arch/arm/kernel/sleep.S        | 12 ++++++++++++
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7792.c b/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
-index 21badb6166b92..97998929db938 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
-@@ -1863,6 +1863,7 @@ static const char * const vin1_groups[] = {
- 	"vin1_data8",
- 	"vin1_data24_b",
- 	"vin1_data20_b",
-+	"vin1_data18_b",
- 	"vin1_data16_b",
- 	"vin1_sync",
- 	"vin1_field",
+diff --git a/arch/arm/common/mcpm_entry.c b/arch/arm/common/mcpm_entry.c
+index a923524d10407..8617323eb2735 100644
+--- a/arch/arm/common/mcpm_entry.c
++++ b/arch/arm/common/mcpm_entry.c
+@@ -379,7 +379,7 @@ static int __init nocache_trampoline(unsigned long _arg)
+ 	unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+ 	phys_reset_t phys_reset;
+ 
+-	mcpm_set_entry_vector(cpu, cluster, cpu_resume);
++	mcpm_set_entry_vector(cpu, cluster, cpu_resume_no_hyp);
+ 	setup_mm_for_reboot();
+ 
+ 	__mcpm_cpu_going_down(cpu, cluster);
+diff --git a/arch/arm/include/asm/suspend.h b/arch/arm/include/asm/suspend.h
+index 6c7182f32cefe..e6c2f426f8c86 100644
+--- a/arch/arm/include/asm/suspend.h
++++ b/arch/arm/include/asm/suspend.h
+@@ -7,6 +7,7 @@ struct sleep_save_sp {
+ };
+ 
+ extern void cpu_resume(void);
++extern void cpu_resume_no_hyp(void);
+ extern void cpu_resume_arm(void);
+ extern int cpu_suspend(unsigned long, int (*)(unsigned long));
+ 
+diff --git a/arch/arm/kernel/sleep.S b/arch/arm/kernel/sleep.S
+index 0f6c1000582c3..c8569390e7e7e 100644
+--- a/arch/arm/kernel/sleep.S
++++ b/arch/arm/kernel/sleep.S
+@@ -119,6 +119,14 @@ ENDPROC(cpu_resume_after_mmu)
+ 	.text
+ 	.align
+ 
++#ifdef CONFIG_MCPM
++	.arm
++THUMB(	.thumb			)
++ENTRY(cpu_resume_no_hyp)
++ARM_BE8(setend be)			@ ensure we are in BE mode
++	b	no_hyp
++#endif
++
+ #ifdef CONFIG_MMU
+ 	.arm
+ ENTRY(cpu_resume_arm)
+@@ -134,6 +142,7 @@ ARM_BE8(setend be)			@ ensure we are in BE mode
+ 	bl	__hyp_stub_install_secondary
+ #endif
+ 	safe_svcmode_maskall r1
++no_hyp:
+ 	mov	r1, #0
+ 	ALT_SMP(mrc p15, 0, r0, c0, c0, 5)
+ 	ALT_UP_B(1f)
+@@ -162,6 +171,9 @@ ENDPROC(cpu_resume)
+ 
+ #ifdef CONFIG_MMU
+ ENDPROC(cpu_resume_arm)
++#endif
++#ifdef CONFIG_MCPM
++ENDPROC(cpu_resume_no_hyp)
+ #endif
+ 
+ 	.align 2
 -- 
 2.20.1
 
