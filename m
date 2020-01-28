@@ -2,147 +2,143 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_DBL_ABUSE_MALW autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519CFC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6CCC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3285B24681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B2224687
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580214262;
+	bh=BtqscQvFbrm9Hvfh2uW51lnqhOWg/ZKqqk/HxI4Up1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vxIroYXdBv7vmcatVw9KsbDuDPeJni8gaZSFQIKrbXuutdWu2axhD5vRCF0tWK5Wx
+	 fU/m3ElrFPEg/reK7F/6nYmXrDfq/9mrNrHvIv4E86OlHVnUnsJ1/EuCLzbdzbTmZY
+	 4iM4GyqpVft1az+sAoLI4rR9XrEPsvS5NXsVkNwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbgA1MVB (ORCPT
+        id S1726162AbgA1MYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:21:01 -0500
-Received: from disco-boy.misterjones.org ([51.254.78.96]:52158 "EHLO
-        disco-boy.misterjones.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgA1MVB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:21:01 -0500
-X-Greylist: delayed 1943 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jan 2020 07:21:00 EST
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@misterjones.org>)
-        id 1iwPM8-001o2H-Sm; Tue, 28 Jan 2020 11:48:33 +0000
+        Tue, 28 Jan 2020 07:24:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbgA1MYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 07:24:20 -0500
+Received: from localhost (unknown [223.226.101.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0041C24685;
+        Tue, 28 Jan 2020 12:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580214259;
+        bh=BtqscQvFbrm9Hvfh2uW51lnqhOWg/ZKqqk/HxI4Up1A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qdUQmUtqdRw+9h3xCJxZPnmgPE0w88p/uvrqPvpdpQY2NVJgCVCuG2L2bjiWb+6Ya
+         +esNf2jMmYgrO4zO0hnY9k3ICW/kPZa3jeUI5V2DENTSts4MCG59r2ICpRGBtdpHx+
+         95VeNeU3w44aK9YXEnraPxKQQRWuZOoQoSWmKgBU=
+Date:   Tue, 28 Jan 2020 17:54:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     peter.ujfalusi@ti.com, dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, corbet@lwn.net,
+        linux-doc@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: Docs build broken by driver-api/dmaengine/client.rst ? (was Re:
+ [GIT PULL]: dmaengine updates for v5.6-rc1)
+Message-ID: <20200128122415.GU2841@vkoul-mobl>
+References: <20200127145835.GI2841@vkoul-mobl>
+ <87imkvhkaq.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 28 Jan 2020 11:48:32 +0000
-From:   Marc Zyngier <maz@misterjones.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-kernel@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        xen-devel@lists.xenproject.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC 0/6] vDSO support for Hyper-V guest on ARM64
-In-Reply-To: <20200128055846.GA83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20191216001922.23008-1-boqun.feng@gmail.com>
- <ef6cb7ba-b448-cfa5-abbb-1d99d1396ce5@arm.com>
- <20200124063215.GA93938@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <4cdf2188-8909-4b90-ca78-92cef520b23d@arm.com>
- <20200128055846.GA83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-Message-ID: <58c453d060066ebaed24cd13e22de1c5@misterjones.org>
-X-Sender: maz@misterjones.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: boqun.feng@gmail.com, vincenzo.frascino@arm.com, sashal@kernel.org, linux-hyperv@vger.kernel.org, sstabellini@kernel.org, sthemmin@microsoft.com, catalin.marinas@arm.com, haiyangz@microsoft.com, linux-kernel@vger.kernel.org, mikelley@microsoft.com, xen-devel@lists.xenproject.org, tglx@linutronix.de, kys@microsoft.com, will@kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@misterjones.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imkvhkaq.fsf@mpe.ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-28 05:58, Boqun Feng wrote:
-> On Fri, Jan 24, 2020 at 10:24:44AM +0000, Vincenzo Frascino wrote:
->> Hi Boqun Feng,
->> 
->> On 24/01/2020 06:32, Boqun Feng wrote:
->> > Hi Vincenzo,
->> >
->> 
->> [...]
->> 
->> >>
->> >> I had a look to your patches and overall, I could not understand why we can't
->> >> use the arch_timer to do the same things you are doing with the one you
->> >> introduced in this series. What confuses me is that KVM works just fine with the
->> >> arch_timer which was designed with virtualization in mind. Why do we need
->> >> another one? Could you please explain?
->> >>
->> >
->> > Please note that the guest VM on Hyper-V for ARM64 doesn't use
->> > arch_timer as the clocksource. See:
->> >
->> > 	https://lore.kernel.org/linux-arm-kernel/1570129355-16005-7-git-send-email-mikelley@microsoft.com/
->> >
->> > ,  ACPI_SIG_GTDT is used for setting up Hyper-V synthetic clocksource
->> > and other initialization work.
->> >
->> 
->> I had a look a look at it and my question stands, why do we need 
->> another timer
->> on arm64?
->> 
+Hi Michael,
+
+On 28-01-20, 22:50, Michael Ellerman wrote:
+> Hi Vinod,
 > 
-> Sorry for the late response. It's weekend and Chinese New Year, so I 
-> got
-> to spend some time making (and mostly eating) dumplings ;-)
-
-And you haven't been sharing! ;-)
-
-> After discussion with Michael, here is some explanation why we need
-> another timer:
+> Vinod Koul <vkoul@kernel.org> writes:
+> > Hello Linus,
+> >
+> > Please pull to receive the dmaengine updates for v5.6-rc1. This time we
+> > have a bunch of core changes to support dynamic channels, hotplug of
+> > controllers, new apis for metadata ops etc along with new drivers for
+> > Intel data accelerators, TI K3 UDMA, PLX DMA engine and hisilicon
+> > Kunpeng DMA engine. Also usual assorted updates to drivers.
+> >
+> > The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+> >
+> >   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.6-rc1
+> >
+> > for you to fetch changes up to 71723a96b8b1367fefc18f60025dae792477d602:
+> >
+> >   dmaengine: Create symlinks between DMA channels and slaves (2020-01-24 11:41:32 +0530)
+> >
+> > ----------------------------------------------------------------
+> > dmaengine updates for v5.6-rc1
+> ...
+> >
+> > Peter Ujfalusi (9):
+> >       dmaengine: doc: Add sections for per descriptor metadata support
 > 
-> The synthetic clocks that Hyper-V presents in a guest VM were 
-> originally
-> created for the x86 architecture. They provide a level of abstraction
-> that solves problems like continuity across live migrations where the
-> hardware clock (i.e., TSC in the case x86) frequency may be different
-> across the migration. When Hyper-V was brought to ARM64, this
-> abstraction was maintained to provide consistency across the x86 and
-> ARM64 architectures, and for both Windows and Linux guest VMs.   The
-> core Linux code for the Hyper-V clocks (in
-> drivers/clocksource/hyperv_timer.c) is architecture neutral and works 
-> on
-> both x86 and ARM64. As you can see, this part is done in Michael's
-> patchset.
+> This broke the docs build for me with:
 > 
-> Arguably, Hyper-V for ARM64 should have optimized for consistency with
-> the ARM64 community rather with the existing x86 implementation and
-> existing guest code in Windows. But at this point, it is what it is,
-> and the Hyper-V clocks do solve problems like migration that aren’t
-> addressed in ARM64 until v8.4 of the architecture with the addition of
-> the counter hardware scaling feature. Hyper-V doesn’t currently map the
-> ARM arch timer interrupts into guest VMs, so we need to use the 
-> existing
-> Hyper-V clocks and the common code that already exists.
+>   Sphinx parallel build error:
+>   docutils.utils.SystemMessage: /linux/Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
 
-The migration thing is a bit of a red herring. Do you really anticipate
-VM migration across systems that have their timers running at different
-frequencies *today*? And even if you did, there are ways to deal with it
-with the arch timers (patches to that effect were posted on the list, 
-and
-there was even a bit of an ARM spec for it).
+Thanks for the report.
 
-I find it odd to try and make arm64 "just another x86", while the 
-architecture
-gives you most of what you need already. I guess I'm tainted.
+>   Optional: per descriptor metadata
+>   ---------------------------------
+> 
+> 
+> The patch below fixes the build. It may not produce the output you
+> intended, it just makes it bold rather than a heading, but it doesn't
+> really make sense to have a heading inside a numbered list.
+> 
+> diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+> index a9a7a3c84c63..343df26e73e8 100644
+> --- a/Documentation/driver-api/dmaengine/client.rst
+> +++ b/Documentation/driver-api/dmaengine/client.rst
+> @@ -151,8 +151,8 @@ DMA usage
+>       Note that callbacks will always be invoked from the DMA
+>       engines tasklet, never from interrupt context.
+>  
+> -  Optional: per descriptor metadata
+> -  ---------------------------------
+> +  **Optional: per descriptor metadata**
+> +
 
-Thanks,
+I have modified this to below as this:
 
-         M.
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -151,8 +151,8 @@ The details of these operations are:
+      Note that callbacks will always be invoked from the DMA
+      engines tasklet, never from interrupt context.
+ 
+-  Optional: per descriptor metadata
+-  ---------------------------------
++Optional: per descriptor metadata
++---------------------------------
+   DMAengine provides two ways for metadata support.
+ 
+   DESC_METADATA_CLIENT
+
+And I will add this as fixes and it should be in linux-next tomorrow
+
+Thanks
 -- 
-Who you jivin' with that Cosmik Debris?
+~Vinod
