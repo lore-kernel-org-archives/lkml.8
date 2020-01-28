@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547A3C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4404C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C45A2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA16524688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221743;
-	bh=JAjAeDhx0S/90GrsL1jOsjUZ4BTjZmzFFrqi3twWyLg=;
+	s=default; t=1580221745;
+	bh=pmH3pqwquri/97YKTJEYZAwFtUYiOj88w6HvPfcMfoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fibnxZRzsb+v6bOiEOPdtm+JoK/oaGdUBD2BHTUCN4LNmC3bJ3xUPbk7NG7UV8va0
-	 iR/GjRRaE285z6fZznYsyWswjoT7LftOZnZ/1O0qOQ4c0xQ/AdlsreDqqUYfRnIlQg
-	 HgqnmmYIf1CzmgOUxNzOLUiLul18ybTBwbn+btLw=
+	b=kdmBsn7lvmKkiQUUJFQreZA+A1AmfM+tyWzqYjUaGjLObB4ZWMBUfriCRfAsaPPxx
+	 tF35eMDk/BqMGscppix4w8ayMNpSaaleJKe54dTulApa2T7pKp55wmHBgBHbb10pJF
+	 2yftZCRMY9KJvLiIyFPtJDRHCfyd3u2tg1/Kl4qY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387600AbgA1O3C (ORCPT
+        id S2387610AbgA1O3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:29:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:29:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387553AbgA1O26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:28:58 -0500
+        id S2387593AbgA1O3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:29:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D3292468F;
-        Tue, 28 Jan 2020 14:28:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AFBB2468D;
+        Tue, 28 Jan 2020 14:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221737;
-        bh=JAjAeDhx0S/90GrsL1jOsjUZ4BTjZmzFFrqi3twWyLg=;
+        s=default; t=1580221740;
+        bh=pmH3pqwquri/97YKTJEYZAwFtUYiOj88w6HvPfcMfoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=atc9t/lyVRPROPGRod4TlBWXx8f0x2uVqsxf5JJRdiCDYL/o/9u6Fmt4VFX2u75di
-         rMkU9WaK6N8ILiAUHhp0D8n7EgkGzWQfxQLyE7T7MBba3/yVOAEX/xzmXeglfPpJxC
-         7h8JMntvDTiC6+CUl1HENOFlBEYc/i7PKI+8GFQ4=
+        b=mj68Uz43xckdoOdHWxNKPV6ks2YXfT1Yqt83PjSqW9otV5B2im9fu1HCIkKjHcudp
+         7ZbLp3rtqIAc+pZJE7WMwCGi40ZAj6ddBweEkPiyMYh4A4h/PALZhBot8M9Q1IqL7r
+         LY+3/WS+PsPxBC7SuhIrkErnSVVWpuMmKtq68LL0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Oscar Salvador <osalvador@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 70/92] mm, sparse: drop pgdat_resize_lock in sparse_add/remove_one_section()
-Date:   Tue, 28 Jan 2020 15:08:38 +0100
-Message-Id: <20200128135818.356174370@linuxfoundation.org>
+Subject: [PATCH 4.19 71/92] mm, sparse: pass nid instead of pgdat to sparse_add_one_section()
+Date:   Tue, 28 Jan 2020 15:08:39 +0100
+Message-Id: <20200128135818.493866712@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -66,45 +66,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wei Yang <richard.weiyang@gmail.com>
 
-commit 83af658898cb292a32d8b6cd9b51266d7cfc4b6a upstream.
+commit 4e0d2e7ef14d9e1c900dac909db45263822b824f upstream.
 
-pgdat_resize_lock is used to protect pgdat's memory region information
-like: node_start_pfn, node_present_pages, etc.  While in function
-sparse_add/remove_one_section(), pgdat_resize_lock is used to protect
-initialization/release of one mem_section.  This looks not proper.
+Since the information needed in sparse_add_one_section() is node id to
+allocate proper memory, it is not necessary to pass its pgdat.
 
-These code paths are currently protected by mem_hotplug_lock currently but
-should there ever be any reason for locking at the sparse layer a
-dedicated lock should be introduced.
+This patch changes the prototype of sparse_add_one_section() to pass node
+id directly.  This is intended to reduce misleading that
+sparse_add_one_section() would touch pgdat.
 
-Following is the current call trace of sparse_add/remove_one_section()
-
-    mem_hotplug_begin()
-    arch_add_memory()
-       add_pages()
-           __add_pages()
-               __add_section()
-                   sparse_add_one_section()
-    mem_hotplug_done()
-
-    mem_hotplug_begin()
-    arch_remove_memory()
-        __remove_pages()
-            __remove_section()
-                sparse_remove_one_section()
-    mem_hotplug_done()
-
-The comment above the pgdat_resize_lock also mentions "Holding this will
-also guarantee that any pfn_valid() stays that way.", which is true with
-the current implementation and false after this patch.  But current
-implementation doesn't meet this comment.  There isn't any pfn walkers to
-take the lock so this looks like a relict from the past.  This patch also
-removes this comment.
-
-[richard.weiyang@gmail.com: v4]
-  Link: http://lkml.kernel.org/r/20181204085657.20472-1-richard.weiyang@gmail.com
-[mhocko@suse.com: changelog suggestion]
-Link: http://lkml.kernel.org/r/20181128091243.19249-1-richard.weiyang@gmail.com
+Link: http://lkml.kernel.org/r/20181204085657.20472-2-richard.weiyang@gmail.com
 Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
 Reviewed-by: David Hildenbrand <david@redhat.com>
 Acked-by: Michal Hocko <mhocko@suse.com>
@@ -115,68 +86,61 @@ Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/mmzone.h |    3 +--
- mm/sparse.c            |    9 +--------
- 2 files changed, 2 insertions(+), 10 deletions(-)
+ include/linux/memory_hotplug.h |    4 ++--
+ mm/memory_hotplug.c            |    2 +-
+ mm/sparse.c                    |    8 ++++----
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -637,8 +637,7 @@ typedef struct pglist_data {
- #if defined(CONFIG_MEMORY_HOTPLUG) || defined(CONFIG_DEFERRED_STRUCT_PAGE_INIT)
- 	/*
- 	 * Must be held any time you expect node_start_pfn, node_present_pages
--	 * or node_spanned_pages stay constant.  Holding this will also
--	 * guarantee that any pfn_valid() stays that way.
-+	 * or node_spanned_pages stay constant.
- 	 *
- 	 * pgdat_resize_lock() and pgdat_resize_unlock() are provided to
- 	 * manipulate node_size_lock without checking for CONFIG_MEMORY_HOTPLUG
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -335,8 +335,8 @@ extern void move_pfn_range_to_zone(struc
+ 		unsigned long nr_pages, struct vmem_altmap *altmap);
+ extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
+ extern bool is_memblock_offlined(struct memory_block *mem);
+-extern int sparse_add_one_section(struct pglist_data *pgdat,
+-		unsigned long start_pfn, struct vmem_altmap *altmap);
++extern int sparse_add_one_section(int nid, unsigned long start_pfn,
++				  struct vmem_altmap *altmap);
+ extern void sparse_remove_one_section(struct zone *zone, struct mem_section *ms,
+ 		unsigned long map_offset, struct vmem_altmap *altmap);
+ extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -255,7 +255,7 @@ static int __meminit __add_section(int n
+ 	if (pfn_valid(phys_start_pfn))
+ 		return -EEXIST;
+ 
+-	ret = sparse_add_one_section(NODE_DATA(nid), phys_start_pfn, altmap);
++	ret = sparse_add_one_section(nid, phys_start_pfn, altmap);
+ 	if (ret < 0)
+ 		return ret;
+ 
 --- a/mm/sparse.c
 +++ b/mm/sparse.c
-@@ -668,7 +668,6 @@ int __meminit sparse_add_one_section(str
- 	struct mem_section *ms;
- 	struct page *memmap;
- 	unsigned long *usemap;
--	unsigned long flags;
- 	int ret;
- 
- 	/*
-@@ -688,8 +687,6 @@ int __meminit sparse_add_one_section(str
- 		return -ENOMEM;
- 	}
- 
--	pgdat_resize_lock(pgdat, &flags);
--
- 	ms = __pfn_to_section(start_pfn);
- 	if (ms->section_mem_map & SECTION_MARKED_PRESENT) {
- 		ret = -EEXIST;
-@@ -708,7 +705,6 @@ int __meminit sparse_add_one_section(str
- 	sparse_init_one_section(ms, section_nr, memmap, usemap);
- 
- out:
--	pgdat_resize_unlock(pgdat, &flags);
- 	if (ret < 0) {
- 		kfree(usemap);
- 		__kfree_section_memmap(memmap, altmap);
-@@ -770,10 +766,8 @@ void sparse_remove_one_section(struct zo
- 		unsigned long map_offset, struct vmem_altmap *altmap)
+@@ -661,8 +661,8 @@ static void free_map_bootmem(struct page
+  * set.  If this is <=0, then that means that the passed-in
+  * map was not consumed and must be freed.
+  */
+-int __meminit sparse_add_one_section(struct pglist_data *pgdat,
+-		unsigned long start_pfn, struct vmem_altmap *altmap)
++int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
++				     struct vmem_altmap *altmap)
  {
- 	struct page *memmap = NULL;
--	unsigned long *usemap = NULL, flags;
--	struct pglist_data *pgdat = zone->zone_pgdat;
-+	unsigned long *usemap = NULL;
- 
--	pgdat_resize_lock(pgdat, &flags);
- 	if (ms->section_mem_map) {
- 		usemap = ms->pageblock_flags;
- 		memmap = sparse_decode_mem_map(ms->section_mem_map,
-@@ -781,7 +775,6 @@ void sparse_remove_one_section(struct zo
- 		ms->section_mem_map = 0;
- 		ms->pageblock_flags = NULL;
- 	}
--	pgdat_resize_unlock(pgdat, &flags);
- 
- 	clear_hwpoisoned_pages(memmap + map_offset,
- 			PAGES_PER_SECTION - map_offset);
+ 	unsigned long section_nr = pfn_to_section_nr(start_pfn);
+ 	struct mem_section *ms;
+@@ -674,11 +674,11 @@ int __meminit sparse_add_one_section(str
+ 	 * no locking for this, because it does its own
+ 	 * plus, it does a kmalloc
+ 	 */
+-	ret = sparse_index_init(section_nr, pgdat->node_id);
++	ret = sparse_index_init(section_nr, nid);
+ 	if (ret < 0 && ret != -EEXIST)
+ 		return ret;
+ 	ret = 0;
+-	memmap = kmalloc_section_memmap(section_nr, pgdat->node_id, altmap);
++	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
+ 	if (!memmap)
+ 		return -ENOMEM;
+ 	usemap = __kmalloc_section_usemap();
 
 
