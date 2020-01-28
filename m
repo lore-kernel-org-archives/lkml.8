@@ -2,135 +2,214 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1C9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8E6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D3524691
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D769D24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:39:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="TFndPTPX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e85SRB11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgA1Iie (ORCPT
+        id S1726028AbgA1Ijn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 03:38:34 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:54143 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725867AbgA1Iid (ORCPT
+        Tue, 28 Jan 2020 03:39:43 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46362 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgA1Ijm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 03:38:33 -0500
-Received: from [IPv6:2001:983:e9a7:1:6d16:ffdc:f7c6:fc6f]
- ([IPv6:2001:983:e9a7:1:6d16:ffdc:f7c6:fc6f])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id wMOEiIkz7rNgywMOFiSdnm; Tue, 28 Jan 2020 09:38:31 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1580200711; bh=IV9O/g4Kf0NmuJ/UEFAYcx5nb57xh717LTJtJ7iiERY=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=TFndPTPXRuMwwNo9Xd2LuBMFrNO3fT0IEbD2rbN3hfbTyj+Q5vk6lNyCsMz8m4Zmu
-         VZMvVKjo8tEQL9U79xT1Nvd/2/VFyonkddRzVLbEI4957OA5b5bxCKn2HZtaM/tQRf
-         Q/VYb73UEWH4OM/OvGB1VTFAKZR3juKGQuiRv0Iw5/ZR/50DUDTn8OnBqPRF0owxlb
-         REo2XDKXspBE8VxVcCxL3UmWtIs+HPfkCewn0Wsg8+qg+Edgjn9/M0ATuKc05rPPiq
-         r6GPOKW2Mc4c3+hAWzmHn/a++MTF3zofvfbU6YC4qljetjvLdhDe3sgOWiL0E83F64
-         Q26qq9d0zwO2w==
-Subject: Re: [RFC][PATCH 05/15] videobuf2: handle
- V4L2_FLAG_MEMORY_NON_CONSISTENT in REQBUFS
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191217032034.54897-1-senozhatsky@chromium.org>
- <20191217032034.54897-6-senozhatsky@chromium.org>
- <8d0c95c3-64a2-ec14-0ac2-204b0430b2b4@xs4all.nl>
- <20200122021805.GE149602@google.com> <20200122034826.GA49953@google.com>
- <7c4accc6-56f2-ecd0-1549-a4114b339ce8@xs4all.nl>
- <CAAFQd5C=Zj7h5Xe1w=0czX5ge1Kh=2cj6yEkN6binPgmmpj6Wg@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <be0b79dc-c92f-cbb5-2baa-b058a944435d@xs4all.nl>
-Date:   Tue, 28 Jan 2020 09:38:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 28 Jan 2020 03:39:42 -0500
+Received: by mail-il1-f194.google.com with SMTP id t17so9907143ilm.13;
+        Tue, 28 Jan 2020 00:39:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dEoW6trIyGpD4Kvb30x1mKGZZhALEZWIqSY8XIzBoOo=;
+        b=e85SRB11bQ6yaIcLY6N76MEgqAVOPwm3CKsT7JHEZ9gQ0UY5DA3LhIk95uMWjhaZ1m
+         vX9/GcMcuJMZTqpU0gCutCjN6lbqZeq6bQtI9zqbBPd5m8JOoWdP/L0bVBVW5tn+9wo2
+         jpwuccaBz1Kj7HY4sA2eYNrvqbNItAlBMrXawztWTyaOMrfETkuDB/OhecUKheZbKz59
+         rn0mak+BTN0SyKw39isrL3Y07ErN8PV68HyKU47MQDcqABH1spJr/fVdXAp+F3qt4I2h
+         I0+JPd3hLRQ8b02UJ59Ulfts2o4+6OzAoPYvd6xZpJhlr6ydP+uQB+tzqFGdn0uulhHF
+         8SFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dEoW6trIyGpD4Kvb30x1mKGZZhALEZWIqSY8XIzBoOo=;
+        b=W+mDBCxkgCug3PtZPpyROpHNzXFqWI69WmaSt4C4tpHOHPupkBr9euXHVUGCrDmMlT
+         BX1riTOVKYQDTnj9RzpwTOLymSA+4NtAzUWJrMx0n84Fd9uJAbJJYYyc2+Krp885u4rI
+         iUKMdWZyuwJqcB33TV5+SoechoGlhjnZbXEQaIxlYwVY9FpeEGGH8vZegpWfNHk66Hls
+         XkeJ2/SWm2irds/P6G34U+Xk/KY2YfmejQuvK+PPmzuRMgjHmHtvKanqc8H/ptQDGEvV
+         M1VPTCKpdkrMIfUWlO9vPvTMkMAMZdR9frsOQTCvUIqzgc08MYnBH90mEXHZxm0FmoPM
+         Vqig==
+X-Gm-Message-State: APjAAAXPxWrK18YDKETJ5TeR5RdfO/ETaYK8PwroBixB1Uzsj59IbNIB
+        W+Gwkz3x6qp5+Qa41BL2r1t15GoVuzBW1ccxDrM=
+X-Google-Smtp-Source: APXvYqxbItAFVdwg3ATF3Xor4sPSAzsaOAhPbWgZNPkv+WJS+rcJLCIRUcjb4McWxsDYzO5E+micOxmgrzDrunXbwM0=
+X-Received: by 2002:a92:ccd0:: with SMTP id u16mr17521848ilq.215.1580200781833;
+ Tue, 28 Jan 2020 00:39:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAAFQd5C=Zj7h5Xe1w=0czX5ge1Kh=2cj6yEkN6binPgmmpj6Wg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKhEKfdXAdA81HiQ4zgKXjWpzuc1aiNifsOOV1m3LmCz/4IKJlloa5zdoRcxZbCSUQrnY0MAlFMtbdmbqFumT0EcI+bVtzG+r5NS1DLOh/LwW8BpM3GU
- oXt0dUpdn+Lod8HiKhoGdxMskahQN3fVNR0AXeK/sstlhbjVagvJ4DNLk/rzLc5juWPdDIjqAOt4ZrjAyFiQkLl+I+aboXk5oivLErmzpUB/6qPhI1sQ3Hgp
- ym+nbdFiULGbqK21+UcVM0U7I6t+XKvwT2mppESmeRWMqvIRPYkNfkqK5TtYiGykDYWjGTPh+K+Co5jh8E77viyZcdWgcXFVr+8QUMp7xHuFEfk2UqlEovtQ
- enASxPymsBn6hH0piaWtU2LzrAOpSegXNZR/I8Mvn9671sb9KZhl0R9mlexhKQJmsNGuxMX8cNgj/7d4PeVL/tSkVJjN2rAto/n+Na/jx9ED6fQga+cADLsd
- 1nLBnkm1/7f85cFkYlWZ7HILdH4kUudd25vaav1Hf4XqULX1BaZhLYhW7GGnkZNYjapAN8eNmZCSxVbLSZtkLaOSgMfUw5/+/xqg+8+8fcmeJDDvQXK9BPei
- reOAdRBVcW/eG08q4X+pPN3UmzHX27QJHpIquqDoHCijag==
+References: <20200127164321.17468-1-lhenriques@suse.com> <20200127164321.17468-3-lhenriques@suse.com>
+ <CAOi1vP9HB4dPTHrgn2bTZ3nM2HSpLkwRvjZ8za0KE4NNnHmmtw@mail.gmail.com> <20200127184443.GB22545@suse.com>
+In-Reply-To: <20200127184443.GB22545@suse.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Tue, 28 Jan 2020 09:39:49 +0100
+Message-ID: <CAOi1vP8sBN6cx+aOtZwJ3FLZHRiZ6_3=cpCD3C5DTRgpE=TmhA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/3] ceph: parallelize all copy-from requests in copy_file_range
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/28/20 5:45 AM, Tomasz Figa wrote:
-> On Thu, Jan 23, 2020 at 8:08 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> On 1/22/20 4:48 AM, Sergey Senozhatsky wrote:
->>> On (20/01/22 11:18), Sergey Senozhatsky wrote:
->>> [..]
->>>>>> +    * -
->>>>>> +      - __u32
->>>>>>        - ``reserved``\ [1]
->>>>>>        - A place holder for future extensions. Drivers and applications
->>>>>> -  must set the array to zero.
->>>>>> +  must set the array to zero, unless application wants to specify
->>>>>> +        buffer management ``flags``.
->>>>>
->>>>> I think support for this flag should be signaled as a V4L2_BUF_CAP capability.
->>>>> If the capability is not set, then vb2 should set 'flags' to 0 to preserve the
->>>>> old 'Drivers and applications must set the array to zero' behavior.
->>>>
->>>> The patch set adds V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS towards the end of the
->>>> series, I guess I can shuffle the patches and change the wording here.
->>>
->>> Or I can add separate queue flag and V4L2_BUF_CAP:
->>>
->>> struct vb2_queue {
->>> ...
->>>       allow_cache_hints:1
->>> +     allow_consistency_hints:1
->>> ...
->>> }
->>>
->>> and then have CAP_SUPPORTS_CACHE_HINTS/CAP_SUPPORTS_CONSISTENCY_HINTS.
->>
->> Don't these two go hand-in-hand? I.e. either neither are supported, or
->> both are supported? If so, then one queue flag is sufficient.
-> 
-> Cache sync hints are already part of the standard UAPI, so I think
-> there isn't any capability bit needed for them.
+On Mon, Jan 27, 2020 at 7:44 PM Luis Henriques <lhenriques@suse.com> wrote:
+>
+> On Mon, Jan 27, 2020 at 06:58:46PM +0100, Ilya Dryomov wrote:
+> > On Mon, Jan 27, 2020 at 5:43 PM Luis Henriques <lhenriques@suse.com> wrote:
+> > >
+> > > Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
+> > > operations, waiting for each request to complete before sending the next
+> > > one.  This patch modifies copy_file_range so that all the 'copy-from'
+> > > operations are sent in bulk and waits for its completion at the end.  This
+> > > will allow significant speed-ups, specially when sending requests for
+> > > different target OSDs.
+> > >
+> > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > ---
+> > >  fs/ceph/file.c                  | 38 +++++++++++++++++++++++++++++++--
+> > >  include/linux/ceph/osd_client.h |  2 ++
+> > >  net/ceph/osd_client.c           |  1 +
+> > >  3 files changed, 39 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > > index 1e6cdf2dfe90..5d8f0ba11719 100644
+> > > --- a/fs/ceph/file.c
+> > > +++ b/fs/ceph/file.c
+> > > @@ -1931,6 +1931,28 @@ static int is_file_size_ok(struct inode *src_inode, struct inode *dst_inode,
+> > >         return 0;
+> > >  }
+> > >
+> > > +static int wait_copy_from_reqs(struct list_head *osd_reqs)
+> > > +{
+> > > +       struct ceph_osd_request *req;
+> > > +       int ret = 0, err;
+> > > +
+> > > +       while (!list_empty(osd_reqs)) {
+> > > +               req = list_first_entry(osd_reqs,
+> > > +                                      struct ceph_osd_request,
+> > > +                                      r_copy_item);
+> > > +               list_del_init(&req->r_copy_item);
+> > > +               err = ceph_osdc_wait_request(req->r_osdc, req);
+> > > +               if (err) {
+> > > +                       if (!ret)
+> > > +                               ret = err;
+> > > +                       dout("copy request failed (err=%d)\n", err);
+> > > +               }
+> > > +               ceph_osdc_put_request(req);
+> > > +       }
+> > > +
+> > > +       return ret;
+> > > +}
+> >
+> > This should probably go into libceph, as ceph_osdc_wait_requests().
+>
+> Sure, that makes sense.
+>
+> > > +
+> > >  static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >                                       struct file *dst_file, loff_t dst_off,
+> > >                                       size_t len, unsigned int flags)
+> > > @@ -1943,12 +1965,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >         struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+> > >         struct ceph_object_locator src_oloc, dst_oloc;
+> > >         struct ceph_object_id src_oid, dst_oid;
+> > > +       struct ceph_osd_request *req;
+> > >         loff_t endoff = 0, size;
+> > >         ssize_t ret = -EIO;
+> > >         u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
+> > >         u32 src_objlen, dst_objlen, object_size;
+> > >         int src_got = 0, dst_got = 0, err, dirty;
+> > >         bool do_final_copy = false;
+> > > +       LIST_HEAD(osd_reqs);
+> > >
+> > >         if (src_inode->i_sb != dst_inode->i_sb) {
+> > >                 struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+> > > @@ -2097,7 +2121,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >                 ceph_oid_printf(&dst_oid, "%llx.%08llx",
+> > >                                 dst_ci->i_vino.ino, dst_objnum);
+> > >                 /* Do an object remote copy */
+> > > -               err = ceph_osdc_copy_from(
+> > > +               req = ceph_osdc_copy_from_nowait(
+> > >                         &src_fsc->client->osdc,
+> > >                         src_ci->i_vino.snap, 0,
+> > >                         &src_oid, &src_oloc,
+> > > @@ -2108,7 +2132,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> > >                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> > >                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > > -               if (err) {
+> > > +               if (IS_ERR(req)) {
+> > > +                       err = PTR_ERR(req);
+> > >                         if (err == -EOPNOTSUPP) {
+> > >                                 src_fsc->have_copy_from2 = false;
+> > >                                 pr_notice("OSDs don't support 'copy-from2'; "
+> > > @@ -2117,14 +2142,23 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > >                         dout("ceph_osdc_copy_from returned %d\n", err);
+> > >                         if (!ret)
+> > >                                 ret = err;
+> > > +                       /* wait for all queued requests */
+> > > +                       wait_copy_from_reqs(&osd_reqs);
+> > >                         goto out_caps;
+> > >                 }
+> > > +               list_add(&req->r_copy_item, &osd_reqs);
+> > >                 len -= object_size;
+> > >                 src_off += object_size;
+> > >                 dst_off += object_size;
+> > >                 ret += object_size;
+> > >         }
+> > >
+> > > +       err = wait_copy_from_reqs(&osd_reqs);
+> > > +       if (err) {
+> > > +               if (!ret)
+> > > +                       ret = err;
+> > > +               goto out_caps;
+> > > +       }
+> > >         if (len)
+> > >                 /* We still need one final local copy */
+> > >                 do_final_copy = true;
+> > > diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
+> > > index 7916a178d137..2b4a14bc6154 100644
+> > > --- a/include/linux/ceph/osd_client.h
+> > > +++ b/include/linux/ceph/osd_client.h
+> > > @@ -210,6 +210,8 @@ struct ceph_osd_request {
+> > >         u64 r_data_offset;                    /* ditto */
+> > >         bool r_linger;                        /* don't resend on failure */
+> > >
+> > > +       struct list_head r_copy_item;         /* used for copy-from operations */
+> > > +
+> >
+> > We have r_private_item for exactly this kind of ad-hoc lists, already
+> > used in rbd and ceph_direct_read_write().
+>
+> Ah!  I've actually considered using it, but thought that using the same
+> field for different purposes may be a source of confusion and bugs in the
+> future.  But sure, it can be used.  I'll add a comment in the struct
+> definition regarding this ad-hoc usage.
 
-These hints may exist, but they never worked. So I think a capability would
-be very useful.
+It's a means to pass some state through libceph, just like r_priv
+pointer.  The comment is already there, it says "for use by callbacks"
+meaning that libceph won't touch these fields.
 
- That said, they aren't
-> really tied to non-consistent MMAP buffers. Userspace using USERPTR
-> can also use them.
+Thanks,
 
-OK, two separate capability bits is fine.
-
-Regards,
-
-	Hans
-
-> 
-> MMAP buffer consistency hint deserves a capability bit indeed.
-> 
-> Best regards,
-> Tomasz
-> 
-
+                Ilya
