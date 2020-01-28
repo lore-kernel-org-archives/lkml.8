@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E59C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DD1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF7E20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBA420716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222590;
-	bh=+U6b4XD2WqxgEkprIzTowYWBmXQtV3ncKvDWiac7q+Y=;
+	s=default; t=1580222601;
+	bh=gTb6kW3GnDiTwRyBC3U1q9NvZgaOYOeM03IU4gcL/s0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aYif90ZkQi6bU8T33zQqRkaoNR4qQ6fJhfJVlUToVW4R/NUoPdap+qxIwOrAGBbUE
-	 hWr95+KsKA7x4KgicPwRqz6z6s+R8f/eUjCUgoiTPECXrGhuV5Nu1fsh1bLyCjqR60
-	 Xpft0MLZJcbDpCTTvm4l0jqQk3ehkPj+4NfyJF30=
+	b=WSeJc8JjriTz4LW7TiPi8edLEpXnrZ3pdHzrk4mJ5XR4q8NdyipPEjYyxrD+wl8Ol
+	 8Po+c2C6+zrJXETlfVEFDTQLnKkEQLs+XuBJ/yStK2+CHa8mlCOz1HyKq0v10M8xVe
+	 Nl7ImsEkps6E9ve5Ahd8P+X02kePQl1G53QQqzhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbgA1OnJ (ORCPT
+        id S1729658AbgA1OnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:43:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33028 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:43:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbgA1OL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:11:59 -0500
+        id S1727920AbgA1OLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:11:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7601820678;
-        Tue, 28 Jan 2020 14:11:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B72CF20678;
+        Tue, 28 Jan 2020 14:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220718;
-        bh=+U6b4XD2WqxgEkprIzTowYWBmXQtV3ncKvDWiac7q+Y=;
+        s=default; t=1580220702;
+        bh=gTb6kW3GnDiTwRyBC3U1q9NvZgaOYOeM03IU4gcL/s0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HGORmmcLeFSlvAArTQlTXYmcx1SEvgWgxemd60AJw/g5YfnU9QbZiYx8um52A8exb
-         lzfvZ7ATREs+QpTEvrOPzsv8dDncEs2MNb/204suOCTzJD20sWr1xe9LLBMpmfVDAr
-         pRnSF8/xwKw7deSLUrsLvp1S5GjlN4/dLscslly4=
+        b=0fRCg1dyRHJb4A3R3P7EscAQ1I0V522qKmFjsvTTEeqoGkW+vIkL2V6HmF4nSXmXh
+         +OPI6Y+jP2t8kOAA2e+YggLP5+UrPOGaB1xLTBcgx0LzMNXBb4NOFEYGemuM2nY5ag
+         fiVU6L7TfLz8C7zPwXqPNWGDp+PsZYg44eD9BAq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 112/183] libertas_tf: Use correct channel range in lbtf_geo_init
-Date:   Tue, 28 Jan 2020 15:05:31 +0100
-Message-Id: <20200128135841.105057769@linuxfoundation.org>
+Subject: [PATCH 4.4 075/183] ARM: pxa: ssp: Fix "WARNING: invalid free of devm_ allocated data"
+Date:   Tue, 28 Jan 2020 15:04:54 +0100
+Message-Id: <20200128135837.467747307@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -63,34 +62,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 2ec4ad49b98e4a14147d04f914717135eca7c8b1 ]
+[ Upstream commit 9ee8578d953023cc57e7e736ae48502c707c0210 ]
 
-It seems we should use 'range' instead of 'priv->range'
-in lbtf_geo_init(), because 'range' is the corret one
-related to current regioncode.
+Since commit 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
+kfree, iounmap, clk_put etc are not needed anymore in remove path.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 691cdb49388b ("libertas_tf: command helper functions for libertas_tf")
+Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[ commit message spelling fix ]
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/libertas_tf/cmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/plat-pxa/ssp.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/net/wireless/libertas_tf/cmd.c b/drivers/net/wireless/libertas_tf/cmd.c
-index 909ac3685010f..2b193f1257a5a 100644
---- a/drivers/net/wireless/libertas_tf/cmd.c
-+++ b/drivers/net/wireless/libertas_tf/cmd.c
-@@ -69,7 +69,7 @@ static void lbtf_geo_init(struct lbtf_private *priv)
- 			break;
- 		}
+diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
+index 6748827c2ec8b..b6b0979e3cf94 100644
+--- a/arch/arm/plat-pxa/ssp.c
++++ b/arch/arm/plat-pxa/ssp.c
+@@ -231,18 +231,12 @@ static int pxa_ssp_probe(struct platform_device *pdev)
  
--	for (ch = priv->range.start; ch < priv->range.end; ch++)
-+	for (ch = range->start; ch < range->end; ch++)
- 		priv->channels[CHAN_TO_IDX(ch)].flags = 0;
- }
+ static int pxa_ssp_remove(struct platform_device *pdev)
+ {
+-	struct resource *res;
+ 	struct ssp_device *ssp;
  
+ 	ssp = platform_get_drvdata(pdev);
+ 	if (ssp == NULL)
+ 		return -ENODEV;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	release_mem_region(res->start, resource_size(res));
+-
+-	clk_put(ssp->clk);
+-
+ 	mutex_lock(&ssp_lock);
+ 	list_del(&ssp->node);
+ 	mutex_unlock(&ssp_lock);
 -- 
 2.20.1
 
