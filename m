@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A5FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64873C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D66224688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38BC52071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221038;
-	bh=5htcjhtbHdq0Ost+KCtaiwAzMuhIrqKE1/rT2KnWr9o=;
+	s=default; t=1580221041;
+	bh=jBuyLlNp3zAb6ohXoJPeAtctGAMrGd1G7QiBMnwbUIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3a3hUehhS3jcVxLunakbp9FEaHT0iDoL+f3CGFjD7nxyn7rVwzzMlGkN4TnnRkr+
-	 3/kgkTRyxilbcXMGlbPY6unEMeAUkRJDZeboGQESMIfYe3xAJ0/ebK+qp/smnJ9JpK
-	 /zJDWU1lDBmqAIXh6FsF86JW5FnEqAPDYWPk32Mg=
+	b=vATIjV1/CvCXDdTz1kRw0Lt0VSgy6M8vOqgmNOocQcgrXNxlyjDdlEPgYsYkofzaO
+	 nddqxelyL15XK87K6Vlg4tMapYCxM6Y08CUY6cikJTEZyu8W7M4XpKO2J3BNYGMhQV
+	 j7TcJKSltfGWiy+LvZbEEuEM6/sKqtfgQll3s7xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbgA1ORR (ORCPT
+        id S1730488AbgA1ORQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:17:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40938 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:17:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729986AbgA1ORP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:17:15 -0500
+        id S1730467AbgA1ORN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:17:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A5B324688;
-        Tue, 28 Jan 2020 14:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E84E72071E;
+        Tue, 28 Jan 2020 14:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221034;
-        bh=5htcjhtbHdq0Ost+KCtaiwAzMuhIrqKE1/rT2KnWr9o=;
+        s=default; t=1580221032;
+        bh=jBuyLlNp3zAb6ohXoJPeAtctGAMrGd1G7QiBMnwbUIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y6O8YdmD+HeY8ySsh9ZBd1Jwn/Bg44kxW6TRJXetKo//D6d8xeaet2Z3H96K1UJvg
-         DMoXbJZ8lqCAfn3Bn+dvVZl6no6UNN/WCGdOiUXWoOH1qVy41HFRBFlxfKrtifyHIZ
-         0jAPJshL+1lJG4DGUvP2rh+egyzc0hqbYc4/GXKM=
+        b=pck0V33lY9ppxh8xTsTdchLD/ObaAN77OdcRc0Y5itgecyxoz8ShMMnCQxawVR6zj
+         J38zghHMBOplxKTJi8qacg6qpl7WJBUho9dWahor5fvfKcG0YwEIFXpmV9Vg8akKX2
+         WfGwxEHJgW+zN4QolImOd8kJ6XEyMtVBYgSafV7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Moritz Fischer <mdf@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Michael Kao <michael.kao@mediatek.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 061/271] net: phy: fixed_phy: Fix fixed_phy not checking GPIO
-Date:   Tue, 28 Jan 2020 15:03:30 +0100
-Message-Id: <20200128135857.168617889@linuxfoundation.org>
+Subject: [PATCH 4.9 060/271] thermal: mediatek: fix register index error
+Date:   Tue, 28 Jan 2020 15:03:29 +0100
+Message-Id: <20200128135857.098304444@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,44 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moritz Fischer <mdf@kernel.org>
+From: Michael Kao <michael.kao@mediatek.com>
 
-[ Upstream commit 8f289805616e81f7c1690931aa8a586c76f4fa88 ]
+[ Upstream commit eb9aecd90d1a39601e91cd08b90d5fee51d321a6 ]
 
-Fix fixed_phy not checking GPIO if no link_update callback
-is registered.
+The index of msr and adcpnp should match the sensor
+which belongs to the selected bank in the for loop.
 
-In the original version all users registered a link_update
-callback so the issue was masked.
-
-Fixes: a5597008dbc2 ("phy: fixed_phy: Add gpio to determine link up/down.")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
+Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/fixed_phy.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/thermal/mtk_thermal.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/fixed_phy.c b/drivers/net/phy/fixed_phy.c
-index eb51672106811..3ab2eb677a599 100644
---- a/drivers/net/phy/fixed_phy.c
-+++ b/drivers/net/phy/fixed_phy.c
-@@ -67,11 +67,11 @@ static int fixed_mdio_read(struct mii_bus *bus, int phy_addr, int reg_num)
- 			do {
- 				s = read_seqcount_begin(&fp->seqcount);
- 				/* Issue callback if user registered it. */
--				if (fp->link_update) {
-+				if (fp->link_update)
- 					fp->link_update(fp->phydev->attached_dev,
- 							&fp->status);
--					fixed_phy_update(fp);
--				}
-+				/* Check the GPIO for change in status */
-+				fixed_phy_update(fp);
- 				state = fp->status;
- 			} while (read_seqcount_retry(&fp->seqcount, s));
+diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+index 34169c32d4956..ea9558679634b 100644
+--- a/drivers/thermal/mtk_thermal.c
++++ b/drivers/thermal/mtk_thermal.c
+@@ -348,7 +348,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
+ 	u32 raw;
  
+ 	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
+-		raw = readl(mt->thermal_base + conf->msr[i]);
++		raw = readl(mt->thermal_base +
++			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
+ 
+ 		temp = raw_to_mcelsius(mt,
+ 				       conf->bank_data[bank->id].sensors[i],
+@@ -485,7 +486,8 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
+ 
+ 	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
+ 		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
+-		       mt->thermal_base + conf->adcpnp[i]);
++		       mt->thermal_base +
++		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
+ 
+ 	writel((1 << conf->bank_data[num].num_sensors) - 1,
+ 	       mt->thermal_base + TEMP_MONCTL0);
 -- 
 2.20.1
 
