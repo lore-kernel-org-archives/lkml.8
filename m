@@ -2,62 +2,98 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56865C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC91C35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228332173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E28592467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbgA1HD7 (ORCPT
+        id S1726024AbgA1HEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Jan 2020 02:04:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:52830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725797AbgA1HD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jan 2020 02:03:59 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:35896 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgA1HD6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 02:03:58 -0500
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id B5D75CECDB;
-        Tue, 28 Jan 2020 08:13:16 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH] Bluetooth: SMP: Fix SALT value in some comments
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200127223609.15066-1-christophe.jaillet@wanadoo.fr>
-Date:   Tue, 28 Jan 2020 08:03:56 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>, kuba@kernel.org,
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2F6331B;
+        Mon, 27 Jan 2020 23:03:58 -0800 (PST)
+Received: from [10.163.1.151] (unknown [10.163.1.151])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A5A43F67D;
+        Mon, 27 Jan 2020 23:07:21 -0800 (PST)
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Qian Cai <cai@lca.pw>, Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <03F1C6B2-0F04-4991-8912-7220F9F88F5C@holtmann.org>
-References: <20200127223609.15066-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <115c187b-73ce-30b2-0694-999db1f2183b@c-s.fr>
+ <F90DA0AA-4D27-4346-8D8D-D9A7871E2C07@lca.pw>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <ba5a836a-b594-f846-1734-71dcd5d089e6@arm.com>
+Date:   Tue, 28 Jan 2020 12:33:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <F90DA0AA-4D27-4346-8D8D-D9A7871E2C07@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
 
-> Salts are 16 bytes long.
-> Remove some extra and erroneous '0' in the human readable format used
-> in comments.
+
+On 01/28/2020 12:06 PM, Qian Cai wrote:
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> net/bluetooth/smp.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+>> On Jan 28, 2020, at 1:17 AM, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+>>
+>> It is 'default y' so there is no much risk that it is forgotten, at least all test suites run with 'allyes_defconfig' will trigger the test, so I think it is really a good feature.
+> 
+> This thing depends on DEBUG_VM which I don’t see it is selected by any defconfig. Am I missing anything?
+> 
 
-patch has been applied to bluetooth-next tree.
-
-Regards
-
-Marcel
-
+'allyesconfig' makes 'DEBUG_VM = y' which in turn will enable 'DEBUG_VM_PGTABLE = y'
+on platforms that subscribe ARCH_HAS_DEBUG_VM_PGTABLE.
