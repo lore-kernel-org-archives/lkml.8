@@ -2,142 +2,195 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD9FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883D2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5066A24688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6079B24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgA1MKS (ORCPT
+        id S1726111AbgA1MQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:10:18 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51056 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726063AbgA1MKS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:10:18 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SC7HD9078765
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:10:16 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xrg63bene-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:10:15 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 28 Jan 2020 12:10:12 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 Jan 2020 12:10:02 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00SCA17u41681050
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 12:10:01 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A00D11C04A;
-        Tue, 28 Jan 2020 12:10:01 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B8F411C050;
-        Tue, 28 Jan 2020 12:09:58 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.59.112])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 28 Jan 2020 12:09:57 +0000 (GMT)
-Date:   Tue, 28 Jan 2020 14:09:56 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
- <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
- <214c0d53-eb34-9b0c-2e4e-1aa005146331@arm.com>
- <016A776F-EFD9-4D2B-A3A9-788008617D95@lca.pw>
+        Tue, 28 Jan 2020 07:16:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57378 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbgA1MQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 07:16:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 95B15AEFF;
+        Tue, 28 Jan 2020 12:16:53 +0000 (UTC)
+Date:   Tue, 28 Jan 2020 13:16:53 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [POC 02/23] livepatch: Split livepatch modules per livepatched
+ object
+Message-ID: <20200128121653.72mhdqnfwtw7kifr@pathway.suse.cz>
+References: <20200117150323.21801-1-pmladek@suse.com>
+ <20200117150323.21801-3-pmladek@suse.com>
+ <af90531e-219c-3515-1dc8-d86191902ea4@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <016A776F-EFD9-4D2B-A3A9-788008617D95@lca.pw>
-X-TM-AS-GCONF: 00
-x-cbid: 20012812-0028-0000-0000-000003D5276E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012812-0029-0000-0000-000024996EC2
-Message-Id: <20200128120956.GB6363@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_03:2020-01-24,2020-01-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=843
- malwarescore=0 suspectscore=56 phishscore=0 adultscore=0 mlxscore=0
- lowpriorityscore=0 clxscore=1015 bulkscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001280098
+In-Reply-To: <af90531e-219c-3515-1dc8-d86191902ea4@redhat.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Qian,
-
-On Mon, Jan 27, 2020 at 10:33:08PM -0500, Qian Cai wrote:
+On Tue 2020-01-21 11:11:45, Julien Thierry wrote:
+> Hi Petr,
 > 
-> > On Jan 27, 2020, at 10:06 PM, Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> >
-> > enablement of this test (for the moment) but then the goal is to integrate all
-> > of them going forward. The test not only validates platform's adherence to the
-> > expected semantics from generic MM but also helps in keeping it that way during
-> > code changes in future as well.
+> On 1/17/20 3:03 PM, Petr Mladek wrote:
+> > One livepatch module allows to fix vmlinux and any number of modules
+> > while providing some guarantees defined by the consistency model.
+> > 
+> > The solution is to split the livepatch module per livepatched
+> > object (vmlinux or module). Then both livepatch module and
+> > the livepatched modules could get loaded and removed at the
+> > same time.
+> > 
+> > The livepatches for modules are put into separate source files
+> > that define only struct klp_object() and call the new klp_add_object()
+> > in the init() callback. The name of the module follows the pattern:
+> > 
+> >    <patch_name>__<object_name>
+> > 
 > 
-> Another option maybe to get some decent arches on board first before merging this
-> thing, so it have more changes to catch regressions for developers who might run this. 
+> Is that a requirement? Or is it just the convention followed for the current
+> tests?
 
-Aren't x86 and arm64 not decent enough?
-Even if this test could be used to detect regressions only on these two
-platforms, the test is valuable.
- 
+This naming pattern is enforced by the code. The reason is to
+distinguish the purpose of each livepatch module.
 
--- 
-Sincerely yours,
-Mike.
+   + Livepatch module for "vmlinux" and the related livepatch modules
+     for other objects.
 
+   + Different livepatches (versions) that might be installed at the
+     same time. This happens even with cumulative livepatches.
+
+
+It is important for the functionality:
+
+   + Consistency checks that all and right livepatch modules are
+     loaded.
+
+   + Automatic loading of livepatch modules for modules when the patched
+     module is being loaded.
+
+But it should be "clear" even for humans because the livepatch modules are
+listed by lsmod, ...
+
+Of course, we could talk about other naming scheme, another approach.
+
+
+> > @@ -844,21 +822,7 @@ static int klp_init_patch_early(struct klp_patch *patch)
+> >   	INIT_WORK(&patch->free_work, klp_free_patch_work_fn);
+> >   	init_completion(&patch->finish);
+> > -	klp_for_each_object_static(patch, obj) {
+> 
+> I think we can get rid of klp_for_each_object_static(), no? Now the
+> klp_patch is only associated to a single klp_object, so everything will be
+> dynamic. Is this correct?
+
+Yes, the macro klp_for_each_object_static() is not longer needed.
+
+Just to be sure. It would be better to say that all klp_object
+structures will be in the linked lists only.
+
+Most structures are still defined statically. The name "dynamic" is
+used for the dynamically allocated structures. They are used for
+"nop" functions that might be needed when doing atomic replace
+of cumulative patches and functions that are not longer patched.
+See obj->dynamic and func->nop.
+
+
+> > @@ -991,12 +958,12 @@ int klp_enable_patch(struct klp_patch *patch)
+> >   {
+> >   	int ret;
+> > -	if (!patch || !patch->mod)
+> > +	if (!patch || !patch->obj || !patch->obj->mod)
+> >   		return -EINVAL;
+> > -	if (!is_livepatch_module(patch->mod)) {
+> > +	if (!is_livepatch_module(patch->obj->mod)) {
+> >   		pr_err("module %s is not marked as a livepatch module\n",
+> > -		       patch->mod->name);
+> > +		       patch->obj->patch_name);
+> 
+> Shouldn't that be "patch->obj->mod->name" ?
+
+They are actually the same. Note that it is redundant only in
+struct klp_object that is in the livepatch module for vmlinux.
+
+Hmm, it might be possible to get rid of it after I added the array
+patch->obj_names. But I would prefer to keep it as a consistency
+check.
+
+One big drawback of the split modules approach is that there are
+suddenly many more livepatch modules. The kernel code has to make
+sure always the right ones are loaded. It is great to have some
+cross-checks.
+
+
+> >   		return -EINVAL;
+> >   	}
+
+> > diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+> > index f6310f848f34..78e3280560cd 100644
+> > --- a/kernel/livepatch/transition.c
+> > +++ b/kernel/livepatch/transition.c
+> > @@ -147,7 +145,7 @@ void klp_cancel_transition(void)
+> >   		return;
+> >   	pr_debug("'%s': canceling patching transition, going to unpatch\n",
+> > -		 klp_transition_patch->mod->name);
+> > +		 klp_transition_patch->obj->patch_name);
+> >   	klp_target_state = KLP_UNPATCHED;
+> >   	klp_complete_transition();
+> > @@ -468,7 +466,7 @@ void klp_start_transition(void)
+> >   	WARN_ON_ONCE(klp_target_state == KLP_UNDEFINED);
+> >   	pr_notice("'%s': starting %s transition\n",
+> > -		  klp_transition_patch->mod->name,
+> > +		  klp_transition_patch->obj->patch_name,
+> 
+> Isn't the transition per livepatched module rather than per-patch now?
+> If so, would it make more sense to display also the name of the module being
+> patched/unpatched?
+
+The transition still happens for the entire livepatch defined by
+struct klp_patch. All needed livepatch modules for the other objects
+are loaded before the transition starts, see the patch 17/24
+("livepatch: Load livepatches for modules when loading the main
+livepatch").
+
+> >   		  klp_target_state == KLP_PATCHED ? "patching" : "unpatching");
+> >   	/*
+
+Best Regards,
+Petr
+
+PS: Julien,
+
+first, thanks a lot for looking at the patchset.
+
+I am going to answer questions and comments that are related to
+the overall design. The most important question is if the split
+livepatch modules are the way to go. I hope that this patchset
+shows possible wins and catches so that we could decide if it
+is worth the effort.
+
+Anyway, feel free to comment even details when you notice
+a mistake. There might be some catches that I missed, ...
+
+Best Regards,
+Petr
