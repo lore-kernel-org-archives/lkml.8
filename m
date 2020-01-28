@@ -2,96 +2,92 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBEFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEC9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51942465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E8B24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgA1Iu6 (ORCPT
+        id S1726107AbgA1IvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 03:50:58 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:13567 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgA1Iu5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 03:50:57 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 01A9624000D;
-        Tue, 28 Jan 2020 08:50:54 +0000 (UTC)
-Date:   Tue, 28 Jan 2020 09:50:54 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Joe Perches <joe@perches.com>, linux-rtc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rtc: i2c/spi: Avoid inclusion of REGMAP support when not
- needed
-Message-ID: <20200128085054.GA3398@piout.net>
-References: <20200112171349.22268-1-geert@linux-m68k.org>
- <20200127224549.GC3273@piout.net>
- <CAMuHMdXFkcAn8c+rPixkN0W5G14j039shhOZcvtLP_RHA9CFtQ@mail.gmail.com>
+        Tue, 28 Jan 2020 03:51:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40980 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgA1IvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 03:51:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8745BAEC1;
+        Tue, 28 Jan 2020 08:51:09 +0000 (UTC)
+Date:   Tue, 28 Jan 2020 09:51:07 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
+Message-ID: <20200128085107.GF17425@blackbody.suse.cz>
+References: <alpine.DEB.2.21.1912041652410.29709@www.lameter.com>
+ <20191204173224.GN25242@dhcp22.suse.cz>
+ <20200106115733.GH12699@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2001061550270.23163@www.lameter.com>
+ <20200109145236.GS4951@dhcp22.suse.cz>
+ <20200109114415.cf01bd3ad30c5c4aec981653@linux-foundation.org>
+ <20200117171331.GA17179@blackbody.suse.cz>
+ <20200118161528.94dc18c074aeaa384200486b@linux-foundation.org>
+ <20200127173336.GB17425@blackbody.suse.cz>
+ <alpine.DEB.2.21.2001272304080.25307@www.lameter.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hK8Uo4Yp55NZU70L"
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXFkcAn8c+rPixkN0W5G14j039shhOZcvtLP_RHA9CFtQ@mail.gmail.com>
+In-Reply-To: <alpine.DEB.2.21.2001272304080.25307@www.lameter.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 28/01/2020 09:33:28+0100, Geert Uytterhoeven wrote:
-> Hi Alexandre,
-> 
-> On Mon, Jan 27, 2020 at 11:45 PM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> > On 12/01/2020 18:13:49+0100, Geert Uytterhoeven wrote:
-> > > Merely enabling I2C and RTC selects REGMAP_I2C and REGMAP_SPI, even when
-> > > no driver needs it.  While the former can be moduler, the latter cannot,
-> > > and thus becomes built-in.
-> > >
-> > > Fix this by moving the select statements for REGMAP_I2C and REGMAP_SPI
-> > > from the RTC_I2C_AND_SPI helper to the individual drivers that depend on
-> > > it.
-> > >
-> > > Note that the comment for RTC_I2C_AND_SPI refers to SND_SOC_I2C_AND_SPI
-> > > for more information, but the latter does not select REGMAP_{I2C,SPI}
-> > > itself, and defers that to the individual drivers, too.
-> > >
-> > > Fixes: 080481f54ef62121 ("rtc: merge ds3232 and ds3234")
-> > > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > ---
-> > > Joe: When merging addresses, scripts/get_maintainer.pl replaces
-> > >      Alexandre's authoritative email address from MAINTAINERS by the
-> > >      obsolete address in the SoB-line of the commit referred to by the
-> > >      Fixes-line.
-> > >
-> > >  drivers/rtc/Kconfig | 8 ++++++--
-> > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > >
-> > Applied, thanks.
-> 
-> According to the reports from kbuild test report, some drivers are still
-> missing some selects, which is exposed by this patch.
-> But perhaps you have already fixed those in your tree?
-> 
+--hK8Uo4Yp55NZU70L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I did fix a bunch of those in
-https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit/?h=rtc-next&id=578c2b661e2b1b474ea3571a3c3c6d57bae89e8d
+On Mon, Jan 27, 2020 at 11:04:53PM +0000, Christopher Lameter <cl@linux.com> wrote:
+> The patch exposes details of cgroup caches? Which patch are we talking
+> about?
+Sorry, that's misunderstanding. I mean the current state (sending
+uevents) exposes the internals (creation of caches per cgroup). The
+patch [1] removing uevent notifications is rectifying it.
 
-kbuild reported that it successfully built a few configuration with that
-patch applied so I'm hoping it is enough.
+Michal
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+[1] https://lore.kernel.org/lkml/alpine.DEB.2.21.1912041652410.29709@www.lameter.com/
+
+
+--hK8Uo4Yp55NZU70L
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl4v9fsACgkQia1+riC5
+qShawg/+LW2OYgM6w1QE6LO/MoUzffOfLBRZVBJlt7R5ZMG7bgHB4ApxugB2S3U8
+KD3fzUb8J2fOT6xxPrF2A927JjkFlwIGfldD6Z1FsoKvtmcWpHiCOPDRuNAd5fKq
+3r54hXzXgnIHIOOIGEvQpztRfRR0kKAdXPNFX5isLmbB4K7n+J8Pc3oRsxmjBehZ
+fSzUTU5PjVyYtHkopFB80q+3pcPsfl45TBvZD3azU2p3/KMxuuNI6inGM477WJhl
+UlY8p/bnA9p4wV6Cw6g0LPNGBmyw7WFl2WxAu4fIsHnR8RXu4A4qxKh22d+N6QuM
+cVDERVcVS6FiqqzXlQcGLR6X1KOBIhS7aG8kKj5ewYvUuBApTonhjDfdlwbfJdnr
+lzyAXMlzV3sEuyxOtPxH71oLPYGfPThADjtohnnaJGUg0We7881zsi1evUIG7mYB
+BJFnJsKYZPJqq8H/c28vbUR2Mztgaz3o9RqXyS4OTZEfp51Q3R6MOaQxsrkP46cs
+yD0MdyWFHnveoJRUWGz+u8HwxSvG7Jrvjhd0ob2s5imBsc6HxpTuVfuvVfJGGB3t
+bKBj2lTjS44iKi2tNLMC0I2OVoF60kA6kDW7JECj7sK++7LF37AIC996uzQ/mODZ
+naZ/G/dZMUvAl0mt5MYZrK0WYURLbEn5IXgldMhtzc7s9a7cDl8=
+=/YoQ
+-----END PGP SIGNATURE-----
+
+--hK8Uo4Yp55NZU70L--
