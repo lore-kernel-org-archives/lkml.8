@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC11C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00406C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8355B24688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E6A24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221377;
-	bh=BAuGnV6ApDLBskZlToVXtsrcdU/YeZu3hnzsSO+iKSU=;
+	s=default; t=1580221379;
+	bh=QewKoEJlIRAHjoP4tt654qmdwr7ZKQY39OMFwub97Ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mdwiclboDWBQ2iYITY1ng4FNeRP/mdqYtnrEU67DFGWH+sPH3wUSD9dcAOFrtnuMn
-	 PjYRu7gLrxporwJZqJwAz8OSml+95mTIQ+8IVhKOTuryaBuq2klyNdPDg2mr1eP7yO
-	 y/0Ueyn8cA6KivpH9w3510OZKzs76c0bFoyzgkSc=
+	b=kgGdtBVxjpRn83jo1eUpa/prVQ+BWNgtaGX4E3wEYnW7Ny9tQnfqjOsRpIDVTt1CE
+	 Zw5vZLdWIfRkM4xsz/M1qFXq1kV+yAqunTTeaAZcR8TEKsoRxvD+Ad7CNYVo2lkpIc
+	 cpjqeGVmpskMDBd0rpSci13AQvnIavsNLS8lxWJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731398AbgA1OW4 (ORCPT
+        id S1731887AbgA1OW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:22:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48844 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:22:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731753AbgA1OWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:22:53 -0500
+        id S1731794AbgA1OW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:22:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3CBA24686;
-        Tue, 28 Jan 2020 14:22:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E6AD24681;
+        Tue, 28 Jan 2020 14:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221373;
-        bh=BAuGnV6ApDLBskZlToVXtsrcdU/YeZu3hnzsSO+iKSU=;
+        s=default; t=1580221375;
+        bh=QewKoEJlIRAHjoP4tt654qmdwr7ZKQY39OMFwub97Ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DdiMJxu+9xgkJ22CLB8TG7ZfHGlVVynwq1sZmzZQDZw58JHaWQWDF1qL6Gs7VdJfc
-         hEulzUC1aKSJs7ktm+/U0zkbpRks1PuY+/sc2JrkH0DLsCSwhg5bsFWdBHYdkue7qH
-         pKgj8nmKzJaWBdyyBFawl6nZlOAmNSy6Q/NzaJw8=
+        b=A+3Qs7wV+QYhnrwYSl4b1GrTLTTlx205/Vtuj8W/AyZxJTwYG8XOWgjeS8WYChIUa
+         3AfVaTgXpu44lqcEdkmPK+Xlpg+mRfZef6ecv2iSyhR5rHEXF4G+FnGAeFdcC9r40d
+         au6YRJe57ru48M8g3qZBKtThllYfpC6lZ2GoXihs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Robertson <dan@dlrobertson.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 199/271] hwmon: (shtc1) fix shtc1 and shtw1 id mask
-Date:   Tue, 28 Jan 2020 15:05:48 +0100
-Message-Id: <20200128135907.392010581@linuxfoundation.org>
+Subject: [PATCH 4.9 200/271] net: sonic: replace dev_kfree_skb in sonic_send_packet
+Date:   Tue, 28 Jan 2020 15:05:49 +0100
+Message-Id: <20200128135907.463538012@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,37 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Robertson <dan@dlrobertson.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit fdc7d8e829ec755c5cfb2f5a8d8c0cdfb664f895 ]
+[ Upstream commit 49f6c90bf6805948b597eabb499e500a47cf24be ]
 
-Fix an error in the bitmaskfor the shtc1 and shtw1 bitmask used to
-retrieve the chip ID from the ID register. See section 5.7 of the shtw1
-or shtc1 datasheet for details.
+sonic_send_packet will be processed in irq or non-irq
+context, so it would better use dev_kfree_skb_any
+instead of dev_kfree_skb.
 
-Fixes: 1a539d372edd9832444e7a3daa710c444c014dc9 ("hwmon: add support for Sensirion SHTC1 sensor")
-Signed-off-by: Dan Robertson <dan@dlrobertson.com>
-Link: https://lore.kernel.org/r/20190905014554.21658-3-dan@dlrobertson.com
-[groeck: Reordered to be first in series and adjusted accordingly]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/shtc1.c | 2 +-
+ drivers/net/ethernet/natsemi/sonic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
-index decd7df995abf..2a18539591eaf 100644
---- a/drivers/hwmon/shtc1.c
-+++ b/drivers/hwmon/shtc1.c
-@@ -38,7 +38,7 @@ static const unsigned char shtc1_cmd_read_id_reg[]	       = { 0xef, 0xc8 };
+diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
+index 11f472fd5d477..a051dddcbd768 100644
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -222,7 +222,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
+ 	if (!laddr) {
+ 		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
+-		dev_kfree_skb(skb);
++		dev_kfree_skb_any(skb);
+ 		return NETDEV_TX_OK;
+ 	}
  
- /* constants for reading the ID register */
- #define SHTC1_ID	  0x07
--#define SHTC1_ID_REG_MASK 0x1f
-+#define SHTC1_ID_REG_MASK 0x3f
- 
- /* delays for non-blocking i2c commands, both in us */
- #define SHTC1_NONBLOCKING_WAIT_TIME_HPM  14400
 -- 
 2.20.1
 
