@@ -2,94 +2,117 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12E5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FB8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D52C214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C2C2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:00:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="azEWFPlV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaSSm2k0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgA1PAX (ORCPT
+        id S1726859AbgA1PAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:00:23 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25951 "EHLO
+        Tue, 28 Jan 2020 10:00:32 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37927 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726712AbgA1PAX (ORCPT
+        by vger.kernel.org with ESMTP id S1726610AbgA1PAb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:00:23 -0500
+        Tue, 28 Jan 2020 10:00:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580223622;
+        s=mimecast20190719; t=1580223630;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=JC/v0R+n19poVshHaFB2ikrnZeGzcPgJ7gdAXwWxsCA=;
-        b=azEWFPlVR0TJB7UsQJ83sYRnenvVydFJ8EKaB/mh5Q9BT3VFCK/NH1cW8Ii+WQtgW6tyiW
-        7mitqXt6f7PBl5lirzw7iPd2TbL512P8LFYolAmh0BBhzPUVU9VMPBNKc4/HaUXzDWqomO
-        rj8SS8a0eVXItK2Bf6dRHeTocP0tQ9Y=
+        bh=UciBCe0URT2sDPatGmTOte5M9IpV1BmQHRNEHQ3YlSQ=;
+        b=ZaSSm2k0MNjHcI17wmW8T51Ylq+mJqNksA2MPVfg2FVsBd2cezMDVhxnoNLIIyX/XxZEWf
+        I0U04zwY4tEkfH0L/d038TQN96wVEExDcfgVMbzUaZKhZ/EY9zNEBcER8MSGn5W771E+6G
+        nDBDQyM4U1RAd4rA3C+9dLksF7NpNsA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-Ezdjjf2gPp-tKiDpGIq6Jg-1; Tue, 28 Jan 2020 10:00:17 -0500
-X-MC-Unique: Ezdjjf2gPp-tKiDpGIq6Jg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-165-eqD_xNQHPAmiQzXLd2hz_g-1; Tue, 28 Jan 2020 10:00:28 -0500
+X-MC-Unique: eqD_xNQHPAmiQzXLd2hz_g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9524513F5;
-        Tue, 28 Jan 2020 15:00:15 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-70.rdu2.redhat.com [10.10.121.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D56015DA7E;
-        Tue, 28 Jan 2020 15:00:10 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200128072740.21272-1-frextrite@gmail.com>
-References: <20200128072740.21272-1-frextrite@gmail.com>
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     dhowells@redhat.com, Shakeel Butt <shakeelb@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] cred: Use RCU primitives to access RCU pointers
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1236513F7;
+        Tue, 28 Jan 2020 15:00:25 +0000 (UTC)
+Received: from treble (ovpn-124-151.rdu2.redhat.com [10.10.124.151])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7904F1000337;
+        Tue, 28 Jan 2020 15:00:16 +0000 (UTC)
+Date:   Tue, 28 Jan 2020 09:00:14 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20200128150014.juaxfgivneiv6lje@treble>
+References: <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home>
+ <20191016074217.GL2328@hirez.programming.kicks-ass.net>
+ <20191021150549.bitgqifqk2tbd3aj@treble>
+ <20200120165039.6hohicj5o52gdghu@treble>
+ <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
+ <20200121161045.dhihqibnpyrk2lsu@treble>
+ <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
+ <20200122214239.ivnebi7hiabi5tbs@treble>
+ <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2176479.1580223610.1@warthog.procyon.org.uk>
-Date:   Tue, 28 Jan 2020 15:00:10 +0000
-Message-ID: <2176480.1580223610@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amol Grover <frextrite@gmail.com> wrote:
-
-> task_struct.cred and task_struct.real_cred are annotated by __rcu,
-> hence use rcu_access_pointer to access them.
+On Tue, Jan 28, 2020 at 10:28:07AM +0100, Miroslav Benes wrote:
+> I don't think we have something special at SUSE not generally available...
 > 
-> Fixes the following sparse errors:
-> kernel/cred.c:144:9: error: incompatible types in comparison expression
-> (different address spaces):
-> kernel/cred.c:144:9:    struct cred *
-> kernel/cred.c:144:9:    struct cred const [noderef] <asn:4> *
-> kernel/cred.c:145:9: error: incompatible types in comparison expression
-> (different address spaces):
-> kernel/cred.c:145:9:    struct cred *
-> kernel/cred.c:145:9:    struct cred const [noderef] <asn:4> *
+> ...and I don't think it is really important to discuss that and replying 
+> to the above, because there is a legitimate use case which relies on the 
+> flag. We decided to support different use cases right at the beginning.
 > 
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> I understand it currently complicates things for objtool, but objtool is 
+> sensitive to GCC code generation by definition. "Issues" appear with every 
+> new GCC version. I see no difference here and luckily it is not so 
+> difficult to fix it.
+> 
+> I am happy to help with acting on those objtool warning reports you 
+> mentioned in the other email. Just Cc me where appropriate. We will take a 
+> look.
 
-Reviewed-by: David Howells <dhowells@redhat.com>
+As I said, the objtool warnings aren't even the main issue.
+
+There are N users[*] of CONFIG_LIVEPATCH, where N is perhaps dozens.
+For N-1 users, they have to suffer ALL the drawbacks, with NONE of the
+benefits.
+
+And, even if they wanted those benefits, they have no idea how to get
+them because the patch creation process isn't documented.
+
+And, there's no direct upstream usage of the flag, i.e. the only user
+does so in a distro which can easily modify KCFLAGS in the spec file.
+
+As best as I can tell, these are facts, which you seem to keep glossing
+over.  Did I get any of the facts wrong?
+
+
+[*] The term 'user' describes the creator/distributor of the
+    live patches.
+
+-- 
+Josh
 
