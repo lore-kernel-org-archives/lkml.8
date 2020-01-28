@@ -2,120 +2,99 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E5EC32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE3BC32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0719224656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EDC52064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580172346;
+	bh=XnIT7n0BsNwWTi0jYkzDUPCDuKAKG2Q9ZI4Bh9AiXps=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0MZ1Jr+gg89TJFxYR6WMW2O9fVqsXXl4r+eB4IV7mOgy4kz/9ZPssL0I0EOwVchmf
+	 JiLcZLYaGIn+XybI4eNfoVR4bSliU5X1Z9PkSUJmifbUej9QIOtD7M0HTcH0CuqTJu
+	 UqxFo7WaRyfeEYUiJ0QNzUxVRYP6NKwN+A9CMziA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgA1AnS (ORCPT
+        id S1726296AbgA1App (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 19:43:18 -0500
-Received: from mga07.intel.com ([134.134.136.100]:17363 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgA1AnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 19:43:17 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 16:42:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,371,1574150400"; 
-   d="scan'208";a="261266505"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 27 Jan 2020 16:42:48 -0800
-Date:   Tue, 28 Jan 2020 08:43:01 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, dan.j.williams@intel.com,
-        aneesh.kumar@linux.ibm.com, kirill@shutemov.name,
-        yang.shi@linux.alibaba.com, thellstrom@vmware.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
- move_page_tables()
-Message-ID: <20200128004301.GD20624@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
- <20200117232254.2792-4-richardw.yang@linux.intel.com>
- <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
+        Mon, 27 Jan 2020 19:45:45 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45537 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA1Apo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 19:45:44 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 203so7712183lfa.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:45:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E7M0vcp9YogKd4X4x+TIfPxOZ/euFR9ot2NpG6ELc48=;
+        b=gSXrA3WD8q0cd4IiPU422Cf0E4A5re9NtnaNtW5mwWIVh781/QJoWfJx76H2tdl5qs
+         O3woHaOSZANGtxdHG+Fmi2YQQ+Eo2BhU80gvQ014AOqyMcWc+SWD147RH0+6aMQ9yCDK
+         gnDfr4B5yKflE7xElOKPQK+v7rpPFdxkhk/co=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E7M0vcp9YogKd4X4x+TIfPxOZ/euFR9ot2NpG6ELc48=;
+        b=Bq6gar96TjKg/JFT+D6wgaF74LslgtT1KB8o2Z8oHF6D9Du9EbBzxeGemsdulW6heJ
+         mgXbt9IG6AeRoqDKh45zRvGmYaaMr8G8PAGeuJe6xHjRZLzWHMyvQ+GJxn+6sAY/TQ7Q
+         ZR4wYSsmH8TVVCLZWigHB+NbdD4Bfzzn2se8F4M3hgQS3sE1lpVtaK+zR8V/5WRQhEqY
+         uUCCdVpRJwWok8h9ceP965uSEdlJRVdDJu7yrSchGYhJlXXzLTxeTLFwgiNAP0GloD2E
+         ZN9ZAJn3AHVxX8BqP9Ng1xo5x/uH6oMV7CyyQ8QAPl/1SNyD2Xuv/UqFh/WSvt999u2l
+         fWbw==
+X-Gm-Message-State: APjAAAU4aCZ2OeJq8/2CVvLalS6J5fKCY4c8Cv+pAuY9WwuErrLtyZHR
+        mO70OFihn31ZFk2uE8T+Kz+/38w3zeU=
+X-Google-Smtp-Source: APXvYqxxUZwHko+hFZBaOuClfpf9OlQlS6yGg7Cpiv9PeK6NvdB3p/G0b4sFTp72EpNGK6oRfJ2v5A==
+X-Received: by 2002:a19:f811:: with SMTP id a17mr755497lff.182.1580172342082;
+        Mon, 27 Jan 2020 16:45:42 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id k12sm8868135lfc.33.2020.01.27.16.45.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 16:45:41 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id v17so12915018ljg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:45:41 -0800 (PST)
+X-Received: by 2002:a2e:97cc:: with SMTP id m12mr1286611ljj.241.1580172340821;
+ Mon, 27 Jan 2020 16:45:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <158016896586.31887.7695979159638645055.tglx@nanos.tec.linutronix.de>
+ <158016896589.31887.11649925452756898441.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <158016896589.31887.11649925452756898441.tglx@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 27 Jan 2020 16:45:25 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjL8j-8FSO-JyvK=wjiZmAmrAFgqLuyg2oH9bfgHV2cZQ@mail.gmail.com>
+Message-ID: <CAHk-=wjL8j-8FSO-JyvK=wjiZmAmrAFgqLuyg2oH9bfgHV2cZQ@mail.gmail.com>
+Subject: Re: [GIT pull] core/core for
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 05:47:57PM +0300, Dmitry Osipenko wrote:
->18.01.2020 02:22, Wei Yang пишет:
->> Use the general helper instead of do it by hand.
->> 
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> ---
->>  mm/mremap.c | 7 ++-----
->>  1 file changed, 2 insertions(+), 5 deletions(-)
->> 
->> diff --git a/mm/mremap.c b/mm/mremap.c
->> index c2af8ba4ba43..a258914f3ee1 100644
->> --- a/mm/mremap.c
->> +++ b/mm/mremap.c
->> @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->>  
->>  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
->>  		cond_resched();
->> -		next = (old_addr + PMD_SIZE) & PMD_MASK;
->> -		/* even if next overflowed, extent below will be ok */
->> +		next = pmd_addr_end(old_addr, old_end);
->>  		extent = next - old_addr;
->> -		if (extent > old_end - old_addr)
->> -			extent = old_end - old_addr;
->>  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
->>  		if (!old_pmd)
->>  			continue;
->> @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->>  
->>  		if (pte_alloc(new_vma->vm_mm, new_pmd))
->>  			break;
->> -		next = (new_addr + PMD_SIZE) & PMD_MASK;
->> +		next = pmd_addr_end(new_addr, new_addr + len);
->>  		if (extent > next - new_addr)
->>  			extent = next - new_addr;
->>  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
->> 
+On Mon, Jan 27, 2020 at 4:06 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
->Hello Wei,
->
->Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
->Tegra (ARM32):
->
->  BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
->
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-core-2020-01-28
 
-Thanks.
+Hmm. Maybe this is related to the subject line after all.
 
-Would you mind letting me know which case you are testing? Or the special
-thing is 32-bit platform?
+I think that your tag naming has some bug in it, and then that bug
+causes problems for the subject line?
 
->and eventually kernel hangs.
->
->Git's bisection points to this patch and reverting it helps. Please fix,
->thanks in advance.
+"core-core" doesn't make much sense as a name, since it is about
+watchdog logic.
 
--- 
-Wei Yang
-Help you, Help me
+My guess is that you automated this and something escaped through the cracks.
+
+Again, not a big deal - everything _works_, it just has some oddities there.
+
+            Linus
