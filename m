@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CBEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D77C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65D62468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159272468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220767;
-	bh=nyI/6SjcakQKzoISggYuKG9ogY0kdS9qt0vhf/o1DP0=;
+	s=default; t=1580220771;
+	bh=mhU7D4PyjDt9+AooO+s78QBc9Px5u9jPuIT6hdqiEcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bmN730WyiT3ulpYsnB4hbIEypNlhhx5VC8FaQhokKYWzq44XtRjLTSi3dnIZZ+uJg
-	 AY25RagGwPY8c88w6x18O/WFBrzG131tlNDzWDUjxj9p6YdVNDNfM+sAsna1BtNxja
-	 2Dggzd3zLirZElmrpmaUG9jN2FCnPn6MopJGUhKI=
+	b=XpXo21wnKgkO8VaZ0Z1SKNd+d1MT99OvHu4XxIbRQ4coheGzb838GYSPlq5M0zv/Y
+	 3LbA358UWncC5Q9i2xv/32hevzXhI73XFbpl0aRblWSFEQRSsFwkc5QnMon00nr9kq
+	 X0PG7lp3h2EHFNu8PRNHC5cVwr01Qy3QwsLQmtFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgA1OMq (ORCPT
+        id S1729572AbgA1OMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:12:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:12:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727611AbgA1OMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:12:44 -0500
+        id S1728763AbgA1OMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:12:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5013D2468D;
-        Tue, 28 Jan 2020 14:12:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C28BC24690;
+        Tue, 28 Jan 2020 14:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220763;
-        bh=nyI/6SjcakQKzoISggYuKG9ogY0kdS9qt0vhf/o1DP0=;
+        s=default; t=1580220766;
+        bh=mhU7D4PyjDt9+AooO+s78QBc9Px5u9jPuIT6hdqiEcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pNivBqOb9Kp7GM+KMn+2P7taw9jqCEu4fwJTNeWNF/t2aO7N486XtUSkSjXB0Ewxk
-         XwT8XCYf7Sa/FKhW4KCS6G68Pam8JEWjCuSTGXkQKsZ4grXLVMWS01P8oqz+g/CftE
-         tw6QY+SX5MhodOGvVbZJ24qxwm2Wa9SxPdcqIhpo=
+        b=cNeqt5CMkk7Z1bDf4cioacP51R5vxwdn7p3VmDwRdPUT8DxAWp5yuf3vgPhY9cv3R
+         j2rLJttlFfg0H2WwPxk+weeLgoJWZ4TYSMFOp9vyGsR2/fr4HMw7HAfW8NZcAUi8Or
+         I9JAQsF1BXS9UIvB06W+2Ci3W+hWNyISROGW/skM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
+        stable@vger.kernel.org, Gerd Rausch <gerd.rausch@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 137/183] net: sonic: replace dev_kfree_skb in sonic_send_packet
-Date:   Tue, 28 Jan 2020 15:05:56 +0100
-Message-Id: <20200128135843.437284531@linuxfoundation.org>
+Subject: [PATCH 4.4 138/183] net/rds: Fix ib_evt_handler_call element in rds_ib_stat_names
+Date:   Tue, 28 Jan 2020 15:05:57 +0100
+Message-Id: <20200128135843.531481174@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,35 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Gerd Rausch <gerd.rausch@oracle.com>
 
-[ Upstream commit 49f6c90bf6805948b597eabb499e500a47cf24be ]
+[ Upstream commit 05a82481a3024b94db00b8c816bb3d526b5209e0 ]
 
-sonic_send_packet will be processed in irq or non-irq
-context, so it would better use dev_kfree_skb_any
-instead of dev_kfree_skb.
+All entries in 'rds_ib_stat_names' are stringified versions
+of the corresponding "struct rds_ib_statistics" element
+without the "s_"-prefix.
 
-Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Fix entry 'ib_evt_handler_call' to do the same.
+
+Fixes: f4f943c958a2 ("RDS: IB: ack more receive completions to improve performance")
+Signed-off-by: Gerd Rausch <gerd.rausch@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 2 +-
+ net/rds/ib_stats.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index b5f1f4ea9d4a3..6679005782499 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -222,7 +222,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
- 	if (!laddr) {
- 		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
--		dev_kfree_skb(skb);
-+		dev_kfree_skb_any(skb);
- 		return NETDEV_TX_OK;
- 	}
- 
+diff --git a/net/rds/ib_stats.c b/net/rds/ib_stats.c
+index d77e044730563..a88460058185b 100644
+--- a/net/rds/ib_stats.c
++++ b/net/rds/ib_stats.c
+@@ -42,7 +42,7 @@ DEFINE_PER_CPU_SHARED_ALIGNED(struct rds_ib_statistics, rds_ib_stats);
+ static const char *const rds_ib_stat_names[] = {
+ 	"ib_connect_raced",
+ 	"ib_listen_closed_stale",
+-	"s_ib_evt_handler_call",
++	"ib_evt_handler_call",
+ 	"ib_tasklet_call",
+ 	"ib_tx_cq_event",
+ 	"ib_tx_ring_full",
 -- 
 2.20.1
 
