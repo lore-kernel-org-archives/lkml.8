@@ -2,240 +2,118 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEF0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07988C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB0D20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:25:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="daANP32j"
+	by mail.kernel.org (Postfix) with ESMTP id CC04B2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580225209;
+	bh=dj+J/+PtbTGjVK/oHj202CDxS9GCGCuwxkfK9zJalX8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2UvsKjvKq5fzR+M+JrEqz7PtAUMl9mWrHsdQU8eCc51gdHB3nYw6xLQJgwM6F6ofc
+	 0Do2Hb7RudHrKZ2TnnAH/CZVMAmr9Gvvc5E0P203hrm5pltM5wBhj68zFdPmVscdIO
+	 XNSwE+A0HxXZTMGyViRU59Oezz3NPwPrWjQoHUF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgA1PZt (ORCPT
+        id S1726582AbgA1P0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:25:49 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26133 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726141AbgA1PZt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:25:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580225146;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4u1eecLUmt9wBhg+/Wu6HCzpTCvXarAFVysnsNaCuCA=;
-        b=daANP32jCVGQEGzUL6sHQKX8rZybWMD5G5YHOib6fBRqKI6ukHMX5yGt3SeQJxOj3wl6/1
-        Hb1tIn7MX8js4/qCix7dfsjOH70pSsw+J0GV+Fmr2FQCvzn/rnSM4DdV/HJBqvId+XJH1w
-        eocxJg3q2yIHx1+Sj9rtUvnwa4HiWtI=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-lxULVTxzObez6jAvSGJv8w-1; Tue, 28 Jan 2020 10:25:44 -0500
-X-MC-Unique: lxULVTxzObez6jAvSGJv8w-1
-Received: by mail-qv1-f72.google.com with SMTP id e26so8923312qvb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:25:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4u1eecLUmt9wBhg+/Wu6HCzpTCvXarAFVysnsNaCuCA=;
-        b=OnxoRyzOVvwVTnt1E05HqIgZh4YmeNrx+PrI+XfmmAbmIB/P/IcXtknOFfIzq8fyr4
-         YThoZFSkYjcA431rrezJWjU5nuZyK8JBkhhwTsKdMYdwH6NMX/9Ejo1ZDeECkVEA6qdi
-         hiwQQyvWVL8LdKpgcCmU9iTK5ex5NLTQlD1mc1DBim/wxZtbiHn4tTasBuacakdOynvS
-         RouU0xC0OBbSny/REBFzBIhk93AptD0o4l27OiqUbaxRBwTAloETm0nYZNz6k8+4H36L
-         Jcd17rlQHldk1Vubym1b7BlbyYoRlNphbMdUlTdqSNDb4ntivqrzYpDo6TvOpcKz8exg
-         9FyQ==
-X-Gm-Message-State: APjAAAW71nkMm6cITZ/KQ1r0yohPLb9N+0k+mT9gVukgGHl8K1d3MMjc
-        R6EzATXOl52vCzCxvZXPRG1/eASuaEmXPLaNu8SvbnGlngsh/M6Gwv9LJZg45fyVgMjulMaHxEY
-        OXHUpsLBeReusNrryZ/N2tLGZYXK8Qf0jmyF6YjE5
-X-Received: by 2002:ae9:ef4b:: with SMTP id d72mr22040725qkg.27.1580225144378;
-        Tue, 28 Jan 2020 07:25:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwa0r9/LJBQh84MY0bPX7/2+z98kqzE1ApQo3V/9ZMyGSk2kMAPZn6udWvO3iCtpJlQ3zhVkr+15X6sFqoFhBE=
-X-Received: by 2002:ae9:ef4b:: with SMTP id d72mr22040694qkg.27.1580225144075;
- Tue, 28 Jan 2020 07:25:44 -0800 (PST)
+        Tue, 28 Jan 2020 10:26:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbgA1P0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:26:49 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4087207FD;
+        Tue, 28 Jan 2020 15:26:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580225208;
+        bh=dj+J/+PtbTGjVK/oHj202CDxS9GCGCuwxkfK9zJalX8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OHv6vMz+yD5U8x6jcim8pbmwQnkrN4uZpX7DzpHQsMWV60vUZW+5b6hLCopr+YzlV
+         m58G8lzyFU8S/neJVArtj7ee0qKQp3rxEnBv8B767ntyNTp9k+KoplSvW6qGdVbECq
+         lE7l0SpLW/1wIyvzaUMpqwNlQSy8Oc2/OTqCeXKc=
+Date:   Tue, 28 Jan 2020 15:26:42 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [PATCH v3] mm: Add MREMAP_DONTUNMAP to mremap().
+Message-ID: <20200128152641.GA29776@willie-the-truck>
+References: <20200123014627.71720-1-bgeffon@google.com>
+ <20200127053056.213679-1-bgeffon@google.com>
 MIME-Version: 1.0
-References: <20200111192419.2503922-1-lains@archlinux.org> <aaca852e-cb31-2690-7f90-819ed673bacb@pedrovanzella.com>
- <CAO-hwJJwqXbJSTY2iEBTv3=N1_NaoHii6JvpA7_1oJUWQHZHag@mail.gmail.com>
-In-Reply-To: <CAO-hwJJwqXbJSTY2iEBTv3=N1_NaoHii6JvpA7_1oJUWQHZHag@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 28 Jan 2020 16:25:33 +0100
-Message-ID: <CAO-hwJLXQSjq0J-emUMCu9Z69FmzzQO3Am0E3Xiw6aWBfiEjnA@mail.gmail.com>
-Subject: Re: [PATCH] HID: logitech-hidpp: BatteryVoltage: only read
- chargeStatus if extPower is active
-To:     Pedro Vanzella <pedro@pedrovanzella.com>
-Cc:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200127053056.213679-1-bgeffon@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 10:12 AM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> Hi,
->
-> On Mon, Jan 20, 2020 at 2:43 PM Pedro Vanzella <pedro@pedrovanzella.com> =
-wrote:
-> >
-> > On 1/11/20 4:24 PM, Filipe La=C3=ADns wrote:
-> > > In the HID++ 2.0 function getBatteryInfo() from the BatteryVoltage
-> > > (0x1001) feature, chargeStatus is only valid if extPower is active.
-> > >
-> > > Previously we were ignoring extPower, which resulted in wrong values.
-> >
-> > Nice catch. Sorry for missing that the first time around.
-> >
-> > >
-> > > Example:
-> > >      With an unplugged mouse
-> > >
-> > >      $ cat /sys/class/power_supply/hidpp_battery_0/status
-> > >      Charging
-> >
-> > Tested and it works as expected now.
->
-> Thanks for the patch and the tests.
->
-> Unfortunately, the merge window is already opened, and I'd rather not
-> sneak this one right now. This patch doesn't seem very critical so I
-> rather not annoy the other maintainers.
-> I'll make sure it gets in the 5.6 final by pushing it into a rc when
-> things are calmer for everybody.
->
-> So the plan would be:
-> - wait for the 'normal' 5.6 HID pull request to be sent
-> - apply this one in for-5.6/upstream-fixes
-> - sent this branch for either 5.6-rc1 or 5.6-rc2
->
-> Cheers,
-> Benjamin
->
-> >
-> > >
-> > > This patch makes fixes that, it also renames charge_sts to flags as
+Hi Brian,
 
-Fixed the typo: 's/makes //' and pushed to for-5.6/upstream-fixes
+On Sun, Jan 26, 2020 at 09:30:56PM -0800, Brian Geffon wrote:
+> When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+> set, the source mapping will not be removed. Instead it will be
+> cleared as if a brand new anonymous, private mapping had been created
+> atomically as part of the mremap() call.  If a userfaultfd was watching
+> the source, it will continue to watch the new mapping.  For a mapping
+> that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
+> mremap() call to fail. MREMAP_DONTUNMAP requires that MREMAP_FIXED is
+> also used. The final result is two equally sized VMAs where the
+> destination contains the PTEs of the source.
+>    
+> We hope to use this in Chrome OS where with userfaultfd we could write
+> an anonymous mapping to disk without having to STOP the process or worry
+> about VMA permission changes.
+>    
+> This feature also has a use case in Android, Lokesh Gidra has said
+> that "As part of using userfaultfd for GC, We'll have to move the physical
+> pages of the java heap to a separate location. For this purpose mremap
+> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+> heap, its virtual mapping will be removed as well. Therefore, we'll
+> require performing mmap immediately after. This is not only time consuming
+> but also opens a time window where a native thread may call mmap and
+> reserve the java heap's address range for its own usage. This flag
+> solves the problem."
+
+Hmm, this sounds like you're dealing with a multi-threaded environment,
+yet your change only supports private mappings. How does that work?
+
+It's also worrying because, with two private mappings of the same anonymous
+memory live simultaneously, you run the risk of hitting D-cache aliasing
+issues on some architectures and losing coherency between them as a result
+(even in a single-threaded scenario). Is userspace just supposed to deal
+with this, or should we be enforcing SHMLBA alignment?
+ 
+> Signed-off-by: Brian Geffon <bgeffon@google.com>
+> ---
+>  include/uapi/linux/mman.h |  5 +++--
+>  mm/mremap.c               | 38 +++++++++++++++++++++++++++++++-------
+>  2 files changed, 34 insertions(+), 9 deletions(-)
+
+Could you also a include a patch to update the mremap man page, please?
+
+https://www.kernel.org/doc/man-pages/patches.html
 
 Cheers,
-Benjamin
 
-> > > charge_sts can be confused with chargeStatus from the spec.
-> > >
-> > > Spec:
-> > > +--------+-----------------------------------------------------------=
---------------+
-> > > |  byte  |                                    2                      =
-              |
-> > > +--------+--------------+------------+------------+----------+-------=
----+----------+
-> > > |   bit  |     0..2     |      3     |      4     |     5    |     6 =
-   |     7    |
-> > > +--------+--------------+------------+------------+----------+-------=
----+----------+
-> > > | buffer | chargeStatus | fastCharge | slowCharge | critical | (unuse=
-d) | extPower |
-> > > +--------+--------------+------------+------------+----------+-------=
----+----------+
-> > > Table 1 - battery voltage (0x1001), getBatteryInfo() (ASE 0), 3rd byt=
-e
-> > >
-> > > +-------+--------------------------------------+
-> > > | value |                meaning               |
-> > > +-------+--------------------------------------+
-> > > |   0   | Charging                             |
-> > > +-------+--------------------------------------+
-> > > |   1   | End of charge (100% charged)         |
-> > > +-------+--------------------------------------+
-> > > |   2   | Charge stopped (any "normal" reason) |
-> > > +-------+--------------------------------------+
-> > > |   7   | Hardware error                       |
-> > > +-------+--------------------------------------+
-> > > Table 2 - chargeStatus value
-> > >
-> > > Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
-> > > ---
-> > >   drivers/hid/hid-logitech-hidpp.c | 43 ++++++++++++++++-------------=
----
-> > >   1 file changed, 21 insertions(+), 22 deletions(-)
-> > >
-> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logit=
-ech-hidpp.c
-> > > index bb063e7d48df..39a5ee0aaab0 100644
-> > > --- a/drivers/hid/hid-logitech-hidpp.c
-> > > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > > @@ -1256,36 +1256,35 @@ static int hidpp20_battery_map_status_voltage=
-(u8 data[3], int *voltage,
-> > >   {
-> > >       int status;
-> > >
-> > > -     long charge_sts =3D (long)data[2];
-> > > +     long flags =3D (long) data[2];
-> > >
-> > > -     *level =3D POWER_SUPPLY_CAPACITY_LEVEL_UNKNOWN;
-> > > -     switch (data[2] & 0xe0) {
-> > > -     case 0x00:
-> > > -             status =3D POWER_SUPPLY_STATUS_CHARGING;
-> > > -             break;
-> > > -     case 0x20:
-> > > -             status =3D POWER_SUPPLY_STATUS_FULL;
-> > > -             *level =3D POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-> > > -             break;
-> > > -     case 0x40:
-> > > +     if (flags & 0x80)
-> > > +             switch (flags & 0x07) {
-> > > +             case 0:
-> > > +                     status =3D POWER_SUPPLY_STATUS_CHARGING;
-> > > +                     break;
-> > > +             case 1:
-> > > +                     status =3D POWER_SUPPLY_STATUS_FULL;
-> > > +                     *level =3D POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-> > > +                     break;
-> > > +             case 2:
-> > > +                     status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
-> > > +                     break;
-> > > +             default:
-> > > +                     status =3D POWER_SUPPLY_STATUS_UNKNOWN;
-> > > +                     break;
-> > > +             }
-> > > +     else
-> > >               status =3D POWER_SUPPLY_STATUS_DISCHARGING;
-> > > -             break;
-> > > -     case 0xe0:
-> > > -             status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
-> > > -             break;
-> > > -     default:
-> > > -             status =3D POWER_SUPPLY_STATUS_UNKNOWN;
-> > > -     }
-> > >
-> > >       *charge_type =3D POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-> > > -     if (test_bit(3, &charge_sts)) {
-> > > +     if (test_bit(3, &flags)) {
-> > >               *charge_type =3D POWER_SUPPLY_CHARGE_TYPE_FAST;
-> > >       }
-> > > -     if (test_bit(4, &charge_sts)) {
-> > > +     if (test_bit(4, &flags)) {
-> > >               *charge_type =3D POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
-> > >       }
-> > > -
-> > > -     if (test_bit(5, &charge_sts)) {
-> > > +     if (test_bit(5, &flags)) {
-> > >               *level =3D POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
-> > >       }
-> > >
-> > >
-> >
-> > Tested-by: Pedro Vanzella <pedro@pedrovanzella.com>
-> > Reviewed-by: Pedro Vanzella <pedro@pedrovanzella.com>
-> >
-
+Will
