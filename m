@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41230C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A1AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18878207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE6120716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221701;
-	bh=O0yBQ5DYF7rB/yI0dJffhdORoXmFPMV03S1Gh524xXQ=;
+	s=default; t=1580221704;
+	bh=TWHetQeApuPwWwnFAnNwR4s/mLNZZaOaZdJP3JYknWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=on3HvrcJ236f3nZZXzudGEaB7Ltxz05x91ur4XJH5XS/F8CYf2xb4nfDkWHgpjGf0
-	 Bq1OKqgJCb5Zjie3AAfAtdUgkPWv/3+mlOdLWLoQVnhreIfzeW7ezTtY9sqbCF4pAC
-	 qqcfSiX97cwPlLoTe/Q+0YO9CDX6fvCAlwDE0pQ0=
+	b=LD2h47ZAa00wY2qKIW9ypdqsogVqvu5ZH+Hrq1chi0udj8UjZXKD37ah/tsncHZ8B
+	 JSjZ87GysSrm37Uhyg30owLMntAGvdILWOZJCfkdvcMM+TISpgPaXuViBeTGXFZFJR
+	 gXG4wcUTQEZbUlEvambTqT8PuHyg/GWbmXLmy+bU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387486AbgA1O2U (ORCPT
+        id S2387491AbgA1O2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:28:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56214 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:28:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387475AbgA1O2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:28:17 -0500
+        id S2387480AbgA1O2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:28:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40508207FD;
-        Tue, 28 Jan 2020 14:28:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08C7120716;
+        Tue, 28 Jan 2020 14:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221695;
-        bh=O0yBQ5DYF7rB/yI0dJffhdORoXmFPMV03S1Gh524xXQ=;
+        s=default; t=1580221698;
+        bh=TWHetQeApuPwWwnFAnNwR4s/mLNZZaOaZdJP3JYknWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cR4sty6T8dBG/j3rc1CNSMYE9Bl/jVhEmG+Q0HA9iYINPoHNiXR/mFnk1+wjsZ1sH
-         bjg4ikmfLFNZILyJEUFIOCoc+bRNpgFM7DESr5solmqpaNAhtC4bajFXsRoix2hh/p
-         d7q1E3d3Nm29NOyHscynU+si+ud4uCmIDGdDjb4g=
+        b=LWyKqdboi5OAe8vV8R1Pn+0D8N8DT60zdyMXdLlQmXrDuGA/0tXAIy/NUz+KnSIcw
+         OZxR+Jd2KRS+uXOd/szkwfnpND5tm1W0yeEdMVF9HFZg8Yk3neOJ61kGi8CBqi3MSO
+         9WjC3u6vpbMyJMU5erMf8H56r/d8B6zHIRCeG0+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 53/92] net/sonic: Fix command register usage
-Date:   Tue, 28 Jan 2020 15:08:21 +0100
-Message-Id: <20200128135815.971043592@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 38/92] Input: sun4i-ts - add a check for devm_thermal_zone_of_sensor_register
+Date:   Tue, 28 Jan 2020 15:08:06 +0100
+Message-Id: <20200128135813.965752394@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,88 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 27e0c31c5f27c1d1a1d9d135c123069f60dcf97b upstream.
+commit 97e24b095348a15ec08c476423c3b3b939186ad7 upstream.
 
-There are several issues relating to command register usage during
-chip initialization.
+The driver misses a check for devm_thermal_zone_of_sensor_register().
+Add a check to fix it.
 
-Firstly, the SONIC sometimes comes out of software reset with the
-Start Timer bit set. This gets logged as,
-
-    macsonic macsonic eth0: sonic_init: status=24, i=101
-
-Avoid this by giving the Stop Timer command earlier than later.
-
-Secondly, the loop that waits for the Read RRA command to complete has
-the break condition inverted. That's why the for loop iterates until
-its termination condition. Call the helper for this instead.
-
-Finally, give the Receiver Enable command after clearing interrupts,
-not before, to avoid the possibility of losing an interrupt.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e28d0c9cd381 ("input: convert sun4i-ts to use devm_thermal_zone_of_sensor_register")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/natsemi/sonic.c |   18 +++---------------
- 1 file changed, 3 insertions(+), 15 deletions(-)
+ drivers/input/touchscreen/sun4i-ts.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -663,7 +663,6 @@ static void sonic_multicast_list(struct
-  */
- static int sonic_init(struct net_device *dev)
- {
--	unsigned int cmd;
- 	struct sonic_local *lp = netdev_priv(dev);
- 	int i;
+--- a/drivers/input/touchscreen/sun4i-ts.c
++++ b/drivers/input/touchscreen/sun4i-ts.c
+@@ -246,6 +246,7 @@ static int sun4i_ts_probe(struct platfor
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+ 	struct device *hwmon;
++	struct thermal_zone_device *thermal;
+ 	int error;
+ 	u32 reg;
+ 	bool ts_attached;
+@@ -365,7 +366,10 @@ static int sun4i_ts_probe(struct platfor
+ 	if (IS_ERR(hwmon))
+ 		return PTR_ERR(hwmon);
  
-@@ -680,7 +679,7 @@ static int sonic_init(struct net_device
- 	 * enable interrupts, then completely initialize the SONIC
- 	 */
- 	SONIC_WRITE(SONIC_CMD, 0);
--	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
-+	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS | SONIC_CR_STP);
- 	sonic_quiesce(dev, SONIC_CR_ALL);
+-	devm_thermal_zone_of_sensor_register(ts->dev, 0, ts, &sun4i_ts_tz_ops);
++	thermal = devm_thermal_zone_of_sensor_register(ts->dev, 0, ts,
++						       &sun4i_ts_tz_ops);
++	if (IS_ERR(thermal))
++		return PTR_ERR(thermal);
  
- 	/*
-@@ -710,14 +709,7 @@ static int sonic_init(struct net_device
- 	netif_dbg(lp, ifup, dev, "%s: issuing RRRA command\n", __func__);
+ 	writel(TEMP_IRQ_EN(1), ts->base + TP_INT_FIFOC);
  
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RRRA);
--	i = 0;
--	while (i++ < 100) {
--		if (SONIC_READ(SONIC_CMD) & SONIC_CR_RRRA)
--			break;
--	}
--
--	netif_dbg(lp, ifup, dev, "%s: status=%x, i=%d\n", __func__,
--		  SONIC_READ(SONIC_CMD), i);
-+	sonic_quiesce(dev, SONIC_CR_RRRA);
- 
- 	/*
- 	 * Initialize the receive descriptors so that they
-@@ -805,15 +797,11 @@ static int sonic_init(struct net_device
- 	 * enable receiver, disable loopback
- 	 * and enable all interrupts
- 	 */
--	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXEN | SONIC_CR_STP);
- 	SONIC_WRITE(SONIC_RCR, SONIC_RCR_DEFAULT);
- 	SONIC_WRITE(SONIC_TCR, SONIC_TCR_DEFAULT);
- 	SONIC_WRITE(SONIC_ISR, 0x7fff);
- 	SONIC_WRITE(SONIC_IMR, SONIC_IMR_DEFAULT);
--
--	cmd = SONIC_READ(SONIC_CMD);
--	if ((cmd & SONIC_CR_RXEN) == 0 || (cmd & SONIC_CR_STP) == 0)
--		printk(KERN_ERR "sonic_init: failed, status=%x\n", cmd);
-+	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXEN);
- 
- 	netif_dbg(lp, ifup, dev, "%s: new status=%x\n", __func__,
- 		  SONIC_READ(SONIC_CMD));
 
 
