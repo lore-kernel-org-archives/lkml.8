@@ -2,111 +2,91 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4AAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D58BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E407214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140792467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cAoClRy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgA1O4Q (ORCPT
+        id S1726717AbgA1O6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:56:16 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29038 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726497AbgA1O4Q (ORCPT
+        Tue, 28 Jan 2020 09:58:11 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40214 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbgA1O6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:56:16 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SEtsVT011817
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 09:56:14 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrjea8drm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 09:56:14 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <oberpar@linux.ibm.com>;
-        Tue, 28 Jan 2020 14:56:12 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 Jan 2020 14:56:08 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00SEu7Ti47579278
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 14:56:07 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E9BE52050;
-        Tue, 28 Jan 2020 14:56:07 +0000 (GMT)
-Received: from [9.152.212.29] (unknown [9.152.212.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id F253D52051;
-        Tue, 28 Jan 2020 14:56:06 +0000 (GMT)
-Subject: Re: [PATCH v2 10/10] gcov: Remove old GCC 3.4 support
-To:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-References: <20200123153341.19947-1-will@kernel.org>
- <20200123153341.19947-11-will@kernel.org>
-From:   Peter Oberparleiter <oberpar@linux.ibm.com>
-Date:   Tue, 28 Jan 2020 15:56:06 +0100
+        Tue, 28 Jan 2020 09:58:11 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q8so6741252pfh.7;
+        Tue, 28 Jan 2020 06:58:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xVg7yvmtWgmr43KxLTmI3D7lMD6VbKHeVc6c1ksu9WU=;
+        b=cAoClRy3JAZUhXmD5tD9S6sAgFkmXeMAWWyZj4AyoV+mQvhmXqkmysZ/PpYCpQMh4q
+         8URdcdKQjwDsls1KxHWOxtxJs9XXcM5qF6IluaXDwPXEre3psp1G3a+T5Szjt/gPDOKg
+         Lba5C4uWOILvq46slE+w3i+qqsxfGe3CwCTqQiHcKGjPEjd8qBGPadaQPhkAeRmusLf4
+         YMCDIEgpzRKl9cBTa1EYKwF+HoBNNiOxh9VdbuT8aai/yBMXWC5DtJnnWKy5kVEqwA2U
+         wF4V2/UN70Gq8OEmZd7yA+tb5TMmL6/imGvzthSSzdfv7+0L916YpT4Axr0cgaJrPDjA
+         HI2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xVg7yvmtWgmr43KxLTmI3D7lMD6VbKHeVc6c1ksu9WU=;
+        b=mzUx85DuAa1DI4wWFvUvecT9d9lUxqcEk6TELwEnjsaVyqafocH21WcTZt4AXClyYs
+         6uuP7rgxDOoPbhsUwyCFR2nGgFVuQI4Jao1hOyQUvJGHmHx3FzU91Lqqg47EtVfIF0lM
+         IHtm8jQ7OjQ5KKeRUwUVjgqBmXNOifGvxi2DPpMk79OkFvLSAB5+P0b/7HWkdoF+9PdD
+         sVBIr3XKuQVFSf150eXcNyVMlfKkD6FvaLWsNF1rG+IxrdLFmXSPnruO3Ovg10z0himG
+         oEjdeI5Z+VAO4CTQHYHLDK/G+djpDpwcGfbv/JUdKRXw7R7RAHul0/b/Fd4tvcAWrZZ8
+         x1Iw==
+X-Gm-Message-State: APjAAAXd4NMJlB+izLHv9X5L48It0QdXs0D4HHAe4Df7d9sHa0gcFDOK
+        5jSoesoEINDl2z/SacvPnaA=
+X-Google-Smtp-Source: APXvYqxNf1EXoNBaASlV1mmB+s43Ce4o89OK8f/drmebdoVYbgswj1SeuD+turU5RtHfze5RRLx7Qw==
+X-Received: by 2002:a65:4b89:: with SMTP id t9mr11059341pgq.102.1580223490422;
+        Tue, 28 Jan 2020 06:58:10 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id x7sm20743774pfp.93.2020.01.28.06.58.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2020 06:58:09 -0800 (PST)
+Date:   Tue, 28 Jan 2020 06:58:07 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        davidgow@google.com, heidifahim@google.com, netdev@vger.kernel.org
+Subject: Re: [PATCH v1 4/5] ptp: 1588_clock_ines: add unspecified HAS_IOMEM
+ dependency
+Message-ID: <20200128145807.GA2492@localhost>
+References: <20200127235356.122031-1-brendanhiggins@google.com>
+ <20200127235356.122031-5-brendanhiggins@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200123153341.19947-11-will@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012814-0028-0000-0000-000003D53311
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012814-0029-0000-0000-000024997B2E
-Message-Id: <28e3e35c-1a26-5f87-064e-39f8a1fc9105@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_03:2020-01-28,2020-01-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- malwarescore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
- bulkscore=0 suspectscore=1 clxscore=1011 spamscore=0 mlxscore=0
- mlxlogscore=966 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001280119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127235356.122031-5-brendanhiggins@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.01.2020 16:33, Will Deacon wrote:
-> The kernel requires at least GCC 4.8 in order to build, and so there is
-> no need to cater for the pre-4.7 gcov format.
+On Mon, Jan 27, 2020 at 03:53:55PM -0800, Brendan Higgins wrote:
+> Currently CONFIG_PTP_1588_CLOCK_INES=y implicitly depends on
+> CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
+> the following build error:
 > 
-> Remove the obsolete code.
+> /usr/bin/ld: drivers/ptp/ptp_ines.o: in function `ines_ptp_ctrl_probe':
+> drivers/ptp/ptp_ines.c:795: undefined reference to `devm_ioremap_resource'
 > 
-> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  kernel/gcov/Kconfig   |  24 --
->  kernel/gcov/Makefile  |   3 +-
->  kernel/gcov/gcc_3_4.c | 573 ------------------------------------------
->  3 files changed, 1 insertion(+), 599 deletions(-)
->  delete mode 100644 kernel/gcov/gcc_3_4.c
+> Fix the build error by adding the unspecified dependency.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 
-Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-
-Compiles, boots, produces coverage output on a s390 system with a
-recent-ish GCC version, so that change is fine by me.
-
-There's a final reference to the gcc_3_4.c file in the gcc_4_7.c header
-comment, but its probably not worth the extra effort to adjust that as well.
-
--- 
-Peter Oberparleiter
-Linux on Z Development - IBM Germany
-
+Acked-by: Richard Cochran <richardcochran@gmail.com>
