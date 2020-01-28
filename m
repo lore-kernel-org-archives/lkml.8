@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6626CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D7EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DEFB24690
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF4E22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220494;
-	bh=QAAjMfGSoQErDk6/hKAZVcV4JaObA4y8dL4SImk7QOk=;
+	s=default; t=1580220497;
+	bh=xyUGEFXpyzNFtWfdd8thjkylmfAJL4ZvM6xvi4QDHHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BkfM7XeSVGhJqOg60IKMjXRozZyWj3hc5KzHVIU3KTWObfd7++CdvQxu5NGIov+uK
-	 B2XiVLJYbKrve4egTwCDiU5W5OaqPXGxERUjSRQzvxGDHslhuvNgLyBB3poCq+5W0z
-	 ZIzIBSdwD7kZyd3gvoHOnfIyF4lESr1J4Bhmy4JI=
+	b=P9OKqf6bHZ6kP43dIn8YzH82HzHybbLgeZmDdc4011IKQZOEu9+XghTa18H9juy30
+	 umkAU6xPM3Bk8psriT0sfOd+iS+yCtCxJxkh2hTR4ON06Hyc8ku85RzMGwSdv9V3bb
+	 36ko+E9XcoKaAgLObdFBbTCtN3cTOcg6IyS7GIFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgA1OIN (ORCPT
+        id S1728457AbgA1OIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:08:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:08:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728178AbgA1OIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:08:07 -0500
+        id S1728431AbgA1OIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:08:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5268E24685;
-        Tue, 28 Jan 2020 14:08:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3D8A22522;
+        Tue, 28 Jan 2020 14:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220486;
-        bh=QAAjMfGSoQErDk6/hKAZVcV4JaObA4y8dL4SImk7QOk=;
+        s=default; t=1580220494;
+        bh=xyUGEFXpyzNFtWfdd8thjkylmfAJL4ZvM6xvi4QDHHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ziy9CMvrag6nbFHRvNvOvL669I4egdpdUk4qKrCUtORCaRTOi97HByvHlYiDIQ+Bt
-         Tp7v31hZL/1XwVlIi0DVZ1NXjDpvVq76htSQ4bm4XgNzxJMOtr9WnyMBeFErjAcdaQ
-         JhOi4LBeoNytsO0K/SDZrTA2nAKkdTUS3rKaRnWI=
+        b=nofYpB16Fa6RChfc0OlumFaiIK844oxKmrsQNSoZbTO96YBzfqQ/3/MzzYskmb5ru
+         iMKsvTUvIfeilmcfvimL/r9TzC+fHPSSh7t8J151Libl8vaTKi8Iou3iup6n1QXoNm
+         EAiI+qS2oC1v7EjVHtr7CcN6LZDOajx/8ZApQG50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 026/183] clk: imx6sx: fix refcount leak in imx6sx_clocks_init()
-Date:   Tue, 28 Jan 2020 15:04:05 +0100
-Message-Id: <20200128135832.629732622@linuxfoundation.org>
+Subject: [PATCH 4.4 029/183] clk: armada-370: fix refcount leak in a370_clk_init()
+Date:   Tue, 28 Jan 2020 15:04:08 +0100
+Message-Id: <20200128135832.950495130@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -62,32 +63,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 1731e14fb30212dd8c1e9f8fc1af061e56498c55 ]
+[ Upstream commit a3c24050bdf70c958a8d98c2823b66ea761e6a31 ]
 
 The of_find_compatible_node() returns a node pointer with refcount
 incremented, but there is the lack of use of the of_node_put() when
 done. Add the missing of_node_put() to release the refcount.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: d55135689019 ("ARM: imx: add clock driver for imx6sx")
+Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Fixes: 07ad6836fa21 ("clk: mvebu: armada-370: maintain clock init order")
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-imx6sx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/mvebu/armada-370.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/imx/clk-imx6sx.c b/drivers/clk/imx/clk-imx6sx.c
-index fea125eb4330b..8f2958ac04e8e 100644
---- a/drivers/clk/imx/clk-imx6sx.c
-+++ b/drivers/clk/imx/clk-imx6sx.c
-@@ -162,6 +162,7 @@ static void __init imx6sx_clocks_init(struct device_node *ccm_node)
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx6sx-anatop");
- 	base = of_iomap(np, 0);
- 	WARN_ON(!base);
-+	of_node_put(np);
+diff --git a/drivers/clk/mvebu/armada-370.c b/drivers/clk/mvebu/armada-370.c
+index 2c7c1085f8830..8fdfa97900cd8 100644
+--- a/drivers/clk/mvebu/armada-370.c
++++ b/drivers/clk/mvebu/armada-370.c
+@@ -177,8 +177,10 @@ static void __init a370_clk_init(struct device_node *np)
  
- 	clks[IMX6SX_PLL1_BYPASS_SRC] = imx_clk_mux("pll1_bypass_src", base + 0x00, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
- 	clks[IMX6SX_PLL2_BYPASS_SRC] = imx_clk_mux("pll2_bypass_src", base + 0x30, 14, 1, pll_bypass_src_sels, ARRAY_SIZE(pll_bypass_src_sels));
+ 	mvebu_coreclk_setup(np, &a370_coreclks);
+ 
+-	if (cgnp)
++	if (cgnp) {
+ 		mvebu_clk_gating_setup(cgnp, a370_gating_desc);
++		of_node_put(cgnp);
++	}
+ }
+ CLK_OF_DECLARE(a370_clk, "marvell,armada-370-core-clock", a370_clk_init);
+ 
 -- 
 2.20.1
 
