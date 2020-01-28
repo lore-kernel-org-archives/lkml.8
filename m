@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5C6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C61C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A20206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C71206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222184;
-	bh=PpV52MBBkqaaQBnB7A/QBShT+Hi+PB9fQkUgRK78POo=;
+	s=default; t=1580222187;
+	bh=Ko9j2RnJHDSnhuDL5FBd/0ONSRujyE5lU0vvIsuBk20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eXL626s5B+fe6/Ke5QzPOxf6hT5rIPS+FO+wh0T3EjRQ1nXeDHyb88ku/UmzEgnca
-	 OQPHzxcJx5zJjli5zGEEm+zkQbnqi8Vn7I5I9xHooRoMHu/r7VHNykyY2nVYb5VJ8R
-	 GlXRU2+0X7MLm6Ix3RVTp1xUT+uqvjPjEPVffrp4=
+	b=aViWcWn3Q7rCRkl3iuIgzPqddM7JudB9AWbuHwaBFWe+K9yQfjEp/84wgUa5+Iokn
+	 LX5t5PiBXIefmzoqiaKZhSrHMvZA4eP0xBsZRIqxjo4X0KlJa2+k2WOpJ7wola+DSE
+	 umcDLM+BoXOBhYfvELy1+AybkKQNd5a+Ia71cbeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731391AbgA1OVr (ORCPT
+        id S1730909AbgA1OVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:21:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:21:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730920AbgA1OVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:21:44 -0500
+        id S1731362AbgA1OVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:21:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 228C624699;
-        Tue, 28 Jan 2020 14:21:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA00C24686;
+        Tue, 28 Jan 2020 14:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221303;
-        bh=PpV52MBBkqaaQBnB7A/QBShT+Hi+PB9fQkUgRK78POo=;
+        s=default; t=1580221301;
+        bh=Ko9j2RnJHDSnhuDL5FBd/0ONSRujyE5lU0vvIsuBk20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0ZZrm+WiBRzpoY6Dt0VhCF/glzSJmEE1vBH4JD3w4LP7e5HKso5znm5xxz5fmhQP
-         PYp+VI1bi8LQd/jFTaLyKlmIrIq7xNwhJI6mTCj9S0E2hhPon3atQS0T0gj0osoDHX
-         tAnaH2WQd1W33UWZ4+FshvpnGQzhWv+LTNxVF4P0=
+        b=wVsqXAlLFPD5qfABMMKVrSPmHaEqfBDRN1gaagPq+APRbUgNbwGwHEmRgBQSv9oBu
+         tcVjzrDIZsNp8D7LrW+kgNC/nP5QXrGvNxWJpmOGgd5iBnDkIiTpdOpyXI1s1aLX+/
+         UsCuLz8uXMXDN0kVNLzWuihc4bvDt7/XHhOUNgvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 170/271] libertas_tf: Use correct channel range in lbtf_geo_init
-Date:   Tue, 28 Jan 2020 15:05:19 +0100
-Message-Id: <20200128135905.228000498@linuxfoundation.org>
+Subject: [PATCH 4.9 169/271] scsi: libfc: fix null pointer dereference on a null lport
+Date:   Tue, 28 Jan 2020 15:05:18 +0100
+Message-Id: <20200128135905.156121550@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,36 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 2ec4ad49b98e4a14147d04f914717135eca7c8b1 ]
+[ Upstream commit 41a6bf6529edd10a6def42e3b2c34a7474bcc2f5 ]
 
-It seems we should use 'range' instead of 'priv->range'
-in lbtf_geo_init(), because 'range' is the corret one
-related to current regioncode.
+Currently if lport is null then the null lport pointer is dereference when
+printing out debug via the FC_LPORT_DB macro. Fix this by using the more
+generic FC_LIBFC_DBG debug macro instead that does not use lport.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 691cdb49388b ("libertas_tf: command helper functions for libertas_tf")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Addresses-Coverity: ("Dereference after null check")
+Fixes: 7414705ea4ae ("libfc: Add runtime debugging with debug_logging module parameter")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas_tf/cmd.c | 2 +-
+ drivers/scsi/libfc/fc_exch.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas_tf/cmd.c b/drivers/net/wireless/marvell/libertas_tf/cmd.c
-index 909ac3685010f..2b193f1257a5a 100644
---- a/drivers/net/wireless/marvell/libertas_tf/cmd.c
-+++ b/drivers/net/wireless/marvell/libertas_tf/cmd.c
-@@ -69,7 +69,7 @@ static void lbtf_geo_init(struct lbtf_private *priv)
- 			break;
- 		}
+diff --git a/drivers/scsi/libfc/fc_exch.c b/drivers/scsi/libfc/fc_exch.c
+index 16ca31ad5ec0a..d0a86ef806522 100644
+--- a/drivers/scsi/libfc/fc_exch.c
++++ b/drivers/scsi/libfc/fc_exch.c
+@@ -2506,7 +2506,7 @@ void fc_exch_recv(struct fc_lport *lport, struct fc_frame *fp)
  
--	for (ch = priv->range.start; ch < priv->range.end; ch++)
-+	for (ch = range->start; ch < range->end; ch++)
- 		priv->channels[CHAN_TO_IDX(ch)].flags = 0;
- }
- 
+ 	/* lport lock ? */
+ 	if (!lport || lport->state == LPORT_ST_DISABLED) {
+-		FC_LPORT_DBG(lport, "Receiving frames for an lport that "
++		FC_LIBFC_DBG("Receiving frames for an lport that "
+ 			     "has not been initialized correctly\n");
+ 		fc_frame_free(fp);
+ 		return;
 -- 
 2.20.1
 
