@@ -2,121 +2,117 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73850C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D74C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5026D207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948F524686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgA1PPN convert rfc822-to-8bit (ORCPT
+        id S1726442AbgA1PUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:15:13 -0500
-Received: from unicorn.mansr.com ([81.2.72.234]:39866 "EHLO unicorn.mansr.com"
+        Tue, 28 Jan 2020 10:20:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:59338 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbgA1PPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:15:13 -0500
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 321851B0DA; Tue, 28 Jan 2020 15:15:11 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports hub property
-References: <20200124152504.23411-1-mans@mansr.com>
-        <20200127153506.GA4589@bogus> <yw1xy2tsvnww.fsf@mansr.com>
-        <20200128134745.GA3048749@kroah.com>
-Date:   Tue, 28 Jan 2020 15:15:11 +0000
-In-Reply-To: <20200128134745.GA3048749@kroah.com> (Greg Kroah-Hartman's
-        message of "Tue, 28 Jan 2020 14:47:45 +0100")
-Message-ID: <yw1xpnf3vchs.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S1726024AbgA1PUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:20:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC4AB31B;
+        Tue, 28 Jan 2020 07:20:43 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 727093F68E;
+        Tue, 28 Jan 2020 07:20:42 -0800 (PST)
+Date:   Tue, 28 Jan 2020 15:20:40 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, jeremy.linton@arm.com,
+        arnd@arndb.de, olof@lixom.net, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, guohanjun@huawei.com,
+        gregkh@linuxfoundation.org, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
+Message-ID: <20200128152040.GC47557@bogus>
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
+ <1580210059-199540-3-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+(commenting on other parts though I am not sure if we want to add this
+despite it being deprecated)
 
-> On Mon, Jan 27, 2020 at 04:56:15PM +0000, Måns Rullgård wrote:
->> Rob Herring <robh@kernel.org> writes:
->> 
->> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
->> >> Add a non-removable-ports property that lists the hardwired downstream
->> >> ports of a hub.  Although hubs can provide this information, they are
->> >> not always configured correctly.  An alternate means of indicating this
->> >> for built-in USB devices is thus useful.
->> >> 
->> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
->> >
->> > I reviewed this already, but since you didn't add my reviewed-by, I'm 
->> > looking at it again and having 2nd thoughts.
->> >
->> >> ---
->> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
->> >>  1 file changed, 4 insertions(+)
->> >> 
->> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
->> >> index 036be172b1ae..92d863cc96b6 100644
->> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
->> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
->> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
->> >>  - #size-cells: shall be 0
->> >>  
->> >>  
->> >> +Optional properties for hub and host-controller nodes:
->> >> +- non-removable-ports: list of hardwired downstream ports
->> >
->> > If you have a hardwired device and need to know that, doesn't that imply 
->> > there's some other stuff you need to describe beyond what a standard USB 
->> > device has. Such as a power supply that's not Vbus from the hub.
->> 
->> I suppose there could be, but there isn't in my actual situation.
->> 
->> > At a minimum, I think this should be a per port property.
->> 
->> That's what I suggested first.  Greg told me to do it like this instead.
+On Tue, Jan 28, 2020 at 07:14:19PM +0800, John Garry wrote:
+> Add a generic driver for platforms which populate their ACPI PPTT
+> processor package ID Type Structure according to suggestion in the ACPI
+> spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
 >
-> I said that?  I do not remember discussing this at all, when did that
-> happen?
-
-https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
-
->> > Though really, I think this should just be implied by describing the
->> > device in DT. I'm not sure if there's a case for hotpluggable devices
->> > described in DT.  Maybe with overlays.
->> 
->> That's also an option.  Greg, what do you think?
+> The soc_id is from member LEVEL_2_ID.
 >
-> I have no idea, sorry, I'm totally lost here...
+> For this, we need to use a whitelist of platforms which are known to
+> populate the structure as suggested.
+>
+> For now, only the vendor and soc_id fields are exposed.
+>
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>  drivers/soc/Makefile       |   1 +
+>  drivers/soc/acpi_generic.c | 102 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 103 insertions(+)
+>  create mode 100644 drivers/soc/acpi_generic.c
+>
+> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> index 8b49d782a1ab..2a59a30a22cd 100644
+> --- a/drivers/soc/Makefile
+> +++ b/drivers/soc/Makefile
+> @@ -3,6 +3,7 @@
+>  # Makefile for the Linux Kernel SOC specific device drivers.
+>  #
+>
+> +obj-$(CONFIG_ACPI_PPTT)		+= acpi_generic.o
+>  obj-$(CONFIG_ARCH_ACTIONS)	+= actions/
+>  obj-$(CONFIG_SOC_ASPEED)	+= aspeed/
+>  obj-$(CONFIG_ARCH_AT91)		+= atmel/
+> diff --git a/drivers/soc/acpi_generic.c b/drivers/soc/acpi_generic.c
+> new file mode 100644
+> index 000000000000..34a1f5f8e063
+> --- /dev/null
+> +++ b/drivers/soc/acpi_generic.c
+> @@ -0,0 +1,102 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) John Garry, john.garry@huawei.com
+> + */
+> +
+> +#define pr_fmt(fmt) "SOC ACPI GENERIC: " fmt
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/sys_soc.h>
+> +
+> +/*
+> + * Known platforms that fill in PPTT package ID structures according to
+> + * ACPI spec examples, that being:
+> + * - Custom driver attribute is in ID Type Structure VENDOR_ID member
+> + * - SoC id is in ID Type Structure LEVEL_2_ID member
+> + *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
+> + */
+> +static struct acpi_platform_list plat_list[] = {
+> +	{"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
 
-Background: I need to differentiate between on-board and external USB
-devices on a few boards.  Although hubs can indicate the removable
-status of each port, the configuration options are often limited and may
-not be capable of describing the actual wiring.  Also, if a device is
-hard-wired directly to a host port, there is no way of indicating this.
+What do you want to match this ? The same silicon can end up with
+different OEMs and this list just blows up soon for single SoC if
+used by different OEM/ODMs. I assume we get all the required info
+from the Type 2 table entry and hence can just rely on that. If
+PPTT has type 2 entry, just initialise this soc driver and expose
+the relevant information from the table entry.
 
-While I could match the full device path using per-board lists, I'd
-prefer a generic solution.  To this end, it is necessary to add the
-ability for DT to supply this information.  Three variants have been
-discussed:
-
-1. Add a "non-removable" property to the USB device node similar to how
-   it's done for MMC.
-
-2. Add a "non-removable-ports" property to the hub node.  Apparently
-   ACPI can supply the information in this manner.
-
-3. Make any USB device with a DT node implicitly non-removable.
-
-Either one will work for me.
-
--- 
-Måns Rullgård
+--
+Regards,
+Sudeep
