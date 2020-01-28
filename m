@@ -2,123 +2,125 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E7FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB411C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50148207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60E52465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:50:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T1hFsGEO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgA1Wsj (ORCPT
+        id S1726401AbgA1WuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 17:48:39 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50132 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgA1Wsj (ORCPT
+        Tue, 28 Jan 2020 17:50:03 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36828 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgA1WuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 17:48:39 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iwZer-0006o0-HV; Tue, 28 Jan 2020 23:48:33 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 084FB101227; Tue, 28 Jan 2020 23:48:33 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        x86@kernel.org, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
-In-Reply-To: <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com>
-References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com> <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com> <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de> <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com> <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com> <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com> <87d0b82a9o.fsf@nanos.tec.linutronix.de> <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com> <878slwmpu9.fsf@nanos.tec.linutronix.de> <87imkv63yf.fsf@nanos.tec.linutronix.de> <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com>
-Date:   Tue, 28 Jan 2020 23:48:32 +0100
-Message-ID: <87pnf342pr.fsf@nanos.tec.linutronix.de>
+        Tue, 28 Jan 2020 17:50:03 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k3so7788095pgc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 14:50:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eHEMtu7LgfkFmyO7oGGN1Lq9IQ3mukp2v1f/r5o0L0s=;
+        b=T1hFsGEO0/ylAav9HFUtgqeRhLCk+8mN4axKzOMQw6onWhdziR92MjVxq99AAlFqvU
+         kku1dM+53W1OlgPVvAdZpJUQQFRFZXSDYoFSRxG+GgXnjw7uLYw9w3Uwi+5GnyvWh7Zr
+         AS8uPHr3/+DROwe5Czh3qwOMmnX6Zh6aNF314=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eHEMtu7LgfkFmyO7oGGN1Lq9IQ3mukp2v1f/r5o0L0s=;
+        b=ncI5bsomA9TmXzkJbTvOx+DImXrMl0oc3SQHebPyYw0bnyIBvAzTVbBes+irpm+ejc
+         kUZs9wQ7uJ1lxY+1McBWShDI9QRcKNYr4LPdiqrVO8SPvCIJrUk0/FgB+FWjIKlu/l9X
+         b4+mkmiy/pPSrgSfcgLJVI7YNI8eV9SC0urqv5mr2HUCXUsk4Pwngx8KM7AmkMUZ5Fts
+         aVOXdkksMp7LnHObBoqyTC0+qlZRe8o9kYGaaIhIH9LwzVUUlON/h7G3I4MDvfl99ym8
+         HkmiLCHU+1EojjSIiUwYIUjQczhmJGnCdPwcX2+i1jpWzNOiAUvlKMZZ5ac1c8y/aHx9
+         uAbQ==
+X-Gm-Message-State: APjAAAWvefbQMDMd/qVfZRNygiO7Bpm392hkL/XRGWFwWkzsxHvlwShv
+        ugLikM6gZAYQyrDHpqTbQquMmw==
+X-Google-Smtp-Source: APXvYqx9wzHAeZmTEPl0AGnf9TAiBUX0F1ZcpzaNR4O6MA9xWbzMW0w2pC5Y4TVfo8+2jVMqh5iIHw==
+X-Received: by 2002:a65:5786:: with SMTP id b6mr27614437pgr.316.1580251802779;
+        Tue, 28 Jan 2020 14:50:02 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s23sm2178658pjq.17.2020.01.28.14.50.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2020 14:50:02 -0800 (PST)
+Date:   Tue, 28 Jan 2020 14:50:00 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com,
+        Dave Martin <Dave.Martin@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 04/11] scs: disable when function graph tracing is
+ enabled
+Message-ID: <202001281449.FB1671805E@keescook>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200128184934.77625-1-samitolvanen@google.com>
+ <20200128184934.77625-5-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128184934.77625-5-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Evan,
+On Tue, Jan 28, 2020 at 10:49:27AM -0800, Sami Tolvanen wrote:
+> The graph tracer hooks returns by modifying frame records on the
+> (regular) stack, but with SCS the return address is taken from the
+> shadow stack, and the value in the frame record has no effect. As we
+> don't currently have a mechanism to determine the corresponding slot
+> on the shadow stack (and to pass this through the ftrace
+> infrastructure), for now let's disable SCS when the graph tracer is
+> enabled.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-Evan Green <evgreen@chromium.org> writes:
-> On Tue, Jan 28, 2020 at 6:38 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->> The patch is only lightly tested, but so far it survived.
->>
->
-> Hi Thomas,
-> Thanks for the patch, I gave it a try. I get the following splat, then a hang:
->
-> [   62.238406]        CPU0
-> [   62.241135]        ----
-> [   62.243863]   lock(vector_lock);
-> [   62.247467]   lock(vector_lock);
-> [   62.251071]
-> [   62.251071]  *** DEADLOCK ***
-> [   62.251071]
-> [   62.257687]  May be due to missing lock nesting notation
-> [   62.257687]
-> [   62.265274] 2 locks held by migration/1/17:
-> [   62.269946]  #0: 00000000cfa9d8c3 (&irq_desc_lock_class){-.-.}, at:
-> irq_migrate_all_off_this_cpu+0x44/0x28f
-> [   62.280846]  #1: 000000006885da2d (vector_lock){-.-.}, at:
-> msi_set_affinity+0x13c/0x27b
-> [   62.289801]
-> [   62.289801] stack backtrace:
-> [   62.294669] CPU: 1 PID: 17 Comm: migration/1 Not tainted 4.19.96 #2
-> [   62.310713] Call Trace:
-> [   62.313446]  dump_stack+0xac/0x11e
-> [   62.317255]  __lock_acquire+0x64f/0x19bc
-> [   62.321646]  ? find_held_lock+0x3d/0xb8
-> [   62.325936]  ? pci_conf1_write+0x4f/0xdf
-> [   62.330320]  lock_acquire+0x1b2/0x1fa
-> [   62.334413]  ? apic_retrigger_irq+0x31/0x63
-> [   62.339097]  _raw_spin_lock_irqsave+0x51/0x7d
-> [   62.343972]  ? apic_retrigger_irq+0x31/0x63
-> [   62.348646]  apic_retrigger_irq+0x31/0x63
-> [   62.353124]  msi_set_affinity+0x25a/0x27b
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Bah. I'm sure I looked at that call chain, noticed the double vector
-lock and then forgot. Delta patch below.
+-Kees
 
-Thanks,
+> ---
+>  arch/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 1b16aa9a3fe5..0d746373c52e 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -530,6 +530,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
+>  
+>  config SHADOW_CALL_STACK
+>  	bool "Clang Shadow Call Stack"
+> +	depends on !FUNCTION_GRAPH_TRACER
+>  	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+>  	help
+>  	  This option enables Clang's Shadow Call Stack, which uses a
+> -- 
+> 2.25.0.341.g760bfbb309-goog
+> 
 
-        tglx
-
-8<--------------
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -64,6 +64,7 @@ msi_set_affinity(struct irq_data *irqd,
- 	struct irq_cfg old_cfg, *cfg = irqd_cfg(irqd);
- 	struct irq_data *parent = irqd->parent_data;
- 	unsigned int cpu;
-+	bool pending;
- 	int ret;
- 
- 	/* Save the current configuration */
-@@ -147,9 +148,13 @@ msi_set_affinity(struct irq_data *irqd,
- 	 * vector/CPU. Check whether the transition raced with a device
- 	 * interrupt and is pending in the local APICs IRR.
- 	 */
--	if (lapic_vector_set_in_irr(cfg->vector))
--		irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
-+	pending = lapic_vector_set_in_irr(cfg->vector);
-+
- 	unlock_vector_lock();
-+
-+	if (pending)
-+		irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
-+
- 	return ret;
- }
- 
+-- 
+Kees Cook
