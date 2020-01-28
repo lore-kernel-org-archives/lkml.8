@@ -2,49 +2,97 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C2FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A66C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C042E24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76FE5207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnkrjD/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgA1Sg2 (ORCPT
+        id S1726697AbgA1Sgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:36:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:33558 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbgA1Sg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:36:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 082E3328;
-        Tue, 28 Jan 2020 10:36:27 -0800 (PST)
-Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2538C3F52E;
-        Tue, 28 Jan 2020 10:36:25 -0800 (PST)
-Subject: Re: [PATCH v2 4/6] Documentation: arm64: document support for the AMU
- extension
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        dietmar.eggemann@arm.com, peterz@infradead.org, mingo@redhat.com,
-        ggherdovich@suse.cz, vincent.guittot@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-References: <20191218182607.21607-1-ionela.voinescu@arm.com>
- <20191218182607.21607-5-ionela.voinescu@arm.com>
- <b63b6f10-22c8-79be-cc97-08484874bd62@arm.com>
- <20200128165325.GA16417@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <487a8af1-a1b8-5a16-6487-968049bfc12f@arm.com>
-Date:   Tue, 28 Jan 2020 18:36:23 +0000
+        Tue, 28 Jan 2020 13:36:52 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:46580 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbgA1Sgw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 13:36:52 -0500
+Received: by mail-yw1-f66.google.com with SMTP id u139so6955597ywf.13;
+        Tue, 28 Jan 2020 10:36:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UAaJIyMCtfqDJNVGPg+VIxoXHpPloRjdhA2WOZPQuQo=;
+        b=nnkrjD/4eh4orr4I9QZwg2tsLzI/F7M1p9TKAUtbzdELO0mgklmIYiLAd5geqGJB7u
+         Vp9oLuyidZqIeV7sAIANKB3mkgnupXSadCS4j0ObyivnC1i/tOddlV+vsuPIAUU/ls0S
+         tZdA+/o1Az2iRUa9PGDQFPxR9n3pBaosh6ftpPW/oUWtDGnEQR86U1UHFcHpkrH2Yoav
+         qsqdzeTyoPS7xLCPxDSuogcNkMEJmctyj/vAJmazWs7EdBXnpdIM7fL9CgI6Mo0yJt9S
+         mTieWkt4sPblkKDg4sBkH/Pz3ShgtahvE3GOOdX+stAg3SdoXe33CdibMKAfBbQ8fLQZ
+         E22g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UAaJIyMCtfqDJNVGPg+VIxoXHpPloRjdhA2WOZPQuQo=;
+        b=NtKn0n3iOrcvT8wU5tX1XPsswCtOIwKf7w9Pv31p8GVH8Q6vKT0EhuQCq69BrSApo8
+         LAgg3VwlFVBYqduZ+AW5uEaNr8BSqpxx7QCofrBTI4b8nZjQo36oCEDVWDLyWdhYtPau
+         Y8tDNxTujanGxmpauGeZdGMQDV1NuiWpfS9Oif8aKZ5FuW4ghoqz+Gg8LoZ3HtGZucT2
+         AMpJsjlJOvV8w4TvNhO6k4NhHSn9Jd3qntos/pwJ8fbdcllvPf0qO20DGH5Y/eLEH8BT
+         EeBgfJM91wJkTFyHiUx2iDNTYwiDs0CbIbTaDCilHVy6gMoUB5C4ZdCbzQHO+D47NV7O
+         ikhg==
+X-Gm-Message-State: APjAAAX8997Rb5FkXJdKIbadhzmb2liggl+abXQAmp2ssFfktZujtoCh
+        nOh6J53+CrzeaAGN4/LTwNE=
+X-Google-Smtp-Source: APXvYqyzGvSY0gHjoEHGMOB4+0FYgIao/sa1DMQ5fP8MYcSTPmpU8qNnV4/4N227yIsPKr6z1eGTOA==
+X-Received: by 2002:a0d:df15:: with SMTP id i21mr2024857ywe.73.1580236610860;
+        Tue, 28 Jan 2020 10:36:50 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id t3sm8858935ywi.18.2020.01.28.10.36.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Jan 2020 10:36:50 -0800 (PST)
+Subject: Re: [RFC v1 0/6] kunit: create a centralized executor to dispatch all
+ KUnit tests
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191216220555.245089-1-brendanhiggins@google.com>
+ <20200106224022.GX11244@42.do-not-panic.com>
+ <CAFd5g456c2Zs7rCvRPgio83G=SrtPGi25zbqAUyTBHspHwtu4w@mail.gmail.com>
+ <594b7815-0611-34ea-beb5-0642114b5d82@gmail.com>
+ <CAFd5g469TWzrLKmQNR2i0HACJ3FEu-=4-Rk005g9szB5UsZAcw@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <e801e4ac-b7c2-3d0a-71e7-f8153a3dfbc8@gmail.com>
+Date:   Tue, 28 Jan 2020 12:36:49 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200128165325.GA16417@arm.com>
+In-Reply-To: <CAFd5g469TWzrLKmQNR2i0HACJ3FEu-=4-Rk005g9szB5UsZAcw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -53,64 +101,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/01/2020 16:53, Ionela Voinescu wrote:
-> Or you won't be able to access them at all. Lacking firmware support
-> accesses to AMU registers could be trapped in EL3. If access for EL1 and
-> EL2 is enabled from EL3, it's still possible that the counters
-> themselves are not enabled - that means they are not enabled to count
-> the events they are designed to be counting. That's why in this case the
-> event counter register could read 0.
-> 
-> But if we read 0, it does not necessarily mean that the counter is
-> disabled. It could also mean that the events is meant to count did not
-> happen yet.
-> 
-
-Right, which (as we discussed offline) is quite likely to happen if/when
-we get stuff like SVE counters and we try to read them at boot time. Might
-be worth adding a small note about that (0 != disabled).
-
->> I haven't seen something that would try to catch this on the kernel side.
->> Can we try to detect that (e.g. at least one counter returns > 0) in
->> cpu_amu_enable() and thus not write to the CPU-local 'amu_feat'?
+On 1/28/20 1:19 AM, Brendan Higgins wrote:
+> On Mon, Jan 27, 2020 at 9:40 AM Frank Rowand <frowand.list@gmail.com> wrote:
 >>
-> 
-> I'm reluctant to do this especially given that platforms might choose to
-> keep some counters disabled while enabling some counters that might not
-> have counted any events by the time we reach cpu_enable. We would end up
-> mistakenly disabling the feature. I would rather leave the validation of
-> the counters to be done at the location and for the purpose of their
-> use: see patch 6/6 - the use of counters for frequency invariance.
-> 
-
-Hmph, I'm a bit torn on that one. It would be really nice to provide *some*
-amount of sanity checking at core level - e.g. by checking that at least
-one of the four architected counters reads non-zero. But as you say these
-could be disabled, while some other arch/aux counter is enabled, and we
-could then mistakenly disable the feature. So we can't really do much
-unless we handle *each* individual counter. Oh well :/
-
->> While we're on the topic of detecting broken stuff, what if some CPUs
->> implement some auxiliary counters that some others don't?
+>> On 1/23/20 4:40 PM, Brendan Higgins wrote:
+>>> Sorry for the late reply. I am still catching up from being on vacation.
+>>>>> On Mon, Jan 6, 2020 at 2:40 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>>>> It does beg the question if this means kunit is happy to not be a tool
+>>>> to test pre basic setup stuff (terminology used in init.c, meaning prior
+>>>> to running all init levels). I suspect this is the case.
+>>>
+>>> Not sure. I still haven't seen any cases where this is necessary, so I
+>>> am not super worried about it. Regardless, I don't think this patchset
+>>> really changes anything in that regard, we are moving from late_init
+>>> to after late_init, so it isn't that big of a change for most use
+>>> cases.
+>>>
+>>> Please share if you can think of some things that need to be tested in
+>>> early init.
 >>
+>> I don't have a specific need for this right now.  I had not thought about
+>> how the current kunit implementation forces all kunit tests to run at a
+>> specific initcall level before reading this email thread.
+>>
+>> I can see the value of being able to have some tests run at different
+>> initcall levels to verify what functionality is available and working
+>> at different points in the boot sequence.
 > 
-> I think it should be up to the user of that counter to decide if the
-> usecase is at CPU level or system level. My intention of this base
-> support was to keep it simple and allow users of some counters to
-> decide on their own how to validate and make use of either architected
-> or auxiliary counters.
+> Let's cross that bridge when we get there. It should be fairly easy to
+> add that functionality.
+
+Yes. I just wanted to add the thought to the back of your mind so that
+it does not get precluded by future changes to the kunit architecture.
+
 > 
-> For example, in the case of frequency invariance, given a platform that
-> does not support cpufreq based invariance, I would validate all CPUs for
-> the use of AMU core and constant counters. If it happens that some CPUs
-> do not support those counters or they are not enabled, we'd have to
-> disable frequency invariance at system level.
+>> But more important than early initcall levels, I do not want the
+>> framework to prevent using or testing code and data that are marked
+>> as '__init'.  So it is important to retain a way to invoke the tests
+>> while __init code and data are available, if there is also a change
+>> to generally invoke the tests later.
 > 
-> For some other scenarios only partial support is needed - only a subset
-> of CPUs need to support the counters for their use to be feasible.
+> Definitely. For now that still works as long as you don't build KUnit
+> as a module, but I think Alan's new patches which allow KUnit to be
+> run at runtime via debugfs could cause some difficulty there. Again,
+
+Yes, Alan's patches are part of what triggered me thinking about the
+issues I raised.
+
+
+> we could add Kconfigs to control this, but the compiler nevertheless
+> complains because it doesn't know what phase KUnit runs in.
 > 
-> But I believe only the user of the counters can decide, whether this is
-> happening in architecture code, driver code, generic code.
+> Is there any way to tell the compiler that it is okay for non __init
+> code to call __init code? I would prefer not to have a duplicate
+> version of all the KUnit libraries with all the symbols marked __init.
+
+I'm not sure.  The build messages have always been useful and valid in
+my context, so I never thought to consider that possibility.
+
+> Thoughts?
+> .
 > 
 
-Right, the FIE support is actually a good example of that, I think.
