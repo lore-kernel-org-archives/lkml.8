@@ -2,112 +2,116 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D428C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEA7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85412467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:58:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580209113;
-	bh=fPIGD7bZiuPsICx66b+4r7EJxaT51+ZFDK7Fnb9seEk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=B0hRgS0oSva6CPdG/JvHLyaeyxX6S/GVW2tmv5IeoISC/jiouhiVtB27i0Yz5tp72
-	 xgiGjVAyz9+z5Lk2lt4KvRIhhBKQgVbQHBwGBTksgC24QYb2RgILpq+BflZDh70lP5
-	 t2LJB+nwBWhBvABc6Wi2ZERGsVeJgNmMaesdbXHY=
+	by mail.kernel.org (Postfix) with ESMTP id 863852467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgA1K6d (ORCPT
+        id S1726072AbgA1LAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:58:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35148 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 06:00:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:55116 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgA1K6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:58:32 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 022272467B;
-        Tue, 28 Jan 2020 10:58:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580209111;
-        bh=fPIGD7bZiuPsICx66b+4r7EJxaT51+ZFDK7Fnb9seEk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1ctD0lburdWt3ZOtVj5XjYkEhuGI8R5O7+QvVol5aKA4A/kVC5guTaNEXrw4S+q7C
-         ROcM5bCZuKIpf1xHbcixgP2r6MHVi4yBvKGo9D46PITetF2dNVQ29fOpZ1T4os+5tm
-         1AAyEH+The9/aovJDctEl2W6zefngSGCDwPsxEhU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1iwOZh-001naq-9h; Tue, 28 Jan 2020 10:58:29 +0000
+        id S1725937AbgA1LAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 06:00:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAF1C30E;
+        Tue, 28 Jan 2020 03:00:08 -0800 (PST)
+Received: from localhost (unknown [10.1.198.81])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 784D43F52E;
+        Tue, 28 Jan 2020 03:00:08 -0800 (PST)
+Date:   Tue, 28 Jan 2020 11:00:07 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        dietmar.eggemann@arm.com, peterz@infradead.org, mingo@redhat.com,
+        ggherdovich@suse.cz, vincent.guittot@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] arm64: add support for the AMU extension v1
+Message-ID: <20200128110007.GA17411@arm.com>
+References: <20191218182607.21607-1-ionela.voinescu@arm.com>
+ <20191218182607.21607-2-ionela.voinescu@arm.com>
+ <05b1981b-cf4d-d990-5155-6ed3fadcca92@arm.com>
+ <20200123183207.GB20475@arm.com>
+ <00d852b0-d456-efc3-5bfa-31524168344b@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jan 2020 10:58:29 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Makarand Pawagi <makarand.pawagi@nxp.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux@armlinux.org.uk, jon@solid-run.com,
-        cristian.sovaiala@nxp.com, laurentiu.tudor@nxp.com,
-        ioana.ciornei@nxp.com, V.Sethi@nxp.com, calvin.johnson@nxp.com,
-        pankaj.bansal@nxp.com, lorenzo.pieralisi@arm.com,
-        guohanjun@huawei.com, sudeep.holla@arm.com, rjw@rjwysocki.net,
-        lenb@kernel.org, stuyoder@gmail.com, tglx@linutronix.de,
-        jason@lakedaemon.net, shameerali.kolothum.thodi@huawei.com,
-        will@kernel.org, robin.murphy@arm.com, nleeder@codeaurora.org
-Subject: Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-In-Reply-To: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
-References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
-Message-ID: <d8aa6658f8f3763e28bb5d4884b9b686@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: makarand.pawagi@nxp.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, linux@armlinux.org.uk, jon@solid-run.com, cristian.sovaiala@nxp.com, laurentiu.tudor@nxp.com, ioana.ciornei@nxp.com, V.Sethi@nxp.com, calvin.johnson@nxp.com, pankaj.bansal@nxp.com, lorenzo.pieralisi@arm.com, guohanjun@huawei.com, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, stuyoder@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, shameerali.kolothum.thodi@huawei.com, will@kernel.org, robin.murphy@arm.com, nleeder@codeaurora.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00d852b0-d456-efc3-5bfa-31524168344b@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-28 08:08, Makarand Pawagi wrote:
-> ACPI support is added in the fsl-mc driver. Driver will parse
-> MC DSDT table to extract memory and other resorces.
-> 
-> Interrupt (GIC ITS) information will be extracted from MADT table
-> by drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c.
-> 
-> IORT table will be parsed to configure DMA.
-> 
-> Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
-> ---
->  drivers/acpi/arm64/iort.c                   | 53 +++++++++++++++++++++
->  drivers/bus/fsl-mc/dprc-driver.c            |  3 +-
->  drivers/bus/fsl-mc/fsl-mc-bus.c             | 48 +++++++++++++------
->  drivers/bus/fsl-mc/fsl-mc-msi.c             | 10 +++-
->  drivers/bus/fsl-mc/fsl-mc-private.h         |  4 +-
->  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 71 
-> ++++++++++++++++++++++++++++-
->  include/linux/acpi_iort.h                   |  5 ++
->  7 files changed, 174 insertions(+), 20 deletions(-)
+Hi Valentin,
 
-A general comment when you do this kind of work:
+On Friday 24 Jan 2020 at 12:00:25 (+0000), Valentin Schneider wrote:
+> On 23/01/2020 18:32, Ionela Voinescu wrote:
+> [...]
+> > and later we can use information in
+> > AMCGCR_EL0 to get the number of architected counters (n) and
+> > AMEVTYPER0<n>_EL0 to find out the type. The same logic would apply to
+> > the auxiliary counters.
+> > 
+> 
+> Good, I think that's all we'll really need. I've not gone through the whole
+> series (yet!) so I might've missed AMCGCR being used.
+>
 
-Do not write a single patch that impacts at least three different
-subsystems. As it is, it is unmergeable.
+No, it's not used later in the patches either, specifically because
+this is version 1 and we should be able to rely on these first 4
+architected counters for all future versions of the AMU implementation.
 
-Now the real question is *WHY* we need this kind of monstruosity?
-ACPI deals with PCI, not with exotic busses and whatnot. If you want
-to be creative, DT is your space. ACPI is designed to be plain and
-boring, and that's how we like it.
+> >>> @@ -1150,6 +1152,59 @@ static bool has_hw_dbm(const struct arm64_cpu_capabilities *cap,
+> >>>  
+> >>>  #endif
+> >>>  
+> >>> +#ifdef CONFIG_ARM64_AMU_EXTN
+> >>> +
+> >>> +/*
+> >>> + * This per cpu variable only signals that the CPU implementation supports
+> >>> + * the Activity Monitors Unit (AMU) but does not provide information
+> >>> + * regarding all the events that it supports.
+> >>> + * When this amu_feat per CPU variable is true, the user of this feature
+> >>> + * can only rely on the presence of the 4 fixed counters. But this does
+> >>> + * not guarantee that the counters are enabled or access to these counters
+> >>> + * is provided by code executed at higher exception levels.
+> >>> + *
+> >>> + * Also, to ensure the safe use of this per_cpu variable, the following
+> >>> + * accessor is defined to allow a read of amu_feat for the current cpu only
+> >>> + * from the current cpu.
+> >>> + *  - cpu_has_amu_feat()
+> >>> + */
+> >>> +static DEFINE_PER_CPU_READ_MOSTLY(u8, amu_feat);
+> >>> +
+> >>
+> >> Why not bool?
+> >>
+> > 
+> > I've changed it from bool after a sparse warning about expression using
+> > sizeof(bool) and found this is due to sizeof(bool) being compiler
+> > dependent. It does not change anything but I thought it might be a good
+> > idea to define it as 8-bit unsigned and rely on fixed size.
+> > 
+> 
+> I believe conveying the intent (a truth value) is more important than the
+> underlying storage size in this case. It mostly matters when dealing with
+> aggregates, but here it's just a free-standing variable.
+> 
+> We already have a few per-CPU boolean variables in arm64/kernel/fpsimd.c
+> and the commits aren't even a year old, so I'd go for ignoring sparse this
+> time around.
+>
+
+Will do!
 
 Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Ionela.
