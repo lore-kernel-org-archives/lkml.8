@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DF2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151D2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE6724686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D222B24686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222555;
-	bh=2IlUtJTJbKBJAHL7rr3Zmi4Neo47Xs2N+P5Hq5OxvbA=;
+	s=default; t=1580222560;
+	bh=VH3Bij5zgMyfH1s4oU+Dx0I4FOa5rMtwEj5H9Y0PFGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KPuzZafllgjZq6m0tpQ6uJPICqGO5gXnsXFgJ+UNND4FXopB0IF3nKlUimJ7n/BLa
-	 c5VcNDOhkj/riPB9B4MoPJGUUJmvdIgIYVUoAu+VC+CvGwen5ZNX3mWGcHW/NkNzdU
-	 tIpzOObcvTUTOpNcdfwdwPvfMWioiP5qikYyj6jE=
+	b=dpE4ugGitQVmFxnZzXuEtiE+cbiv9vPOmwNrWl9/bEybuRXoOeFFEug3kd8G6jJR7
+	 GdzuQxAy27l0huLD2sslUJYtZiYlDp6d8dI0ayZAK/WaMeNRzeozJVg0BNDBNL5jmS
+	 Z5/8dVafAvk+gwf7G5RHE4lVGiSV4izd8dfmq6EI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbgA1Ome (ORCPT
+        id S1729541AbgA1OMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:42:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34438 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:12:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729122AbgA1OM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:12:56 -0500
+        id S1728022AbgA1OMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:12:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E440D2468F;
-        Tue, 28 Jan 2020 14:12:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 505392468A;
+        Tue, 28 Jan 2020 14:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220776;
-        bh=2IlUtJTJbKBJAHL7rr3Zmi4Neo47Xs2N+P5Hq5OxvbA=;
+        s=default; t=1580220755;
+        bh=VH3Bij5zgMyfH1s4oU+Dx0I4FOa5rMtwEj5H9Y0PFGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p07V2McxgDv4Q2bBzeS2ZTFJUlLeCJTEeHk5ShGJAIRCz3O+ErpKZVKvkWGzfVlr9
-         UqwJLSLiZZJk6DuABIhMUvC7FlpFex0tKoJBSJQ4ltikE3IHtU7hEOY/ezrQyVAzRU
-         KY+abL/83XjCuVW1F9emU3nLZGsb9CJNpuJRABmQ=
+        b=e3WHfsLY+syEpGzrbSfDhu/NsEeJzskZz0AQZ3jPoHbhFurh1POrSy+ZpKugBChzh
+         vVtH211j4+9P6yBtAumICmRocPv9GPuOh1DUNQfialACGKR2eV0hK0QMv4oWgwl2Td
+         DCahJonzNKvWAUz9kCT5iUOw86n6bhaJiSk5Dv2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 141/183] net: broadcom/bcmsysport: Fix signedness in bcm_sysport_probe()
-Date:   Tue, 28 Jan 2020 15:06:00 +0100
-Message-Id: <20200128135843.829260915@linuxfoundation.org>
+Subject: [PATCH 4.4 134/183] net: sonic: return NETDEV_TX_OK if failed to map buffer
+Date:   Tue, 28 Jan 2020 15:05:53 +0100
+Message-Id: <20200128135843.178628972@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,36 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 25a584955f020d6ec499c513923fb220f3112d2b ]
+[ Upstream commit 6e1cdedcf0362fed3aedfe051d46bd7ee2a85fe1 ]
 
-The "priv->phy_interface" variable is an enum and in this context GCC
-will treat it as unsigned so the error handling will never be
-triggered.
+NETDEV_TX_BUSY really should only be used by drivers that call
+netif_tx_stop_queue() at the wrong moment. If dma_map_single() is
+failed to map tx DMA buffer, it might trigger an infinite loop.
+This patch use NETDEV_TX_OK instead of NETDEV_TX_BUSY, and change
+printk to pr_err_ratelimited.
 
-Fixes: 80105befdb4b ("net: systemport: add Broadcom SYSTEMPORT Ethernet MAC driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bcmsysport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/natsemi/sonic.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
-index 53b3c1a5851c3..9530ee12726f3 100644
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -1794,7 +1794,7 @@ static int bcm_sysport_probe(struct platform_device *pdev)
+diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
+index 0798b4adb0394..b5f1f4ea9d4a3 100644
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -221,9 +221,9 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
  
- 	priv->phy_interface = of_get_phy_mode(dn);
- 	/* Default to GMII interface mode */
--	if (priv->phy_interface < 0)
-+	if ((int)priv->phy_interface < 0)
- 		priv->phy_interface = PHY_INTERFACE_MODE_GMII;
+ 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
+ 	if (!laddr) {
+-		printk(KERN_ERR "%s: failed to map tx DMA buffer.\n", dev->name);
++		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
+ 		dev_kfree_skb(skb);
+-		return NETDEV_TX_BUSY;
++		return NETDEV_TX_OK;
+ 	}
  
- 	/* In the case of a fixed PHY, the DT node associated
+ 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
 -- 
 2.20.1
 
