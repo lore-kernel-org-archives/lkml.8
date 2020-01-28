@@ -7,132 +7,180 @@ X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F201C33CB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CC9C33CB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23BE42173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C9A32467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:06:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gfeoTWee"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jgylNYI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgA1ADB (ORCPT
+        id S1726438AbgA1AGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 19:03:01 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41094 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgA1ADB (ORCPT
+        Mon, 27 Jan 2020 19:06:05 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39306 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA1AGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 19:03:01 -0500
-Received: by mail-pf1-f193.google.com with SMTP id w62so5677356pfw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:03:00 -0800 (PST)
+        Mon, 27 Jan 2020 19:06:05 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so13902096wrt.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:06:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=l/+22tuCgv/c7pzmNa8hMOqSD4cnYp/OANcRNx6S0OE=;
-        b=gfeoTWeeEpelq2VhnCxceWKTgALWOfvaDYWNXG3I3R+mR60voLJm2xVMRyEQ61FmMG
-         /zmvCPAW3FXmZlOCpzGJmlT3H8XVJ1HNtAq7EJ+7cfVI/4/EvouJfNllrUiqfWodaVAJ
-         eoo/iwDocujDURl/NjLnM9iRzs+gDxRmV5Zxa8fEoyx+H4/wN97Jh5xDq1TdNwajO7yC
-         HyhNSs6EJ/MQlXYgYuyJ5DzA6F9gOLwQBlbSVH/56G+ERq0eF3AnCdtwZUvaHzEfHmA+
-         FvlQA0K9iI4aJBPKMxLfbGZtGcUAMKt3+R8gzNeDFGXU2HZHfLkio7yyG59acg1Q41Sw
-         n/Qg==
+        bh=DjVrjeD3QJ+6PJ6qKZcWEoHjMRPEf3uOEfUKJ8JnHLI=;
+        b=jgylNYI7FFPqPl0yj8XLVgEzfctkkIK1IgEcYRwwP0urotQmY6b1+D0B4p5fz50qyk
+         pqvqBZhIvuAPBLybcLTvgXwi8xJK5DqnIYila8oWZlL1mnJsgr8/6IrHpJwjq/CUTrtb
+         rEsc6LloiI6vjH+s/ob2yHadqW7/XTvB5ZFQe6GrVz4DZk9Lj0QKlTXTo8Y8ZItdmvol
+         VLh9PoXSR4AH8n9sj6MMSvs1W+E3xvYrsJbk349ogXmvotRZ2OqsvrHJ4Vfv1yVJ91qL
+         GtP3GvOO/lw4RKyew/krYJZO1hPtz/JvOG82GcMrBHJA8ikNNHFWC6lq6aTgdh/6le4/
+         4m2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=l/+22tuCgv/c7pzmNa8hMOqSD4cnYp/OANcRNx6S0OE=;
-        b=C0DAE8n41f7D1Kg94Jm61ZpRTuzPfCRGAhVsNBJRPfyUHzoK17zB7y3e+c7erlNgTO
-         p/XubULRYw2CZ6pUguxHlbysTPK73p2AudpID7VysrRJFH6YDllip3set+FIh7qDeFDE
-         e8rnDdzRCu+NaVAuvTgVeHk2D8X4HLNRfbRboOKe5EAh+ZwiS2mQ3JuOCWVZslBkLeDH
-         AQ2sr0KI5P1GXE/7irFHfMy67HMmnjTsKdhBo8BYkZuQQjxsnqxuc74jxpT/hN79RWzS
-         rKe8BOe8I/Yev/dgdXWfg4p9hJH5otGrBE9bjcts/gazz4kEHJJwURCKiPbFL8SSS93+
-         yb7A==
-X-Gm-Message-State: APjAAAWcr8oGlEEmHTzYrM/YLnF8/4WUB/ukWM517FvEMSigx/bcesFd
-        CB9dHdUBICAo79xxoXMXbh1RwfWc8k09PjMZX2ygXA==
-X-Google-Smtp-Source: APXvYqz/hjm742JY6RjWU2IOn2Ej9B6rcY0LoAXJ2VgFjuz+q8joZGQ/0HiGIAuKCITVgNP9RIrNn8FDBLLA1vMjcqs=
-X-Received: by 2002:aa7:961b:: with SMTP id q27mr1155291pfg.23.1580169780179;
- Mon, 27 Jan 2020 16:03:00 -0800 (PST)
+        bh=DjVrjeD3QJ+6PJ6qKZcWEoHjMRPEf3uOEfUKJ8JnHLI=;
+        b=VNRsGrfO18vOsGibmhyhdm/JZ3xqeOX+EmKXOabbu9PpRQq72vUQJZRlHSddw6Ct8b
+         zvN+8P6D6+lNN3t47VFNH3zou1627TgooVI6xV/zO5FVRE4gjQflGUYGr4TmNTDTgcDb
+         aciOhpJtsEBQ0relEI0g5ZYQ0CKBpjxfEV1VIR54KN23IyTlmEp37U17qqWefuWzaCso
+         o/IOEO9gSdbsYkH50Qqo8QBUpUCtQC3ftEzGFtnvWfrnhHIGvn27QgVXXIzJuj9Yf+8p
+         roHRYNBmTHChYRIydYIBMZeeitRV+M4gl7G4zqjW+KWRA878dwm5YT8OX2QTXSdBEQc3
+         TiKQ==
+X-Gm-Message-State: APjAAAX3Os2L2j3bayMDEMK6qOc+XEXvXAPi82oldwS16qciXWYFSOM1
+        8sa+ILRsDy8QJ6L3RMKX5Wsc0gX4mpuYV0g/Cv58DQ==
+X-Google-Smtp-Source: APXvYqwxaQhqrgUqe/+ObXlT0KOHI2eBR504o0ZIi+HYSd8zO7ktcKNPRVp+Yvr8uwipS/G4h6OW7T0ou+wEi8SHI58=
+X-Received: by 2002:adf:f508:: with SMTP id q8mr25440974wro.334.1580169961494;
+ Mon, 27 Jan 2020 16:06:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20200126015924.4198-1-sj38.park@gmail.com>
-In-Reply-To: <20200126015924.4198-1-sj38.park@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 27 Jan 2020 16:02:48 -0800
-Message-ID: <CAFd5g46v-RyNMP7GROn4bUEAATOPZ=w5AyO+tvuTG25aqt6oAg@mail.gmail.com>
-Subject: Re: [PATCH] kunit/kunit_kernel: Rebuild .config if .kunitconfig is modified
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
+References: <20200127210014.5207-1-tkjos@google.com> <CAJWu+orT-A5HVi97ccKwMvs9MvXWV0MZhsKcZDNS8r-gqRmcDA@mail.gmail.com>
+ <CAHRSSEw67bY9V7un_t1oV2dsfE72BCAtOj_OH4wyQLpuEAjUfg@mail.gmail.com>
+In-Reply-To: <CAHRSSEw67bY9V7un_t1oV2dsfE72BCAtOj_OH4wyQLpuEAjUfg@mail.gmail.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Mon, 27 Jan 2020 16:05:50 -0800
+Message-ID: <CAJuCfpEYUsBt2iNixkOd9L0Wd4+0tNDquC3_fgRKtN63ZU=sjg@mail.gmail.com>
+Subject: Re: [PATCH] staging: android: ashmem: Disallow ashmem memory from
+ being remapped
+To:     Todd Kjos <tkjos@google.com>
+Cc:     Joel Fernandes <joelaf@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve Hjonnevag <arve@android.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Jann Horn <jannh@google.com>, stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 5:59 PM <sj38.park@gmail.com> wrote:
+On Mon, Jan 27, 2020 at 3:57 PM 'Todd Kjos' via kernel-team
+<kernel-team@android.com> wrote:
 >
-> From: SeongJae Park <sjpark@amazon.de>
+> On Mon, Jan 27, 2020 at 2:30 PM Joel Fernandes <joelaf@google.com> wrote:
+> >
+> > On Mon, Jan 27, 2020 at 1:00 PM 'Todd Kjos' via kernel-team
+> > <kernel-team@android.com> wrote:
+> > >
+> > > From: Suren Baghdasaryan <surenb@google.com>
+> > >
+> > > When ashmem file is being mmapped the resulting vma->vm_file points to the
+> > > backing shmem file with the generic fops that do not check ashmem
+> > > permissions like fops of ashmem do. Fix that by disallowing mapping
+> > > operation for backing shmem file.
+> >
+> > Looks good, but I think the commit message is confusing. I had to read
+> > the code a couple times to understand what's going on since there are
+> > no links to a PoC for the security issue, in the commit message. I
+> > think a better message could have been:
+> >
+> >  When ashmem file is mmapped, the resulting vma->vm_file points to the
+> >  backing shmem file with the generic fops that do not check ashmem
+> >  permissions like fops of ashmem do. If an mremap is done on the ashmem
+> >  region, then the permission checks will be skipped. Fix that by disallowing
+> >  mapping operation on the backing shmem file.
 >
-> Deletions of configs in the '.kunitconfig' is not applied because kunit
-> rebuilds '.config' only if the '.config' is not a subset of the
-> '.kunitconfig'.  To allow the deletions to applied, this commit modifies
-> the '.config' rebuild condition to addtionally check the modified times
-> of those files.
+> Sent v2 with the suggested change.
 
-The reason it only checks that .kunitconfig is a subset of .config is
-because we don't want the .kunitconfig to remove options just because
-it doesn't recognize them.
+Sorry for the delay. The suggestion makes sense to me. Thanks!
 
-It runs `make ARCH=um olddefconfig` on the .config that it generates
-from the .kunitconfig, and most of the time that means you will get a
-.config with lots of things in it that aren't in the .kunitconfig.
-Consequently, nothing should ever be deleted from the .config just
-because it was deleted in the .kunitconfig (unless, of course, you
-change a =y to a =n or # ... is not set), so I don't see what this
-change would do.
-
-Can you maybe provide an example?
-
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> ---
->  tools/testing/kunit/kunit_kernel.py | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
 >
-> diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-> index cc5d844ecca1..a3a5d6c7e66d 100644
-> --- a/tools/testing/kunit/kunit_kernel.py
-> +++ b/tools/testing/kunit/kunit_kernel.py
-> @@ -111,17 +111,22 @@ class LinuxSourceTree(object):
->                 return True
+> >
+> > Or did I miss something?
+> >
+> > thanks!
+> >
+> > - Joel
+> >
+> >
+> >
+> > >
+> > > Reported-by: Jann Horn <jannh@google.com>
+> > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > > Cc: stable <stable@vger.kernel.org> # 4.4,4.9,4.14,4.18,5.4
+> > > Signed-off-by: Todd Kjos <tkjos@google.com>
+> > > ---
+> > >  drivers/staging/android/ashmem.c | 28 ++++++++++++++++++++++++++++
+> > >  1 file changed, 28 insertions(+)
+> > >
+> > > diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
+> > > index 74d497d39c5a..c6695354b123 100644
+> > > --- a/drivers/staging/android/ashmem.c
+> > > +++ b/drivers/staging/android/ashmem.c
+> > > @@ -351,8 +351,23 @@ static inline vm_flags_t calc_vm_may_flags(unsigned long prot)
+> > >                _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
+> > >  }
+> > >
+> > > +static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
+> > > +{
+> > > +       /* do not allow to mmap ashmem backing shmem file directly */
+> > > +       return -EPERM;
+> > > +}
+> > > +
+> > > +static unsigned long
+> > > +ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
+> > > +                               unsigned long len, unsigned long pgoff,
+> > > +                               unsigned long flags)
+> > > +{
+> > > +       return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
+> > > +}
+> > > +
+> > >  static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+> > >  {
+> > > +       static struct file_operations vmfile_fops;
+> > >         struct ashmem_area *asma = file->private_data;
+> > >         int ret = 0;
+> > >
+> > > @@ -393,6 +408,19 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+> > >                 }
+> > >                 vmfile->f_mode |= FMODE_LSEEK;
+> > >                 asma->file = vmfile;
+> > > +               /*
+> > > +                * override mmap operation of the vmfile so that it can't be
+> > > +                * remapped which would lead to creation of a new vma with no
+> > > +                * asma permission checks. Have to override get_unmapped_area
+> > > +                * as well to prevent VM_BUG_ON check for f_ops modification.
+> > > +                */
+> > > +               if (!vmfile_fops.mmap) {
+> > > +                       vmfile_fops = *vmfile->f_op;
+> > > +                       vmfile_fops.mmap = ashmem_vmfile_mmap;
+> > > +                       vmfile_fops.get_unmapped_area =
+> > > +                                       ashmem_vmfile_get_unmapped_area;
+> > > +               }
+> > > +               vmfile->f_op = &vmfile_fops;
+> > >         }
+> > >         get_file(asma->file);
+> > >
+> > > --
+> > > 2.25.0.341.g760bfbb309-goog
+> > >
+> > > --
+> > > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> > >
 >
->         def build_reconfig(self, build_dir):
-> -               """Creates a new .config if it is not a subset of the .kunitconfig."""
-> +               """Creates a new .config if it is not a subset of, or older than the .kunitconfig."""
->                 kconfig_path = get_kconfig_path(build_dir)
->                 if os.path.exists(kconfig_path):
->                         existing_kconfig = kunit_config.Kconfig()
->                         existing_kconfig.read_from_file(kconfig_path)
-> -                       if not self._kconfig.is_subset_of(existing_kconfig):
-> -                               print('Regenerating .config ...')
-> -                               os.remove(kconfig_path)
-> -                               return self.build_config(build_dir)
-> -                       else:
-> +                       subset = self._kconfig.is_subset_of(existing_kconfig)
-> +
-> +                       kunitconfig_mtime = os.path.getmtime(kunitconfig_path)
-> +                       kconfig_mtime = os.path.getmtime(kconfig_path)
-> +                       older = kconfig_mtime < kunitconfig_mtime
-> +
-> +                       if subset and not older:
->                                 return True
-> +                       print('Regenerating .config ...')
-> +                       os.remove(kconfig_path)
-> +                       return self.build_config(build_dir)
->                 else:
->                         print('Generating .config ...')
->                         return self.build_config(build_dir)
 > --
-> 2.17.1
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
 >
