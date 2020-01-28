@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36C3C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87EFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACAA24685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8182468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220599;
-	bh=7Bqw8ISoSFaT8Sy98uUeBIjYtgSaDadb9YZZCMD+ZbY=;
+	s=default; t=1580220602;
+	bh=JKu0dhzvjzrLtzvtJGee9t8K2qFBno9QeXygxZ12YYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nb4ytzFTXORYQ3w7E2NPx+4nlWzgauFdxaoh+70n4tNLEfEURDvmzBhLZM+Wh34QX
-	 XLQ7+PPSbadDRW/OdlVQNTREMKqKhxIgnLXR1zDRcJXNwGH90vq4enFVXkr0wDK0vW
-	 8kD+3XXLaNYn9pH/Mn0oArXARAPQX9P0Q+t4itr4=
+	b=kZScUBLwbDeNuOeiQcJT4gHfRv0FoCJPEak5F/ZKROumpdYktCa1G0iX6fnXTdimi
+	 5LUdkK8nv7FCCdbrdMv04qHtC2YEjksLaHMRfUtzIkP1ow9xzOELPF8mfZPcbm/AFq
+	 AgU8b+jWXIGybQxq/c6tyIxS5de2Q0czEMd2i3Jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgA1OJ7 (ORCPT
+        id S1728315AbgA1OKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:09:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58404 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:10:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727629AbgA1OJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:09:53 -0500
+        id S1729075AbgA1OJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:09:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E812824681;
-        Tue, 28 Jan 2020 14:09:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5773A24681;
+        Tue, 28 Jan 2020 14:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220592;
-        bh=7Bqw8ISoSFaT8Sy98uUeBIjYtgSaDadb9YZZCMD+ZbY=;
+        s=default; t=1580220596;
+        bh=JKu0dhzvjzrLtzvtJGee9t8K2qFBno9QeXygxZ12YYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KeM1twL22DmjQCRsH671xtYrmfefKmJFlA+64+jO1Aqwyp1qlo3rFPLjzxb0+ntUO
-         PBctt9l6N2wvageo3/GntZr9Q5zMJw1oQnEUo/wjBSO3oCxkC23RuPMbu/6nBHhJdC
-         pzMVeZPZRd841LDkCcKlD5v1RA1WtAO4WAcZLsNc=
+        b=EJCrP8zB8jdV+tFVKb9PWTXtC86ezVkuBYVBPKR61eM/FOvnmdhMD10HReXdcZ2H7
+         PBb8jzE7UUsH8/NsA20cxiOhSYrUwbTorX539L8rPSkXXj57WO5I17Y62nbHzJ9I3D
+         y2UEpR7DRsSjGIEJx9zW+coaTSV63VEIlzytWvCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Walmsley <paul@pwsan.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 067/183] ARM: OMAP2+: Fix potentially uninitialized return value for _setup_reset()
-Date:   Tue, 28 Jan 2020 15:04:46 +0100
-Message-Id: <20200128135836.711843670@linuxfoundation.org>
+Subject: [PATCH 4.4 069/183] spi: tegra114: clear packed bit for unpacked mode
+Date:   Tue, 28 Jan 2020 15:04:48 +0100
+Message-Id: <20200128135836.919265338@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,41 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 7f0d078667a494466991aa7133f49594f32ff6a2 ]
+[ Upstream commit 7b3d10cdf54b8bc1dc0da21faed9789ac4da3684 ]
 
-Commit 747834ab8347 ("ARM: OMAP2+: hwmod: revise hardreset behavior") made
-the call to _enable() conditional based on no oh->rst_lines_cnt. This
-caused the return value to be potentially uninitialized. Curiously we see
-no compiler warnings for this, probably as this gets inlined.
+Fixes: Clear packed bit when not using packed mode.
 
-We call _setup_reset() from _setup() and only _setup_postsetup() if the
-return value is zero. Currently the return value can be uninitialized for
-cases where oh->rst_lines_cnt is set and HWMOD_INIT_NO_RESET is not set.
+Packed bit is not cleared when not using packed mode. This results
+in transfer timeouts for the unpacked mode transfers followed by the
+packed mode transfers.
 
-Fixes: 747834ab8347 ("ARM: OMAP2+: hwmod: revise hardreset behavior")
-Cc: Paul Walmsley <paul@pwsan.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap_hwmod.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-tegra114.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
-index 36706d32d656d..1bc87c29467b3 100644
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -2563,7 +2563,7 @@ static void _setup_iclk_autoidle(struct omap_hwmod *oh)
-  */
- static int _setup_reset(struct omap_hwmod *oh)
- {
--	int r;
-+	int r = 0;
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index 705f515863d4f..d98c502a9c478 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -730,6 +730,8 @@ static int tegra_spi_start_transfer_one(struct spi_device *spi,
  
- 	if (oh->_state != _HWMOD_STATE_INITIALIZED)
- 		return -EINVAL;
+ 	if (tspi->is_packed)
+ 		command1 |= SPI_PACKED;
++	else
++		command1 &= ~SPI_PACKED;
+ 
+ 	command1 &= ~(SPI_CS_SEL_MASK | SPI_TX_EN | SPI_RX_EN);
+ 	tspi->cur_direction = 0;
 -- 
 2.20.1
 
