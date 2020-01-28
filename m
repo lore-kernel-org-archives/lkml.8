@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDC4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B37BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846612468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6D82468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580219959;
-	bh=OEsGfAD1Z+hIdPREY+MSLf1P6cwvF10/s8/wQSWnvaQ=;
+	s=default; t=1580219965;
+	bh=+nPt4fGip0//XuMl2t2UICHr4ttdiN5OsI2+WOkv7Sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ArTU/2FeETLmH50A1bStF9RLwOqpBSO7+X+gDLkygW2Z3Wci7CHxY8rjjKo0Mplkt
-	 8lnvoY0KitIzVCnQ58Oug6WzaCfoH+0ZglkCWe/Oq4SjuSngqMOoGoq3eIFcbju/LZ
-	 4SOycSjsb0WQi2+X+WU7cOJMs4b/waogBcniS/Gk=
+	b=su6VBGsdayycrYuiG/hM2aPlFkV7q/0QS3U8NVuk6sQcbDXl0vJXyxnjoLkO+IgZe
+	 TyckRhyx6X35N2IK4uujxUg6GmXK3RoGUFj652spoaqIUb6Pq5h5FP3yxQjPGzD3+Q
+	 PNIy9cxcSQoegthkAKGhlTMm9uG7eI2Q8947fCX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgA1N7S (ORCPT
+        id S1726294AbgA1N7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:59:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44520 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 08:59:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbgA1N7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:59:13 -0500
+        id S1726833AbgA1N7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:59:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9DAE24694;
-        Tue, 28 Jan 2020 13:59:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09F062173E;
+        Tue, 28 Jan 2020 13:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219953;
-        bh=OEsGfAD1Z+hIdPREY+MSLf1P6cwvF10/s8/wQSWnvaQ=;
+        s=default; t=1580219960;
+        bh=+nPt4fGip0//XuMl2t2UICHr4ttdiN5OsI2+WOkv7Sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tfpSWcE2GL08L3iKLD58/fdNkfzQvDHYIzhF0lcmE5QysajWq04KuEx42m86x8R0I
-         TUH85O7pirTM2r0eFKxMepU02R/0TI+4j0VVp1NG4ekUewAmpxIi1fj0LguFLhlW/E
-         N1eo3OUrnIwaw/moDvocGtUyFFXU4LaK3BZHew6M=
+        b=eozuMrzAMi5F+jxFGEa0pFgllzoD4ZHWzqw6Ge/1MH6GdVhQ+BeoXYmD4f+SRww4f
+         y/r6PgxaH012FEiBeHa5jr5zN0GdWpTJ82kOL663XHHHuL35FHCJkwIwuYM0Fyll1Y
+         D/fAHRp+wB6VmHYaLljiTCOox4z2SpddugNJ8Zyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 10/46] net-sysfs: fix netdev_queue_add_kobject() breakage
-Date:   Tue, 28 Jan 2020 14:57:44 +0100
-Message-Id: <20200128135751.442708030@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+ad8ca40ecd77896d51e2@syzkaller.appspotmail.com,
+        David Miller <davem@davemloft.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>
+Subject: [PATCH 4.14 13/46] net-sysfs: Fix reference count leak
+Date:   Tue, 28 Jan 2020 14:57:47 +0100
+Message-Id: <20200128135751.746247926@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -60,31 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-commit 48a322b6f9965b2f1e4ce81af972f0e287b07ed0 upstream.
+[ Upstream commit cb626bf566eb4433318d35681286c494f04fedcc ]
 
-kobject_put() should only be called in error path.
+Netdev_register_kobject is calling device_initialize. In case of error
+reference taken by device_initialize is not given up.
 
-Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Jouni Hogander <jouni.hogander@unikie.com>
+Drivers are supposed to call free_netdev in case of error. In non-error
+case the last reference is given up there and device release sequence
+is triggered. In error case this reference is kept and the release
+sequence is never started.
+
+Fix this by setting reg_state as NETREG_UNREGISTERED if registering
+fails.
+
+This is the rootcause for couple of memory leaks reported by Syzkaller:
+
+BUG: memory leak unreferenced object 0xffff8880675ca008 (size 256):
+  comm "netdev_register", pid 281, jiffies 4294696663 (age 6.808s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<0000000058ca4711>] kmem_cache_alloc_trace+0x167/0x280
+    [<000000002340019b>] device_add+0x882/0x1750
+    [<000000001d588c3a>] netdev_register_kobject+0x128/0x380
+    [<0000000011ef5535>] register_netdevice+0xa1b/0xf00
+    [<000000007fcf1c99>] __tun_chr_ioctl+0x20d5/0x3dd0
+    [<000000006a5b7b2b>] tun_chr_ioctl+0x2f/0x40
+    [<00000000f30f834a>] do_vfs_ioctl+0x1c7/0x1510
+    [<00000000fba062ea>] ksys_ioctl+0x99/0xb0
+    [<00000000b1c1b8d2>] __x64_sys_ioctl+0x78/0xb0
+    [<00000000984cabb9>] do_syscall_64+0x16f/0x580
+    [<000000000bde033d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<00000000e6ca2d9f>] 0xffffffffffffffff
+
+BUG: memory leak
+unreferenced object 0xffff8880668ba588 (size 8):
+  comm "kobject_set_nam", pid 286, jiffies 4294725297 (age 9.871s)
+  hex dump (first 8 bytes):
+    6e 72 30 00 cc be df 2b                          nr0....+
+  backtrace:
+    [<00000000a322332a>] __kmalloc_track_caller+0x16e/0x290
+    [<00000000236fd26b>] kstrdup+0x3e/0x70
+    [<00000000dd4a2815>] kstrdup_const+0x3e/0x50
+    [<0000000049a377fc>] kvasprintf_const+0x10e/0x160
+    [<00000000627fc711>] kobject_set_name_vargs+0x5b/0x140
+    [<0000000019eeab06>] dev_set_name+0xc0/0xf0
+    [<0000000069cb12bc>] netdev_register_kobject+0xc8/0x320
+    [<00000000f2e83732>] register_netdevice+0xa1b/0xf00
+    [<000000009e1f57cc>] __tun_chr_ioctl+0x20d5/0x3dd0
+    [<000000009c560784>] tun_chr_ioctl+0x2f/0x40
+    [<000000000d759e02>] do_vfs_ioctl+0x1c7/0x1510
+    [<00000000351d7c31>] ksys_ioctl+0x99/0xb0
+    [<000000008390040a>] __x64_sys_ioctl+0x78/0xb0
+    [<0000000052d196b7>] do_syscall_64+0x16f/0x580
+    [<0000000019af9236>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<00000000bc384531>] 0xffffffffffffffff
+
+v3 -> v4:
+  Set reg_state to NETREG_UNREGISTERED if registering fails
+
+v2 -> v3:
+* Replaced BUG_ON with WARN_ON in free_netdev and netdev_release
+
+v1 -> v2:
+* Relying on driver calling free_netdev rather than calling
+  put_device directly in error path
+
+Reported-by: syzbot+ad8ca40ecd77896d51e2@syzkaller.appspotmail.com
+Cc: David Miller <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/core/net-sysfs.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/core/dev.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1339,6 +1339,7 @@ static int netdev_queue_add_kobject(stru
- #endif
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -7667,8 +7667,10 @@ int register_netdevice(struct net_device
+ 		goto err_uninit;
  
- 	kobject_uevent(kobj, KOBJ_ADD);
-+	return 0;
+ 	ret = netdev_register_kobject(dev);
+-	if (ret)
++	if (ret) {
++		dev->reg_state = NETREG_UNREGISTERED;
+ 		goto err_uninit;
++	}
+ 	dev->reg_state = NETREG_REGISTERED;
  
- err:
- 	kobject_put(kobj);
+ 	__netdev_update_features(dev);
 
 
