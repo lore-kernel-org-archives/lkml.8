@@ -2,210 +2,208 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B14FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD08C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 393A124685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693CA2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:42:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Y1hcyEUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgA1Pkx (ORCPT
+        id S1726847AbgA1Pmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:40:53 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32272 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726865AbgA1Pkv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:40:51 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SFb0ef110406
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 10:40:50 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrhv1vw3y-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 10:40:50 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 28 Jan 2020 15:40:48 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 Jan 2020 15:40:44 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00SFeiUM42467494
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 15:40:44 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0570BA4040;
-        Tue, 28 Jan 2020 15:40:44 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36FCFA4053;
-        Tue, 28 Jan 2020 15:40:43 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.138.98])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 28 Jan 2020 15:40:43 +0000 (GMT)
-Subject: Re: [PATCH 2/2] ima: support calculating the boot_aggregate based
- on different TPM banks
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Tue, 28 Jan 2020 10:42:42 -0500
+Received: from mail-mw2nam12on2094.outbound.protection.outlook.com ([40.107.244.94]:22881
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726384AbgA1Pmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:42:42 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OSGP60qmgyIZWR1XywrqOe3+XRgUHfO2BKqL8fR+9VcL32YRYkV1vKVkyZvQlrFKZbCZoCj9Dowo8ZDOmehB60YE1XnQSVRFqz7lUqwMkjR+vNudaCJDm4+MbiuUkpTd6eWmCMKOB8FXeAf7ZqcRAn3Ru3ORmYrkhWr4QQun48MS7Azi1R6qtvWBTXVfXE4ZrQn5npJNAF9M0WS2CH/0FAp0OXQxx5AjPSYCvi+eX7Ypyz0gTyqaz2Az+x4HvPapMDqOSRVmE4sJ1UZV41isnskS2yDCxqhpOA2AKIVh0vXY2XEoYA5ODTlptpqq/3p2IadUuLd0EUy8e9hlVXeshQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v9YauDjfK6CFMt7vUEPSvF3bP04+i1wp/myN9Dmp5Ns=;
+ b=R7jdAnBsTZMovgQxydWI5e6jZXpMUEctHVd66YibyCRRPfTqanlk2M8qhdSJTG9G9uo0amZESLQR+HiCzwZ75a3dqwhKIE3yFyRuWGnFbpmYDMuPhr7/heoKnMmKX+oLMblum/hrR0kGRObk8NBbx4Di81emiQKRORAiP1imHzM6jo8D1Rwyvy/9li5lrZu3B3Mg1ln2crPDaPGW4Lu8vypr3aET+r8Sg9eWZF85+2HDi74QO1kKoYCZ/QfIXV7juufA7utg7FrS/6aKLLI2yLtxuUFIlswaIYZhWjvDPzuWJnmujD5izYcg+rz4RVa0heO/sPCzHii562rdPq4nsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v9YauDjfK6CFMt7vUEPSvF3bP04+i1wp/myN9Dmp5Ns=;
+ b=Y1hcyEUa/cXPFjDFfARZi7BMwuIc9NKozuf25U/GXyHEjaf1WgzgsXs3vumyDpHWwu1V9/Z0g13OhK4O6UWWkG0M17BFGcjXydUL2kprfxVyssTaOy+PgP71oAX0WDh8l7PeYpGHi6kWH0iCU86Qhx16sDuN9i0SNCuSU4ZCmHg=
+Received: from BN6PR1301MB2097.namprd13.prod.outlook.com (10.174.87.14) by
+ BN6PR1301MB2210.namprd13.prod.outlook.com (10.174.86.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.11; Tue, 28 Jan 2020 15:42:35 +0000
+Received: from BN6PR1301MB2097.namprd13.prod.outlook.com
+ ([fe80::40e1:9ff5:2b8c:38bf]) by BN6PR1301MB2097.namprd13.prod.outlook.com
+ ([fe80::40e1:9ff5:2b8c:38bf%5]) with mapi id 15.20.2686.019; Tue, 28 Jan 2020
+ 15:42:34 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "rmilkowski@gmail.com" <rmilkowski@gmail.com>
+CC:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Date:   Tue, 28 Jan 2020 10:40:42 -0500
-In-Reply-To: <465015d0c9ca4e278ed32f78eb3eb4a4@huawei.com>
-References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
-         <1580140919-6127-2-git-send-email-zohar@linux.ibm.com>
-         <465015d0c9ca4e278ed32f78eb3eb4a4@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012815-0028-0000-0000-000003D5363D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012815-0029-0000-0000-000024997E80
-Message-Id: <1580226042.5088.90.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_05:2020-01-28,2020-01-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 malwarescore=0 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001280123
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Subject: Re: [PATCH v4] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease
+ renewals
+Thread-Topic: [PATCH v4] NFSv4.0: nfs4_do_fsinfo() should not do implicit
+ lease renewals
+Thread-Index: AdXV6tGXVv4pqJJkS9G0izuAHIy3vAABrzOA
+Date:   Tue, 28 Jan 2020 15:42:34 +0000
+Message-ID: <0a92e07814ee1f4fadc6334b954743c88302b1a2.camel@hammerspace.com>
+References: <004e01d5d5ed$5e7ca490$1b75edb0$@gmail.com>
+In-Reply-To: <004e01d5d5ed$5e7ca490$1b75edb0$@gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: abc37b2c-2517-46cb-bcdd-08d7a408b201
+x-ms-traffictypediagnostic: BN6PR1301MB2210:
+x-microsoft-antispam-prvs: <BN6PR1301MB22109758DC0C3870130D8C8EB80A0@BN6PR1301MB2210.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 029651C7A1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(376002)(39830400003)(136003)(366004)(199004)(189003)(6506007)(186003)(6512007)(26005)(36756003)(8936002)(2616005)(6486002)(2906002)(91956017)(81166006)(110136005)(71200400001)(81156014)(8676002)(76116006)(66476007)(66556008)(64756008)(66446008)(54906003)(316002)(5660300002)(66946007)(86362001)(478600001)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1301MB2210;H:BN6PR1301MB2097.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Pjqvsn4uM0hZ6Db/oPhWXElwpe4TFSGLQ+YcMbSHvD8geF+3tJWNAdzudVKdD4TX0vzAlgMKEi9yTrm0HyRa40N0uRCbixsOSFi/xVY1BFJO9QPOwBo1JwKEkcr8ei1MocSzSB90G1S3TcCD+4HClaGUSoIL9n2MifASP0koUnbW93W6mNBbbqQ6VlQWY/r4TfB5CFydYb97gcdNFdTOQKALKjhbIAs73Jt5KQjrzTD1pNwt5fNdxDhsJMMLgLBxBCmMT39du26NGXVWwf3qNtyH//p6UBx+ySH41Wexhj8sCqYMjpV3M63tPu0dAGxT8lnN7SNCCutjd4/PMDiPU7OSz6DpbEEia0747YPrIxGYQFkG73DUiJsk0A7KZyv3fUsXkrguhNZ0/QS5+w43pW//YmkeDfBhPagJAbN61qY++pOAPVng5CRtZ1Z7O/Ng
+x-ms-exchange-antispam-messagedata: ssP3+wRpfvMCLYkhluUieANndq5gscHSCEKnpSEhYqO6hKCxlvwsLKhteqjv3gdSkOF6yrozpJTE+5MuRxS1aIi8FhJNo/Ke9CcFTxA6V9LWZscU0d+jPFnYCmC0XV/aG4PGHFXXTq1ak614OraJ6Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3817469F8A731C49AED9C4169DFB308A@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: abc37b2c-2517-46cb-bcdd-08d7a408b201
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 15:42:34.6578
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: W/oGb92Cya2zXmURpP4s/TnIfcAFXtt+gyKZ7FTdbAhzmICXjj6gDioWa85rjeu99Z/TxjYsbKzxZkNMaaxEeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1301MB2210
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-28 at 14:19 +0000, Roberto Sassu wrote:
-> > -----Original Message-----
-> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
-> > owner@vger.kernel.org] On Behalf Of Mimi Zohar
-> > Sent: Monday, January 27, 2020 5:02 PM
-> > To: linux-integrity@vger.kernel.org
-> > Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
-> > <James.Bottomley@HansenPartnership.com>; linux-
-> > kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
-> > Subject: [PATCH 2/2] ima: support calculating the boot_aggregate based on
-> > different TPM banks
-> > 
-> > Calculating the boot_aggregate attempts to read the TPM SHA1 bank,
-> > assuming it is always enabled.  With TPM 2.0 hash agility, TPM chips
-> > could support multiple TPM PCR banks, allowing firmware to configure and
-> > enable different banks.
-> > 
-> > Instead of hard coding the TPM 2.0 bank hash algorithm used for calculating
-> > the boot-aggregate, see if the configured IMA_DEFAULT_HASH algorithm is
-> > an allocated TPM bank, otherwise use the first allocated TPM bank.
-> > 
-> > For TPM 1.2 SHA1 is the only supported hash algorithm.
-> > 
-> > Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> > ---
-> >  security/integrity/ima/ima_crypto.c | 37
-> > ++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 36 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/security/integrity/ima/ima_crypto.c
-> > b/security/integrity/ima/ima_crypto.c
-> > index 7967a6904851..b1b26d61f174 100644
-> > --- a/security/integrity/ima/ima_crypto.c
-> > +++ b/security/integrity/ima/ima_crypto.c
-> > @@ -656,8 +656,25 @@ static void __init ima_pcrread(u32 idx, struct
-> > tpm_digest *d)
-> >  		pr_err("Error Communicating to TPM chip\n");
-> >  }
-> > 
-> > +/* tpm2_hash_map is the same as defined in tpm2-cmd.c and
-> > trusted_tpm2.c */
-> > +static struct tpm2_hash tpm2_hash_map[] = {
-> > +	{HASH_ALGO_SHA1, TPM_ALG_SHA1},
-> > +	{HASH_ALGO_SHA256, TPM_ALG_SHA256},
-> > +	{HASH_ALGO_SHA384, TPM_ALG_SHA384},
-> > +	{HASH_ALGO_SHA512, TPM_ALG_SHA512},
-> > +	{HASH_ALGO_SM3_256, TPM_ALG_SM3_256},
-> > +};
-> > +
-> >  /*
-> > - * Calculate the boot aggregate hash
-> > + * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
-> > + * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
-> > + * allowing firmware to configure and enable different banks.
-> > + *
-> > + * Instead of hard coding the TPM bank hash algorithm used for calculating
-> > + * the boot-aggregate, see if the configured IMA_DEFAULT_HASH
-> > algorithm is
-> > + * an allocated TPM bank, otherwise use the first allocated TPM bank.
-> > + *
-> > + * For TPM 1.2 SHA1 is the only hash algorithm.
-> >   */
-> >  static int __init ima_calc_boot_aggregate_tfm(char *digest,
-> >  					      struct crypto_shash *tfm)
-> > @@ -673,6 +690,24 @@ static int __init ima_calc_boot_aggregate_tfm(char
-> > *digest,
-> >  	if (rc != 0)
-> >  		return rc;
-> > 
-> > +	for (i = 0; i < ARRAY_SIZE(tpm2_hash_map); i++) {
-> > +		if (tpm2_hash_map[i].crypto_id == ima_hash_algo) {
-> 
-> It is not necessary to define a new map. ima_tpm_chip->allocated_banks
-> has a crypto_id field.
-
-Ok, thanks.
-
-> 
-> > +			d.alg_id = tpm2_hash_map[i].tpm_id;
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
-> > +		if (ima_tpm_chip->allocated_banks[i].alg_id == d.alg_id)
-> > +			break;
-> > +	}
-> > +
-> > +	if (i == ima_tpm_chip->nr_allocated_banks)
-> > +		d.alg_id = ima_tpm_chip->allocated_banks[0].alg_id;
-> 
-> This code assumes that the algorithm used to calculate boot_aggregate and
-> the algorithm of the PCR bank can be different. I don't know if it is possible to
-> communicate to the verifier which bank has been selected (it depends on
-> the local configuration).
-
-Agreed, but defaulting to the first bank would only happen if the IMA
-default hash algorithm is not a configured TPM algorithm.
-
-> 
-> In my opinion the safest approach would be to use the same algorithm for the
-> digest and the PCR bank. If you agree to this, then the code above must be
-> moved to ima_calc_boot_aggregate() so that the algorithm of the selected
-> PCR bank can be passed to ima_alloc_tfm().
-
-Using the same hash algorithm, preferably the IMA hash default
-algorithm, for reading the TPM PCR bank and calculating the
-boot_aggregate makes sense.
-
-> 
-> The selected PCR bank might be not the first, if the algorithm is unknown to
-> the crypto subsystem.
-
-It sounds like you're suggesting finding a common configured hash
-algorithm between the TPM and the kernel. 
-
-> 
-> > +	pr_info("Calculating the boot-aggregregate, reading TPM PCR
-> 
-> Typo.
-
-thanks
-
-Mimi
-
+T24gVHVlLCAyMDIwLTAxLTI4IGF0IDE1OjEyICswMDAwLCBSb2JlcnQgTWlsa293c2tpIHdyb3Rl
+Og0KPiBGcm9tOiBSb2JlcnQgTWlsa293c2tpIDxybWlsa293c2tpQGdtYWlsLmNvbT4NCj4gDQo+
+IEN1cnJlbnRseSwgZWFjaCB0aW1lIG5mczRfZG9fZnNpbmZvKCkgaXMgY2FsbGVkIGl0IHdpbGwg
+ZG8gYW4NCj4gaW1wbGljaXQNCj4gTkZTNCBsZWFzZSByZW5ld2FsLCB3aGljaCBpcyBub3QgY29t
+cGxpYW50IHdpdGggdGhlIE5GUzQNCj4gc3BlY2lmaWNhdGlvbi4NCj4gVGhpcyBjYW4gcmVzdWx0
+IGluIGEgbGVhc2UgYmVpbmcgZXhwaXJlZCBieSBhbiBORlMgc2VydmVyLg0KPiANCj4gQ29tbWl0
+IDgzY2E3ZjVhYjMxZiAoIk5GUzogQXZvaWQgUFVUUk9PVEZIIHdoZW4gbWFuYWdpbmcgbGVhc2Vz
+IikNCj4gaW50cm9kdWNlZCBpbXBsaWNpdCBjbGllbnQgbGVhc2UgcmVuZXdhbCBpbiBuZnM0X2Rv
+X2ZzaW5mbygpLA0KPiB3aGljaCBjYW4gcmVzdWx0IGluIHRoZSBORlN2NC4wIGxlYXNlIHRvIGV4
+cGlyZSBvbiBhIHNlcnZlciBzaWRlLA0KPiBhbmQgc2VydmVycyByZXR1cm5pbmcgTkZTNEVSUl9F
+WFBJUkVEIG9yIE5GUzRFUlJfU1RBTEVfQ0xJRU5USUQuDQo+IA0KPiBUaGlzIGNhbiBlYXNpbHkg
+YmUgcmVwcm9kdWNlZCBieSBmcmVxdWVudGx5IHVubW91bnRpbmcgYSBzdWItbW91bnQsDQo+IHRo
+ZW4gc3RhdCdpbmcgaXQgdG8gZ2V0IGl0IG1vdW50ZWQgYWdhaW4sIHdoaWNoIHdpbGwgZGVsYXkg
+b3IgZXZlbg0KPiBjb21wbGV0ZWx5IHByZXZlbnQgY2xpZW50IGZyb20gc2VuZGluZyBSRU5FVyBv
+cGVyYXRpb25zIGlmIG5vIG90aGVyDQo+IE5GUyBvcGVyYXRpb25zIGFyZSBpc3N1ZWQuIEV2ZW50
+dWFsbHkgbmZzIHNlcnZlciB3aWxsIGV4cGlyZSBjbGllbnQncw0KPiBsZWFzZSBhbmQgcmV0dXJu
+IGFuIGVycm9yIG9uIGZpbGUgYWNjZXNzIG9yIG5leHQgUkVORVcuDQo+IA0KPiBUaGlzIGNhbiBh
+bHNvIGhhcHBlbiB3aGVuIGEgc3ViLW1vdW50IGlzIGF1dG9tYXRpY2FsbHkgdW5tb3VudGVkDQo+
+IGR1ZSB0byBpbmFjdGl2aXR5IChhZnRlciBuZnNfbW91bnRwb2ludF9leHBpcnlfdGltZW91dCks
+IHRoZW4gaXQgaXMNCj4gbW91bnRlZCBhZ2FpbiB2aWEgc3RhdCgpLiBUaGlzIGNhbiByZXN1bHQg
+aW4gYSBzaG9ydCB3aW5kb3cgZHVyaW5nDQo+IHdoaWNoIGNsaWVudCdzIGxlYXNlIHdpbGwgZXhw
+aXJlIG9uIGEgc2VydmVyIGJ1dCBub3Qgb24gYSBjbGllbnQuDQo+IFRoaXMgc3BlY2lmaWMgY2Fz
+ZSB3YXMgb2JzZXJ2ZWQgb24gcHJvZHVjdGlvbiBzeXN0ZW1zLg0KPiANCj4gVGhpcyBwYXRjaCBy
+ZW1vdmVzIHRoZSBpbXBsaWNpdCBsZWFzZSByZW5ld2FsIGZyb20gbmZzNF9kb19mc2luZm8oKS4N
+Cj4gDQo+IEZpeGVzOiA4M2NhN2Y1YWIzMWYgKCJORlM6IEF2b2lkIFBVVFJPT1RGSCB3aGVuIG1h
+bmFnaW5nIGxlYXNlcyIpDQo+IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBNaWxrb3dza2kgPHJtaWxr
+b3dza2lAZ21haWwuY29tPg0KPiAtLS0NCj4gIGZzL25mcy9uZnM0X2ZzLmggICAgfCAgNCArLS0t
+DQo+ICBmcy9uZnMvbmZzNHByb2MuYyAgIHwgMTIgKysrKysrKystLS0tDQo+ICBmcy9uZnMvbmZz
+NHJlbmV3ZC5jIHwgIDUgKy0tLS0NCj4gIGZzL25mcy9uZnM0c3RhdGUuYyAgfCAgNCArLS0tDQo+
+ICA0IGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQ0KPiAN
+Cj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0X2ZzLmggYi9mcy9uZnMvbmZzNF9mcy5oDQo+IGlu
+ZGV4IGE3YTczYjEuLmE1ZGIwNTUgMTAwNjQ0DQo+IC0tLSBhL2ZzL25mcy9uZnM0X2ZzLmgNCj4g
+KysrIGIvZnMvbmZzL25mczRfZnMuaA0KPiBAQCAtNDQ2LDkgKzQ0Niw3IEBAIGV4dGVybiBpbnQg
+bmZzNF9kZXRlY3Rfc2Vzc2lvbl90cnVua2luZyhzdHJ1Y3QNCj4gbmZzX2NsaWVudCAqY2xwLA0K
+PiAgZXh0ZXJuIHZvaWQgbmZzNF9yZW5ld2RfcHJlcGFyZV9zaHV0ZG93bihzdHJ1Y3QgbmZzX3Nl
+cnZlciAqKTsNCj4gIGV4dGVybiB2b2lkIG5mczRfa2lsbF9yZW5ld2Qoc3RydWN0IG5mc19jbGll
+bnQgKik7DQo+ICBleHRlcm4gdm9pZCBuZnM0X3JlbmV3X3N0YXRlKHN0cnVjdCB3b3JrX3N0cnVj
+dCAqKTsNCj4gLWV4dGVybiB2b2lkIG5mczRfc2V0X2xlYXNlX3BlcmlvZChzdHJ1Y3QgbmZzX2Ns
+aWVudCAqY2xwLA0KPiAtCQl1bnNpZ25lZCBsb25nIGxlYXNlLA0KPiAtCQl1bnNpZ25lZCBsb25n
+IGxhc3RyZW5ld2VkKTsNCj4gK2V4dGVybiB2b2lkIG5mczRfc2V0X2xlYXNlX3BlcmlvZChzdHJ1
+Y3QgbmZzX2NsaWVudCAqY2xwLCB1bnNpZ25lZA0KPiBsb25nIGxlYXNlKTsNCj4gIA0KPiAgDQo+
+ICAvKiBuZnM0c3RhdGUuYyAqLw0KPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL25mczRwcm9jLmMgYi9m
+cy9uZnMvbmZzNHByb2MuYw0KPiBpbmRleCA3NmQzNzE2Li43YjJkODhiIDEwMDY0NA0KPiAtLS0g
+YS9mcy9uZnMvbmZzNHByb2MuYw0KPiArKysgYi9mcy9uZnMvbmZzNHByb2MuYw0KPiBAQCAtNTAx
+OSwxNiArNTAxOSwxMyBAQCBzdGF0aWMgaW50IG5mczRfZG9fZnNpbmZvKHN0cnVjdCBuZnNfc2Vy
+dmVyDQo+ICpzZXJ2ZXIsIHN0cnVjdCBuZnNfZmggKmZoYW5kbGUsIHN0cg0KPiAgCXN0cnVjdCBu
+ZnM0X2V4Y2VwdGlvbiBleGNlcHRpb24gPSB7DQo+ICAJCS5pbnRlcnJ1cHRpYmxlID0gdHJ1ZSwN
+Cj4gIAl9Ow0KPiAtCXVuc2lnbmVkIGxvbmcgbm93ID0gamlmZmllczsNCj4gIAlpbnQgZXJyOw0K
+PiAgDQo+ICAJZG8gew0KPiAgCQllcnIgPSBfbmZzNF9kb19mc2luZm8oc2VydmVyLCBmaGFuZGxl
+LCBmc2luZm8pOw0KPiAgCQl0cmFjZV9uZnM0X2ZzaW5mbyhzZXJ2ZXIsIGZoYW5kbGUsIGZzaW5m
+by0+ZmF0dHIsIGVycik7DQo+ICAJCWlmIChlcnIgPT0gMCkgew0KPiAtCQkJbmZzNF9zZXRfbGVh
+c2VfcGVyaW9kKHNlcnZlci0+bmZzX2NsaWVudCwNCj4gLQkJCQkJZnNpbmZvLT5sZWFzZV90aW1l
+ICogSFosDQo+IC0JCQkJCW5vdyk7DQo+ICsJCQluZnM0X3NldF9sZWFzZV9wZXJpb2Qoc2VydmVy
+LT5uZnNfY2xpZW50LA0KPiBmc2luZm8tPmxlYXNlX3RpbWUgKiBIWik7DQo+ICAJCQlicmVhazsN
+Cj4gIAkJfQ0KPiAgCQllcnIgPSBuZnM0X2hhbmRsZV9leGNlcHRpb24oc2VydmVyLCBlcnIsICZl
+eGNlcHRpb24pOw0KPiBAQCAtNjA4NCw2ICs2MDgxLDcgQEAgaW50IG5mczRfcHJvY19zZXRjbGll
+bnRpZChzdHJ1Y3QgbmZzX2NsaWVudA0KPiAqY2xwLCB1MzIgcHJvZ3JhbSwNCj4gIAkJLmNhbGxi
+YWNrX2RhdGEgPSAmc2V0Y2xpZW50aWQsDQo+ICAJCS5mbGFncyA9IFJQQ19UQVNLX1RJTUVPVVQg
+fCBSUENfVEFTS19OT19ST1VORF9ST0JJTiwNCj4gIAl9Ow0KPiArCXVuc2lnbmVkIGxvbmcgbm93
+ID0gamlmZmllczsNCj4gIAlpbnQgc3RhdHVzOw0KPiAgDQo+ICAJLyogbmZzX2NsaWVudF9pZDQg
+Ki8NCj4gQEAgLTYxMTYsNiArNjExNCw5IEBAIGludCBuZnM0X3Byb2Nfc2V0Y2xpZW50aWQoc3Ry
+dWN0IG5mc19jbGllbnQNCj4gKmNscCwgdTMyIHByb2dyYW0sDQo+ICAJCWNscC0+Y2xfYWNjZXB0
+b3IgPQ0KPiBycGNhdXRoX3N0cmluZ2lmeV9hY2NlcHRvcihzZXRjbGllbnRpZC5zY19jcmVkKTsN
+Cj4gIAkJcHV0X3JwY2NyZWQoc2V0Y2xpZW50aWQuc2NfY3JlZCk7DQo+ICAJfQ0KPiArDQo+ICsJ
+aWYoc3RhdHVzID09IDApDQo+ICsJCWRvX3JlbmV3X2xlYXNlKGNscCwgbm93KTsNCj4gIG91dDoN
+Cj4gIAl0cmFjZV9uZnM0X3NldGNsaWVudGlkKGNscCwgc3RhdHVzKTsNCj4gIAlkcHJpbnRrKCJO
+RlMgcmVwbHkgc2V0Y2xpZW50aWQ6ICVkXG4iLCBzdGF0dXMpOw0KPiBAQCAtODIwMyw2ICs4MjA0
+LDcgQEAgc3RhdGljIGludCBfbmZzNF9wcm9jX2V4Y2hhbmdlX2lkKHN0cnVjdA0KPiBuZnNfY2xp
+ZW50ICpjbHAsIGNvbnN0IHN0cnVjdCBjcmVkICpjcmUNCj4gIAlzdHJ1Y3QgcnBjX3Rhc2sgKnRh
+c2s7DQo+ICAJc3RydWN0IG5mczQxX2V4Y2hhbmdlX2lkX2FyZ3MgKmFyZ3A7DQo+ICAJc3RydWN0
+IG5mczQxX2V4Y2hhbmdlX2lkX3JlcyAqcmVzcDsNCj4gKwl1bnNpZ25lZCBsb25nIG5vdyA9IGpp
+ZmZpZXM7DQo+ICAJaW50IHN0YXR1czsNCj4gIA0KPiAgCXRhc2sgPSBuZnM0X3J1bl9leGNoYW5n
+ZV9pZChjbHAsIGNyZWQsIHNwNF9ob3csIE5VTEwpOw0KPiBAQCAtODIyMyw2ICs4MjI1LDggQEAg
+c3RhdGljIGludCBfbmZzNF9wcm9jX2V4Y2hhbmdlX2lkKHN0cnVjdA0KPiBuZnNfY2xpZW50ICpj
+bHAsIGNvbnN0IHN0cnVjdCBjcmVkICpjcmUNCj4gIAlpZiAoc3RhdHVzICE9IDApDQo+ICAJCWdv
+dG8gb3V0Ow0KPiAgDQo+ICsJZG9fcmVuZXdfbGVhc2UoY2xwLCBub3cpOw0KPiArDQo+ICAJY2xw
+LT5jbF9jbGllbnRpZCA9IHJlc3AtPmNsaWVudGlkOw0KPiAgCWNscC0+Y2xfZXhjaGFuZ2VfZmxh
+Z3MgPSByZXNwLT5mbGFnczsNCj4gIAljbHAtPmNsX3NlcWlkID0gcmVzcC0+c2VxaWQ7DQo+IGRp
+ZmYgLS1naXQgYS9mcy9uZnMvbmZzNHJlbmV3ZC5jIGIvZnMvbmZzL25mczRyZW5ld2QuYw0KPiBp
+bmRleCA2ZWE0MzFiLi5mZjg3NmRkIDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMvbmZzNHJlbmV3ZC5j
+DQo+ICsrKyBiL2ZzL25mcy9uZnM0cmVuZXdkLmMNCj4gQEAgLTEzOCwxNSArMTM4LDEyIEBADQo+
+ICAgKg0KPiAgICogQGNscDogcG9pbnRlciB0byBuZnNfY2xpZW50DQo+ICAgKiBAbGVhc2U6IG5l
+dyB2YWx1ZSBmb3IgbGVhc2UgcGVyaW9kDQo+IC0gKiBAbGFzdHJlbmV3ZWQ6IHRpbWUgYXQgd2hp
+Y2ggbGVhc2Ugd2FzIGxhc3QgcmVuZXdlZA0KPiAgICovDQo+ICB2b2lkIG5mczRfc2V0X2xlYXNl
+X3BlcmlvZChzdHJ1Y3QgbmZzX2NsaWVudCAqY2xwLA0KPiAtCQl1bnNpZ25lZCBsb25nIGxlYXNl
+LA0KPiAtCQl1bnNpZ25lZCBsb25nIGxhc3RyZW5ld2VkKQ0KPiArCQl1bnNpZ25lZCBsb25nIGxl
+YXNlKQ0KPiAgew0KPiAgCXNwaW5fbG9jaygmY2xwLT5jbF9sb2NrKTsNCj4gIAljbHAtPmNsX2xl
+YXNlX3RpbWUgPSBsZWFzZTsNCj4gLQljbHAtPmNsX2xhc3RfcmVuZXdhbCA9IGxhc3RyZW5ld2Vk
+Ow0KPiAgCXNwaW5fdW5sb2NrKCZjbHAtPmNsX2xvY2spOw0KPiAgDQo+ICAJLyogQ2FwIG1heGlt
+dW0gcmVjb25uZWN0IHRpbWVvdXQgYXQgMS8yIGxlYXNlIHBlcmlvZCAqLw0KPiBkaWZmIC0tZ2l0
+IGEvZnMvbmZzL25mczRzdGF0ZS5jIGIvZnMvbmZzL25mczRzdGF0ZS5jDQo+IGluZGV4IDM0NTUy
+MzIuLmYwYjAwMjcgMTAwNjQ0DQo+IC0tLSBhL2ZzL25mcy9uZnM0c3RhdGUuYw0KPiArKysgYi9m
+cy9uZnMvbmZzNHN0YXRlLmMNCj4gQEAgLTkyLDE3ICs5MiwxNSBAQCBzdGF0aWMgaW50IG5mczRf
+c2V0dXBfc3RhdGVfcmVuZXdhbChzdHJ1Y3QNCj4gbmZzX2NsaWVudCAqY2xwKQ0KPiAgew0KPiAg
+CWludCBzdGF0dXM7DQo+ICAJc3RydWN0IG5mc19mc2luZm8gZnNpbmZvOw0KPiAtCXVuc2lnbmVk
+IGxvbmcgbm93Ow0KPiAgDQo+ICAJaWYgKCF0ZXN0X2JpdChORlNfQ1NfQ0hFQ0tfTEVBU0VfVElN
+RSwgJmNscC0+Y2xfcmVzX3N0YXRlKSkgew0KPiAgCQluZnM0X3NjaGVkdWxlX3N0YXRlX3JlbmV3
+YWwoY2xwKTsNCj4gIAkJcmV0dXJuIDA7DQo+ICAJfQ0KPiAgDQo+IC0Jbm93ID0gamlmZmllczsN
+Cj4gIAlzdGF0dXMgPSBuZnM0X3Byb2NfZ2V0X2xlYXNlX3RpbWUoY2xwLCAmZnNpbmZvKTsNCj4g
+IAlpZiAoc3RhdHVzID09IDApIHsNCj4gLQkJbmZzNF9zZXRfbGVhc2VfcGVyaW9kKGNscCwgZnNp
+bmZvLmxlYXNlX3RpbWUgKiBIWiwNCj4gbm93KTsNCj4gKwkJbmZzNF9zZXRfbGVhc2VfcGVyaW9k
+KGNscCwgZnNpbmZvLmxlYXNlX3RpbWUgKiBIWik7DQo+ICAJCW5mczRfc2NoZWR1bGVfc3RhdGVf
+cmVuZXdhbChjbHApOw0KPiAgCX0NCj4gIA0KDQpUaGFua3MhIFRoaXMgb25lIGxvb2tzIGdvb2Qg
+dG8gbWUuDQoNClJldmlld2VkLWJ5OiBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kLm15a2xlYnVzdEBo
+YW1tZXJzcGFjZS5jb20+DQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50
+IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29t
+DQoNCg0K
