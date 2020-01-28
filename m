@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37F7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B5BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773922468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA3B24688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220952;
-	bh=SDqW5Iph+lI9dhyYY8ABmTB0TCq8uR/gTZCPBN8GEXo=;
+	s=default; t=1580220957;
+	bh=tycVKF0FxI+yOaoCkjgdxiNSkeT0/jFkUto3S4xIIfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bBqPr4XCYMy0kZx6yvjOn89E69FM1vtUkEwguJPcNlL9WgR6uP1Unn8+sF2/6inrs
-	 x+QO/6l2m9s+xPMTO5WJOy6YkH//fTvFvVsboWHbdahW/1xWwYME7KdIylsOFID86W
-	 mYYVJvo6U6hGSYrxUy0YboomIrpLiFOZCk6TBnTY=
+	b=yXztkQ74AjEeUxrf8qlVDgyPIWo2Y8ByQPS4DlNwbowE8twc6zoShdBaEFMSmZIU+
+	 +1xMrHkhvY53ab7G7o8o6kVhFtsYTd38iP+E4OYUyH9Ei3QthplJYH0WMQOKlLKZux
+	 e6B+ZZZC2djWdtFFdCFaYSGGru1ynSCKvhZU9pK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbgA1OPv (ORCPT
+        id S1730221AbgA1OP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:15:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38678 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:15:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729864AbgA1OPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:15:48 -0500
+        id S1729232AbgA1OPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:15:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 715472070E;
-        Tue, 28 Jan 2020 14:15:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EAFD24681;
+        Tue, 28 Jan 2020 14:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220947;
-        bh=SDqW5Iph+lI9dhyYY8ABmTB0TCq8uR/gTZCPBN8GEXo=;
+        s=default; t=1580220952;
+        bh=tycVKF0FxI+yOaoCkjgdxiNSkeT0/jFkUto3S4xIIfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cR/iYU5fo3X5f80YzNJerjo31WnUquHVGcDYzRYZAkMF9sFHLPRJEQ4hXRUTEnWrh
-         V7f7N4hcPwYbiQ+vroZeY3sn+KMSj9SdaISywuqZuutHrakSagDTFUcknEZGXzzM/P
-         y/vQ6sEhqDcQZ3bqalk8SByE1gCx43Hq/ry9v2FI=
+        b=GQYV0tAUXhQu+H8BzwSbqMDNdj6P2HE1dttIm0IJ5nrJxVmWGPrmDWKW9KYB0OE5H
+         lYpR5oVjWwYG8qndtL7ZxKPS1spJ+5EZeUKz58pxB4zON91OMRjwpJ5QRN4JUeTVzW
+         m8h5QqJ+f+DPttBI4BZr3pBVVLUBgUg4Z8rYeQ8E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Rosin <peda@axentia.se>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 027/271] clk: qoriq: fix refcount leak in clockgen_init()
-Date:   Tue, 28 Jan 2020 15:02:56 +0100
-Message-Id: <20200128135854.697426763@linuxfoundation.org>
+Subject: [PATCH 4.9 004/271] drm/sti: do not remove the drm_bridge that was never added
+Date:   Tue, 28 Jan 2020 15:02:33 +0100
+Message-Id: <20200128135852.721847723@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,34 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Peter Rosin <peda@axentia.se>
 
-[ Upstream commit 70af6c5b5270e8101f318c4b69cc98a726edfab9 ]
+[ Upstream commit 66e31a72dc38543b2d9d1ce267dc78ba9beebcfd ]
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+Removing the drm_bridge_remove call should avoid a NULL dereference
+during list processing in drm_bridge_remove if the error path is ever
+taken.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 0dfc86b3173f ("clk: qoriq: Move chip-specific knowledge into driver")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+The more natural approach would perhaps be to add a drm_bridge_add,
+but there are several other bridges that never call drm_bridge_add.
+Just removing the drm_bridge_remove is the easier fix.
+
+Fixes: 84601dbdea36 ("drm: sti: rework init sequence")
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Peter Rosin <peda@axentia.se>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180806061910.29914-2-peda@axentia.se
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-qoriq.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/sti/sti_hda.c  | 1 -
+ drivers/gpu/drm/sti/sti_hdmi.c | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index cdce49f6476aa..65876ff6df411 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -1245,6 +1245,7 @@ static void __init clockgen_init(struct device_node *np)
- 				pr_err("%s: Couldn't map %s regs\n", __func__,
- 				       guts->full_name);
- 			}
-+			of_node_put(guts);
- 		}
+diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_hda.c
+index e7c243f708702..08808e3701de9 100644
+--- a/drivers/gpu/drm/sti/sti_hda.c
++++ b/drivers/gpu/drm/sti/sti_hda.c
+@@ -740,7 +740,6 @@ static int sti_hda_bind(struct device *dev, struct device *master, void *data)
+ 	return 0;
  
- 	}
+ err_sysfs:
+-	drm_bridge_remove(bridge);
+ 	return -EINVAL;
+ }
+ 
+diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdmi.c
+index 376b0763c874a..a5412a6fbeca2 100644
+--- a/drivers/gpu/drm/sti/sti_hdmi.c
++++ b/drivers/gpu/drm/sti/sti_hdmi.c
+@@ -1352,7 +1352,6 @@ static int sti_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 	return 0;
+ 
+ err_sysfs:
+-	drm_bridge_remove(bridge);
+ 	hdmi->drm_connector = NULL;
+ 	return -EINVAL;
+ }
 -- 
 2.20.1
 
