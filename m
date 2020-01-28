@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3118C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EBCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA7E6207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D70207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222915;
-	bh=LCui2WNz6L9Whnfns1gfRNOoq1mN+c8iXpf0GRB9sWs=;
+	s=default; t=1580222919;
+	bh=3hKvNmT8nmLVI3xCpYfux5YxrqvOxqQ22wVDWQSZauo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nndjjzBrnHBd/ogBPjtWRGaYIUDc5jSYhzmjdBsZrCownw+xoxQjk2H2bSp5QytoA
-	 IadQaakJuDmjWwlXDsJRGfpKQhqzEJ/AR3TDnUVihxcRgOS7roBCU6QTBlRNLvWREX
-	 ArIuZSoZ4G3cycXxWEqjyJZlDeeGy2rQUW/uHGbs=
+	b=NYj1CDRm/Pl1fOEycnKK6XL7kRhvddOxp6lK6GzVN5V4ABnrVGVoqHzQVf7ecAFU0
+	 osenGbmn+rJhpf/tEneZKyKX+zYjB4aV5BagDxSuHgOC/Rygg4J13PkPBC+Kqwr2U5
+	 S6HXmkMPe6HU1qQZVrucI9AmXoMVYIOWJPKivpqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbgA1OCQ (ORCPT
+        id S1727317AbgA1Osi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:02:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48470 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:48:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727586AbgA1OCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:02:12 -0500
+        id S1726715AbgA1OCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:02:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AB7B24685;
-        Tue, 28 Jan 2020 14:02:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75097205F4;
+        Tue, 28 Jan 2020 14:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220131;
-        bh=LCui2WNz6L9Whnfns1gfRNOoq1mN+c8iXpf0GRB9sWs=;
+        s=default; t=1580220138;
+        bh=3hKvNmT8nmLVI3xCpYfux5YxrqvOxqQ22wVDWQSZauo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HqySbAbq7jA+jgl4lbuXoFd6Uo4/B5MLjlZnOPbhE9eifWhlu5Mu98EmSxPjh2ouJ
-         4X99RG5aN/db9TWl5MnITgGZLY3UJ5IyL1ILki0FxYEU6NleTNr3lArzzJ4nbc0YRs
-         YkF34kA7b3+QC51BjgWp13QuQCQBgv0EH6ckB3VE=
+        b=MhVaQu6qarECxABreXgoWGBF7mxYQlBk7fJiGjThhNsrVEcDB1Kn/fEBSn5+Hwgr1
+         hDAY5KtzGdJte9tOQ9g+2mSC2LNZEYqccTtKmX1bIUseUhrHwd+TwZgey4kfuwu9cj
+         Pthd7iNjW3Lkqtm4u5A0c7uEvnVpb2dfljkmc+8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 029/104] net/mlx5e: kTLS, Fix corner-case checks in TX resync flow
-Date:   Tue, 28 Jan 2020 14:59:50 +0100
-Message-Id: <20200128135821.297322025@linuxfoundation.org>
+        stable@vger.kernel.org, Sven-Haegar Koch <haegar@sdinet.de>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 032/104] ipv4: Detect rollover in specific fib table dump
+Date:   Tue, 28 Jan 2020 14:59:53 +0100
+Message-Id: <20200128135821.698374819@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,113 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
+From: David Ahern <dsahern@gmail.com>
 
-commit ffbd9ca94e2ebbfe802d4b28bab5ba19818de853 upstream.
+[ Upstream commit 9827c0634e461703abf81e8cc8b7adf5da5886d0 ]
 
-There are the following cases:
+Sven-Haegar reported looping on fib dumps when 255.255.255.255 route has
+been added to a table. The looping is caused by the key rolling over from
+FFFFFFFF to 0. When dumping a specific table only, we need a means to detect
+when the table dump is done. The key and count saved to cb args are both 0
+only at the start of the table dump. If key is 0 and count > 0, then we are
+in the rollover case. Detect and return to avoid looping.
 
-1. Packet ends before start marker: bypass offload.
-2. Packet starts before start marker and ends after it: drop,
-   not supported, breaks contract with kernel.
-3. packet ends before tls record info starts: drop,
-   this packet was already acknowledged and its record info
-   was released.
+This only affects dumps of a specific table; for dumps of all tables
+(the case prior to the change in the Fixes tag) inet_dump_fib moved
+the entry counter to the next table and reset the cb args used by
+fib_table_dump and fn_trie_dump_leaf, so the rollover ffffffff back
+to 0 did not cause looping with the dumps.
 
-Add the above as comment in code.
-
-Mind possible wraparounds of the TCP seq, replace the simple comparison
-with a call to the TCP before() method.
-
-In addition, remove logic that handles negative sync_len values,
-as it became impossible.
-
-Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
-Fixes: 46a3ea98074e ("net/mlx5e: kTLS, Enhance TX resync flow")
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Boris Pismenny <borisp@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: effe67926624 ("net: Enable kernel side filtering of route dumps")
+Reported-by: Sven-Haegar Koch <haegar@sdinet.de>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c |   33 +++++++------
- 1 file changed, 19 insertions(+), 14 deletions(-)
+ net/ipv4/fib_trie.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
-@@ -180,7 +180,7 @@ mlx5e_ktls_tx_post_param_wqes(struct mlx
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -2175,6 +2175,12 @@ int fib_table_dump(struct fib_table *tb,
+ 	int count = cb->args[2];
+ 	t_key key = cb->args[3];
  
- struct tx_sync_info {
- 	u64 rcd_sn;
--	s32 sync_len;
-+	u32 sync_len;
- 	int nr_frags;
- 	skb_frag_t frags[MAX_SKB_FRAGS];
- };
-@@ -193,13 +193,14 @@ enum mlx5e_ktls_sync_retval {
- 
- static enum mlx5e_ktls_sync_retval
- tx_sync_info_get(struct mlx5e_ktls_offload_context_tx *priv_tx,
--		 u32 tcp_seq, struct tx_sync_info *info)
-+		 u32 tcp_seq, int datalen, struct tx_sync_info *info)
- {
- 	struct tls_offload_context_tx *tx_ctx = priv_tx->tx_ctx;
- 	enum mlx5e_ktls_sync_retval ret = MLX5E_KTLS_SYNC_DONE;
- 	struct tls_record_info *record;
- 	int remaining, i = 0;
- 	unsigned long flags;
-+	bool ends_before;
- 
- 	spin_lock_irqsave(&tx_ctx->lock, flags);
- 	record = tls_get_record(tx_ctx, tcp_seq, &info->rcd_sn);
-@@ -209,9 +210,21 @@ tx_sync_info_get(struct mlx5e_ktls_offlo
- 		goto out;
- 	}
- 
--	if (unlikely(tcp_seq < tls_record_start_seq(record))) {
--		ret = tls_record_is_start_marker(record) ?
--			MLX5E_KTLS_SYNC_SKIP_NO_DATA : MLX5E_KTLS_SYNC_FAIL;
-+	/* There are the following cases:
-+	 * 1. packet ends before start marker: bypass offload.
-+	 * 2. packet starts before start marker and ends after it: drop,
-+	 *    not supported, breaks contract with kernel.
-+	 * 3. packet ends before tls record info starts: drop,
-+	 *    this packet was already acknowledged and its record info
-+	 *    was released.
++	/* First time here, count and key are both always 0. Count > 0
++	 * and key == 0 means the dump has wrapped around and we are done.
 +	 */
-+	ends_before = before(tcp_seq + datalen, tls_record_start_seq(record));
++	if (count && !key)
++		return skb->len;
 +
-+	if (unlikely(tls_record_is_start_marker(record))) {
-+		ret = ends_before ? MLX5E_KTLS_SYNC_SKIP_NO_DATA : MLX5E_KTLS_SYNC_FAIL;
-+		goto out;
-+	} else if (ends_before) {
-+		ret = MLX5E_KTLS_SYNC_FAIL;
- 		goto out;
- 	}
+ 	while ((l = leaf_walk_rcu(&tp, key)) != NULL) {
+ 		int err;
  
-@@ -337,7 +350,7 @@ mlx5e_ktls_tx_handle_ooo(struct mlx5e_kt
- 	u8 num_wqebbs;
- 	int i = 0;
- 
--	ret = tx_sync_info_get(priv_tx, seq, &info);
-+	ret = tx_sync_info_get(priv_tx, seq, datalen, &info);
- 	if (unlikely(ret != MLX5E_KTLS_SYNC_DONE)) {
- 		if (ret == MLX5E_KTLS_SYNC_SKIP_NO_DATA) {
- 			stats->tls_skip_no_sync_data++;
-@@ -351,14 +364,6 @@ mlx5e_ktls_tx_handle_ooo(struct mlx5e_kt
- 		goto err_out;
- 	}
- 
--	if (unlikely(info.sync_len < 0)) {
--		if (likely(datalen <= -info.sync_len))
--			return MLX5E_KTLS_SYNC_DONE;
--
--		stats->tls_drop_bypass_req++;
--		goto err_out;
--	}
--
- 	stats->tls_ooo++;
- 
- 	tx_post_resync_params(sq, priv_tx, info.rcd_sn);
 
 
