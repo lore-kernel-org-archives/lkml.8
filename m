@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E0BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 412F1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2AB20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B99207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222228;
-	bh=IODptUNHUasedGKHmhUQ10ZnXdsVBZIRPb84G/A80QE=;
+	s=default; t=1580222231;
+	bh=a8iVCfyzuC8lx0lPKI/m4kCpKXomju8FoDjyN1TUv28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wHSF606uL2HmNibnlZeLniD7DClz2AKiUEvHDJBkb1Cn2e+6jEzl5yLYdGYNUbYuH
-	 5YPxz6H3hLrY5ioePNuojX/gM4V7Kj7Q6ZOlqMihLkc/zzVnBnSRUkzBHDv7jv3sgq
-	 MrmkYemBY6yNIxyoHdMysdQjaFZpZV0rYYC+uWYg=
+	b=VJ0rceeUyGrHN5AbQiwXnqtPSoJDJNQJPMueD1ZEZ1kCHMCJiCx0gjxNTtJ8ickA1
+	 10Pb8ZS0o8GYfzljBLIUI+MmxrP/G6lmfB4qnIa4tHJlN/GXohIFYcRHiJNzwEMRu+
+	 D+h87GEkMnOytuxQAPsqBlmD9F+pxEkC5PILPMfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgA1OhH (ORCPT
+        id S1730349AbgA1OhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:37:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45816 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:37:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731133AbgA1OUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:20:47 -0500
+        id S1730700AbgA1OUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:20:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9E3924688;
-        Tue, 28 Jan 2020 14:20:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6429B21739;
+        Tue, 28 Jan 2020 14:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221246;
-        bh=IODptUNHUasedGKHmhUQ10ZnXdsVBZIRPb84G/A80QE=;
+        s=default; t=1580221243;
+        bh=a8iVCfyzuC8lx0lPKI/m4kCpKXomju8FoDjyN1TUv28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SiysmG/H63DB6dmAaes3ODZAengRQ1ayBDbC1uGRH/c24g3XX+xDiqkmmo+3DWlNr
-         BPet0p35xHhjFRHjpacuGbs+e3X7jqUrGi0lMy6nASmmQYtVwMe2XXPaWuJMd+yJhI
-         QDw8Xon8e5HSJRpJatEQSNzwTdSCjDi+zmUveOFI=
+        b=ok3mfqRx3cxO8yUZNrS0QOkyAiUE/EUUg5s/mmbHYNa+9M/PkeYWqeUeIetttWyZN
+         BCxJrkI/QC1p37DH3dpGh8Oahyi/HyuWGes/KhW3fZm766uqdVb1OdtQAaMc+X7cre
+         1U1tkzUgv1lPI0FX5q2A6fxbJARfbz342/JRiWkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 146/271] crypto: ccp - fix AES CFB error exposed by new test vectors
-Date:   Tue, 28 Jan 2020 15:04:55 +0100
-Message-Id: <20200128135903.426588152@linuxfoundation.org>
+Subject: [PATCH 4.9 145/271] spi: spi-fsl-spi: call spi_finalize_current_message() at the end
+Date:   Tue, 28 Jan 2020 15:04:54 +0100
+Message-Id: <20200128135903.349248480@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,61 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hook, Gary <Gary.Hook@amd.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit c3b359d6567c0b8f413e924feb37cf025067d55a ]
+[ Upstream commit 44a042182cb1e9f7916e015c836967bf638b33c4 ]
 
-Updated testmgr will exhibit this error message when loading the
-ccp-crypto module:
+spi_finalize_current_message() shall be called once all
+actions are finished, otherwise the last actions might
+step over a newly started transfer.
 
-alg: skcipher: cfb-aes-ccp encryption failed with err -22 on test vector 3, cfg="in-place"
-
-Update the CCP crypto driver to correctly treat CFB as a streaming mode
-cipher (instead of block mode). Update the configuration for CFB to
-specify the block size as a single byte;
-
-Fixes: 2b789435d7f3 ('crypto: ccp - CCP AES crypto API support')
-
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: c592becbe704 ("spi: fsl-(e)spi: migrate to generic master queueing")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccp/ccp-crypto-aes.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/spi/spi-fsl-spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/ccp/ccp-crypto-aes.c b/drivers/crypto/ccp/ccp-crypto-aes.c
-index 89291c15015cd..3f768699332ba 100644
---- a/drivers/crypto/ccp/ccp-crypto-aes.c
-+++ b/drivers/crypto/ccp/ccp-crypto-aes.c
-@@ -1,7 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * AMD Cryptographic Coprocessor (CCP) AES crypto API support
-  *
-- * Copyright (C) 2013,2016 Advanced Micro Devices, Inc.
-+ * Copyright (C) 2013-2019 Advanced Micro Devices, Inc.
-  *
-  * Author: Tom Lendacky <thomas.lendacky@amd.com>
-  *
-@@ -79,8 +80,7 @@ static int ccp_aes_crypt(struct ablkcipher_request *req, bool encrypt)
- 		return -EINVAL;
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 8b290d9d79350..5419de19859a0 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -408,7 +408,6 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
+ 	}
  
- 	if (((ctx->u.aes.mode == CCP_AES_MODE_ECB) ||
--	     (ctx->u.aes.mode == CCP_AES_MODE_CBC) ||
--	     (ctx->u.aes.mode == CCP_AES_MODE_CFB)) &&
-+	     (ctx->u.aes.mode == CCP_AES_MODE_CBC)) &&
- 	    (req->nbytes & (AES_BLOCK_SIZE - 1)))
- 		return -EINVAL;
+ 	m->status = status;
+-	spi_finalize_current_message(master);
  
-@@ -291,7 +291,7 @@ static struct ccp_aes_def aes_algs[] = {
- 		.version	= CCP_VERSION(3, 0),
- 		.name		= "cfb(aes)",
- 		.driver_name	= "cfb-aes-ccp",
--		.blocksize	= AES_BLOCK_SIZE,
-+		.blocksize	= 1,
- 		.ivsize		= AES_BLOCK_SIZE,
- 		.alg_defaults	= &ccp_aes_defaults,
- 	},
+ 	if (status || !cs_change) {
+ 		ndelay(nsecs);
+@@ -416,6 +415,7 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
+ 	}
+ 
+ 	fsl_spi_setup_transfer(spi, NULL);
++	spi_finalize_current_message(master);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
