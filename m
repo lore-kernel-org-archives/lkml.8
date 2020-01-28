@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D11C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEE9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156CF24690
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C612467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221890;
-	bh=UIPb6mSlBJYQ+nhAexkLxgOPVQ1YQMIHzX4hxIdSJYE=;
+	s=default; t=1580221895;
+	bh=fusV38pNnVTYdf03ragpw6I0F770zWDy/XdXdVRpTR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2RlE9Ddyt/CsZeV7ZTOQOAp3lvi1tVmjT8by75sT5IFvcmd5y5QqrZhvOP0FMDpmQ
-	 FwG/PhU7wCYy9DgPpK2ajDuYfDreWPYczfx4Taprheww6Emi78yliAsBBZpZmb2zz8
-	 Y9wn/BmYbJzZbmZr+1wQfsnt2KfqvP0ORBGHcfZw=
+	b=PjUTQ7mZ7x+MxIYizf3Fw25YyOl8n+b6sigJayPb9A/7yYyHad7mbwpXrfXufCnu/
+	 naiE8Z1w7GwvUytsY3KIjCNAXmyDPYgaq5Y0TrB0CJV0mX3fF0Zj9G/7Oq+Uj5SKJs
+	 2pyRvFYi9ZJnK5P1DfX9IDDQ9C+rzp3BeeR18LwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387421AbgA1O1w (ORCPT
+        id S1731246AbgA1Obe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:27:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55512 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:31:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387401AbgA1O1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:27:43 -0500
+        id S2387411AbgA1O1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:27:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 842F420716;
-        Tue, 28 Jan 2020 14:27:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71B2924688;
+        Tue, 28 Jan 2020 14:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221663;
-        bh=UIPb6mSlBJYQ+nhAexkLxgOPVQ1YQMIHzX4hxIdSJYE=;
+        s=default; t=1580221667;
+        bh=fusV38pNnVTYdf03ragpw6I0F770zWDy/XdXdVRpTR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VclUboM5zJ4W88XoqZ43DVfyJW06h+Wo+zKwJ91JLJB0vbLCa98+2mRrK5c96y1ti
-         FRJ2eVZgkuAy5UEQQ43mYbcQQ/bcyAsvgE8HXJ9zRDiNFWdjOqXgS+lMMYgCsNwZqp
-         ZKDyLGyNzPpSIYB1FrPKTJbu1jsiqEuTQCzxTI38=
+        b=vEgt7CBF9JhHb7smjiElznJTY/lWAfotaYGBCq6logd6fpKwE3lY78PZydNUcSf4V
+         EubV3Qx/vgU6IHM8Ot+8sDwLHxG+lVDCJl0IimxgcfnUCqtWJqG/IZmq9xB3pJAVEf
+         sHgOYGz/ub2O4v7CcMpywU0eS38Sj3xewK1+jaYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 24/92] hwmon: (core) Do not use device managed functions for memory allocations
-Date:   Tue, 28 Jan 2020 15:07:52 +0100
-Message-Id: <20200128135812.191821008@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Zanussi <zanussi@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 26/92] tracing: trigger: Replace unneeded RCU-list traversals
+Date:   Tue, 28 Jan 2020 15:07:54 +0100
+Message-Id: <20200128135812.413518101@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,235 +60,244 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 3bf8bdcf3bada771eb12b57f2a30caee69e8ab8d upstream.
+commit aeed8aa3874dc15b9d82a6fe796fd7cfbb684448 upstream.
 
-The hwmon core uses device managed functions, tied to the hwmon parent
-device, for various internal memory allocations. This is problematic
-since hwmon device lifetime does not necessarily match its parent's
-device lifetime. If there is a mismatch, memory leaks will accumulate
-until the parent device is released.
+With CONFIG_PROVE_RCU_LIST, I had many suspicious RCU warnings
+when I ran ftracetest trigger testcases.
 
-Fix the problem by managing all memory allocations internally. The only
-exception is memory allocation for thermal device registration, which
-can be tied to the hwmon device, along with thermal device registration
-itself.
+-----
+  # dmesg -c > /dev/null
+  # ./ftracetest test.d/trigger
+  ...
+  # dmesg | grep "RCU-list traversed" | cut -f 2 -d ] | cut -f 2 -d " "
+  kernel/trace/trace_events_hist.c:6070
+  kernel/trace/trace_events_hist.c:1760
+  kernel/trace/trace_events_hist.c:5911
+  kernel/trace/trace_events_trigger.c:504
+  kernel/trace/trace_events_hist.c:1810
+  kernel/trace/trace_events_hist.c:3158
+  kernel/trace/trace_events_hist.c:3105
+  kernel/trace/trace_events_hist.c:5518
+  kernel/trace/trace_events_hist.c:5998
+  kernel/trace/trace_events_hist.c:6019
+  kernel/trace/trace_events_hist.c:6044
+  kernel/trace/trace_events_trigger.c:1500
+  kernel/trace/trace_events_trigger.c:1540
+  kernel/trace/trace_events_trigger.c:539
+  kernel/trace/trace_events_trigger.c:584
+-----
 
-Fixes: d560168b5d0f ("hwmon: (core) New hwmon registration API")
-Cc: stable@vger.kernel.org # v4.14.x: 47c332deb8e8: hwmon: Deal with errors from the thermal subsystem
-Cc: stable@vger.kernel.org # v4.14.x: 74e3512731bd: hwmon: (core) Fix double-free in __hwmon_device_register()
-Cc: stable@vger.kernel.org # v4.9.x: 3a412d5e4a1c: hwmon: (core) Simplify sysfs attribute name allocation
-Cc: stable@vger.kernel.org # v4.9.x: 47c332deb8e8: hwmon: Deal with errors from the thermal subsystem
-Cc: stable@vger.kernel.org # v4.9.x: 74e3512731bd: hwmon: (core) Fix double-free in __hwmon_device_register()
-Cc: stable@vger.kernel.org # v4.9+
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+I investigated those warnings and found that the RCU-list
+traversals in event trigger and hist didn't need to use
+RCU version because those were called only under event_mutex.
+
+I also checked other RCU-list traversals related to event
+trigger list, and found that most of them were called from
+event_hist_trigger_func() or hist_unregister_trigger() or
+register/unregister functions except for a few cases.
+
+Replace these unneeded RCU-list traversals with normal list
+traversal macro and lockdep_assert_held() to check the
+event_mutex is held.
+
+Link: http://lkml.kernel.org/r/157680910305.11685.15110237954275915782.stgit@devnote2
+
+Cc: stable@vger.kernel.org
+Fixes: 30350d65ac567 ("tracing: Add variable support to hist triggers")
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/hwmon/hwmon.c |   68 ++++++++++++++++++++++++++++++--------------------
- 1 file changed, 41 insertions(+), 27 deletions(-)
 
---- a/drivers/hwmon/hwmon.c
-+++ b/drivers/hwmon/hwmon.c
-@@ -51,6 +51,7 @@ struct hwmon_device_attribute {
+---
+ kernel/trace/trace_events_hist.c    |   38 ++++++++++++++++++++++++++----------
+ kernel/trace/trace_events_trigger.c |   20 ++++++++++++++----
+ 2 files changed, 43 insertions(+), 15 deletions(-)
+
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1511,11 +1511,13 @@ static struct hist_field *find_var(struc
+ 	struct event_trigger_data *test;
+ 	struct hist_field *hist_field;
  
- #define to_hwmon_attr(d) \
- 	container_of(d, struct hwmon_device_attribute, dev_attr)
-+#define to_dev_attr(a) container_of(a, struct device_attribute, attr)
- 
- /*
-  * Thermal zone information
-@@ -58,7 +59,7 @@ struct hwmon_device_attribute {
-  * also provides the sensor index.
-  */
- struct hwmon_thermal_data {
--	struct hwmon_device *hwdev;	/* Reference to hwmon device */
-+	struct device *dev;		/* Reference to hwmon device */
- 	int index;			/* sensor index */
- };
- 
-@@ -95,9 +96,27 @@ static const struct attribute_group *hwm
- 	NULL
- };
- 
-+static void hwmon_free_attrs(struct attribute **attrs)
-+{
-+	int i;
++	lockdep_assert_held(&event_mutex);
 +
-+	for (i = 0; attrs[i]; i++) {
-+		struct device_attribute *dattr = to_dev_attr(attrs[i]);
-+		struct hwmon_device_attribute *hattr = to_hwmon_attr(dattr);
+ 	hist_field = find_var_field(hist_data, var_name);
+ 	if (hist_field)
+ 		return hist_field;
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			test_data = test->private_data;
+ 			hist_field = find_var_field(test_data, var_name);
+@@ -1565,7 +1567,9 @@ static struct hist_field *find_file_var(
+ 	struct event_trigger_data *test;
+ 	struct hist_field *hist_field;
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
 +
-+		kfree(hattr);
-+	}
-+	kfree(attrs);
-+}
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			test_data = test->private_data;
+ 			hist_field = find_var_field(test_data, var_name);
+@@ -2828,7 +2832,9 @@ static char *find_trigger_filter(struct
+ {
+ 	struct event_trigger_data *test;
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
 +
- static void hwmon_dev_release(struct device *dev)
- {
--	kfree(to_hwmon_device(dev));
-+	struct hwmon_device *hwdev = to_hwmon_device(dev);
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (test->private_data == hist_data)
+ 				return test->filter_str;
+@@ -2879,9 +2885,11 @@ find_compatible_hist(struct hist_trigger
+ 	struct event_trigger_data *test;
+ 	unsigned int n_keys;
+ 
++	lockdep_assert_held(&event_mutex);
 +
-+	if (hwdev->group.attrs)
-+		hwmon_free_attrs(hwdev->group.attrs);
-+	kfree(hwdev->groups);
-+	kfree(hwdev);
- }
+ 	n_keys = target_hist_data->n_fields - target_hist_data->n_vals;
  
- static struct class hwmon_class = {
-@@ -121,11 +140,11 @@ static DEFINE_IDA(hwmon_ida);
- static int hwmon_thermal_get_temp(void *data, int *temp)
- {
- 	struct hwmon_thermal_data *tdata = data;
--	struct hwmon_device *hwdev = tdata->hwdev;
-+	struct hwmon_device *hwdev = to_hwmon_device(tdata->dev);
- 	int ret;
- 	long t;
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			hist_data = test->private_data;
  
--	ret = hwdev->chip->ops->read(&hwdev->dev, hwmon_temp, hwmon_temp_input,
-+	ret = hwdev->chip->ops->read(tdata->dev, hwmon_temp, hwmon_temp_input,
- 				     tdata->index, &t);
- 	if (ret < 0)
- 		return ret;
-@@ -139,8 +158,7 @@ static const struct thermal_zone_of_devi
- 	.get_temp = hwmon_thermal_get_temp,
- };
- 
--static int hwmon_thermal_add_sensor(struct device *dev,
--				    struct hwmon_device *hwdev, int index)
-+static int hwmon_thermal_add_sensor(struct device *dev, int index)
- {
- 	struct hwmon_thermal_data *tdata;
- 	struct thermal_zone_device *tzd;
-@@ -149,10 +167,10 @@ static int hwmon_thermal_add_sensor(stru
- 	if (!tdata)
- 		return -ENOMEM;
- 
--	tdata->hwdev = hwdev;
-+	tdata->dev = dev;
- 	tdata->index = index;
- 
--	tzd = devm_thermal_zone_of_sensor_register(&hwdev->dev, index, tdata,
-+	tzd = devm_thermal_zone_of_sensor_register(dev, index, tdata,
- 						   &hwmon_thermal_ops);
- 	/*
- 	 * If CONFIG_THERMAL_OF is disabled, this returns -ENODEV,
-@@ -164,8 +182,7 @@ static int hwmon_thermal_add_sensor(stru
- 	return 0;
- }
- #else
--static int hwmon_thermal_add_sensor(struct device *dev,
--				    struct hwmon_device *hwdev, int index)
-+static int hwmon_thermal_add_sensor(struct device *dev, int index)
- {
- 	return 0;
- }
-@@ -242,8 +259,7 @@ static bool is_string_attr(enum hwmon_se
- 	       (type == hwmon_fan && attr == hwmon_fan_label);
- }
- 
--static struct attribute *hwmon_genattr(struct device *dev,
--				       const void *drvdata,
-+static struct attribute *hwmon_genattr(const void *drvdata,
- 				       enum hwmon_sensor_types type,
- 				       u32 attr,
- 				       int index,
-@@ -271,7 +287,7 @@ static struct attribute *hwmon_genattr(s
- 	if ((mode & S_IWUGO) && !ops->write)
- 		return ERR_PTR(-EINVAL);
- 
--	hattr = devm_kzalloc(dev, sizeof(*hattr), GFP_KERNEL);
-+	hattr = kzalloc(sizeof(*hattr), GFP_KERNEL);
- 	if (!hattr)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -478,8 +494,7 @@ static int hwmon_num_channel_attrs(const
- 	return n;
- }
- 
--static int hwmon_genattrs(struct device *dev,
--			  const void *drvdata,
-+static int hwmon_genattrs(const void *drvdata,
- 			  struct attribute **attrs,
- 			  const struct hwmon_ops *ops,
- 			  const struct hwmon_channel_info *info)
-@@ -505,7 +520,7 @@ static int hwmon_genattrs(struct device
- 			attr_mask &= ~BIT(attr);
- 			if (attr >= template_size)
- 				return -EINVAL;
--			a = hwmon_genattr(dev, drvdata, info->type, attr, i,
-+			a = hwmon_genattr(drvdata, info->type, attr, i,
- 					  templates[attr], ops);
- 			if (IS_ERR(a)) {
- 				if (PTR_ERR(a) != -ENOENT)
-@@ -519,8 +534,7 @@ static int hwmon_genattrs(struct device
- }
- 
- static struct attribute **
--__hwmon_create_attrs(struct device *dev, const void *drvdata,
--		     const struct hwmon_chip_info *chip)
-+__hwmon_create_attrs(const void *drvdata, const struct hwmon_chip_info *chip)
- {
- 	int ret, i, aindex = 0, nattrs = 0;
- 	struct attribute **attrs;
-@@ -531,15 +545,17 @@ __hwmon_create_attrs(struct device *dev,
- 	if (nattrs == 0)
- 		return ERR_PTR(-EINVAL);
- 
--	attrs = devm_kcalloc(dev, nattrs + 1, sizeof(*attrs), GFP_KERNEL);
-+	attrs = kcalloc(nattrs + 1, sizeof(*attrs), GFP_KERNEL);
- 	if (!attrs)
- 		return ERR_PTR(-ENOMEM);
- 
- 	for (i = 0; chip->info[i]; i++) {
--		ret = hwmon_genattrs(dev, drvdata, &attrs[aindex], chip->ops,
-+		ret = hwmon_genattrs(drvdata, &attrs[aindex], chip->ops,
- 				     chip->info[i]);
--		if (ret < 0)
-+		if (ret < 0) {
-+			hwmon_free_attrs(attrs);
- 			return ERR_PTR(ret);
-+		}
- 		aindex += ret;
+@@ -4905,7 +4913,7 @@ static int hist_show(struct seq_file *m,
+ 		goto out_unlock;
  	}
  
-@@ -581,14 +597,13 @@ __hwmon_device_register(struct device *d
- 			for (i = 0; groups[i]; i++)
- 				ngroups++;
+-	list_for_each_entry_rcu(data, &event_file->triggers, list) {
++	list_for_each_entry(data, &event_file->triggers, list) {
+ 		if (data->cmd_ops->trigger_type == ETT_EVENT_HIST)
+ 			hist_trigger_show(m, data, n++);
+ 	}
+@@ -5296,7 +5304,9 @@ static int hist_register_trigger(char *g
+ 	if (hist_data->attrs->name && !named_data)
+ 		goto new;
  
--		hwdev->groups = devm_kcalloc(dev, ngroups, sizeof(*groups),
--					     GFP_KERNEL);
-+		hwdev->groups = kcalloc(ngroups, sizeof(*groups), GFP_KERNEL);
- 		if (!hwdev->groups) {
- 			err = -ENOMEM;
- 			goto free_hwmon;
- 		}
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (!hist_trigger_match(data, test, named_data, false))
+ 				continue;
+@@ -5380,10 +5390,12 @@ static bool have_hist_trigger_match(stru
+ 	struct event_trigger_data *test, *named_data = NULL;
+ 	bool match = false;
  
--		attrs = __hwmon_create_attrs(dev, drvdata, chip);
-+		attrs = __hwmon_create_attrs(drvdata, chip);
- 		if (IS_ERR(attrs)) {
- 			err = PTR_ERR(attrs);
- 			goto free_hwmon;
-@@ -633,8 +648,7 @@ __hwmon_device_register(struct device *d
- 							   hwmon_temp_input, j))
- 					continue;
- 				if (info[i]->config[j] & HWMON_T_INPUT) {
--					err = hwmon_thermal_add_sensor(dev,
--								hwdev, j);
-+					err = hwmon_thermal_add_sensor(hdev, j);
- 					if (err) {
- 						device_unregister(hdev);
- 						goto ida_remove;
-@@ -647,7 +661,7 @@ __hwmon_device_register(struct device *d
- 	return hdev;
++	lockdep_assert_held(&event_mutex);
++
+ 	if (hist_data->attrs->name)
+ 		named_data = find_named_trigger(hist_data->attrs->name);
  
- free_hwmon:
--	kfree(hwdev);
-+	hwmon_dev_release(hdev);
- ida_remove:
- 	ida_simple_remove(&hwmon_ida, id);
- 	return ERR_PTR(err);
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (hist_trigger_match(data, test, named_data, false)) {
+ 				match = true;
+@@ -5401,10 +5413,12 @@ static bool hist_trigger_check_refs(stru
+ 	struct hist_trigger_data *hist_data = data->private_data;
+ 	struct event_trigger_data *test, *named_data = NULL;
+ 
++	lockdep_assert_held(&event_mutex);
++
+ 	if (hist_data->attrs->name)
+ 		named_data = find_named_trigger(hist_data->attrs->name);
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (!hist_trigger_match(data, test, named_data, false))
+ 				continue;
+@@ -5426,10 +5440,12 @@ static void hist_unregister_trigger(char
+ 	struct event_trigger_data *test, *named_data = NULL;
+ 	bool unregistered = false;
+ 
++	lockdep_assert_held(&event_mutex);
++
+ 	if (hist_data->attrs->name)
+ 		named_data = find_named_trigger(hist_data->attrs->name);
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (!hist_trigger_match(data, test, named_data, false))
+ 				continue;
+@@ -5455,7 +5471,9 @@ static bool hist_file_check_refs(struct
+ 	struct hist_trigger_data *hist_data;
+ 	struct event_trigger_data *test;
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			hist_data = test->private_data;
+ 			if (check_var_refs(hist_data))
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -495,7 +495,9 @@ void update_cond_flag(struct trace_event
+ 	struct event_trigger_data *data;
+ 	bool set_cond = false;
+ 
+-	list_for_each_entry_rcu(data, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(data, &file->triggers, list) {
+ 		if (data->filter || event_command_post_trigger(data->cmd_ops) ||
+ 		    event_command_needs_rec(data->cmd_ops)) {
+ 			set_cond = true;
+@@ -530,7 +532,9 @@ static int register_trigger(char *glob,
+ 	struct event_trigger_data *test;
+ 	int ret = 0;
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == data->cmd_ops->trigger_type) {
+ 			ret = -EEXIST;
+ 			goto out;
+@@ -575,7 +579,9 @@ static void unregister_trigger(char *glo
+ 	struct event_trigger_data *data;
+ 	bool unregistered = false;
+ 
+-	list_for_each_entry_rcu(data, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(data, &file->triggers, list) {
+ 		if (data->cmd_ops->trigger_type == test->cmd_ops->trigger_type) {
+ 			unregistered = true;
+ 			list_del_rcu(&data->list);
+@@ -1490,7 +1496,9 @@ int event_enable_register_trigger(char *
+ 	struct event_trigger_data *test;
+ 	int ret = 0;
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(test, &file->triggers, list) {
+ 		test_enable_data = test->private_data;
+ 		if (test_enable_data &&
+ 		    (test->cmd_ops->trigger_type ==
+@@ -1530,7 +1538,9 @@ void event_enable_unregister_trigger(cha
+ 	struct event_trigger_data *data;
+ 	bool unregistered = false;
+ 
+-	list_for_each_entry_rcu(data, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(data, &file->triggers, list) {
+ 		enable_data = data->private_data;
+ 		if (enable_data &&
+ 		    (data->cmd_ops->trigger_type ==
 
 
