@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5741C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768F1C35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA3020716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD9B20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222841;
-	bh=xmqf4R/yqaxyn6B/aXLkj6ePZROjIT/6cr9njFDMExI=;
+	s=default; t=1580222853;
+	bh=UPpOQv8TcPyjsQb6FhvUjCbVkkQduXCWqwZvAxggsWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SqXBvuS3XpMjLk/nTOWGc3bT+GUaIYJVkAYjjeHnExkO9V+8LoUMQMaCq/SbnOib2
-	 E27dl+5YgTtkfdLj4f44PVPpgggVd60OcPEuUkWwiRu9DbJVIXpyzIqxlKaG873wwR
-	 isyQwc/oh/0jxQ9c6J6Pfdq1GJIOccgMYIVi+dXY=
+	b=X3UjMMAAWqu9ZB6ezMHRwobLyJjgaJqWfAyc/aYHEV6S1369gXMRAWXrWeMAg5KD0
+	 h305aZuY9Y+x43DPDu1Dh9l3spqqlB/J8+lWKmTTFyqBA3J8cKAuUjkJ9H01yTajS/
+	 ohnxj23i/BqVxfexVIsUYBwbgfjHwbxjPmE/yydg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgA1OHs (ORCPT
+        id S1727966AbgA1OH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:07:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55548 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:07:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728165AbgA1OHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:07:45 -0500
+        id S1727933AbgA1OHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:07:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE7424688;
-        Tue, 28 Jan 2020 14:07:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4357022522;
+        Tue, 28 Jan 2020 14:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220464;
-        bh=xmqf4R/yqaxyn6B/aXLkj6ePZROjIT/6cr9njFDMExI=;
+        s=default; t=1580220444;
+        bh=UPpOQv8TcPyjsQb6FhvUjCbVkkQduXCWqwZvAxggsWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15M8xqYm3jZ/NNJ5LaoieOsf7fr0yiHbkCG6GCvDOA9EU+oct2VAZ7U7VBjcOPS9Q
-         wYGvyvudVH1FuvZXtjTPk5e/gs9Go5bbVTxeRAB1v9Jd+R21+NTvcxVg6o8HmVwaVT
-         tZSeDRdtbKi3uGHPpUHO0/m2lfs0L+gOkPoti1MU=
+        b=WqgWb2gA3M2CP7+q2euW1rEFRoHUg6+dmj2PqbdN9P1fppqLE6uPAGTGRdckuLjXD
+         aFQzHGPXdF50wAcWXfb/J4TOo7YdFfYPTMu0x2M/CEBi+MU43eFXgwhYLo2498Lsu8
+         jkIhvZliCHhaP58CgexPtpf/L85lowSpUmjFvEX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Jerry Zuo <Jerry.Zuo@amd.com>,
+        Harry Wentland <Harry.Wentland@amd.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Sean Paul <seanpaul@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 018/183] pinctrl: sh-pfc: sh7269: Add missing PCIOR0 field
-Date:   Tue, 28 Jan 2020 15:03:57 +0100
-Message-Id: <20200128135831.686680043@linuxfoundation.org>
+Subject: [PATCH 4.4 010/183] drm/dp_mst: Skip validating ports during destruction, just ref
+Date:   Tue, 28 Jan 2020 15:03:49 +0100
+Message-Id: <20200128135830.698209468@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,37 +63,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit 9540cbdfcd861caf67a6f0e4bb7f46d41c4aad86 ]
+[ Upstream commit c54c7374ff44de5e609506aca7c0deae4703b6d1 ]
 
-The Port C I/O Register 0 contains 7 reserved bits, but the descriptor
-contains only dummy configuration values for 6 reserved bits, thus
-breaking the configuration of all subsequent fields in the register.
+Jerry Zuo pointed out a rather obscure hotplugging issue that it seems I
+accidentally introduced into DRM two years ago.
 
-Fix this by adding the two missing configuration values.
+Pretend we have a topology like this:
 
-Fixes: f5e811f2a43117b2 ("sh-pfc: Add sh7269 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+|- DP-1: mst_primary
+   |- DP-4: active display
+   |- DP-5: disconnected
+   |- DP-6: active hub
+      |- DP-7: active display
+      |- DP-8: disconnected
+      |- DP-9: disconnected
+
+If we unplug DP-6, the topology starting at DP-7 will be destroyed but
+it's payloads will live on in DP-1's VCPI allocations and thus require
+removal. However, this removal currently fails because
+drm_dp_update_payload_part1() will (rightly so) try to validate the port
+before accessing it, fail then abort. If we keep going, eventually we
+run the MST hub out of bandwidth and all new allocations will start to
+fail (or in my case; all new displays just start flickering a ton).
+
+We could just teach drm_dp_update_payload_part1() not to drop the port
+ref in this case, but then we also need to teach
+drm_dp_destroy_payload_step1() to do the same thing, then hope no one
+ever adds anything to the that requires a validated port reference in
+drm_dp_destroy_connector_work(). Kind of sketchy.
+
+So let's go with a more clever solution: any port that
+drm_dp_destroy_connector_work() interacts with is guaranteed to still
+exist in memory until we say so. While said port might not be valid we
+don't really care: that's the whole reason we're destroying it in the
+first place! So, teach drm_dp_get_validated_port_ref() to use the all
+mighty current_work() function to avoid attempting to validate ports
+from the context of mgr->destroy_connector_work. I can't see any
+situation where this wouldn't be safe, and this avoids having to play
+whack-a-mole in the future of trying to work around port validation.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: 263efde31f97 ("drm/dp/mst: Get validated port ref in drm_dp_update_payload_part1()")
+Reported-by: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Harry Wentland <Harry.Wentland@amd.com>
+Cc: <stable@vger.kernel.org> # v4.6+
+Reviewed-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181113224613.28809-1-lyude@redhat.com
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7269.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7269.c b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-index a50d22bef1f44..cfdb4fc177c3e 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-@@ -2119,7 +2119,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	},
- 
- 	{ PINMUX_CFG_REG("PCIOR0", 0xfffe3852, 16, 1) {
--		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 		PC8_IN, PC8_OUT,
- 		PC7_IN, PC7_OUT,
- 		PC6_IN, PC6_OUT,
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 2cb924ffd5a3c..4d0f77f0edad1 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -975,9 +975,20 @@ static struct drm_dp_mst_port *drm_dp_mst_get_port_ref_locked(struct drm_dp_mst_
+ static struct drm_dp_mst_port *drm_dp_get_validated_port_ref(struct drm_dp_mst_topology_mgr *mgr, struct drm_dp_mst_port *port)
+ {
+ 	struct drm_dp_mst_port *rport = NULL;
++
+ 	mutex_lock(&mgr->lock);
+-	if (mgr->mst_primary)
+-		rport = drm_dp_mst_get_port_ref_locked(mgr->mst_primary, port);
++	/*
++	 * Port may or may not be 'valid' but we don't care about that when
++	 * destroying the port and we are guaranteed that the port pointer
++	 * will be valid until we've finished
++	 */
++	if (current_work() == &mgr->destroy_connector_work) {
++		kref_get(&port->kref);
++		rport = port;
++	} else if (mgr->mst_primary) {
++		rport = drm_dp_mst_get_port_ref_locked(mgr->mst_primary,
++						       port);
++	}
+ 	mutex_unlock(&mgr->lock);
+ 	return rport;
+ }
 -- 
 2.20.1
 
