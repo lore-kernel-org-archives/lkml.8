@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755F3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A13C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B9B20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C45A20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222353;
-	bh=/ZeNBeRi+wBBWwpnIePn081VkZesiruP2fgMfFLHADM=;
+	s=default; t=1580222356;
+	bh=cPEmQ8PSkG3gHp0isK5MwvQ+vtEACJ8Ijg0XjouAvIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bTh0M5P13z7b7ROMbulPshGNz/d0+8E13iN9kb2jYIIvwrWWv+88GTOQkA6V54CbU
-	 LMsSWMZzaApaUmwVaTpak07J7XOFq0rkZWC5PKEaMqM5Pg9Fa++xSCifwJhTqUB9V5
-	 lymzI1MQbWecnIl3d5oMCQCv4TIj1MigpBSsYhb8=
+	b=nQEve2BFqOF0n3HDclCLOl1kQBqhcSMs0Exq1NgYCPpksSzxwGIcimXSs2YoUjMMj
+	 AgNYiA0Pb1ThGiBbL5SLQHJ4zlY0yKpMYUPwPu7VI68J9R3tG9B5m4S58r/ABjZvfQ
+	 V+P0D4oXUttJQp9APzcyAkeZdpQjG7NqG0GT0VyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgA1ORf (ORCPT
+        id S1730529AbgA1ORb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:17:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41316 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:17:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730090AbgA1ORc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:17:32 -0500
+        id S1730292AbgA1ORZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:17:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CE652071E;
-        Tue, 28 Jan 2020 14:17:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 514AE21739;
+        Tue, 28 Jan 2020 14:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221052;
-        bh=/ZeNBeRi+wBBWwpnIePn081VkZesiruP2fgMfFLHADM=;
+        s=default; t=1580221044;
+        bh=cPEmQ8PSkG3gHp0isK5MwvQ+vtEACJ8Ijg0XjouAvIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x0+Eyx/emozme4BrNHwBnHiJqhG7tRrZp93qI6ljw/Jl+c9M3apLnd+uNn8ViXtEZ
-         c0OtCj+F2EzuQAnojC0WqLna4bWtCcab9y5b639MriRHX282nDuI+wgAAoK+pHUzWk
-         DOYXh8wE0yYK+yOktfkknIkor4DtX1MhvW57XJVM=
+        b=aeSzsAErl1IWoVTV6ApPFGAiFT/7Rh5h606kNBkqiq6r3TbitF+SVNp6o1SA3iuwz
+         JR25vf6p95nFmGMnU5DKyGCSu5yi13aYjU3IiWh2npN+Ghy5Ug1ty6JviqigGWioEs
+         CznU5ddiyLR55BuQxHZQ1tY3yf2I5t6yxsw8LWIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 032/271] clk: imx7d: fix refcount leak in imx7d_clocks_init()
-Date:   Tue, 28 Jan 2020 15:03:01 +0100
-Message-Id: <20200128135855.072395906@linuxfoundation.org>
+Subject: [PATCH 4.9 065/271] fbdev: chipsfb: remove set but not used variable size
+Date:   Tue, 28 Jan 2020 15:03:34 +0100
+Message-Id: <20200128135857.450856334@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,34 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 5f8c183a996b76bb09748073c856e4246fd4ce95 ]
+[ Upstream commit 8e71fa5e4d86bedfd26df85381d65d6b4c860020 ]
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 8f6d8094b215 ("ARM: imx: add imx7d clk tree support")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+drivers/video/fbdev/chipsfb.c: In function 'chipsfb_pci_init':
+drivers/video/fbdev/chipsfb.c:352:22: warning:
+ variable 'size' set but not used [-Wunused-but-set-variable]
+
+Fixes: 8c8709334cec ("[PATCH] ppc32: Remove CONFIG_PMAC_PBOOK").
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+[b.zolnierkie: minor commit summary and description fixups]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-imx7d.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/video/fbdev/chipsfb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-index e7c7353a86fc6..8c0c0d0151321 100644
---- a/drivers/clk/imx/clk-imx7d.c
-+++ b/drivers/clk/imx/clk-imx7d.c
-@@ -415,6 +415,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx7d-anatop");
- 	base = of_iomap(np, 0);
- 	WARN_ON(!base);
-+	of_node_put(np);
+diff --git a/drivers/video/fbdev/chipsfb.c b/drivers/video/fbdev/chipsfb.c
+index 59abdc6a97f66..314b7eceb81c5 100644
+--- a/drivers/video/fbdev/chipsfb.c
++++ b/drivers/video/fbdev/chipsfb.c
+@@ -350,7 +350,7 @@ static void init_chips(struct fb_info *p, unsigned long addr)
+ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
+ {
+ 	struct fb_info *p;
+-	unsigned long addr, size;
++	unsigned long addr;
+ 	unsigned short cmd;
+ 	int rc = -ENODEV;
  
- 	clks[IMX7D_PLL_ARM_MAIN_SRC]  = imx_clk_mux("pll_arm_main_src", base + 0x60, 14, 2, pll_bypass_src_sel, ARRAY_SIZE(pll_bypass_src_sel));
- 	clks[IMX7D_PLL_DRAM_MAIN_SRC] = imx_clk_mux("pll_dram_main_src", base + 0x70, 14, 2, pll_bypass_src_sel, ARRAY_SIZE(pll_bypass_src_sel));
+@@ -362,7 +362,6 @@ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
+ 	if ((dp->resource[0].flags & IORESOURCE_MEM) == 0)
+ 		goto err_disable;
+ 	addr = pci_resource_start(dp, 0);
+-	size = pci_resource_len(dp, 0);
+ 	if (addr == 0)
+ 		goto err_disable;
+ 
 -- 
 2.20.1
 
