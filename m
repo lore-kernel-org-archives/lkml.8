@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD661C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 031CBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AED524685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC6124688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220115;
-	bh=vMpxyAqnrEJuoN/d216fjcn0fgCF1ucexb1psryi8K4=;
+	s=default; t=1580220118;
+	bh=uwgvlv15vQsuyHotZFmUErIIFdmdFA6njzevUyYb6Rw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Q+2NU/TUkkpX21ruYBPdn98xKYCAYdCgMwryO10onhWMGjF719KSIQPXrSeRe+o2
-	 3OjENh5QcSPKjs7ciz8AaLlKOorIqy4euVa6Tu3ojqhL9tgWO1Qbdz8gN0MkxRuj/P
-	 5d3sNEgTQ4eg0zhSg3CPvtzwyP92SCQW5dQwX4OM=
+	b=AuicCeu7kvD207zdYBaa7eM/E0pZeoCBha0U2XNDIJNO67oict+z3YdQL6rqTGzSH
+	 mL492Ecpl7IBW+zJHl6HoqzSdzKNAw5bm8RVvVd0RrB/A0jtz8j7sXsUHP/5AfCQoo
+	 0nWroUIz6Nqz0DpDzmcJSHEwRlgLjxa/NhdQzz2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgA1OBy (ORCPT
+        id S1727206AbgA1OB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:01:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47976 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:01:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727521AbgA1OBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:01:50 -0500
+        id S1726668AbgA1OBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:01:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FC1E2468F;
-        Tue, 28 Jan 2020 14:01:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7B6124683;
+        Tue, 28 Jan 2020 14:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220109;
-        bh=vMpxyAqnrEJuoN/d216fjcn0fgCF1ucexb1psryi8K4=;
+        s=default; t=1580220114;
+        bh=uwgvlv15vQsuyHotZFmUErIIFdmdFA6njzevUyYb6Rw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pM37EbhYasbRPA+moVDE3+If3sibSxsZ/l0tqTpaTWlv64FTvybH61ElLuiCCz9Ci
-         wcA7g8skL64TTVB1yoYk/2PXY64rmftfk03BRpH/Q2ZLPnsXHmybLTNrsHeqLgRQAm
-         TAlZaB2QAIqjGH0QfcSttTgeM8TiTRn6Y50XX6s8=
+        b=JBOna2vwnRECoZVhKUqRohgQxmUMoDcItXN4KkdIl4y84nFCS32ixBUDyHS7bb+Rl
+         fObq4VkjL5Aw5l66yhgQqfQXc0s4mc6ld/PqSncZ9CGjqWjM/LwX50qgX5WH295Yrz
+         PGN3sGacMxcznsXghQRtzt0WdjbuT33dGef6Y4oY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Edward Cree <ecree@solarflare.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 021/104] mlxsw: spectrum_acl: Fix use-after-free during reload
-Date:   Tue, 28 Jan 2020 14:59:42 +0100
-Message-Id: <20200128135820.188273004@linuxfoundation.org>
+Subject: [PATCH 5.4 023/104] net: Fix packet reordering caused by GRO and listified RX cooperation
+Date:   Tue, 28 Jan 2020 14:59:44 +0100
+Message-Id: <20200128135820.474088756@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,201 +62,221 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit 971de2e572118c1128bff295341e37b6c8b8f108 ]
+[ Upstream commit c80794323e82ac6ab45052ebba5757ce47b4b588 ]
 
-During reload (or module unload), the router block is de-initialized.
-Among other things, this results in the removal of a default multicast
-route from each active virtual router (VRF). These default routes are
-configured during initialization to trap packets to the CPU. In
-Spectrum-2, unlike Spectrum-1, multicast routes are implemented using
-ACL rules.
+Commit 323ebb61e32b ("net: use listified RX for handling GRO_NORMAL
+skbs") introduces batching of GRO_NORMAL packets in napi_frags_finish,
+and commit 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in
+napi_gro_receive()") adds the same to napi_skb_finish. However,
+dev_gro_receive (that is called just before napi_{frags,skb}_finish) can
+also pass skbs to the networking stack: e.g., when the GRO session is
+flushed, napi_gro_complete is called, which passes pp directly to
+netif_receive_skb_internal, skipping napi->rx_list. It means that the
+packet stored in pp will be handled by the stack earlier than the
+packets that arrived before, but are still waiting in napi->rx_list. It
+leads to TCP reorderings that can be observed in the TCPOFOQueue counter
+in netstat.
 
-Since the router block is de-initialized before the ACL block, it is
-possible that the ACL rules corresponding to the default routes are
-deleted while being accessed by the ACL delayed work that queries rules'
-activity from the device. This can result in a rare use-after-free [1].
+This commit fixes the reordering issue by making napi_gro_complete also
+use napi->rx_list, so that all packets going through GRO will keep their
+order. In order to keep napi_gro_flush working properly, gro_normal_list
+calls are moved after the flush to clear napi->rx_list.
 
-Fix this by protecting the rules list accessed by the delayed work with
-a lock. We cannot use a spinlock as the activity read operation is
-blocking.
+iwlwifi calls napi_gro_flush directly and does the same thing that is
+done by gro_normal_list, so the same change is applied there:
+napi_gro_flush is moved to be before the flush of napi->rx_list.
 
-[1]
-[  123.331662] ==================================================================
-[  123.339920] BUG: KASAN: use-after-free in mlxsw_sp_acl_rule_activity_update_work+0x330/0x3b0
-[  123.349381] Read of size 8 at addr ffff8881f3bb4520 by task kworker/0:2/78
-[  123.357080]
-[  123.358773] CPU: 0 PID: 78 Comm: kworker/0:2 Not tainted 5.5.0-rc5-custom-33108-gf5df95d3ef41 #2209
-[  123.368898] Hardware name: Mellanox Technologies Ltd. MSN3700C/VMOD0008, BIOS 5.11 10/10/2018
-[  123.378456] Workqueue: mlxsw_core mlxsw_sp_acl_rule_activity_update_work
-[  123.385970] Call Trace:
-[  123.388734]  dump_stack+0xc6/0x11e
-[  123.392568]  print_address_description.constprop.4+0x21/0x340
-[  123.403236]  __kasan_report.cold.8+0x76/0xb1
-[  123.414884]  kasan_report+0xe/0x20
-[  123.418716]  mlxsw_sp_acl_rule_activity_update_work+0x330/0x3b0
-[  123.444034]  process_one_work+0xb06/0x19a0
-[  123.453731]  worker_thread+0x91/0xe90
-[  123.467348]  kthread+0x348/0x410
-[  123.476847]  ret_from_fork+0x24/0x30
-[  123.480863]
-[  123.482545] Allocated by task 73:
-[  123.486273]  save_stack+0x19/0x80
-[  123.490000]  __kasan_kmalloc.constprop.6+0xc1/0xd0
-[  123.495379]  mlxsw_sp_acl_rule_create+0xa7/0x230
-[  123.500566]  mlxsw_sp2_mr_tcam_route_create+0xf6/0x3e0
-[  123.506334]  mlxsw_sp_mr_tcam_route_create+0x5b4/0x820
-[  123.512102]  mlxsw_sp_mr_table_create+0x3b5/0x690
-[  123.517389]  mlxsw_sp_vr_get+0x289/0x4d0
-[  123.521797]  mlxsw_sp_fib_node_get+0xa2/0x990
-[  123.526692]  mlxsw_sp_router_fib4_event_work+0x54c/0x2d60
-[  123.532752]  process_one_work+0xb06/0x19a0
-[  123.537352]  worker_thread+0x91/0xe90
-[  123.541471]  kthread+0x348/0x410
-[  123.545103]  ret_from_fork+0x24/0x30
-[  123.549113]
-[  123.550795] Freed by task 518:
-[  123.554231]  save_stack+0x19/0x80
-[  123.557958]  __kasan_slab_free+0x125/0x170
-[  123.562556]  kfree+0xd7/0x3a0
-[  123.565895]  mlxsw_sp_acl_rule_destroy+0x63/0xd0
-[  123.571081]  mlxsw_sp2_mr_tcam_route_destroy+0xd5/0x130
-[  123.576946]  mlxsw_sp_mr_tcam_route_destroy+0xba/0x260
-[  123.582714]  mlxsw_sp_mr_table_destroy+0x1ab/0x290
-[  123.588091]  mlxsw_sp_vr_put+0x1db/0x350
-[  123.592496]  mlxsw_sp_fib_node_put+0x298/0x4c0
-[  123.597486]  mlxsw_sp_vr_fib_flush+0x15b/0x360
-[  123.602476]  mlxsw_sp_router_fib_flush+0xba/0x470
-[  123.607756]  mlxsw_sp_vrs_fini+0xaa/0x120
-[  123.612260]  mlxsw_sp_router_fini+0x137/0x384
-[  123.617152]  mlxsw_sp_fini+0x30a/0x4a0
-[  123.621374]  mlxsw_core_bus_device_unregister+0x159/0x600
-[  123.627435]  mlxsw_devlink_core_bus_device_reload_down+0x7e/0xb0
-[  123.634176]  devlink_reload+0xb4/0x380
-[  123.638391]  devlink_nl_cmd_reload+0x610/0x700
-[  123.643382]  genl_rcv_msg+0x6a8/0xdc0
-[  123.647497]  netlink_rcv_skb+0x134/0x3a0
-[  123.651904]  genl_rcv+0x29/0x40
-[  123.655436]  netlink_unicast+0x4d4/0x700
-[  123.659843]  netlink_sendmsg+0x7c0/0xc70
-[  123.664251]  __sys_sendto+0x265/0x3c0
-[  123.668367]  __x64_sys_sendto+0xe2/0x1b0
-[  123.672773]  do_syscall_64+0xa0/0x530
-[  123.676892]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  123.682552]
-[  123.684238] The buggy address belongs to the object at ffff8881f3bb4500
-[  123.684238]  which belongs to the cache kmalloc-128 of size 128
-[  123.698261] The buggy address is located 32 bytes inside of
-[  123.698261]  128-byte region [ffff8881f3bb4500, ffff8881f3bb4580)
-[  123.711303] The buggy address belongs to the page:
-[  123.716682] page:ffffea0007ceed00 refcount:1 mapcount:0 mapping:ffff888236403500 index:0x0
-[  123.725958] raw: 0200000000000200 dead000000000100 dead000000000122 ffff888236403500
-[  123.734646] raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
-[  123.743315] page dumped because: kasan: bad access detected
-[  123.749562]
-[  123.751241] Memory state around the buggy address:
-[  123.756620]  ffff8881f3bb4400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  123.764716]  ffff8881f3bb4480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  123.772812] >ffff8881f3bb4500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  123.780904]                                ^
-[  123.785697]  ffff8881f3bb4580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  123.793793]  ffff8881f3bb4600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  123.801883] ==================================================================
+A few other drivers also use napi_gro_flush (brocade/bna/bnad.c,
+cortina/gemini.c, hisilicon/hns3/hns3_enet.c). The first two also use
+napi_complete_done afterwards, which performs the gro_normal_list flush,
+so they are fine. The latter calls napi_gro_receive right after
+napi_gro_flush, so it can end up with non-empty napi->rx_list anyway.
 
-Fixes: cf7221a4f5a5 ("mlxsw: spectrum_router: Add Multicast routing support for Spectrum-2")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 323ebb61e32b ("net: use listified RX for handling GRO_NORMAL skbs")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Cc: Alexander Lobakin <alobakin@dlink.ru>
+Cc: Edward Cree <ecree@solarflare.com>
+Acked-by: Alexander Lobakin <alobakin@dlink.ru>
+Acked-by: Saeed Mahameed <saeedm@mellanox.com>
+Acked-by: Edward Cree <ecree@solarflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c |    4 -
+ net/core/dev.c                               |   64 +++++++++++++--------------
+ 2 files changed, 35 insertions(+), 33 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c
-@@ -8,6 +8,7 @@
- #include <linux/string.h>
- #include <linux/rhashtable.h>
- #include <linux/netdevice.h>
-+#include <linux/mutex.h>
- #include <net/net_namespace.h>
- #include <net/tc_act/tc_vlan.h>
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1537,13 +1537,13 @@ out:
  
-@@ -25,6 +26,7 @@ struct mlxsw_sp_acl {
- 	struct mlxsw_sp_fid *dummy_fid;
- 	struct rhashtable ruleset_ht;
- 	struct list_head rules;
-+	struct mutex rules_lock; /* Protects rules list */
- 	struct {
- 		struct delayed_work dw;
- 		unsigned long interval;	/* ms */
-@@ -701,7 +703,9 @@ int mlxsw_sp_acl_rule_add(struct mlxsw_s
- 			goto err_ruleset_block_bind;
+ 	napi = &rxq->napi;
+ 	if (napi->poll) {
++		napi_gro_flush(napi, false);
++
+ 		if (napi->rx_count) {
+ 			netif_receive_skb_list(&napi->rx_list);
+ 			INIT_LIST_HEAD(&napi->rx_list);
+ 			napi->rx_count = 0;
+ 		}
+-
+-		napi_gro_flush(napi, false);
  	}
  
-+	mutex_lock(&mlxsw_sp->acl->rules_lock);
- 	list_add_tail(&rule->list, &mlxsw_sp->acl->rules);
-+	mutex_unlock(&mlxsw_sp->acl->rules_lock);
- 	block->rule_count++;
- 	block->egress_blocker_rule_count += rule->rulei->egress_bind_blocker;
- 	return 0;
-@@ -723,7 +727,9 @@ void mlxsw_sp_acl_rule_del(struct mlxsw_
- 
- 	block->egress_blocker_rule_count -= rule->rulei->egress_bind_blocker;
- 	ruleset->ht_key.block->rule_count--;
-+	mutex_lock(&mlxsw_sp->acl->rules_lock);
- 	list_del(&rule->list);
-+	mutex_unlock(&mlxsw_sp->acl->rules_lock);
- 	if (!ruleset->ht_key.chain_index &&
- 	    mlxsw_sp_acl_ruleset_is_singular(ruleset))
- 		mlxsw_sp_acl_ruleset_block_unbind(mlxsw_sp, ruleset,
-@@ -783,19 +789,18 @@ static int mlxsw_sp_acl_rules_activity_u
- 	struct mlxsw_sp_acl_rule *rule;
- 	int err;
- 
--	/* Protect internal structures from changes */
--	rtnl_lock();
-+	mutex_lock(&acl->rules_lock);
- 	list_for_each_entry(rule, &acl->rules, list) {
- 		err = mlxsw_sp_acl_rule_activity_update(acl->mlxsw_sp,
- 							rule);
- 		if (err)
- 			goto err_rule_update;
- 	}
--	rtnl_unlock();
-+	mutex_unlock(&acl->rules_lock);
- 	return 0;
- 
- err_rule_update:
--	rtnl_unlock();
-+	mutex_unlock(&acl->rules_lock);
- 	return err;
+ 	iwl_pcie_rxq_restock(trans, rxq);
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5270,9 +5270,29 @@ static void flush_all_backlogs(void)
+ 	put_online_cpus();
  }
  
-@@ -880,6 +885,7 @@ int mlxsw_sp_acl_init(struct mlxsw_sp *m
- 	acl->dummy_fid = fid;
++/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
++static void gro_normal_list(struct napi_struct *napi)
++{
++	if (!napi->rx_count)
++		return;
++	netif_receive_skb_list_internal(&napi->rx_list);
++	INIT_LIST_HEAD(&napi->rx_list);
++	napi->rx_count = 0;
++}
++
++/* Queue one GRO_NORMAL SKB up for list processing. If batch size exceeded,
++ * pass the whole batch up to the stack.
++ */
++static void gro_normal_one(struct napi_struct *napi, struct sk_buff *skb)
++{
++	list_add_tail(&skb->list, &napi->rx_list);
++	if (++napi->rx_count >= gro_normal_batch)
++		gro_normal_list(napi);
++}
++
+ INDIRECT_CALLABLE_DECLARE(int inet_gro_complete(struct sk_buff *, int));
+ INDIRECT_CALLABLE_DECLARE(int ipv6_gro_complete(struct sk_buff *, int));
+-static int napi_gro_complete(struct sk_buff *skb)
++static int napi_gro_complete(struct napi_struct *napi, struct sk_buff *skb)
+ {
+ 	struct packet_offload *ptype;
+ 	__be16 type = skb->protocol;
+@@ -5305,7 +5325,8 @@ static int napi_gro_complete(struct sk_b
+ 	}
  
- 	INIT_LIST_HEAD(&acl->rules);
-+	mutex_init(&acl->rules_lock);
- 	err = mlxsw_sp_acl_tcam_init(mlxsw_sp, &acl->tcam);
- 	if (err)
- 		goto err_acl_ops_init;
-@@ -892,6 +898,7 @@ int mlxsw_sp_acl_init(struct mlxsw_sp *m
- 	return 0;
+ out:
+-	return netif_receive_skb_internal(skb);
++	gro_normal_one(napi, skb);
++	return NET_RX_SUCCESS;
+ }
  
- err_acl_ops_init:
-+	mutex_destroy(&acl->rules_lock);
- 	mlxsw_sp_fid_put(fid);
- err_fid_get:
- 	rhashtable_destroy(&acl->ruleset_ht);
-@@ -908,6 +915,7 @@ void mlxsw_sp_acl_fini(struct mlxsw_sp *
+ static void __napi_gro_flush_chain(struct napi_struct *napi, u32 index,
+@@ -5318,7 +5339,7 @@ static void __napi_gro_flush_chain(struc
+ 		if (flush_old && NAPI_GRO_CB(skb)->age == jiffies)
+ 			return;
+ 		skb_list_del_init(skb);
+-		napi_gro_complete(skb);
++		napi_gro_complete(napi, skb);
+ 		napi->gro_hash[index].count--;
+ 	}
  
- 	cancel_delayed_work_sync(&mlxsw_sp->acl->rule_activity_update.dw);
- 	mlxsw_sp_acl_tcam_fini(mlxsw_sp, &acl->tcam);
-+	mutex_destroy(&acl->rules_lock);
- 	WARN_ON(!list_empty(&acl->rules));
- 	mlxsw_sp_fid_put(acl->dummy_fid);
- 	rhashtable_destroy(&acl->ruleset_ht);
+@@ -5421,7 +5442,7 @@ static void gro_pull_from_frag0(struct s
+ 	}
+ }
+ 
+-static void gro_flush_oldest(struct list_head *head)
++static void gro_flush_oldest(struct napi_struct *napi, struct list_head *head)
+ {
+ 	struct sk_buff *oldest;
+ 
+@@ -5437,7 +5458,7 @@ static void gro_flush_oldest(struct list
+ 	 * SKB to the chain.
+ 	 */
+ 	skb_list_del_init(oldest);
+-	napi_gro_complete(oldest);
++	napi_gro_complete(napi, oldest);
+ }
+ 
+ INDIRECT_CALLABLE_DECLARE(struct sk_buff *inet_gro_receive(struct list_head *,
+@@ -5513,7 +5534,7 @@ static enum gro_result dev_gro_receive(s
+ 
+ 	if (pp) {
+ 		skb_list_del_init(pp);
+-		napi_gro_complete(pp);
++		napi_gro_complete(napi, pp);
+ 		napi->gro_hash[hash].count--;
+ 	}
+ 
+@@ -5524,7 +5545,7 @@ static enum gro_result dev_gro_receive(s
+ 		goto normal;
+ 
+ 	if (unlikely(napi->gro_hash[hash].count >= MAX_GRO_SKBS)) {
+-		gro_flush_oldest(gro_head);
++		gro_flush_oldest(napi, gro_head);
+ 	} else {
+ 		napi->gro_hash[hash].count++;
+ 	}
+@@ -5672,26 +5693,6 @@ struct sk_buff *napi_get_frags(struct na
+ }
+ EXPORT_SYMBOL(napi_get_frags);
+ 
+-/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
+-static void gro_normal_list(struct napi_struct *napi)
+-{
+-	if (!napi->rx_count)
+-		return;
+-	netif_receive_skb_list_internal(&napi->rx_list);
+-	INIT_LIST_HEAD(&napi->rx_list);
+-	napi->rx_count = 0;
+-}
+-
+-/* Queue one GRO_NORMAL SKB up for list processing.  If batch size exceeded,
+- * pass the whole batch up to the stack.
+- */
+-static void gro_normal_one(struct napi_struct *napi, struct sk_buff *skb)
+-{
+-	list_add_tail(&skb->list, &napi->rx_list);
+-	if (++napi->rx_count >= gro_normal_batch)
+-		gro_normal_list(napi);
+-}
+-
+ static gro_result_t napi_frags_finish(struct napi_struct *napi,
+ 				      struct sk_buff *skb,
+ 				      gro_result_t ret)
+@@ -5979,8 +5980,6 @@ bool napi_complete_done(struct napi_stru
+ 				 NAPIF_STATE_IN_BUSY_POLL)))
+ 		return false;
+ 
+-	gro_normal_list(n);
+-
+ 	if (n->gro_bitmask) {
+ 		unsigned long timeout = 0;
+ 
+@@ -5996,6 +5995,9 @@ bool napi_complete_done(struct napi_stru
+ 			hrtimer_start(&n->timer, ns_to_ktime(timeout),
+ 				      HRTIMER_MODE_REL_PINNED);
+ 	}
++
++	gro_normal_list(n);
++
+ 	if (unlikely(!list_empty(&n->poll_list))) {
+ 		/* If n->poll_list is not empty, we need to mask irqs */
+ 		local_irq_save(flags);
+@@ -6327,8 +6329,6 @@ static int napi_poll(struct napi_struct
+ 		goto out_unlock;
+ 	}
+ 
+-	gro_normal_list(n);
+-
+ 	if (n->gro_bitmask) {
+ 		/* flush too old packets
+ 		 * If HZ < 1000, flush all packets.
+@@ -6336,6 +6336,8 @@ static int napi_poll(struct napi_struct
+ 		napi_gro_flush(n, HZ >= 1000);
+ 	}
+ 
++	gro_normal_list(n);
++
+ 	/* Some drivers may have called napi_schedule
+ 	 * prior to exhausting their budget.
+ 	 */
 
 
