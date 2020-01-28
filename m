@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB59FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AF9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F372173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB3524683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222627;
-	bh=PnT+a4d/aKzbMVQyBqlysgV2ccLUscDE6NdCsVM8Paw=;
+	s=default; t=1580222634;
+	bh=JCX2n3gscyc16de9sD7q/L6xPdnl4sxAI6Nb/SzPk7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nsTF+/S6dPd6qQfZr8K66b9ZtIuQ2TqK5EqJfTBpHyev+yI0GfrpoOCO7SoNVbcxL
-	 jthT0Ofe2KcykKYioTisgil/HW7gx45LkGwY9DwNnpkdxcbhj++vdyGqz0OUDWR1NK
-	 7tEiA8dAcLjiS5OClhbu9Lj/KPB6QYb0+QceDu1o=
+	b=ibV07TBBnHI3lzrmqqAYeVnuk49D8ZzSWGZvxyVd9x5JuwRMv4lw0BUDNaKJIedB+
+	 J81/jKjG+ix4f/J3MNtEPuA5aIqE65IvXa/gHEhhHA73Rddp4hTiuJZDvKzAYyfP6T
+	 0KpdoM8LKV+jf+JCq7R5DoSQXQmxageKodDjnjOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgA1OLL (ORCPT
+        id S1728948AbgA1Ony (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:11:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60190 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:43:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727209AbgA1OLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:11:07 -0500
+        id S1728021AbgA1OLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:11:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71F5224685;
-        Tue, 28 Jan 2020 14:11:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF51220678;
+        Tue, 28 Jan 2020 14:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220666;
-        bh=PnT+a4d/aKzbMVQyBqlysgV2ccLUscDE6NdCsVM8Paw=;
+        s=default; t=1580220664;
+        bh=JCX2n3gscyc16de9sD7q/L6xPdnl4sxAI6Nb/SzPk7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J4CIeOYL2jI+e0dMvpFDbDaZpE4cl7v9skLokaUxjtMZqA8H7KqwFiueOYRggdwHY
-         fVc813mcAEooyNRncHb4VCwnBTdMBi0bWO4yltWWYMrszoWBqlzPCx4/hadSdbsKxP
-         4ypD7+PYk9Fukqp6ObFXXMrNJdhz2bpeu+IOnnlY=
+        b=zhvz2mmCZWKI2sUgVao4PkDj3mL9TAFXdTUJGPHIukDKOI8OPFFNh7sW7l6BjpFWQ
+         ek5/6Ze8a/zxFBIZH4DbhPqwn/Z+zM3bGS0aygSc1bbfqBMg8s89/IbnFHcZ8o8via
+         6Mo7afdYcjWlv0DjGh0EoOh6Pue3dBtnbiJ6EOVY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Namjae Jeon <namjae.jeon@samsung.com>,
-        Jeff Layton <jlayton@primarydata.com>,
-        Steve French <smfrench@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 098/183] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
-Date:   Tue, 28 Jan 2020 15:05:17 +0100
-Message-Id: <20200128135839.851494074@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 097/183] iommu: Use right function to get group for device
+Date:   Tue, 28 Jan 2020 15:05:16 +0100
+Message-Id: <20200128135839.764329679@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -62,51 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
+[ Upstream commit 57274ea25736496ee019a5c40479855b21888839 ]
 
-The locking in force_sig_info is not prepared to deal with a task that
-exits or execs (as sighand may change).  The is not a locking problem
-in force_sig as force_sig is only built to handle synchronous
-exceptions.
+The iommu_group_get_for_dev() will allocate a group for a
+device if it isn't in any group. This isn't the use case
+in iommu_request_dm_for_dev(). Let's use iommu_group_get()
+instead.
 
-Further the function force_sig_info changes the signal state if the
-signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
-delivery of the signal.  The signal SIGKILL can not be ignored and can
-not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
-delivered.
-
-So using force_sig rather than send_sig for SIGKILL is confusing
-and pointless.
-
-Because it won't impact the sending of the signal and and because
-using force_sig is wrong, replace force_sig with send_sig.
-
-Cc: Namjae Jeon <namjae.jeon@samsung.com>
-Cc: Jeff Layton <jlayton@primarydata.com>
-Cc: Steve French <smfrench@gmail.com>
-Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
-Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: d290f1e70d85a ("iommu: Introduce iommu_request_dm_for_dev()")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/iommu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 63108343124af..b608ce741444f 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2246,7 +2246,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 5d5066cf3bbd7..589207176ffa1 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1594,9 +1594,9 @@ int iommu_request_dm_for_dev(struct device *dev)
+ 	int ret;
  
- 	task = xchg(&server->tsk, NULL);
- 	if (task)
--		force_sig(SIGKILL, task);
-+		send_sig(SIGKILL, task, 1);
- }
+ 	/* Device must already be in a group before calling this function */
+-	group = iommu_group_get_for_dev(dev);
+-	if (IS_ERR(group))
+-		return PTR_ERR(group);
++	group = iommu_group_get(dev);
++	if (!group)
++		return -EINVAL;
  
- static struct TCP_Server_Info *
+ 	mutex_lock(&group->mutex);
+ 
 -- 
 2.20.1
 
