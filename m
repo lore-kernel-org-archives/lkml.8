@@ -2,109 +2,85 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7EDC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEF2C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 618FA2465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:37:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEC55NoZ"
+	by mail.kernel.org (Postfix) with ESMTP id EB6132468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgA1Ihi (ORCPT
+        id S1726073AbgA1IiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 03:37:38 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37343 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgA1Ihi (ORCPT
+        Tue, 28 Jan 2020 03:38:06 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34798 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgA1IiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 03:37:38 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so1529094wmf.2;
-        Tue, 28 Jan 2020 00:37:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=/vUdKDhZSRY/UX+VRyOW826eNHk7nxM2Wg/skywcxoM=;
-        b=lEC55NoZfcBco9gkCKx9wq6xyDjud7Fv5F+wTOH/qxIvC3/nWVYq6qluFTaZx3Aydg
-         htnOIuXNCqPksfDPijgue8RzGkn6AwD1xSnZCwpzMBFJDEmdKi4htAFmsbMDOaS8huDP
-         GBmv1UXVRganOrijeu0oOw61JSP9+JV8F12zamQy3z7XvRZfIIdZ5LijihcZwe5FaHvF
-         hidAbBblBul/CpWHUCM6ZDUBT8LMV0NOJZ5o4Rw55f8LdB77VwaEK+qL4aP/QKnTlCPJ
-         Cusyt4wvmvPNQ1hriHLZWoOFrIn0UjK1fJqxcxtdFehJfXjLJ7SiO/AvgU24M6U5qEl/
-         8DjA==
+        Tue, 28 Jan 2020 03:38:06 -0500
+Received: by mail-ot1-f66.google.com with SMTP id a15so11231636otf.1;
+        Tue, 28 Jan 2020 00:38:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=/vUdKDhZSRY/UX+VRyOW826eNHk7nxM2Wg/skywcxoM=;
-        b=H4c/ThXcfeuq4sNoaTxl33ldssvlJAhv85KKeHddkTavHMMbToXZlDPWJYxMNZG1v7
-         Q9dHsoUvEh65jWbt2BXIsskCF/J2YSt//J4lbyjvLinb+b2fzMcqj6z69VNnBKpELgMW
-         EGS0G8OzKIcgMb6DS8/zeFyKT4dCzpLvB2uWHg6CQzj8Uq0DyeI6nafaX3u2VK/2tlud
-         drlSMSqIduzkg8mGRsNx8zZjuh60LlK1llXwC0y3wLKze2PXQKRABdJBhJjJ3xVkN1og
-         VG6xEW4BGSAdkoVOoa8A+2AnrlwlkRVEq2Qto3RSy174dGAvlJltrxile4SvTlr1OO+n
-         5DWA==
-X-Gm-Message-State: APjAAAVGUP3z9LMfrAYTyVevgzGm5iPFHmjZobJgFxHm28rAmWTArZ9x
-        UH0N893cT3q15fTW4rOXsbaLmJThfKY=
-X-Google-Smtp-Source: APXvYqwVBs4AOejmU9P7vielmKkhFW1daLUZrJZ2sePoawnjBbf01RD6w1UJWec7tr0TcLJTqqPLXw==
-X-Received: by 2002:a1c:6408:: with SMTP id y8mr3560022wmb.130.1580200656136;
-        Tue, 28 Jan 2020 00:37:36 -0800 (PST)
-Received: from loulrmilkow1 ([213.52.196.70])
-        by smtp.gmail.com with ESMTPSA id z11sm24999782wrt.82.2020.01.28.00.37.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Jan 2020 00:37:35 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     <linux-nfs@vger.kernel.org>,
-        "'Trond Myklebust'" <trondmy@hammerspace.com>
-Cc:     "'Anna Schumaker'" <anna.schumaker@netapp.com>,
-        "'Chuck Lever'" <chuck.lever@oracle.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Date:   Tue, 28 Jan 2020 08:37:47 -0000
-Message-ID: <000601d5d5b6$39065c60$ab131520$@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lM+EMxmDAUToXA01z4vnAcpu5kuFLx/qsygIzPZ8TjI=;
+        b=VGjQz3rsht4XDfLoAxLDqH56wDwyPQI4EKvtYBu35N22yv2ud34s0h6p6uIj2DI66t
+         3GR4KybylvcbC+4qV4alpmuCJgK+j23qzYHtkueShyl0paJZwOkNCOxHJeyXUTI58243
+         5uCqsYJgMs6jS5C0yEcDmkedsMupiMT+n4ezSrH2Za7bn/Ib0bo5zI0x0c/CjbAJCl3S
+         QArxGB0qC/roqnWEf4HP3hMS9H9GiLbN0fyj3/BR4lvC2IyJn6cna+gi9wegKtxys+er
+         PGmw7SvhFNWS09cE9uaDnJDn+SkMi5JQ4ICeRHkJvJ4g8aBRCqdOMXT/Z2OO8/50LP27
+         j1MA==
+X-Gm-Message-State: APjAAAUUa+B1VWrscTI7z35mH4Mx/BPv5i+jqaTv+bUfh08HPu50t9jw
+        oq+kooSOdSU+/Li3SLMxailVXcfsEqdbvx1g0z/lHw==
+X-Google-Smtp-Source: APXvYqyXgbIEA2p/A3WTi723yG6Nw//TYGPvtIWqa407cBskdum5TXbedSRTDXy5Y/YfK0lwCoDo2VGAqi47xrrGE44=
+X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr15557631oth.145.1580200685033;
+ Tue, 28 Jan 2020 00:38:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AdXVs9KkXsilGD6+RnONAb8nbCW6uA==
-Content-Language: en-gb
+References: <1580171838-1770-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <1580171838-1770-1-git-send-email-frowand.list@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 28 Jan 2020 09:37:54 +0100
+Message-ID: <CAMuHMdUTDMeA=GOR7Mp79BynARgSG8AiwJSa_zQi-Rh1GsRoDQ@mail.gmail.com>
+Subject: Re: [PATCH v2] of: Documentation: change overlay example to use
+ current syntax
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Tull <atull@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+On Tue, Jan 28, 2020 at 1:38 AM <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> The overlay implementation details in the compiled (DTB) file are
+> now properly implemented by the dtc compiler and should no longer
+> be hard coded in the source file.
+>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+>
+> changes since v1:
+>   - fixed typo in patch comment (implementation)
 
-Currently, if an nfs server returns NFS4ERR_EXPIRED to open(),
-we return EIO to applications without even trying to recover.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry of a single stateid")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
----
- fs/nfs/nfs4proc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Gr{oetje,eeting}s,
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 76d3716..b7c4044 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3187,6 +3187,11 @@ static struct nfs4_state *nfs4_do_open(struct inode *dir,
- 			exception.retry = 1;
- 			continue;
- 		}
-+		if (status == -NFS4ERR_EXPIRED) {
-+			nfs4_schedule_lease_recovery(server->nfs_client);
-+			exception.retry = 1;
-+			continue;
-+		}
- 		if (status == -EAGAIN) {
- 			/* We must have found a delegation */
- 			exception.retry = 1;
+                        Geert
+
 -- 
-1.8.3.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
