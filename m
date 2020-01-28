@@ -2,373 +2,636 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E071C32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3F3C33CB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A1F2467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF36B24682
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 02:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PSdxb2Xi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFjmvWLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgA1C2e (ORCPT
+        id S1726338AbgA1Ce0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 21:28:34 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:43151 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgA1C2J (ORCPT
+        Mon, 27 Jan 2020 21:34:26 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:46353 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbgA1Ce0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 21:28:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1580178489; x=1611714489;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lLnSSp5V0S7IlrLQUH6dCPgzF3vGX5c4jvbyzeIJGbU=;
-  b=PSdxb2XiHSYraSCAOxtYAzX3Tf/UPE1cvVST4DqPtTWxTNgJr88dHXL7
-   lAoABSW+uyqMYzgdauWzWjL54KuDIFekJM0uf8NleahjzUUi9eduEVktO
-   5qjsH6675+GRejJiLjpTLm6xS8hrKTCImeXaxcRoeBgrJrfxQxZM+FXGM
-   ylov1hudlKh9Wsq9urdRhjflecN+lguZu8oy0DbgXvb5PdzX4gGUrzgQY
-   upujAmbZ7A0eMaPTdAAzCQDirhiDooyOwKLTa8nd1a82ez28M/pOZvAis
-   MyHDcJcvJkClwyuJKXyV31z7qSRgt47Y2I1kB48p506q72Mjmd2IMan7X
-   A==;
-IronPort-SDR: bP96OfuZwNEPkbqMqVibmtxN5Y1I+lGmAw/Ue0SIZXJbTpmOw7eJkW2PNDYWY15FEAh6qOCOps
- I4f3Bi0BhYbYc+1H5uBph4z4xYxIht4G+KHfI94TWyDNzSoltJM8eJdJImbIrMZrkn/+LvcIEE
- a2CEP0nhcFYc+nuqwjBGEoO7r7mY0WQxfgKRueZZWWk2331LpBZZ2OSBxT7sum2kUA9HgWbUTI
- CC4RjAxpctITMHzQqJRp/L35Wpggw2UiryCcxV1kcRoBs522TC0QU7fyZQU/916Z+IElHZnr8I
- 36I=
-X-IronPort-AV: E=Sophos;i="5.70,372,1574092800"; 
-   d="scan'208";a="132899397"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Jan 2020 10:28:09 +0800
-IronPort-SDR: LTO82IiLED1yuSs1qPszm+eSqnkBMm8wj8R/m3vNNykA+MSIfs0Spg5To4HXTI/KeiWl34hepx
- vaKr78vhhFpkwZLiHxiTPtrq4vA3+JHLAV7thrKc3x7hhHtghpt6M7FPmjMF97j4cjLKpoJRiH
- THi5wzMbRdlwT4wX+AXqyF7MuYgEKP4M/Gy3qIdKn5g6KytLkFAZKVlRDbt0Zh6kgRBZgZcQDZ
- qz7K7A/CHVUTmsQKRX1cju+8NMnEXvDxUPLSO2qdZ6hvITXm/Vg9Z2Ty3930NOjJgKrDERkDid
- 9nd/gv/4BFOeAnaIGB+bouYZ
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 18:21:24 -0800
-IronPort-SDR: SUdIAj1+GzrrXDLC63vGKQJTtKpatY3+LM6ZT5CnM2ESlDFhlaCpPUk2r/eGVVjd4bghrL/QVX
- fqQ79Gb5tdaKonALni64d/O8wcu+rZqrIWPZs2fKXaVhvtpJBjJshfUeBaGelm56hJOdKJljAK
- wvKkduPA1PSGgNiXBBYrefU6zShMqG9MIdg+b1xXRB4oplxSSfu0PMw/NIxVqrruIWLNR4CNI9
- pmM2yO/vQ0F8/nnHGt/MriFtcJMbucUoBW56mlw5fWO4S04NQ7yAo25fRrvqh3V4owtVqakPcS
- TLM=
-WDCIronportException: Internal
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip01.wdc.com with ESMTP; 27 Jan 2020 18:28:09 -0800
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Borislav Petkov <bp@suse.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Chen <vincent.chen@sifive.com>, abner.chang@hpe.com,
-        clin@suse.com, nickhu@andestech.com,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH v7 04/10] RISC-V: Introduce a new config for SBI v0.1
-Date:   Mon, 27 Jan 2020 18:27:31 -0800
-Message-Id: <20200128022737.15371-5-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200128022737.15371-1-atish.patra@wdc.com>
-References: <20200128022737.15371-1-atish.patra@wdc.com>
+        Mon, 27 Jan 2020 21:34:26 -0500
+Received: by mail-yw1-f66.google.com with SMTP id u139so5816291ywf.13;
+        Mon, 27 Jan 2020 18:34:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BLZjKbQqw8/vSRAvqhbH57wjg371XNFVEXKJoHOqB1Q=;
+        b=VFjmvWLtMi2Fqocf1Hf6TR6EqnuQwonR5MHPvRo860vNpgJ4fxvqOBWUXu79Yggs4y
+         dSt8LZU9d9hXCDg5xzin5L6m96sNS6BXbhpz3OYGprcENlOESpxFBqHtRyPZLuJPdDIR
+         gkaMEJDdPBctlO/yqgfNFm9WBkP+K7K0kp2vtIkbSf9UQiUQlqwdT0q/loP7NTErPJlM
+         0vtWJT1fU4zk0BUuivgBy0dvHSMGC8CKVkj/xOxbuucwPjZTuIeD+Cb+Y9P5tGSY1FQP
+         Cx24KOBQXbX01muxOxQXE/gwYuK8LMzZOt3RNnNBQEwqBwXDMQoXOVMFOcGMV6iov77E
+         i/ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BLZjKbQqw8/vSRAvqhbH57wjg371XNFVEXKJoHOqB1Q=;
+        b=YZ9Ad2ZubDr+Kqvdz8SPMyIqzg4aH5UTwY/499ys0O6e2HtnGzFrzTnkEpEDqe+kVU
+         wg77ctQ1+XwXCkGhZbyFLDhjef2Jp1Bv3c2AdUnskMwrkclCKSkkqKswnea9m9f+KATd
+         dVxvAZ1aPP9avpLJ2PqB4+fb4xZoS/uUPjnqcKjj4ubluyJ1dOfc1uZR+IxXEXh9qcwU
+         uIB/hPcGBvAsSgp+Vr4j7Gaeza+jy+d+q39mXos652Wj+dMCx0LfV2cCRTtf5d5TFD06
+         lyAhSEa+h17Hh0GmtzrgQyWoVu9p/wvLqoZP1p6K3Q4gXfJB63+J3fqZz/GJeXnlmkp8
+         1JJg==
+X-Gm-Message-State: APjAAAWMH4Pu9UfopMZPa+IwES/Yqib83ArAN376NCeARfKJaFyZ/zNL
+        nWPdtLLV6pe92nZI+PKAeQ4=
+X-Google-Smtp-Source: APXvYqylFQxYAaGxx59fkWKNN1Jm72KLPV6wfBtWKL+MnUQzFHO9kWVUbYqZaveHVueXYdbtSAfIzQ==
+X-Received: by 2002:a81:780b:: with SMTP id t11mr14048540ywc.117.1580178863447;
+        Mon, 27 Jan 2020 18:34:23 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id s3sm7947576ywf.22.2020.01.27.18.34.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Jan 2020 18:34:22 -0800 (PST)
+Subject: Re: [RFC PATCH 1/2] of: unittest: add overlay gpio test to catch gpio
+ hog problem
+To:     Rob Herring <robh@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        pantelis.antoniou@konsulko.com,
+        Pantelis Antoniou <panto@antoniou-consulting.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alan Tull <atull@kernel.org>
+References: <1579070828-18221-1-git-send-email-frowand.list@gmail.com>
+ <1579070828-18221-2-git-send-email-frowand.list@gmail.com>
+ <20200121230210.GA3193@bogus>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <f7bb7365-1664-7850-55b4-2dac11799c46@gmail.com>
+Date:   Mon, 27 Jan 2020 20:34:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200121230210.GA3193@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We now have SBI v0.2 which is more scalable and extendable to handle
-future needs for RISC-V supervisor interfaces.
+On 1/21/20 5:02 PM, Rob Herring wrote:
+> On Wed, Jan 15, 2020 at 12:47:07AM -0600, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Geert reports that gpio hog nodes are not properly processed when
+>> the gpio hog node is added via an overlay reply and provides an
+>> RFC patch to fix the problem [1].
+>>
+>> Add a unittest that shows the problem.  Unittest will report "1 failed"
+>> test before applying Geert's RFC patch and "0 failed" after applying
+>> Geert's RFC patch.
+>>
+>> [1] https://lore.kernel.org/linux-devicetree/20191230133852.5890-1-geert+renesas@glider.be/
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>>
+>> There are checkpatch warnings.
+>>   - The lines over 80 characters are consistent with unittest.c style
+>>   - The undocumented compatibles are restricted to use by unittest
+>>     and should not be documented under Documentation
+>>
+>> This unittest was also valuable in that it allowed me to explore
+>> possible issues related to the proposed solution to the gpio hog
+>> problem.
+>>
+>>  drivers/of/unittest-data/Makefile             |   8 +-
+>>  drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +++
+>>  drivers/of/unittest-data/overlay_gpio_02a.dts |  16 ++
+>>  drivers/of/unittest-data/overlay_gpio_02b.dts |  16 ++
+>>  drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +++
+>>  drivers/of/unittest-data/overlay_gpio_04a.dts |  16 ++
+>>  drivers/of/unittest-data/overlay_gpio_04b.dts |  16 ++
+>>  drivers/of/unittest.c                         | 257 ++++++++++++++++++++++++++
+>>  8 files changed, 374 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
+>>
+>> diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
+>> index 9b6807065827..009f4045c8e4 100644
+>> --- a/drivers/of/unittest-data/Makefile
+>> +++ b/drivers/of/unittest-data/Makefile
+>> @@ -21,7 +21,13 @@ obj-$(CONFIG_OF_OVERLAY) += overlay.dtb.o \
+>>  			    overlay_bad_add_dup_prop.dtb.o \
+>>  			    overlay_bad_phandle.dtb.o \
+>>  			    overlay_bad_symbol.dtb.o \
+>> -			    overlay_base.dtb.o
+>> +			    overlay_base.dtb.o \
+>> +			    overlay_gpio_01.dtb.o \
+>> +			    overlay_gpio_02a.dtb.o \
+>> +			    overlay_gpio_02b.dtb.o \
+>> +			    overlay_gpio_03.dtb.o \
+>> +			    overlay_gpio_04a.dtb.o \
+>> +			    overlay_gpio_04b.dtb.o
+>>  
+>>  # enable creation of __symbols__ node
+>>  DTC_FLAGS_overlay += -@
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_01.dts b/drivers/of/unittest-data/overlay_gpio_01.dts
+>> new file mode 100644
+>> index 000000000000..f039e8bce3b6
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_01.dts
+>> @@ -0,0 +1,23 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_01 {
+> 
+> gpio@0
+> 
+>> +		compatible = "unittest-gpio";
+> 
+> There's a mock GPIO driver and I think there was a binding proposed at 
+> some point for some sort of GPIO testing device binding. Maybe that can 
+> save another test driver.
 
-Introduce a new config and move all SBI v0.1 code under that config.
-This allows to implement the new replacement SBI extensions cleanly
-and remove v0.1 extensions easily in future. Currently, the config
-is enabled by default. Once all M-mode software, with v0.1, is no
-longer in use, this config option and all relevant code can be easily
-removed.
+I did not reply to this comment in my first reply.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
----
- arch/riscv/Kconfig           |   6 ++
- arch/riscv/include/asm/sbi.h |   2 +
- arch/riscv/kernel/sbi.c      | 137 +++++++++++++++++++++++++++++------
- 3 files changed, 121 insertions(+), 24 deletions(-)
+Thanks for pointing out that driver, I was not aware of it.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index fa7dc03459e7..518da42be545 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -307,6 +307,12 @@ config SECCOMP
- 	  and the task is only allowed to execute a few safe syscalls
- 	  defined by each seccomp mode.
- 
-+config RISCV_SBI_V01
-+	bool "SBI v0.1 support"
-+	default y
-+	help
-+	  This config allows kernel to use SBI v0.1 APIs. This will be
-+	  deprecated in future once legacy M-mode software are no longer in use.
- endmenu
- 
- menu "Boot options"
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index e478368a47f3..4d67bef8f894 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -11,6 +11,7 @@
- 
- #ifdef CONFIG_RISCV_SBI
- enum sbi_ext_id {
-+#ifdef CONFIG_RISCV_SBI_V01
- 	SBI_EXT_0_1_SET_TIMER = 0x0,
- 	SBI_EXT_0_1_CONSOLE_PUTCHAR = 0x1,
- 	SBI_EXT_0_1_CONSOLE_GETCHAR = 0x2,
-@@ -20,6 +21,7 @@ enum sbi_ext_id {
- 	SBI_EXT_0_1_REMOTE_SFENCE_VMA = 0x6,
- 	SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID = 0x7,
- 	SBI_EXT_0_1_SHUTDOWN = 0x8,
-+#endif
- 	SBI_EXT_BASE = 0x10,
- 	SBI_EXT_TIME = 0x54494D45,
- 	SBI_EXT_IPI = 0x735049,
-diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-index 33632e7f91da..265637cb5eb0 100644
---- a/arch/riscv/kernel/sbi.c
-+++ b/arch/riscv/kernel/sbi.c
-@@ -13,6 +13,13 @@
- unsigned long sbi_spec_version = SBI_SPEC_VERSION_DEFAULT;
- EXPORT_SYMBOL(sbi_spec_version);
- 
-+static void (*__sbi_set_timer)(uint64_t stime);
-+static int (*__sbi_send_ipi)(const unsigned long *hart_mask);
-+static int (*__sbi_rfence)(int fid, const unsigned long *hart_mask,
-+			   unsigned long hbase, unsigned long start,
-+			   unsigned long size, unsigned long arg4,
-+			   unsigned long arg5);
-+
- struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
- 			unsigned long arg1, unsigned long arg2,
- 			unsigned long arg3, unsigned long arg4,
-@@ -57,6 +64,7 @@ static int sbi_err_map_linux_errno(int err)
- 	};
- }
- 
-+#ifdef CONFIG_RISCV_SBI_V01
- /**
-  * sbi_console_putchar() - Writes given character to the console device.
-  * @ch: The data to be written to the console.
-@@ -85,41 +93,115 @@ int sbi_console_getchar(void)
- EXPORT_SYMBOL(sbi_console_getchar);
- 
- /**
-- * sbi_set_timer() - Program the timer for next timer event.
-- * @stime_value: The value after which next timer event should fire.
-+ * sbi_shutdown() - Remove all the harts from executing supervisor code.
-  *
-  * Return: None
-  */
--void sbi_set_timer(uint64_t stime_value)
-+void sbi_shutdown(void)
- {
--#if __riscv_xlen == 32
--	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value,
--			  stime_value >> 32, 0, 0, 0, 0);
--#else
--	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value, 0, 0, 0, 0, 0);
--#endif
-+	sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0);
- }
- EXPORT_SYMBOL(sbi_set_timer);
- 
- /**
-- * sbi_shutdown() - Remove all the harts from executing supervisor code.
-+ * sbi_clear_ipi() - Clear any pending IPIs for the calling hart.
-  *
-  * Return: None
-  */
--void sbi_shutdown(void)
-+void sbi_clear_ipi(void)
- {
--	sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0);
-+	sbi_ecall(SBI_EXT_0_1_CLEAR_IPI, 0, 0, 0, 0, 0, 0, 0);
- }
- EXPORT_SYMBOL(sbi_shutdown);
- 
- /**
-- * sbi_clear_ipi() - Clear any pending IPIs for the calling hart.
-+ * sbi_set_timer_v01() - Program the timer for next timer event.
-+ * @stime_value: The value after which next timer event should fire.
-  *
-  * Return: None
-  */
--void sbi_clear_ipi(void)
-+static void __sbi_set_timer_v01(uint64_t stime_value)
- {
--	sbi_ecall(SBI_EXT_0_1_CLEAR_IPI, 0, 0, 0, 0, 0, 0, 0);
-+#if __riscv_xlen == 32
-+	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value,
-+		  stime_value >> 32, 0, 0, 0, 0);
-+#else
-+	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value, 0, 0, 0, 0, 0);
-+#endif
-+}
-+
-+static int __sbi_send_ipi_v01(const unsigned long *hart_mask)
-+{
-+	sbi_ecall(SBI_EXT_0_1_SEND_IPI, 0, (unsigned long)hart_mask,
-+		  0, 0, 0, 0, 0);
-+	return 0;
-+}
-+
-+static int __sbi_rfence_v01(int fid, const unsigned long *hart_mask,
-+			    unsigned long hbase, unsigned long start,
-+			    unsigned long size, unsigned long arg4,
-+			    unsigned long arg5)
-+{
-+	int result = 0;
-+
-+	/* v0.2 function IDs are equivalent to v0.1 extension IDs */
-+	switch (fid) {
-+	case SBI_EXT_RFENCE_REMOTE_FENCE_I:
-+		sbi_ecall(SBI_EXT_0_1_REMOTE_FENCE_I, 0,
-+			  (unsigned long)hart_mask, 0, 0, 0, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA:
-+		sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA, 0,
-+			  (unsigned long)hart_mask, start, size,
-+			  0, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID:
-+		sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, 0,
-+			  (unsigned long)hart_mask, start, size,
-+			  arg4, 0, 0);
-+		break;
-+	default:
-+		pr_err("SBI call [%d]not supported in SBI v0.1\n", fid);
-+		result = -EINVAL;
-+	}
-+
-+	return result;
-+}
-+#else
-+static void __sbi_set_timer_v01(uint64_t stime_value)
-+{
-+	pr_warn("Timer extension is not available in SBI v%lu.%lu\n",
-+		sbi_major_version(), sbi_minor_version());
-+}
-+static int __sbi_send_ipi_v01(const unsigned long *hart_mask)
-+{
-+	pr_warn("IPI extension is not available in SBI v%lu.%lu\n",
-+		sbi_major_version(), sbi_minor_version());
-+
-+	return 0;
-+}
-+static int __sbi_rfence_v01(int fid,
-+			    const unsigned long *hart_mask,
-+			    unsigned long hbase, unsigned long start,
-+			    unsigned long size, unsigned long arg4,
-+			    unsigned long arg5)
-+{
-+	pr_warn("remote fence extension is not available in SBI v%lu.%lu\n",
-+		sbi_major_version(), sbi_minor_version());
-+
-+	return 0;
-+}
-+#endif /* CONFIG_RISCV_SBI_V01 */
-+
-+/**
-+ * sbi_set_timer() - Program the timer for next timer event.
-+ * @stime_value: The value after which next timer event should fire.
-+ *
-+ * Return: None
-+ */
-+void sbi_set_timer(uint64_t stime_value)
-+{
-+	__sbi_set_timer(stime_value);
- }
- 
- /**
-@@ -130,11 +212,11 @@ void sbi_clear_ipi(void)
-  */
- void sbi_send_ipi(const unsigned long *hart_mask)
- {
--	sbi_ecall(SBI_EXT_0_1_SEND_IPI, 0, (unsigned long)hart_mask,
--			0, 0, 0, 0, 0);
-+	__sbi_send_ipi(hart_mask);
- }
- EXPORT_SYMBOL(sbi_send_ipi);
- 
-+
- /**
-  * sbi_remote_fence_i() - Execute FENCE.I instruction on given remote harts.
-  * @hart_mask: A cpu mask containing all the target harts.
-@@ -143,8 +225,8 @@ EXPORT_SYMBOL(sbi_send_ipi);
-  */
- void sbi_remote_fence_i(const unsigned long *hart_mask)
- {
--	sbi_ecall(SBI_EXT_0_1_REMOTE_FENCE_I, 0, (unsigned long)hart_mask,
--			0, 0, 0, 0, 0);
-+	__sbi_rfence(SBI_EXT_RFENCE_REMOTE_FENCE_I,
-+		     hart_mask, 0, 0, 0, 0, 0);
- }
- EXPORT_SYMBOL(sbi_remote_fence_i);
- 
-@@ -161,8 +243,8 @@ void sbi_remote_sfence_vma(const unsigned long *hart_mask,
- 					 unsigned long start,
- 					 unsigned long size)
- {
--	sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA, 0,
--			(unsigned long)hart_mask, start, size, 0, 0, 0);
-+	__sbi_rfence(SBI_EXT_RFENCE_REMOTE_SFENCE_VMA,
-+		     hart_mask, 0, start, size, 0, 0);
- }
- EXPORT_SYMBOL(sbi_remote_sfence_vma);
- 
-@@ -182,8 +264,8 @@ void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
- 					      unsigned long size,
- 					      unsigned long asid)
- {
--	sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, 0,
--			(unsigned long)hart_mask, start, size, asid, 0, 0);
-+	__sbi_rfence(SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID,
-+		     hart_mask, 0, start, size, asid, 0);
- }
- EXPORT_SYMBOL(sbi_remote_sfence_vma_asid);
- 
-@@ -249,8 +331,15 @@ int __init sbi_init(void)
- 
- 	pr_info("SBI specification v%lu.%lu detected\n",
- 		sbi_major_version(), sbi_minor_version());
--	if (!sbi_spec_is_0_1())
-+
-+	if (!sbi_spec_is_0_1()) {
- 		pr_info("SBI implementation ID=0x%lx Version=0x%lx\n",
- 			sbi_get_firmware_id(), sbi_get_firmware_version());
-+	}
-+
-+	__sbi_set_timer = __sbi_set_timer_v01;
-+	__sbi_send_ipi	= __sbi_send_ipi_v01;
-+	__sbi_rfence	= __sbi_rfence_v01;
-+
- 	return 0;
- }
--- 
-2.24.0
+The existing driver is way larger and more complicated than the one that
+is in this patch.
+
+I needed to add global (to unittest.c) variables to count how many times
+some gpio driver functions are called to be able to determine whether
+the gpio infrastructure was calling the specific functions as gpio and
+gpio hog nodes were being added.  It would be pretty ugly to put those
+counters in the more generic gpio test driver.
+
+-Frank
+
+> 
+>> +		reg = <0>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		ngpios = <2>;
+>> +		gpio-line-names = "line-A", "line-B";
+>> +
+>> +		line_b {
+> 
+> line-b
+> 
+>> +			gpio-hog;
+>> +			gpios = <2 0>;
+>> +			input;
+>> +			line-name = "line-B-input";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_02a.dts b/drivers/of/unittest-data/overlay_gpio_02a.dts
+>> new file mode 100644
+>> index 000000000000..cdafab604793
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_02a.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_02 {
+>> +		compatible = "unittest-gpio";
+>> +		reg = <1>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		ngpios = <2>;
+>> +		gpio-line-names = "line-A", "line-B";
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_02b.dts b/drivers/of/unittest-data/overlay_gpio_02b.dts
+>> new file mode 100644
+>> index 000000000000..0cea0dccafba
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_02b.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_02 {
+>> +		line_a {
+>> +			gpio-hog;
+>> +			gpios = <1 0>;
+>> +			input;
+>> +			line-name = "line-A-input";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_03.dts b/drivers/of/unittest-data/overlay_gpio_03.dts
+>> new file mode 100644
+>> index 000000000000..1d5c680fa254
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_03.dts
+>> @@ -0,0 +1,23 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_03 {
+>> +		compatible = "unittest-gpio";
+>> +		reg = <0>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		ngpios = <2>;
+>> +		gpio-line-names = "line-A", "line-B", "line-C", "line-D";
+>> +
+>> +		line_d {
+>> +			gpio-hog;
+>> +			gpios = <4 0>;
+>> +			input;
+>> +			line-name = "line-D-input";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_04a.dts b/drivers/of/unittest-data/overlay_gpio_04a.dts
+>> new file mode 100644
+>> index 000000000000..d2482cde310e
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_04a.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_04 {
+>> +		compatible = "unittest-gpio";
+>> +		reg = <1>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		ngpios = <2>;
+>> +		gpio-line-names = "line-A", "line-B", "line-C", "line-D";
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest-data/overlay_gpio_04b.dts b/drivers/of/unittest-data/overlay_gpio_04b.dts
+>> new file mode 100644
+>> index 000000000000..70ad05d759f9
+>> --- /dev/null
+>> +++ b/drivers/of/unittest-data/overlay_gpio_04b.dts
+>> @@ -0,0 +1,16 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/dts-v1/;
+>> +/plugin/;
+>> +
+>> +&unittest_test_bus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	gpio_04 {
+>> +		line_c {
+>> +			gpio-hog;
+>> +			gpios = <3 0>;
+>> +			input;
+>> +			line-name = "line-C-input";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+>> index 68b87587b2ef..db0a6f4103a4 100644
+>> --- a/drivers/of/unittest.c
+>> +++ b/drivers/of/unittest.c
+>> @@ -24,6 +24,7 @@
+>>  
+>>  #include <linux/i2c.h>
+>>  #include <linux/i2c-mux.h>
+>> +#include <linux/gpio/driver.h>
+>>  
+>>  #include <linux/bitops.h>
+>>  
+>> @@ -46,6 +47,101 @@
+>>  	failed; \
+>>  })
+>>  
+>> +/*
+>> + * Expected message may have a message level other than KERN_INFO.
+>> + * Print the expected message only if the current loglevel will allow
+>> + * the actual message to print.
+>> + */
+>> +#define EXPECT_BEGIN(level, fmt, ...) \
+>> +	printk(level pr_fmt("EXPECT \\ : ") fmt, ##__VA_ARGS__)
+>> +
+>> +#define EXPECT_END(level, fmt, ...) \
+>> +	printk(level pr_fmt("EXPECT / : ") fmt, ##__VA_ARGS__)
+> 
+> When I first saw this, I thought of kunit...
+> 
+> Just wondering if this is a standard way to express this, and if not, is 
+> there?
+> 
+>> +
+>> +struct unittest_gpio_dev {
+>> +	void __iomem *base;
+>> +	struct gpio_chip chip;
+>> +	spinlock_t gpio_lock;
+> 
+> base and gpio_lock aren't used.
+> 
+>> +};
+>> +
+>> +static int unittest_gpio_chip_request_count;
+>> +static int unittest_gpio_probe_count;
+>> +static int unittest_gpio_probe_pass_count;
+>> +
+>> +static int unittest_gpio_chip_request(struct gpio_chip *chip, unsigned int offset)
+>> +{
+>> +	unittest_gpio_chip_request_count++;
+>> +
+>> +	pr_debug("%s(): %s %d %d\n", __func__, chip->label, offset,
+>> +		 unittest_gpio_chip_request_count);
+>> +	return 0;
+>> +}
+>> +
+>> +static int unittest_gpio_probe(struct platform_device *pdev)
+>> +{
+>> +	struct unittest_gpio_dev *devptr;
+>> +	int ret;
+>> +
+>> +	unittest_gpio_probe_count++;
+>> +
+>> +	devptr = kzalloc(sizeof(*devptr), GFP_KERNEL);
+>> +	if (!devptr)
+>> +		return -ENOMEM;
+>> +
+>> +	spin_lock_init(&devptr->gpio_lock);
+>> +
+>> +	platform_set_drvdata(pdev, devptr);
+>> +
+>> +	devptr->chip.of_node = pdev->dev.of_node;
+>> +	devptr->chip.label = "of-unittest-gpio";
+>> +	devptr->chip.base = -1; /* dynamic allocation */
+>> +	devptr->chip.ngpio = 5;
+>> +	devptr->chip.request = unittest_gpio_chip_request;
+>> +
+>> +	ret = gpiochip_add_data(&devptr->chip, NULL);
+>> +
+>> +	unittest(!ret,
+>> +		 "gpiochip_add_data() for node @%pOF failed, ret = %d\n", devptr->chip.of_node, ret);
+>> +
+>> +	if (!ret)
+>> +		unittest_gpio_probe_pass_count++;
+>> +	return ret;
+>> +}
+>> +
+>> +static int unittest_gpio_remove(struct platform_device *pdev)
+>> +{
+>> +	struct unittest_gpio_dev *gdev = platform_get_drvdata(pdev);
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +
+>> +	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
+>> +
+>> +	if (!gdev)
+>> +		return -EINVAL;
+>> +
+>> +	if (gdev->chip.base != -1)
+>> +		gpiochip_remove(&gdev->chip);
+>> +
+>> +	platform_set_drvdata(pdev, NULL);
+>> +	kfree(pdev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id unittest_gpio_id[] = {
+>> +	{ .compatible = "unittest-gpio", },
+>> +	{}
+>> +};
+>> +
+>> +static struct platform_driver unittest_gpio_driver = {
+>> +	.probe	= unittest_gpio_probe,
+>> +	.remove	= unittest_gpio_remove,
+>> +	.driver	= {
+>> +		.name		= "unittest-gpio",
+>> +		.of_match_table	= of_match_ptr(unittest_gpio_id),
+>> +	},
+>> +};
+>> +
+>>  static void __init of_unittest_find_node_by_name(void)
+>>  {
+>>  	struct device_node *np;
+>> @@ -2183,6 +2279,153 @@ static inline void of_unittest_overlay_i2c_15(void) { }
+>>  
+>>  #endif
+>>  
+>> +static void __init of_unittest_overlay_gpio(void)
+>> +{
+>> +	int chip_request_count;
+>> +	int probe_pass_count;
+>> +	int ret;
+>> +
+>> +	/*
+>> +	 * tests: apply overlays before registering driver
+>> +	 * Similar to installing a driver as a module, the
+>> +	 * driver is registered after applying the overlays.
+>> +	 *
+>> +	 * - apply overlay_gpio_01
+>> +	 * - apply overlay_gpio_02a
+>> +	 * - apply overlay_gpio_02b
+>> +	 * - register driver
+>> +	 *
+>> +	 * register driver will result in
+>> +	 *   - probe and processing gpio hog for overlay_gpio_01
+>> +	 *   - probe for overlay_gpio_02a
+>> +	 *   - processing gpio for overlay_gpio_02b
+>> +	 */
+>> +
+>> +	probe_pass_count = unittest_gpio_probe_pass_count;
+>> +	chip_request_count = unittest_gpio_chip_request_count;
+>> +
+>> +	/*
+>> +	 * overlay_gpio_01 contains gpio node and child gpio hog node
+>> +	 * overlay_gpio_02a contains gpio node
+>> +	 * overlay_gpio_02b contains child gpio hog node
+>> +	 */
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_01", NULL),
+>> +		 "Adding overlay 'overlay_gpio_01' failed\n");
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_02a", NULL),
+>> +		 "Adding overlay 'overlay_gpio_02a' failed\n");
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_02b", NULL),
+>> +		 "Adding overlay 'overlay_gpio_02b' failed\n");
+>> +
+>> +	/*
+>> +	 * messages are the result of the probes, after the
+>> +	 * driver is registered
+>> +	 */
+>> +
+>> +	EXPECT_BEGIN(KERN_INFO,
+>> +		     "GPIO line <<int>> (line-B-input) hogged as input\n");
+>> +
+>> +	EXPECT_BEGIN(KERN_INFO,
+>> +		     "GPIO line <<int>> (line-A-input) hogged as input\n");
+>> +
+>> +	ret = platform_driver_register(&unittest_gpio_driver);
+>> +	if (unittest(ret == 0, "could not register unittest gpio driver\n"))
+>> +		return;
+>> +
+>> +	EXPECT_END(KERN_INFO,
+>> +		   "GPIO line <<int>> (line-A-input) hogged as input\n");
+>> +	EXPECT_END(KERN_INFO,
+>> +		   "GPIO line <<int>> (line-B-input) hogged as input\n");
+>> +
+>> +	unittest(probe_pass_count + 2 == unittest_gpio_probe_pass_count,
+>> +		 "unittest_gpio_probe() failed or not called\n");
+>> +
+>> +	unittest(chip_request_count + 2 == unittest_gpio_chip_request_count,
+>> +		 "unittest_gpio_chip_request() called %d times (expected 1 time)\n",
+>> +		 unittest_gpio_chip_request_count - chip_request_count);
+>> +
+>> +	/*
+>> +	 * tests: apply overlays after registering driver
+>> +	 *
+>> +	 * Similar to a driver built-in to the kernel, the
+>> +	 * driver is registered before applying the overlays.
+>> +	 *
+>> +	 * overlay_gpio_03 contains gpio node and child gpio hog node
+>> +	 *
+>> +	 * - apply overlay_gpio_03
+>> +	 *
+>> +	 * apply overlay will result in
+>> +	 *   - probe and processing gpio hog.
+>> +	 */
+>> +
+>> +	probe_pass_count = unittest_gpio_probe_pass_count;
+>> +	chip_request_count = unittest_gpio_chip_request_count;
+>> +
+>> +	EXPECT_BEGIN(KERN_INFO,
+>> +		     "GPIO line <<int>> (line-D-input) hogged as input\n");
+>> +
+>> +	/* overlay_gpio_03 contains gpio node and child gpio hog node */
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_03", NULL),
+>> +		 "Adding overlay 'overlay_gpio_03' failed\n");
+>> +
+>> +	EXPECT_END(KERN_INFO,
+>> +		   "GPIO line <<int>> (line-D-input) hogged as input\n");
+>> +
+>> +	unittest(probe_pass_count + 1 == unittest_gpio_probe_pass_count,
+>> +		 "unittest_gpio_probe() failed or not called\n");
+>> +
+>> +	unittest(chip_request_count + 1 == unittest_gpio_chip_request_count,
+>> +		 "unittest_gpio_chip_request() called %d times (expected 1 time)\n",
+>> +		 unittest_gpio_chip_request_count - chip_request_count);
+>> +
+>> +	/*
+>> +	 * overlay_gpio_04a contains gpio node
+>> +	 *
+>> +	 * - apply overlay_gpio_04a
+>> +	 *
+>> +	 * apply the overlay will result in
+>> +	 *   - probe for overlay_gpio_04a
+>> +	 */
+>> +
+>> +	probe_pass_count = unittest_gpio_probe_pass_count;
+>> +	chip_request_count = unittest_gpio_chip_request_count;
+>> +
+>> +	/* overlay_gpio_04a contains gpio node */
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_04a", NULL),
+>> +		 "Adding overlay 'overlay_gpio_04a' failed\n");
+>> +
+>> +	unittest(probe_pass_count + 1 == unittest_gpio_probe_pass_count,
+>> +		 "unittest_gpio_probe() failed or not called\n");
+>> +
+>> +	/*
+>> +	 * overlay_gpio_04b contains child gpio hog node
+>> +	 *
+>> +	 * - apply overlay_gpio_04b
+>> +	 *
+>> +	 * apply the overlay will result in
+>> +	 *   - processing gpio for overlay_gpio_04b
+>> +	 */
+>> +
+>> +	EXPECT_BEGIN(KERN_INFO,
+>> +		     "GPIO line <<int>> (line-C-input) hogged as input\n");
+>> +
+>> +	/* overlay_gpio_04b contains child gpio hog node */
+>> +
+>> +	unittest(overlay_data_apply("overlay_gpio_04b", NULL),
+>> +		 "Adding overlay 'overlay_gpio_04b' failed\n");
+>> +
+>> +	EXPECT_END(KERN_INFO,
+>> +		   "GPIO line <<int>> (line-C-input) hogged as input\n");
+>> +
+>> +	unittest(chip_request_count + 1 == unittest_gpio_chip_request_count,
+>> +		 "unittest_gpio_chip_request() called %d times (expected 1 time)\n",
+>> +		 unittest_gpio_chip_request_count - chip_request_count);
+>> +}
+>> +
+>>  static void __init of_unittest_overlay(void)
+>>  {
+>>  	struct device_node *bus_np = NULL;
+>> @@ -2242,6 +2485,8 @@ static void __init of_unittest_overlay(void)
+>>  	of_unittest_overlay_i2c_cleanup();
+>>  #endif
+>>  
+>> +	of_unittest_overlay_gpio();
+>> +
+>>  	of_unittest_destroy_tracked_overlays();
+>>  
+>>  out:
+>> @@ -2295,6 +2540,12 @@ struct overlay_info {
+>>  OVERLAY_INFO_EXTERN(overlay_12);
+>>  OVERLAY_INFO_EXTERN(overlay_13);
+>>  OVERLAY_INFO_EXTERN(overlay_15);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_01);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_02a);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_02b);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_03);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_04a);
+>> +OVERLAY_INFO_EXTERN(overlay_gpio_04b);
+>>  OVERLAY_INFO_EXTERN(overlay_bad_add_dup_node);
+>>  OVERLAY_INFO_EXTERN(overlay_bad_add_dup_prop);
+>>  OVERLAY_INFO_EXTERN(overlay_bad_phandle);
+>> @@ -2319,6 +2570,12 @@ struct overlay_info {
+>>  	OVERLAY_INFO(overlay_12, 0),
+>>  	OVERLAY_INFO(overlay_13, 0),
+>>  	OVERLAY_INFO(overlay_15, 0),
+>> +	OVERLAY_INFO(overlay_gpio_01, 0),
+>> +	OVERLAY_INFO(overlay_gpio_02a, 0),
+>> +	OVERLAY_INFO(overlay_gpio_02b, 0),
+>> +	OVERLAY_INFO(overlay_gpio_03, 0),
+>> +	OVERLAY_INFO(overlay_gpio_04a, 0),
+>> +	OVERLAY_INFO(overlay_gpio_04b, 0),
+>>  	OVERLAY_INFO(overlay_bad_add_dup_node, -EINVAL),
+>>  	OVERLAY_INFO(overlay_bad_add_dup_prop, -EINVAL),
+>>  	OVERLAY_INFO(overlay_bad_phandle, -EINVAL),
+>> -- 
+>> Frank Rowand <frank.rowand@sony.com>
+>>
+> 
 
