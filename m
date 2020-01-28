@@ -2,138 +2,115 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BE8C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495E0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD2124685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:30:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aIujI3As"
+	by mail.kernel.org (Postfix) with ESMTP id 2647324684
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbgA1Iaq (ORCPT
+        id S1725995AbgA1Iaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 03:30:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44982 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbgA1Iaq (ORCPT
+        Tue, 28 Jan 2020 03:30:52 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28664 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725848AbgA1Iaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 03:30:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2+/gVAvYBlL8oa7wpkNriFT1H6VzmpxQUtsVLdvG6Cc=; b=aIujI3AsJjriPqpzupdhhnRXz
-        UUFvER1bBH0La9gdj+2YsNdKPPdu5iTfbBwnk4y4a5cFNSqAnxRejXiLkOyBL26hZgudMUFTlSUWQ
-        +rTsPIKpNWClT3HHWFb69fqVW1cau4wR7Ym5zYCkQEmGwVhy3EWKQ9Ri7v06pdv6XaztcYOnRG24+
-        V7A5m+eNM3V4zV7a3ZWCjSvcGaj+rc1zaL4nvo04uzpWEK/IptxmJrr2aMEz4CCEFAK/LTGoSbggw
-        K/20Pr0Jj0ZyWT0LamCAsMj8+pwW7//aI7F457wwSG0vjTBsm/6+QXHA7vbROW2MpSvI9lQA9fnxz
-        P0aMTF4OA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwMGi-00068o-Tb; Tue, 28 Jan 2020 08:30:44 +0000
-Date:   Tue, 28 Jan 2020 00:30:44 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
-Message-ID: <20200128083044.GB6615@bombadil.infradead.org>
-References: <20200109225646.22983-1-xiyou.wangcong@gmail.com>
- <20200110073822.GC29802@dhcp22.suse.cz>
- <CAM_iQpVN4MNhcK0TXvhmxsCdkVOqQ4gZBzkDHykLocPC6Va7LQ@mail.gmail.com>
- <20200121090048.GG29276@dhcp22.suse.cz>
- <CAM_iQpU0p7JLyQ4mQ==Kd7+0ugmricsEAp1ST2ShAZar2BLAWg@mail.gmail.com>
- <20200126233935.GA11536@bombadil.infradead.org>
- <20200127150024.GN1183@dhcp22.suse.cz>
- <20200127190653.GA8708@bombadil.infradead.org>
- <20200128081712.GA18145@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128081712.GA18145@dhcp22.suse.cz>
+        Tue, 28 Jan 2020 03:30:52 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S8Spsj022196
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 03:30:50 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrvw7gn4x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 03:30:49 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <svens@linux.ibm.com>;
+        Tue, 28 Jan 2020 08:30:42 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 Jan 2020 08:30:40 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00S8UdOE46792994
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jan 2020 08:30:39 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 280CDA4040;
+        Tue, 28 Jan 2020 08:30:39 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 211A0A4059;
+        Tue, 28 Jan 2020 08:30:39 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 28 Jan 2020 08:30:39 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
+        id C6D49E0663; Tue, 28 Jan 2020 09:30:38 +0100 (CET)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: [PATCH v4] selftests/ftrace: fix glob selftest
+Date:   Tue, 28 Jan 2020 09:30:29 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20012808-0016-0000-0000-000002E15901
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012808-0017-0000-0000-0000334418C9
+Message-Id: <20200128083029.34050-1-svens@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ malwarescore=0 phishscore=0 spamscore=0 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001280069
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 09:17:12AM +0100, Michal Hocko wrote:
-> On Mon 27-01-20 11:06:53, Matthew Wilcox wrote:
-> > On Mon, Jan 27, 2020 at 04:00:24PM +0100, Michal Hocko wrote:
-> > > On Sun 26-01-20 15:39:35, Matthew Wilcox wrote:
-> > > > On Sun, Jan 26, 2020 at 11:53:55AM -0800, Cong Wang wrote:
-> > > > > I suspect the process gets stuck in the retry loop in try_charge(), as
-> > > > > the _shortest_ stacktrace of the perf samples indicated:
-> > > > > 
-> > > > > cycles:ppp:
-> > > > >         ffffffffa72963db mem_cgroup_iter
-> > > > >         ffffffffa72980ca mem_cgroup_oom_unlock
-> > > > >         ffffffffa7298c15 try_charge
-> > > > >         ffffffffa729a886 mem_cgroup_try_charge
-> > > > >         ffffffffa720ec03 __add_to_page_cache_locked
-> > > > >         ffffffffa720ee3a add_to_page_cache_lru
-> > > > >         ffffffffa7312ddb iomap_readpages_actor
-> > > > >         ffffffffa73133f7 iomap_apply
-> > > > >         ffffffffa73135da iomap_readpages
-> > > > >         ffffffffa722062e read_pages
-> > > > >         ffffffffa7220b3f __do_page_cache_readahead
-> > > > >         ffffffffa7210554 filemap_fault
-> > > > >         ffffffffc039e41f __xfs_filemap_fault
-> > > > >         ffffffffa724f5e7 __do_fault
-> > > > >         ffffffffa724c5f2 __handle_mm_fault
-> > > > >         ffffffffa724cbc6 handle_mm_fault
-> > > > >         ffffffffa70a313e __do_page_fault
-> > > > >         ffffffffa7a00dfe page_fault
-> > > > > 
-> > > > > But I don't see how it could be, the only possible case is when
-> > > > > mem_cgroup_oom() returns OOM_SUCCESS. However I can't
-> > > > > find any clue in dmesg pointing to OOM. These processes in the
-> > > > > same memcg are either running or sleeping (that is not exiting or
-> > > > > coredump'ing), I don't see how and why they could be selected as
-> > > > > a victim of OOM killer. I don't see any signal pending either from
-> > > > > their /proc/X/status.
-> > > > 
-> > > > I think this is a situation where we might end up with a genuine deadlock
-> > > > if we're not trylocking the pages.  readahead allocates a batch of
-> > > > locked pages and adds them to the pagecache.  If it has allocated,
-> > > > say, 5 pages, successfully inserted the first three into i_pages, then
-> > > > needs to allocate memory to insert the fourth one into i_pages, and
-> > > > the process then attempts to migrate the pages which are still locked,
-> > > > they will never come unlocked because they haven't yet been submitted
-> > > > to the filesystem for reading.
-> > > 
-> > > Just to make sure I understand. Do you mean this?
-> > > lock_page(A)
-> > > alloc_pages
-> > >   try_to_compact_pages
-> > >     compact_zone_order
-> > >       compact_zone(MIGRATE_SYNC_LIGHT)
-> > >         migrate_pages
-> > > 	  unmap_and_move
-> > > 	    __unmap_and_move
-> > > 	      lock_page(A)
-> > 
-> > Yes.  There's a little more to it than that, eg slab is involved, but
-> > you have it in a nutshell.
-> 
-> I am not deeply familiar with the readahead code. But is there really a
-> high oerder allocation (order > 1) that would trigger compaction in the
-> phase when pages are locked?
+test.d/ftrace/func-filter-glob.tc is failing on s390 because it has
+ARCH_INLINE_SPIN_LOCK and friends set to 'y'. So the usual
+__raw_spin_lock symbol isn't in the ftrace function list. Change
+'*aw*lock' to '*spin*lock' which would hopefully match some of the
+locking functions on all platforms.
 
-Thanks to sl*b, yes:
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+---
 
-radix_tree_node    80890 102536    584   28    4 : tunables    0    0    0 : slabdata   3662   3662      0
+Changes in v4:
+  - rebase to latest master
 
-so it's allocating 4 pages for an allocation of a 576 byte node.
+Changes in v3:
+  change '*spin*lock' to '*pin*lock' to not match the beginning
 
-> Btw. the compaction rejects to consider file backed pages when __GFP_FS
-> is not present AFAIR.
+Changes in v2:
+  use '*spin*lock' instead of '*ktime*ns'
 
-Ah, that would save us.
+ .../testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
+index 27a54a17da65..f4e92afab14b 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
+@@ -30,7 +30,7 @@ ftrace_filter_check '*schedule*' '^.*schedule.*$'
+ ftrace_filter_check 'schedule*' '^schedule.*$'
+ 
+ # filter by *mid*end
+-ftrace_filter_check '*aw*lock' '.*aw.*lock$'
++ftrace_filter_check '*pin*lock' '.*pin.*lock$'
+ 
+ # filter by start*mid*
+ ftrace_filter_check 'mutex*try*' '^mutex.*try.*'
+-- 
+2.17.1
+
