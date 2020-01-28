@@ -2,183 +2,162 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD32AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782CCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863CC214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580240151;
-	bh=Pr3DXFI8ViRGOKjh9h8Hz0BT7YyyVwuuTEjQR62AWt0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cQtvMgilEnY8d2xQuNyBk8PLCn+BvcloyJxk04S64mMZjZXNrxq59hJZWEN1rHNJB
-	 ERxl+hPmujMDMxtxX2iWIwLGuzL9Q6y59fIVoNys99JDKNnPRvSOYtsrfImcxrE7XA
-	 b4FBaJGhSUBmBQYY/gjWiA+Y3Sx/UXhSuxMACkjg=
+	by mail.kernel.org (Postfix) with ESMTP id 4E4D124681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:36:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZqL3CZgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgA1Tfv (ORCPT
+        id S1726583AbgA1TgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 14:35:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbgA1Tfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 14:35:48 -0500
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        Tue, 28 Jan 2020 14:36:17 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:61713 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726234AbgA1TgR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 14:36:17 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580240176; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=eD6pavUpVIfzOBxAZx81/D8x7XfFjDmVXln2oUQASnk=; b=ZqL3CZguX65ouAd4egzY0nfkk5R4IfKntWNj2xhBL7IgUwWNnxM/90fl+9eFh+ny6odCLJeF
+ UdmWA1STXDODC1w+i+mG60Ru8+/tje/J5VXQBjtSS481frqjw0M1LayxJy5hbY5sMFXAZLs1
+ cpCTU1JQCLS6kY7X4c14Rnykq5g=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e308d28.7f228a1fd308-smtp-out-n03;
+ Tue, 28 Jan 2020 19:36:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 59CEDC447A1; Tue, 28 Jan 2020 19:36:07 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B3912064C;
-        Tue, 28 Jan 2020 19:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580240147;
-        bh=Pr3DXFI8ViRGOKjh9h8Hz0BT7YyyVwuuTEjQR62AWt0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WfvRLtX5hpTQMwySLxrZH8GpBe6ytT2T/lwnUPhmTFwO1NedUw8V0GQrveCaKQZ8P
-         ohCoeR/PjFUr4GK+xsjvr1e1Pq9c1LysBmb5DmJrFbUPl09WXUa+7W+Bu+UrBIQItp
-         rYcqUX1cq+HCR5fwJzxS2OI6cs7CxlP7xdhwju7I=
-Received: by mail-qv1-f54.google.com with SMTP id s7so1170028qvn.8;
-        Tue, 28 Jan 2020 11:35:47 -0800 (PST)
-X-Gm-Message-State: APjAAAWi/iv3AL6h+1kMqcNvV/Ea21f5xWgO+aJ1F+/VdYQR5uzE6sfU
-        KufMORa5aOOGo0lxCe13mPwyQYGbWOI7Q8j6WA==
-X-Google-Smtp-Source: APXvYqwkmWB2OfVLFMVNplRokJbj3S/E+jDUH5hAvg+SvFAjOQiYU7rRQIIH/C6cNNowZ+CtFMHj5h56SknQFBBd9ec=
-X-Received: by 2002:ad4:4511:: with SMTP id k17mr22775194qvu.135.1580240146421;
- Tue, 28 Jan 2020 11:35:46 -0800 (PST)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EE3CEC4479C;
+        Tue, 28 Jan 2020 19:36:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EE3CEC4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH 08/16] bus: mhi: core: Add support for downloading
+ firmware over BHIe
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
+ <20200123111836.7414-9-manivannan.sadhasivam@linaro.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <00e3d4f8-89ab-79f0-7094-90cc6d85fa41@codeaurora.org>
+Date:   Tue, 28 Jan 2020 12:36:04 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200128082013.15951-1-benjamin.gaignard@st.com>
- <20200128120600.oagnindklixjyieo@gilmour.lan> <a7fa1b43-a188-9d06-73ec-16bcd4012207@st.com>
-In-Reply-To: <a7fa1b43-a188-9d06-73ec-16bcd4012207@st.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 28 Jan 2020 13:35:34 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ80kSU7bHJt0_SeX5FVfxxjN5-ZKxt+tOfGy2cV62cbQ@mail.gmail.com>
-Message-ID: <CAL_JsqJ80kSU7bHJt0_SeX5FVfxxjN5-ZKxt+tOfGy2cV62cbQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: display: Convert etnaviv to json-schema
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux+etnaviv@armlinux.org.uk" <linux+etnaviv@armlinux.org.uk>,
-        "christian.gmeiner@gmail.com" <christian.gmeiner@gmail.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200123111836.7414-9-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 6:31 AM Benjamin GAIGNARD
-<benjamin.gaignard@st.com> wrote:
->
->
-> On 1/28/20 1:06 PM, Maxime Ripard wrote:
-> > Hi Benjamin,
-> >
-> > On Tue, Jan 28, 2020 at 09:20:13AM +0100, Benjamin Gaignard wrote:
-> >> Convert etnaviv bindings to yaml format.
-> >>
-> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> >> ---
-> >>   .../bindings/display/etnaviv/etnaviv-drm.txt       | 36 -----------
-> >>   .../devicetree/bindings/gpu/vivante,gc.yaml        | 72 ++++++++++++++++++++++
-> >>   2 files changed, 72 insertions(+), 36 deletions(-)
-> >>   delete mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> >>   create mode 100644 Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> >> deleted file mode 100644
-> >> index 8def11b16a24..000000000000
-> >> --- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> >> +++ /dev/null
-> >> @@ -1,36 +0,0 @@
-> >> -Vivante GPU core devices
-> >> -========================
-> >> -
-> >> -Required properties:
-> >> -- compatible: Should be "vivante,gc"
-> >> -  A more specific compatible is not needed, as the cores contain chip
-> >> -  identification registers at fixed locations, which provide all the
-> >> -  necessary information to the driver.
-> >> -- reg: should be register base and length as documented in the
-> >> -  datasheet
-> >> -- interrupts: Should contain the cores interrupt line
-> >> -- clocks: should contain one clock for entry in clock-names
-> >> -  see Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >> -- clock-names:
-> >> -   - "bus":    AXI/master interface clock
-> >> -   - "reg":    AHB/slave interface clock
-> >> -               (only required if GPU can gate slave interface independently)
-> >> -   - "core":   GPU core clock
-> >> -   - "shader": Shader clock (only required if GPU has feature PIPE_3D)
-> >> -
-> >> -Optional properties:
-> >> -- power-domains: a power domain consumer specifier according to
-> >> -  Documentation/devicetree/bindings/power/power_domain.txt
-> >> -
-> >> -example:
-> >> -
-> >> -gpu_3d: gpu@130000 {
-> >> -    compatible = "vivante,gc";
-> >> -    reg = <0x00130000 0x4000>;
-> >> -    interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
-> >> -    clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
-> >> -             <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> >> -             <&clks IMX6QDL_CLK_GPU3D_SHADER>;
-> >> -    clock-names = "bus", "core", "shader";
-> >> -    power-domains = <&gpc 1>;
-> >> -};
-> >> diff --git a/Documentation/devicetree/bindings/gpu/vivante,gc.yaml b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-> >> new file mode 100644
-> >> index 000000000000..c4f549c0d750
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-> >> @@ -0,0 +1,72 @@
-> >> +# SPDX-License-Identifier: GPL-2.0
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/gpu/vivante,gc.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Vivante GPU Bindings
-> >> +
-> >> +description: Vivante GPU core devices
-> >> +
-> >> +maintainers:
-> >> +  -  Lucas Stach <l.stach@pengutronix.de>
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    const: vivante,gc
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +
-> >> +  interrupts:
-> >> +    maxItems: 1
-> >> +
-> >> +  clocks:
-> >> +    items:
-> >> +      - description: AXI/master interface clock
-> >> +      - description: GPU core clock
-> >> +      - description: Shader clock (only required if GPU has feature PIPE_3D)
-> >> +      - description: AHB/slave interface clock (only required if GPU can gate slave interface independently)
-> > Can you have an AHB slave interface clock without a shader clock?
->
-> No because the items in the list are ordered so you need to have, in
-> order: "bus", "core", "shader", "reg"
->
-> If it is needed to allow any number of clock in any order I could write
-> it like this:
+On 1/23/2020 4:18 AM, Manivannan Sadhasivam wrote:
+> MHI supports downloading the device firmware over BHI/BHIe (Boot Host
+> Interface) protocol. Hence, this commit adds necessary helpers, which
+> will be called during device power up stage.
+> 
+> This is based on the patch submitted by Sujeev Dias:
+> https://lkml.org/lkml/2018/7/9/989
+> 
+> Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
+> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> [mani: splitted the data transfer patch and cleaned up for upstream]
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>   drivers/bus/mhi/core/boot.c     | 268 ++++++++++++++++++++++++++++++++
+>   drivers/bus/mhi/core/init.c     |   1 +
+>   drivers/bus/mhi/core/internal.h |   1 +
+>   3 files changed, 270 insertions(+)
+> 
+> diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+> index 0996f18c4281..36956fb6eff2 100644
+> --- a/drivers/bus/mhi/core/boot.c
+> +++ b/drivers/bus/mhi/core/boot.c
+> @@ -20,6 +20,121 @@
+>   #include <linux/wait.h>
+>   #include "internal.h"
+>   
+> +/* Download AMSS image to device */
 
-Yes, but I prefer we don't allow any order if we don't have to. Did
-you run this schema against dtbs_check or just audit the dts files
-with vivante?
+Nit: I don't feel like this comment really adds any value.  I feel like 
+it either should have more content, or be removed.  What do you think?
+> +static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
+> +			    const struct mhi_buf *mhi_buf)
+> +{
 
-Rob
+
+> +/* Download SBL image to device */
+
+Same here.  Comment seems self evident from the function name.
+> +static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
+> +			   dma_addr_t dma_addr,
+> +			   size_t size)
+> +{
+> +	u32 tx_status, val, session_id;
+> +	int i, ret;
+> +	void __iomem *base = mhi_cntrl->bhi;
+> +	rwlock_t *pm_lock = &mhi_cntrl->pm_lock;
+> +	struct {
+> +		char *name;
+> +		u32 offset;
+> +	} error_reg[] = {
+> +		{ "ERROR_CODE", BHI_ERRCODE },
+> +		{ "ERROR_DBG1", BHI_ERRDBG1 },
+> +		{ "ERROR_DBG2", BHI_ERRDBG2 },
+> +		{ "ERROR_DBG3", BHI_ERRDBG3 },
+> +		{ NULL },
+> +	};
+> +
+> +	read_lock_bh(pm_lock);
+> +	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
+> +		read_unlock_bh(pm_lock);
+> +		goto invalid_pm_state;
+> +	}
+> +
+> +	/* Start SBL download via BHI protocol */
+
+I'm wondering, what do you think about having a debug level message here 
+that SBL is being loaded?  I think it would be handy for looking into 
+the device state.
+
+> +	mhi_write_reg(mhi_cntrl, base, BHI_STATUS, 0);
+> +	mhi_write_reg(mhi_cntrl, base, BHI_IMGADDR_HIGH,
+> +		      upper_32_bits(dma_addr));
+> +	mhi_write_reg(mhi_cntrl, base, BHI_IMGADDR_LOW,
+> +		      lower_32_bits(dma_addr));
+> +	mhi_write_reg(mhi_cntrl, base, BHI_IMGSIZE, size);
+> +	session_id = prandom_u32() & BHI_TXDB_SEQNUM_BMSK;
+> +	mhi_write_reg(mhi_cntrl, base, BHI_IMGTXDB, session_id);
+> +	read_unlock_bh(pm_lock);
+> +
+> +
+> +static void mhi_firmware_copy(struct mhi_controller *mhi_cntrl,
+> +			      const struct firmware *firmware,
+> +			      struct image_info *img_info)
+
+Perhaps its just me, but the parameters on the second and third lines do 
+not look aligned in the style used in the rest of the file.
+
+
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
