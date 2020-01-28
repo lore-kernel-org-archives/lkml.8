@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D02C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775DCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2E52468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7B824691
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220005;
-	bh=9MdhLw8bCOJwhXjVcSWUEJ0OY99eCT6+70jrT5f0DKw=;
+	s=default; t=1580220009;
+	bh=6Zf7WpmE37b/Hbx0ZBYx+MP+UHtZ5PHCF50LJoYk9ZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUqFJpeHiregaLll0SQxSzsTwq4M8fd9zzpvTN7VmOciNbcQEMCvRZR2WncX6vw60
-	 26V1oSXcNrn0VEOo8nsx/erxivWRuGLIVsGod1YHIp+oeAAET4F9R0MogJwqIOSMKB
-	 +Qq0yAwgxY51CQudksW1WzenXXqN/tpdXm1KXVik=
+	b=Nv49h1SxcXU855DvL+yIaqPmGpllwJ+FEeCmjM2+b4f+1LO0z+DOqgdBhTT2+rvDs
+	 ifIq6nrIAtPPh/8townegBMp9jEU7nrX2Kga15T7rgNOAQ32waEi7wRqac0YMfdmg9
+	 YyVcIJjLqbi2r7oruNFA+fNPhdbEvvCb/5+GL8eE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgA1OAE (ORCPT
+        id S1727215AbgA1OAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:00:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45530 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:00:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727166AbgA1OAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:00:00 -0500
+        id S1726273AbgA1OAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:00:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2675F24685;
-        Tue, 28 Jan 2020 13:59:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F6C02468A;
+        Tue, 28 Jan 2020 14:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219999;
-        bh=9MdhLw8bCOJwhXjVcSWUEJ0OY99eCT6+70jrT5f0DKw=;
+        s=default; t=1580220004;
+        bh=6Zf7WpmE37b/Hbx0ZBYx+MP+UHtZ5PHCF50LJoYk9ZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pnjlf68iKuNyznCGvMcZidYrWojZ5b1D1O4srwH/gWUWmce1AwBrlZXq9nqW3Ml1a
-         XWrZLID66hhE1uUezgmSnNfPGgL8Wa9vAXeqInX812KBhPZdKgkjgqHmOWzBfwaAJd
-         NiE4v6uOWQr5MTPFVuy6pKRl4C5890lAhPzhAAwc=
+        b=ZnLi41eVAGk91TayeClCMclDaZJOcSPqfTslY+8HZXNeazT1WFW06DiCyZ4QzHvuC
+         ZOcus2cHwL/8BQNgR9EKGS/Pi6euzo06YJfMJxYSaKzK3Gjg6Bt0tD9cG5BhKWjLJu
+         hEqC0z9tTCzkDKsoEU3hSjoseu8Rhj2wPNwEaRTc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
-        syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com,
-        syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 46/46] net/x25: fix nonblocking connect
-Date:   Tue, 28 Jan 2020 14:58:20 +0100
-Message-Id: <20200128135755.727223289@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Vladis Dronov <vdronov@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 30/46] Input: aiptek - fix endpoint sanity check
+Date:   Tue, 28 Jan 2020 14:58:04 +0100
+Message-Id: <20200128135753.992900345@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -61,56 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit e21dba7a4df4d93da237da65a096084b4f2e87b4 upstream.
+commit 3111491fca4f01764e0c158c5e0f7ced808eef51 upstream.
 
-This patch fixes 2 issues in x25_connect():
+The driver was checking the number of endpoints of the first alternate
+setting instead of the current one, something which could lead to the
+driver binding to an invalid interface.
 
-1. It makes absolutely no sense to reset the neighbour and the
-connection state after a (successful) nonblocking call of x25_connect.
-This prevents any connection from being established, since the response
-(call accept) cannot be processed.
+This in turn could cause the driver to misbehave or trigger a WARN() in
+usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-2. Any further calls to x25_connect() while a call is pending should
-simply return, instead of creating new Call Request (on different
-logical channels).
-
-This patch should also fix the "KASAN: null-ptr-deref Write in
-x25_connect" and "BUG: unable to handle kernel NULL pointer dereference
-in x25_connect" bugs reported by syzbot.
-
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Reported-by: syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com
-Reported-by: syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 8e20cf2bce12 ("Input: aiptek - fix crash on detecting device without endpoints")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Vladis Dronov <vdronov@redhat.com>
+Link: https://lore.kernel.org/r/20191210113737.4016-3-johan@kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/x25/af_x25.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/input/tablet/aiptek.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -764,6 +764,10 @@ static int x25_connect(struct socket *so
- 	if (sk->sk_state == TCP_ESTABLISHED)
- 		goto out;
+--- a/drivers/input/tablet/aiptek.c
++++ b/drivers/input/tablet/aiptek.c
+@@ -1822,14 +1822,14 @@ aiptek_probe(struct usb_interface *intf,
+ 	input_set_abs_params(inputdev, ABS_WHEEL, AIPTEK_WHEEL_MIN, AIPTEK_WHEEL_MAX - 1, 0, 0);
  
-+	rc = -EALREADY;	/* Do nothing if call is already in progress */
-+	if (sk->sk_state == TCP_SYN_SENT)
-+		goto out;
-+
- 	sk->sk_state   = TCP_CLOSE;
- 	sock->state = SS_UNCONNECTED;
+ 	/* Verify that a device really has an endpoint */
+-	if (intf->altsetting[0].desc.bNumEndpoints < 1) {
++	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
+ 		dev_err(&intf->dev,
+ 			"interface has %d endpoints, but must have minimum 1\n",
+-			intf->altsetting[0].desc.bNumEndpoints);
++			intf->cur_altsetting->desc.bNumEndpoints);
+ 		err = -EINVAL;
+ 		goto fail3;
+ 	}
+-	endpoint = &intf->altsetting[0].endpoint[0].desc;
++	endpoint = &intf->cur_altsetting->endpoint[0].desc;
  
-@@ -810,7 +814,7 @@ static int x25_connect(struct socket *so
- 	/* Now the loop */
- 	rc = -EINPROGRESS;
- 	if (sk->sk_state != TCP_ESTABLISHED && (flags & O_NONBLOCK))
--		goto out_put_neigh;
-+		goto out;
- 
- 	rc = x25_wait_for_connection_establishment(sk);
- 	if (rc)
+ 	/* Go set up our URB, which is called when the tablet receives
+ 	 * input.
 
 
