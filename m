@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F82C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B546CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19B4820702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E9F20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222360;
-	bh=yniMCHJcUMBFjVrDnRjpp7sQccbfr5C/tTjc7ZX7s5c=;
+	s=default; t=1580222362;
+	bh=nVu7Lc0yiqepNHw5qjG/DjEzlaDyKfhKmT9JqkUZwpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y02jYe8aqp+EI8XKQ7xqcnpYOEK4SUaKVkUwxyL7y++nO9WNdQPTRnwJcgkU0vJV/
-	 OAxxG6lTqYIc3I8MVtNsQW/jeyIfJH10e62en3dkvGOMbKXDcmWCxnq9gVfIGAnTSN
-	 tAbusHBCpF6tKsNFNKAs48YN9QUzfk3ciP3hu1B0=
+	b=FvKYZ7bQDz0bZgZjfmcFTjOz8ZlR/EQJD8qZBFWNd8kUZRV7/TdFnWbHVvcdmiwc7
+	 wlI4kJCwZKWFbvUO5xJWrDMR15RFHBaNsl2cIzf8dXaIxt7xFpQ+Ak4pfBSAqJxJKu
+	 u7v4vCkMc213An3FFGjwNE616A2UAYe332Lkilks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgA1OjT (ORCPT
+        id S1730520AbgA1OR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:39:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41290 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:17:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730524AbgA1ORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:17:30 -0500
+        id S1729977AbgA1ORW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:17:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 331D624681;
-        Tue, 28 Jan 2020 14:17:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C69402071E;
+        Tue, 28 Jan 2020 14:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221049;
-        bh=yniMCHJcUMBFjVrDnRjpp7sQccbfr5C/tTjc7ZX7s5c=;
+        s=default; t=1580221042;
+        bh=nVu7Lc0yiqepNHw5qjG/DjEzlaDyKfhKmT9JqkUZwpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=prSlTEc1py54BPHuxHa6jLTIcJn/LOy1ISDAXe/F8FboNFuc2K5aNfm+SOTs4w549
-         Si7Ra18DuP8i4YDCa/wnWc6PC5zcWR5Adzfvn7zBUu40Xg9BHCA2NRSEpwIxZSneCg
-         FZMKj3wBr8rrXMHd1Xf8OSGTJAnOgk3Vqaw4BN2U=
+        b=w7Vvuy6scQT6m+/TEusfnFi3x84Q6ugDeL3UWnKDrWzxIo5or4YOn6G+FhVuQvGsH
+         qV8ouEHzf70k8iIe2+QjqMMTf1Xrph8Xtf6SZYTYmaHQ5czaECkxFoExJqmqZfOxfQ
+         PR0I5OGvsYnoaOuvovIQuZquMpuMPv4xXC4Y0od8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Wise <swise@opengridcomputing.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 067/271] iw_cxgb4: use tos when finding ipv6 routes
-Date:   Tue, 28 Jan 2020 15:03:36 +0100
-Message-Id: <20200128135857.593309620@linuxfoundation.org>
+Subject: [PATCH 4.9 064/271] rtc: pm8xxx: fix unintended sign extension
+Date:   Tue, 28 Jan 2020 15:03:33 +0100
+Message-Id: <20200128135857.380313453@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,44 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Wise <swise@opengridcomputing.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit c8a7eb554a83214c3d8ee5cb322da8c72810d2dc ]
+[ Upstream commit e42280886018c6f77f0a90190f7cba344b0df3e0 ]
 
-When IPv6 support was added, the correct tos was not passed to
-cxgb_find_route6(). This potentially results in the wrong route entry.
+Shifting a u8 by 24 will cause the value to be promoted to an integer. If
+the top bit of the u8 is set then the following conversion to an unsigned
+long will sign extend the value causing the upper 32 bits to be set in
+the result.
 
-Fixes: 830662f6f032 ("RDMA/cxgb4: Add support for active and passive open connection with IPv6 address")
-Signed-off-by: Steve Wise <swise@opengridcomputing.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fix this by casting the u8 value to an unsigned long before the shift.
+
+Detected by CoverityScan, CID#1309693 ("Unintended sign extension")
+
+Fixes: 9a9a54ad7aa2 ("drivers/rtc: add support for Qualcomm PMIC8xxx RTC")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/cm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-pm8xxx.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index a29fe11d688a5..a04a53acb24ff 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -2135,7 +2135,8 @@ static int c4iw_reconnect(struct c4iw_ep *ep)
- 					   laddr6->sin6_addr.s6_addr,
- 					   raddr6->sin6_addr.s6_addr,
- 					   laddr6->sin6_port,
--					   raddr6->sin6_port, 0,
-+					   raddr6->sin6_port,
-+					   ep->com.cm_id->tos,
- 					   raddr6->sin6_scope_id);
- 		iptype = 6;
- 		ra = (__u8 *)&raddr6->sin6_addr;
-@@ -3278,7 +3279,7 @@ int c4iw_connect(struct iw_cm_id *cm_id, struct iw_cm_conn_param *conn_param)
- 					   laddr6->sin6_addr.s6_addr,
- 					   raddr6->sin6_addr.s6_addr,
- 					   laddr6->sin6_port,
--					   raddr6->sin6_port, 0,
-+					   raddr6->sin6_port, cm_id->tos,
- 					   raddr6->sin6_scope_id);
+diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
+index fac835530671f..a1b4b0ed1f196 100644
+--- a/drivers/rtc/rtc-pm8xxx.c
++++ b/drivers/rtc/rtc-pm8xxx.c
+@@ -186,7 +186,8 @@ static int pm8xxx_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 		}
  	}
- 	if (!ep->dst) {
+ 
+-	secs = value[0] | (value[1] << 8) | (value[2] << 16) | (value[3] << 24);
++	secs = value[0] | (value[1] << 8) | (value[2] << 16) |
++	       ((unsigned long)value[3] << 24);
+ 
+ 	rtc_time_to_tm(secs, tm);
+ 
+@@ -267,7 +268,8 @@ static int pm8xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+ 		return rc;
+ 	}
+ 
+-	secs = value[0] | (value[1] << 8) | (value[2] << 16) | (value[3] << 24);
++	secs = value[0] | (value[1] << 8) | (value[2] << 16) |
++	       ((unsigned long)value[3] << 24);
+ 
+ 	rtc_time_to_tm(secs, &alarm->time);
+ 
 -- 
 2.20.1
 
