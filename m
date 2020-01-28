@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4C5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123F0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6753E20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6833207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580223038;
-	bh=xPJ4DVVjuH7+QRs/g3mZ9AXjGQdLwflaajAmAbDLLC8=;
+	s=default; t=1580223044;
+	bh=SFR2d31pGBWYC5sDAQbVOFXbyWhqJ2hBoTVTx7MidMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BULVD2AWqNFpnnLafhsMFX3DjrElp/4K6joSGVMW3tde71yZKOKot+0Hu73b91xPc
-	 7pNwDj+JzZ8fUcs+POgya2pQriYz2hCq7ZvfJTTuDo+lpOh1+U/IfBY8pQ7iG855x+
-	 11qEuixPL9iJFoSuCJz5aFijsISLAoQAslI24wdw=
+	b=BdHyq73SjH/s+HlGeV0QcTd0/sqTzxirnSMdSYTYPS9KPwf5dYx2WwSFChFiH98c/
+	 9bKwQsx1dKFUu732T8QfFV1lwdMO9517AZ2u2F3XfzuM8Tddr73jf1waDWcqY0jJ0N
+	 BaxvhzC6TCsR6qnFW6cTc6k2bXvSqpD1pVon9rkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgA1Ouh (ORCPT
+        id S1727359AbgA1Ouo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:50:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44198 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:50:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbgA1N7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:59:01 -0500
+        id S1726497AbgA1N6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:58:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6137724683;
-        Tue, 28 Jan 2020 13:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A61AD2173E;
+        Tue, 28 Jan 2020 13:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219940;
-        bh=xPJ4DVVjuH7+QRs/g3mZ9AXjGQdLwflaajAmAbDLLC8=;
+        s=default; t=1580219931;
+        bh=SFR2d31pGBWYC5sDAQbVOFXbyWhqJ2hBoTVTx7MidMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7Lf81ORGG/ExtlrzfoyXOZ0YKGIyTB1kYOsXFO1j2C+SEHd22owBmFMNf8bwWY7r
-         GHUBJI4hXG0ovKQVpp6zBhF+WzlHmPvTiSKfI0cwseC/zN6BQyMD50pjQliQMr6ens
-         i/BRmJAr7f0ioAopsBXPJh1nM66/CUPI7L9IeUEo=
+        b=J3eXcurjfp7sYcj0xwaUDV5P4Ey4Zk4cHVTjwYEB5/q/4rsmiNNlw5/T20bet2FWw
+         mRMnNZ8t9p1fb25dUXz/BxKulI0sqOlzjfkwLnB6KGilJSG3rv9SKrY/zPEy0AC7TO
+         wBDLjVe8UzPUH9v1u2YT5ZCbhgC2MV0ZFzbfGXy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Timo Kaufmann <timokau@zoho.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 22/46] Revert "Input: synaptics-rmi4 - dont increment rmiaddr for SMBus transfers"
-Date:   Tue, 28 Jan 2020 14:57:56 +0100
-Message-Id: <20200128135752.743656510@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 18/46] hwmon: Deal with errors from the thermal subsystem
+Date:   Tue, 28 Jan 2020 14:57:52 +0100
+Message-Id: <20200128135752.300771628@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -60,50 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit 8ff771f8c8d55d95f102cf88a970e541a8bd6bcf upstream.
+commit 47c332deb8e89f6c59b0bb2615945c6e7fad1a60 upstream.
 
-This reverts commit a284e11c371e446371675668d8c8120a27227339.
+If the thermal subsystem returne -EPROBE_DEFER or any other error
+when hwmon calls devm_thermal_zone_of_sensor_register(), this is
+silently ignored.
 
-This causes problems (drifting cursor) with at least the F11 function that
-reads more than 32 bytes.
+I ran into this with an incorrectly defined thermal zone, making
+it non-existing and thus this call failed with -EPROBE_DEFER
+assuming it would appear later. The sensor was still added
+which is incorrect: sensors must strictly be added after the
+thermal zones, so deferred probe must be respected.
 
-The real issue is in the F54 driver, and so this should be fixed there, and
-not in rmi_smbus.c.
-
-So first revert this bad commit, then fix the real problem in F54 in another
-patch.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: Timo Kaufmann <timokau@zoho.com>
-Fixes: a284e11c371e ("Input: synaptics-rmi4 - don't increment rmiaddr for SMBus transfers")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200115124819.3191024-2-hverkuil-cisco@xs4all.nl
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: d560168b5d0f ("hwmon: (core) New hwmon registration API")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/rmi4/rmi_smbus.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hwmon/hwmon.c |   21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
---- a/drivers/input/rmi4/rmi_smbus.c
-+++ b/drivers/input/rmi4/rmi_smbus.c
-@@ -166,6 +166,7 @@ static int rmi_smb_write_block(struct rm
- 		/* prepare to write next block of bytes */
- 		cur_len -= SMB_MAX_COUNT;
- 		databuff += SMB_MAX_COUNT;
-+		rmiaddr += SMB_MAX_COUNT;
- 	}
- exit:
- 	mutex_unlock(&rmi_smb->page_mutex);
-@@ -217,6 +218,7 @@ static int rmi_smb_read_block(struct rmi
- 		/* prepare to read next block of bytes */
- 		cur_len -= SMB_MAX_COUNT;
- 		databuff += SMB_MAX_COUNT;
-+		rmiaddr += SMB_MAX_COUNT;
+--- a/drivers/hwmon/hwmon.c
++++ b/drivers/hwmon/hwmon.c
+@@ -143,6 +143,7 @@ static int hwmon_thermal_add_sensor(stru
+ 				    struct hwmon_device *hwdev, int index)
+ {
+ 	struct hwmon_thermal_data *tdata;
++	struct thermal_zone_device *tzd;
+ 
+ 	tdata = devm_kzalloc(dev, sizeof(*tdata), GFP_KERNEL);
+ 	if (!tdata)
+@@ -151,8 +152,14 @@ static int hwmon_thermal_add_sensor(stru
+ 	tdata->hwdev = hwdev;
+ 	tdata->index = index;
+ 
+-	devm_thermal_zone_of_sensor_register(&hwdev->dev, index, tdata,
+-					     &hwmon_thermal_ops);
++	tzd = devm_thermal_zone_of_sensor_register(&hwdev->dev, index, tdata,
++						   &hwmon_thermal_ops);
++	/*
++	 * If CONFIG_THERMAL_OF is disabled, this returns -ENODEV,
++	 * so ignore that error but forward any other error.
++	 */
++	if (IS_ERR(tzd) && (PTR_ERR(tzd) != -ENODEV))
++		return PTR_ERR(tzd);
+ 
+ 	return 0;
+ }
+@@ -621,14 +628,20 @@ __hwmon_device_register(struct device *d
+ 				if (!chip->ops->is_visible(drvdata, hwmon_temp,
+ 							   hwmon_temp_input, j))
+ 					continue;
+-				if (info[i]->config[j] & HWMON_T_INPUT)
+-					hwmon_thermal_add_sensor(dev, hwdev, j);
++				if (info[i]->config[j] & HWMON_T_INPUT) {
++					err = hwmon_thermal_add_sensor(dev,
++								hwdev, j);
++					if (err)
++						goto free_device;
++				}
+ 			}
+ 		}
  	}
  
- 	retval = 0;
+ 	return hdev;
+ 
++free_device:
++	device_unregister(hdev);
+ free_hwmon:
+ 	kfree(hwdev);
+ ida_remove:
 
 
