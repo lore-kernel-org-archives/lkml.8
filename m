@@ -2,155 +2,113 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D15C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EAFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7347620716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C79620716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:25:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VebU66qE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgA1SYF (ORCPT
+        id S1726759AbgA1SZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:24:05 -0500
-Received: from mga18.intel.com ([134.134.136.126]:15937 "EHLO mga18.intel.com"
+        Tue, 28 Jan 2020 13:25:52 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:57408 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727080AbgA1SYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:24:04 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 10:24:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,374,1574150400"; 
-   d="scan'208";a="252352625"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Jan 2020 10:24:02 -0800
-Date:   Tue, 28 Jan 2020 10:24:03 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200128182402.GA18652@linux.intel.com>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-10-peterx@redhat.com>
- <20200121155657.GA7923@linux.intel.com>
- <20200128055005.GB662081@xz-x1>
+        id S1726276AbgA1SZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 13:25:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=9rzg8pOQc/eaFdW99Vz4O3jHl+7pHiM7u4M/N2zjXkU=; b=VebU66qEXJs9WAZC/uirqsZ7mX
+        OeOrKJJw/KVKUhkMEVs/QGETVhl2qzSFUd3E/lV7hdBCotWajXxt6dvKTE9vVde4qW/MMN5mMOp3S
+        ZA1c5MLXkU2rC0fe7ztoIqt4Ohv3tPUiuPC8w1qtDw5vdx11umzbQlCyqmRrmTHhgoUk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iwVYU-0003W8-Ff; Tue, 28 Jan 2020 19:25:42 +0100
+Date:   Tue, 28 Jan 2020 19:25:42 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
+ up without PHY
+Message-ID: <20200128182542.GB12180@lunn.ch>
+References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+ <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+ <20200127112102.GT25745@shell.armlinux.org.uk>
+ <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20200127114600.GU25745@shell.armlinux.org.uk>
+ <20200127140038.GD13647@lunn.ch>
+ <20200127140834.GW25745@shell.armlinux.org.uk>
+ <20200127145107.GE13647@lunn.ch>
+ <20200128180802.GD25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200128055005.GB662081@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200128180802.GD25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 01:50:05PM +0800, Peter Xu wrote:
-> On Tue, Jan 21, 2020 at 07:56:57AM -0800, Sean Christopherson wrote:
-> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > index c4d3972dcd14..ff97782b3919 100644
-> > > --- a/arch/x86/kvm/x86.c
-> > > +++ b/arch/x86/kvm/x86.c
-> > > @@ -9584,7 +9584,15 @@ void kvm_arch_sync_events(struct kvm *kvm)
-> > >  	kvm_free_pit(kvm);
-> > >  }
-> > >  
-> > > -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
-> > > +/*
-> > > + * If `uaddr' is specified, `*uaddr' will be returned with the
-> > > + * userspace address that was just allocated.  `uaddr' is only
-> > > + * meaningful if the function returns zero, and `uaddr' will only be
-> > > + * valid when with either the slots_lock or with the SRCU read lock
-> > > + * held.  After we release the lock, the returned `uaddr' will be invalid.
-> > 
-> > This is all incorrect.  Neither of those locks has any bearing on the
-> > validity of the hva.  slots_lock does as the name suggests and prevents
-> > concurrent writes to the memslots.  The SRCU lock ensures the implicit
-> > memslots lookup in kvm_clear_guest_page() won't result in a use-after-free
-> > due to derefencing old memslots.
-> > 
-> > Neither of those has anything to do with the userspace address, they're
-> > both fully tied to KVM's gfn->hva lookup.  As Paolo pointed out, KVM's
-> > mapping is instead tied to the lifecycle of the VM.  Note, even *that* has
-> > no bearing on the validity of the mapping or address as KVM only increments
-> > mm_count, not mm_users, i.e. guarantees the mm struct itself won't be freed
-> > but doesn't ensure the vmas or associated pages tables are valid.
-> > 
-> > Which is the entire point of using __copy_{to,from}_user(), as they
-> > gracefully handle the scenario where the process has not valid mapping
-> > and/or translation for the address.
+On Tue, Jan 28, 2020 at 06:08:03PM +0000, Russell King - ARM Linux admin wrote:
+> On Mon, Jan 27, 2020 at 03:51:07PM +0100, Andrew Lunn wrote:
+> > I've also had issues with the DSA links, also being configured to
+> > 10/Half. That seems to be related to having a phy-mode property in
+> > device tree. I need to add a fixed-link property to set the correct
+> > speed. Something is broken here, previously the fixed-link was only
+> > needed if the speed needed to be lower than the ports maximum. I think
+> > that is a separate issue i need to dig into, not part of the PCS to
+> > MAC transfer.
 > 
-> Sorry I don't understand.
+> I think I understand what is happening on this one more fully.
 > 
-> I do think either the slots_lock or SRCU would protect at least the
-> existing kvm.memslots, and if so at least the previous vm_mmap()
-> return value should still be valid.
+> When DSA initialises, the DSA and CPU ports are initially configured to
+> maximum speed via mv88e6xxx_setup_port(), called via mv88e6xxx_setup(),
+> the .setup method, dsa_switch_setup(), and dsa_tree_setup_switches().
+> 
+> dsa_tree_setup_switches() then moves on to calling dsa_port_setup().
+> dsa_port_setup() calls dsa_port_link_register_of() for the DSA and CPU
+> ports, which calls into dsa_port_phylink_register().
+> 
+> That calls phylink_create(), and then attempts to attach a PHY using
+> phylink_of_phy_connect() - which itself is rather weird - since when
+> has a DSA or CPU port been allowed to have a PHY in its DT node?
 
-Nope.  kvm->slots_lock only protects gfn->hva lookups, e.g. userspace can
-munmap() the range at any time.
+Hi Russell
 
-> I agree that __copy_to_user() will protect us from many cases from process
-> mm pov (which allows page faults inside), but again if the kvm.memslots is
-> changed underneath us then it's another story, IMHO, and that's why we need
-> either the lock or SRCU.
+There are some boards which have back to back PHYs between the SoC and
+the Switch. Most designs rely on strapping the PHYs to just work, no
+software configuration needed. But then came along a board with a PHY
+which needed a kick to make it work :-(
 
-No, again, slots_lock and SRCU only protect gfn->hva lookups.
+> That hasn't changed in phylink yet - so it's a bug that dates back
+> to the phylink integration into the DSA core, and is a regression
+> resulting from that.
 
-> Or are you assuming that (1) __x86_set_memory_region() is only for the
-> 3 private kvm memslots, 
+And i think i probably did not notice it because nearly all the boards
+i test with connect to the FEC, which is Fast Ethernet only, so needs
+fixed-link properties.
 
-It's not an assumption, the entire purpose of __x86_set_memory_region()
-is to provide support for private KVM memslots.
-
-> and (2) currently the kvm private memory slots will never change after VM
-> is created and before VM is destroyed?
-
-No, I'm not assuming the private memslots are constant, e.g. the flow in
-question, vmx_set_tss_addr() is directly tied to an unprotected ioctl().
-
-KVM's sole responsible for vmx_set_tss_addr() is to not crash the kernel.
-Userspace is responsible for ensuring it doesn't break its guests, e.g.
-that multiple calls to KVM_SET_TSS_ADDR are properly serialized.
-
-In the existing code, KVM ensures it doesn't crash by holding the SRCU lock
-for the duration of init_rmode_tss() so that the gfn->hva lookups in
-kvm_clear_guest_page() don't dereference a stale memslots array.  In no way
-does that ensure the validity of the resulting hva, e.g. multiple calls to
-KVM_SET_TSS_ADDR would race to set vmx->tss_addr and so init_rmode_tss()
-could be operating on a stale gpa.
-
-Putting the onus on KVM to ensure atomicity is pointless because concurrent
-calls to KVM_SET_TSS_ADDR would still race, i.e. the end value of
-vmx->tss_addr would be non-deterministic.  The intregrity of the underlying
-TSS would be guaranteed, but that guarantee isn't part of KVM's ABI.
-
-> If so, I agree with you.  However I don't see why we need to restrict
-> __x86_set_memory_region() with that assumption, after all taking a
-> lock is not expensive in this slow path.
-
-In what way would not holding slots_lock in vmx_set_tss_addr() restrict
-__x86_set_memory_region()?  Literally every other usage of
-__x86_set_memory_region() holds slots_lock for the duration of creating
-the private memslot, because in those flows, KVM *is* responsible for
-ensuring correct ordering.
-
-> Even if so, we'd better comment above __x86_set_memory_region() about this,
-> so we know that we should not use __x86_set_memory_region() for future kvm
-> internal memslots that are prone to change during VM's lifecycle (while
-> currently it seems to be a very general interface).
-
-There is no such restriction.  Obviously such a flow would need to ensure
-correctness, but hopefully that goes without saying.
+	   Andrew
