@@ -2,119 +2,86 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C025EC35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B891DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97FB624684
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB622467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:30:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VzGyPT+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgA1J2N (ORCPT
+        id S1725948AbgA1Jas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:28:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33168 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbgA1J2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:28:13 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3B8B7ADA1;
-        Tue, 28 Jan 2020 09:28:10 +0000 (UTC)
-Date:   Tue, 28 Jan 2020 10:28:07 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-In-Reply-To: <20200122214239.ivnebi7hiabi5tbs@treble>
-Message-ID: <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
-References: <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com> <20191015153120.GA21580@linux-8ccs> <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com> <20191015182705.1aeec284@gandalf.local.home> <20191016074217.GL2328@hirez.programming.kicks-ass.net>
- <20191021150549.bitgqifqk2tbd3aj@treble> <20200120165039.6hohicj5o52gdghu@treble> <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz> <20200121161045.dhihqibnpyrk2lsu@treble> <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
- <20200122214239.ivnebi7hiabi5tbs@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 28 Jan 2020 04:30:48 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45760 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgA1Jas (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 04:30:48 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 59so11329578otp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 01:30:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yh41YjQOL6v5qPkhPRLG/JO3Fw/88a695J6NKkJZrX0=;
+        b=VzGyPT+yQnMZWoX1YeBN9u8Fx5p+Am8kWrm005R45IP8atXD3C+oTdtHxSOA5v9BRE
+         3Nig17W/n+ysFLzSZAFhSx3yjCeq+JLnmIcBu3dJ8nsNKx/4Q/bYUFTUbDjmze6metaP
+         Hy3VRvHtnNsmHjt8W/xS4mDccKPlw8UL4hwQmxuQ9DzABpDaJE7b3DR9Jd1v58JmVsv0
+         MVNYjHw494rtK0iFkHcOGuIPm6dyRgOvqti7c5R/MbBVHMaBNSSwoscjG2dlDlnKGPgN
+         vLy4PB4tKkgZ3053449rUXz2ZNMb53RTi2tkML4hNLrxnFwbpBW75aMMsRkM+v+X0Y+A
+         36mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yh41YjQOL6v5qPkhPRLG/JO3Fw/88a695J6NKkJZrX0=;
+        b=RNIyhk18bYYvVRk2Cs6mf73yqZyuU5NzHvRBcj9AhmLNgjfFCGZ7OeOvia5I95dHRx
+         kAYA0QnPrByW7lsLLu3wBiDh3bFWrHXtP4VGN7hUMOlPIdpuvA5YRNNz1P1nB8u5kRzM
+         QaR4NDFBo8lhXEmF4ZV2r6cHuJg2crahkydi3+xbVRKNcS/ywZewPaSCd0rvvj++Wv0J
+         0f+yd8+7WkJSk/KPyYxH+ARYh2avrK+dEFi5qHMZ3WVImLoaDjPCc/UUIAuAabFzbgIB
+         dRex/oTJ3ZkKRXyYQOkz6SAeytwJmhGfj8kCIIh3hJs+ixO5Oeeg6PFHexG98o3u4swA
+         VA4g==
+X-Gm-Message-State: APjAAAUM5b4OHtoLbeX0FWWMiRdotR9C+nCXRX4IlPKR9dnlwus12lkK
+        bSleQOsfgXkmRN6dA5JXDLKmFYqjvw2tD8/gza+cyQ==
+X-Google-Smtp-Source: APXvYqymR8w/Jv0Wq2tNhPnRAIsBKyqe0PLz5bMDnxBePf0GK0M2eqKuON/UlhLLm577QR6m4J2QrKzRKeI22A+nyXA=
+X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr15362244oti.32.1580203847077;
+ Tue, 28 Jan 2020 01:30:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200128072740.21272-1-frextrite@gmail.com>
+In-Reply-To: <20200128072740.21272-1-frextrite@gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 28 Jan 2020 10:30:19 +0100
+Message-ID: <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
+Subject: Re: [PATCH] cred: Use RCU primitives to access RCU pointers
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020, Josh Poimboeuf wrote:
+On Tue, Jan 28, 2020 at 8:28 AM Amol Grover <frextrite@gmail.com> wrote:
+> task_struct.cred and task_struct.real_cred are annotated by __rcu,
 
-> On Wed, Jan 22, 2020 at 11:09:56AM +0100, Miroslav Benes wrote:
-> > 
-> > > > > At this point, I only see downsides of -flive-patching, at least until
-> > > > > we actually have real upstream code which needs it.
-> > > > 
-> > > > Can you explain this? The option makes GCC to avoid optimizations which 
-> > > > are difficult to detect and would make live patching unsafe. I consider it 
-> > > > useful as it is, so if you shared the other downsides and what you meant 
-> > > > by real upstream code, we could discuss it.
-> > > 
-> > > Only SLES needs it right?  Why inflict it on other livepatch users?  By
-> > > "real upstream code" I mean there's no (documented) way to create live
-> > > patches using the method which relies on this flag.  So I don't see any
-> > > upstream benefits for having it enabled.
-> > 
-> > I'd put it differently. SLES and upstream need it, RHEL does not need it. 
-> > Or anyone using kpatch-build.
-> 
-> I'm confused about why you think upstream needs it.
-> 
-> Is all the tooling available somewhere?  Is there documentation
-> available which describes how to build patches using that method from
-> start to finish?  Are there actual users other than SUSE?
-> 
-> BTW, kpatch-build has a *lot* of users other than RHEL.  All its tooling
-> and documentation are available on Github.
-> 
-> > It is perfectly fine to prepare live patches just from the source code
-> > using upstream live patching infrastructure. 
-> 
-> Do you mean the dangerous method used by the livepatch sample code which
-> completely ignores interprocedural optimizations?  I wouldn't call that
-> perfectly fine.
-> 
-> > After all, SLES is nothing else than upstream here. We were creating live 
-> > patches manually for quite a long time and only recently we have been 
-> > using Nicolai's klp-ccp automation (https://github.com/SUSE/klp-ccp).
-> > 
-> > So, everyone using upstream directly relies on the flag, which seems to be 
-> > a clear benefit to me. Reverting the patch would be a step back.
-> 
-> Who exactly is "everyone using upstream"?
-> 
-> >From what I can tell, kpatch-build is the only known way (to those
-> outside of SUSE) to make safe patches for an upstream kernel.  And it
-> doesn't need this flag and the problems associated with it: performance,
-> LTO incompatibility, clang incompatibility (I think?), the GCC dead code
-> issue.
+task_struct.cred doesn't actually have RCU semantics though, see
+commit d7852fbd0f0423937fa287a598bfde188bb68c22. For task_struct.cred,
+it would probably be more correct to remove the __rcu annotation?
 
-I don't think we have something special at SUSE not generally available...
-
-...and I don't think it is really important to discuss that and replying 
-to the above, because there is a legitimate use case which relies on the 
-flag. We decided to support different use cases right at the beginning.
-
-I understand it currently complicates things for objtool, but objtool is 
-sensitive to GCC code generation by definition. "Issues" appear with every 
-new GCC version. I see no difference here and luckily it is not so 
-difficult to fix it.
-
-I am happy to help with acting on those objtool warning reports you 
-mentioned in the other email. Just Cc me where appropriate. We will take a 
-look.
-
-Regards
-Miroslav
+> hence use rcu_access_pointer to access them.
