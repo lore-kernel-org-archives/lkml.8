@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E96C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73C6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAC762468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2A62468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221293;
-	bh=Y/54ylXk+kowQjlt5npb6YUIY/T5vb4IJIiawlYtIOE=;
+	s=default; t=1580221297;
+	bh=82oBk3V6XH8DMTqOHW/rTRzWb1gZ1spYcwkITJN6/pI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KUBmIir7b3x93kSr2t+jhH7djS0nEXROnPVbGBBzKbVLBw4+3VBWT8MDC/xmgCnsR
-	 GZJGB6Y8s9zMSz0pT138UuNdknxDMHk0bofiYZL/7Yi03Y5T7BoJKf8UxSz8GL9xZI
-	 IcMZS7fB/KhqiBxHK5joWt/928n/sZG06ksSzGQo=
+	b=Me5sml/OFOxFXN8v/wE4IzpEhydXdGk9ModDvwtxxgd/0UkHBSwoZWJEsJ4eWgovA
+	 YCn+Al2TdXcKKUN9bBksnGi+bBN24d0evPxH/zziR0xAOHkYWSMZ8GNnA+yC8OVJNo
+	 qVgRoU3WOtOMswnJDo/TPgvHM5YnXkJIp1QtC/u4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731324AbgA1OVd (ORCPT
+        id S1731336AbgA1OVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:21:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:21:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731311AbgA1OVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:21:31 -0500
+        id S1731311AbgA1OVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:21:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A53B924688;
-        Tue, 28 Jan 2020 14:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2471424686;
+        Tue, 28 Jan 2020 14:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221291;
-        bh=Y/54ylXk+kowQjlt5npb6YUIY/T5vb4IJIiawlYtIOE=;
+        s=default; t=1580221293;
+        bh=82oBk3V6XH8DMTqOHW/rTRzWb1gZ1spYcwkITJN6/pI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XHCorElULhyG1qVNLuas+j+keVR5BNb3c6biD7KeOUnPkKtKkbfGIP5PeUudzWYcO
-         jRqawUWRUmMNlqmTjqiWKW0C4svZu0vrV8xwnTwXRXlndem1xezp2McuEH/nin9Q8L
-         e7bFhjGDtipxU3BHYP6q98Kcr1WsSHyYjbHLUo4A=
+        b=wHrC2akmTIxLz98Hpn75zmkdFWVvdEyaby7hYEVAWZkY/aobzTlKQn44nMwcRAstK
+         c+3uJERr+1YS6g7iEUSl1k27DIorNBpCBDMnDGVGSzAdyPz0zxIVxvnFZX268k0u6j
+         6rv1JJIFrwxyuhN24MbI/gmTe2wc0NT5mnbkH6ug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Enrico Weigelt <info@metux.net>
-Subject: [PATCH 4.9 166/271] devres: allow const resource arguments
-Date:   Tue, 28 Jan 2020 15:05:15 +0100
-Message-Id: <20200128135904.938533884@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 149/271] iommu: Use right function to get group for device
+Date:   Tue, 28 Jan 2020 15:04:58 +0100
+Message-Id: <20200128135903.643607538@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,61 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit 9dea44c91469512d346e638694c22c30a5273992 ]
+[ Upstream commit 57274ea25736496ee019a5c40479855b21888839 ]
 
-devm_ioremap_resource() does not currently take 'const' arguments,
-which results in a warning from the first driver trying to do it
-anyway:
+The iommu_group_get_for_dev() will allocate a group for a
+device if it isn't in any group. This isn't the use case
+in iommu_request_dm_for_dev(). Let's use iommu_group_get()
+instead.
 
-drivers/gpio/gpio-amd-fch.c: In function 'amd_fch_gpio_probe':
-drivers/gpio/gpio-amd-fch.c:171:49: error: passing argument 2 of 'devm_ioremap_resource' discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
-  priv->base = devm_ioremap_resource(&pdev->dev, &amd_fch_gpio_iores);
-                                                 ^~~~~~~~~~~~~~~~~~~
-
-Change the prototype to allow it, as there is no real reason not to.
-
-Fixes: 9bb2e0452508 ("gpio: amd: Make resource struct const")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190628150049.1108048-1-arnd@arndb.de
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviwed-By: Enrico Weigelt <info@metux.net>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: d290f1e70d85a ("iommu: Introduce iommu_request_dm_for_dev()")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/device.h | 3 ++-
- lib/devres.c           | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/iommu/iommu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 8d732965fab77..eb865b461acc4 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -682,7 +682,8 @@ extern unsigned long devm_get_free_pages(struct device *dev,
- 					 gfp_t gfp_mask, unsigned int order);
- extern void devm_free_pages(struct device *dev, unsigned long addr);
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 71b89e47e9521..dbcc13efaf3c8 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1582,9 +1582,9 @@ int iommu_request_dm_for_dev(struct device *dev)
+ 	int ret;
  
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res);
+ 	/* Device must already be in a group before calling this function */
+-	group = iommu_group_get_for_dev(dev);
+-	if (IS_ERR(group))
+-		return PTR_ERR(group);
++	group = iommu_group_get(dev);
++	if (!group)
++		return -EINVAL;
  
- /* allows to add/remove a custom action to devres stack */
- int devm_add_action(struct device *dev, void (*action)(void *), void *data);
-diff --git a/lib/devres.c b/lib/devres.c
-index cb1464c411a2b..38912892053c0 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -131,7 +131,8 @@ EXPORT_SYMBOL(devm_iounmap);
-  *	if (IS_ERR(base))
-  *		return PTR_ERR(base);
-  */
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res)
- {
- 	resource_size_t size;
- 	const char *name;
+ 	mutex_lock(&group->mutex);
+ 
 -- 
 2.20.1
 
