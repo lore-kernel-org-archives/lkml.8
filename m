@@ -2,149 +2,91 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D67C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8021EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17D220661
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520F520661
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="priCxcB8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BUwmu0GE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgA1K2T (ORCPT
+        id S1726111AbgA1K3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:28:19 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38304 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgA1K2T (ORCPT
+        Tue, 28 Jan 2020 05:29:24 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39247 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgA1K3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:28:19 -0500
-Received: by mail-lj1-f196.google.com with SMTP id w1so14152629ljh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 02:28:18 -0800 (PST)
+        Tue, 28 Jan 2020 05:29:24 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 77so11484408oty.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 02:29:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unikie-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=R/hB3d9WV1ZfOuGwum6uaHEPLLo7pAkJ9wkfhb8ryno=;
-        b=priCxcB8LwrgDL3P9hJ8Fhmz7cxKGIy5qUbauEytJmHyUWYu7pXT5HSujg53hLD3Lr
-         krD7ENJZwPzwkJrsrHAK6YqYhHgULLtAv3mK/hHiODmlK32heqyLinOp00IRwaIuXApL
-         r2IK4w3Ajxik/4eEu8URX3EjVRQlMxzkY/UpVyhmwgZAszAKja9SosTyp8ojYQMuoUn0
-         cSNpivomMSRy5LkkEMTLTVtyJgXrq68NQ6QCCrfix2uFvQ4B4DMTtx0XOoo6Fk0Q4F37
-         Yc6wsBtUuRXwz3SS71tWgFCnxW+4bCcSWOKSvBjtE13pMU9IvLjbV3IrIpat5Uq1UorZ
-         0E6w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gcED4ZlmJtyovEG5JdlRhvSs0Jksu0OFoc3+PCIVqXY=;
+        b=BUwmu0GE0Rcc+1UBNZsrzbQNpFfbcREG6DcUvZCQi2jT9v/IvUk+nQ8oFyKoa2/zTc
+         ugiAhMbuzt0bcoIKrUgrXfeOA33UWz/+869S17yghumlNhR3Ri7+zyVrT4vfsLTnK5Lu
+         q8EOdgTU4yEOyNV3HphjwsKUA+RiZ7ZZa3A5IOz896rPx3L46hkZimSmCLPJuRtxI4Jq
+         BMqW3qWzO1/LJjMlAYnL3r8p3FHXMfQTWuCHoqlfkOM7U+KMC+4N+CVYz3GtyO4gMMW+
+         CUfkojgEavUQ83XI7ET69HA11OBwlrBF5l8h2EolzaoaS1eYENmP2QpUqUmeWzWFRqFi
+         dGOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version:content-transfer-encoding;
-        bh=R/hB3d9WV1ZfOuGwum6uaHEPLLo7pAkJ9wkfhb8ryno=;
-        b=LUYTw5hO1Eqdkne6d4zTfox74Mulq8rxgyokBBVq19QqEFSBxDnFzjcLSx3jJlzbVz
-         xHCSMhFFp7ACDKvGBnXpLiMRqeZZdDZDr/j0f/SvCvtFoVaSTGj9gpfWiQWnir6m/IoR
-         flsRFQin6EpMr/j4sJrkO4cN9l3iA9v6VK7yG3k89cYV99VG7iPB46NG7ajgmnYipMu0
-         7pbkwJob+2sisCaFm2DLgcdQnDtlNPbEHxIsZm0r38dy3arLPslFB+23CxnInncd/mpg
-         YF6H2UVCMMexkkNZW/7B4NW+bYw14LxZ8HxwHTl5blHeqCRXo1yEOCwR2mt8h7Ia9RXC
-         GFUw==
-X-Gm-Message-State: APjAAAW2Od591RCnq8JWJjWwHF9LGnZTWDIN3G3uYM/Lj4oUWr1JED5R
-        MLQKYxEkLM4KqM9IR7wIZKb7gw==
-X-Google-Smtp-Source: APXvYqz1H+G5sAa2YK3jJrrb2gl81iOk9gR7ql0r3PFxcDlQk+/3WQL3GKFf6/h+4lgSCFz2FboK2w==
-X-Received: by 2002:a2e:9c04:: with SMTP id s4mr13050425lji.147.1580207297152;
-        Tue, 28 Jan 2020 02:28:17 -0800 (PST)
-Received: from GL-434 ([109.204.235.119])
-        by smtp.gmail.com with ESMTPSA id d11sm9687741lfj.3.2020.01.28.02.28.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jan 2020 02:28:16 -0800 (PST)
-From:   jouni.hogander@unikie.com (Jouni =?utf-8?Q?H=C3=B6gander?=)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>, syzkaller@googlegroups.com
-Subject: Re: [PATCH 4.19 000/306] 4.19.87-stable review
-References: <20191127203114.766709977@linuxfoundation.org>
-        <CA+G9fYuAY+14aPiRVUcXLbsr5zJ-GLjULX=s9jcGWcw_vb5Kzw@mail.gmail.com>
-        <20191128073623.GE3317872@kroah.com>
-        <CAKXUXMy_=gVVw656AL5Rih_DJrdrFLoURS-et0+dpJ2cKaw6SQ@mail.gmail.com>
-        <20191129085800.GF3584430@kroah.com> <87sgk8szhc.fsf@unikie.com>
-Date:   Tue, 28 Jan 2020 12:28:15 +0200
-In-Reply-To: <87sgk8szhc.fsf@unikie.com> ("Jouni \=\?utf-8\?Q\?H\=C3\=B6gander\?\=
- \=\?utf-8\?Q\?\=22's\?\= message of "Wed,
-        22 Jan 2020 09:48:47 +0200")
-Message-ID: <87zhe727uo.fsf@unikie.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.2 (gnu/linux)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gcED4ZlmJtyovEG5JdlRhvSs0Jksu0OFoc3+PCIVqXY=;
+        b=nhHtH7UbfGNwPQTMzu8PGQr58CW0hQoeoVJ+mg24FiAC+KIEdq2miZ8nx9k+M0bNCW
+         7XNWCIK51SjESgD3P9pNuvtH4DViSJ4IRaMspoUblfKMrQDwK/AhFoDx1lm8R3yiHZ6l
+         cFEiEUw32lTYiVErL5w4ygdGSo4Xv2K/vE7z4nkpqyUnqiQ6JryZtKaObQyXwWJyARGv
+         riAR9ey9RDN1d2dyK6vCGdP4QPpyxJht086agS/FP6glU+mgh0/JilIaFiduYgB9PYMa
+         AgMlJwcbyWIZzrx1nhMBoHW58jeL30xFvK7rPfcxMxT5y2toh7/h+Uj5LkX2T3WDI4RH
+         armw==
+X-Gm-Message-State: APjAAAWSfBXgfsfFfPIgxgqknee1DsZkMfBCJYXEJDLZZQ70xR8V0KU2
+        Otyrlr4AK+O4Jy5aUrweNiGGZ9mDugcwLpNGHyk2otDG
+X-Google-Smtp-Source: APXvYqzc3S/crHEzbEjQS4F3FomiDAtebl0zV8C7DZvl0NmnEoqKbbbHfAu7bueh9FpsPJM2YyfXweMK+vT7aLuR9qw=
+X-Received: by 2002:a9d:7f12:: with SMTP id j18mr16795906otq.17.1580207363151;
+ Tue, 28 Jan 2020 02:29:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <CANpmjNMzvcrQWpGWVgNRxvZroecAEZYYa2yYAtm5+ekcK=H3OQ@mail.gmail.com>
+ <E65D0BFC-719A-4CF9-A934-55ACFF663F98@lca.pw>
+In-Reply-To: <E65D0BFC-719A-4CF9-A934-55ACFF663F98@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 28 Jan 2020 11:29:11 +0100
+Message-ID: <CANpmjNNFBLB4iB7gj3sR9y1RKB6PmneNZmfpyJ4418impvwqBA@mail.gmail.com>
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+To:     Qian Cai <cai@lca.pw>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Greg,
-
-jouni.hogander@unikie.com (Jouni H=C3=B6gander) writes:
-
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
->>> > Now queued up, I'll push out -rc2 versions with this fix.
->>> >
->>> > greg k-h
->>>=20
->>> We have also been informed about another regression these two commits
->>> are causing:
->>>=20
->>> https://lore.kernel.org/lkml/ace19af4-7cae-babd-bac5-cd3505dcd874@I-lov=
-e.SAKURA.ne.jp/
->>>=20
->>> I suggest to drop these two patches from this queue, and give us a
->>> week to shake out the regressions of the change, and once ready, we
->>> can include the complete set of fixes to stable (probably in a week or
->>> two).
->>
->> Ok, thanks for the information, I've now dropped them from all of the
->> queues that had them in them.
->>
->> greg k-h
+On Tue, 28 Jan 2020 at 11:10, Qian Cai <cai@lca.pw> wrote:
 >
-> I have now run more extensive Syzkaller testing on following patches:
 >
-> cb626bf566eb net-sysfs: Fix reference count leak
-> ddd9b5e3e765 net-sysfs: Call dev_hold always in rx_queue_add_kobject
-> e0b60903b434 net-sysfs: Call dev_hold always in netdev_queue_add_kobje
-> 48a322b6f996 net-sysfs: fix netdev_queue_add_kobject() breakage
-> b8eb718348b8 net-sysfs: Fix reference count leak in rx|netdev_queue_add_k=
-object
 >
-> These patches are fixing couple of memory leaks including this one found
-> by Syzbot: https://syzkaller.appspot.com/bug?extid=3Dad8ca40ecd77896d51e2
+> > On Jan 28, 2020, at 3:18 AM, Marco Elver <elver@google.com> wrote:
+> >
+> > This should be an instance of same-value-store, since the node->cpu is
+> > per-CPU and smp_processor_id() should always be the same, at least
+> > once it's published. I believe the data race I observed here before
+> > KCSAN had KCSAN_REPORT_VALUE_CHANGE_ONLY on syzbot, and hasn't been
+> > observed since. For the most part, that should deal with this case.
 >
-> I can reproduce these memory leaks in following stable branches: 4.14,
-> 4.19, and 5.4.
->
-> These are all now merged into net/master tree and based on my testing
-> they are ready to be taken into stable branches as well.
->
-> Best Regards,
->
-> Jouni H=C3=B6gander
+> Are you sure? I had KCSAN_REPORT_VALUE_CHANGE_ONLY=3Dy here and saw somet=
+hing similar a splat. I=E2=80=99ll also double check on my side and provide=
+ the decoding.
 
-These four patches are still missing from 4.14 and 4.19 branches:
-
-ddd9b5e3e765 net-sysfs: Call dev_hold always in rx_queue_add_kobject
-e0b60903b434 net-sysfs: Call dev_hold always in netdev_queue_add_kobje
-48a322b6f996 net-sysfs: fix netdev_queue_add_kobject() breakage
-b8eb718348b8 net-sysfs: Fix reference count leak in rx|netdev_queue_add_kob=
-ject
-
-Could you please consider taking them in or let me know if you want some
-further activities from my side?
-
-BR,
-
-Jouni H=C3=B6gander
+The data race you reported in this thread is a different one (same
+function, but different accesses). I will reply separately.
