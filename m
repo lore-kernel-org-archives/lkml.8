@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76733C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9214C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3262468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8186B2469B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221442;
-	bh=TTJ6GVWyctbFg9psBxC6ZtWRo9RWGRb4RSj8wENSv80=;
+	s=default; t=1580221445;
+	bh=A8JJUYJGyNhOqLSJ3vjLgkbwZ+hmT28q+PCz6k8lqMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UtVK9Xwpm2PIWHPkYL6kh958v42pSb2f6jMCA9gQHuqqeti5xLcx12bvw1jZUOU+M
-	 Q0Mf9fzuN6Wh73M2+R/LzJEz/K01tn7JQkbaAvYIjfDhe2PuIxOGiBcvgXbLFwD/Ai
-	 7filvzzuWVZZx45j72/7unlWh6sgFbL4FRZTtyu4=
+	b=L/kVL4rWpBYI9buGPuDxfCnfTqm5Y/LX+OBmJRfo+9/ftgCdVPe9qOqNjyB9Yywms
+	 1O5zXyUSxort0VDgRDzhqkwc/lqdzS8uLpXLgIMmZxkODhmLf8GUGVffWj8e/4gcAg
+	 POao6jVlWmZTMf7c2FWqa/pktlnJCKjJs3ozUCjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732448AbgA1OYB (ORCPT
+        id S1732464AbgA1OYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:24:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50424 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:24:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbgA1OX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:23:58 -0500
+        id S1727217AbgA1OX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:23:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 720FA24688;
-        Tue, 28 Jan 2020 14:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E21CE24686;
+        Tue, 28 Jan 2020 14:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221437;
-        bh=TTJ6GVWyctbFg9psBxC6ZtWRo9RWGRb4RSj8wENSv80=;
+        s=default; t=1580221435;
+        bh=A8JJUYJGyNhOqLSJ3vjLgkbwZ+hmT28q+PCz6k8lqMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H0FYA9GJ///Pj8WrHjVEDxolPAPCCWnlJfIIF1fugkC3Cq6VkP6B9gZizBoiCv/7I
-         NcaItHd97pDGVOCapl26kYuDY7v517pqKf7GTX6ZCr+gPaK2NguBBZh1ylWO8goxW+
-         tZwcARvY35zS3XxyTv+y9EkphdzapA4/npAaQU1A=
+        b=KqkFwUKGGHYG9R5zz4ySH0rsGlrZTzIyANJEzNu8Pd25VV+Fl6Flf6O1oTMNVjlWC
+         osxM1AV8rnHjA4/piO7jYPp5zULZlc7ub5qdVfJ0UjV611WfA2g3Udr2wZt/nFgxUY
+         iELzKN0hTLwCdQ9Bp3NYreR1LKMCXc9dk9yZk+2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 223/271] media: ov6650: Fix .get_fmt() V4L2_SUBDEV_FORMAT_TRY support
-Date:   Tue, 28 Jan 2020 15:06:12 +0100
-Message-Id: <20200128135909.155150138@linuxfoundation.org>
+Subject: [PATCH 4.9 222/271] media: ov6650: Fix some format attributes not under control
+Date:   Tue, 28 Jan 2020 15:06:11 +0100
+Message-Id: <20200128135909.077783872@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -63,45 +63,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 39034bb0c26b76a2c3abc54aa28c185f18b40c2f ]
+[ Upstream commit 1c6a2b63095154bbf9e8f38d79487a728331bf65 ]
 
-Commit da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad
-op get_fmt") converted a former ov6650_g_fmt() video operation callback
-to an ov6650_get_fmt() pad operation callback.  However, the converted
-function disregards a format->which flag that pad operations should
-obey and always returns active frame format settings.
+User arguments passed to .get/set_fmt() pad operation callbacks may
+contain unsupported values.  The driver takes control over frame size
+and pixel code as well as colorspace and field attributes but has never
+cared for remainig format attributes, i.e., ycbcr_enc, quantization
+and xfer_func, introduced by commit 11ff030c7365 ("[media]
+v4l2-mediabus: improve colorspace support").  Fix it.
 
-That can be fixed by always responding to V4L2_SUBDEV_FORMAT_TRY with
--EINVAL, or providing the response from a pad config argument, likely
-updated by a former user call to V4L2_SUBDEV_FORMAT_TRY .set_fmt().
-Since implementation of the latter is trivial, go for it.
+Set up a static v4l2_mbus_framefmt structure with attributes
+initialized to reasonable defaults and use it for updating content of
+user provided arguments.  In case of V4L2_SUBDEV_FORMAT_ACTIVE,
+postpone frame size update, now performed from inside ov6650_s_fmt()
+helper, util the user argument is first updated in ov6650_set_fmt() with
+default frame format content.  For V4L2_SUBDEV_FORMAT_TRY, don't copy
+all attributes to pad config, only those handled by the driver, then
+fill the response with the default frame format updated with resulting
+pad config format code and frame size.
 
-Fixes: da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad op get_fmt")
+Fixes: 11ff030c7365 ("[media] v4l2-mediabus: improve colorspace support")
 Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/soc_camera/ov6650.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/media/i2c/soc_camera/ov6650.c | 51 ++++++++++++++++++++-------
+ 1 file changed, 39 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
-index 3b118d45d433b..3c959e48855c3 100644
+index e9271ad9ee4c1..3b118d45d433b 100644
 --- a/drivers/media/i2c/soc_camera/ov6650.c
 +++ b/drivers/media/i2c/soc_camera/ov6650.c
-@@ -526,10 +526,16 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
- 	*mf = ov6650_def_fmt;
+@@ -215,6 +215,17 @@ static u32 ov6650_codes[] = {
+ 	MEDIA_BUS_FMT_Y8_1X8,
+ };
  
- 	/* update media bus format code and frame size */
--	mf->width	= priv->rect.width >> priv->half_scale;
--	mf->height	= priv->rect.height >> priv->half_scale;
--	mf->code	= priv->code;
++static const struct v4l2_mbus_framefmt ov6650_def_fmt = {
++	.width		= W_CIF,
++	.height		= H_CIF,
++	.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
++	.colorspace	= V4L2_COLORSPACE_SRGB,
++	.field		= V4L2_FIELD_NONE,
++	.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
++	.quantization	= V4L2_QUANTIZATION_DEFAULT,
++	.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
++};
++
+ /* read a register */
+ static int ov6650_reg_read(struct i2c_client *client, u8 reg, u8 *val)
+ {
+@@ -511,11 +522,13 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
+ 	if (format->pad)
+ 		return -EINVAL;
+ 
++	/* initialize response with default media bus frame format */
++	*mf = ov6650_def_fmt;
++
++	/* update media bus format code and frame size */
+ 	mf->width	= priv->rect.width >> priv->half_scale;
+ 	mf->height	= priv->rect.height >> priv->half_scale;
+ 	mf->code	= priv->code;
+-	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+-	mf->field	= V4L2_FIELD_NONE;
+ 
+ 	return 0;
+ }
+@@ -678,10 +691,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 	if (!ret)
+ 		priv->code = code;
+ 
+-	if (!ret) {
+-		mf->width = priv->rect.width >> half_scale;
+-		mf->height = priv->rect.height >> half_scale;
+-	}
+ 	return ret;
+ }
+ 
+@@ -700,9 +709,6 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
+ 		v4l_bound_align_image(&mf->width, 2, W_CIF, 1,
+ 				&mf->height, 2, H_CIF, 1, 0);
+ 
+-	mf->field = V4L2_FIELD_NONE;
+-	mf->colorspace = V4L2_COLORSPACE_SRGB;
+-
+ 	switch (mf->code) {
+ 	case MEDIA_BUS_FMT_Y10_1X10:
+ 		mf->code = MEDIA_BUS_FMT_Y8_1X8;
+@@ -718,10 +724,31 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
+ 		break;
+ 	}
+ 
+-	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+-		return ov6650_s_fmt(sd, mf);
+-	cfg->try_fmt = *mf;
 +	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
++		/* store media bus format code and frame size in pad config */
++		cfg->try_fmt.width = mf->width;
++		cfg->try_fmt.height = mf->height;
++		cfg->try_fmt.code = mf->code;
+ 
++		/* return default mbus frame format updated with pad config */
++		*mf = ov6650_def_fmt;
 +		mf->width = cfg->try_fmt.width;
 +		mf->height = cfg->try_fmt.height;
 +		mf->code = cfg->try_fmt.code;
- 
++
 +	} else {
++		/* apply new media bus format code and frame size */
++		int ret = ov6650_s_fmt(sd, mf);
++
++		if (ret)
++			return ret;
++
++		/* return default format updated with active size and code */
++		*mf = ov6650_def_fmt;
 +		mf->width = priv->rect.width >> priv->half_scale;
 +		mf->height = priv->rect.height >> priv->half_scale;
 +		mf->code = priv->code;
