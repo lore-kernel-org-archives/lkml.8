@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806FEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB192C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546FA2468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6892468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220868;
-	bh=jV/dth03refcE4X+CD8qRfFQaEXuob2S/bnzO3uo3Fc=;
+	s=default; t=1580220871;
+	bh=ViKLiKUsFLh8npdo0eFWdWYH7r9YeMZzDa3TMAqTyG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HyUQseDt0b97dr55ye1jdRdJ07qcnAavJTL81mwpSv2n9MDzkG3J6ALRJN8jdRE+Q
-	 ol6lPejweROTJULpqftSsEjqyoEmfInDa5jaz6X4VGSRin2mMSyr0XWXmgHl4CjYoZ
-	 VwX9stgf3fCspH9zy6HAkyxiXUEsGSH/jYLs6ndY=
+	b=zLKblggUesg6m59TuiEP1PFrphWSV4F835iNorH7dbB2E5ApBYm+luY8Cn+JPfn3Z
+	 UEsfoO+g7AgvBg/uuPoTXAHCs9UvJLYemEL/QNfdeq0BM6Pk/GAA4gVXcMeDitAoDj
+	 +d8F8scOk8wg6QzdMR+jqZ4NmVfsU4BrxPnZxBIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgA1OO1 (ORCPT
+        id S1729897AbgA1OOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:14:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36506 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:14:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729864AbgA1OOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:14:23 -0500
+        id S1729359AbgA1OO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:14:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D07FF24694;
-        Tue, 28 Jan 2020 14:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9EB12468A;
+        Tue, 28 Jan 2020 14:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220863;
-        bh=jV/dth03refcE4X+CD8qRfFQaEXuob2S/bnzO3uo3Fc=;
+        s=default; t=1580220868;
+        bh=ViKLiKUsFLh8npdo0eFWdWYH7r9YeMZzDa3TMAqTyG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IKbtprDHSUjl+teUz5iZyswqMAbB+SfEmR4W73inwAxiUrrphcfd2rDCPMoeKFyXd
-         9/4CvN36FrcOGy2ZDBwhxCnSMg5QDHTwPUdbs7x7K7g3Dlg7GdeCf+ZKcroiOiGXi0
-         7vK4YWECTNetIRFQqb/55lj2OD+Pg+iJpXqQZgg0=
+        b=Oxuo9aZCv4JKSBkvsLsFG/r4ib6jU3fIekGwposE7P0DrAO+Gwir2Jz7HaZaV3cNO
+         DKRx9RzpEiJuxZZKNsuhkh4NWKxYeglH3qtOukBR478CNuIYmxX6nz7eeoSULWY2Vr
+         lhcW33HLYu6js3gziBiZ8xWjrpysv8TvGHJCWrF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Lars=20M=C3=B6llendorf?= <lars.moellendorf@plating.de>,
-        Lars-Peter Clausen <lars@metafoo.de>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.4 177/183] iio: buffer: align the size of scan bytes to size of the largest element
-Date:   Tue, 28 Jan 2020 15:06:36 +0100
-Message-Id: <20200128135847.434432262@linuxfoundation.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shaohua Li <shli@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.4 179/183] md: Avoid namespace collision with bitmap API
+Date:   Tue, 28 Jan 2020 15:06:38 +0100
+Message-Id: <20200128135847.631280854@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,60 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars Möllendorf <lars.moellendorf@plating.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 883f616530692d81cb70f8a32d85c0d2afc05f69 upstream.
+commit e64e4018d572710c44f42c923d4ac059f0a23320 upstream.
 
-Previous versions of `iio_compute_scan_bytes` only aligned each element
-to its own length (i.e. its own natural alignment). Because multiple
-consecutive sets of scan elements are buffered this does not work in
-case the computed scan bytes do not align with the natural alignment of
-the first scan element in the set.
+bitmap API (include/linux/bitmap.h) has 'bitmap' prefix for its methods.
 
-This commit fixes this by aligning the scan bytes to the natural
-alignment of the largest scan element in the set.
+On the other hand MD bitmap API is special case.
+Adding 'md' prefix to it to avoid name space collision.
 
-Fixes: 959d2952d124 ("staging:iio: make iio_sw_buffer_preenable much more general.")
-Signed-off-by: Lars Möllendorf <lars.moellendorf@plating.de>
-Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+No functional changes intended.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Shaohua Li <shli@kernel.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+[only take the bitmap_free change for stable - gregkh]
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/iio/industrialio-buffer.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/md/bitmap.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -527,7 +527,7 @@ static int iio_compute_scan_bytes(struct
+--- a/drivers/md/bitmap.c
++++ b/drivers/md/bitmap.c
+@@ -1671,7 +1671,7 @@ void bitmap_flush(struct mddev *mddev)
+ /*
+  * free memory that was allocated
+  */
+-static void bitmap_free(struct bitmap *bitmap)
++static void md_bitmap_free(struct bitmap *bitmap)
  {
- 	const struct iio_chan_spec *ch;
- 	unsigned bytes = 0;
--	int length, i;
-+	int length, i, largest = 0;
+ 	unsigned long k, pages;
+ 	struct bitmap_page *bp;
+@@ -1721,7 +1721,7 @@ void bitmap_destroy(struct mddev *mddev)
+ 	if (bitmap->sysfs_can_clear)
+ 		sysfs_put(bitmap->sysfs_can_clear);
  
- 	/* How much space will the demuxed element take? */
- 	for_each_set_bit(i, mask,
-@@ -540,6 +540,7 @@ static int iio_compute_scan_bytes(struct
- 			length = ch->scan_type.storagebits / 8;
- 		bytes = ALIGN(bytes, length);
- 		bytes += length;
-+		largest = max(largest, length);
- 	}
- 	if (timestamp) {
- 		ch = iio_find_channel_from_si(indio_dev,
-@@ -551,7 +552,10 @@ static int iio_compute_scan_bytes(struct
- 			length = ch->scan_type.storagebits / 8;
- 		bytes = ALIGN(bytes, length);
- 		bytes += length;
-+		largest = max(largest, length);
- 	}
-+
-+	bytes = ALIGN(bytes, largest);
- 	return bytes;
+-	bitmap_free(bitmap);
++	md_bitmap_free(bitmap);
  }
  
+ /*
+@@ -1805,7 +1805,7 @@ struct bitmap *bitmap_create(struct mdde
+ 
+ 	return bitmap;
+  error:
+-	bitmap_free(bitmap);
++	md_bitmap_free(bitmap);
+ 	return ERR_PTR(err);
+ }
+ 
+@@ -1904,7 +1904,7 @@ int bitmap_copy_from_slot(struct mddev *
+ 	*low = lo;
+ 	*high = hi;
+ err:
+-	bitmap_free(bitmap);
++	md_bitmap_free(bitmap);
+ 	return rv;
+ }
+ EXPORT_SYMBOL_GPL(bitmap_copy_from_slot);
 
 
