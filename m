@@ -2,129 +2,85 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBF3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD607C35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8254D207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:18:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SDdQka3j"
+	by mail.kernel.org (Postfix) with ESMTP id 91A16207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgA1VSy (ORCPT
+        id S1726520AbgA1VT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 16:18:54 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40862 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgA1VSx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 16:18:53 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j104so1873038wrj.7;
-        Tue, 28 Jan 2020 13:18:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vqrFGl4DYQ6rBDtmgmAyCIFwbIeB0lM4NEh8e6KqoQY=;
-        b=SDdQka3jB7cfln27F1gTq4Fx8sx4W8EYxf/E3vwRlzZODWF0xXkomBM2O0FIIMhFpt
-         qB9QJjMwEqxYdqthj1WOSAo05ZbnWUALLUzmHbRaCkAN5JaeKheGJMN3x9OSTRece0Zx
-         +IaVhN8fve0gmbNXRIgJelEbysxd8xfSfJhMg1lfOimQJmW7ngJQegYwdigGJrD7mD2x
-         jIymh1wyYeTy2mfMFlTWBdFCDH9UwRCJBhQAsAGGCmQkk9Wo8rGoKgLnhxp23OafbYuy
-         xyrzYR6p3fksBmI11NS/7w95JMQgn64rzoggMMdRtWJlsxC57lp3ZgE2kVeVJt3O9ECr
-         Ujgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vqrFGl4DYQ6rBDtmgmAyCIFwbIeB0lM4NEh8e6KqoQY=;
-        b=IaZQYT8j0h7qL9L9paq6wVzqSZ+oe8s076wygtMlcD0sgdIS7ICdc1q5OGxoBzzvFU
-         JvjOfojNuht7NUsM1Bsnr/agkZkldRniFa/6de+xVAe3w2ZttNH/I8C/nLUwl8I2kWoB
-         YrM9TBmgB1q0yI/B4QDKI2UbKkstji7citJVsYk+Q8hdRn6NdST9znh5KeXaFlj1CYz1
-         B74mEnPi2Z9Rh4s8DwoVbCQn35q3n9mt7arv7nzsNC/0+RheE+qSbolmu6UKPcIJOWBZ
-         N+dn1YiiZbQtWb9vCdzz8memjztSbCp3wUcRri7cgvHvBwxbarrnBwlVpCh61JlP8j5Q
-         QJJQ==
-X-Gm-Message-State: APjAAAU3W+0kxYGLP+x2JbtEPRUboUe2YQhreU22oDA6fnp9aAhZ2oon
-        nGN52dA0HUuB/nDdopXCNrYw/1fmM9/YaKHn8X0=
-X-Google-Smtp-Source: APXvYqzU39n+7gDP5IecAKJU2PwwUD3Oq2p0BtGAC6k1BXDb1seK0Kzycq+zX8/RWXr46l71QQTb6vYsiRjS4KjZvOg=
-X-Received: by 2002:a5d:40c9:: with SMTP id b9mr32033070wrq.419.1580246331794;
- Tue, 28 Jan 2020 13:18:51 -0800 (PST)
+        Tue, 28 Jan 2020 16:19:29 -0500
+Received: from namei.org ([65.99.196.166]:60442 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbgA1VT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 16:19:28 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 00SLGD0G004501;
+        Tue, 28 Jan 2020 21:16:14 GMT
+Date:   Wed, 29 Jan 2020 08:16:13 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>, Will Deacon <will@kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        oprofile-list@lists.sf.net
+Subject: Re: [PATCH v6 01/10] capabilities: introduce CAP_PERFMON to kernel
+ and user space
+In-Reply-To: <62274abc-6067-9121-9397-c9b626ca5f7a@linux.intel.com>
+Message-ID: <alpine.LRH.2.21.2001290815420.2204@namei.org>
+References: <74d524ab-ac11-a7b8-1052-eba10f117e09@linux.intel.com> <62274abc-6067-9121-9397-c9b626ca5f7a@linux.intel.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200128154227.43f15a1f@canb.auug.org.au>
-In-Reply-To: <20200128154227.43f15a1f@canb.auug.org.au>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 28 Jan 2020 16:18:40 -0500
-Message-ID: <CADnq5_Pc8SCfek7D86qwt1bWut-RD6SUVZzH=ccK+BsdDcvN2g@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the amdgpu tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Tianci.Yin" <tianci.yin@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 11:42 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the amdgpu tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
->
-> drivers/gpu/drm/amd/amdgpu/psp_v11_0.c: In function 'psp_v11_0_memory_training':
-> drivers/gpu/drm/amd/amdgpu/psp_v11_0.c:1047:9: error: implicit declaration of function 'vmalloc'; did you mean 'kvmalloc'? [-Werror=implicit-function-declaration]
->  1047 |   buf = vmalloc(sz);
->       |         ^~~~~~~
->       |         kvmalloc
-> drivers/gpu/drm/amd/amdgpu/psp_v11_0.c:1047:7: warning: assignment to 'void *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
->  1047 |   buf = vmalloc(sz);
->       |       ^
-> drivers/gpu/drm/amd/amdgpu/psp_v11_0.c:1057:4: error: implicit declaration of function 'vfree'; did you mean 'kvfree'? [-Werror=implicit-function-declaration]
->  1057 |    vfree(buf);
->       |    ^~~~~
->       |    kvfree
->
-> Caused by commit
->
->   240c811ccde4 ("drm/amdgpu: fix VRAM partially encroached issue in GDDR6 memory training(V2)")
->
-> I have applied this patch for today:
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 28 Jan 2020 15:33:44 +1100
-> Subject: [PATCH] amdgpu: using vmalloc requires includeing vmalloc.h
->
-> Fixes: 240c811ccde4 ("drm/amdgpu: fix VRAM partially encroached issue in GDDR6 memory training(V2)")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+On Tue, 28 Jan 2020, Alexey Budankov wrote:
 
-Applied.  thanks!
-
-Alex
-
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 > ---
->  drivers/gpu/drm/amd/amdgpu/psp_v11_0.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-> index ac173d2eb809..0829188c1a5c 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-> @@ -22,6 +22,7 @@
->
->  #include <linux/firmware.h>
->  #include <linux/module.h>
-> +#include <linux/vmalloc.h>
->
->  #include "amdgpu.h"
->  #include "amdgpu_psp.h"
-> --
-> 2.24.1
->
-> --
-> Cheers,
-> Stephen Rothwell
+>  include/linux/capability.h          | 4 ++++
+>  include/uapi/linux/capability.h     | 8 +++++++-
+>  security/selinux/include/classmap.h | 4 ++--
+>  3 files changed, 13 insertions(+), 3 deletions(-)
+
+
+Acked-by: James Morris <jamorris@linux.microsoft.com>
+
+
+-- 
+James Morris
+<jmorris@namei.org>
+
