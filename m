@@ -2,162 +2,146 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A9FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD79C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CAD2465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rCOoAVHU"
+	by mail.kernel.org (Postfix) with ESMTP id 3FAB7214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580232898;
+	bh=4ZRiXFBvxjNF1vSR2mMc8kfjR2X6mCSZ/le9+O4KKm4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=hdc7kST3ywrJ2hGEqRHzq2Xk9RhE+qtl6rgDEN2p4O2oA3X8w8Uq3P5DwTk3Bxo5y
+	 LdjsCzzHAC9Boh0h2U8R8GuekgxyYokmzd1AV6v1cAetA9nPWk0XwV4FOaMu6jkeg8
+	 0MroJacJ1rr2dYUyw+yfME/sKIGsxYpg4uGzDQu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgA1Rcv (ORCPT
+        id S1726443AbgA1Re5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:32:51 -0500
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:37690 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgA1Rcv (ORCPT
+        Tue, 28 Jan 2020 12:34:57 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39770 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgA1Re5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:32:51 -0500
-Received: by mail-wr1-f48.google.com with SMTP id w15so17053934wru.4;
-        Tue, 28 Jan 2020 09:32:49 -0800 (PST)
+        Tue, 28 Jan 2020 12:34:57 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c84so3491769wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 09:34:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UEHKbjV0nqlBA9um3vA2rHSRrf9BUyNOWdNP0/CH1zQ=;
-        b=rCOoAVHUuXEwpmWpZvFfgWUGpJd5f9Co2EQ/jOAaZkSBXnB1B5H2apc95dtNF/YDzv
-         5D4yYxYnElORcJr62gw5/mS6XRokF81sBCeBps2Q9rhKwqF9dB7MEdUdtOD6Y4ST7ioS
-         4g7pJgbGV8j9vlXOoiNUu1wl9vhD/VIzxfskS2/jZtCaLcq8Bh/gGj+LxqhKHMTuGPZd
-         hSqZK0cyvBMcFqRwa38gBnMf7Zg8Zmvd7t0Hg0x5a2FCZU4gpDNx80VHFa261ntDXmP5
-         wJ+u+gtTyEGib8iMN+LMfDR4TVaBMCbqx7BGuQdj/HJuVP9TYWXgtqNhEUmqLDd+/w1+
-         k/kQ==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=lx3j6BrSnjaR1j8BXuFz2mANCw6TQ/1Pb+Fl70a0flY=;
+        b=YHTW/jXoim+GJrxkWXxgq8dKV3TVjVr3GE6qZckCo89Q5rr0Hv4vZScQ2+z8rRE0QB
+         tGBayuAPeZLfAqMdcZwctBfjmAdLTXwbaIfPMjxxa8gLf/zbd0NdV4ZKHFtg5HQirsaA
+         fLatv25rTvpDv0QMRu/PHpFC+ESKGpsTnnaTzh5ZnunYjErfX4M4+pt60BQuCDCSbPlr
+         BYhcIpzvWalE8VB2VlVPgE3etG7C6RvS9cnnmfhL4p5ZdeOHIxtuTj1y74VT5iXwqV8n
+         /N+9PrVC6LGq+bdCMX9FOBoUUvw0Jk1YFOw4FvzjaKkcxTGb9LXzyJ7UdR7gbPrZ48J7
+         v1gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UEHKbjV0nqlBA9um3vA2rHSRrf9BUyNOWdNP0/CH1zQ=;
-        b=g6yIk38JzP12Uw2n9fMHlbzPHiIiCjk0WAaJmgdCx+8PjsVTAMRJwJTa2bs/nQTL9U
-         +TqMhBmXz2k8rDsbulGeqgYBqkOvPGxweetw3qoU4YCt14DHUnDSdU2Agi9PH85Kj5oQ
-         mvfUS1F3a1bbTmmYTtwfpQPjgWLm/vXPJe3Dl5Uu58jfFdGI3Mhuk2mk10IvkR3uxQna
-         dguMBhNHpSP7QNYICZQrcFydaA4LCg4jkNx3CeJP3hxIaHU5FBko/lnNxIucr/OD27Wz
-         Bw1kxFbcZQIUEg4QosDBS8Az70LwUnSiPqONM7qIVo/9FD1VuYBjBr13XrAinhdohpxQ
-         dxkA==
-X-Gm-Message-State: APjAAAWcoSC4TShO7v7SJAaXfWWe2uStNT7OSASIFu0GQ9uG5xFbqbLe
-        8Mpoyzs8b7BephrTE+GkZIE=
-X-Google-Smtp-Source: APXvYqxxzLuT1opuigpzIK4xWjOJqPCVVVG/JSzAUmGeqpPZWeTYrAqozisOsy3R9YNvm17hGd4H1A==
-X-Received: by 2002:adf:dd46:: with SMTP id u6mr28613441wrm.13.1580232768634;
-        Tue, 28 Jan 2020 09:32:48 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id d14sm28185347wru.9.2020.01.28.09.32.47
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=lx3j6BrSnjaR1j8BXuFz2mANCw6TQ/1Pb+Fl70a0flY=;
+        b=bWUhKpBIP2OrE3LJ+na3aGW9qVcZ4v0wDzjYx+QFvma8sRQ11+wDodA4s4n0Ud5D/s
+         K/6t6YEgbph+GxDUz9S3zw359H7wBsBpZGGLqjaQ/MRyrjtbmIaOpXeS+n0Y80IfKtrY
+         G6AheabXONCc8RFjfT6onwYUVJaac9dnMjJJu3LES3wRYLDW8W/YfLHj/I6vKMzqx58b
+         5qcdKSfHl9mHOWPi4hwsfqBDcZwoycTvo9kvZAeb8uw5DIrERJz72np0b5KPBG/OATcI
+         yEb1uME1/pNhVWaJkZQwGBh+7fOuWUEQgm7rKc7HZVtNOM4ofUGAikI84GEYUP5mt/4I
+         97bg==
+X-Gm-Message-State: APjAAAWdHq+prySihnpafVHniWDv8J9Pa2wwj8ovoN0ijdGqMxuEWgH0
+        pSE2GlS5czAzhDAUi+m4xAQ=
+X-Google-Smtp-Source: APXvYqyPse6KreDjxSFgxcfNgBmZYUMAg/hzB07m5sRd/5Ck2QNmGnPozV+/mQQud1m4/ZvDO4nQNA==
+X-Received: by 2002:a1c:5ac2:: with SMTP id o185mr6196566wmb.179.1580232894923;
+        Tue, 28 Jan 2020 09:34:54 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id h17sm28247256wrs.18.2020.01.28.09.34.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 09:32:47 -0800 (PST)
-Date:   Tue, 28 Jan 2020 18:32:44 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V3 03/18] phy: tegra: xusb: Add usb-role-switch support
-Message-ID: <20200128173244.GA2293590@ulmo>
-References: <1577704195-2535-1-git-send-email-nkristam@nvidia.com>
- <1577704195-2535-4-git-send-email-nkristam@nvidia.com>
+        Tue, 28 Jan 2020 09:34:54 -0800 (PST)
+Date:   Tue, 28 Jan 2020 18:34:52 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/cleanups
+Message-ID: <20200128173452.GA25020@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1577704195-2535-4-git-send-email-nkristam@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please pull the latest x86-cleanups-for-linus git tree from:
 
-On Mon, Dec 30, 2019 at 04:39:40PM +0530, Nagarjuna Kristam wrote:
-> If usb-role-switch property is present in USB 2 port, register
-> usb-role-switch to receive usb role changes.
->=20
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> ---
-> V3:
->  - Driver aborts if usb-role-switch is not added in dt forotg/peripheral
->    roles.
->  - Added role name strings instead of enum values in debug prints.
->  - Updated arguments and variable allignments as per Thierry inputs.
-> ---
-> V2:
->  - Removed dev_set_drvdata for port->dev.
->  - Added of_platform_depopulate during error handling and driver removal.
-> ---
->  drivers/phy/tegra/Kconfig |  1 +
->  drivers/phy/tegra/xusb.c  | 57 +++++++++++++++++++++++++++++++++++++++++=
-++++++
->  drivers/phy/tegra/xusb.h  |  3 +++
->  3 files changed, 61 insertions(+)
->=20
-> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
-> index f9817c3..df07c4d 100644
-> --- a/drivers/phy/tegra/Kconfig
-> +++ b/drivers/phy/tegra/Kconfig
-> @@ -2,6 +2,7 @@
->  config PHY_TEGRA_XUSB
->  	tristate "NVIDIA Tegra XUSB pad controller driver"
->  	depends on ARCH_TEGRA
-> +	select USB_CONN_GPIO
->  	help
->  	  Choose this option if you have an NVIDIA Tegra SoC.
-> =20
-> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-> index f98ec39..11ea9b5 100644
-> --- a/drivers/phy/tegra/xusb.c
-> +++ b/drivers/phy/tegra/xusb.c
-> @@ -523,6 +523,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_por=
-t *port,
->  	port->dev.type =3D &tegra_xusb_port_type;
->  	port->dev.of_node =3D of_node_get(np);
->  	port->dev.parent =3D padctl->dev;
-> +	port->dev.driver =3D padctl->dev->driver;
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cleanups-for-linus
 
-This looks wrong. I don't think driver's are supposed to set this
-because it basically means that the device is being attached to the
-driver, but in this case it doesn't get probed by the driver and in
-fact the ports don't match the pad controller, so they can't really
-be driven by the same driver.
+   # HEAD: 3c749b81ee99ef1a01d342ee5e4bc01e4332eb75 x86/CPU/AMD: Remove amd_get_topology_early()
 
-Is there any particular reason why you need this?
+Misc cleanups all around the map.
 
-Thierry
+ Thanks,
 
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
+	Ingo
 
------BEGIN PGP SIGNATURE-----
+------------------>
+Anthony Steinhauser (1):
+      x86/nospec: Remove unused RSB_FILL_LOOPS
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4wcDkACgkQ3SOs138+
-s6FsghAAoD/UomjaeZd8bY2R43NpHXrHIRhlcnRJUrm2NQzod8kdj9tkUH093usf
-t+oPi+lizbJqV3P8wJUrk0wNPAz1B+2TchrcpuWXzc/orwcMhQVhV4Vw/B3psEo3
-jxL0UE5bhSdErLS4enDP8lu9XiKfDBM5rXwroRYYWogQK86I3RLPeW+WJEzLbDfR
-gJH47XBA7ZMTP3EmBXd92NZZA0+2CSiAjwoT5QC4+EJpYdhJTDPjmxQbZY/dHB37
-TKu7s1tJMSz14Vkypgh2ExUufbk+f3JlYEka2R+DWXHSN3e2vLixoMtVIwYlaM33
-AWAlBHW7iJPxGmoZLY3QyjF3fZOMvOzRRI/GwIbY+F6kwPFEiZHmoPruBVLKyg4a
-4q0hkBD/O2Q/8A/boju/7eUVw3WXRFzVvSYHoKVvl3rsY6o4hIlAuGj6crkaDarh
-gPJYvJh6eDY5snTEM98/Xmrme82PKLaXJGcf8FBZ1ZCUQoak4EX2mop+30Ml38Ly
-ABLHIaubha4ciqJ4DZwX5lwuUQyEXSgr1IKeLklGBuIvK6ffvsjSK9fYHasGUrmz
-V2W+urskYuFQPefo0zND/vBGFtYTWbFz+cQxNWz/F4uU1j8adbVb5txSgOleRutF
-lXfIGLpnOk+eGhf/it6b6phm/AKz2FgJt3d2E4xNMq27JuMUsuk=
-=nbqn
------END PGP SIGNATURE-----
+Benjamin Thiel (1):
+      x86/cpu: Add a missing prototype for arch_smt_update()
 
---PNTmBPCT7hxwcZjr--
+Borislav Petkov (1):
+      x86/CPU/AMD: Remove amd_get_topology_early()
+
+Enrico Weigelt (1):
+      Documentation/x86/boot: Fix typo
+
+Ingo Molnar (2):
+      x86/setup: Clean up the header portion of setup.c
+      x86/setup: Enhance the comments
+
+Julia Lawall (1):
+      x86/crash: Use resource_size()
+
+Krzysztof Kozlowski (1):
+      x86/Kconfig: Fix Kconfig indentation
+
+Mateusz Nosek (1):
+      x86/tsc: Remove redundant assignment
+
+Randy Dunlap (1):
+      x86/Kconfig: Correct spelling and punctuation
+
+Sean Christopherson (1):
+      x86/boot: Fix a comment's incorrect file reference
+
+Valdis Kletnieks (1):
+      x86/vdso: Provide missing include file
+
+yu kuai (1):
+      x86/process: Remove set but not used variables prev and next
+
+
+ Documentation/x86/boot.rst           |   2 +-
+ arch/x86/Kconfig                     |  74 ++++++++--------
+ arch/x86/entry/vdso/vdso32-setup.c   |   1 +
+ arch/x86/include/asm/nospec-branch.h |   1 -
+ arch/x86/include/asm/realmode.h      |   4 +-
+ arch/x86/kernel/cpu/amd.c            |  10 +--
+ arch/x86/kernel/cpu/common.c         |   1 +
+ arch/x86/kernel/crash.c              |   2 +-
+ arch/x86/kernel/process.c            |   4 -
+ arch/x86/kernel/setup.c              | 163 ++++++++++-------------------------
+ arch/x86/kernel/tsc_sync.c           |   1 -
+ arch/x86/xen/Kconfig                 |   8 +-
+ 12 files changed, 96 insertions(+), 175 deletions(-)
