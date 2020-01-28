@@ -2,213 +2,151 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53386C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49784C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F27C24684
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mx5ogHr3"
+	by mail.kernel.org (Postfix) with ESMTP id 1E03E24686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580211598;
+	bh=kmf5D6RKZUxlp3g7H60rO0uBNfp2fqdARa08eJtYZqM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MLUCael8Ocqi5yHpQoVGXwMBq+2LpCt6WluCvZTGBJlBOkZvrzwlCIQoXmiyWj2FZ
+	 Akbt+frMk1G68BYJZnK9UBZf+EOKwABRs7XXvLvrYcnhJTlrvbPvjspe4yRgXNMGUv
+	 sg3rGAg0zbTYjzbyrn90cyHk0jJl+LAh5kvkkeZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgA1Lio (ORCPT
+        id S1726108AbgA1Lj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 06:38:44 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44609 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbgA1Lim (ORCPT
+        Tue, 28 Jan 2020 06:39:57 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40325 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgA1Lj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 06:38:42 -0500
-Received: by mail-lf1-f65.google.com with SMTP id v201so8808369lfa.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 03:38:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=shek/n2yaJ4xNGyr8p8VRMr5B9/J6o+UNlVfe5LW8Wk=;
-        b=mx5ogHr3Q1649qfV1I/89WFMUGNodbkAskaHwYx5cV+jARa8ihf9fCZhc01yQAfR+w
-         JnXP1BKtt/2eCZBD7+NcbS7CE4Yfwhdf9Cx9YSmr3gIc6GfseuM9j0A0pK1TffeqjIDg
-         dxJQpOL/b87oMxS+jzmz0E0YBDIc74+4HveLL+xaUMfoe6FSwIR+BbTIyr95KqLShCjm
-         oupWzKprvdeQuDYTNpSk+fXXwMTxNyiZjJm0OVBSTYcWyQmRjFFZGcNimiZcVUbbUDM7
-         YWEEtgoBPCwI2TiiL3wP5SFOto8OVl4SFITf2ogKyERJf9tzX+lV/O7yFpo+eacRP3z/
-         icXQ==
+        Tue, 28 Jan 2020 06:39:57 -0500
+Received: by mail-wr1-f68.google.com with SMTP id c14so15632728wrn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 03:39:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=shek/n2yaJ4xNGyr8p8VRMr5B9/J6o+UNlVfe5LW8Wk=;
-        b=W2tgnPusBxa2As2xjvXbEe6dZcc76RSra18AVgHfuahJKrEF/zfeRmwhq903gSFVDH
-         ergHRwAtk0w0oD7xeZ2alcEtkKx71dz0pFKe9hSC2Tiujz4gaW8DvJA72RfZhvBZ1vpS
-         21SZGw/94GUPsN2DIJ0W46RtDeVzgo/wAF9xRZXomQnDioWSqPYWQWW40RlUFdjPv5bm
-         9nyPdWo8vWC8a9Ace7DQzzfHaow5VHRJ7zSAnco2gnjYw7wtHzLUi7+6O5xC1XBzLsEj
-         dDKRyGi7ABXBfe5RrYOoyimw9Cnc7wMu3nYD2mnw7zR+9bft4PNscAfgLVLTDQ6g2PK0
-         5FvQ==
-X-Gm-Message-State: APjAAAUU73gMjYUMFsmsyS/DiBXyMwv8N2/vzqFBY60lD0U0FSZisMD2
-        uylG2AV1r5S0iBWH53HDmvRtYWyOEuP5njVZRNMlZQ==
-X-Google-Smtp-Source: APXvYqxIGZaVMql0dzFVuAp0Npksnl5WAwwR8IJITZh402Xtqso4VRK/EtNCV+s++HoutkYkagjhKbkeoADGPMcI5j8=
-X-Received: by 2002:ac2:5467:: with SMTP id e7mr2052345lfn.74.1580211518997;
- Tue, 28 Jan 2020 03:38:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20180630201750.2588-1-andriy.shevchenko@linux.intel.com> <20180630201750.2588-4-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20180630201750.2588-4-andriy.shevchenko@linux.intel.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 28 Jan 2020 17:08:27 +0530
-Message-ID: <CA+G9fYs3GPid5fcHEWp2i9NKR1hQGc5h0zKaUK5xr1RGJ83xLg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] bitmap: Add bitmap_alloc(), bitmap_zalloc() and bitmap_free()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Shaohua Li <shli@kernel.org>, linux-raid@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=T3Wbgf30Ii+VOg2FGlTD1Ulg3uZcieH89u7q/gSMF7Q=;
+        b=b2ke8Tb8inNAk094ut1CQvIywQNw2arDJ9gFUncf6F3JZf6IDiUawbauNAij/hqy0F
+         T7yzXhmayuXVjjBA5+6os1ewu8qYnm8cYdIA36XepvwARk/DnyWlAigAAtFZi+Fxo+fO
+         hC7vgirRV58aeG7NhDEzKzXIW3bUq//I7lg222gvvzlsB3f65T12+5vMht0p/BxbsiTV
+         HVHKKK1a50tewrlq7dprwOMNxZxssAulsGxXpIIQpDqCK6rsMqw+lm849gpnf8THbdqq
+         PC1aAHfTRMEvw19XOHBH2mNOy3WJEuDqphiTusZGzdw6VleMkVRWjQcPMMO0CLnQEk3R
+         eMOA==
+X-Gm-Message-State: APjAAAVevgZ6/WZ/tFVxWa1dsSwfx3CTRvRffv7BsGqcmU8muF7juDUK
+        R91UBohO1EfAdNR5W5EXdcA=
+X-Google-Smtp-Source: APXvYqzgecilxTYzirylIKzVzYuY4fsPh3O0daKMkdvqtSLa+z+JrNZ6MnR+WnRBbY9ZDtMGNtZvHw==
+X-Received: by 2002:a5d:56ca:: with SMTP id m10mr29266505wrw.313.1580211595104;
+        Tue, 28 Jan 2020 03:39:55 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id r6sm25656024wrq.92.2020.01.28.03.39.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2020 03:39:54 -0800 (PST)
+Date:   Tue, 28 Jan 2020 12:39:53 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        mika.westerberg@linux.intel.com, Joe Perches <joe@perches.com>,
-        linux- stable <stable@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-mm <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
+Message-ID: <20200128113953.GA24244@dhcp22.suse.cz>
+References: <CAM_iQpVN4MNhcK0TXvhmxsCdkVOqQ4gZBzkDHykLocPC6Va7LQ@mail.gmail.com>
+ <20200121090048.GG29276@dhcp22.suse.cz>
+ <CAM_iQpU0p7JLyQ4mQ==Kd7+0ugmricsEAp1ST2ShAZar2BLAWg@mail.gmail.com>
+ <20200126233935.GA11536@bombadil.infradead.org>
+ <20200127150024.GN1183@dhcp22.suse.cz>
+ <20200127190653.GA8708@bombadil.infradead.org>
+ <20200128081712.GA18145@dhcp22.suse.cz>
+ <20200128083044.GB6615@bombadil.infradead.org>
+ <20200128091352.GC18145@dhcp22.suse.cz>
+ <20200128104857.GC6615@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128104857.GC6615@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 1 Jul 2018 at 01:49, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> A lot of code become ugly because of open coding allocations for bitmaps.
->
-> Introduce three helpers to allow users be more clear of intention
-> and keep their code neat.
->
-> Note, due to multiple circular dependencies we may not provide
-> the helpers as inliners. For now we keep them exported and, perhaps,
-> at some point in the future we will sort out header inclusion and
-> inheritance.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  include/linux/bitmap.h |  8 ++++++++
->  lib/bitmap.c           | 19 +++++++++++++++++++
->  2 files changed, 27 insertions(+)
->
-> diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-> index 1ee46f492267..acf5e8df3504 100644
-> --- a/include/linux/bitmap.h
-> +++ b/include/linux/bitmap.h
-> @@ -104,6 +104,14 @@
->   * contain all bit positions from 0 to 'bits' - 1.
->   */
->
-> +/*
-> + * Allocation and deallocation of bitmap.
-> + * Provided in lib/bitmap.c to avoid circular dependency.
-> + */
-> +extern unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags);
-> +extern unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags);
-> +extern void bitmap_free(const unsigned long *bitmap);
-> +
->  /*
->   * lib/bitmap.c provides these functions:
->   */
-> diff --git a/lib/bitmap.c b/lib/bitmap.c
-> index 33e95cd359a2..09acf2fd6a35 100644
-> --- a/lib/bitmap.c
-> +++ b/lib/bitmap.c
-> @@ -13,6 +13,7 @@
->  #include <linux/bitops.h>
->  #include <linux/bug.h>
->  #include <linux/kernel.h>
-> +#include <linux/slab.h>
->  #include <linux/string.h>
->  #include <linux/uaccess.h>
->
-> @@ -1125,6 +1126,24 @@ void bitmap_copy_le(unsigned long *dst, const unsigned long *src, unsigned int n
->  EXPORT_SYMBOL(bitmap_copy_le);
->  #endif
->
-> +unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags)
-> +{
-> +       return kmalloc_array(BITS_TO_LONGS(nbits), sizeof(unsigned long), flags);
-> +}
-> +EXPORT_SYMBOL(bitmap_alloc);
-> +
-> +unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags)
-> +{
-> +       return bitmap_alloc(nbits, flags | __GFP_ZERO);
-> +}
-> +EXPORT_SYMBOL(bitmap_zalloc);
-> +
-> +void bitmap_free(const unsigned long *bitmap)
-> +{
-> +       kfree(bitmap);
-> +}
-> +EXPORT_SYMBOL(bitmap_free);
-> +
->  #if BITS_PER_LONG == 64
->  /**
->   * bitmap_from_arr32 - copy the contents of u32 array of bits to bitmap
+On Tue 28-01-20 02:48:57, Matthew Wilcox wrote:
+> On Tue, Jan 28, 2020 at 10:13:52AM +0100, Michal Hocko wrote:
+> > On Tue 28-01-20 00:30:44, Matthew Wilcox wrote:
+> > > On Tue, Jan 28, 2020 at 09:17:12AM +0100, Michal Hocko wrote:
+> > > > On Mon 27-01-20 11:06:53, Matthew Wilcox wrote:
+> > > > > On Mon, Jan 27, 2020 at 04:00:24PM +0100, Michal Hocko wrote:
+> > > > > > On Sun 26-01-20 15:39:35, Matthew Wilcox wrote:
+> > > > > > > On Sun, Jan 26, 2020 at 11:53:55AM -0800, Cong Wang wrote:
+> > > > > > > > I suspect the process gets stuck in the retry loop in try_charge(), as
+> > > > > > > > the _shortest_ stacktrace of the perf samples indicated:
+> > > > > > > > 
+> > > > > > > > cycles:ppp:
+> > > > > > > >         ffffffffa72963db mem_cgroup_iter
+> > > > > > > >         ffffffffa72980ca mem_cgroup_oom_unlock
+> > > > > > > >         ffffffffa7298c15 try_charge
+> > > > > > > >         ffffffffa729a886 mem_cgroup_try_charge
+> > > > > > > >         ffffffffa720ec03 __add_to_page_cache_locked
+> > > > > > > >         ffffffffa720ee3a add_to_page_cache_lru
+> > > > > > > >         ffffffffa7312ddb iomap_readpages_actor
+> > > > > > > >         ffffffffa73133f7 iomap_apply
+> > > > > > > >         ffffffffa73135da iomap_readpages
+> > > > > > > >         ffffffffa722062e read_pages
+> > > > > > > >         ffffffffa7220b3f __do_page_cache_readahead
+> > > > > > > >         ffffffffa7210554 filemap_fault
+> > > > > > > >         ffffffffc039e41f __xfs_filemap_fault
+> > > > > > > >         ffffffffa724f5e7 __do_fault
+> > > > > > > >         ffffffffa724c5f2 __handle_mm_fault
+> > > > > > > >         ffffffffa724cbc6 handle_mm_fault
+> > > > > > > >         ffffffffa70a313e __do_page_fault
+> > > > > > > >         ffffffffa7a00dfe page_fault
+> > > > 
+> > > > I am not deeply familiar with the readahead code. But is there really a
+> > > > high oerder allocation (order > 1) that would trigger compaction in the
+> > > > phase when pages are locked?
+> > > 
+> > > Thanks to sl*b, yes:
+> > > 
+> > > radix_tree_node    80890 102536    584   28    4 : tunables    0    0    0 : slabdata   3662   3662      0
+> > > 
+> > > so it's allocating 4 pages for an allocation of a 576 byte node.
+> > 
+> > I am not really sure that we do sync migration for costly orders.
+> 
+> Doesn't the stack trace above indicate that we're doing migration as
+> the result of an allocation in add_to_page_cache_lru()?
 
-stable-rc 4.14 build failed due to these build error,
+Which stack trace do you refer to? Because the one above doesn't show
+much more beyond mem_cgroup_iter and likewise others in this email
+thread. I do not really remember any stack with lock_page on the trace.
+> 
+> > > > Btw. the compaction rejects to consider file backed pages when __GFP_FS
+> > > > is not present AFAIR.
+> > > 
+> > > Ah, that would save us.
+> > 
+> > So the NOFS comes from the mapping GFP mask, right? That is something I
+> > was hoping to get rid of eventually :/ Anyway it would be better to have
+> > an explicit NOFS with a comment explaining why we need that. If for
+> > nothing else then for documentation.
+> 
+> I'd also like to see the mapping GFP mask go away, but rather than seeing
+> an explicit GFP_NOFS here, I'd rather see the memalloc_nofs API used.
 
-lib/bitmap.c: In function 'bitmap_from_u32array':
-lib/bitmap.c:1133:1: warning: ISO C90 forbids mixed declarations and
-code [-Wdeclaration-after-statement]
- unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags)
- ^~~~~~~~
-In file included from
-/srv/oe/build/tmp-lkft-glibc/work-shared/intel-corei7-64/kernel-source/lib/bitmap.c:8:0:
-lib/bitmap.c:1138:15: error: non-static declaration of 'bitmap_alloc'
-follows static declaration
- EXPORT_SYMBOL(bitmap_alloc);
-               ^
-include/linux/export.h:65:21: note: in definition of macro '___EXPORT_SYMBOL'
-  extern typeof(sym) sym;      \
-                     ^~~
-lib/bitmap.c:1138:1: note: in expansion of macro 'EXPORT_SYMBOL'
- EXPORT_SYMBOL(bitmap_alloc);
- ^~~~~~~~~~~~~
-lib/bitmap.c:1133:16: note: previous definition of 'bitmap_alloc' was here
- unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags)
-                ^~~~~~~~~~~~
-In file included from
-/srv/oe/build/tmp-lkft-glibc/work-shared/intel-corei7-64/kernel-source/lib/bitmap.c:8:0:
-lib/bitmap.c:1144:15: error: non-static declaration of 'bitmap_zalloc'
-follows static declaration
- EXPORT_SYMBOL(bitmap_zalloc);
-               ^
-include/linux/export.h:65:21: note: in definition of macro '___EXPORT_SYMBOL'
-  extern typeof(sym) sym;      \
-                     ^~~
-lib/bitmap.c:1144:1: note: in expansion of macro 'EXPORT_SYMBOL'
- EXPORT_SYMBOL(bitmap_zalloc);
- ^~~~~~~~~~~~~
-lib/bitmap.c:1140:16: note: previous definition of 'bitmap_zalloc' was here
- unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags)
-                ^~~~~~~~~~~~~
-In file included from
-/srv/oe/build/tmp-lkft-glibc/work-shared/intel-corei7-64/kernel-source/lib/bitmap.c:8:0:
-lib/bitmap.c:1150:15: error: non-static declaration of 'bitmap_free'
-follows static declaration
- EXPORT_SYMBOL(bitmap_free);
-               ^
-include/linux/export.h:65:21: note: in definition of macro '___EXPORT_SYMBOL'
-  extern typeof(sym) sym;      \
-                     ^~~
-lib/bitmap.c:1150:1: note: in expansion of macro 'EXPORT_SYMBOL'
- EXPORT_SYMBOL(bitmap_free);
- ^~~~~~~~~~~~~
-lib/bitmap.c:1146:6: note: previous definition of 'bitmap_free' was here
- void bitmap_free(const unsigned long *bitmap)
-      ^~~~~~~~~~~
-  CC      drivers/char/random.o
-scripts/Makefile.build:326: recipe for target 'lib/bitmap.o' failed
-make[3]: *** [lib/bitmap.o] Error 1
-Makefile:1052: recipe for target 'lib' failed
-make[2]: *** [lib] Error 2
+Completely agreed agree here. The proper place for the scope would be
+the place where pages are locked with an explanation that there are
+other allocations down the line which might invoke sync migration and
+that would be dangerous. Having that explicitly documented is clearly an
+improvement.
+
+-- 
+Michal Hocko
+SUSE Labs
