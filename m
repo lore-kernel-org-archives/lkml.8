@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E0FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FE3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDC424687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA992467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221853;
-	bh=sY7XWHTJaL6C2cC0Ct4juQRGtasPLxjNLYSOZPeOZ2I=;
+	s=default; t=1580221858;
+	bh=EmbOA6+hWdsPZ/sAO+/zMX5+diva24McWvwCbOtM7VY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eU/kP6s3VwKbhG8Ji6wBcpwezimqNLz2mQbS4Be+cAUdsniBROvu9e3Lb1cn+CHIj
-	 8FHqqijo4kAjy7Reyrb0eU6OXYpKt8cgvkky+QT6KNzk7ZI8OjLFCrLVxqgX3GQzUU
-	 pE0YVxV2Eh+ke9tZ1adpCkXP/cl2OAC3IViXejNw=
+	b=z68RYV6VTH+gKVozG/F/qL4Fu1KRnjebY4aoleqfOdVHGlD6uSEjy198it9Lo00aC
+	 jmjro8iWcRCtFzwiL1jKGys9Rntt6hodrOipXBcSR/so1lp97vRS4cKSXzwPu4v1is
+	 NssBNMpTC9ry7EKUhlvuGy1PM0t7gQSY+GdR2FIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387729AbgA1Oaw (ORCPT
+        id S1730397AbgA1O2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:30:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56734 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:28:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387539AbgA1O2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:28:40 -0500
+        id S2387511AbgA1O2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:28:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13A312468A;
-        Tue, 28 Jan 2020 14:28:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BB8F2468F;
+        Tue, 28 Jan 2020 14:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221720;
-        bh=sY7XWHTJaL6C2cC0Ct4juQRGtasPLxjNLYSOZPeOZ2I=;
+        s=default; t=1580221710;
+        bh=EmbOA6+hWdsPZ/sAO+/zMX5+diva24McWvwCbOtM7VY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2a933cKZ7lhix7dYKQnZ22Uzz+QMqUnyvjnfBNV7Zu2DX2RkgsKME+pE1RD7cxI3L
-         oJZLmeInBw8F7cVl50TR283WbAnY0QbMcxnzhLskkcZgv7ADigs1vj7/6qdOgCUif6
-         dYcSpObZyHwlljQ5X2ONPCOM2KpNc4awsGKGhRxY=
+        b=ancw+Z1fJp0sDCKmYTLl6N/QBq10PA0BWwBf8jn86aqjgdZYcQVqMtyUGgTr6CVJk
+         W756KLJ/qS9/7B/J05h2VDAWLlvXnPmzfVDZTcKJR+sizEUlaY3nujbgpPH4QuWx38
+         N3jiUpJg2A+dRRILZakQ7J9wfiPkKtcMCNgFFpgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 55/92] net/sonic: Prevent tx watchdog timeout
-Date:   Tue, 28 Jan 2020 15:08:23 +0100
-Message-Id: <20200128135816.271158392@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 4.19 43/92] do_last(): fetch directory ->i_mode and ->i_uid before its too late
+Date:   Tue, 28 Jan 2020 15:08:11 +0100
+Message-Id: <20200128135814.584735840@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,62 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 686f85d71d095f1d26b807e23b0f0bfd22042c45 upstream.
+commit d0cb50185ae942b03c4327be322055d622dc79f6 upstream.
 
-Section 5.5.3.2 of the datasheet says,
+may_create_in_sticky() call is done when we already have dropped the
+reference to dir.
 
-    If FIFO Underrun, Byte Count Mismatch, Excessive Collision, or
-    Excessive Deferral (if enabled) errors occur, transmission ceases.
-
-In this situation, the chip asserts a TXER interrupt rather than TXDN.
-But the handler for the TXDN is the only way that the transmit queue
-gets restarted. Hence, an aborted transmission can result in a watchdog
-timeout.
-
-This problem can be reproduced on congested link, as that can result in
-excessive transmitter collisions. Another way to reproduce this is with
-a FIFO Underrun, which may be caused by DMA latency.
-
-In event of a TXER interrupt, prevent a watchdog timeout by restarting
-transmission.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 30aba6656f61e (namei: allow restricted O_CREAT of FIFOs and regular files)
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/natsemi/sonic.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ fs/namei.c |   17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -414,10 +414,19 @@ static irqreturn_t sonic_interrupt(int i
- 			lp->stats.rx_missed_errors += 65536;
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -1009,7 +1009,8 @@ static int may_linkat(struct path *link)
+  * may_create_in_sticky - Check whether an O_CREAT open in a sticky directory
+  *			  should be allowed, or not, on files that already
+  *			  exist.
+- * @dir: the sticky parent directory
++ * @dir_mode: mode bits of directory
++ * @dir_uid: owner of directory
+  * @inode: the inode of the file to open
+  *
+  * Block an O_CREAT open of a FIFO (or a regular file) when:
+@@ -1025,18 +1026,18 @@ static int may_linkat(struct path *link)
+  *
+  * Returns 0 if the open is allowed, -ve on error.
+  */
+-static int may_create_in_sticky(struct dentry * const dir,
++static int may_create_in_sticky(umode_t dir_mode, kuid_t dir_uid,
+ 				struct inode * const inode)
+ {
+ 	if ((!sysctl_protected_fifos && S_ISFIFO(inode->i_mode)) ||
+ 	    (!sysctl_protected_regular && S_ISREG(inode->i_mode)) ||
+-	    likely(!(dir->d_inode->i_mode & S_ISVTX)) ||
+-	    uid_eq(inode->i_uid, dir->d_inode->i_uid) ||
++	    likely(!(dir_mode & S_ISVTX)) ||
++	    uid_eq(inode->i_uid, dir_uid) ||
+ 	    uid_eq(current_fsuid(), inode->i_uid))
+ 		return 0;
  
- 		/* transmit error */
--		if (status & SONIC_INT_TXER)
--			if (SONIC_READ(SONIC_TCR) & SONIC_TCR_FU)
--				netif_dbg(lp, tx_err, dev, "%s: tx fifo underrun\n",
--					  __func__);
-+		if (status & SONIC_INT_TXER) {
-+			u16 tcr = SONIC_READ(SONIC_TCR);
-+
-+			netif_dbg(lp, tx_err, dev, "%s: TXER intr, TCR %04x\n",
-+				  __func__, tcr);
-+
-+			if (tcr & (SONIC_TCR_EXD | SONIC_TCR_EXC |
-+				   SONIC_TCR_FU | SONIC_TCR_BCM)) {
-+				/* Aborted transmission. Try again. */
-+				netif_stop_queue(dev);
-+				SONIC_WRITE(SONIC_CMD, SONIC_CR_TXP);
-+			}
-+		}
- 
- 		/* bus retry */
- 		if (status & SONIC_INT_BR) {
+-	if (likely(dir->d_inode->i_mode & 0002) ||
+-	    (dir->d_inode->i_mode & 0020 &&
++	if (likely(dir_mode & 0002) ||
++	    (dir_mode & 0020 &&
+ 	     ((sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) ||
+ 	      (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode))))) {
+ 		return -EACCES;
+@@ -3258,6 +3259,8 @@ static int do_last(struct nameidata *nd,
+ 		   struct file *file, const struct open_flags *op)
+ {
+ 	struct dentry *dir = nd->path.dentry;
++	kuid_t dir_uid = dir->d_inode->i_uid;
++	umode_t dir_mode = dir->d_inode->i_mode;
+ 	int open_flag = op->open_flag;
+ 	bool will_truncate = (open_flag & O_TRUNC) != 0;
+ 	bool got_write = false;
+@@ -3393,7 +3396,7 @@ finish_open:
+ 		error = -EISDIR;
+ 		if (d_is_dir(nd->path.dentry))
+ 			goto out;
+-		error = may_create_in_sticky(dir,
++		error = may_create_in_sticky(dir_mode, dir_uid,
+ 					     d_backing_inode(nd->path.dentry));
+ 		if (unlikely(error))
+ 			goto out;
 
 
