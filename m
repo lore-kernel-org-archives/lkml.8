@@ -2,95 +2,268 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC82AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27013C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E252173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5592467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y0MLwohp"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="FMGXr3/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgA1EtA (ORCPT
+        id S1726428AbgA1Eyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 23:49:00 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57902 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgA1EtA (ORCPT
+        Mon, 27 Jan 2020 23:54:54 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44066 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgA1Eyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 23:49:00 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00S4mpug016309;
-        Mon, 27 Jan 2020 22:48:51 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580186931;
-        bh=kTS9wd2+alAAQtu+YNKx/BnZ0qUwrv3/nmc42J3DW2k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Y0MLwohphdAUerLuRVvfeZ0D9N0Lh0JjakyBh8A2JihqhKJgb7RFtdv8DXhWXzkOk
-         Ggy8HvhSOGTD6wgPLWmNF2NUfr3S3yWHq7me7EU0KPcwtmyQkeP4RB4afQCghLCSZv
-         VzQYGg7lz9s+njyf2931Y+AxsoidIwPSU7NPYKn0=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00S4mpQd124214
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jan 2020 22:48:51 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 27
- Jan 2020 22:48:51 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 27 Jan 2020 22:48:51 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00S4mnOT012763;
-        Mon, 27 Jan 2020 22:48:50 -0600
-Subject: Re: linux-next: Fixes tag needs some work in the phy-next tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-References: <20200128070521.129eb07a@canb.auug.org.au>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <698b79a0-33a1-3d1d-d842-aa24e4b6cdaa@ti.com>
-Date:   Tue, 28 Jan 2020 10:22:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:73.0) Gecko/20100101
- Thunderbird/73.0
+        Mon, 27 Jan 2020 23:54:54 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q10so14434200wrm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 20:54:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6npXOuD/Bo9Epv5uCeYToBPL1sbhP+ZtGVUUhP+lSl4=;
+        b=FMGXr3/X5d5MGN25hhpmHA0I89Je2TlY/luDe2ZDEyCBgWWLoS+USu2m9mWi6jIcDC
+         CxpOLgkwdzLc5sLd4Ei2ZQYzU+OowUfHLM3nxn2E4q2VPaBV4W+5jBxyRZt1imd6O1QT
+         njuUqLVVgLpOZLoYRPwBAo9HFifDcmyFuKTPyVI2HbbBCmDmj5c+/uaYqOFtD2UkWwAJ
+         Z9DaVA4ml/+j43chulho0QtwQ+QhB+DMRWJFQ62sWaBvuh4MXmTTNseGTCuDkUW2G1lR
+         /o81IkQ0lVL4L5TWP8yECxzfZqKmdMqPM6d0jpMUofOLmyyd7YiG2Ix04ue30OZR5MRs
+         B/kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6npXOuD/Bo9Epv5uCeYToBPL1sbhP+ZtGVUUhP+lSl4=;
+        b=PWRDzc6sFsXaA2KbuHz1YJHFVNdQhXGhQh+9BeW+WQenr8LxrBTofslwu+vIJGqT+a
+         Lu6kQgDGmS/DbZk92UU3H4bPFEgpEnVeMVyhMRZP1HFQKGptKXI0Ie+HJs66iLtiN00E
+         B8wB2GiRIj0rMnfCo7YlA4qdXXHEFKZ1Dxl2z2dCJPFOUzDR2hXAG9nWKW1xVSkpkKYp
+         EPEbQ9+d7kM8cbS23cmQOS5i/42yt9A/AgpsuSKjQn3cktLFlBPj3OuOEVAEN+DfyIm0
+         iJqvcx3ppARdJOkNXEP6upRfPCXH8OPsuc5OpObsqadf1RPcfz2jmnBxDisu8q5VGvja
+         FrXg==
+X-Gm-Message-State: APjAAAUwo1fNKirt4LuDlfRozWbFwY31+1rf6CbMMGsKmDdOyZTtr5rq
+        FlPFj6AkFlIkCP+4JGM2wC1r+BpamPlgXP2MqghTxw==
+X-Google-Smtp-Source: APXvYqxO8qqIfHJxIrZsVj/r0pQPCXFKnUcnGiVAVQmGDRByQc1Hu/tzfYlYDbYF99jedC0aySwaqN7z1IVhDjGZGZE=
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr26992846wrv.358.1580187290925;
+ Mon, 27 Jan 2020 20:54:50 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200128070521.129eb07a@canb.auug.org.au>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200128022737.15371-1-atish.patra@wdc.com> <20200128022737.15371-9-atish.patra@wdc.com>
+In-Reply-To: <20200128022737.15371-9-atish.patra@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 28 Jan 2020 10:24:39 +0530
+Message-ID: <CAAhSdy1DtsPeKYrSDuqNUirDixypvrd42xQnr1bVExc8XE-Npw@mail.gmail.com>
+Subject: Re: [PATCH v7 08/10] RISC-V: Add SBI HSM extension
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Borislav Petkov <bp@suse.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Mao Han <han_mao@c-sky.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Abner Chang <abner.chang@hpe.com>, Chester Lin <clin@suse.com>,
+        nickhu@andestech.com, Palmer Dabbelt <palmerdabbelt@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 28, 2020 at 7:58 AM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> SBI specification defines HSM extension that allows to start/stop a hart
+> by a supervisor anytime. The specification is available at
+>
+> https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
+>
+> Implement SBI HSM extension.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/include/asm/sbi.h | 22 ++++++++++++++++
+>  arch/riscv/kernel/sbi.c      | 51 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 73 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+> index d55d8090ab5c..bed6fa26ec84 100644
+> --- a/arch/riscv/include/asm/sbi.h
+> +++ b/arch/riscv/include/asm/sbi.h
+> @@ -26,6 +26,7 @@ enum sbi_ext_id {
+>         SBI_EXT_TIME = 0x54494D45,
+>         SBI_EXT_IPI = 0x735049,
+>         SBI_EXT_RFENCE = 0x52464E43,
+> +       SBI_EXT_HSM = 0x48534D,
+>  };
+>
+>  enum sbi_ext_base_fid {
+> @@ -56,6 +57,12 @@ enum sbi_ext_rfence_fid {
+>         SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
+>  };
+>
+> +enum sbi_ext_hsm_fid {
+> +       SBI_EXT_HSM_HART_START = 0,
+> +       SBI_EXT_HSM_HART_STOP,
+> +       SBI_EXT_HSM_HART_STATUS,
+> +};
+> +
 
+I think we should also define the possible return values of
+SBI_EXT_HSM_HART_STATUS function.
 
-On 28/01/20 1:35 am, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->   0b96a3349af1 ("dt-bindings: fix compilation error of the example in intel,lgm-emmc-phy.yaml")
-> 
-> Fixes tag
-> 
->   Fixes: 5bc999108025 ("dt-bindings: phy: intel-emmc-phy: Add YAML
-> 
-> has these problem(s):
-> 
->   - Subject has leading but no trailing parentheses
->   - Subject has leading but no trailing quotes
-> 
-> Please keep Fixes tags on a single line.
+>  #define SBI_SPEC_VERSION_DEFAULT       0x1
+>  #define SBI_SPEC_VERSION_MAJOR_SHIFT   24
+>  #define SBI_SPEC_VERSION_MAJOR_MASK    0x7f
+> @@ -70,6 +77,7 @@ enum sbi_ext_rfence_fid {
+>  #define SBI_ERR_INVALID_ADDRESS -5
+>
+>  extern unsigned long sbi_spec_version;
+> +extern bool sbi_hsm_avail;
+>  struct sbiret {
+>         long error;
+>         long value;
+> @@ -110,8 +118,18 @@ int sbi_remote_hfence_vvma_asid(const unsigned long *hart_mask,
+>                                 unsigned long start,
+>                                 unsigned long size,
+>                                 unsigned long asid);
+> +int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
+> +                      unsigned long priv);
+> +int sbi_hsm_hart_stop(void);
+> +int sbi_hsm_hart_get_status(unsigned long hartid);
+> +
+>  int sbi_probe_extension(int ext);
+>
+> +static inline bool sbi_hsm_is_available(void)
+> +{
+> +       return sbi_hsm_avail;
+> +}
+> +
+>  /* Check if current SBI specification version is 0.1 or not */
+>  static inline int sbi_spec_is_0_1(void)
+>  {
+> @@ -137,5 +155,9 @@ void sbi_clear_ipi(void);
+>  void sbi_send_ipi(const unsigned long *hart_mask);
+>  void sbi_remote_fence_i(const unsigned long *hart_mask);
+>  void sbi_init(void);
+> +static inline bool sbi_hsm_is_available(void)
+> +{
+> +       return false;
+> +}
+>  #endif /* CONFIG_RISCV_SBI */
+>  #endif /* _ASM_RISCV_SBI_H */
+> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+> index 3c34aba30f6f..9bdc9801784d 100644
+> --- a/arch/riscv/kernel/sbi.c
+> +++ b/arch/riscv/kernel/sbi.c
+> @@ -12,6 +12,8 @@
+>
+>  /* default SBI version is 0.1 */
+>  unsigned long sbi_spec_version = SBI_SPEC_VERSION_DEFAULT;
+> +bool sbi_hsm_avail;
+> +
+>  EXPORT_SYMBOL(sbi_spec_version);
+>
+>  static void (*__sbi_set_timer)(uint64_t stime);
+> @@ -496,6 +498,54 @@ static void sbi_power_off(void)
+>         sbi_shutdown();
+>  }
+>
+> +int sbi_hsm_hart_stop(void)
+> +{
+> +       struct sbiret ret;
+> +
+> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
+> +
+> +       if (!ret.error)
+> +               return ret.value;
+> +       else
+> +               return sbi_err_map_linux_errno(ret.error);
+> +}
+> +EXPORT_SYMBOL(sbi_hsm_hart_stop);
+> +
+> +int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
+> +                      unsigned long priv)
+> +{
+> +       struct sbiret ret;
+> +
+> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
+> +                             hartid, saddr, priv, 0, 0, 0);
+> +       if (!ret.error)
+> +               return ret.value;
+> +       else
+> +               return sbi_err_map_linux_errno(ret.error);
+> +}
+> +EXPORT_SYMBOL(sbi_hsm_hart_start);
+> +
+> +int sbi_hsm_hart_get_status(unsigned long hartid)
+> +{
+> +       struct sbiret ret;
+> +
+> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
+> +                             hartid, 0, 0, 0, 0, 0);
+> +       if (!ret.error)
+> +               return ret.value;
+> +       else
+> +               return sbi_err_map_linux_errno(ret.error);
+> +}
+> +EXPORT_SYMBOL(sbi_hsm_hart_get_status);
+> +
+> +void __init sbi_hsm_ext_init(void)
+> +{
+> +       if (sbi_probe_extension(SBI_EXT_HSM) > 0) {
+> +               pr_info("SBI v0.2 HSM extension detected\n");
+> +               sbi_hsm_avail = true;
+> +       }
+> +}
+> +
 
-Fixed this.
+If we start adding all present and future extensions in
+arch/riscv/kernel/sbi.c then it will blow-up.
 
-Thanks
-Kishon
+IMHO, we should only keep legacy and replacement
+extension in arch/riscv/kernel/sbi.c. All other extensions
+will be separate based on how they are integrated.
+
+For SBI HSM, all sbi_hsm_xyz() functions should be in
+arch/riscv/kernel/cpu_ops_sbi.c which will be only compiled
+when CONFIG_RISCV_SBI is enabled.
+
+Maybe merge PATCH8 and PATCH9 ?
+
+Regards,
+Anup
+
+>  int __init sbi_init(void)
+>  {
+>         int ret;
+> @@ -532,5 +582,6 @@ int __init sbi_init(void)
+>                 __sbi_rfence    = __sbi_rfence_v01;
+>         }
+>
+> +       sbi_hsm_ext_init();
+
+We don't need sbi_hsm_ext_init() because we can check
+and set CPU ops at boot-time in cpu_set_ops()
+
+>         return 0;
+>  }
+> --
+> 2.24.0
+>
+
+Regards,
+Anup
