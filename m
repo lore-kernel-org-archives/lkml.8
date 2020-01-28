@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D99C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E00C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D071020716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AF520716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222828;
-	bh=iUtRt/4A0EKtUxFN7POXi60okHJXln+goaL3CNV6aQo=;
+	s=default; t=1580222834;
+	bh=H3cmjn2qBhuY9aCdYfIFQhA8ZeD98oKCjUb7CNOfBtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jQx+GfW/90PsezsJBv3Gu9gecdNtEP7kFT5XkWxNI4PM2taUo/ockkTcTo5P/YqEk
-	 wOn+qBbpEn6qRWYQbPuhVRHkn8iWjVcoG1To4RBmHjheHkfz3jaw1cC2XFmJQwpFRH
-	 RLUXXTeEWP13Y+03FxC3pLzy0XoXfSt3IvhoacL8=
+	b=RnIYDb3fdBnLI/j7Jg1z1/Vc4QxCneSigKULLj+HtrCvVr4OpipGedYHm9xbj7pED
+	 Mb7ByrhGE5+n1l4YOl4PNSokS5yjmNHwuJuuaBAIAbQIXW2IhfjOF5yBs7xxmfKwd6
+	 /MbRKemGf2YlurbR71se67GoEM1SLT+ijGsfeNao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgA1OrH (ORCPT
+        id S1728384AbgA1OIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:47:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56152 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:08:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727792AbgA1OIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:08:12 -0500
+        id S1728356AbgA1OH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:07:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76EAB22522;
-        Tue, 28 Jan 2020 14:08:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C0BB24681;
+        Tue, 28 Jan 2020 14:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220491;
-        bh=iUtRt/4A0EKtUxFN7POXi60okHJXln+goaL3CNV6aQo=;
+        s=default; t=1580220477;
+        bh=H3cmjn2qBhuY9aCdYfIFQhA8ZeD98oKCjUb7CNOfBtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZavAVhOX8aoBNNB3P6BlAgcK9NcLCP/xn+uU0h5K0dsOIh8q19Ry+7yMzaEOWsgx
-         hp7c7G1rNAfsgY/e/eTSuzP8IfAWwjHeALOcfx8j3gGYCWn/JZ6LIKEOGLbdtK6VhT
-         qU86Afgo/hcrxN5wdVj5VeYaRhNe5p+jKguY6Aec=
+        b=wiSF6nGlFgQzxe0VFj5BC7OjqIdtOp37Uo7Bnr7rE9YNHZtoqr7/0WR02CU9r26R8
+         Qf8I4EeeeAH8pM3uidbQWGVqi5iwY/qb2PMn8gp3c2FqxVSbz09YqQoPmA6Y8/NZsp
+         UwYXpiqgr0rdCmMM4GJz/9c9oSNwNVNFkYeh3PeA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 028/183] clk: vf610: fix refcount leak in vf610_clocks_init()
-Date:   Tue, 28 Jan 2020 15:04:07 +0100
-Message-Id: <20200128135832.847402064@linuxfoundation.org>
+Subject: [PATCH 4.4 022/183] clk: qoriq: fix refcount leak in clockgen_init()
+Date:   Tue, 28 Jan 2020 15:04:01 +0100
+Message-Id: <20200128135832.185313675@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -62,32 +62,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 567177024e0313e4f0dcba7ba10c0732e50e655d ]
+[ Upstream commit 70af6c5b5270e8101f318c4b69cc98a726edfab9 ]
 
 The of_find_compatible_node() returns a node pointer with refcount
 incremented, but there is the lack of use of the of_node_put() when
 done. Add the missing of_node_put() to release the refcount.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 1f2c5fd5f048 ("ARM: imx: add VF610 clock support")
+Fixes: 0dfc86b3173f ("clk: qoriq: Move chip-specific knowledge into driver")
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-vf610.c | 1 +
+ drivers/clk/clk-qoriq.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-index 0a94d9661d912..2c92a2706fdd0 100644
---- a/drivers/clk/imx/clk-vf610.c
-+++ b/drivers/clk/imx/clk-vf610.c
-@@ -155,6 +155,7 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
- 	np = of_find_compatible_node(NULL, NULL, "fsl,vf610-anatop");
- 	anatop_base = of_iomap(np, 0);
- 	BUG_ON(!anatop_base);
-+	of_node_put(np);
+diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
+index 7244a621c61b9..efc9e19732957 100644
+--- a/drivers/clk/clk-qoriq.c
++++ b/drivers/clk/clk-qoriq.c
+@@ -1244,6 +1244,7 @@ static void __init clockgen_init(struct device_node *np)
+ 				pr_err("%s: Couldn't map %s regs\n", __func__,
+ 				       guts->full_name);
+ 			}
++			of_node_put(guts);
+ 		}
  
- 	np = ccm_node;
- 	ccm_base = of_iomap(np, 0);
+ 	}
 -- 
 2.20.1
 
