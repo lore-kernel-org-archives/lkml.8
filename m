@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EC7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20604C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E924424690
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30F224690
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220910;
-	bh=1m+lCTM68vTe/EhceDD5nTkHNlOHn75Gidd+5DqJr1w=;
+	s=default; t=1580220913;
+	bh=AZ+KTiH2AuAuxd2VCt7KSBWdxt9JsjHbNKgEjirdV1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LgIelxezEtcgrFZ5zUahfuzNqMHSsbIvO89soAJxeYM6vMB83e+3Ge0WOXAkFGryg
-	 mP98z5s1EmqvGKWMzEBwgrUJQeIAY6b+ux8BXVcRtZDUx+yOvdu1JG9TukhzOF4ndO
-	 INDJbb/pBTB5z28FsPlCuIzT2lc0gpCT3Jj35g5o=
+	b=2FQm9Kg/6dXvXL7w5M3PTth+ERzY/702rihOfd+/32Lgj3VaONsjGd4+qrIQizC1B
+	 B2TfNo8ebIDT6ei2tePCcaeQit3YDlXPWBXabXmB1kdf3E2s29CNdO0TBEZPXflvlb
+	 LsQGjaJHvEzKWxM//dRyUKjEsYyZZALv4n49Kzw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbgA1OPI (ORCPT
+        id S1730069AbgA1OPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:15:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37620 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:15:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730026AbgA1OPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:15:06 -0500
+        id S1730047AbgA1OPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:15:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3979924681;
-        Tue, 28 Jan 2020 14:15:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EFB224681;
+        Tue, 28 Jan 2020 14:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220905;
-        bh=1m+lCTM68vTe/EhceDD5nTkHNlOHn75Gidd+5DqJr1w=;
+        s=default; t=1580220910;
+        bh=AZ+KTiH2AuAuxd2VCt7KSBWdxt9JsjHbNKgEjirdV1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O/mDC+ciaBXG8jY6uMCa5GYSUZ8krIJzChZioaLhh2U4AHcrucX/8eCMQMOnesgEV
-         fHg/fu/DL37FmFnZVcLhVczbE6EFdDL/bjk+uad66h/fXJwBqQ4rYYUBxgLjJC0MnB
-         W/U3GXsfX2NZIjrNDP7zyHp2ECsVGP3MuCchjq+g=
+        b=jpxu+yk9kIUVSoax6Nc7TH/p82smhzClTluCJSzSeQxZboisKdAq3EVY77WzPvDvT
+         VWUS9ETSCmG6hn8sMdHtYv/D7JNvbNDqDdAWCgmAZMVrVZ57yFNCVLnaKQ0DJR2Atz
+         sBOJh9R9AoxeavGyIPicE6B/9Z9n27mJjHWdsSMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 011/271] mlxsw: reg: QEEC: Add minimum shaper fields
-Date:   Tue, 28 Jan 2020 15:02:40 +0100
-Message-Id: <20200128135853.266292286@linuxfoundation.org>
+Subject: [PATCH 4.9 013/271] exportfs: fix passing zero to ERR_PTR() warning
+Date:   Tue, 28 Jan 2020 15:02:42 +0100
+Message-Id: <20200128135853.452724759@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,75 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 8b931821aa04823e2e5df0ae93937baabbd23286 ]
+[ Upstream commit 909e22e05353a783c526829427e9a8de122fba9c ]
 
-Add QEEC.mise (minimum shaper enable) and QEEC.min_shaper_rate to enable
-configuration of minimum shaper.
+Fix a static code checker warning:
+  fs/exportfs/expfs.c:171 reconnect_one() warn: passing zero to 'ERR_PTR'
 
-Increase the QEEC length to 0x20 as well: that's the length that the
-register has had for a long time now, but with the configurations that
-mlxsw typically exercises, the firmware tolerated 0x1C-sized packets.
-With mise=true however, FW rejects packets unless they have the full
-required length.
+The error path for lookup_one_len_unlocked failure
+should set err to PTR_ERR.
 
-Fixes: b9b7cee40579 ("mlxsw: reg: Add QoS ETS Element Configuration register")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: bbf7a8a3562f ("exportfs: move most of reconnect_path to helper function")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/reg.h | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ fs/exportfs/expfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-index b2a745b579fd1..fdc69218c8cac 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-@@ -1873,7 +1873,7 @@ static inline void mlxsw_reg_qtct_pack(char *payload, u8 local_port,
-  * Configures the ETS elements.
-  */
- #define MLXSW_REG_QEEC_ID 0x400D
--#define MLXSW_REG_QEEC_LEN 0x1C
-+#define MLXSW_REG_QEEC_LEN 0x20
- 
- static const struct mlxsw_reg_info mlxsw_reg_qeec = {
- 	.id = MLXSW_REG_QEEC_ID,
-@@ -1918,6 +1918,15 @@ MLXSW_ITEM32(reg, qeec, element_index, 0x04, 0, 8);
-  */
- MLXSW_ITEM32(reg, qeec, next_element_index, 0x08, 0, 8);
- 
-+/* reg_qeec_mise
-+ * Min shaper configuration enable. Enables configuration of the min
-+ * shaper on this ETS element
-+ * 0 - Disable
-+ * 1 - Enable
-+ * Access: RW
-+ */
-+MLXSW_ITEM32(reg, qeec, mise, 0x0C, 31, 1);
-+
- enum {
- 	MLXSW_REG_QEEC_BYTES_MODE,
- 	MLXSW_REG_QEEC_PACKETS_MODE,
-@@ -1934,6 +1943,17 @@ enum {
-  */
- MLXSW_ITEM32(reg, qeec, pb, 0x0C, 28, 1);
- 
-+/* The smallest permitted min shaper rate. */
-+#define MLXSW_REG_QEEC_MIS_MIN	200000		/* Kbps */
-+
-+/* reg_qeec_min_shaper_rate
-+ * Min shaper information rate.
-+ * For CPU port, can only be configured for port hierarchy.
-+ * When in bytes mode, value is specified in units of 1000bps.
-+ * Access: RW
-+ */
-+MLXSW_ITEM32(reg, qeec, min_shaper_rate, 0x0C, 0, 28);
-+
- /* reg_qeec_mase
-  * Max shaper configuration enable. Enables configuration of the max
-  * shaper on this ETS element.
+diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+index 3706939e5dd5e..1730122b10e06 100644
+--- a/fs/exportfs/expfs.c
++++ b/fs/exportfs/expfs.c
+@@ -146,6 +146,7 @@ static struct dentry *reconnect_one(struct vfsmount *mnt,
+ 	tmp = lookup_one_len_unlocked(nbuf, parent, strlen(nbuf));
+ 	if (IS_ERR(tmp)) {
+ 		dprintk("%s: lookup failed: %d\n", __func__, PTR_ERR(tmp));
++		err = PTR_ERR(tmp);
+ 		goto out_err;
+ 	}
+ 	if (tmp != dentry) {
 -- 
 2.20.1
 
