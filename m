@@ -2,82 +2,80 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C870C35249
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 03:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5B7C33CB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 03:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA512173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 03:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF7620678
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 03:11:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="BxuCsT+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgA1DGX (ORCPT
+        id S1726323AbgA1DLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 22:06:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:51646 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbgA1DGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 22:06:23 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEA3A30E;
-        Mon, 27 Jan 2020 19:06:21 -0800 (PST)
-Received: from [10.163.1.151] (unknown [10.163.1.151])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A0623F68E;
-        Mon, 27 Jan 2020 19:06:06 -0800 (PST)
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
- <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <214c0d53-eb34-9b0c-2e4e-1aa005146331@arm.com>
-Date:   Tue, 28 Jan 2020 08:36:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 27 Jan 2020 22:11:14 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35739 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgA1DLN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 22:11:13 -0500
+Received: by mail-qt1-f196.google.com with SMTP id t8so3725825qtr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 19:11:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=LOIYIqCCFHSha1FH0aa4/khvhD5szI599OmZrkoJ7kk=;
+        b=BxuCsT+2qPMOe/Ostp02p2HonZyfFkam/I65XeI7+lBfaGReZlsl9LvTv+OuwuExFG
+         gd5UlhxpUR0vxSzYfv591zyOPa6tlWDNCPAuUXY+krtaPE5tmWJVYZJTlS+cc/95rF8C
+         Pf7UKflXY3vF17fTJEnGKgiMuPH7woIxr2dfu/a4DlPk9ZRqk7YyLgZzQHLySpnUIJ+V
+         kqzuMS47Ecwr83/NUrDBgnhzvCkdVXoRP6ZaWr0w7VMosALwIFe09ShIG9W8G4jqqvdb
+         srUjqpz7hsuYPFe4DQ5SXixcLLw5CDLg9T2aMCdWaWdm6737KlJRW1FyK8MlXM4gaDK+
+         dMYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=LOIYIqCCFHSha1FH0aa4/khvhD5szI599OmZrkoJ7kk=;
+        b=sQ7rG2xWs5rMBXJYKIc85FbM7b+K5wvqEWHywvt0lXMpVZ0nn63j0u9hxjxhjBw8mb
+         uaXuPXHjn5q/Cd1iRjkFva4qXdIeoyBcc3QU8Q1Xak5bWVEOEup4yv/m16JVTU5c8ZsG
+         ltZd3eSlc0EZKLu9tPkFe7/yd19QJOz4fbALuqyFwSPZ8iwNivrnZQBOXB5XjbC5dX+c
+         AQEu6DApTnlFf/xV1Notxpqutv+oTj+dmSNcvOXeuoAKpGYnaEIMbFfjhPXYaVEUOw6W
+         CbdbU5NLWljOLYnjuID996yXItaW5/KnvxF3HGE3QdENS0mx9Z9srMsd4RQvMeu722QV
+         b0JA==
+X-Gm-Message-State: APjAAAWDTXuvLt7FplF1c128bC4ojkCnbHfk8L4IY7KDM61Jh4R0fy+w
+        uZvvp22O0CS6x/zEZ1c7U5j5dg==
+X-Google-Smtp-Source: APXvYqxmP8t/mYHBeLdflRZEVZLiUjACF312C/eoPcaYqaDrzwk4qOf33cM0SNnj/Qmp4LDpThUXtg==
+X-Received: by 2002:ac8:19b6:: with SMTP id u51mr12676666qtj.319.1580181072736;
+        Mon, 27 Jan 2020 19:11:12 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id s20sm11013777qkg.131.2020.01.27.19.11.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Jan 2020 19:11:12 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200123093905.GU14914@hirez.programming.kicks-ass.net>
+Date:   Mon, 27 Jan 2020 22:11:10 -0500
+Cc:     Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "paul E. McKenney" <paulmck@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E722E6E0-26CB-440F-98D7-D182B57D1F43@lca.pw>
+References: <20200122165938.GA16974@willie-the-truck>
+ <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
+ <20200122223851.GA45602@google.com>
+ <A90E2B85-77CB-4743-AEC3-90D7836C4D47@lca.pw>
+ <20200123093905.GU14914@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,81 +83,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 01/28/2020 07:41 AM, Qian Cai wrote:
-> 
-> 
->> On Jan 27, 2020, at 8:28 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
->>
->> This adds tests which will validate architecture page table helpers and
->> other accessors in their compliance with expected generic MM semantics.
->> This will help various architectures in validating changes to existing
->> page table helpers or addition of new ones.
->>
->> This test covers basic page table entry transformations including but not
->> limited to old, young, dirty, clean, write, write protect etc at various
->> level along with populating intermediate entries with next page table page
->> and validating them.
->>
->> Test page table pages are allocated from system memory with required size
->> and alignments. The mapped pfns at page table levels are derived from a
->> real pfn representing a valid kernel text symbol. This test gets called
->> right after page_alloc_init_late().
->>
->> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
->> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
->> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
->> arm64. Going forward, other architectures too can enable this after fixing
->> build or runtime problems (if any) with their page table helpers.
+> On Jan 23, 2020, at 4:39 AM, Peter Zijlstra <peterz@infradead.org> =
+wrote:
+>=20
+> On Wed, Jan 22, 2020 at 06:54:43PM -0500, Qian Cai wrote:
+>> diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+>> index 1f7734949ac8..832e87966dcf 100644
+>> --- a/kernel/locking/osq_lock.c
+>> +++ b/kernel/locking/osq_lock.c
+>> @@ -75,7 +75,7 @@ osq_wait_next(struct optimistic_spin_queue *lock,
+>>                 * wait for either @lock to point to us, through its =
+Step-B, or
+>>                 * wait for a new @node->next from its Step-C.
+>>                 */
+>> -               if (node->next) {
+>> +               if (READ_ONCE(node->next)) {
+>>                        next =3D xchg(&node->next, NULL);
+>>                        if (next)
+>>                                break;
+>=20
+> This could possibly trigger the warning, but is a false positive. The
+> above doesn't fix anything in that even if that load is shattered the
+> code will function correctly -- it checks for any !0 value, any byte
+> composite that is !0 is sufficient.
+>=20
+> This is in fact something KCSAN compiler infrastructure could deduce.
 
-Hello Qian,
 
-> 
-> What’s the value of this block of new code? It only supports x86 and arm64
-> which are supposed to be good now.
-
-We have been over the usefulness of this code many times before as the patch is
-already in it's V12. Currently it is enabled on arm64, x86 (except PAE), arc and
-ppc32. There are build time or runtime problems with other archs which prevent
-enablement of this test (for the moment) but then the goal is to integrate all
-of them going forward. The test not only validates platform's adherence to the
-expected semantics from generic MM but also helps in keeping it that way during
-code changes in future as well.
-
-> Did those tests ever find any regression or this is almost only useful for new
-
-The test has already found problems with s390 page table helpers.
-
-> architectures which only happened once in a few years?
-
-Again, not only it validates what exist today but its also a tool to make
-sure that all platforms continue adhere to a common agreed upon semantics
-as reflected through the tests here.
-
-> The worry if not many people will use this config and code those that much in
-
-Debug features or tests in the kernel are used when required. These are never or
-should not be enabled by default. AFAICT this is true even for entire DEBUG_VM
-packaged tests. Do you have any particular data or precedence to substantiate
-the fact that this test will be used any less often than the other similar ones
-in the tree ? I can only speak for arm64 platform but the very idea for this
-test came from Catalin when we were trying to understand the semantics for THP
-helpers while enabling THP migration without split. Apart from going over the
-commit messages from the past, there were no other way to figure out how any
-particular page table helper is suppose to change given page table entry. This
-test tries to formalize those semantics.
-
-> the future because it is inefficient to find bugs, it will simply be rotten
-Could you be more specific here ? What parts of the test are inefficient ? I
-am happy to improve upon the test. Do let me know you if you have suggestions.
-
-> like a few other debugging options out there we have in the mainline that
-will be a pain to remove later on.
->
-
-Even though I am not agreeing to your assessment about the usefulness of the
-test without any substantial data backing up the claims, the test case in
-itself is very much compartmentalized, staying clear from generic MM and
-debug_vm_pgtable() is only function executing the test which is getting
-called from kernel_init_freeable() path.
-
-- Anshuman
+Marco, any thought on improving KCSAN for this to reduce the false
+positives?=
