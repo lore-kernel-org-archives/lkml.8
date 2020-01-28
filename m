@@ -2,70 +2,151 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E587C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB14EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3862073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580246130;
-	bh=/UPoKIu/WPQNdLD8n7PUdqwUR6CyNWh3C+yokVCwuxs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=twqIZ1QT4ueVgdRNDjHwdh9KZsSvcVM6ggnBiB8iw0bU4PzcBp44L7QretbG1qWsm
-	 C1yHLK92OqbfLtuwqTvuzjFLL0ckwlQWrlrSsP32pW4h9cWi6B+PoaRsmTPYs5U5Zl
-	 4qpzLWuf/gkY+Enpo/SQsnXPjE+Gqr8o/ch3qSOQ=
+	by mail.kernel.org (Postfix) with ESMTP id AADA82468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:16:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="u8ngAzFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgA1VP3 (ORCPT
+        id S1726533AbgA1VQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 16:15:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43634 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 16:16:46 -0500
+Received: from ozlabs.org ([203.11.71.1]:49327 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbgA1VPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 16:15:06 -0500
-Subject: Re: [GIT PULL] x86/cache changes for v5.6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580246106;
-        bh=/UPoKIu/WPQNdLD8n7PUdqwUR6CyNWh3C+yokVCwuxs=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=f4qmnVwDvK7eKHp7Cy/d9C+6144o8hy3OY4hdPz9G3MfcyYEUfXGTxqXGjtwcM6Mw
-         c4AyIKlohTMsWsfjyoB6gJUuvDWlXXmGHTW97Vd/DB2rX+4eB4Hjmxy6a9wq1tqQ0v
-         8vm+2gHJN7S+1D79FmNtMEJP7BPEwLzUIoS8nwKA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200128172826.GA83630@gmail.com>
-References: <20200128172826.GA83630@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200128172826.GA83630@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cache-for-linus
-X-PR-Tracked-Commit-Id: e79f15a4598c1f3f3f7f3319ca308c63c91fdaf2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4244057c3da1dde07c0f338ea32fed6e79d6a657
-Message-Id: <158024610642.20407.8058075761492928777.pr-tracker-bot@kernel.org>
-Date:   Tue, 28 Jan 2020 21:15:06 +0000
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
+        id S1726211AbgA1VQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 16:16:46 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 486fZ15jfFz9sNT;
+        Wed, 29 Jan 2020 08:16:41 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580246202;
+        bh=znBPl4ee35QRiKKMj1IQ0LS/r8uB/BO2eAzVRMxlpbE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=u8ngAzFhMKfp/dMM02griDzeRlvEGx8zNGu570k3jabOi7r8aXkHLNGFyW18yyIjn
+         w5JFRt3vO+NqoDoro7fdRG0w11EQDa2QK/Cv1gkXsaa70yWm6dGFllToDKerhow/Vy
+         K6X7fGGDCrYi3+Be3qnIXOcb6jGRgZgEVXevryPqRgOs2I+pgkSoHxTWs/VzAB++eK
+         FLi4jmoOugI/XUID0YM95fCyoh6Gw0Ng/uojITKFK0QiIns0JszyRmP7PmPYbe0Y91
+         PZImZNvG6z96oqcmZc64RvxvqlTa51tchCbR6wu4QoEqXTrTNC2molUT6R+M7XoW+C
+         wWADUuo9A7cLg==
+Date:   Wed, 29 Jan 2020 08:16:28 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexandru-Mihai Maftei <amaftei@solarflare.com>
+Subject: Re: linux-next: manual merge of the generic-ioremap tree with the
+ net-next tree
+Message-ID: <20200129081628.750f5e05@canb.auug.org.au>
+In-Reply-To: <20200128095449.5688fddc@canb.auug.org.au>
+References: <20200109161202.1b0909d9@canb.auug.org.au>
+        <20200128095449.5688fddc@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/H80WBqcdd8x4xb7Ec0IpJys";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 28 Jan 2020 18:28:26 +0100:
+--Sig_/H80WBqcdd8x4xb7Ec0IpJys
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cache-for-linus
+Hi all,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4244057c3da1dde07c0f338ea32fed6e79d6a657
+On Tue, 28 Jan 2020 09:54:49 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Thu, 9 Jan 2020 16:12:02 +1100 Stephen Rothwell <sfr@canb.auug.org.au>=
+ wrote:
+> >=20
+> > Today's linux-next merge of the generic-ioremap tree got a conflict in:
+> >=20
+> >   drivers/net/ethernet/sfc/efx.c
+> >=20
+> > between commit:
+> >=20
+> >   f1826756b499 ("sfc: move struct init and fini code")
+> >=20
+> > from the net-next tree and commit:
+> >=20
+> >   4bdc0d676a64 ("remove ioremap_nocache and devm_ioremap_nocache")
+> >=20
+> > from the generic-ioremap tree.
+> >=20
+> > I fixed it up (the latter moved the code, so I applied the following
+> > merge fix patch) and can carry the fix as necessary. This is now fixed
+> > as far as linux-next is concerned, but any non trivial conflicts should
+> > be mentioned to your upstream maintainer when your tree is submitted
+> > for merging.  You may also want to consider cooperating with the
+> > maintainer of the conflicting tree to minimise any particularly complex
+> > conflicts.
+> >=20
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Thu, 9 Jan 2020 16:08:52 +1100
+> > Subject: [PATCH] fix up for "sfc: move struct init and fini code"
+> >=20
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/net/ethernet/sfc/efx_common.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/net/ethernet/sfc/efx_common.c b/drivers/net/ethern=
+et/sfc/efx_common.c
+> > index fe74c66c8ec6..bf0126633c25 100644
+> > --- a/drivers/net/ethernet/sfc/efx_common.c
+> > +++ b/drivers/net/ethernet/sfc/efx_common.c
+> > @@ -954,7 +954,7 @@ int efx_init_io(struct efx_nic *efx, int bar, dma_a=
+ddr_t dma_mask,
+> >  		goto fail3;
+> >  	}
+> > =20
+> > -	efx->membase =3D ioremap_nocache(efx->membase_phys, mem_map_size);
+> > +	efx->membase =3D ioremap(efx->membase_phys, mem_map_size);
+> >  	if (!efx->membase) {
+> >  		netif_err(efx, probe, efx->net_dev,
+> >  			  "could not map memory BAR at %llx+%x\n",
+> > --=20
+> > 2.24.0 =20
+>=20
+> This is now a conflict between the net-next tree and Linus' tree.
 
-Thank you!
+It actually turns out that this is a conflict between the
+wireless-drivers tree and Linus' tree since the wireless-drivers tree
+has merged most of the net-next tree.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/H80WBqcdd8x4xb7Ec0IpJys
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4wpKwACgkQAVBC80lX
+0GyOJAf/VlXWXj3k+51plddZl88xdeutVOpBxXmovQt+7ecZdqniu8CMA4YCipTv
+JLGwp7h/0zoxsDMu7ddzJectmvR5EbQZbKIST+lYVSpYCOkuXMNIastFwWNlAg08
+FSdvCllk2X09M69WuvEFfABd4UY9Uj4xRcCWZIKiQzSokaHRxTw5hhmkw+BnEW3T
+eZS8HNw+HitwLAgDa7Dt+Goz7zFe4qJldYHiP4eRpJ9OKG1uolGE5gA3NnN8PnVJ
+63k5U1Aohojt5m8MRb64oqNJ8k+09Oe7pqTUTdzdJJotTRiQREiA2S5Dklnr4+1y
+MpWd7x5b5nBXPmpB0TE5Wdlh5HqRuA==
+=wRbj
+-----END PGP SIGNATURE-----
+
+--Sig_/H80WBqcdd8x4xb7Ec0IpJys--
