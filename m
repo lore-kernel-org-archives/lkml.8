@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA32EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCD4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7532720702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29C524683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222270;
-	bh=HY+wfotgluU10jnyLR4+EduJuquGEvYO7BcvVCfbxrM=;
+	s=default; t=1580222275;
+	bh=OmakTc7+CEIwIVwgJvm2ptrnkn0uxJwn1MlkN69iRHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ezgL71hMeUDlm5nyA8Iv6zTV42rGROLxK7c89G8/skpuySl1eVGJcXVg/rUJjg4pc
-	 ieqWDCnM5q0B7YXkFP2Fi91Paw1jLQJkiI9NoeLHvrtAM41r/GmhIwI0v6izJEsB1f
-	 2/+GENfnnYM+DpT7O5/LlQOl5IzTVfCFqpi/gEy0=
+	b=d+q1GbLMVkBDU8Ihi3WWHqqWHE7+5PC8XjnWEuEr5lRIT2aQtVm6IvB+FdUzF8ePk
+	 6XCtYAvyDyo5moUIGJEoc3QoG01VdIDqjEzZNEFuo9nDM5Gy/ws/92EabNUfzUpWQB
+	 j0wL0i2uF6wXqOfpk7o5vT9Ru6/XGjawDI9uWq7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbgA1Oht (ORCPT
+        id S1728204AbgA1OT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:37:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44178 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:19:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730923AbgA1OTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:19:41 -0500
+        id S1730435AbgA1OTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:19:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6DEC2468F;
-        Tue, 28 Jan 2020 14:19:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC15D24698;
+        Tue, 28 Jan 2020 14:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221181;
-        bh=HY+wfotgluU10jnyLR4+EduJuquGEvYO7BcvVCfbxrM=;
+        s=default; t=1580221164;
+        bh=OmakTc7+CEIwIVwgJvm2ptrnkn0uxJwn1MlkN69iRHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GL5Ckk4G0VzlgHy6mnSMGAOSkSdD234RY9Ux13xY7Pq4cOtEo5g1PcT92SOPj4Z7C
-         gg0Pv/ck4BwPsJpWyogdD5VQ0/KZqeWl8m6wWa3aP8ylo6SgxI+DYTVPERUWhjllml
-         bj7BlzdtugwXNizTuSOyWLkXSo3ReVA3g+fn+OEE=
+        b=YRsQTOC0nxLIJRCP9ySevdqmGS4pFfNLtkO6zJJ5DeEbGCLjXcF8C4xRiBTbjgwPf
+         0B1517Xebivv/llqB2Jj2MFDEatdJvvVEqiazzZ/fnW0iOdv206yXFzOryYA3IAR/r
+         UrrI9AycXtqYKpKTSwQbQhoSGT48yUBmQSB9mEn8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 122/271] dmaengine: axi-dmac: Dont check the number of frames for alignment
-Date:   Tue, 28 Jan 2020 15:04:31 +0100
-Message-Id: <20200128135901.671922895@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 077/271] cdc-wdm: pass return value of recover_from_urb_loss
+Date:   Tue, 28 Jan 2020 15:03:46 +0100
+Message-Id: <20200128135858.291000386@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,43 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 648865a79d8ee3d1aa64aab5eb2a9d12eeed14f9 ]
+[ Upstream commit 0742a338f5b3446a26de551ad8273fb41b2787f2 ]
 
-In 2D transfers (for the AXI DMAC), the number of frames (numf) represents
-Y_LENGTH, and the length of a frame is X_LENGTH. 2D transfers are useful
-for video transfers where screen resolutions ( X * Y ) are typically
-aligned for X, but not for Y.
+'rv' is the correct return value, pass it upstream instead of 0
 
-There is no requirement for Y_LENGTH to be aligned to the bus-width (or
-anything), and this is also true for AXI DMAC.
-
-Checking the Y_LENGTH for alignment causes false errors when initiating DMA
-transfers. This change fixes this by checking only that the Y_LENGTH is
-non-zero.
-
-Fixes: 0e3b67b348b8 ("dmaengine: Add support for the Analog Devices AXI-DMAC DMA controller")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 17d80d562fd7 ("USB: autosuspend for cdc-wdm")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dma-axi-dmac.c | 2 +-
+ drivers/usb/class/cdc-wdm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 7f0b9aa158679..9887f2a14aa98 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -451,7 +451,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
+diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
+index 217a479165e03..09337a973335c 100644
+--- a/drivers/usb/class/cdc-wdm.c
++++ b/drivers/usb/class/cdc-wdm.c
+@@ -1098,7 +1098,7 @@ static int wdm_post_reset(struct usb_interface *intf)
+ 	rv = recover_from_urb_loss(desc);
+ 	mutex_unlock(&desc->wlock);
+ 	mutex_unlock(&desc->rlock);
+-	return 0;
++	return rv;
+ }
  
- 	if (chan->hw_2d) {
- 		if (!axi_dmac_check_len(chan, xt->sgl[0].size) ||
--		    !axi_dmac_check_len(chan, xt->numf))
-+		    xt->numf == 0)
- 			return NULL;
- 		if (xt->sgl[0].size + dst_icg > chan->max_length ||
- 		    xt->sgl[0].size + src_icg > chan->max_length)
+ static struct usb_driver wdm_driver = {
 -- 
 2.20.1
 
