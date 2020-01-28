@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157E8C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2199EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8BDB2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E305D24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 05:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bzSft2iJ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oZrJZ3kf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgA1F2m (ORCPT
+        id S1725948AbgA1F2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 00:28:42 -0500
-Received: from mail-eopbgr80072.outbound.protection.outlook.com ([40.107.8.72]:29315
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Tue, 28 Jan 2020 00:28:51 -0500
+Received: from mail-am6eur05on2063.outbound.protection.outlook.com ([40.107.22.63]:25184
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725283AbgA1F2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 00:28:41 -0500
+        id S1725914AbgA1F2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 00:28:50 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SO6lY2WYULVMnmKIsW8arATFaqfPs3rI1hHgCHu3o9IICLyVQ4uHNLGfOFdQvJjP3HXfePZrkIy3c4d0YfEpg+WDwTQJZOhJrmmIi3oIHcCin+gvW5HnQ3mKC/nrkecqrgfv/uKuhIlKH0VlTq3QdUyzPkspY449wOADNBnoxGY39+MDPq9WnTOksxC5tENPKY9sl7jB2KEpr1y6/BkWEJlqIxFPUlKFX11vsZ7fm4bLSb6l588HIs4TFpKABlyb2EmHwiI/VIp+EaOd3QcOEAriB5uuFbDgHE+k3cmj/kryJWi7lWXIoHM02QIDlt6sESFPy7rakFjDh4yZtXfsYw==
+ b=Cp8sfsdITjF9VzqJ+//LO/BOynh9WsoKz08ldFd3FMDJJtkc9XQXvCxW2jIC9XBLxkMnh7+8X1miQHZ7Zldlw41LL6SpayjT/8EsxuMl4xtbg0YutwdjfXs3kxT7F72Wds54HcCfn13mqPJH4srcM/Usx9rTqrbOozW9px27uRDA71pkAvXleBv2NTDBL8t3vtaXvo/elG8SeMGoaP0tJgUSAKvYGJfE1fNi2WhSi5zNm7etNF8ht/NLMsp6rq5skk8AYiJ+L9rZHO5H54SaST0FYbxu/XSyVy7iT7H4YT9Xh5cutiwE0Qax+Ly8RuzY7hfR5JT2ItiDPmO8k6MVeQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xQ3zTQ6kFuym5Bl6y1u2gUNP0cH+hU/PnWj9x9N0zpQ=;
- b=CaD97y98u/r79SPqn5gXyXDo4y5qn7n81Kb1WPLAJQ+BHwPo9MHUcoe4xWq1oZk/Hd4hz+tN1PV6XtFYVAfsIE2IK1VkXWdxwESW2c8P7jG0z6Bs2uEMb/XJ3qVaGQYk4+m4q8ft3ZdX+fCaIWSMcFYKpCpu6AeirbcA5klvHbyzyVy1OGVS/S/93zxOFYDNxwCWuEXkjqEtSja+u1NxcmWSqcx7jRow+KeYlBISicmlW+VUntfNXp1dpyLNZlKvUP5XQH/4oXh/bf+RWqTounrzhWmnvkYplWKU/5FJtcHgz1jUhpViOeCA/G2dQLCUAUQVhcz33v9LNYKw1Zq7YA==
+ bh=B4c5ji5iRY/c/KIM2OC2UeIjiqJnN7GFOjzdDrVqlXw=;
+ b=iyMZb4nR4+b74iIlMDNJaOWjNxrQjQj5dFaozqMGHKtRmpWw+Vp/N5VA5AUqwQyej8DWDp3y32zJ0G61h326MVd9CJ/Zm11G7mVkhvCuQrxH/YAjBpB2L6Hi8KtqaOs29ZxGW9GkVGorjQx4HNMmDjSXI/0hh7jUmwImOQRq4oSpnC3oKP+WpitUNaHgWblguZpIzJTCnfwndk34LYhZP5/NVvwaqKSccUyPgUzUC0nVllLh410imOTMaiqa7wuS8FFtIV4jSq3tUImXyjaV6oe2H3VB4XXM2yJUfKwNbrE2t0n+0Bhya5k1tpqjrwZFk96MWR0ENt9QzNVilFj5VA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xQ3zTQ6kFuym5Bl6y1u2gUNP0cH+hU/PnWj9x9N0zpQ=;
- b=bzSft2iJf182/PCA8HEfPMwPWl/+BrZAa9MDNTsRQq3uhRn8VFTkSwQmqq7CD0aEGgW47bd8zvLZ7s+meay7/JqjekCQtwIcN0F3+XoarHibl2RlO5IG0Zb81nQN+mGjxX6wZ/FZG/J14DOy4uhiu2rYFoa9AbvYqawp5lr24S4=
+ bh=B4c5ji5iRY/c/KIM2OC2UeIjiqJnN7GFOjzdDrVqlXw=;
+ b=oZrJZ3kfmXD3/hr1cqXiJEtO8dFHYjPzFiM79T6c5Md5Hx5XbWkpWgrWHgjt1KJ8F4Khl0yBWIf9yK6UOg0RK6LQ/kzyCc3UpzYAxTjTS5JYIlpULXfrwpcal3aJM56yPjNB7L3rfyRUct9awb8E4Q2RFyxM5xoOMLjrZdpalP0=
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5890.eurprd04.prod.outlook.com (20.178.202.92) with Microsoft SMTP
+ AM0PR04MB5939.eurprd04.prod.outlook.com (20.178.112.158) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.22; Tue, 28 Jan 2020 05:28:37 +0000
+ 15.20.2665.23; Tue, 28 Jan 2020 05:28:46 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2665.026; Tue, 28 Jan 2020
- 05:28:37 +0000
-Received: from localhost.localdomain (119.31.174.66) by HK0PR03CA0113.apcprd03.prod.outlook.com (2603:1096:203:b0::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2665.22 via Frontend Transport; Tue, 28 Jan 2020 05:28:32 +0000
+ 05:28:46 +0000
+Received: from localhost.localdomain (119.31.174.66) by HK0PR03CA0113.apcprd03.prod.outlook.com (2603:1096:203:b0::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2665.22 via Frontend Transport; Tue, 28 Jan 2020 05:28:41 +0000
 From:   Peng Fan <peng.fan@nxp.com>
 To:     "sboyd@kernel.org" <sboyd@kernel.org>,
         "shawnguo@kernel.org" <shawnguo@kernel.org>,
@@ -64,13 +64,11 @@ CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
         Jacky Bai <ping.bai@nxp.com>,
         "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V4 1/4] clk: imx: composite-8m: add
- imx8m_clk_hw_composite_core
-Thread-Topic: [PATCH V4 1/4] clk: imx: composite-8m: add
- imx8m_clk_hw_composite_core
-Thread-Index: AQHV1ZvKDxq3UpFxMEyFV9hEtp7TTw==
-Date:   Tue, 28 Jan 2020 05:28:36 +0000
-Message-ID: <1580189015-5744-2-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH V4 3/4] clk: imx: imx8mm: use imx8m_clk_hw_composite_core
+Thread-Topic: [PATCH V4 3/4] clk: imx: imx8mm: use imx8m_clk_hw_composite_core
+Thread-Index: AQHV1ZvP2+ovD9ZmcECh6GZdFmH9Hg==
+Date:   Tue, 28 Jan 2020 05:28:46 +0000
+Message-ID: <1580189015-5744-4-git-send-email-peng.fan@nxp.com>
 References: <1580189015-5744-1-git-send-email-peng.fan@nxp.com>
 In-Reply-To: <1580189015-5744-1-git-send-email-peng.fan@nxp.com>
 Accept-Language: en-US
@@ -87,31 +85,31 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c51b3319-ea4d-4768-30d1-08d7a3b2eca9
-x-ms-traffictypediagnostic: AM0PR04MB5890:|AM0PR04MB5890:
+x-ms-office365-filtering-correlation-id: 3d7d86d8-8abd-45db-64d2-08d7a3b2f240
+x-ms-traffictypediagnostic: AM0PR04MB5939:|AM0PR04MB5939:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB58908C3B49BE1CC6419D7D78880A0@AM0PR04MB5890.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-microsoft-antispam-prvs: <AM0PR04MB5939F969432365B2230A7009880A0@AM0PR04MB5939.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
 x-forefront-prvs: 029651C7A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(376002)(136003)(396003)(189003)(199004)(36756003)(69590400006)(110136005)(54906003)(4326008)(71200400001)(52116002)(44832011)(66556008)(64756008)(478600001)(66476007)(66946007)(66446008)(2616005)(5660300002)(956004)(316002)(86362001)(6486002)(186003)(8676002)(16526019)(6512007)(81156014)(81166006)(6506007)(6636002)(2906002)(26005)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5890;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(39860400002)(366004)(376002)(189003)(199004)(2616005)(956004)(110136005)(54906003)(44832011)(5660300002)(316002)(186003)(16526019)(71200400001)(69590400006)(26005)(478600001)(81156014)(81166006)(6486002)(52116002)(6506007)(6636002)(2906002)(8676002)(4326008)(8936002)(6512007)(86362001)(66946007)(36756003)(66476007)(66556008)(66446008)(64756008)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5939;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hp9H5PyO5Nv42ftq7ZcRvqq5A74BQ4h0S+fhMwseNB+RqdH2ZUK5da8ArQ9COfHBqv/MPqrr2TpXt/FZQ6KAJKPMRJpBh1+nUp392ryEFThR7THOqaeF5kcr4/qy30ZwbvczvexEV3DhTOqb5jy9JUWt5eVfEEWXV4CU6OtvDQLO56PbguF/ofFaHpEhldgVvQspvmyfvNJAJo8EevP8HYNHtZiJSMjT+ZIm9M3ybUKDDu4ueG6LCKh8CPMFChrfOM2qDJbDb4qbvtAJoTS5XP3CstQ0oOlXsDQG/jylq/0J3fgluJNxwgZ8d4ape+GIXdm21xllyqD/kwLNhtJv/mZ+1EFhl6fPpJjFtEqV5VGR5ApNcMda6/JIzAq+JDWI79kGZY7IKdXX54MpKrNQEALnbvs3nxTJYIdIgRXn3Pf1WeVMnQw6EI+yxraP74V36vOahRrz1dJj6deVyGQ76Ou0Vb43flYHvFkk5LP+pnT2F4TFyaqBVJzvexX+7Pmv9sLhLlsEBTIRORgl0JWvOX9nkE1PDJfNiKtRms/1nYA=
-x-ms-exchange-antispam-messagedata: QFeah0X2Fc6NwW0jMZlZVpxeUllN6RtuUp+w1u7Cs9fILZUAkQTHipmxWwlyyxZob1nLEvAm8L9fmnMx/sEEEj5dR3HM0jmSiiHQNT1AXQT8Lttmb8Gf4iIywErs8t7K619Rlm8W7kMbxVYQrSmNNg==
+x-microsoft-antispam-message-info: NRh52mA7X8tGhkSRH7n4BEcQdA686NIDMqUipEcUce2a3WTtTYeSuJAyuOkTzF85ejzgAPCmXsMe6U6HtVooBAgsuAWbyuBg41zDOJz25yj3UgBQfxUKm5kLd1dXm94yBBgN1Gdspvfievq6Qdr003Pq5TURf9bzZHJRPi7q2yMGKY4EQRMCpJnpLN03GC86IuGT28zpCN8biVdPYSbFIK2tziB47XnrTpQYwcHeWCxSpQaQgJAWuM7jHJ6SW+2XhiVrY7lTyLkz9yRwzmU+sqBQBQ5VWOPEs9vggrUBsbBZ0XyHNkxphH1Zf6XHLNF+/N8+hHvCdbj4Yqafmnhg6ZyqxcR9TX6XTULqzVMpVr5vFPsYTzQVxncOd8vfe2kp4x4DmMcQxz9cdrFzgf9AGGbszw/gOSOMhLC8o2eQiX5Ezd+8DypzMc49OwsgU7kFxG18LWQWZ6JEABLx30cgCb9uSS+dXSt5xkx5F6D9gphXL04Gl8Y9R3fVGpNDF4CYFbxjm2+nRr4x4p9N6rathHxG4ochOrCwcTLPRpLPddRvR4Am4PqoDFPW6Jhcbrn1
+x-ms-exchange-antispam-messagedata: Qr6Dq/VJ8lprHizCLgzfoMqW0SeKNEbd8NcoIOWAU7cqYkbc7oi5wjDteST1a3LObAksOzCuOc1op7llCfmg04WxxfbJYDYUElEwtzG0NmERhZ5HvsKOfbMsACSnX6XDG2p9FJsdoNVscxTJaZ370Q==
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c51b3319-ea4d-4768-30d1-08d7a3b2eca9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 05:28:36.8312
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d7d86d8-8abd-45db-64d2-08d7a3b2f240
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 05:28:46.1659
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TE+6gdJb+4v8mGQcEB0XN3XYXBhe557OHGo7hDgGPPvLxfVzDyBXGVubwhWWPMZNcSCkDAlMzfCQsSBahapKRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5890
+X-MS-Exchange-CrossTenant-userprincipalname: 78T1rj29x4JvZXIg5DDtC5upgFerlkcut+mwdtbblpzQ9p4GZovKd6OHVDSk48aa0PbPrtvDJCiE46MJx7WqUw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5939
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -119,122 +117,137 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-There are several clock slices, current composite code
-only support bus/ip clock slices, it could not support core
-slice.
+Use imx8m_clk_hw_composite_core to simplify code.
 
-So introduce a new API imx8m_clk_hw_composite_core to support
-core slice. To core slice, post divider with 3 bits width and
-no pre divider. Other fields are same as bus/ip slices.
-
-Add a flag IMX_COMPOSITE_CORE for the usecase.
+Add new definitions, and X_SRC/CG/DIV will be alias to the new
+definitions for backwards compatibility
 
 Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/clk/imx/clk-composite-8m.c | 18 ++++++++++++++----
- drivers/clk/imx/clk.h              | 13 +++++++++++--
- 2 files changed, 25 insertions(+), 6 deletions(-)
+ drivers/clk/imx/clk-imx8mm.c             | 35 +++++++++++++++++++---------=
+----
+ include/dt-bindings/clock/imx8mm-clock.h |  7 ++++++-
+ 2 files changed, 27 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-compo=
-site-8m.c
-index 20f7c91c03d2..4869c16376bf 100644
---- a/drivers/clk/imx/clk-composite-8m.c
-+++ b/drivers/clk/imx/clk-composite-8m.c
-@@ -15,6 +15,7 @@
- #define PCG_PREDIV_MAX		8
+diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
+index 2ed93fc25087..f79a5f5d9ed5 100644
+--- a/drivers/clk/imx/clk-imx8mm.c
++++ b/drivers/clk/imx/clk-imx8mm.c
+@@ -414,20 +414,27 @@ static int imx8mm_clocks_probe(struct platform_device=
+ *pdev)
 =20
- #define PCG_DIV_SHIFT		0
-+#define PCG_CORE_DIV_WIDTH	3
- #define PCG_DIV_WIDTH		6
- #define PCG_DIV_MAX		64
-=20
-@@ -126,6 +127,7 @@ static const struct clk_ops imx8m_clk_composite_divider=
-_ops =3D {
- struct clk_hw *imx8m_clk_hw_composite_flags(const char *name,
- 					const char * const *parent_names,
- 					int num_parents, void __iomem *reg,
-+					u32 composite_flags,
- 					unsigned long flags)
- {
- 	struct clk_hw *hw =3D ERR_PTR(-ENOMEM), *mux_hw;
-@@ -133,6 +135,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const char =
-*name,
- 	struct clk_divider *div =3D NULL;
- 	struct clk_gate *gate =3D NULL;
- 	struct clk_mux *mux =3D NULL;
-+	const struct clk_ops *divider_ops;
-=20
- 	mux =3D kzalloc(sizeof(*mux), GFP_KERNEL);
- 	if (!mux)
-@@ -150,8 +153,16 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const char=
- *name,
-=20
- 	div_hw =3D &div->hw;
- 	div->reg =3D reg;
--	div->shift =3D PCG_PREDIV_SHIFT;
--	div->width =3D PCG_PREDIV_WIDTH;
-+	if (composite_flags & IMX_COMPOSITE_CORE) {
-+		div->shift =3D PCG_DIV_SHIFT;
-+		div->width =3D PCG_CORE_DIV_WIDTH;
-+		divider_ops =3D &clk_divider_ops;
-+	} else {
-+		div->shift =3D PCG_PREDIV_SHIFT;
-+		div->width =3D PCG_PREDIV_WIDTH;
-+		divider_ops =3D &imx8m_clk_composite_divider_ops;
-+	}
+ 	/* Core Slice */
+ 	hws[IMX8MM_CLK_A53_SRC] =3D imx_clk_hw_mux2("arm_a53_src", base + 0x8000,=
+ 24, 3, imx8mm_a53_sels, ARRAY_SIZE(imx8mm_a53_sels));
+-	hws[IMX8MM_CLK_M4_SRC] =3D imx_clk_hw_mux2("arm_m4_src", base + 0x8080, 2=
+4, 3, imx8mm_m4_sels, ARRAY_SIZE(imx8mm_m4_sels));
+-	hws[IMX8MM_CLK_VPU_SRC] =3D imx_clk_hw_mux2("vpu_src", base + 0x8100, 24,=
+ 3, imx8mm_vpu_sels, ARRAY_SIZE(imx8mm_vpu_sels));
+-	hws[IMX8MM_CLK_GPU3D_SRC] =3D imx_clk_hw_mux2("gpu3d_src", base + 0x8180,=
+ 24, 3,  imx8mm_gpu3d_sels, ARRAY_SIZE(imx8mm_gpu3d_sels));
+-	hws[IMX8MM_CLK_GPU2D_SRC] =3D imx_clk_hw_mux2("gpu2d_src", base + 0x8200,=
+ 24, 3, imx8mm_gpu2d_sels,  ARRAY_SIZE(imx8mm_gpu2d_sels));
+ 	hws[IMX8MM_CLK_A53_CG] =3D imx_clk_hw_gate3("arm_a53_cg", "arm_a53_src", =
+base + 0x8000, 28);
+-	hws[IMX8MM_CLK_M4_CG] =3D imx_clk_hw_gate3("arm_m4_cg", "arm_m4_src", bas=
+e + 0x8080, 28);
+-	hws[IMX8MM_CLK_VPU_CG] =3D imx_clk_hw_gate3("vpu_cg", "vpu_src", base + 0=
+x8100, 28);
+-	hws[IMX8MM_CLK_GPU3D_CG] =3D imx_clk_hw_gate3("gpu3d_cg", "gpu3d_src", ba=
+se + 0x8180, 28);
+-	hws[IMX8MM_CLK_GPU2D_CG] =3D imx_clk_hw_gate3("gpu2d_cg", "gpu2d_src", ba=
+se + 0x8200, 28);
+ 	hws[IMX8MM_CLK_A53_DIV] =3D imx_clk_hw_divider2("arm_a53_div", "arm_a53_c=
+g", base + 0x8000, 0, 3);
+-	hws[IMX8MM_CLK_M4_DIV] =3D imx_clk_hw_divider2("arm_m4_div", "arm_m4_cg",=
+ base + 0x8080, 0, 3);
+-	hws[IMX8MM_CLK_VPU_DIV] =3D imx_clk_hw_divider2("vpu_div", "vpu_cg", base=
+ + 0x8100, 0, 3);
+-	hws[IMX8MM_CLK_GPU3D_DIV] =3D imx_clk_hw_divider2("gpu3d_div", "gpu3d_cg"=
+, base + 0x8180, 0, 3);
+-	hws[IMX8MM_CLK_GPU2D_DIV] =3D imx_clk_hw_divider2("gpu2d_div", "gpu2d_cg"=
+, base + 0x8200, 0, 3);
 +
- 	div->lock =3D &imx_ccm_lock;
- 	div->flags =3D CLK_DIVIDER_ROUND_CLOSEST;
-=20
-@@ -166,8 +177,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const char =
-*name,
-=20
- 	hw =3D clk_hw_register_composite(NULL, name, parent_names, num_parents,
- 			mux_hw, &clk_mux_ops, div_hw,
--			&imx8m_clk_composite_divider_ops,
--			gate_hw, &clk_gate_ops, flags);
-+			divider_ops, gate_hw, &clk_gate_ops, flags);
- 	if (IS_ERR(hw))
- 		goto fail;
-=20
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index b05213b91dcf..f074dd8ec42e 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -477,20 +477,29 @@ struct clk_hw *imx_clk_hw_cpu(const char *name, const=
- char *parent_name,
- 		struct clk *div, struct clk *mux, struct clk *pll,
- 		struct clk *step);
-=20
-+#define IMX_COMPOSITE_CORE	BIT(0)
++	hws[IMX8MM_CLK_M4_CORE] =3D imx8m_clk_hw_composite_core("arm_m4_core", im=
+x8mm_m4_sels, base + 0x8080);
++	hws[IMX8MM_CLK_VPU_CORE] =3D imx8m_clk_hw_composite_core("vpu_core", imx8=
+mm_vpu_sels, base + 0x8100);
++	hws[IMX8MM_CLK_GPU3D_CORE] =3D imx8m_clk_hw_composite_core("gpu3d_core", =
+imx8mm_gpu3d_sels, base + 0x8180);
++	hws[IMX8MM_CLK_GPU2D_CORE] =3D imx8m_clk_hw_composite_core("gpu2d_core", =
+imx8mm_gpu2d_sels, base + 0x8200);
 +
- struct clk_hw *imx8m_clk_hw_composite_flags(const char *name,
- 					    const char * const *parent_names,
- 					    int num_parents,
- 					    void __iomem *reg,
-+					    u32 composite_flags,
- 					    unsigned long flags);
++	/* For backwards compatibility */
++	hws[IMX8MM_CLK_M4_SRC] =3D hws[IMX8MM_CLK_M4_CORE];
++	hws[IMX8MM_CLK_M4_CG] =3D hws[IMX8MM_CLK_M4_CORE];
++	hws[IMX8MM_CLK_M4_DIV] =3D hws[IMX8MM_CLK_M4_CORE];
++	hws[IMX8MM_CLK_VPU_SRC] =3D hws[IMX8MM_CLK_VPU_CORE];
++	hws[IMX8MM_CLK_VPU_CG] =3D hws[IMX8MM_CLK_VPU_CORE];
++	hws[IMX8MM_CLK_VPU_DIV] =3D hws[IMX8MM_CLK_VPU_CORE];
++	hws[IMX8MM_CLK_GPU3D_SRC] =3D hws[IMX8MM_CLK_GPU3D_CORE];
++	hws[IMX8MM_CLK_GPU3D_CG] =3D hws[IMX8MM_CLK_GPU3D_CORE];
++	hws[IMX8MM_CLK_GPU3D_DIV] =3D hws[IMX8MM_CLK_GPU3D_CORE];
++	hws[IMX8MM_CLK_GPU2D_SRC] =3D hws[IMX8MM_CLK_GPU2D_CORE];
++	hws[IMX8MM_CLK_GPU2D_CG] =3D hws[IMX8MM_CLK_GPU2D_CORE];
++	hws[IMX8MM_CLK_GPU2D_DIV] =3D hws[IMX8MM_CLK_GPU2D_CORE];
 =20
-+#define imx8m_clk_hw_composite_core(name, parent_names, reg)	\
-+	imx8m_clk_hw_composite_flags(name, parent_names, \
-+			ARRAY_SIZE(parent_names), reg, \
-+			IMX_COMPOSITE_CORE, \
-+			CLK_SET_RATE_NO_REPARENT | CLK_OPS_PARENT_ENABLE)
+ 	/* BUS */
+ 	hws[IMX8MM_CLK_MAIN_AXI] =3D imx8m_clk_hw_composite_critical("main_axi", =
+ imx8mm_main_axi_sels, base + 0x8800);
+@@ -564,7 +571,7 @@ static int imx8mm_clocks_probe(struct platform_device *=
+pdev)
+ 	hws[IMX8MM_CLK_UART3_ROOT] =3D imx_clk_hw_gate4("uart3_root_clk", "uart3"=
+, base + 0x44b0, 0);
+ 	hws[IMX8MM_CLK_UART4_ROOT] =3D imx_clk_hw_gate4("uart4_root_clk", "uart4"=
+, base + 0x44c0, 0);
+ 	hws[IMX8MM_CLK_USB1_CTRL_ROOT] =3D imx_clk_hw_gate4("usb1_ctrl_root_clk",=
+ "usb_bus", base + 0x44d0, 0);
+-	hws[IMX8MM_CLK_GPU3D_ROOT] =3D imx_clk_hw_gate4("gpu3d_root_clk", "gpu3d_=
+div", base + 0x44f0, 0);
++	hws[IMX8MM_CLK_GPU3D_ROOT] =3D imx_clk_hw_gate4("gpu3d_root_clk", "gpu3d_=
+core", base + 0x44f0, 0);
+ 	hws[IMX8MM_CLK_USDHC1_ROOT] =3D imx_clk_hw_gate4("usdhc1_root_clk", "usdh=
+c1", base + 0x4510, 0);
+ 	hws[IMX8MM_CLK_USDHC2_ROOT] =3D imx_clk_hw_gate4("usdhc2_root_clk", "usdh=
+c2", base + 0x4520, 0);
+ 	hws[IMX8MM_CLK_WDOG1_ROOT] =3D imx_clk_hw_gate4("wdog1_root_clk", "wdog",=
+ base + 0x4530, 0);
+@@ -586,7 +593,7 @@ static int imx8mm_clocks_probe(struct platform_device *=
+pdev)
+ 	hws[IMX8MM_CLK_SDMA1_ROOT] =3D imx_clk_hw_gate4("sdma1_clk", "ipg_root", =
+base + 0x43a0, 0);
+ 	hws[IMX8MM_CLK_SDMA2_ROOT] =3D imx_clk_hw_gate4("sdma2_clk", "ipg_audio_r=
+oot", base + 0x43b0, 0);
+ 	hws[IMX8MM_CLK_SDMA3_ROOT] =3D imx_clk_hw_gate4("sdma3_clk", "ipg_audio_r=
+oot", base + 0x45f0, 0);
+-	hws[IMX8MM_CLK_GPU2D_ROOT] =3D imx_clk_hw_gate4("gpu2d_root_clk", "gpu2d_=
+div", base + 0x4660, 0);
++	hws[IMX8MM_CLK_GPU2D_ROOT] =3D imx_clk_hw_gate4("gpu2d_root_clk", "gpu2d_=
+core", base + 0x4660, 0);
+ 	hws[IMX8MM_CLK_CSI1_ROOT] =3D imx_clk_hw_gate4("csi1_root_clk", "csi1_cor=
+e", base + 0x4650, 0);
+=20
+ 	hws[IMX8MM_CLK_GPT_3M] =3D imx_clk_hw_fixed_factor("gpt_3m", "osc_24m", 1=
+, 8);
+diff --git a/include/dt-bindings/clock/imx8mm-clock.h b/include/dt-bindings=
+/clock/imx8mm-clock.h
+index edeece2289f0..038c28d349e8 100644
+--- a/include/dt-bindings/clock/imx8mm-clock.h
++++ b/include/dt-bindings/clock/imx8mm-clock.h
+@@ -265,6 +265,11 @@
+ #define IMX8MM_SYS_PLL2_333M_CG			244
+ #define IMX8MM_SYS_PLL2_500M_CG			245
+=20
+-#define IMX8MM_CLK_END				246
++#define IMX8MM_CLK_M4_CORE			246
++#define IMX8MM_CLK_VPU_CORE			247
++#define IMX8MM_CLK_GPU3D_CORE			248
++#define IMX8MM_CLK_GPU2D_CORE			249
 +
- #define imx8m_clk_composite_flags(name, parent_names, num_parents, reg, \
- 				  flags) \
- 	to_clk(imx8m_clk_hw_composite_flags(name, parent_names, \
--				num_parents, reg, flags))
-+				num_parents, reg, 0, flags))
++#define IMX8MM_CLK_END				250
 =20
- #define __imx8m_clk_hw_composite(name, parent_names, reg, flags) \
- 	imx8m_clk_hw_composite_flags(name, parent_names, \
--		ARRAY_SIZE(parent_names), reg, \
-+		ARRAY_SIZE(parent_names), reg, 0, \
- 		flags | CLK_SET_RATE_NO_REPARENT | CLK_OPS_PARENT_ENABLE)
-=20
- #define __imx8m_clk_composite(name, parent_names, reg, flags) \
+ #endif
 --=20
 2.16.4
 
