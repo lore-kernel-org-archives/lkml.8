@@ -2,138 +2,114 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC81C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA676C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A589B24687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F032173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:43:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LJ6J9ShT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDbsI95f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgA1Emb (ORCPT
+        id S1726599AbgA1Enf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 23:42:31 -0500
-Received: from ozlabs.org ([203.11.71.1]:51603 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbgA1Emb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 23:42:31 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 486DVr1gM1z9sP3;
-        Tue, 28 Jan 2020 15:42:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580186548;
-        bh=mdFAlO4xqDSxUJvby4gyYXsCSkEtFdc1ndNP7fQ7gaY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=LJ6J9ShT0EGSyYxosF0fADdsq9URPFj9N1Zxn7klEv/GvwdvVlz6O7zBbxVtSIJrV
-         XITaRDT2HCRyh65DaGgvnHsW85Fnc7rXRPcBFOfHI6AqeUyO+wWBR/TBzeYIO09KAH
-         /qV5zpH6BQ88KZy0030jw1TZufueISLVDq+CO0fZvsRcOMEtL9tv0S8n6J4MOVdfQV
-         QmYYTXqbb87WNpDpqveUEWqJXruumFKJisj5rr6szVBlWNZ3S/5s2WW+SWrfyrQ1/b
-         /Ov3M1XbT8LudfzbMqJAoiUEmSwCD3zmiLSLYsOCdsHkvML/c1F1Q5I0g0srycRyS9
-         BmfmdKyFT1RcA==
-Date:   Tue, 28 Jan 2020 15:42:27 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Tianci.Yin" <tianci.yin@amd.com>
-Subject: linux-next: build failure after merge of the amdgpu tree
-Message-ID: <20200128154227.43f15a1f@canb.auug.org.au>
+        Mon, 27 Jan 2020 23:43:35 -0500
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:44922 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgA1Enf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 23:43:35 -0500
+Received: by mail-pf1-f173.google.com with SMTP id y5so2911275pfb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 20:43:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o/eiodGD5lp4RWZNR205Jfk41Ea2mOrlpEOAJGFIIOE=;
+        b=RDbsI95fxayjdpnQGgTzzWcOn+WF5GX4k/uSyZQlGLHI+1rbOZT/V0Go2Bfaaq/LXi
+         +GTw9RApTN5AaG+yvm+3S7bxl1mEWmLqecwTtD/Pr/MiRZ5jueoHu351RXFAGSdnUpE+
+         M5CHud/zIRiBVrqG2IQcdWM2IypgB52/sJgKA1D3lv1sQQ2L83IUz0eT/IdnwMOX5doh
+         yrd5RBaYVxQe6BtZvJetc96h167zt+dQpuOreo+vr0tvVLzOlUcgAElvJsOz1IlUeSFI
+         fSkvu+z1LyVLIuHoXF4Y/9bMA8P7+dmC1zERot7GkrKYBcG5O3YqMYytWzXAD48AxCxc
+         eURg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o/eiodGD5lp4RWZNR205Jfk41Ea2mOrlpEOAJGFIIOE=;
+        b=Uot6eRdWuzXhWb/fZ+q1YU5g92snU6H921IKET44fOLylvQC7xNzHWI1d16tsAqibh
+         7B0AVszH4JJ41ViN9WNHTd2JsPRJg5H/miwBybnx32jH+jK73WqW3IOPsOHXVIc5gLtM
+         7DOswkhxLmUJIpiDZyjC0Fi+IDxsUNmb662Zt7UxLX1ppj2d0AIWpe+fNPNiixTuKJux
+         Y8YfIcuyF5yzjUERDaDqPvT9uJDNvs/LV+mBUPAD026Cbg11cTk2ZeMWHe94jEpRaIXe
+         ZDyvYdEHkWh8GfuDSgXkJLkReprQu6ubUExYOHMFdCfQqUkBTw5gnBZnpX102qWUQPsA
+         5d+A==
+X-Gm-Message-State: APjAAAWOFbnlb2FyeBDKaJ0SxD1TZEreLfthFzLl30t5npxL0sbZW6TE
+        bHz0zS+2NvaIJiwndM6JADk=
+X-Google-Smtp-Source: APXvYqwxDJIVmbpnATu5bEpg3pxqqVwS4f7Pl082BK6VxiT99QH6kMl4MJUW5za+f9V+ZY+s5MRTDQ==
+X-Received: by 2002:a63:ff20:: with SMTP id k32mr22273186pgi.448.1580186614618;
+        Mon, 27 Jan 2020 20:43:34 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id z14sm17352926pgj.43.2020.01.27.20.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 20:43:33 -0800 (PST)
+Date:   Tue, 28 Jan 2020 13:43:32 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] console: Avoid positive return code from
+ unregister_console()
+Message-ID: <20200128044332.GA115889@google.com>
+References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
+ <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_fqnv+_6hBGTPV2SB6_uoQe";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_fqnv+_6hBGTPV2SB6_uoQe
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On (20/01/27 13:47), Andy Shevchenko wrote:
+[..]
+>  	res = _braille_unregister_console(console);
+> -	if (res)
+> +	if (res < 0)
+>  		return res;
+> +	if (res > 0)
+> +		return 0;
+>  
+> -	res = 1;
+> +	res = -ENODEV;
+>  	console_lock();
+>  	if (console_drivers == console) {
+>  		console_drivers=console->next;
+> @@ -2838,6 +2840,9 @@ int unregister_console(struct console *console)
+>  	if (!res && (console->flags & CON_EXTENDED))
+>  		nr_ext_console_drivers--;
+>  
+> +	if (res && !(console->flags & CON_ENABLED))
+> +		res = 0;
 
-Hi all,
+Console is not on the console_drivers list. Why does !ENABLED case
+require extra handling? What about the case when console is ENABLED
+but still not registered?
 
-After merging the amdgpu tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
+I think that if the console is not on the list (was never registered)
+then we can just bail out, without console_sysfs_notify(), etc. IOW,
 
-drivers/gpu/drm/amd/amdgpu/psp_v11_0.c: In function 'psp_v11_0_memory_train=
-ing':
-drivers/gpu/drm/amd/amdgpu/psp_v11_0.c:1047:9: error: implicit declaration =
-of function 'vmalloc'; did you mean 'kvmalloc'? [-Werror=3Dimplicit-functio=
-n-declaration]
- 1047 |   buf =3D vmalloc(sz);
-      |         ^~~~~~~
-      |         kvmalloc
-drivers/gpu/drm/amd/amdgpu/psp_v11_0.c:1047:7: warning: assignment to 'void=
- *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
- 1047 |   buf =3D vmalloc(sz);
-      |       ^
-drivers/gpu/drm/amd/amdgpu/psp_v11_0.c:1057:4: error: implicit declaration =
-of function 'vfree'; did you mean 'kvfree'? [-Werror=3Dimplicit-function-de=
-claration]
- 1057 |    vfree(buf);
-      |    ^~~~~
-      |    kvfree
+	if (res) {
+		console->flags &= ~CON_ENABLED; /* just in case */
+		console_unlock();
+		return res;
+	}
 
-Caused by commit
-
-  240c811ccde4 ("drm/amdgpu: fix VRAM partially encroached issue in GDDR6 m=
-emory training(V2)")
-
-I have applied this patch for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 28 Jan 2020 15:33:44 +1100
-Subject: [PATCH] amdgpu: using vmalloc requires includeing vmalloc.h
-
-Fixes: 240c811ccde4 ("drm/amdgpu: fix VRAM partially encroached issue in GD=
-DR6 memory training(V2)")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/gpu/drm/amd/amdgpu/psp_v11_0.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c b/drivers/gpu/drm/amd/a=
-mdgpu/psp_v11_0.c
-index ac173d2eb809..0829188c1a5c 100644
---- a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-@@ -22,6 +22,7 @@
-=20
- #include <linux/firmware.h>
- #include <linux/module.h>
-+#include <linux/vmalloc.h>
-=20
- #include "amdgpu.h"
- #include "amdgpu_psp.h"
---=20
-2.24.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/_fqnv+_6hBGTPV2SB6_uoQe
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4vu7MACgkQAVBC80lX
-0GzDEwf/eOakLMi/zmYAX55knylSvMVaF+QmQKA7pbz5RumsuD/XL97BnI1RtO0U
-3TyeZySkyxuWAtMNqkXxPJIaPWBApUcSVQVt2ECRRzWQLB84+JxlqfG6Wx0WDgkO
-68ekuZOQvqws38EMrxEFzbu18EL558kNyAWRsqIufdiVnqeY8lnG5ao/QlzHLRWe
-37M3ed+1BUWrRx7Z2T+buvIlzYebWJiGGzJz+B5tpl3Zuxht/PweSsaJfJUosUFK
-4lQDTbqsvDF+5KG7Om2PltU8YJoyL//jBZZQNz28v1taM8B8svo2D+PO4Zo+KeqK
-6Ptmy+5DjgNrxqkgPdoDHae3EuHW2A==
-=IAbN
------END PGP SIGNATURE-----
-
---Sig_/_fqnv+_6hBGTPV2SB6_uoQe--
+	-ss
