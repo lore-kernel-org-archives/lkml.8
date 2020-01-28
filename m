@@ -2,52 +2,53 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526A5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E16FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B20820702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182AE20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222422;
-	bh=A4VOQoF9dWI8S5tSrJ048hbisbbfIjDHmUMOCk3lkHE=;
+	s=default; t=1580222432;
+	bh=2H0OlEXUigJTXu7tQLf7/KBOB9u+oISf7XJnwBADS0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YWycVo7P4tOqvNZ5pdi45NS2mTr+cNXSe5abqP0V6S8C4/SnZWkoj8wWXd99zyWS+
-	 Ho+Yix2wuwQUTMIka4H8xEnwOEb8JLST4j2UXThr83pLt+eCH/c7sWxoGoqau8cmzF
-	 9zEiSS9AWqVS1aDpL2rAHGhnX2xhSbjrKimfxyPw=
+	b=PXCwi07LfiydgOKoZIwPdBzgjSPv43lACA+rGuVnG4+cqhLDI9EFCX99HTVyU63xC
+	 kImk290dmL4x0Q8uwz7V1On3Aq1MqUszErFFHm4ywQ82igpFHlTZUn76/ekHc4XJiA
+	 BE2e6FtlkNTCUVp9likCzQuHROKscKXVY1GpDZig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbgA1OPy (ORCPT
+        id S1729635AbgA1OPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:15:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38744 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:15:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730198AbgA1OPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:15:50 -0500
+        id S1730112AbgA1OPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:15:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF4822070E;
-        Tue, 28 Jan 2020 14:15:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0534A20678;
+        Tue, 28 Jan 2020 14:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220950;
-        bh=A4VOQoF9dWI8S5tSrJ048hbisbbfIjDHmUMOCk3lkHE=;
+        s=default; t=1580220930;
+        bh=2H0OlEXUigJTXu7tQLf7/KBOB9u+oISf7XJnwBADS0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bIJV6RSAhOLNtrf0sb7c3S8qCNEFlBi9H9uOxByJ65ESJ0QSa9jDCRDmxRFgxQpGO
-         hJ4DKzJDzM7Bh9WDci3NOUXUXFmgSNroklLtu9nhp8e3gyDWz9SQvrYyGTg0EA/Rh5
-         cfuNR/32HHp+4AYdgDbDZdeoj9hnB19xmHmUfKyo=
+        b=xeGBH9hQ/KmQ5JqyLYiNyYSucQIisq5WHie7nmPRlbejWBnFYutTJBtfPqvTIiy2W
+         tL7BfXC2/GtqTpDqjLsEJu1klppcltzXYdJwlfgbPM5RX3QqOhZbJROLPYJP9Jdu71
+         FZuZsrTZXVa9fninL4abiQw7MvLQK44zbASYL338=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kubakici@wp.pl>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 003/271] mt7601u: fix bbp version check in mt7601u_wait_bbp_ready
-Date:   Tue, 28 Jan 2020 15:02:32 +0100
-Message-Id: <20200128135852.655913475@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 020/271] pinctrl: sh-pfc: sh73a0: Add missing TO pin to tpu4_to3 group
+Date:   Tue, 28 Jan 2020 15:02:49 +0100
+Message-Id: <20200128135854.174407753@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,38 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 15e14f76f85f4f0eab3b8146e1cd3c58ce272823 upstream.
+[ Upstream commit 124cde98f856b6206b804acbdec3b7c80f8c3427 ]
 
-Fix bbp ready check in mt7601u_wait_bbp_ready. The issue is reported by
-coverity with the following error:
+The tpu4_to3_mux[] array contains the TPU4TO3 pin mark, but the
+tpu4_to3_pins[] array lacks the corresponding pin number.
 
-Logical vs. bitwise operator
-The expression's value does not depend on the operands; inadvertent use
-of the wrong operator is a likely logic error.
+Add the missing pin number, for non-GPIO pin F26.
 
-Addresses-Coverity-ID: 1309441 ("Logical vs. bitwise operator")
-Fixes: c869f77d6abb ("add mt7601u driver")
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 5da4eb049de803c7 ("sh-pfc: sh73a0: Add TPU pin groups and functions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt7601u/phy.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-sh73a0.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/mediatek/mt7601u/phy.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/phy.c
-@@ -221,7 +221,7 @@ int mt7601u_wait_bbp_ready(struct mt7601
- 
- 	do {
- 		val = mt7601u_bbp_rr(dev, MT_BBP_REG_VERSION);
--		if (val && ~val)
-+		if (val && val != 0xff)
- 			break;
- 	} while (--i);
- 
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
+index d25e6f674d0ab..f8fbedb46585d 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
+@@ -3086,6 +3086,7 @@ static const unsigned int tpu4_to2_mux[] = {
+ };
+ static const unsigned int tpu4_to3_pins[] = {
+ 	/* TO */
++	PIN_NUMBER(6, 26),
+ };
+ static const unsigned int tpu4_to3_mux[] = {
+ 	TPU4TO3_MARK,
+-- 
+2.20.1
+
 
 
