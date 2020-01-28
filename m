@@ -2,315 +2,132 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5848DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADB1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21091214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF92214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580232473;
+	bh=2r7YfbL9UUbs/P7wgljyb0t694akOrvI4j3adZdefA4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Bgu14N8RhjsvnhgxoKf5zNu151ouq3zttgr3+4ABA6ypmcLpFDszOq0tytMFQJUvf
+	 k+ib9XRImOIz8JtM/YiG8nIzBR6fc2rpq8cIh8CqiRqPhlVh+rLMJA7CGcTY7PZtGS
+	 MRSWSYGCa5kY98d4XzbNpCSCKLrUAyPj+qO8fYXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgA1R1A (ORCPT
+        id S1726162AbgA1R1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:27:00 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45760 "EHLO mx2.suse.de"
+        Tue, 28 Jan 2020 12:27:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgA1R1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:27:00 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B72B5AE2B;
-        Tue, 28 Jan 2020 17:26:56 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 419D2DA730; Tue, 28 Jan 2020 18:26:38 +0100 (CET)
-Date:   Tue, 28 Jan 2020 18:26:38 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, dsterba@suse.com,
-        josef@toxicpanda.com, linux-btrfs@vger.kernel.org,
-        Marcos Paulo de Souza <mpdesouza@suse.com>
-Subject: Re: [PATCHv2] btrfs: Introduce new BTRFS_IOC_SNAP_DESTROY_V2 ioctl
-Message-ID: <20200128172638.GA3929@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        linux-kernel@vger.kernel.org, dsterba@suse.com,
-        josef@toxicpanda.com, linux-btrfs@vger.kernel.org,
-        Marcos Paulo de Souza <mpdesouza@suse.com>
-References: <20200127024817.15587-1-marcos.souza.org@gmail.com>
+        id S1726066AbgA1R1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:27:52 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A42CE2467E;
+        Tue, 28 Jan 2020 17:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580232470;
+        bh=2r7YfbL9UUbs/P7wgljyb0t694akOrvI4j3adZdefA4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=W0wgul/caH/Yc+effaSlwkpSvk4pKuOoE2OHFoCUiNSrffgDE9XIgUNFVS0TSC+gD
+         M7EXVFuFbJYfPEjS6CkOh7J39YWxDe4lM1QBnpqOGexAUcHSvN1Qr54sU0t03/omCi
+         2oUXeUBIKZxIiGcRnljzNAzTL5x8fw9OUkv+PA7Y=
+Received: by mail-qk1-f174.google.com with SMTP id s187so14138996qke.8;
+        Tue, 28 Jan 2020 09:27:50 -0800 (PST)
+X-Gm-Message-State: APjAAAWJYROtQT+P+LQNQi3IZudd4GuQXWFOTIWM8Oka+FV56pWtrymR
+        nR1q3+Yjfpe1dNdpOzncUBzHhrxSQ/38S0RXgw==
+X-Google-Smtp-Source: APXvYqxWnBqpx/z38JlVgWNF4cQ9OxBTlrKB37T1Va9nNc30arKtXukF/RW57qRkfaYEVw9/c+JiqeGTUuaobBybgTI=
+X-Received: by 2002:a05:620a:9c7:: with SMTP id y7mr23200508qky.393.1580232469721;
+ Tue, 28 Jan 2020 09:27:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127024817.15587-1-marcos.souza.org@gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+References: <20200124152504.23411-1-mans@mansr.com> <20200127153506.GA4589@bogus>
+ <yw1xy2tsvnww.fsf@mansr.com> <20200128134745.GA3048749@kroah.com>
+ <yw1xpnf3vchs.fsf@mansr.com> <20200128152818.GB3437093@kroah.com>
+In-Reply-To: <20200128152818.GB3437093@kroah.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 28 Jan 2020 11:27:38 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLiELcXaAJAaD5jk05ifjVvgrRqGtEQJmg5iKxptZi5dw@mail.gmail.com>
+Message-ID: <CAL_JsqLiELcXaAJAaD5jk05ifjVvgrRqGtEQJmg5iKxptZi5dw@mail.gmail.com>
+Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports hub property
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 26, 2020 at 11:48:17PM -0300, Marcos Paulo de Souza wrote:
-> From: Marcos Paulo de Souza <mpdesouza@suse.com>
-> 
-> This ioctl will be responsible for deleting a subvolume using it's id.
-> This can be used when a system has a file system mounted from a
-> subvolume, rather than the root file system, like below:
-> 
-> /
-> |- @subvol1
-> |- @subvol2
-> \- @subvol_default
-> If only @subvol_default is mounted, we have no path to reach
-> @subvol1 and @subvol2, thus no way to delete them.
-> This patch introduces a new flag to allow BTRFS_IOC_SNAP_DESTORY_V2
-> to delete subvolume using subvolid.
-> 
-> Also in this patch, export some functions, add BTRFS_SUBVOL_BY_ID flag
-> and add subvolid as a union member of name in struct btrfs_ioctl_vol_args_v2.
-> 
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> ---
->  Changes from v1:
->  * make btrfs_ioctl_snap_destroy handle both SNAP_DESTROY and SNAP_DESTROY_V2
->    (suggested by Josef)
->  * Change BTRFS_SUBVOL_DELETE_BY_ID to BTRFS_SUBVOL_BY_ID (David)
->  * Send patches for btrfs-progs and xfstests along this change
-> 
->  fs/btrfs/ctree.h           |  2 +
->  fs/btrfs/export.c          |  4 +-
->  fs/btrfs/export.h          |  5 ++
->  fs/btrfs/ioctl.c           | 97 +++++++++++++++++++++++++++++++-------
->  fs/btrfs/super.c           |  4 +-
->  include/uapi/linux/btrfs.h | 12 ++++-
->  6 files changed, 101 insertions(+), 23 deletions(-)
-> 
-> diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-> index f90b82050d2d..5847a34b5146 100644
-> --- a/fs/btrfs/ctree.h
-> +++ b/fs/btrfs/ctree.h
-> @@ -3010,6 +3010,8 @@ int btrfs_defrag_leaves(struct btrfs_trans_handle *trans,
->  int btrfs_parse_options(struct btrfs_fs_info *info, char *options,
->  			unsigned long new_flags);
->  int btrfs_sync_fs(struct super_block *sb, int wait);
-> +char *btrfs_get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
-> +					   u64 subvol_objectid);
->  
->  static inline __printf(2, 3) __cold
->  void btrfs_no_printk(const struct btrfs_fs_info *fs_info, const char *fmt, ...)
-> diff --git a/fs/btrfs/export.c b/fs/btrfs/export.c
-> index 72e312cae69d..027411cdbae7 100644
-> --- a/fs/btrfs/export.c
-> +++ b/fs/btrfs/export.c
-> @@ -57,7 +57,7 @@ static int btrfs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
->  	return type;
->  }
->  
-> -static struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
-> +struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
->  				       u64 root_objectid, u32 generation,
->  				       int check_generation)
->  {
-> @@ -152,7 +152,7 @@ static struct dentry *btrfs_fh_to_dentry(struct super_block *sb, struct fid *fh,
->  	return btrfs_get_dentry(sb, objectid, root_objectid, generation, 1);
->  }
->  
-> -static struct dentry *btrfs_get_parent(struct dentry *child)
-> +struct dentry *btrfs_get_parent(struct dentry *child)
->  {
->  	struct inode *dir = d_inode(child);
->  	struct btrfs_fs_info *fs_info = btrfs_sb(dir->i_sb);
-> diff --git a/fs/btrfs/export.h b/fs/btrfs/export.h
-> index 57488ecd7d4e..f981e8103d64 100644
-> --- a/fs/btrfs/export.h
-> +++ b/fs/btrfs/export.h
-> @@ -18,4 +18,9 @@ struct btrfs_fid {
->  	u64 parent_root_objectid;
->  } __attribute__ ((packed));
->  
-> +struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
-> +				       u64 root_objectid, u32 generation,
-> +				       int check_generation);
-> +struct dentry *btrfs_get_parent(struct dentry *child);
-> +
->  #endif
-> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-> index 1b1b6ff855aa..889cb43149f9 100644
-> --- a/fs/btrfs/ioctl.c
-> +++ b/fs/btrfs/ioctl.c
-> @@ -28,6 +28,7 @@
->  #include <linux/iversion.h>
->  #include "ctree.h"
->  #include "disk-io.h"
-> +#include "export.h"
->  #include "transaction.h"
->  #include "btrfs_inode.h"
->  #include "print-tree.h"
-> @@ -2836,7 +2837,8 @@ static int btrfs_ioctl_get_subvol_rootref(struct file *file, void __user *argp)
->  }
->  
->  static noinline int btrfs_ioctl_snap_destroy(struct file *file,
-> -					     void __user *arg)
-> +					     void __user *arg,
-> +					     bool destroy_v2)
->  {
->  	struct dentry *parent = file->f_path.dentry;
->  	struct btrfs_fs_info *fs_info = btrfs_sb(parent->d_sb);
-> @@ -2845,34 +2847,87 @@ static noinline int btrfs_ioctl_snap_destroy(struct file *file,
->  	struct inode *inode;
->  	struct btrfs_root *root = BTRFS_I(dir)->root;
->  	struct btrfs_root *dest = NULL;
-> -	struct btrfs_ioctl_vol_args *vol_args;
-> +	struct btrfs_ioctl_vol_args *vol_args = NULL;
-> +	struct btrfs_ioctl_vol_args_v2 *vol_args2 = NULL;
-> +	char *name, *name_ptr = NULL;
+On Tue, Jan 28, 2020 at 9:28 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jan 28, 2020 at 03:15:11PM +0000, M=C3=A5ns Rullg=C3=A5rd wrote:
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> >
+> > > On Mon, Jan 27, 2020 at 04:56:15PM +0000, M=C3=A5ns Rullg=C3=A5rd wro=
+te:
+> > >> Rob Herring <robh@kernel.org> writes:
+> > >>
+> > >> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
+> > >> >> Add a non-removable-ports property that lists the hardwired downs=
+tream
+> > >> >> ports of a hub.  Although hubs can provide this information, they=
+ are
+> > >> >> not always configured correctly.  An alternate means of indicatin=
+g this
+> > >> >> for built-in USB devices is thus useful.
+> > >> >>
+> > >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> > >> >
+> > >> > I reviewed this already, but since you didn't add my reviewed-by, =
+I'm
+> > >> > looking at it again and having 2nd thoughts.
+> > >> >
+> > >> >> ---
+> > >> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+> > >> >>  1 file changed, 4 insertions(+)
+> > >> >>
+> > >> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt=
+ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > >> >> index 036be172b1ae..92d863cc96b6 100644
+> > >> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> > >> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > >> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes =
+with device nodes:
+> > >> >>  - #size-cells: shall be 0
+> > >> >>
+> > >> >>
+> > >> >> +Optional properties for hub and host-controller nodes:
+> > >> >> +- non-removable-ports: list of hardwired downstream ports
+> > >> >
+> > >> > If you have a hardwired device and need to know that, doesn't that=
+ imply
+> > >> > there's some other stuff you need to describe beyond what a standa=
+rd USB
+> > >> > device has. Such as a power supply that's not Vbus from the hub.
+> > >>
+> > >> I suppose there could be, but there isn't in my actual situation.
+> > >>
+> > >> > At a minimum, I think this should be a per port property.
+> > >>
+> > >> That's what I suggested first.  Greg told me to do it like this inst=
+ead.
+> > >
+> > > I said that?  I do not remember discussing this at all, when did that
+> > > happen?
+> >
+> > https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
+>
+> Almost a full year ago!  Hah, I can't remember what I wrote last week.
 
-The naming is confusing, name_ptr refers to the resolved subvolume name,
-so I suggest to rename it to subvol_name.
-
->  	int namelen;
->  	int err = 0;
->  
-> -	if (!S_ISDIR(dir->i_mode))
-> -		return -ENOTDIR;
-> +	if (destroy_v2) {
-> +		vol_args2 = memdup_user(arg, sizeof(*vol_args2));
-> +		if (IS_ERR(vol_args2))
-> +			return PTR_ERR(vol_args2);
->  
-> -	vol_args = memdup_user(arg, sizeof(*vol_args));
-> -	if (IS_ERR(vol_args))
-> -		return PTR_ERR(vol_args);
-> +		if (vol_args2->subvolid == 0) {
-
-This should be compared >= BTRFS_FIRST_FREE_OBJECTID
-as there are no valid subvolumes with lower id. The exception is the
-toplevel subvolume with id 5 that must not be deletable.
-
-> +			err = -EINVAL;
-> +			goto out;
-> +		}
->  
-> -	vol_args->name[BTRFS_PATH_NAME_MAX] = '\0';
-> -	namelen = strlen(vol_args->name);
-> -	if (strchr(vol_args->name, '/') ||
-> -	    strncmp(vol_args->name, "..", namelen) == 0) {
-> -		err = -EINVAL;
-> -		goto out;
-> +		if (!(vol_args2->flags & BTRFS_SUBVOL_BY_ID)) {
-> +			err = -EINVAL;
-> +			goto out;
-
-The flag validation needs to be factored out of the if. First validate,
-then do the rest. For backward compatibility, the v1 ioctl must take no
-flags, so if theres BTRFS_SUBVOL_BY_ID for v1, it needs to fail. For v2
-the flag is optional.
-
-> +		}
-> +
-> +		dentry = btrfs_get_dentry(fs_info->sb, BTRFS_FIRST_FREE_OBJECTID,
-> +					vol_args2->subvolid, 0, 0);
-> +		if (IS_ERR(dentry)) {
-> +			err = PTR_ERR(dentry);
-> +			goto out;
-> +		}
-> +
-> +		/* 
-
-There's a trailing space on the line, 'git am' does not allow me to
-apply the patch without removing it manually. Same for the comment
-below.
-
-> +		 * change the default parent since the subvolume being deleted
-
-Also please uppercase first letter in comments unless it's an
-identifier. I fix such things but for patches that are going to have
-another iteration it's better to point it out.
-
-> +		 * can be outside of the current mount point
-> +		 */
-> +		parent = btrfs_get_parent(dentry);
-> +
-> +		/* 
-> +		 * the only use of dentry was to get the parent, so we can
-> +		 * release it now. Later on the dentry will be queried again to
-> +		 * make sure the dentry will reside in the dentry cache
-
-Can you please rephrase that? I'm not sure I understand.
-
-> +		 */
-> +		dput(dentry);
-> +		if (IS_ERR(parent)) {
-> +			err = PTR_ERR(parent);
-> +			goto out;
-> +		}
-> +		dir = d_inode(parent);
-> +
-> +		name_ptr = btrfs_get_subvol_name_from_objectid(fs_info, vol_args2->subvolid);
-> +		if (IS_ERR(name_ptr)) {
-> +			err = PTR_ERR(name_ptr);
-> +			goto free_parent;
-> +		}
-> +		name = (char *)kbasename(name_ptr);
-> +		namelen = strlen(name);
-> +	} else {
-> +		vol_args = memdup_user(arg, sizeof(*vol_args));
-> +		if (IS_ERR(vol_args))
-> +			return PTR_ERR(vol_args);
-> +
-> +		vol_args->name[BTRFS_PATH_NAME_MAX] = '\0';
-> +		namelen = strlen(vol_args->name);
-
-> +		if (strchr(vol_args->name, '/') ||
-> +		    strncmp(vol_args->name, "..", namelen) == 0) {
-> +			err = -EINVAL;
-> +			goto out;
-> +		}
-
-This sanity check can be unconditional, ie. also done for the v2 even in
-the spec-by-id case.
-
-> +		name = vol_args->name;
-> +	}
-> +
-> +	if (!S_ISDIR(dir->i_mode)) {
-> +		err = -ENOTDIR;
-> +		goto free_subvol_name;
->  	}
->  
->  	err = mnt_want_write_file(file);
-
-So this is related to separating the validation. Calling
-mnt_want_write_file must be between flag validation and using the
-dentries and resolving path etc.
-
-The initial part is ordered like: argument checks, subsystem checks, the
-implementation.
-
->  	if (err)
-> -		goto out;
-> -
-> +		goto free_subvol_name;
->  
->  	err = down_write_killable_nested(&dir->i_rwsem, I_MUTEX_PARENT);
->  	if (err == -EINTR)
->  		goto out_drop_write;
-> -	dentry = lookup_one_len(vol_args->name, parent, namelen);
-> +	dentry = lookup_one_len(name, parent, namelen);
->  	if (IS_ERR(dentry)) {
->  		err = PTR_ERR(dentry);
->  		goto out_unlock_dir;
-> @@ -2943,7 +2998,13 @@ static noinline int btrfs_ioctl_snap_destroy(struct file *file,
->  	inode_unlock(dir);
->  out_drop_write:
->  	mnt_drop_write_file(file);
-> +free_subvol_name:
-> +	kfree(name_ptr);
-> +free_parent:
-> +	if (destroy_v2)
-> +		dput(parent);
->  out:
-> +	kfree(vol_args2);
->  	kfree(vol_args);
->  	return err;
->  }
+I was typing up the same thing... :)
