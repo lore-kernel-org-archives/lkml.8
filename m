@@ -2,117 +2,159 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FB8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFAFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C2C2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:00:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaSSm2k0"
+	by mail.kernel.org (Postfix) with ESMTP id A89832467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgA1PAc (ORCPT
+        id S1726444AbgA1PBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:00:32 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37927 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726610AbgA1PAb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:00:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580223630;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UciBCe0URT2sDPatGmTOte5M9IpV1BmQHRNEHQ3YlSQ=;
-        b=ZaSSm2k0MNjHcI17wmW8T51Ylq+mJqNksA2MPVfg2FVsBd2cezMDVhxnoNLIIyX/XxZEWf
-        I0U04zwY4tEkfH0L/d038TQN96wVEExDcfgVMbzUaZKhZ/EY9zNEBcER8MSGn5W771E+6G
-        nDBDQyM4U1RAd4rA3C+9dLksF7NpNsA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-165-eqD_xNQHPAmiQzXLd2hz_g-1; Tue, 28 Jan 2020 10:00:28 -0500
-X-MC-Unique: eqD_xNQHPAmiQzXLd2hz_g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1236513F7;
-        Tue, 28 Jan 2020 15:00:25 +0000 (UTC)
-Received: from treble (ovpn-124-151.rdu2.redhat.com [10.10.124.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7904F1000337;
-        Tue, 28 Jan 2020 15:00:16 +0000 (UTC)
-Date:   Tue, 28 Jan 2020 09:00:14 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20200128150014.juaxfgivneiv6lje@treble>
-References: <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
- <20191015182705.1aeec284@gandalf.local.home>
- <20191016074217.GL2328@hirez.programming.kicks-ass.net>
- <20191021150549.bitgqifqk2tbd3aj@treble>
- <20200120165039.6hohicj5o52gdghu@treble>
- <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
- <20200121161045.dhihqibnpyrk2lsu@treble>
- <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
- <20200122214239.ivnebi7hiabi5tbs@treble>
- <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
+        Tue, 28 Jan 2020 10:01:40 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2319 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726243AbgA1PBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:01:39 -0500
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 5BFBE50E8A17CDAF3232;
+        Tue, 28 Jan 2020 14:46:08 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 28 Jan 2020 14:46:07 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jan
+ 2020 14:46:07 +0000
+Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, <jeremy.linton@arm.com>,
+        Olof Johansson <olof@lixom.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ACPI Devel Maling List" <linux-acpi@vger.kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        gregkh <gregkh@linuxfoundation.org>
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
+ <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+ <CAK8P3a2famGETLM7JgEh+eUJ9HSqm_Fu79uAkU_BPOkDvV2ROg@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <683fc9df-3655-5044-f81c-00e2896a268d@huawei.com>
+Date:   Tue, 28 Jan 2020 14:46:07 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <CAK8P3a2famGETLM7JgEh+eUJ9HSqm_Fu79uAkU_BPOkDvV2ROg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 10:28:07AM +0100, Miroslav Benes wrote:
-> I don't think we have something special at SUSE not generally available...
+On 28/01/2020 12:50, Arnd Bergmann wrote:
+
+Hi Arnd,
+
+> On Tue, Jan 28, 2020 at 12:18 PM John Garry <john.garry@huawei.com> wrote:
+>>
+>> Add a generic driver for platforms which populate their ACPI PPTT
+>> processor package ID Type Structure according to suggestion in the ACPI
+>> spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
+>>
+>> The soc_id is from member LEVEL_2_ID.
+>>
+>> For this, we need to use a whitelist of platforms which are known to
+>> populate the structure as suggested.
+>>
+>> For now, only the vendor and soc_id fields are exposed.
+>>
+>> Signed-off-by: John Garry <john.garry@huawei.com>
 > 
-> ...and I don't think it is really important to discuss that and replying 
-> to the above, because there is a legitimate use case which relies on the 
-> flag. We decided to support different use cases right at the beginning.
+> Would it be possible to make this the root device for all on-chip devices
+> to correctly reflect the hierarchy inside of the soc?
+
+I don't think so. The information about the SoC is got from the PPTT, 
+which only describes processors, caches, and physical package 
+boundaries. It doesn't include references to on-chip devices.
+
+Having said that (and unrelated to this series), we could add 
+/sys/devices/system/soc folder, similar to node folder.
+
 > 
-> I understand it currently complicates things for objtool, but objtool is 
-> sensitive to GCC code generation by definition. "Issues" appear with every 
-> new GCC version. I see no difference here and luckily it is not so 
-> difficult to fix it.
+>> +/*
+>> + * Known platforms that fill in PPTT package ID structures according to
+>> + * ACPI spec examples, that being:
+>> + * - Custom driver attribute is in ID Type Structure VENDOR_ID member
+>> + * - SoC id is in ID Type Structure LEVEL_2_ID member
+>> + *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
+>> + */
+>> +static struct acpi_platform_list plat_list[] = {
+>> +       {"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
+>> +       { } /* End */
+>> +};
 > 
-> I am happy to help with acting on those objtool warning reports you 
-> mentioned in the other email. Just Cc me where appropriate. We will take a 
-> look.
+> That matches a single machine, right? It doesn't seem very generic
+> that way.
 
-As I said, the objtool warnings aren't even the main issue.
+Yes :) The problem is that the PPTT ID structure is open to use how the 
+implementer wants, so we can't assume everything/anything implemented 
+according to the spec examples. Maybe we could call it type1 or 
+something like that for platforms which did use the convention in the 
+spec example.
 
-There are N users[*] of CONFIG_LIVEPATCH, where N is perhaps dozens.
-For N-1 users, they have to suffer ALL the drawbacks, with NONE of the
-benefits.
+> 
+>> +struct acpi_generic_soc_struct {
+>> +       struct soc_device_attribute dev_attr;
+>> +       u32 vendor;
+>> +};
+>> +
+>> +static ssize_t vendor_show(struct device *dev,
+>> +                          struct device_attribute *attr,
+>> +                          char *buf)
+>> +{
+>> +       struct acpi_generic_soc_struct *soc = dev_get_drvdata(dev);
+>> +       u8 vendor_id[5] = {};
+>> +
+>> +       *(u32 *)vendor_id = soc->vendor;
+>> +
+>> +       return sprintf(buf, "%s\n", vendor_id);
+>> +}
+> 
+> I'd rather not see nonstandard attributes in a "generic" driver at
+> all. Maybe the
+> you can simply concatenate the vendor and  LEVEL_2_ID into a single string
+> here?
 
-And, even if they wanted those benefits, they have no idea how to get
-them because the patch creation process isn't documented.
+I actually don't really require the vendor attr. And since "vendor" is 
+not in the set of standard soc driver attrs, it can just be omitted.
 
-And, there's no direct upstream usage of the flag, i.e. the only user
-does so in a distro which can easily modify KCFLAGS in the spec file.
+> 
+>> +                       soc = kzalloc(sizeof(*soc), GFP_KERNEL);
+>> +                       if (!soc)
+>> +                               return -ENOMEM;
+>> +
+>> +                       soc_dev_attr = &soc->dev_attr;
+>> +                       soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s",
+>> +                                                        soc_id);
+> 
+> On the other hand, it would make sense to fill out additional fields here.
+> You have already matched the name of the board from the
+> acpi_platform_list, so there are two strings available that could be put
+> into the "machine" field, and it would make sense to fill out "family" with
+> something that identifies it as coming from ACPI PPTT data.
 
-As best as I can tell, these are facts, which you seem to keep glossing
-over.  Did I get any of the facts wrong?
+OK, maybe the ones you suggested could be added. I did just want to 
+start out with a minimal sets of files, especially since we don't always 
+have a direct mapping between soc driver attrs and this PPTT ID structure.
 
-
-[*] The term 'user' describes the creator/distributor of the
-    live patches.
-
--- 
-Josh
-
+Thanks,
+John
