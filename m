@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DD1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C842C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCBA420716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39294207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222601;
-	bh=gTb6kW3GnDiTwRyBC3U1q9NvZgaOYOeM03IU4gcL/s0=;
+	s=default; t=1580222604;
+	bh=v4wkE3pqRqKWQUHiLFZCxVeJI+D7Ymg2N+kIRpv3zM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WSeJc8JjriTz4LW7TiPi8edLEpXnrZ3pdHzrk4mJ5XR4q8NdyipPEjYyxrD+wl8Ol
-	 8Po+c2C6+zrJXETlfVEFDTQLnKkEQLs+XuBJ/yStK2+CHa8mlCOz1HyKq0v10M8xVe
-	 Nl7ImsEkps6E9ve5Ahd8P+X02kePQl1G53QQqzhs=
+	b=pOyfyqf/oeVfAlFgSCEzbanrkZcDTGESmN4rm8DlcaVSKG3BpfiPkmYZUZMACHwuQ
+	 UCAqZp64vyRrJIW3/pcDbd5CCTPwfWgBhzG/wdf9y9izGJFzN7NjIZm80JNUD1QEoG
+	 1sfFcWGA0my9M/Cu36tzg4UoE8kNIy3/cJ1/iR1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729658AbgA1OnU (ORCPT
+        id S1726391AbgA1OLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:43:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60864 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:11:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727920AbgA1OLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:11:42 -0500
+        id S1728116AbgA1OLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:11:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B72CF20678;
-        Tue, 28 Jan 2020 14:11:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2ECD20678;
+        Tue, 28 Jan 2020 14:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220702;
-        bh=gTb6kW3GnDiTwRyBC3U1q9NvZgaOYOeM03IU4gcL/s0=;
+        s=default; t=1580220692;
+        bh=v4wkE3pqRqKWQUHiLFZCxVeJI+D7Ymg2N+kIRpv3zM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0fRCg1dyRHJb4A3R3P7EscAQ1I0V522qKmFjsvTTEeqoGkW+vIkL2V6HmF4nSXmXh
-         +OPI6Y+jP2t8kOAA2e+YggLP5+UrPOGaB1xLTBcgx0LzMNXBb4NOFEYGemuM2nY5ag
-         fiVU6L7TfLz8C7zPwXqPNWGDp+PsZYg44eD9BAq4=
+        b=ZblL/CAu9+SBYfkD15gytfUPP4utRejLn6tBQ+H0B18MSbEpAqEc/LbrMnCcDE945
+         sjl5Q1WCydOCxdEZ7jYmZuCvr4RgbbCfWBCykrYfE+xScNPF+oXqMblvKgDB4r04zJ
+         778IPiQ8U5jb+8q5q0FwSfZLMoedRk+ipn/W03AU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 075/183] ARM: pxa: ssp: Fix "WARNING: invalid free of devm_ allocated data"
-Date:   Tue, 28 Jan 2020 15:04:54 +0100
-Message-Id: <20200128135837.467747307@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Mitchell <kevmitch@arista.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 107/183] iommu/amd: Make iommu_disable safer
+Date:   Tue, 28 Jan 2020 15:05:26 +0100
+Message-Id: <20200128135840.626944088@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,45 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Kevin Mitchell <kevmitch@arista.com>
 
-[ Upstream commit 9ee8578d953023cc57e7e736ae48502c707c0210 ]
+[ Upstream commit 3ddbe913e55516d3e2165d43d4d5570761769878 ]
 
-Since commit 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-kfree, iounmap, clk_put etc are not needed anymore in remove path.
+Make it safe to call iommu_disable during early init error conditions
+before mmio_base is set, but after the struct amd_iommu has been added
+to the amd_iommu_list. For example, this happens if firmware fails to
+fill in mmio_phys in the ACPI table leading to a NULL pointer
+dereference in iommu_feature_disable.
 
-Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-[ commit message spelling fix ]
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Fixes: 2c0ae1720c09c ('iommu/amd: Convert iommu initialization to state machine')
+Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-pxa/ssp.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/iommu/amd_iommu_init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
-index 6748827c2ec8b..b6b0979e3cf94 100644
---- a/arch/arm/plat-pxa/ssp.c
-+++ b/arch/arm/plat-pxa/ssp.c
-@@ -231,18 +231,12 @@ static int pxa_ssp_probe(struct platform_device *pdev)
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 6a69b5bb231f8..036fb186a3bef 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -360,6 +360,9 @@ static void iommu_enable(struct amd_iommu *iommu)
  
- static int pxa_ssp_remove(struct platform_device *pdev)
+ static void iommu_disable(struct amd_iommu *iommu)
  {
--	struct resource *res;
- 	struct ssp_device *ssp;
++	if (!iommu->mmio_base)
++		return;
++
+ 	/* Disable command buffer */
+ 	iommu_feature_disable(iommu, CONTROL_CMDBUF_EN);
  
- 	ssp = platform_get_drvdata(pdev);
- 	if (ssp == NULL)
- 		return -ENODEV;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	release_mem_region(res->start, resource_size(res));
--
--	clk_put(ssp->clk);
--
- 	mutex_lock(&ssp_lock);
- 	list_del(&ssp->node);
- 	mutex_unlock(&ssp_lock);
 -- 
 2.20.1
 
