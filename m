@@ -2,52 +2,51 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9028C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DA8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC2C2468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25D52468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221495;
-	bh=krkpRTJjaq0aPRrGNgYXqjuGQlifAOUX/tNFEfRm/jU=;
+	s=default; t=1580221498;
+	bh=DVCDE0C3uPlaTr0kFjim1TFu6hOp8YaOTgtX+v4fjKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TM2a+vgWsVJJOmh11YeRiTZC+Gf7jJtUOqDfuY9UA6jZWt6HFvUajwZfvZ0LCwmWF
-	 9YpysX2N86R3chJ5OnH8KwOprK3SjjKf8WCw1FiMGhhTtZdR5nBCcAoDQjO4v7qRmM
-	 quB5Z1+Fgx1NAgyLzIF6+8THc5fSDLsnTBZdWiy0=
+	b=JhCvwe17hB5OPlDeRfL3q4B9NOlIIzqKil44J/EpiVqWaTQrEE9ps6mYchFv/5N48
+	 pflSuT/tX9ylOrAPEaZC+9TpCue8lKzEj2LbQ+u8nbB48oU97Br6c58a7MwJDUX21o
+	 4PkOnzTzYj+82OowuJDhOVCm9T02eFyvYsbvVaRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731672AbgA1OYy (ORCPT
+        id S1732790AbgA1OY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:24:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51710 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:24:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732766AbgA1OYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:24:51 -0500
+        id S1730246AbgA1OYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:24:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70D542468A;
-        Tue, 28 Jan 2020 14:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF81924699;
+        Tue, 28 Jan 2020 14:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221489;
-        bh=krkpRTJjaq0aPRrGNgYXqjuGQlifAOUX/tNFEfRm/jU=;
+        s=default; t=1580221492;
+        bh=DVCDE0C3uPlaTr0kFjim1TFu6hOp8YaOTgtX+v4fjKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fj9F/5kwalY8V1+oj8vzJqab96lw7EXIdnmlPNMFEWqsCUAtBJXiVPd0S8yL83cyM
-         o+QNpHbyVbZQpKh7O+VsAHIlfmyQOvn19zEEXM+0ucooVysKJRVoBGQAYKefVoqYRm
-         z+g8wO258hiE7nCGAoIEX0NoLiYe5Sq5GBdoGErQ=
+        b=TtImCgTzgIvJ0IIGguYCKAwd/ifBiUvWa6QmFwRUX+L1PBBnMxd/KrVqndxvqu5r3
+         631wGclaey84DEO3toDtSCtGv/1ZvN1dVlRKKlTvEeoEht8IeV5FJkhk/gCTjPPwLP
+         QVrLpcwRso7/ysQkL/uyXjZGf26ohCLjCLD4Iut0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 228/271] drm/radeon: fix bad DMA from INTERRUPT_CNTL2
-Date:   Tue, 28 Jan 2020 15:06:17 +0100
-Message-Id: <20200128135909.551165717@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 246/271] hwmon: (core) Fix double-free in __hwmon_device_register()
+Date:   Tue, 28 Jan 2020 15:06:35 +0100
+Message-Id: <20200128135910.831096550@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,77 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 62d91dd2851e8ae2ca552f1b090a3575a4edf759 ]
+commit 74e3512731bd5c9673176425a76a7cc5efa8ddb6 upstream.
 
-The INTERRUPT_CNTL2 register expects a valid DMA address, but is
-currently set with a GPU MC address.  This can cause problems on
-systems that detect the resulting DMA read from an invalid address
-(found on a Power8 guest).
+Fix double-free that happens when thermal zone setup fails, see KASAN log
+below.
 
-Instead, use the DMA address of the dummy page because it will always
-be safe.
+==================================================================
+BUG: KASAN: double-free or invalid-free in __hwmon_device_register+0x5dc/0xa7c
 
-Fixes: d8f60cfc9345 ("drm/radeon/kms: Add support for interrupts on r6xx/r7xx chips (v3)")
-Fixes: 25a857fbe973 ("drm/radeon/kms: add support for interrupts on SI")
-Fixes: a59781bbe528 ("drm/radeon: add support for interrupts on CIK (v5)")
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+CPU: 0 PID: 132 Comm: kworker/0:2 Tainted: G    B             4.19.0-rc8-next-20181016-00042-gb52cd80401e9-dirty #41
+Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+Workqueue: events deferred_probe_work_func
+Backtrace:
+[<c0110540>] (dump_backtrace) from [<c0110944>] (show_stack+0x20/0x24)
+[<c0110924>] (show_stack) from [<c105cb08>] (dump_stack+0x9c/0xb0)
+[<c105ca6c>] (dump_stack) from [<c02fdaec>] (print_address_description+0x68/0x250)
+[<c02fda84>] (print_address_description) from [<c02fd4ac>] (kasan_report_invalid_free+0x68/0x88)
+[<c02fd444>] (kasan_report_invalid_free) from [<c02fc85c>] (__kasan_slab_free+0x1f4/0x200)
+[<c02fc668>] (__kasan_slab_free) from [<c02fd0c0>] (kasan_slab_free+0x14/0x18)
+[<c02fd0ac>] (kasan_slab_free) from [<c02f9c6c>] (kfree+0x90/0x294)
+[<c02f9bdc>] (kfree) from [<c0b41bbc>] (__hwmon_device_register+0x5dc/0xa7c)
+[<c0b415e0>] (__hwmon_device_register) from [<c0b421e8>] (hwmon_device_register_with_info+0xa0/0xa8)
+[<c0b42148>] (hwmon_device_register_with_info) from [<c0b42324>] (devm_hwmon_device_register_with_info+0x74/0xb4)
+[<c0b422b0>] (devm_hwmon_device_register_with_info) from [<c0b4481c>] (lm90_probe+0x414/0x578)
+[<c0b44408>] (lm90_probe) from [<c0aeeff4>] (i2c_device_probe+0x35c/0x384)
+[<c0aeec98>] (i2c_device_probe) from [<c08776cc>] (really_probe+0x290/0x3e4)
+[<c087743c>] (really_probe) from [<c0877a2c>] (driver_probe_device+0x80/0x1c4)
+[<c08779ac>] (driver_probe_device) from [<c0877da8>] (__device_attach_driver+0x104/0x11c)
+[<c0877ca4>] (__device_attach_driver) from [<c0874dd8>] (bus_for_each_drv+0xa4/0xc8)
+[<c0874d34>] (bus_for_each_drv) from [<c08773b0>] (__device_attach+0xf0/0x15c)
+[<c08772c0>] (__device_attach) from [<c0877e24>] (device_initial_probe+0x1c/0x20)
+[<c0877e08>] (device_initial_probe) from [<c08762f4>] (bus_probe_device+0xdc/0xec)
+[<c0876218>] (bus_probe_device) from [<c0876a08>] (deferred_probe_work_func+0xa8/0xd4)
+[<c0876960>] (deferred_probe_work_func) from [<c01527c4>] (process_one_work+0x3dc/0x96c)
+[<c01523e8>] (process_one_work) from [<c01541e0>] (worker_thread+0x4ec/0x8bc)
+[<c0153cf4>] (worker_thread) from [<c015b238>] (kthread+0x230/0x240)
+[<c015b008>] (kthread) from [<c01010bc>] (ret_from_fork+0x14/0x38)
+Exception stack(0xcf743fb0 to 0xcf743ff8)
+3fa0:                                     00000000 00000000 00000000 00000000
+3fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+3fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+
+Allocated by task 132:
+ kasan_kmalloc.part.1+0x58/0xf4
+ kasan_kmalloc+0x90/0xa4
+ kmem_cache_alloc_trace+0x90/0x2a0
+ __hwmon_device_register+0xbc/0xa7c
+ hwmon_device_register_with_info+0xa0/0xa8
+ devm_hwmon_device_register_with_info+0x74/0xb4
+ lm90_probe+0x414/0x578
+ i2c_device_probe+0x35c/0x384
+ really_probe+0x290/0x3e4
+ driver_probe_device+0x80/0x1c4
+ __device_attach_driver+0x104/0x11c
+ bus_for_each_drv+0xa4/0xc8
+ __device_attach+0xf0/0x15c
+ device_initial_probe+0x1c/0x20
+ bus_probe_device+0xdc/0xec
+ deferred_probe_work_func+0xa8/0xd4
+ process_one_work+0x3dc/0x96c
+ worker_thread+0x4ec/0x8bc
+ kthread+0x230/0x240
+ ret_from_fork+0x14/0x38
+   (null)
+
+Freed by task 132:
+ __kasan_slab_free+0x12c/0x200
+ kasan_slab_free+0x14/0x18
+ kfree+0x90/0x294
+ hwmon_dev_release+0x1c/0x20
+ device_release+0x4c/0xe8
+ kobject_put+0xac/0x11c
+ device_unregister+0x2c/0x30
+ __hwmon_device_register+0xa58/0xa7c
+ hwmon_device_register_with_info+0xa0/0xa8
+ devm_hwmon_device_register_with_info+0x74/0xb4
+ lm90_probe+0x414/0x578
+ i2c_device_probe+0x35c/0x384
+ really_probe+0x290/0x3e4
+ driver_probe_device+0x80/0x1c4
+ __device_attach_driver+0x104/0x11c
+ bus_for_each_drv+0xa4/0xc8
+ __device_attach+0xf0/0x15c
+ device_initial_probe+0x1c/0x20
+ bus_probe_device+0xdc/0xec
+ deferred_probe_work_func+0xa8/0xd4
+ process_one_work+0x3dc/0x96c
+ worker_thread+0x4ec/0x8bc
+ kthread+0x230/0x240
+ ret_from_fork+0x14/0x38
+   (null)
+
+Cc: <stable@vger.kernel.org> # v4.15+
+Fixes: 47c332deb8e8 ("hwmon: Deal with errors from the thermal subsystem")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/radeon/cik.c  | 4 ++--
- drivers/gpu/drm/radeon/r600.c | 4 ++--
- drivers/gpu/drm/radeon/si.c   | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/hwmon/hwmon.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
-index b99f3e59011c1..5fcb5869a4891 100644
---- a/drivers/gpu/drm/radeon/cik.c
-+++ b/drivers/gpu/drm/radeon/cik.c
-@@ -7026,8 +7026,8 @@ static int cik_irq_init(struct radeon_device *rdev)
- 	}
+--- a/drivers/hwmon/hwmon.c
++++ b/drivers/hwmon/hwmon.c
+@@ -596,8 +596,10 @@ __hwmon_device_register(struct device *d
+ 				if (info[i]->config[j] & HWMON_T_INPUT) {
+ 					err = hwmon_thermal_add_sensor(dev,
+ 								hwdev, j);
+-					if (err)
+-						goto free_device;
++					if (err) {
++						device_unregister(hdev);
++						goto ida_remove;
++					}
+ 				}
+ 			}
+ 		}
+@@ -605,8 +607,6 @@ __hwmon_device_register(struct device *d
  
- 	/* setup interrupt control */
--	/* XXX this should actually be a bus address, not an MC address. same on older asics */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
-diff --git a/drivers/gpu/drm/radeon/r600.c b/drivers/gpu/drm/radeon/r600.c
-index f2eac6b6c46a3..9569c35f8766a 100644
---- a/drivers/gpu/drm/radeon/r600.c
-+++ b/drivers/gpu/drm/radeon/r600.c
-@@ -3697,8 +3697,8 @@ int r600_irq_init(struct radeon_device *rdev)
- 	}
+ 	return hdev;
  
- 	/* setup interrupt control */
--	/* set dummy read address to ring address */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
-diff --git a/drivers/gpu/drm/radeon/si.c b/drivers/gpu/drm/radeon/si.c
-index b75d809c292e3..919d389869ceb 100644
---- a/drivers/gpu/drm/radeon/si.c
-+++ b/drivers/gpu/drm/radeon/si.c
-@@ -6018,8 +6018,8 @@ static int si_irq_init(struct radeon_device *rdev)
- 	}
- 
- 	/* setup interrupt control */
--	/* set dummy read address to ring address */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
--- 
-2.20.1
-
+-free_device:
+-	device_unregister(hdev);
+ free_hwmon:
+ 	kfree(hwdev);
+ ida_remove:
 
 
