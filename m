@@ -2,148 +2,186 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A01C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2D2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFF62465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72F2206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:06:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="j/zSANJk"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="e9NHPQxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgA1UG0 (ORCPT
+        id S1726391AbgA1UGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 15:06:26 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25492 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726007AbgA1UG0 (ORCPT
+        Tue, 28 Jan 2020 15:06:35 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:34387 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgA1UGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 15:06:26 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SK3OAv001771;
-        Tue, 28 Jan 2020 21:06:10 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=QtK10QkzspDmDSuwJ4qZX17Wym1ujmLQHvWb3VQQQCw=;
- b=j/zSANJkMXggcHeczRzJ1ZsbFtjRAAAPdv3PLOceITUwQQ7/4fC/tbhyWm0XLR7prqeW
- fe0ewA0J27Sx9vcGM/bJUnwcDE6BzhIbzsvcFmRzX0Y6Zk6plLjzn9Ew12Dzi84yNfqc
- W7F45BU/4Eb27E6XP2CyKm3cS8Aeaz2R4EQVNdoETAFMm2I/b+hftRQ9+mByseY8pjEE
- i3A9BzJqdR+X4rZEauvpcwnJJ3uX+mvDN//hefVYyjH2mfAkVLJHga6gt6xU/8a1JKO4
- 4RP9reRD30Fgfx4PbNtMf93ghtcBYs8UCpSjgB2JlAWJOTXqqj9BN1VoM9c8BdH67eIc JA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrbpayx6r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 21:06:10 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8E5B710002A;
-        Tue, 28 Jan 2020 21:06:09 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag7node1.st.com [10.75.127.19])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4D0632B5E6A;
-        Tue, 28 Jan 2020 21:06:09 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG7NODE1.st.com
- (10.75.127.19) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan
- 2020 21:06:08 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Tue, 28 Jan 2020 21:06:08 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     "broonie@kernel.org" <broonie@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
-        "lkml@metux.net" <lkml@metux.net>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "system-dt@lists.openampproject.org" 
-        <system-dt@lists.openampproject.org>,
-        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Robin.Murphy@arm.com" <Robin.Murphy@arm.com>
-Subject: Re: [PATCH v2 0/7] Introduce bus firewall controller framework
-Thread-Topic: [PATCH v2 0/7] Introduce bus firewall controller framework
-Thread-Index: AQHV1fD3HkoxlN8gBkO/naZ6SuTotagANYcAgAAC24CAAAijAIAALxcA
-Date:   Tue, 28 Jan 2020 20:06:08 +0000
-Message-ID: <26eb1fde-5408-43f0-ccba-f0c81e791f54@st.com>
-References: <20200128153806.7780-1-benjamin.gaignard@st.com>
- <20200128163628.GB30489@bogus> <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
- <20200128171639.GA36496@bogus>
-In-Reply-To: <20200128171639.GA36496@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <66B307CE2705F7409AD5AB7A8A9F7E04@st.com>
-Content-Transfer-Encoding: base64
+        Tue, 28 Jan 2020 15:06:34 -0500
+Received: by mail-il1-f193.google.com with SMTP id l4so11860326ilj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 12:06:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=18eMNLfWeTpjQI4b5ZYrk3XYyWX7tif+KJnemAbz9Dg=;
+        b=e9NHPQxg8TyI9cf2QCmIh7v2zDsT4l/DdNfuGEiAW6PdtqC/cGN5+nDdPi+scGy8P7
+         FBh7DCSbuVbLyy8gmc2fPo2C/SLhYW5c5NZTnNyIJOEQ8QMifNBcTLtd/yjX5FIfaWJH
+         Gg4n8wNnfCJPoEEjkKUXOg4IAaICJhyTL2vNwM53gwWRHTO8I75oJ8eEeMUvSRDxqq1V
+         zQ8T+KL0tvJnFFbWK1Enqmme4hdxOMjEdkAGKSm0LFeYHEpKmn95jU289EoYZJumExga
+         ql/CbZWEdrsk/TgDwAR4IgdImKuJtg09a8CjpXhNzQOiLNKBvi8GUfV9KXSkX417Udo/
+         dFGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=18eMNLfWeTpjQI4b5ZYrk3XYyWX7tif+KJnemAbz9Dg=;
+        b=W9bpeY5GX9lDvAxbw3RMa+5xLZJMRLerR27c2PIN+165WdYzCEPqs7Wl8SpwmljBSE
+         54Hl+4yxmsGW+BS5HUIE00U9Jd9qClD8NKzHYVf8HWsvX4Fe/S9PFN8DLwICw54faP6A
+         L2UMP7ywsaXg+5io97RkAxkvCev3heVrDMmiMsNbeywgi2OkWyLHcTbb2l1L/ARVCj8N
+         5mGIsuAJbZaS99vWYp4X/kDyYCRoR6Db/uzPgiLChbn/SAwp3EcxiJ89tIsO2W6/g6tP
+         H6WCpy4aon79InVchoKFF39pRSXPGJe7TSnsxzCBG+iFA/TUq1amcE/W4Y1nXvXZId1S
+         CrUg==
+X-Gm-Message-State: APjAAAX8xiOAdX/FOWD1GLYtbxMTY8c6CS78D0hK30WL5WvJfRQrEFIY
+        gWk1VmgVETNgu5i5agSOyyuHJ19GIrB3zHd6XqMRtQ==
+X-Google-Smtp-Source: APXvYqxy0fzH/avztxInoqB+8YhlTTkLEIRn1GEV9oB36rzB8eGeslSXkYuBGEBDvMzMnZeO86HexjRrQg2MzrrNkpE=
+X-Received: by 2002:a92:ba8d:: with SMTP id t13mr21343880ill.207.1580241993195;
+ Tue, 28 Jan 2020 12:06:33 -0800 (PST)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_07:2020-01-28,2020-01-28 signatures=0
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
+ <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+ <CAOesGMiCVSvL8H+haLoz=xyiX1CxBSRL_pbCgx-DLhN+5xRn9g@mail.gmail.com> <4c6462e3-e368-bd9f-260f-e8351c85bcc2@huawei.com>
+In-Reply-To: <4c6462e3-e368-bd9f-260f-e8351c85bcc2@huawei.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Tue, 28 Jan 2020 12:06:21 -0800
+Message-ID: <CAOesGMjrC=b781LLU-Btp1b9uKTiMXj8tF3rjK_Wy6Q4iaR+Rw@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
+To:     John Garry <john.garry@huawei.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, jeremy.linton@arm.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAxLzI4LzIwIDY6MTcgUE0sIFN1ZGVlcCBIb2xsYSB3cm90ZToNCj4gT24gVHVlLCBKYW4g
-MjgsIDIwMjAgYXQgMDQ6NDY6NDFQTSArMDAwMCwgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+
-PiBPbiAxLzI4LzIwIDU6MzYgUE0sIFN1ZGVlcCBIb2xsYSB3cm90ZToNCj4+PiBPbiBUdWUsIEph
-biAyOCwgMjAyMCBhdCAwNDozNzo1OVBNICswMTAwLCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToN
-Cj4+Pj4gQnVzIGZpcmV3YWxsIGZyYW1ld29yayBhaW1zIHRvIHByb3ZpZGUgYSBrZXJuZWwgQVBJ
-IHRvIHNldCB0aGUgY29uZmlndXJhdGlvbg0KPj4+PiBvZiB0aGUgaGFyd2FyZSBibG9ja3MgaW4g
-Y2hhcmdlIG9mIGJ1c3NlcyBhY2Nlc3MgY29udHJvbC4NCj4+Pj4NCj4+Pj4gRnJhbWV3b3JrIGFy
-Y2hpdGVjdHVyZSBpcyBpbnNwaXJhdGVkIGJ5IHBpbmN0cmwgZnJhbWV3b3JrOg0KPj4+PiAtIGEg
-ZGVmYXVsdCBjb25maWd1cmF0aW9uIGNvdWxkIGJlIGFwcGxpZWQgYmVmb3JlIGJpbmQgdGhlIGRy
-aXZlci4NCj4+Pj4gICAgIElmIGEgY29uZmlndXJhdGlvbiBjb3VsZCBub3QgYmUgYXBwbGllZCB0
-aGUgZHJpdmVyIGlzIG5vdCBiaW5kDQo+Pj4+ICAgICB0byBhdm9pZCBkb2luZyBhY2Nlc3NlcyBv
-biBwcm9oaWJpdGVkIHJlZ2lvbnMuDQo+Pj4+IC0gY29uZmlndXJhdGlvbnMgY291bGQgYmUgYXBs
-bGllZCBkeW5hbWljYWxseSBieSBkcml2ZXJzLg0KPj4+PiAtIGRldmljZSBub2RlIHByb3ZpZGVz
-IHRoZSBidXMgZmlyZXdhbGwgY29uZmlndXJhdGlvbnMuDQo+Pj4+DQo+Pj4+IEFuIGV4YW1wbGUg
-b2YgYnVzIGZpcmV3YWxsIGNvbnRyb2xsZXIgaXMgU1RNMzIgRVRaUEMgaGFyZHdhcmUgYmxvY2sN
-Cj4+Pj4gd2hpY2ggZ290IDMgcG9zc2libGUgY29uZmlndXJhdGlvbnM6DQo+Pj4+IC0gdHJ1c3Q6
-IGhhcmR3YXJlIGJsb2NrcyBhcmUgb25seSBhY2Nlc3NpYmxlIGJ5IHNvZnR3YXJlIHJ1bm5pbmcg
-b24gdHJ1c3QNCj4+Pj4gICAgIHpvbmUgKGkuZSBvcC10ZWUgZmlybXdhcmUpLg0KPj4+PiAtIG5v
-bi1zZWN1cmU6IGhhcmR3YXJlIGJsb2NrcyBhcmUgYWNjZXNzaWJsZSBieSBub24tc2VjdXJlIHNv
-ZnR3YXJlIChpLmUuDQo+Pj4+ICAgICBsaW51eCBrZXJuZWwpLg0KPj4+PiAtIGNvcHJvY2Vzc29y
-OiBoYXJkd2FyZSBibG9ja3MgYXJlIG9ubHkgYWNjZXNzaWJsZSBieSB0aGUgY29wcm9jZXNzb3Iu
-DQo+Pj4+IFVwIHRvIDk0IGhhcmR3YXJlIGJsb2NrcyBvZiB0aGUgc29jIGNvdWxkIGJlIG1hbmFn
-ZWQgYnkgRVRaUEMuDQo+Pj4+DQo+Pj4gL21lIGNvbmZ1c2VkLiBJcyBFVFpQQyBhY2Nlc3NpYmxl
-IGZyb20gdGhlIG5vbi1zZWN1cmUga2VybmVsIHNwYWNlIHRvDQo+Pj4gYmVnaW4gd2l0aCA/IElm
-IHNvLCBpcyBpdCBhbGxvd2VkIHRvIGNvbmZpZ3VyZSBoYXJkd2FyZSBibG9ja3MgYXMgc2VjdXJl
-DQo+Pj4gb3IgdHJ1c3RlZCA/IEkgYW0gZmFpbGluZyB0byB1bmRlcnN0YW5kIHRoZSBvdmVyYWxs
-IGRlc2lnbiBvZiBhIHN5c3RlbQ0KPj4+IHdpdGggRVRaUEMgY29udHJvbGxlci4NCj4+IE5vbi1z
-ZWN1cmUga2VybmVsIGNvdWxkIHJlYWQgdGhlIHZhbHVlcyBzZXQgaW4gRVRaUEMsIGlmIGl0IGRv
-ZXNuJ3QgbWF0Y2gNCj4+IHdpdGggd2hhdCBpcyByZXF1aXJlZCBieSB0aGUgZGV2aWNlIG5vZGUg
-dGhlIGRyaXZlciB3b24ndCBiZSBwcm9iZWQuDQo+Pg0KPiBPSywgYnV0IEkgd2FzIHVuZGVyIHRo
-ZSBpbXByZXNzaW9uIHRoYXQgaXQgd2FzIG1hZGUgY2xlYXIgdGhhdCBMaW51eCBpcw0KPiBub3Qg
-ZmlybXdhcmUgdmFsaWRhdGlvbiBzdWl0ZS4gVGhlIGZpcm13YXJlIG5lZWQgdG8gZW5zdXJlIGFs
-bCB0aGUgZGV2aWNlcw0KPiB0aGF0IGFyZSBub3QgYWNjZXNzaWJsZSBpbiB0aGUgTGludXgga2Vy
-bmVsIGFyZSBtYXJrZWQgYXMgZGlzYWJsZWQgYW5kDQo+IHRoaXMgbmVlZHMgdG8gaGFwcGVuIGJl
-Zm9yZSBlbnRlcmluZyB0aGUga2VybmVsLiBTbyBpZiB0aGlzIGlzIHdoYXQgdGhpcw0KPiBwYXRj
-aCBzZXJpZXMgYWNoaWV2ZXMsIHRoZW4gdGhlcmUgaXMgbm8gbmVlZCBmb3IgaXQuIFBsZWFzZSBz
-dG9wIHB1cnN1aW5nDQo+IHRoaXMgYW55IGZ1cnRoZXIgb3IgcHJvdmlkZSBhbnkgb3RoZXIgcmVh
-c29ucyhpZiBhbnkpIHRvIGhhdmUgaXQuIFVudGlsDQo+IHlvdSBoYXZlIG90aGVyIHJlYXNvbnMs
-IE5BQ0sgZm9yIHRoaXMgc2VyaWVzLg0KDQpObyBpdCBkb2Vzbid0IGRpc2FibGUgdGhlIG5vZGVz
-Lg0KDQpXaGVuIHRoZSBmaXJtd2FyZSBkaXNhYmxlIGEgbm9kZSBiZWZvcmUgdGhlIGtlcm5lbCB0
-aGF0IG1lYW5zIGl0IGNoYW5nZQ0KDQp0aGUgRFRCIGFuZCB0aGF0IGlzIGEgcHJvYmxlbSB3aGVu
-IHlvdSB3YW50IHRvIHNpZ24gaXQuIFdpdGggbXkgcHJvcG9zYWwNCg0KdGhlIERUQiByZW1haW5z
-IHRoZSBzYW1lLg0KDQo+DQo+IE5vdGUgeW91IGhhdmVuJ3QgY2MtZWQgMiBwZW9wbGUgd2hvIGhh
-cyBjb21tZW50cyBlYXJsaWVyWzFdWzJdDQpJIHdpbGwgY2MgdGhlbSwgdGhhbmtzDQo+IC0tDQo+
-IFJlZ2FyZHMsDQo+IFN1ZGVlcA0KPg0KPiBbMV0gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTgv
-Mi8yNy81MTINCj4gWzJdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE4LzIvMjcvNTk4
+On Tue, Jan 28, 2020 at 10:22 AM John Garry <john.garry@huawei.com> wrote:
+>
+> On 28/01/2020 17:51, Olof Johansson wrote:
+> > Hi,
+> >
+> > On Tue, Jan 28, 2020 at 3:18 AM John Garry <john.garry@huawei.com> wrote:
+> >>
+>
+> Hi Olof,
+>
+> >> Add a generic driver for platforms which populate their ACPI PPTT
+> >> processor package ID Type Structure according to suggestion in the ACPI
+> >> spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
+> >>
+> >> The soc_id is from member LEVEL_2_ID.
+> >>
+> >> For this, we need to use a whitelist of platforms which are known to
+> >> populate the structure as suggested.
+> >>
+> >> For now, only the vendor and soc_id fields are exposed.
+> >>
+> >> Signed-off-by: John Garry <john.garry@huawei.com>
+> >> ---
+> >>   drivers/soc/Makefile       |   1 +
+> >>   drivers/soc/acpi_generic.c | 102 +++++++++++++++++++++++++++++++++++++
+> >>   2 files changed, 103 insertions(+)
+> >>   create mode 100644 drivers/soc/acpi_generic.c
+> >>
+> >> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> >> index 8b49d782a1ab..2a59a30a22cd 100644
+> >> --- a/drivers/soc/Makefile
+> >> +++ b/drivers/soc/Makefile
+> >> @@ -3,6 +3,7 @@
+> >>   # Makefile for the Linux Kernel SOC specific device drivers.
+> >>   #
+> >>
+> >> +obj-$(CONFIG_ACPI_PPTT)                += acpi_generic.o
+> >>   obj-$(CONFIG_ARCH_ACTIONS)     += actions/
+> >>   obj-$(CONFIG_SOC_ASPEED)       += aspeed/
+> >>   obj-$(CONFIG_ARCH_AT91)                += atmel/
+> >
+> > Based on everything I've seen so far, this should go under drivers/acpi instead.
+>
+> soc drivers seem to live in drivers/soc (non-arm32, anyway), so I
+> decided on this location. But drivers/acpi would also seem reasonable now.
+
+We don't want drivers/soc to be too much of a catch-all -- it is meant
+for some of the glue pieces that don't have good homes elsewhere.
+Unfortunately, the slope is slippery and we've already gone down it a
+bit, but I think we can fairly clearly declare that this kind of
+cross-soc material is likely not the right home for it -- especially
+when drivers/acpi is a good fit in this case.
+
+> >> diff --git a/drivers/soc/acpi_generic.c b/drivers/soc/acpi_generic.c
+> >> new file mode 100644
+> >> index 000000000000..34a1f5f8e063
+> >> --- /dev/null
+> >> +++ b/drivers/soc/acpi_generic.c
+> >> @@ -0,0 +1,102 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Copyright (c) John Garry, john.garry@huawei.com
+> >> + */
+> >> +
+> >> +#define pr_fmt(fmt) "SOC ACPI GENERIC: " fmt
+> >> +
+> >> +#include <linux/acpi.h>
+> >> +#include <linux/sys_soc.h>
+> >> +
+> >> +/*
+> >> + * Known platforms that fill in PPTT package ID structures according to
+> >> + * ACPI spec examples, that being:
+> >> + * - Custom driver attribute is in ID Type Structure VENDOR_ID member
+> >> + * - SoC id is in ID Type Structure LEVEL_2_ID member
+> >> + *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
+> >> + */
+> >> +static struct acpi_platform_list plat_list[] = {
+> >> +       {"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
+> >> +       { } /* End */
+> >> +};
+> >
+> > As others have said, this will become a mess over time, and will
+> > require changes for every new platform. Which, unfortunately, is
+> > exactly what ACPI is supposed to provide relief from by making
+> > standardized platforms... standardized.
+> >
+>
+> Right, and I think that it can be dropped. As discussed with Sudeep, I
+> was concerned how this PPTT ID structure could be interpreted, and had a
+> whitelist as a conservative approach.
+
+[...]
+
+> >
+> > Hmm, this doesn't look like much of a driver to me. This looks like
+> > the export of an attribute to userspace, and should probably be done
+> > by ACPI core instead of creating an empty driver for it.
+>
+> OK, but I'm thinking that having a soc driver can be useful as it is
+> common to DT, and so userspace only has to check a single location. And
+> the soc driver can also cover multiple-chip systems without have to
+> reinvent that code for ACPI core. And it saves adding a new ABI.
+
+While having a single location could be convenient, the actual data
+read/written would be different (I'm guessing).
+
+We also already have a supposed standard way of figuring out what SoC
+we're on (toplevel compatible for the DT). So no matter what, I think
+userspace will need to handle two ways of probing this.
+
+
+-Olof
