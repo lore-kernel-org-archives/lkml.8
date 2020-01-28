@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34F7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCC0C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A66246A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9DE2468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220209;
-	bh=IJD9R2j0hsqiGOgYqv+TWIQqwiy/lpRCbiwIDBQJYNY=;
+	s=default; t=1580220211;
+	bh=AbVq1QrPmhqVImnU0a/nmaEX0iS6VnJbAfKWMzInLeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ijXtKkRLFOwDN5618fa7plfwByOTgVplgBl2N80fIM8lAd75aF5o+04m51T+PXO0
-	 XRX59x++i/c3itwB7nYgsOXb3pFuUbJ0bTOcvHkYy++T0DfI7zT/6JqSjNLxz+wkh/
-	 yA1041t75cYygy8a8DUg9VRs1Ug6xXPNXoFhpKYw=
+	b=AOiZvGgosh5lCZCJ8tubpKdmepfWHhgvQuM+o+ndIgIUukWRzHsd6xYhUuUEJ1uBA
+	 kvjSoM2zecwY7X/B2eFVfmk5zjR4nfi/LXezEI9U8AdgStpIZ/Hn4X7m4XtL13nQf7
+	 IYDT++Jv8qlecCk3R339iKFVUpA/9wIgoHJqJHn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgA1OD1 (ORCPT
+        id S1727880AbgA1ODa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:03:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50090 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:03:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727859AbgA1ODW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:03:22 -0500
+        id S1727869AbgA1OD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:03:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6991424685;
-        Tue, 28 Jan 2020 14:03:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58AEC24693;
+        Tue, 28 Jan 2020 14:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220201;
-        bh=IJD9R2j0hsqiGOgYqv+TWIQqwiy/lpRCbiwIDBQJYNY=;
+        s=default; t=1580220206;
+        bh=AbVq1QrPmhqVImnU0a/nmaEX0iS6VnJbAfKWMzInLeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x70EJf7SrErR5sMtycvhpfLxYmPBaewHauvgqu09+pm5QdGfF4IRA7yOrAm56Kher
-         o+NKI6xE5RqtmQOVzTE4Zhp0Vh0mo2fn+9uPdu0APSmXv1ncamLnZYLRHZ2M7eOlZt
-         99NyuUQT+BTW4wjznV4bAAHdbUQWeQjRAKtpxWYA=
+        b=PRy2rgVWvAS3RLrcIoLbXjNuAqumvP4kEzXQTNaYhkZUfGB91JuJf+o0YqSaoZTK7
+         wlWQiMx/Gzk7OgAMDBdLiXdtVtKqursohh+/MdUiC4qxFjYLD8E/rdAn+NOzoLDW8F
+         6BiEw70rBu2s7M/oT82TwM0ddHHfGE5jlceLaftM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.4 040/104] drm/i915: Align engine->uabi_class/instance with i915_drm.h
-Date:   Tue, 28 Jan 2020 15:00:01 +0100
-Message-Id: <20200128135823.145637119@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 059/104] mmc: sdhci: fix minimum clock rate for v3 controller
+Date:   Tue, 28 Jan 2020 15:00:20 +0100
+Message-Id: <20200128135825.755320560@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,104 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit 5eec71829ad7749a8c918f66a91a9bcf6fb4462a upstream.
+commit 2a187d03352086e300daa2044051db00044cd171 upstream.
 
-In our ABI we have defined I915_ENGINE_CLASS_INVALID_NONE and
-I915_ENGINE_CLASS_INVALID_VIRTUAL as negative values which creates
-implicit coupling with type widths used in, also ABI, struct
-i915_engine_class_instance.
+For SDHCIv3+ with programmable clock mode, minimal clock frequency is
+still base clock / max(divider). Minimal programmable clock frequency is
+always greater than minimal divided clock frequency. Without this patch,
+SDHCI uses out-of-spec initial frequency when multiplier is big enough:
 
-One place where we export engine->uabi_class
-I915_ENGINE_CLASS_INVALID_VIRTUAL is from our our tracepoints. Because the
-type of the former is u8 in contrast to u16 defined in the ABI, 254 will
-be returned instead of 65534 which userspace would legitimately expect.
+mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
+[for 480 MHz source clock divided by 1024]
 
-Another place is I915_CONTEXT_PARAM_ENGINES.
+The code in sdhci_calc_clk() already chooses a correct SDCLK clock mode.
 
-Therefore we need to align the type used to store engine ABI class and
-instance.
-
-v2:
- * Update the commit message mentioning get_engines and cc stable.
-   (Chris)
-
-Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Fixes: 6d06779e8672 ("drm/i915: Load balancing across a virtual engine")
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: <stable@vger.kernel.org> # v5.3+
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200116134508.25211-1-tvrtko.ursulin@linux.intel.com
-(cherry picked from commit 0b3bd0cdc329a1e2e00995cffd61aacf58c87cb4)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Fixes: c3ed3877625f ("mmc: sdhci: add support for programmable clock mode")
+Cc: <stable@vger.kernel.org> # 4f6aa3264af4: mmc: tegra: Only advertise UHS modes if IO regulator is present
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/ffb489519a446caffe7a0a05c4b9372bd52397bb.1579082031.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gem/i915_gem_busy.c     |   12 ++++++------
- drivers/gpu/drm/i915/gt/intel_engine_types.h |    4 ++--
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/mmc/host/sdhci.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/i915/gem/i915_gem_busy.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_busy.c
-@@ -9,16 +9,16 @@
- #include "i915_gem_ioctls.h"
- #include "i915_gem_object.h"
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -3902,11 +3902,13 @@ int sdhci_setup_host(struct sdhci_host *
+ 	if (host->ops->get_min_clock)
+ 		mmc->f_min = host->ops->get_min_clock(host);
+ 	else if (host->version >= SDHCI_SPEC_300) {
+-		if (host->clk_mul) {
+-			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
++		if (host->clk_mul)
+ 			max_clk = host->max_clk * host->clk_mul;
+-		} else
+-			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
++		/*
++		 * Divided Clock Mode minimum clock rate is always less than
++		 * Programmable Clock Mode minimum clock rate.
++		 */
++		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
+ 	} else
+ 		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
  
--static __always_inline u32 __busy_read_flag(u8 id)
-+static __always_inline u32 __busy_read_flag(u16 id)
- {
--	if (id == (u8)I915_ENGINE_CLASS_INVALID)
-+	if (id == (u16)I915_ENGINE_CLASS_INVALID)
- 		return 0xffff0000u;
- 
- 	GEM_BUG_ON(id >= 16);
- 	return 0x10000u << id;
- }
- 
--static __always_inline u32 __busy_write_id(u8 id)
-+static __always_inline u32 __busy_write_id(u16 id)
- {
- 	/*
- 	 * The uABI guarantees an active writer is also amongst the read
-@@ -29,14 +29,14 @@ static __always_inline u32 __busy_write_
- 	 * last_read - hence we always set both read and write busy for
- 	 * last_write.
- 	 */
--	if (id == (u8)I915_ENGINE_CLASS_INVALID)
-+	if (id == (u16)I915_ENGINE_CLASS_INVALID)
- 		return 0xffffffffu;
- 
- 	return (id + 1) | __busy_read_flag(id);
- }
- 
- static __always_inline unsigned int
--__busy_set_if_active(const struct dma_fence *fence, u32 (*flag)(u8 id))
-+__busy_set_if_active(const struct dma_fence *fence, u32 (*flag)(u16 id))
- {
- 	const struct i915_request *rq;
- 
-@@ -57,7 +57,7 @@ __busy_set_if_active(const struct dma_fe
- 		return 0;
- 
- 	/* Beware type-expansion follies! */
--	BUILD_BUG_ON(!typecheck(u8, rq->engine->uabi_class));
-+	BUILD_BUG_ON(!typecheck(u16, rq->engine->uabi_class));
- 	return flag(rq->engine->uabi_class);
- }
- 
---- a/drivers/gpu/drm/i915/gt/intel_engine_types.h
-+++ b/drivers/gpu/drm/i915/gt/intel_engine_types.h
-@@ -300,8 +300,8 @@ struct intel_engine_cs {
- 	u8 class;
- 	u8 instance;
- 
--	u8 uabi_class;
--	u8 uabi_instance;
-+	u16 uabi_class;
-+	u16 uabi_instance;
- 
- 	u32 context_size;
- 	u32 mmio_base;
 
 
