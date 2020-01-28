@@ -2,160 +2,238 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9C8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCD4C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977A224683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580235706;
-	bh=p//mWvbjUQWMz/yXfxYT49hHopuwkXyy57UEPZOG144=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tC7ldwbyEboofk+RoM8UfzfPPWWoRAIehIX2ht+ruWxAXT7PT3j1qSHMrNL+wj0eC
-	 qzald3wz1NuOAnxGqHvIdBRVMe95DcV5DfJraxQTO8kaRhlpZiiuh/zlhi841msy3z
-	 Ld790fmXkR3nPvw/Iw8aZ4Vhaz0zo47VNHbr0+Uo=
+	by mail.kernel.org (Postfix) with ESMTP id 722E922522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgA1SVq (ORCPT
+        id S1726750AbgA1SWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:21:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgA1SVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:21:45 -0500
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EC5722522;
-        Tue, 28 Jan 2020 18:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580235704;
-        bh=p//mWvbjUQWMz/yXfxYT49hHopuwkXyy57UEPZOG144=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=F8N1ih0hsfMcT1itiIdThXCa1Rq600KUposZhsvsGGkRADH9Mr14RKjkBrKdxIPgh
-         fLmQ2TFqTR5yrhTE3eEgn4+PREBXj2RSmhEGntwIx9eFu69dR+2SD5S/LM9ocWvE1N
-         hX6FsM0O94jMxtz1vwT+dPy2CvyKtPr8D04rrEX8=
-Received: by mail-qv1-f48.google.com with SMTP id dp13so6719082qvb.7;
-        Tue, 28 Jan 2020 10:21:44 -0800 (PST)
-X-Gm-Message-State: APjAAAUlhZojxlFoSgznpM6lUB5EihDoCRFYJwPQp0TVGByf0qf/B5PI
-        jyiOdNUtHE8zh5/YVK3EaHq+zvgvM/bmqGGAVg==
-X-Google-Smtp-Source: APXvYqwPpTr1MCUPd3qOHeLBf2H6pq4i35Dq4QnQtMfEtE0xTbpsF1vW77fxpZogY+7MgKbUv34lw2kPVCNgBOs8lJw=
-X-Received: by 2002:ad4:4511:: with SMTP id k17mr22463825qvu.135.1580235703715;
- Tue, 28 Jan 2020 10:21:43 -0800 (PST)
+        Tue, 28 Jan 2020 13:22:08 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2323 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726276AbgA1SWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 13:22:08 -0500
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id BBBB14C99F5943C6C623;
+        Tue, 28 Jan 2020 18:22:05 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 28 Jan 2020 18:22:05 +0000
+Received: from [127.0.0.1] (10.210.167.110) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jan
+ 2020 18:22:04 +0000
+Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
+To:     Olof Johansson <olof@lixom.net>
+CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, <jeremy.linton@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, Hanjun Guo <guohanjun@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
+ <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+ <CAOesGMiCVSvL8H+haLoz=xyiX1CxBSRL_pbCgx-DLhN+5xRn9g@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <4c6462e3-e368-bd9f-260f-e8351c85bcc2@huawei.com>
+Date:   Tue, 28 Jan 2020 18:22:02 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20200124152504.23411-1-mans@mansr.com> <20200127153506.GA4589@bogus>
- <yw1xy2tsvnww.fsf@mansr.com> <20200128134745.GA3048749@kroah.com>
- <yw1xpnf3vchs.fsf@mansr.com> <20200128152818.GB3437093@kroah.com> <20200128165243.GC3666045@kroah.com>
-In-Reply-To: <20200128165243.GC3666045@kroah.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 28 Jan 2020 12:21:32 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK1fMCrbbMdRPqVjtS0D6p4AhqjcOGoivGbT2aKN7UJWw@mail.gmail.com>
-Message-ID: <CAL_JsqK1fMCrbbMdRPqVjtS0D6p4AhqjcOGoivGbT2aKN7UJWw@mail.gmail.com>
-Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports hub property
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAOesGMiCVSvL8H+haLoz=xyiX1CxBSRL_pbCgx-DLhN+5xRn9g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.167.110]
+X-ClientProxiedBy: lhreml712-chm.china.huawei.com (10.201.108.63) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-n Tue, Jan 28, 2020 at 10:52 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jan 28, 2020 at 04:28:18PM +0100, Greg Kroah-Hartman wrote:
-> > On Tue, Jan 28, 2020 at 03:15:11PM +0000, M=C3=A5ns Rullg=C3=A5rd wrote=
-:
-> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> > >
-> > > > On Mon, Jan 27, 2020 at 04:56:15PM +0000, M=C3=A5ns Rullg=C3=A5rd w=
-rote:
-> > > >> Rob Herring <robh@kernel.org> writes:
-> > > >>
-> > > >> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
-> > > >> >> Add a non-removable-ports property that lists the hardwired dow=
-nstream
-> > > >> >> ports of a hub.  Although hubs can provide this information, th=
-ey are
-> > > >> >> not always configured correctly.  An alternate means of indicat=
-ing this
-> > > >> >> for built-in USB devices is thus useful.
-> > > >> >>
-> > > >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> > > >> >
-> > > >> > I reviewed this already, but since you didn't add my reviewed-by=
-, I'm
-> > > >> > looking at it again and having 2nd thoughts.
-> > > >> >
-> > > >> >> ---
-> > > >> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
-> > > >> >>  1 file changed, 4 insertions(+)
-> > > >> >>
-> > > >> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.t=
-xt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > >> >> index 036be172b1ae..92d863cc96b6 100644
-> > > >> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > >> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > >> >> @@ -66,6 +66,10 @@ Required properties for host-controller node=
-s with device nodes:
-> > > >> >>  - #size-cells: shall be 0
-> > > >> >>
-> > > >> >>
-> > > >> >> +Optional properties for hub and host-controller nodes:
-> > > >> >> +- non-removable-ports: list of hardwired downstream ports
-> > > >> >
-> > > >> > If you have a hardwired device and need to know that, doesn't th=
-at imply
-> > > >> > there's some other stuff you need to describe beyond what a stan=
-dard USB
-> > > >> > device has. Such as a power supply that's not Vbus from the hub.
-> > > >>
-> > > >> I suppose there could be, but there isn't in my actual situation.
-> > > >>
-> > > >> > At a minimum, I think this should be a per port property.
-> > > >>
-> > > >> That's what I suggested first.  Greg told me to do it like this in=
-stead.
-> > > >
-> > > > I said that?  I do not remember discussing this at all, when did th=
-at
-> > > > happen?
-> > >
-> > > https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
-> >
-> > Almost a full year ago!  Hah, I can't remember what I wrote last week.
->
-> Ah, ok, all I said was "do what ACPI does here", as that's a model of
-> what has already been agreed apon by a whole huge number of people and
-> standardized.  No need for DT to come up with something totally
-> different instead, making a mess of things :)
->
-> If this is doing what ACPI does, fine, if not, it should.  It was here
-> first.
+On 28/01/2020 17:51, Olof Johansson wrote:
+> Hi,
+> 
+> On Tue, Jan 28, 2020 at 3:18 AM John Garry <john.garry@huawei.com> wrote:
+>>
 
-That's not always possible as ACPI and DT work in different ways. The
-DT (Open Firmware) USB binding originated in 1998[1]. While ancient,
-that is what defines the node structure of USB hubs, ports, and
-devices that we use today.
+Hi Olof,
 
-However, after a quick read of ACPI sec 9.14, I'd say what I suggested
-is more aligned to ACPI than what's proposed here. Ports are child
-nodes ("Device" in ACPI terms) and the properties to determine all
-this are properties of the port node(s). Aligning beyond that isn't
-really possible. ACPI has a standard thing (not sure what the proper
-term is) called '_PLD' for describing device location which includes
-'user visible' among several other things. There is no such concept in
-DT to align with. What we have is the 'non-removable' property and IMO
-that's what we should use here.
+>> Add a generic driver for platforms which populate their ACPI PPTT
+>> processor package ID Type Structure according to suggestion in the ACPI
+>> spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
+>>
+>> The soc_id is from member LEVEL_2_ID.
+>>
+>> For this, we need to use a whitelist of platforms which are known to
+>> populate the structure as suggested.
+>>
+>> For now, only the vendor and soc_id fields are exposed.
+>>
+>> Signed-off-by: John Garry <john.garry@huawei.com>
+>> ---
+>>   drivers/soc/Makefile       |   1 +
+>>   drivers/soc/acpi_generic.c | 102 +++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 103 insertions(+)
+>>   create mode 100644 drivers/soc/acpi_generic.c
+>>
+>> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+>> index 8b49d782a1ab..2a59a30a22cd 100644
+>> --- a/drivers/soc/Makefile
+>> +++ b/drivers/soc/Makefile
+>> @@ -3,6 +3,7 @@
+>>   # Makefile for the Linux Kernel SOC specific device drivers.
+>>   #
+>>
+>> +obj-$(CONFIG_ACPI_PPTT)                += acpi_generic.o
+>>   obj-$(CONFIG_ARCH_ACTIONS)     += actions/
+>>   obj-$(CONFIG_SOC_ASPEED)       += aspeed/
+>>   obj-$(CONFIG_ARCH_AT91)                += atmel/
+> 
+> Based on everything I've seen so far, this should go under drivers/acpi instead.
 
-Rob
+soc drivers seem to live in drivers/soc (non-arm32, anyway), so I 
+decided on this location. But drivers/acpi would also seem reasonable now.
 
-[1] https://www.devicetree.org/open-firmware/bindings/usb/usb-1_0.ps
+> 
+>> diff --git a/drivers/soc/acpi_generic.c b/drivers/soc/acpi_generic.c
+>> new file mode 100644
+>> index 000000000000..34a1f5f8e063
+>> --- /dev/null
+>> +++ b/drivers/soc/acpi_generic.c
+>> @@ -0,0 +1,102 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) John Garry, john.garry@huawei.com
+>> + */
+>> +
+>> +#define pr_fmt(fmt) "SOC ACPI GENERIC: " fmt
+>> +
+>> +#include <linux/acpi.h>
+>> +#include <linux/sys_soc.h>
+>> +
+>> +/*
+>> + * Known platforms that fill in PPTT package ID structures according to
+>> + * ACPI spec examples, that being:
+>> + * - Custom driver attribute is in ID Type Structure VENDOR_ID member
+>> + * - SoC id is in ID Type Structure LEVEL_2_ID member
+>> + *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
+>> + */
+>> +static struct acpi_platform_list plat_list[] = {
+>> +       {"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
+>> +       { } /* End */
+>> +};
+> 
+> As others have said, this will become a mess over time, and will
+> require changes for every new platform. Which, unfortunately, is
+> exactly what ACPI is supposed to provide relief from by making
+> standardized platforms... standardized.
+> 
+
+Right, and I think that it can be dropped. As discussed with Sudeep, I 
+was concerned how this PPTT ID structure could be interpreted, and had a 
+whitelist as a conservative approach.
+
+>> +
+>> +struct acpi_generic_soc_struct {
+>> +       struct soc_device_attribute dev_attr;
+>> +       u32 vendor;
+>> +};
+>> +
+>> +static ssize_t vendor_show(struct device *dev,
+>> +                          struct device_attribute *attr,
+>> +                          char *buf)
+>> +{
+>> +       struct acpi_generic_soc_struct *soc = dev_get_drvdata(dev);
+>> +       u8 vendor_id[5] = {};
+>> +
+>> +       *(u32 *)vendor_id = soc->vendor;
+>> +
+>> +       return sprintf(buf, "%s\n", vendor_id);
+>> +}
+>> +
+>> +static DEVICE_ATTR_RO(vendor);
+>> +
+>> +static __init int soc_acpi_generic_init(void)
+>> +{
+>> +       int index;
+>> +
+>> +       index = acpi_match_platform_list(plat_list);
+>> +       if (index < 0)
+>> +               return -ENOENT;
+>> +
+>> +       index = 0;
+>> +       while (true) {
+>> +               struct acpi_pptt_package_info info;
+>> +
+>> +               if (!acpi_pptt_get_package_info(index, &info)) {
+>> +                       struct soc_device_attribute *soc_dev_attr;
+>> +                       struct acpi_generic_soc_struct *soc;
+>> +                       struct soc_device *soc_dev;
+>> +                       u8 soc_id[9] = {};
+>> +
+>> +                       *(u64 *)soc_id = info.LEVEL_2_ID;
+>> +
+>> +                       soc = kzalloc(sizeof(*soc), GFP_KERNEL);
+>> +                       if (!soc)
+>> +                               return -ENOMEM;
+>> +
+>> +                       soc_dev_attr = &soc->dev_attr;
+>> +                       soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s",
+>> +                                                        soc_id);
+>> +                       if (!soc_dev_attr->soc_id) {
+>> +                               kfree(soc);
+>> +                               return -ENOMEM;
+>> +                       }
+>> +                       soc->vendor = info.vendor_id;
+>> +
+>> +                       soc_dev = soc_device_register(soc_dev_attr);
+>> +                       if (IS_ERR(soc_dev)) {
+>> +                               int ret = PTR_ERR(soc_dev);
+>> +
+>> +                               pr_info("could not register soc (%d) index=%d\n",
+>> +                                       ret, index);
+>> +                               kfree(soc_dev_attr->soc_id);
+>> +                               kfree(soc);
+>> +                               return ret;
+>> +                       }
+>> +                       dev_set_drvdata(soc_device_to_device(soc_dev), soc);
+>> +                       device_create_file(soc_device_to_device(soc_dev),
+>> +                                          &dev_attr_vendor);
+> 
+> Hmm, this doesn't look like much of a driver to me. This looks like
+> the export of an attribute to userspace, and should probably be done
+> by ACPI core instead of creating an empty driver for it.
+
+OK, but I'm thinking that having a soc driver can be useful as it is 
+common to DT, and so userspace only has to check a single location. And 
+the soc driver can also cover multiple-chip systems without have to 
+reinvent that code for ACPI core. And it saves adding a new ABI.
+
+> 
+> This would also solve the whitelist issue -- always export this
+> property if it's set. If it's wrong, then the platform vendor needs to
+> fix it up. That's the approach that is used for other aspects of the
+> standardized platforms, right? We don't want to litter the kernel with
+> white/blacklists -- that's not a net improvement.
+
+Agreed.
+
+> 
+> 
+> -Olof
+> .
+
+Thanks,
+John
+
+> 
+
