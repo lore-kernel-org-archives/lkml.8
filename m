@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774F2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7471EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1D024694
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D49724686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221282;
-	bh=CkSWa3+tm2tcfSWRmOI5hOneByH/GcjVShb/+UDPSb4=;
+	s=default; t=1580221287;
+	bh=7m3fKvPOw1TUuYme9LEnc0AE6Udzj0eu0sWT5cbzFnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IkTA5/NvQI2uKsXplYoO55JPdRquhcYfPEO07AmqxFocionozn33glYtCGxrBwxXw
-	 ErZ0fD7NIlWdMf7X2YuOa1eF4eKLSOFMsYqLhgPN980XLzTB8CtpLBOrJzimnxhTsh
-	 hO9CHjjgyHErvQdpkZ8Q8/JJ3i8eOAUuZvZiTF+k=
+	b=wB9/KyFshlJC2EJMCW8oYNec6m2HpU3CZ+gtKwaq1g8APHPUUTJGsj4aoDzaMNCZd
+	 m9B7f8xSm2GR+x5gC7nncQ21+OhP4ie1khcX8SG8GpPk+4GMXs2DLQjLpGYD3iUGmF
+	 1mMMKIgXhdFX+qgeUkt7qTmCnYeYJUtOWnuQeDZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731264AbgA1OVV (ORCPT
+        id S1731086AbgA1OV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:21:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46602 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:21:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731074AbgA1OVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:21:19 -0500
+        id S1731272AbgA1OVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:21:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BC1924688;
-        Tue, 28 Jan 2020 14:21:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3EC024691;
+        Tue, 28 Jan 2020 14:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221278;
-        bh=CkSWa3+tm2tcfSWRmOI5hOneByH/GcjVShb/+UDPSb4=;
+        s=default; t=1580221283;
+        bh=7m3fKvPOw1TUuYme9LEnc0AE6Udzj0eu0sWT5cbzFnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T84+7HuPgnb0t+ti29VsS3hrZXmI8nJrIXyYUfz96P7DqBH1cPMRDK6V6ZEzwjqpH
-         7u9EPLR45uygckEhOpW4Hj5gFd4ToVIeXBuxO1Q71Nw+hWLDyQkGnqCudjBuGNHOLD
-         Vf+Zcta9K2kV1tT7wJbsbMYeL8xzolXp8znzYWZ0=
+        b=Bxw55WSTY/ero4tn2D2hhlw0TDFljBuSXwzpWTnePOYuAflbZNazmfOOGXK8w5ORO
+         wIxxQESp8k2aws0NpPrQjUYAT+oYAwstgAQ3G3uQK9eNVOCA7ZyVaIbCEzXHmeoY6/
+         oLi+fb6wWkQv435vF5Eyx9Baz+08V2REJ7MRFYP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 161/271] dmaengine: hsu: Revert "set HSU_CH_MTSR to memory width"
-Date:   Tue, 28 Jan 2020 15:05:10 +0100
-Message-Id: <20200128135904.561198424@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Mitchell <kevmitch@arista.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 163/271] iommu/amd: Make iommu_disable safer
+Date:   Tue, 28 Jan 2020 15:05:12 +0100
+Message-Id: <20200128135904.718482747@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,49 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Kevin Mitchell <kevmitch@arista.com>
 
-[ Upstream commit c24a5c735f87d0549060de31367c095e8810b895 ]
+[ Upstream commit 3ddbe913e55516d3e2165d43d4d5570761769878 ]
 
-The commit
+Make it safe to call iommu_disable during early init error conditions
+before mmio_base is set, but after the struct amd_iommu has been added
+to the amd_iommu_list. For example, this happens if firmware fails to
+fill in mmio_phys in the ACPI table leading to a NULL pointer
+dereference in iommu_feature_disable.
 
-  080edf75d337 ("dmaengine: hsu: set HSU_CH_MTSR to memory width")
-
-has been mistakenly submitted. The further investigations show that
-the original code does better job since the memory side transfer size
-has never been configured by DMA users.
-
-As per latest revision of documentation: "Channel minimum transfer size
-(CHnMTSR)... For IOSF UART, maximum value that can be programmed is 64 and
-minimum value that can be programmed is 1."
-
-This reverts commit 080edf75d337d35faa6fc3df99342b10d2848d16.
-
-Fixes: 080edf75d337 ("dmaengine: hsu: set HSU_CH_MTSR to memory width")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 2c0ae1720c09c ('iommu/amd: Convert iommu initialization to state machine')
+Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/hsu/hsu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/amd_iommu_init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/hsu/hsu.c b/drivers/dma/hsu/hsu.c
-index 29d04ca71d52e..15525a2b8ebd7 100644
---- a/drivers/dma/hsu/hsu.c
-+++ b/drivers/dma/hsu/hsu.c
-@@ -64,10 +64,10 @@ static void hsu_dma_chan_start(struct hsu_dma_chan *hsuc)
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 9bb8d64b6f947..c113e46fdc3ab 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -383,6 +383,9 @@ static void iommu_enable(struct amd_iommu *iommu)
  
- 	if (hsuc->direction == DMA_MEM_TO_DEV) {
- 		bsr = config->dst_maxburst;
--		mtsr = config->src_addr_width;
-+		mtsr = config->dst_addr_width;
- 	} else if (hsuc->direction == DMA_DEV_TO_MEM) {
- 		bsr = config->src_maxburst;
--		mtsr = config->dst_addr_width;
-+		mtsr = config->src_addr_width;
- 	}
+ static void iommu_disable(struct amd_iommu *iommu)
+ {
++	if (!iommu->mmio_base)
++		return;
++
+ 	/* Disable command buffer */
+ 	iommu_feature_disable(iommu, CONTROL_CMDBUF_EN);
  
- 	hsu_chan_disable(hsuc);
 -- 
 2.20.1
 
