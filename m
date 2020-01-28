@@ -2,209 +2,311 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA7AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F12AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4271220661
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E418D2465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s/LpWYEI"
+	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="HGnELdt8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgA1Ikq (ORCPT
+        id S1725971AbgA1Iqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 03:40:46 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51695 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgA1Ikq (ORCPT
+        Tue, 28 Jan 2020 03:46:34 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34619 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgA1Iqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 03:40:46 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t23so1532734wmi.1;
-        Tue, 28 Jan 2020 00:40:44 -0800 (PST)
+        Tue, 28 Jan 2020 03:46:34 -0500
+Received: by mail-lj1-f195.google.com with SMTP id x7so13777262ljc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 00:46:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=CY0t0Jh4KmNVk3ml8hjXW8Vdas/J0r5nTkeZF74pSy0=;
-        b=s/LpWYEIcfGMYj16YRbqin5Jwv6iYr8gbOvilsGF5E0NS2RZAtMwaA1QgmEQYJer9l
-         4ljNiptvd8t9Ch8FcAtJMGOpsZC7Bk7cAq3uEWy1XgHr05QqOkG6/Z6FAc7pG4YfH7/f
-         y9qhiHNjmpiPoEq73qxiikV+5Ddl2RuzTXiI9MNBrQpPAQtdZb+B3rJl8wIXq8z0Nx3E
-         +sVt1BFSfbt6uPe8R6WoRQ2YkRtvFsJmeyPNmYHYoRXj1G+qvKS6+DUj+TcOhTLsJ5IF
-         nErwzIEFNvxk5WUgdwfBJoaDEgVql8oToASv3JMQT5Ey6g/Pgpv9BMAeN6vhVLAV2gW/
-         5xkg==
+        d=unikie-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=SDBsxgSpYZSFr1ROXj8dVGyZsGMgCVC//9YDGkSiWcg=;
+        b=HGnELdt8HlrpzP4ndtkJ7Wvh1GyMe5vSQZx7pSdGLhEAvOZ1fZ8fqHnMvplCAV7ik1
+         dNp+bNgUu02Shms45KKKjf+lTu626ec+zLwZlvuNoomFnCGG5CC3cvV/fDs8cWcJsCuV
+         XXnXvqPVfO+bpsK3darslnkbK0Gm4aPPcmn+4A8NpeLq0PVOr0kTgCAUlmhOl156CwVY
+         PFUHG849UCeVpY6AubiyU70BoZp+xeRzOV7ltcTJvE3iggfVWZCoevVWztxsg/+Y7BrY
+         dl520z2P4oZkghEPx6Sg+eX47RW2CG24QdALI+s6XLrBz3nQ7zDOXcWVCnAoEp10UA+p
+         oz2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=CY0t0Jh4KmNVk3ml8hjXW8Vdas/J0r5nTkeZF74pSy0=;
-        b=Mf10ywzAQdNJO3INEn/+Ala9PeqQQcwGOXsXV2j6ibB29EPvhjXzYZ4jUmMqSaWD77
-         cOXU7PoiFlqJSQd5py6InFJ9jmmkHR3+6OpPSOAZvWBffxDZc0kjKcCynkROQByR/pky
-         qkad1pv+V+uesDMmCjidFs1JIrO36C0MZO5HR2r6Wp/7s2EQVgQwbkdoj4xSxd42wdqh
-         wHd9V3yVaVUs4fpC2hF9S0oliSsB6itGUKr1ubePE2BqaZI9Snj2lWkkdhBimy4W3KFG
-         U8L4Xb5DBa809UxfZn/AMa+d7cqLkbnDuKHNke+C4uY/Lb2npCMw256Sm2XMJi+7/JqI
-         3SSg==
-X-Gm-Message-State: APjAAAUzXWzulactpAFu6YPesyiPG4ng5e5BUiPPP25Tu7VXI40hPbqr
-        7YAdKz2NceVxzvQpmg3VCWE=
-X-Google-Smtp-Source: APXvYqydtAPMTd8VYXMiKc/zqY0XzwWworu4R59xBUl28EjN007x2C/d4Omf/55dw5k8RxiP/TVZCQ==
-X-Received: by 2002:a1c:81d3:: with SMTP id c202mr3533111wmd.14.1580200843638;
-        Tue, 28 Jan 2020 00:40:43 -0800 (PST)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id d16sm28065304wrg.27.2020.01.28.00.40.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 00:40:42 -0800 (PST)
-Date:   Tue, 28 Jan 2020 09:40:41 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sunxi@googlegroups.com" <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH 5/9] crypto: engine: add enqueue_request/can_do_more
-Message-ID: <20200128084041.GA10493@Red>
-References: <20200122104528.30084-1-clabbe.montjoie@gmail.com>
- <20200122104528.30084-6-clabbe.montjoie@gmail.com>
- <AM0PR04MB717155300E3575C07D31E1D08C0B0@AM0PR04MB7171.eurprd04.prod.outlook.com>
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version:content-transfer-encoding;
+        bh=SDBsxgSpYZSFr1ROXj8dVGyZsGMgCVC//9YDGkSiWcg=;
+        b=hfpdV4pBqwGNJarIpQdL31xs+FhqzUmrYW/j6QuzgDXrjI9TF9xCa2E4V/abO5EbTK
+         JFLuOKBAYNwx5vV2tBkRHCVC3okrOOxuv8MPjvv68Z4qqDCYLJdmeaBqSEGuAgKLpHzY
+         /EFFXFBELOy6oOU6lO7Fh4ZY6wLPBDgEzBF+c4goyU0qS0WMNjR+lhuHITrQZerytCAX
+         L1cFSUcxCT9WFBNVh9bd74WClYhGJ+ixvFpWKiPzitEDNRlVtkpcFZpRfTscshJ+16ny
+         GkiXAhP81x4L5+V4DZB3PWPxXKhKXqNlv0f57eHPCNTWESs8pUfVvwJNXdt2951XJmsy
+         fJtg==
+X-Gm-Message-State: APjAAAXeGtZ2aim6kg4aNjbzdVgSMQsV2PJ9zyNqE7fjqhxK8lI3gKur
+        K11tDTYd0FO4AC3bHdZNV8m1FA==
+X-Google-Smtp-Source: APXvYqyt2aBzRqqHZepJ45mwWclGHx9VYi3zavQa87nf+WeEgvwZg1USKMiIA3JW/8FYm7eanS1N1g==
+X-Received: by 2002:a2e:818e:: with SMTP id e14mr12558317ljg.2.1580201190711;
+        Tue, 28 Jan 2020 00:46:30 -0800 (PST)
+Received: from GL-434 ([109.204.235.119])
+        by smtp.gmail.com with ESMTPSA id f16sm9231922ljn.17.2020.01.28.00.46.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jan 2020 00:46:29 -0800 (PST)
+From:   jouni.hogander@unikie.com (Jouni =?utf-8?Q?H=C3=B6gander?=)
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>, syzkaller@googlegroups.com
+Subject: Re: [PATCH 4.19 000/306] 4.19.87-stable review
+References: <20191127203114.766709977@linuxfoundation.org>
+        <CA+G9fYuAY+14aPiRVUcXLbsr5zJ-GLjULX=s9jcGWcw_vb5Kzw@mail.gmail.com>
+        <20191128073623.GE3317872@kroah.com>
+        <CAKXUXMy_=gVVw656AL5Rih_DJrdrFLoURS-et0+dpJ2cKaw6SQ@mail.gmail.com>
+        <20191129085800.GF3584430@kroah.com> <87sgk8szhc.fsf@unikie.com>
+        <alpine.DEB.2.21.2001261236430.4933@felia> <87h80h2suv.fsf@unikie.com>
+        <alpine.DEB.2.21.2001272145260.2951@felia>
+Date:   Tue, 28 Jan 2020 10:46:29 +0200
+In-Reply-To: <alpine.DEB.2.21.2001272145260.2951@felia> (Lukas Bulwahn's
+        message of "Mon, 27 Jan 2020 22:16:04 +0100 (CET)")
+Message-ID: <874kwg2cka.fsf@unikie.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.2 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR04MB717155300E3575C07D31E1D08C0B0@AM0PR04MB7171.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 10:58:36PM +0000, Iuliana Prodan wrote:
-> On 1/22/2020 12:45 PM, Corentin Labbe wrote:
-> > This patchs adds two new function wrapper in crypto_engine.
-> > - enqueue_request() for drivers enqueuing request to hardware.
-> > - can_queue_more() for letting drivers to tell if they can
-> > enqueue/prepare more.
-> > 
-> > Since some drivers (like caam) only enqueue request without "doing"
-> > them, do_one_request() is now optional.
-> > 
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > ---
-> >   crypto/crypto_engine.c  | 25 ++++++++++++++++++++++---
-> >   include/crypto/engine.h | 14 ++++++++------
-> >   2 files changed, 30 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/crypto/crypto_engine.c b/crypto/crypto_engine.c
-> > index 5bcb1e740fd9..4a28548c49aa 100644
-> > --- a/crypto/crypto_engine.c
-> > +++ b/crypto/crypto_engine.c
-> > @@ -83,6 +83,7 @@ static void crypto_pump_requests(struct crypto_engine *engine,
-> >   		goto out;
-> >   	}
-> >   
-> > +retry:
-> >   	/* Get the fist request from the engine queue to handle */
-> >   	backlog = crypto_get_backlog(&engine->queue);
-> >   	async_req = crypto_dequeue_request(&engine->queue);
-> > @@ -118,10 +119,28 @@ static void crypto_pump_requests(struct crypto_engine *engine,
-> >   			goto req_err2;
-> >   		}
-> >   	}
-> > +
-> > +	if (enginectx->op.enqueue_request) {
-> > +		ret = enginectx->op.enqueue_request(engine, async_req);
-> > +		if (ret) {
-> > +			dev_err(engine->dev, "failed to enqueue request: %d\n",
-> > +				ret);
-> > +			goto req_err;
-> > +		}
-> > +	}
-> > +	if (enginectx->op.can_queue_more && engine->queue.qlen > 0) {
-> > +		ret = enginectx->op.can_queue_more(engine, async_req);
-> > +		if (ret > 0) {
-> > +			spin_lock_irqsave(&engine->queue_lock, flags);
-> > +			goto retry;
-> > +		}
-> > +		if (ret < 0) {
-> > +			dev_err(engine->dev, "failed to call can_queue_more\n");
-> > +			/* TODO */
-> > +		}
-> > +	}
-> >   	if (!enginectx->op.do_one_request) {
-> > -		dev_err(engine->dev, "failed to do request\n");
-> > -		ret = -EINVAL;
-> > -		goto req_err;
-> > +		return;
-> >   	}
-> >   	ret = enginectx->op.do_one_request(engine, async_req);
-> >   	if (ret) {
-> > diff --git a/include/crypto/engine.h b/include/crypto/engine.h
-> > index 03d9f9ec1cea..8ab9d26e30fe 100644
-> > --- a/include/crypto/engine.h
-> > +++ b/include/crypto/engine.h
-> > @@ -63,14 +63,16 @@ struct crypto_engine {
-> >    * @prepare__request: do some prepare if need before handle the current request
-> >    * @unprepare_request: undo any work done by prepare_request()
-> >    * @do_one_request: do encryption for current request
-> > + * @enqueue_request:	Enqueue the request in the hardware
-> > + * @can_queue_more:	if this function return > 0, it will tell the crypto
-> > + * 	engine that more space are availlable for prepare/enqueue request
-> >    */
-> >   struct crypto_engine_op {
-> > -	int (*prepare_request)(struct crypto_engine *engine,
-> > -			       void *areq);
-> > -	int (*unprepare_request)(struct crypto_engine *engine,
-> > -				 void *areq);
-> > -	int (*do_one_request)(struct crypto_engine *engine,
-> > -			      void *areq);
-> > +	int (*prepare_request)(struct crypto_engine *engine, void *areq);
-> > +	int (*unprepare_request)(struct crypto_engine *engine, void *areq);
-> > +	int (*do_one_request)(struct crypto_engine *engine, void *areq);
-> > +	int (*enqueue_request)(struct crypto_engine *engine, void *areq);
-> > +	int (*can_queue_more)(struct crypto_engine *engine, void *areq);
-> >   };
-> 
-> As I mentioned in another thread [1], these crypto-engine patches (#1 - 
-> #5) imply modifications in all the drivers that use crypto-engine.
-> It's not backwards compatible.
+Lukas Bulwahn <lukas.bulwahn@gmail.com> writes:
 
-This is wrong. This is false.
-AS I HAVE ALREADY SAID, I have tested and didnt see any behavour change in the current user of crypto engine.
-I have tested my serie with omap, virtio, amlogic, sun8i-ss, sun8i-ce and didnt see any change in behavour WITHOUT CHANGING them.
-I resaid, I didnt touch omap, virtio, etc...
-Only stm32 is not tested because simply there are not board with this driver enabled.
+> On Mon, 27 Jan 2020, Jouni H=C3=B6gander wrote:
+>
+>> Lukas Bulwahn <lukas.bulwahn@gmail.com> writes:
+>>=20
+>> > On Wed, 22 Jan 2020, Jouni H=C3=B6gander wrote:
+>> >
+>> >> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>> >> >> > Now queued up, I'll push out -rc2 versions with this fix.
+>> >> >> >
+>> >> >> > greg k-h
+>> >> >>=20
+>> >> >> We have also been informed about another regression these two comm=
+its
+>> >> >> are causing:
+>> >> >>=20
+>> >> >> https://lore.kernel.org/lkml/ace19af4-7cae-babd-bac5-cd3505dcd874@=
+I-love.SAKURA.ne.jp/
+>> >> >>=20
+>> >> >> I suggest to drop these two patches from this queue, and give us a
+>> >> >> week to shake out the regressions of the change, and once ready, we
+>> >> >> can include the complete set of fixes to stable (probably in a wee=
+k or
+>> >> >> two).
+>> >> >
+>> >> > Ok, thanks for the information, I've now dropped them from all of t=
+he
+>> >> > queues that had them in them.
+>> >> >
+>> >> > greg k-h
+>> >>=20
+>> >> I have now run more extensive Syzkaller testing on following patches:
+>> >>=20
+>> >> cb626bf566eb net-sysfs: Fix reference count leak
+>> >> ddd9b5e3e765 net-sysfs: Call dev_hold always in rx_queue_add_kobject
+>> >> e0b60903b434 net-sysfs: Call dev_hold always in netdev_queue_add_kobje
+>> >> 48a322b6f996 net-sysfs: fix netdev_queue_add_kobject() breakage
+>> >> b8eb718348b8 net-sysfs: Fix reference count leak in rx|netdev_queue_a=
+dd_kobject
+>> >>=20
+>> >> These patches are fixing couple of memory leaks including this one fo=
+und
+>> >> by Syzbot: https://syzkaller.appspot.com/bug?extid=3Dad8ca40ecd77896d=
+51e2
+>> >>=20
+>> >> I can reproduce these memory leaks in following stable branches: 4.14,
+>> >> 4.19, and 5.4.
+>> >>=20
+>> >> These are all now merged into net/master tree and based on my testing
+>> >> they are ready to be taken into stable branches as well.
+>> >>
+>> >
+>> > + syzkaller list
+>> > Jouni et. al, please drop Linus in further responses; Linus, it was wr=
+ong=20
+>> > to add you to this thread in the first place (reason is explained belo=
+w)
+>> >
+>> > Jouni, thanks for investigating.
+>> >
+>> > It raises the following questions and comments:
+>> >
+>> > - Does the memory leak NOT appear on 4.9 and earlier LTS branches (or =
+did=20
+>> > you not check that)? If it does not appear, can you bisect it with the=
+=20
+>> > reproducer to the commit between 4.14 and 4.9?
+>>=20
+>> I tested and these memory leaks are not reproucible in 4.9 and earlier.
+>>=20
+>> >
+>> > - Do the reproducers you found with your syzkaller testing show the sa=
+me=20
+>> > behaviour (same bisection) as the reproducers from syzbot?
+>>=20
+>> Yes, they are same.
+>>=20
+>> >
+>> > - I fear syzbot's automatic bisection on is wrong, and Linus' commit=20
+>> > 0e034f5c4bc4 ("iwlwifi: fix mis-merge that breaks the driver") is not =
+to=20
+>> > blame here; that commit did not cause the memory leak, but fixed some=
+=20
+>> > unrelated issue that simply confuses syzbot's automatic bisection.
+>> >
+>> > Just FYI: Dmitry Vyukov's evaluation of the syzbot bisection shows tha=
+t=20
+>> > about 50% are wrong, e.g., due to multiple bugs being triggered with o=
+ne=20
+>> > reproducer and the difficulty of automatically identifying them of bei=
+ng=20
+>> > different due to different root causes (despite the smart heuristics o=
+f=20
+>> > syzkaller & syzbot). So, to identify the actual commit on which the me=
+mory=20
+>> > leak first appeared, you need to bisect manually with your own judgeme=
+nt=20
+>> > if the reported bug stack trace fits to the issue you investigating. O=
+r=20
+>> > you use syzbot's automatic bisection but then with a reduced kernel co=
+nfig=20
+>> > that cannot be confused by other issues. You might possibly also hit a=
+=20
+>> > "beginning of time" in your bisection, where KASAN was simply not=20
+>> > supported, then the initially causing commit can simply not determined=
+ by=20
+>> > bisection with the reproducer and needs some code inspection and=20
+>> > archaeology with git. Can you go ahead try to identify the correct com=
+mit=20
+>> > for this issue?
+>>=20
+>> These two commits (that are not in 4.9 and earlier) are intorducing thes=
+e leaks:
+>>=20
+>> commit e331c9066901dfe40bea4647521b86e9fb9901bb
+>> Author: YueHaibing <yuehaibing@huawei.com>
+>> Date:   Tue Mar 19 10:16:53 2019 +0800
+>>=20
+>>     net-sysfs: call dev_hold if kobject_init_and_add success
+>>=20=20=20=20=20
+>>     [ Upstream commit a3e23f719f5c4a38ffb3d30c8d7632a4ed8ccd9e ]
+>>=20=20=20=20=20
+>>     In netdev_queue_add_kobject and rx_queue_add_kobject,
+>>     if sysfs_create_group failed, kobject_put will call
+>>     netdev_queue_release to decrease dev refcont, however
+>>     dev_hold has not be called. So we will see this while
+>>     unregistering dev:
+>>=20=20=20=20=20
+>>     unregister_netdevice: waiting for bcsh0 to become free. Usage count =
+=3D -1
+>>=20=20=20=20=20
+>>     Reported-by: Hulk Robot <hulkci@huawei.com>
+>>     Fixes: d0d668371679 ("net: don't decrement kobj reference count on i=
+nit fail
+>> ure")
+>>     Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>     Signed-off-by: David S. Miller <davem@davemloft.net>
+>>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>=20
+>> commit d0d6683716791b2a2761a1bb025c613eb73da6c3
+>> Author: stephen hemminger <stephen@networkplumber.org>
+>> Date:   Fri Aug 18 13:46:19 2017 -0700
+>>=20
+>>     net: don't decrement kobj reference count on init failure
+>>=20=20=20=20=20
+>>     If kobject_init_and_add failed, then the failure path would
+>>     decrement the reference count of the queue kobject whose reference
+>>     count was already zero.
+>>=20=20=20=20=20
+>>     Fixes: 114cf5802165 ("bql: Byte queue limits")
+>>     Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
+>>     Signed-off-by: David S. Miller <davem@davemloft.net>
+>>=20
+>
+> But, it seems that we now have just a long sequences of fix patches.
+>
+> This commit from 2011 seems to be the initial buggy one:
+>
+> commit 114cf5802165ee93e3ab461c9c505cd94a08b800
+> Author: Tom Herbert <therbert@google.com>
+> Date:   Mon Nov 28 16:33:09 2011 +0000
+>
+>     bql: Byte queue limits
+>
+> And then we just have fixes over fixes:
+>
+> 114cf5802165ee93e3ab461c9c505cd94a08b800
+> fixed by d0d6683716791b2a2761a1bb025c613eb73da6c3
+> fixed by a3e23f719f5c4a38ffb3d30c8d7632a4ed8ccd9e
+> fixed by the sequence of your five patches, mentioned above
+>
+>
+> If that is right, we should be able to find a reproducer with syzkaller o=
+n=20
+> the versions before d0d668371679 ("net: don't decrement kobj reference=20
+> count on init failure") with fault injection enabled or some manually=20
+> injected fault by modifying the source code to always fail on init to=20
+> really trigger the init failure, and see the reference count go below=20
+> zero.
+>
+> All further issues should also have reproducers found with syzkaller.
+> If we have a good feeling on the reproducers and this series of fixes=20
+> really fixed the issue now here for all cases, we should suggest to=20
+> backport all of the fixes to 4.4 and 4.9.
+>
+> We should NOT just have Greg pick up a subset of the patches and backport=
+=20
+> them to 4.4 and 4.9, that will likely break more than it fixes.
 
-I have also tested your serie which adds support for crypto engine to caam, and the crash is the same with/without my serie.
-So no behavour change.
+Yes, this is the case.
 
-> Your changes imply that do_one_request executes the request & waits for 
-> completion and enqueue_request sends it to hardware. That means that all 
-> the other drivers need to be modify, to implement enqueue_request, 
-> instead of do_one_request. They need to be compliant with the new 
-> changes, new API. Otherwise, they are not using crypto-engine right, 
-> don't you think?
-> 
+>
+> Jouni, did you see Greg's bot inform you that he would pick up your lates=
+t=20
+> patch for 4.4 and 4.9? Please respond to those emails to make sure a=20
+> complete set of patches is picked up, which we tested with all those=20
+> intermediate reproducers and an extensive syzkaller run hitting the=20
+> net-sysfs interface (e.g., by configuring the corpus and check
+> coverage).
 
-My change imply nothing, current user work the same.
-But if they want, they COULD switch to enqueue_request().
+I already responded to not pick these patches into 4.4 and 4.9.=20
 
-> Also, do_one_request it shouldn’t be blocking. We got this confirmation 
-> from Herbert [2].
+>
+> If you cannot do this testing for 4.4 and 4.9 now quickly (you=20
+> potentially have less than 24 hours), we should hold those new patches=20
+> back for 4.4 and 4.9, as none of the fixes seem to be applied at all righ=
+t=20
+> now and the users have not complained yet on 4.4 and 4.9.
+> Once testing of the whole fix sequence is done, we request to backport al=
+l=20
+> patches at once for 4.4 and 4.9.
 
-Re-read what Herbert said, "It certainly shouldn't be blocking in the general case." But that means it could.
-But this wont change my patch since both behavour are supported.
+If we want to pick whole set including older patches I think I need more
+time for identifying which older patches (apart from these two I
+identified causing the memory leak) should be taken in and for testing.
 
-> 
-> [1] 
-> https://lore.kernel.org/lkml/VI1PR04MB44455343230CBA7400D21C998C0C0@VI1PR04MB4445.eurprd04.prod.outlook.com/
-> [2] 
-> https://lore.kernel.org/lkml/20200122144134.axqpwx65j7xysyy3@gondor.apana.org.au/
+>
+> Lukas
+
+BR,
+
+Jouni H=C3=B6gander
