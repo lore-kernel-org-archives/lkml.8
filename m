@@ -2,128 +2,87 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A96C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E197C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487FD20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:42:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="b/fgh1Ll"
+	by mail.kernel.org (Postfix) with ESMTP id 1EC5420CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgA1Jmn (ORCPT
+        id S1726010AbgA1JoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:42:43 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1510 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726139AbgA1Jm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:42:26 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S9XRtS026096;
-        Tue, 28 Jan 2020 10:42:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=IyA5aTp3/+pbmYuqWZPjub3ixeGxRIPZ8Nm8rzvgpb8=;
- b=b/fgh1LlFXyxNZt/aSiCsjSeGpZ36W1tqi2x7a9AraqiNcRNsDlXahk+WdJum3DFBW8E
- b1DII+LWKUk6aEAYby5KujlnOpI/1+IIEg+iF8hXgC7XXyP8OGiLJSgNkYu+QFnUjsot
- oT25orxBvaL31iv4xcXRiBZymHACFjnPFquvzvS9U7Ggeitjp2ZFJxy+k+HFCD5wcyGU
- 6Ob1HxXuUzBQdTgRBFtk+A109PW7oUdidplJ2tgKij7rnQmH/6FLT4iEXRyrHhac8bdR
- UUuGseDvph6jWmYRYAhimj3BO0xAaS4H8kNnbwhxZJsXJM5OEQfLR4MuunBuSGhcQ7gX Lg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrbpaw9xa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 10:42:11 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 726A6100040;
-        Tue, 28 Jan 2020 10:42:09 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 67D3221D3C0;
-        Tue, 28 Jan 2020 10:42:09 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 28 Jan 2020 10:42:09
- +0100
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH 3/4] dmaengine: stm32-dmamux: use reset controller only at probe time
-Date:   Tue, 28 Jan 2020 10:41:57 +0100
-Message-ID: <20200128094158.20361-4-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200128094158.20361-1-amelie.delaunay@st.com>
-References: <20200128094158.20361-1-amelie.delaunay@st.com>
+        Tue, 28 Jan 2020 04:44:19 -0500
+Received: from mga14.intel.com ([192.55.52.115]:49545 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbgA1JoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 04:44:19 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 01:44:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,373,1574150400"; 
+   d="scan'208";a="217568281"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 28 Jan 2020 01:44:16 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iwNPu-0007Jz-3K; Tue, 28 Jan 2020 11:44:18 +0200
+Date:   Tue, 28 Jan 2020 11:44:18 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] console: Introduce ->exit() callback
+Message-ID: <20200128094418.GY32742@smile.fi.intel.com>
+References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
+ <20200127114719.69114-5-andriy.shevchenko@linux.intel.com>
+ <20200128051711.GB115889@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128051711.GB115889@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Etienne Carriere <etienne.carriere@st.com>
+On Tue, Jan 28, 2020 at 02:17:11PM +0900, Sergey Senozhatsky wrote:
+> On (20/01/27 13:47), Andy Shevchenko wrote:
 
-Remove reset controller reference from device instance since it is
-used only at probe time.
+...
 
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- drivers/dma/stm32-dmamux.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> > @@ -2853,6 +2853,10 @@ int unregister_console(struct console *console)
+> >  	console->flags &= ~CON_ENABLED;
+> >  	console_unlock();
+> >  	console_sysfs_notify();
+> > +
+> > +	if (console->exit)
+> > +		console->exit(console);
+> > +
+> 
+> If the console was not registered (hence not enabled) is it still required
+> to call ->exit()? Is there a requirement that ->exit() should handle such
+> cases?
 
-diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
-index a862d3339fb7..1dfecbac64cf 100644
---- a/drivers/dma/stm32-dmamux.c
-+++ b/drivers/dma/stm32-dmamux.c
-@@ -35,7 +35,6 @@ struct stm32_dmamux {
- struct stm32_dmamux_data {
- 	struct dma_router dmarouter;
- 	struct clk *clk;
--	struct reset_control *rst;
- 	void __iomem *iomem;
- 	u32 dma_requests; /* Number of DMA requests connected to DMAMUX */
- 	u32 dmamux_requests; /* Number of DMA requests routed toward DMAs */
-@@ -182,6 +181,7 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
- 	struct stm32_dmamux_data *stm32_dmamux;
- 	struct resource *res;
- 	void __iomem *iomem;
-+	struct reset_control *rst;
- 	int i, count, ret;
- 	u32 dma_req;
- 
-@@ -265,11 +265,11 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	stm32_dmamux->rst = devm_reset_control_get(&pdev->dev, NULL);
--	if (!IS_ERR(stm32_dmamux->rst)) {
--		reset_control_assert(stm32_dmamux->rst);
-+	rst = devm_reset_control_get(&pdev->dev, NULL);
-+	if (!IS_ERR(rst)) {
-+		reset_control_assert(rst);
- 		udelay(2);
--		reset_control_deassert(stm32_dmamux->rst);
-+		reset_control_deassert(rst);
- 	}
- 
- 	stm32_dmamux->iomem = iomem;
+This is a good point. The ->exit() purpose is to keep balance for whatever
+happened at ->setup().
+
+But ->setup() is being called either when we have has_preferred == false or
+when we got no matching we call it for all such consoles, till it returns an
+error (can you elaborate the logic behind it?).
+
+In both cases we will get the console to have CON_ENABLED flag set.
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
