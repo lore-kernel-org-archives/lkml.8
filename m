@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8818C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB738C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA9B24688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B243024685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220622;
-	bh=4tsbLvzpH6KACgrSusRTvQLdfeOm9HSCRWokT2heKuA=;
+	s=default; t=1580220623;
+	bh=3iagYyoCa+nNB3Jidm/+3b53P4fbZ9mjjofOdLx9dlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6WyVVoxiiuRl9nQgbyjsMQ07LtK91gA70wPusUi0LhbiMRxjSomqwzooBlrq5eyI
-	 0QSpwTyfyCNf5CBoT2ppzAUPkQVkBji9eAZk1+N2gZ3YszE6+oALgJ5HR8QgP31W9N
-	 LGifJ85Hx33xT3lOMxayTrWR+QZu/nx/s6tP51gM=
+	b=mCyx7Yy4598ZGP7KeDAfeg8zNXvKt6O9QIIJpdELv5PAFGueyKrBKEwX3WxX2F5Ec
+	 wa1O4wqWZ+P+4/q8B8Jcio6GOKFaRB1FvFsoawZHJrUozUI27nF/c8FQJXC/ha7Hqe
+	 aIdirlmNOheMJ3DLLqiXfRS/0Zb9iCik0cka6pKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgA1OKV (ORCPT
+        id S1729149AbgA1OKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:10:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58960 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:10:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729126AbgA1OKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:10:15 -0500
+        id S1726697AbgA1OKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:10:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D267F24688;
-        Tue, 28 Jan 2020 14:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 170C624681;
+        Tue, 28 Jan 2020 14:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220614;
-        bh=4tsbLvzpH6KACgrSusRTvQLdfeOm9HSCRWokT2heKuA=;
+        s=default; t=1580220619;
+        bh=3iagYyoCa+nNB3Jidm/+3b53P4fbZ9mjjofOdLx9dlo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bbK3X02aJ/YZPNhaR0e5gJViLd7cYTV6NW3Ojo0O1T33NBA7sfz2xyz1wl0iONBdL
-         esiyzCXEDgiJfmr5u67K16O7aldI9iTTNZaog1AuCKUE3g51ppn//Nhvnk91U1fo/6
-         nmogmQchJHr3HC/+ACqw+N8HcIMd1rawMBunkHP0=
+        b=oGO7Hmjpfx2fsYR8yx6vYVaKxTSGOuNoXuQAqUi4/fV5rxKjJt4z8YakvNbVuCTPI
+         Gk6lmJVLK4UKSDtS5KLWJoE40w3G74tfU2VCKgJbagC10jerN4ttjFz+M4f0HM6z+v
+         rNAaAQJ1A2Uo1BrWRCHMdt+1lzh9ny6aSCnsHp0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Martin Sperl <kernel@martin.sperl.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 040/183] rtc: 88pm860x: fix unintended sign extension
-Date:   Tue, 28 Jan 2020 15:04:19 +0100
-Message-Id: <20200128135834.007102906@linuxfoundation.org>
+Subject: [PATCH 4.4 072/183] spi: bcm2835aux: fix driver to not allow 65535 (=-1) cs-gpios
+Date:   Tue, 28 Jan 2020 15:04:51 +0100
+Message-Id: <20200128135837.194143955@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,88 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Martin Sperl <kernel@martin.sperl.org>
 
-[ Upstream commit dc9e47160626cdb58d5c39a4f43dcfdb27a5c004 ]
+[ Upstream commit 509c583620e9053e43d611bf1614fc3d3abafa96 ]
 
-Shifting a u8 by 24 will cause the value to be promoted to an integer. If
-the top bit of the u8 is set then the following conversion to an unsigned
-long will sign extend the value causing the upper 32 bits to be set in
-the result.
+The original driver by default defines num_chipselects as -1.
+This actually allicates an array of 65535 entries in
+of_spi_register_master.
 
-Fix this by casting the u8 value to an unsigned long before the shift.
+There is a side-effect for buggy device trees that (contrary to
+dt-binding documentation) have no cs-gpio defined.
 
-Detected by CoverityScan, CID#144925-144928 ("Unintended sign extension")
+This mode was never supported by the driver due to limitations
+of native cs and additional code complexity and is explicitly
+not stated to be implemented.
 
-Fixes: 008b30408c40 ("mfd: Add rtc support to 88pm860x")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To keep backwards compatibility with such buggy DTs we limit
+the number of chip_selects to 1, as for all practical purposes
+it is only ever realistic to use a single chip select in
+native cs mode without negative side-effects.
+
+Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm860x.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/spi/spi-bcm2835aux.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 166faae3a59cd..7d3e5168fcefc 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -115,11 +115,13 @@ static int pm860x_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
- 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
- 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
--	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
-+	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
-+		(buf[5] << 8) | buf[7];
- 
- 	/* load 32-bit read-only counter */
- 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -145,7 +147,8 @@ static int pm860x_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 
- 	/* load 32-bit read-only counter */
- 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	base = ticks - data;
- 	dev_dbg(info->dev, "set base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -170,10 +173,12 @@ static int pm860x_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
- 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
- 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
--	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
-+	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
-+		(buf[5] << 8) | buf[7];
- 
- 	pm860x_bulk_read(info->i2c, PM8607_RTC_EXPIRE1, 4, buf);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -198,11 +203,13 @@ static int pm860x_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
- 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
- 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
--	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
-+	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
-+		(buf[5] << 8) | buf[7];
- 
- 	/* load 32-bit read-only counter */
- 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
+diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
+index ca655593c5e0e..1cedd640705f3 100644
+--- a/drivers/spi/spi-bcm2835aux.c
++++ b/drivers/spi/spi-bcm2835aux.c
+@@ -390,7 +390,18 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, master);
+ 	master->mode_bits = BCM2835_AUX_SPI_MODE_BITS;
+ 	master->bits_per_word_mask = SPI_BPW_MASK(8);
+-	master->num_chipselect = -1;
++	/* even though the driver never officially supported native CS
++	 * allow a single native CS for legacy DT support purposes when
++	 * no cs-gpio is configured.
++	 * Known limitations for native cs are:
++	 * * multiple chip-selects: cs0-cs2 are all simultaniously asserted
++	 *     whenever there is a transfer -  this even includes SPI_NO_CS
++	 * * SPI_CS_HIGH: is ignores - cs are always asserted low
++	 * * cs_change: cs is deasserted after each spi_transfer
++	 * * cs_delay_usec: cs is always deasserted one SCK cycle after
++	 *     a spi_transfer
++	 */
++	master->num_chipselect = 1;
+ 	master->transfer_one = bcm2835aux_spi_transfer_one;
+ 	master->handle_err = bcm2835aux_spi_handle_err;
+ 	master->dev.of_node = pdev->dev.of_node;
 -- 
 2.20.1
 
