@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA5CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D45C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DA12468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C24B24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220171;
-	bh=Ch9YBjU79Ys/nbghlzg8QCFHjX8KPmmFLde/BTwlU7c=;
+	s=default; t=1580220174;
+	bh=L5tXybbfFwLNhPwySu2m1ddDBS2AwIZyIJJ34ryLuCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WDrHfR7E1RZ5ecTioyw8INx+t2agFBwo7enb055/B7qY/CI/h+P6maOdkStJ73Tws
-	 T7H89nMJM+lEzA+zd/BLdsLYyoy1n+XxxuhResVStN5oZCIcnYpbInGH1jp7mYqQkG
-	 qpZJ9S6kF09gy1xW8toUz2C8b/xdKwzXxP3ip4WY=
+	b=BcP8Ky7SJrHPUjUqk4JEU1xfbUY+mi3UklPCL8E+OUjfkJLJFEMFYzV+aJ0semNYk
+	 vhYRfvTOJH2PDgIeBYlAQovCSvv0+WpswCta8j7sIvWPyVXRcyiIF8Sg0Z5ii+zgbb
+	 94jcsz12Ffx5mpZ5CSHCc9cLLR7FWzMo9Q2pvfAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbgA1OCu (ORCPT
+        id S1727755AbgA1OCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:02:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49212 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:02:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726733AbgA1OCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:02:48 -0500
+        id S1726742AbgA1OCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:02:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A2AB24690;
-        Tue, 28 Jan 2020 14:02:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3A2B205F4;
+        Tue, 28 Jan 2020 14:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220166;
-        bh=Ch9YBjU79Ys/nbghlzg8QCFHjX8KPmmFLde/BTwlU7c=;
+        s=default; t=1580220169;
+        bh=L5tXybbfFwLNhPwySu2m1ddDBS2AwIZyIJJ34ryLuCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DrUYEcGVgVR1be9UphZPWYw4TYLB8eZ7vd/Col2sCIvk0rJ13qU5sJFT9YJ/FQ75c
-         yWjwZwiLx9Zk2FbcdFqzY+c3C/89JRMcp57rAKwO8Un9mlO9esiVq+X9a8dj9ZFNNH
-         WJlBkHw4mMlj2CTDcVklXpYLZRNVQN9AlhiwRdOE=
+        b=RXEXinvH3fPTC5uiAgLlfoWR8U13hDI/rgzanIW+ZAxldEx0ZsaZzU0Rden+GEUUf
+         iYp9iJdX2eD63BW1itnOotJm+6KNdgGSWc4VcEDhtrAoRZMLwnLbUnJNnBiLFcQu6S
+         Ym8DVI6SURQaODyNxF4gMaid7+MdEIjYuU1SElIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 012/104] net_sched: use validated TCA_KIND attribute in tc_new_tfilter()
-Date:   Tue, 28 Jan 2020 14:59:33 +0100
-Message-Id: <20200128135818.937721268@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+ad8ca40ecd77896d51e2@syzkaller.appspotmail.com,
+        David Miller <davem@davemloft.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>
+Subject: [PATCH 5.4 013/104] net-sysfs: Fix reference count leak
+Date:   Tue, 28 Jan 2020 14:59:34 +0100
+Message-Id: <20200128135819.067629019@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -64,103 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit 36d79af7fb59d6d9106feb9c1855eb93d6d53fe6 ]
+[ Upstream commit cb626bf566eb4433318d35681286c494f04fedcc ]
 
-sysbot found another issue in tc_new_tfilter().
-We probably should use @name which contains the sanitized
-version of TCA_KIND.
+Netdev_register_kobject is calling device_initialize. In case of error
+reference taken by device_initialize is not given up.
 
-BUG: KMSAN: uninit-value in string_nocheck lib/vsprintf.c:608 [inline]
-BUG: KMSAN: uninit-value in string+0x522/0x690 lib/vsprintf.c:689
-CPU: 1 PID: 10753 Comm: syz-executor.1 Not tainted 5.5.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- string_nocheck lib/vsprintf.c:608 [inline]
- string+0x522/0x690 lib/vsprintf.c:689
- vsnprintf+0x207d/0x31b0 lib/vsprintf.c:2574
- __request_module+0x2ad/0x11c0 kernel/kmod.c:143
- tcf_proto_lookup_ops+0x241/0x720 net/sched/cls_api.c:139
- tcf_proto_create net/sched/cls_api.c:262 [inline]
- tc_new_tfilter+0x2a4e/0x5010 net/sched/cls_api.c:2058
- rtnetlink_rcv_msg+0xcb7/0x1570 net/core/rtnetlink.c:5415
- netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2477
- rtnetlink_rcv+0x50/0x60 net/core/rtnetlink.c:5442
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0x1248/0x14d0 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:639 [inline]
- sock_sendmsg net/socket.c:659 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2330
- ___sys_sendmsg net/socket.c:2384 [inline]
- __sys_sendmsg+0x451/0x5f0 net/socket.c:2417
- __do_sys_sendmsg net/socket.c:2426 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2424
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2424
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45b349
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f88b3948c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f88b39496d4 RCX: 000000000045b349
-RDX: 0000000000000000 RSI: 00000000200001c0 RDI: 0000000000000003
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000099f R14: 00000000004cb163 R15: 000000000075bfd4
+Drivers are supposed to call free_netdev in case of error. In non-error
+case the last reference is given up there and device release sequence
+is triggered. In error case this reference is kept and the release
+sequence is never started.
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
- slab_alloc_node mm/slub.c:2774 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4382
- __kmalloc_reserve net/core/skbuff.c:141 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:209
- alloc_skb include/linux/skbuff.h:1049 [inline]
- netlink_alloc_large_skb net/netlink/af_netlink.c:1174 [inline]
- netlink_sendmsg+0x7d3/0x14d0 net/netlink/af_netlink.c:1892
- sock_sendmsg_nosec net/socket.c:639 [inline]
- sock_sendmsg net/socket.c:659 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2330
- ___sys_sendmsg net/socket.c:2384 [inline]
- __sys_sendmsg+0x451/0x5f0 net/socket.c:2417
- __do_sys_sendmsg net/socket.c:2426 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2424
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2424
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Fix this by setting reg_state as NETREG_UNREGISTERED if registering
+fails.
 
-Fixes: 6f96c3c6904c ("net_sched: fix backward compatibility for TCA_KIND")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
+This is the rootcause for couple of memory leaks reported by Syzkaller:
+
+BUG: memory leak unreferenced object 0xffff8880675ca008 (size 256):
+  comm "netdev_register", pid 281, jiffies 4294696663 (age 6.808s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<0000000058ca4711>] kmem_cache_alloc_trace+0x167/0x280
+    [<000000002340019b>] device_add+0x882/0x1750
+    [<000000001d588c3a>] netdev_register_kobject+0x128/0x380
+    [<0000000011ef5535>] register_netdevice+0xa1b/0xf00
+    [<000000007fcf1c99>] __tun_chr_ioctl+0x20d5/0x3dd0
+    [<000000006a5b7b2b>] tun_chr_ioctl+0x2f/0x40
+    [<00000000f30f834a>] do_vfs_ioctl+0x1c7/0x1510
+    [<00000000fba062ea>] ksys_ioctl+0x99/0xb0
+    [<00000000b1c1b8d2>] __x64_sys_ioctl+0x78/0xb0
+    [<00000000984cabb9>] do_syscall_64+0x16f/0x580
+    [<000000000bde033d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<00000000e6ca2d9f>] 0xffffffffffffffff
+
+BUG: memory leak
+unreferenced object 0xffff8880668ba588 (size 8):
+  comm "kobject_set_nam", pid 286, jiffies 4294725297 (age 9.871s)
+  hex dump (first 8 bytes):
+    6e 72 30 00 cc be df 2b                          nr0....+
+  backtrace:
+    [<00000000a322332a>] __kmalloc_track_caller+0x16e/0x290
+    [<00000000236fd26b>] kstrdup+0x3e/0x70
+    [<00000000dd4a2815>] kstrdup_const+0x3e/0x50
+    [<0000000049a377fc>] kvasprintf_const+0x10e/0x160
+    [<00000000627fc711>] kobject_set_name_vargs+0x5b/0x140
+    [<0000000019eeab06>] dev_set_name+0xc0/0xf0
+    [<0000000069cb12bc>] netdev_register_kobject+0xc8/0x320
+    [<00000000f2e83732>] register_netdevice+0xa1b/0xf00
+    [<000000009e1f57cc>] __tun_chr_ioctl+0x20d5/0x3dd0
+    [<000000009c560784>] tun_chr_ioctl+0x2f/0x40
+    [<000000000d759e02>] do_vfs_ioctl+0x1c7/0x1510
+    [<00000000351d7c31>] ksys_ioctl+0x99/0xb0
+    [<000000008390040a>] __x64_sys_ioctl+0x78/0xb0
+    [<0000000052d196b7>] do_syscall_64+0x16f/0x580
+    [<0000000019af9236>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<00000000bc384531>] 0xffffffffffffffff
+
+v3 -> v4:
+  Set reg_state to NETREG_UNREGISTERED if registering fails
+
+v2 -> v3:
+* Replaced BUG_ON with WARN_ON in free_netdev and netdev_release
+
+v1 -> v2:
+* Relying on driver calling free_netdev rather than calling
+  put_device directly in error path
+
+Reported-by: syzbot+ad8ca40ecd77896d51e2@syzkaller.appspotmail.com
+Cc: David Miller <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_api.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ net/core/dev.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/sched/cls_api.c
-+++ b/net/sched/cls_api.c
-@@ -2055,9 +2055,8 @@ replay:
- 							       &chain_info));
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -9082,8 +9082,10 @@ int register_netdevice(struct net_device
+ 		goto err_uninit;
  
- 		mutex_unlock(&chain->filter_chain_lock);
--		tp_new = tcf_proto_create(nla_data(tca[TCA_KIND]),
--					  protocol, prio, chain, rtnl_held,
--					  extack);
-+		tp_new = tcf_proto_create(name, protocol, prio, chain,
-+					  rtnl_held, extack);
- 		if (IS_ERR(tp_new)) {
- 			err = PTR_ERR(tp_new);
- 			goto errout_tp;
+ 	ret = netdev_register_kobject(dev);
+-	if (ret)
++	if (ret) {
++		dev->reg_state = NETREG_UNREGISTERED;
+ 		goto err_uninit;
++	}
+ 	dev->reg_state = NETREG_REGISTERED;
+ 
+ 	__netdev_update_features(dev);
 
 
