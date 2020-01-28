@@ -2,201 +2,248 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB08C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BF0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 231AC2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:45:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="kRAT4hsq"
+	by mail.kernel.org (Postfix) with ESMTP id D22812073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:48:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgA1PpU (ORCPT
+        id S1726666AbgA1Psa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:45:20 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37360 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgA1PpU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:45:20 -0500
-Received: by mail-ed1-f67.google.com with SMTP id cy15so15181089edb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:45:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=85X9GHeVc4w641RnmcMhBwx63v1ZtyBTAYXogoHDpfQ=;
-        b=kRAT4hsqeY1G2RqpIvDJyOlRh+9IPwSvzJ/6s1rAVlOpPhCcFoGOjdkvx+lJIou22U
-         VVU9fyEDF9xoeFWlQgSJlLB9AFO7Po/f3AESKI1fIJY9o3c0h30JszruELCuVhqjQrtP
-         Bqthr8KemN93kQvyjwLMqQ+8/rVK2HzSj8qfZaxP/DgDKEJYsTliVTBvKvehdOpBNq1s
-         ZBjJIhTz5sJ7wJFoWUTveJIYUJ8+dsVYXACE71ZUPrvCJdqMBBGxFphYlq6Qu3QOPcys
-         dny8kA8WYCOGSTZRVu2v3VG14MqSM6tlTPAh9mCYr2lJmWtW75jGexV3+LEwvf0f89P8
-         wOZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=85X9GHeVc4w641RnmcMhBwx63v1ZtyBTAYXogoHDpfQ=;
-        b=WsorGQ+WV5PTQLu5AeXsx047/sNDqnk1KEdiojraILqOH6wNjQTFSSRQjuGZGwNiJz
-         1M+TBb1wcib04wLGim5cXXr7PDy8dxjPdlc90yacCm8Z9x6hS/R0n+kK9KDcrtKSdxo2
-         Q2m4lPT28jofgmb/xq5LKm4xcWg+q3H41nsWeprSF0YNdMYAg9S4pTzAs58TCMVspTyh
-         GFOOJp3V095I0ZtTWU11gagoT746ogPynbx7pxOeXiHCaTTURE9UVw6o23CQhgoZS4g0
-         9CLuGnPNyQm/EeaVQvhqjrLZmXrDGiLbQON2sOVP8mbvqEjZX7tC47BHQZP1ARtkutyK
-         RHKg==
-X-Gm-Message-State: APjAAAW8u2LeucVwFvXV/nwVS1BiOS6SiyFwlbAH65MLOqU2u7NC5O75
-        9dI9s7pHPwZs5kg/7/fEOdpfbRul2OkfQ1bzfL8+u17+ZA==
-X-Google-Smtp-Source: APXvYqxW2+QQA/TNUC70Hc/xwNtkpkqJcBLbjw6JiLi1VTz4Pd/sGtiHW49upzu1IC3E6RN0GzPW9dhwgOYYh7dUSj0=
-X-Received: by 2002:a50:e108:: with SMTP id h8mr3668227edl.196.1580226317332;
- Tue, 28 Jan 2020 07:45:17 -0800 (PST)
+        Tue, 28 Jan 2020 10:48:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:59774 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbgA1Ps3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:48:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49F9A31B;
+        Tue, 28 Jan 2020 07:48:28 -0800 (PST)
+Received: from localhost (unknown [10.1.198.81])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF8AA3F68E;
+        Tue, 28 Jan 2020 07:48:27 -0800 (PST)
+Date:   Tue, 28 Jan 2020 15:48:26 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        dietmar.eggemann@arm.com, peterz@infradead.org, mingo@redhat.com,
+        ggherdovich@suse.cz, vincent.guittot@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+Subject: Re: [PATCH v2 3/6] arm64/kvm: disable access to AMU registers from
+ kvm guests
+Message-ID: <20200128154826.GB17411@arm.com>
+References: <20191218182607.21607-1-ionela.voinescu@arm.com>
+ <20191218182607.21607-4-ionela.voinescu@arm.com>
+ <bc3f582c-9aed-8052-d0cb-b39c76c8ce73@arm.com>
 MIME-Version: 1.0
-References: <000000000000143de7059d2ba3e5@google.com> <000000000000fdbd71059d32a906@google.com>
- <CAHC9VhS_Bfywhp+6H03bY7LrQsBz+io672pSS0DpiZKFiz4L6g@mail.gmail.com>
- <850873b8-8a30-58e5-ad3c-86fb35296130@tycho.nsa.gov> <CAFqZXNuxFTKXVZDpPGCTHifn_AeCdVmP+PZrMDKDOYiLOWtsUA@mail.gmail.com>
-In-Reply-To: <CAFqZXNuxFTKXVZDpPGCTHifn_AeCdVmP+PZrMDKDOYiLOWtsUA@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 28 Jan 2020 10:45:05 -0500
-Message-ID: <CAHC9VhR9a1xEB3gXUkb4KRVkwXUAo-701ZumN2OTOmJ7r5ez8g@mail.gmail.com>
-Subject: Re: possible deadlock in sidtab_sid2str_put
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bc3f582c-9aed-8052-d0cb-b39c76c8ce73@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 9:27 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> On Tue, Jan 28, 2020 at 2:44 PM Stephen Smalley <sds@tycho.nsa.gov> wrote:
-> > On 1/28/20 8:39 AM, Paul Moore wrote:
-> > > On Tue, Jan 28, 2020 at 7:50 AM syzbot
-> > > <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com> wrote:
-> > >>
-> > >> syzbot has found a reproducer for the following crash on:
-> > >>
-> > >> HEAD commit:    b0be0eff Merge tag 'x86-pti-2020-01-28' of git://git.kerne..
-> > >> git tree:       upstream
-> > >> console output: https://syzkaller.appspot.com/x/log.txt?x=1432aebee00000
-> > >> kernel config:  https://syzkaller.appspot.com/x/.config?x=9784e57c96a92f20
-> > >> dashboard link: https://syzkaller.appspot.com/bug?extid=61cba5033e2072d61806
-> > >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10088e95e00000
-> > >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13fa605ee00000
-> > >>
-> > >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > >> Reported-by: syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com
-> > >>
-> > >> =====================================================
-> > >> WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-> > >> 5.5.0-syzkaller #0 Not tainted
-> > >> -----------------------------------------------------
-> > >> syz-executor305/10624 [HC0[0]:SC0[2]:HE1:SE0] is trying to acquire:
-> > >> ffff888098c14098 (&(&s->cache_lock)->rlock){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-> > >> ffff888098c14098 (&(&s->cache_lock)->rlock){+.+.}, at: sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-> > >>
-> > >> and this task is already holding:
-> > >> ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-> > >> ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-> > >> which would create a new lock dependency:
-> > >>   (&(&nf_conntrack_locks[i])->rlock){+.-.} -> (&(&s->cache_lock)->rlock){+.+.}
-> > >>
-> > >> but this new dependency connects a SOFTIRQ-irq-safe lock:
-> > >>   (&(&nf_conntrack_locks[i])->rlock){+.-.}
-> > >>
-> > >> ... which became SOFTIRQ-irq-safe at:
-> > >>    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-> > >>    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-> > >>    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-> > >>    spin_lock include/linux/spinlock.h:338 [inline]
-> > >>    nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-> > >
-> > > ...
-> > >
-> > >> to a SOFTIRQ-irq-unsafe lock:
-> > >>   (&(&s->cache_lock)->rlock){+.+.}
-> > >>
-> > >> ... which became SOFTIRQ-irq-unsafe at:
-> > >> ...
-> > >>    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-> > >>    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-> > >>    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-> > >>    spin_lock include/linux/spinlock.h:338 [inline]
-> > >>    sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-> > >>    sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-> > >>    sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-> > >>    sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-> > >>    security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-> > >>    security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-> > >>    avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
-> > >>    common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
-> > >>    slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
-> > >>    avc_audit security/selinux/include/avc.h:140 [inline]
-> > >>    avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
-> > >>    inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
-> > >>    selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
-> > >>    security_mmap_file+0xa4/0x1e0 security/security.c:1482
-> > >>    vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
-> > >
-> > > ...
-> > >
-> > >> other info that might help us debug this:
-> > >>
-> > >>   Possible interrupt unsafe locking scenario:
-> > >>
-> > >>         CPU0                    CPU1
-> > >>         ----                    ----
-> > >>    lock(&(&s->cache_lock)->rlock);
-> > >>                                 local_irq_disable();
-> > >>                                 lock(&(&nf_conntrack_locks[i])->rlock);
-> > >>                                 lock(&(&s->cache_lock)->rlock);
-> > >>    <Interrupt>
-> > >>      lock(&(&nf_conntrack_locks[i])->rlock);
-> > >>
-> > >>   *** DEADLOCK ***
-> > >>
-> > >> 4 locks held by syz-executor305/10624:
-> > >>   #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnl_lock net/netfilter/nfnetlink.c:62 [inline]
-> > >>   #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnetlink_rcv_msg+0x9ee/0xfb0 net/netfilter/nfnetlink.c:224
-> > >>   #1: ffff8880836415d8 (nlk_cb_mutex-NETFILTER){+.+.}, at: netlink_dump+0xe7/0xfb0 net/netlink/af_netlink.c:2199
-> > >>   #2: ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-> > >>   #2: ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-> > >>   #3: ffffffff8b7df008 (&selinux_ss.policy_rwlock){.+.?}, at: security_sid_to_context_core+0x1ca/0x3c0 security/selinux/ss/services.c:1344
-> > >
-> > > I think this is going to be tricky to fix due to the differing
-> > > contexts from which sidtab_sid2str_put() may be called.  We already
-> > > have a check for !in_task() in sidtab_sid2str_put(), do we want to add
-> > > a check for !in_serving_softirq() too?
-> >
-> > No, we should just use spin_lock_irqsave/unlock_irqrestore() IMHO, but
-> > that then means we need to re-evaluate the performance gain of this change.
+On Monday 27 Jan 2020 at 15:33:26 (+0000), Valentin Schneider wrote:
+> On 18/12/2019 18:26, Ionela Voinescu wrote:
+> > diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
+> > index 6e5d839f42b5..dd20fb185d56 100644
+> > --- a/arch/arm64/include/asm/kvm_arm.h
+> > +++ b/arch/arm64/include/asm/kvm_arm.h
+> > @@ -266,10 +266,11 @@
+> >  #define CPTR_EL2_TFP_SHIFT 10
+> >  
+> >  /* Hyp Coprocessor Trap Register */
+> > -#define CPTR_EL2_TCPAC	(1 << 31)
+> > -#define CPTR_EL2_TTA	(1 << 20)
+> > -#define CPTR_EL2_TFP	(1 << CPTR_EL2_TFP_SHIFT)
+> >  #define CPTR_EL2_TZ	(1 << 8)
+> > +#define CPTR_EL2_TFP	(1 << CPTR_EL2_TFP_SHIFT)
+> > +#define CPTR_EL2_TTA	(1 << 20)
+> > +#define CPTR_EL2_TAM	(1 << 30)
+> > +#define CPTR_EL2_TCPAC	(1 << 31)
+> 
+> Nit: why the #define movement? Couldn't that just be added beneath
+> CPTR_EL2_TCPAC?
 >
-> I just tested a patch that switches to the IRQ-disabling locking under
-> the systemd-journald scenario from [1] and the impact seems not that
-> bad - the security_secid_to_secctx() function only takes up 3.18% of
-> total run time vs. ~2% I reported in the original patch
-> (d97bd23c2d7d). I'll post the patch shortly.
+
+It was a 'while here' thing done wrong. I was looking at the CPACR bits
+and it led me to believe that the order of bits in the rest of the file
+was from least significant to most significant and I thought I'll
+reorder this as well. But looking again I see that it was done
+correctly the first time, according to most of the file. My bad!
+
+> >  #define CPTR_EL2_RES1	0x000032ff /* known RES1 bits in CPTR_EL2 */
+> >  #define CPTR_EL2_DEFAULT	CPTR_EL2_RES1
+> >  
+> > diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
+> > index 72fbbd86eb5e..0bca87a2621f 100644
+> > --- a/arch/arm64/kvm/hyp/switch.c
+> > +++ b/arch/arm64/kvm/hyp/switch.c
+> > @@ -90,6 +90,17 @@ static void activate_traps_vhe(struct kvm_vcpu *vcpu)
+> >  	val = read_sysreg(cpacr_el1);
+> >  	val |= CPACR_EL1_TTA;
+> >  	val &= ~CPACR_EL1_ZEN;
+> > +
+> > +	/*
+> > +	 * With VHE enabled, we have HCR_EL2.{E2H,TGE} = {1,1}. Note that in
+> > +	 * this case CPACR_EL1 has the same bit layout as CPTR_EL2, and
+> > +	 * CPACR_EL1 accessing instructions are redefined to access CPTR_EL2.
+> > +	 * Therefore use CPTR_EL2.TAM bit reference to activate AMU register
+> > +	 * traps.
+> > +	 */
+> > +
+> > +	val |= CPTR_EL2_TAM;
+> > +
+> 
+> Hmm so this is a bit confusing for me, I've rewritten that part of the
+> email too many times (didn't help that I'm far from being a virt guru).
+> Rectifications are most welcome.
+> 
+
+Yes, this is definitely not straight-forward. It took me a while to
+retrace my steps in regards to this functionality as well.
+
+> 
+> First, AFAICT we *don't* have HCR_EL2.TGE set anymore at this point, it's
+> cleared just a bit earlier in __activate_traps().
+> 
+
+First of all when I wrote the above I believed that when this function is
+called we'll have HCR_EL2.{E2H,TGE} = {1,1}, which reflects running on
+the host with general exceptions trapped to EL2. So thank you for the
+correction.
+
+But I don't believe running with TGE cleared changes anything at this
+point. First of all I think we can only run the code here at EL2.
+Initially I thought we might run it at EL1 for nested virtualisation
+but for nested OSs we'll use NVHE so that problem goes away.
+
+So when we run this code at EL2, accesses to EL1 registers are
+redirected to their EL2 equivalents due to HCR_EL2.{E2H} = {1}, with no
+impact from HCR_EL2.{TGE} = {0} in regards to the setting of the TAM bit
+for CPACR_EL1/CPTR_EL2. Therefore, this code will result in AMU accesses
+being trapped to EL2 when coming from EL0 or EL1 on the guest side, once
+we enter guest.
+
+> Then, your comment suggests that when we're running this code, CPACR_EL1
+> accesses are rerouted to CPTR_EL2. Annoyingly this isn't mentioned in
+> the doc of CPACR_EL1, but D5.6.3 does say
+> 
+> """
+> When ARMv8.1-VHE is implemented, and HCR_EL2.E2H is set to 1, when executing
+> at EL2, some EL1 System register access instructions are redefined to access
+> the equivalent EL2 register.
+> """
+> 
+> And CPACR_EL1 is part of these, so far so good. Now, the thing is
+> the doc for CPACR_EL1 *doesn't* mention any TAM bit - but CPTR_EL2 does.
+> I believe what *do* want here is to set CPTR_EL2.TAM (which IIUC we end
+> up doing via the rerouting).
+> 
+
+Right! The error of my comment is that I believed that E2H and TGE
+together determine the re-mapping or CPACR_EL1 to CPTR_EL2. But
+actually, E2H determines this redirection when running at EL2, while TGE
+only determines the current trapping behaviour: if we run with TGE=0,
+we're running on the guest and CPACR_EL1 takes effect, and when we run
+on the host with TGE=1, CPTR_EL2 takes effect.
+
+I believe the reason CPACR_EL1 does not have a TAM bit is that for
+trapping at EL1 we have the AMU register AMUSERENR_EL0 to trap accesses
+from EL0.
+
+When we run on the host side with HCR_EL2.{E2H,TGE} = {1,1}, the
+CPTR_EL2.TAM bit takes effect.
+
+I will modify my comment.
+
+> So, providing I didn't get completely lost on the way, I have to ask:
+> why do we use CPACR_EL1 here? Couldn't we use CPTR_EL2 directly?
 >
-> [1] https://bugzilla.redhat.com/show_bug.cgi?id=1733259, i.e.:
->     cat /dev/urandom | base64 | logger &
->     timeout 30s perf record -p $(pidof systemd-journald) -a -g
 
-I'm skeptical of the real world impact of disabling IRQs here,
-although I'm not sure off the top of my head how we could manage a
-cache (I'm thinking more about adding to, and evicting entries, from
-the cache) without some form of locking.  Perhaps we look into per-cpu
-caching?
+No, all good so far :). I believe the reason is to keep the kernel as
+generic as possible with the accesses to EL1 registers where a generic
+kernel should be running. The fact that with VHE we know to be running
+at EL2 and this code is only called at EL2 is more of an implementation
+detail that should be hidden behind the VHE abstraction.
 
--- 
-paul moore
-www.paul-moore.com
+
+This being said I'm still not sure if I should be using here a
+CPTR_EL2.TAM bit or a CPACR_EL1.TAM bit. Functionally it would be the
+same but the use of one or another will 'break' some kind of
+abstraction logic :).
+
+Let me know if you have a preference.
+
+
+>
+> >  	if (update_fp_enabled(vcpu)) {
+> >  		if (vcpu_has_sve(vcpu))
+> >  			val |= CPACR_EL1_ZEN;
+> > diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> > index 9f2165937f7d..940ab9b4c98b 100644
+> > --- a/arch/arm64/kvm/sys_regs.c
+> > +++ b/arch/arm64/kvm/sys_regs.c
+> > @@ -1003,6 +1003,20 @@ static bool access_pmuserenr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+> >  	{ SYS_DESC(SYS_PMEVTYPERn_EL0(n)),					\
+> >  	  access_pmu_evtyper, reset_unknown, (PMEVTYPER0_EL0 + n), }
+> >  
+> > +static bool access_amu(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+> > +			     const struct sys_reg_desc *r)
+> > +{
+> > +	kvm_inject_undefined(vcpu);
+> > +
+> > +	return false;
+> > +}
+> > +
+> > +/* Macro to expand the AMU counter and type registers*/
+> > +#define AMU_AMEVCNTR0_EL0(n) { SYS_DESC(SYS_AMEVCNTR0_EL0(n)), access_amu }
+> > +#define AMU_AMEVTYPE0_EL0(n) { SYS_DESC(SYS_AMEVTYPE0_EL0(n)), access_amu }
+> > +#define AMU_AMEVCNTR1_EL0(n) { SYS_DESC(SYS_AMEVCNTR1_EL0(n)), access_amu }
+> > +#define AMU_AMEVTYPE1_EL0(n) { SYS_DESC(SYS_AMEVTYPE1_EL0(n)), access_amu }
+> > +
+> 
+> You could save a *whopping* two lines with something like:
+> 
+> #define AMU_AMEVCNTR_EL0(group, n) { SYS_DESC(SYS_AMEVCNTR##group##_EL0(n)), access_amu }
+> #define AMU_AMEVTYPE_EL0(group, n) { SYS_DESC(SYS_AMEVTYPE##group##_EL0(n)), access_amu }
+> 
+
+Will do!
+
+> Though it doesn't help shortening the big register list below.
+> 
+> >  static bool trap_ptrauth(struct kvm_vcpu *vcpu,
+> >  			 struct sys_reg_params *p,
+> >  			 const struct sys_reg_desc *rd)
+> > @@ -1078,8 +1092,12 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
+> >  			 (u32)r->CRn, (u32)r->CRm, (u32)r->Op2);
+> >  	u64 val = raz ? 0 : read_sanitised_ftr_reg(id);
+> >  
+> > -	if (id == SYS_ID_AA64PFR0_EL1 && !vcpu_has_sve(vcpu)) {
+> > -		val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
+> > +	if (id == SYS_ID_AA64PFR0_EL1) {
+> > +		if (!vcpu_has_sve(vcpu))
+> > +			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
+> > +		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
+> > +	} else if (id == SYS_ID_PFR0_EL1) {
+> > +		val &= ~(0xfUL << ID_PFR0_AMU_SHIFT);
+> >  	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
+> >  		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
+> >  			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
+> 
+> Could almost turn the thing into a switch case at this point.
+
+
+Right! It would definitely read better.
+
+Thanks,
+Ionela.
