@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1494EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32375C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3EA207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A81221739
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221688;
-	bh=N9JCsctYS6DLxLH6OeDZqSnCsjKp1WVIucQTWoyQmh4=;
+	s=default; t=1580221692;
+	bh=Uay/Pp++OQfKvHnmq/jbjr3sv9SNyp5g89epRGIZK0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=06atHBDDMPO7FjVMBRHLxJlAW3OnjR6ajZNVgCi93z5Qgbbsmm3nAVyc9zad1rTDp
-	 B+z8SXee45gYomD7IU2QwWWNB/5qs6+vu5/kq82ybqu7aGYGItrTE64bRa6BA1BKuW
-	 McbL1ltTA5UVmc1MBS/BqkDIi7bdlbFIJQ/C3ByY=
+	b=oS6z6pvi7jSGsKIenYGCrEsmPjjNG2OjDiXLpGpRka6v86Bcan15xX9v59HeMHFh8
+	 xoudbcC6tMkQC5xT47ffdcjqBMKqjiVxjV7T880oIKe7NMIWOvO8AOQUE8pagiKWBX
+	 Pe8IrThRaR2REwvoRZ0ogVT/n1rp/IGSeKAr8VGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733247AbgA1O2H (ORCPT
+        id S1733266AbgA1O2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:28:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55890 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:28:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387446AbgA1O2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:28:01 -0500
+        id S2387450AbgA1O2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:28:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B998D21739;
-        Tue, 28 Jan 2020 14:27:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FB6B21739;
+        Tue, 28 Jan 2020 14:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221680;
-        bh=N9JCsctYS6DLxLH6OeDZqSnCsjKp1WVIucQTWoyQmh4=;
+        s=default; t=1580221682;
+        bh=Uay/Pp++OQfKvHnmq/jbjr3sv9SNyp5g89epRGIZK0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2MsLX1yG7ViXqZOpbB1Fb7qw9Q4jZus5kZWjbba4znc7g1Op77n/Ij5XAzfuabuZn
-         uaiL0DcbhI+9QCxlgBj+DxDPXow9ERPOjaqsWjwwPMXJZ2T8Qpd+fe0GWvuK50AdRn
-         /tsXyAVn5qlMHIOb+8pBtPxDZpuGKGcSBjoQiIXM=
+        b=1FIdGu5PQy5OsNhcXqPL4sMUV4qZX2Wsy/k3p3MBSiDP43de/ExleiFPFffkk1Z/T
+         O5CdRc8EdZ4kkt++yyQmzxfUy4cTPwyvKNfNdpg14i3l2gqk0UFbhpqpsk3To51u2W
+         /J9p4o9UNSprJGhC2QO00eK6N5PRd567H2zbCuCE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
         Finn Thain <fthain@telegraphics.com.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 47/92] net/sonic: Fix interface error stats collection
-Date:   Tue, 28 Jan 2020 15:08:15 +0100
-Message-Id: <20200128135815.129096353@linuxfoundation.org>
+Subject: [PATCH 4.19 48/92] net/sonic: Fix receive buffer handling
+Date:   Tue, 28 Jan 2020 15:08:16 +0100
+Message-Id: <20200128135815.256347124@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -62,105 +62,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 427db97df1ee721c20bdc9a66db8a9e1da719855 upstream.
+commit 9e311820f67e740f4fb8dcb82b4c4b5b05bdd1a5 upstream.
 
-The tx_aborted_errors statistic should count packets flagged with EXD,
-EXC, FU, or BCM bits because those bits denote an aborted transmission.
-That corresponds to the bitmask 0x0446, not 0x0642. Use macros for these
-constants to avoid mistakes. Better to leave out FIFO Underruns (FU) as
-there's a separate counter for that purpose.
+The SONIC can sometimes advance its rx buffer pointer (RRP register)
+without advancing its rx descriptor pointer (CRDA register). As a result
+the index of the current rx descriptor may not equal that of the current
+rx buffer. The driver mistakenly assumes that they are always equal.
+This assumption leads to incorrect packet lengths and possible packet
+duplication. Avoid this by calling a new function to locate the buffer
+corresponding to a given descriptor.
 
-Don't lump all these errors in with the general tx_errors counter as
-that's used for tx timeout events.
-
-On the rx side, don't count RDE and RBAE interrupts as dropped packets.
-These interrupts don't indicate a lost packet, just a lack of resources.
-When a lack of resources results in a lost packet, this gets reported
-in the rx_missed_errors counter (along with RFO events).
-
-Don't double-count rx_frame_errors and rx_crc_errors.
-
-Don't use the general rx_errors counter for events that already have
-special counters.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/natsemi/sonic.c |   21 +++++++--------------
- drivers/net/ethernet/natsemi/sonic.h |    1 +
- 2 files changed, 8 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c |   35 ++++++++++++++++++++++++++++++-----
+ drivers/net/ethernet/natsemi/sonic.h |    5 +++--
+ 2 files changed, 33 insertions(+), 7 deletions(-)
 
 --- a/drivers/net/ethernet/natsemi/sonic.c
 +++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -329,18 +329,19 @@ static irqreturn_t sonic_interrupt(int i
- 				if ((td_status = sonic_tda_get(dev, entry, SONIC_TD_STATUS)) == 0)
- 					break;
+@@ -412,6 +412,21 @@ static irqreturn_t sonic_interrupt(int i
+ 	return IRQ_HANDLED;
+ }
  
--				if (td_status & 0x0001) {
-+				if (td_status & SONIC_TCR_PTX) {
- 					lp->stats.tx_packets++;
- 					lp->stats.tx_bytes += sonic_tda_get(dev, entry, SONIC_TD_PKTSIZE);
- 				} else {
--					lp->stats.tx_errors++;
--					if (td_status & 0x0642)
-+					if (td_status & (SONIC_TCR_EXD |
-+					    SONIC_TCR_EXC | SONIC_TCR_BCM))
- 						lp->stats.tx_aborted_errors++;
--					if (td_status & 0x0180)
-+					if (td_status &
-+					    (SONIC_TCR_NCRS | SONIC_TCR_CRLS))
- 						lp->stats.tx_carrier_errors++;
--					if (td_status & 0x0020)
-+					if (td_status & SONIC_TCR_OWC)
- 						lp->stats.tx_window_errors++;
--					if (td_status & 0x0004)
-+					if (td_status & SONIC_TCR_FU)
- 						lp->stats.tx_fifo_errors++;
- 				}
++/* Return the array index corresponding to a given Receive Buffer pointer. */
++static int index_from_addr(struct sonic_local *lp, dma_addr_t addr,
++			   unsigned int last)
++{
++	unsigned int i = last;
++
++	do {
++		i = (i + 1) & SONIC_RRS_MASK;
++		if (addr == lp->rx_laddr[i])
++			return i;
++	} while (i != last);
++
++	return -ENOENT;
++}
++
+ /*
+  * We have a good packet(s), pass it/them up the network stack.
+  */
+@@ -431,6 +446,16 @@ static void sonic_rx(struct net_device *
  
-@@ -370,17 +371,14 @@ static irqreturn_t sonic_interrupt(int i
- 		if (status & SONIC_INT_RFO) {
- 			netif_dbg(lp, rx_err, dev, "%s: rx fifo overrun\n",
- 				  __func__);
--			lp->stats.rx_fifo_errors++;
- 		}
- 		if (status & SONIC_INT_RDE) {
- 			netif_dbg(lp, rx_err, dev, "%s: rx descriptors exhausted\n",
- 				  __func__);
--			lp->stats.rx_dropped++;
- 		}
- 		if (status & SONIC_INT_RBAE) {
- 			netif_dbg(lp, rx_err, dev, "%s: rx buffer area exceeded\n",
- 				  __func__);
--			lp->stats.rx_dropped++;
- 		}
+ 		status = sonic_rda_get(dev, entry, SONIC_RD_STATUS);
+ 		if (status & SONIC_RCR_PRX) {
++			u32 addr = (sonic_rda_get(dev, entry,
++						  SONIC_RD_PKTPTR_H) << 16) |
++				   sonic_rda_get(dev, entry, SONIC_RD_PKTPTR_L);
++			int i = index_from_addr(lp, addr, entry);
++
++			if (i < 0) {
++				WARN_ONCE(1, "failed to find buffer!\n");
++				break;
++			}
++
+ 			/* Malloc up new buffer. */
+ 			new_skb = netdev_alloc_skb(dev, SONIC_RBSIZE + 2);
+ 			if (new_skb == NULL) {
+@@ -452,7 +477,7 @@ static void sonic_rx(struct net_device *
  
- 		/* counter overruns; all counters are 16bit wide */
-@@ -472,11 +470,6 @@ static void sonic_rx(struct net_device *
- 			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_H, bufadr_h);
+ 			/* now we have a new skb to replace it, pass the used one up the stack */
+ 			dma_unmap_single(lp->device, lp->rx_laddr[entry], SONIC_RBSIZE, DMA_FROM_DEVICE);
+-			used_skb = lp->rx_skb[entry];
++			used_skb = lp->rx_skb[i];
+ 			pkt_len = sonic_rda_get(dev, entry, SONIC_RD_PKTLEN);
+ 			skb_trim(used_skb, pkt_len);
+ 			used_skb->protocol = eth_type_trans(used_skb, dev);
+@@ -461,13 +486,13 @@ static void sonic_rx(struct net_device *
+ 			lp->stats.rx_bytes += pkt_len;
+ 
+ 			/* and insert the new skb */
+-			lp->rx_laddr[entry] = new_laddr;
+-			lp->rx_skb[entry] = new_skb;
++			lp->rx_laddr[i] = new_laddr;
++			lp->rx_skb[i] = new_skb;
+ 
+ 			bufadr_l = (unsigned long)new_laddr & 0xffff;
+ 			bufadr_h = (unsigned long)new_laddr >> 16;
+-			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_L, bufadr_l);
+-			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_H, bufadr_h);
++			sonic_rra_put(dev, i, SONIC_RR_BUFADR_L, bufadr_l);
++			sonic_rra_put(dev, i, SONIC_RR_BUFADR_H, bufadr_h);
  		} else {
  			/* This should only happen, if we enable accepting broken packets. */
--			lp->stats.rx_errors++;
--			if (status & SONIC_RCR_FAER)
--				lp->stats.rx_frame_errors++;
--			if (status & SONIC_RCR_CRCR)
--				lp->stats.rx_crc_errors++;
  		}
- 		if (status & SONIC_RCR_LPKT) {
- 			/*
 --- a/drivers/net/ethernet/natsemi/sonic.h
 +++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -175,6 +175,7 @@
- #define SONIC_TCR_NCRS          0x0100
- #define SONIC_TCR_CRLS          0x0080
- #define SONIC_TCR_EXC           0x0040
-+#define SONIC_TCR_OWC           0x0020
- #define SONIC_TCR_PMB           0x0008
- #define SONIC_TCR_FU            0x0004
- #define SONIC_TCR_BCM           0x0002
+@@ -275,8 +275,9 @@
+ #define SONIC_NUM_RDS   SONIC_NUM_RRS /* number of receive descriptors */
+ #define SONIC_NUM_TDS   16            /* number of transmit descriptors */
+ 
+-#define SONIC_RDS_MASK  (SONIC_NUM_RDS-1)
+-#define SONIC_TDS_MASK  (SONIC_NUM_TDS-1)
++#define SONIC_RRS_MASK  (SONIC_NUM_RRS - 1)
++#define SONIC_RDS_MASK  (SONIC_NUM_RDS - 1)
++#define SONIC_TDS_MASK  (SONIC_NUM_TDS - 1)
+ 
+ #define SONIC_RBSIZE	1520          /* size of one resource buffer */
+ 
 
 
