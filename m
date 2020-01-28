@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3708C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33617C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DC124690
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F153424681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221206;
-	bh=nSP8sb8U6UsTtSCBrxZasHOtuaL9If0F0xYS33SxkBE=;
+	s=default; t=1580221213;
+	bh=SuNEaunjicElcpYE4/DtL1GUO/p8JfWw102Z1PSi99s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ucbr/xcjimh4dCCrEGx2M+XFQW25C4fNLHqXirwZtAfwsroRt9dgDR65nt017q1lT
-	 f7hsi30VC39a2BwzlibqWb3xpY6oCv6ssU9vzEGlPN9IBBQbs3PbcnWahzD12xAoWW
-	 G/RjHqhAD7po7mqjyqhjfn6XLVfmd3n5EsC5wvYs=
+	b=kNFHqn2fm0KERbk/roc489S/5melkt1xFtuEDYev4Jkoc2NN3bddpJK955dgzJ2fh
+	 naVstLggnNp+udijvd5pRXMWGNaUp974wRjZOlT6uzOPkM9JjzKcRYeWZXQtAAz7z5
+	 0o5w0GrdWrjBfpE2+PFMuEp0sys8eqZEG/23dwGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731004AbgA1OUF (ORCPT
+        id S1731039AbgA1OUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:20:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:20:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730977AbgA1OT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:19:59 -0500
+        id S1731010AbgA1OUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:20:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BB5C2071E;
-        Tue, 28 Jan 2020 14:19:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4E462071E;
+        Tue, 28 Jan 2020 14:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221198;
-        bh=nSP8sb8U6UsTtSCBrxZasHOtuaL9If0F0xYS33SxkBE=;
+        s=default; t=1580221206;
+        bh=SuNEaunjicElcpYE4/DtL1GUO/p8JfWw102Z1PSi99s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UXBI2FeTYxfpyM6ozK+u16T/nyBPlgNrNj01l+kBvnGsfREVToHj2YATT8OXOFF2N
-         Vh445j4HeLAaEAEWJnA37xKcyeFy3JWnJoc4QtErRb9XkK6ihjnKVicYr/+7XMm7LV
-         /jA3+NzRDaTV8FaGKmHNjN1HaQqoK+4UFFHSuNBM=
+        b=uNGKVcUlnO/HkpFQgm6yyetLf6tHnK4jZV6xgsa1RoJsjMoPcrNhH13rrmtjwyMaW
+         e2VdpIaosFoNxrY0HYofEHXsjW8eqmtt2dOXouRXs0Zm3+eLbif0eYGrC8x9Te+IVT
+         wqpjYUVC+9EkRcwyA33fUaFBD1lO2uAARtBPheHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 128/271] iommu/vt-d: Make kernel parameter igfx_off work with vIOMMU
-Date:   Tue, 28 Jan 2020 15:04:37 +0100
-Message-Id: <20200128135902.127906391@linuxfoundation.org>
+        stable@vger.kernel.org, Arthur Kiyanovski <akiyano@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 131/271] net: ena: fix incorrect test of supported hash function
+Date:   Tue, 28 Jan 2020 15:04:40 +0100
+Message-Id: <20200128135902.353434800@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -63,47 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 5daab58043ee2bca861068e2595564828f3bc663 ]
+[ Upstream commit d3cfe7ddbc3dfbb9b201615b7fef8fd66d1b5fe8 ]
 
-The kernel parameter igfx_off is used by users to disable
-DMA remapping for the Intel integrated graphic device. It
-was designed for bare metal cases where a dedicated IOMMU
-is used for graphic. This doesn't apply to virtual IOMMU
-case where an include-all IOMMU is used.  This makes the
-kernel parameter work with virtual IOMMU as well.
+ena_com_set_hash_function() tests if a hash function is supported
+by the device before setting it.
+The test returns the opposite result than needed.
+Reverse the condition to return the correct value.
+Also use the BIT macro instead of inline shift.
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Suggested-by: Kevin Tian <kevin.tian@intel.com>
-Fixes: c0771df8d5297 ("intel-iommu: Export a flag indicating that the IOMMU is used for iGFX.")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Tested-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 25cc6ae87039d..5c6e0a9fd2f36 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3345,9 +3345,12 @@ static int __init init_dmars(void)
- 		iommu_identity_mapping |= IDENTMAP_ALL;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index bcd993140f841..2d196d521b836 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -1967,7 +1967,7 @@ int ena_com_set_hash_function(struct ena_com_dev *ena_dev)
+ 	if (unlikely(ret))
+ 		return ret;
  
- #ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
--	iommu_identity_mapping |= IDENTMAP_GFX;
-+	dmar_map_gfx = 0;
- #endif
- 
-+	if (!dmar_map_gfx)
-+		iommu_identity_mapping |= IDENTMAP_GFX;
-+
- 	check_tylersburg_isoch();
- 
- 	if (iommu_identity_mapping) {
+-	if (get_resp.u.flow_hash_func.supported_func & (1 << rss->hash_func)) {
++	if (!(get_resp.u.flow_hash_func.supported_func & BIT(rss->hash_func))) {
+ 		pr_err("Func hash %d isn't supported by device, abort\n",
+ 		       rss->hash_func);
+ 		return -EPERM;
 -- 
 2.20.1
 
