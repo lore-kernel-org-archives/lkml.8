@@ -2,51 +2,62 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345FAC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A960C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D2624688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0576924686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221369;
-	bh=W7xtTQ/Seu3GcN/vKIk0ij30T6WGNN3v6s4L10ALXG0=;
+	s=default; t=1580221372;
+	bh=qwTLXXni0laGzArkawsT8uWneqmS22Y3RwOerASELaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d6tKlndRwnu9QhyLQowgqXiesuBFWYga5gZKKOJ6qyZo89pIABbyzCh2QGt0otzzL
-	 YBIUNbB33I6YpEYJPfVGrVow3hT0AOgGhScPMgP+VtFOBhWk68wRTEjJbUwP8wkYEZ
-	 9caeGmuKXf5fIFDqQ+t29fVlgtbog9p5kBtRcmFU=
+	b=NUBJ8Xr3efDVGWjotAgQlBRDl3Sm55h8z1mu+Yxv+RH2nH+akND6HA7gn/qeoVaTC
+	 4TD5nZNgAmMfRxWpfENInu4x5/Scc+LO9AG6T9pAOeel/NxlUYQyzM7P2zSYxyprdZ
+	 b2SRZq243EY5HrdW7Hrd0Rfn7bvHCxiMHFWu6F1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731712AbgA1OWs (ORCPT
+        id S1731740AbgA1OWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:22:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48556 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:22:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731667AbgA1OWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:22:41 -0500
+        id S1731673AbgA1OWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:22:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82CA124686;
-        Tue, 28 Jan 2020 14:22:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D16B524681;
+        Tue, 28 Jan 2020 14:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221361;
-        bh=W7xtTQ/Seu3GcN/vKIk0ij30T6WGNN3v6s4L10ALXG0=;
+        s=default; t=1580221363;
+        bh=qwTLXXni0laGzArkawsT8uWneqmS22Y3RwOerASELaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zaBjQ0TgjnS/DwB0gdZ+zKvJQunwsCZBsXlMCpA3tA87Z2l/6f6FgR88YLF1Yg6tr
-         6+DLHUjyGx4V+UQO7TL9gzvK+SfKcXJ07TMl+UYbpC0iISk2i9Z6VXpR+O9daoHQj9
-         9inJO09e8unmFeB87OQhKgU7NhJGRR7fzCyFofJo=
+        b=lfySTc3XWZP+4SRtnncSHtmoXcbIz+PwLpM95p+i6d7Fvd/A6OajJJQXAJStreCnD
+         lHJyKIED6zXDdjDngJZkKCFShs80ckMpIlZsutdq9BdYkyTjoUr0fwzOD3d9t+k9jS
+         eIF214q+Fr9Hw9cMOFEpbrvKtdKxs2dz7lxNPeaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 147/271] serial: stm32: fix transmit_chars when tx is stopped
-Date:   Tue, 28 Jan 2020 15:04:56 +0100
-Message-Id: <20200128135903.499231268@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Stephen Kitt <steve@sk2.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 187/271] mips: avoid explicit UB in assignment of mips_io_port_base
+Date:   Tue, 28 Jan 2020 15:05:36 +0100
+Message-Id: <20200128135906.492399637@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,50 +70,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit b83b957c91f68e53f0dc596e129e8305761f2a32 ]
+[ Upstream commit 12051b318bc3ce5b42d6d786191008284b067d83 ]
 
-Disables the tx irq  when the transmission is ended and updates stop_tx
-conditions for code cleanup.
+The code in question is modifying a variable declared const through
+pointer manipulation.  Such code is explicitly undefined behavior, and
+is the lone issue preventing malta_defconfig from booting when built
+with Clang:
 
-Fixes: 48a6092fb41f ("serial: stm32-usart: Add STM32 USART Driver")
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+If an attempt is made to modify an object defined with a const-qualified
+type through use of an lvalue with non-const-qualified type, the
+behavior is undefined.
+
+LLVM is removing such assignments. A simple fix is to not declare
+variables const that you plan on modifying.  Limiting the scope would be
+a better method of preventing unwanted writes to such a variable.
+
+Further, the code in question mentions "compiler bugs" without any links
+to bug reports, so it is difficult to know if the issue is resolved in
+GCC. The patch was authored in 2006, which would have been GCC 4.0.3 or
+4.1.1. The minimal supported version of GCC in the Linux kernel is
+currently 4.6.
+
+For what its worth, there was UB before the commit in question, it just
+added a barrier and got lucky IRT codegen. I don't think there's any
+actual compiler bugs related, just runtime bugs due to UB.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/610
+Fixes: 966f4406d903 ("[MIPS] Work around bad code generation for <asm/io.h>.")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Eli Friedman <efriedma@quicinc.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: Maciej W. Rozycki <macro@linux-mips.org>
+Cc: Hassan Naveed <hnaveed@wavecomp.com>
+Cc: Stephen Kitt <steve@sk2.org>
+Cc: Serge Semin <fancer.lancer@gmail.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/stm32-usart.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ arch/mips/include/asm/io.h | 14 ++------------
+ arch/mips/kernel/setup.c   |  2 +-
+ 2 files changed, 3 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 033856287ca21..ea8b591dd46f4 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -293,13 +293,8 @@ static void stm32_transmit_chars(struct uart_port *port)
- 		return;
- 	}
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index 06049b6b3dddb..5dfae80264b9b 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -60,21 +60,11 @@
+  * instruction, so the lower 16 bits must be zero.  Should be true on
+  * on any sane architecture; generic code does not use this assumption.
+  */
+-extern const unsigned long mips_io_port_base;
++extern unsigned long mips_io_port_base;
  
--	if (uart_tx_stopped(port)) {
--		stm32_stop_tx(port);
--		return;
--	}
--
--	if (uart_circ_empty(xmit)) {
--		stm32_stop_tx(port);
-+	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
-+		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
- 		return;
- 	}
- 
-@@ -312,7 +307,7 @@ static void stm32_transmit_chars(struct uart_port *port)
- 		uart_write_wakeup(port);
- 
- 	if (uart_circ_empty(xmit))
--		stm32_stop_tx(port);
-+		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
+-/*
+- * Gcc will generate code to load the value of mips_io_port_base after each
+- * function call which may be fairly wasteful in some cases.  So we don't
+- * play quite by the book.  We tell gcc mips_io_port_base is a long variable
+- * which solves the code generation issue.  Now we need to violate the
+- * aliasing rules a little to make initialization possible and finally we
+- * will need the barrier() to fight side effects of the aliasing chat.
+- * This trickery will eventually collapse under gcc's optimizer.  Oh well.
+- */
+ static inline void set_io_port_base(unsigned long base)
+ {
+-	* (unsigned long *) &mips_io_port_base = base;
+-	barrier();
++	mips_io_port_base = base;
  }
  
- static irqreturn_t stm32_interrupt(int irq, void *ptr)
+ /*
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 695950361d2a7..7cc1d29334ee1 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -74,7 +74,7 @@ static char __initdata builtin_cmdline[COMMAND_LINE_SIZE] = CONFIG_CMDLINE;
+  * mips_io_port_base is the begin of the address space to which x86 style
+  * I/O ports are mapped.
+  */
+-const unsigned long mips_io_port_base = -1;
++unsigned long mips_io_port_base = -1;
+ EXPORT_SYMBOL(mips_io_port_base);
+ 
+ static struct resource code_resource = { .name = "Kernel code", };
 -- 
 2.20.1
 
