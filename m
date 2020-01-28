@@ -2,163 +2,118 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8E4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D0CC35249
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904D324684
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580202837;
-	bh=jvCXGmvU3e/zioy6hqXrLNtJ3S+zOI0WT86/a2JWoeE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zJzz+x9MyIOV2pzXBzFfiNl5d1nfHQtaFOI3lIKkjC6zeitORGRK8TYyWX0hRTeO9
-	 iArHCy0UWevYERmUNKhly6Nat+wSWjLWu6YkaP3rMX9UtmMuML1o6vx946KS95wCwU
-	 V/KRYY7bK+aScLjMNIDnaxWxdbEhk5aLT8+vbd68=
+	by mail.kernel.org (Postfix) with ESMTP id 3E2C62467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:17:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dv17cOT0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725922AbgA1JN5 (ORCPT
+        id S1725927AbgA1JRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:13:57 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35155 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgA1JN4 (ORCPT
+        Tue, 28 Jan 2020 04:17:24 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36933 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgA1JRY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:13:56 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g17so15078858wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 01:13:55 -0800 (PST)
+        Tue, 28 Jan 2020 04:17:24 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so15131001wru.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 01:17:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/eguvHwOu0sO1sY9Y2sGUaUw1z+hAiiwi7HS5TszeM0=;
+        b=dv17cOT0ZvLsFiZ0yr19WQNg2zQBv0lDkp9UA7o/+y3XapJI+0ZYTgo1dbErZaZkI+
+         VrtRoHSf7fPZX9AWCfQzGVqgL9EAuEBlB6i7HvsuqsCnHRWJuNNVzZyRxwgyp2FmPVho
+         iFppSCBqiKHitwA6onSMY3z5RpDrNdMnxU15dXUTYM8xvoWUhhwKbjywt+TkbGN0YeMD
+         M91dazJWXfRdPk/Q/Gn9y31TrOaoJhmzBFpY/fdbKC9GQCG4ON5AJ7lEP4+lM87TSTnK
+         wuL8JxVTOoq0uDzlXO4dfd3FwW07HCMcNZnOdzlJZVYuUb67qj6Ho/HPEiR8FrAWjPkT
+         iHaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=saosZuV2/eYI88dYpQg2/qi+lKEe+LY8ew7q+xeqRVM=;
-        b=ni9YHtlRM/IhzD35Ci05DnsQnvOIxQRX6AuLHHP6duWaHpAO+B4EKKn/VojbAFjXkY
-         TIjvaV/prVfwSqgpguRHwOC/+2dXIuZ6SUKu3h4fQelRdolQNuCTVbiZdaKJpAPdkR3L
-         BenobmhbBH5DOvifuVGYVwTFOdaknfLHriBroPVVjI3FlBoR6BSChkYmd+C5s8tIDzDm
-         LqOOB6YS94Os0jkByNUXyNeNvtgiZiWu4sXSRe8WnBG6TM0DKlexKFO7111fhhShAXBd
-         lRpVQzI3lK0lMvpYPtn6qe3kA27tegCdVvP+/91Zm3vCu0bRQHuo8FYDWEuHP4vauYLe
-         lCAw==
-X-Gm-Message-State: APjAAAVI1kvGciGAzs/4SvP6b/o2JPUXNMDrbzAL4PX3VC21b03YbPuR
-        IvalGim6T41+BE74Bekjnr472VWr
-X-Google-Smtp-Source: APXvYqw+9rgxxkOI0vC5B0xvXCdd9UulHflV0RPlqpbJx4CRBHCbkl8ZavyTPuFzhm0nnOhOvTD1/Q==
-X-Received: by 2002:a5d:4f90:: with SMTP id d16mr27344759wru.395.1580202834577;
-        Tue, 28 Jan 2020 01:13:54 -0800 (PST)
-Received: from localhost (37-48-13-185.nat.epc.tmcz.cz. [37.48.13.185])
-        by smtp.gmail.com with ESMTPSA id z19sm2073489wmi.35.2020.01.28.01.13.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 01:13:53 -0800 (PST)
-Date:   Tue, 28 Jan 2020 10:13:52 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
-Message-ID: <20200128091352.GC18145@dhcp22.suse.cz>
-References: <20200109225646.22983-1-xiyou.wangcong@gmail.com>
- <20200110073822.GC29802@dhcp22.suse.cz>
- <CAM_iQpVN4MNhcK0TXvhmxsCdkVOqQ4gZBzkDHykLocPC6Va7LQ@mail.gmail.com>
- <20200121090048.GG29276@dhcp22.suse.cz>
- <CAM_iQpU0p7JLyQ4mQ==Kd7+0ugmricsEAp1ST2ShAZar2BLAWg@mail.gmail.com>
- <20200126233935.GA11536@bombadil.infradead.org>
- <20200127150024.GN1183@dhcp22.suse.cz>
- <20200127190653.GA8708@bombadil.infradead.org>
- <20200128081712.GA18145@dhcp22.suse.cz>
- <20200128083044.GB6615@bombadil.infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/eguvHwOu0sO1sY9Y2sGUaUw1z+hAiiwi7HS5TszeM0=;
+        b=mewM0dT7/cLGTBSF7bim+57oucBFbomwbj1RZraCP7xqn6kmJOjykAWAnpYz88UpmL
+         YDKeta1EmFGKNhyUoiB+JEjoPJ6CoIe8Q+IJrHeX36bbXGmzCPHszcDOJz20Ku1QaeX3
+         tYyNlURU1d7aicRq3JVI9dr/xSvi4EAtdFiy2esCzFlo4gSUNkKDmEX72XRFwXRF0vmL
+         WLu/qP2CQFqmRvleRs4cS1ZwvqevgTV+ZomOpZhiQ/Iuriy/A4lR+FvdpwjyWZuTGeO+
+         AmDFpCCBEHcK3DuV7YOsZXpFUZrLHvQ9GkkYnzv5rcMpZ4So5+Lj1ux2/I5qKguBbaPr
+         vd5A==
+X-Gm-Message-State: APjAAAU9pzqJV1H8FcavtJr64/ok3rLVxQx1uniy1F4SbUWRTXQXiQet
+        lqPMsBmGZwWsAkFUrRXFLWrZpSFavAkJddwxfByvnQ==
+X-Google-Smtp-Source: APXvYqyZYgpjDLF5ghzGbSKFBjB5YpA2p+s3dNc4AhugXoRohektUWFPHnw5CjmXnUhh7MD4cnmybDhoxJETks+GwMU=
+X-Received: by 2002:a5d:50cb:: with SMTP id f11mr1884084wrt.252.1580203042186;
+ Tue, 28 Jan 2020 01:17:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128083044.GB6615@bombadil.infradead.org>
+References: <CAKv+Gu8ZcO3jRMuMJL_eTmWtuzJ+=qEA9muuN5DpdpikFLwamg@mail.gmail.com>
+ <E600649B-A8CA-48D3-AD86-A2BAAE0BCA25@lca.pw> <CACT4Y+a5q1dWrm+PhWH3uQRfLWZ0HOyHA6Er4V3bn9tk85TKYA@mail.gmail.com>
+ <CAKv+Gu8ZRjqvQvOJ5JXpAQXyApMQNAFz7cRO9NSjq9u=WnjkTA@mail.gmail.com> <CACT4Y+Z+vYF=6h0+ioMXGX6OHVnAXyHqOQLNFmngT9TqNwAgKA@mail.gmail.com>
+In-Reply-To: <CACT4Y+Z+vYF=6h0+ioMXGX6OHVnAXyHqOQLNFmngT9TqNwAgKA@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 28 Jan 2020 10:17:11 +0100
+Message-ID: <CAKv+Gu8-LxoYNCtwG76UkUkNC_7XrRSfwfRm9=6WdZy=C_buJw@mail.gmail.com>
+Subject: Re: mmotm 2020-01-23-21-12 uploaded (efi)
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Qian Cai <cai@lca.pw>, Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.cz>, mm-commits@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-01-20 00:30:44, Matthew Wilcox wrote:
-> On Tue, Jan 28, 2020 at 09:17:12AM +0100, Michal Hocko wrote:
-> > On Mon 27-01-20 11:06:53, Matthew Wilcox wrote:
-> > > On Mon, Jan 27, 2020 at 04:00:24PM +0100, Michal Hocko wrote:
-> > > > On Sun 26-01-20 15:39:35, Matthew Wilcox wrote:
-> > > > > On Sun, Jan 26, 2020 at 11:53:55AM -0800, Cong Wang wrote:
-> > > > > > I suspect the process gets stuck in the retry loop in try_charge(), as
-> > > > > > the _shortest_ stacktrace of the perf samples indicated:
-> > > > > > 
-> > > > > > cycles:ppp:
-> > > > > >         ffffffffa72963db mem_cgroup_iter
-> > > > > >         ffffffffa72980ca mem_cgroup_oom_unlock
-> > > > > >         ffffffffa7298c15 try_charge
-> > > > > >         ffffffffa729a886 mem_cgroup_try_charge
-> > > > > >         ffffffffa720ec03 __add_to_page_cache_locked
-> > > > > >         ffffffffa720ee3a add_to_page_cache_lru
-> > > > > >         ffffffffa7312ddb iomap_readpages_actor
-> > > > > >         ffffffffa73133f7 iomap_apply
-> > > > > >         ffffffffa73135da iomap_readpages
-> > > > > >         ffffffffa722062e read_pages
-> > > > > >         ffffffffa7220b3f __do_page_cache_readahead
-> > > > > >         ffffffffa7210554 filemap_fault
-> > > > > >         ffffffffc039e41f __xfs_filemap_fault
-> > > > > >         ffffffffa724f5e7 __do_fault
-> > > > > >         ffffffffa724c5f2 __handle_mm_fault
-> > > > > >         ffffffffa724cbc6 handle_mm_fault
-> > > > > >         ffffffffa70a313e __do_page_fault
-> > > > > >         ffffffffa7a00dfe page_fault
-> > > > > > 
-> > > > > > But I don't see how it could be, the only possible case is when
-> > > > > > mem_cgroup_oom() returns OOM_SUCCESS. However I can't
-> > > > > > find any clue in dmesg pointing to OOM. These processes in the
-> > > > > > same memcg are either running or sleeping (that is not exiting or
-> > > > > > coredump'ing), I don't see how and why they could be selected as
-> > > > > > a victim of OOM killer. I don't see any signal pending either from
-> > > > > > their /proc/X/status.
-> > > > > 
-> > > > > I think this is a situation where we might end up with a genuine deadlock
-> > > > > if we're not trylocking the pages.  readahead allocates a batch of
-> > > > > locked pages and adds them to the pagecache.  If it has allocated,
-> > > > > say, 5 pages, successfully inserted the first three into i_pages, then
-> > > > > needs to allocate memory to insert the fourth one into i_pages, and
-> > > > > the process then attempts to migrate the pages which are still locked,
-> > > > > they will never come unlocked because they haven't yet been submitted
-> > > > > to the filesystem for reading.
-> > > > 
-> > > > Just to make sure I understand. Do you mean this?
-> > > > lock_page(A)
-> > > > alloc_pages
-> > > >   try_to_compact_pages
-> > > >     compact_zone_order
-> > > >       compact_zone(MIGRATE_SYNC_LIGHT)
-> > > >         migrate_pages
-> > > > 	  unmap_and_move
-> > > > 	    __unmap_and_move
-> > > > 	      lock_page(A)
-> > > 
-> > > Yes.  There's a little more to it than that, eg slab is involved, but
-> > > you have it in a nutshell.
-> > 
-> > I am not deeply familiar with the readahead code. But is there really a
-> > high oerder allocation (order > 1) that would trigger compaction in the
-> > phase when pages are locked?
-> 
-> Thanks to sl*b, yes:
-> 
-> radix_tree_node    80890 102536    584   28    4 : tunables    0    0    0 : slabdata   3662   3662      0
-> 
-> so it's allocating 4 pages for an allocation of a 576 byte node.
+On Tue, 28 Jan 2020 at 10:08, Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Tue, Jan 28, 2020 at 8:33 AM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> > > > > Should be fixed by
+> > > > >
+> > > > > https://lore.kernel.org/linux-efi/20200121093912.5246-1-ardb@kernel.org/
+> > > >
+> > > > Cc kasan-devel@
+> > > >
+> > > > If everyone has to disable KASAN for the whole subdirectories like this, I am worried about we are losing testing coverage fairly quickly. Is there a bug in compiler?
+> > >
+> > > My understanding is that this is invalid C code in the first place,
+> > > no? It just happened to compile with some compilers, some options and
+> > > probably only with high optimization level.
+> >
+> > No, this is not true. The whole point of favoring IS_ENABLED(...) over
+> > #ifdef ... has always been that the code remains visible to the
+> > compiler, regardless of whether the option is selected or not, but
+> > that it gets optimized away entirely. The linker errors prove that
+> > there is dead code remaining in the object files, which means we can
+> > no longer rely on IS_ENABLED() to work as intended.
+>
+> I agree that exposing more code to compiler is good, I prefer to do it
+> as well. But I don't see how this proves anything wrt this particular
+> code being invalid C. Called functions still need to be defined. There
+> is no notion of dead code in C. Yes, this highly depends on compiler,
+> options, optimization level, etc. Some combinations may work, some
+> won't. E.g. my compiler compiles it just fine (clang 10) without
+> disabling instrumentation... what does it prove? I don't know.
+>
+> To clarify: I completely don't object to patching this case in gcc
+> with -O2, it just may be hard to find anybody willing to do this work
+> if we are talking about fixing compilation of invalid code.
+>
 
-I am not really sure that we do sync migration for costly orders.
-
-> > Btw. the compaction rejects to consider file backed pages when __GFP_FS
-> > is not present AFAIR.
-> 
-> Ah, that would save us.
-
-So the NOFS comes from the mapping GFP mask, right? That is something I
-was hoping to get rid of eventually :/ Anyway it would be better to have
-an explicit NOFS with a comment explaining why we need that. If for
-nothing else then for documentation.
--- 
-Michal Hocko
-SUSE Labs
+I don't mind simply disabling KASAN altogether for this code if nobody
+can be bothered to fix the compiler.
