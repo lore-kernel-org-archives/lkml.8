@@ -2,133 +2,123 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1DEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39455C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFF424691
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE9224686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580221568;
+	bh=KNT/RIVk/x73NLpD9nQB6BYohuSfGeNeCr1xlG9FM20=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GvjoIv8cxGmmMFFKCCHepsgF8w0NNHa6Jx3fe8ZEK13a/k+M0rezmkii1Vglc81Nn
+	 MUbxgaSXYYYtus8L9cuCiWjyN8HkJhThMimF93o2WnRi+zN97kmhOjltx+W5GOvCEW
+	 vcqsCwLr1T6uxm1zBuU8mw3upyP7lbekwbJNCYMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733134AbgA1O0E (ORCPT
+        id S1731690AbgA1O0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:26:04 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:59696 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733098AbgA1O0C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:26:02 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SEHZhb008962;
-        Tue, 28 Jan 2020 09:25:48 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xrkfah3e8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 09:25:47 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00SEPkJo028606
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 28 Jan 2020 09:25:46 -0500
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 28 Jan
- 2020 09:25:45 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 28 Jan 2020 06:25:45 -0800
-Received: from mircea-Precision-5530-2-in-1.ad.analog.com ([10.48.65.114])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00SEPgIx007832;
-        Tue, 28 Jan 2020 09:25:42 -0500
-From:   Mircea Caprioru <mircea.caprioru@analog.com>
-To:     <jic23@kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        Mircea <mircea.caprioru@analog.com>
-Subject: [PATCH] iio: adc: ad7124: Add direct reg access
-Date:   Tue, 28 Jan 2020 16:25:49 +0200
-Message-ID: <20200128142549.1370-1-mircea.caprioru@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 28 Jan 2020 09:26:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729644AbgA1O0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:26:05 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F019624685;
+        Tue, 28 Jan 2020 14:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580221565;
+        bh=KNT/RIVk/x73NLpD9nQB6BYohuSfGeNeCr1xlG9FM20=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mRUhbgaHn21dsudhAo+VSYJn1RNtKNAF8uzLgYUN9umJMMU62WfFfwFBilyjXwHit
+         fhb7Ww0SCpOLXJWSTnEhfZNqvRqz8v1PyAnc/iFLyi43zjTQodpfqguJFXj+qaQ5xL
+         ps+GgXVk4aBhXLwTKTsOgBnNeoe1/zN/2m4casPI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shaohua Li <shli@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.9 268/271] md: Avoid namespace collision with bitmap API
+Date:   Tue, 28 Jan 2020 15:06:57 +0100
+Message-Id: <20200128135912.548904600@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
+References: <20200128135852.449088278@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_03:2020-01-28,2020-01-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=1 mlxlogscore=818 clxscore=1011 phishscore=0 spamscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001280115
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mircea <mircea.caprioru@analog.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This patch adds the posibility do read and write registers from userspace
-using the kernel debug direct register access option.
+commit e64e4018d572710c44f42c923d4ac059f0a23320 upstream.
 
-Signed-off-by: Mircea <mircea.caprioru@analog.com>
+bitmap API (include/linux/bitmap.h) has 'bitmap' prefix for its methods.
+
+On the other hand MD bitmap API is special case.
+Adding 'md' prefix to it to avoid name space collision.
+
+No functional changes intended.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Shaohua Li <shli@kernel.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+[only take the bitmap_free change for stable - gregkh]
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iio/adc/ad7124.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/md/bitmap.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-index 52f45b13da4a..38e67e08a79a 100644
---- a/drivers/iio/adc/ad7124.c
-+++ b/drivers/iio/adc/ad7124.c
-@@ -93,6 +93,14 @@ static const unsigned int ad7124_gain[8] = {
- 	1, 2, 4, 8, 16, 32, 64, 128
- };
+--- a/drivers/md/bitmap.c
++++ b/drivers/md/bitmap.c
+@@ -1699,7 +1699,7 @@ void bitmap_flush(struct mddev *mddev)
+ /*
+  * free memory that was allocated
+  */
+-static void bitmap_free(struct bitmap *bitmap)
++static void md_bitmap_free(struct bitmap *bitmap)
+ {
+ 	unsigned long k, pages;
+ 	struct bitmap_page *bp;
+@@ -1749,7 +1749,7 @@ void bitmap_destroy(struct mddev *mddev)
+ 	if (mddev->thread)
+ 		mddev->thread->timeout = MAX_SCHEDULE_TIMEOUT;
  
-+static const unsigned int ad7124_reg_size[] = {
-+	1, 2, 3, 3, 2, 1, 3, 3, 1, 2, 2, 2, 2,
-+	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-+	2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3
-+};
-+
- static const int ad7124_master_clk_freq_hz[3] = {
- 	[AD7124_LOW_POWER] = 76800,
- 	[AD7124_MID_POWER] = 153600,
-@@ -360,6 +368,25 @@ static int ad7124_write_raw(struct iio_dev *indio_dev,
- 	}
+-	bitmap_free(bitmap);
++	md_bitmap_free(bitmap);
  }
  
-+static int ad7124_reg_access(struct iio_dev *indio_dev,
-+			     unsigned int reg,
-+			     unsigned int writeval,
-+			     unsigned int *readval)
-+{
-+	struct ad7124_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+
-+	if (readval)
-+		ret = ad_sd_read_reg(&st->sd, reg, ad7124_reg_size[reg],
-+				     readval);
-+	else
-+		ret = ad_sd_write_reg(&st->sd, reg, ad7124_reg_size[reg],
-+				      writeval);
-+
-+	return ret;
-+}
-+
- static IIO_CONST_ATTR(in_voltage_scale_available,
- 	"0.000001164 0.000002328 0.000004656 0.000009313 0.000018626 0.000037252 0.000074505 0.000149011 0.000298023");
+ /*
+@@ -1834,7 +1834,7 @@ struct bitmap *bitmap_create(struct mdde
  
-@@ -375,6 +402,7 @@ static const struct attribute_group ad7124_attrs_group = {
- static const struct iio_info ad7124_info = {
- 	.read_raw = ad7124_read_raw,
- 	.write_raw = ad7124_write_raw,
-+	.debugfs_reg_access = &ad7124_reg_access,
- 	.validate_trigger = ad_sd_validate_trigger,
- 	.attrs = &ad7124_attrs_group,
- };
--- 
-2.17.1
+ 	return bitmap;
+  error:
+-	bitmap_free(bitmap);
++	md_bitmap_free(bitmap);
+ 	return ERR_PTR(err);
+ }
+ 
+@@ -1936,7 +1936,7 @@ int bitmap_copy_from_slot(struct mddev *
+ 	*low = lo;
+ 	*high = hi;
+ err:
+-	bitmap_free(bitmap);
++	md_bitmap_free(bitmap);
+ 	return rv;
+ }
+ EXPORT_SYMBOL_GPL(bitmap_copy_from_slot);
+
 
