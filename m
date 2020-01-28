@@ -7,489 +7,729 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4319FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E67C35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03DC022522
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05D422522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:35:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AS5HJMu8"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HbBLNq7L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgA1NfR (ORCPT
+        id S1726847AbgA1NfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:35:17 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:58943 "EHLO
+        Tue, 28 Jan 2020 08:35:23 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:58897 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgA1NeS (ORCPT
+        with ESMTP id S1726478AbgA1NeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:34:18 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200128133416euoutp0168d68aba1af2e6678ce272192c5fc997~uEFBA_BDO0195601956euoutp01H
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 13:34:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200128133416euoutp0168d68aba1af2e6678ce272192c5fc997~uEFBA_BDO0195601956euoutp01H
+        Tue, 28 Jan 2020 08:34:17 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200128133414euoutp01906f8f9d9aac0d6202f575ce4ee12c36~uEE-6-cUB0286702867euoutp01U
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 13:34:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200128133414euoutp01906f8f9d9aac0d6202f575ce4ee12c36~uEE-6-cUB0286702867euoutp01U
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580218456;
-        bh=YJuztuDcbtIa1CTQmlrIwWwmuUQVBn+CSkuRet1nkR8=;
+        s=mail20170921; t=1580218454;
+        bh=T6lHnAKlpw/zz4V71yEIDoPVDXBTHjTDKfCDgnmDEbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AS5HJMu8y1zv72dmiZLal3rxhpOhbK/1NnaztVv+l7HyRdyBVMQcfxlvVVeY/xYDt
-         UM/rceEbn6aCWezx6btP3QJ3IYNKOFjKSxv/ZOjCWk70QTpW8kvPy8bamoRnkNnF/S
-         i1AaFQPPeX7QSNhsFwHzUtQuxBpvt0JdChGKqYT0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        b=HbBLNq7LE8AcXEsRiy+v6h9h/cT/H4bowJW8RDZbcTwaywxsM5eicwlowDayF+Pe6
+         CsUJkULBRnQbzx4xt0oqnLAhSlIhER3An2ETXvzK3FQtWSAB9fP5a3hT9/GxtTWU3p
+         03/N+EtC/lOFMlYNDOX3Rk70tmPRA8lbvH7ZOGDc=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200128133415eucas1p24a251a44e423d3382f722c7a2bf472d7~uEFAzRnRQ1867618676eucas1p2e;
-        Tue, 28 Jan 2020 13:34:15 +0000 (GMT)
+        20200128133414eucas1p2fd6d6e560c9236c3a922169f6b1b65df~uEE-pAeXB3103131031eucas1p2o;
+        Tue, 28 Jan 2020 13:34:14 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 8F.CA.61286.758303E5; Tue, 28
-        Jan 2020 13:34:15 +0000 (GMT)
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id C1.5A.60679.658303E5; Tue, 28
+        Jan 2020 13:34:14 +0000 (GMT)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200128133415eucas1p1cd35ec3ee9783b76c1a32de63796ce30~uEFAUmukq0087500875eucas1p1-;
-        Tue, 28 Jan 2020 13:34:15 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        20200128133414eucas1p14b041a2d58ca70817f3007c0f405ee73~uEE-GAEbc0713407134eucas1p1q;
+        Tue, 28 Jan 2020 13:34:14 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200128133415eusmtrp2326360a694214c3d920da348f5247054~uEFAT_xGq0330003300eusmtrp21;
-        Tue, 28 Jan 2020 13:34:15 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-84-5e303857529c
+        20200128133414eusmtrp299a1e2d410bca940bda641faf6fad1e8~uEE-FadAh0330103301eusmtrp2t;
+        Tue, 28 Jan 2020 13:34:14 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-48-5e3038565483
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 93.92.08375.758303E5; Tue, 28
-        Jan 2020 13:34:15 +0000 (GMT)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id DF.72.07950.558303E5; Tue, 28
+        Jan 2020 13:34:13 +0000 (GMT)
 Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200128133415eusmtip2980e30d713ad90fcf10fd3e1397f9405~uEE--HvAl0685506855eusmtip2X;
-        Tue, 28 Jan 2020 13:34:14 +0000 (GMT)
+        20200128133413eusmtip2b1a0bc87cbd83581eacf298dd6f8aa5b~uEE_vQk0N0657106571eusmtip2f;
+        Tue, 28 Jan 2020 13:34:13 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Michael Schmitz <schmitzmic@gmail.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
         b.zolnierkie@samsung.com
-Subject: [PATCH 14/28] ata: move ata_dev_config_ncq*() to libata-core-sata.c
-Date:   Tue, 28 Jan 2020 14:33:29 +0100
-Message-Id: <20200128133343.29905-15-b.zolnierkie@samsung.com>
+Subject: [PATCH 10/28] ata: separate PATA timings code from libata-core.c
+Date:   Tue, 28 Jan 2020 14:33:25 +0100
+Message-Id: <20200128133343.29905-11-b.zolnierkie@samsung.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200128133343.29905-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOKsWRmVeSWpSXmKPExsWy7djPc7rhFgZxBg++mlisvtvPZrFxxnpW
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsWy7djPc7phFgZxBrO+KVqsvtvPZrFxxnpW
         i2e39jJZHNvxiMni8q45bBZzW6ezO7B57Jx1l93j8tlSj0OHOxg9+rasYvT4vEkugDWKyyYl
-        NSezLLVI3y6BK2Nak1vBybCK6bPWMzYwLnbtYuTgkBAwkbg5W6mLkYtDSGAFo8Tjv1dYIZwv
-        jBKHtvUzQzifGSXmblgBlOEE6zjwfR1U1XJGicMXXjLDtfzYvZUFpIpNwEpiYvsqRhBbREBB
-        ouf3SjaQImaBNYwSqw43gSWEBXwkNs+4yw5iswioSrzrfswOchSvgJ1E4x4hiG3yElu/fWIF
-        CXMChXv2moOEeQUEJU7OfAK2ihmopHnrbLAbJAS62SU2nNjHBtHrIvF9/WdmCFtY4tXxLewQ
-        tozE/53zmSAa1jFK/O14AdW9nVFi+eR/UN3WEnfO/WID2cwsoCmxfpc+RNhRYvedB6yQwOOT
-        uPFWEOIIPolJ26YzQ4R5JTraoM5Xk9iwbAMbzNqunSuhzvGQuDxzG/sERsVZSN6ZheSdWQh7
-        FzAyr2IUTy0tzk1PLTbMSy3XK07MLS7NS9dLzs/dxAhMLqf/Hf+0g/HrpaRDjAIcjEo8vDNU
-        DOKEWBPLiitzDzFKcDArifB2MgGFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8xovehkrJJCeWJKa
-        nZpakFoEk2Xi4JRqYCyM5ue6XfVymaq75tbkCTY6K4SyHxjNM/nRdi5YcL7/pn/H5/ySFc9i
-        W6B4ee7UEJuOHC2e62E5b3gfqE/jvBHce5h9Scf5CQWpN1at+nJhnprKln8cfgUxuwRPsly5
-        r7vgEOts4dRAy4VvNDqfChpoVjzTUPRraXEKErIXzatbF6FRkeV0QImlOCPRUIu5qDgRAK3Y
-        JVMqAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42I5/e/4Pd1wC4M4gymLRCxW3+1ns9g4Yz2r
-        xbNbe5ksju14xGRxedccNou5rdPZHdg8ds66y+5x+Wypx6HDHYwefVtWMXp83iQXwBqlZ1OU
-        X1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5eglzGtya3gZFjF
-        9FnrGRsYF7t2MXJySAiYSBz4vo61i5GLQ0hgKaPE8dapjF2MHEAJGYnj68sgaoQl/lzrYgOx
-        hQQ+MUp82+MAYrMJWElMbF/FCGKLCChI9PxeyQYyh1lgA6PEq5tfWEASwgI+Eptn3GUHsVkE
-        VCXedT9mB5nPK2An0bhHCGK+vMTWb59YQcKcQOGeveYQq2wl1p95ygpi8woISpyc+QRsIjNQ
-        efPW2cwTGAVmIUnNQpJawMi0ilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzACth37uXkH46WN
-        wYcYBTgYlXh4Z6gYxAmxJpYVV+YeYpTgYFYS4e1kAgrxpiRWVqUW5ccXleakFh9iNAV6YSKz
-        lGhyPjA680riDU0NzS0sDc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MCo+iS+Y
-        Ud+psa3jYpyNK7/y+8b/JpOSbu98KJDGWi708ewPxd2flQ5nzzISzk/hmbff+GqNrOGy7FNB
-        C9zfP9j0/bv+/Fm6i3KmsBRK3zt9/HAds22g8fL8r/I3Xn76Zt15eUbzhAtT9ff+2pf+6uc8
-        vR/MtT+5qu79rg9TPJps9qLjh/yvxHVKLMUZiYZazEXFiQAMSQwPlgIAAA==
-X-CMS-MailID: 20200128133415eucas1p1cd35ec3ee9783b76c1a32de63796ce30
+        NSezLLVI3y6BK+Po1i9MBcdXMVb0dRY0MH5rZOxi5OSQEDCR2HbjNnsXIxeHkMAKRolHm9aw
+        QDhfGCXOzvjDDOF8ZpS4+GsnUxcjB1jLles8EPHljBLr/t9ihuuY2HieBWQum4CVxMT2VWA7
+        RAQUJHp+r2QDKWIWWMMosepwE1hCWMBTYtbF2awgNouAqsTLqzPBbF4BO4k9DbehDpSX2Prt
+        EyvIZk6geM9ec4gSQYmTM5+A7WIGKmneOpsZorydXWL+YxYI20Xi4+N9TBC2sMSr41vYIWwZ
+        if875zOB3CMhsI5R4m/HC2YIZzujxPLJ/9ggqqwl7pz7xQaymFlAU2L9Ln2IsKNE17aFLJCQ
+        4JO48VYQ4gY+iUnbpjNDhHklOtqEIKrVJDYs28AGs7Zr50qoMz0k9v2dyziBUXEWkm9mIflm
+        FsLeBYzMqxjFU0uLc9NTi43yUsv1ihNzi0vz0vWS83M3MQITzOl/x7/sYNz1J+kQowAHoxIP
+        7wwVgzgh1sSy4srcQ4wSHMxKIrydTEAh3pTEyqrUovz4otKc1OJDjNIcLErivMaLXsYKCaQn
+        lqRmp6YWpBbBZJk4OKUaGD0XFvjdLv2kuFWxa+HOixkSCttfvbnf/1JMf9fmDfX5Cr5BV2Wd
+        StsSXYwqvbkWvfC/VfMiKiKaidPdSFeimVn6N0OAfuXSfklRm4+5k46IFkTl7v203CnhVCB7
+        0IrZW73KX1d9N1Zi2ZGxYIvRg/qiiueVk/mtipobF8XeSKqvkdI2+pGuxFKckWioxVxUnAgA
+        2yUM8ywDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42I5/e/4Pd0wC4M4gxeCFqvv9rNZbJyxntXi
+        2a29TBbHdjxisri8aw6bxdzW6ewObB47Z91l97h8ttTj0OEORo++LasYPT5vkgtgjdKzKcov
+        LUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLOLr1C1PB8VWM
+        FX2dBQ2M3xoZuxg5OCQETCSuXOfpYuTiEBJYyijxb9IMFoi4jMTx9WVdjJxAprDEn2tdbBA1
+        nxgl9ky/zQ6SYBOwkpjYvooRxBYRUJDo+b0SrIhZYAOjxKubX1hAEsICnhKzLs5mBbFZBFQl
+        Xl6dCWbzCthJ7Gm4zQixQV5i67dPrCCLOYHiPXvNQcJCArYS6888hSoXlDg58wnYSGag8uat
+        s5knMArMQpKahSS1gJFpFaNIamlxbnpusZFecWJucWleul5yfu4mRmAUbDv2c8sOxq53wYcY
+        BTgYlXh4HZQM4oRYE8uKK3MPMUpwMCuJ8HYyAYV4UxIrq1KL8uOLSnNSiw8xmgL9MJFZSjQ5
+        HxiheSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGG/Y/k49tSZ8
+        p+zzjKPbdz37NO+uYIW/lui8thXWHZ4hM55etfpv+HrxA1UL1aKr+oKrtvE87fJectI4xMRi
+        j3/du393Xt29dt2SxXVqwzS24G0PZgso7zC5Kr9mzYSanz9mG2YLGdlPmhUQ2dB7SLnwFRPH
+        lJfdqedvLMn+e11bdrW1+40FFvOVWIozEg21mIuKEwHf1BJEmAIAAA==
+X-CMS-MailID: 20200128133414eucas1p14b041a2d58ca70817f3007c0f405ee73
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200128133415eucas1p1cd35ec3ee9783b76c1a32de63796ce30
+X-RootMTR: 20200128133414eucas1p14b041a2d58ca70817f3007c0f405ee73
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200128133415eucas1p1cd35ec3ee9783b76c1a32de63796ce30
+X-CMS-RootMailID: 20200128133414eucas1p14b041a2d58ca70817f3007c0f405ee73
 References: <20200128133343.29905-1-b.zolnierkie@samsung.com>
-        <CGME20200128133415eucas1p1cd35ec3ee9783b76c1a32de63796ce30@eucas1p1.samsung.com>
+        <CGME20200128133414eucas1p14b041a2d58ca70817f3007c0f405ee73@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* move ata_log_supported() to libata.h and make it inline
+Separate PATA timings code from libata-core.c:
 
-* move ata_dev_config_ncq*() to libata-core-sata.c
+* add PATA_TIMINGS config option and make corresponding PATA
+  host drivers (and ATA ACPI code) select it
 
-* add static inline version of ata_dev_config_ncq() for
-  CONFIG_SATA_HOST=n case
+* move following PATA timings code to libata-pata-timings.c:
+  - ata_timing_quantize()
+  - ata_timing_merge()
+  - ata_timing_find_mode()
+  - ata_timing_compute()
+
+* group above functions together in <linux/libata.h> and cover
+  them with CONFIG_PATA_TIMINGS ifdef
+
+* include libata-pata-timings.c in the build when PATA_TIMINGS
+  config option is enabled
+
+* cover ata_timing_cycle2mode() with CONFIG_ATA_ACPI ifdef (it
+  depends on code from libata-core.c and libata-pata-timings.c
+  while its only user is ATA ACPI)
 
 Code size savings on m68k arch using atari_defconfig:
 
    text    data     bss     dec     hex filename
 before:
-  36627     572      40   37239    9177 drivers/ata/libata-core.o
+  39688     573      40   40301    9d6d drivers/ata/libata-core.o
 after:
-  35499     572      40   36111    8d0f drivers/ata/libata-core.o
+  37820     572      40   38432    9620 drivers/ata/libata-core.o
 
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/ata/libata-core-sata.c | 138 ++++++++++++++++++++++++++++++
- drivers/ata/libata-core.c      | 148 ---------------------------------
- drivers/ata/libata.h           |  18 ++++
- 3 files changed, 156 insertions(+), 148 deletions(-)
+ drivers/ata/Kconfig               |  21 ++++
+ drivers/ata/Makefile              |   1 +
+ drivers/ata/libata-core.c         | 171 +---------------------------
+ drivers/ata/libata-pata-timings.c | 180 ++++++++++++++++++++++++++++++
+ include/linux/libata.h            |  20 +++-
+ 5 files changed, 218 insertions(+), 175 deletions(-)
+ create mode 100644 drivers/ata/libata-pata-timings.c
 
-diff --git a/drivers/ata/libata-core-sata.c b/drivers/ata/libata-core-sata.c
-index fed8009981c0..f2629e069a55 100644
---- a/drivers/ata/libata-core-sata.c
-+++ b/drivers/ata/libata-core-sata.c
-@@ -120,6 +120,144 @@ int ata_do_link_spd_horkage(struct ata_device *dev)
- 	return 0;
- }
+diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+index ad7760656f71..5b55ebf56b5a 100644
+--- a/drivers/ata/Kconfig
++++ b/drivers/ata/Kconfig
+@@ -37,6 +37,9 @@ config ATA_NONSTANDARD
+ config SATA_HOST
+ 	bool
  
-+static void ata_dev_config_ncq_send_recv(struct ata_device *dev)
-+{
-+	struct ata_port *ap = dev->link->ap;
-+	unsigned int err_mask;
++config PATA_TIMINGS
++	bool
 +
-+	if (!ata_log_supported(dev, ATA_LOG_NCQ_SEND_RECV)) {
-+		ata_dev_warn(dev, "NCQ Send/Recv Log not supported\n");
-+		return;
-+	}
-+	err_mask = ata_read_log_page(dev, ATA_LOG_NCQ_SEND_RECV,
-+				     0, ap->sector_buf, 1);
-+	if (err_mask) {
-+		ata_dev_dbg(dev,
-+			    "failed to get NCQ Send/Recv Log Emask 0x%x\n",
-+			    err_mask);
-+	} else {
-+		u8 *cmds = dev->ncq_send_recv_cmds;
-+
-+		dev->flags |= ATA_DFLAG_NCQ_SEND_RECV;
-+		memcpy(cmds, ap->sector_buf, ATA_LOG_NCQ_SEND_RECV_SIZE);
-+
-+		if (dev->horkage & ATA_HORKAGE_NO_NCQ_TRIM) {
-+			ata_dev_dbg(dev, "disabling queued TRIM support\n");
-+			cmds[ATA_LOG_NCQ_SEND_RECV_DSM_OFFSET] &=
-+				~ATA_LOG_NCQ_SEND_RECV_DSM_TRIM;
-+		}
-+	}
-+}
-+
-+static void ata_dev_config_ncq_non_data(struct ata_device *dev)
-+{
-+	struct ata_port *ap = dev->link->ap;
-+	unsigned int err_mask;
-+
-+	if (!ata_log_supported(dev, ATA_LOG_NCQ_NON_DATA)) {
-+		ata_dev_warn(dev,
-+			     "NCQ Send/Recv Log not supported\n");
-+		return;
-+	}
-+	err_mask = ata_read_log_page(dev, ATA_LOG_NCQ_NON_DATA,
-+				     0, ap->sector_buf, 1);
-+	if (err_mask) {
-+		ata_dev_dbg(dev,
-+			    "failed to get NCQ Non-Data Log Emask 0x%x\n",
-+			    err_mask);
-+	} else {
-+		u8 *cmds = dev->ncq_non_data_cmds;
-+
-+		memcpy(cmds, ap->sector_buf, ATA_LOG_NCQ_NON_DATA_SIZE);
-+	}
-+}
-+
-+static void ata_dev_config_ncq_prio(struct ata_device *dev)
-+{
-+	struct ata_port *ap = dev->link->ap;
-+	unsigned int err_mask;
-+
-+	if (!(dev->flags & ATA_DFLAG_NCQ_PRIO_ENABLE)) {
-+		dev->flags &= ~ATA_DFLAG_NCQ_PRIO;
-+		return;
-+	}
-+
-+	err_mask = ata_read_log_page(dev,
-+				     ATA_LOG_IDENTIFY_DEVICE,
-+				     ATA_LOG_SATA_SETTINGS,
-+				     ap->sector_buf,
-+				     1);
-+	if (err_mask) {
-+		ata_dev_dbg(dev,
-+			    "failed to get Identify Device data, Emask 0x%x\n",
-+			    err_mask);
-+		return;
-+	}
-+
-+	if (ap->sector_buf[ATA_LOG_NCQ_PRIO_OFFSET] & BIT(3)) {
-+		dev->flags |= ATA_DFLAG_NCQ_PRIO;
-+	} else {
-+		dev->flags &= ~ATA_DFLAG_NCQ_PRIO;
-+		ata_dev_dbg(dev, "SATA page does not support priority\n");
-+	}
-+
-+}
-+
-+int ata_dev_config_ncq(struct ata_device *dev, char *desc, size_t desc_sz)
-+{
-+	struct ata_port *ap = dev->link->ap;
-+	int hdepth = 0, ddepth = ata_id_queue_depth(dev->id);
-+	unsigned int err_mask;
-+	char *aa_desc = "";
-+
-+	if (!ata_id_has_ncq(dev->id)) {
-+		desc[0] = '\0';
-+		return 0;
-+	}
-+	if (dev->horkage & ATA_HORKAGE_NONCQ) {
-+		snprintf(desc, desc_sz, "NCQ (not used)");
-+		return 0;
-+	}
-+	if (ap->flags & ATA_FLAG_NCQ) {
-+		hdepth = min(ap->scsi_host->can_queue, ATA_MAX_QUEUE);
-+		dev->flags |= ATA_DFLAG_NCQ;
-+	}
-+
-+	if (!(dev->horkage & ATA_HORKAGE_BROKEN_FPDMA_AA) &&
-+		(ap->flags & ATA_FLAG_FPDMA_AA) &&
-+		ata_id_has_fpdma_aa(dev->id)) {
-+		err_mask = ata_dev_set_feature(dev, SETFEATURES_SATA_ENABLE,
-+			SATA_FPDMA_AA);
-+		if (err_mask) {
-+			ata_dev_err(dev,
-+				    "failed to enable AA (error_mask=0x%x)\n",
-+				    err_mask);
-+			if (err_mask != AC_ERR_DEV) {
-+				dev->horkage |= ATA_HORKAGE_BROKEN_FPDMA_AA;
-+				return -EIO;
-+			}
-+		} else
-+			aa_desc = ", AA";
-+	}
-+
-+	if (hdepth >= ddepth)
-+		snprintf(desc, desc_sz, "NCQ (depth %d)%s", ddepth, aa_desc);
-+	else
-+		snprintf(desc, desc_sz, "NCQ (depth %d/%d)%s", hdepth,
-+			ddepth, aa_desc);
-+
-+	if ((ap->flags & ATA_FLAG_FPDMA_AUX)) {
-+		if (ata_id_has_ncq_send_and_recv(dev->id))
-+			ata_dev_config_ncq_send_recv(dev);
-+		if (ata_id_has_ncq_non_data(dev->id))
-+			ata_dev_config_ncq_non_data(dev);
-+		if (ata_id_has_ncq_prio(dev->id))
-+			ata_dev_config_ncq_prio(dev);
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  *	sata_link_scr_lpm - manipulate SControl IPM and SPM fields
-  *	@link: ATA link to manipulate SControl for
+ config ATA_VERBOSE_ERROR
+ 	bool "Verbose ATA error reporting"
+ 	default y
+@@ -51,6 +54,7 @@ config ATA_VERBOSE_ERROR
+ config ATA_ACPI
+ 	bool "ATA ACPI Support"
+ 	depends on ACPI
++	select PATA_TIMINGS
+ 	default y
+ 	help
+ 	  This option adds support for ATA-related ACPI objects.
+@@ -341,6 +345,7 @@ config PDC_ADMA
+ config PATA_OCTEON_CF
+ 	tristate "OCTEON Boot Bus Compact Flash support"
+ 	depends on CAVIUM_OCTEON_SOC
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables a polled compact flash driver for use with
+ 	  compact flash cards attached to the OCTEON boot bus.
+@@ -536,6 +541,7 @@ comment "PATA SFF controllers with BMDMA"
+ config PATA_ALI
+ 	tristate "ALi PATA support"
+ 	depends on PCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the ALi ATA interfaces
+ 	  found on the many ALi chipsets.
+@@ -545,6 +551,7 @@ config PATA_ALI
+ config PATA_AMD
+ 	tristate "AMD/NVidia PATA support"
+ 	depends on PCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the AMD and NVidia PATA
+ 	  interfaces found on the chipsets for Athlon/Athlon64.
+@@ -579,6 +586,7 @@ config PATA_ATIIXP
+ config PATA_ATP867X
+ 	tristate "ARTOP/Acard ATP867X PATA support"
+ 	depends on PCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for ARTOP/Acard ATP867X PATA
+ 	  controllers.
+@@ -588,6 +596,7 @@ config PATA_ATP867X
+ config PATA_BK3710
+ 	tristate "Palmchip BK3710 PATA support"
+ 	depends on ARCH_DAVINCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the integrated IDE controller on
+ 	  the TI DaVinci SoC.
+@@ -597,6 +606,7 @@ config PATA_BK3710
+ config PATA_CMD64X
+ 	tristate "CMD64x PATA support"
+ 	depends on PCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the CMD64x series chips
+ 	  except for the CMD640.
+@@ -642,6 +652,7 @@ config PATA_CS5536
+ config PATA_CYPRESS
+ 	tristate "Cypress CY82C693 PATA support (Very Experimental)"
+ 	depends on PCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the Cypress/Contaq CY82C693
+ 	  chipset found in some Alpha systems
+@@ -660,6 +671,7 @@ config PATA_EFAR
+ config PATA_EP93XX
+ 	tristate "Cirrus Logic EP93xx PATA support"
+ 	depends on ARCH_EP93XX
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the PATA controller in
+ 	  the Cirrus Logic EP9312 and EP9315 ARM CPU.
+@@ -724,6 +736,7 @@ config PATA_HPT3X3_DMA
+ config PATA_ICSIDE
+ 	tristate "Acorn ICS PATA support"
+ 	depends on ARM && ARCH_ACORN
++	select PATA_TIMINGS
+ 	help
+ 	  On Acorn systems, say Y here if you wish to use the ICS PATA
+ 	  interface card.  This is not required for ICS partition support.
+@@ -732,6 +745,7 @@ config PATA_ICSIDE
+ config PATA_IMX
+ 	tristate "PATA support for Freescale iMX"
+ 	depends on ARCH_MXC
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the PATA host available on Freescale
+           iMX SoCs.
+@@ -817,6 +831,7 @@ config PATA_NINJA32
+ config PATA_NS87415
+ 	tristate "Nat Semi NS87415 PATA support"
+ 	depends on PCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the National Semiconductor
+ 	  NS87415 PCI-IDE controller.
+@@ -941,6 +956,7 @@ config PATA_TRIFLEX
+ config PATA_VIA
+ 	tristate "VIA PATA support"
+ 	depends on PCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the VIA PATA interfaces
+ 	  found on the many VIA chipsets.
+@@ -974,6 +990,7 @@ comment "PIO-only SFF controllers"
+ config PATA_CMD640_PCI
+ 	tristate "CMD640 PCI PATA support (Experimental)"
+ 	depends on PCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the CMD640 PCI IDE
+ 	  interface chip. Only the primary channel is currently
+@@ -1044,6 +1061,7 @@ config PATA_MPIIX
+ config PATA_NS87410
+ 	tristate "Nat Semi NS87410 PATA support"
+ 	depends on PCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for the National Semiconductor
+ 	  NS87410 PCI-IDE controller.
+@@ -1124,6 +1142,7 @@ config PATA_RZ1000
+ config PATA_SAMSUNG_CF
+ 	tristate "Samsung SoC PATA support"
+ 	depends on SAMSUNG_DEV_IDE
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables basic support for Samsung's S3C/S5P board
+ 	  PATA controllers via the new ATA layer
+@@ -1143,6 +1162,7 @@ comment "Generic fallback / legacy drivers"
+ config PATA_ACPI
+ 	tristate "ACPI firmware driver for PATA"
+ 	depends on ATA_ACPI && ATA_BMDMA && PCI
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables an ACPI method driver which drives
+ 	  motherboard PATA controller interfaces through the ACPI
+@@ -1162,6 +1182,7 @@ config ATA_GENERIC
+ config PATA_LEGACY
+ 	tristate "Legacy ISA PATA support (Experimental)"
+ 	depends on (ISA || PCI)
++	select PATA_TIMINGS
+ 	help
+ 	  This option enables support for ISA/VLB/PCI bus legacy PATA
+ 	  ports and allows them to be accessed via the new ATA layer.
+diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
+index d8cc2e04a6c7..cdaf965fed25 100644
+--- a/drivers/ata/Makefile
++++ b/drivers/ata/Makefile
+@@ -127,3 +127,4 @@ libata-$(CONFIG_ATA_SFF)	+= libata-sff.o
+ libata-$(CONFIG_SATA_PMP)	+= libata-pmp.o
+ libata-$(CONFIG_ATA_ACPI)	+= libata-acpi.o
+ libata-$(CONFIG_SATA_ZPODD)	+= libata-zpodd.o
++libata-$(CONFIG_PATA_TIMINGS)	+= libata-pata-timings.o
 diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 52bd81bad484..0a90e0e65f0b 100644
+index c41198bb9582..408dee580f24 100644
 --- a/drivers/ata/libata-core.c
 +++ b/drivers/ata/libata-core.c
-@@ -2034,15 +2034,6 @@ unsigned int ata_read_log_page(struct ata_device *dev, u8 log,
- 	return err_mask;
+@@ -3204,175 +3204,7 @@ int sata_set_spd(struct ata_link *link)
  }
+ EXPORT_SYMBOL_GPL(sata_set_spd);
  
--static bool ata_log_supported(struct ata_device *dev, u8 log)
--{
--	struct ata_port *ap = dev->link->ap;
+-/*
+- * This mode timing computation functionality is ported over from
+- * drivers/ide/ide-timing.h and was originally written by Vojtech Pavlik
+- */
+-/*
+- * PIO 0-4, MWDMA 0-2 and UDMA 0-6 timings (in nanoseconds).
+- * These were taken from ATA/ATAPI-6 standard, rev 0a, except
+- * for UDMA6, which is currently supported only by Maxtor drives.
+- *
+- * For PIO 5/6 MWDMA 3/4 see the CFA specification 3.0.
+- */
 -
--	if (ata_read_log_page(dev, ATA_LOG_DIRECTORY, 0, ap->sector_buf, 1))
--		return false;
--	return get_unaligned_le16(&ap->sector_buf[log * 2]) ? true : false;
+-static const struct ata_timing ata_timing[] = {
+-/*	{ XFER_PIO_SLOW, 120, 290, 240, 960, 290, 240, 0,  960,   0 }, */
+-	{ XFER_PIO_0,     70, 290, 240, 600, 165, 150, 0,  600,   0 },
+-	{ XFER_PIO_1,     50, 290,  93, 383, 125, 100, 0,  383,   0 },
+-	{ XFER_PIO_2,     30, 290,  40, 330, 100,  90, 0,  240,   0 },
+-	{ XFER_PIO_3,     30,  80,  70, 180,  80,  70, 0,  180,   0 },
+-	{ XFER_PIO_4,     25,  70,  25, 120,  70,  25, 0,  120,   0 },
+-	{ XFER_PIO_5,     15,  65,  25, 100,  65,  25, 0,  100,   0 },
+-	{ XFER_PIO_6,     10,  55,  20,  80,  55,  20, 0,   80,   0 },
+-
+-	{ XFER_SW_DMA_0, 120,   0,   0,   0, 480, 480, 50, 960,   0 },
+-	{ XFER_SW_DMA_1,  90,   0,   0,   0, 240, 240, 30, 480,   0 },
+-	{ XFER_SW_DMA_2,  60,   0,   0,   0, 120, 120, 20, 240,   0 },
+-
+-	{ XFER_MW_DMA_0,  60,   0,   0,   0, 215, 215, 20, 480,   0 },
+-	{ XFER_MW_DMA_1,  45,   0,   0,   0,  80,  50, 5,  150,   0 },
+-	{ XFER_MW_DMA_2,  25,   0,   0,   0,  70,  25, 5,  120,   0 },
+-	{ XFER_MW_DMA_3,  25,   0,   0,   0,  65,  25, 5,  100,   0 },
+-	{ XFER_MW_DMA_4,  25,   0,   0,   0,  55,  20, 5,   80,   0 },
+-
+-/*	{ XFER_UDMA_SLOW,  0,   0,   0,   0,   0,   0, 0,    0, 150 }, */
+-	{ XFER_UDMA_0,     0,   0,   0,   0,   0,   0, 0,    0, 120 },
+-	{ XFER_UDMA_1,     0,   0,   0,   0,   0,   0, 0,    0,  80 },
+-	{ XFER_UDMA_2,     0,   0,   0,   0,   0,   0, 0,    0,  60 },
+-	{ XFER_UDMA_3,     0,   0,   0,   0,   0,   0, 0,    0,  45 },
+-	{ XFER_UDMA_4,     0,   0,   0,   0,   0,   0, 0,    0,  30 },
+-	{ XFER_UDMA_5,     0,   0,   0,   0,   0,   0, 0,    0,  20 },
+-	{ XFER_UDMA_6,     0,   0,   0,   0,   0,   0, 0,    0,  15 },
+-
+-	{ 0xFF }
+-};
+-
+-#define ENOUGH(v, unit)		(((v)-1)/(unit)+1)
+-#define EZ(v, unit)		((v)?ENOUGH(((v) * 1000), unit):0)
+-
+-static void ata_timing_quantize(const struct ata_timing *t, struct ata_timing *q, int T, int UT)
+-{
+-	q->setup	= EZ(t->setup,       T);
+-	q->act8b	= EZ(t->act8b,       T);
+-	q->rec8b	= EZ(t->rec8b,       T);
+-	q->cyc8b	= EZ(t->cyc8b,       T);
+-	q->active	= EZ(t->active,      T);
+-	q->recover	= EZ(t->recover,     T);
+-	q->dmack_hold	= EZ(t->dmack_hold,  T);
+-	q->cycle	= EZ(t->cycle,       T);
+-	q->udma		= EZ(t->udma,       UT);
 -}
 -
- static bool ata_identify_page_supported(struct ata_device *dev, u8 page)
- {
- 	struct ata_port *ap = dev->link->ap;
-@@ -2084,145 +2075,6 @@ static inline u8 ata_dev_knobble(struct ata_device *dev)
- 	return ((ap->cbl == ATA_CBL_SATA) && (!ata_id_is_sata(dev->id)));
- }
- 
--static void ata_dev_config_ncq_send_recv(struct ata_device *dev)
+-void ata_timing_merge(const struct ata_timing *a, const struct ata_timing *b,
+-		      struct ata_timing *m, unsigned int what)
 -{
--	struct ata_port *ap = dev->link->ap;
--	unsigned int err_mask;
--
--	if (!ata_log_supported(dev, ATA_LOG_NCQ_SEND_RECV)) {
--		ata_dev_warn(dev, "NCQ Send/Recv Log not supported\n");
--		return;
--	}
--	err_mask = ata_read_log_page(dev, ATA_LOG_NCQ_SEND_RECV,
--				     0, ap->sector_buf, 1);
--	if (err_mask) {
--		ata_dev_dbg(dev,
--			    "failed to get NCQ Send/Recv Log Emask 0x%x\n",
--			    err_mask);
--	} else {
--		u8 *cmds = dev->ncq_send_recv_cmds;
--
--		dev->flags |= ATA_DFLAG_NCQ_SEND_RECV;
--		memcpy(cmds, ap->sector_buf, ATA_LOG_NCQ_SEND_RECV_SIZE);
--
--		if (dev->horkage & ATA_HORKAGE_NO_NCQ_TRIM) {
--			ata_dev_dbg(dev, "disabling queued TRIM support\n");
--			cmds[ATA_LOG_NCQ_SEND_RECV_DSM_OFFSET] &=
--				~ATA_LOG_NCQ_SEND_RECV_DSM_TRIM;
--		}
--	}
+-	if (what & ATA_TIMING_SETUP  ) m->setup   = max(a->setup,   b->setup);
+-	if (what & ATA_TIMING_ACT8B  ) m->act8b   = max(a->act8b,   b->act8b);
+-	if (what & ATA_TIMING_REC8B  ) m->rec8b   = max(a->rec8b,   b->rec8b);
+-	if (what & ATA_TIMING_CYC8B  ) m->cyc8b   = max(a->cyc8b,   b->cyc8b);
+-	if (what & ATA_TIMING_ACTIVE ) m->active  = max(a->active,  b->active);
+-	if (what & ATA_TIMING_RECOVER) m->recover = max(a->recover, b->recover);
+-	if (what & ATA_TIMING_DMACK_HOLD) m->dmack_hold = max(a->dmack_hold, b->dmack_hold);
+-	if (what & ATA_TIMING_CYCLE  ) m->cycle   = max(a->cycle,   b->cycle);
+-	if (what & ATA_TIMING_UDMA   ) m->udma    = max(a->udma,    b->udma);
 -}
+-EXPORT_SYMBOL_GPL(ata_timing_merge);
 -
--static void ata_dev_config_ncq_non_data(struct ata_device *dev)
+-const struct ata_timing *ata_timing_find_mode(u8 xfer_mode)
 -{
--	struct ata_port *ap = dev->link->ap;
--	unsigned int err_mask;
+-	const struct ata_timing *t = ata_timing;
 -
--	if (!ata_log_supported(dev, ATA_LOG_NCQ_NON_DATA)) {
--		ata_dev_warn(dev,
--			     "NCQ Send/Recv Log not supported\n");
--		return;
--	}
--	err_mask = ata_read_log_page(dev, ATA_LOG_NCQ_NON_DATA,
--				     0, ap->sector_buf, 1);
--	if (err_mask) {
--		ata_dev_dbg(dev,
--			    "failed to get NCQ Non-Data Log Emask 0x%x\n",
--			    err_mask);
--	} else {
--		u8 *cmds = dev->ncq_non_data_cmds;
+-	while (xfer_mode > t->mode)
+-		t++;
 -
--		memcpy(cmds, ap->sector_buf, ATA_LOG_NCQ_NON_DATA_SIZE);
--	}
+-	if (xfer_mode == t->mode)
+-		return t;
+-
+-	WARN_ONCE(true, "%s: unable to find timing for xfer_mode 0x%x\n",
+-			__func__, xfer_mode);
+-
+-	return NULL;
 -}
+-EXPORT_SYMBOL_GPL(ata_timing_find_mode);
 -
--static void ata_dev_config_ncq_prio(struct ata_device *dev)
+-int ata_timing_compute(struct ata_device *adev, unsigned short speed,
+-		       struct ata_timing *t, int T, int UT)
 -{
--	struct ata_port *ap = dev->link->ap;
--	unsigned int err_mask;
+-	const u16 *id = adev->id;
+-	const struct ata_timing *s;
+-	struct ata_timing p;
 -
--	if (!(dev->flags & ATA_DFLAG_NCQ_PRIO_ENABLE)) {
--		dev->flags &= ~ATA_DFLAG_NCQ_PRIO;
--		return;
+-	/*
+-	 * Find the mode.
+-	 */
+-
+-	if (!(s = ata_timing_find_mode(speed)))
+-		return -EINVAL;
+-
+-	memcpy(t, s, sizeof(*s));
+-
+-	/*
+-	 * If the drive is an EIDE drive, it can tell us it needs extended
+-	 * PIO/MW_DMA cycle timing.
+-	 */
+-
+-	if (id[ATA_ID_FIELD_VALID] & 2) {	/* EIDE drive */
+-		memset(&p, 0, sizeof(p));
+-
+-		if (speed >= XFER_PIO_0 && speed < XFER_SW_DMA_0) {
+-			if (speed <= XFER_PIO_2)
+-				p.cycle = p.cyc8b = id[ATA_ID_EIDE_PIO];
+-			else if ((speed <= XFER_PIO_4) ||
+-				 (speed == XFER_PIO_5 && !ata_id_is_cfa(id)))
+-				p.cycle = p.cyc8b = id[ATA_ID_EIDE_PIO_IORDY];
+-		} else if (speed >= XFER_MW_DMA_0 && speed <= XFER_MW_DMA_2)
+-			p.cycle = id[ATA_ID_EIDE_DMA_MIN];
+-
+-		ata_timing_merge(&p, t, t, ATA_TIMING_CYCLE | ATA_TIMING_CYC8B);
 -	}
 -
--	err_mask = ata_read_log_page(dev,
--				     ATA_LOG_IDENTIFY_DEVICE,
--				     ATA_LOG_SATA_SETTINGS,
--				     ap->sector_buf,
--				     1);
--	if (err_mask) {
--		ata_dev_dbg(dev,
--			    "failed to get Identify Device data, Emask 0x%x\n",
--			    err_mask);
--		return;
+-	/*
+-	 * Convert the timing to bus clock counts.
+-	 */
+-
+-	ata_timing_quantize(t, t, T, UT);
+-
+-	/*
+-	 * Even in DMA/UDMA modes we still use PIO access for IDENTIFY,
+-	 * S.M.A.R.T * and some other commands. We have to ensure that the
+-	 * DMA cycle timing is slower/equal than the fastest PIO timing.
+-	 */
+-
+-	if (speed > XFER_PIO_6) {
+-		ata_timing_compute(adev, adev->pio_mode, &p, T, UT);
+-		ata_timing_merge(&p, t, t, ATA_TIMING_ALL);
 -	}
 -
--	if (ap->sector_buf[ATA_LOG_NCQ_PRIO_OFFSET] & BIT(3)) {
--		dev->flags |= ATA_DFLAG_NCQ_PRIO;
--	} else {
--		dev->flags &= ~ATA_DFLAG_NCQ_PRIO;
--		ata_dev_dbg(dev, "SATA page does not support priority\n");
+-	/*
+-	 * Lengthen active & recovery time so that cycle time is correct.
+-	 */
+-
+-	if (t->act8b + t->rec8b < t->cyc8b) {
+-		t->act8b += (t->cyc8b - (t->act8b + t->rec8b)) / 2;
+-		t->rec8b = t->cyc8b - t->act8b;
 -	}
 -
--}
--
--static int ata_dev_config_ncq(struct ata_device *dev,
--			       char *desc, size_t desc_sz)
--{
--	struct ata_port *ap = dev->link->ap;
--	int hdepth = 0, ddepth = ata_id_queue_depth(dev->id);
--	unsigned int err_mask;
--	char *aa_desc = "";
--
--	if (!ata_id_has_ncq(dev->id)) {
--		desc[0] = '\0';
--		return 0;
--	}
--	if (dev->horkage & ATA_HORKAGE_NONCQ) {
--		snprintf(desc, desc_sz, "NCQ (not used)");
--		return 0;
--	}
--	if (ap->flags & ATA_FLAG_NCQ) {
--		hdepth = min(ap->scsi_host->can_queue, ATA_MAX_QUEUE);
--		dev->flags |= ATA_DFLAG_NCQ;
+-	if (t->active + t->recover < t->cycle) {
+-		t->active += (t->cycle - (t->active + t->recover)) / 2;
+-		t->recover = t->cycle - t->active;
 -	}
 -
--	if (!(dev->horkage & ATA_HORKAGE_BROKEN_FPDMA_AA) &&
--		(ap->flags & ATA_FLAG_FPDMA_AA) &&
--		ata_id_has_fpdma_aa(dev->id)) {
--		err_mask = ata_dev_set_feature(dev, SETFEATURES_SATA_ENABLE,
--			SATA_FPDMA_AA);
--		if (err_mask) {
--			ata_dev_err(dev,
--				    "failed to enable AA (error_mask=0x%x)\n",
--				    err_mask);
--			if (err_mask != AC_ERR_DEV) {
--				dev->horkage |= ATA_HORKAGE_BROKEN_FPDMA_AA;
--				return -EIO;
--			}
--		} else
--			aa_desc = ", AA";
--	}
--
--	if (hdepth >= ddepth)
--		snprintf(desc, desc_sz, "NCQ (depth %d)%s", ddepth, aa_desc);
--	else
--		snprintf(desc, desc_sz, "NCQ (depth %d/%d)%s", hdepth,
--			ddepth, aa_desc);
--
--	if ((ap->flags & ATA_FLAG_FPDMA_AUX)) {
--		if (ata_id_has_ncq_send_and_recv(dev->id))
--			ata_dev_config_ncq_send_recv(dev);
--		if (ata_id_has_ncq_non_data(dev->id))
--			ata_dev_config_ncq_non_data(dev);
--		if (ata_id_has_ncq_prio(dev->id))
--			ata_dev_config_ncq_prio(dev);
--	}
+-	/* In a few cases quantisation may produce enough errors to
+-	   leave t->cycle too low for the sum of active and recovery
+-	   if so we must correct this */
+-	if (t->active + t->recover > t->cycle)
+-		t->cycle = t->active + t->recover;
 -
 -	return 0;
 -}
+-EXPORT_SYMBOL_GPL(ata_timing_compute);
 -
- static void ata_dev_config_sense_reporting(struct ata_device *dev)
- {
- 	unsigned int err_mask;
-diff --git a/drivers/ata/libata.h b/drivers/ata/libata.h
-index 9eebe4e0be39..24b08efd79a3 100644
---- a/drivers/ata/libata.h
-+++ b/drivers/ata/libata.h
-@@ -15,6 +15,8 @@
- #define DRV_NAME	"libata"
- #define DRV_VERSION	"3.00"	/* must be exactly four chars */
++#ifdef CONFIG_ATA_ACPI
+ /**
+  *	ata_timing_cycle2mode - find xfer mode for the specified cycle duration
+  *	@xfer_shift: ATA_SHIFT_* value for transfer type to examine.
+@@ -3423,6 +3255,7 @@ u8 ata_timing_cycle2mode(unsigned int xfer_shift, int cycle)
  
-+#include <asm/unaligned.h>
+ 	return last_mode;
+ }
++#endif
+ 
+ /**
+  *	ata_down_xfermask_limit - adjust dev xfer masks downward
+diff --git a/drivers/ata/libata-pata-timings.c b/drivers/ata/libata-pata-timings.c
+new file mode 100644
+index 000000000000..bababa6f519b
+--- /dev/null
++++ b/drivers/ata/libata-pata-timings.c
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  libata-pata-timings.c - helper library for PATA timings
++ *
++ *  Copyright 2003-2004 Red Hat, Inc.  All rights reserved.
++ *  Copyright 2003-2004 Jeff Garzik
++ */
 +
- /* libata-core.c */
- enum {
- 	/* flags for ata_dev_read_id() */
-@@ -85,13 +87,29 @@ extern void __ata_port_probe(struct ata_port *ap);
- extern unsigned int ata_read_log_page(struct ata_device *dev, u8 log,
- 				      u8 page, void *buf, unsigned int sectors);
- 
-+static inline bool ata_log_supported(struct ata_device *dev, u8 log)
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/libata.h>
++
++/*
++ * This mode timing computation functionality is ported over from
++ * drivers/ide/ide-timing.h and was originally written by Vojtech Pavlik
++ */
++/*
++ * PIO 0-4, MWDMA 0-2 and UDMA 0-6 timings (in nanoseconds).
++ * These were taken from ATA/ATAPI-6 standard, rev 0a, except
++ * for UDMA6, which is currently supported only by Maxtor drives.
++ *
++ * For PIO 5/6 MWDMA 3/4 see the CFA specification 3.0.
++ */
++
++static const struct ata_timing ata_timing[] = {
++/*	{ XFER_PIO_SLOW, 120, 290, 240, 960, 290, 240, 0,  960,   0 }, */
++	{ XFER_PIO_0,     70, 290, 240, 600, 165, 150, 0,  600,   0 },
++	{ XFER_PIO_1,     50, 290,  93, 383, 125, 100, 0,  383,   0 },
++	{ XFER_PIO_2,     30, 290,  40, 330, 100,  90, 0,  240,   0 },
++	{ XFER_PIO_3,     30,  80,  70, 180,  80,  70, 0,  180,   0 },
++	{ XFER_PIO_4,     25,  70,  25, 120,  70,  25, 0,  120,   0 },
++	{ XFER_PIO_5,     15,  65,  25, 100,  65,  25, 0,  100,   0 },
++	{ XFER_PIO_6,     10,  55,  20,  80,  55,  20, 0,   80,   0 },
++
++	{ XFER_SW_DMA_0, 120,   0,   0,   0, 480, 480, 50, 960,   0 },
++	{ XFER_SW_DMA_1,  90,   0,   0,   0, 240, 240, 30, 480,   0 },
++	{ XFER_SW_DMA_2,  60,   0,   0,   0, 120, 120, 20, 240,   0 },
++
++	{ XFER_MW_DMA_0,  60,   0,   0,   0, 215, 215, 20, 480,   0 },
++	{ XFER_MW_DMA_1,  45,   0,   0,   0,  80,  50, 5,  150,   0 },
++	{ XFER_MW_DMA_2,  25,   0,   0,   0,  70,  25, 5,  120,   0 },
++	{ XFER_MW_DMA_3,  25,   0,   0,   0,  65,  25, 5,  100,   0 },
++	{ XFER_MW_DMA_4,  25,   0,   0,   0,  55,  20, 5,   80,   0 },
++
++/*	{ XFER_UDMA_SLOW,  0,   0,   0,   0,   0,   0, 0,    0, 150 }, */
++	{ XFER_UDMA_0,     0,   0,   0,   0,   0,   0, 0,    0, 120 },
++	{ XFER_UDMA_1,     0,   0,   0,   0,   0,   0, 0,    0,  80 },
++	{ XFER_UDMA_2,     0,   0,   0,   0,   0,   0, 0,    0,  60 },
++	{ XFER_UDMA_3,     0,   0,   0,   0,   0,   0, 0,    0,  45 },
++	{ XFER_UDMA_4,     0,   0,   0,   0,   0,   0, 0,    0,  30 },
++	{ XFER_UDMA_5,     0,   0,   0,   0,   0,   0, 0,    0,  20 },
++	{ XFER_UDMA_6,     0,   0,   0,   0,   0,   0, 0,    0,  15 },
++
++	{ 0xFF }
++};
++
++#define ENOUGH(v, unit)		(((v)-1)/(unit)+1)
++#define EZ(v, unit)		((v)?ENOUGH(((v) * 1000), unit):0)
++
++static void ata_timing_quantize(const struct ata_timing *t, struct ata_timing *q, int T, int UT)
 +{
-+	struct ata_port *ap = dev->link->ap;
-+
-+	if (ata_read_log_page(dev, ATA_LOG_DIRECTORY, 0, ap->sector_buf, 1))
-+		return false;
-+	return get_unaligned_le16(&ap->sector_buf[log * 2]) ? true : false;
++	q->setup	= EZ(t->setup,       T);
++	q->act8b	= EZ(t->act8b,       T);
++	q->rec8b	= EZ(t->rec8b,       T);
++	q->cyc8b	= EZ(t->cyc8b,       T);
++	q->active	= EZ(t->active,      T);
++	q->recover	= EZ(t->recover,     T);
++	q->dmack_hold	= EZ(t->dmack_hold,  T);
++	q->cycle	= EZ(t->cycle,       T);
++	q->udma		= EZ(t->udma,       UT);
 +}
 +
- #define to_ata_port(d) container_of(d, struct ata_port, tdev)
- 
- /* libata-core-sata.c */
- #ifdef CONFIG_SATA_HOST
- int ata_do_link_spd_horkage(struct ata_device *dev);
-+int ata_dev_config_ncq(struct ata_device *dev, char *desc, size_t desc_sz);
- #else
- static inline int ata_do_link_spd_horkage(struct ata_device *dev) { return 0; }
-+static inline int ata_dev_config_ncq(struct ata_device *dev, char *desc,
-+				     size_t desc_sz)
++void ata_timing_merge(const struct ata_timing *a, const struct ata_timing *b,
++		      struct ata_timing *m, unsigned int what)
 +{
-+	desc[0] = '\0';
++	if (what & ATA_TIMING_SETUP  ) m->setup   = max(a->setup,   b->setup);
++	if (what & ATA_TIMING_ACT8B  ) m->act8b   = max(a->act8b,   b->act8b);
++	if (what & ATA_TIMING_REC8B  ) m->rec8b   = max(a->rec8b,   b->rec8b);
++	if (what & ATA_TIMING_CYC8B  ) m->cyc8b   = max(a->cyc8b,   b->cyc8b);
++	if (what & ATA_TIMING_ACTIVE ) m->active  = max(a->active,  b->active);
++	if (what & ATA_TIMING_RECOVER) m->recover = max(a->recover, b->recover);
++	if (what & ATA_TIMING_DMACK_HOLD) m->dmack_hold = max(a->dmack_hold, b->dmack_hold);
++	if (what & ATA_TIMING_CYCLE  ) m->cycle   = max(a->cycle,   b->cycle);
++	if (what & ATA_TIMING_UDMA   ) m->udma    = max(a->udma,    b->udma);
++}
++EXPORT_SYMBOL_GPL(ata_timing_merge);
++
++const struct ata_timing *ata_timing_find_mode(u8 xfer_mode)
++{
++	const struct ata_timing *t = ata_timing;
++
++	while (xfer_mode > t->mode)
++		t++;
++
++	if (xfer_mode == t->mode)
++		return t;
++
++	WARN_ONCE(true, "%s: unable to find timing for xfer_mode 0x%x\n",
++			__func__, xfer_mode);
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(ata_timing_find_mode);
++
++int ata_timing_compute(struct ata_device *adev, unsigned short speed,
++		       struct ata_timing *t, int T, int UT)
++{
++	const u16 *id = adev->id;
++	const struct ata_timing *s;
++	struct ata_timing p;
++
++	/*
++	 * Find the mode.
++	 */
++
++	if (!(s = ata_timing_find_mode(speed)))
++		return -EINVAL;
++
++	memcpy(t, s, sizeof(*s));
++
++	/*
++	 * If the drive is an EIDE drive, it can tell us it needs extended
++	 * PIO/MW_DMA cycle timing.
++	 */
++
++	if (id[ATA_ID_FIELD_VALID] & 2) {	/* EIDE drive */
++		memset(&p, 0, sizeof(p));
++
++		if (speed >= XFER_PIO_0 && speed < XFER_SW_DMA_0) {
++			if (speed <= XFER_PIO_2)
++				p.cycle = p.cyc8b = id[ATA_ID_EIDE_PIO];
++			else if ((speed <= XFER_PIO_4) ||
++				 (speed == XFER_PIO_5 && !ata_id_is_cfa(id)))
++				p.cycle = p.cyc8b = id[ATA_ID_EIDE_PIO_IORDY];
++		} else if (speed >= XFER_MW_DMA_0 && speed <= XFER_MW_DMA_2)
++			p.cycle = id[ATA_ID_EIDE_DMA_MIN];
++
++		ata_timing_merge(&p, t, t, ATA_TIMING_CYCLE | ATA_TIMING_CYC8B);
++	}
++
++	/*
++	 * Convert the timing to bus clock counts.
++	 */
++
++	ata_timing_quantize(t, t, T, UT);
++
++	/*
++	 * Even in DMA/UDMA modes we still use PIO access for IDENTIFY,
++	 * S.M.A.R.T * and some other commands. We have to ensure that the
++	 * DMA cycle timing is slower/equal than the fastest PIO timing.
++	 */
++
++	if (speed > XFER_PIO_6) {
++		ata_timing_compute(adev, adev->pio_mode, &p, T, UT);
++		ata_timing_merge(&p, t, t, ATA_TIMING_ALL);
++	}
++
++	/*
++	 * Lengthen active & recovery time so that cycle time is correct.
++	 */
++
++	if (t->act8b + t->rec8b < t->cyc8b) {
++		t->act8b += (t->cyc8b - (t->act8b + t->rec8b)) / 2;
++		t->rec8b = t->cyc8b - t->act8b;
++	}
++
++	if (t->active + t->recover < t->cycle) {
++		t->active += (t->cycle - (t->active + t->recover)) / 2;
++		t->recover = t->cycle - t->active;
++	}
++
++	/* In a few cases quantisation may produce enough errors to
++	   leave t->cycle too low for the sum of active and recovery
++	   if so we must correct this */
++	if (t->active + t->recover > t->cycle)
++		t->cycle = t->active + t->recover;
++
 +	return 0;
 +}
- #endif
++EXPORT_SYMBOL_GPL(ata_timing_compute);
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index dc162cca63a4..79953c6d769c 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1207,13 +1207,9 @@ extern int ata_cable_unknown(struct ata_port *ap);
  
- /* libata-acpi.c */
+ /* Timing helpers */
+ extern unsigned int ata_pio_need_iordy(const struct ata_device *);
+-extern const struct ata_timing *ata_timing_find_mode(u8 xfer_mode);
+-extern int ata_timing_compute(struct ata_device *, unsigned short,
+-			      struct ata_timing *, int, int);
+-extern void ata_timing_merge(const struct ata_timing *,
+-			     const struct ata_timing *, struct ata_timing *,
+-			     unsigned int);
++#ifdef CONFIG_ATA_ACPI
+ extern u8 ata_timing_cycle2mode(unsigned int xfer_shift, int cycle);
++#endif
+ 
+ /* PCI */
+ #ifdef CONFIG_PCI
+@@ -1805,6 +1801,18 @@ static inline int ata_dma_enabled(struct ata_device *adev)
+ 	return (adev->dma_mode == 0xFF ? 0 : 1);
+ }
+ 
++/**************************************************************************
++ * PATA timings - drivers/ata/libata-pata-timings.c
++ */
++#ifdef CONFIG_PATA_TIMINGS
++extern const struct ata_timing *ata_timing_find_mode(u8 xfer_mode);
++extern int ata_timing_compute(struct ata_device *, unsigned short,
++			      struct ata_timing *, int, int);
++extern void ata_timing_merge(const struct ata_timing *,
++			     const struct ata_timing *, struct ata_timing *,
++			     unsigned int);
++#endif
++
+ /**************************************************************************
+  * PMP - drivers/ata/libata-pmp.c
+  */
 -- 
 2.24.1
 
