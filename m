@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCD4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31576C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29C524683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F292C20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222275;
-	bh=OmakTc7+CEIwIVwgJvm2ptrnkn0uxJwn1MlkN69iRHU=;
+	s=default; t=1580222281;
+	bh=a7hZ0I9DVi8FQ2vUmwYlY7OO1gbwxmdrjRY9e4lKIj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d+q1GbLMVkBDU8Ihi3WWHqqWHE7+5PC8XjnWEuEr5lRIT2aQtVm6IvB+FdUzF8ePk
-	 6XCtYAvyDyo5moUIGJEoc3QoG01VdIDqjEzZNEFuo9nDM5Gy/ws/92EabNUfzUpWQB
-	 j0wL0i2uF6wXqOfpk7o5vT9Ru6/XGjawDI9uWq7s=
+	b=hFvK+EbPhhYrAzIrnJmBgkd0i0Yd0Gjm5z8l9BC4tmNKNbffp8ibukBZTkCU6MVMk
+	 u4gVa0n1lg1nPvKf656Ve4v9w+sp18KKD+LMDPEF+l8WJll8gQHbvfA08QfdTUD+nf
+	 QEF0IaFy6gJFbhjLVMor+zoC2nJzSzIBOVxk/xEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgA1OT2 (ORCPT
+        id S1730860AbgA1OTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:19:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43782 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:19:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbgA1OTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:19:24 -0500
+        id S1729866AbgA1OTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:19:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC15D24698;
-        Tue, 28 Jan 2020 14:19:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC17724681;
+        Tue, 28 Jan 2020 14:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221164;
-        bh=OmakTc7+CEIwIVwgJvm2ptrnkn0uxJwn1MlkN69iRHU=;
+        s=default; t=1580221154;
+        bh=a7hZ0I9DVi8FQ2vUmwYlY7OO1gbwxmdrjRY9e4lKIj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YRsQTOC0nxLIJRCP9ySevdqmGS4pFfNLtkO6zJJ5DeEbGCLjXcF8C4xRiBTbjgwPf
-         0B1517Xebivv/llqB2Jj2MFDEatdJvvVEqiazzZ/fnW0iOdv206yXFzOryYA3IAR/r
-         UrrI9AycXtqYKpKTSwQbQhoSGT48yUBmQSB9mEn8=
+        b=a18755Vb178SkAtxCkIeE1ybA5KhadM5M/CpwL+fBLvHb+BEZ6WAHZoRreyB6Sk5r
+         DEEV4BIDD6B+lri9fAmA86sUmDeeTZAug+/rbWM9KKO7Q2IQ9w/hSP1PBLUc7S/mDf
+         2xbDq32WqZE8Kj14N93GqSpxuKUUF57Ot7z0Ry48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 077/271] cdc-wdm: pass return value of recover_from_urb_loss
-Date:   Tue, 28 Jan 2020 15:03:46 +0100
-Message-Id: <20200128135858.291000386@linuxfoundation.org>
+        stable@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 073/271] block: dont use bio->bi_vcnt to figure out segment number
+Date:   Tue, 28 Jan 2020 15:03:42 +0100
+Message-Id: <20200128135858.012132990@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,33 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 0742a338f5b3446a26de551ad8273fb41b2787f2 ]
+[ Upstream commit 1a67356e9a4829da2935dd338630a550c59c8489 ]
 
-'rv' is the correct return value, pass it upstream instead of 0
+It is wrong to use bio->bi_vcnt to figure out how many segments
+there are in the bio even though CLONED flag isn't set on this bio,
+because this bio may be splitted or advanced.
 
-Fixes: 17d80d562fd7 ("USB: autosuspend for cdc-wdm")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So always use bio_segments() in blk_recount_segments(), and it shouldn't
+cause any performance loss now because the physical segment number is figured
+out in blk_queue_split() and BIO_SEG_VALID is set meantime since
+bdced438acd83ad83a6c ("block: setup bi_phys_segments after splitting").
+
+Reviewed-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: 76d8137a3113 ("blk-merge: recaculate segment if it isn't less than max segments")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/cdc-wdm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/blk-merge.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
-index 217a479165e03..09337a973335c 100644
---- a/drivers/usb/class/cdc-wdm.c
-+++ b/drivers/usb/class/cdc-wdm.c
-@@ -1098,7 +1098,7 @@ static int wdm_post_reset(struct usb_interface *intf)
- 	rv = recover_from_urb_loss(desc);
- 	mutex_unlock(&desc->wlock);
- 	mutex_unlock(&desc->rlock);
--	return 0;
-+	return rv;
- }
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 2642e5fc8b69a..66795cca662a3 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -305,13 +305,7 @@ void blk_recalc_rq_segments(struct request *rq)
  
- static struct usb_driver wdm_driver = {
+ void blk_recount_segments(struct request_queue *q, struct bio *bio)
+ {
+-	unsigned short seg_cnt;
+-
+-	/* estimate segment number by bi_vcnt for non-cloned bio */
+-	if (bio_flagged(bio, BIO_CLONED))
+-		seg_cnt = bio_segments(bio);
+-	else
+-		seg_cnt = bio->bi_vcnt;
++	unsigned short seg_cnt = bio_segments(bio);
+ 
+ 	if (test_bit(QUEUE_FLAG_NO_SG_MERGE, &q->queue_flags) &&
+ 			(seg_cnt < queue_max_segments(q)))
 -- 
 2.20.1
 
