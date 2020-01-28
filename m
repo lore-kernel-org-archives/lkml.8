@@ -2,95 +2,188 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EF1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C31C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1CAD21739
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DC22468B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgA1LND (ORCPT
+        id S1726024AbgA1LSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 06:13:03 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:48670 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgA1LNC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 06:13:02 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iwOng-0002YR-RT; Tue, 28 Jan 2020 12:12:56 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3B3751C1A10;
-        Tue, 28 Jan 2020 12:12:56 +0100 (CET)
-Date:   Tue, 28 Jan 2020 11:12:55 -0000
-From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] MAINTAINERS: Correct path to time namespace source file
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200127143748.268515-1-dima@arista.com>
-References: <20200127143748.268515-1-dima@arista.com>
+        Tue, 28 Jan 2020 06:18:15 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37672 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725937AbgA1LSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 06:18:14 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4F0272D8AA78D8510173;
+        Tue, 28 Jan 2020 19:18:10 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 28 Jan 2020 19:18:02 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <rjw@rjwysocki.net>, <lenb@kernel.org>
+CC:     <jeremy.linton@arm.com>, <arnd@arndb.de>, <olof@lixom.net>,
+        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <guohanjun@huawei.com>, <gregkh@linuxfoundation.org>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
+Date:   Tue, 28 Jan 2020 19:14:19 +0800
+Message-ID: <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Message-ID: <158020997595.396.4728433356571662875.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+Add a generic driver for platforms which populate their ACPI PPTT
+processor package ID Type Structure according to suggestion in the ACPI
+spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
 
-Commit-ID:     fcfd7345209210ab309f4422a308bad3e1fa6b8c
-Gitweb:        https://git.kernel.org/tip/fcfd7345209210ab309f4422a308bad3e1fa6b8c
-Author:        Dmitry Safonov <dima@arista.com>
-AuthorDate:    Mon, 27 Jan 2020 14:37:48 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 28 Jan 2020 12:08:42 +01:00
+The soc_id is from member LEVEL_2_ID.
 
-MAINTAINERS: Correct path to time namespace source file
+For this, we need to use a whitelist of platforms which are known to
+populate the structure as suggested.
 
-According to reviews, Time Namespace source was moved from
-kernel/time_namespace.c to kernel/time/namespace.c between patchset
-versions, while the path in MAINTERNERS file wasn't adjusted properly.
+For now, only the vendor and soc_id fields are exposed.
 
-Correct it, so get_maintainer.pl produces a correct emails list again.
-
-Fixes: 769071ac9f20 ("ns: Introduce Time Namespace")
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200127143748.268515-1-dima@arista.com
+Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/Makefile       |   1 +
+ drivers/soc/acpi_generic.c | 102 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 103 insertions(+)
+ create mode 100644 drivers/soc/acpi_generic.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 141b8d3..3a4163b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13267,7 +13267,7 @@ S:	Maintained
- F:	fs/timerfd.c
- F:	include/linux/timer*
- F:	include/linux/time_namespace.h
--F:	kernel/time_namespace.c
-+F:	kernel/time/namespace.c
- F:	kernel/time/*timer*
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 8b49d782a1ab..2a59a30a22cd 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -3,6 +3,7 @@
+ # Makefile for the Linux Kernel SOC specific device drivers.
+ #
  
- POWER MANAGEMENT CORE
++obj-$(CONFIG_ACPI_PPTT)		+= acpi_generic.o
+ obj-$(CONFIG_ARCH_ACTIONS)	+= actions/
+ obj-$(CONFIG_SOC_ASPEED)	+= aspeed/
+ obj-$(CONFIG_ARCH_AT91)		+= atmel/
+diff --git a/drivers/soc/acpi_generic.c b/drivers/soc/acpi_generic.c
+new file mode 100644
+index 000000000000..34a1f5f8e063
+--- /dev/null
++++ b/drivers/soc/acpi_generic.c
+@@ -0,0 +1,102 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) John Garry, john.garry@huawei.com
++ */
++
++#define pr_fmt(fmt) "SOC ACPI GENERIC: " fmt
++
++#include <linux/acpi.h>
++#include <linux/sys_soc.h>
++
++/*
++ * Known platforms that fill in PPTT package ID structures according to
++ * ACPI spec examples, that being:
++ * - Custom driver attribute is in ID Type Structure VENDOR_ID member
++ * - SoC id is in ID Type Structure LEVEL_2_ID member
++ *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
++ */
++static struct acpi_platform_list plat_list[] = {
++	{"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
++	{ } /* End */
++};
++
++struct acpi_generic_soc_struct {
++	struct soc_device_attribute dev_attr;
++	u32 vendor;
++};
++
++static ssize_t vendor_show(struct device *dev,
++			   struct device_attribute *attr,
++			   char *buf)
++{
++	struct acpi_generic_soc_struct *soc = dev_get_drvdata(dev);
++	u8 vendor_id[5] = {};
++
++	*(u32 *)vendor_id = soc->vendor;
++
++	return sprintf(buf, "%s\n", vendor_id);
++}
++
++static DEVICE_ATTR_RO(vendor);
++
++static __init int soc_acpi_generic_init(void)
++{
++	int index;
++
++	index = acpi_match_platform_list(plat_list);
++	if (index < 0)
++		return -ENOENT;
++
++	index = 0;
++	while (true) {
++		struct acpi_pptt_package_info info;
++
++		if (!acpi_pptt_get_package_info(index, &info)) {
++			struct soc_device_attribute *soc_dev_attr;
++			struct acpi_generic_soc_struct *soc;
++			struct soc_device *soc_dev;
++			u8 soc_id[9] = {};
++
++			*(u64 *)soc_id = info.LEVEL_2_ID;
++
++			soc = kzalloc(sizeof(*soc), GFP_KERNEL);
++			if (!soc)
++				return -ENOMEM;
++
++			soc_dev_attr = &soc->dev_attr;
++			soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s",
++							 soc_id);
++			if (!soc_dev_attr->soc_id) {
++				kfree(soc);
++				return -ENOMEM;
++			}
++			soc->vendor = info.vendor_id;
++
++			soc_dev = soc_device_register(soc_dev_attr);
++			if (IS_ERR(soc_dev)) {
++				int ret = PTR_ERR(soc_dev);
++
++				pr_info("could not register soc (%d) index=%d\n",
++					ret, index);
++				kfree(soc_dev_attr->soc_id);
++				kfree(soc);
++				return ret;
++			}
++			dev_set_drvdata(soc_device_to_device(soc_dev), soc);
++			device_create_file(soc_device_to_device(soc_dev),
++					   &dev_attr_vendor);
++		} else {
++			break;
++		}
++
++		index++;
++	}
++
++	return 0;
++}
++
++module_init(soc_acpi_generic_init);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("John Garry <john.garry@huawei.com>");
++MODULE_DESCRIPTION("Generic ACPI soc driver");
+-- 
+2.17.1
+
