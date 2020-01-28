@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEADC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806FEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267842468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546FA2468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220864;
-	bh=vRgmqPjzXZxTazayl2hBXX8S1fu0Gnzq5eN1LZUL/FU=;
+	s=default; t=1580220868;
+	bh=jV/dth03refcE4X+CD8qRfFQaEXuob2S/bnzO3uo3Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=teXcc1K/2/uXwGB0QgLIEL7NWMg3cimCngZfPq73vJlOrktlP+pLyPjDLlDZHOa2r
-	 9XUMkhK8dg3l7PH8HmqPoyWYeGpiOqqDD3u75Mk+6ywZsFWXRARU96/GW3eX338utn
-	 55WuKx7VI3zQPO7jtsGIcObZiUY+zh/2cYar8COA=
+	b=HyUQseDt0b97dr55ye1jdRdJ07qcnAavJTL81mwpSv2n9MDzkG3J6ALRJN8jdRE+Q
+	 ol6lPejweROTJULpqftSsEjqyoEmfInDa5jaz6X4VGSRin2mMSyr0XWXmgHl4CjYoZ
+	 VwX9stgf3fCspH9zy6HAkyxiXUEsGSH/jYLs6ndY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgA1OOX (ORCPT
+        id S1729652AbgA1OO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:14:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:14:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729843AbgA1OOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:14:19 -0500
+        id S1729864AbgA1OOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:14:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00B4924681;
-        Tue, 28 Jan 2020 14:14:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D07FF24694;
+        Tue, 28 Jan 2020 14:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220858;
-        bh=vRgmqPjzXZxTazayl2hBXX8S1fu0Gnzq5eN1LZUL/FU=;
+        s=default; t=1580220863;
+        bh=jV/dth03refcE4X+CD8qRfFQaEXuob2S/bnzO3uo3Fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQVLuVmxcgepMk4ujLJPPUftMtmi4B79yvYbQhcAsxSb+NBcO1JyloW00Q7gML38M
-         VmALhs2FwN99TTp7X8eI03hDnmu/cXYPchQfaMG/zAaoovqXRGSHwjxJ00+WOuCGqd
-         kFhKX5tUJDRieLBdqECNonGDj2LxF3bDtQuIMAMw=
+        b=IKbtprDHSUjl+teUz5iZyswqMAbB+SfEmR4W73inwAxiUrrphcfd2rDCPMoeKFyXd
+         9/4CvN36FrcOGy2ZDBwhxCnSMg5QDHTwPUdbs7x7K7g3Dlg7GdeCf+ZKcroiOiGXi0
+         7vK4YWECTNetIRFQqb/55lj2OD+Pg+iJpXqQZgg0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.4 175/183] tracing: xen: Ordered comparison of function pointers
-Date:   Tue, 28 Jan 2020 15:06:34 +0100
-Message-Id: <20200128135847.222285466@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Lars=20M=C3=B6llendorf?= <lars.moellendorf@plating.de>,
+        Lars-Peter Clausen <lars@metafoo.de>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.4 177/183] iio: buffer: align the size of scan bytes to size of the largest element
+Date:   Tue, 28 Jan 2020 15:06:36 +0100
+Message-Id: <20200128135847.434432262@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -59,53 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Lars Möllendorf <lars.moellendorf@plating.de>
 
-commit d0695e2351102affd8efae83989056bc4b275917 upstream.
+commit 883f616530692d81cb70f8a32d85c0d2afc05f69 upstream.
 
-Just as commit 0566e40ce7 ("tracing: initcall: Ordered comparison of
-function pointers"), this patch fixes another remaining one in xen.h
-found by clang-9.
+Previous versions of `iio_compute_scan_bytes` only aligned each element
+to its own length (i.e. its own natural alignment). Because multiple
+consecutive sets of scan elements are buffered this does not work in
+case the computed scan bytes do not align with the natural alignment of
+the first scan element in the set.
 
-In file included from arch/x86/xen/trace.c:21:
-In file included from ./include/trace/events/xen.h:475:
-In file included from ./include/trace/define_trace.h:102:
-In file included from ./include/trace/trace_events.h:473:
-./include/trace/events/xen.h:69:7: warning: ordered comparison of function \
-pointers ('xen_mc_callback_fn_t' (aka 'void (*)(void *)') and 'xen_mc_callback_fn_t') [-Wordered-compare-function-pointers]
-                    __field(xen_mc_callback_fn_t, fn)
-                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/trace/trace_events.h:421:29: note: expanded from macro '__field'
-                                ^
-./include/trace/trace_events.h:407:6: note: expanded from macro '__field_ext'
-                                 is_signed_type(type), filter_type);    \
-                                 ^
-./include/linux/trace_events.h:554:44: note: expanded from macro 'is_signed_type'
-                                              ^
+This commit fixes this by aligning the scan bytes to the natural
+alignment of the largest scan element in the set.
 
-Fixes: c796f213a6934 ("xen/trace: add multicall tracing")
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 959d2952d124 ("staging:iio: make iio_sw_buffer_preenable much more general.")
+Signed-off-by: Lars Möllendorf <lars.moellendorf@plating.de>
+Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+
 ---
- include/trace/events/xen.h |    6 +++++-
+ drivers/iio/industrialio-buffer.c |    6 +++++-
  1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/include/trace/events/xen.h
-+++ b/include/trace/events/xen.h
-@@ -63,7 +63,11 @@ TRACE_EVENT(xen_mc_callback,
- 	    TP_PROTO(xen_mc_callback_fn_t fn, void *data),
- 	    TP_ARGS(fn, data),
- 	    TP_STRUCT__entry(
--		    __field(xen_mc_callback_fn_t, fn)
-+		    /*
-+		     * Use field_struct to avoid is_signed_type()
-+		     * comparison of a function pointer.
-+		     */
-+		    __field_struct(xen_mc_callback_fn_t, fn)
- 		    __field(void *, data)
- 		    ),
- 	    TP_fast_assign(
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -527,7 +527,7 @@ static int iio_compute_scan_bytes(struct
+ {
+ 	const struct iio_chan_spec *ch;
+ 	unsigned bytes = 0;
+-	int length, i;
++	int length, i, largest = 0;
+ 
+ 	/* How much space will the demuxed element take? */
+ 	for_each_set_bit(i, mask,
+@@ -540,6 +540,7 @@ static int iio_compute_scan_bytes(struct
+ 			length = ch->scan_type.storagebits / 8;
+ 		bytes = ALIGN(bytes, length);
+ 		bytes += length;
++		largest = max(largest, length);
+ 	}
+ 	if (timestamp) {
+ 		ch = iio_find_channel_from_si(indio_dev,
+@@ -551,7 +552,10 @@ static int iio_compute_scan_bytes(struct
+ 			length = ch->scan_type.storagebits / 8;
+ 		bytes = ALIGN(bytes, length);
+ 		bytes += length;
++		largest = max(largest, length);
+ 	}
++
++	bytes = ALIGN(bytes, largest);
+ 	return bytes;
+ }
+ 
 
 
