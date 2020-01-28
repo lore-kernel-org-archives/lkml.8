@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17574C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51A6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32EE2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 799742071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221182;
-	bh=W/Mi6R3n2y8Ym1v+tBFnv2NOvUfjk9okOQxD3vYlfNg=;
+	s=default; t=1580221185;
+	bh=Xw9YztzTE2/FOpzeBm47CYzucRq34DUyKjvMFYOZgkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qpfWSgFHUDs8b1TV9qcXv3dxLEwQKbH2Za3UA7zsi9un4W7ndayo8dJclqKVQgvyP
-	 EfcuUL36f9XiO9vFzcGWJjjJfiYBswHFiYkM18TZf1D+6z1O1u97j3zDlp4F9HVuPr
-	 xkp9zjSk2n6Y4YNFZ/24sJ0HX3h7ZZEBVLixO2PE=
+	b=yTQZx+iXN2K2jA3ub72kinwmkgCAf9RZ8v73BrYJDXkTUHd1nFfE08EBpqWl2st4H
+	 GdBFHDHccRJDbfbsGswS5qHe820o8/QKNWBrFcqJZ/yBTAO6Hs503yB40k0oy9sPi+
+	 cESWqvdx6uTe7QmjUGxd6AY7g1zeF74iK1Rz0ZOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbgA1OTk (ORCPT
+        id S1730932AbgA1OTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:19:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44010 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:19:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730913AbgA1OTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:19:35 -0500
+        id S1728299AbgA1OTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:19:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 912FE2071E;
-        Tue, 28 Jan 2020 14:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49EA32071E;
+        Tue, 28 Jan 2020 14:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221174;
-        bh=W/Mi6R3n2y8Ym1v+tBFnv2NOvUfjk9okOQxD3vYlfNg=;
+        s=default; t=1580221178;
+        bh=Xw9YztzTE2/FOpzeBm47CYzucRq34DUyKjvMFYOZgkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cnTEUmcObDkYppW2Ry01UsAgowpSRSBvIWlHiai5pYjUagWMQ1yhZeKiqHaFqAlzX
-         /darJqColODDgN3fFUhd4wyjsQj6EB72wJ3p54qsHq3062pI2Ec/jceWr7eXz8iG9x
-         0gLW24bTLk3lUlLyIAJUJrQPTjHfRaDkNLU3P+Ag=
+        b=2Ps6wWQ5tDuJzwMGtlVOFu7nQnw8MlnRYdm4pLvnSfjQEwFm6RmxuPYLL2TJ5wnsq
+         ClkgIdHPdwZnRkjUKChounIBDZ5iprgcWPpcd2NlORg+pRxuM9KiHN4qMTZg+/ZA2f
+         DIZaaLyUlnSeXg+0wseVtO1QiLV2njhWJld6gi10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
+        Alexander Aring <aring@mojatatu.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 119/271] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect
-Date:   Tue, 28 Jan 2020 15:04:28 +0100
-Message-Id: <20200128135901.450424545@linuxfoundation.org>
+Subject: [PATCH 4.9 121/271] 6lowpan: Off by one handling ->nexthdr
+Date:   Tue, 28 Jan 2020 15:04:30 +0100
+Message-Id: <20200128135901.598707621@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,92 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit c7861adbe37f576931650ad8ef805e0c47564b9a ]
+[ Upstream commit f57c4bbf34439531adccd7d3a4ecc14f409c1399 ]
 
-Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-are pointing towards the same internal PCS. Therefore nobody is
-controlling the internal PCS of eTSEC0.
+NEXTHDR_MAX is 255.  What happens here is that we take a u8 value
+"hdr->nexthdr" from the network and then look it up in
+lowpan_nexthdr_nhcs[].  The problem is that if hdr->nexthdr is 0xff then
+we read one element beyond the end of the array so the array needs to
+be one element larger.
 
-Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-initialization. But upon an ifdown/ifup sequence, the code path from
-ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-failure condition, the PHY driver keeps printing
-'803x_aneg_done: SGMII link is not ok'.
-
-Also, it changes compatible of mdio0 to "fsl,etsec2-mdio" to match
-mdio1 device.
-
-Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Acked-by: Li Yang <leoyang.li@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 92aa7c65d295 ("6lowpan: add generic nhc layer interface")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Jukka Rissanen <jukka.rissanen@linux.intel.com>
+Acked-by: Alexander Aring <aring@mojatatu.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ls1021a-twr.dts |  9 ++++++++-
- arch/arm/boot/dts/ls1021a.dtsi    | 11 ++++++++++-
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ net/6lowpan/nhc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index 44715c8ef756b..72a3fc63d0ece 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -143,7 +143,7 @@
- };
+diff --git a/net/6lowpan/nhc.c b/net/6lowpan/nhc.c
+index 7008d53e455c5..e61679bf09085 100644
+--- a/net/6lowpan/nhc.c
++++ b/net/6lowpan/nhc.c
+@@ -18,7 +18,7 @@
+ #include "nhc.h"
  
- &enet0 {
--	tbi-handle = <&tbi1>;
-+	tbi-handle = <&tbi0>;
- 	phy-handle = <&sgmii_phy2>;
- 	phy-connection-type = "sgmii";
- 	status = "okay";
-@@ -222,6 +222,13 @@
- 	sgmii_phy2: ethernet-phy@2 {
- 		reg = <0x2>;
- 	};
-+	tbi0: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
- 	tbi1: tbi-phy@1f {
- 		reg = <0x1f>;
- 		device_type = "tbi-phy";
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 825f6eae3d1c1..27133c3a4b122 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -505,13 +505,22 @@
- 		};
+ static struct rb_root rb_root = RB_ROOT;
+-static struct lowpan_nhc *lowpan_nexthdr_nhcs[NEXTHDR_MAX];
++static struct lowpan_nhc *lowpan_nexthdr_nhcs[NEXTHDR_MAX + 1];
+ static DEFINE_SPINLOCK(lowpan_nhc_lock);
  
- 		mdio0: mdio@2d24000 {
--			compatible = "gianfar";
-+			compatible = "fsl,etsec2-mdio";
- 			device_type = "mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x0 0x2d24000 0x0 0x4000>;
- 		};
- 
-+		mdio1: mdio@2d64000 {
-+			compatible = "fsl,etsec2-mdio";
-+			device_type = "mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2d64000 0x0 0x4000>,
-+			      <0x0 0x2d50030 0x0 0x4>;
-+		};
-+
- 		ptp_clock@2d10e00 {
- 			compatible = "fsl,etsec-ptp";
- 			reg = <0x0 0x2d10e00 0x0 0xb0>;
+ static int lowpan_nhc_insert(struct lowpan_nhc *nhc)
 -- 
 2.20.1
 
