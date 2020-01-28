@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F34FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B30EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2908724688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF4324688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221016;
-	bh=F6SWhXdGVj04psLS6o2Ih7BWlGCKQZEirJv0QantYuM=;
+	s=default; t=1580221021;
+	bh=VuMsKBRBxCYbvIrB00nURs8cZXEpVbI5i5U9GF4OQzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K1uNeXoQ5kMsdF5CP1oeMZ2FnJnae6LaSsc/2Z35gJe3cBMJDnaThMRXA4YMPBB84
-	 tZeTesWbQXJKipD47B1oIY/sSAGnHyNzOMsQOPEI+4b44Ycw7vhrhAlJdkgbMb4Jcd
-	 DscXob7CVRA6GbloBI/7FC5bBFbZlQ/C8U53CE08=
+	b=JZVMtReDJVr1F+G5+6XDwR75ORMjxpL2EDs/zXcaUF3Yl90jSqYd9F8OFhMp3CdR2
+	 M5jf2Kpqe9wNB1J3b2op3IMyDBifFJKrteiSI2rYTjgDBWNkhS0cyeZ2NQGTu6HD3I
+	 +enyeLNvyectJLG9aux1YZFjHQ2H1TIITNNBrgd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbgA1OQz (ORCPT
+        id S1730200AbgA1OQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:16:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40454 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:16:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728309AbgA1OQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:16:53 -0500
+        id S1730418AbgA1OQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:16:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EC7E24681;
-        Tue, 28 Jan 2020 14:16:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7D9424688;
+        Tue, 28 Jan 2020 14:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221012;
-        bh=F6SWhXdGVj04psLS6o2Ih7BWlGCKQZEirJv0QantYuM=;
+        s=default; t=1580221017;
+        bh=VuMsKBRBxCYbvIrB00nURs8cZXEpVbI5i5U9GF4OQzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYUWOK9OMrMO2qbgVBq0ETNARBo9EkLh8i3DchTlGnQlkbpvlyb4i1JXHcWdcZwwF
-         ViAP4Mh3Nfs6bqdUK9F0hkeAdUf2RJz6XkVZXDOaDfeCTCCYgYQ5ngQmkOL3l9jRmi
-         DX2W1hjHMd6nfiRkBkoJKuKgOimAlcZk8osUCf5o=
+        b=cIKPFoClxYXJ7y5YEAhGBQY29ZcBP+YYBqMJSHY2t1twPxYCjaS29IK0pQauu6ufS
+         rfFFJIdXRgTjczWygcwfwpwtE73TawirZfhDIZsYtqasKkOdCC9sRBCAP9tkt14qmx
+         t29PT3B55iG4o81hFe3oJwRbVRFZ8ffaawGVBM58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 053/271] ARM: dts: lpc32xx: reparent keypad controller to SIC1
-Date:   Tue, 28 Jan 2020 15:03:22 +0100
-Message-Id: <20200128135856.586419147@linuxfoundation.org>
+Subject: [PATCH 4.9 055/271] ARM: dts: lpc32xx: fix ARM PrimeCell LCD controller clocks property
+Date:   Tue, 28 Jan 2020 15:03:24 +0100
+Message-Id: <20200128135856.739615942@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,38 +61,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Zapolskiy <vz@mleia.com>
 
-[ Upstream commit 489261c45f0ebbc1c2813f337bbdf858267f5033 ]
+[ Upstream commit 30fc01bae3cda747e7d9c352b1aa51ca113c8a9d ]
 
-After switching to a new interrupt controller scheme by separating SIC1
-and SIC2 from MIC interrupt controller just one SoC keypad controller
-was not taken into account, fix it now:
+The originally added ARM PrimeCell PL111 clocks property misses
+the required "clcdclk" clock, which is the same as a clock to enable
+the LCD controller on NXP LPC3230 and NXP LPC3250 SoCs.
 
-  WARNING: CPU: 0 PID: 1 at kernel/irq/irqdomain.c:524 irq_domain_associate+0x50/0x1b0
-  error: hwirq 0x36 is too large for interrupt-controller@40008000
-  ...
-  lpc32xx_keys 40050000.key: failed to get platform irq
-  lpc32xx_keys: probe of 40050000.key failed with error -22
-
-Fixes: 9b8ad3fb81ae ("ARM: dts: lpc32xx: reparent SIC1 and SIC2 interrupts from MIC")
+Fixes: 93898eb775e5 ("arm: dts: lpc32xx: add clock properties to device nodes")
 Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index da375813afd04..6bd196457ccc2 100644
+index 3adbbaff79715..2802c9565b6ca 100644
 --- a/arch/arm/boot/dts/lpc32xx.dtsi
 +++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -463,7 +463,8 @@
- 				compatible = "nxp,lpc3220-key";
- 				reg = <0x40050000 0x1000>;
- 				clocks = <&clk LPC32XX_CLK_KEY>;
--				interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
+@@ -142,8 +142,8 @@
+ 			compatible = "arm,pl111", "arm,primecell";
+ 			reg = <0x31040000 0x1000>;
+ 			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk LPC32XX_CLK_LCD>;
+-			clock-names = "apb_pclk";
++			clocks = <&clk LPC32XX_CLK_LCD>, <&clk LPC32XX_CLK_LCD>;
++			clock-names = "clcdclk", "apb_pclk";
+ 			status = "disabled";
+ 		};
  
 -- 
 2.20.1
