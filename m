@@ -7,134 +7,95 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5240C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF6BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD06E2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCF62173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OIJ94549"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K62JkGjH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgA1MhE (ORCPT
+        id S1726067AbgA1Miq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:37:04 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36824 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgA1MhE (ORCPT
+        Tue, 28 Jan 2020 07:38:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42082 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725283AbgA1Miq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:37:04 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00SCavOl087487;
-        Tue, 28 Jan 2020 06:36:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580215017;
-        bh=eH6ZEc8wDkBWw7j1581yfbj0sCQVGFuszERkTW7GjVU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OIJ94549IqV40CP6iuX5VVhQRVLONgCD52xu14iRolMQTZBG93syReoCxImpzrdwG
-         gn6A9RzHex1iia9r5Y6aLYgYXb7k/Pj0QeShxbSKcMbAZQKCfX1nINKrrGUN6MoPCh
-         8Bkq34crJ3aHiC7LbO3+d58LjcgGMPrctItRT6LE=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00SCav3P118973;
-        Tue, 28 Jan 2020 06:36:57 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 28
- Jan 2020 06:36:56 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 28 Jan 2020 06:36:56 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00SCasvD049933;
-        Tue, 28 Jan 2020 06:36:55 -0600
-Subject: Re: [PATCH for-next 0/4] dmaengine: ti: k3-udma: Updates for next
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>,
-        <vigneshr@ti.com>
-References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
- <41c53cc4-fa3e-1ab1-32b8-1d516cda7341@ti.com>
- <20200128115006.GT2841@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <fbe5a971-650d-de58-cee2-0a80eca5c1cd@ti.com>
-Date:   Tue, 28 Jan 2020 14:37:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 28 Jan 2020 07:38:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580215125;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jAUdcUoNlbNA3wmapQDhv1Xevu4+dUMP19fy7F3OARs=;
+        b=K62JkGjHw2opSm71KNW93l2CKHflbv5kSV6NkSdYGQGB8md+cZT4jXle5eHX2DS/RcTxbk
+        rdU+O/zD5aiL7QOPWnBxW1DvHujDP734+TwZmlJTUc6Ws+mBl/IIzrkkOaqAtxUQIfbiH9
+        AzFZxJ8jGXTItgHWI9J4QKWMPbklIEA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-185-GuLWnJoVMYevW03hQENvBQ-1; Tue, 28 Jan 2020 07:38:41 -0500
+X-MC-Unique: GuLWnJoVMYevW03hQENvBQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 843518010C9;
+        Tue, 28 Jan 2020 12:38:39 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.70])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0BD1D89D13;
+        Tue, 28 Jan 2020 12:38:36 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 28 Jan 2020 13:38:38 +0100 (CET)
+Date:   Tue, 28 Jan 2020 13:38:35 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Amol Grover <frextrite@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: Re: [PATCH] cred: Use RCU primitives to access RCU pointers
+Message-ID: <20200128123834.GB17943@redhat.com>
+References: <20200128072740.21272-1-frextrite@gmail.com>
+ <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
+ <20200128114818.GA17943@redhat.com>
+ <CAG48ez2rJZGQyhOcgWe7NwLOxk-CBJugUFMM0Oa9JyuPamRwCg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200128115006.GT2841@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2rJZGQyhOcgWe7NwLOxk-CBJugUFMM0Oa9JyuPamRwCg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+On 01/28, Jann Horn wrote:
+>
+> On Tue, Jan 28, 2020 at 12:48 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> > On 01/28, Jann Horn wrote:
+> > > On Tue, Jan 28, 2020 at 8:28 AM Amol Grover <frextrite@gmail.com> wrote:
+> > > > task_struct.cred and task_struct.real_cred are annotated by __rcu,
+> > >
+> > > task_struct.cred doesn't actually have RCU semantics though, see
+> > > commit d7852fbd0f0423937fa287a598bfde188bb68c22. For task_struct.cred,
+> > > it would probably be more correct to remove the __rcu annotation?
+> >
+> > Yes, but get_task_cred() assumes it has RCU semantics...
+>
+> Oh, huh. AFAICS get_task_cred() makes no sense semantically, and I
+> think it ought to be deleted.
 
-On 28/01/2020 13.50, Vinod Koul wrote:
-> On 28-01-20, 12:15, Peter Ujfalusi wrote:
->> Vinod,
->>
->> On 27/01/2020 15.21, Peter Ujfalusi wrote:
->>> Hi Vinod,
->>>
->>> Based on customer reports we have identified two issues with the UDMA driver:
->>>
->>> TX completion (1st patch):
->>> The scheduled work based workaround for checking for completion worked well for
->>> UART, but it had significant impact on SPI performance.
->>> The underlying issue is coming from the fact that we have split data movement
->>> architecture.
->>> In order to know that the transfer is really done we need to check the remote
->>> end's (PDMA) byte counter.
->>>
->>> RX channel teardown with stale data in PDMA (2nd patch):
->>> If we try to stop the RX DMA channel (teardown) then PDMA is trying to flush the
->>> data is might received from a peripheral, but if UDMA does not have a packet to
->>> use for this draining than it is going to push back on the PDMA and the flush
->>> will never completes.
->>> The workaround is to use a dummy descriptor for flush purposes when the channel
->>> is terminated and we did not have active transfer (no descriptor for UDMA).
->>> This allows UDMA to drain the data and the teardown can complete.
->>>
->>> The last two patch is to use common code to set up the TR parameters for
->>> slave_sg, cyclic and memcpy. The setup code is the same as we used for memcpy
->>> with the change we can handle 4.2GB sg elements and periods in case of cyclic.
->>> It is also nice that we have single function to do the configuration.
->>
->> I have marked these patches as for-next as 5.5 was not released yet.
->> Would it be possible to have these as fixes for 5.6?
-> 
-> Sure but are they really fixes, why cant they go for next release :)
-> 
-> They seem to improve things for sure, but do we want to call them as
-> fixes..?
+Ah, sorry for noise Jann. Somehow I managed to missread this function
+as if it uses task->cred. No, it reads ->real_cred so it is fine.
 
-I would say that the first two patch is a fix:
-TX completion check is fixing the performance hit by the early TX
-completion workaround which used jiffies+work.
+Oleg.
 
-The second patch is fixing a case when we have stale data during RX and
-no active transfer. For example when UART reads 1000 bytes, but the
-other end is 'streaming' the data and after the 1000 bytes the UART+PDMA
-receives data.
-Recovering from this state is not easy and it might not even succeed in
-HW level.
-
-The last two is I agree, it is not fixing much, it does corrects the
-slave_sg TR setup (and improves the cyclic as well).
-With that I could send the ASoC platform wrapper for UDMA with
-period_bytes_max = 4.2GB ;)
-I have SZ_512K in there atm, with the old calculation SZ_64K is the
-maximum, not a big issue.
-
-I think the first two patch is a fix candidate as they fix regression
-(albeit regression between the series's) and a real world channel lockup
-discovered too late for the initial driver.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
