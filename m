@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A098AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0417C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D1E24693
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3FE920678
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220679;
-	bh=+NLwLL+RkfplSTZTqZNgO2fTjIuG0Ovblv1XfSHLhYc=;
+	s=default; t=1580220683;
+	bh=a3b8GTGMrmfY7nhd+ivfJZYIfMPdm75bJRxBWlYuFWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nW9H2rFxbLaPIG+jXRseZcXOR7F5nX4wqHgEDWG+bUf8eK2c0VaUMdfgcu5DLS64R
-	 hHflrnVZunO4x/k00xLM8ZN6E5WeJHxnKPeulqAVRcj3TXJzeObPmorcAhA85WY0h6
-	 ogpYDFadW4m2OzTii1kG7Cv71QPOaBx3ebFe3QLU=
+	b=wTxf+VEy7xnPCmU30N8kfjikiief6E7oNoIh6zOddTBIqJ+hZdvZjS3hoY0nwBFy3
+	 zp0no1ZJGa+2dqufoG1CQM2GUuXKpjNF469vW/mqLjVzoUA+SjPYJbS8Dmj9qRSkh9
+	 Olv4GWuerEwi3tYNdekKwUrceeC0eCpTiHepcloE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbgA1OLS (ORCPT
+        id S1727874AbgA1OLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:11:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60364 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:11:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728035AbgA1OLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:11:15 -0500
+        id S1727659AbgA1OLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:11:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF51F2468A;
-        Tue, 28 Jan 2020 14:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 887012468E;
+        Tue, 28 Jan 2020 14:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220674;
-        bh=+NLwLL+RkfplSTZTqZNgO2fTjIuG0Ovblv1XfSHLhYc=;
+        s=default; t=1580220677;
+        bh=a3b8GTGMrmfY7nhd+ivfJZYIfMPdm75bJRxBWlYuFWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xWwestinO9ILNQPYhGbW6wSKXT28sG+hJpzcj5L/43zF9NcHvn+s51dldp65frtL5
-         N/D0UKSIxKiHfo2UdnbuodOmjKIqM2RODDW3clVrUtL01213ZBznnOADOyPsU2p/nx
-         gCPaxuuGQxuUp9noLgx5KCi7TYf+8gUhooJmjr5M=
+        b=YTYPRN2LMi7IiWYHnfjpbNo+CgR/kMl//NKShmX5g9pKzrVRlBn0o/5wuvyGw3BP7
+         PX+qQ/jAm8ruUNal9lfEC/y+4nx4v4wDMwQf2r6Bw8BgxFFoIlR6aNW+843Yjj1KWG
+         TsKtSo2WgFHYztGplg8vFjca8rAj0CLEatSW0baA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <giridhar.malavali@qlogic.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 074/183] scsi: qla2xxx: Unregister chrdev if module initialization fails
-Date:   Tue, 28 Jan 2020 15:04:53 +0100
-Message-Id: <20200128135837.385055668@linuxfoundation.org>
+Subject: [PATCH 4.4 101/183] powerpc/cacheinfo: add cacheinfo_teardown, cacheinfo_rebuild
+Date:   Tue, 28 Jan 2020 15:05:20 +0100
+Message-Id: <20200128135840.116104290@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -62,98 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit c794d24ec9eb6658909955772e70f34bef5b5b91 ]
+[ Upstream commit d4aa219a074a5abaf95a756b9f0d190b5c03a945 ]
 
-If module initialization fails after the character device has been
-registered, unregister the character device. Additionally, avoid
-duplicating error path code.
+Allow external callers to force the cacheinfo code to release all its
+references to cache nodes, e.g. before processing device tree updates
+post-migration, and to rebuild the hierarchy afterward.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <giridhar.malavali@qlogic.com>
-Fixes: 6a03b4cd78f3 ("[SCSI] qla2xxx: Add char device to increase driver use count") # v2.6.35.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+CPU online/offline must be blocked by callers; enforce this.
+
+Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+ arch/powerpc/kernel/cacheinfo.c | 21 +++++++++++++++++++++
+ arch/powerpc/kernel/cacheinfo.h |  4 ++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 611a127f08d82..8975baab73e55 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -5780,8 +5780,7 @@ qla2x00_module_init(void)
- 	/* Initialize target kmem_cache and mem_pools */
- 	ret = qlt_init();
- 	if (ret < 0) {
--		kmem_cache_destroy(srb_cachep);
--		return ret;
-+		goto destroy_cache;
- 	} else if (ret > 0) {
- 		/*
- 		 * If initiator mode is explictly disabled by qlt_init(),
-@@ -5800,11 +5799,10 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_template =
- 	    fc_attach_transport(&qla2xxx_transport_functions);
- 	if (!qla2xxx_transport_template) {
--		kmem_cache_destroy(srb_cachep);
- 		ql_log(ql_log_fatal, NULL, 0x0002,
- 		    "fc_attach_transport failed...Failing load!.\n");
--		qlt_exit();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto qlt_exit;
- 	}
- 
- 	apidev_major = register_chrdev(0, QLA2XXX_APIDEV, &apidev_fops);
-@@ -5816,27 +5814,37 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_vport_template =
- 	    fc_attach_transport(&qla2xxx_transport_vport_functions);
- 	if (!qla2xxx_transport_vport_template) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0004,
- 		    "fc_attach_transport vport failed...Failing load!.\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto unreg_chrdev;
- 	}
- 	ql_log(ql_log_info, NULL, 0x0005,
- 	    "QLogic Fibre Channel HBA Driver: %s.\n",
- 	    qla2x00_version_str);
- 	ret = pci_register_driver(&qla2xxx_pci_driver);
- 	if (ret) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
--		fc_release_transport(qla2xxx_transport_vport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0006,
- 		    "pci_register_driver failed...ret=%d Failing load!.\n",
- 		    ret);
-+		goto release_vport_transport;
- 	}
- 	return ret;
-+
-+release_vport_transport:
-+	fc_release_transport(qla2xxx_transport_vport_template);
-+
-+unreg_chrdev:
-+	if (apidev_major >= 0)
-+		unregister_chrdev(apidev_major, QLA2XXX_APIDEV);
-+	fc_release_transport(qla2xxx_transport_template);
-+
-+qlt_exit:
-+	qlt_exit();
-+
-+destroy_cache:
-+	kmem_cache_destroy(srb_cachep);
-+	return ret;
+diff --git a/arch/powerpc/kernel/cacheinfo.c b/arch/powerpc/kernel/cacheinfo.c
+index c641983bbdd68..0122d5ce0637d 100644
+--- a/arch/powerpc/kernel/cacheinfo.c
++++ b/arch/powerpc/kernel/cacheinfo.c
+@@ -867,4 +867,25 @@ void cacheinfo_cpu_offline(unsigned int cpu_id)
+ 	if (cache)
+ 		cache_cpu_clear(cache, cpu_id);
  }
++
++void cacheinfo_teardown(void)
++{
++	unsigned int cpu;
++
++	lockdep_assert_cpus_held();
++
++	for_each_online_cpu(cpu)
++		cacheinfo_cpu_offline(cpu);
++}
++
++void cacheinfo_rebuild(void)
++{
++	unsigned int cpu;
++
++	lockdep_assert_cpus_held();
++
++	for_each_online_cpu(cpu)
++		cacheinfo_cpu_online(cpu);
++}
++
+ #endif /* (CONFIG_PPC_PSERIES && CONFIG_SUSPEND) || CONFIG_HOTPLUG_CPU */
+diff --git a/arch/powerpc/kernel/cacheinfo.h b/arch/powerpc/kernel/cacheinfo.h
+index a7b74d36acd71..2cdee87a482c5 100644
+--- a/arch/powerpc/kernel/cacheinfo.h
++++ b/arch/powerpc/kernel/cacheinfo.h
+@@ -5,4 +5,8 @@
+ extern void cacheinfo_cpu_online(unsigned int cpu_id);
+ extern void cacheinfo_cpu_offline(unsigned int cpu_id);
  
- /**
++/* Allow migration/suspend to tear down and rebuild the hierarchy. */
++extern void cacheinfo_teardown(void);
++extern void cacheinfo_rebuild(void);
++
+ #endif /* _PPC_CACHEINFO_H */
 -- 
 2.20.1
 
