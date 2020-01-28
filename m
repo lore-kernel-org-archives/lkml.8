@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E890EC35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCABFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06EF24685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE3520716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222541;
-	bh=cXhWVoe8l7SesCfbvpKHyaadgu/BrM44Hjki1zDwezM=;
+	s=default; t=1580222546;
+	bh=/VLrlyOP3aW7VmKKpylXx4uG78qDbxT43JAHOyjHMBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aaINGecEd4xSUIZOtnhUUf3Pt5qCR+7hEyWwJolj+NZGo3bJINk5qUCDYFV6TPz8H
-	 8B3mN+RWLwzkiT/ddq9JjT8d1Yc+5fLTkv/Twq3N8EiCoNgDDNtUwvJYHAsFR+sKc1
-	 FX+HvQr/Eu5UNQl767Boi5hO9mmd75TFnGP3n8T8=
+	b=UmE9BYBxIxl7FIc0zR9rq0LvSNOKdGTAka67qFRP3dfDHMj7uAG4hhvDYh01ZW3Pl
+	 yzZOtilZxPN9gwdTANdh1Ul2zse3WLghXsh/nK0y6TcG1W2pADFCCMeTURPvGcylOZ
+	 xPNX47Yk/EIHHp7Qs3v8/ZsbKeEvPwTIpXY15f7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgA1ONT (ORCPT
+        id S1730236AbgA1OmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:13:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34732 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:42:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbgA1ONJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:13:09 -0500
+        id S1729207AbgA1ONO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:13:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4292A2468A;
-        Tue, 28 Jan 2020 14:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 388C920678;
+        Tue, 28 Jan 2020 14:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220788;
-        bh=cXhWVoe8l7SesCfbvpKHyaadgu/BrM44Hjki1zDwezM=;
+        s=default; t=1580220793;
+        bh=/VLrlyOP3aW7VmKKpylXx4uG78qDbxT43JAHOyjHMBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zL2TP4ug485Eueab8DY7W+BV89oLPJu+dL/ZTBe9AJ7SchYvyey/5PLE6eXbZKXmP
-         Mocji6R4iHTkig83YSTdsVSuw0Etmc5POs/wfGCj8Lg5xLR39dFZIY2wuBKZ3kpBlI
-         jGBERp3/TciZM076lSSpL64ST5WDVMdepEUkA2pw=
+        b=ZGV3xDDnklH8gVCjpL531IohZ1eAFzKkXMJwLMSR27bf87gItKhm2TnP6BaQ5Hv2w
+         snaTkb7LexpGI9wkz3LN/65LvjAZVvOrATkolsfNamnGoMV/5cGO5ajc2x2zEEfT7W
+         2PjHWZpntbYDgfUW9eTwnsTQV7Jl0iQlMwiseytM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antonio Borneo <antonio.borneo@st.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 146/183] net: stmmac: fix length of PTP clocks name string
-Date:   Tue, 28 Jan 2020 15:06:05 +0100
-Message-Id: <20200128135844.326536543@linuxfoundation.org>
+        stable@vger.kernel.org, stable@vger.kernel,
+        Robin Gong <yibin.gong@nxp.com>,
+        Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 148/183] dmaengine: imx-sdma: fix size check for sdma script_number
+Date:   Tue, 28 Jan 2020 15:06:07 +0100
+Message-Id: <20200128135844.521185059@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,49 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Borneo <antonio.borneo@st.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-[ Upstream commit 5da202c88f8c355ad79bc2e8eb582e6d433060e7 ]
+[ Upstream commit bd73dfabdda280fc5f05bdec79b6721b4b2f035f ]
 
-The field "name" in struct ptp_clock_info has a fixed size of 16
-chars and is used as zero terminated string by clock_name_show()
-in drivers/ptp/ptp_sysfs.c
-The current initialization value requires 17 chars to fit also the
-null termination, and this causes overflow to the next bytes in
-the struct when the string is read as null terminated:
-	hexdump -C /sys/class/ptp/ptp0/clock_name
-	00000000  73 74 6d 6d 61 63 5f 70  74 70 5f 63 6c 6f 63 6b  |stmmac_ptp_clock|
-	00000010  a0 ac b9 03 0a                                    |.....|
-where the extra 4 bytes (excluding the newline) after the string
-represent the integer 0x03b9aca0 = 62500000 assigned to the field
-"max_adj" that follows "name" in the same struct.
+Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+(41) exceed the size of structure sdma_script_start_addrs(40),
+thus cause memory corrupt such as slob block header so that kernel
+trap into while() loop forever in slob_free(). Please refer to below
+code piece in imx-sdma.c:
+for (i = 0; i < sdma->script_number; i++)
+	if (addr_arr[i] > 0)
+		saddr_arr[i] = addr_arr[i]; /* memory corrupt here */
+That issue was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
+support for version 3 firmware") because SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+(38->41 3 scripts added) not align with script number added in
+sdma_script_start_addrs(2 scripts).
 
-There is no strict requirement for the "name" content and in the
-comment in ptp_clock_kernel.h it's reported it should just be 'A
-short "friendly name" to identify the clock'.
-Replace it with "stmmac ptp".
-
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-Fixes: 92ba6888510c ("stmmac: add the support for PTP hw clock driver")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: a572460be9cf ("dmaengine: imx-sdma: Add support for version 3 firmware")
+Cc: stable@vger.kernel
+Link: https://www.spinics.net/lists/arm-kernel/msg754895.html
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reported-by: Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>
+Link: https://lore.kernel.org/r/1569347584-3478-1-git-send-email-yibin.gong@nxp.com
+[vkoul: update the patch title]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/imx-sdma.c                     | 8 ++++++++
+ include/linux/platform_data/dma-imx-sdma.h | 3 +++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-index 170a18b61281d..147c9f8cee7f7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-@@ -157,7 +157,7 @@ static int stmmac_enable(struct ptp_clock_info *ptp,
- /* structure describing a PTP hardware clock */
- static struct ptp_clock_info stmmac_ptp_clock_ops = {
- 	.owner = THIS_MODULE,
--	.name = "stmmac_ptp_clock",
-+	.name = "stmmac ptp",
- 	.max_adj = 62500000,
- 	.n_alarm = 0,
- 	.n_ext_ts = 0,
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index dd97dbf6618cd..1dc06e0e890f4 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1411,6 +1411,14 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
+ 	if (!sdma->script_number)
+ 		sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
+ 
++	if (sdma->script_number > sizeof(struct sdma_script_start_addrs)
++				  / sizeof(s32)) {
++		dev_err(sdma->dev,
++			"SDMA script number %d not match with firmware.\n",
++			sdma->script_number);
++		return;
++	}
++
+ 	for (i = 0; i < sdma->script_number; i++)
+ 		if (addr_arr[i] > 0)
+ 			saddr_arr[i] = addr_arr[i];
+diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+index 2d08816720f6d..5bb0a119f39a3 100644
+--- a/include/linux/platform_data/dma-imx-sdma.h
++++ b/include/linux/platform_data/dma-imx-sdma.h
+@@ -50,7 +50,10 @@ struct sdma_script_start_addrs {
+ 	/* End of v2 array */
+ 	s32 zcanfd_2_mcu_addr;
+ 	s32 zqspi_2_mcu_addr;
++	s32 mcu_2_ecspi_addr;
+ 	/* End of v3 array */
++	s32 mcu_2_zqspi_addr;
++	/* End of v4 array */
+ };
+ 
+ /**
 -- 
 2.20.1
 
