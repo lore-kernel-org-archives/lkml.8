@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56F2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4C8C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9989120716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C57C20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222372;
-	bh=pddlwd+yZz8Np8BgmC0uvxaGjvNjT0t57Be+WRiok4k=;
+	s=default; t=1580222375;
+	bh=PQCZOBb0tClRVHStN0KZHSKj/cQZcnA7ddxBlP3cQg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+P8/HWTCA6UeIYfiigL4nw+QZekJkcSlyrywoZbFHuNreNZaduYlRXG9nmmYCaM+
-	 pw6gX/A8RIxSNx4W/4PG54CrLJsTmNnvkKCLn6GLMmCo4EVInuSzpqDUEwM0R5MDyq
-	 HlNSKhXOpcpBIFoI6X2sQhh9pBS48yI6yb5dvsH4=
+	b=DPIKElUy3hkSQ96jbrMHFFIcLk9ZvXxv8fXL+eC8pcz2yLyiZcHvqAftinV67eimX
+	 kZphtiE3RILceT0Dt+vUpCXnpC31k+ESpYDMC7U3EAHmMrdcLNCaqck8dsQBdYTWWa
+	 p5t/IBvcUATpmoY0LZspx4aC0OS5KUZsFpvjvbSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730747AbgA1Ojb (ORCPT
+        id S1730424AbgA1OQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:39:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40774 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:16:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728212AbgA1ORH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:17:07 -0500
+        id S1730403AbgA1OQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:16:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFFA82071E;
-        Tue, 28 Jan 2020 14:17:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7918B24681;
+        Tue, 28 Jan 2020 14:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221027;
-        bh=pddlwd+yZz8Np8BgmC0uvxaGjvNjT0t57Be+WRiok4k=;
+        s=default; t=1580221014;
+        bh=PQCZOBb0tClRVHStN0KZHSKj/cQZcnA7ddxBlP3cQg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RUW9582OrkGpEUzLz3kDRLCg8aCg21AgxqUh6YlEP8GWZND5UW4x/bLLT/hRHRejB
-         G1F7vA2nXDA9V9nGimXXTqpmbrCVDdOjGPGQFoEKN2+xPAl/MPYCX0AO/d7mkR4mlp
-         N35lpVEEV4THRjOWZTMuih2g4h8UVDLVj/EsQOX0=
+        b=GfYymceUm2ETCrj7H53LnIHP7AbU4X7CVjwi5Um5Og4VHFQVWHtUHygNUjoWfNpDW
+         zjhRs63sQRUuMg0parPGpOON48QFgVmiQtQR7SkPx9zVwGdu4YIvNG9SxF5uPR+7jK
+         Txn9Vzdt2AgqNzoFZ8akUjsCqo3mO0f/+cwDbK8A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        stable@vger.kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 058/271] staging: most: cdev: add missing check for cdev_add failure
-Date:   Tue, 28 Jan 2020 15:03:27 +0100
-Message-Id: <20200128135856.957905403@linuxfoundation.org>
+Subject: [PATCH 4.9 054/271] ARM: dts: lpc32xx: fix ARM PrimeCell LCD controller variant
+Date:   Tue, 28 Jan 2020 15:03:23 +0100
+Message-Id: <20200128135856.660149737@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,47 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
 
-[ Upstream commit 5ae890780e1b4d08f2c0c5d4ea96fc3928fc0ee9 ]
+[ Upstream commit 7a0790a4121cbcd111cc537cdc801c46ccb789ee ]
 
-Currently the call to cdev_add is missing a check for failure. Fix this by
-checking for failure and exiting via a new error path that ensures the
-allocated comp_channel struct is kfree'd.
+ARM PrimeCell PL111 LCD controller is found on On NXP LPC3230
+and LPC3250 SoCs variants, the original reference in compatible
+property to an older one ARM PrimeCell PL110 is invalid.
 
-Detected by CoverityScan, CID#1462359 ("Unchecked return value")
-
-Fixes: 9bc79bbcd0c5 ("Staging: most: add MOST driver's aim-cdev module")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e04920d9efcb3 ("ARM: LPC32xx: DTS files for device tree conversion")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/most/aim-cdev/cdev.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/most/aim-cdev/cdev.c b/drivers/staging/most/aim-cdev/cdev.c
-index 7f51024dc5ebb..e87b9ed4f37de 100644
---- a/drivers/staging/most/aim-cdev/cdev.c
-+++ b/drivers/staging/most/aim-cdev/cdev.c
-@@ -451,7 +451,9 @@ static int aim_probe(struct most_interface *iface, int channel_id,
- 	c->devno = MKDEV(major, current_minor);
- 	cdev_init(&c->cdev, &channel_fops);
- 	c->cdev.owner = THIS_MODULE;
--	cdev_add(&c->cdev, c->devno, 1);
-+	retval = cdev_add(&c->cdev, c->devno, 1);
-+	if (retval < 0)
-+		goto err_free_c;
- 	c->iface = iface;
- 	c->cfg = cfg;
- 	c->channel_id = channel_id;
-@@ -487,6 +489,7 @@ error_create_device:
- 	list_del(&c->list);
- error_alloc_kfifo:
- 	cdev_del(&c->cdev);
-+err_free_c:
- 	kfree(c);
- error_alloc_channel:
- 	ida_simple_remove(&minor_id, current_minor);
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index 6bd196457ccc2..3adbbaff79715 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -139,7 +139,7 @@
+ 		};
+ 
+ 		clcd: clcd@31040000 {
+-			compatible = "arm,pl110", "arm,primecell";
++			compatible = "arm,pl111", "arm,primecell";
+ 			reg = <0x31040000 0x1000>;
+ 			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk LPC32XX_CLK_LCD>;
 -- 
 2.20.1
 
