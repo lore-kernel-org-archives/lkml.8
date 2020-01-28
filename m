@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C842C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6258C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39294207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD4920716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222604;
-	bh=v4wkE3pqRqKWQUHiLFZCxVeJI+D7Ymg2N+kIRpv3zM8=;
+	s=default; t=1580222607;
+	bh=tPSxCTXcktM2lbrk4Lrl5eUcbYzTi+LQsSkYBIuEiqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pOyfyqf/oeVfAlFgSCEzbanrkZcDTGESmN4rm8DlcaVSKG3BpfiPkmYZUZMACHwuQ
-	 UCAqZp64vyRrJIW3/pcDbd5CCTPwfWgBhzG/wdf9y9izGJFzN7NjIZm80JNUD1QEoG
-	 1sfFcWGA0my9M/Cu36tzg4UoE8kNIy3/cJ1/iR1M=
+	b=rHeAdNP+cOgsGzTIy6sb9upG4KcXMX6JUDlglKuzXRRfSsPkRug8685T3KEuyJC+n
+	 9kzrC1mCXOyp+F9WuSvTURB6KAErwtoaTJyiApufya9LOmwEKAZ4OqjV7zLuE/18+s
+	 S5t4pRwSZgRiUcJEO64ZHVPk1UOQ0tZZhZL0o9tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgA1OLj (ORCPT
+        id S1729848AbgA1On0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:11:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60676 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:43:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728116AbgA1OLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:11:33 -0500
+        id S1728350AbgA1OLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:11:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2ECD20678;
-        Tue, 28 Jan 2020 14:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D34CB20678;
+        Tue, 28 Jan 2020 14:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220692;
-        bh=v4wkE3pqRqKWQUHiLFZCxVeJI+D7Ymg2N+kIRpv3zM8=;
+        s=default; t=1580220697;
+        bh=tPSxCTXcktM2lbrk4Lrl5eUcbYzTi+LQsSkYBIuEiqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZblL/CAu9+SBYfkD15gytfUPP4utRejLn6tBQ+H0B18MSbEpAqEc/LbrMnCcDE945
-         sjl5Q1WCydOCxdEZ7jYmZuCvr4RgbbCfWBCykrYfE+xScNPF+oXqMblvKgDB4r04zJ
-         778IPiQ8U5jb+8q5q0FwSfZLMoedRk+ipn/W03AU=
+        b=ZL4BkSbSrDZ+u0W6fGZmjBpt3txvIAkLCfeJebbWZLTuiOl6MYUqXqBZ/kHtlhiFJ
+         +tUDKRQIfPOSZGCfA3E/gdEbOMRxTEwlwesV2hO/KnfdsXYjmlq9pVoIaQBn3kqC4A
+         My4Xb4y3KGmudTa5IC2YthYIb/mE/Lcu7OFj8JiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Mitchell <kevmitch@arista.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 107/183] iommu/amd: Make iommu_disable safer
-Date:   Tue, 28 Jan 2020 15:05:26 +0100
-Message-Id: <20200128135840.626944088@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: [PATCH 4.4 109/183] devres: allow const resource arguments
+Date:   Tue, 28 Jan 2020 15:05:28 +0100
+Message-Id: <20200128135840.804264930@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -59,38 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Mitchell <kevmitch@arista.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 3ddbe913e55516d3e2165d43d4d5570761769878 ]
+[ Upstream commit 9dea44c91469512d346e638694c22c30a5273992 ]
 
-Make it safe to call iommu_disable during early init error conditions
-before mmio_base is set, but after the struct amd_iommu has been added
-to the amd_iommu_list. For example, this happens if firmware fails to
-fill in mmio_phys in the ACPI table leading to a NULL pointer
-dereference in iommu_feature_disable.
+devm_ioremap_resource() does not currently take 'const' arguments,
+which results in a warning from the first driver trying to do it
+anyway:
 
-Fixes: 2c0ae1720c09c ('iommu/amd: Convert iommu initialization to state machine')
-Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+drivers/gpio/gpio-amd-fch.c: In function 'amd_fch_gpio_probe':
+drivers/gpio/gpio-amd-fch.c:171:49: error: passing argument 2 of 'devm_ioremap_resource' discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+  priv->base = devm_ioremap_resource(&pdev->dev, &amd_fch_gpio_iores);
+                                                 ^~~~~~~~~~~~~~~~~~~
+
+Change the prototype to allow it, as there is no real reason not to.
+
+Fixes: 9bb2e0452508 ("gpio: amd: Make resource struct const")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20190628150049.1108048-1-arnd@arndb.de
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviwed-By: Enrico Weigelt <info@metux.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/device.h | 3 ++-
+ lib/devres.c           | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 6a69b5bb231f8..036fb186a3bef 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -360,6 +360,9 @@ static void iommu_enable(struct amd_iommu *iommu)
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 834000903525d..eb891c9c4b620 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -677,7 +677,8 @@ extern unsigned long devm_get_free_pages(struct device *dev,
+ 					 gfp_t gfp_mask, unsigned int order);
+ extern void devm_free_pages(struct device *dev, unsigned long addr);
  
- static void iommu_disable(struct amd_iommu *iommu)
+-void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
++void __iomem *devm_ioremap_resource(struct device *dev,
++				    const struct resource *res);
+ 
+ /* allows to add/remove a custom action to devres stack */
+ int devm_add_action(struct device *dev, void (*action)(void *), void *data);
+diff --git a/lib/devres.c b/lib/devres.c
+index 8c85672639d3e..9d18ccd00df52 100644
+--- a/lib/devres.c
++++ b/lib/devres.c
+@@ -131,7 +131,8 @@ EXPORT_SYMBOL(devm_iounmap);
+  *	if (IS_ERR(base))
+  *		return PTR_ERR(base);
+  */
+-void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
++void __iomem *devm_ioremap_resource(struct device *dev,
++				    const struct resource *res)
  {
-+	if (!iommu->mmio_base)
-+		return;
-+
- 	/* Disable command buffer */
- 	iommu_feature_disable(iommu, CONTROL_CMDBUF_EN);
- 
+ 	resource_size_t size;
+ 	const char *name;
 -- 
 2.20.1
 
