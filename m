@@ -1,149 +1,169 @@
 Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AE9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CCFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAC922522
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B18622522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 06:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mc3mUiwp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/XLAZmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgA1GDF (ORCPT
+        id S1725903AbgA1GDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 01:03:05 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44782 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgA1GDF (ORCPT
+        Tue, 28 Jan 2020 01:03:10 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50963 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgA1GDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 01:03:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eiy4vZNsRLqD8F6sU+rjqr6HzK/2uGJED4ZdYTS3tUA=; b=Mc3mUiwpVUEDqWqbXFCUqIFFn
-        b2R2iWmVJSGoAbUQoPSdPEMSpYuDn0yzivIRExpce5dUHQT8Zex4H2ThoWQks4/2CLvjGr3DeAIxf
-        Suy8WqkEFjlIHA/jfLdcFY7jM5xcu4rzE2ycSfXo8a+w4dqRUMUaS8Dp/lqlfZ5has09IqpWhVpWo
-        o0V8OpDddhp86HH6bumobgCFEAnDwTyQVIA0cIVdefEHh52gYR2n+EU27jNohPuZVvxakjh3o2LEM
-        pIhu6oh6klPbfr2Cy1EFNkp3E1HIo+zTvnCGAihNOFQlWdrJbglsjGEcLgycUnw/4SguzKcgG0235
-        QHqasIYpg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwJxo-00072H-8O; Tue, 28 Jan 2020 06:03:04 +0000
-Date:   Mon, 27 Jan 2020 22:03:04 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
-Message-ID: <20200128060304.GA6615@bombadil.infradead.org>
-References: <20200109225646.22983-1-xiyou.wangcong@gmail.com>
- <20200110073822.GC29802@dhcp22.suse.cz>
- <CAM_iQpVN4MNhcK0TXvhmxsCdkVOqQ4gZBzkDHykLocPC6Va7LQ@mail.gmail.com>
- <20200121090048.GG29276@dhcp22.suse.cz>
- <CAM_iQpU0p7JLyQ4mQ==Kd7+0ugmricsEAp1ST2ShAZar2BLAWg@mail.gmail.com>
- <20200126233935.GA11536@bombadil.infradead.org>
- <20200127150024.GN1183@dhcp22.suse.cz>
- <20200127190653.GA8708@bombadil.infradead.org>
- <CAHbLzkoiYKEEzek9=84jTB8QVgE=uNjvi+gHR2CwVo0yK0KpBQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHbLzkoiYKEEzek9=84jTB8QVgE=uNjvi+gHR2CwVo0yK0KpBQ@mail.gmail.com>
+        Tue, 28 Jan 2020 01:03:10 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so1161157wmb.0;
+        Mon, 27 Jan 2020 22:03:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=uzw58AxJyROr8rcMN8+tQkKTP/GB1BTnbsoLW+T9bYk=;
+        b=U/XLAZmEa7FoBjgoyU8wMcZ5kvRPBBjiKtZOhlYZ3i50AyKGIhCme4LOTgNUES0zoh
+         DNsTA7p5hOqy9mpaE8Q/Z9vSC7iwRlelFsVCWaYkxc6KCkCCYQcqmB3/wpYq6iOOd+Vm
+         wRCrDdthL6nGdesnPUuxuLrV5lWHAXe6GBpZ/jypCVTGNSJkjZI3teQaFR0kys0adpFs
+         d2TkDOV0Sut3b3wmXMggXviARjCbAtsF3Ux+BHH/jQikGhJZY66CfdUdSjZvC+/4fFnQ
+         t4sfRbb6/DbFYLXMTPY98hoA72GXMlUn+ifhP5sPO0CjECVSzz4X/ddRarBwaMx2EEVg
+         FVLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=uzw58AxJyROr8rcMN8+tQkKTP/GB1BTnbsoLW+T9bYk=;
+        b=h0p9KQIQ+i8Us+Q+jqQ5U5dT6Yk7f2pR1CdWx4/KhPTuH5uk2UGYcV/LKtFDJI7n0y
+         e11OgyeKl9m149cqqpsxK6CmZNHDCbu90aUBAjJTYCbhyL5/qjPqaZGlBzAZBWYNWFzV
+         Zykm0bCzSRzvxINn9JHRL88BfB3NdLcRrFQXTrvmj3F7MdE6GPLhjYdV8ZX+ag6lW4jl
+         7vV5bsm/yxHEdttgHD70FB8MP6dHzTq9/AkyAu/YpfKOeJO38z99AkF3Kzj7utKMWuqj
+         c72QwdLt6/1qQmtIqQ7mzN1PcgLi+TegeUdy9tyEB3VRF/ODus1SixQeUfHmNUk/Oa4C
+         YM0g==
+X-Gm-Message-State: APjAAAX0qB4FLcV5xVP1cRTTuYcYCNdBFlYjoJvmiHxXh7wbrAnKaFjG
+        czDKKE5CW1AWagreCbrkMPA=
+X-Google-Smtp-Source: APXvYqzGz7ZuGFcI0BoC2X5Ts/w3Qvls5A/hK7yPgVcvXcHRKynQCnFsoiuBdQJgjo4rs+q/oVWTSQ==
+X-Received: by 2002:a05:600c:3d1:: with SMTP id z17mr2876527wmd.90.1580191387751;
+        Mon, 27 Jan 2020 22:03:07 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:841f:4795:9ca0:c33f])
+        by smtp.gmail.com with ESMTPSA id w13sm24781940wru.38.2020.01.27.22.03.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2020 22:03:07 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     SeongJae Park <sj38.park@gmail.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Subject: Re: Re: [PATCH] kunit/kunit_kernel: Rebuild .config if .kunitconfig is modified
+Date:   Tue, 28 Jan 2020 07:03:00 +0100
+Message-Id: <20200128060300.23989-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAFd5g46v-RyNMP7GROn4bUEAATOPZ=w5AyO+tvuTG25aqt6oAg@mail.gmail.com> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 05:25:13PM -0800, Yang Shi wrote:
-> On Mon, Jan 27, 2020 at 11:06 AM Matthew Wilcox <willy@infradead.org> wrote:
+On Mon, 27 Jan 2020 16:02:48 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
+
+> On Sat, Jan 25, 2020 at 5:59 PM <sj38.park@gmail.com> wrote:
 > >
-> > On Mon, Jan 27, 2020 at 04:00:24PM +0100, Michal Hocko wrote:
-> > > On Sun 26-01-20 15:39:35, Matthew Wilcox wrote:
-> > > > On Sun, Jan 26, 2020 at 11:53:55AM -0800, Cong Wang wrote:
-> > > > > I suspect the process gets stuck in the retry loop in try_charge(), as
-> > > > > the _shortest_ stacktrace of the perf samples indicated:
-> > > > >
-> > > > > cycles:ppp:
-> > > > >         ffffffffa72963db mem_cgroup_iter
-> > > > >         ffffffffa72980ca mem_cgroup_oom_unlock
-> > > > >         ffffffffa7298c15 try_charge
-> > > > >         ffffffffa729a886 mem_cgroup_try_charge
-> > > > >         ffffffffa720ec03 __add_to_page_cache_locked
-> > > > >         ffffffffa720ee3a add_to_page_cache_lru
-> > > > >         ffffffffa7312ddb iomap_readpages_actor
-> > > > >         ffffffffa73133f7 iomap_apply
-> > > > >         ffffffffa73135da iomap_readpages
-> > > > >         ffffffffa722062e read_pages
-> > > > >         ffffffffa7220b3f __do_page_cache_readahead
-> > > > >         ffffffffa7210554 filemap_fault
-> > > > >         ffffffffc039e41f __xfs_filemap_fault
-> > > > >         ffffffffa724f5e7 __do_fault
-> > > > >         ffffffffa724c5f2 __handle_mm_fault
-> > > > >         ffffffffa724cbc6 handle_mm_fault
-> > > > >         ffffffffa70a313e __do_page_fault
-> > > > >         ffffffffa7a00dfe page_fault
-> > > > >
-> > > > > But I don't see how it could be, the only possible case is when
-> > > > > mem_cgroup_oom() returns OOM_SUCCESS. However I can't
-> > > > > find any clue in dmesg pointing to OOM. These processes in the
-> > > > > same memcg are either running or sleeping (that is not exiting or
-> > > > > coredump'ing), I don't see how and why they could be selected as
-> > > > > a victim of OOM killer. I don't see any signal pending either from
-> > > > > their /proc/X/status.
-> > > >
-> > > > I think this is a situation where we might end up with a genuine deadlock
-> > > > if we're not trylocking the pages.  readahead allocates a batch of
-> > > > locked pages and adds them to the pagecache.  If it has allocated,
-> > > > say, 5 pages, successfully inserted the first three into i_pages, then
-> > > > needs to allocate memory to insert the fourth one into i_pages, and
-> > > > the process then attempts to migrate the pages which are still locked,
-> > > > they will never come unlocked because they haven't yet been submitted
-> > > > to the filesystem for reading.
-> > >
-> > > Just to make sure I understand. Do you mean this?
-> > > lock_page(A)
-> > > alloc_pages
-> > >   try_to_compact_pages
-> > >     compact_zone_order
-> > >       compact_zone(MIGRATE_SYNC_LIGHT)
-> > >         migrate_pages
-> > >         unmap_and_move
-> > >           __unmap_and_move
-> > >             lock_page(A)
+> > From: SeongJae Park <sjpark@amazon.de>
 > >
-> > Yes.  There's a little more to it than that, eg slab is involved, but
-> > you have it in a nutshell.
+> > Deletions of configs in the '.kunitconfig' is not applied because kunit
+> > rebuilds '.config' only if the '.config' is not a subset of the
+> > '.kunitconfig'.  To allow the deletions to applied, this commit modifies
+> > the '.config' rebuild condition to addtionally check the modified times
+> > of those files.
 > 
-> But, how compact could get blocked for readahead page if it is not on LRU?
+> The reason it only checks that .kunitconfig is a subset of .config is
+> because we don't want the .kunitconfig to remove options just because
+> it doesn't recognize them.
 > 
-> The page is charged before adding to LRU, so if kernel just retry
-> charge or reclaim forever, the page should be not on LRU, so it should
-> not block compaction.
+> It runs `make ARCH=um olddefconfig` on the .config that it generates
+> from the .kunitconfig, and most of the time that means you will get a
+> .config with lots of things in it that aren't in the .kunitconfig.
+> Consequently, nothing should ever be deleted from the .config just
+> because it was deleted in the .kunitconfig (unless, of course, you
+> change a =y to a =n or # ... is not set), so I don't see what this
+> change would do.
+> 
+> Can you maybe provide an example?
 
-The five pages are allocated ABCDE, then they are added one at a time to
-both the LRU list and i_pages.  Once ABCDE have been added to the page
-cache, they are submitted to the filesystem in a batch.  The sceanrio
-here is that once ABC have been added, we need to allocate memory to
-add D.  The page migration code then attempts to migrate A.  Deadlock;
-it will never come unlocked.
+Sorry for my insufficient explanation.  I added a kunit test
+(SYSCTL_KUNIT_TEST) to '.kunitconfig', ran the added test, and then removed it
+from the file.  However, '.config' is not generated again due to the condition
+and therefore the test still runs.
 
-This kind of problem can occur in any filesystem in either readpages or
-readpage.  Once the page is locked and on the LRU list, if the filesystem
-attempts to allocate memory (and many do), this kind of deadlock can
-occur.  It's avoided if the filesystem uses a mempool to avoid memory
-allocation in this path, but they certainly don't all do that.
+For more detail:
 
-This specific deadlock can be avoided if we skip !PageUptodate pages.
-But I don't know what other situations there are where we allocate memory
-while holding a page locked that is on the LRU list.
+    $ ./tools/testing/kunit/kunit.py run --defconfig --build_dir ../kunit.out/
+    $ echo "CONFIG_SYSCTL_KUNIT_TEST=y" >> ../kunit.out/.kunitconfig
+    $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
+    $ sed -i '4d' ../kunit.out/.kunitconfig
+    $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
+
+The 2nd line command adds sysctl kunit test and the 3rd line shows it runs the
+added test as expected.  Because the default kunit config contains only 3
+lines, The 4th line command removes the sysctl kunit test from the
+.kunitconfig.  However, the 5th line still run the test.
+
+This patch is for such cases.  Of course, this might make more false positives
+but I believe it would not be a big problem because .config generation takes no
+long time.  If I missed something, please let me know.
+
+
+Thanks,
+SeongJae Park
+
+> 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > ---
+> >  tools/testing/kunit/kunit_kernel.py | 17 +++++++++++------
+> >  1 file changed, 11 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
+> > index cc5d844ecca1..a3a5d6c7e66d 100644
+> > --- a/tools/testing/kunit/kunit_kernel.py
+> > +++ b/tools/testing/kunit/kunit_kernel.py
+> > @@ -111,17 +111,22 @@ class LinuxSourceTree(object):
+> >                 return True
+> >
+> >         def build_reconfig(self, build_dir):
+> > -               """Creates a new .config if it is not a subset of the .kunitconfig."""
+> > +               """Creates a new .config if it is not a subset of, or older than the .kunitconfig."""
+> >                 kconfig_path = get_kconfig_path(build_dir)
+> >                 if os.path.exists(kconfig_path):
+> >                         existing_kconfig = kunit_config.Kconfig()
+> >                         existing_kconfig.read_from_file(kconfig_path)
+> > -                       if not self._kconfig.is_subset_of(existing_kconfig):
+> > -                               print('Regenerating .config ...')
+> > -                               os.remove(kconfig_path)
+> > -                               return self.build_config(build_dir)
+> > -                       else:
+> > +                       subset = self._kconfig.is_subset_of(existing_kconfig)
+> > +
+> > +                       kunitconfig_mtime = os.path.getmtime(kunitconfig_path)
+> > +                       kconfig_mtime = os.path.getmtime(kconfig_path)
+> > +                       older = kconfig_mtime < kunitconfig_mtime
+> > +
+> > +                       if subset and not older:
+> >                                 return True
+> > +                       print('Regenerating .config ...')
+> > +                       os.remove(kconfig_path)
+> > +                       return self.build_config(build_dir)
+> >                 else:
+> >                         print('Generating .config ...')
+> >                         return self.build_config(build_dir)
+> > --
+> > 2.17.1
+> >
