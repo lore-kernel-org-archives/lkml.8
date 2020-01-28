@@ -2,132 +2,132 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF96C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045E6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4F520CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66E524683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="yMPLzY/o";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="sLBSB/X5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XTLx96RM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgA1QXo (ORCPT
+        id S1726437AbgA1QYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:23:44 -0500
-Received: from pb-smtp21.pobox.com ([173.228.157.53]:50655 "EHLO
-        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgA1QXn (ORCPT
+        Tue, 28 Jan 2020 11:24:36 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:46736 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgA1QYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:23:43 -0500
-Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
-        by pb-smtp21.pobox.com (Postfix) with ESMTP id 93C92BDBCB;
-        Tue, 28 Jan 2020 11:23:37 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=jYpALN1fbxMFSVVBUXE7zg9UxeE=; b=yMPLzY
-        /oEE7pHkRhjtDKzYsKfgr6OB8Ve0ryTdCW67B9Ykhu5gOrTWF5hoN+XLvdLmlNN1
-        ijt8AMi/QxwlMLjff8CURMK/UDBlsAhlMvzuAC64GCCLlPjXYTu0hisGNT7viU7o
-        GhpOXjdyxdzyAos0sDbbHNMuJK3qSEMaBu6pg=
-Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp21.pobox.com (Postfix) with ESMTP id 88261BDBCA;
-        Tue, 28 Jan 2020 11:23:37 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=1LSD1SXyHfZByrcKZiHw6WOuFn+XRuVq7AgxFxAf94Y=; b=sLBSB/X56XRODwmvf4UnhZTlcIQSH43t+irzIPlKOxjm0DKulSd8hl4vCdQ1dKIgaTLbp1znFBmLV+xirJyvIb6qbDGKtcn3gJTylkmwjoRjuy97rlCTNf6QMQIR8xtpdYR4QgoWvobzKzM87wARIZM6naUno/JYtDb+QmjOJJI=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 5DC82BDBC8;
-        Tue, 28 Jan 2020 11:23:34 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 5A1A22DA00E3;
-        Tue, 28 Jan 2020 11:23:32 -0500 (EST)
-Date:   Tue, 28 Jan 2020 11:23:32 -0500 (EST)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Lukas Wunner <lukas@wunner.de>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Matthew Whitehead <tedheadster@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vt: Fix non-blinking cursor regression
-In-Reply-To: <20200128111107.ppqeebsctffmk7n6@wunner.de>
-Message-ID: <nycvar.YSQ.7.76.2001281121340.1655@knanqh.ubzr>
-References: <575cb82102aa59a7a8e34248821b78e1dd844777.1579701673.git.lukas@wunner.de> <nycvar.YSQ.7.76.2001221032210.1655@knanqh.ubzr> <20200126124834.ea7uxyprz2uaek5x@wunner.de> <nycvar.YSQ.7.76.2001261208030.1655@knanqh.ubzr>
- <20200128111107.ppqeebsctffmk7n6@wunner.de>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Tue, 28 Jan 2020 11:24:36 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00SGEEiZ038187;
+        Tue, 28 Jan 2020 16:24:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=ZWdf7sG5Xw7ejFplB1oAzj7ALcivlmGZ3sLaK7nXF7U=;
+ b=XTLx96RMtWLPWR1Mfszf621kniFGf/Svj9QHnW5RD6RJ7lB0a7ZGc+1Xo6jePDsHv1bO
+ MKzaVgXId9G6x4Nk7cFzT1emmIW9o6sQc6P8JdctbvGjo5ADSfKjdyN6B6HfhwIqcGgz
+ NoJUTckWMlXNDuFcNWXBNjFeCVc6dJa5KyxV8aFgdb+9iBueBZtj5cKN/i8Z8Ny8gBTG
+ RwFZvhSMahTCPAIxSPEbgJIm2LHkCwritMQ/AKIiGjecv83+F6yX7NgBVgcYrBdSy5+z
+ awR+9RorLo7dj+fcjbSEmk9gnYnt/U4l8Wcbf2AO6Ig62/pGi4I66X5I2n9oQR1TW5M8 jg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xrd3u7eet-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jan 2020 16:24:20 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00SGEKaq191045;
+        Tue, 28 Jan 2020 16:24:19 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2xta8j2tyk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jan 2020 16:24:19 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00SGOG3B026765;
+        Tue, 28 Jan 2020 16:24:17 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Jan 2020 08:24:16 -0800
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+To:     xen-devel@lists.xenproject.org
+Cc:     jgg@mellanox.com, jgross@suse.com, linux-kernel@vger.kernel.org,
+        ilpo.jarvinen@cs.helsinki.fi, stable@vger.kernel.org
+Subject: [PATCH] xen/gntdev: Do not use mm notifiers with autotranslating guests
+Date:   Tue, 28 Jan 2020 11:24:19 -0500
+Message-Id: <1580228659-6086-1-git-send-email-boris.ostrovsky@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 87C1ABFC-41EA-11EA-A842-8D86F504CC47-78420484!pb-smtp21.pobox.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001280126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001280126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jan 2020, Lukas Wunner wrote:
+Commit d3eeb1d77c5d ("xen/gntdev: use mmu_interval_notifier_insert")
+missed a test for use_ptemod when calling mmu_interval_read_begin(). Fix
+that.
 
-> On Sun, Jan 26, 2020 at 12:32:10PM -0500, Nicolas Pitre wrote:
-> > On Sun, 26 Jan 2020, Lukas Wunner wrote:
-> > > On Wed, Jan 22, 2020 at 11:40:38AM -0500, Nicolas Pitre wrote:
-> > > > On Wed, 22 Jan 2020, Lukas Wunner wrote:
-> > > > > Since commit a6dbe4427559 ("vt: perform safe console erase in the right
-> > > > > order"), when userspace clears both the scrollback buffer and the screen
-> > > > > by writing "\e[3J" to an fbdev virtual console, the cursor stops blinking
-> > > > > if that virtual console is not in the foreground.  I'm witnessing this
-> > > > > on every boot of Raspbian since updating to v4.19.37+ because agetty
-> > > > > writes the sequence to /dev/tty6 while the console is still switched to
-> > > > > /dev/tty1.  Switching consoles once makes the cursor blink again.
-> > > > > 
-> > > > > The commit added an invocation of ->con_switch() to flush_scrollback().
-> > > > > Normally this is only invoked from switch_screen() to switch consoles.
-> > > > > switch_screen() updates *vc->vc_display_fg to the new console and
-> > > > > fbcon_switch() updates ops->currcon.  Because the commit only invokes
-> > > > > fbcon_switch() but doesn't update *vc->vc_display_fg, it performs an
-> > > > > incomplete console switch.
-> > > > > 
-> > > > > When fb_flashcursor() subsequently blinks the cursor, it retrieves the
-> > > > > foreground console from ops->currcon.  Because *vc->vc_display_fg wasn't
-> > > > > updated, con_is_visible() incorrectly returns false and as a result,
-> > > > > fb_flashcursor() bails out without blinking the cursor.
-> > > > > 
-> > > > > The invocation of ->con_switch() appears to have been erroneous.  After
-> > > > > all, why should a console switch be performed when clearing the screen?
-> > > > > The commit message doesn't provide a rationale either.  So delete it.
-> > > > 
-> > > > The problem here is that only vgacon provides a con_flush_scrollback 
-> > > > method. When not provided, the only way to flush the scrollback buffer 
-> > > > is to invoke the switch method. If you remove it the scrollback buffer 
-> > > > of the foreground console won't be flushed in the fb case and possibly 
-> > > > others.
-> [...]
-> > Still, I'd prefer to get back to the same functional state from before 
-> > commit a6dbe44275 with the switch method first. Can you confirm that the 
-> > patch I propose does fix it for you?
-> 
-> Yes, your patch is
-> 
-> Reported-and-tested-by: Lukas Wunner <lukas@wunner.de>
+Fixes: d3eeb1d77c5d ("xen/gntdev: use mmu_interval_notifier_insert")
+CC: stable@vger.kernel.org # 5.5
+Reported-by: Ilpo Järvinen <ilpo.jarvinen@cs.helsinki.fi>
+Tested-by: Ilpo Järvinen <ilpo.jarvinen@cs.helsinki.fi>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+---
+ drivers/xen/gntdev.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-OK, thanks.
+diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
+index 4fc83e3f5ad3..0258415ca0b2 100644
+--- a/drivers/xen/gntdev.c
++++ b/drivers/xen/gntdev.c
+@@ -1006,19 +1006,19 @@ static int gntdev_mmap(struct file *flip, struct vm_area_struct *vma)
+ 	}
+ 	mutex_unlock(&priv->lock);
+ 
+-	/*
+-	 * gntdev takes the address of the PTE in find_grant_ptes() and passes
+-	 * it to the hypervisor in gntdev_map_grant_pages(). The purpose of
+-	 * the notifier is to prevent the hypervisor pointer to the PTE from
+-	 * going stale.
+-	 *
+-	 * Since this vma's mappings can't be touched without the mmap_sem,
+-	 * and we are holding it now, there is no need for the notifier_range
+-	 * locking pattern.
+-	 */
+-	mmu_interval_read_begin(&map->notifier);
+-
+ 	if (use_ptemod) {
++		/*
++		 * gntdev takes the address of the PTE in find_grant_ptes() and
++		 * passes it to the hypervisor in gntdev_map_grant_pages(). The
++		 * purpose of the notifier is to prevent the hypervisor pointer
++		 * to the PTE from going stale.
++		 *
++		 * Since this vma's mappings can't be touched without the
++		 * mmap_sem, and we are holding it now, there is no need for
++		 * the notifier_range locking pattern.
++		 */
++		mmu_interval_read_begin(&map->notifier);
++
+ 		map->pages_vm_start = vma->vm_start;
+ 		err = apply_to_page_range(vma->vm_mm, vma->vm_start,
+ 					  vma->vm_end - vma->vm_start,
+-- 
+2.17.1
 
-> I'm withdrawing my own patch because further testing has shown that while it
-> fixes the non-blinking cursor issue, it doesn't flush scrollback if "\e[3J"
-> is written to the foreground console.
-> 
-> Would you prefer me to submit your patch with your Signed-off-by or rather
-> submit it yourself with my Tested-by?  If the latter, please include a code
-> comment explaining that ->con_switch() has the side effect of flushing
-> scrollback.  That seems quite non-obvious to me.
-
-I'll submit it with a comment stating the non-obvious.
-
-
-Nicolas
