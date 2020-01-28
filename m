@@ -2,94 +2,194 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D2EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64750C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1E624686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 306B22173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:51:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="diQxNiIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgA1Nrw (ORCPT
+        id S1726273AbgA1Nvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:47:52 -0500
-Received: from out01.mta.xmission.com ([166.70.13.231]:54264 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbgA1Nrv (ORCPT
+        Tue, 28 Jan 2020 08:51:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43757 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726129AbgA1Nvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:47:51 -0500
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iwRDY-00020G-C5; Tue, 28 Jan 2020 06:47:48 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iwRDX-0006bg-Ma; Tue, 28 Jan 2020 06:47:48 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Hridya Valsaraju <hridya@google.com>,
-        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list\:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-References: <CACT4Y+bg1UKXzZF4a9y+5CfNYRwBc5Gx+GjPS0Dhb1n-Qf50+g@mail.gmail.com>
-        <20200126085535.GA3533171@kroah.com>
-        <20200126093506.oa2ee5kbptur4zhz@wittgenstein>
-Date:   Tue, 28 Jan 2020 07:46:08 -0600
-In-Reply-To: <20200126093506.oa2ee5kbptur4zhz@wittgenstein> (Christian
-        Brauner's message of "Sun, 26 Jan 2020 10:35:07 +0100")
-Message-ID: <87blqn3d9b.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 28 Jan 2020 08:51:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580219489;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xYwXigMHs9ibErg+EUOIdW+B0ZNS8vmFHtUCpU8Vzfc=;
+        b=diQxNiIKcOHqccAVuWVqUdGnUfcIv8e5qkU1Svej2C/VJICbs6ns1EcxOWXsWuau/EsR7p
+        sb/bi2hjYeSkkFDACZP5wxS6ecpSPC5ZUaH87uI1BCSbTaiLOooHWJMcI+rOW0KKQq+q/9
+        L2+L8xq5si+zq7AXCH2GIMXbv49ufsg=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-28-d9vOXxcUOB6wcq6wWdvghA-1; Tue, 28 Jan 2020 08:51:25 -0500
+X-MC-Unique: d9vOXxcUOB6wcq6wWdvghA-1
+Received: by mail-oi1-f200.google.com with SMTP id m127so3303859oig.19
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 05:51:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xYwXigMHs9ibErg+EUOIdW+B0ZNS8vmFHtUCpU8Vzfc=;
+        b=khZVnwBAG5NgK5PJOmnc5ZNMHbaB9e6r/lwO53pyT5o4w7gSxypZEmxwoD9GAkwrK4
+         PaWHMF/jwR8lw8fDEj0PfNPrxdpTcA9xml990jXgflI7oS9yfu2PBcHOvQVXmG0DpLXA
+         7TioMgshNZrKbL+Hy5VvseNO3KILbZ6v/LYgWMQWecxtuQkWfZvwPYKCOU0+KqOlezdg
+         lZ1W0bfXGkgYDIn3YcAiNhfZ17Zhdfd+ZTB9B6CACpBvkVuQXdHwyL/xB8AZ/WmlNaKM
+         E/mGFu3dcelTpqB0OD+g6K1VPtGlcQ9/3Ya7rj8j2GRtDUAMfSNPJbwl3wlcvemuAmzu
+         J1qg==
+X-Gm-Message-State: APjAAAWXlLO2ZJsXWfaXNth/e+BarAbANr42ouGsS7wwXhKMW1bBf8iK
+        jj5UFR4+P80Jpcp7Rok69Nr++Yea+Nl80zQ8GlAl4rySioIH+ZKkwzGFJvHiJNJUtLvWLT8JX8P
+        Pnweg9/xldn+nJKJyxHlleEUo5UuHnwhhvjqFzJAs
+X-Received: by 2002:a9d:7ccc:: with SMTP id r12mr17105161otn.22.1580219483345;
+        Tue, 28 Jan 2020 05:51:23 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwRvQI1gr/NFgoti/hhT7JXmXbeDFLVnhKG/bADBQcuYLCllybAUzHF3MW9GatHixvAK2KOIfLcBws0vdYKGo8=
+X-Received: by 2002:a9d:7ccc:: with SMTP id r12mr17105143otn.22.1580219483054;
+ Tue, 28 Jan 2020 05:51:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1iwRDX-0006bg-Ma;;;mid=<87blqn3d9b.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19TaqhwtfnOs4J3o+rZtj2FKDMPKZsQpjA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: binderfs interferes with syzkaller?
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <000000000000143de7059d2ba3e5@google.com> <000000000000fdbd71059d32a906@google.com>
+ <CAHC9VhS_Bfywhp+6H03bY7LrQsBz+io672pSS0DpiZKFiz4L6g@mail.gmail.com>
+In-Reply-To: <CAHC9VhS_Bfywhp+6H03bY7LrQsBz+io672pSS0DpiZKFiz4L6g@mail.gmail.com>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Tue, 28 Jan 2020 14:51:11 +0100
+Message-ID: <CAFqZXNsevSVXroCCBMaWHiVG9sh3Sb9ZDy3tYGDs=ONV8Mc25A@mail.gmail.com>
+Subject: Re: possible deadlock in sidtab_sid2str_put
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Jeff Vander Stoep <jeffv@google.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> writes:
-
-> On Sun, Jan 26, 2020 at 09:55:35AM +0100, Greg Kroah-Hartman wrote:
->> On Sat, Jan 25, 2020 at 06:49:49PM +0100, Dmitry Vyukov wrote:
->> > Hi binder maintainers,
->> > 
->> > It seems that something has happened and now syzbot has 0 coverage in
->> > drivers/android/binder.c:
->> > https://storage.googleapis.com/syzkaller/cover/ci-upstream-kasan-gce-root.html
->> > It covered at least something there before as it found some bugs in binder code.
->> > I _suspect_ it may be related to introduction binderfs, but it's
->> > purely based on the fact that binderfs changed lots of things there.
->> > And I see it claims to be backward compatible.
->> 
->> It is backwards compatible if you mount binderfs, right?
+On Tue, Jan 28, 2020 at 2:39 PM Paul Moore <paul@paul-moore.com> wrote:
+> On Tue, Jan 28, 2020 at 7:50 AM syzbot
+> <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com> wrote:
+> >
+> > syzbot has found a reproducer for the following crash on:
+> >
+> > HEAD commit:    b0be0eff Merge tag 'x86-pti-2020-01-28' of git://git.kerne..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1432aebee00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9784e57c96a92f20
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=61cba5033e2072d61806
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10088e95e00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13fa605ee00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com
+> >
+> > =====================================================
+> > WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
+> > 5.5.0-syzkaller #0 Not tainted
+> > -----------------------------------------------------
+> > syz-executor305/10624 [HC0[0]:SC0[2]:HE1:SE0] is trying to acquire:
+> > ffff888098c14098 (&(&s->cache_lock)->rlock){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+> > ffff888098c14098 (&(&s->cache_lock)->rlock){+.+.}, at: sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
+> >
+> > and this task is already holding:
+> > ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+> > ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
+> > which would create a new lock dependency:
+> >  (&(&nf_conntrack_locks[i])->rlock){+.-.} -> (&(&s->cache_lock)->rlock){+.+.}
+> >
+> > but this new dependency connects a SOFTIRQ-irq-safe lock:
+> >  (&(&nf_conntrack_locks[i])->rlock){+.-.}
+> >
+> > ... which became SOFTIRQ-irq-safe at:
+> >   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+> >   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+> >   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+> >   spin_lock include/linux/spinlock.h:338 [inline]
+> >   nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
 >
-> Yes, it is backwards compatible. The devices that would usually be
-> created in devtmpfs are now created in binderfs. The core
-> binder-codepaths are the same.
+> ...
+>
+> > to a SOFTIRQ-irq-unsafe lock:
+> >  (&(&s->cache_lock)->rlock){+.+.}
+> >
+> > ... which became SOFTIRQ-irq-unsafe at:
+> > ...
+> >   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+> >   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+> >   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+> >   spin_lock include/linux/spinlock.h:338 [inline]
+> >   sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
+> >   sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
+> >   sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
+> >   sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
+> >   security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
+> >   security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
+> >   avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
+> >   common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
+> >   slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
+> >   avc_audit security/selinux/include/avc.h:140 [inline]
+> >   avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
+> >   inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
+> >   selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
+> >   security_mmap_file+0xa4/0x1e0 security/security.c:1482
+> >   vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
+>
+> ...
+>
+> > other info that might help us debug this:
+> >
+> >  Possible interrupt unsafe locking scenario:
+> >
+> >        CPU0                    CPU1
+> >        ----                    ----
+> >   lock(&(&s->cache_lock)->rlock);
+> >                                local_irq_disable();
+> >                                lock(&(&nf_conntrack_locks[i])->rlock);
+> >                                lock(&(&s->cache_lock)->rlock);
+> >   <Interrupt>
+> >     lock(&(&nf_conntrack_locks[i])->rlock);
+> >
+> >  *** DEADLOCK ***
+> >
+> > 4 locks held by syz-executor305/10624:
+> >  #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnl_lock net/netfilter/nfnetlink.c:62 [inline]
+> >  #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnetlink_rcv_msg+0x9ee/0xfb0 net/netfilter/nfnetlink.c:224
+> >  #1: ffff8880836415d8 (nlk_cb_mutex-NETFILTER){+.+.}, at: netlink_dump+0xe7/0xfb0 net/netlink/af_netlink.c:2199
+> >  #2: ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+> >  #2: ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
+> >  #3: ffffffff8b7df008 (&selinux_ss.policy_rwlock){.+.?}, at: security_sid_to_context_core+0x1ca/0x3c0 security/selinux/ss/services.c:1344
+>
+> I think this is going to be tricky to fix due to the differing
+> contexts from which sidtab_sid2str_put() may be called.  We already
+> have a check for !in_task() in sidtab_sid2str_put(), do we want to add
+> a check for !in_serving_softirq() too?
 
-Any chance you can add code to the binderfs case to automatically
-create the symlinks to the standard mount location in devtmpfs?
+I don't think that is going to fix it. The issue here is that an
+interrupt may happen while we are holding the lock and in that
+interrupt we try to take some other lock, which another thread has
+taken before the cache lock... I'm afraid using the irqsave/irqrestore
+locking is the only possible fix here... (Either that or giving up on
+the proper least-recently-used logic.)
 
-That way existing userspace might not need to care how the kernel is
-configured.
-
-Eric
+-- 
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
 
