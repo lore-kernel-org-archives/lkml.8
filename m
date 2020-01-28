@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B0EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0521EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E30120716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D4720716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580223026;
-	bh=sWoF9hko6XibnWvONH+6UswkDcJ+wiVAoNYyJHi8Cyw=;
+	s=default; t=1580223031;
+	bh=UDOslw//HU9T3CyQRE952D+mST3b7MPfW+u9hhNdxtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GPm4srPLcby/dSNoteo/6odXauwrxJLtROCS2hxOXYGLEzeKj0aqRG0uDIBWobQKA
-	 LPGSiVSMJYlYvEuqpzFUO7jaUHj3a7n202gkqtIOq7Hv9snVQejbiXTrAOAfTR1ARf
-	 8pQXV87iIvoKtoZ/Z4QaKg1yjTfcVKerhZFRA8k8=
+	b=VKuil49n1AiWvR8/WnZAJbUQFmkUJLIBjOZ71oLEe48S4kU7YRljwTUjCQP1CnnQ5
+	 LmfM2eoyXk2y5jbTuBRsqYNRZKeEwvdE4mXmR51UR/gv09WB9eRJ/mWBGaVvPgW6cr
+	 ZasFkfgf2C9OgmHlyNQLYEQH31NzpFqojr5hkuZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgA1OuZ (ORCPT
+        id S1726682AbgA1Oub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:50:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:50:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726802AbgA1N7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:59:16 -0500
+        id S1726749AbgA1N7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:59:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20AE424685;
-        Tue, 28 Jan 2020 13:59:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 433572468F;
+        Tue, 28 Jan 2020 13:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219955;
-        bh=sWoF9hko6XibnWvONH+6UswkDcJ+wiVAoNYyJHi8Cyw=;
+        s=default; t=1580219945;
+        bh=UDOslw//HU9T3CyQRE952D+mST3b7MPfW+u9hhNdxtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UpzZh9dkqR3H+OW07YpUQ5lmUFMuVqMhn7cNzxX4LzRInHJs1fACjZf61N7otK4ZK
-         1HGQy5CZ7NVGUU28ScsiuqVBTw7VfNzlZqRYK7zL6DQ4Y7TNUB8rU0j/2a2LSmp6RH
-         yijbVGqm9ztGk5VpEXfvDGfLMLStCIv8Xu2+1ru0=
+        b=PHiSwlv+EhWJYhriWGbYJxNHRqbdxE/BN478I8N71ZTAUtQaQfSLrwxT95eC2+7yu
+         WUGoLNZs99gkqExkyyU2wnNroxUexF7LdWeIgjLiJeQbuv1p0SsifkTuWGuq72Qju6
+         UQIhnweVt7Zj+iPcdjTQdrsxWTaUGDH7ILFMVfQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        David Miller <davem@davemloft.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH 4.14 11/46] net-sysfs: Call dev_hold always in netdev_queue_add_kobject
-Date:   Tue, 28 Jan 2020 14:57:45 +0100
-Message-Id: <20200128135751.545271071@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 24/46] mmc: tegra: fix SDR50 tuning override
+Date:   Tue, 28 Jan 2020 14:57:58 +0100
+Message-Id: <20200128135752.969149082@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -61,47 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit e0b60903b434a7ee21ba8d8659f207ed84101e89 upstream.
+commit f571389c0b015e76f91c697c4c1700aba860d34f upstream.
 
-Dev_hold has to be called always in netdev_queue_add_kobject.
-Otherwise usage count drops below 0 in case of failure in
-kobject_init_and_add.
+Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
+broke SDR50 tuning override. Use correct NVQUIRK_ name.
 
-Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: David Miller <davem@davemloft.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
+Cc: <stable@vger.kernel.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+Tested-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/9aff1d859935e59edd81e4939e40d6c55e0b55f6.1578390388.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/net-sysfs.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci-tegra.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1324,14 +1324,17 @@ static int netdev_queue_add_kobject(stru
- 	struct kobject *kobj = &queue->kobj;
- 	int error = 0;
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -177,7 +177,7 @@ static void tegra_sdhci_reset(struct sdh
+ 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_DDR50;
+ 		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR104)
+ 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_SDR104;
+-		if (soc_data->nvquirks & SDHCI_MISC_CTRL_ENABLE_SDR50)
++		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR50)
+ 			clk_ctrl |= SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE;
+ 	}
  
-+	/* Kobject_put later will trigger netdev_queue_release call
-+	 * which decreases dev refcount: Take that reference here
-+	 */
-+	dev_hold(queue->dev);
-+
- 	kobj->kset = dev->queues_kset;
- 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
- 				     "tx-%u", index);
- 	if (error)
- 		goto err;
- 
--	dev_hold(queue->dev);
--
- #ifdef CONFIG_BQL
- 	error = sysfs_create_group(kobj, &dql_group);
- 	if (error)
 
 
