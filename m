@@ -4,50 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB95C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ED2C35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C9924691
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E106246A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221805;
-	bh=jMh9yRbaa+TzKO4bYqKMD6D1FyrXnUEJEHjYr7s+1tE=;
+	s=default; t=1580221807;
+	bh=87zU2HfPJQxSVVJUShfv5Co+lwd3sWco4/BSmjl7nUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fueg3OEZblPhsPhUGoli1HaFlIqGZEOkDNq3JxPgNfSx5CO8ruv/FOFuyacN5EsF4
-	 WKHDACE2nms0F75EjPVLwpL06Ls9hlOzdyMUtQeA4WZXWIsbYo9HNAs8OcyZHJmPd5
-	 WQiX3ttMP2DyFTJvUtz07pMLpB3uLNMSFuCsAlpQ=
+	b=LpcXBncp26Drklhd7RYjK85h3HvogaDRp8lMlf3Rw4Cb6m6+dchgJHChuz+qa/9MT
+	 Fccq55bJKjCr+MubpiZzGBRm4Nw4d0hY6dXr1rbCYEGrPZsCtsgjrzA7j6DyoswPiJ
+	 sU2aaX/T1Fgrecpboq02UpjfVMVO2jScbjwD47qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387451AbgA1O30 (ORCPT
+        id S2387561AbgA1OaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:29:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57776 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:30:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387644AbgA1O3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:29:21 -0500
+        id S1729368AbgA1OaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:30:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3690624688;
-        Tue, 28 Jan 2020 14:29:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35E8D24692;
+        Tue, 28 Jan 2020 14:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221760;
-        bh=jMh9yRbaa+TzKO4bYqKMD6D1FyrXnUEJEHjYr7s+1tE=;
+        s=default; t=1580221804;
+        bh=87zU2HfPJQxSVVJUShfv5Co+lwd3sWco4/BSmjl7nUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eW8FOKCY3HYaY0pN1JE1SifXyWn3fB56WoRKPWErYJXXM1Ub7qsa0VO4kpW9efKzI
-         zsDhG2LmzgY3OMpWrrxFfPyD2RxQN7p3dRIEFpFRu6DfDQi4docISeUIA8ut6c0O/L
-         uQyTg1BfgxmvD00zJZPIA9UCOF1wQpyAG8qhBg4I=
+        b=jKSyT+SmbUbCl2TWLsIKbHQmPnte19ngMqW5Dx24KCHBQwfjJyQz5ltLj5UhKIAP4
+         YqaVLuox+ruEttYbUa9LGRBvtcIuPg90KA8YLYL7uonqdRFZ6JTeSzn/YmsYUL6cmF
+         WrXi8e4yDCRJwnxNCtDTyxk2I554BZZiTcvjqxKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Wen Huang <huangwenabc@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 63/92] libertas: Fix two buffer overflows at parsing bss descriptor
-Date:   Tue, 28 Jan 2020 15:08:31 +0100
-Message-Id: <20200128135817.338824312@linuxfoundation.org>
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Jane Chu <jane.chu@oracle.com>, Jeff Moyer <jmoyer@redhat.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH 4.19 88/92] mm/hotplug: kill is_dev_zone() usage in __remove_pages()
+Date:   Tue, 28 Jan 2020 15:08:56 +0100
+Message-Id: <20200128135820.770949060@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -60,68 +75,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Huang <huangwenabc@gmail.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-commit e5e884b42639c74b5b57dc277909915c0aefc8bb upstream.
+commit 96da4350000973ef9310a10d077d65bbc017f093 upstream.
 
-add_ie_rates() copys rates without checking the length
-in bss descriptor from remote AP.when victim connects to
-remote attacker, this may trigger buffer overflow.
-lbs_ibss_join_existing() copys rates without checking the length
-in bss descriptor from remote IBSS node.when victim connects to
-remote attacker, this may trigger buffer overflow.
-Fix them by putting the length check before performing copy.
+-- snip --
 
-This fix addresses CVE-2019-14896 and CVE-2019-14897.
-This also fix build warning of mixed declarations and code.
+Minor conflict, keep the altmap check.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Wen Huang <huangwenabc@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+-- snip --
+
+The zone type check was a leftover from the cleanup that plumbed altmap
+through the memory hotplug path, i.e.  commit da024512a1fa "mm: pass the
+vmem_altmap to arch_remove_memory and __remove_pages".
+
+Link: http://lkml.kernel.org/r/156092352642.979959.6664333788149363039.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Tested-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>	[ppc64]
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Jane Chu <jane.chu@oracle.com>
+Cc: Jeff Moyer <jmoyer@redhat.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Toshi Kani <toshi.kani@hpe.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Wei Yang <richardw.yang@linux.intel.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/marvell/libertas/cfg.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ mm/memory_hotplug.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
---- a/drivers/net/wireless/marvell/libertas/cfg.c
-+++ b/drivers/net/wireless/marvell/libertas/cfg.c
-@@ -273,6 +273,10 @@ add_ie_rates(u8 *tlv, const u8 *ie, int
- 	int hw, ap, ap_max = ie[1];
- 	u8 hw_rate;
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -507,11 +507,8 @@ void __remove_pages(struct zone *zone, u
+ 	unsigned long map_offset = 0;
+ 	int sections_to_remove;
  
-+	if (ap_max > MAX_RATES) {
-+		lbs_deb_assoc("invalid rates\n");
-+		return tlv;
-+	}
- 	/* Advance past IE header */
- 	ie += 2;
+-	/* In the ZONE_DEVICE case device driver owns the memory region */
+-	if (is_dev_zone(zone)) {
+-		if (altmap)
+-			map_offset = vmem_altmap_offset(altmap);
+-	}
++	if (altmap)
++		map_offset = vmem_altmap_offset(altmap);
  
-@@ -1717,6 +1721,9 @@ static int lbs_ibss_join_existing(struct
- 	struct cmd_ds_802_11_ad_hoc_join cmd;
- 	u8 preamble = RADIO_PREAMBLE_SHORT;
- 	int ret = 0;
-+	int hw, i;
-+	u8 rates_max;
-+	u8 *rates;
+ 	clear_zone_contiguous(zone);
  
- 	/* TODO: set preamble based on scan result */
- 	ret = lbs_set_radio(priv, preamble, 1);
-@@ -1775,9 +1782,12 @@ static int lbs_ibss_join_existing(struct
- 	if (!rates_eid) {
- 		lbs_add_rates(cmd.bss.rates);
- 	} else {
--		int hw, i;
--		u8 rates_max = rates_eid[1];
--		u8 *rates = cmd.bss.rates;
-+		rates_max = rates_eid[1];
-+		if (rates_max > MAX_RATES) {
-+			lbs_deb_join("invalid rates");
-+			goto out;
-+		}
-+		rates = cmd.bss.rates;
- 		for (hw = 0; hw < ARRAY_SIZE(lbs_rates); hw++) {
- 			u8 hw_rate = lbs_rates[hw].bitrate / 5;
- 			for (i = 0; i < rates_max; i++) {
 
 
