@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8D6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD137C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5AF220702
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E0120702
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222326;
-	bh=erU36mSuWyFSClo7QW4jYPmaXV6VmAAt49OmgnJyu0c=;
+	s=default; t=1580222331;
+	bh=PcEUpSz1l1Agv5M26s4TsmTinViyWnuAaUguPsE67hI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFKEpMN19L0egwt7yeReEUnnu6pIlenTTMteSCrSbk0MLZUUhcnhDu9CMguVM7FK5
-	 Y2XPDz7lITjfSGWWy4vxHKlQTjO1a8+SzQhjrjyojp0hc0tlsPfcDfdwyEY8gLcN3b
-	 YImde3LLyn88JHL0UPfnPTlvRzrrl0nk1ITz3deU=
+	b=x+hHk3tI+A5kHurWHOo/GWxiUPKi2CQrTO2mU8zshgEIsOOvq6KpDIoANt07S9HGe
+	 RFIR0HSvN8qnb81gzjQLjRfNY4W4C7OHn2nnXz7XfqSi+m38NvxY5qezv4sqj3WIDc
+	 Oeb9OMLQJl2cQvU79FrLklRmkeYGGI9XRO6WweZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbgA1Oip (ORCPT
+        id S1731152AbgA1Oiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:38:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42132 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:38:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730621AbgA1OSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:18:13 -0500
+        id S1729903AbgA1OSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:18:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A68AB21739;
-        Tue, 28 Jan 2020 14:18:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 960D021739;
+        Tue, 28 Jan 2020 14:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221092;
-        bh=erU36mSuWyFSClo7QW4jYPmaXV6VmAAt49OmgnJyu0c=;
+        s=default; t=1580221087;
+        bh=PcEUpSz1l1Agv5M26s4TsmTinViyWnuAaUguPsE67hI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mGPjj74uEN4Ox2P5gDfjg3nWCpZAqeeAp9yHxaVWWmvWRAdKf23bEMx4vi5sHp/b2
-         WomrtCxxwJk3xrrxlaqAsnAbZA1/KN9cwKC5rMnRbnt1hlCgnpMgnnbkcvrIehcC8Y
-         6E2t4FjXJoJsHv+bLnr6GWGQdJnoJrahRECLK4kk=
+        b=RdfxLvyo5ydQ1MqRABImDWxb/WVijjgwbJ8c6USlokFbO283lbCsPdus39K6hdbUp
+         nx+xVxNXTZ7S7kv4r1LQfWZkNdkV/ZIXhVhsO9JZDyF2qQ3VMhuJtGHRj9XBIOhZt9
+         8hdYyndMyTuREJzdfEJoAGoucE1Z+Wczf9NmQF7s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 086/271] NFS: Fix a soft lockup in the delegation recovery code
-Date:   Tue, 28 Jan 2020 15:03:55 +0100
-Message-Id: <20200128135858.977014036@linuxfoundation.org>
+Subject: [PATCH 4.9 084/271] ASoC: qcom: Fix of-node refcount unbalance in apq8016_sbc_parse_of()
+Date:   Tue, 28 Jan 2020 15:03:53 +0100
+Message-Id: <20200128135858.823917481@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,81 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 6f9449be53f3ce383caed797708b332ede8d952c ]
+[ Upstream commit 8d1667200850f8753c0265fa4bd25c9a6e5f94ce ]
 
-Fix a soft lockup when NFS client delegation recovery is attempted
-but the inode is in the process of being freed. When the
-igrab(inode) call fails, and we have to restart the recovery process,
-we need to ensure that we won't attempt to recover the same delegation
-again.
+The apq8016 driver leaves the of-node refcount at aborting from the
+loop of for_each_child_of_node() in the error path.  Not only the
+iterator node of for_each_child_of_node(), the children nodes referred
+from it for codec and cpu have to be properly unreferenced.
 
-Fixes: 45870d6909d5a ("NFSv4.1: Test delegation stateids when server...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: bdb052e81f62 ("ASoC: qcom: add apq8016 sound card support")
+Cc: Patrick Lai <plai@codeaurora.org>
+Cc: Banajit Goswami <bgoswami@codeaurora.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 20 ++++++++++++--------
- fs/nfs/delegation.h |  1 +
- 2 files changed, 13 insertions(+), 8 deletions(-)
+ sound/soc/qcom/apq8016_sbc.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 9a8830a0f31f9..014039618cff0 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -234,6 +234,8 @@ static struct inode *nfs_delegation_grab_inode(struct nfs_delegation *delegation
- 	spin_lock(&delegation->lock);
- 	if (delegation->inode != NULL)
- 		inode = igrab(delegation->inode);
-+	if (!inode)
-+		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
- 	spin_unlock(&delegation->lock);
- 	return inode;
- }
-@@ -867,10 +869,11 @@ restart:
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
- 		list_for_each_entry_rcu(delegation, &server->delegations,
- 								super_list) {
--			if (test_bit(NFS_DELEGATION_RETURNING,
--						&delegation->flags))
--				continue;
--			if (test_bit(NFS_DELEGATION_NEED_RECLAIM,
-+			if (test_bit(NFS_DELEGATION_INODE_FREEING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_RETURNING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_NEED_RECLAIM,
- 						&delegation->flags) == 0)
- 				continue;
- 			if (!nfs_sb_active(server->super))
-@@ -975,10 +978,11 @@ restart:
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
- 		list_for_each_entry_rcu(delegation, &server->delegations,
- 								super_list) {
--			if (test_bit(NFS_DELEGATION_RETURNING,
--						&delegation->flags))
--				continue;
--			if (test_bit(NFS_DELEGATION_TEST_EXPIRED,
-+			if (test_bit(NFS_DELEGATION_INODE_FREEING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_RETURNING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_TEST_EXPIRED,
- 						&delegation->flags) == 0)
- 				continue;
- 			if (!nfs_sb_active(server->super))
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index 2c6cb7fb7d5ee..f72095bf9e107 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -33,6 +33,7 @@ enum {
- 	NFS_DELEGATION_RETURNING,
- 	NFS_DELEGATION_REVOKED,
- 	NFS_DELEGATION_TEST_EXPIRED,
-+	NFS_DELEGATION_INODE_FREEING,
- };
+diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
+index 07f91e918b234..754742018515a 100644
+--- a/sound/soc/qcom/apq8016_sbc.c
++++ b/sound/soc/qcom/apq8016_sbc.c
+@@ -114,13 +114,15 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
  
- int nfs_inode_set_delegation(struct inode *inode, struct rpc_cred *cred, struct nfs_openres *res);
+ 		if (!cpu || !codec) {
+ 			dev_err(dev, "Can't find cpu/codec DT node\n");
+-			return ERR_PTR(-EINVAL);
++			ret = -EINVAL;
++			goto error;
+ 		}
+ 
+ 		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
+ 		if (!link->cpu_of_node) {
+ 			dev_err(card->dev, "error getting cpu phandle\n");
+-			return ERR_PTR(-EINVAL);
++			ret = -EINVAL;
++			goto error;
+ 		}
+ 
+ 		link->codec_of_node = of_parse_phandle(codec, "sound-dai", 0);
+@@ -132,28 +134,37 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
+ 		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting cpu dai name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		ret = snd_soc_of_get_dai_name(codec, &link->codec_dai_name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting codec dai name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		link->platform_of_node = link->cpu_of_node;
+ 		ret = of_property_read_string(np, "link-name", &link->name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting codec dai_link name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		link->stream_name = link->name;
+ 		link->init = apq8016_sbc_dai_init;
+ 		link++;
++
++		of_node_put(cpu);
++		of_node_put(codec);
+ 	}
+ 
+ 	return data;
++
++ error:
++	of_node_put(np);
++	of_node_put(cpu);
++	of_node_put(codec);
++	return ERR_PTR(ret);
+ }
+ 
+ static const struct snd_soc_dapm_widget apq8016_sbc_dapm_widgets[] = {
 -- 
 2.20.1
 
