@@ -2,536 +2,140 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104B7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F935C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10F224685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0025A24687
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgA1MuL (ORCPT
+        id S1726239AbgA1Muo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:50:11 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:57082 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgA1MuK (ORCPT
+        Tue, 28 Jan 2020 07:50:44 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:38203 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgA1Muo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:50:10 -0500
-Received: by mail-io1-f71.google.com with SMTP id d13so8223145ioo.23
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 04:50:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=8M/35Eu4bKGU2hk0dn7Fs84p+ZKY68jNr7HJ4Qr432g=;
-        b=iAoWLFYLsJ/YbwixjIapNqVdedGclcD2g5SFGpdl7DWDXFQYER0OZA8U/e/qeEcA3V
-         CoMdSgOr4jlaogtH/vrpY+VrGjELJd51mJeJ3Ni89XUJNrB9YPwEGvlpyzlPGWEgWR24
-         bdQW0w/jDzaXWneuuqKGqqv1dWnE0OCTJlDyfIL64SkHt0TifDvQ0lrZXiqPIMWzE9ws
-         +EtiCgMP2t1YKUxSd4K4s7U1qZwr0RT53ens4ZOAn3VsDT81Rrkks17jukMRsaaKc+Y2
-         3peXo/reZrYs+nvHFHxc4jF9/c/w+PE8jlOZamVwXmPP7QRs3agxh/J2w0n6sw6MWtgC
-         tbOw==
-X-Gm-Message-State: APjAAAUXL7H/aWPQTgTVDzjPG4VoEui4khFM2H+dSDyu+NLLf5540zhy
-        ctKVs3zG2L3+7PcRTaHLxEZ9ie8Mw/TQ5NTMlqpBw0PYEdch
-X-Google-Smtp-Source: APXvYqz1VKjzy7UVfNiKwxx7H2v7dtXfLLV0ZvxXU2a8XhdSFA9TtTEoCH4s76VJR0R/DyafHiM+mVszODBP2pN5DcM8nHY2I0oh
+        Tue, 28 Jan 2020 07:50:44 -0500
+Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MfYDO-1jTZIA1JYO-00g0pf; Tue, 28 Jan 2020 13:50:42 +0100
+Received: by mail-qv1-f50.google.com with SMTP id dc14so6158053qvb.9;
+        Tue, 28 Jan 2020 04:50:42 -0800 (PST)
+X-Gm-Message-State: APjAAAUlbMj3edb9FViq9eps2RGb60zdG8lN3Vf74v43TmedTXTOEPnx
+        BmDNf0v0QfjPbLYkXhvxwbc6vr7YH5m7rPxNuxs=
+X-Google-Smtp-Source: APXvYqwJy4DwfEzTsOkoi0YCpAanaatx64QLkeoLB3399GuTavZPkuD/rRK//KCoPuUtr3vyStofBIgJqCNGfmKx4so=
+X-Received: by 2002:a0c:ead1:: with SMTP id y17mr20934030qvp.210.1580215841088;
+ Tue, 28 Jan 2020 04:50:41 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a02:ce87:: with SMTP id y7mr14800234jaq.26.1580215809456;
- Tue, 28 Jan 2020 04:50:09 -0800 (PST)
-Date:   Tue, 28 Jan 2020 04:50:09 -0800
-In-Reply-To: <000000000000143de7059d2ba3e5@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fdbd71059d32a906@google.com>
-Subject: Re: possible deadlock in sidtab_sid2str_put
-From:   syzbot <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com>
-To:     eparis@parisplace.org, jannh@google.com, jeffv@google.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        omosnace@redhat.com, paul@paul-moore.com, paulmck@kernel.org,
-        sds@tycho.nsa.gov, selinux@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com> <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 28 Jan 2020 13:50:25 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2famGETLM7JgEh+eUJ9HSqm_Fu79uAkU_BPOkDvV2ROg@mail.gmail.com>
+Message-ID: <CAK8P3a2famGETLM7JgEh+eUJ9HSqm_Fu79uAkU_BPOkDvV2ROg@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
+To:     John Garry <john.garry@huawei.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, jeremy.linton@arm.com,
+        Olof Johansson <olof@lixom.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        gregkh <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:3nMHLYujwFcb9tdRgyh5pqOB2vOeaVGdkAJy7Iigx6xOA/kppSB
+ Xmzua0GGpQ4F+4mZwBygccrfbLrpJDE/+hqngCif9WS/q4wGfCRsaZSvF9rV9Qk7RDu2VHm
+ P0FZS9HOb7Yyez4DE4I/oBJspzXWb7NvXMRnqJTzrPl0tKW30LH7gzsNpITyW06DmRlUZ5o
+ ca6a12vh1gngg6T66vv3Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MDP6mq5stY0=:AeGKJuejOqVgqxsGJ0wycJ
+ 11NhK/41P7k7onJk3BhJdklMt7NQpdAUSaFj30J+HeCFAlSez13JYgG+Nk5VM2DqatIJKVMhs
+ CU5PMSwMns2HR8j2FKn+Xl/2NC0SBg9fCfjSNEgrPsLy8RSniQ/8jpTfxSbtvLVlRxcKlJn7l
+ cotp5oMjXFSvjzsTqdXAgyjOYwgc68/s01y6SWWJDYTlC4HGULTQbWvgy7+OTCk/EC5uLH9qQ
+ Tj7TlNl8SovLqHxgtxqTVNNL5JmKMdAhu0SL2C7jSHzmlho2IgxV0KPmBHKFfPwREXWhJfJqk
+ APp7l0QfVPuuo+M2BB0LSJwXpmDv8+nSnixdH4Y49d8K8asb6OMAhpHHiSRJIaohYvAOpQzr1
+ lkIvXGdwAD6XB67DBtTKgAWF1WvN8njLlLBkknX+f9OgxCtSt4YVpj/0JRH9uIYOGIVEB4GAA
+ ofPYzP8pPsseGKgnWpECxUWi3N2lGp3wP1BQcmY+dfOXs6FgIMceWEJFQHdiYZmVRZjnA4W0B
+ G5tEhbe+/lRKG1thA78s7704I0ZVT1fe40Emrz0NR4d8az8i0ndWqHDm1ppTybDUd6kHGmb0o
+ jB1zUDKRK6ceSnFYIEc6xbXe4Rv7p5uqbk0DdjmuVTQcSABshpPNI6BCtt7NgxcZqc3VTu4cI
+ gvcw2oTmrKilAk/UlD2sIBhUMKnwyUsmLPgwxy4k3WHstEOVyBnj7eeKNGsIOEL91O8I/u8iP
+ ULkxSF+j7uzVagC7UIIcRxx9YH7mN/kdSxCGyF7u9Vog9lOYaPMfFe0RF13WtTg7cgp8BWuiP
+ HPz0PP10JP2aMGQhcKwA6m8cVbaxcZevJ6XXaN9E/F4zEo2+zw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Tue, Jan 28, 2020 at 12:18 PM John Garry <john.garry@huawei.com> wrote:
+>
+> Add a generic driver for platforms which populate their ACPI PPTT
+> processor package ID Type Structure according to suggestion in the ACPI
+> spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
+>
+> The soc_id is from member LEVEL_2_ID.
+>
+> For this, we need to use a whitelist of platforms which are known to
+> populate the structure as suggested.
+>
+> For now, only the vendor and soc_id fields are exposed.
+>
+> Signed-off-by: John Garry <john.garry@huawei.com>
 
-HEAD commit:    b0be0eff Merge tag 'x86-pti-2020-01-28' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1432aebee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9784e57c96a92f20
-dashboard link: https://syzkaller.appspot.com/bug?extid=61cba5033e2072d61806
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10088e95e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13fa605ee00000
+Would it be possible to make this the root device for all on-chip devices
+to correctly reflect the hierarchy inside of the soc?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com
+> +/*
+> + * Known platforms that fill in PPTT package ID structures according to
+> + * ACPI spec examples, that being:
+> + * - Custom driver attribute is in ID Type Structure VENDOR_ID member
+> + * - SoC id is in ID Type Structure LEVEL_2_ID member
+> + *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
+> + */
+> +static struct acpi_platform_list plat_list[] = {
+> +       {"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
+> +       { } /* End */
+> +};
 
-=====================================================
-WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-5.5.0-syzkaller #0 Not tainted
------------------------------------------------------
-syz-executor305/10624 [HC0[0]:SC0[2]:HE1:SE0] is trying to acquire:
-ffff888098c14098 (&(&s->cache_lock)->rlock){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-ffff888098c14098 (&(&s->cache_lock)->rlock){+.+.}, at: sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
+That matches a single machine, right? It doesn't seem very generic
+that way.
 
-and this task is already holding:
-ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-which would create a new lock dependency:
- (&(&nf_conntrack_locks[i])->rlock){+.-.} -> (&(&s->cache_lock)->rlock){+.+.}
+> +struct acpi_generic_soc_struct {
+> +       struct soc_device_attribute dev_attr;
+> +       u32 vendor;
+> +};
+> +
+> +static ssize_t vendor_show(struct device *dev,
+> +                          struct device_attribute *attr,
+> +                          char *buf)
+> +{
+> +       struct acpi_generic_soc_struct *soc = dev_get_drvdata(dev);
+> +       u8 vendor_id[5] = {};
+> +
+> +       *(u32 *)vendor_id = soc->vendor;
+> +
+> +       return sprintf(buf, "%s\n", vendor_id);
+> +}
 
-but this new dependency connects a SOFTIRQ-irq-safe lock:
- (&(&nf_conntrack_locks[i])->rlock){+.-.}
+I'd rather not see nonstandard attributes in a "generic" driver at
+all. Maybe the
+you can simply concatenate the vendor and  LEVEL_2_ID into a single string
+here?
 
-... which became SOFTIRQ-irq-safe at:
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-  nf_conntrack_double_lock.isra.0+0xac/0x100 net/netfilter/nf_conntrack_core.c:134
-  __nf_conntrack_confirm+0x252/0x1710 net/netfilter/nf_conntrack_core.c:963
-  nf_conntrack_confirm include/net/netfilter/nf_conntrack_core.h:63 [inline]
-  nf_confirm+0x3e7/0x4d0 net/netfilter/nf_conntrack_proto.c:154
-  ipv4_confirm+0x14c/0x240 net/netfilter/nf_conntrack_proto.c:169
-  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
-  nf_hook include/linux/netfilter.h:262 [inline]
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  ip_local_deliver+0x352/0x520 net/ipv4/ip_input.c:252
-  dst_input include/net/dst.h:442 [inline]
-  ip_sublist_rcv_finish+0x9b/0x2d0 net/ipv4/ip_input.c:549
-  ip_list_rcv_finish net/ipv4/ip_input.c:599 [inline]
-  ip_sublist_rcv+0x5a6/0xa20 net/ipv4/ip_input.c:607
-  ip_list_rcv+0x37e/0x4bf net/ipv4/ip_input.c:642
-  __netif_receive_skb_list_ptype net/core/dev.c:5193 [inline]
-  __netif_receive_skb_list_core+0x5fc/0x9d0 net/core/dev.c:5241
-  __netif_receive_skb_list net/core/dev.c:5293 [inline]
-  netif_receive_skb_list_internal+0x7eb/0xe50 net/core/dev.c:5388
-  gro_normal_list.part.0+0x1e/0xb0 net/core/dev.c:5499
-  gro_normal_list net/core/dev.c:6232 [inline]
-  napi_complete_done+0x208/0x510 net/core/dev.c:6220
-  virtqueue_napi_complete+0x31/0xa0 drivers/net/virtio_net.c:329
-  virtnet_poll+0xbad/0xe90 drivers/net/virtio_net.c:1432
-  napi_poll net/core/dev.c:6534 [inline]
-  net_rx_action+0x508/0x1120 net/core/dev.c:6602
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  do_IRQ+0xe3/0x280 arch/x86/kernel/irq.c:263
-  ret_from_intr+0x0/0x36
-  native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
-  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:690
-  default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
-  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-  do_idle+0x3c8/0x6e0 kernel/sched/idle.c:269
-  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:361
-  rest_init+0x23b/0x371 init/main.c:451
-  arch_call_rest_init+0xe/0x1b
-  start_kernel+0x8a3/0x8e2 init/main.c:785
-  x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
-  x86_64_start_kernel+0x77/0x7b arch/x86/kernel/head64.c:471
-  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
+> +                       soc = kzalloc(sizeof(*soc), GFP_KERNEL);
+> +                       if (!soc)
+> +                               return -ENOMEM;
+> +
+> +                       soc_dev_attr = &soc->dev_attr;
+> +                       soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s",
+> +                                                        soc_id);
 
-to a SOFTIRQ-irq-unsafe lock:
- (&(&s->cache_lock)->rlock){+.+.}
+On the other hand, it would make sense to fill out additional fields here.
+You have already matched the name of the board from the
+acpi_platform_list, so there are two strings available that could be put
+into the "machine" field, and it would make sense to fill out "family" with
+something that identifies it as coming from ACPI PPTT data.
 
-... which became SOFTIRQ-irq-unsafe at:
-...
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-  sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-  sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-  sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-  security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-  security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-  avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
-  common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
-  slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
-  avc_audit security/selinux/include/avc.h:140 [inline]
-  avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
-  inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
-  selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
-  security_mmap_file+0xa4/0x1e0 security/security.c:1482
-  vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
-  vm_mmap+0x94/0xc0 mm/util.c:525
-  elf_map+0x10a/0x2b0 fs/binfmt_elf.c:377
-  load_elf_binary+0xd4b/0x5310 fs/binfmt_elf.c:982
-  search_binary_handler fs/exec.c:1658 [inline]
-  search_binary_handler+0x16d/0x570 fs/exec.c:1635
-  exec_binprm fs/exec.c:1701 [inline]
-  __do_execve_file.isra.0+0x1329/0x22b0 fs/exec.c:1821
-  do_execveat_common fs/exec.c:1867 [inline]
-  do_execve fs/exec.c:1884 [inline]
-  __do_sys_execve fs/exec.c:1960 [inline]
-  __se_sys_execve fs/exec.c:1955 [inline]
-  __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&(&s->cache_lock)->rlock);
-                               local_irq_disable();
-                               lock(&(&nf_conntrack_locks[i])->rlock);
-                               lock(&(&s->cache_lock)->rlock);
-  <Interrupt>
-    lock(&(&nf_conntrack_locks[i])->rlock);
-
- *** DEADLOCK ***
-
-4 locks held by syz-executor305/10624:
- #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnl_lock net/netfilter/nfnetlink.c:62 [inline]
- #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnetlink_rcv_msg+0x9ee/0xfb0 net/netfilter/nfnetlink.c:224
- #1: ffff8880836415d8 (nlk_cb_mutex-NETFILTER){+.+.}, at: netlink_dump+0xe7/0xfb0 net/netlink/af_netlink.c:2199
- #2: ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
- #2: ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
- #3: ffffffff8b7df008 (&selinux_ss.policy_rwlock){.+.?}, at: security_sid_to_context_core+0x1ca/0x3c0 security/selinux/ss/services.c:1344
-
-the dependencies between SOFTIRQ-irq-safe lock and the holding lock:
--> (&(&nf_conntrack_locks[i])->rlock){+.-.} {
-   HARDIRQ-ON-W at:
-                    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                    spin_lock include/linux/spinlock.h:338 [inline]
-                    nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-                    get_next_corpse net/netfilter/nf_conntrack_core.c:2001 [inline]
-                    nf_ct_iterate_cleanup+0x1d2/0x4e0 net/netfilter/nf_conntrack_core.c:2035
-                    nf_ct_iterate_destroy+0x12e/0x160 net/netfilter/nf_conntrack_core.c:2162
-                    nf_conntrack_helper_unregister+0x111/0x160 net/netfilter/nf_conntrack_helper.c:469
-                    nf_conntrack_helpers_unregister net/netfilter/nf_conntrack_helper.c:532 [inline]
-                    nf_conntrack_helpers_register+0xaa/0xe0 net/netfilter/nf_conntrack_helper.c:523
-                    nf_conntrack_sip_init+0x266/0x2a4 net/netfilter/nf_conntrack_sip.c:1693
-                    do_one_initcall+0x120/0x820 init/main.c:939
-                    do_initcall_level init/main.c:1007 [inline]
-                    do_initcalls init/main.c:1015 [inline]
-                    do_basic_setup init/main.c:1032 [inline]
-                    kernel_init_freeable+0x4ca/0x570 init/main.c:1203
-                    kernel_init+0x12/0x1bf init/main.c:1110
-                    ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-   IN-SOFTIRQ-W at:
-                    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                    spin_lock include/linux/spinlock.h:338 [inline]
-                    nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-                    nf_conntrack_double_lock.isra.0+0xac/0x100 net/netfilter/nf_conntrack_core.c:134
-                    __nf_conntrack_confirm+0x252/0x1710 net/netfilter/nf_conntrack_core.c:963
-                    nf_conntrack_confirm include/net/netfilter/nf_conntrack_core.h:63 [inline]
-                    nf_confirm+0x3e7/0x4d0 net/netfilter/nf_conntrack_proto.c:154
-                    ipv4_confirm+0x14c/0x240 net/netfilter/nf_conntrack_proto.c:169
-                    nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-                    nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
-                    nf_hook include/linux/netfilter.h:262 [inline]
-                    NF_HOOK include/linux/netfilter.h:305 [inline]
-                    ip_local_deliver+0x352/0x520 net/ipv4/ip_input.c:252
-                    dst_input include/net/dst.h:442 [inline]
-                    ip_sublist_rcv_finish+0x9b/0x2d0 net/ipv4/ip_input.c:549
-                    ip_list_rcv_finish net/ipv4/ip_input.c:599 [inline]
-                    ip_sublist_rcv+0x5a6/0xa20 net/ipv4/ip_input.c:607
-                    ip_list_rcv+0x37e/0x4bf net/ipv4/ip_input.c:642
-                    __netif_receive_skb_list_ptype net/core/dev.c:5193 [inline]
-                    __netif_receive_skb_list_core+0x5fc/0x9d0 net/core/dev.c:5241
-                    __netif_receive_skb_list net/core/dev.c:5293 [inline]
-                    netif_receive_skb_list_internal+0x7eb/0xe50 net/core/dev.c:5388
-                    gro_normal_list.part.0+0x1e/0xb0 net/core/dev.c:5499
-                    gro_normal_list net/core/dev.c:6232 [inline]
-                    napi_complete_done+0x208/0x510 net/core/dev.c:6220
-                    virtqueue_napi_complete+0x31/0xa0 drivers/net/virtio_net.c:329
-                    virtnet_poll+0xbad/0xe90 drivers/net/virtio_net.c:1432
-                    napi_poll net/core/dev.c:6534 [inline]
-                    net_rx_action+0x508/0x1120 net/core/dev.c:6602
-                    __do_softirq+0x262/0x98c kernel/softirq.c:292
-                    invoke_softirq kernel/softirq.c:373 [inline]
-                    irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-                    exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-                    do_IRQ+0xe3/0x280 arch/x86/kernel/irq.c:263
-                    ret_from_intr+0x0/0x36
-                    native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
-                    arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:690
-                    default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
-                    cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-                    do_idle+0x3c8/0x6e0 kernel/sched/idle.c:269
-                    cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:361
-                    rest_init+0x23b/0x371 init/main.c:451
-                    arch_call_rest_init+0xe/0x1b
-                    start_kernel+0x8a3/0x8e2 init/main.c:785
-                    x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
-                    x86_64_start_kernel+0x77/0x7b arch/x86/kernel/head64.c:471
-                    secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
-   INITIAL USE at:
-                   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                   spin_lock include/linux/spinlock.h:338 [inline]
-                   nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
-                   get_next_corpse net/netfilter/nf_conntrack_core.c:2001 [inline]
-                   nf_ct_iterate_cleanup+0x1d2/0x4e0 net/netfilter/nf_conntrack_core.c:2035
-                   nf_ct_iterate_destroy+0x12e/0x160 net/netfilter/nf_conntrack_core.c:2162
-                   nf_conntrack_helper_unregister+0x111/0x160 net/netfilter/nf_conntrack_helper.c:469
-                   nf_conntrack_helpers_unregister net/netfilter/nf_conntrack_helper.c:532 [inline]
-                   nf_conntrack_helpers_register+0xaa/0xe0 net/netfilter/nf_conntrack_helper.c:523
-                   nf_conntrack_sip_init+0x266/0x2a4 net/netfilter/nf_conntrack_sip.c:1693
-                   do_one_initcall+0x120/0x820 init/main.c:939
-                   do_initcall_level init/main.c:1007 [inline]
-                   do_initcalls init/main.c:1015 [inline]
-                   do_basic_setup init/main.c:1032 [inline]
-                   kernel_init_freeable+0x4ca/0x570 init/main.c:1203
-                   kernel_init+0x12/0x1bf init/main.c:1110
-                   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
- }
- ... key      at: [<ffffffff8c1ad440>] __key.79496+0x0/0x40
- ... acquired at:
-   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-   spin_lock include/linux/spinlock.h:338 [inline]
-   sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-   sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-   sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-   sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-   security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-   security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-   selinux_secid_to_secctx+0x2d/0x40 security/selinux/hooks.c:6451
-   security_secid_to_secctx+0x75/0xc0 security/security.c:1950
-   ctnetlink_dump_secctx.isra.0+0x8c/0x330 net/netfilter/nf_conntrack_netlink.c:335
-   ctnetlink_dump_info net/netfilter/nf_conntrack_netlink.c:531 [inline]
-   ctnetlink_fill_info+0x750/0xd40 net/netfilter/nf_conntrack_netlink.c:591
-   ctnetlink_dump_table+0x68c/0x1130 net/netfilter/nf_conntrack_netlink.c:979
-   netlink_dump+0x558/0xfb0 net/netlink/af_netlink.c:2244
-   __netlink_dump_start+0x66a/0x930 net/netlink/af_netlink.c:2352
-   netlink_dump_start include/linux/netlink.h:233 [inline]
-   ctnetlink_get_conntrack+0x55e/0x6a0 net/netfilter/nf_conntrack_netlink.c:1355
-   nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
-   netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-   nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
-   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-   netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-   netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-   sock_sendmsg_nosec net/socket.c:639 [inline]
-   sock_sendmsg+0xd7/0x130 net/socket.c:659
-   ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-   ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-   __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-   __do_sys_sendmsg net/socket.c:2426 [inline]
-   __se_sys_sendmsg net/socket.c:2424 [inline]
-   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-
-the dependencies between the lock to be acquired
- and SOFTIRQ-irq-unsafe lock:
--> (&(&s->cache_lock)->rlock){+.+.} {
-   HARDIRQ-ON-W at:
-                    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                    spin_lock include/linux/spinlock.h:338 [inline]
-                    sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-                    sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-                    sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-                    sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-                    security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-                    security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-                    avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
-                    common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
-                    slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
-                    avc_audit security/selinux/include/avc.h:140 [inline]
-                    avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
-                    inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
-                    selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
-                    security_mmap_file+0xa4/0x1e0 security/security.c:1482
-                    vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
-                    vm_mmap+0x94/0xc0 mm/util.c:525
-                    elf_map+0x10a/0x2b0 fs/binfmt_elf.c:377
-                    load_elf_binary+0xd4b/0x5310 fs/binfmt_elf.c:982
-                    search_binary_handler fs/exec.c:1658 [inline]
-                    search_binary_handler+0x16d/0x570 fs/exec.c:1635
-                    exec_binprm fs/exec.c:1701 [inline]
-                    __do_execve_file.isra.0+0x1329/0x22b0 fs/exec.c:1821
-                    do_execveat_common fs/exec.c:1867 [inline]
-                    do_execve fs/exec.c:1884 [inline]
-                    __do_sys_execve fs/exec.c:1960 [inline]
-                    __se_sys_execve fs/exec.c:1955 [inline]
-                    __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
-                    do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-                    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-   SOFTIRQ-ON-W at:
-                    lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                    _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                    spin_lock include/linux/spinlock.h:338 [inline]
-                    sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-                    sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-                    sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-                    sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-                    security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-                    security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-                    avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
-                    common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
-                    slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
-                    avc_audit security/selinux/include/avc.h:140 [inline]
-                    avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
-                    inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
-                    selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
-                    security_mmap_file+0xa4/0x1e0 security/security.c:1482
-                    vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
-                    vm_mmap+0x94/0xc0 mm/util.c:525
-                    elf_map+0x10a/0x2b0 fs/binfmt_elf.c:377
-                    load_elf_binary+0xd4b/0x5310 fs/binfmt_elf.c:982
-                    search_binary_handler fs/exec.c:1658 [inline]
-                    search_binary_handler+0x16d/0x570 fs/exec.c:1635
-                    exec_binprm fs/exec.c:1701 [inline]
-                    __do_execve_file.isra.0+0x1329/0x22b0 fs/exec.c:1821
-                    do_execveat_common fs/exec.c:1867 [inline]
-                    do_execve fs/exec.c:1884 [inline]
-                    __do_sys_execve fs/exec.c:1960 [inline]
-                    __se_sys_execve fs/exec.c:1955 [inline]
-                    __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
-                    do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-                    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-   INITIAL USE at:
-                   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-                   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-                   spin_lock include/linux/spinlock.h:338 [inline]
-                   sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-                   sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-                   sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-                   sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-                   security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-                   security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-                   avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
-                   common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
-                   slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
-                   avc_audit security/selinux/include/avc.h:140 [inline]
-                   avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
-                   inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
-                   selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
-                   security_mmap_file+0xa4/0x1e0 security/security.c:1482
-                   vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
-                   vm_mmap+0x94/0xc0 mm/util.c:525
-                   elf_map+0x10a/0x2b0 fs/binfmt_elf.c:377
-                   load_elf_binary+0xd4b/0x5310 fs/binfmt_elf.c:982
-                   search_binary_handler fs/exec.c:1658 [inline]
-                   search_binary_handler+0x16d/0x570 fs/exec.c:1635
-                   exec_binprm fs/exec.c:1701 [inline]
-                   __do_execve_file.isra.0+0x1329/0x22b0 fs/exec.c:1821
-                   do_execveat_common fs/exec.c:1867 [inline]
-                   do_execve fs/exec.c:1884 [inline]
-                   __do_sys_execve fs/exec.c:1960 [inline]
-                   __se_sys_execve fs/exec.c:1955 [inline]
-                   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
-                   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-                   entry_SYSCALL_64_after_hwframe+0x49/0xbe
- }
- ... key      at: [<ffffffff8b7dec80>] __key.69173+0x0/0x40
- ... acquired at:
-   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-   spin_lock include/linux/spinlock.h:338 [inline]
-   sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
-   sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
-   sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
-   sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
-   security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
-   security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
-   selinux_secid_to_secctx+0x2d/0x40 security/selinux/hooks.c:6451
-   security_secid_to_secctx+0x75/0xc0 security/security.c:1950
-   ctnetlink_dump_secctx.isra.0+0x8c/0x330 net/netfilter/nf_conntrack_netlink.c:335
-   ctnetlink_dump_info net/netfilter/nf_conntrack_netlink.c:531 [inline]
-   ctnetlink_fill_info+0x750/0xd40 net/netfilter/nf_conntrack_netlink.c:591
-   ctnetlink_dump_table+0x68c/0x1130 net/netfilter/nf_conntrack_netlink.c:979
-   netlink_dump+0x558/0xfb0 net/netlink/af_netlink.c:2244
-   __netlink_dump_start+0x66a/0x930 net/netlink/af_netlink.c:2352
-   netlink_dump_start include/linux/netlink.h:233 [inline]
-   ctnetlink_get_conntrack+0x55e/0x6a0 net/netfilter/nf_conntrack_netlink.c:1355
-   nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
-   netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-   nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
-   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-   netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-   netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-   sock_sendmsg_nosec net/socket.c:639 [inline]
-   sock_sendmsg+0xd7/0x130 net/socket.c:659
-   ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-   ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-   __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-   __do_sys_sendmsg net/socket.c:2426 [inline]
-   __se_sys_sendmsg net/socket.c:2424 [inline]
-   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-
-stack backtrace:
-CPU: 1 PID: 10624 Comm: syz-executor305 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_bad_irq_dependency kernel/locking/lockdep.c:2094 [inline]
- check_irq_usage.cold+0x586/0x6fe kernel/locking/lockdep.c:2292
- check_prev_add kernel/locking/lockdep.c:2479 [inline]
- check_prevs_add kernel/locking/lockdep.c:2580 [inline]
- validate_chain kernel/locking/lockdep.c:2970 [inline]
- __lock_acquire+0x25b4/0x4a00 kernel/locking/lockdep.c:3954
- lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
- __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
- _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
- spin_lock include/linux/spinlock.h:338 [inline]
- sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
- sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
- sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
- sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
- security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
- security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
- selinux_secid_to_secctx+0x2d/0x40 security/selinux/hooks.c:6451
- security_secid_to_secctx+0x75/0xc0 security/security.c:1950
- ctnetlink_dump_secctx.isra.0+0x8c/0x330 net/netfilter/nf_conntrack_netlink.c:335
- ctnetlink_dump_info net/netfilter/nf_conntrack_netlink.c:531 [inline]
- ctnetlink_fill_info+0x750/0xd40 net/netfilter/nf_conntrack_netlink.c:591
- ctnetlink_dump_table+0x68c/0x1130 net/netfilter/nf_conntrack_netlink.c:979
- netlink_dump+0x558/0xfb0 net/netlink/af_netlink.c:2244
- __netlink_dump_start+0x66a/0x930 net/netlink/af_netlink.c:2352
- netlink_dump_start include/linux/netlink.h:233 [inline]
- ctnetlink_get_conntrack+0x55e/0x6a0 net/netfilter/nf_conntrack_netlink.c:1355
- nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
- nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:639 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:659
- ____sys_sendmsg+0x753/0x880 net/socket.c:2330
- ___sys_sendmsg+0x100/0x170 net/socket.c:2384
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
- __do_sys_sendmsg net/socket.c:2426 [inline]
- __se_sys_sendmsg net/socket.c:2424 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4401e9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe6ca42208 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401e9
-RDX: 0000000000000000 RSI: 0000000020d65000 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000
-
+             Arnd
