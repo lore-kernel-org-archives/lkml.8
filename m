@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC103C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865BCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925C52468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F5F24693
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220262;
-	bh=n8euAXScR1CSlqLFgVc19vSB9xLj+3ntt9IPjt/ZXH8=;
+	s=default; t=1580220266;
+	bh=yWUG+dYnu8T18ahauskRPIFh8fr5BTymKVv6gsFOrho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TYo+kmfm+liCU6pMrpKdjSfwvlcUS67m98jTjry0E8E+y596hYU9rJ7IT751scHeY
-	 AE1SbnCb8yr6ar6qD6/lh/RvQIxMlK3KOeTGun27KduFPtTzjaqHHyO7vDsf1gasRH
-	 7LhZ3bmj/AfGyB4yR6V4CUbzhADKMOOxJEG+lTe4=
+	b=Rlzle6zsUwaGs2Ne8NW9cZ6rZh8PmwlTgPcWEz7S50nZEU2qkSzf62R21bAwRnZF1
+	 ZUx+zcC9B7VUcojcmgShiYfTVK4nzuVOuo4dJ+bE2LKCI2tYQnieo2GWAPpo3FPFTo
+	 YnQ/G0us+1NRWInVRAId1PaNwToHptKWoLkTShCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgA1OEV (ORCPT
+        id S1728066AbgA1OEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:04:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51330 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:04:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728040AbgA1OEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:04:15 -0500
+        id S1726836AbgA1OES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:04:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA4A205F4;
-        Tue, 28 Jan 2020 14:04:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA7A24685;
+        Tue, 28 Jan 2020 14:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220255;
-        bh=n8euAXScR1CSlqLFgVc19vSB9xLj+3ntt9IPjt/ZXH8=;
+        s=default; t=1580220257;
+        bh=yWUG+dYnu8T18ahauskRPIFh8fr5BTymKVv6gsFOrho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1xIVkWPVNw8fJ2R1CwrQOx3GRVxWZjwnAcuDagxuhSPJQc+c6PopzaZgOw8uxhEmU
-         SWd7jd5AH6FXy7dC28kZDSU52K+W2Pqi3dSUTEcYTlRpHd84Mca+BXJAMJ9hqJZw9Q
-         3N73iuKeRmNGcRtnC2pm9hANZWG1zjhX1dG+0awg=
+        b=s/6Bamc6NowMTo6wHRyIKoJhEEXPdyRALwXx5BIIaIVjqfhplGhHnhraSuhIS1MZh
+         yNuQwb8RyywIuRtgiDtxLNR/eTRPEYDexh+coFbWNuHA0HWnwP4MmNDsT8XY/b4eeo
+         tkEewWXYOkul6c3PdaIkCL15S1lwV7WAGw1hASi8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilles Buloz <gilles.buloz@kontron.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 077/104] hwmon: (nct7802) Fix non-working alarm on voltages
-Date:   Tue, 28 Jan 2020 15:00:38 +0100
-Message-Id: <20200128135827.867956742@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Zanussi <zanussi@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4 042/104] tracing: trigger: Replace unneeded RCU-list traversals
+Date:   Tue, 28 Jan 2020 15:00:03 +0100
+Message-Id: <20200128135823.479153298@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -59,154 +60,253 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilles Buloz <gilles.buloz@kontron.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit e51a7dda299815e92f43960d620cdfc8dfc144f2 upstream.
+commit aeed8aa3874dc15b9d82a6fe796fd7cfbb684448 upstream.
 
-No alarm is reported by /sys/.../inX_alarm
+With CONFIG_PROVE_RCU_LIST, I had many suspicious RCU warnings
+when I ran ftracetest trigger testcases.
 
-In detail:
+-----
+  # dmesg -c > /dev/null
+  # ./ftracetest test.d/trigger
+  ...
+  # dmesg | grep "RCU-list traversed" | cut -f 2 -d ] | cut -f 2 -d " "
+  kernel/trace/trace_events_hist.c:6070
+  kernel/trace/trace_events_hist.c:1760
+  kernel/trace/trace_events_hist.c:5911
+  kernel/trace/trace_events_trigger.c:504
+  kernel/trace/trace_events_hist.c:1810
+  kernel/trace/trace_events_hist.c:3158
+  kernel/trace/trace_events_hist.c:3105
+  kernel/trace/trace_events_hist.c:5518
+  kernel/trace/trace_events_hist.c:5998
+  kernel/trace/trace_events_hist.c:6019
+  kernel/trace/trace_events_hist.c:6044
+  kernel/trace/trace_events_trigger.c:1500
+  kernel/trace/trace_events_trigger.c:1540
+  kernel/trace/trace_events_trigger.c:539
+  kernel/trace/trace_events_trigger.c:584
+-----
 
-The SMI Voltage status register is the only register giving a status
-for voltages, but it does not work like the non-SMI status registers
-used for temperatures and fans.
-A bit is set for each input crossing a threshold, in both direction,
-but the "inside" or "outside" limits info is not available.
-Also this register is cleared on read.
-Note : this is not explicitly spelled out in the datasheet, but from
-experiment.
-As a result if an input is crossing a threshold (min or max in any
-direction), the alarm is reported only once even if the input is
-still outside limits. Also if the alarm for another input is read
-before the one of this input, no alarm is reported at all.
+I investigated those warnings and found that the RCU-list
+traversals in event trigger and hist didn't need to use
+RCU version because those were called only under event_mutex.
 
-Signed-off-by: Gilles Buloz <gilles.buloz@kontron.com>
-Link: https://lore.kernel.org/r/5de0f566.tBga5POKAgHlmd0p%gilles.buloz@kontron.com
-Fixes: 3434f3783580 ("hwmon: Driver for Nuvoton NCT7802Y")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+I also checked other RCU-list traversals related to event
+trigger list, and found that most of them were called from
+event_hist_trigger_func() or hist_unregister_trigger() or
+register/unregister functions except for a few cases.
+
+Replace these unneeded RCU-list traversals with normal list
+traversal macro and lockdep_assert_held() to check the
+event_mutex is held.
+
+Link: http://lkml.kernel.org/r/157680910305.11685.15110237954275915782.stgit@devnote2
+
+Cc: stable@vger.kernel.org
+Fixes: 30350d65ac567 ("tracing: Add variable support to hist triggers")
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/nct7802.c |   71 +++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 67 insertions(+), 4 deletions(-)
+ kernel/trace/trace_events_hist.c    |   41 ++++++++++++++++++++++++++----------
+ kernel/trace/trace_events_trigger.c |   20 +++++++++++++----
+ 2 files changed, 45 insertions(+), 16 deletions(-)
 
---- a/drivers/hwmon/nct7802.c
-+++ b/drivers/hwmon/nct7802.c
-@@ -58,6 +58,8 @@ static const u8 REG_VOLTAGE_LIMIT_MSB_SH
- struct nct7802_data {
- 	struct regmap *regmap;
- 	struct mutex access_lock; /* for multi-byte read and write operations */
-+	u8 in_status;
-+	struct mutex in_alarm_lock;
- };
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1766,11 +1766,13 @@ static struct hist_field *find_var(struc
+ 	struct event_trigger_data *test;
+ 	struct hist_field *hist_field;
  
- static ssize_t temp_type_show(struct device *dev,
-@@ -368,6 +370,66 @@ static ssize_t in_store(struct device *d
- 	return err ? : count;
- }
++	lockdep_assert_held(&event_mutex);
++
+ 	hist_field = find_var_field(hist_data, var_name);
+ 	if (hist_field)
+ 		return hist_field;
  
-+static ssize_t in_alarm_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct nct7802_data *data = dev_get_drvdata(dev);
-+	int volt, min, max, ret;
-+	unsigned int val;
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			test_data = test->private_data;
+ 			hist_field = find_var_field(test_data, var_name);
+@@ -1820,7 +1822,9 @@ static struct hist_field *find_file_var(
+ 	struct event_trigger_data *test;
+ 	struct hist_field *hist_field;
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
 +
-+	mutex_lock(&data->in_alarm_lock);
-+
-+	/*
-+	 * The SMI Voltage status register is the only register giving a status
-+	 * for voltages. A bit is set for each input crossing a threshold, in
-+	 * both direction, but the "inside" or "outside" limits info is not
-+	 * available. Also this register is cleared on read.
-+	 * Note: this is not explicitly spelled out in the datasheet, but
-+	 * from experiment.
-+	 * To deal with this we use a status cache with one validity bit and
-+	 * one status bit for each input. Validity is cleared at startup and
-+	 * each time the register reports a change, and the status is processed
-+	 * by software based on current input value and limits.
-+	 */
-+	ret = regmap_read(data->regmap, 0x1e, &val); /* SMI Voltage status */
-+	if (ret < 0)
-+		goto abort;
-+
-+	/* invalidate cached status for all inputs crossing a threshold */
-+	data->in_status &= ~((val & 0x0f) << 4);
-+
-+	/* if cached status for requested input is invalid, update it */
-+	if (!(data->in_status & (0x10 << sattr->index))) {
-+		ret = nct7802_read_voltage(data, sattr->nr, 0);
-+		if (ret < 0)
-+			goto abort;
-+		volt = ret;
-+
-+		ret = nct7802_read_voltage(data, sattr->nr, 1);
-+		if (ret < 0)
-+			goto abort;
-+		min = ret;
-+
-+		ret = nct7802_read_voltage(data, sattr->nr, 2);
-+		if (ret < 0)
-+			goto abort;
-+		max = ret;
-+
-+		if (volt < min || volt > max)
-+			data->in_status |= (1 << sattr->index);
-+		else
-+			data->in_status &= ~(1 << sattr->index);
-+
-+		data->in_status |= 0x10 << sattr->index;
-+	}
-+
-+	ret = sprintf(buf, "%u\n", !!(data->in_status & (1 << sattr->index)));
-+abort:
-+	mutex_unlock(&data->in_alarm_lock);
-+	return ret;
-+}
-+
- static ssize_t temp_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			test_data = test->private_data;
+ 			hist_field = find_var_field(test_data, var_name);
+@@ -3115,7 +3119,9 @@ static char *find_trigger_filter(struct
  {
-@@ -660,7 +722,7 @@ static const struct attribute_group nct7
- static SENSOR_DEVICE_ATTR_2_RO(in0_input, in, 0, 0);
- static SENSOR_DEVICE_ATTR_2_RW(in0_min, in, 0, 1);
- static SENSOR_DEVICE_ATTR_2_RW(in0_max, in, 0, 2);
--static SENSOR_DEVICE_ATTR_2_RO(in0_alarm, alarm, 0x1e, 3);
-+static SENSOR_DEVICE_ATTR_2_RO(in0_alarm, in_alarm, 0, 3);
- static SENSOR_DEVICE_ATTR_2_RW(in0_beep, beep, 0x5a, 3);
+ 	struct event_trigger_data *test;
  
- static SENSOR_DEVICE_ATTR_2_RO(in1_input, in, 1, 0);
-@@ -668,19 +730,19 @@ static SENSOR_DEVICE_ATTR_2_RO(in1_input
- static SENSOR_DEVICE_ATTR_2_RO(in2_input, in, 2, 0);
- static SENSOR_DEVICE_ATTR_2_RW(in2_min, in, 2, 1);
- static SENSOR_DEVICE_ATTR_2_RW(in2_max, in, 2, 2);
--static SENSOR_DEVICE_ATTR_2_RO(in2_alarm, alarm, 0x1e, 0);
-+static SENSOR_DEVICE_ATTR_2_RO(in2_alarm, in_alarm, 2, 0);
- static SENSOR_DEVICE_ATTR_2_RW(in2_beep, beep, 0x5a, 0);
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (test->private_data == hist_data)
+ 				return test->filter_str;
+@@ -3166,9 +3172,11 @@ find_compatible_hist(struct hist_trigger
+ 	struct event_trigger_data *test;
+ 	unsigned int n_keys;
  
- static SENSOR_DEVICE_ATTR_2_RO(in3_input, in, 3, 0);
- static SENSOR_DEVICE_ATTR_2_RW(in3_min, in, 3, 1);
- static SENSOR_DEVICE_ATTR_2_RW(in3_max, in, 3, 2);
--static SENSOR_DEVICE_ATTR_2_RO(in3_alarm, alarm, 0x1e, 1);
-+static SENSOR_DEVICE_ATTR_2_RO(in3_alarm, in_alarm, 3, 1);
- static SENSOR_DEVICE_ATTR_2_RW(in3_beep, beep, 0x5a, 1);
++	lockdep_assert_held(&event_mutex);
++
+ 	n_keys = target_hist_data->n_fields - target_hist_data->n_vals;
  
- static SENSOR_DEVICE_ATTR_2_RO(in4_input, in, 4, 0);
- static SENSOR_DEVICE_ATTR_2_RW(in4_min, in, 4, 1);
- static SENSOR_DEVICE_ATTR_2_RW(in4_max, in, 4, 2);
--static SENSOR_DEVICE_ATTR_2_RO(in4_alarm, alarm, 0x1e, 2);
-+static SENSOR_DEVICE_ATTR_2_RO(in4_alarm, in_alarm, 4, 2);
- static SENSOR_DEVICE_ATTR_2_RW(in4_beep, beep, 0x5a, 2);
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			hist_data = test->private_data;
  
- static struct attribute *nct7802_in_attrs[] = {
-@@ -1011,6 +1073,7 @@ static int nct7802_probe(struct i2c_clie
- 		return PTR_ERR(data->regmap);
+@@ -5528,7 +5536,7 @@ static int hist_show(struct seq_file *m,
+ 		goto out_unlock;
+ 	}
  
- 	mutex_init(&data->access_lock);
-+	mutex_init(&data->in_alarm_lock);
+-	list_for_each_entry_rcu(data, &event_file->triggers, list) {
++	list_for_each_entry(data, &event_file->triggers, list) {
+ 		if (data->cmd_ops->trigger_type == ETT_EVENT_HIST)
+ 			hist_trigger_show(m, data, n++);
+ 	}
+@@ -5921,7 +5929,9 @@ static int hist_register_trigger(char *g
+ 	if (hist_data->attrs->name && !named_data)
+ 		goto new;
  
- 	ret = nct7802_init_chip(data);
- 	if (ret < 0)
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (!hist_trigger_match(data, test, named_data, false))
+ 				continue;
+@@ -6005,10 +6015,12 @@ static bool have_hist_trigger_match(stru
+ 	struct event_trigger_data *test, *named_data = NULL;
+ 	bool match = false;
+ 
++	lockdep_assert_held(&event_mutex);
++
+ 	if (hist_data->attrs->name)
+ 		named_data = find_named_trigger(hist_data->attrs->name);
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (hist_trigger_match(data, test, named_data, false)) {
+ 				match = true;
+@@ -6026,10 +6038,12 @@ static bool hist_trigger_check_refs(stru
+ 	struct hist_trigger_data *hist_data = data->private_data;
+ 	struct event_trigger_data *test, *named_data = NULL;
+ 
++	lockdep_assert_held(&event_mutex);
++
+ 	if (hist_data->attrs->name)
+ 		named_data = find_named_trigger(hist_data->attrs->name);
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (!hist_trigger_match(data, test, named_data, false))
+ 				continue;
+@@ -6051,10 +6065,12 @@ static void hist_unregister_trigger(char
+ 	struct event_trigger_data *test, *named_data = NULL;
+ 	bool unregistered = false;
+ 
++	lockdep_assert_held(&event_mutex);
++
+ 	if (hist_data->attrs->name)
+ 		named_data = find_named_trigger(hist_data->attrs->name);
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (!hist_trigger_match(data, test, named_data, false))
+ 				continue;
+@@ -6080,7 +6096,9 @@ static bool hist_file_check_refs(struct
+ 	struct hist_trigger_data *hist_data;
+ 	struct event_trigger_data *test;
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			hist_data = test->private_data;
+ 			if (check_var_refs(hist_data))
+@@ -6323,7 +6341,8 @@ hist_enable_trigger(struct event_trigger
+ 	struct enable_trigger_data *enable_data = data->private_data;
+ 	struct event_trigger_data *test;
+ 
+-	list_for_each_entry_rcu(test, &enable_data->file->triggers, list) {
++	list_for_each_entry_rcu(test, &enable_data->file->triggers, list,
++				lockdep_is_held(&event_mutex)) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			if (enable_data->enable)
+ 				test->paused = false;
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -501,7 +501,9 @@ void update_cond_flag(struct trace_event
+ 	struct event_trigger_data *data;
+ 	bool set_cond = false;
+ 
+-	list_for_each_entry_rcu(data, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(data, &file->triggers, list) {
+ 		if (data->filter || event_command_post_trigger(data->cmd_ops) ||
+ 		    event_command_needs_rec(data->cmd_ops)) {
+ 			set_cond = true;
+@@ -536,7 +538,9 @@ static int register_trigger(char *glob,
+ 	struct event_trigger_data *test;
+ 	int ret = 0;
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == data->cmd_ops->trigger_type) {
+ 			ret = -EEXIST;
+ 			goto out;
+@@ -581,7 +585,9 @@ static void unregister_trigger(char *glo
+ 	struct event_trigger_data *data;
+ 	bool unregistered = false;
+ 
+-	list_for_each_entry_rcu(data, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(data, &file->triggers, list) {
+ 		if (data->cmd_ops->trigger_type == test->cmd_ops->trigger_type) {
+ 			unregistered = true;
+ 			list_del_rcu(&data->list);
+@@ -1497,7 +1503,9 @@ int event_enable_register_trigger(char *
+ 	struct event_trigger_data *test;
+ 	int ret = 0;
+ 
+-	list_for_each_entry_rcu(test, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(test, &file->triggers, list) {
+ 		test_enable_data = test->private_data;
+ 		if (test_enable_data &&
+ 		    (test->cmd_ops->trigger_type ==
+@@ -1537,7 +1545,9 @@ void event_enable_unregister_trigger(cha
+ 	struct event_trigger_data *data;
+ 	bool unregistered = false;
+ 
+-	list_for_each_entry_rcu(data, &file->triggers, list) {
++	lockdep_assert_held(&event_mutex);
++
++	list_for_each_entry(data, &file->triggers, list) {
+ 		enable_data = data->private_data;
+ 		if (enable_data &&
+ 		    (data->cmd_ops->trigger_type ==
 
 
