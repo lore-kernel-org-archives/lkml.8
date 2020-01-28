@@ -2,152 +2,129 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DDAC33CB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780A3C32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C57522527
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A33B2467F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="EUj614/H"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SKfoxij3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgA1AZ3 (ORCPT
+        id S1726438AbgA1A2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 19:25:29 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35847 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgA1AZ3 (ORCPT
+        Mon, 27 Jan 2020 19:28:11 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56222 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgA1A2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 19:25:29 -0500
-Received: by mail-pl1-f194.google.com with SMTP id a6so4393116plm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 16:25:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V+BSVtOjuS68/b2v0f7OT648Jg3O+3AV7imEPIWfZyw=;
-        b=EUj614/He5DI6FobTl5392ZqO7A6CzV7kdXT1PuB3EGx3J+GPDqLfqgd7QXlznNm4L
-         y68b4WVm1dxVr+tnmypR/Z01rMwkubTzy9Vx1vFZQafxAHSbcHtK7iIENoEBTbXwULWv
-         mkg8C12/yJRbY/G32Fwa4JEd4z8MXuoel0JtM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V+BSVtOjuS68/b2v0f7OT648Jg3O+3AV7imEPIWfZyw=;
-        b=l22EHn/WlywK3KsKKFe7mJ4ixLcWeYBycWLbIvul/N1CLPwNlI6SIvGRqkESChl+D1
-         FbCWPesXPWN1Or0krk11wbazDad8R7MaKjBCfXnStsRojeEGXSAjGx/HrQOErcw3t4Jb
-         BjeXEaAqNJcGWnn+uHXNFWewlkYxybTg/sSnZbWrlMnoG2RsLToEyIqzkNx6HYPN9WIX
-         vDjhTApJIBjHk9XjhSXVnkJqjQKpNP8UIBeJXkaSPd0RJIF9GkaP52degVxzZ9bqeTej
-         KxeCqzf89b9CB6zeXbZwxPEW3n8ldDV6y6Dbvx5N846a2TD9bCjeSTmPWFn/kFM/cUUV
-         0M1Q==
-X-Gm-Message-State: APjAAAUKNo/ijRFGIT+eAIuIGcMOGQ+jwNDkPrOKHoDAyQd0nelHt54O
-        l80CT/Fv914v32nSfUYjsS03vg==
-X-Google-Smtp-Source: APXvYqxjSyhkagCwOGrSkkXQiY8CYWhpKHQ6EdsasKmr4x2185dIVpT5C1eC06D1ybeI/kMaN6i9Rw==
-X-Received: by 2002:a17:902:7d8c:: with SMTP id a12mr19193277plm.47.1580171128071;
-        Mon, 27 Jan 2020 16:25:28 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id u20sm17009658pgf.29.2020.01.27.16.25.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 16:25:27 -0800 (PST)
-Date:   Mon, 27 Jan 2020 19:25:26 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Todd Kjos <tkjos@google.com>
-Cc:     surenb@google.com, gregkh@linuxfoundation.org, arve@android.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        maco@google.com, kernel-team@android.com,
-        Jann Horn <jannh@google.com>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] staging: android: ashmem: Disallow ashmem memory from
- being remapped
-Message-ID: <20200128002526.GC175575@google.com>
-References: <20200127235616.48920-1-tkjos@google.com>
+        Mon, 27 Jan 2020 19:28:11 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00S0RJvu059947;
+        Mon, 27 Jan 2020 18:27:19 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580171239;
+        bh=W1EB64W45tmk/zMPnKEvQZ3k2ekG2mBDdjgBaVTmooE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SKfoxij3czRX498JAimlSsNcBJ2eS7JtvSDxNfs9A0J+Uu0U8D9aLr8WU/r5imFnn
+         I1j/F/CkTj/hTfSIITRpfJSQYfuk3Epr/3mq/1Kwmh61FQrOKMj0LfWBnLdvaf3s70
+         Sk5uWeTQb6W9LKodHGBdeGPDQBgkWJ6bdZWKhWAE=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00S0RJOt018928
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jan 2020 18:27:19 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 27
+ Jan 2020 18:27:19 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 27 Jan 2020 18:27:19 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00S0RJUJ089082;
+        Mon, 27 Jan 2020 18:27:19 -0600
+Subject: Re: [PATCH v2] mfd: syscon: Use a unique name with regmap_config
+To:     David Lechner <david@lechnology.com>,
+        Lee Jones <lee.jones@linaro.org>
+CC:     Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>,
+        Roger Quadros <rogerq@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>
+References: <20200127231208.1443-1-s-anna@ti.com>
+ <217993e5-5e1d-79a1-7684-c6bb964379f0@lechnology.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <448eeb87-9945-8a93-9231-6e2a22aa8342@ti.com>
+Date:   Mon, 27 Jan 2020 18:27:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127235616.48920-1-tkjos@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <217993e5-5e1d-79a1-7684-c6bb964379f0@lechnology.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 03:56:16PM -0800, Todd Kjos wrote:
-> From: Suren Baghdasaryan <surenb@google.com>
-> 
-> When ashmem file is mmapped, the resulting vma->vm_file points to the
-> backing shmem file with the generic fops that do not check ashmem
-> permissions like fops of ashmem do. If an mremap is done on the ashmem
-> region, then the permission checks will be skipped. Fix that by disallowing
-> mapping operation on the backing shmem file.
+Hi David,
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On 1/27/20 5:40 PM, David Lechner wrote:
+> On 1/27/20 5:12 PM, Suman Anna wrote:
+>> The DT node full name is currently being used in regmap_config
+>> which in turn is used to create the regmap debugfs directories.
+>> This name however is not guaranteed to be unique and the regmap
+>> debugfs registration can fail in the cases where the syscon nodes
+>> have the same unit-address but are present in different DT node
+>> hierarchies. Replace this logic using the syscon reg resource
+>> address instead (inspired from logic used while creating platform
+>> devices) to ensure a unique name is given for each syscon.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> v2: Fix build warning reported by kbuild test bot
+>> v1: https://patchwork.kernel.org/patch/11346363/
+>>
+>>   drivers/mfd/syscon.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+>> index e22197c832e8..f0815d8e6e95 100644
+>> --- a/drivers/mfd/syscon.c
+>> +++ b/drivers/mfd/syscon.c
+>> @@ -101,12 +101,14 @@ static struct syscon *of_syscon_register(struct
+>> device_node *np, bool check_clk)
+>>           }
+>>       }
+>>   -    syscon_config.name = of_node_full_name(np);
+>> +    syscon_config.name = kasprintf(GFP_KERNEL, "%pOFn@%llx", np,
+>> +                       (u64)res.start);
+> 
+> Would it make sense to also include the node name along with the
+> pointer address so that the name is still easily identifiable?
 
-thanks!
+I haven't dropped the node name, it is still there, the pOFn part. I am
+only replacing the DT unit-address with the bus address, I haven't
+changed the name style either.
 
- - Joel
+regards
+Suman
 
 > 
-> Reported-by: Jann Horn <jannh@google.com>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> Cc: stable <stable@vger.kernel.org> # 4.4,4.9,4.14,4.18,5.4
-> Signed-off-by: Todd Kjos <tkjos@google.com>
-> ---
->  drivers/staging/android/ashmem.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+>>       syscon_config.reg_stride = reg_io_width;
+>>       syscon_config.val_bits = reg_io_width * 8;
+>>       syscon_config.max_register = resource_size(&res) - reg_io_width;
+>>         regmap = regmap_init_mmio(NULL, base, &syscon_config);
+>> +    kfree(syscon_config.name);
+>>       if (IS_ERR(regmap)) {
+>>           pr_err("regmap init failed\n");
+>>           ret = PTR_ERR(regmap);
+>>
 > 
-> v2: update commit message as suggested by joelaf@google.com.
-> 
-> diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
-> index 74d497d39c5a..c6695354b123 100644
-> --- a/drivers/staging/android/ashmem.c
-> +++ b/drivers/staging/android/ashmem.c
-> @@ -351,8 +351,23 @@ static inline vm_flags_t calc_vm_may_flags(unsigned long prot)
->  	       _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
->  }
->  
-> +static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
-> +{
-> +	/* do not allow to mmap ashmem backing shmem file directly */
-> +	return -EPERM;
-> +}
-> +
-> +static unsigned long
-> +ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
-> +				unsigned long len, unsigned long pgoff,
-> +				unsigned long flags)
-> +{
-> +	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
-> +}
-> +
->  static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
->  {
-> +	static struct file_operations vmfile_fops;
->  	struct ashmem_area *asma = file->private_data;
->  	int ret = 0;
->  
-> @@ -393,6 +408,19 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
->  		}
->  		vmfile->f_mode |= FMODE_LSEEK;
->  		asma->file = vmfile;
-> +		/*
-> +		 * override mmap operation of the vmfile so that it can't be
-> +		 * remapped which would lead to creation of a new vma with no
-> +		 * asma permission checks. Have to override get_unmapped_area
-> +		 * as well to prevent VM_BUG_ON check for f_ops modification.
-> +		 */
-> +		if (!vmfile_fops.mmap) {
-> +			vmfile_fops = *vmfile->f_op;
-> +			vmfile_fops.mmap = ashmem_vmfile_mmap;
-> +			vmfile_fops.get_unmapped_area =
-> +					ashmem_vmfile_get_unmapped_area;
-> +		}
-> +		vmfile->f_op = &vmfile_fops;
->  	}
->  	get_file(asma->file);
->  
-> -- 
-> 2.25.0.341.g760bfbb309-goog
-> 
+
