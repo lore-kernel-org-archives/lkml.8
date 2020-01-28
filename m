@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D409C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76733C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A1124688
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B3262468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221436;
-	bh=sGnxMuTgy7DgmZdvueqtU+n/1YlCWn9mXKr9FGAKLkw=;
+	s=default; t=1580221442;
+	bh=TTJ6GVWyctbFg9psBxC6ZtWRo9RWGRb4RSj8wENSv80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l8eMNnTRLCkche/Gb55U4VH8FtOBDvPqW4As1+pAbNS4hF51Exw0WW2MSnxHL1C6B
-	 CaQ6zxbMAuacnYeEKPqE48mgaPG03PkQIJLkudDcs+1QlbFMXtEmycMxUE0LCddH4F
-	 42nHyWOf1ZZ0IVl3j630tFDECEW8KyCtrxGeMKiE=
+	b=UtVK9Xwpm2PIWHPkYL6kh958v42pSb2f6jMCA9gQHuqqeti5xLcx12bvw1jZUOU+M
+	 Q0Mf9fzuN6Wh73M2+R/LzJEz/K01tn7JQkbaAvYIjfDhe2PuIxOGiBcvgXbLFwD/Ai
+	 7filvzzuWVZZx45j72/7unlWh6sgFbL4FRZTtyu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732438AbgA1OXy (ORCPT
+        id S1732448AbgA1OYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:23:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50222 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:24:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732417AbgA1OXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:23:51 -0500
+        id S1727298AbgA1OX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:23:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BE0A2071E;
-        Tue, 28 Jan 2020 14:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 720FA24688;
+        Tue, 28 Jan 2020 14:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221430;
-        bh=sGnxMuTgy7DgmZdvueqtU+n/1YlCWn9mXKr9FGAKLkw=;
+        s=default; t=1580221437;
+        bh=TTJ6GVWyctbFg9psBxC6ZtWRo9RWGRb4RSj8wENSv80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=px69NmyvpNCeFGPXKl0R6lX/D+1ksB0ARXs9FPdOmACQmBhcceV36Qi3W0jhvbvtr
-         KjVvEJ4scdOfb8o1HgU3hrWUHPYx2xduPbA8FTkAb5tcUria2220WaDmUajvF4XJg5
-         rULHqUImTixS5YWbnRntEkbdn1h84D9TH3aZP8TA=
+        b=H0FYA9GJ///Pj8WrHjVEDxolPAPCCWnlJfIIF1fugkC3Cq6VkP6B9gZizBoiCv/7I
+         NcaItHd97pDGVOCapl26kYuDY7v517pqKf7GTX6ZCr+gPaK2NguBBZh1ylWO8goxW+
+         tZwcARvY35zS3XxyTv+y9EkphdzapA4/npAaQU1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 220/271] afs: Fix large file support
-Date:   Tue, 28 Jan 2020 15:06:09 +0100
-Message-Id: <20200128135908.922984771@linuxfoundation.org>
+Subject: [PATCH 4.9 223/271] media: ov6650: Fix .get_fmt() V4L2_SUBDEV_FORMAT_TRY support
+Date:   Tue, 28 Jan 2020 15:06:12 +0100
+Message-Id: <20200128135909.155150138@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,43 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Dionne <marc.dionne@auristor.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit b485275f1aca8a9da37fd35e4fad673935e827da ]
+[ Upstream commit 39034bb0c26b76a2c3abc54aa28c185f18b40c2f ]
 
-By default s_maxbytes is set to MAX_NON_LFS, which limits the usable
-file size to 2GB, enforced by the vfs.
+Commit da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad
+op get_fmt") converted a former ov6650_g_fmt() video operation callback
+to an ov6650_get_fmt() pad operation callback.  However, the converted
+function disregards a format->which flag that pad operations should
+obey and always returns active frame format settings.
 
-Commit b9b1f8d5930a ("AFS: write support fixes") added support for the
-64-bit fetch and store server operations, but did not change this value.
-As a result, attempts to write past the 2G mark result in EFBIG errors:
+That can be fixed by always responding to V4L2_SUBDEV_FORMAT_TRY with
+-EINVAL, or providing the response from a pad config argument, likely
+updated by a former user call to V4L2_SUBDEV_FORMAT_TRY .set_fmt().
+Since implementation of the latter is trivial, go for it.
 
- $ dd if=/dev/zero of=foo bs=1M count=1 seek=2048
- dd: error writing 'foo': File too large
-
-Set s_maxbytes to MAX_LFS_FILESIZE.
-
-Fixes: b9b1f8d5930a ("AFS: write support fixes")
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad op get_fmt")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/super.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/i2c/soc_camera/ov6650.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/fs/afs/super.c b/fs/afs/super.c
-index fbdb022b75a27..65389394e2028 100644
---- a/fs/afs/super.c
-+++ b/fs/afs/super.c
-@@ -317,6 +317,7 @@ static int afs_fill_super(struct super_block *sb,
- 	/* fill in the superblock */
- 	sb->s_blocksize		= PAGE_SIZE;
- 	sb->s_blocksize_bits	= PAGE_SHIFT;
-+	sb->s_maxbytes		= MAX_LFS_FILESIZE;
- 	sb->s_magic		= AFS_FS_MAGIC;
- 	sb->s_op		= &afs_super_ops;
- 	sb->s_bdi		= &as->volume->bdi;
+diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
+index 3b118d45d433b..3c959e48855c3 100644
+--- a/drivers/media/i2c/soc_camera/ov6650.c
++++ b/drivers/media/i2c/soc_camera/ov6650.c
+@@ -526,10 +526,16 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
+ 	*mf = ov6650_def_fmt;
+ 
+ 	/* update media bus format code and frame size */
+-	mf->width	= priv->rect.width >> priv->half_scale;
+-	mf->height	= priv->rect.height >> priv->half_scale;
+-	mf->code	= priv->code;
++	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
++		mf->width = cfg->try_fmt.width;
++		mf->height = cfg->try_fmt.height;
++		mf->code = cfg->try_fmt.code;
+ 
++	} else {
++		mf->width = priv->rect.width >> priv->half_scale;
++		mf->height = priv->rect.height >> priv->half_scale;
++		mf->code = priv->code;
++	}
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
