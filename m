@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB738C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2E2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B243024685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9CB24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220623;
-	bh=3iagYyoCa+nNB3Jidm/+3b53P4fbZ9mjjofOdLx9dlo=;
+	s=default; t=1580220633;
+	bh=64tjRuPo32NZZurslVMyoDVjsRyc8RxmUOy72LQs6fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mCyx7Yy4598ZGP7KeDAfeg8zNXvKt6O9QIIJpdELv5PAFGueyKrBKEwX3WxX2F5Ec
-	 wa1O4wqWZ+P+4/q8B8Jcio6GOKFaRB1FvFsoawZHJrUozUI27nF/c8FQJXC/ha7Hqe
-	 aIdirlmNOheMJ3DLLqiXfRS/0Zb9iCik0cka6pKg=
+	b=KxTh5jgsYWHXvTXN6EtKLwfcrCqR+gT/Ue8XRAglUo03EFi4yVSMH+aYJgmLYtQNG
+	 /wV/FhAJdYGnPhRhSvOkmsolMA6d8fR8/BZWl3VeFCwupvDlnvRH3zUyi9Aqb4yNnl
+	 3RvG0TaMCrEPiWlgeQL88jTiyy7mFNuJlnFyNboQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgA1OKX (ORCPT
+        id S1727441AbgA1OKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:10:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59120 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:10:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726697AbgA1OKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:10:20 -0500
+        id S1729151AbgA1OK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:10:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 170C624681;
-        Tue, 28 Jan 2020 14:10:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F236824685;
+        Tue, 28 Jan 2020 14:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220619;
-        bh=3iagYyoCa+nNB3Jidm/+3b53P4fbZ9mjjofOdLx9dlo=;
+        s=default; t=1580220629;
+        bh=64tjRuPo32NZZurslVMyoDVjsRyc8RxmUOy72LQs6fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oGO7Hmjpfx2fsYR8yx6vYVaKxTSGOuNoXuQAqUi4/fV5rxKjJt4z8YakvNbVuCTPI
-         Gk6lmJVLK4UKSDtS5KLWJoE40w3G74tfU2VCKgJbagC10jerN4ttjFz+M4f0HM6z+v
-         rNAaAQJ1A2Uo1BrWRCHMdt+1lzh9ny6aSCnsHp0Y=
+        b=Z2dCgyrHIL+kjVwRX/ZDd0mWZbbp0RS11Q5OS8q7PIwnt0wQuy3MR2RT7mWRltxTL
+         TQJI6tK1OuhBiwer9q609kVSaWlQiy1aN0Idns9WykY9qyXw2gjRdoT6kckiyZuGwz
+         QXouOvtjJxGzRaMJIrQVDvo2syxEzZWj5XyA6l/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Sperl <kernel@martin.sperl.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 072/183] spi: bcm2835aux: fix driver to not allow 65535 (=-1) cs-gpios
-Date:   Tue, 28 Jan 2020 15:04:51 +0100
-Message-Id: <20200128135837.194143955@linuxfoundation.org>
+Subject: [PATCH 4.4 084/183] ASoC: fix valid stream condition
+Date:   Tue, 28 Jan 2020 15:05:03 +0100
+Message-Id: <20200128135838.343775756@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,59 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Sperl <kernel@martin.sperl.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 509c583620e9053e43d611bf1614fc3d3abafa96 ]
+[ Upstream commit 6a7c59c6d9f3b280e81d7a04bbe4e55e90152dce ]
 
-The original driver by default defines num_chipselects as -1.
-This actually allicates an array of 65535 entries in
-of_spi_register_master.
+A stream may specify a rate range using 'rate_min' and 'rate_max', so a
+stream may be valid and not specify any rates. However, as stream cannot
+be valid and not have any channel. Let's use this condition instead to
+determine if a stream is valid or not.
 
-There is a side-effect for buggy device trees that (contrary to
-dt-binding documentation) have no cs-gpio defined.
-
-This mode was never supported by the driver due to limitations
-of native cs and additional code complexity and is explicitly
-not stated to be implemented.
-
-To keep backwards compatibility with such buggy DTs we limit
-the number of chip_selects to 1, as for all practical purposes
-it is only ever realistic to use a single chip select in
-native cs mode without negative side-effects.
-
-Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Fixes: cde79035c6cf ("ASoC: Handle multiple codecs with split playback / capture")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm2835aux.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ sound/soc/soc-pcm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index ca655593c5e0e..1cedd640705f3 100644
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -390,7 +390,18 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, master);
- 	master->mode_bits = BCM2835_AUX_SPI_MODE_BITS;
- 	master->bits_per_word_mask = SPI_BPW_MASK(8);
--	master->num_chipselect = -1;
-+	/* even though the driver never officially supported native CS
-+	 * allow a single native CS for legacy DT support purposes when
-+	 * no cs-gpio is configured.
-+	 * Known limitations for native cs are:
-+	 * * multiple chip-selects: cs0-cs2 are all simultaniously asserted
-+	 *     whenever there is a transfer -  this even includes SPI_NO_CS
-+	 * * SPI_CS_HIGH: is ignores - cs are always asserted low
-+	 * * cs_change: cs is deasserted after each spi_transfer
-+	 * * cs_delay_usec: cs is always deasserted one SCK cycle after
-+	 *     a spi_transfer
-+	 */
-+	master->num_chipselect = 1;
- 	master->transfer_one = bcm2835aux_spi_transfer_one;
- 	master->handle_err = bcm2835aux_spi_handle_err;
- 	master->dev.of_node = pdev->dev.of_node;
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 78813057167d7..dbdea1975f90c 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -48,8 +48,8 @@ static bool snd_soc_dai_stream_valid(struct snd_soc_dai *dai, int stream)
+ 	else
+ 		codec_stream = &dai->driver->capture;
+ 
+-	/* If the codec specifies any rate at all, it supports the stream. */
+-	return codec_stream->rates;
++	/* If the codec specifies any channels at all, it supports the stream */
++	return codec_stream->channels_min;
+ }
+ 
+ /**
 -- 
 2.20.1
 
