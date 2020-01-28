@@ -2,114 +2,149 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA2DC35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD39C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B038B2468B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:50:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nTDNH8XY"
+	by mail.kernel.org (Postfix) with ESMTP id 1DB5F2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:50:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580208645;
+	bh=xn/+wGx2wdvNYeHfEvNeO9WqRTrsPri3ACJFwmTconE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O/GhnTepnU7Npf4YWyk4q5rXvxC9OWl3+ef6ARE5Dtpdmwn5sM4Agt0zk+WfEXyCQ
+	 GthYcwQpGdiWBkUtlxoBL/PDnasAJPKFwW3mG2ScwL1g1lwou4Lz/+NSn4MTy2CddR
+	 RtCJ89o1fO8974QXNGjzA0IpTY9bM/90r/LGvNXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgA1KuL (ORCPT
+        id S1726212AbgA1Kuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:50:11 -0500
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:37368 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgA1KuK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:50:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1580208609; x=1611744609;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=WYtCBgBVN8ObAntGrLP9PSwj39O1B410LMI+5OpI30E=;
-  b=nTDNH8XYvUKl0hzaXfJUaJG7iblk5gCxNUulLYXN2goLXts0pgEpZlFz
-   xpoUdDptLQ6d3NdcRvX66fHJIDz470gq997a2s8jwnNETxOzqU3uSlONQ
-   +jOl2EQSJEuBKOGD4nfrGlbUeKCgZS6h0HW1w5j8MrhzVABWQLP4TQ29u
-   A=;
-IronPort-SDR: 0Hsb+qv42wSiM41C93C4a1LfhcjySaLvJzM+hKrBuLySIDMN7FQIj68NhS/Pw2n8brqfJ6m+/6
- U5kUDS2M0P6g==
-X-IronPort-AV: E=Sophos;i="5.70,373,1574121600"; 
-   d="scan'208";a="14547675"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 28 Jan 2020 10:50:06 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com (Postfix) with ESMTPS id 3B6FFA24EE;
-        Tue, 28 Jan 2020 10:50:05 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Tue, 28 Jan 2020 10:50:04 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.74) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 28 Jan 2020 10:49:56 +0000
-From:   <sjpark@amazon.com>
-To:     Qian Cai <cai@lca.pw>
-CC:     <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.de>, <sj38.park@gmail.com>,
-        <acme@kernel.org>, <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
-        <corbet@lwn.net>, <dwmw@amazon.com>, <mgorman@suse.de>,
-        <rostedt@goodmis.org>, <kirill@shutemov.name>,
-        <brendanhiggins@google.com>, <colin.king@canonical.com>,
-        <minchan@kernel.org>, <vdavydov.dev@gmail.com>,
-        <vdavydov@parallels.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v2 0/9] Introduce Data Access MONitor (DAMON)
-Date:   Tue, 28 Jan 2020 11:49:42 +0100
-Message-ID: <20200128104942.11419-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <D20B234E-04EE-4410-9B27-FF63AB3E1808@lca.pw> (raw)
+        Tue, 28 Jan 2020 05:50:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbgA1Kun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 05:50:43 -0500
+Received: from localhost (unknown [223.226.101.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02E9A24681;
+        Tue, 28 Jan 2020 10:50:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580208643;
+        bh=xn/+wGx2wdvNYeHfEvNeO9WqRTrsPri3ACJFwmTconE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E8Xuor/XyPCcJ/eHtBuGVcURbPZfWcNDdBL71eqV6irDMNC+JnkPU37rKtXRpzmC+
+         YZXjADJoa564vYuXQQ0ywV++HJOWuoWtvX/HHgl0bYwqIitAf6iloWvd1Wgxy6qVQf
+         MmUBL3o691pKPKp857GVAyujlSeuqUTkEXYhXcpA=
+Date:   Tue, 28 Jan 2020 16:20:36 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, slawomir.blauciak@intel.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH v5 09/17] soundwire: intel: remove platform
+ devices and use 'Master Devices' instead
+Message-ID: <20200128105036.GO2841@vkoul-mobl>
+References: <20200114060959.GA2818@vkoul-mobl>
+ <6635bf0b-c20a-7561-bcbf-4a480a077ae4@linux.intel.com>
+ <20200118071257.GY2818@vkoul-mobl>
+ <73907607-0763-576d-b24e-4773dfb15f0b@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.74]
-X-ClientProxiedBy: EX13D39UWA001.ant.amazon.com (10.43.160.54) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <73907607-0763-576d-b24e-4773dfb15f0b@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jan 2020 05:20:35 -0500 Qian Cai <cai@lca.pw> wrote:
+Hi Pierre,
 
+I took some time to look into the overall code and how this is fitting
+into big picture and help recommend way forward.
+
+On 21-01-20, 11:31, Pierre-Louis Bossart wrote:
 > 
 > 
-> > On Jan 28, 2020, at 3:58 AM, sjpark@amazon.com wrote:
-> > 
-> > This patchset introduces a new kernel module for practical monitoring of data
-> > accesses, namely DAMON.
-> > 
-> > The patches are organized in the following sequence.  The first four patches
-> > implements the core logic of DAMON one by one.  After that, the fifth patch
-> > implements DAMON's debugfs interface for users.  To provide a minimal reference
-> > to the low level interface and for more convenient use/tests of the DAMON, the
-> > sixth patch implements an user space tool.  The seventh patch adds a document
-> > for administrators of DAMON, and the eightth patch provides DAMON's kunit
-> > tests.  Finally, the ninth patch implements a tracepoint for DAMON.  As the
-> > tracepoint prints every monitoring results, it will be easily integrated with
-> > other tracers supporting tracepoints including perf.
+> > A rename away from probe will certainly be very helpful as
+> > you would also agree that terms 'probe' and 'remove' have a very
+> > special meaning in kernel, so let us avoid these
 > 
-> I am a bit surprised that this patchset did not include perf maintainers which makes me wonder if there is any attempt to discuss first if we actually need a whole new subsystem for it or a existing tool can be enhanced.
+> ok, so would the following be ok with you?
+> 
+> /**
+>  * struct sdw_md_driver - SoundWire 'Master Device' driver
+>  *
+>  * @init: allocations and initializations (hardware may not be enabled yet)
+>  * @startup: initialization handled after the hardware is enabled, all
+>  * clock/power dependencies are available
+>  * @shutdown: cleanups before hardware is disabled (optional)
+>  * @exit: free all remaining resources
+>  * @autonomous_clock_stop_enable: enable/disable driver control while
+>  * in clock-stop mode, typically in always-on/D0ix modes. When the driver
+>  * yields control, another entity in the system (typically firmware
+>  * running on an always-on microprocessor) is responsible to tracking
+>  * Slave-initiated wakes
+>  */
+> struct sdw_md_driver {
+> 	int (*init)(struct sdw_master_device *md, void *link_ctx);
+> 	int (*startup)(struct sdw_master_device *md);
+> 	int (*shutdown)(struct sdw_master_device *md);
+> 	int (*exit)(struct sdw_master_device *md);
+> 	int (*autonomous_clock_stop_enable)(struct sdw_master_device *md,
+> 					    bool state);
+> };
 
-For the comments from perf maintainers, I added Steven Rostedt and Arnaldo
-Carvalho de Melo first, but I might missed someone.  If you recommend some more
-people, I will add them to recipients.
+So this is a soundwire core driver structure, but the modelling and
+explanation provided here suggests the reasoning to be based on hardware
+sequencing. I am not sure if we should follow this approach. Solving
+hardware sequencing is fine but that should IMO be restricted to intel
+code as that is intel issue which may or may not be present on other
+controllers.
 
-I made DAMON as a new subsystem because I think no existing subsystem fits well
-to be a base of DAMON, due to DAMON's unique goals and mechanisms described
-below in the original cover letter.
+If I look at the calling sequence of the code (looked up the sof code on
+github, topic/sof-dev-rebase), the sof code sound/soc/sof/intel/hda.c
+invokes the sdw_intel_startup() and sdw_intel_probe() based on hardware
+sequencing and further you call .init and .probe/startup of sdw_md_driver.
 
-The existing subsystem that most similar to DAMON might be 'mm/page_idle.c'.
-However, there are many conceptual differences with DAMON.  One biggest
-difference I think is the target.  'page_idle' deals with physical page frames
-while DAMON deals with virtual address of specific processes.
+I really do not see why we need a sdw_md_driver object to do that. You can
+easily have a another function exported by sdw_intel driver and you call
+these and do same functionality without having a sdw_md_driver in
+between.
 
-Nevertheless, if you have some different opinion, please let me know.
+Now, I am going to step back one more step and ask you why should we
+have a sdw_md_driver? I am not seeing the driver object achieving
+anything here expect adding wrappers which we can avoid. But we still
+need to add the sdw_master_device() as a new device object and use that
+for both sysfs representation as well as representing the master device
+and do all the things we want, but it *can* come without having
+accompanying sdw_md_driver.
+
+This way you can retain you calling sequence and add the master device.
+
+Stretching this one more step I would ask that maybe it is even better
+idea that we should hide sdw_master_device_add() calling for soundwire
+drivers and move that internal to bus as part of bus registration as
+well, I don't see sdw_master_device calling back into the driver so it
+should not impact your sequences as well.
+
+Do you see a reason for sdw_md_driver which is must have? I couldn't
+find that by looking at the code, let me know if I have missed anything
+here.
 
 
-Thanks,
-SeongJae Park
+So to summarize, my recommendation would be to drop sdw_md_driver, keep
+sdw_master_device object and make sdw_master_device_add() hidden to
+driver and call it from sdw_add_bus_master() and keep intel specific
+startup/init routine which do same steps as they have now.
+
+Thanks
+-- 
+~Vinod
