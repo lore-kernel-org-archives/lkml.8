@@ -2,33 +2,69 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC91C35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E48C35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28592467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D7AE2467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:07:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="HLqlIR1y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgA1HEA (ORCPT
+        id S1725922AbgA1HHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 02:04:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:52830 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbgA1HD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 02:03:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2F6331B;
-        Mon, 27 Jan 2020 23:03:58 -0800 (PST)
-Received: from [10.163.1.151] (unknown [10.163.1.151])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A5A43F67D;
-        Mon, 27 Jan 2020 23:07:21 -0800 (PST)
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-To:     Qian Cai <cai@lca.pw>, Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Linux-MM <linux-mm@kvack.org>,
+        Tue, 28 Jan 2020 02:07:10 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40111 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgA1HHJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 02:07:09 -0500
+Received: by mail-qt1-f193.google.com with SMTP id v25so9501226qto.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 23:07:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=S88X9kdR1m457FxjowRY1cG95Ez9+awfEFeNZBzBj5c=;
+        b=HLqlIR1y5B5/PsLNv/5LbKmkRD0LOfvs+3Uw5UFR8XmB3CZjk35sCKEGU7QUrB0DXx
+         ro3J8jPDeF5kpX6rK5bqvFjVyygmmBxTqc+U9+GqB6XkJi7vq8NcYRCERMAEMhDVXUCh
+         582xGO5f2XyXtpU5uRDgb4Bc99IiX0ZDjMomKpIHbbLRjRqqVt+qwAOuBjm+lP5W2SJ+
+         vCTV/46saWz+DSrfHpwXbiE5Bw1kdqVnfBTP+u5/moAx6Z3f1YyRVCqjbBB5F8ReCJuz
+         rLNiGsK+2jKaexspyfqYWjO7Gf6gMQ5SLYW8N1k3kz0BSFSsLmhau83aEBKEGep3vOtX
+         Tp+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=S88X9kdR1m457FxjowRY1cG95Ez9+awfEFeNZBzBj5c=;
+        b=Ok/j0dyCyBVrQPr/HG1KqytPoIk2LUpkg9KNRTUCzqPin0u6M7sOumWVhy78QzzBB1
+         SqK4DUftSeRKQOzBZ/hrko75Kove3UBiaytdH95FAm18j5/Z5s+Gz8J9gMe6LIkGaeQ0
+         9/TWTEcgCNA3VGi317vbgU4CziI5Lff3cdiDtuE0YeplQlJApKBRai+7WoKv81GHx5Fe
+         cBziYLyG+5IweVtKdggJUWNNXjRTXmjDTKC0CqDT5VEKm99lXdkp8gD9p//iHGDAx9xo
+         BoidWqLxRtMhuxnlEb4XfBZf39zA5Xq+4X2RhQ/b+X4nBSMiwsUhWybLAV1XUx17VVPD
+         WP3A==
+X-Gm-Message-State: APjAAAWrKOJQsMSs73kar8I4JGiad01TT+f9Wjyg+e+k2hzGyYBSS9z3
+        AksvTSfFlwLBX8o5+WJ4EmT0cQ==
+X-Google-Smtp-Source: APXvYqwjL/tF2WR3QmLuG8LOj7E2zvaXqRI6bLl13yd8OQ3r0ofRKuuNBE3aHo9M+hTpUmSXvKe5+w==
+X-Received: by 2002:aed:3fce:: with SMTP id w14mr20841113qth.0.1580195228489;
+        Mon, 27 Jan 2020 23:07:08 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q130sm11341027qka.114.2020.01.27.23.07.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 23:07:07 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page table helpers
+Date:   Tue, 28 Jan 2020 02:07:07 -0500
+Message-Id: <C0CC7DB9-5B58-40D3-BE7A-D15B3738C971@lca.pw>
+References: <ba5a836a-b594-f846-1734-71dcd5d089e6@arm.com>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Linux-MM <linux-mm@kvack.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Vlastimil Babka <vbabka@suse.cz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -66,18 +102,9 @@ Cc:     Linux-MM <linux-mm@kvack.org>,
         linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
         linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
         x86@kernel.org, linux-kernel@vger.kernel.org
-References: <115c187b-73ce-30b2-0694-999db1f2183b@c-s.fr>
- <F90DA0AA-4D27-4346-8D8D-D9A7871E2C07@lca.pw>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ba5a836a-b594-f846-1734-71dcd5d089e6@arm.com>
-Date:   Tue, 28 Jan 2020 12:33:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <F90DA0AA-4D27-4346-8D8D-D9A7871E2C07@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ba5a836a-b594-f846-1734-71dcd5d089e6@arm.com>
+To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,15 +112,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 01/28/2020 12:06 PM, Qian Cai wrote:
-> 
-> 
->> On Jan 28, 2020, at 1:17 AM, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
->>
->> It is 'default y' so there is no much risk that it is forgotten, at least all test suites run with 'allyes_defconfig' will trigger the test, so I think it is really a good feature.
-> 
-> This thing depends on DEBUG_VM which I don’t see it is selected by any defconfig. Am I missing anything?
-> 
+> On Jan 28, 2020, at 2:03 AM, Anshuman Khandual <Anshuman.Khandual@arm.com>=
+ wrote:
+>=20
+> 'allyesconfig' makes 'DEBUG_VM =3D y' which in turn will enable 'DEBUG_VM_=
+PGTABLE =3D y'
+> on platforms that subscribe ARCH_HAS_DEBUG_VM_PGTABLE.
 
-'allyesconfig' makes 'DEBUG_VM = y' which in turn will enable 'DEBUG_VM_PGTABLE = y'
-on platforms that subscribe ARCH_HAS_DEBUG_VM_PGTABLE.
+Isn=E2=80=99t that only for compiling testing? Who is booting such a beast a=
+nd make sure everything working as expected?=
