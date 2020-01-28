@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E45C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A551C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CEF207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C79207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222943;
-	bh=kvKXTCNphan1+FsgLSajrygmMUgSdUAfETnu5I/AWwk=;
+	s=default; t=1580222947;
+	bh=+0D6euA8CE4WjqA7DLQwotiII8Xa0lgFqvviyeObp8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ff7aEFBX0CzlCC+AYB7czm92n5hc3/cNnUhB/4Qjn1wXoAK45HVP18i3AelPfuCsW
-	 w4rjDCSljUhPnuXNZmOGSizkzcoQJ36rWfj2DmcMSy4c5HWgqmwbhyWb8je237Cg4H
-	 H9lSn5tm/WHrWeEmd0MkJZePHRhgnzhVckWOjE8Y=
+	b=PWdisXT62Yk883O3TKQAkp8vJgpZCAheEPf3xwkKBKtiYgZSxf4H+d/Pu7EON/ecY
+	 EfvY4+I9enMShpQLtLWEftJJrg/7fznWVMGaSl9WSLjv6RSL7KGwnPc0j4MeZQ67EX
+	 7R8Z/TqHF9uzjH88L06hRZGrtb8W3MPhhDo1zK4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbgA1OBr (ORCPT
+        id S1727367AbgA1OtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:01:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47834 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:49:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbgA1OBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:01:43 -0500
+        id S1727506AbgA1OBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:01:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A082B24688;
-        Tue, 28 Jan 2020 14:01:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91A8324688;
+        Tue, 28 Jan 2020 14:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220102;
-        bh=kvKXTCNphan1+FsgLSajrygmMUgSdUAfETnu5I/AWwk=;
+        s=default; t=1580220107;
+        bh=+0D6euA8CE4WjqA7DLQwotiII8Xa0lgFqvviyeObp8I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bh9l4gqfc/DkV+SCuPvbXv3QCYEqF3ngvLeSFMZaPevYWWK0PzGFgKQmbWENjUd1w
-         ZV4HTMbsIMydkFZJhlq1gKZ26JseEbpYTVWpH8ibLN9eiJMOKg2CZWYMXMegncjkwk
-         wc3ocZvHWYcA0uIvcOYXBB1KVEfWehm7aPjjdc6M=
+        b=AQFbVbRtNgYnR2iJo5xwz4s+SvjuKyrWC59O/k+/pC+SN2OivQP4LYdnQmeqO5NpM
+         j+pYVYznf89If2ikI2Hf44U1iLPY0byj3g0h7Y82hBG7AJyEOY4kVvRG+VqDAC1rOP
+         9gWFA2lIRaxZ5r/ZpIzjX382xnJLs4IMzg8w3/8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org,
+        Ilja Van Sprundel <ivansprundel@ioactive.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 018/104] tun: add mutex_unlock() call and napi.skb clearing in tun_get_user()
-Date:   Tue, 28 Jan 2020 14:59:39 +0100
-Message-Id: <20200128135819.762305010@linuxfoundation.org>
+Subject: [PATCH 5.4 020/104] airo: Add missing CAP_NET_ADMIN check in AIROOLDIOCTL/SIOCDEVPRIVATE
+Date:   Tue, 28 Jan 2020 14:59:41 +0100
+Message-Id: <20200128135820.041283682@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -62,44 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 1efba987c48629c0c64703bb4ea76ca1a3771d17 ]
+[ Upstream commit 78f7a7566f5eb59321e99b55a6fdb16ea05b37d1 ]
 
-If both IFF_NAPI_FRAGS mode and XDP are enabled, and the XDP program
-consumes the skb, we need to clear the napi.skb (or risk
-a use-after-free) and release the mutex (or risk a deadlock)
+The driver for Cisco Aironet 4500 and 4800 series cards (airo.c),
+implements AIROOLDIOCTL/SIOCDEVPRIVATE in airo_ioctl().
 
-WARNING: lock held when returning to user space!
-5.5.0-rc6-syzkaller #0 Not tainted
-------------------------------------------------
-syz-executor.0/455 is leaving the kernel with locks still held!
-1 lock held by syz-executor.0/455:
- #0: ffff888098f6e748 (&tfile->napi_mutex){+.+.}, at: tun_get_user+0x1604/0x3fc0 drivers/net/tun.c:1835
+The ioctl handler copies an aironet_ioctl struct from userspace, which
+includes a command. Some of the commands are handled in readrids(),
+where the user controlled command is converted into a driver-internal
+value called "ridcode".
 
-Fixes: 90e33d459407 ("tun: enable napi_gro_frags() for TUN/TAP driver")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Petar Penkov <ppenkov@google.com>
-Cc: Willem de Bruijn <willemb@google.com>
+There are two command values, AIROGWEPKTMP and AIROGWEPKNV, which
+correspond to ridcode values of RID_WEP_TEMP and RID_WEP_PERM
+respectively. These commands both have checks that the user has
+CAP_NET_ADMIN, with the comment that "Only super-user can read WEP
+keys", otherwise they return -EPERM.
+
+However there is another command value, AIRORRID, that lets the user
+specify the ridcode value directly, with no other checks. This means
+the user can bypass the CAP_NET_ADMIN check on AIROGWEPKTMP and
+AIROGWEPKNV.
+
+Fix it by moving the CAP_NET_ADMIN check out of the command handling
+and instead do it later based on the ridcode. That way regardless of
+whether the ridcode is set via AIROGWEPKTMP or AIROGWEPKNV, or passed
+in using AIRORID, we always do the CAP_NET_ADMIN check.
+
+Found by Ilja by code inspection, not tested as I don't have the
+required hardware.
+
+Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/tun.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/cisco/airo.c |   18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1936,6 +1936,10 @@ drop:
- 			if (ret != XDP_PASS) {
- 				rcu_read_unlock();
- 				local_bh_enable();
-+				if (frags) {
-+					tfile->napi.skb = NULL;
-+					mutex_unlock(&tfile->napi_mutex);
-+				}
- 				return total_len;
- 			}
- 		}
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -7790,16 +7790,8 @@ static int readrids(struct net_device *d
+ 	case AIROGVLIST:    ridcode = RID_APLIST;       break;
+ 	case AIROGDRVNAM:   ridcode = RID_DRVNAME;      break;
+ 	case AIROGEHTENC:   ridcode = RID_ETHERENCAP;   break;
+-	case AIROGWEPKTMP:  ridcode = RID_WEP_TEMP;
+-		/* Only super-user can read WEP keys */
+-		if (!capable(CAP_NET_ADMIN))
+-			return -EPERM;
+-		break;
+-	case AIROGWEPKNV:   ridcode = RID_WEP_PERM;
+-		/* Only super-user can read WEP keys */
+-		if (!capable(CAP_NET_ADMIN))
+-			return -EPERM;
+-		break;
++	case AIROGWEPKTMP:  ridcode = RID_WEP_TEMP;	break;
++	case AIROGWEPKNV:   ridcode = RID_WEP_PERM;	break;
+ 	case AIROGSTAT:     ridcode = RID_STATUS;       break;
+ 	case AIROGSTATSD32: ridcode = RID_STATSDELTA;   break;
+ 	case AIROGSTATSC32: ridcode = RID_STATS;        break;
+@@ -7813,6 +7805,12 @@ static int readrids(struct net_device *d
+ 		return -EINVAL;
+ 	}
+ 
++	if (ridcode == RID_WEP_TEMP || ridcode == RID_WEP_PERM) {
++		/* Only super-user can read WEP keys */
++		if (!capable(CAP_NET_ADMIN))
++			return -EPERM;
++	}
++
+ 	if ((iobuf = kzalloc(RIDSIZE, GFP_KERNEL)) == NULL)
+ 		return -ENOMEM;
+ 
 
 
