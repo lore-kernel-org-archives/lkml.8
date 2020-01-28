@@ -2,336 +2,436 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DEFC35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB997C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 076A420663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F22214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 17:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NyfqsIb0"
+	dkim=pass (1024-bit key) header.d=NETORGFT5695220.onmicrosoft.com header.i=@NETORGFT5695220.onmicrosoft.com header.b="scwMT+J8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgA1RFo (ORCPT
+        id S1726296AbgA1RHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 12:05:44 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:3878 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgA1RFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 12:05:43 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 486Y0M18SRz9tyrg;
-        Tue, 28 Jan 2020 18:05:39 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=NyfqsIb0; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id BxhrHtxf1fJY; Tue, 28 Jan 2020 18:05:39 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 486Y0L6ltRz9tyrf;
-        Tue, 28 Jan 2020 18:05:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580231138; bh=ihfPCvoS5mhssdU/CWQGRQyoTkFqbnCSL7XYZpDWBBI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NyfqsIb0WYfGkwwRXCi4mviBXVht5035XRkQEUMkYVrK+kvXsqyC01Ge/84pDXico
-         JiX6P4e/rd1XwHKFdfUYAulUl8Bab7lOcDCfWoS6b7lkyqkPzcXggxczTjMouWp1w8
-         BakNDUS9X1lr5teDKcou4UiSzbqUTfYKRsLhysmw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 775F08B7E7;
-        Tue, 28 Jan 2020 18:05:40 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 34jfQVcpYhXe; Tue, 28 Jan 2020 18:05:40 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AE28C8B7E6;
-        Tue, 28 Jan 2020 18:05:37 +0100 (CET)
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <68ed6488-aa25-ab41-8da6-f0ddeb15d52b@c-s.fr>
-Date:   Tue, 28 Jan 2020 18:05:37 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 28 Jan 2020 12:07:15 -0500
+Received: from mail-eopbgr1390138.outbound.protection.outlook.com ([40.107.139.138]:8992
+        "EHLO IND01-BO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725881AbgA1RHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 12:07:15 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oFJsKgKmdrMdu657gSQ84KtV33b8ryPuY/kUD5TxMKRGJ6lDpRICOjtSxYqepxpU4nre/7fMk+9PghH8wLm/J4Itf6muO/uYPMW7tYt66ImGrfYABcjiC9OOChB5HkZvtsupSdYgAU8HX7jXo003TNmN0XalToswOjwGysYr+yrB+N/V/R7bWBg1cUEABfl6bj21Z+hXjz3aX/kr4lyOcAOBpVt12U9O9BtpONf1T8v0mDXWBIYXSfQzeTqmYKVcygYP/ocv8WfYC8vNswa76lAACqOvf9fFp2pGM/sfIFjwZrob+p72SALw9KAyki2gZNTdRvlkBUVu5Yob+YXQGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8thqdHUkm642093PPtlQfEIDhCimUuBZa3DSqcgC2cs=;
+ b=jUapeLcwQLFvquRC5IpwqYa2MQJ+g8QUTmjLgM7vrP71q3Bi46kkBZcWc+gIm5f28y2rn8lqbykd72fBmoM7e2T263cNd3aAfu0/ymiUejwvnJLFSh58RM4Egy6Nq+zdb8ygWwvLWEAixfAKi8O7k0G6aWIk5IpAd/uMC1CeK0IxGW7F8q90Q9Hyw8OEKJjYpTl0lv/mTmq8mxOWWJ2/O2ub/zLoVYCpIFU7HGU2rNzXbSmPrUmSRfgzorTlVcip1khhuXpyNcGmb/7LpH0qkW/GTAe0bxDGR3HNtMIuWvSNhUEn5tMwLLCEwx0PJJsSWHNU61UGnKBGmsiw02m+dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=a2zdb.com; dmarc=pass action=none header.from=a2zdb.com;
+ dkim=pass header.d=a2zdb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=NETORGFT5695220.onmicrosoft.com;
+ s=selector2-NETORGFT5695220-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8thqdHUkm642093PPtlQfEIDhCimUuBZa3DSqcgC2cs=;
+ b=scwMT+J8ZHTwMCl04h9PnjVOp4VEbkSaV/eI/hNSKsQEELYyrZBYIAQZCJhV3jV39BQyDNUMkLziRYwPO0cB7FUzury/R5CWPMof9HixzUWz9EFRJubeNXVVFQFHZN9rs0acdpijlk7+XSXK6EAydc5u+X8LAs9oLq877rrKYm8=
+Received: from MAXPR01MB3181.INDPRD01.PROD.OUTLOOK.COM (10.255.152.147) by
+ MAXPR01MB2464.INDPRD01.PROD.OUTLOOK.COM (52.134.153.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.21; Tue, 28 Jan 2020 17:07:08 +0000
+Received: from MAXPR01MB3181.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::92b:c1b1:bf77:6bf0]) by MAXPR01MB3181.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::92b:c1b1:bf77:6bf0%7]) with mapi id 15.20.2665.026; Tue, 28 Jan 2020
+ 17:07:08 +0000
+Content-Type: multipart/mixed;
+        boundary="_000_MAXPR01MB31816E6D665EA036F570E79BB70A0MAXPR01MB3181INDP_"
+From:   stephanie klaiber <stephanie.klaiber@a2zdb.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Genetec Software Users Contact List
+Thread-Topic: Genetec Software Users Contact List
+Thread-Index: AdXV/EmDJEWR/iH7Ss2UmJ0aBpKymw==
+Date:   Tue, 28 Jan 2020 17:02:48 +0000
+Message-ID: <MAXPR01MB31816E6D665EA036F570E79BB70A0@MAXPR01MB3181.INDPRD01.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: <MAXPR01MB31816E6D665EA036F570E79BB70A0@MAXPR01MB3181.INDPRD01.PROD.OUTLOOK.COM>
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=stephanie.klaiber@a2zdb.com; 
+x-originating-ip: [49.206.228.230]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c76e5971-fea2-40a2-56b3-08d7a41481e8
+x-ms-traffictypediagnostic: MAXPR01MB2464:
+x-microsoft-antispam-prvs: <MAXPR01MB2464C827AE38FAA636468EBDB70A0@MAXPR01MB2464.INDPRD01.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 029651C7A1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(366004)(136003)(396003)(376002)(346002)(199004)(189003)(86362001)(9686003)(6916009)(52536014)(26005)(55016002)(7696005)(2906002)(6506007)(55236004)(186003)(66946007)(4744005)(64756008)(5660300002)(6666004)(316002)(33656002)(66476007)(66556008)(76116006)(66446008)(81166006)(45080400002)(71200400001)(8676002)(9326002)(81156014)(8936002)(508600001)(26710200004);DIR:OUT;SFP:1102;SCL:1;SRVR:MAXPR01MB2464;H:MAXPR01MB3181.INDPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: a2zdb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ODfXu4RE6dzW+kgRNRlqLS7wp0u1myUalSj5yEgTqV/eQ3SAPtQF+HoPo8cnTFoDQ7A3x/po5BDRWWObQ0aN6F0LPm57kk49I0ZDbXi7eKhyYII8/ndIr5bmuNXF1RpPgb/sqIyswQkQM4RyljmikUl963Dczaw/8JqqQ7Fzhd0aH7a9wl5AFPO7xmkCtvEggwCxTGqflW8MBvF3YCSJp2j+8Ff7WlnIZ7EfanGqxrOPi5mnSQA8TqXFiTgqtRLQTaWXFufz7Er6QQU2yE/6Ngs7Rt0jyzscFnIzLxo+DoH5jvQAWJW94wPexEkNcDWeAwqgwYCdFW68C8GqKIFE8WItwFZCrQc59TmpGByqpzW6mwfwP7tEkfKU73f8beJXIwbDQWPyi8nkXYBMJG/+AimbuKZwNwWAnVQnS8DMU3/8NFEoII70Hh7s1urLLmkRpUw96a18xkRya4tfMbq/Noi3le7xApUSG+p+IF1LskNUr16bJBvPCBbV0cKKXWr7
+x-ms-exchange-antispam-messagedata: S1STY9irYshUCUrt1GhaW5V+H+n5gcftRn0+Cx/dMT44YLxa62ef8j9k5RgKvbgsRAa1djSkPKYPot7zcONiUrmCFW5JsP28aiRQ+UKnnoTydp4vzKFgQIz3+5d1FNd3dr0sOCBI3xR8X+o35Pb86w==
+x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-In-Reply-To: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: a2zdb.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c76e5971-fea2-40a2-56b3-08d7a41481e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 17:02:48.5761
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2d431b7d-2908-4c53-b357-a8137832d964
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KJXY4T2asy9CfiTAUQoJLtFrY99UgYdYkqwCytf8hhrFBNn91rUMju8J95nPQ6k30qZ1cDi5KvzjLt5p/19yaDisvMBaZx6es0aoTW14aSw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAXPR01MB2464
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--_000_MAXPR01MB31816E6D665EA036F570E79BB70A0MAXPR01MB3181INDP_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
 
 
-Le 28/01/2020 à 02:27, Anshuman Khandual a écrit :
-> This adds tests which will validate architecture page table helpers and
-> other accessors in their compliance with expected generic MM semantics.
-> This will help various architectures in validating changes to existing
-> page table helpers or addition of new ones.
-> 
-> This test covers basic page table entry transformations including but not
-> limited to old, young, dirty, clean, write, write protect etc at various
-> level along with populating intermediate entries with next page table page
-> and validating them.
-> 
-> Test page table pages are allocated from system memory with required size
-> and alignments. The mapped pfns at page table levels are derived from a
-> real pfn representing a valid kernel text symbol. This test gets called
-> right after page_alloc_init_late().
-> 
-> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
-> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
-> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
-> arm64. Going forward, other architectures too can enable this after fixing
-> build or runtime problems (if any) with their page table helpers.
-> 
-> Folks interested in making sure that a given platform's page table helpers
-> conform to expected generic MM semantics should enable the above config
-> which will just trigger this test during boot. Any non conformity here will
-> be reported as an warning which would need to be fixed. This test will help
-> catch any changes to the agreed upon semantics expected from generic MM and
-> enable platforms to accommodate it thereafter.
-> 
 
-[...]
+I would like to know if you are interested in acquiring Genetec Software Us=
+ers Contact List.
 
-> 
-> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>		#PPC32
 
-Also tested on PPC64 (under QEMU): book3s/64 64k pages, book3s/64 4k 
-pages and book3e/64
 
-> Reviewed-by: Ingo Molnar <mingo@kernel.org>
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
+Information fields: Names, Title, Email, Phone, Company Name, Company URL, =
+Company physical address, SIC Code, Industry, Company Size (Revenue and Emp=
+loyee), LinkedIn profile link and kind of technology using/solution in plac=
+e.
 
-[...]
 
-> 
-> diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
-> new file mode 100644
-> index 000000000000..f3f8111edbe3
-> --- /dev/null
-> +++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
-> @@ -0,0 +1,35 @@
-> +#
-> +# Feature name:          debug-vm-pgtable
-> +#         Kconfig:       ARCH_HAS_DEBUG_VM_PGTABLE
-> +#         description:   arch supports pgtable tests for semantics compliance
-> +#
-> +    -----------------------
-> +    |         arch |status|
-> +    -----------------------
-> +    |       alpha: | TODO |
-> +    |         arc: |  ok  |
-> +    |         arm: | TODO |
-> +    |       arm64: |  ok  |
-> +    |         c6x: | TODO |
-> +    |        csky: | TODO |
-> +    |       h8300: | TODO |
-> +    |     hexagon: | TODO |
-> +    |        ia64: | TODO |
-> +    |        m68k: | TODO |
-> +    |  microblaze: | TODO |
-> +    |        mips: | TODO |
-> +    |       nds32: | TODO |
-> +    |       nios2: | TODO |
-> +    |    openrisc: | TODO |
-> +    |      parisc: | TODO |
-> +    |  powerpc/32: |  ok  |
-> +    |  powerpc/64: | TODO |
 
-You can change the two above lines by
+Let me know your target geography so that I can get back to you with update=
+d counts, pricing and more information.
 
-	powerpc: ok
 
-> +    |       riscv: | TODO |
-> +    |        s390: | TODO |
-> +    |          sh: | TODO |
-> +    |       sparc: | TODO |
-> +    |          um: | TODO |
-> +    |   unicore32: | TODO |
-> +    |         x86: |  ok  |
-> +    |      xtensa: | TODO |
-> +    -----------------------
 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 1ec34e16ed65..253dcab0bebc 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -120,6 +120,7 @@ config PPC
->   	#
->   	select ARCH_32BIT_OFF_T if PPC32
->   	select ARCH_HAS_DEBUG_VIRTUAL
-> +	select ARCH_HAS_DEBUG_VM_PGTABLE if PPC32
+Await your response!
 
-Remove the 'if PPC32' as we now know it also work on PPC64.
 
->   	select ARCH_HAS_DEVMEM_IS_ALLOWED
->   	select ARCH_HAS_ELF_RANDOMIZE
->   	select ARCH_HAS_FORTIFY_SOURCE
 
-> diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
-> index 0b6c4042942a..fb0e76d254b3 100644
-> --- a/arch/x86/include/asm/pgtable_64.h
-> +++ b/arch/x86/include/asm/pgtable_64.h
-> @@ -53,6 +53,12 @@ static inline void sync_initial_page_table(void) { }
->   
->   struct mm_struct;
->   
-> +#define mm_p4d_folded mm_p4d_folded
-> +static inline bool mm_p4d_folded(struct mm_struct *mm)
-> +{
-> +	return !pgtable_l5_enabled();
-> +}
-> +
+Regards,
 
-For me this should be part of another patch, it is not directly linked 
-to the tests.
+Stephanie klaiber
 
->   void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
->   void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
->   
-> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-> index 798ea36a0549..e0b04787e789 100644
-> --- a/include/asm-generic/pgtable.h
-> +++ b/include/asm-generic/pgtable.h
-> @@ -1208,6 +1208,12 @@ static inline bool arch_has_pfn_modify_check(void)
->   # define PAGE_KERNEL_EXEC PAGE_KERNEL
->   #endif
->   
-> +#ifdef CONFIG_DEBUG_VM_PGTABLE
+Marketing Executive
 
-Not sure it is a good idea to put that in include/asm-generic/pgtable.h
 
-By doing this you are forcing a rebuild of almost all files, whereas 
-only init/main.o and mm/debug_vm_pgtable.o should be rebuilt when 
-activating this config option.
 
-> +extern void debug_vm_pgtable(void);
+If you do not wish to receive further emails, please respond with remove me=
+.
 
-Please don't use the 'extern' keyword, it is useless and not to be used 
-for functions declaration.
 
-> +#else
-> +static inline void debug_vm_pgtable(void) { }
-> +#endif
-> +
->   #endif /* !__ASSEMBLY__ */
->   
->   #ifndef io_remap_pfn_range
-> diff --git a/init/main.c b/init/main.c
-> index da1bc0b60a7d..5e59e6ac0780 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -1197,6 +1197,7 @@ static noinline void __init kernel_init_freeable(void)
->   	sched_init_smp();
->   
->   	page_alloc_init_late();
-> +	debug_vm_pgtable();
 
-Wouldn't it be better to call debug_vm_pgtable() in kernel_init() 
-between the call to async_synchronise_full() and ftrace_free_init_mem() ?
 
->   	/* Initialize page ext after all struct pages are initialized. */
->   	page_ext_init();
->   
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 5ffe144c9794..7cceae923c05 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -653,6 +653,12 @@ config SCHED_STACK_END_CHECK
->   	  data corruption or a sporadic crash at a later stage once the region
->   	  is examined. The runtime overhead introduced is minimal.
->   
-> +config ARCH_HAS_DEBUG_VM_PGTABLE
-> +	bool
-> +	help
-> +	  An architecture should select this when it can successfully
-> +	  build and run DEBUG_VM_PGTABLE.
-> +
->   config DEBUG_VM
->   	bool "Debug VM"
->   	depends on DEBUG_KERNEL
-> @@ -688,6 +694,22 @@ config DEBUG_VM_PGFLAGS
->   
->   	  If unsure, say N.
->   
-> +config DEBUG_VM_PGTABLE
-> +	bool "Debug arch page table for semantics compliance"
-> +	depends on MMU
-> +	depends on DEBUG_VM
 
-Does it really need to depend on DEBUG_VM ?
-I think we could make it standalone and 'default y if DEBUG_VM' instead.
+--_000_MAXPR01MB31816E6D665EA036F570E79BB70A0MAXPR01MB3181INDP_
+Content-Disposition: attachment; filename="winmail.dat"
+Content-Transfer-Encoding: base64
+Content-Type: application/ms-tnef; name="winmail.dat"
 
-> +	depends on ARCH_HAS_DEBUG_VM_PGTABLE
-> +	default y
-> +	help
-> +	  This option provides a debug method which can be used to test
-> +	  architecture page table helper functions on various platforms in
-> +	  verifying if they comply with expected generic MM semantics. This
-> +	  will help architecture code in making sure that any changes or
-> +	  new additions of these helpers still conform to expected
-> +	  semantics of the generic MM.
-> +
-> +	  If unsure, say N.
-> +
+eJ8+IuwKAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAEJgAEAIQAAAEUxNjUwRjI5
+MTZDQjk3NENCQTdENTY1MDExRDU1RTdFADQHAQ2ABAACAAAAAgACAAEFgAMADgAAAOQHAQAcABEA
+AgAwAAIATQEBIIADAA4AAADkBwEAHAARAAIAMAACAE0BAQiABwAYAAAASVBNLk1pY3Jvc29mdCBN
+YWlsLk5vdGUAMQgBBIABACQAAABHZW5ldGVjIFNvZnR3YXJlIFVzZXJzIENvbnRhY3QgTGlzdAAA
+DQEDkAYATEAAAGQAAAACAX8AAQAAAFEAAAA8TUFYUFIwMU1CMzE4MTZFNkQ2NjVFQTAzNkY1NzBF
+NzlCQjcwQTBATUFYUFIwMU1CMzE4MS5JTkRQUkQwMS5QUk9ELk9VVExPT0suQ09NPgAAAAACARMQ
+AQAAAHoaAAA8aHRtbCB4bWxuczp2PSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOnZtbCIgeG1s
+bnM6bz0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlIiB4bWxuczp3PSJ1
+cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkIiB4bWxuczptPSJodHRwOi8vc2No
+ZW1hcy5taWNyb3NvZnQuY29tL29mZmljZS8yMDA0LzEyL29tbWwiIHhtbG5zPSJodHRwOi8vd3d3
+LnczLm9yZy9UUi9SRUMtaHRtbDQwIj48aGVhZD48TUVUQSBIVFRQLUVRVUlWPSJDb250ZW50LVR5
+cGUiIENPTlRFTlQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+PG1ldGEgbmFtZT1HZW5l
+cmF0b3IgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPjxzdHls
+ZT48IS0tDQovKiBGb250IERlZmluaXRpb25zICovDQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5
+OiJDYW1icmlhIE1hdGgiOw0KCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQ0KQGZvbnQt
+ZmFjZQ0KCXtmb250LWZhbWlseTpDYWxpYnJpOw0KCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMg
+MiA0O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6Q2FtYnJpYTsNCglwYW5vc2UtMToyIDQg
+NSAzIDUgNCA2IDMgMiA0O30NCi8qIFN0eWxlIERlZmluaXRpb25zICovDQpwLk1zb05vcm1hbCwg
+bGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsDQoJe21hcmdpbjowaW47DQoJbWFyZ2luLWJvdHRv
+bTouMDAwMXB0Ow0KCWZvbnQtc2l6ZToxMS4wcHQ7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLCJz
+YW5zLXNlcmlmIjt9DQpoMQ0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTsNCgltc28tc3R5bGUtbGlu
+azoiSGVhZGluZyAxIENoYXIiOw0KCW1hcmdpbi10b3A6MTIuMHB0Ow0KCW1hcmdpbi1yaWdodDow
+aW47DQoJbWFyZ2luLWJvdHRvbTowaW47DQoJbWFyZ2luLWxlZnQ6MGluOw0KCW1hcmdpbi1ib3R0
+b206LjAwMDFwdDsNCglwYWdlLWJyZWFrLWFmdGVyOmF2b2lkOw0KCWZvbnQtc2l6ZToxNi4wcHQ7
+DQoJZm9udC1mYW1pbHk6IkNhbGlicmkgTGlnaHQiLCJzYW5zLXNlcmlmIjsNCgljb2xvcjojMkU3
+NEI1Ow0KCWZvbnQtd2VpZ2h0Om5vcm1hbDt9DQpoMg0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTsN
+Cgltc28tc3R5bGUtbGluazoiSGVhZGluZyAyIENoYXIiOw0KCW1hcmdpbi10b3A6Mi4wcHQ7DQoJ
+bWFyZ2luLXJpZ2h0OjBpbjsNCgltYXJnaW4tYm90dG9tOjBpbjsNCgltYXJnaW4tbGVmdDowaW47
+DQoJbWFyZ2luLWJvdHRvbTouMDAwMXB0Ow0KCXBhZ2UtYnJlYWstYWZ0ZXI6YXZvaWQ7DQoJZm9u
+dC1zaXplOjEzLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSBMaWdodCIsInNhbnMtc2VyaWYi
+Ow0KCWNvbG9yOiMyRTc0QjU7DQoJZm9udC13ZWlnaHQ6bm9ybWFsO30NCmgzDQoJe21zby1zdHls
+ZS1wcmlvcml0eTo5Ow0KCW1zby1zdHlsZS1saW5rOiJIZWFkaW5nIDMgQ2hhciI7DQoJbWFyZ2lu
+LXRvcDoyLjBwdDsNCgltYXJnaW4tcmlnaHQ6MGluOw0KCW1hcmdpbi1ib3R0b206MGluOw0KCW1h
+cmdpbi1sZWZ0OjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJcGFnZS1icmVhay1hZnRl
+cjphdm9pZDsNCglmb250LXNpemU6MTIuMHB0Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIExpZ2h0
+Iiwic2Fucy1zZXJpZiI7DQoJY29sb3I6IzFGNEQ3ODsNCglmb250LXdlaWdodDpub3JtYWw7fQ0K
+aDQNCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk7DQoJbXNvLXN0eWxlLWxpbms6IkhlYWRpbmcgNCBD
+aGFyIjsNCgltYXJnaW4tdG9wOjIuMHB0Ow0KCW1hcmdpbi1yaWdodDowaW47DQoJbWFyZ2luLWJv
+dHRvbTowaW47DQoJbWFyZ2luLWxlZnQ6MGluOw0KCW1hcmdpbi1ib3R0b206LjAwMDFwdDsNCglw
+YWdlLWJyZWFrLWFmdGVyOmF2b2lkOw0KCWZvbnQtc2l6ZToxMS4wcHQ7DQoJZm9udC1mYW1pbHk6
+IkNhbGlicmkgTGlnaHQiLCJzYW5zLXNlcmlmIjsNCgljb2xvcjojMkU3NEI1Ow0KCWZvbnQtd2Vp
+Z2h0Om5vcm1hbDsNCglmb250LXN0eWxlOml0YWxpYzt9DQpoNQ0KCXttc28tc3R5bGUtcHJpb3Jp
+dHk6OTsNCgltc28tc3R5bGUtbGluazoiSGVhZGluZyA1IENoYXIiOw0KCW1hcmdpbi10b3A6Mi4w
+cHQ7DQoJbWFyZ2luLXJpZ2h0OjBpbjsNCgltYXJnaW4tYm90dG9tOjBpbjsNCgltYXJnaW4tbGVm
+dDowaW47DQoJbWFyZ2luLWJvdHRvbTouMDAwMXB0Ow0KCXBhZ2UtYnJlYWstYWZ0ZXI6YXZvaWQ7
+DQoJZm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSBMaWdodCIsInNhbnMt
+c2VyaWYiOw0KCWNvbG9yOiMyRTc0QjU7DQoJZm9udC13ZWlnaHQ6bm9ybWFsO30NCnAuTXNvTm9T
+cGFjaW5nLCBsaS5Nc29Ob1NwYWNpbmcsIGRpdi5Nc29Ob1NwYWNpbmcNCgl7bXNvLXN0eWxlLXBy
+aW9yaXR5OjE7DQoJbWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJZm9udC1z
+aXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsInNhbnMtc2VyaWYiO30NCnNwYW4u
+SGVhZGluZzFDaGFyDQoJe21zby1zdHlsZS1uYW1lOiJIZWFkaW5nIDEgQ2hhciI7DQoJbXNvLXN0
+eWxlLXByaW9yaXR5Ojk7DQoJbXNvLXN0eWxlLWxpbms6IkhlYWRpbmcgMSI7DQoJZm9udC1mYW1p
+bHk6IkNhbGlicmkgTGlnaHQiLCJzYW5zLXNlcmlmIjsNCgljb2xvcjojMkU3NEI1O30NCnNwYW4u
+SGVhZGluZzJDaGFyDQoJe21zby1zdHlsZS1uYW1lOiJIZWFkaW5nIDIgQ2hhciI7DQoJbXNvLXN0
+eWxlLXByaW9yaXR5Ojk7DQoJbXNvLXN0eWxlLWxpbms6IkhlYWRpbmcgMiI7DQoJZm9udC1mYW1p
+bHk6IkNhbGlicmkgTGlnaHQiLCJzYW5zLXNlcmlmIjsNCgljb2xvcjojMkU3NEI1O30NCnNwYW4u
+SGVhZGluZzNDaGFyDQoJe21zby1zdHlsZS1uYW1lOiJIZWFkaW5nIDMgQ2hhciI7DQoJbXNvLXN0
+eWxlLXByaW9yaXR5Ojk7DQoJbXNvLXN0eWxlLWxpbms6IkhlYWRpbmcgMyI7DQoJZm9udC1mYW1p
+bHk6IkNhbGlicmkgTGlnaHQiLCJzYW5zLXNlcmlmIjsNCgljb2xvcjojMUY0RDc4O30NCnNwYW4u
+SGVhZGluZzRDaGFyDQoJe21zby1zdHlsZS1uYW1lOiJIZWFkaW5nIDQgQ2hhciI7DQoJbXNvLXN0
+eWxlLXByaW9yaXR5Ojk7DQoJbXNvLXN0eWxlLWxpbms6IkhlYWRpbmcgNCI7DQoJZm9udC1mYW1p
+bHk6IkNhbGlicmkgTGlnaHQiLCJzYW5zLXNlcmlmIjsNCgljb2xvcjojMkU3NEI1Ow0KCWZvbnQt
+c3R5bGU6aXRhbGljO30NCnNwYW4uSGVhZGluZzVDaGFyDQoJe21zby1zdHlsZS1uYW1lOiJIZWFk
+aW5nIDUgQ2hhciI7DQoJbXNvLXN0eWxlLXByaW9yaXR5Ojk7DQoJbXNvLXN0eWxlLWxpbms6Ikhl
+YWRpbmcgNSI7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkgTGlnaHQiLCJzYW5zLXNlcmlmIjsNCglj
+b2xvcjojMkU3NEI1O30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1v
+bmx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7fQ0KLk1zb1BhcERlZmF1
+bHQNCgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7DQoJbWFyZ2luLWJvdHRvbTo4LjBwdDsN
+CglsaW5lLWhlaWdodDoxMDclO30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXplOjguNWluIDEx
+LjBpbjsNCgltYXJnaW46MS4waW4gMS4waW4gMS4waW4gMS4waW47fQ0KZGl2LldvcmRTZWN0aW9u
+MQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48
+eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwv
+eG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQg
+djpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hh
+cGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+PC9oZWFkPjxib2R5IGxhbmc9RU4tVVM+PGRpdiBj
+bGFzcz1Xb3JkU2VjdGlvbjE+PHAgY2xhc3M9TXNvTm9TcGFjaW5nPjxzcGFuIHN0eWxlPSdmb250
+LWZhbWlseToiQ2FtYnJpYSIsInNlcmlmIjtjb2xvcjojMUY0RTc5Jz5IZWxsbyw8bzpwPjwvbzpw
+Pjwvc3Bhbj48L3A+PHAgY2xhc3M9TXNvTm9TcGFjaW5nPjxzcGFuIHN0eWxlPSdmb250LWZhbWls
+eToiQ2FtYnJpYSIsInNlcmlmIjtjb2xvcjojMUY0RTc5Jz4mbmJzcDs8bzpwPjwvbzpwPjwvc3Bh
+bj48L3A+PHAgY2xhc3M9TXNvTm9TcGFjaW5nPjxzcGFuIHN0eWxlPSdmb250LWZhbWlseToiQ2Ft
+YnJpYSIsInNlcmlmIjtjb2xvcjojMUY0RTc5Jz5JIHdvdWxkIGxpa2UgdG8ga25vdyBpZiB5b3Ug
+YXJlIGludGVyZXN0ZWQgaW4gYWNxdWlyaW5nPC9zcGFuPjxzcGFuIHN0eWxlPSdmb250LWZhbWls
+eToiQ2FtYnJpYSIsInNlcmlmIic+IDxiPjx1PjxzcGFuIHN0eWxlPSdjb2xvcjojMUY0RTc5Jz5H
+ZW5ldGVjIDwvc3Bhbj48L3U+PC9iPjwvc3Bhbj48Yj48dT48c3BhbiBzdHlsZT0nZm9udC1mYW1p
+bHk6IkNhbWJyaWEiLCJzZXJpZiI7Y29sb3I6IzFGNEU3OTtiYWNrZ3JvdW5kOndoaXRlJz5Tb2Z0
+d2FyZSBVc2VycyBDb250YWN0IExpc3QuPC9zcGFuPjwvdT48L2I+PGI+PHU+PHNwYW4gc3R5bGU9
+J2ZvbnQtZmFtaWx5OiJDYW1icmlhIiwic2VyaWYiO2NvbG9yOiMxRjRFNzknPjxvOnA+PC9vOnA+
+PC9zcGFuPjwvdT48L2I+PC9wPjxwIGNsYXNzPU1zb05vU3BhY2luZz48Yj48dT48c3BhbiBzdHls
+ZT0nZm9udC1mYW1pbHk6IkNhbWJyaWEiLCJzZXJpZiI7Y29sb3I6IzFGNEU3OSc+PG86cD48c3Bh
+biBzdHlsZT0ndGV4dC1kZWNvcmF0aW9uOm5vbmUnPiZuYnNwOzwvc3Bhbj48L286cD48L3NwYW4+
+PC91PjwvYj48L3A+PHAgY2xhc3M9TXNvTm9TcGFjaW5nPjxzcGFuIHN0eWxlPSdmb250LWZhbWls
+eToiQ2FtYnJpYSIsInNlcmlmIjtjb2xvcjojMUY0RTc5Jz5JbmZvcm1hdGlvbiBmaWVsZHM6IE5h
+bWVzLCBUaXRsZSwgRW1haWwsIFBob25lLCBDb21wYW55IE5hbWUsIENvbXBhbnkgVVJMLCBDb21w
+YW55IHBoeXNpY2FsIGFkZHJlc3MsIFNJQyBDb2RlLCBJbmR1c3RyeSwgQ29tcGFueSBTaXplIChS
+ZXZlbnVlIGFuZCBFbXBsb3llZSksIExpbmtlZEluIHByb2ZpbGUgbGluayBhbmQga2luZCBvZiB0
+ZWNobm9sb2d5IHVzaW5nL3NvbHV0aW9uIGluIHBsYWNlLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD48
+cCBjbGFzcz1Nc29Ob1NwYWNpbmc+PHNwYW4gc3R5bGU9J2ZvbnQtZmFtaWx5OiJDYW1icmlhIiwi
+c2VyaWYiO2NvbG9yOiMxRjRFNzknPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFz
+cz1Nc29Ob1NwYWNpbmc+PHNwYW4gc3R5bGU9J2ZvbnQtZmFtaWx5OiJDYW1icmlhIiwic2VyaWYi
+O2NvbG9yOiMxRjRFNzknPkxldCBtZSBrbm93IHlvdXIgdGFyZ2V0IGdlb2dyYXBoeSBzbyB0aGF0
+IEkgY2FuIGdldCBiYWNrIHRvIHlvdSB3aXRoIHVwZGF0ZWQgY291bnRzLCBwcmljaW5nIGFuZCBt
+b3JlIGluZm9ybWF0aW9uLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFzcz1Nc29Ob1NwYWNp
+bmc+PHNwYW4gc3R5bGU9J2ZvbnQtZmFtaWx5OiJDYW1icmlhIiwic2VyaWYiO2NvbG9yOiMxRjRF
+NzknPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFzcz1Nc29Ob1NwYWNpbmc+PHNw
+YW4gc3R5bGU9J2ZvbnQtZmFtaWx5OiJDYW1icmlhIiwic2VyaWYiO2NvbG9yOiMxRjRFNzknPkF3
+YWl0IHlvdXIgcmVzcG9uc2UhIDxvOnA+PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFzcz1Nc29Ob1Nw
+YWNpbmc+PHNwYW4gc3R5bGU9J2ZvbnQtZmFtaWx5OiJDYW1icmlhIiwic2VyaWYiO2NvbG9yOiMx
+RjRFNzknPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFzcz1Nc29Ob1NwYWNpbmc+
+PGI+PHNwYW4gc3R5bGU9J2ZvbnQtZmFtaWx5OiJDYW1icmlhIiwic2VyaWYiO2NvbG9yOiMxRjRF
+NzknPlJlZ2FyZHMsPG86cD48L286cD48L3NwYW4+PC9iPjwvcD48cCBjbGFzcz1Nc29Ob1NwYWNp
+bmc+PGI+PHNwYW4gc3R5bGU9J2ZvbnQtZmFtaWx5OiJDYW1icmlhIiwic2VyaWYiO2NvbG9yOiMx
+RjRFNzknPlN0ZXBoYW5pZSBrbGFpYmVyIDxvOnA+PC9vOnA+PC9zcGFuPjwvYj48L3A+PHAgY2xh
+c3M9TXNvTm9TcGFjaW5nPjxiPjxzcGFuIHN0eWxlPSdmb250LWZhbWlseToiQ2FtYnJpYSIsInNl
+cmlmIjtjb2xvcjojMUY0RTc5Jz5NYXJrZXRpbmcgRXhlY3V0aXZlPG86cD48L286cD48L3NwYW4+
+PC9iPjwvcD48cCBjbGFzcz1Nc29Ob1NwYWNpbmc+PHNwYW4gc3R5bGU9J2ZvbnQtc2l6ZToxMC4w
+cHQ7Zm9udC1mYW1pbHk6IkNhbWJyaWEiLCJzZXJpZiI7Y29sb3I6I0JERDZFRSc+PG86cD4mbmJz
+cDs8L286cD48L3NwYW4+PC9wPjxwIGNsYXNzPU1zb05vU3BhY2luZz48c3BhbiBzdHlsZT0nZm9u
+dC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5OiJDYW1icmlhIiwic2VyaWYiO2NvbG9yOiNERUVBRjYn
+PklmIHlvdSBkbyBub3Qgd2lzaCB0byByZWNlaXZlIGZ1cnRoZXIgZW1haWxzLCBwbGVhc2UgcmVz
+cG9uZCB3aXRoIHJlbW92ZSBtZS48L3NwYW4+PHNwYW4gc3R5bGU9J2ZvbnQtc2l6ZTo4LjBwdDtm
+b250LWZhbWlseToiQ2FtYnJpYSIsInNlcmlmIjtjb2xvcjojQkRENkVFJz48bzpwPjwvbzpwPjwv
+c3Bhbj48L3A+PHAgY2xhc3M9TXNvTm9TcGFjaW5nPjxzcGFuIHN0eWxlPSdmb250LWZhbWlseToi
+Q2FtYnJpYSIsInNlcmlmIjtjb2xvcjojREVFQUY2Jz48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48
+L3A+PHAgY2xhc3M9TXNvTm9TcGFjaW5nPjxzcGFuIHN0eWxlPSdmb250LWZhbWlseToiQ2FtYnJp
+YSIsInNlcmlmIic+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPjwvZGl2PjwvYm9keT48L2h0
+bWw+AAAfAEIAAQAAACQAAABzAHQAZQBwAGgAYQBuAGkAZQAgAGsAbABhAGkAYgBlAHIAAAAfAGUA
+AQAAADgAAABzAHQAZQBwAGgAYQBuAGkAZQAuAGsAbABhAGkAYgBlAHIAQABhADIAegBkAGIALgBj
+AG8AbQAAAB8AZAABAAAACgAAAFMATQBUAFAAAAAAAAIBQQABAAAAfgAAAAAAAACBKx+kvqMQGZ1u
+AN0BD1QCAAAAgHMAdABlAHAAaABhAG4AaQBlACAAawBsAGEAaQBiAGUAcgAAAFMATQBUAFAAAABz
+AHQAZQBwAGgAYQBuAGkAZQAuAGsAbABhAGkAYgBlAHIAQABhADIAegBkAGIALgBjAG8AbQAAAAAA
+HwACXQEAAAA4AAAAcwB0AGUAcABoAGEAbgBpAGUALgBrAGwAYQBpAGIAZQByAEAAYQAyAHoAZABi
+AC4AYwBvAG0AAAAfAOVfAQAAAAQAAAAgAAAAHwAaDAEAAAAkAAAAcwB0AGUAcABoAGEAbgBpAGUA
+IABrAGwAYQBpAGIAZQByAAAAHwAfDAEAAAA4AAAAcwB0AGUAcABoAGEAbgBpAGUALgBrAGwAYQBp
+AGIAZQByAEAAYQAyAHoAZABiAC4AYwBvAG0AAAAfAB4MAQAAAAoAAABTAE0AVABQAAAAAAACARkM
+AQAAAH4AAAAAAAAAgSsfpL6jEBmdbgDdAQ9UAgAAAIBzAHQAZQBwAGgAYQBuAGkAZQAgAGsAbABh
+AGkAYgBlAHIAAABTAE0AVABQAAAAcwB0AGUAcABoAGEAbgBpAGUALgBrAGwAYQBpAGIAZQByAEAA
+YQAyAHoAZABiAC4AYwBvAG0AAAAAAB8AAV0BAAAAOAAAAHMAdABlAHAAaABhAG4AaQBlAC4AawBs
+AGEAaQBiAGUAcgBAAGEAMgB6AGQAYgAuAGMAbwBtAAAAHwArQAEAAAAkAAAAcwB0AGUAcABoAGEA
+bgBpAGUAIABrAGwAYQBpAGIAZQByAAAAHwAqQAEAAAA4AAAAcwB0AGUAcABoAGEAbgBpAGUALgBr
+AGwAYQBpAGIAZQByAEAAYQAyAHoAZABiAC4AYwBvAG0AAAAfAClAAQAAAAoAAABTAE0AVABQAAAA
+AAACAUYAAQAAAH4AAAAAAAAAgSsfpL6jEBmdbgDdAQ9UAgAAAIBzAHQAZQBwAGgAYQBuAGkAZQAg
+AGsAbABhAGkAYgBlAHIAAABTAE0AVABQAAAAcwB0AGUAcABoAGEAbgBpAGUALgBrAGwAYQBpAGIA
+ZQByAEAAYQAyAHoAZABiAC4AYwBvAG0AAAAAAB8ABV0BAAAAOAAAAHMAdABlAHAAaABhAG4AaQBl
+AC4AawBsAGEAaQBiAGUAcgBAAGEAMgB6AGQAYgAuAGMAbwBtAAAACwBAOgEAAAAfABoAAQAAABIA
+AABJAFAATQAuAE4AbwB0AGUAAAAAAAMA8T8JBAAACwBAOgEAAAADAP0/5AQAAAIBCzABAAAAEAAA
+AOFlDykWy5dMun1WUBHVXn4DABcAAQAAAEAAOQAA7FnE/NXVAUAACDBxT7DE/NXVAQsAKQABAAAA
+HwDZPwEAAAAAAgAASABlAGwAbABvACwADQAKAA0ACgANAAoADQAKAEkAIAB3AG8AdQBsAGQAIABs
+AGkAawBlACAAdABvACAAawBuAG8AdwAgAGkAZgAgAHkAbwB1ACAAYQByAGUAIABpAG4AdABlAHIA
+ZQBzAHQAZQBkACAAaQBuACAAYQBjAHEAdQBpAHIAaQBuAGcAIABHAGUAbgBlAHQAZQBjACAAUwBv
+AGYAdAB3AGEAcgBlACAAVQBzAGUAcgBzACAAQwBvAG4AdABhAGMAdAAgAEwAaQBzAHQALgANAAoA
+DQAKAA0ACgANAAoASQBuAGYAbwByAG0AYQB0AGkAbwBuACAAZgBpAGUAbABkAHMAOgAgAE4AYQBt
+AGUAcwAsACAAVABpAHQAbABlACwAIABFAG0AYQBpAGwALAAgAFAAaABvAG4AZQAsACAAQwBvAG0A
+cABhAG4AeQAgAE4AYQBtAGUALAAgAEMAbwBtAHAAYQBuAHkAIABVAFIATAAsACAAQwBvAG0AcABh
+AG4AeQAgAHAAaAB5AHMAaQBjAGEAbAAgAGEAZABkAHIAZQBzAHMALAAgAFMASQBDACAAQwBvAGQA
+ZQAsACAASQBuAGQAdQBzAHQAcgB5ACwAIABDAG8AbQBwAGEAbgB5ACAAUwBpAHoAZQAgACgAUgBl
+AHYAZQBuAHUAAAALACMAAQAAAB8AAICGAwIAAAAAAMAAAAAAAABGAQAAAB4AAABhAGMAYwBlAHAA
+dABsAGEAbgBnAHUAYQBnAGUAAAAAAAEAAAAMAAAAZQBuAC0AVQBTAAAAAgExAAEAAABkAAAAUENE
+RkVCMDkAAQACAAAAAAAAAAAAAAAAAC4AAAAAAAAAzlcPwl+tPkuRFjRHNOKzrAEA8l8OLpnW70qQ
+hypiMEHAgAAAAAABCQAAEAAAAOFlDykWy5dMun1WUBHVXn4BAAAAAAMAAIAIIAYAAAAAAMAAAAAA
+AABGAQAAADIAAABFAHgAYwBoAGEAbgBnAGUAQQBwAHAAbABpAGMAYQB0AGkAbwBuAEYAbABhAGcA
+cwAAAAAAIAAAAEgAAIAIIAYAAAAAAMAAAAAAAABGAQAAACIAAABOAGUAdAB3AG8AcgBrAE0AZQBz
+AHMAYQBnAGUASQBkAAAAAABxWW7Hov6iQFazCNekFIHoHwAAgBOP8kH0gxRBpYTu21prC/8BAAAA
+FgAAAEMAbABpAGUAbgB0AEkAbgBmAG8AAAAAAAEAAAAqAAAAQwBsAGkAZQBuAHQAPQBNAFMARQB4
+AGMAaABhAG4AZwBlAFIAUABDAAAAAAAfAPo/AQAAACQAAABzAHQAZQBwAGgAYQBuAGkAZQAgAGsA
+bABhAGkAYgBlAHIAAAALAACACCAGAAAAAADAAAAAAAAARgAAAAAGhQAAAAAAAB8ANwABAAAASAAA
+AEcAZQBuAGUAdABlAGMAIABTAG8AZgB0AHcAYQByAGUAIABVAHMAZQByAHMAIABDAG8AbgB0AGEA
+YwB0ACAATABpAHMAdAAAAB8APQABAAAAAgAAAAAAAAADADYAAAAAAAIBcQABAAAAFgAAAAHV1fxJ
+gyRFkf4h+0rNlJidGgaSspsAAB8AcAABAAAASAAAAEcAZQBuAGUAdABlAGMAIABTAG8AZgB0AHcA
+YQByAGUAIABVAHMAZQByAHMAIABDAG8AbgB0AGEAYwB0ACAATABpAHMAdAAAAB8ANRABAAAAogAA
+ADwATQBBAFgAUABSADAAMQBNAEIAMwAxADgAMQA2AEUANgBEADYANgA1AEUAQQAwADMANgBGADUA
+NwAwAEUANwA5AEIAQgA3ADAAQQAwAEAATQBBAFgAUABSADAAMQBNAEIAMwAxADgAMQAuAEkATgBE
+AFAAUgBEADAAMQAuAFAAUgBPAEQALgBPAFUAVABMAE8ATwBLAC4AQwBPAE0APgAAAAAAAwDeP59O
+AAALAACACCAGAAAAAADAAAAAAAAARgAAAAADhQAAAAAAAAMAAIAIIAYAAAAAAMAAAAAAAABGAAAA
+AAGFAAAAAAAAAwCAEP////8DABMSAAAAAAIBAIATj/JB9IMUQaWE7ttaawv/AQAAAC4AAABIAGUA
+YQBkAGUAcgBCAG8AZAB5AEYAcgBhAGcAbQBlAG4AdABMAGkAcwB0AAAAAAABAAAAIgAAAAEACgAA
+AAQAAAAAAAAAFAAAAAAAAAAAAAAA/////wAAAAAAAAsAAIATj/JB9IMUQaWE7ttaawv/AQAAABwA
+AABIAGEAcwBRAHUAbwB0AGUAZABUAGUAeAB0AAAAAAAAAAsAAIATj/JB9IMUQaWE7ttaawv/AQAA
+ACgAAABJAHMAUQB1AG8AdABlAGQAVABlAHgAdABDAGgAYQBuAGcAZQBkAAAAAAAAAEAABzDl46LE
+/NXVAQsAAgABAAAAAwAmAAAAAAALAAYMAQAAAAIBEDABAAAARgAAAAAAAADOVw/CX60+S5EWNEc0
+4rOsBwDyXw4umdbvSpCHKmIwQcCAAAAAAAELAADyXw4umdbvSpCHKmIwQcCAAAAdpHw4AAAAAAIB
+EzABAAAAEAAAACRFkf4h+0rNlJidGgaSspsCARQwAQAAAAwAAABbAAAAMf78vRIeWcoDAFo2AAAA
+AAMAaDYNAAAAHwD4PwEAAAAkAAAAcwB0AGUAcABoAGEAbgBpAGUAIABrAGwAYQBpAGIAZQByAAAA
+HwAiQAEAAAAGAAAARQBYAAAAAAAfACNAAQAAAAIBAAAvAE8APQBFAFgAQwBIAEEATgBHAEUATABB
+AEIAUwAvAE8AVQA9AEUAWABDAEgAQQBOAEcARQAgAEEARABNAEkATgBJAFMAVABSAEEAVABJAFYA
+RQAgAEcAUgBPAFUAUAAgACgARgBZAEQASQBCAE8ASABGADIAMwBTAFAARABMAFQAKQAvAEMATgA9
+AFIARQBDAEkAUABJAEUATgBUAFMALwBDAE4APQA2ADUANwBCADQAMQAzADEARQAzADcARAA0ADUA
+MwA4ADkAQwAyADQAQwAwADMANgA0ADIAMABEADgAQwBDAEMALQBTAFQARQBQAEgAQQBOAEkARQAu
+AEsAAAAAAB8AJEABAAAABgAAAEUAWAAAAAAAHwAlQAEAAAACAQAALwBPAD0ARQBYAEMASABBAE4A
+RwBFAEwAQQBCAFMALwBPAFUAPQBFAFgAQwBIAEEATgBHAEUAIABBAEQATQBJAE4ASQBTAFQAUgBB
+AFQASQBWAEUAIABHAFIATwBVAFAAIAAoAEYAWQBEAEkAQgBPAEgARgAyADMAUwBQAEQATABUACkA
+LwBDAE4APQBSAEUAQwBJAFAASQBFAE4AVABTAC8AQwBOAD0ANgA1ADcAQgA0ADEAMwAxAEUAMwA3
+AEQANAA1ADMAOAA5AEMAMgA0AEMAMAAzADYANAAyADAARAA4AEMAQwBDAC0AUwBUAEUAUABIAEEA
+TgBJAEUALgBLAAAAAAAfADBAAQAAACQAAABzAHQAZQBwAGgAYQBuAGkAZQAgAGsAbABhAGkAYgBl
+AHIAAAAfADFAAQAAACQAAABzAHQAZQBwAGgAYQBuAGkAZQAgAGsAbABhAGkAYgBlAHIAAAAfADhA
+AQAAACQAAABzAHQAZQBwAGgAYQBuAGkAZQAgAGsAbABhAGkAYgBlAHIAAAAfADlAAQAAACQAAABz
+AHQAZQBwAGgAYQBuAGkAZQAgAGsAbABhAGkAYgBlAHIAAAADAFlAAAAAAAMAWkAAAAAAAwACWQAA
+FgADAAlZAgAAAB8ACl0BAAAAOAAAAHMAdABlAHAAaABhAG4AaQBlAC4AawBsAGEAaQBiAGUAcgBA
+AGEAMgB6AGQAYgAuAGMAbwBtAAAAHwALXQEAAAA4AAAAcwB0AGUAcABoAGEAbgBpAGUALgBrAGwA
+YQBpAGIAZQByAEAAYQAyAHoAZABiAC4AYwBvAG0AAAADAACAUONjC8yc0BG82wCAX8zOBAEAAAAk
+AAAASQBuAGQAZQB4AGkAbgBnAEUAcgByAG8AcgBDAG8AZABlAAAAGwAAAB8AAIBQ42MLzJzQEbzb
+AIBfzM4EAQAAACoAAABJAG4AZABlAHgAaQBuAGcARQByAHIAbwByAE0AZQBzAHMAYQBnAGUAAAAA
+AAEAAABwAAAASQBuAGQAZQB4AGkAbgBnACAAUABlAG4AZABpAG4AZwAgAHcAaABpAGwAZQAgAEIA
+aQBnAEYAdQBuAG4AZQBsAFAATwBJAEkAcwBVAHAAVABvAEQAYQB0AGUAIABpAHMAIABmAGEAbABz
+AGUALgAAAAsAAIBQ42MLzJzQEbzbAIBfzM4EAQAAACYAAABJAHMAUABlAHIAbQBhAG4AZQBuAHQA
+RgBhAGkAbAB1AHIAZQAAAAAAAAAAAB8AAIAfpOszqHouQr57eeGpjlSzAQAAADgAAABDAG8AbgB2
+AGUAcgBzAGEAdABpAG8AbgBJAG4AZABlAHgAVAByAGEAYwBrAGkAbgBnAEUAeAAAAAEAAAAuAQAA
+SQBJAD0AWwBDAEkARAA9AGYAZQA5ADEANAA1ADIANAAtAGYAYgAyADEALQBjAGQANABhAC0AOQA0
+ADkAOAAtADkAZAAxAGEAMAA2ADkAMgBiADIAOQBiADsASQBEAFgASABFAEEARAA9AEQANQBEADUA
+RgBDADQAOQA4ADMAOwBJAEQAWABDAE8AVQBOAFQAPQAxAF0AOwBUAEYAUgA9AE4AbwB0AEYAbwBy
+AGsAaQBuAGcAOwBWAGUAcgBzAGkAbwBuAD0AVgBlAHIAcwBpAG8AbgAgADEANQAuADIAMAAgACgA
+QgB1AGkAbABkACAAMgA2ADYANQAuADAAKQAsACAAUwB0AGEAZwBlAD0ASAA0ADsAVQBQAD0AMQAw
+ADsARABQAD0AMQBDADUAAAAAAAMAAIAIIAYAAAAAAMAAAAAAAABGAAAAABCFAAAAAAAACwAAgAgg
+BgAAAAAAwAAAAAAAAEYAAAAADoUAAAAAAAADAACACCAGAAAAAADAAAAAAAAARgAAAAAYhQAAAAAA
+AAsAAIAIIAYAAAAAAMAAAAAAAABGAAAAAIKFAAAAAAAAAwANNP0/AAAfAACAhgMCAAAAAADAAAAA
+AAAARgEAAAAuAAAAYQB1AHQAaABlAG4AdABpAGMAYQB0AGkAbwBuAC0AcgBlAHMAdQBsAHQAcwAA
+AAAAAQAAAIoAAABzAHAAZgA9AG4AbwBuAGUAIAAoAHMAZQBuAGQAZQByACAASQBQACAAaQBzACAA
+KQAgAHMAbQB0AHAALgBtAGEAaQBsAGYAcgBvAG0APQBzAHQAZQBwAGgAYQBuAGkAZQAuAGsAbABh
+AGkAYgBlAHIAQABhADIAegBkAGIALgBjAG8AbQA7ACAAAAAAAB8AAICGAwIAAAAAAMAAAAAAAABG
+AQAAACAAAAB4AC0AbQBzAC0AaABhAHMALQBhAHQAdABhAGMAaAAAAAEAAAACAAAAAAAAAB8AAICG
+AwIAAAAAAMAAAAAAAABGAQAAACIAAAB4AC0AbwByAGkAZwBpAG4AYQB0AGkAbgBnAC0AaQBwAAAA
+AAABAAAAIgAAAFsANAA5AC4AMgAwADYALgAyADIAOAAuADIAMwAwAF0AAAAAAB8AAICGAwIAAAAA
+AMAAAAAAAABGAQAAAC4AAAB4AC0AbQBzAC0AcAB1AGIAbABpAGMAdAByAGEAZgBmAGkAYwB0AHkA
+cABlAAAAAAABAAAADAAAAEUAbQBhAGkAbAAAAB8AAICGAwIAAAAAAMAAAAAAAABGAQAAAFAAAAB4
+AC0AbQBzAC0AbwBmAGYAaQBjAGUAMwA2ADUALQBmAGkAbAB0AGUAcgBpAG4AZwAtAGMAbwByAHIA
+ZQBsAGEAdABpAG8AbgAtAGkAZAAAAAEAAABKAAAAYwA3ADYAZQA1ADkANwAxAC0AZgBlAGEAMgAt
+ADQAMABhADIALQA1ADYAYgAzAC0AMAA4AGQANwBhADQAMQA0ADgAMQBlADgAAAAAAB8AAICGAwIA
+AAAAAMAAAAAAAABGAQAAADYAAAB4AC0AbQBzAC0AdAByAGEAZgBmAGkAYwB0AHkAcABlAGQAaQBh
+AGcAbgBvAHMAdABpAGMAAAAAAAEAAAAeAAAATQBBAFgAUABSADAAMQBNAEIAMgA0ADYANAA6AAAA
+AAAfAACAhgMCAAAAAADAAAAAAAAARgEAAAA0AAAAeAAtAG0AaQBjAHIAbwBzAG8AZgB0AC0AYQBu
+AHQAaQBzAHAAYQBtAC0AcAByAHYAcwAAAAEAAACiAAAAPABNAEEAWABQAFIAMAAxAE0AQgAyADQA
+NgA0AEMAOAAyADcAQQBFADMAOABGAEEAQQA2ADMANgA0ADYAOABFAEIARABCADcAMABBADAAQABN
+AEEAWABQAFIAMAAxAE0AQgAyADQANgA0AC4ASQBOAEQAUABSAEQAMAAxAC4AUABSAE8ARAAuAE8A
+VQBUAEwATwBPAEsALgBDAE8ATQA+AAAAAAAfAACAhgMCAAAAAADAAAAAAAAARgEAAAA4AAAAeAAt
+AG0AcwAtAG8AbwBiAC0AdABsAGMALQBvAG8AYgBjAGwAYQBzAHMAaQBmAGkAZQByAHMAAAABAAAA
+FAAAAE8ATABNADoANAAzADAAMwA7AAAAHwAAgIYDAgAAAAAAwAAAAAAAAEYBAAAAIgAAAHgALQBm
+AG8AcgBlAGYAcgBvAG4AdAAtAHAAcgB2AHMAAAAAAAEAAAAWAAAAMAAyADkANgA1ADEAQwA3AEEA
+MQAAAAAAHwAAgIYDAgAAAAAAwAAAAAAAAEYBAAAAOAAAAHgALQBmAG8AcgBlAGYAcgBvAG4AdAAt
+AGEAbgB0AGkAcwBwAGEAbQAtAHIAZQBwAG8AcgB0AAAAAQAAACgEAABTAEYAVgA6AE4AUwBQAE0A
+OwBTAEYAUwA6ACgAMQAwADAAMQA5ADAAMgAwACkAKAAzADkAOAA1ADAANAAwADAAMAAwADQAKQAo
+ADMANgA2ADAAMAA0ACkAKAAxADMANgAwADAAMwApACgAMwA5ADYAMAAwADMAKQAoADMANwA2ADAA
+MAAyACkAKAAzADQANgAwADAAMgApACgAMQA5ADkAMAAwADQAKQAoADEAOAA5ADAAMAAzACkAKAA4
+ADYAMwA2ADIAMAAwADEAKQAoADkANgA4ADYAMAAwADMAKQAoADYAOQAxADYAMAAwADkAKQAoADUA
+MgA1ADMANgAwADEANAApACgAMgA2ADAAMAA1ACkAKAA1ADUAMAAxADYAMAAwADIAKQAoADcANgA5
+ADYAMAAwADUAKQAoADIAOQAwADYAMAAwADIAKQAoADYANQAwADYAMAAwADcAKQAoADUANQAyADMA
+NgAwADAANAApACgAMQA4ADYAMAAwADMAKQAoADYANgA5ADQANgAwADAANwApACgANAA3ADQANAAw
+ADAANQApACgANgA0ADcANQA2ADAAMAA4ACkAKAA1ADYANgAwADMAMAAwADAAMAAyACkAKAA2ADYA
+NgA2ADAAMAA0ACkAKAAzADEANgAwADAAMgApACgAMwAzADYANQA2ADAAMAAyACkAKAA2ADYANAA3
+ADYAMAAwADcAKQAoADYANgA1ADUANgAwADAAOAApACgANwA2ADEAMQA2ADAAMAA2ACkAKAA2ADYA
+NAA0ADYAMAAwADgAKQAoADgAMQAxADYANgAwADAANgApACgANAA1ADAAOAAwADQAMAAwADAAMAAy
+ACkAKAA3ADEAMgAwADAANAAwADAAMAAwADEAKQAoADgANgA3ADYAMAAwADIAKQAoADkAMwAyADYA
+MAAwADIAKQAoADgAMQAxADUANgAwADEANAApACgAOAA5ADMANgAwADAAMgApACgANQAwADgANgAw
+ADAAMAAwADEAKQAoADIANgA3ADEAMAAyADAAMAAwADAANAApADsARABJAFIAOgBPAFUAVAA7AFMA
+RgBQADoAMQAxADAAMgA7AFMAQwBMADoAMQA7AFMAUgBWAFIAOgBNAEEAWABQAFIAMAAxAE0AQgAy
+ADQANgA0ADsASAA6AE0AQQBYAFAAUgAwADEATQBCADMAMQA4ADEALgBJAE4ARABQAFIARAAwADEA
+LgBQAFIATwBEAC4ATwBVAFQATABPAE8ASwAuAEMATwBNADsARgBQAFIAOgA7AFMAUABGADoATgBv
+AG4AZQA7AEwAQQBOAEcAOgBlAG4AOwBQAFQAUgA6AEkAbgBmAG8ATgBvAFIAZQBjAG8AcgBkAHMA
+OwBBADoAMAA7AE0AWAA6ADEAOwAAAB8AAICGAwIAAAAAAMAAAAAAAABGAQAAABoAAAByAGUAYwBl
+AGkAdgBlAGQALQBzAHAAZgAAAAAAAQAAAKYAAABOAG8AbgBlACAAKABwAHIAbwB0AGUAYwB0AGkA
+bwBuAC4AbwB1AHQAbABvAG8AawAuAGMAbwBtADoAIABhADIAegBkAGIALgBjAG8AbQAgAGQAbwBl
+AHMAIABuAG8AdAAgAGQAZQBzAGkAZwBuAGEAdABlACAAcABlAHIAbQBpAHQAdABlAGQAIABzAGUA
+bgBkAGUAcgAgAGgAbwBzAHQAcwApAAAAAAAfAACAhgMCAAAAAADAAAAAAAAARgEAAAA4AAAAeAAt
+AG0AcwAtAGUAeABjAGgAYQBuAGcAZQAtAHMAZQBuAGQAZQByAGEAZABjAGgAZQBjAGsAAAABAAAA
+BAAAADEAAAAfAACAhgMCAAAAAADAAAAAAAAARgEAAAAqAAAAeAAtAG0AaQBjAHIAbwBzAG8AZgB0
+AC0AYQBuAHQAaQBzAHAAYQBtAAAAAAABAAAADgAAAEIAQwBMADoAMAA7AAAAAAAfAACAhgMCAAAA
+AADAAAAAAAAARgEAAABEAAAAeAAtAG0AaQBjAHIAbwBzAG8AZgB0AC0AYQBuAHQAaQBzAHAAYQBt
+AC0AbQBlAHMAcwBhAGcAZQAtAGkAbgBmAG8AAAABAAAAAgQAAE8ARABmAFgAdQA0AFIARQA2AGQA
+egBXACsAawBnAFIATgBSAGwAcQBMAFMANwB3AHAAMAB1ADEAbQB5AFUAYQBsAFMAagA1AHkARQBn
+AFQAcQBWAC8AZQBRADMAUwBBAFAAdABRAEYAKwBIAG8AUABvADgAYwBuAFQARgBvAEQAUQA3AEEA
+MwB4AC8AcABvADUAQgBEAFIAVwBXAE8AYgBRADAAYQBOADYARgAwAEwAUABtADUANwBrAGsANAA5
+AEkAMABaAEQAYgBYAGkANwBlAEsAaAB5AFkASQBJADgALwBuAGQASQByADUAYgBtAHUATgBYAEYA
+MQBSAHAAUABnAGIALwBzAHEASQB5AHMAdwBRAGsAUQBNADQAUgB5AGwAagBtAGkAawBVAGwAOQA2
+ADMARABjAHoAYQB3AC8AOABKAHEAcQBRADcARgB6AGgAZAAwAGEASAA3AGEAOQB3AGwANQBBAEYA
+UABPADcAeABtAGsAQwB0AHYARQBnAGcAdwBDAHgAVABHAHEAZgBsAFcAOABNAEIAdgBGADMAWQBD
+AFMASgBwADIAagArADgARgBmADcAVwBsAG4ASQBaADcARQBmAGEAbgBHAHEAeAByAE8AUABpADUA
+bQBuAFMAUQBBADgAVABxAFgARgBpAFQAZwBxAHQAUgBMAFEAVABhAFcAWABGAHUAZgB6ADcARQBy
+ADYAUQBRAFUAMgB5AEUALwA2AE4AZwBzADcAUgB0ADAAagB5AHoAcwBjAEYAbgBJAHoATAB4AG8A
+KwBEAG8ASAA1AGoAdgBRAEEAVwBKAFcAOQA0AHcAUABlAHgARQBrAE4AYwBEAFcAZQBBAHcAcQBn
+AHcAWQBDAGQARgBXADYAOABDADgARwBxAEsASQBGAEUAOABXAEkAdAB3AEYAWgBDAHIAUQBjADUA
+OQBUAG0AcABHAEIAeQBxAHAAegBXADYAbQB3AGYAdwBQADcAdABFAGsAZgBLAFUANwAzAGYAOABi
+AGUASgBYAEkAdwBiAEQAUQBXAFAAeQBpADgAbgBrAFgAWQBCAE0ASgBHAC8AKwBBAGkAbQBiAHUA
+SwBaAHcATgB3AFcAQQBuAFYAUQBuAFMAOABEAE0AVQAzAC8AOABOAEYARQBvAEkASQA3ADAASABo
+ADcAcwAxAHUAcgBMAEwAbQBrAFIAcABVAHcAOQA2AGEAMQA4AHgAawBSAHkAYQA0AHQAZgBNAGIA
+cQAvAE4AbwBpADMAbABlADcAeABBAHAAVQBTAEcAKwBwACsASQBGADEATABzAGsATgBVAHIAMQA2
+AGIASgBCAHYAUABDAEIAYgBWADAAYwBLAEsAWABXAHIANwAAAAAAHwAAgIYDAgAAAAAAwAAAAAAA
+AEYBAAAARgAAAHgALQBtAHMALQBlAHgAYwBoAGEAbgBnAGUALQBhAG4AdABpAHMAcABhAG0ALQBt
+AGUAcwBzAGEAZwBlAGQAYQB0AGEAAAAAAAEAAAAyAQAAUwAxAFMAVABZADkAaQByAFkAcwBoAFUA
+QwBVAHIAdAAxAEcAaABhAFcANQBWACsASAArAG4ANQBnAGMAZgB0AFIAbgAwACsAQwB4AC8AZABN
+AFQANAA0AFkATAB4AGEANgAyAGUAZgA4AGoAOQBrADUAUgBnAEsAdgBiAGcAcwBSAEEAYQAxAGQA
+agBTAGsAUABLAFkAUABvAHQANwB6AGMATwBOAGkAVQByAG0AQwBGAFcANQBKAHMAUAAyADgAYQBp
+AFIAUQArAFUASwBuAG4AbwBUAHkAZABwADQAdgB6AEsARgBnAFEASQB6ADMAKwA1AGQAMQBGAE4A
+ZAAzAGQAcgAwAHMATwBDAEIASQAzAHgAUgA4AFgAKwBvADMANQBQAGIAOAA2AHcAPQA9AAAAAAAf
+AACAhgMCAAAAAADAAAAAAAAARgEAAAA+AAAAeAAtAG0AcwAtAGUAeABjAGgAYQBuAGcAZQAtAHQA
+cgBhAG4AcwBwAG8AcgB0AC0AZgBvAHIAawBlAGQAAAAAAAEAAAAKAAAAVAByAHUAZQAAAAAA6W0=
 
-Does it make sense to make it 'default y' and say 'If unsure, say N' ?
-
->   config ARCH_HAS_DEBUG_VIRTUAL
->   	bool
->   
-
-Christophe
+--_000_MAXPR01MB31816E6D665EA036F570E79BB70A0MAXPR01MB3181INDP_--
