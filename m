@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7701C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99904C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA79124686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6814324686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221538;
-	bh=WZKi91Qb+hIqQzuLMjQLrerJQVMOSj3EzXxFrKloU1o=;
+	s=default; t=1580221541;
+	bh=ziGI/k3pZwZT/ZxCQvtV6gIQK7UA8ZSG2yeY0lAKxx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TDRe69mvQBiYGZbZLWWr6GX8jPxZMJXP47bnGgZs60+QbgJ060YdQvcQSP/tiewrP
-	 4WHtfQ+mDEEvPq2IpYJkeoqmakRKBWWmuGflRZsJJEW9pgqNgV5/jbM0ZBKLnTGHfv
-	 UXYE+4MlSMna+L4vPgB8QRIPtM4Oi7RUzjjbGgAw=
+	b=KvL8GnANHxqBUPMUCE/D0yYESouctmTXuXb3Vjm59e6OoGWHiE4qQW+xClXMku2Hp
+	 qZYYYuNndFvFa2CvgB5kLm3g+tcm8WiGW2BK+neGCdKRoO9PdJbRIGttYksRXDLM3v
+	 TPYzMODC648Ec87SMcmLqR+oPXIv70WGkC9waq7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733020AbgA1OZi (ORCPT
+        id S1733043AbgA1OZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:25:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:25:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732959AbgA1OZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:35 -0500
+        id S1733019AbgA1OZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:25:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F4D24686;
-        Tue, 28 Jan 2020 14:25:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 713E324688;
+        Tue, 28 Jan 2020 14:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221535;
-        bh=WZKi91Qb+hIqQzuLMjQLrerJQVMOSj3EzXxFrKloU1o=;
+        s=default; t=1580221537;
+        bh=ziGI/k3pZwZT/ZxCQvtV6gIQK7UA8ZSG2yeY0lAKxx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pQv9aVtKvqY9vDcTRwdJ1FUJhAggwrWD5FY0HK3V+OWO4k8ThWCnG4MvWhkW3Qkz5
-         Ix1XojhJZcYi9SZD+N7TZbWg7Wi99RmuFIMmUz708pH1kcMQ6ALRrGdmFdBCE7TJSq
-         r2/S2ay1MxCixamIF3azt85pisITHWclAVLWIcZM=
+        b=t3FUZwbYIy3nPJRhL0Y2U4ZV+AlOsOx8mjytVYVq5mS4E8NzxqjhPdmoFs+7xenei
+         9DX0S1cdIR6DONGrUBt4HuuTWU9ybib0A+FqQv3FmpFtsatEj4mhRNu+o4cOFNOfbR
+         zfuFm1bZe4Rn/Xs40P8zGG2akhW/0tjvGg5FSHgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 4.9 262/271] arm64: kpti: Whitelist Cortex-A CPUs that dont implement the CSV3 field
-Date:   Tue, 28 Jan 2020 15:06:51 +0100
-Message-Id: <20200128135912.099755783@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 4.9 263/271] coresight: etb10: Do not call smp_processor_id from preemptible
+Date:   Tue, 28 Jan 2020 15:06:52 +0100
+Message-Id: <20200128135912.171842103@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,39 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit 2a355ec25729053bb9a1a89b6c1d1cdd6c3b3fb1 upstream.
+commit 730766bae3280a25d40ea76a53dc6342e84e6513 upstream.
 
-While the CSV3 field of the ID_AA64_PFR0 CPU ID register can be checked
-to see if a CPU is susceptible to Meltdown and therefore requires kpti
-to be enabled, existing CPUs do not implement this field.
+During a perf session we try to allocate buffers on the "node" associated
+with the CPU the event is bound to. If it is not bound to a CPU, we
+use the current CPU node, using smp_processor_id(). However this is unsafe
+in a pre-emptible context and could generate the splats as below :
 
-We therefore whitelist all unaffected Cortex-A CPUs that do not implement
-the CSV3 field.
+ BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
 
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-[florian: adjust whilelist location and table to stable-4.9.y]
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Use NUMA_NO_NODE hint instead of using the current node for events
+not bound to CPUs.
+
+Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: stable <stable@vger.kernel.org> # 4.6+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/arm64/kernel/cpufeature.c |    5 +++++
- 1 file changed, 5 insertions(+)
 
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -789,6 +789,11 @@ static bool unmap_kernel_at_el0(const st
- 	switch (read_cpuid_id() & MIDR_CPU_MODEL_MASK) {
- 	case MIDR_CAVIUM_THUNDERX2:
- 	case MIDR_BRCM_VULCAN:
-+	case MIDR_CORTEX_A53:
-+	case MIDR_CORTEX_A55:
-+	case MIDR_CORTEX_A57:
-+	case MIDR_CORTEX_A72:
-+	case MIDR_CORTEX_A73:
- 		return false;
- 	}
+---
+ drivers/hwtracing/coresight/coresight-etb10.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+--- a/drivers/hwtracing/coresight/coresight-etb10.c
++++ b/drivers/hwtracing/coresight/coresight-etb10.c
+@@ -279,9 +279,7 @@ static void *etb_alloc_buffer(struct cor
+ 	int node;
+ 	struct cs_buffers *buf;
  
+-	if (cpu == -1)
+-		cpu = smp_processor_id();
+-	node = cpu_to_node(cpu);
++	node = (cpu == -1) ? NUMA_NO_NODE : cpu_to_node(cpu);
+ 
+ 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
+ 	if (!buf)
 
 
