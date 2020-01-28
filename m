@@ -2,154 +2,187 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECDCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD54C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1386C214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580241137;
-	bh=SbyOG7cvW7ZLtAUVL89GtKsbgtdLZWiTOY160LF4WRk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nOQ8JbJNAKV8oCLvdN6/BXCFFx9JmJsiUIbmBdW2PblKhXmkX5ksXkMqpRXZ6vRnN
-	 3UXiVkx3rHllQt/XWjHn+QEZbq9d2vK/aU4zhzp0J8Eax2eY89I6UTciJLPQ1imJtm
-	 Zu2+UdYYpY7K17M7Zj3gFxFp/1LuEeicHuOxYD4c=
+	by mail.kernel.org (Postfix) with ESMTP id A2E60214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:53:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VzBbyfrX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgA1TwQ (ORCPT
+        id S1726466AbgA1Tx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 14:52:16 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42273 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgA1TwQ (ORCPT
+        Tue, 28 Jan 2020 14:53:27 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45812 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbgA1Tx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 14:52:16 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y4so15978055ljj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:52:14 -0800 (PST)
+        Tue, 28 Jan 2020 14:53:26 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b9so7551260pgk.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:53:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iyik5rYQjUugRWXOhS91wMvUPz7Kgd9tYhKH8VVIVRY=;
-        b=ExwhayKlEf7Bfgv9eqGWXilHEdU7XISxBPCehCpR45dam0NkLcmg21/yMfF+WYxJ1q
-         NH73D6YQ8j6ssVoWLhhf7598l4vaKJFGcwmXOjz8/EzAv0WZ3qLIHbZtiDiV8lct6SaL
-         DnsfmlutMeOKWC1ZGIrU+ID/EVX0teHv0zlS8=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fd0Bf5ciOLDTzu4NvqY5lz18CA8ytAWcDkClCt4wOyA=;
+        b=VzBbyfrXVyTu7+qADXfLaD3EjrI4fRju5zzq6rggViLj1t/lQA5k01gHSHLjHTTFQD
+         1W4boLRmulXdcHOS3sn7t2I4ZwVPsNWq2uq9VvKzMNc/jboiF6Mml59qVjX5mB5mZQaL
+         ZOuCxQKhPWuI9boE0o/Y/80zNA7ioPQIGtPa4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iyik5rYQjUugRWXOhS91wMvUPz7Kgd9tYhKH8VVIVRY=;
-        b=csYnE9jd2p6IgZLo55Pr6fQnCHgZXAJa6HasFbWUZdWgYARFxLAn9MgTPeKWj6/Jc/
-         CgFH0pLsPy28AP6ru9TK5FygPbimPLNTsuAM34BvF3pGqXi3xwxOS8G7GVAQ1kgvGSlI
-         tcnNczVMoMGvbj/Cu3ikZmzDwc6ce9zz2EAC5gUw1U6U/CGaqJX3jo/Ssz8TZjiLjhGe
-         A+rCEoVOZ6dG5AFi2u5QCdv1f1wMf0qaG+F4Z94NL2W42rufyC69hUWSrKBcJLsQPiOD
-         MKTfJ2wLAawf695oFLLih76P5eWLYNR50Z3NozJlK3KL1WDMOUiurPoaGI+XDAH4aPbg
-         jpKg==
-X-Gm-Message-State: APjAAAWtbIJyk5gOlqbG2MEPQI8UC1+1dsALlgKPVF8Gj3fizJCx3K1p
-        mQJlbGl/i1aiwklwd1geDJpk1hH357M=
-X-Google-Smtp-Source: APXvYqzOjcEc9t35j03cRCMa10YEPebtbXINzUZU4+aPPk2f+dr8TTIQ0ZAnbAf95Z15zxmO9kLAhw==
-X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr14563802ljm.233.1580241133648;
-        Tue, 28 Jan 2020 11:52:13 -0800 (PST)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id w19sm10223670lfl.55.2020.01.28.11.52.12
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fd0Bf5ciOLDTzu4NvqY5lz18CA8ytAWcDkClCt4wOyA=;
+        b=k0dE4SNT5EJ96C4vh+q5a541Dm8ucS8VLQoKad0PJdw2cOua9xQFUbnIA6zAAO2f7f
+         +nUbx6R6OQz9j5mKgemT1Hk4g7IC/03mMQ6Gootcw8L5Ks51tQbiRabcTsgXpq54Zf30
+         fl26iMoIHgAiUz/M53tL+3KB1olhq8GJ7WOD/RuUiUnT95AYFk80f5pSegIt+khtkkCa
+         nfvcB8v8sdHl1RQivPaXiQjjYBuJLDuID1MGZBwRad6xpVQzDaBBcOitlJY2/FAmY2x4
+         /4idGuGQ1UVLISgW2sYxE59GO0N0nU8kt2ozadcyBRYLrLmPvqkWXENNh4xqDXuQvqdB
+         89AA==
+X-Gm-Message-State: APjAAAX7gRFodvkcy0zB1ZaHlf3TG0zkF8AHM4Zvl9mjbpr5lS8+73Nr
+        YQFZeigmvxJLRJBWVmrhhAeY2Q==
+X-Google-Smtp-Source: APXvYqxnNBwdER95BEHw3GteU6AfO0/0iBE9siRHXhDTs3M6ALIsjR66bbcQH9s8Amw+OkFTtECJBw==
+X-Received: by 2002:a65:484d:: with SMTP id i13mr27036413pgs.32.1580241205473;
+        Tue, 28 Jan 2020 11:53:25 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w3sm20442356pgj.48.2020.01.28.11.53.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 11:52:12 -0800 (PST)
-Received: by mail-lj1-f171.google.com with SMTP id h23so15995144ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 11:52:12 -0800 (PST)
-X-Received: by 2002:a2e:3a13:: with SMTP id h19mr14478575lja.16.1580241132023;
- Tue, 28 Jan 2020 11:52:12 -0800 (PST)
+        Tue, 28 Jan 2020 11:53:24 -0800 (PST)
+Date:   Tue, 28 Jan 2020 11:53:23 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v1] arm64: dts: sc7180: add dsi controller and phy entries for
+ idp dts
+Message-ID: <20200128195323.GC46072@google.com>
+References: <1580218617-30293-1-git-send-email-harigovi@codeaurora.org>
 MIME-Version: 1.0
-References: <20200128165906.GA67781@gmail.com>
-In-Reply-To: <20200128165906.GA67781@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 28 Jan 2020 11:51:56 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
-Message-ID: <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
-Subject: Re: [GIT PULL] x86/asm changes for v5.6
-To:     Ingo Molnar <mingo@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@suse.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: multipart/mixed; boundary="00000000000055d6b2059d388f19"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1580218617-30293-1-git-send-email-harigovi@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000055d6b2059d388f19
-Content-Type: text/plain; charset="UTF-8"
+Hi,
 
-On Tue, Jan 28, 2020 at 8:59 AM Ingo Molnar <mingo@kernel.org> wrote:
->
->  - Add support for "Fast Short Rep Mov", which is available starting with
->    Ice Lake Intel CPUs - and make the x86 assembly version of memmove()
->    use REP MOV for all sizes when FSRM is available.
+On Tue, Jan 28, 2020 at 07:06:57PM +0530, Harigovindan P wrote:
+> Adding dsi controller and phy entries for idp dt.
+> 
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 56 +++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50a..9f42367 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -7,6 +7,7 @@
+>  
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>  #include "sc7180.dtsi"
+>  #include "pm6150.dtsi"
+> @@ -232,6 +233,50 @@
+>  	};
+>  };
+>  
+> +&dsi_controller {
+> +	status = "okay";
+> +
+> +	vdda-supply = <&vreg_l3c_1p2>;
+> +
+> +	panel@0 {
+> +		compatible = "visionox,rm69299-1080p-display";
 
-Pulled. However, this seems rather non-optimal:
+This depends on the series "Add support for rm69299 Visionox panel
+driver and add devicetree bindings for visionox panel"
+(https://patchwork.kernel.org/cover/11320773/) which hasn't landed
+IIUC. This should be mentioned after '---'.
 
-        ALTERNATIVE "cmp $0x20, %rdx; jb 1f", "", X86_FEATURE_FSRM
-        ALTERNATIVE "", "movq %rdx, %rcx; rep movsb; retq", X86_FEATURE_ERMS
+> +		reg = <0>;
+> +
+> +		vdda-supply = <&vreg_l8c_1p8>;
+> +		vdd3p3-supply = <&vreg_l18a_2p8>;
+> +
+> +		pinctrl-names = "default", "suspend";
+> +		pinctrl-0 = <&disp_pins_default>;
+> +		pinctrl-1 = <&disp_pins_default>;
 
-in that it leaves unnecessary NOP's there as alternatives.
+Is there a point for listing a suspend configuration if it is the same
+as the default?
 
-We have "ALTERNATIVE_2", so we can do the above in one thing, _and_
-move the rep-movsq testing code into there too:
+> +		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			port@0 {
+> +				reg = <0>;
+> +				panel0_in: endpoint {
+> +					remote-endpoint = <&dsi0_out>;
 
-        ALTERNATIVE_2 \
-                "cmp  $680, %rdx ; jb 3f ; cmpb %dil, %sil; je 4f", \
-                "movq %rdx, %rcx ; rep movsb; retq", X86_FEATURE_FSRM, \
-                "cmp $0x20, %rdx; jb 1f; movq %rdx, %rcx; rep movsb;
-retq", X86_FEATURE_ERMS
+The 'dsi0_out' node is added by 'arm64: dts: sc7180: add display dt nodes'
+(https://patchwork.kernel.org/patch/11354253/), which has not landed. So
+either you should list it as dependency below the commit message, or
+(probably better) send the two patches in the same series.
 
-which avoids unnecessary nops.
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	ports {
+> +		port@1 {
+> +			endpoint {
+> +				remote-endpoint = <&panel0_in>;
+> +				data-lanes = <0 1 2 3>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&dsi_phy {
 
-I dunno.  It doesn't much matter, but we _do_ have things to do for
-all three cases, and it actually makes sense to move all the three
-"use rep movs" cases into the ALTERNATIVE. No?
+Also this node does not exist yet, it also depends on the patch mentioned
+above.
 
-UNTESTED patch attached, but visually it seems to generate better code
-and less unnecessary nops (I get just two bytes of nop with this for
-the nonFSRM/ERMS case)
+> +	status = "okay";
+> +};
+> +
+>  &qspi {
+>  	status = "okay";
+>  	pinctrl-names = "default";
+> @@ -289,6 +334,17 @@
+>  
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>  
+> +&pm6150l_gpio {
+> +	disp_pins_default: disp-pins-default{
 
-If somebody tests this out and commits it and writes a commit message,
-they can claim authorship. Or add my sign-off.
+nit: missing blank before curly brace
 
-              Linus
+If there is no suspend configuration you can get rid of the 'default'
+suffix.
 
---00000000000055d6b2059d388f19
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k5yap2xj0>
-X-Attachment-Id: f_k5yap2xj0
+Since this is only a single pin I would suggest to use a name that
+describes the function of the pin or the name used in the schematic
+instead of 'disp-pins'.
 
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2xpYi9tZW1tb3ZlXzY0LlMgYi9hcmNoL3g4Ni9saWIvbWVt
-bW92ZV82NC5TCmluZGV4IDdmZjAwZWE2NGU0Zi4uZTQyYmYzNWI5YjYyIDEwMDY0NAotLS0gYS9h
-cmNoL3g4Ni9saWIvbWVtbW92ZV82NC5TCisrKyBiL2FyY2gveDg2L2xpYi9tZW1tb3ZlXzY0LlMK
-QEAgLTM5LDIzICszOSwxOSBAQCBTWU1fRlVOQ19TVEFSVChfX21lbW1vdmUpCiAJY21wICVyZGks
-ICVyOAogCWpnIDJmCiAKLQkvKiBGU1JNIGltcGxpZXMgRVJNUyA9PiBubyBsZW5ndGggY2hlY2tz
-LCBkbyB0aGUgY29weSBkaXJlY3RseSAqLworCS8qCisJICogVGhyZWUgcmVwLXN0cmluZyBhbHRl
-cm5hdGl2ZXM6CisJICogIC0gZ28gdG8gIm1vdnNxIiBmb3IgbGFyZ2UgcmVnaW9ucyB3aGVyZSBz
-b3VyY2UgYW5kIGRlc3QgYXJlCisJICogICAgbXV0dWFsbHkgYWxpZ25lZCAoc2FtZSBpbiBsb3cg
-OCBiaXRzKS4gImxhYmVsIDQiCisJICogIC0gcGxhaW4gcmVwLW1vdnNiIGZvciBGU1JNCisJICog
-IC0gcmVwLW1vdnMgZm9yID4gMzIgYnl0ZSBmb3IgRVJNUy4KKwkgKi8KIC5MbWVtbW92ZV9iZWdp
-bl9mb3J3YXJkOgotCUFMVEVSTkFUSVZFICJjbXAgJDB4MjAsICVyZHg7IGpiIDFmIiwgIiIsIFg4
-Nl9GRUFUVVJFX0ZTUk0KLQlBTFRFUk5BVElWRSAiIiwgIm1vdnEgJXJkeCwgJXJjeDsgcmVwIG1v
-dnNiOyByZXRxIiwgWDg2X0ZFQVRVUkVfRVJNUworCUFMVEVSTkFUSVZFXzIgXAorCQkiY21wICAk
-NjgwLCAlcmR4IDsgamIgM2YgOyBjbXBiICVkaWwsICVzaWw7IGplIDRmIiwgXAorCQkibW92cSAl
-cmR4LCAlcmN4IDsgcmVwIG1vdnNiOyByZXRxIiwgWDg2X0ZFQVRVUkVfRlNSTSwgXAorCQkiY21w
-ICQweDIwLCAlcmR4OyBqYiAxZjsgbW92cSAlcmR4LCAlcmN4OyByZXAgbW92c2I7IHJldHEiLCBY
-ODZfRkVBVFVSRV9FUk1TCiAKLQkvKgotCSAqIG1vdnNxIGluc3RydWN0aW9uIGhhdmUgbWFueSBz
-dGFydHVwIGxhdGVuY3kKLQkgKiBzbyB3ZSBoYW5kbGUgc21hbGwgc2l6ZSBieSBnZW5lcmFsIHJl
-Z2lzdGVyLgotCSAqLwotCWNtcCAgJDY4MCwgJXJkeAotCWpiCTNmCi0JLyoKLQkgKiBtb3ZzcSBp
-bnN0cnVjdGlvbiBpcyBvbmx5IGdvb2QgZm9yIGFsaWduZWQgY2FzZS4KLQkgKi8KLQotCWNtcGIg
-JWRpbCwgJXNpbAotCWplIDRmCiAzOgogCXN1YiAkMHgyMCwgJXJkeAogCS8qCg==
---00000000000055d6b2059d388f19--
+Thanks
+
+Matthias
