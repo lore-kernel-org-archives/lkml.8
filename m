@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6036C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE07BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7AA207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B269B21739
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222104;
-	bh=CBaszSDNlm5NoSx/zARR8prZi4DXJ4Y5llwvvqesr1I=;
+	s=default; t=1580222108;
+	bh=ZEQZaK7X3xLNh0B3h2Vr87ah+kdPyglD8gqGpmygO1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i8jIwyJwzMq/yRlQ+HLwfi4obatP5Fa62z17ZK17jDert73/iRLczOWZotQtPs2/c
-	 vChGe/wU3W2YzkgGP4UVdGjAm85tOl85VJ3QSCGHWe02HgV6coKd/EvnE3EFtPvzkE
-	 Ren0+oZxQCrquZhmralTkx038rw7WT3q1JZxj2UU=
+	b=gsEZlxmHBCr5N9AKrVRmJ8Q8OeOj5MoAJ0Q0+pmcflpEvWuINvau21mxxkgB5pF3O
+	 0wGGCnL0z9Ae+Fl9ePoDM9Nji6UZzqMj218ywl2uALnj+TTEo0+Zr1OP9JW5b78LS1
+	 sBbPcplFfTsXu/xSbYWztsHqlXvnz0WPzKFxna2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbgA1OXZ (ORCPT
+        id S1731316AbgA1OfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:23:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49374 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:35:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731005AbgA1OXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:23:18 -0500
+        id S1726346AbgA1OXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:23:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D690521739;
-        Tue, 28 Jan 2020 14:23:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E662071E;
+        Tue, 28 Jan 2020 14:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221398;
-        bh=CBaszSDNlm5NoSx/zARR8prZi4DXJ4Y5llwvvqesr1I=;
+        s=default; t=1580221403;
+        bh=ZEQZaK7X3xLNh0B3h2Vr87ah+kdPyglD8gqGpmygO1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cp8JPPY/oQGF4HleYDubjK5g8RTJSxDg6NLrCiEF4LS12vDZ8r0i8gQVik74Ix2/k
-         /++iN5wrLYZMheD9cmCaniE/RD85K+cMeApGf9f0IPwTDQW7U1WJ1qvzAz8R60XmOq
-         uPyZ8ZRwOcd+GQPu6OVuj04tvJqxcVWKiul5VkFc=
+        b=SPp2YCTkSYMOBCEnjJ6e9+IqCk1qVxFxOJrZpNhLECPNqBFOgiW+L6RbMpAlRIyr7
+         oR4wHH3ObeATQNSW1MlfbFMzgP7At4IuvNGM6ErLvvfzXItAI1eCvBt2HmCBUbeXFQ
+         tvqDlnLlM8AuQMKsi+2sT4D/sy+m/+kURGmOhkpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 208/271] nvme: retain split access workaround for capability reads
-Date:   Tue, 28 Jan 2020 15:05:57 +0100
-Message-Id: <20200128135908.029090090@linuxfoundation.org>
+Subject: [PATCH 4.9 210/271] mac80211: accept deauth frames in IBSS mode
+Date:   Tue, 28 Jan 2020 15:05:59 +0100
+Message-Id: <20200128135908.169824594@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,55 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 3a8ecc935efabdad106b5e06d07b150c394b4465 ]
+[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
 
-Commit 7fd8930f26be4
+We can process deauth frames and all, but we drop them very
+early in the RX path today - this could never have worked.
 
-  "nvme: add a common helper to read Identify Controller data"
-
-has re-introduced an issue that we have attempted to work around in the
-past, in commit a310acd7a7ea ("NVMe: use split lo_hi_{read,write}q").
-
-The problem is that some PCIe NVMe controllers do not implement 64-bit
-outbound accesses correctly, which is why the commit above switched
-to using lo_hi_[read|write]q for all 64-bit BAR accesses occuring in
-the code.
-
-In the mean time, the NVMe subsystem has been refactored, and now calls
-into the PCIe support layer for NVMe via a .reg_read64() method, which
-fails to use lo_hi_readq(), and thus reintroduces the problem that the
-workaround above aimed to address.
-
-Given that, at the moment, .reg_read64() is only used to read the
-capability register [which is known to tolerate split reads], let's
-switch .reg_read64() to lo_hi_readq() as well.
-
-This fixes a boot issue on some ARM boxes with NVMe behind a Synopsys
-DesignWare PCIe host controller.
-
-Fixes: 7fd8930f26be4 ("nvme: add a common helper to read Identify Controller data")
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/rx.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 1ac4cec5f4f7c..e2bce9385eda6 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1863,7 +1863,7 @@ static int nvme_pci_reg_write32(struct nvme_ctrl *ctrl, u32 off, u32 val)
- 
- static int nvme_pci_reg_read64(struct nvme_ctrl *ctrl, u32 off, u64 *val)
- {
--	*val = readq(to_nvme_dev(ctrl)->bar + off);
-+	*val = lo_hi_readq(to_nvme_dev(ctrl)->bar + off);
- 	return 0;
- }
- 
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 3b423c50ec8fa..74652eb2f90fd 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -3205,9 +3205,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
+ 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
+ 		/* process for all: mesh, mlme, ibss */
+ 		break;
++	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
++		if (is_multicast_ether_addr(mgmt->da) &&
++		    !is_broadcast_ether_addr(mgmt->da))
++			return RX_DROP_MONITOR;
++
++		/* process only for station/IBSS */
++		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
++		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
++			return RX_DROP_MONITOR;
++		break;
+ 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
+ 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
+-	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
+ 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
+ 		if (is_multicast_ether_addr(mgmt->da) &&
+ 		    !is_broadcast_ether_addr(mgmt->da))
 -- 
 2.20.1
 
