@@ -2,411 +2,236 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC28C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9637DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E066205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220323;
-	bh=WeNql1s/ZBtGz1k+khlE3jvxSB8QCjuTQmpdKQrKDUM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Edyr/Ipi1hnlfQyaJfWPeL2tsyPsu/ShohiLnKMcOloCWAVxTU5WSx6Zlri0jynOW
-	 8lT7SqP9HeaklOTevrTMefHz7kI7qN7muicGf6/oWmgrxI6C9D6gQ+WqHtYiuFiLU3
-	 6zOAj17R/4yA+FZZLzEp3V9nO00w4WApiEwF7R5c=
+	by mail.kernel.org (Postfix) with ESMTP id 5937E2468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eVgQh1zf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgA1OFW (ORCPT
+        id S1728272AbgA1OF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Jan 2020 09:05:27 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3966 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728247AbgA1OFW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jan 2020 09:05:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727650AbgA1OFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:05:18 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539D2205F4;
-        Tue, 28 Jan 2020 14:05:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220317;
-        bh=WeNql1s/ZBtGz1k+khlE3jvxSB8QCjuTQmpdKQrKDUM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qmz8Dr+xZCMkywMeSu6uDUYxVsN6HZA316HW8FIYRSHPIdMLxSu1xRDh7+EnZXMOE
-         tVLtEeUCd/MdSzqSCHaV2kpZNlqRaqLQ5D5aLi0w9NPjjsXpKVySptZTxm+iwnIvWl
-         42j7bSMlXVV5RrnQOs+TPnP062jg12u/2Tljjj1k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+29125d208b3dae9a7019@syzkaller.appspotmail.com,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 103/104] netfilter: nf_tables: autoload modules from the abort path
-Date:   Tue, 28 Jan 2020 15:01:04 +0100
-Message-Id: <20200128135831.129806684@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
-References: <20200128135817.238524998@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e303f6f0000>; Tue, 28 Jan 2020 06:04:31 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 28 Jan 2020 06:05:21 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 28 Jan 2020 06:05:21 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jan
+ 2020 14:05:19 +0000
+Subject: Re: [PATCH v4 08/14] dmaengine: tegra-apb: Fix coding style problems
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-9-digetx@gmail.com>
+ <844c4ace-d043-a908-823d-545b5b753008@nvidia.com>
+ <134adcfb-83fb-4bb7-986e-65217bc4f821@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <bab1eec0-8b1d-6005-e9eb-05e93da844aa@nvidia.com>
+Date:   Tue, 28 Jan 2020 14:05:17 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <134adcfb-83fb-4bb7-986e-65217bc4f821@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580220271; bh=u1ctu0oWZJcamSgw2+pnsbCaxQfAI44s/dGExveBizg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=eVgQh1zfQ7RrhGVXxvr2G+pSNmOZDoGd7LXT5tlBXtcjR1uWhfns4UN0tibEUP9QE
+         8IzZ6/Pn6J2EKUg8ECvS6Eo9VsNBXzT6gltnB5I0l3dW5GlI2JNARFjwGf4MQbgbrd
+         tqpJWbedTce69ZKcQm2qEVFrzhg8wzQU42MGkCNS1by1iUjgNCZzz2kMna+EiWArqF
+         sbkyglNnCE6uiqcHprEwEOYFS05Yh4uXqtnjWNrISGhFgPxc8/8EA+FToi0ple5TXs
+         n21DrZjMRpsP4fA4z0yDuVe/7n5K8kSkorrtijVIvBPc0vLfDk/ldQjgnjLo15mjAU
+         t1dBzYwWnmXgg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit eb014de4fd418de1a277913cba244e47274fe392 upstream.
+On 16/01/2020 17:37, Dmitry Osipenko wrote:
+> 15.01.2020 12:49, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>>
+>> On 12/01/2020 17:30, Dmitry Osipenko wrote:
+>>> This patch fixes few dozens of coding style problems reported by
+>>> checkpatch and prettifies code where makes sense.
+>>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  drivers/dma/tegra20-apb-dma.c | 276 ++++++++++++++++++----------------
+>>>  1 file changed, 144 insertions(+), 132 deletions(-)
+>>>
+>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dm=
+a.c
+>>> index dff21e80ffa4..7158bd3145c4 100644
+>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>
+>> ...
+>>
+>>> @@ -1003,20 +1014,23 @@ static void tegra_dma_prep_wcount(struct tegra_=
+dma_channel *tdc,
+>>>  		ch_regs->csr |=3D len_field;
+>>>  }
+>>> =20
+>>> -static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>>> -	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
+>>> -	enum dma_transfer_direction direction, unsigned long flags,
+>>> -	void *context)
+>>> +static struct dma_async_tx_descriptor *
+>>> +tegra_dma_prep_slave_sg(struct dma_chan *dc,
+>>> +			struct scatterlist *sgl,
+>>> +			unsigned int sg_len,
+>>> +			enum dma_transfer_direction direction,
+>>> +			unsigned long flags,
+>>> +			void *context)
+>>>  {
+>>>  	struct tegra_dma_channel *tdc =3D to_tegra_dma_chan(dc);
+>>> +	struct tegra_dma_sg_req *sg_req =3D NULL;
+>>> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
+>>> +	enum dma_slave_buswidth slave_bw;
+>>>  	struct tegra_dma_desc *dma_desc;
+>>> -	unsigned int i;
+>>> -	struct scatterlist *sg;
+>>> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
+>>>  	struct list_head req_list;
+>>> -	struct tegra_dma_sg_req  *sg_req =3D NULL;
+>>> -	u32 burst_size;
+>>> -	enum dma_slave_buswidth slave_bw;
+>>> +	struct scatterlist *sg;
+>>> +	unsigned int burst_size;
+>>> +	unsigned int i;
+>>
+>> This is not really consistent with the rest of the changes by having 'i'
+>> and 'burst_size' on separate lines.
+>=20
+> The goal wasn't to squash everything into a single line, but to make
+> code more readable. In this particular case the separated lines look
+> better to me.
+>=20
+>>> =20
+>>>  	if (!tdc->config_init) {
+>>>  		dev_err(tdc2dev(tdc), "DMA channel is not configured\n");
+>>> @@ -1028,7 +1042,7 @@ static struct dma_async_tx_descriptor *tegra_dma_=
+prep_slave_sg(
+>>>  	}
+>>> =20
+>>>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
+>>> -				&burst_size, &slave_bw) < 0)
+>>> +			       &burst_size, &slave_bw) < 0)
+>>>  		return NULL;
+>>> =20
+>>>  	INIT_LIST_HEAD(&req_list);
+>>> @@ -1074,7 +1088,7 @@ static struct dma_async_tx_descriptor *tegra_dma_=
+prep_slave_sg(
+>>>  		len =3D sg_dma_len(sg);
+>>> =20
+>>>  		if ((len & 3) || (mem & 3) ||
+>>> -				(len > tdc->tdma->chip_data->max_dma_count)) {
+>>> +		    len > tdc->tdma->chip_data->max_dma_count) {
+>>>  			dev_err(tdc2dev(tdc),
+>>>  				"DMA length/memory address is not supported\n");
+>>>  			tegra_dma_desc_put(tdc, dma_desc);
+>>> @@ -1126,20 +1140,21 @@ static struct dma_async_tx_descriptor *tegra_dm=
+a_prep_slave_sg(
+>>>  	return &dma_desc->txd;
+>>>  }
+>>> =20
+>>> -static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+>>> -	struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_len,
+>>> -	size_t period_len, enum dma_transfer_direction direction,
+>>> -	unsigned long flags)
+>>> +static struct dma_async_tx_descriptor *
+>>> +tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
+>>> +			  size_t buf_len,
+>>> +			  size_t period_len,
+>>> +			  enum dma_transfer_direction direction,
+>>> +			  unsigned long flags)
+>>>  {
+>>>  	struct tegra_dma_channel *tdc =3D to_tegra_dma_chan(dc);
+>>> -	struct tegra_dma_desc *dma_desc =3D NULL;
+>>>  	struct tegra_dma_sg_req *sg_req =3D NULL;
+>>> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
+>>> -	int len;
+>>> -	size_t remain_len;
+>>> -	dma_addr_t mem =3D buf_addr;
+>>> -	u32 burst_size;
+>>> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
+>>>  	enum dma_slave_buswidth slave_bw;
+>>> +	struct tegra_dma_desc *dma_desc;
+>>> +	dma_addr_t mem =3D buf_addr;
+>>> +	unsigned int burst_size;
+>>> +	size_t len, remain_len;
+>>> =20
+>>>  	if (!buf_len || !period_len) {
+>>>  		dev_err(tdc2dev(tdc), "Invalid buffer/period len\n");
+>>> @@ -1173,13 +1188,13 @@ static struct dma_async_tx_descriptor *tegra_dm=
+a_prep_dma_cyclic(
+>>> =20
+>>>  	len =3D period_len;
+>>>  	if ((len & 3) || (buf_addr & 3) ||
+>>> -			(len > tdc->tdma->chip_data->max_dma_count)) {
+>>> +	    len > tdc->tdma->chip_data->max_dma_count) {
+>>>  		dev_err(tdc2dev(tdc), "Req len/mem address is not correct\n");
+>>>  		return NULL;
+>>>  	}
+>>> =20
+>>>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
+>>> -				&burst_size, &slave_bw) < 0)
+>>> +			       &burst_size, &slave_bw) < 0)
+>>>  		return NULL;
+>>> =20
+>>>  	ahb_seq =3D TEGRA_APBDMA_AHBSEQ_INTR_ENB;
+>>> @@ -1269,7 +1284,6 @@ static int tegra_dma_alloc_chan_resources(struct =
+dma_chan *dc)
+>>>  	int ret;
+>>> =20
+>>>  	dma_cookie_init(&tdc->dma_chan);
+>>> -	tdc->config_init =3D false;
+>>
+>> Why is this removed? Does not seem to belong in this patch.
+>=20
+> Because initially, on driver's probe, the tdc->config_init is false for
+> all channels and then tegra_dma_free_chan_resources() also sets it to
+> false. Thus there is no need to re-initilize the already initialized
+> variable. It's not a very good coding style if variables are
+> unnecessarily initialized, you probably noticed that there are few other
+> cases of removing the unneeded initializations of local variables in
+> this patch.
 
-This patch introduces a list of pending module requests. This new module
-list is composed of nft_module_request objects that contain the module
-name and one status field that tells if the module has been already
-loaded (the 'done' field).
+OK, but I don't really consider this coding-style and would prefer a
+separate patch for this.
 
-In the first pass, from the preparation phase, the netlink command finds
-that a module is missing on this list. Then, a module request is
-allocated and added to this list and nft_request_module() returns
--EAGAIN. This triggers the abort path with the autoload parameter set on
-from nfnetlink, request_module() is called and the module request enters
-the 'done' state. Since the mutex is released when loading modules from
-the abort phase, the module list is zapped so this is iteration occurs
-over a local list. Therefore, the request_module() calls happen when
-object lists are in consistent state (after fulling aborting the
-transaction) and the commit list is empty.
+Jon
 
-On the second pass, the netlink command will find that it already tried
-to load the module, so it does not request it again and
-nft_request_module() returns 0. Then, there is a look up to find the
-object that the command was missing. If the module was successfully
-loaded, the command proceeds normally since it finds the missing object
-in place, otherwise -ENOENT is reported to userspace.
-
-This patch also updates nfnetlink to include the reason to enter the
-abort phase, which is required for this new autoload module rationale.
-
-Fixes: ec7470b834fe ("netfilter: nf_tables: store transaction list locally while requesting module")
-Reported-by: syzbot+29125d208b3dae9a7019@syzkaller.appspotmail.com
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- include/linux/netfilter/nfnetlink.h |    2 
- include/net/netns/nftables.h        |    1 
- net/netfilter/nf_tables_api.c       |  126 ++++++++++++++++++++++++------------
- net/netfilter/nfnetlink.c           |    6 -
- 4 files changed, 91 insertions(+), 44 deletions(-)
-
---- a/include/linux/netfilter/nfnetlink.h
-+++ b/include/linux/netfilter/nfnetlink.h
-@@ -31,7 +31,7 @@ struct nfnetlink_subsystem {
- 	const struct nfnl_callback *cb;	/* callback for individual types */
- 	struct module *owner;
- 	int (*commit)(struct net *net, struct sk_buff *skb);
--	int (*abort)(struct net *net, struct sk_buff *skb);
-+	int (*abort)(struct net *net, struct sk_buff *skb, bool autoload);
- 	void (*cleanup)(struct net *net);
- 	bool (*valid_genid)(struct net *net, u32 genid);
- };
---- a/include/net/netns/nftables.h
-+++ b/include/net/netns/nftables.h
-@@ -7,6 +7,7 @@
- struct netns_nftables {
- 	struct list_head	tables;
- 	struct list_head	commit_list;
-+	struct list_head	module_list;
- 	struct mutex		commit_mutex;
- 	unsigned int		base_seq;
- 	u8			gencursor;
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -514,35 +514,45 @@ __nf_tables_chain_type_lookup(const stru
- 	return NULL;
- }
- 
--/*
-- * Loading a module requires dropping mutex that guards the transaction.
-- * A different client might race to start a new transaction meanwhile. Zap the
-- * list of pending transaction and then restore it once the mutex is grabbed
-- * again. Users of this function return EAGAIN which implicitly triggers the
-- * transaction abort path to clean up the list of pending transactions.
-- */
-+struct nft_module_request {
-+	struct list_head	list;
-+	char			module[MODULE_NAME_LEN];
-+	bool			done;
-+};
-+
- #ifdef CONFIG_MODULES
--static void nft_request_module(struct net *net, const char *fmt, ...)
-+static int nft_request_module(struct net *net, const char *fmt, ...)
- {
- 	char module_name[MODULE_NAME_LEN];
--	LIST_HEAD(commit_list);
-+	struct nft_module_request *req;
- 	va_list args;
- 	int ret;
- 
--	list_splice_init(&net->nft.commit_list, &commit_list);
--
- 	va_start(args, fmt);
- 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
- 	va_end(args);
- 	if (ret >= MODULE_NAME_LEN)
--		return;
-+		return 0;
- 
--	mutex_unlock(&net->nft.commit_mutex);
--	request_module("%s", module_name);
--	mutex_lock(&net->nft.commit_mutex);
-+	list_for_each_entry(req, &net->nft.module_list, list) {
-+		if (!strcmp(req->module, module_name)) {
-+			if (req->done)
-+				return 0;
- 
--	WARN_ON_ONCE(!list_empty(&net->nft.commit_list));
--	list_splice(&commit_list, &net->nft.commit_list);
-+			/* A request to load this module already exists. */
-+			return -EAGAIN;
-+		}
-+	}
-+
-+	req = kmalloc(sizeof(*req), GFP_KERNEL);
-+	if (!req)
-+		return -ENOMEM;
-+
-+	req->done = false;
-+	strlcpy(req->module, module_name, MODULE_NAME_LEN);
-+	list_add_tail(&req->list, &net->nft.module_list);
-+
-+	return -EAGAIN;
- }
- #endif
- 
-@@ -566,10 +576,9 @@ nf_tables_chain_type_lookup(struct net *
- 	lockdep_nfnl_nft_mutex_not_held();
- #ifdef CONFIG_MODULES
- 	if (autoload) {
--		nft_request_module(net, "nft-chain-%u-%.*s", family,
--				   nla_len(nla), (const char *)nla_data(nla));
--		type = __nf_tables_chain_type_lookup(nla, family);
--		if (type != NULL)
-+		if (nft_request_module(net, "nft-chain-%u-%.*s", family,
-+				       nla_len(nla),
-+				       (const char *)nla_data(nla)) == -EAGAIN)
- 			return ERR_PTR(-EAGAIN);
- 	}
- #endif
-@@ -2073,9 +2082,8 @@ static const struct nft_expr_type *__nft
- static int nft_expr_type_request_module(struct net *net, u8 family,
- 					struct nlattr *nla)
- {
--	nft_request_module(net, "nft-expr-%u-%.*s", family,
--			   nla_len(nla), (char *)nla_data(nla));
--	if (__nft_expr_type_get(family, nla))
-+	if (nft_request_module(net, "nft-expr-%u-%.*s", family,
-+			       nla_len(nla), (char *)nla_data(nla)) == -EAGAIN)
- 		return -EAGAIN;
- 
- 	return 0;
-@@ -2101,9 +2109,9 @@ static const struct nft_expr_type *nft_e
- 		if (nft_expr_type_request_module(net, family, nla) == -EAGAIN)
- 			return ERR_PTR(-EAGAIN);
- 
--		nft_request_module(net, "nft-expr-%.*s",
--				   nla_len(nla), (char *)nla_data(nla));
--		if (__nft_expr_type_get(family, nla))
-+		if (nft_request_module(net, "nft-expr-%.*s",
-+				       nla_len(nla),
-+				       (char *)nla_data(nla)) == -EAGAIN)
- 			return ERR_PTR(-EAGAIN);
- 	}
- #endif
-@@ -2194,9 +2202,10 @@ static int nf_tables_expr_parse(const st
- 			err = PTR_ERR(ops);
- #ifdef CONFIG_MODULES
- 			if (err == -EAGAIN)
--				nft_expr_type_request_module(ctx->net,
--							     ctx->family,
--							     tb[NFTA_EXPR_NAME]);
-+				if (nft_expr_type_request_module(ctx->net,
-+								 ctx->family,
-+								 tb[NFTA_EXPR_NAME]) != -EAGAIN)
-+					err = -ENOENT;
- #endif
- 			goto err1;
- 		}
-@@ -3033,8 +3042,7 @@ nft_select_set_ops(const struct nft_ctx
- 	lockdep_nfnl_nft_mutex_not_held();
- #ifdef CONFIG_MODULES
- 	if (list_empty(&nf_tables_set_types)) {
--		nft_request_module(ctx->net, "nft-set");
--		if (!list_empty(&nf_tables_set_types))
-+		if (nft_request_module(ctx->net, "nft-set") == -EAGAIN)
- 			return ERR_PTR(-EAGAIN);
- 	}
- #endif
-@@ -5160,8 +5168,7 @@ nft_obj_type_get(struct net *net, u32 ob
- 	lockdep_nfnl_nft_mutex_not_held();
- #ifdef CONFIG_MODULES
- 	if (type == NULL) {
--		nft_request_module(net, "nft-obj-%u", objtype);
--		if (__nft_obj_type_get(objtype))
-+		if (nft_request_module(net, "nft-obj-%u", objtype) == -EAGAIN)
- 			return ERR_PTR(-EAGAIN);
- 	}
- #endif
-@@ -5777,8 +5784,7 @@ nft_flowtable_type_get(struct net *net,
- 	lockdep_nfnl_nft_mutex_not_held();
- #ifdef CONFIG_MODULES
- 	if (type == NULL) {
--		nft_request_module(net, "nf-flowtable-%u", family);
--		if (__nft_flowtable_type_get(family))
-+		if (nft_request_module(net, "nf-flowtable-%u", family) == -EAGAIN)
- 			return ERR_PTR(-EAGAIN);
- 	}
- #endif
-@@ -6725,6 +6731,18 @@ static void nft_chain_del(struct nft_cha
- 	list_del_rcu(&chain->list);
- }
- 
-+static void nf_tables_module_autoload_cleanup(struct net *net)
-+{
-+	struct nft_module_request *req, *next;
-+
-+	WARN_ON_ONCE(!list_empty(&net->nft.commit_list));
-+	list_for_each_entry_safe(req, next, &net->nft.module_list, list) {
-+		WARN_ON_ONCE(!req->done);
-+		list_del(&req->list);
-+		kfree(req);
-+	}
-+}
-+
- static void nf_tables_commit_release(struct net *net)
- {
- 	struct nft_trans *trans;
-@@ -6737,6 +6755,7 @@ static void nf_tables_commit_release(str
- 	 * to prevent expensive synchronize_rcu() in commit phase.
- 	 */
- 	if (list_empty(&net->nft.commit_list)) {
-+		nf_tables_module_autoload_cleanup(net);
- 		mutex_unlock(&net->nft.commit_mutex);
- 		return;
- 	}
-@@ -6751,6 +6770,7 @@ static void nf_tables_commit_release(str
- 	list_splice_tail_init(&net->nft.commit_list, &nf_tables_destroy_list);
- 	spin_unlock(&nf_tables_destroy_list_lock);
- 
-+	nf_tables_module_autoload_cleanup(net);
- 	mutex_unlock(&net->nft.commit_mutex);
- 
- 	schedule_work(&trans_destroy_work);
-@@ -6942,6 +6962,26 @@ static int nf_tables_commit(struct net *
- 	return 0;
- }
- 
-+static void nf_tables_module_autoload(struct net *net)
-+{
-+	struct nft_module_request *req, *next;
-+	LIST_HEAD(module_list);
-+
-+	list_splice_init(&net->nft.module_list, &module_list);
-+	mutex_unlock(&net->nft.commit_mutex);
-+	list_for_each_entry_safe(req, next, &module_list, list) {
-+		if (req->done) {
-+			list_del(&req->list);
-+			kfree(req);
-+		} else {
-+			request_module("%s", req->module);
-+			req->done = true;
-+		}
-+	}
-+	mutex_lock(&net->nft.commit_mutex);
-+	list_splice(&module_list, &net->nft.module_list);
-+}
-+
- static void nf_tables_abort_release(struct nft_trans *trans)
- {
- 	switch (trans->msg_type) {
-@@ -6971,7 +7011,7 @@ static void nf_tables_abort_release(stru
- 	kfree(trans);
- }
- 
--static int __nf_tables_abort(struct net *net)
-+static int __nf_tables_abort(struct net *net, bool autoload)
- {
- 	struct nft_trans *trans, *next;
- 	struct nft_trans_elem *te;
-@@ -7093,6 +7133,11 @@ static int __nf_tables_abort(struct net
- 		nf_tables_abort_release(trans);
- 	}
- 
-+	if (autoload)
-+		nf_tables_module_autoload(net);
-+	else
-+		nf_tables_module_autoload_cleanup(net);
-+
- 	return 0;
- }
- 
-@@ -7101,9 +7146,9 @@ static void nf_tables_cleanup(struct net
- 	nft_validate_state_update(net, NFT_VALIDATE_SKIP);
- }
- 
--static int nf_tables_abort(struct net *net, struct sk_buff *skb)
-+static int nf_tables_abort(struct net *net, struct sk_buff *skb, bool autoload)
- {
--	int ret = __nf_tables_abort(net);
-+	int ret = __nf_tables_abort(net, autoload);
- 
- 	mutex_unlock(&net->nft.commit_mutex);
- 
-@@ -7698,6 +7743,7 @@ static int __net_init nf_tables_init_net
- {
- 	INIT_LIST_HEAD(&net->nft.tables);
- 	INIT_LIST_HEAD(&net->nft.commit_list);
-+	INIT_LIST_HEAD(&net->nft.module_list);
- 	mutex_init(&net->nft.commit_mutex);
- 	net->nft.base_seq = 1;
- 	net->nft.validate_state = NFT_VALIDATE_SKIP;
-@@ -7709,7 +7755,7 @@ static void __net_exit nf_tables_exit_ne
- {
- 	mutex_lock(&net->nft.commit_mutex);
- 	if (!list_empty(&net->nft.commit_list))
--		__nf_tables_abort(net);
-+		__nf_tables_abort(net, false);
- 	__nft_release_tables(net);
- 	mutex_unlock(&net->nft.commit_mutex);
- 	WARN_ON_ONCE(!list_empty(&net->nft.tables));
---- a/net/netfilter/nfnetlink.c
-+++ b/net/netfilter/nfnetlink.c
-@@ -476,7 +476,7 @@ ack:
- 	}
- done:
- 	if (status & NFNL_BATCH_REPLAY) {
--		ss->abort(net, oskb);
-+		ss->abort(net, oskb, true);
- 		nfnl_err_reset(&err_list);
- 		kfree_skb(skb);
- 		module_put(ss->owner);
-@@ -487,11 +487,11 @@ done:
- 			status |= NFNL_BATCH_REPLAY;
- 			goto done;
- 		} else if (err) {
--			ss->abort(net, oskb);
-+			ss->abort(net, oskb, false);
- 			netlink_ack(oskb, nlmsg_hdr(oskb), err, NULL);
- 		}
- 	} else {
--		ss->abort(net, oskb);
-+		ss->abort(net, oskb, false);
- 	}
- 	if (ss->cleanup)
- 		ss->cleanup(net);
-
-
+--=20
+nvpublic
