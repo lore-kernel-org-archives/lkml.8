@@ -2,163 +2,202 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F12C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2CFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E71AB214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:46:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZttBa79g"
+	by mail.kernel.org (Postfix) with ESMTP id 13A5224687
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580212108;
+	bh=pw5kYxZm9G8bLsY3E+NaT8ov/Ppi5g63BufSTp34Tfs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yF+H6JsadRv9SXhECQ8Kxre0ZQ3mMlmfWgrkfpwhlAH3+dVlOYOkg4DxuTylTGZVE
+	 2KXZ3flUFYJuurnxrzHIzllz7rsMvHziCSaEzh2IFW+cjlSNQ5oalGNaw0mrbhB/+u
+	 LUoiyf+MwXNAkn83zisIh7MZHjugmCqxb/Bhgdr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgA1Lqk (ORCPT
+        id S1726177AbgA1Ls1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 06:46:40 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33548 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgA1Lqj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 06:46:39 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b18so11709884otp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 03:46:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1m2tU4RYYXkdt6z78fcFtsSj6N8xIeX/v5Mckd3HuOk=;
-        b=ZttBa79gzBgDbPkfBP8sPfD3BF/YLjtcdJXxEzmIHNFa8Wh+qbLdybQfy2wxyv9REZ
-         T7zNoMa8hcPdXW/VJYqpZ0d0ot9PIg4Khkl3MS0y5FHewWqmfvJ6zDT6cGLe+IBpRdsb
-         SeEmBHvk2/y0emlzZaZmvdmXK+iEDHBFjIiZnp0RNn3Yoh6ZBKQIbhM8ACNI2djVuDm1
-         RvUsUhQyH8G5EQ2P9hkeq8+purJGvlDSuRDtZqMPZA+gbR51rEOMvk94+ka/lITSVHPR
-         lFkEZ2aSolxL7jgRBQhOF/Qi2Wk8sGGX8JIOFVr8OHXAggzc3ifG8TJaoDR0C30xyVPO
-         e5OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1m2tU4RYYXkdt6z78fcFtsSj6N8xIeX/v5Mckd3HuOk=;
-        b=kZ1zi7njO3tWudqAv8AazLulbJN0g3h4QOskrj5gKmAkZwwxtGr/93J/8O9DUHFwoC
-         Dc2tod7L3c7DIFIGEofO6AQd7IAH5j0SaLvsA97UqhHy5trcgIBpgs9f12eEUG4WFCRp
-         dhLS8Vycu5ZfobYtcW9kgupVE5deiwjNkrwpQQa3nGkwUepECIa1FRgA2qfY0EmyZe/g
-         b8Fhul9Tu7jQ6sSRvluyL/s/2jPG9/uRSXnMWDgO1hkMK0hzX9nILg95EM6gsi1hMZxu
-         uiBPHpSjJKfVNHd+QGsjRkvFhYUzeVsVAz+Q30e3GztwNU1lL9Z2L89JHpM2EK7v1Njo
-         8zSQ==
-X-Gm-Message-State: APjAAAVf9shJp6kgEP5jKIP+3cUzWSQtb598UgwEv6j58ncVhFbfQlyX
-        hYaoXS++HYHRbJMGtoVhK1uCxrMcbMoLwyc0U5W3ag==
-X-Google-Smtp-Source: APXvYqxOEXCf2VKOm8lc1lfUFjyefZVbf3PuAE3Myn0xbv/LYIZp5H2xnMKr9uSVMo1zbgqkLUZ2zOND8+m8OwWqXi8=
-X-Received: by 2002:a05:6830:1d7b:: with SMTP id l27mr14982490oti.251.1580211998038;
- Tue, 28 Jan 2020 03:46:38 -0800 (PST)
+        Tue, 28 Jan 2020 06:48:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbgA1Ls1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 06:48:27 -0500
+Received: from localhost (unknown [223.226.101.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68ADE214AF;
+        Tue, 28 Jan 2020 11:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580212106;
+        bh=pw5kYxZm9G8bLsY3E+NaT8ov/Ppi5g63BufSTp34Tfs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L0h/gYA/u6HIRlJ7o3pXP+37TtCWwpA8DryUtLo44fX5Z4bWwBOHorFe5AW1eb5g7
+         vs5FZjNdvDTynpU+BYumheXcWNXgbeLZAX3gcwFA8UEqY3Yn94Ru4LSrifU+7x8UhN
+         Qqb6PGWJAzLagNA3T2ePUMC6bAwD/mEwqYKVwpKs=
+Date:   Tue, 28 Jan 2020 17:18:20 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dan.j.williams@intel.com, grygorii.strashko@ti.com, vigneshr@ti.com
+Subject: Re: [PATCH for-next 1/4] dmaengine: ti: k3-udma: Use
+ ktime/usleep_range based TX completion check
+Message-ID: <20200128114820.GS2841@vkoul-mobl>
+References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
+ <20200127132111.20464-2-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-References: <20200122165938.GA16974@willie-the-truck> <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
- <20200122223851.GA45602@google.com> <A90E2B85-77CB-4743-AEC3-90D7836C4D47@lca.pw>
- <20200123093905.GU14914@hirez.programming.kicks-ass.net> <E722E6E0-26CB-440F-98D7-D182B57D1F43@lca.pw>
-In-Reply-To: <E722E6E0-26CB-440F-98D7-D182B57D1F43@lca.pw>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 28 Jan 2020 12:46:26 +0100
-Message-ID: <CANpmjNNo6yW-y-Af7JgvWi3t==+=02hE4-pFU4OiH8yvbT3Byg@mail.gmail.com>
-Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
-To:     Qian Cai <cai@lca.pw>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "paul E. McKenney" <paulmck@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127132111.20464-2-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jan 2020 at 04:11, Qian Cai <cai@lca.pw> wrote:
->
-> > On Jan 23, 2020, at 4:39 AM, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Jan 22, 2020 at 06:54:43PM -0500, Qian Cai wrote:
-> >> diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
-> >> index 1f7734949ac8..832e87966dcf 100644
-> >> --- a/kernel/locking/osq_lock.c
-> >> +++ b/kernel/locking/osq_lock.c
-> >> @@ -75,7 +75,7 @@ osq_wait_next(struct optimistic_spin_queue *lock,
-> >>                 * wait for either @lock to point to us, through its Step-B, or
-> >>                 * wait for a new @node->next from its Step-C.
-> >>                 */
-> >> -               if (node->next) {
-> >> +               if (READ_ONCE(node->next)) {
-> >>                        next = xchg(&node->next, NULL);
-> >>                        if (next)
-> >>                                break;
-> >
-> > This could possibly trigger the warning, but is a false positive. The
-> > above doesn't fix anything in that even if that load is shattered the
-> > code will function correctly -- it checks for any !0 value, any byte
-> > composite that is !0 is sufficient.
-> >
-> > This is in fact something KCSAN compiler infrastructure could deduce.
+On 27-01-20, 15:21, Peter Ujfalusi wrote:
+> From: Vignesh Raghavendra <vigneshr@ti.com>
+> 
+> In some cases (McSPI for example) the jiffie and delayed_work based
+> workaround can cause big throughput drop.
+> 
+> Switch to use ktime/usleep_range based implementation to be able
+> to sustain speed for PDMA based peripherals.
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/dma/ti/k3-udma.c | 80 ++++++++++++++++++++++++++--------------
+>  1 file changed, 53 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> index ea79c2df28e0..fb59c869a6a7 100644
+> --- a/drivers/dma/ti/k3-udma.c
+> +++ b/drivers/dma/ti/k3-udma.c
+> @@ -5,6 +5,7 @@
+>   */
+>  
+>  #include <linux/kernel.h>
+> +#include <linux/delay.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/dmapool.h>
+> @@ -169,7 +170,7 @@ enum udma_chan_state {
+>  
+>  struct udma_tx_drain {
+>  	struct delayed_work work;
+> -	unsigned long jiffie;
+> +	ktime_t tstamp;
+>  	u32 residue;
+>  };
+>  
+> @@ -946,9 +947,10 @@ static bool udma_is_desc_really_done(struct udma_chan *uc, struct udma_desc *d)
+>  	peer_bcnt = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_PEER_BCNT_REG);
+>  	bcnt = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_BCNT_REG);
+>  
+> +	/* Transfer is incomplete, store current residue and time stamp */
+>  	if (peer_bcnt < bcnt) {
+>  		uc->tx_drain.residue = bcnt - peer_bcnt;
+> -		uc->tx_drain.jiffie = jiffies;
+> +		uc->tx_drain.tstamp = ktime_get();
 
-Not in the general case. As far as I can tell, this if-statement is
-purely optional and an optimization to avoid false sharing. This is
-specific knowledge about the logic that (without conveying more
-details about the logic) the tool couldn't safely deduce. Consider the
-case:
+Any reason why ktime_get() is better than jiffies..?
 
-T0:
-if ( (x = READ_ONCE(ptr)) ) use_ptr_value(*x);
+>  		return false;
+>  	}
+>  
+> @@ -961,35 +963,59 @@ static void udma_check_tx_completion(struct work_struct *work)
+>  					    tx_drain.work.work);
+>  	bool desc_done = true;
+>  	u32 residue_diff;
+> -	unsigned long jiffie_diff, delay;
+> +	ktime_t time_diff;
+> +	unsigned long delay;
+> +
+> +	while (1) {
+> +		if (uc->desc) {
+> +			/* Get previous residue and time stamp */
+> +			residue_diff = uc->tx_drain.residue;
+> +			time_diff = uc->tx_drain.tstamp;
+> +			/*
+> +			 * Get current residue and time stamp or see if
+> +			 * transfer is complete
+> +			 */
+> +			desc_done = udma_is_desc_really_done(uc, uc->desc);
+> +		}
+>  
+> -	if (uc->desc) {
+> -		residue_diff = uc->tx_drain.residue;
+> -		jiffie_diff = uc->tx_drain.jiffie;
+> -		desc_done = udma_is_desc_really_done(uc, uc->desc);
+> -	}
+> -
+> -	if (!desc_done) {
+> -		jiffie_diff = uc->tx_drain.jiffie - jiffie_diff;
+> -		residue_diff -= uc->tx_drain.residue;
+> -		if (residue_diff) {
+> -			/* Try to guess when we should check next time */
+> -			residue_diff /= jiffie_diff;
+> -			delay = uc->tx_drain.residue / residue_diff / 3;
+> -			if (jiffies_to_msecs(delay) < 5)
+> -				delay = 0;
+> -		} else {
+> -			/* No progress, check again in 1 second  */
+> -			delay = HZ;
+> +		if (!desc_done) {
+> +			/*
+> +			 * Find the time delta and residue delta w.r.t
+> +			 * previous poll
+> +			 */
+> +			time_diff = ktime_sub(uc->tx_drain.tstamp,
+> +					      time_diff) + 1;
+> +			residue_diff -= uc->tx_drain.residue;
+> +			if (residue_diff) {
+> +				/*
+> +				 * Try to guess when we should check
+> +				 * next time by calculating rate at
+> +				 * which data is being drained at the
+> +				 * peer device
+> +				 */
+> +				delay = (time_diff / residue_diff) *
+> +					uc->tx_drain.residue;
+> +			} else {
+> +				/* No progress, check again in 1 second  */
+> +				schedule_delayed_work(&uc->tx_drain.work, HZ);
+> +				break;
+> +			}
+> +
+> +			usleep_range(ktime_to_us(delay),
+> +				     ktime_to_us(delay) + 10);
+> +			continue;
+>  		}
+>  
+> -		schedule_delayed_work(&uc->tx_drain.work, delay);
+> -	} else if (uc->desc) {
+> -		struct udma_desc *d = uc->desc;
+> +		if (uc->desc) {
+> +			struct udma_desc *d = uc->desc;
+> +
+> +			uc->bcnt += d->residue;
+> +			udma_start(uc);
+> +			vchan_cookie_complete(&d->vd);
+> +			break;
+> +		}
+>  
+> -		uc->bcnt += d->residue;
+> -		udma_start(uc);
+> -		vchan_cookie_complete(&d->vd);
+> +		break;
+>  	}
+>  }
+>  
+> -- 
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-T1:
-WRITE_ONCE(ptr, valid_ptr);
-
-Here, unlike the case above, reading ptr without READ_ONCE can clearly
-be dangerous.
-
-The false sharing scenario came up before, and maybe it's worth
-telling the tool about the logic. In fact, the 'data_race()' macro is
-perfectly well suited to do this.
-
->
-> Marco, any thought on improving KCSAN for this to reduce the false
-> positives?
-
-Define 'false positive'.
-
-From what I can tell, all 'false positives' that have come up are data
-races where the consequences on the behaviour of the code is
-inconsequential. In other words, all of them would require
-understanding of the intended logic of the code, and understanding if
-the worst possible outcome of a data race changes the behaviour of the
-code in such a way that we may end up with an erroneously behaving
-system.
-
-As I have said before, KCSAN (or any data race detector) by definition
-only works at the language level. Any semantic analysis, beyond simple
-rules (such as ignore same-value stores) and annotations, is simply
-impossible since the tool can't know about the logic that the
-programmer intended.
-
-That being said, if there are simple rules (like ignore same-value
-stores) or other minimal annotations that can help reduce such 'false
-positives', more than happy to add them.
-
-Qian: firstly I suggest you try
-CONFIG_KCSAN_REPORT_ONCE_IN_MS=1000000000 as mentioned before so your
-system doesn't get spammed, considering you do not use the default
-config but want to use all debugging tools at once which seems to
-trigger certain data races more than usual.
-
-Secondly, what are your expectations? If you expect the situation to
-be perfect tomorrow, you'll be disappointed. This is inherent, given
-the problem we face (safe concurrency). Consider the various parts to
-this story: concurrent kernel code, the LKMM, people's preferences and
-opinions, and KCSAN (which is late to the party). All of them are
-still evolving, hopefully together. At least that's my expectation.
-
-What to do about osq_lock here? If people agree that no further
-annotations are wanted, and the reasoning above concludes there are no
-bugs, we can blacklist the file. That would, however, miss new data
-races in future.
-
-Thanks,
--- Marco
+-- 
+~Vinod
