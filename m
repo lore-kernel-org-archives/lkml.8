@@ -2,118 +2,80 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07988C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A11CBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC04B2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580225209;
-	bh=dj+J/+PtbTGjVK/oHj202CDxS9GCGCuwxkfK9zJalX8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2UvsKjvKq5fzR+M+JrEqz7PtAUMl9mWrHsdQU8eCc51gdHB3nYw6xLQJgwM6F6ofc
-	 0Do2Hb7RudHrKZ2TnnAH/CZVMAmr9Gvvc5E0P203hrm5pltM5wBhj68zFdPmVscdIO
-	 XNSwE+A0HxXZTMGyViRU59Oezz3NPwPrWjQoHUF4=
+	by mail.kernel.org (Postfix) with ESMTP id 73318207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgA1P0t (ORCPT
+        id S1726655AbgA1P2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:26:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbgA1P0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:26:49 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4087207FD;
-        Tue, 28 Jan 2020 15:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580225208;
-        bh=dj+J/+PtbTGjVK/oHj202CDxS9GCGCuwxkfK9zJalX8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OHv6vMz+yD5U8x6jcim8pbmwQnkrN4uZpX7DzpHQsMWV60vUZW+5b6hLCopr+YzlV
-         m58G8lzyFU8S/neJVArtj7ee0qKQp3rxEnBv8B767ntyNTp9k+KoplSvW6qGdVbECq
-         lE7l0SpLW/1wIyvzaUMpqwNlQSy8Oc2/OTqCeXKc=
-Date:   Tue, 28 Jan 2020 15:26:42 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Brian Geffon <bgeffon@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-api@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH v3] mm: Add MREMAP_DONTUNMAP to mremap().
-Message-ID: <20200128152641.GA29776@willie-the-truck>
-References: <20200123014627.71720-1-bgeffon@google.com>
- <20200127053056.213679-1-bgeffon@google.com>
+        Tue, 28 Jan 2020 10:28:02 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:37386 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgA1P2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 10:28:02 -0500
+Received: by mail-il1-f197.google.com with SMTP id z79so10618631ilf.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:28:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=kf/2DSY+al5mumI7h2ryUV9LTBu1iYUGw9WEv/U1Od0=;
+        b=DJ0Y9StjAwEVgMFt0hLVFrqxUqItrtCeT/ysjZCkmeHcNuSb9ZNN9huWVeR47GUO1O
+         1lb7BrP/iXWawf4TQ3EOhVU9Tg4gqbQUfdHOZG/cGd85EAV8EzTVphv5G9ZInxjlbNdg
+         eQxhRNoDNha4lPQ8s90eZtHejHkRoH16RF+zjK22whpEd1HiLG/qLmfKiKW7X16sXl3y
+         45Iwa6EMPG43bQKa2oKQMIIbiX5uVhEtwtSsDntmcuQktvwla9+wyxy3Al7zGeZjer1F
+         qiCGdFNtxhb3twr0OIQWNIlGS2LV/5iBR9Em3YXhEVDBc/+QnfM59bUFbM/DuTa8GAFo
+         svOA==
+X-Gm-Message-State: APjAAAW1RMU0sIINkK/qYSTPRm6DCAIWqju7Z3BaoPOBPM9QZyvIk+ym
+        qH4SzNAGoBAfVHB8U8xbuk+LlY+rCzDAhlJkV8jZ4/D0fiiB
+X-Google-Smtp-Source: APXvYqzy6PuA/euamEwBFqw/3xbkW5eZ7eJtHmPMU8+qYVEZwoaLB9/5JQSjUbtttEgIfBh11ag2qJBuLsLKwxJ0j/I3YKO5m9cE
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200127053056.213679-1-bgeffon@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a5d:9ad9:: with SMTP id x25mr15534203ion.253.1580225281799;
+ Tue, 28 Jan 2020 07:28:01 -0800 (PST)
+Date:   Tue, 28 Jan 2020 07:28:01 -0800
+In-Reply-To: <000000000000143de7059d2ba3e5@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000963c75059d34ded7@google.com>
+Subject: Re: possible deadlock in sidtab_sid2str_put
+From:   syzbot <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com>
+To:     eparis@parisplace.org, jannh@google.com, jeffv@google.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        omosnace@redhat.com, paul@paul-moore.com, paulmck@kernel.org,
+        sds@tycho.nsa.gov, selinux@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Brian,
+syzbot has bisected this bug to:
 
-On Sun, Jan 26, 2020 at 09:30:56PM -0800, Brian Geffon wrote:
-> When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
-> set, the source mapping will not be removed. Instead it will be
-> cleared as if a brand new anonymous, private mapping had been created
-> atomically as part of the mremap() call.  If a userfaultfd was watching
-> the source, it will continue to watch the new mapping.  For a mapping
-> that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
-> mremap() call to fail. MREMAP_DONTUNMAP requires that MREMAP_FIXED is
-> also used. The final result is two equally sized VMAs where the
-> destination contains the PTEs of the source.
->    
-> We hope to use this in Chrome OS where with userfaultfd we could write
-> an anonymous mapping to disk without having to STOP the process or worry
-> about VMA permission changes.
->    
-> This feature also has a use case in Android, Lokesh Gidra has said
-> that "As part of using userfaultfd for GC, We'll have to move the physical
-> pages of the java heap to a separate location. For this purpose mremap
-> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
-> heap, its virtual mapping will be removed as well. Therefore, we'll
-> require performing mmap immediately after. This is not only time consuming
-> but also opens a time window where a native thread may call mmap and
-> reserve the java heap's address range for its own usage. This flag
-> solves the problem."
+commit d97bd23c2d7d866e99eb3a927c742715c85a90ef
+Author: Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Tue Nov 26 13:57:00 2019 +0000
 
-Hmm, this sounds like you're dealing with a multi-threaded environment,
-yet your change only supports private mappings. How does that work?
+    selinux: cache the SID -> context string translation
 
-It's also worrying because, with two private mappings of the same anonymous
-memory live simultaneously, you run the risk of hitting D-cache aliasing
-issues on some architectures and losing coherency between them as a result
-(even in a single-threaded scenario). Is userspace just supposed to deal
-with this, or should we be enforcing SHMLBA alignment?
- 
-> Signed-off-by: Brian Geffon <bgeffon@google.com>
-> ---
->  include/uapi/linux/mman.h |  5 +++--
->  mm/mremap.c               | 38 +++++++++++++++++++++++++++++++-------
->  2 files changed, 34 insertions(+), 9 deletions(-)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13fe5f69e00000
+start commit:   b0be0eff Merge tag 'x86-pti-2020-01-28' of git://git.kerne..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=10015f69e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17fe5f69e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9784e57c96a92f20
+dashboard link: https://syzkaller.appspot.com/bug?extid=61cba5033e2072d61806
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10088e95e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13fa605ee00000
 
-Could you also a include a patch to update the mremap man page, please?
+Reported-by: syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com
+Fixes: d97bd23c2d7d ("selinux: cache the SID -> context string translation")
 
-https://www.kernel.org/doc/man-pages/patches.html
-
-Cheers,
-
-Will
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
