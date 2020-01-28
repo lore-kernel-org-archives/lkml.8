@@ -2,159 +2,133 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ED4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9659C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DCA24690
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:23:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jMkIfWiQ"
+	by mail.kernel.org (Postfix) with ESMTP id 846AA24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:23:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580221424;
+	bh=5RI0BHXybSUsHLdcfZyRe5r8mC4ow8i5/53KYlleeUU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=d33/ForKG+lwgvRx6XDFD9n9J15FM+mQacQzJm9pyUMO5Kqr3EwfjU1r3wHrAd+nu
+	 rbZipGpbD+RlftE9fJG+/lHhUbQy44jww1Xa+ETT2ndbQLjCUbx0utEa6sem4Bp+q9
+	 fBuJyRhLNKNpSYxaLWMV9hHMukV6K25jgS10yB/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbgA1OXl (ORCPT
+        id S1732393AbgA1OXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:23:41 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58461 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727097AbgA1OXf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:23:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580221414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PoorEe3BgUIDWbZrCh3DXrBZXbNmAisrYa8c3ofYrmk=;
-        b=jMkIfWiQAbnV+J4YyQxn09/sPidarpAjSJHoE6nCnldXRRD4zXMMwr/Xck9Jlwn7FLyhFY
-        /n2grw5vXnL39f8MKBfVrZQfE11FtxhC0mkcBfOKYvGRhYkM3DjUb3eFxHWUbJGc54VA3t
-        95n4vk/nd5WuuUAC/eRo0QebB0UFMZQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-_nAqYHhBOiypkNJq-COWqg-1; Tue, 28 Jan 2020 09:23:32 -0500
-X-MC-Unique: _nAqYHhBOiypkNJq-COWqg-1
-Received: by mail-wr1-f72.google.com with SMTP id s13so645483wru.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 06:23:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PoorEe3BgUIDWbZrCh3DXrBZXbNmAisrYa8c3ofYrmk=;
-        b=SaX/9t3YTJzIrNIdsbLRSQFsEKymG4RT5sZsCFhYz+pp/HGW6yGXo5dQ0/Uy5TzRTl
-         rmdAckdiYrMW5sUtdpNieJGRxoV668aa4/Z6FHj44fzHjlB9w/Jgmo9lJkJf4pKwrJRF
-         nnrx9lTXcrQKbGI9pazt6Kpp3XXd7Oi4RXadaPTem4zxSZJf1sBr8C8jMGI7hi/PnetW
-         DU/zfm1Q69zgTuyNxBjBkOW6+AKUtJ+TNApLEk1bHDWbFs2KMrQWIlTWc/skqIHsbzAn
-         g1hKVjTcPMXuSMRTQvgkwsbTUIkWO3DLgenl9YxEbifm+DQFDbdX1iV2ayXcX3leOyTw
-         uESw==
-X-Gm-Message-State: APjAAAXNWU6OL9Yn8MsbW9pMkRBghAOIB2qfG3Hfdyi/8G5A9qoy4eGu
-        qAwjO5j3MtKXa+/G9LTfcl0JJWyw4mfaVSj3sCAd+6QCJkiH5ZMTV+sc7p54y8O3bgwpDCDom+O
-        aHNdGkZDRSxq4IedHtyykK0qs
-X-Received: by 2002:a5d:4983:: with SMTP id r3mr27273084wrq.134.1580221411397;
-        Tue, 28 Jan 2020 06:23:31 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxYw2chTdDz/2/YZKa8hws0FseLlswooyyiI+PyGP3EMBgoFWXFLA6gKBHI6Dwbt8wiSXVkSA==
-X-Received: by 2002:a5d:4983:: with SMTP id r3mr27273066wrq.134.1580221411179;
-        Tue, 28 Jan 2020 06:23:31 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id s65sm3348672wmf.48.2020.01.28.06.23.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 06:23:30 -0800 (PST)
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on
- Intel Bay Trail SoC
-To:     vipul kumar <vipulk0511@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        x86@kernel.org, Len Brown <len.brown@intel.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>
-References: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com>
- <87eevs7lfd.fsf@nanos.tec.linutronix.de>
- <CADdC98RJpsvu_zWehNGDDN=W11rD11NSPaodg-zuaXsHuOJYTQ@mail.gmail.com>
- <878slzeeim.fsf@nanos.tec.linutronix.de>
- <CADdC98TE4oNWZyEsqXzr+zJtfdTTOyeeuHqu1u04X_ktLHo-Hg@mail.gmail.com>
- <20200123144108.GU32742@smile.fi.intel.com>
- <df04f43d-8c6d-7602-cb50-535b85cf2aaa@redhat.com>
- <87iml11ccf.fsf@nanos.tec.linutronix.de>
- <c06260e3-bd19-bf3c-89f7-d36bdb9a5b20@redhat.com>
- <87ftg5131x.fsf@nanos.tec.linutronix.de>
- <37321319-e110-81f5-2488-cedf000da04d@redhat.com>
- <CADdC98To8VKOUWnR+8zAJ04vgdc4vJoh2h96588+5XFer9YTJw@mail.gmail.com>
-Message-ID: <329a2f7d-c5ed-6376-ec78-f00fa1ba41cd@redhat.com>
-Date:   Tue, 28 Jan 2020 15:23:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 28 Jan 2020 09:23:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728559AbgA1OXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:23:36 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B73224686;
+        Tue, 28 Jan 2020 14:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580221415;
+        bh=5RI0BHXybSUsHLdcfZyRe5r8mC4ow8i5/53KYlleeUU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hWC56A4K5iNmKjYkC/WCJ4gcVF7P72bCbDIK2Sp0LKLEkeapI6s/WcpBGaHj8bZ23
+         ddH21137ISKV5E1yN7/v+J3OIZcmEK7mCZzB/p1XS15sIWHu6w/fumCc6yq2NEZxKM
+         6UQuvrAKjLBkTKTXeCZfo2vaLD4hYT3cLo9M/XD0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hai Li <hali@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Sean Paul <sean@poorly.run>, Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 215/271] drm/msm/dsi: Implement reset correctly
+Date:   Tue, 28 Jan 2020 15:06:04 +0100
+Message-Id: <20200128135908.532405202@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
+References: <20200128135852.449088278@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CADdC98To8VKOUWnR+8zAJ04vgdc4vJoh2h96588+5XFer9YTJw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-On 28-01-2020 12:47, vipul kumar wrote:
-> Hi Thomas,
-> 
-> Please find attached logs with mainline kernel version 5.4.15 with patch.
+[ Upstream commit 78e31c42261779a01bc73472d0f65f15378e9de3 ]
 
-So the suggested change seems to not work, that is strange.
+On msm8998, vblank timeouts are observed because the DSI controller is not
+reset properly, which ends up stalling the MDP.  This is because the reset
+logic is not correct per the hardware documentation.
 
-Can you double check you are running the correct kernel and
-add the following change and gather debug output ? :
+The documentation states that after asserting reset, software should wait
+some time (no indication of how long), or poll the status register until it
+returns 0 before deasserting reset.
 
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -102,6 +103,8 @@ unsigned long cpu_khz_from_msr(void)
-         /* Get FSB FREQ ID */
+wmb() is insufficient for this purpose since it just ensures ordering, not
+timing between writes.  Since asserting and deasserting reset occurs on the
+same register, ordering is already guaranteed by the architecture, making
+the wmb extraneous.
 
-+ pr_err("tsc msr id match %ld lo 0x%02x\n", id - tsc_msr_cpu_ids, lo);
+Since we would define a timeout for polling the status register to avoid a
+possible infinite loop, lets just use a static delay of 20 ms, since 16.666
+ms is the time available to process one frame at 60 fps.
+
+Fixes: a689554ba6ed ("drm/msm: Initial add DSI connector support")
+Cc: Hai Li <hali@codeaurora.org>
+Cc: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Sean Paul <sean@poorly.run>
+[seanpaul renamed RESET_DELAY to DSI_RESET_TOGGLE_DELAY_MS]
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191011133939.16551-1-jeffrey.l.hugo@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/msm/dsi/dsi_host.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+index 6f240021705b0..e49b414c012c6 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -33,6 +33,8 @@
+ #include "sfpb.xml.h"
+ #include "dsi_cfg.h"
+ 
++#define DSI_RESET_TOGGLE_DELAY_MS 20
 +
-         /* Map CPU reference clock freq ID(0-7) to CPU reference clock freq(KHz) */
-         freq = freq_desc->freqs[lo & 0x7];
+ static int dsi_get_version(const void __iomem *base, u32 *major, u32 *minor)
+ {
+ 	u32 ver;
+@@ -909,7 +911,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
+ 	wmb(); /* clocks need to be enabled before reset */
+ 
+ 	dsi_write(msm_host, REG_DSI_RESET, 1);
+-	wmb(); /* make sure reset happen */
++	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
+ 	dsi_write(msm_host, REG_DSI_RESET, 0);
+ }
+ 
+@@ -1288,7 +1290,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
+ 
+ 	/* dsi controller can only be reset while clocks are running */
+ 	dsi_write(msm_host, REG_DSI_RESET, 1);
+-	wmb();	/* make sure reset happen */
++	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
+ 	dsi_write(msm_host, REG_DSI_RESET, 0);
+ 	wmb();	/* controller out of reset */
+ 	dsi_write(msm_host, REG_DSI_CTRL, data0);
+-- 
+2.20.1
 
-Regards,
 
-Hans
-
-
-
-> On Fri, Jan 24, 2020 at 9:24 PM Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>> wrote:
-> 
->     Hi,
-> 
->     On 1/24/20 12:55 PM, Thomas Gleixner wrote:
->      > Hans,
->      >
->      > Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>> writes:
->      >> On 1/24/20 9:35 AM, Thomas Gleixner wrote:
->      >>> Where does that number come from? Just math?
->      >>
->      >> Yes just math, but perhaps the Intel folks can see if they can find some
->      >> datasheet to back this up ?
->      >
->      > Can you observe the issue on one of the machines in your zoo as well?
-> 
->     I haven't tried yet. Looking at the thread sofar the problem was noticed on
->     a system with a Celeron N2930, I don't have access to one of those, I
->     do have access to a system with a closely related N2840 I will give that
->     a try as well as see if I can reproduce this on one of the tablet
->     oriented Z3735x SoCs.
-> 
->     I'll report back when I have had a chance to test this.
-> 
->     Regards,
-> 
->     Hans
-> 
 
