@@ -2,82 +2,116 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D313DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066B4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28512467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEA324686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgA1TD6 (ORCPT
+        id S1726541AbgA1TER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 14:03:58 -0500
-Received: from smtprelay0097.hostedemail.com ([216.40.44.97]:51522 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726234AbgA1TD6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 14:03:58 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 9CFE5247F;
-        Tue, 28 Jan 2020 19:03:56 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fish97_224a391ab8e4c
-X-Filterd-Recvd-Size: 1907
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 28 Jan 2020 19:03:55 +0000 (UTC)
-Message-ID: <2dd59a9ea0ed9029caf1b91fb6758ecc7f1dd695.camel@perches.com>
-Subject: [PATCH] net: drop_monitor: Use kstrdup
-From:   Joe Perches <joe@perches.com>
-To:     Neil Horman <nhorman@tuxdriver.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Jan 2020 11:02:50 -0800
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 28 Jan 2020 14:04:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:33906 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbgA1TEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 14:04:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CBA6328;
+        Tue, 28 Jan 2020 11:04:16 -0800 (PST)
+Received: from [192.168.122.167] (unknown [10.118.28.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E15503F52E;
+        Tue, 28 Jan 2020 11:04:15 -0800 (PST)
+Subject: Re: [PATCH RFC 0/2] Add basic generic ACPI soc driver
+To:     John Garry <john.garry@huawei.com>, rjw@rjwysocki.net,
+        lenb@kernel.org
+Cc:     arnd@arndb.de, olof@lixom.net, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, guohanjun@huawei.com,
+        gregkh@linuxfoundation.org
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
+ <bb87efe5-d0be-498a-25a1-008a7bebd452@arm.com>
+ <5ab3a97d-bbc4-6d5a-fd06-f8da324339ab@huawei.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <6be8d175-477d-d163-3fe0-3ab562874ce4@arm.com>
+Date:   Tue, 28 Jan 2020 13:04:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <5ab3a97d-bbc4-6d5a-fd06-f8da324339ab@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the equivalent but rather odd uses of kmemdup with
-__GFP_ZERO to the more common kstrdup and avoid unnecessary
-zeroing of copied over memory.
+Hi,
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- net/core/drop_monitor.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+On 1/28/20 11:28 AM, John Garry wrote:
+> On 28/01/2020 16:56, Jeremy Linton wrote:
+>> Hi,
+>>
+> 
+> Hi Jeremy,
+> 
+>> On 1/28/20 5:14 AM, John Garry wrote:
+>>> A requirement has come up recently to be able to read system SoC 
+>>> packages
+>>> identifiers from userspace [0].
+>>>
+>>> For device tree FW-based systems, this would be quite 
+>>> straightforward, in
+>>> that we could add a soc driver for that system and use the DT model
+>>> identifier as the soc id - that's how most soc drivers seem to do it.
+>>>
+>>> For ACPI-based systems, the only place I know to get (put) such SoC
+>>> information is in the PPTT, specifically the ID Type Structure for a
+>>> processor package node. A processor package node describes a physical
+>>> boundary of a processor topology.
+>>
+>> Well presumably that is one of the use cases for DMI, which has fields 
+>> for the processor/socket as well as the machine vendor.
+> 
+> I did consider DMI, but I want something more generic, i.e. could cover 
+> embedded/DT systems also.
+> 
+> And I need to double check if DMI really has the info I require. Last 
+> time I checked, it didn't for my dev board, but I know that some fields 
+> are simply not filled in.
 
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index 536e032..ea46fc 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -802,16 +802,12 @@ net_dm_hw_metadata_clone(const struct net_dm_hw_metadata *hw_metadata)
- 	if (!n_hw_metadata)
- 		return NULL;
- 
--	trap_group_name = kmemdup(hw_metadata->trap_group_name,
--				  strlen(hw_metadata->trap_group_name) + 1,
--				  GFP_ATOMIC | __GFP_ZERO);
-+	trap_group_name = kstrdup(hw_metadata->trap_group_name, GFP_ATOMIC);
- 	if (!trap_group_name)
- 		goto free_hw_metadata;
- 	n_hw_metadata->trap_group_name = trap_group_name;
- 
--	trap_name = kmemdup(hw_metadata->trap_name,
--			    strlen(hw_metadata->trap_name) + 1,
--			    GFP_ATOMIC | __GFP_ZERO);
-+	trap_name = kstrdup(hw_metadata->trap_name, GFP_ATOMIC);
- 	if (!trap_name)
- 		goto free_trap_group;
- 	n_hw_metadata->trap_name = trap_name;
+Well the info is probably there, but that doesn't mean it should be used 
+programmatically. As your board shows, its not that reliable. And 
+looking at the linked patch I see you mention that.
+
+
+> 
+>>
+>> But, quickly looking at the use case, I can't help but think you don't 
+>> really want any of the above, or the PPTT id. It seems the mapping 
+>> should actually be tied directly to the uncore PMU definition, rather 
+>> than a soc/machine/whatever identifier. Which would imply keying off 
+>> one of the ACPI object identifiers for the PMU itself.
+> 
+> So a PMU device (/sys/bus/event_source/devices) does not have a link to 
+> the ACPI object identifiers or uncore PMU platform device etc.
+> 
+> And even if it did, there is no clear link between that ACPI object and 
+> the events it supports for that implementation.
+
+Having a direct link isn't ideal either. It seems you do mention the pmu 
+naming conventions, which can be controlled based on ACPI object 
+identifiers. Something like "uncore_dmc_hsi1" where the appended bits 
+could for example vary on _CID+_UID or DT name.
+
+Not sure that is a particularly good suggestion either, but I do think 
+its a better idea to tie the mapping to the pmu type/man/version concept 
+than the SOC it appears in. The sysfs-bus-event_source-devices-* ABI 
+docs are noticeably silent on the format of the pmu name (is that 
+somewhere else?).
+
 
 
