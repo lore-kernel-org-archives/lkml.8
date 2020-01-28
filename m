@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E30CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356B3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB312468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D28C2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221189;
-	bh=bDKKJwqaY1HS0eLa+nR0eXOmJiILJrJmQGOdxTWxIOk=;
+	s=default; t=1580221192;
+	bh=GkmS6Nex2vCZ6uL4UYPfmvaRHWDpmAKvtj3pkJAo20o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ON18PfBQ2f2Oz5eDYHbA5/Q/L0potE1xBTb3nvVizfN5QqOzvENwSMvbcmqSvFqb+
-	 e/fEcDhBZKySiRtDWAIEkQUi7+oDbV1LovDeu+BUK/iS/0CDKFh/WzRS9tMLCOWx9C
-	 kPZfL7MNAZ5h8Zn3/1DDehhlFwaPyLaFb8B5Mgac=
+	b=BwbVy+jywv3Vj9juR6GICXVzDZQm1e0YyJc16bH2geKDDy+5yR9W4IB/hhvfmejOH
+	 h9o31X7d4Y00W4GszLeXAURl6P0GAlNcxXnpC3aOMDIkLz+gbXkW9lg9K/TWoBljNj
+	 6ZsuNYCk2yx5usAoA59NcX8AePel7vUHzrws9EqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730549AbgA1OTs (ORCPT
+        id S1730950AbgA1OTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:19:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44242 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:19:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730929AbgA1OTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:19:44 -0500
+        id S1730651AbgA1OTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:19:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 370E32071E;
-        Tue, 28 Jan 2020 14:19:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EEA624681;
+        Tue, 28 Jan 2020 14:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221183;
-        bh=bDKKJwqaY1HS0eLa+nR0eXOmJiILJrJmQGOdxTWxIOk=;
+        s=default; t=1580221186;
+        bh=GkmS6Nex2vCZ6uL4UYPfmvaRHWDpmAKvtj3pkJAo20o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nMiEvL3yTovpwfNc8+kgvjtsJC/GyWyLdD8zGdWoo3LRhfI2t7Z3HlpBQxElZam3P
-         BlXTb3MVGQjHAn28nwU2l95zGgoA0Mmta8VGgEYFuBhuyf1kH1d2ou0UXGzD0L30Q9
-         Ojn4xKZXk5c2YhezFVyTRVXUaIC2F/+1w07UXQb0=
+        b=ITZfBNvz7kryh/jd/woNoUiscNJiK4tcJ1dFaNiE9ZLC37qQQ6tcNvsQNasFIu7jB
+         Na+eTvZjvJKhcGkH7yHqPt6ToVqh8zyU4WMmtgc2cwQRLYbesp9WXOU82poHoHS0Au
+         QC7jBRrazWOqYZYLkAHWNDmQS2O0Uj+s/C3hCMX8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, David Laight <David.Laight@aculab.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 123/271] ALSA: usb-audio: Handle the error from snd_usb_mixer_apply_create_quirk()
-Date:   Tue, 28 Jan 2020 15:04:32 +0100
-Message-Id: <20200128135901.746566204@linuxfoundation.org>
+Subject: [PATCH 4.9 124/271] packet: in recvmsg msg_name return at least sizeof sockaddr_ll
+Date:   Tue, 28 Jan 2020 15:04:33 +0100
+Message-Id: <20200128135901.826156562@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,36 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 328e9f6973be2ee67862cb17bf6c0c5c5918cd72 ]
+[ Upstream commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c ]
 
-The error from snd_usb_mixer_apply_create_quirk() is ignored in the
-current usb-audio driver code, which will continue the probing even
-after the error.  Let's take it more serious.
+Packet send checks that msg_name is at least sizeof sockaddr_ll.
+Packet recv must return at least this length, so that its output
+can be passed unmodified to packet send.
 
-Fixes: 7b1eda223deb ("ALSA: usb-mixer: factor out quirks")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This ceased to be true since adding support for lladdr longer than
+sll_addr. Since, the return value uses true address length.
+
+Always return at least sizeof sockaddr_ll, even if address length
+is shorter. Zero the padding bytes.
+
+Change v1->v2: do not overwrite zeroed padding again. use copy_len.
+
+Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
+Suggested-by: David Laight <David.Laight@aculab.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/packet/af_packet.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 64fa1bbf0acb3..54011f8543a72 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2626,7 +2626,9 @@ int snd_usb_create_mixer(struct snd_usb_audio *chip, int ctrlif,
- 	    (err = snd_usb_mixer_status_create(mixer)) < 0)
- 		goto _error;
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 40cade140222f..47a862cc7b349 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3404,20 +3404,29 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 	sock_recv_ts_and_drops(msg, sk, skb);
  
--	snd_usb_mixer_apply_create_quirk(mixer);
-+	err = snd_usb_mixer_apply_create_quirk(mixer);
-+	if (err < 0)
-+		goto _error;
+ 	if (msg->msg_name) {
++		int copy_len;
++
+ 		/* If the address length field is there to be filled
+ 		 * in, we fill it in now.
+ 		 */
+ 		if (sock->type == SOCK_PACKET) {
+ 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
+ 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
++			copy_len = msg->msg_namelen;
+ 		} else {
+ 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
  
- 	err = snd_device_new(chip->card, SNDRV_DEV_CODEC, mixer, &dev_ops);
- 	if (err < 0)
+ 			msg->msg_namelen = sll->sll_halen +
+ 				offsetof(struct sockaddr_ll, sll_addr);
++			copy_len = msg->msg_namelen;
++			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
++				memset(msg->msg_name +
++				       offsetof(struct sockaddr_ll, sll_addr),
++				       0, sizeof(sll->sll_addr));
++				msg->msg_namelen = sizeof(struct sockaddr_ll);
++			}
+ 		}
+-		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
+-		       msg->msg_namelen);
++		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
+ 	}
+ 
+ 	if (pkt_sk(sk)->auxdata) {
 -- 
 2.20.1
 
