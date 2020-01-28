@@ -2,121 +2,134 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365E0C33CB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6ADC32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051832467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nMH4Aix/"
+	by mail.kernel.org (Postfix) with ESMTP id 4B9D22467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgA1Aiy (ORCPT
+        id S1726911AbgA1Ajb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 19:38:54 -0500
-Received: from ozlabs.org ([203.11.71.1]:45491 "EHLO ozlabs.org"
+        Mon, 27 Jan 2020 19:39:31 -0500
+Received: from mga12.intel.com ([192.55.52.136]:7369 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbgA1Aiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 19:38:54 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48675l5F8Kz9sPn;
-        Tue, 28 Jan 2020 11:38:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580171931;
-        bh=ZFt22swylBexWXxCjDtzrVb/gug9eg5TVHthriwijXo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nMH4Aix/KxRe2sNjxNdFXqhHR74+65e3ajN0W7sfcyZwNBlOES+n8fTqaMw3Wjk9X
-         8fzTyUMnuh3LCkofgKnhsMMSqQkrJ9iQRzPNqcEPn/WRufEWzPF5YGWM0BFePM5Ssh
-         MMc1ZBV24Ei3XzxMtarAKGHnYxTuUCrI8nYbF6dHoDIQGJZyIclM6/EyAvq9FF9PrK
-         azZ2rJ70YUCmnC7meN9wMFJ1iWhycsbMdO/VM6dR+zaLheGjyHbevzoUeid9PUjee2
-         uF9sc4qtyw2AIRKzhTBjtADDST0otF6u9w+LcI9/aW1XLf9Qebn/Y7rbLtX+YcZZaL
-         cS9j4pY1Vbg3g==
-Date:   Tue, 28 Jan 2020 11:38:51 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Subject: linux-next: manual merge of the block tree with Linus' tree
-Message-ID: <20200128113851.50161614@canb.auug.org.au>
+        id S1726080AbgA1Ajb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 19:39:31 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 16:39:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,371,1574150400"; 
+   d="scan'208";a="261265782"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Jan 2020 16:39:29 -0800
+Date:   Tue, 28 Jan 2020 08:39:42 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/vmscan.c: only adjust related kswapd cpu affinity
+ when online cpu
+Message-ID: <20200128003942.GC20624@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200126132052.11921-1-richardw.yang@linux.intel.com>
+ <alpine.DEB.2.21.2001261443020.164983@chino.kir.corp.google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/RfCmZvQZ3be/nInvFS6ReTJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2001261443020.164983@chino.kir.corp.google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/RfCmZvQZ3be/nInvFS6ReTJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jan 26, 2020 at 02:44:31PM -0800, David Rientjes wrote:
+>On Sun, 26 Jan 2020, Wei Yang wrote:
+>
+>> When onlining a cpu, kswapd_cpu_online() is called to adjust kswapd cpu
+>> affinity.
+>> 
+>> Current routine does like this:
+>> 
+>>   * Iterate all the numa node
+>>   * Adjust cpu affinity when node has an online cpu
+>> 
+>> Actually we could improve this by:
+>> 
+>>   * Just adjust the numa node to which current online cpu belongs
+>> 
+>> Because we know which numa node the cpu belongs to and this cpu would
+>> not affect other node.
+>> 
+>
+>Is there ever a situation where the cpu to be onlined would have appeared 
+>in the cpumask of another node and so a different kswapd's cpumask would 
+>now include an off-node cpu?
 
-Hi all,
+No, I don't think so.
 
-Today's linux-next merge of the block tree got a conflict in:
+Per my understanding, kswapd_cpu_online() will be invoked when a cpu is
+onlined. And the particular cpu belongs to a particular numa node. So it is
+not necessary to iterate on every nodes.
 
-  fs/io_uring.c
+And current code use cpumask_and_any() to do the check. If my understanding is
+correct, the check would return true if this node has any online cpu. This is
+likely to be true.
 
-between commit:
+This is why I want to make the logic clear.
 
-  73e08e711d9c ("Revert "io_uring: only allow submit from owning task"")
+>
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> ---
+>>  mm/vmscan.c | 19 ++++++++++---------
+>>  1 file changed, 10 insertions(+), 9 deletions(-)
+>> 
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index 572fb17c6273..19c92d35045c 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -4049,18 +4049,19 @@ unsigned long shrink_all_memory(unsigned long nr_to_reclaim)
+>>     restore their cpu bindings. */
+>>  static int kswapd_cpu_online(unsigned int cpu)
+>>  {
+>> -	int nid;
+>> +	int nid = cpu_to_node(cpu);
+>> +	pg_data_t *pgdat;
+>> +	const struct cpumask *mask;
+>>  
+>> -	for_each_node_state(nid, N_MEMORY) {
+>> -		pg_data_t *pgdat = NODE_DATA(nid);
+>> -		const struct cpumask *mask;
+>> +	if (!node_state(nid, N_MEMORY))
+>> +		return 0;
+>>  
+>> -		mask = cpumask_of_node(pgdat->node_id);
+>> +	pgdat = NODE_DATA(nid);
+>> +	mask = cpumask_of_node(nid);
+>> +
+>> +	/* One of our CPUs online: restore mask */
+>> +	set_cpus_allowed_ptr(pgdat->kswapd, mask);
+>>  
+>> -		if (cpumask_any_and(cpu_online_mask, mask) < nr_cpu_ids)
+>> -			/* One of our CPUs online: restore mask */
+>> -			set_cpus_allowed_ptr(pgdat->kswapd, mask);
+>> -	}
+>>  	return 0;
+>>  }
+>>  
+>> -- 
+>> 2.17.1
+>> 
+>> 
+>> 
 
-from Linus' tree and commit:
-
-  9ef4f124894b ("io_uring: clamp to_submit in io_submit_sqes()")
-
-from the block tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/io_uring.c
-index e54556b0fcc6,82fd87e3a6ca..000000000000
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@@ -5157,7 -6384,12 +6380,6 @@@ SYSCALL_DEFINE6(io_uring_enter, unsigne
-  	} else if (to_submit) {
-  		struct mm_struct *cur_mm;
- =20
-- 		to_submit =3D min(to_submit, ctx->sq_entries);
- -		if (current->mm !=3D ctx->sqo_mm ||
- -		    current_cred() !=3D ctx->creds) {
- -			ret =3D -EPERM;
- -			goto out;
- -		}
- -
-  		mutex_lock(&ctx->uring_lock);
-  		/* already have mm, so io_submit_sqes() won't try to grab it */
-  		cur_mm =3D ctx->sqo_mm;
-
---Sig_/RfCmZvQZ3be/nInvFS6ReTJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4vgpsACgkQAVBC80lX
-0Gwwtgf/YSTxRUUrIXexcc2DSII7iOPm5vAyA4dNTt6ggG9jWL8wmcYzvXcl+EkT
-xmGgk5L9jWuCn35CDARJReaYjIxidpgqYZp2ZYaH6FIzULWDAVicyuz2V3f/v5m2
-asjKS1bF8hvGPhXyXWYGhZHW1kNtOoImUdQRRtGWwl5EfZFrRw5C7mg+BN7uRULh
-wjxE0SLv7pYAXmEcMty/eAJ0Kc2pOuv3Uy812FeX9+N0q0iG9GM3DvBhBQu49+u+
-TV7r5dM2x+zcIT+wo5lCtebENkvRWrS0OxQra1QEghknIXbPCc1cOTuP3+07pqea
-0rg4OyxiWbqWebU8dnaWFoHWsuqrIw==
-=kpaS
------END PGP SIGNATURE-----
-
---Sig_/RfCmZvQZ3be/nInvFS6ReTJ--
+-- 
+Wei Yang
+Help you, Help me
