@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5983AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B69FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3206324683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3B6207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222899;
-	bh=XeuMbXAjwPd+V/cZdsSRUeyp6/zzpu6kKovsVz2lexo=;
+	s=default; t=1580222907;
+	bh=jFBkBZpR37Xa506YkLZCDaF6CQW7L2QeG0BSlqy/7Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HBSwx2bTMd4jY210Ef6koEyHJuC128DjB5nDFw1acrnag8Xbn0KxBf4OqfBbTfZun
-	 vxecJtMs2rARQtHYsxEMtL+a92BOY2BZjh7/YbLh28M7zDDpHzq85MQX28Qa+5uota
-	 2VAdUOi5ECJuSofVVWiUw8fhYle6jsl6F0d2w4mM=
+	b=GqjYe1RRXrclLqdlhR6lTqhjxEYh3SCYThT1vA84zECIDCZyZnR7L4I+iniOQsY1j
+	 j9WMvGMjaIe22Ekku+OPzCulfiUhtRuyLDgZh3fhg0JOs0/5DiKpSqDJuRHOBiC9cG
+	 BdzzPeBPQXJOmTMiOnF4Rj7TAlFkObDHrVLS4hqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgA1OCn (ORCPT
+        id S1727260AbgA1Os0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:02:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49042 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:48:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727677AbgA1OCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:02:39 -0500
+        id S1726766AbgA1OCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:02:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAA3B2468D;
-        Tue, 28 Jan 2020 14:02:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BA8024695;
+        Tue, 28 Jan 2020 14:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220159;
-        bh=XeuMbXAjwPd+V/cZdsSRUeyp6/zzpu6kKovsVz2lexo=;
+        s=default; t=1580220154;
+        bh=jFBkBZpR37Xa506YkLZCDaF6CQW7L2QeG0BSlqy/7Fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wW15W0KUNASRpfzclS1jL1ByiYPTDbg6mocxABuMJiKrfPVlW+dVFDuqsb+KHxVkk
-         R/IW9opem/6NXRwJaXaEi/T9gzQ7TcCm8foERO8zBjDEIRQXYvwijGHFeKCkGTfQGN
-         ooHLlSWY/z2Su0zZZS7Xz9k5SpnYlS3d1a+XcCrQ=
+        b=0QFGBWnViUzI8nRODgViJUaF6nLzTpw6pnJDKAIe+DpTLoyQ3BUuEb/CObgtGti9Q
+         UuRg2KxQJUzblwm87YL808+aKk9IN83bXHevd/QI/KvyzdzRPGL4FK/xKkMHL6Uf36
+         r9V7WLztZDMFAOG5c4XylOimKN/dmaWo1qC43264=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, William Dauchy <w.dauchy@criteo.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 009/104] net, ip_tunnel: fix namespaces move
-Date:   Tue, 28 Jan 2020 14:59:30 +0100
-Message-Id: <20200128135818.530435405@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 5.4 037/104] ceph: hold extra reference to r_parent over life of request
+Date:   Tue, 28 Jan 2020 14:59:58 +0100
+Message-Id: <20200128135822.575355015@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,40 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: William Dauchy <w.dauchy@criteo.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-[ Upstream commit d0f418516022c32ecceaf4275423e5bd3f8743a9 ]
+commit 9c1c2b35f1d94de8325344c2777d7ee67492db3b upstream.
 
-in the same manner as commit 690afc165bb3 ("net: ip6_gre: fix moving
-ip6gre between namespaces"), fix namespace moving as it was broken since
-commit 2e15ea390e6f ("ip_gre: Add support to collect tunnel metadata.").
-Indeed, the ip6_gre commit removed the local flag for collect_md
-condition, so there is no reason to keep it for ip_gre/ip_tunnel.
+Currently, we just assume that it will stick around by virtue of the
+submitter's reference, but later patches will allow the syscall to
+return early and we can't rely on that reference at that point.
 
-this patch will fix both ip_tunnel and ip_gre modules.
+While I'm not aware of any reports of it, Xiubo pointed out that this
+may fix a use-after-free.  If the wait for a reply times out or is
+canceled via signal, and then the reply comes in after the syscall
+returns, the client can end up trying to access r_parent without a
+reference.
 
-Fixes: 2e15ea390e6f ("ip_gre: Add support to collect tunnel metadata.")
-Signed-off-by: William Dauchy <w.dauchy@criteo.com>
-Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Take an extra reference to the inode when setting r_parent and release
+it when releasing the request.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/ip_tunnel.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -1236,10 +1236,8 @@ int ip_tunnel_init(struct net_device *de
- 	iph->version		= 4;
- 	iph->ihl		= 5;
- 
--	if (tunnel->collect_md) {
--		dev->features |= NETIF_F_NETNS_LOCAL;
-+	if (tunnel->collect_md)
- 		netif_keep_dst(dev);
--	}
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(ip_tunnel_init);
+---
+ fs/ceph/mds_client.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -708,8 +708,10 @@ void ceph_mdsc_release_request(struct kr
+ 		/* avoid calling iput_final() in mds dispatch threads */
+ 		ceph_async_iput(req->r_inode);
+ 	}
+-	if (req->r_parent)
++	if (req->r_parent) {
+ 		ceph_put_cap_refs(ceph_inode(req->r_parent), CEPH_CAP_PIN);
++		ceph_async_iput(req->r_parent);
++	}
+ 	ceph_async_iput(req->r_target_inode);
+ 	if (req->r_dentry)
+ 		dput(req->r_dentry);
+@@ -2670,8 +2672,10 @@ int ceph_mdsc_submit_request(struct ceph
+ 	/* take CAP_PIN refs for r_inode, r_parent, r_old_dentry */
+ 	if (req->r_inode)
+ 		ceph_get_cap_refs(ceph_inode(req->r_inode), CEPH_CAP_PIN);
+-	if (req->r_parent)
++	if (req->r_parent) {
+ 		ceph_get_cap_refs(ceph_inode(req->r_parent), CEPH_CAP_PIN);
++		ihold(req->r_parent);
++	}
+ 	if (req->r_old_dentry_dir)
+ 		ceph_get_cap_refs(ceph_inode(req->r_old_dentry_dir),
+ 				  CEPH_CAP_PIN);
 
 
