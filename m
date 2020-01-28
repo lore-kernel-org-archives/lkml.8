@@ -2,185 +2,136 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47410C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365E8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2824324685
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B33662465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 08:06:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="MyjtX7ef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbgA1H6r (ORCPT
+        id S1725903AbgA1IGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 02:58:47 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38320 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725839AbgA1H6r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 02:58:47 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S7vUo7122131
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 02:58:46 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrjq73u9x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 02:58:45 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 28 Jan 2020 07:58:43 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 Jan 2020 07:58:34 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00S7wWmZ48627784
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jan 2020 07:58:32 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0E85A4040;
-        Tue, 28 Jan 2020 07:58:32 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC979A404D;
-        Tue, 28 Jan 2020 07:58:31 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.41])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 28 Jan 2020 07:58:31 +0000 (GMT)
-Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches as
- usercopy caches
-To:     Kees Cook <keescook@chromium.org>, Jiri Slaby <jslaby@suse.cz>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, David Windsor <dave@nullcore.net>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christoph Lameter <cl@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Christoffer Dall <christoffer.dall@linaro.org>,
-        Dave Kleikamp <dave.kleikamp@oracle.com>,
-        Jan Kara <jack@suse.cz>,
-        Luis de Bethencourt <luisbg@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rik van Riel <riel@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-        netdev@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Kubecek <mkubecek@suse.cz>
-References: <1515636190-24061-1-git-send-email-keescook@chromium.org>
- <1515636190-24061-10-git-send-email-keescook@chromium.org>
- <9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz>
- <201911121313.1097D6EE@keescook> <201911141327.4DE6510@keescook>
- <bfca96db-bbd0-d958-7732-76e36c667c68@suse.cz>
- <202001271519.AA6ADEACF0@keescook>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Tue, 28 Jan 2020 08:58:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <202001271519.AA6ADEACF0@keescook>
-Content-Type: text/plain; charset=utf-8
+        Tue, 28 Jan 2020 03:06:14 -0500
+Received: from mail-eopbgr10042.outbound.protection.outlook.com ([40.107.1.42]:49828
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725810AbgA1IGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 03:06:14 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cJxDbtP9C0C4ApCOukY4fNoJyuEjPCBPZMg5Gz3v68cIKkOoyHd1achdbC80uu9w4hzpl4QNjVQK3f+D5dtJ9q9gV8NDKi8bUErO1TUEsP6OoYZUwVed26XYpWGu0X6Rske8HbHTlM2Xnq8Exq9cAiHnVBsndQMLMl2ww33225ByZrCyEya2wsxSrmjmEslobHCNjUD4cxPQG3NuqsVH8YESjaiors3p+NHb3jKWLvIUPYItmVYcSKg98kdMUvOJhm163ZUqLtU+cQMWTswerCwLRVP77YQz22SU3wXilXVjFFIy2FORgYdq2MvG3KFM17TzSFvFadNn253J9U0HEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XgrTWVveA8muFu/PDoevERBiRmp32PRRCYOjvz1v+0g=;
+ b=UtvNQystGXrnTodUEiD15mRg84FTsTCHnnoxw8uhRmWrRB74vDghQFrYbA5oXl4NYfpe9SxFJiuAubrsN7j7jl2M0xgUqX+RmFu5NU9GgvtZRYJngxHnlLs/ZvhQCKB88UehD0nnZuTwxWI2wKABGWA3yChoYre2A9k7DlyCbbWtogdQzmxBx/o5VcUpklEzIlN33ClxdkPamidd6B6Dys1RKg/xvJ2alP9NowieKSYMvVB8hx5jc0/UQBP+FBPG7tOWtqgvObr2r+SiataWSJMW5XsZlTfaIB6E0G3rS96GdeIhAtE3PZK6UhkeoDVpGqH1GH+9KHw0/IDldth8Uw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XgrTWVveA8muFu/PDoevERBiRmp32PRRCYOjvz1v+0g=;
+ b=MyjtX7efT+Y3BYceu4ow4y6UYCczdWpjWZSsLCLEjfRoQ6fbwO3r8qB/R5PHVccGs+VPW7/KsTdUQj2CgilI3wwgT5d9iHnwBTz6siZE3P8FCy1vISoUmpk/Z4j8NC1Gia1NyDOl0wcn74Oc9LAXSVPiqeWw+6U4Hcw65o5cQxQ=
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com (52.134.16.147) by
+ VI1PR0402MB3646.eurprd04.prod.outlook.com (52.134.13.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.23; Tue, 28 Jan 2020 08:06:08 +0000
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::8881:e155:f058:c0d1]) by VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::8881:e155:f058:c0d1%4]) with mapi id 15.20.2665.026; Tue, 28 Jan 2020
+ 08:06:08 +0000
+Received: from fsr-ub1864-103.ro-buh02.nxp.com (89.37.124.34) by AM4PR0701CA0015.eurprd07.prod.outlook.com (2603:10a6:200:42::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.13 via Frontend Transport; Tue, 28 Jan 2020 08:06:06 +0000
+From:   "Daniel Baluta (OSS)" <daniel.baluta@oss.nxp.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH 0/4] Add a better separation between i.MX8 families
+Thread-Topic: [PATCH 0/4] Add a better separation between i.MX8 families
+Thread-Index: AQHV1bHLGvLY3Gox+0avSHaglC7LIg==
+Date:   Tue, 28 Jan 2020 08:06:07 +0000
+Message-ID: <20200128080518.29970-1-daniel.baluta@oss.nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012807-4275-0000-0000-0000039B95C8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012807-4276-0000-0000-000038AFAC92
-Message-Id: <5861936c-1fe1-4c44-d012-26efa0c8b6e7@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 mlxscore=0 clxscore=1015 phishscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001280065
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM4PR0701CA0015.eurprd07.prod.outlook.com
+ (2603:10a6:200:42::25) To VI1PR0402MB3839.eurprd04.prod.outlook.com
+ (2603:10a6:803:21::19)
+x-mailer: git-send-email 2.17.1
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@oss.nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e3d9c1b8-58cc-40cb-1e37-08d7a3c8ede6
+x-ms-traffictypediagnostic: VI1PR0402MB3646:|VI1PR0402MB3646:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB36467B2BC005E00A0390AFF6B80A0@VI1PR0402MB3646.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 029651C7A1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(39860400002)(396003)(366004)(189003)(199004)(86362001)(6506007)(6512007)(54906003)(110136005)(2906002)(316002)(478600001)(81156014)(6486002)(956004)(66946007)(71200400001)(66476007)(2616005)(64756008)(66446008)(1076003)(8936002)(16526019)(81166006)(5660300002)(186003)(4326008)(66556008)(26005)(8676002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3646;H:VI1PR0402MB3839.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5seF/cMWrE99bSQDovor1/PFw/wbnsONC9mVCPvCW2p3iDWP5xrXDghuFRf+4AEStgKZNQIiJIKAqj9WlcBpggLao9Yz0mq1WP7YUW8+T2gkRp9gvQ/gpBoOLsCt8eAh2s0MkqQKgAUK5H1R4HrWwuH4PLtU9Qrzv7f8aMskz1u+m5hUWGAuKmoRUiYL8jtR9JOhYhr4laOcoIXS9mas8RewwhE62gL26fp4Z/d4TBz0H2mmcB/WNSkVtnZ4lsvbfjmlqIYQdxT8M3zbFzJcqizfMRBjPeeHX7b0eo6AMlKXR3z38iNeqXI1H9jATpinUL/R1QrwGlMMG8x7ARsIIHt5JqjsKrDn+q3nKLB4QJRQcv/txvLlZC+K+DoxJ1UqDkU7zTRbnZ4lifCm+RpiMSOx3A+RBDEx6dDjWlnpelLLD4i9UIrToRWTWtWLj3iV
+x-ms-exchange-antispam-messagedata: Ytp8a2700P4ELLxTOcydR5uKjvIXyd1TdtDwfgTd/hbMEZqTwK6v5bzphtVNECC3M7TRxwGvZa2cO++Id+vR/2u4jdiwqAPWMVDzyP+JEMpuRwvEczDJeLCAqIYl1hMgIdMOiOuRsqBww37PbiFlqw==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <701A0E63D7940347839D7CE063670E83@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3d9c1b8-58cc-40cb-1e37-08d7a3c8ede6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 08:06:08.2069
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rArL3kXfnhEmeFo4xzRgX0/G0DD/+Q9fgL66pWzU3GmJ6nfMLp49prLxX7PMSpGYFP8z7ZOvI6g4KRzG36oZgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3646
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 28.01.20 00:19, Kees Cook wrote:
-> On Thu, Jan 23, 2020 at 09:14:20AM +0100, Jiri Slaby wrote:
->> On 14. 11. 19, 22:27, Kees Cook wrote:
->>> On Tue, Nov 12, 2019 at 01:21:54PM -0800, Kees Cook wrote:
->>>> How is iucv the only network protocol that has run into this? Do others
->>>> use a bounce buffer?
->>>
->>> Another solution would be to use a dedicated kmem cache (instead of the
->>> shared kmalloc dma one)?
->>
->> Has there been any conclusion to this thread yet? For the time being, we
->> disabled HARDENED_USERCOPY on s390...
->>
->> https://lore.kernel.org/kernel-hardening/9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz/
-> 
-> I haven't heard anything new. What did people think of a separate kmem
-> cache?
-> 
-
-Adding Julian and Ursula. A separate kmem cache for iucv might be indeed
-a solution for the user hardening issue.
-On the other hand not marking the DMA caches still seems questionable.
-
-For reference
-https://bugzilla.suse.com/show_bug.cgi?id=1156053
-the kernel hardening now triggers a warning.
-
+RnJvbTogRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPg0KDQpTbyBmYXIgdGhl
+IGltcGxlbWVudGF0aW9uIHdhcyBkZXNpZ25lZCB0byBzdXBwb3J0ICBhIGdlbmVyaWMgcGxhdGZv
+cm0NCm5hbWVkIGkuTVg4LiBBbnlob3csIG5vdyB3b3JraW5nIHdpdGggc3BlY2lmaWMgaS5NWDgg
+aW5zdGFuY2VzIHdlIG5lZWQNCnRvIGFjY291bnQgZm9yIHRoZSBkaWZmZXJlbmNlcy4NCg0KaS5N
+WDggbmFtaW5nIGNhbiBiZSBjb25mdXNpbmcgYXQgdGhlIGZpcnN0IGdsYW5jZSwgc28gd2UgbmVl
+ZCB0byBoYXZlDQphIGNsZWFuIHNlcGFyYXRpb24gYmV0d2VlbiBkaWZmZXJlbnQgcGxhdGZvcm1z
+Lg0KDQpIZXJlIGlzIHRoZSBzcGxpdCBvZiBpLk1YOCBwZXIgcGxhdGZvcm1zLiBOb3RpY2UgdGhh
+dCBpLk1YOCBuYW1lcw0KdGhlIGVudGlyZSBmYW1pbHksIGJ1dCBhbHNvIGEgc3ViLWZhbWlseS4N
+Cg0KaW14OA0K4pSc4pSA4pSAIGlteDgNCuKUgsKgwqAg4pSU4pSA4pSAIGlteDhxbSAoKikNCuKU
+nOKUgOKUgCBpbXg4bQ0K4pSCwqDCoCDilJzilIDilIAgaW14OG1tDQrilILCoMKgIOKUnOKUgOKU
+gCBpbXg4bW4NCuKUgsKgwqAg4pSc4pSA4pSAIGlteDhtcCAoKikNCuKUgsKgwqAg4pSU4pSA4pSA
+IGlteDhtcQ0K4pSU4pSA4pSAIGlteDh4DQogICAg4pSU4pSA4pSAIGlteDhxeHAgKCopDQoNClBs
+YXRmb3JtcyBtYXJrZWQgd2l0aCAoKikgY29udGFpbiBhIERTUC4gSW4gdGhlIGZ1dHVyZSB0aGVy
+ZSBtaWdodCBiZQ0KbW9yZSBwbGF0Zm9ybXMuDQoNClRoaXMgcGF0Y2hzZXJpZXMgZG9lcyB0aGUg
+Zm9sbG93aW5nOg0KCSogcmVuYW1lcyBpbXg4IHRvIGlteDh4IChiZWNhdXNlIHRoZSBvbmx5IHN1
+cHBvcnRlZCBwbGF0Zm9ybSBub3cNCiAgICAgICAgaXMgaW14OHF4cCkuDQogICAgICAgICogYWRk
+cyBzdXBwb3J0IGZvciBpbXg4ICh3aGljaCBpcyBpbXg4cW0pDQoNCkEgZnV0dXJlIHBhdGNoc2V0
+IHdpbGwgYWRkIHN1cHByb3QgZm9yIGkuTVg4TVAuDQoNClBhdWwgT2xhcnUgKDQpOg0KICBBU29D
+OiBTT0Y6IFJlbmFtZSBpLk1YOCBwbGF0Zm9ybSB0byBpLk1YOFgNCiAgQVNvQzogU09GOiBpbXg4
+OiBBZGQgb3BzIGZvciBpLk1YOFFNDQogIEFTb0M6IFNPRjogQWRkIGkuTVg4UU0gZGV2aWNlIGRl
+c2NyaXB0b3INCiAgZHQtYmluZGluZ3M6IGRzcDogZnNsOiBBZGQgZnNsLGlteDhxbS1kc3AgZW50
+cnkNCg0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RzcC9mc2wsZHNwLnlhbWwgICAgICB8ICAx
+ICsNCiBzb3VuZC9zb2Mvc29mL2lteC9pbXg4LmMgICAgICAgICAgICAgICAgICAgICAgfCA1NyAr
+KysrKysrKysrKysrKysrKystDQogc291bmQvc29jL3NvZi9zb2Ytb2YtZGV2LmMgICAgICAgICAg
+ICAgICAgICAgIHwgMTAgKysrKw0KIDMgZmlsZXMgY2hhbmdlZCwgNjUgaW5zZXJ0aW9ucygrKSwg
+MyBkZWxldGlvbnMoLSkNCg0KLS0gDQoyLjE3LjENCg0K
