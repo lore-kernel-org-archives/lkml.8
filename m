@@ -2,126 +2,92 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03C1C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E25C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920672468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:01:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aSc5fKvB"
+	by mail.kernel.org (Postfix) with ESMTP id AFFC224688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580213027;
+	bh=Fy0UsXjvLwh38SAvFXY7MyHHnKDTMMR9HZA94bEZquo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SHu69DkQk/sun5FF2fgqWjsdGeb8vy/EYX4CEtNJhKyxYss3/WXWX0NCL5dSYcyMM
+	 YU6sfdnBqIhNZxlY+xriyD31fPpIYKXmyEtRHVTIQPG9JUQIoMdmjJquBA2/tXIwcs
+	 V2CfNWLVspycSrvPyN6B+cwVRdjD9jpnFUT/AfUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgA1MBH (ORCPT
+        id S1726111AbgA1MDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:01:07 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:41605 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgA1MBG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:01:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1580212866; x=1611748866;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=G4XawBinOQE3v9IrgHKbrUqOdbum+3a/Cn7jH1Qi8Yw=;
-  b=aSc5fKvB8YePM3uNCu1NRKIj2hhFv7p3skrYTQ2WuyOdXOiM1RHgyeB5
-   Q8NXhVc4ZedCJNtphX7IlP+b8Psa6i9hFAQvrywf7ANJtTdUFqtf8O5NL
-   +eObG9FEDbYZg6VlTXHL3S7Yl8poCzNgUltNoMf+wLy1JZiFEc/PZG1ui
-   U=;
-IronPort-SDR: eKQ9cgKWSjxfguOEiVl1w4CH1plajgwFhyokzCeQzCrOWS6XGUcwATYiT8fVCgmuR6xPMSMWRk
- OwuzHAQstfbQ==
-X-IronPort-AV: E=Sophos;i="5.70,373,1574121600"; 
-   d="scan'208";a="15092337"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 28 Jan 2020 12:01:04 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id E9ED3A1F50;
-        Tue, 28 Jan 2020 12:00:56 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Tue, 28 Jan 2020 12:00:56 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.117) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 28 Jan 2020 12:00:46 +0000
-From:   <sjpark@amazon.com>
-CC:     <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.de>, <sj38.park@gmail.com>,
-        <acme@kernel.org>, <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
-        <corbet@lwn.net>, <dwmw@amazon.com>, <mgorman@suse.de>,
-        <rostedt@goodmis.org>, <kirill@shutemov.name>,
-        <brendanhiggins@google.com>, <colin.king@canonical.com>,
-        <minchan@kernel.org>, <vdavydov.dev@gmail.com>,
-        <vdavydov@parallels.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Re: [PATCH v2 0/9] Introduce Data Access MONitor (DAMON)
-Date:   Tue, 28 Jan 2020 13:00:33 +0100
-Message-ID: <20200128120033.27016-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <41BBD985-4B3D-4F87-B69D-D8CFE6EC0EBE@lca.pw> (raw)
+        Tue, 28 Jan 2020 07:03:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:55916 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgA1MDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 07:03:46 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DEF81045;
+        Tue, 28 Jan 2020 04:03:46 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D20FC3F52E;
+        Tue, 28 Jan 2020 04:03:45 -0800 (PST)
+Date:   Tue, 28 Jan 2020 12:03:44 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Axel Lin <axel.lin@ingics.com>
+Subject: Re: linux-next: manual merge of the mfd tree with the
+ regulator-fixes tree
+Message-ID: <20200128120344.GB4689@sirena.org.uk>
+References: <20200128120220.53494c29@canb.auug.org.au>
+ <20200128073901.GB3548@dell>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.117]
-X-ClientProxiedBy: EX13D37UWA004.ant.amazon.com (10.43.160.23) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vGgW1X5XWziG23Ko"
+Content-Disposition: inline
+In-Reply-To: <20200128073901.GB3548@dell>
+X-Cookie: Doing gets it done.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To: Qian Cai <cai@lca.pw>
 
-On Tue, 28 Jan 2020 06:20:29 -0500 Qian Cai <cai@lca.pw> wrote:
+--vGgW1X5XWziG23Ko
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> 
-> > On Jan 28, 2020, at 5:50 AM, sjpark@amazon.com wrote:
-> > 
-> > For the comments from perf maintainers, I added Steven Rostedt and Arnaldo
-> > Carvalho de Melo first, but I might missed someone.  If you recommend some more
-> > people, I will add them to recipients.
-> > 
-> > I made DAMON as a new subsystem because I think no existing subsystem fits well
-> > to be a base of DAMON, due to DAMON's unique goals and mechanisms described
-> > below in the original cover letter.
-> > 
-> > The existing subsystem that most similar to DAMON might be 'mm/page_idle.c'.
-> > However, there are many conceptual differences with DAMON.  One biggest
-> > difference I think is the target.  'page_idle' deals with physical page frames
-> > while DAMON deals with virtual address of specific processes.
-> > 
-> > Nevertheless, if you have some different opinion, please let me know.
-> 
-> I thought everyone should know to go to the MAINTAINERS file and search PERFORMANCE EVENTS SUBSYSTEM.
+On Tue, Jan 28, 2020 at 07:39:01AM +0000, Lee Jones wrote:
 
-I worried whether it could be a bother to send the mail to everyone in the
-section, but seems it was an unnecessary worry.  Adding those to recipients.
-You can get the original thread of this patchset from
-https://lore.kernel.org/linux-mm/20200128085742.14566-1-sjpark@amazon.com/
+> A pull-request was sent out to avoid this.
 
-> 
-> It might be difficult but there is a perf subcommand for some subsystems like sched: tracing/measuring of scheduler actions and latencies.
+> If Mark pulls it, this should just go away.
 
-Seems like you are suggesting to implement the DAMON's core logic as a
-subcommand of perf in user space.  Because DAMON's logic inherently require
-frequent interaction with privileged features that need to be done inside the
-kernel space, I think it will incur frequent context switch and might not
-fulfill its performance requirement.
+I didn't pull it in and Linus already took the regulator changes for
+this cycle - I tend to only actually merge the pull requests if there's
+any issue so that I minimize the extra bits in my pull requests and this
+didn't come up in -next until just now.  Sorry about that, it does look
+simple enough though.
 
-As far as I understand, we normally add a data source in the kernel and
-implement sophisticated handlings or visualizations in the perf.  I think DAMON
-is a source of a new primitive data (data access pattern).
+--vGgW1X5XWziG23Ko
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-SeongJae Park
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4wIx8ACgkQJNaLcl1U
+h9DlRQf9Ey6+epFAeW4prJdxkMnbpkjcswISbTZKF553zd6u/HpqL8HF6UTmCwmd
+8qTxOJJp6cb4BbV+xq4NLX4lbLvKo9QPkS/4/JTXPo8vaLRj/LGNv8scLc1B9GX0
+lAv9IAVnKIMtlRjdAscheQoLKM9efZEQgR9EuXwN6e23WR4+b1ZD3BmyIGlNwDyp
+mX6cTrXMznnvpFHJ28fhbq80CqQz98VbWSY0NQaM66zCAK5Ip5S3wXnR64iuKs3a
+lKXoJNbra6evaN1AHfie3vpvODTuCyEkQXZXJxqMuFJs1SeAMgR1ETVMl+fDI6Rk
+532++edd/yPM8gMN+Baidsnutz0mig==
+=bfBp
+-----END PGP SIGNATURE-----
+
+--vGgW1X5XWziG23Ko--
