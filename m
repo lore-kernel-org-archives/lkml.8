@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E4BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419AEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0F024692
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACA424688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221119;
-	bh=MVWClGzJacZzaFzYssaqWdwizSEgGoGJ3ndao72fkp8=;
+	s=default; t=1580221122;
+	bh=ycQ23ixeaeOqETre0ofxhlGMc8IkGjaBNi7nKZ5gf5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A1gRxbsOzQdY9GOdIJ9K0+AfVr3K7p9dDqJlL4uVqN1UeOE1jvehe94VmeJy6HnbJ
-	 Q9IF3dO5V8IwUmWYuhp4/mss82kDaDsnvG6B/c6PW7VvBZZuJOboHLulKXsWTr74KW
-	 jDqgeSW26znqzaj2IV7ByY5fQeFjYV4IZfvKaEsg=
+	b=KKgrJheM7hTDkOxeSPf9EvbszR/B5wVMJCD0rey7RMcz8KEK4w6fFQ0aGYg5VUhso
+	 I9giIZniL2Dhx5ltZZrPAUnRILMOgR8qLEvmMsElEukLY4ITJa6XOHuNhA0NoSwdvW
+	 /RYFI12LgUnNj1qGqylvZI7F1kfe74InMecWDXAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730710AbgA1OSi (ORCPT
+        id S1730720AbgA1OSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:18:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42602 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730497AbgA1OSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:18:34 -0500
+        id S1730497AbgA1OSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:18:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCEF121739;
-        Tue, 28 Jan 2020 14:18:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B6EF2468D;
+        Tue, 28 Jan 2020 14:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221114;
-        bh=MVWClGzJacZzaFzYssaqWdwizSEgGoGJ3ndao72fkp8=;
+        s=default; t=1580221119;
+        bh=ycQ23ixeaeOqETre0ofxhlGMc8IkGjaBNi7nKZ5gf5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpjxsIfo5AKggqNK34ivghYdZK9J701kOIV22Ti8Dn1JaBmZdnnuZIWeVTr7vhAgF
-         ynSfnEmeV/vJ44BcANIwBomnIver5vX7pAToVl4sW77SiVcOkoNP23hEniB1OwoNC/
-         bw4kjqT6zp0LvTcmQSmF4FkHraTJFgarMAwGuhi0=
+        b=fcV70F7xAT+z4hflFsG9tMHaFBkbXFLYy0PtproEiVH0/LWDyA3zYQS8k7IX5tO1K
+         ueBdo9c2oJLjDS1cjIFoSvHddKSyj8GEqbpa9M2ngNO06vkF/vaFDgDZOq1uXl4IDs
+         MaLvAfu9J8OnRxH7rxSnDY9iO02qFucwKIyAJXDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Sistare <steven.sistare@oracle.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 094/271] scsi: megaraid_sas: reduce module load time
-Date:   Tue, 28 Jan 2020 15:04:03 +0100
-Message-Id: <20200128135859.594176685@linuxfoundation.org>
+Subject: [PATCH 4.9 096/271] xen, cpu_hotplug: Prevent an out of bounds access
+Date:   Tue, 28 Jan 2020 15:04:05 +0100
+Message-Id: <20200128135859.742312623@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,65 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Sistare <steven.sistare@oracle.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 31b6a05f86e690e1818116fd23c3be915cc9d9ed ]
+[ Upstream commit 201676095dda7e5b31a5e1d116d10fc22985075e ]
 
-megaraid_sas takes 1+ seconds to load while waiting for firmware:
+The "cpu" variable comes from the sscanf() so Smatch marks it as
+untrusted data.  We can't pass a higher value than "nr_cpu_ids" to
+cpu_possible() or it results in an out of bounds access.
 
-[2.822603] megaraid_sas 0000:03:00.0: Waiting for FW to come to ready state
-[3.871003] megaraid_sas 0000:03:00.0: FW now in Ready state
-
-This is due to the following loop in megasas_transition_to_ready(), which
-waits a minimum of 1 second, even though the FW becomes ready in tens of
-millisecs:
-
-        /*
-         * The cur_state should not last for more than max_wait secs
-         */
-        for (i = 0; i < max_wait; i++) {
-                ...
-                msleep(1000);
-        ...
-        dev_info(&instance->pdev->dev, "FW now in Ready state\n");
-
-This is a regression, caused by a change of the msleep granularity from 1
-to 1000 due to concern about waiting too long on systems with coarse
-jiffies.
-
-To fix, increase iterations and use msleep(20), which results in:
-
-[2.670627] megaraid_sas 0000:03:00.0: Waiting for FW to come to ready state
-[2.739386] megaraid_sas 0000:03:00.0: FW now in Ready state
-
-Fixes: fb2f3e96d80f ("scsi: megaraid_sas: Fix msleep granularity")
-Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: d68d82afd4c8 ("xen: implement CPU hotplugging")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/xen/cpu_hotplug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index c5cc002dfdd5c..10ae624dd2662 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -3694,12 +3694,12 @@ megasas_transition_to_ready(struct megasas_instance *instance, int ocr)
- 		/*
- 		 * The cur_state should not last for more than max_wait secs
- 		 */
--		for (i = 0; i < max_wait; i++) {
-+		for (i = 0; i < max_wait * 50; i++) {
- 			curr_abs_state = instance->instancet->
- 				read_fw_status_reg(instance->reg_set);
+diff --git a/drivers/xen/cpu_hotplug.c b/drivers/xen/cpu_hotplug.c
+index f4e59c445964d..17054d6954117 100644
+--- a/drivers/xen/cpu_hotplug.c
++++ b/drivers/xen/cpu_hotplug.c
+@@ -53,7 +53,7 @@ static int vcpu_online(unsigned int cpu)
+ }
+ static void vcpu_hotplug(unsigned int cpu)
+ {
+-	if (!cpu_possible(cpu))
++	if (cpu >= nr_cpu_ids || !cpu_possible(cpu))
+ 		return;
  
- 			if (abs_state == curr_abs_state) {
--				msleep(1000);
-+				msleep(20);
- 			} else
- 				break;
- 		}
+ 	switch (vcpu_online(cpu)) {
 -- 
 2.20.1
 
