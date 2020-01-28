@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCABFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BCFC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE3520716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5D720716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222546;
-	bh=/VLrlyOP3aW7VmKKpylXx4uG78qDbxT43JAHOyjHMBg=;
+	s=default; t=1580222549;
+	bh=EW4/IRrOJwj5qEvaxtF3QoKN+4u+9FMx9SWDEIYwjus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UmE9BYBxIxl7FIc0zR9rq0LvSNOKdGTAka67qFRP3dfDHMj7uAG4hhvDYh01ZW3Pl
-	 yzZOtilZxPN9gwdTANdh1Ul2zse3WLghXsh/nK0y6TcG1W2pADFCCMeTURPvGcylOZ
-	 xPNX47Yk/EIHHp7Qs3v8/ZsbKeEvPwTIpXY15f7M=
+	b=ivmb4CTAxQsTOENzf3LYHK0KLs9BBuCJWwctvH0t+2pZVJPeuS1mN/egXmQhl8mdq
+	 5v0pLZ4Sw+MjsINLTW4gKgGkV4/XSyhPcQeH3qLJf1M6MlAdKanYt3+VNwKiHhs5c0
+	 VEIYybd3iyiVMLe8OD3jfTt6A/q+TYDqpqG5Z/cU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbgA1OmZ (ORCPT
+        id S1729631AbgA1ONJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:42:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34830 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:13:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729207AbgA1ONO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:13:14 -0500
+        id S1729092AbgA1ONB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:13:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 388C920678;
-        Tue, 28 Jan 2020 14:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1FF524688;
+        Tue, 28 Jan 2020 14:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220793;
-        bh=/VLrlyOP3aW7VmKKpylXx4uG78qDbxT43JAHOyjHMBg=;
+        s=default; t=1580220781;
+        bh=EW4/IRrOJwj5qEvaxtF3QoKN+4u+9FMx9SWDEIYwjus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZGV3xDDnklH8gVCjpL531IohZ1eAFzKkXMJwLMSR27bf87gItKhm2TnP6BaQ5Hv2w
-         snaTkb7LexpGI9wkz3LN/65LvjAZVvOrATkolsfNamnGoMV/5cGO5ajc2x2zEEfT7W
-         2PjHWZpntbYDgfUW9eTwnsTQV7Jl0iQlMwiseytM=
+        b=dDmxiMe9ce5zOajjqgZRSqNR+FlSQZ0CfxynaeI/BQ/NkC3rDveJisR4JBKLeEDDP
+         4R+UJsmW5dyFi+HqKHhVGowY+Gp47b0sqXG9k4zqbEITzvvC8UCWFJShrzi+1C4xj5
+         iLZj/pDDHP2qAT6V6PIB9rVfbQtX88fZolt7Ut0k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@vger.kernel,
-        Robin Gong <yibin.gong@nxp.com>,
-        Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 148/183] dmaengine: imx-sdma: fix size check for sdma script_number
-Date:   Tue, 28 Jan 2020 15:06:07 +0100
-Message-Id: <20200128135844.521185059@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 143/183] mac80211: accept deauth frames in IBSS mode
+Date:   Tue, 28 Jan 2020 15:06:02 +0100
+Message-Id: <20200128135844.041078671@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,71 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit bd73dfabdda280fc5f05bdec79b6721b4b2f035f ]
+[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
 
-Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
-(41) exceed the size of structure sdma_script_start_addrs(40),
-thus cause memory corrupt such as slob block header so that kernel
-trap into while() loop forever in slob_free(). Please refer to below
-code piece in imx-sdma.c:
-for (i = 0; i < sdma->script_number; i++)
-	if (addr_arr[i] > 0)
-		saddr_arr[i] = addr_arr[i]; /* memory corrupt here */
-That issue was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
-support for version 3 firmware") because SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
-(38->41 3 scripts added) not align with script number added in
-sdma_script_start_addrs(2 scripts).
+We can process deauth frames and all, but we drop them very
+early in the RX path today - this could never have worked.
 
-Fixes: a572460be9cf ("dmaengine: imx-sdma: Add support for version 3 firmware")
-Cc: stable@vger.kernel
-Link: https://www.spinics.net/lists/arm-kernel/msg754895.html
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Reported-by: Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>
-Link: https://lore.kernel.org/r/1569347584-3478-1-git-send-email-yibin.gong@nxp.com
-[vkoul: update the patch title]
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/imx-sdma.c                     | 8 ++++++++
- include/linux/platform_data/dma-imx-sdma.h | 3 +++
- 2 files changed, 11 insertions(+)
+ net/mac80211/rx.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index dd97dbf6618cd..1dc06e0e890f4 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1411,6 +1411,14 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
- 	if (!sdma->script_number)
- 		sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
- 
-+	if (sdma->script_number > sizeof(struct sdma_script_start_addrs)
-+				  / sizeof(s32)) {
-+		dev_err(sdma->dev,
-+			"SDMA script number %d not match with firmware.\n",
-+			sdma->script_number);
-+		return;
-+	}
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 3b8e2f97d8151..2b7975c4dac7b 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -3040,9 +3040,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
+ 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
+ 		/* process for all: mesh, mlme, ibss */
+ 		break;
++	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
++		if (is_multicast_ether_addr(mgmt->da) &&
++		    !is_broadcast_ether_addr(mgmt->da))
++			return RX_DROP_MONITOR;
 +
- 	for (i = 0; i < sdma->script_number; i++)
- 		if (addr_arr[i] > 0)
- 			saddr_arr[i] = addr_arr[i];
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-index 2d08816720f6d..5bb0a119f39a3 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -50,7 +50,10 @@ struct sdma_script_start_addrs {
- 	/* End of v2 array */
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
-+	s32 mcu_2_ecspi_addr;
- 	/* End of v3 array */
-+	s32 mcu_2_zqspi_addr;
-+	/* End of v4 array */
- };
- 
- /**
++		/* process only for station/IBSS */
++		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
++		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
++			return RX_DROP_MONITOR;
++		break;
+ 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
+ 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
+-	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
+ 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
+ 		if (is_multicast_ether_addr(mgmt->da) &&
+ 		    !is_broadcast_ether_addr(mgmt->da))
 -- 
 2.20.1
 
