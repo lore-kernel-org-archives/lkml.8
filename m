@@ -4,119 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B51C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D28C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0735A2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB482173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 22:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clbGC1US"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NLdGMSlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgA1WPS (ORCPT
+        id S1726427AbgA1WQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 17:15:18 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:42141 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgA1WPR (ORCPT
+        Tue, 28 Jan 2020 17:16:24 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:30054 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726266AbgA1WQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 17:15:17 -0500
-Received: by mail-yb1-f193.google.com with SMTP id z125so5585242ybf.9;
-        Tue, 28 Jan 2020 14:15:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=WO/nRS9efA2jaU/WklByd7JTyruIx9K7cCmh5g/56w8=;
-        b=clbGC1USnyA8dsclFpIk3x+1zjO8ld+M52BNjyllqE7oNRzkLUCLUREUZdq1bSC2C+
-         43XzQpCcS04+ctxTdiLMAQ/rToX5HBnX3iIS1HywHynDq4QbLkAiRZbwfFx9orpmHbic
-         NTTk2pbeW7BkfGXnlvjZO/uR7Kp21wmyM9Hz5B8D9WUMVj24gMcpoXV2zBtPGGRVASce
-         B3wgGc8HAc5kkV3iPSdIYb5c+TvQCkaptkN1sgQirtzq8c/reKxKmEUnmNxysXhfIK+7
-         VL9e2oUZa352CS9yIQIu/OznwLkPLssfrUy+taYQp7DCnUVC/lC+n906DRXtK7Su44U1
-         eYRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=WO/nRS9efA2jaU/WklByd7JTyruIx9K7cCmh5g/56w8=;
-        b=OTaXvbrTVuL0MmJryN4o8PUQqIr7G6Yi8kEtWidYwnRR4BLzV0RcELZ3TVpg8CC6Mj
-         GTDvPFTGqLWsAJy819A1g9yylZUV8RR591mVGVpmrIyGJ7MIxokNLylGC7h+fM0R2SUE
-         F2ytsjlwNLm4zp6IVxff/ndQRU9UyS9BjPlo6UMJICYo6qmRuBzrV1Kn4Nn0TIE04mdR
-         EKJ85wiKRkheN2Qw6wvR861HedDSZq4j4PY/ddNPL7pZZjFNxHTM2MdJBjAXLFVfyDwp
-         OMayDHJk+UkmXJY2cVoLEn5R6+p8iS2bPArt8D+9MDmdri/24Qj/DNqITnqvKUL3Xuzc
-         K54w==
-X-Gm-Message-State: APjAAAUsaPNzMe9yzho7vyE/o467pKO2gtBnB1UwexZafIxnns8OwJPU
-        cyqECU10IdOHw2Mu+1PKbyM=
-X-Google-Smtp-Source: APXvYqwfpQ/wP6r1KP5a33g8F0cBdliNI0SCjYSrisRyCh/wAQneJm9e9B/vLJjhHeAbSd6n5CGolw==
-X-Received: by 2002:a25:d055:: with SMTP id h82mr18932492ybg.418.1580249716373;
-        Tue, 28 Jan 2020 14:15:16 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l37sm64830ywa.103.2020.01.28.14.15.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jan 2020 14:15:15 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] brcmfmac: abort and release host after error
-Date:   Tue, 28 Jan 2020 14:14:57 -0800
-Message-Id: <20200128221457.12467-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Tue, 28 Jan 2020 17:16:24 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580249783; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=FXsf/z/1DeoIKgsAIM/dfI6zvYtWCIvxuwhvpm/1k8o=; b=NLdGMSlWVAD6PMFvwgOQ8GP80ZYxTgLvqMbb/k4IcV/BtJEXgTnRzxTqwzdcT5/q6iu2Q2K/
+ S/TOm5UwvYcRHBlC3athb+7fp5Uejsj07itjviOdOhgVDSC650xfkpsHGrGsf+1Ge1dS3HMB
+ tlYM2+y8rbHeOIDREcZoTmsb6Vk=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e30b2b3.7f907e9094c8-smtp-out-n03;
+ Tue, 28 Jan 2020 22:16:19 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 56309C4479F; Tue, 28 Jan 2020 22:16:19 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 29111C433A2;
+        Tue, 28 Jan 2020 22:16:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 29111C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     iommu@lists.linux-foundation.org
+Cc:     robin.murphy@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/6] iommu: Add DOMAIN_ATTR_PTBASE
+Date:   Tue, 28 Jan 2020 15:16:05 -0700
+Message-Id: <1580249770-1088-2-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580249770-1088-1-git-send-email-jcrouse@codeaurora.org>
+References: <1580249770-1088-1-git-send-email-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With commit 216b44000ada ("brcmfmac: Fix use after free in
-brcmf_sdio_readframes()") applied, we see locking timeouts in
-brcmf_sdio_watchdog_thread().
+Add an attribute to return the base address of the pagetable. This is used
+by auxiliary domains from arm-smmu to return the address of the pagetable
+to the domain so that it can set the appropriate pagetable through it's
+own means.
 
-brcmfmac: brcmf_escan_timeout: timer expired
-INFO: task brcmf_wdog/mmc1:621 blocked for more than 120 seconds.
-Not tainted 4.19.94-07984-g24ff99a0f713 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-brcmf_wdog/mmc1 D    0   621      2 0x00000000 last_sleep: 2440793077.  last_runnable: 2440766827
-[<c0aa1e60>] (__schedule) from [<c0aa2100>] (schedule+0x98/0xc4)
-[<c0aa2100>] (schedule) from [<c0853830>] (__mmc_claim_host+0x154/0x274)
-[<c0853830>] (__mmc_claim_host) from [<bf10c5b8>] (brcmf_sdio_watchdog_thread+0x1b0/0x1f8 [brcmfmac])
-[<bf10c5b8>] (brcmf_sdio_watchdog_thread [brcmfmac]) from [<c02570b8>] (kthread+0x178/0x180)
-
-In addition to restarting or exiting the loop, it is also necessary to
-abort the command and to release the host.
-
-Fixes: 216b44000ada ("brcmfmac: Fix use after free in brcmf_sdio_readframes()")
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Matthias Kaehlcke <mka@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 2 ++
+
+ include/linux/iommu.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index f9df95bc7fa1..2e1c23c7269d 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -1938,6 +1938,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
- 			if (brcmf_sdio_hdparse(bus, bus->rxhdr, &rd_new,
- 					       BRCMF_SDIO_FT_NORMAL)) {
- 				rd->len = 0;
-+				brcmf_sdio_rxfail(bus, true, true);
-+				sdio_release_host(bus->sdiodev->func1);
- 				brcmu_pkt_buf_free_skb(pkt);
- 				continue;
- 			}
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index b14398b..0e9bcd9 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -128,6 +128,8 @@ enum iommu_attr {
+ 	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+ 	/* Enable split pagetables (for example, TTBR1 on arm-smmu) */
+ 	DOMAIN_ATTR_SPLIT_TABLES,
++	/* Return the pagetable base address */
++	DOMAIN_ATTR_PTBASE,
+ 	DOMAIN_ATTR_MAX,
+ };
+ 
 -- 
-2.17.1
-
+2.7.4
