@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C674FC35240
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC28C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D36C20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40012467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222011;
-	bh=j3dOkO7BzEnopBMaA6mmgyr9Jea+DWcgOpZMXirfMnE=;
+	s=default; t=1580222013;
+	bh=jxyCRKHd0fDIu343tBn5ZNUxn+VXjYVhvW/u9UIssOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zk0l785FqmOPnTltOv7fcYPCYncpwUEW7yN12rssa1ZDJorQ92XtjhWb/Vu1L7YdF
-	 2qA1jxV+zYngpv/59VNbTqV6lA+LkHVuARUuSPestGS6RiM4jIAoq7PkREzt6fu+ut
-	 ip3Zw4DPtjFc/SG8fVDuNS7gjYukYV+nRi4u09Hw=
+	b=0jH03d8dPaJdiRjrsCg/Db6/xAZ/zbmdMCxRopxNHiImiYTO2uCkZkkk/9TRemk32
+	 9W2HBOOBGLtsNM+Wm7M5SAzHDLO9N+0w0cG+v8EQ20AykLZnA+zwxtt3Ldi9NkiJWn
+	 DP9CMjPL2a27SXgp9hjYD767VYOYH7JcGTD/s1eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732867AbgA1OZK (ORCPT
+        id S1732914AbgA1Odc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:25:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52010 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:33:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732835AbgA1OZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:06 -0500
+        id S1731809AbgA1OZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:25:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5A3E21739;
-        Tue, 28 Jan 2020 14:25:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 318242071E;
+        Tue, 28 Jan 2020 14:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221505;
-        bh=j3dOkO7BzEnopBMaA6mmgyr9Jea+DWcgOpZMXirfMnE=;
+        s=default; t=1580221522;
+        bh=jxyCRKHd0fDIu343tBn5ZNUxn+VXjYVhvW/u9UIssOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b2PHh8CFp+4gY+CvLDMNlNK5aG0bumMNkwdrh9FYXq46p3yfpMZX879eOb0Q6Sb12
-         mIOcCqotOqaNr/HXBntctfnFeBFvWTsznklHS1cv6tfTB89KLfrTcvPDfksmB/fZ7C
-         OgmK+4Ioe9lX3Nx4noFvEFzYbZgAca3KLAKxmOm8=
+        b=f5gunr2solUcwoXkzMItHYM1m7D8SD2IB4ZF2wHJ4csYuGKMPc5SzJpgJYn6780M2
+         li/ugcrDZG5t0Cmw3XY1HXn0vBB2KX50dItCYYyLAI2tfI1MacwJHnHUztzVBgiH8Q
+         5etZRyTtkQb/zdNM7wxCgEJlMWOqbO0oidekNw1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.9 251/271] mmc: sdhci: fix minimum clock rate for v3 controller
-Date:   Tue, 28 Jan 2020 15:06:40 +0100
-Message-Id: <20200128135911.255683005@linuxfoundation.org>
+        stable@vger.kernel.org, Gilles Buloz <gilles.buloz@kontron.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 257/271] hwmon: (nct7802) Fix voltage limits to wrong registers
+Date:   Tue, 28 Jan 2020 15:06:46 +0100
+Message-Id: <20200128135911.727902491@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,52 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Gilles Buloz <gilles.buloz@kontron.com>
 
-commit 2a187d03352086e300daa2044051db00044cd171 upstream.
+commit 7713e62c8623c54dac88d1fa724aa487a38c3efb upstream.
 
-For SDHCIv3+ with programmable clock mode, minimal clock frequency is
-still base clock / max(divider). Minimal programmable clock frequency is
-always greater than minimal divided clock frequency. Without this patch,
-SDHCI uses out-of-spec initial frequency when multiplier is big enough:
+in0 thresholds are written to the in2 thresholds registers
+in2 thresholds to in3 thresholds
+in3 thresholds to in4 thresholds
+in4 thresholds to in0 thresholds
 
-mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
-[for 480 MHz source clock divided by 1024]
-
-The code in sdhci_calc_clk() already chooses a correct SDCLK clock mode.
-
-Fixes: c3ed3877625f ("mmc: sdhci: add support for programmable clock mode")
-Cc: <stable@vger.kernel.org> # 4f6aa3264af4: mmc: tegra: Only advertise UHS modes if IO regulator is present
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/ffb489519a446caffe7a0a05c4b9372bd52397bb.1579082031.git.mirq-linux@rere.qmqm.pl
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Gilles Buloz <gilles.buloz@kontron.com>
+Link: https://lore.kernel.org/r/5de0f509.rc0oEvPOMjbfPW1w%gilles.buloz@kontron.com
+Fixes: 3434f3783580 ("hwmon: Driver for Nuvoton NCT7802Y")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/hwmon/nct7802.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -3243,11 +3243,13 @@ int sdhci_setup_host(struct sdhci_host *
- 	if (host->ops->get_min_clock)
- 		mmc->f_min = host->ops->get_min_clock(host);
- 	else if (host->version >= SDHCI_SPEC_300) {
--		if (host->clk_mul) {
--			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
-+		if (host->clk_mul)
- 			max_clk = host->max_clk * host->clk_mul;
--		} else
--			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
-+		/*
-+		 * Divided Clock Mode minimum clock rate is always less than
-+		 * Programmable Clock Mode minimum clock rate.
-+		 */
-+		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
- 	} else
- 		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
+--- a/drivers/hwmon/nct7802.c
++++ b/drivers/hwmon/nct7802.c
+@@ -32,8 +32,8 @@
+ static const u8 REG_VOLTAGE[5] = { 0x09, 0x0a, 0x0c, 0x0d, 0x0e };
  
+ static const u8 REG_VOLTAGE_LIMIT_LSB[2][5] = {
+-	{ 0x40, 0x00, 0x42, 0x44, 0x46 },
+-	{ 0x3f, 0x00, 0x41, 0x43, 0x45 },
++	{ 0x46, 0x00, 0x40, 0x42, 0x44 },
++	{ 0x45, 0x00, 0x3f, 0x41, 0x43 },
+ };
+ 
+ static const u8 REG_VOLTAGE_LIMIT_MSB[5] = { 0x48, 0x00, 0x47, 0x47, 0x48 };
 
 
