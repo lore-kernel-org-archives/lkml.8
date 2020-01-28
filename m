@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75284C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00F9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4985C2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D94324690
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580219972;
-	bh=OV6hMQvSRH9LaYqFuXBly3SfS6lgnnLWXOxFkJq2GQ4=;
+	s=default; t=1580219976;
+	bh=3oQ2Qo92ZWOGJqWbGbtddum9+cQwwvpfjjjxCHq8GVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oykPgUOsPzcO1GVTQP4cyUeqhG6J+eCiiN9HessMmjA5+iJfBWmIWshvhD2xWagWL
-	 yGTIxgoxIx2mD0SkzB7DJ+tmXfQSCYoQIdtHrqDKPg9kERkiaXnhDeNUoLDm8g/qE3
-	 O4/DMFtR4gaOLDYB9U1UYfNqvjUPLOeG1M/6Nm50=
+	b=zVtdKjr1URYJ5ZgZrkSFvt76xazMIXqX5JLcihYONE0qfLk68rys1Rct3SUL1N4Sv
+	 XtRTnLAMEUPwOTsh1QZO/liJwnhPRJQTAhM8q9FWdKwZPkb0+DJ86TOGvPrVhnOZJT
+	 mWQuEg6W8r07N+frr9HHqsDF5EwlwNPAVF40iDe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgA1N7b (ORCPT
+        id S1727001AbgA1N7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:59:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44752 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 08:59:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726856AbgA1N7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:59:23 -0500
+        id S1726945AbgA1N7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:59:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8345B2173E;
-        Tue, 28 Jan 2020 13:59:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB48F2468A;
+        Tue, 28 Jan 2020 13:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219963;
-        bh=OV6hMQvSRH9LaYqFuXBly3SfS6lgnnLWXOxFkJq2GQ4=;
+        s=default; t=1580219970;
+        bh=3oQ2Qo92ZWOGJqWbGbtddum9+cQwwvpfjjjxCHq8GVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CO2t9h3NTKmkOhBTDCipPh3+RXX7xWNPdJWDRgdX0mymwlRiDUNqWLMzuZewKiVZv
-         hARR9fJv1hmNJlt1Fw8j5KJnYzoVR9+biO7lv3hDa0imLbJuo4uz/pdr3ZJ4gH4cSR
-         brhLGh1a59INLOsQN5/vBapkLdlGR6gA9D2xVE+M=
+        b=PbRRTW8XMWNPTdg47QPaTEjfDP7MAoyB6kEM2s3wmTQEhPe5KR5a9XFhYm27cnu7g
+         W5vALO/u3LT6a2LemWoTWP9KIfWUwz1+DKBn1A4n1rsUWLsvqEGpXpP2MPmeKSmDTp
+         Jq4vl/0K630F7LIqT37JHYzNHcNQpxuKLFnS0Ylo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        James Hughes <james.hughes@raspberrypi.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 14/46] net: usb: lan78xx: Add .ndo_features_check
-Date:   Tue, 28 Jan 2020 14:57:48 +0100
-Message-Id: <20200128135751.863035919@linuxfoundation.org>
+        Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 17/46] hwmon: (adt7475) Make volt2reg return same reg as reg2volt input
+Date:   Tue, 28 Jan 2020 14:57:51 +0100
+Message-Id: <20200128135752.177887746@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -61,62 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hughes <james.hughes@raspberrypi.org>
+From: Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
 
-[ Upstream commit ce896476c65d72b4b99fa09c2f33436b4198f034 ]
+commit cf3ca1877574a306c0207cbf7fdf25419d9229df upstream.
 
-As reported by Eric Dumazet, there are still some outstanding
-cases where the driver does not handle TSO correctly when skb's
-are over a certain size. Most cases have been fixed, this patch
-should ensure that forwarded SKB's that are greater than
-MAX_SINGLE_PACKET_SIZE - TX_OVERHEAD are software segmented
-and handled correctly.
+reg2volt returns the voltage that matches a given register value.
+Converting this back the other way with volt2reg didn't return the same
+register value because it used truncation instead of rounding.
 
-Signed-off-by: James Hughes <james.hughes@raspberrypi.org>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This meant that values read from sysfs could not be written back to sysfs
+to set back the same register value.
+
+With this change, volt2reg will return the same value for every voltage
+previously returned by reg2volt (for the set of possible input values)
+
+Signed-off-by: Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
+Link: https://lore.kernel.org/r/20191205231659.1301-1-luuk.paulussen@alliedtelesis.co.nz
+cc: stable@vger.kernel.org
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/lan78xx.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
 
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -31,6 +31,7 @@
- #include <linux/mdio.h>
- #include <linux/phy.h>
- #include <net/ip6_checksum.h>
-+#include <net/vxlan.h>
- #include <linux/interrupt.h>
- #include <linux/irqdomain.h>
- #include <linux/irq.h>
-@@ -3525,6 +3526,19 @@ static void lan78xx_tx_timeout(struct ne
- 	tasklet_schedule(&dev->bh);
+---
+ drivers/hwmon/adt7475.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+--- a/drivers/hwmon/adt7475.c
++++ b/drivers/hwmon/adt7475.c
+@@ -297,9 +297,10 @@ static inline u16 volt2reg(int channel,
+ 	long reg;
+ 
+ 	if (bypass_attn & (1 << channel))
+-		reg = (volt * 1024) / 2250;
++		reg = DIV_ROUND_CLOSEST(volt * 1024, 2250);
+ 	else
+-		reg = (volt * r[1] * 1024) / ((r[0] + r[1]) * 2250);
++		reg = DIV_ROUND_CLOSEST(volt * r[1] * 1024,
++					(r[0] + r[1]) * 2250);
+ 	return clamp_val(reg, 0, 1023) & (0xff << 2);
  }
  
-+static netdev_features_t lan78xx_features_check(struct sk_buff *skb,
-+						struct net_device *netdev,
-+						netdev_features_t features)
-+{
-+	if (skb->len + TX_OVERHEAD > MAX_SINGLE_PACKET_SIZE)
-+		features &= ~NETIF_F_GSO_MASK;
-+
-+	features = vlan_features_check(skb, features);
-+	features = vxlan_features_check(skb, features);
-+
-+	return features;
-+}
-+
- static const struct net_device_ops lan78xx_netdev_ops = {
- 	.ndo_open		= lan78xx_open,
- 	.ndo_stop		= lan78xx_stop,
-@@ -3538,6 +3552,7 @@ static const struct net_device_ops lan78
- 	.ndo_set_features	= lan78xx_set_features,
- 	.ndo_vlan_rx_add_vid	= lan78xx_vlan_rx_add_vid,
- 	.ndo_vlan_rx_kill_vid	= lan78xx_vlan_rx_kill_vid,
-+	.ndo_features_check	= lan78xx_features_check,
- };
- 
- static void lan78xx_stat_monitor(unsigned long param)
 
 
