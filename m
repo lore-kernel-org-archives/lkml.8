@@ -2,114 +2,129 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA676C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D75C35240
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F032173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697C620674
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 04:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDbsI95f"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a4Cvs9dW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgA1Enf (ORCPT
+        id S1726612AbgA1Epp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 23:43:35 -0500
-Received: from mail-pf1-f173.google.com ([209.85.210.173]:44922 "EHLO
-        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgA1Enf (ORCPT
+        Mon, 27 Jan 2020 23:45:45 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40465 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgA1Epp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 23:43:35 -0500
-Received: by mail-pf1-f173.google.com with SMTP id y5so2911275pfb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 20:43:34 -0800 (PST)
+        Mon, 27 Jan 2020 23:45:45 -0500
+Received: by mail-ed1-f67.google.com with SMTP id p3so11510232edx.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 20:45:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o/eiodGD5lp4RWZNR205Jfk41Ea2mOrlpEOAJGFIIOE=;
-        b=RDbsI95fxayjdpnQGgTzzWcOn+WF5GX4k/uSyZQlGLHI+1rbOZT/V0Go2Bfaaq/LXi
-         +GTw9RApTN5AaG+yvm+3S7bxl1mEWmLqecwTtD/Pr/MiRZ5jueoHu351RXFAGSdnUpE+
-         M5CHud/zIRiBVrqG2IQcdWM2IypgB52/sJgKA1D3lv1sQQ2L83IUz0eT/IdnwMOX5doh
-         yrd5RBaYVxQe6BtZvJetc96h167zt+dQpuOreo+vr0tvVLzOlUcgAElvJsOz1IlUeSFI
-         fSkvu+z1LyVLIuHoXF4Y/9bMA8P7+dmC1zERot7GkrKYBcG5O3YqMYytWzXAD48AxCxc
-         eURg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7NOtAZALkjd5QbjFJRxMPx1vlO1G2Wo6On/UllTEVNo=;
+        b=a4Cvs9dW0bcj4NM2LAg0XrILeNdVJT9IysZqJmQvIZAhIeR7qotkPNAJJ30eUHkkxo
+         V9TxlGttgaQY3lYc6oa4XPNhG/3nGSbP6DLllvd7mrJe+N23uLaA3DDkRincOKO/NX0q
+         nh9B8qGw2mhdSk+rjEegrnnjFli0eoKY54c+I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o/eiodGD5lp4RWZNR205Jfk41Ea2mOrlpEOAJGFIIOE=;
-        b=Uot6eRdWuzXhWb/fZ+q1YU5g92snU6H921IKET44fOLylvQC7xNzHWI1d16tsAqibh
-         7B0AVszH4JJ41ViN9WNHTd2JsPRJg5H/miwBybnx32jH+jK73WqW3IOPsOHXVIc5gLtM
-         7DOswkhxLmUJIpiDZyjC0Fi+IDxsUNmb662Zt7UxLX1ppj2d0AIWpe+fNPNiixTuKJux
-         Y8YfIcuyF5yzjUERDaDqPvT9uJDNvs/LV+mBUPAD026Cbg11cTk2ZeMWHe94jEpRaIXe
-         ZDyvYdEHkWh8GfuDSgXkJLkReprQu6ubUExYOHMFdCfQqUkBTw5gnBZnpX102qWUQPsA
-         5d+A==
-X-Gm-Message-State: APjAAAWOFbnlb2FyeBDKaJ0SxD1TZEreLfthFzLl30t5npxL0sbZW6TE
-        bHz0zS+2NvaIJiwndM6JADk=
-X-Google-Smtp-Source: APXvYqwxDJIVmbpnATu5bEpg3pxqqVwS4f7Pl082BK6VxiT99QH6kMl4MJUW5za+f9V+ZY+s5MRTDQ==
-X-Received: by 2002:a63:ff20:: with SMTP id k32mr22273186pgi.448.1580186614618;
-        Mon, 27 Jan 2020 20:43:34 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id z14sm17352926pgj.43.2020.01.27.20.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 20:43:33 -0800 (PST)
-Date:   Tue, 28 Jan 2020 13:43:32 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] console: Avoid positive return code from
- unregister_console()
-Message-ID: <20200128044332.GA115889@google.com>
-References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
- <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7NOtAZALkjd5QbjFJRxMPx1vlO1G2Wo6On/UllTEVNo=;
+        b=FqRSoqXSjZWOjlxvXeJteXCrU6fu70eq8mh9uBMyakxSZXTE2/u4u5qUyxuT25seDO
+         ekGNN0Nt1X/JQwzSuig8QSnPuk/zvDRoliSVEY3Mjvubqjno8KWqXnFcJrYD53bY1Htj
+         1u/7099vNwIfCr3HsZZXxVzVAtg78H7+PtIzbkY6PDSKU1a64acxlzzHlumoLv3pjg04
+         we8ljaBTl2xaBlDugw/O9jDNzqz+aALIjxUU+HNtOcN4Q8Um1hGRhoBzj9xgE7pMyexk
+         inPlESE2mr5g5B0rWyJd5+H5LFNSU8SU81WnhekpdyrJFyUbIP6QmPEbm5j4pcs5n3aM
+         apOw==
+X-Gm-Message-State: APjAAAXGlzt7Q0IwlNBRhS+b0cwn992wK0ROsnXu3QfnT4ft/iD0Xuv3
+        X/mPPrFMA7EcNUs+QMUe2Fd9YcC+9HYkNg==
+X-Google-Smtp-Source: APXvYqwdowUyto8Tk6vBqeW23IlQmd+6AaaPJSCalgf//jC1nZoqU4RY+Xa+ZePDs9l6i87w/SYvdA==
+X-Received: by 2002:a17:906:4e97:: with SMTP id v23mr15745eju.331.1580186743251;
+        Mon, 27 Jan 2020 20:45:43 -0800 (PST)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
+        by smtp.gmail.com with ESMTPSA id lu4sm400561ejb.76.2020.01.27.20.45.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2020 20:45:42 -0800 (PST)
+Received: by mail-wm1-f46.google.com with SMTP id t14so1012779wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 20:45:41 -0800 (PST)
+X-Received: by 2002:a1c:3803:: with SMTP id f3mr2479329wma.134.1580186740766;
+ Mon, 27 Jan 2020 20:45:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-6-senozhatsky@chromium.org> <8d0c95c3-64a2-ec14-0ac2-204b0430b2b4@xs4all.nl>
+ <20200122021805.GE149602@google.com> <20200122034826.GA49953@google.com> <7c4accc6-56f2-ecd0-1549-a4114b339ce8@xs4all.nl>
+In-Reply-To: <7c4accc6-56f2-ecd0-1549-a4114b339ce8@xs4all.nl>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 28 Jan 2020 13:45:29 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5C=Zj7h5Xe1w=0czX5ge1Kh=2cj6yEkN6binPgmmpj6Wg@mail.gmail.com>
+Message-ID: <CAAFQd5C=Zj7h5Xe1w=0czX5ge1Kh=2cj6yEkN6binPgmmpj6Wg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 05/15] videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT
+ in REQBUFS
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/27 13:47), Andy Shevchenko wrote:
-[..]
->  	res = _braille_unregister_console(console);
-> -	if (res)
-> +	if (res < 0)
->  		return res;
-> +	if (res > 0)
-> +		return 0;
->  
-> -	res = 1;
-> +	res = -ENODEV;
->  	console_lock();
->  	if (console_drivers == console) {
->  		console_drivers=console->next;
-> @@ -2838,6 +2840,9 @@ int unregister_console(struct console *console)
->  	if (!res && (console->flags & CON_EXTENDED))
->  		nr_ext_console_drivers--;
->  
-> +	if (res && !(console->flags & CON_ENABLED))
-> +		res = 0;
+On Thu, Jan 23, 2020 at 8:08 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> On 1/22/20 4:48 AM, Sergey Senozhatsky wrote:
+> > On (20/01/22 11:18), Sergey Senozhatsky wrote:
+> > [..]
+> >>>> +    * -
+> >>>> +      - __u32
+> >>>>        - ``reserved``\ [1]
+> >>>>        - A place holder for future extensions. Drivers and applications
+> >>>> -  must set the array to zero.
+> >>>> +  must set the array to zero, unless application wants to specify
+> >>>> +        buffer management ``flags``.
+> >>>
+> >>> I think support for this flag should be signaled as a V4L2_BUF_CAP capability.
+> >>> If the capability is not set, then vb2 should set 'flags' to 0 to preserve the
+> >>> old 'Drivers and applications must set the array to zero' behavior.
+> >>
+> >> The patch set adds V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS towards the end of the
+> >> series, I guess I can shuffle the patches and change the wording here.
+> >
+> > Or I can add separate queue flag and V4L2_BUF_CAP:
+> >
+> > struct vb2_queue {
+> > ...
+> >       allow_cache_hints:1
+> > +     allow_consistency_hints:1
+> > ...
+> > }
+> >
+> > and then have CAP_SUPPORTS_CACHE_HINTS/CAP_SUPPORTS_CONSISTENCY_HINTS.
+>
+> Don't these two go hand-in-hand? I.e. either neither are supported, or
+> both are supported? If so, then one queue flag is sufficient.
 
-Console is not on the console_drivers list. Why does !ENABLED case
-require extra handling? What about the case when console is ENABLED
-but still not registered?
+Cache sync hints are already part of the standard UAPI, so I think
+there isn't any capability bit needed for them. That said, they aren't
+really tied to non-consistent MMAP buffers. Userspace using USERPTR
+can also use them.
 
-I think that if the console is not on the list (was never registered)
-then we can just bail out, without console_sysfs_notify(), etc. IOW,
+MMAP buffer consistency hint deserves a capability bit indeed.
 
-	if (res) {
-		console->flags &= ~CON_ENABLED; /* just in case */
-		console_unlock();
-		return res;
-	}
-
-	-ss
+Best regards,
+Tomasz
