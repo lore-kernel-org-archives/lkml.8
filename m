@@ -2,167 +2,140 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE8EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85192C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87D3214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:53:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hodtc920"
+	by mail.kernel.org (Postfix) with ESMTP id 6584F2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgA1OxK (ORCPT
+        id S1726539AbgA1Oys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:53:10 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37272 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgA1OxJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:53:09 -0500
-Received: by mail-lj1-f195.google.com with SMTP id v17so15023379ljg.4;
-        Tue, 28 Jan 2020 06:53:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U/Ya9HgJWhgUTwQZYe1oiJhltZSo1E2iHMK7KNQPMfY=;
-        b=Hodtc920lvy8sd8TOTlPdC/iSYLKAGwpRDk06V/01Ur3aQ4XL1ivGkNnH84m2XjAn1
-         gGLP60qux/AnellnnVvVspIXPaLRsziphTxCBokG4OTCtZ37vGJY3/YoQ2fa9RmNWcuw
-         ZV86MylNds9Suufer9RChI2yJlqms8dr4wV4zQwlHVmMfjWRHPNtMMtWIgY981nuxJsS
-         4tdkUc+CqcFdlyhyvWbWqu3IjfoNzIVRRtQvsxGCcRsUqvsNlvo1NMi0Af120Fi5YKK+
-         BxdcmSxZWWgyU7tyEmQ0FOuBXEVAgcxCB1ZjL7J/Dy0tCkLWHON44PcYQozxI1tzq6Xo
-         O5GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U/Ya9HgJWhgUTwQZYe1oiJhltZSo1E2iHMK7KNQPMfY=;
-        b=fl33GQHmo6O1cXOiJbcka+vqgWU/3ZBCV8Htmy7j1Is6VidKNr/qbqr0oXoz06HZlj
-         kcbcuEifTCpLjiR26BB1MqiXf5TtL8ZZnFqwgH/QqS5bpMFunyFocT9ZFR7hyDpr45uE
-         RgMeosSH6xw68mnjDxCFSxlWrgHYRDLTEAf2nBCTUeDnLS5Uub/481Mo3RKW5TfzOJRS
-         UY/Haq15GHLyNGHv3fWmS/oFHRWYN0prtSCGwO5QQoAO3U4CFK+8h3UuqMyw+0msKsGN
-         8fp8dPFg7DJn1vmdPCA1JZkpJ4eDt91QLVqCwRZtF1eYbKRHweECBIYhpQu0Th42nWl9
-         Lqdw==
-X-Gm-Message-State: APjAAAXwMvA+lX1A1rUHrmjZI6b/sDpCJ/at+PkHd4LAhmLlDkvTB7fO
-        foku411XUvG3HhsBpvC8qdhcJLXg
-X-Google-Smtp-Source: APXvYqw9Pp2WA7B96iEHSu67EpIA7RH2scmzETdUu6IFWu6gJGRHjOAtKCEWC03WfutzAH5DvVqD2w==
-X-Received: by 2002:a2e:7009:: with SMTP id l9mr13222873ljc.96.1580223186894;
-        Tue, 28 Jan 2020 06:53:06 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id j19sm12072651lfb.90.2020.01.28.06.53.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 06:53:06 -0800 (PST)
-Subject: Re: [PATCH v4 11/14] dmaengine: tegra-apb: Clean up suspend-resume
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-12-digetx@gmail.com>
- <7e0d2cfa-5570-93e6-e3dc-7d3f6902a528@gmail.com>
- <831d5e28-72df-3175-bfb6-b33985d93a52@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e245618c-6ae9-18d9-5671-1d6c0cf47a39@gmail.com>
-Date:   Tue, 28 Jan 2020 17:53:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 28 Jan 2020 09:54:48 -0500
+Received: from foss.arm.com ([217.140.110.172]:59060 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbgA1Oys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:54:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7ACA031B;
+        Tue, 28 Jan 2020 06:54:47 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFBF83F68E;
+        Tue, 28 Jan 2020 06:54:45 -0800 (PST)
+Date:   Tue, 28 Jan 2020 14:54:40 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, jeremy.linton@arm.com,
+        arnd@arndb.de, olof@lixom.net, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, guohanjun@huawei.com,
+        gregkh@linuxfoundation.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>
+Subject: Re: [PATCH RFC 1/2] ACPI/PPTT: Add acpi_pptt_get_package_info() API
+Message-ID: <20200128145430.GA47557@bogus>
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
+ <1580210059-199540-2-git-send-email-john.garry@huawei.com>
+ <20200128123415.GB36168@bogus>
+ <60c79aaa-4c49-71b1-11be-8e41a6bf3c1d@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <831d5e28-72df-3175-bfb6-b33985d93a52@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <60c79aaa-4c49-71b1-11be-8e41a6bf3c1d@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.01.2020 17:10, Jon Hunter пишет:
-> 
-> On 21/01/2020 21:23, Dmitry Osipenko wrote:
->> 12.01.2020 20:30, Dmitry Osipenko пишет:
->>> It is enough to check whether hardware is busy on suspend and to reset
->>> it across of suspend-resume because channel's configuration is fully
->>> re-programmed on each DMA transaction anyways and because save-restore
->>> of an active channel won't end up well without pausing transfer prior to
->>> saving of the state (note that all channels shall be idling at the time of
->>> suspend, so save-restore is not needed at all).
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/dma/tegra20-apb-dma.c | 131 +++++++++++++++++-----------------
->>>  1 file changed, 67 insertions(+), 64 deletions(-)
->>>
->>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>> index b9d8e57eaf54..398a0e1d6506 100644
->>> --- a/drivers/dma/tegra20-apb-dma.c
->>> +++ b/drivers/dma/tegra20-apb-dma.c
->>> @@ -1392,6 +1392,36 @@ static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
->>>  	.support_separate_wcount_reg = true,
->>>  };
->>>  
->>> +static int tegra_dma_init_hw(struct tegra_dma *tdma)
->>> +{
->>> +	int err;
->>> +
->>> +	err = reset_control_assert(tdma->rst);
->>> +	if (err) {
->>> +		dev_err(tdma->dev, "failed to assert reset: %d\n", err);
->>> +		return err;
->>> +	}
->>> +
->>> +	err = clk_enable(tdma->dma_clk);
->>> +	if (err) {
->>> +		dev_err(tdma->dev, "failed to enable clk: %d\n", err);
->>> +		return err;
->>> +	}
->>> +
->>> +	/* reset DMA controller */
->>> +	udelay(2);
->>> +	reset_control_deassert(tdma->rst);
->>> +
->>> +	/* enable global DMA registers */
->>> +	tdma_write(tdma, TEGRA_APBDMA_GENERAL, TEGRA_APBDMA_GENERAL_ENABLE);
->>> +	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
->>> +	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFF);
->>> +
->>> +	clk_disable(tdma->dma_clk);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>>  static int tegra_dma_probe(struct platform_device *pdev)
->>>  {
->>>  	const struct tegra_dma_chip_data *cdata;
->>> @@ -1433,30 +1463,18 @@ static int tegra_dma_probe(struct platform_device *pdev)
->>>  	if (ret)
->>>  		return ret;
->>>  
->>> +	ret = tegra_dma_init_hw(tdma);
->>> +	if (ret)
->>> +		goto err_clk_unprepare;
->>> +
->>>  	pm_runtime_irq_safe(&pdev->dev);
->>>  	pm_runtime_enable(&pdev->dev);
->>>  	if (!pm_runtime_enabled(&pdev->dev)) {
->>>  		ret = tegra_dma_runtime_resume(&pdev->dev);
->>>  		if (ret)
->>>  			goto err_clk_unprepare;
->>
->> Jon, but isn't the RPM mandatory for all Tegra SoCs now and thus
->> guaranteed to be enabled? Maybe we should start to remove handling the
->> case of unavailable RPM from all Tegra drivers?
-> 
-> Yes that's true, even ARCH_TEGRA selects PM now
+On Tue, Jan 28, 2020 at 02:04:19PM +0000, John Garry wrote:
+> On 28/01/2020 12:34, Sudeep Holla wrote:
+>
+> Hi Sudeep,
+>
+> > On Tue, Jan 28, 2020 at 07:14:18PM +0800, John Garry wrote:
+> > > The ACPI PPTT ID structure (see 6.2 spec, section 5.2.29.3) allows the
+> > > vendor to provide an identifier (or vendor specific part number) for a
+> > > particular processor hierarchy node structure. That may be a processor
+> > > identifier for a processor node, or some chip identifier for a processor
+> > > package node.
+> > >
+> >
+> > Unfortunately, there were plans to deprecate this in favour of the new
+> > SOC_ID SMCCC API[1]. I am not sure if you or anyone in your company have
+> > access to UEFI ASWG mantis where you can look for the ECR for the PPTT
+> > Type 2 deprecation.
+>
+> I wasn't aware and I can't get access...
+>
 
-I already sent out v5 with the !RPM handling removed from the code,
-please take a look at it.
+I can understand, it is not well published/advertised.
+
+> Personally I would rather PPTT ID structure have a fixed field definition in
+> future spec versions, rather than deprecate.
+>
+> From checking here, nobody has even used it (properly) for processor package
+> nodes:
+> https://github.com/tianocore/edk2-platforms/tree/master/Platform
+>
+
+Yes, that was one of the things we looked at when we started with SOC_ID
+SMCCC API and proposal to deprecate PPTT Type 2 table.
+
+> > I understand it's not ideal, but we need to converge,
+> > please take a look at both before further discussion.
+>
+> I can only check the SMCCC extension which you pointed me at.
+>
+
+Sure, that will at-least give you what SMCCC SOC_ID API looks like.
+
+> >
+> > I personally would not prefer to add the support when I know it is getting
+> > deprecated. I am not sure on kernel community policy on the same.
+>
+> So I need a generic solution for this, as my userspace tool requires a
+> generic solution.
+>
+
+Yes I agree on the generic solution and the soc driver you have proposed
+in the patch. No objections there, just the source of the information
+needs to be changed. Instead of ACPI PPTT Type 2 table, it needs to be
+SOC_ID SMCCC v1.2 API
+
+> >
+> >
+> > [...]
+> >
+> > >
+> > > The ID structure table has a number of fields, which are left open to
+> > > interpretation per implementation. However the spec does provide reference
+> > > examples of how the fields could be used. As such, just provide the
+> > > table fields directly in the API, which the caller may interpret (probably
+> > > as per spec example).
+> > >
+> >
+> > The "open for interpretation" part is why it's not being favoured anymore
+> > by silicon vendors as OEM/ODMs can override the same.
+> >
+> > > https://lore.kernel.org/linux-arm-kernel/1579876505-113251-6-git-send-email-john.garry@huawei.com/
+> > >
+> > Ah, there's already quite a lot of dependency built for this feature :(
+>
+> Not really. It's only an RFC ATM, and my requirement is a sysfs file to read
+> the SoC id(s) (under ACPI FW). So I would still expect to be able to support
+> this from the SMCCC extension method.
+>
+
+As mentioned above, yes the driver would remain almost same for SMCCC
+SOC_ID support too. The main point was: do we need to add support to
+PPTT Type 2 entry when we know there is proposal to deprecate it. I
+would at-least wait to see progress on that until I would add this to
+the kernel.
+
+--
+Regards,
+Sudeep
