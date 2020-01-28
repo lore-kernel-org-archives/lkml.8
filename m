@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B605DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DABAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FCA20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA79120716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222779;
-	bh=W9vJxPU7+5XYWboOQx6gDHeCsUyBYgBvmGMsPlzeYfA=;
+	s=default; t=1580222784;
+	bh=jI+YicMQN6RgKFZTPOi1pQ0Rp9DsZyiNeEI2BC3Qvrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xrXKzMvDmbWTLcnj2d57W1SU6+5Jw7kCU2f7f5NqRkAz3W6MewX+HjMh4nX7liOpS
-	 LVYB5k8mw5TQBSjN6jZsPXMZjYpsa6uaUSnAEO+PWaGj0XnVdQFLzwqeGi01hoxdk0
-	 cJ5RCgBPs25I9/WcNcirwly6VEzjF8miVHlxxyHA=
+	b=WTgGrBobBL0QX4F1r/wlHRS411x4tICWgKYjKcksvavRXhWcWM9dM2JyJX/hEjKoz
+	 Rh7F4Z/Q87Au3txBdXkqpFj0Wlq2ibB49iU5T4kBaEpUHOdPmjrRFck5r3CDb+jQ1y
+	 o5GC19RwcHvP+VdA63R5K6dTOjDb/X6pDigOg46I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgA1OpH (ORCPT
+        id S1728177AbgA1OJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:45:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57734 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:09:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728708AbgA1OJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:09:22 -0500
+        id S1727129AbgA1OJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:09:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F1AD2468F;
-        Tue, 28 Jan 2020 14:09:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 468552468A;
+        Tue, 28 Jan 2020 14:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220562;
-        bh=W9vJxPU7+5XYWboOQx6gDHeCsUyBYgBvmGMsPlzeYfA=;
+        s=default; t=1580220541;
+        bh=jI+YicMQN6RgKFZTPOi1pQ0Rp9DsZyiNeEI2BC3Qvrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CWi662vThjd6bJlFGximcJLIOl8Su2Qv053jZ7mmeuNbPid+Y75w0WB2C8F4EIDqq
-         50MCEX6N5RpjLSg2P/JfzPaOTyPItJYNdadXF14nEXyWspJOzILZw0OYbWER9oHiyO
-         HoXO11jsLuk6q6fVuY6PUmK6DJOSukGPd/exowzA=
+        b=PoZ0NRlyYvt+vppN2szctH6fKTv/ZU71zBmSdmMx1G7UMdv8qFX3A+8YDavzCUVcV
+         Uf9rRB1fNxChe28T5hoUj28t9lDXHioqQUqg1kk+Z75u9HnD817DlqMJoHCjzjlOYj
+         qYFKEkXJxHms9/pXoFaZ5OVfzHdh+JJGC1d/+cCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 056/183] regulator: wm831x-dcdc: Fix list of wm831x_dcdc_ilim from mA to uA
-Date:   Tue, 28 Jan 2020 15:04:35 +0100
-Message-Id: <20200128135835.473799236@linuxfoundation.org>
+Subject: [PATCH 4.4 049/183] cdc-wdm: pass return value of recover_from_urb_loss
+Date:   Tue, 28 Jan 2020 15:04:28 +0100
+Message-Id: <20200128135834.853941225@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,38 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit c25d47888f0fb3d836d68322d4aea2caf31a75a6 ]
+[ Upstream commit 0742a338f5b3446a26de551ad8273fb41b2787f2 ]
 
-The wm831x_dcdc_ilim entries needs to be uA because it is used to compare
-with min_uA and max_uA.
-While at it also make the array const and change to use unsigned int.
+'rv' is the correct return value, pass it upstream instead of 0
 
-Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 17d80d562fd7 ("USB: autosuspend for cdc-wdm")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/wm831x-dcdc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/class/cdc-wdm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
-index 8cbb82ceec405..fad424e20bd5b 100644
---- a/drivers/regulator/wm831x-dcdc.c
-+++ b/drivers/regulator/wm831x-dcdc.c
-@@ -327,8 +327,8 @@ static int wm831x_buckv_get_voltage_sel(struct regulator_dev *rdev)
+diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
+index 71ad04d542128..1a1d1cfc3704c 100644
+--- a/drivers/usb/class/cdc-wdm.c
++++ b/drivers/usb/class/cdc-wdm.c
+@@ -1098,7 +1098,7 @@ static int wdm_post_reset(struct usb_interface *intf)
+ 	rv = recover_from_urb_loss(desc);
+ 	mutex_unlock(&desc->wlock);
+ 	mutex_unlock(&desc->rlock);
+-	return 0;
++	return rv;
  }
  
- /* Current limit options */
--static u16 wm831x_dcdc_ilim[] = {
--	125, 250, 375, 500, 625, 750, 875, 1000
-+static const unsigned int wm831x_dcdc_ilim[] = {
-+	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
- };
- 
- static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
+ static struct usb_driver wdm_driver = {
 -- 
 2.20.1
 
