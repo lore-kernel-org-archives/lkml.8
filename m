@@ -2,292 +2,186 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10501C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206CDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10772467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Urb2AZSy"
+	by mail.kernel.org (Postfix) with ESMTP id E6E6D2467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgA1KPM (ORCPT
+        id S1726063AbgA1KRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:15:12 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:2814 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725926AbgA1KPK (ORCPT
+        Tue, 28 Jan 2020 05:17:08 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:26363 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgA1KRH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:15:10 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SA4Bsx006239;
-        Tue, 28 Jan 2020 11:15:01 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=XPDA0YgYv7szrLllt+wbRgbm7tyir48cuHVcJnA9Q/c=;
- b=Urb2AZSyG2CvPWwNfyY6Ynk1ANzLuRA0K+Hlf3NPhAiStpTUdf3+05RVjgWyaQZMZ6fI
- dlt5u7/kUeYb6j0JbgfSxseSUgvRRVEjDcztwPjx3PoKMxdIgXfXC1PUE9upBqXrZUwg
- bvKXTUqaK+/u7WvYCy0Esmu7OxiH2Rb2oSOkYYuBjn4pj3css1H9F9iObU5xwVK+GUsF
- Jxas4tMPpPlgoPByWFjAZ8JWZ+iG4sqF+vZsmT1vhRBZMDfhEZqMSlq329RiVvKR8V+q
- 4AebQvCMm8dpnv405Rnm9HrchH6ewKJ1aG3ibq7QRNgCaIf6VqElVulIi4AS30RCIP+E Fg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrc1359ch-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jan 2020 11:15:01 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6A6F110002A;
-        Tue, 28 Jan 2020 11:15:00 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3A49F21ED06;
-        Tue, 28 Jan 2020 11:15:00 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 28 Jan 2020 11:14:59
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <megous@megous.com>,
-        <mylene.josserand@bootlin.com>
-CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: touchscreen: Convert edt-ft5x06 to json-schema
-Date:   Tue, 28 Jan 2020 11:14:55 +0100
-Message-ID: <20200128101455.4635-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Tue, 28 Jan 2020 05:17:07 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 9jdNgCZGuP6bJohSpAGjTFqulzRwrCR6WykVri09mT96SVtGibejsxkw6Y5OJmjLqei5kFDQfK
+ aGJN429epJRrfeu6OqgZ+95w6Qyz9XoSqdSZPIS8ekKn4VvXxB5s05bbqaz3Wk0dn5HcYtTdLk
+ Hyo6Ldu153cVwziRkmLI81CE9JhadQQO/K6yu076Ec6eeq63okYRQaBEo9sgQafVIT7/ncmYbt
+ p3EMGwpsawXo51xKFlWfZ30LCpga72VxRTuWm+AQr0sAHQEikD2ZZNEFCmMp0cppmP+ESzKBH5
+ p6M=
+X-IronPort-AV: E=Sophos;i="5.70,373,1574146800"; 
+   d="scan'208";a="63312956"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jan 2020 03:17:07 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 28 Jan 2020 03:17:06 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 28 Jan 2020 03:17:07 -0700
+Date:   Tue, 28 Jan 2020 11:17:04 +0100
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <anirudh.venkataramanan@intel.com>, <olteanv@gmail.com>,
+        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v3 09/10] net: bridge: mrp: Integrate MRP into the
+ bridge
+Message-ID: <20200128101704.kjqok4lvpgo73pzz@lx-anielsen.microsemi.net>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-10-horatiu.vultur@microchip.com>
+ <20200125161615.GD18311@lunn.ch>
+ <20200126130111.o75gskwe2fmfd4g5@soft-dev3.microsemi.net>
+ <20200126171251.GK18311@lunn.ch>
+ <20200127105746.i2txggfnql4povje@lx-anielsen.microsemi.net>
+ <20200127134053.GG12816@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
+In-Reply-To: <20200127134053.GG12816@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the EDT-FT5x06 to DT schema using json-schema.
+On 27.01.2020 14:40, Andrew Lunn wrote:
+>EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>
+>> > 'Thinking allowed' here.
+>> >
+>> >     +------------------------------------------+
+>> >     |                                          |
+>> >     +-->|H1|<---------->|H2|<---------->|H3|<--+
+>> >     eth0    eth1    eth0    eth1    eth0    eth1
+>> >      ^
+>> >      |
+>> >   Blocked
+>> >
+>> >
+>> > There are three major classes of user case here:
+>> >
+>> > 1) Pure software solution
+>> > You need the software bridge in the client to forward these frames
+>> > from the left side to the right side.
+>
+>> As far as I understand it is not the bridge which forward these frames -
+>> it is the user-space tool. This was to put as much functionality in
+>> user-space and only use the kernel to configure the HW. We can (and
+>> should) discuss if this is the right decision.
+>
+>So i need to flip the point around. How does the software switch know
+>not to forward the frames? Are you adding an MDB?
+In the current implementation (patch v3) this is done here:
+https://github.com/microchip-ung/mrp/blob/patch-v3/kernel-patches/v3-0009-net-bridge-mrp-Integrate-MRP-into-the-bridge.patch#L112
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../bindings/input/touchscreen/edt-ft5x06.txt      |  75 -------------
- .../bindings/input/touchscreen/edt-ft5x06.yaml     | 119 +++++++++++++++++++++
- 2 files changed, 119 insertions(+), 75 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+We simply ask the bridge not to forward any MRP frames, on MRP enabled
+ports, and let "someone" else do that.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-deleted file mode 100644
-index 0f6950073d6f..000000000000
---- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-+++ /dev/null
-@@ -1,75 +0,0 @@
--FocalTech EDT-FT5x06 Polytouch driver
--=====================================
--
--There are 5 variants of the chip for various touch panel sizes
--FT5206GE1  2.8" .. 3.8"
--FT5306DE4  4.3" .. 7"
--FT5406EE8  7"   .. 8.9"
--FT5506EEG  7"   .. 8.9"
--FT5726NEI  5.7” .. 11.6"
--
--The software interface is identical for all those chips, so that
--currently there is no need for the driver to distinguish between the
--different chips. Nevertheless distinct compatible strings are used so
--that a distinction can be added if necessary without changing the DT
--bindings.
--
--
--Required properties:
-- - compatible:  "edt,edt-ft5206"
--           or:  "edt,edt-ft5306"
--           or:  "edt,edt-ft5406"
--           or:  "edt,edt-ft5506"
--           or:  "evervision,ev-ft5726"
--           or:  "focaltech,ft6236"
--
-- - reg:         I2C slave address of the chip (0x38)
-- - interrupts:       interrupt specification for the touchdetect
--                     interrupt
--
--Optional properties:
-- - reset-gpios: GPIO specification for the RESET input
-- - wake-gpios:  GPIO specification for the WAKE input
-- - vcc-supply:  Regulator that supplies the touchscreen
--
-- - pinctrl-names: should be "default"
-- - pinctrl-0:   a phandle pointing to the pin settings for the
--                control gpios
--
-- - threshold:   allows setting the "click"-threshold in the range
--                from 0 to 80.
--
-- - gain:        allows setting the sensitivity in the range from 0 to
--                31. Note that lower values indicate higher
--                sensitivity.
--
-- - offset:      allows setting the edge compensation in the range from
--                0 to 31.
--
-- - offset-x:    Same as offset, but applies only to the horizontal position.
--                Range from 0 to 80, only supported by evervision,ev-ft5726
--                devices.
--
-- - offset-y:    Same as offset, but applies only to the vertical position.
--                Range from 0 to 80, only supported by evervision,ev-ft5726
--                devices.
--
-- - touchscreen-size-x	   : See touchscreen.txt
-- - touchscreen-size-y	   : See touchscreen.txt
-- - touchscreen-fuzz-x      : See touchscreen.txt
-- - touchscreen-fuzz-y      : See touchscreen.txt
-- - touchscreen-inverted-x  : See touchscreen.txt
-- - touchscreen-inverted-y  : See touchscreen.txt
-- - touchscreen-swapped-x-y : See touchscreen.txt
--
--Example:
--	polytouch: edt-ft5x06@38 {
--		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
--		reg = <0x38>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&edt_ft5x06_pins>;
--		interrupt-parent = <&gpio2>;
--		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
--		reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
--		wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
--	};
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-new file mode 100644
-index 000000000000..178b7aea0f83
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-@@ -0,0 +1,119 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/edt-ft5x06.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: FocalTech EDT-FT5x06 Polytouch Bindings
-+
-+description: There are 5 variants of the chip for various touch panel sizes
-+             FT5206GE1  2.8" .. 3.8"
-+             FT5306DE4  4.3" .. 7"
-+             FT5406EE8  7"   .. 8.9"
-+             FT5506EEG  7"   .. 8.9"
-+             FT5726NEI  5.7” .. 11.6"
-+
-+maintainers:
-+  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-+
-+allOf:
-+  - $ref: touchscreen.yaml#
-+  - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - evervision,ev-ft5726
-+
-+    then:
-+      properties:
-+        offset-x: true
-+        offset-y: true
-+
-+properties:
-+  compatible:
-+    enum:
-+      - edt,edt-ft5206
-+      - edt,edt-ft5306
-+      - edt,edt-ft5406
-+      - edt,edt-ft5506
-+      - evervision,ev-ft5726
-+      - focaltech,ft6236
-+
-+  reg:
-+    enum: [ 0x38 ]
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  wake-gpios:
-+    maxItems: 1
-+
-+  vcc-supply:
-+    maxItems: 1
-+
-+  gain:
-+    description: Allows setting the sensitivity in the range from 0 to 31.
-+                 Note that lower values indicate higher sensitivity.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 31
-+
-+  offset:
-+    description: Allows setting the edge compensation in the range from 0 to 31.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 31
-+
-+  offset-x:
-+    description: Same as offset, but applies only to the horizontal position.
-+                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 80
-+
-+  offset-y:
-+    description: Same as offset, but applies only to the vertical position.
-+                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 80
-+
-+  touchscreen-size-x: true
-+  touchscreen-size-y: true
-+  touchscreen-fuzz-x: true
-+  touchscreen-fuzz-y: true
-+  touchscreen-inverted-x: true
-+  touchscreen-inverted-y: true
-+  touchscreen-swapped-x-y: true
-+  interrupt-controller: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    i2c@00000000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      edt-ft5x06@38 {
-+        compatible = "edt,edt-ft5406";
-+        reg = <0x38>;
-+        interrupt-parent = <&gpio2>;
-+        interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-+        reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+        wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-+      };
-+    };
-+
-+...
-+
--- 
-2.15.0
+>> We would properly have better performance if we do this in kernel-space.
+>
+>Yes, that is what i think. And if you can do it without any additional
+>code, using the forwarding tables, so much the better.
+I understand the motivation of using the existing forwarding mechanism,
+but I do not think we have all the hooks needed. But we can certainly
+limit the impact on the existing code as much as possible.
+
+>> BTW: It is not only from left to right, it is also from right to left.
+>> The MRM will inject packets on both ring ports, and monitor both.
+>
+>Using the same MAC address in both directions? I need to think what
+>that implies for MDB entries. It probably just works, since you never
+>flood back out the ingress port.
+Seems to work fine :-D
+
+>> Again, I do not know how other HW is designed, but all the SOC's we are
+>> working with, does allow us to add a TCAM rule which can redirect these
+>> frames to the CPU even on a blocked port.
+>
+>It is not in scope for what you are doing, but i wonder how we
+>describe this in a generic Linux way? And then how we push it down to
+>the hardware?
+>
+>For the Marvell Switches, it might be possible to do this without the
+>TCAM. You can add forwarding DB entries marked as Management. It is
+>unclear if this overrides the blocked state, but it would be a bit odd
+>if it did not.
+Based on this, and also on the input from Jürgen, I think there is a
+good chnage we can make this work for existing silicon from several
+vendors.
+
+>> > You could avoid this by adding MDB entries to the bridge. However,
+>> > this does not scale to more then one ring.
+>> I would prefer a solution where the individual drivers can do what is
+>> best on the given HW.
+>The nice thing about adding MDB is that it is making use of the
+>software bridge facilities. In general, the software bridge and
+>hardware bridges are pretty similar. If you can solve the problem
+>using generic software bridge features, not additional special cases
+>in code, you have good chance of being able to offload it to a
+>hardware bridge which is not MRP aware. The switchdev API for MRP
+>specific features should then allow you to make use of any additional
+>features the hardware might have.
+Yes, but the issues in using the MDB API for this is that it does not
+allow to look at source ports, and it does not allow to update the
+priority of the frames.
+
+>> Yes, the solution Horatiu has chosen, is not to forward MRP frames,
+>> received in MRP ring ports at all. This is done by the user-space tool.
+>>
+>> Again, not sure if this is the right way to do it, but it is what patch
+>> v3 does.
+>>
+>> The alternative to this would be to learn the bridge how to forward MRP
+>> frames when it is a MRC. The user-space tool then never needs to do
+>> this, it know that the kernel will take care of this part (either in SW
+>> or in HW).
+>I think that should be considered. I'm not saying it is the best way,
+>just that some thought should be put into it to figure out what it
+>actually implies.
+Sounds good - I will try to explain and illustrate this a bit better,
+such that we all have the same understanding of the problem we need to
+solve.
+
+/Allan
 
