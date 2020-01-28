@@ -2,97 +2,85 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8E7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1378EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB2D24681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10042173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 19:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgA1TIg (ORCPT
+        id S1726610AbgA1TJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 14:08:36 -0500
-Received: from smtprelay0199.hostedemail.com ([216.40.44.199]:40971 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726303AbgA1TIg (ORCPT
+        Tue, 28 Jan 2020 14:09:19 -0500
+Received: from albert.telenet-ops.be ([195.130.137.90]:42534 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgA1TJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 14:08:36 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 94DD918225DF9;
-        Tue, 28 Jan 2020 19:08:34 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: brush21_4aa0e106f0634
-X-Filterd-Recvd-Size: 2518
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 28 Jan 2020 19:08:32 +0000 (UTC)
-Message-ID: <5a01f309d91c35fa10b8faa60f4b84a8cb7d13b0.camel@perches.com>
-Subject: [PATCH] netfilter: Use kvcalloc
-From:   Joe Perches <joe@perches.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Jan 2020 11:07:27 -0800
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 28 Jan 2020 14:09:19 -0500
+Received: from ramsan ([84.195.182.253])
+        by albert.telenet-ops.be with bizsmtp
+        id vv9G2100D5USYZQ06v9G3A; Tue, 28 Jan 2020 20:09:17 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iwWEe-0008Ot-3V; Tue, 28 Jan 2020 20:09:16 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iwWEe-000616-1A; Tue, 28 Jan 2020 20:09:16 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] [RFC] crypto: ccree - fix retry handling in cc_send_sync_request()
+Date:   Tue, 28 Jan 2020 20:09:13 +0100
+Message-Id: <20200128190913.23086-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the uses of kvmalloc_array with __GFP_ZERO to
-the equivalent kvcalloc.
+If cc_queues_status() indicates that the queue is full,
+cc_send_sync_request() should loop and retry.
 
-Signed-off-by: Joe Perches <joe@perches.com>
+However, cc_queues_status() returns either 0 (for success), or -ENOSPC
+(for queue full), while cc_send_sync_request() checks for real errors by
+comparing with -EAGAIN.  Hence -ENOSPC is always considered a real
+error, and the code never retries the operation.
+
+Fix this by just removing the check, as cc_queues_status() never returns
+any other error value than -ENOSPC.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- net/netfilter/nf_conntrack_core.c | 3 +--
- net/netfilter/x_tables.c          | 4 ++--
- 2 files changed, 3 insertions(+), 4 deletions(-)
+I am not 100% sure what was intended originally.
+Perhaps the second -ENOSPC error in cc_queues_status() should have been
+-EAGAIN?
+---
+ drivers/crypto/ccree/cc_request_mgr.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index f4c4b46..d13054 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -2248,8 +2248,7 @@ void *nf_ct_alloc_hashtable(unsigned int *sizep, int nulls)
- 	BUILD_BUG_ON(sizeof(struct hlist_nulls_head) != sizeof(struct hlist_head));
- 	nr_slots = *sizep = roundup(*sizep, PAGE_SIZE / sizeof(struct hlist_nulls_head));
+diff --git a/drivers/crypto/ccree/cc_request_mgr.c b/drivers/crypto/ccree/cc_request_mgr.c
+index 9d61e6f1247819e2..b2a18122f320b7b2 100644
+--- a/drivers/crypto/ccree/cc_request_mgr.c
++++ b/drivers/crypto/ccree/cc_request_mgr.c
+@@ -476,10 +476,6 @@ int cc_send_sync_request(struct cc_drvdata *drvdata,
+ 			break;
  
--	hash = kvmalloc_array(nr_slots, sizeof(struct hlist_nulls_head),
--			      GFP_KERNEL | __GFP_ZERO);
-+	hash = kvcalloc(nr_slots, sizeof(struct hlist_nulls_head), GFP_KERNEL);
- 
- 	if (hash && nulls)
- 		for (i = 0; i < nr_slots; i++)
-diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
-index ce70c25..e27c6c5 100644
---- a/net/netfilter/x_tables.c
-+++ b/net/netfilter/x_tables.c
-@@ -939,14 +939,14 @@ EXPORT_SYMBOL(xt_check_entry_offsets);
-  *
-  * @size: number of entries
-  *
-- * Return: NULL or kmalloc'd or vmalloc'd array
-+ * Return: NULL or zeroed kmalloc'd or vmalloc'd array
-  */
- unsigned int *xt_alloc_entry_offsets(unsigned int size)
- {
- 	if (size > XT_MAX_TABLE_SIZE / sizeof(unsigned int))
- 		return NULL;
- 
--	return kvmalloc_array(size, sizeof(unsigned int), GFP_KERNEL | __GFP_ZERO);
-+	return kvcalloc(size, sizeof(unsigned int), GFP_KERNEL);
- 
- }
- EXPORT_SYMBOL(xt_alloc_entry_offsets);
-
+ 		spin_unlock_bh(&mgr->hw_lock);
+-		if (rc != -EAGAIN) {
+-			cc_pm_put_suspend(dev);
+-			return rc;
+-		}
+ 		wait_for_completion_interruptible(&drvdata->hw_queue_avail);
+ 		reinit_completion(&drvdata->hw_queue_avail);
+ 	}
+-- 
+2.17.1
 
