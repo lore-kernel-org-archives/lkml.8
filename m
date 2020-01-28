@@ -2,156 +2,272 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1539BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DF1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD1F24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C162D2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:02:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lIAeCkFh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KWX/GTBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgA1P7z (ORCPT
+        id S1726697AbgA1QCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:59:55 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35307 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgA1P7z (ORCPT
+        Tue, 28 Jan 2020 11:02:16 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:57768 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbgA1QCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:59:55 -0500
-Received: by mail-il1-f194.google.com with SMTP id g12so11072436ild.2;
-        Tue, 28 Jan 2020 07:59:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w4ohonp6++tc7WV/sPZwKkfZN7aW1XO2ASROEv1nRiU=;
-        b=lIAeCkFhXtKcaKTzDLsiXbW2Ul2ROk9tb5PwiMDl/qJCGJ+ZSMAIZoTnpN8/KjHmuX
-         SxlWPSts47s3FdhN9qe/baojNFdM5XSVtWYqE36fQmaZ25sLCxCD3MZbBrRjSaI+iQWK
-         PlR/1AkzKpzTO4qNV7w57wm3961oum3bDHlO5GyL25C09Ec+87//WpH+YDxd80rhkqXr
-         6I4Hm3J2nwoHXsQODKt+oEjzDYJJcVkKYNBeG/Q4nl/Qd/MFXh9ia5l6qmfIRqYWr/7s
-         Q5SxKAzQ/giBRAgiB8iPG8CiaU57GF9fu98xJknuguPQs9aWZVc7+D6RGo7hieBAeDDH
-         +LnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w4ohonp6++tc7WV/sPZwKkfZN7aW1XO2ASROEv1nRiU=;
-        b=Te/GqH4Z4l1KApq1vIzGF+aH5pHvcUXNa7aA9XSnxUSBL1fPbblopC66BiSahb9mc3
-         M49see/2mZzONBh51bcMhzEsgN5Y7/MHTNtQlM1MkyXYnYwNh+s42U04qq/gJq+4uMuh
-         v2xcy9EjMUd01cUu21NMUUZJsZHd+5OH5Ec77724L5jmLEv/tZTUgR1vi/Sc6t5Yj/F8
-         HqGG90BGm/cECGxm2yPCvyliaT7hfh05PSWJzVHvHJ6A+n17DPOHyxUPDQzLzoTn0z9I
-         7Tiu+QWFM3L8QpBP7AJ3SEeRPj/YwhC61ZWM1N6otrI6qXKC6vTzNER/aGxE1EtqYpx8
-         +cKQ==
-X-Gm-Message-State: APjAAAWkfmp7ZRdKVrjEJ8teSeLvgKYFL/bfGgNunDz1gVTxkNQjHnY9
-        6pc7xG5SRbAGzBGK9OqaqHE=
-X-Google-Smtp-Source: APXvYqwEH+xXx7KfDR76ROthSQWmNYsqJe8W5aR8XGWqgGAr0ee4xhb+Ck7XnHVGnn3Ly4TJztRBFg==
-X-Received: by 2002:a92:3cc3:: with SMTP id j64mr12118361ilf.160.1580227194744;
-        Tue, 28 Jan 2020 07:59:54 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id e23sm1828838ild.37.2020.01.28.07.59.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 07:59:54 -0800 (PST)
-Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
- move_page_tables()
-To:     Wei Yang <richardw.yang@linux.intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        aneesh.kumar@linux.ibm.com, kirill@shutemov.name,
-        yang.shi@linux.alibaba.com, thellstrom@vmware.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
- <20200117232254.2792-4-richardw.yang@linux.intel.com>
- <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
- <20200128004301.GD20624@richard>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d66bb20e-c0e7-caef-cbbc-aa216c2be7d6@gmail.com>
-Date:   Tue, 28 Jan 2020 18:59:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20200128004301.GD20624@richard>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 28 Jan 2020 11:02:15 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00SFrCr9178260;
+        Tue, 28 Jan 2020 16:02:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=6oL2FWs+cZqFFPLSowaKPi65xXvujr8BHs+SMq4JyD8=;
+ b=KWX/GTBEuBuwSVkCgS5O9Mmyh7mgXl+nrl6rnsIM3E7LQA/Kh/mozinmgpijEolU4Iqd
+ 1QNzC3SDN6UMX+RekccqVESD1VJKvjrkWYRQDVTNjG3orcIKNKUvt7HRjZFh5/nQ9qCi
+ 5bNJiwMNAN+AZzq0IBGlq2xijEiBKOkiq/Ekjf60fszMPtxNZy6hqihOslFBytlv0YYL
+ /3200LVwg8H76+jJM1BMrFl2YoPZK+DjsZSloKYf8ihc6b7KLcC8qabXg9QtmoX7EMsb
+ Ok6NcBt2lR1aaTZrKzgszuawIDSc9fzheYMlxVOQyJHibIeAXPfadcjT29LVakB8ni9M Qw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2xrdmqf9yr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jan 2020 16:02:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00SFsfhq007998;
+        Tue, 28 Jan 2020 16:02:07 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2xtmr2rc40-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jan 2020 16:02:07 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00SG24jf026111;
+        Tue, 28 Jan 2020 16:02:05 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Jan 2020 08:02:04 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v4] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease
+ renewals
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <004e01d5d5ed$5e7ca490$1b75edb0$@gmail.com>
+Date:   Tue, 28 Jan 2020 11:02:02 -0500
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-kernel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F4BC4DA3-B120-436B-B473-4F1A0CFEE639@oracle.com>
+References: <004e01d5d5ed$5e7ca490$1b75edb0$@gmail.com>
+To:     Robert Milkowski <rmilkowski@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001280124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001280124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.01.2020 03:43, Wei Yang пишет:
-> On Sun, Jan 26, 2020 at 05:47:57PM +0300, Dmitry Osipenko wrote:
->> 18.01.2020 02:22, Wei Yang пишет:
->>> Use the general helper instead of do it by hand.
->>>
->>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->>> ---
->>>  mm/mremap.c | 7 ++-----
->>>  1 file changed, 2 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/mm/mremap.c b/mm/mremap.c
->>> index c2af8ba4ba43..a258914f3ee1 100644
->>> --- a/mm/mremap.c
->>> +++ b/mm/mremap.c
->>> @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->>>  
->>>  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
->>>  		cond_resched();
->>> -		next = (old_addr + PMD_SIZE) & PMD_MASK;
->>> -		/* even if next overflowed, extent below will be ok */
->>> +		next = pmd_addr_end(old_addr, old_end);
->>>  		extent = next - old_addr;
->>> -		if (extent > old_end - old_addr)
->>> -			extent = old_end - old_addr;
->>>  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
->>>  		if (!old_pmd)
->>>  			continue;
->>> @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->>>  
->>>  		if (pte_alloc(new_vma->vm_mm, new_pmd))
->>>  			break;
->>> -		next = (new_addr + PMD_SIZE) & PMD_MASK;
->>> +		next = pmd_addr_end(new_addr, new_addr + len);
->>>  		if (extent > next - new_addr)
->>>  			extent = next - new_addr;
->>>  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
->>>
->>
->> Hello Wei,
->>
->> Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
->> Tegra (ARM32):
->>
->>  BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
->>
-> 
-> Thanks.
-> 
-> Would you mind letting me know which case you are testing?
 
-Nothing special, systemd starts to fall apart during boot.
 
-> Or the special thing is 32-bit platform?
-I have a limited knowledge about mm/, so can't provide detailed explanation.
+> On Jan 28, 2020, at 10:12 AM, Robert Milkowski <rmilkowski@gmail.com> =
+wrote:
+>=20
+> From: Robert Milkowski <rmilkowski@gmail.com>
+>=20
+> Currently, each time nfs4_do_fsinfo() is called it will do an implicit
+> NFS4 lease renewal, which is not compliant with the NFS4 =
+specification.
+> This can result in a lease being expired by an NFS server.
+>=20
+> Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+> introduced implicit client lease renewal in nfs4_do_fsinfo(),
+> which can result in the NFSv4.0 lease to expire on a server side,
+> and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+>=20
+> This can easily be reproduced by frequently unmounting a sub-mount,
+> then stat'ing it to get it mounted again, which will delay or even
+> completely prevent client from sending RENEW operations if no other
+> NFS operations are issued. Eventually nfs server will expire client's
+> lease and return an error on file access or next RENEW.
+>=20
+> This can also happen when a sub-mount is automatically unmounted
+> due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
+> mounted again via stat(). This can result in a short window during
+> which client's lease will expire on a server but not on a client.
+> This specific case was observed on production systems.
+>=20
+> This patch removes the implicit lease renewal from nfs4_do_fsinfo().
 
-Please take a look at this:
+I'm OK with this approach.
 
-[1]
-https://elixir.bootlin.com/linux/v5.5/source/arch/arm/include/asm/pgtable-2level.h#L210
+And, we've seen sporadic lease expirations in the field and in
+test environments as well. I'm optimistic that this patch will
+address those situations.
 
-[2]
-https://elixir.bootlin.com/linux/v5.5/source/include/asm-generic/pgtable.h#L549
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
 
-[3]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c0ba10b512eb2e2a3888b6e6cc0e089f5e7a191b
+
+> Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+> Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+> ---
+> fs/nfs/nfs4_fs.h    |  4 +---
+> fs/nfs/nfs4proc.c   | 12 ++++++++----
+> fs/nfs/nfs4renewd.c |  5 +----
+> fs/nfs/nfs4state.c  |  4 +---
+> 4 files changed, 11 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+> index a7a73b1..a5db055 100644
+> --- a/fs/nfs/nfs4_fs.h
+> +++ b/fs/nfs/nfs4_fs.h
+> @@ -446,9 +446,7 @@ extern int nfs4_detect_session_trunking(struct =
+nfs_client *clp,
+> extern void nfs4_renewd_prepare_shutdown(struct nfs_server *);
+> extern void nfs4_kill_renewd(struct nfs_client *);
+> extern void nfs4_renew_state(struct work_struct *);
+> -extern void nfs4_set_lease_period(struct nfs_client *clp,
+> -		unsigned long lease,
+> -		unsigned long lastrenewed);
+> +extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned =
+long lease);
+>=20
+>=20
+> /* nfs4state.c */
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 76d3716..7b2d88b 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -5019,16 +5019,13 @@ static int nfs4_do_fsinfo(struct nfs_server =
+*server, struct nfs_fh *fhandle, str
+> 	struct nfs4_exception exception =3D {
+> 		.interruptible =3D true,
+> 	};
+> -	unsigned long now =3D jiffies;
+> 	int err;
+>=20
+> 	do {
+> 		err =3D _nfs4_do_fsinfo(server, fhandle, fsinfo);
+> 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
+> 		if (err =3D=3D 0) {
+> -			nfs4_set_lease_period(server->nfs_client,
+> -					fsinfo->lease_time * HZ,
+> -					now);
+> +			nfs4_set_lease_period(server->nfs_client, =
+fsinfo->lease_time * HZ);
+> 			break;
+> 		}
+> 		err =3D nfs4_handle_exception(server, err, &exception);
+> @@ -6084,6 +6081,7 @@ int nfs4_proc_setclientid(struct nfs_client =
+*clp, u32 program,
+> 		.callback_data =3D &setclientid,
+> 		.flags =3D RPC_TASK_TIMEOUT | RPC_TASK_NO_ROUND_ROBIN,
+> 	};
+> +	unsigned long now =3D jiffies;
+> 	int status;
+>=20
+> 	/* nfs_client_id4 */
+> @@ -6116,6 +6114,9 @@ int nfs4_proc_setclientid(struct nfs_client =
+*clp, u32 program,
+> 		clp->cl_acceptor =3D =
+rpcauth_stringify_acceptor(setclientid.sc_cred);
+> 		put_rpccred(setclientid.sc_cred);
+> 	}
+> +
+> +	if(status =3D=3D 0)
+> +		do_renew_lease(clp, now);
+> out:
+> 	trace_nfs4_setclientid(clp, status);
+> 	dprintk("NFS reply setclientid: %d\n", status);
+> @@ -8203,6 +8204,7 @@ static int _nfs4_proc_exchange_id(struct =
+nfs_client *clp, const struct cred *cre
+> 	struct rpc_task *task;
+> 	struct nfs41_exchange_id_args *argp;
+> 	struct nfs41_exchange_id_res *resp;
+> +	unsigned long now =3D jiffies;
+> 	int status;
+>=20
+> 	task =3D nfs4_run_exchange_id(clp, cred, sp4_how, NULL);
+> @@ -8223,6 +8225,8 @@ static int _nfs4_proc_exchange_id(struct =
+nfs_client *clp, const struct cred *cre
+> 	if (status !=3D 0)
+> 		goto out;
+>=20
+> +	do_renew_lease(clp, now);
+> +
+> 	clp->cl_clientid =3D resp->clientid;
+> 	clp->cl_exchange_flags =3D resp->flags;
+> 	clp->cl_seqid =3D resp->seqid;
+> diff --git a/fs/nfs/nfs4renewd.c b/fs/nfs/nfs4renewd.c
+> index 6ea431b..ff876dd 100644
+> --- a/fs/nfs/nfs4renewd.c
+> +++ b/fs/nfs/nfs4renewd.c
+> @@ -138,15 +138,12 @@
+>  *
+>  * @clp: pointer to nfs_client
+>  * @lease: new value for lease period
+> - * @lastrenewed: time at which lease was last renewed
+>  */
+> void nfs4_set_lease_period(struct nfs_client *clp,
+> -		unsigned long lease,
+> -		unsigned long lastrenewed)
+> +		unsigned long lease)
+> {
+> 	spin_lock(&clp->cl_lock);
+> 	clp->cl_lease_time =3D lease;
+> -	clp->cl_last_renewal =3D lastrenewed;
+> 	spin_unlock(&clp->cl_lock);
+>=20
+> 	/* Cap maximum reconnect timeout at 1/2 lease period */
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index 3455232..f0b0027 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -92,17 +92,15 @@ static int nfs4_setup_state_renewal(struct =
+nfs_client *clp)
+> {
+> 	int status;
+> 	struct nfs_fsinfo fsinfo;
+> -	unsigned long now;
+>=20
+> 	if (!test_bit(NFS_CS_CHECK_LEASE_TIME, &clp->cl_res_state)) {
+> 		nfs4_schedule_state_renewal(clp);
+> 		return 0;
+> 	}
+>=20
+> -	now =3D jiffies;
+> 	status =3D nfs4_proc_get_lease_time(clp, &fsinfo);
+> 	if (status =3D=3D 0) {
+> -		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ, now);
+> +		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
+> 		nfs4_schedule_state_renewal(clp);
+> 	}
+>=20
+> --=20
+> 1.8.3.1
+>=20
+>=20
+
+--
+Chuck Lever
+
+
+
