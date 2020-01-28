@@ -2,126 +2,85 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D8FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54265C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23415207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1892C207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:59:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KnDzVDoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgA1Vvf (ORCPT
+        id S1726346AbgA1V7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 16:51:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57388 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbgA1Vvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 16:51:35 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AAE21ACE0;
-        Tue, 28 Jan 2020 21:51:32 +0000 (UTC)
-Message-ID: <1580248285.18755.2.camel@suse.de>
-Subject: Re: [PATCH v2] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-From:   Enzo Matsumiya <ematsumiya@suse.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        lukas@wunner.de, Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Date:   Tue, 28 Jan 2020 18:51:25 -0300
-In-Reply-To: <41285254-1bc1-3ffe-383e-276dc7193990@gmail.com>
-References: <20191120222043.53432-1-stuart.w.hayes@gmail.com>
-         <41285254-1bc1-3ffe-383e-276dc7193990@gmail.com>
+        Tue, 28 Jan 2020 16:59:41 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45381 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgA1V7k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 16:59:40 -0500
+Received: by mail-il1-f193.google.com with SMTP id p8so12107252iln.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 13:59:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5qE2yGDar/QO89ZtmbEwV0agYaFSTn6aRkOLzm6MdDM=;
+        b=KnDzVDoX/735WRiNifi2vMkpwGbkqY73NCKHH2E7ldvV16oBi22WMClKG0mBbMlGoP
+         agf6TI3e+yFWCxKVjYsWoadqbKcJ2Y/FWp0721tdhrwJ9PXevZB1t61oMCg4H7DpShbA
+         LYf2DFWQTfn9Em0DZZweVfszDmmnGSE6SeLYTGeQmUpFn82c+4huguBLrWvgNi6giiSt
+         QsCoreTxs1E/HkcMHUFTcbq1npKL2NMPCY0LbbqcqTFOxJ1H2r4KUJVu0CBREgM47dcx
+         yeMKjAg704GP99/Z2dIS5/oePgycIA2fudk8NWYJzVtRWVJAYPhFH/QKET5c1O3ZRtAJ
+         SaLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5qE2yGDar/QO89ZtmbEwV0agYaFSTn6aRkOLzm6MdDM=;
+        b=Tu9uDIlQHpqztjub86O4QnLvllGGEMQf7vHv2XuVOHRVAhqPFZvAZOyV+9pmN9Dcni
+         qIoxTYM8ZxXtwouPkxaYeTE9Dt6bQcFLdmK0u/eB+S1QvEKb/mSkw4P46M5ubMwfFpjT
+         uiopmkatpTPZmqwtuPINHAltNHNJmbvbxAcTjn7sbGshds/u50sivYwUTTV/MTI4MfS8
+         uCBacfDH3rsDoJOVreD43xrI/C0ybuN42s1WMH+vjdPv/XuUcqrkBykwUWjTKfoWTNg/
+         1Av7jXaNFgaqZxBtHy2DBLgDr+US09+ANFmLQPLljk1cknDGSk226TIkEjhaWAVIHGKs
+         pjjA==
+X-Gm-Message-State: APjAAAVijAIcVzXVI8ajb2t38RizKFw9Y7EQ2WdyYxF8Xu47gqe+8YEQ
+        t+yvjTmxoJ1T2htQlQ2MJubWD8GE2DKvnrNScHcwDw==
+X-Google-Smtp-Source: APXvYqya8Ty/3A9imY+gRu5qeRRZ4MwOyuIOlPAzOz3kBJ9Jn7sXOuYGYnovYbSG1jsWbvYccvovJ3B1i4a9Sepp7QQ=
+X-Received: by 2002:a92:8141:: with SMTP id e62mr21629924ild.119.1580248779692;
+ Tue, 28 Jan 2020 13:59:39 -0800 (PST)
+MIME-Version: 1.0
+References: <20200127212256.194310-1-ehankland@google.com>
+In-Reply-To: <20200127212256.194310-1-ehankland@google.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 28 Jan 2020 13:59:28 -0800
+Message-ID: <CALMp9eRfeFFb6n22Uf4R2Pf8WW7BVLX_Vuf04WFwiMtrk14Y-Q@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86: Fix perfctr WRMSR for running counters
+To:     Eric Hankland <ehankland@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Shier <pshier@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-01-20 at 10:10 -0600, Stuart Hayes wrote:
-> On 11/20/19 4:20 PM, Stuart Hayes wrote:
-> > Without this patch, a pciehp hotplug port can stop generating
-> > interrupts
-> > on hotplug events, so device adds and removals will not be seen.
-> > 
-> > The pciehp interrupt handler pciehp_isr() will read the slot status
-> > register and then write back to it to clear the bits that caused
-> > the
-> > interrupt. If a different interrupt event bit gets set between the
-> > read and
-> > the write, pciehp_isr will exit without having cleared all of the
-> > interrupt
-> > event bits. If this happens, and the port is using an MSI interrupt
-> > where
-> > per-vector masking is not supported, we won't get any more hotplug
-> > interrupts from that device.
-> > 
-> > That is expected behavior, according to the PCI Express Base
-> > Specification
-> > Revision 5.0 Version 1.0, section 6.7.3.4, "Software Notification
-> > of Hot-
-> > Plug Events".
-> > 
-> > Because the "presence detect changed" and "data link layer state
-> > changed"
-> > event bits are both getting set at nearly the same time when a
-> > device is
-> > added or removed, this is more likely to happen than it might seem.
-> > The
-> > issue was found (and can be reproduced rather easily) by connecting
-> > and
-> > disconnecting an NVMe storage device on at least one system model.
-> > 
-> > This issue was found while adding and removing various NVMe storage
-> > devices
-> > on an AMD PCIe port (PCI device 0x1022/0x1483).
-> > 
-> > This patch fixes this issue by modifying pciehp_isr() by looping
-> > back and
-> > re-reading the slot status register immediately after writing to
-> > it, until
-> > it sees that all of the event status bits have been cleared.
-> > 
-> > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> > ---
-> > v2:
-> >   * fixed ctrl_warn() call
-> >   * improved comments
-> >   * added pvm_capable flag and changed pciehp_isr() to loop back
-> > only when
-> >     pvm_capable flag not set (suggested by Lukas Wunner)
-> >   
-> >  drivers/pci/hotplug/pciehp.h     |  3 ++
-> >  drivers/pci/hotplug/pciehp_hpc.c | 50
-> > ++++++++++++++++++++++++++++----
-> >  2 files changed, 47 insertions(+), 6 deletions(-)
-> > 
-> 
-> Bjorn,
-> 
-> Please let me know if I could do anything to help get this patch
-> accepted.
-> 
-> Thanks!
-> Stuart
-> 
+On Mon, Jan 27, 2020 at 1:23 PM Eric Hankland <ehankland@google.com> wrote:
+>
+> Correct the logic in intel_pmu_set_msr() for fixed and general purpose
+> counters. This was recently changed to set pmc->counter without taking
+> in to account the value of pmc_read_counter() which will be incorrect if
+> the counter is currently running and non-zero; this changes back to the
+> old logic which accounted for the value of currently running counters.
+>
+> Signed-off-by: Eric Hankland <ehankland@google.com>
 
-Hi, can someone please review/accept this patch please? It fixes NVMe
-hotplug operations in SLES15-SP1.
+Fixes: 2924b52117b2 ("KVM: x86/pmu: do not mask the value that is
+written to fixed PMUs")
 
-Thanks,
-
-Enzo
+Reviewed-by: Jim Mattson <jmattson@google.com>
