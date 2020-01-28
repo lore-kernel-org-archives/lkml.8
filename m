@@ -2,431 +2,120 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EEAC32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E5EC32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220C724656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:42:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580172144;
-	bh=jYZYbR5CcqoR4MC8gzM5JkV2BE6GqJZtz+PgXLn3FS0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhED0DAEYBZMVMV9p+WC+uZykbod8BAbCiC0ICaJR7Io+qDR6dNDuzE6TwORnZtFp
-	 v3P/ImywkQL24nNN8cQ1/jTXagp3GhA8hUs1YtJkHeVNZniHsmsOQ3baq/RInS/vtO
-	 HaZiieDaHe9PwfPG2CVxctkZNa8nuV91t4va9KDU=
+	by mail.kernel.org (Postfix) with ESMTP id 0719224656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 00:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgA1AmX (ORCPT
+        id S1726758AbgA1AnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jan 2020 19:42:23 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36571 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgA1AmX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jan 2020 19:42:23 -0500
-Received: by mail-pl1-f196.google.com with SMTP id a6so4407136plm.3;
-        Mon, 27 Jan 2020 16:42:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=h37QmOEnfEH681WqIGM690KZ1griLq6UuArch1R8Dto=;
-        b=Yxitfm70tQKCjbOvA9AZsj+HUkkHTC8lqqWGFzUxygrkaQjdSEv1qKAubbxGdjI5ZA
-         bRrboLnfmkQ4RebPBY9WTfnOrI703JYHl0db12iKY9tCtLQGNiWakXfZzFphBoYpP7d4
-         /Ow8oflLkCJqIvcfzDY8hn5Xhei+In9WMWYth1xhfLJDNTNjlWz+xJiE8vpkyAWrfSsL
-         NgbO/Dhy1wU901qA5eAgel7VIJioc3zJxJtIhKGtkUUpQr6X1lL3tRi+jsa1G6wGAqoN
-         48bbtaheE+MzDpyrzF/d1hCTlcU2rkQGlT2iKMfy7SIJhZHnlgIVQs0SSM3Kc0H90t5G
-         pNZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=h37QmOEnfEH681WqIGM690KZ1griLq6UuArch1R8Dto=;
-        b=mzLem/raKTszoI7um6olMwz9FDLy4y4onlVOoLrefKg4sfg5L24D+KhDl3eyFA3ZkW
-         5uzb6UtFBiPxhiP5rRF1T8/NU9oa7rh+6lzuYPieP+RlP7wcaTmuBarwiB/UFjuZueI1
-         mlgRerhDT4wP0Ymn1PDt7Lmf4WbLDCEZTf5RoEWsv+JyRaoiWn4+MJo2rkY3N0oUZz2Z
-         d77MPIrkrAxrprQrSb3rPrixKLty9WTQDbvlOnAX09CqLro5CTV8D5ZnlhkSsnrK+OTT
-         zA6dIfpu+8g2XZLuaXMk772vvVFENc0C6/qLPg3bwJDWkEYpENCISCXew3n/T5UA4Bxy
-         GLNg==
-X-Gm-Message-State: APjAAAX4/kJcDVkf0nWZkBOdaISnnVCQLoRdpd+LqoonHl5ogHWFL2Ik
-        kWsD5qLg/QjJlFQb8oIXcXE=
-X-Google-Smtp-Source: APXvYqzdbc3QYO3XmlCy0L1zJoM8DzckxdsGbMfgrENyY81gijMMJ2/CzNavfqirK9Dr7Ker+9LCHA==
-X-Received: by 2002:a17:902:a710:: with SMTP id w16mr20447045plq.43.1580172141999;
-        Mon, 27 Jan 2020 16:42:21 -0800 (PST)
-Received: from dosan.roam.corp.google.com ([182.210.106.196])
-        by smtp.gmail.com with ESMTPSA id o16sm17669034pgl.58.2020.01.27.16.42.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2020 16:42:21 -0800 (PST)
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH v2] perf tools: Add machine pointer to struct hists
-Date:   Tue, 28 Jan 2020 09:42:13 +0900
-Message-Id: <20200128004213.106098-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200127143443.89060-1-namhyung@kernel.org>
-References: <20200127143443.89060-1-namhyung@kernel.org>
+        Mon, 27 Jan 2020 19:43:18 -0500
+Received: from mga07.intel.com ([134.134.136.100]:17363 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbgA1AnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jan 2020 19:43:17 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 16:42:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,371,1574150400"; 
+   d="scan'208";a="261266505"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Jan 2020 16:42:48 -0800
+Date:   Tue, 28 Jan 2020 08:43:01 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, dan.j.williams@intel.com,
+        aneesh.kumar@linux.ibm.com, kirill@shutemov.name,
+        yang.shi@linux.alibaba.com, thellstrom@vmware.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
+ move_page_tables()
+Message-ID: <20200128004301.GD20624@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
+ <20200117232254.2792-4-richardw.yang@linux.intel.com>
+ <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a preparation to handle cgroup events better for upcoming work.
-Having a pointer to struct machine will make it easier to access more
-data from output/sort routines.
+On Sun, Jan 26, 2020 at 05:47:57PM +0300, Dmitry Osipenko wrote:
+>18.01.2020 02:22, Wei Yang пишет:
+>> Use the general helper instead of do it by hand.
+>> 
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> ---
+>>  mm/mremap.c | 7 ++-----
+>>  1 file changed, 2 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/mm/mremap.c b/mm/mremap.c
+>> index c2af8ba4ba43..a258914f3ee1 100644
+>> --- a/mm/mremap.c
+>> +++ b/mm/mremap.c
+>> @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+>>  
+>>  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
+>>  		cond_resched();
+>> -		next = (old_addr + PMD_SIZE) & PMD_MASK;
+>> -		/* even if next overflowed, extent below will be ok */
+>> +		next = pmd_addr_end(old_addr, old_end);
+>>  		extent = next - old_addr;
+>> -		if (extent > old_end - old_addr)
+>> -			extent = old_end - old_addr;
+>>  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
+>>  		if (!old_pmd)
+>>  			continue;
+>> @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+>>  
+>>  		if (pte_alloc(new_vma->vm_mm, new_pmd))
+>>  			break;
+>> -		next = (new_addr + PMD_SIZE) & PMD_MASK;
+>> +		next = pmd_addr_end(new_addr, new_addr + len);
+>>  		if (extent > next - new_addr)
+>>  			extent = next - new_addr;
+>>  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
+>> 
+>
+>Hello Wei,
+>
+>Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
+>Tegra (ARM32):
+>
+>  BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
+>
 
-I added session argument to perf_evsel__object_config callbacks to
-enable this as hists objects are accessed via evsel in the normal
-workflows.  So it can be NULL if those callbacks are never called or
-session was not set when it's called.
+Thanks.
 
-If some codes want to access machine from a hists later, it should
-check the pointer first.
+Would you mind letting me know which case you are testing? Or the special
+thing is 32-bit platform?
 
-Suggested-by: Jiri Olsa <jolsa@redhat.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-* add call to evsel__new2() in util/header.c
+>and eventually kernel hangs.
+>
+>Git's bisection points to this patch and reverting it helps. Please fix,
+>thanks in advance.
 
- tools/perf/util/evlist.c       |  8 ++++---
- tools/perf/util/evsel.c        | 38 ++++++++++++++++++++--------------
- tools/perf/util/evsel.h        | 28 ++++++++++++++++++-------
- tools/perf/util/header.c       |  2 +-
- tools/perf/util/hist.c         |  9 ++++++--
- tools/perf/util/hist.h         |  1 +
- tools/perf/util/parse-events.c |  4 ++--
- tools/perf/util/python.c       |  4 ++--
- 8 files changed, 60 insertions(+), 34 deletions(-)
-
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 1548237b6558..870e56c75c23 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -248,8 +248,9 @@ int perf_evlist__add_dummy(struct evlist *evlist)
- 		.config = PERF_COUNT_SW_DUMMY,
- 		.size	= sizeof(attr), /* to capture ABI version */
- 	};
--	struct evsel *evsel = perf_evsel__new_idx(&attr, evlist->core.nr_entries);
-+	struct evsel *evsel;
- 
-+	evsel = perf_evsel__new_idx(&attr, evlist->core.nr_entries, NULL);
- 	if (evsel == NULL)
- 		return -ENOMEM;
- 
-@@ -265,7 +266,8 @@ static int evlist__add_attrs(struct evlist *evlist,
- 	size_t i;
- 
- 	for (i = 0; i < nr_attrs; i++) {
--		evsel = perf_evsel__new_idx(attrs + i, evlist->core.nr_entries + i);
-+		evsel = perf_evsel__new_idx(attrs + i,
-+					    evlist->core.nr_entries + i, NULL);
- 		if (evsel == NULL)
- 			goto out_delete_partial_list;
- 		list_add_tail(&evsel->core.node, &head);
-@@ -1720,7 +1722,7 @@ int perf_evlist__add_sb_event(struct evlist **evlist,
- 		attr->sample_id_all = 1;
- 	}
- 
--	evsel = perf_evsel__new_idx(attr, (*evlist)->core.nr_entries);
-+	evsel = perf_evsel__new_idx(attr, (*evlist)->core.nr_entries, NULL);
- 	if (!evsel)
- 		goto out_err;
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index c8dc4450884c..cf9bb7bb3542 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -56,21 +56,23 @@ struct perf_missing_features perf_missing_features;
- 
- static clockid_t clockid;
- 
--static int perf_evsel__no_extra_init(struct evsel *evsel __maybe_unused)
-+static int perf_evsel__no_extra_init(struct evsel *evsel __maybe_unused,
-+				     struct perf_session *session __maybe_unused)
- {
- 	return 0;
- }
- 
- void __weak test_attr__ready(void) { }
- 
--static void perf_evsel__no_extra_fini(struct evsel *evsel __maybe_unused)
-+static void perf_evsel__no_extra_fini(struct evsel *evsel __maybe_unused,
-+				      struct perf_session *session __maybe_unused)
- {
- }
- 
- static struct {
- 	size_t	size;
--	int	(*init)(struct evsel *evsel);
--	void	(*fini)(struct evsel *evsel);
-+	int	(*init)(struct evsel *evsel, struct perf_session *session);
-+	void	(*fini)(struct evsel *evsel, struct perf_session *session);
- } perf_evsel__object = {
- 	.size = sizeof(struct evsel),
- 	.init = perf_evsel__no_extra_init,
-@@ -78,8 +80,10 @@ static struct {
- };
- 
- int perf_evsel__object_config(size_t object_size,
--			      int (*init)(struct evsel *evsel),
--			      void (*fini)(struct evsel *evsel))
-+			      int (*init)(struct evsel *evsel,
-+					  struct perf_session *session),
-+			      void (*fini)(struct evsel *evsel,
-+					   struct perf_session *session))
- {
- 
- 	if (object_size == 0)
-@@ -234,8 +238,8 @@ bool perf_evsel__is_function_event(struct evsel *evsel)
- #undef FUNCTION_EVENT
- }
- 
--void evsel__init(struct evsel *evsel,
--		 struct perf_event_attr *attr, int idx)
-+void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx,
-+		 struct perf_session *session)
- {
- 	perf_evsel__init(&evsel->core, attr);
- 	evsel->idx	   = idx;
-@@ -248,7 +252,7 @@ void evsel__init(struct evsel *evsel,
- 	evsel->bpf_obj	   = NULL;
- 	evsel->bpf_fd	   = -1;
- 	INIT_LIST_HEAD(&evsel->config_terms);
--	perf_evsel__object.init(evsel);
-+	perf_evsel__object.init(evsel, session);
- 	evsel->sample_size = __perf_evsel__sample_size(attr->sample_type);
- 	perf_evsel__calc_id_pos(evsel);
- 	evsel->cmdline_group_boundary = false;
-@@ -259,13 +263,14 @@ void evsel__init(struct evsel *evsel,
- 	evsel->pmu_name      = NULL;
- }
- 
--struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx)
-+struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx,
-+				  struct perf_session *session)
- {
- 	struct evsel *evsel = zalloc(perf_evsel__object.size);
- 
- 	if (!evsel)
- 		return NULL;
--	evsel__init(evsel, attr, idx);
-+	evsel__init(evsel, attr, idx, session);
- 
- 	if (perf_evsel__is_bpf_output(evsel)) {
- 		evsel->core.attr.sample_type |= (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
-@@ -334,7 +339,8 @@ struct evsel *perf_evsel__new_cycles(bool precise)
- /*
-  * Returns pointer with encoded error via <linux/err.h> interface.
-  */
--struct evsel *perf_evsel__newtp_idx(const char *sys, const char *name, int idx)
-+struct evsel *perf_evsel__newtp_idx(const char *sys, const char *name, int idx,
-+				    struct perf_session *session)
- {
- 	struct evsel *evsel = zalloc(perf_evsel__object.size);
- 	int err = -ENOMEM;
-@@ -360,7 +366,7 @@ struct evsel *perf_evsel__newtp_idx(const char *sys, const char *name, int idx)
- 		event_attr_init(&attr);
- 		attr.config = evsel->tp_format->id;
- 		attr.sample_period = 1;
--		evsel__init(evsel, &attr, idx);
-+		evsel__init(evsel, &attr, idx, session);
- 	}
- 
- 	return evsel;
-@@ -1271,7 +1277,7 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
- 	}
- }
- 
--void perf_evsel__exit(struct evsel *evsel)
-+void perf_evsel__exit(struct evsel *evsel, struct perf_session *session)
- {
- 	assert(list_empty(&evsel->core.node));
- 	assert(evsel->evlist == NULL);
-@@ -1285,12 +1291,12 @@ void perf_evsel__exit(struct evsel *evsel)
- 	perf_thread_map__put(evsel->core.threads);
- 	zfree(&evsel->group_name);
- 	zfree(&evsel->name);
--	perf_evsel__object.fini(evsel);
-+	perf_evsel__object.fini(evsel, session);
- }
- 
- void evsel__delete(struct evsel *evsel)
- {
--	perf_evsel__exit(evsel);
-+	perf_evsel__exit(evsel, NULL);
- 	free(evsel);
- }
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index dc14f4a823cd..5f93620d7764 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -127,6 +127,7 @@ struct perf_cpu_map;
- struct target;
- struct thread_map;
- struct record_opts;
-+struct perf_session;
- 
- static inline struct perf_cpu_map *evsel__cpus(struct evsel *evsel)
- {
-@@ -145,32 +146,43 @@ void perf_evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
- 				struct perf_counts_values *count);
- 
- int perf_evsel__object_config(size_t object_size,
--			      int (*init)(struct evsel *evsel),
--			      void (*fini)(struct evsel *evsel));
-+			      int (*init)(struct evsel *evsel,
-+					  struct perf_session *session),
-+			      void (*fini)(struct evsel *evsel,
-+					   struct perf_session *session));
- 
--struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx);
-+struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx,
-+				  struct perf_session *session);
- 
- static inline struct evsel *evsel__new(struct perf_event_attr *attr)
- {
--	return perf_evsel__new_idx(attr, 0);
-+	return perf_evsel__new_idx(attr, 0, NULL);
- }
- 
--struct evsel *perf_evsel__newtp_idx(const char *sys, const char *name, int idx);
-+static inline struct evsel *evsel__new2(struct perf_event_attr *attr,
-+					struct perf_session *session)
-+{
-+	return perf_evsel__new_idx(attr, 0, session);
-+}
-+
-+struct evsel *perf_evsel__newtp_idx(const char *sys, const char *name, int idx,
-+				    struct perf_session *session);
- 
- /*
-  * Returns pointer with encoded error via <linux/err.h> interface.
-  */
- static inline struct evsel *perf_evsel__newtp(const char *sys, const char *name)
- {
--	return perf_evsel__newtp_idx(sys, name, 0);
-+	return perf_evsel__newtp_idx(sys, name, 0, NULL);
- }
- 
- struct evsel *perf_evsel__new_cycles(bool precise);
- 
- struct tep_event *event_format__new(const char *sys, const char *name);
- 
--void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
--void perf_evsel__exit(struct evsel *evsel);
-+void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx,
-+		 struct perf_session *session);
-+void perf_evsel__exit(struct evsel *evsel, struct perf_session *session);
- void evsel__delete(struct evsel *evsel);
- 
- struct callchain_param;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 4246e7447e54..456dcb150fc6 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3585,7 +3585,7 @@ int perf_session__read_header(struct perf_session *session)
- 		}
- 
- 		tmp = lseek(fd, 0, SEEK_CUR);
--		evsel = evsel__new(&f_attr.attr);
-+		evsel = evsel__new2(&f_attr.attr, session);
- 
- 		if (evsel == NULL)
- 			goto out_delete_evlist;
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index ca5a8f4d007e..2c1f5a967180 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -2775,7 +2775,8 @@ static void hists__delete_all_entries(struct hists *hists)
- 	hists__delete_remaining_entries(&hists->entries_collapsed);
- }
- 
--static void hists_evsel__exit(struct evsel *evsel)
-+static void hists_evsel__exit(struct evsel *evsel,
-+			      struct perf_session *session __maybe_unused)
- {
- 	struct hists *hists = evsel__hists(evsel);
- 	struct perf_hpp_fmt *fmt, *pos;
-@@ -2793,11 +2794,15 @@ static void hists_evsel__exit(struct evsel *evsel)
- 	}
- }
- 
--static int hists_evsel__init(struct evsel *evsel)
-+static int hists_evsel__init(struct evsel *evsel,
-+			     struct perf_session *session)
- {
- 	struct hists *hists = evsel__hists(evsel);
- 
- 	__hists__init(hists, &perf_hpp_list);
-+	if (session)
-+		hists->machine = &session->machines.host;
-+
- 	return 0;
- }
- 
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 0aa63aeb58ec..ffce7536761b 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -84,6 +84,7 @@ struct hists {
- 	u64			nr_non_filtered_entries;
- 	u64			callchain_period;
- 	u64			callchain_non_filtered_period;
-+	struct machine		*machine;
- 	struct thread		*thread_filter;
- 	const struct dso	*dso_filter;
- 	const char		*uid_filter_str;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index c01ba6f8fdad..7290513f7646 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -360,7 +360,7 @@ __add_event(struct list_head *list, int *idx,
- 
- 	event_attr_init(attr);
- 
--	evsel = perf_evsel__new_idx(attr, *idx);
-+	evsel = perf_evsel__new_idx(attr, *idx, NULL);
- 	if (!evsel)
- 		return NULL;
- 
-@@ -546,7 +546,7 @@ static int add_tracepoint(struct list_head *list, int *idx,
- {
- 	struct evsel *evsel;
- 
--	evsel = perf_evsel__newtp_idx(sys_name, evt_name, (*idx)++);
-+	evsel = perf_evsel__newtp_idx(sys_name, evt_name, (*idx)++, NULL);
- 	if (IS_ERR(evsel)) {
- 		tracepoint_error(err, PTR_ERR(evsel), sys_name, evt_name);
- 		return PTR_ERR(evsel);
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 83212c65848b..aa6319279448 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -795,13 +795,13 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevsel,
- 	attr.sample_id_all  = sample_id_all;
- 	attr.size	    = sizeof(attr);
- 
--	evsel__init(&pevsel->evsel, &attr, idx);
-+	evsel__init(&pevsel->evsel, &attr, idx, NULL);
- 	return 0;
- }
- 
- static void pyrf_evsel__delete(struct pyrf_evsel *pevsel)
- {
--	perf_evsel__exit(&pevsel->evsel);
-+	perf_evsel__exit(&pevsel->evsel, NULL);
- 	Py_TYPE(pevsel)->tp_free((PyObject*)pevsel);
- }
- 
 -- 
-2.25.0.341.g760bfbb309-goog
-
+Wei Yang
+Help you, Help me
