@@ -2,134 +2,173 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D18C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0936C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD3B24686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75EAD24688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="VFOKJhgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgA1NhX (ORCPT
+        id S1726295AbgA1NjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:37:23 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:65165 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725974AbgA1NhX (ORCPT
+        Tue, 28 Jan 2020 08:39:14 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33431 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgA1NjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:37:23 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 28 Jan 2020 19:07:19 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 28 Jan 2020 19:06:58 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 3F74E282F; Tue, 28 Jan 2020 19:06:58 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v1] arm64: dts: sc7180: add dsi controller and phy entries for idp dts
-Date:   Tue, 28 Jan 2020 19:06:57 +0530
-Message-Id: <1580218617-30293-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 28 Jan 2020 08:39:13 -0500
+Received: by mail-ed1-f67.google.com with SMTP id r21so14746318edq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 05:39:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7gQlXmCvzp08kGMtiAsioGcZjenlFV2a52ez86a8TvM=;
+        b=VFOKJhgujdkq/gdEa8/aLY6TLKbW5ZH4+h3YiOFdmf85n0wsmbEe0p6BjDp+Lvi0nO
+         JaINYGmzgkYF9kQKZVZskThv8vANqd139Zw29wJrI8xlDM1NtW44xHUCgPzkKyK+mEIZ
+         /qjMeSSEyw784neoMlzUlRzPzCbvbwAs70OK7nvbJCZRq5HhN0EhI7XbR91N6nmZXOCH
+         34wHsz0soFzglkF3vxmKH3jDdkd194jUJmYsu0L2njiKua/UE42gssQqZE224NTZJCIt
+         wUU8gxzx1kYsNzImjBghDtTQ3M7t+2lrBsO//EdnrSF/trAG3QRMJqd06nwflZZztwyF
+         dHlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7gQlXmCvzp08kGMtiAsioGcZjenlFV2a52ez86a8TvM=;
+        b=lrYUPHrnILHqjpUZeYC9AzFjwb1Lvkh9q8kXxe5uqnMMfZkm8VLV4oYS84DnTq34Ot
+         19lyUHhcMEVfPSYEo0PGmccA2mr6msVnuw1qUi77SbKDdg0V0K9Sc2XcFXkjRHwyu6co
+         Y7nOTPN4jYAj0LOjBnHSxwhjYodtZv785JsnV19CtoQ5EVziTpP1FLdL/Sq+8xFsAAVS
+         aI8Lzcz5rBRLKT3U2eqwhoKSseFM+Kz/I1Hzj3o1uZ9yRYHEtHzpqmRpvnvYzhP2oiqG
+         YwOYlICZW5c7G2jI1kKqbMLFB7KCxrDmRxfvkOqLNlKKEW+5reEextGGC2yslvZu+L0i
+         LnRg==
+X-Gm-Message-State: APjAAAXfzPD/im8nVdPRpXvEL0KGqyVMEhwd2UQBfwffi9WmuPqYK98L
+        nI4MbNi63zKQ72m/nLBsvbMjPalztu27LXcCi5S/
+X-Google-Smtp-Source: APXvYqxZ7Ly9DUJWV9cCYqQdNp3MOZKNLM4t+4/wkqfQbNiXyf9pxA/0Gc91Wju5qnZSTM1HNRpy/rZxjqfShg1LjSY=
+X-Received: by 2002:a17:906:22cf:: with SMTP id q15mr3104217eja.77.1580218751019;
+ Tue, 28 Jan 2020 05:39:11 -0800 (PST)
+MIME-Version: 1.0
+References: <000000000000143de7059d2ba3e5@google.com> <000000000000fdbd71059d32a906@google.com>
+In-Reply-To: <000000000000fdbd71059d32a906@google.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 28 Jan 2020 08:39:00 -0500
+Message-ID: <CAHC9VhS_Bfywhp+6H03bY7LrQsBz+io672pSS0DpiZKFiz4L6g@mail.gmail.com>
+Subject: Re: possible deadlock in sidtab_sid2str_put
+To:     jeffv@google.com, omosnace@redhat.com,
+        Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     Eric Paris <eparis@parisplace.org>, jannh@google.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        paulmck@kernel.org, selinux@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding dsi controller and phy entries for idp dt.
+On Tue, Jan 28, 2020 at 7:50 AM syzbot
+<syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has found a reproducer for the following crash on:
+>
+> HEAD commit:    b0be0eff Merge tag 'x86-pti-2020-01-28' of git://git.kerne..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1432aebee00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9784e57c96a92f20
+> dashboard link: https://syzkaller.appspot.com/bug?extid=61cba5033e2072d61806
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10088e95e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13fa605ee00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+61cba5033e2072d61806@syzkaller.appspotmail.com
+>
+> =====================================================
+> WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
+> 5.5.0-syzkaller #0 Not tainted
+> -----------------------------------------------------
+> syz-executor305/10624 [HC0[0]:SC0[2]:HE1:SE0] is trying to acquire:
+> ffff888098c14098 (&(&s->cache_lock)->rlock){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+> ffff888098c14098 (&(&s->cache_lock)->rlock){+.+.}, at: sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
+>
+> and this task is already holding:
+> ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+> ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
+> which would create a new lock dependency:
+>  (&(&nf_conntrack_locks[i])->rlock){+.-.} -> (&(&s->cache_lock)->rlock){+.+.}
+>
+> but this new dependency connects a SOFTIRQ-irq-safe lock:
+>  (&(&nf_conntrack_locks[i])->rlock){+.-.}
+>
+> ... which became SOFTIRQ-irq-safe at:
+>   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+>   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+>   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+>   spin_lock include/linux/spinlock.h:338 [inline]
+>   nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 56 +++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+...
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50a..9f42367 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -7,6 +7,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sc7180.dtsi"
- #include "pm6150.dtsi"
-@@ -232,6 +233,50 @@
- 	};
- };
- 
-+&dsi_controller {
-+	status = "okay";
-+
-+	vdda-supply = <&vreg_l3c_1p2>;
-+
-+	panel@0 {
-+		compatible = "visionox,rm69299-1080p-display";
-+		reg = <0>;
-+
-+		vdda-supply = <&vreg_l8c_1p8>;
-+		vdd3p3-supply = <&vreg_l18a_2p8>;
-+
-+		pinctrl-names = "default", "suspend";
-+		pinctrl-0 = <&disp_pins_default>;
-+		pinctrl-1 = <&disp_pins_default>;
-+
-+		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				panel0_in: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&panel0_in>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi_phy {
-+	status = "okay";
-+};
-+
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
-@@ -289,6 +334,17 @@
- 
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
-+&pm6150l_gpio {
-+	disp_pins_default: disp-pins-default{
-+		pins = "gpio3";
-+		function = "func1";
-+		qcom,drive-strength = <2>;
-+		power-source = <0>;
-+		bias-disable;
-+		output-low;
-+	};
-+};
-+
- &qspi_clk {
- 	pinconf {
- 		pins = "gpio63";
+> to a SOFTIRQ-irq-unsafe lock:
+>  (&(&s->cache_lock)->rlock){+.+.}
+>
+> ... which became SOFTIRQ-irq-unsafe at:
+> ...
+>   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+>   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+>   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+>   spin_lock include/linux/spinlock.h:338 [inline]
+>   sidtab_sid2str_put.part.0+0x36/0x880 security/selinux/ss/sidtab.c:533
+>   sidtab_sid2str_put+0xa0/0xc0 security/selinux/ss/sidtab.c:566
+>   sidtab_entry_to_string security/selinux/ss/services.c:1279 [inline]
+>   sidtab_entry_to_string+0xf2/0x110 security/selinux/ss/services.c:1266
+>   security_sid_to_context_core+0x2c6/0x3c0 security/selinux/ss/services.c:1361
+>   security_sid_to_context+0x34/0x40 security/selinux/ss/services.c:1384
+>   avc_audit_post_callback+0x102/0x790 security/selinux/avc.c:709
+>   common_lsm_audit+0x5ac/0x1e00 security/lsm_audit.c:466
+>   slow_avc_audit+0x16a/0x1f0 security/selinux/avc.c:782
+>   avc_audit security/selinux/include/avc.h:140 [inline]
+>   avc_has_perm+0x543/0x610 security/selinux/avc.c:1185
+>   inode_has_perm+0x1a8/0x230 security/selinux/hooks.c:1631
+>   selinux_mmap_file+0x10a/0x1d0 security/selinux/hooks.c:3701
+>   security_mmap_file+0xa4/0x1e0 security/security.c:1482
+>   vm_mmap_pgoff+0xf0/0x230 mm/util.c:502
+
+...
+
+> other info that might help us debug this:
+>
+>  Possible interrupt unsafe locking scenario:
+>
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(&(&s->cache_lock)->rlock);
+>                                local_irq_disable();
+>                                lock(&(&nf_conntrack_locks[i])->rlock);
+>                                lock(&(&s->cache_lock)->rlock);
+>   <Interrupt>
+>     lock(&(&nf_conntrack_locks[i])->rlock);
+>
+>  *** DEADLOCK ***
+>
+> 4 locks held by syz-executor305/10624:
+>  #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnl_lock net/netfilter/nfnetlink.c:62 [inline]
+>  #0: ffffffff8c1acc68 (&table[i].mutex){+.+.}, at: nfnetlink_rcv_msg+0x9ee/0xfb0 net/netfilter/nfnetlink.c:224
+>  #1: ffff8880836415d8 (nlk_cb_mutex-NETFILTER){+.+.}, at: netlink_dump+0xe7/0xfb0 net/netlink/af_netlink.c:2199
+>  #2: ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+>  #2: ffffffff89865770 (&(&nf_conntrack_locks[i])->rlock){+.-.}, at: nf_conntrack_lock+0x17/0x70 net/netfilter/nf_conntrack_core.c:91
+>  #3: ffffffff8b7df008 (&selinux_ss.policy_rwlock){.+.?}, at: security_sid_to_context_core+0x1ca/0x3c0 security/selinux/ss/services.c:1344
+
+I think this is going to be tricky to fix due to the differing
+contexts from which sidtab_sid2str_put() may be called.  We already
+have a check for !in_task() in sidtab_sid2str_put(), do we want to add
+a check for !in_serving_softirq() too?
+
 -- 
-2.7.4
-
+paul moore
+www.paul-moore.com
