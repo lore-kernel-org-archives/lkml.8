@@ -2,84 +2,70 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5FCC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C304EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2B32467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD3624685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 21:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580246106;
+	bh=SSlxifBdAKf3yqLV5UqVb1+/rphQVJ1iZrau1mVanfE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=akJNLdndH9unaLOHE8wVsvIY+H1Q6+WvSwFNaGsTK687TXtKMV09LidoYnyWeaM90
+	 7wS37Pw+VRE4xbDSHIBLDnXJNbEB0e/iw56fe5qWAddM3Wx+Oa1+dVcYAGMAuXMKPJ
+	 DEA5Pzrcj49lF0839bUHqfM/sS09zrPx4QHwT1Qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgA1VIw (ORCPT
+        id S1726307AbgA1VPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 16:08:52 -0500
-Received: from [167.172.186.51] ([167.172.186.51]:58046 "EHLO shell.v3.sk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726143AbgA1VIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 16:08:52 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 80912DED6C;
-        Tue, 28 Jan 2020 21:09:01 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id oAgxOuU78ZEH; Tue, 28 Jan 2020 21:09:01 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id DD262DF353;
-        Tue, 28 Jan 2020 21:09:00 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id hjAfGRws14eA; Tue, 28 Jan 2020 21:09:00 +0000 (UTC)
-Received: from furthur.lan (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 72A40DED6C;
-        Tue, 28 Jan 2020 21:09:00 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Robert Jarzmik <robert.jarzmik@free.fr>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] gpio: pxa: Avoid a warning when gpio0 and gpio1 IRQS are not there
-Date:   Tue, 28 Jan 2020 22:08:45 +0100
-Message-Id: <20200128210845.332679-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jan 2020 16:15:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbgA1VPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 16:15:05 -0500
+Subject: Re: [GIT PULL] x86/apic fix
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580246104;
+        bh=SSlxifBdAKf3yqLV5UqVb1+/rphQVJ1iZrau1mVanfE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Njua0Wqr4nJRhfFgrcX6yw6KKdeu3BJEveU0NvHDbEVuMDqjkeXfm31N9jF2UOFrN
+         zbJtgT/chYdyWdgTAr9D6Lr6134uqlXJYfQyPGDSDahs50QAfLoE9AOpy/YcLDLQmV
+         SNsO/QLFNTRoCLTTus1aP6UVSR2nt8pHD03GzT0s=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200128163530.GA122391@gmail.com>
+References: <20200128163530.GA122391@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200128163530.GA122391@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-apic-for-linus
+X-PR-Tracked-Commit-Id: d0b7788804482b2689946cd8d910ac3e03126c8d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 435dd727a411004d9402ad0c868c958408271a48
+Message-Id: <158024610490.20407.8232767933881946579.pr-tracker-bot@kernel.org>
+Date:   Tue, 28 Jan 2020 21:15:04 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all platforms use those. Let's use
-platform_get_irq_byname_optional() instead platform_get_irq_byname() so
-that we avoid a useless warning:
+The pull request you sent on Tue, 28 Jan 2020 17:35:30 +0100:
 
-  [    1.359455] pxa-gpio d4019000.gpio: IRQ gpio0 not found
-  [    1.359583] pxa-gpio d4019000.gpio: IRQ gpio1 not found
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-apic-for-linus
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/gpio/gpio-pxa.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/435dd727a411004d9402ad0c868c958408271a48
 
-diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-index 9888b62f37afb..567742d962aef 100644
---- a/drivers/gpio/gpio-pxa.c
-+++ b/drivers/gpio/gpio-pxa.c
-@@ -652,8 +652,8 @@ static int pxa_gpio_probe(struct platform_device *pde=
-v)
- 	if (!pchip->irqdomain)
- 		return -ENOMEM;
-=20
--	irq0 =3D platform_get_irq_byname(pdev, "gpio0");
--	irq1 =3D platform_get_irq_byname(pdev, "gpio1");
-+	irq0 =3D platform_get_irq_byname_optional(pdev, "gpio0");
-+	irq1 =3D platform_get_irq_byname_optional(pdev, "gpio1");
- 	irq_mux =3D platform_get_irq_byname(pdev, "gpio_mux");
- 	if ((irq0 > 0 && irq1 <=3D 0) || (irq0 <=3D 0 && irq1 > 0)
- 		|| (irq_mux <=3D 0))
---=20
-2.24.1
+Thank you!
 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
