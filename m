@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A28C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F1BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9BF24687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7765324693
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221868;
-	bh=B2fvCv8i+LxBDIg8WI21HrzwIXyf7tintpgAoAddjm8=;
+	s=default; t=1580221876;
+	bh=EhEWfSDQNUaSQ8Oa938cJt2aXPh7TJsM7rdbWnQ5AGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKVQXbjppH00JbQJFfofX4RR5J+Oa3r9Oun9up7NJedJta7VVgkPFYu31PuHVDKF4
-	 xhfgr6TVp+T4zXJlVce3dGJVT7azxTDhn9oGtL2HZKeOr75huSE1m+zrKH1DxawllY
-	 EIaAAWt0mC6aMfcWIqYQe2ZQKqbUIazxoGAshgEs=
+	b=MgQwSkJNEmXtTIwvHtEWJoGq75LWRLAigo7N9hEMRkileclJfyiucJ89C65l+EG+f
+	 H/xv3f36zZQkj8zulp70QufQrvNoBHyrZ0Kgy4Ar+0VmpoM+VCmM+XmrOqo+ZaGpf7
+	 zs8oGzySLIgBOSwuKEhkd6GSDA/ypUQVKO/jZ4uQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387567AbgA1ObH (ORCPT
+        id S2387742AbgA1ObP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:31:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56324 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:31:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387481AbgA1O2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:28:21 -0500
+        id S2387459AbgA1O2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:28:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7073620716;
-        Tue, 28 Jan 2020 14:28:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C035B20716;
+        Tue, 28 Jan 2020 14:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221700;
-        bh=B2fvCv8i+LxBDIg8WI21HrzwIXyf7tintpgAoAddjm8=;
+        s=default; t=1580221693;
+        bh=EhEWfSDQNUaSQ8Oa938cJt2aXPh7TJsM7rdbWnQ5AGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SN3xr2w81LToGiUjQUsEaiRG8NL3f/QecyYeYRwZhLsbdDXz9XmwzHULZc+qhGjon
-         j1XM0v9tvibi+asmthzQXAWmXbYQpMguyitsKf6N7V2EH4ZaNXPF9MijmBvwEMjgVj
-         PtfA1rV+W+p4jiY51k6dXU5Trz9zRy5a1xelkWNg=
+        b=aUeMnchXx6ikCwlJ3XRXr9e9H9wXPa1PwpdqRB1dvrvQACxw3Jsing/LyadCM69gK
+         p/asJ1HuHmoqtIODNkjIeBZLIFET/0jbgcX6JTtrAYaSPpx8R9fq0sfGG/jAgNl0Sc
+         cm+xtxdIPmP/qg2fURklT1uFm0PjCyNOVHYyRBZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+cf23983d697c26c34f60@syzkaller.appspotmail.com,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 39/92] netfilter: nft_osf: add missing check for DREG attribute
-Date:   Tue, 28 Jan 2020 15:08:07 +0100
-Message-Id: <20200128135814.094432237@linuxfoundation.org>
+        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 52/92] net/sonic: Quiesce SONIC before re-initializing descriptor memory
+Date:   Tue, 28 Jan 2020 15:08:20 +0100
+Message-Id: <20200128135815.818407182@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -61,34 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 7eaecf7963c1c8f62d62c6a8e7c439b0e7f2d365 upstream.
+commit 3f4b7e6a2be982fd8820a2b54d46dd9c351db899 upstream.
 
-syzbot reports just another NULL deref crash because of missing test
-for presence of the attribute.
+Make sure the SONIC's DMA engine is idle before altering the transmit
+and receive descriptors. Add a helper for this as it will be needed
+again.
 
-Reported-by: syzbot+cf23983d697c26c34f60@syzkaller.appspotmail.com
-Fixes:  b96af92d6eaf9fadd ("netfilter: nf_tables: implement Passive OS fingerprint module in nft_osf")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nft_osf.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/natsemi/sonic.c |   25 +++++++++++++++++++++++++
+ drivers/net/ethernet/natsemi/sonic.h |    3 +++
+ 2 files changed, 28 insertions(+)
 
---- a/net/netfilter/nft_osf.c
-+++ b/net/netfilter/nft_osf.c
-@@ -47,6 +47,9 @@ static int nft_osf_init(const struct nft
- 	struct nft_osf *priv = nft_expr_priv(expr);
- 	int err;
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -115,6 +115,24 @@ static int sonic_open(struct net_device
+ 	return 0;
+ }
  
-+	if (!tb[NFTA_OSF_DREG])
-+		return -EINVAL;
++/* Wait for the SONIC to become idle. */
++static void sonic_quiesce(struct net_device *dev, u16 mask)
++{
++	struct sonic_local * __maybe_unused lp = netdev_priv(dev);
++	int i;
++	u16 bits;
 +
- 	priv->dreg = nft_parse_register(tb[NFTA_OSF_DREG]);
- 	err = nft_validate_register_store(ctx, priv->dreg, NULL,
- 					  NFT_DATA_VALUE, NFT_OSF_MAXGENRELEN);
++	for (i = 0; i < 1000; ++i) {
++		bits = SONIC_READ(SONIC_CMD) & mask;
++		if (!bits)
++			return;
++		if (irqs_disabled() || in_interrupt())
++			udelay(20);
++		else
++			usleep_range(100, 200);
++	}
++	WARN_ONCE(1, "command deadline expired! 0x%04x\n", bits);
++}
+ 
+ /*
+  * Close the SONIC device
+@@ -131,6 +149,9 @@ static int sonic_close(struct net_device
+ 	/*
+ 	 * stop the SONIC, disable interrupts
+ 	 */
++	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
++	sonic_quiesce(dev, SONIC_CR_ALL);
++
+ 	SONIC_WRITE(SONIC_IMR, 0);
+ 	SONIC_WRITE(SONIC_ISR, 0x7fff);
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
+@@ -170,6 +191,9 @@ static void sonic_tx_timeout(struct net_
+ 	 * put the Sonic into software-reset mode and
+ 	 * disable all interrupts before releasing DMA buffers
+ 	 */
++	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
++	sonic_quiesce(dev, SONIC_CR_ALL);
++
+ 	SONIC_WRITE(SONIC_IMR, 0);
+ 	SONIC_WRITE(SONIC_ISR, 0x7fff);
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
+@@ -657,6 +681,7 @@ static int sonic_init(struct net_device
+ 	 */
+ 	SONIC_WRITE(SONIC_CMD, 0);
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
++	sonic_quiesce(dev, SONIC_CR_ALL);
+ 
+ 	/*
+ 	 * initialize the receive resource area
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -110,6 +110,9 @@
+ #define SONIC_CR_TXP            0x0002
+ #define SONIC_CR_HTX            0x0001
+ 
++#define SONIC_CR_ALL (SONIC_CR_LCAM | SONIC_CR_RRRA | \
++		      SONIC_CR_RXEN | SONIC_CR_TXP)
++
+ /*
+  * SONIC data configuration bits
+  */
 
 
