@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE33EC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A92CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B92924686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED4FA24686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221347;
-	bh=96SgEAgr6ueX9E0YESGVCFy9dx3Ny4bQ+JLx/imZpLM=;
+	s=default; t=1580221359;
+	bh=OEcU7b+/F7+cumlbFBaYVrG3ZfIqMFdLfhcW1NhHUTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SIJLreEsDI4u51JRo6JhJ5Fg3gRI81WmaLHmeY4arsO4zKDs6u095Y4/goBok4ztg
-	 djQpsetL5TALAdN5MzZjwWHWJD1CZLpN9t8BMGf9l51Wl6MrtaJ0kJb27HEpxGTQoP
-	 Zz7wHfNwbrnjUgZqJ+iq+Tjl8uuYSn1qR5zIDhCY=
+	b=L4I6SFv3V9eilszGSEWdWKR8lBLDB7tR+vkL+PR7tn8kGjV5ZZlDPCXPWK6VRjc/H
+	 63JOp+RcPP9po2dHGjvKWRsjWjbzbJpwmEJvbElzWazRtrtlX7TmqCSZOABy8k6SAq
+	 osldgaAiMTuai5Q9qaLIhLBmgNrDc27aiC+9Jm3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731257AbgA1OW1 (ORCPT
+        id S1731650AbgA1OWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:22:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48144 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:22:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727549AbgA1OWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:22:21 -0500
+        id S1727549AbgA1OWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:22:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19A1524693;
-        Tue, 28 Jan 2020 14:22:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4BA524686;
+        Tue, 28 Jan 2020 14:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221340;
-        bh=96SgEAgr6ueX9E0YESGVCFy9dx3Ny4bQ+JLx/imZpLM=;
+        s=default; t=1580221353;
+        bh=OEcU7b+/F7+cumlbFBaYVrG3ZfIqMFdLfhcW1NhHUTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V5yMpRtjGCaq9LBhk8eS6b9Nuzhl7qx3WIN7NzD0pT2FpdfHbR59ocKSi1iJ/Tv13
-         NuP8Ly+IzC/bOY8VVeUL5gZnGJwVHBqiHOuRqyHfTfSkkIL2alOwUOkf1ZX00cdwWV
-         hC2hfwqfsb8d6pBq9j1T5IqxDKaC2hT+5KEf4QvQ=
+        b=b9YPw17E7xuJj+8c2vSFZQEq6sd0YWeV+htH+2KobSbwQc+bcSFkXuTKb2mdbyMoW
+         kkl2Rau5D6j7jjZFACR0f3dlwXgoRLYnB3nmDYqyL68B67Om6/IMBfDtRc2nVFXkIr
+         0ryd50p1FooWkjxwNd3VjLjGZT9LzArRyXc6X9QU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 184/271] ASoC: sun4i-i2s: RX and TX counter registers are swapped
-Date:   Tue, 28 Jan 2020 15:05:33 +0100
-Message-Id: <20200128135906.265270066@linuxfoundation.org>
+Subject: [PATCH 4.9 154/271] drm/msm/mdp5: Fix mdp5_cfg_init error return
+Date:   Tue, 28 Jan 2020 15:05:03 +0100
+Message-Id: <20200128135904.029585964@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,36 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit cf2c0e1ce9544df42170fb921f12da82dc0cc8d6 ]
+[ Upstream commit fc19cbb785d7bbd1a1af26229b5240a3ab332744 ]
 
-The RX and TX counters registers offset have been swapped, fix that.
+If mdp5_cfg_init fails because of an unknown major version, a null pointer
+dereference occurs.  This is because the caller of init expects error
+pointers, but init returns NULL on error.  Fix this by returning the
+expected values on error.
 
-Fixes: fa7c0d13cb26 ("ASoC: sunxi: Add Allwinner A10 Digital Audio driver")
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://lore.kernel.org/r/8b26477560ad5fd8f69e037b167c5e61de5c26a3.1566242458.git-series.maxime.ripard@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 15c92400cea42..02c373c65e194 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -78,8 +78,8 @@
- #define SUN4I_I2S_CLK_DIV_MCLK_MASK		GENMASK(3, 0)
- #define SUN4I_I2S_CLK_DIV_MCLK(mclk)			((mclk) << 0)
+diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
+index 8b4e3004f4518..86b0448d2ce58 100644
+--- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
++++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
+@@ -542,7 +542,7 @@ fail:
+ 	if (cfg_handler)
+ 		mdp5_cfg_destroy(cfg_handler);
  
--#define SUN4I_I2S_RX_CNT_REG		0x28
--#define SUN4I_I2S_TX_CNT_REG		0x2c
-+#define SUN4I_I2S_TX_CNT_REG		0x28
-+#define SUN4I_I2S_RX_CNT_REG		0x2c
+-	return NULL;
++	return ERR_PTR(ret);
+ }
  
- #define SUN4I_I2S_TX_CHAN_SEL_REG	0x30
- #define SUN4I_I2S_TX_CHAN_SEL(num_chan)		(((num_chan) - 1) << 0)
+ static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
 -- 
 2.20.1
 
