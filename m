@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E48C47409
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8370C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE042468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1602465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220639;
-	bh=pv1hu2EFHzRvnISsGUXaVLZ6f/q/Eeg8I5rNzw1c06Y=;
+	s=default; t=1580220646;
+	bh=3ehSg3ImLuPEm4H/Y9yPqzlEvLavThdK7WEUFbNjocY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xp21jLV8lASZE6XRsFrqSTxAKl8EudMNiKI4/jlOmwcDnDrBZJkQXTKLG3xWqgODd
-	 iGFH1xKrIzf9iURE8Rfi5O7YrOg3EYJ86PtYRXYwlqtxU2DljiuL7BULXAwqRMTiqy
-	 rysbCuKbSEnDKyDaqn65JVw7v8HMsFp1kU42DOho=
+	b=zfiU7sxL7kD5/3uvmcMKTZKsHQKa74JifiFI3MQRtJF2vSzBJpIaB+ZstxACtW9uh
+	 aP8O+LxCyO97qyTM+VLpOH0KRjwIZzY1Wg+gajGqzZD5KSQ7modpGPfkXWTF+ANxrT
+	 OmfNMkZESFuLL05Kve51JztwgnRMIgyf4oXxqyKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgA1OKj (ORCPT
+        id S1727867AbgA1OKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:10:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:10:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbgA1OKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:10:33 -0500
+        id S1729196AbgA1OKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:10:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 717DF22522;
-        Tue, 28 Jan 2020 14:10:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6119E2468A;
+        Tue, 28 Jan 2020 14:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220631;
-        bh=pv1hu2EFHzRvnISsGUXaVLZ6f/q/Eeg8I5rNzw1c06Y=;
+        s=default; t=1580220641;
+        bh=3ehSg3ImLuPEm4H/Y9yPqzlEvLavThdK7WEUFbNjocY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D7CYGAmhoevHZR25wvVlAPeoN+QUOr0FgwquXFlabB2zwMu7EYF0gsySdttpm0GBz
-         cbxDv4F0HTjJ4Z8KKYcXcrV/1zHN6UR0dBf1WoLcjAFso0vY2wPiFcGOKkwgFlEzuX
-         qZDEYa7ppVOS+guH5ub/H8jl7nhhNDe5DFNA6TQs=
+        b=hQxRB7cJ8pOnLRmxk9PNPfdo9oXog/zfjX2W0tgz8kFubHEQJ1RWxsq7PgYcJz/0r
+         6hVj7A1jFBLheG87G9dwU9/QB/vjaQqvnVlYr2Vb0o9Bt4ck/6C1gP+Hv81yzMYV8c
+         gycRZh50I9+5Jz44lx8OtL/zrQDzgii6qoP9vctA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 085/183] IB/mlx5: Add missing XRC options to QP optional params mask
-Date:   Tue, 28 Jan 2020 15:05:04 +0100
-Message-Id: <20200128135838.461808358@linuxfoundation.org>
+Subject: [PATCH 4.4 089/183] platform/x86: alienware-wmi: printing the wrong error code
+Date:   Tue, 28 Jan 2020 15:05:08 +0100
+Message-Id: <20200128135838.949293999@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -62,88 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 8f4426aa19fcdb9326ac44154a117b1a3a5ae126 ]
+[ Upstream commit 6d1f8b3d75419a8659ac916a1e9543bb3513a882 ]
 
-The QP transition optional parameters for the various transition for XRC
-QPs are identical to those for RC QPs.
+The "out_data" variable is uninitialized at the point.  Originally, this
+used to print "status" instead and that seems like the correct thing to
+print.
 
-Many of the XRC QP transition optional parameter bits are missing from the
-QP optional mask table.  These omissions caused failures when doing XRC QP
-state transitions.
-
-For example, when trying to change the response timer of an XRC receive QP
-via the RTS2RTS transition, the new timer value was ignored because
-MLX5_QP_OPTPAR_RNR_TIMEOUT bit was missing from the optional params mask
-for XRC qps for the RTS2RTS transition.
-
-Fix this by adding the missing XRC optional parameters for all QP
-transitions to the opt_mask table.
-
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Fixes: a4774e9095de ("IB/mlx5: Fix opt param mask according to firmware spec")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: bc2ef884320b ("alienware-wmi: For WMAX HDMI method, introduce a way to query HDMI cable status")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/qp.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/platform/x86/alienware-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
-index 43d277a931c2a..eac5f5eff8d22 100644
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -1426,6 +1426,11 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_PKEY_INDEX	|
- 					  MLX5_QP_OPTPAR_Q_KEY		|
- 					  MLX5_QP_OPTPAR_PRI_PORT,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_PKEY_INDEX	|
-+					  MLX5_QP_OPTPAR_PRI_PORT,
- 		},
- 		[MLX5_QP_STATE_RTR] = {
- 			[MLX5_QP_ST_RC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH  |
-@@ -1459,6 +1464,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 					  MLX5_QP_OPTPAR_RWE		|
- 					  MLX5_QP_OPTPAR_PM_STATE,
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH	|
-+					  MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_PM_STATE	|
-+					  MLX5_QP_OPTPAR_RNR_TIMEOUT,
- 		},
- 	},
- 	[MLX5_QP_STATE_RTS] = {
-@@ -1475,6 +1486,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY		|
- 					  MLX5_QP_OPTPAR_SRQN		|
- 					  MLX5_QP_OPTPAR_CQN_RCV,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_RNR_TIMEOUT	|
-+					  MLX5_QP_OPTPAR_PM_STATE	|
-+					  MLX5_QP_OPTPAR_ALT_ADDR_PATH,
- 		},
- 	},
- 	[MLX5_QP_STATE_SQER] = {
-@@ -1486,6 +1503,10 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 					   MLX5_QP_OPTPAR_RWE		|
- 					   MLX5_QP_OPTPAR_RAE		|
- 					   MLX5_QP_OPTPAR_RRE,
-+			[MLX5_QP_ST_XRC]  = MLX5_QP_OPTPAR_RNR_TIMEOUT	|
-+					   MLX5_QP_OPTPAR_RWE		|
-+					   MLX5_QP_OPTPAR_RAE		|
-+					   MLX5_QP_OPTPAR_RRE,
- 		},
- 	},
- };
+diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
+index 3df47c1b04ec7..f5585740a7650 100644
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -511,7 +511,7 @@ static ssize_t show_hdmi_source(struct device *dev,
+ 			return scnprintf(buf, PAGE_SIZE,
+ 					 "input [gpu] unknown\n");
+ 	}
+-	pr_err("alienware-wmi: unknown HDMI source status: %d\n", out_data);
++	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
+ 	return scnprintf(buf, PAGE_SIZE, "input gpu [unknown]\n");
+ }
+ 
 -- 
 2.20.1
 
