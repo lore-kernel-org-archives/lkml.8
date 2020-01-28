@@ -2,77 +2,91 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB47C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F373AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E61020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD15220CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 09:42:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="StHYXGkm"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="L75TFrdw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgA1JmW (ORCPT
+        id S1726199AbgA1Jm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 04:42:22 -0500
-Received: from ozlabs.org ([203.11.71.1]:43971 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgA1JmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:42:22 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 486M8n0TCyz9s29;
-        Tue, 28 Jan 2020 20:42:16 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1580204538;
-        bh=vBYxluI8YO3d0BkpCpGleyVdqs3TLmw/qUXpjpvWwkw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=StHYXGkmWl/RXHUl1ZItf4Zf1jmM0t9S9lc+nB3PNyfnS77Fh0FLFoQyHKz+RQw16
-         XNcYb94YF/w/m0dUHHw/1aWvo4YYUurLj38VhZbIK8ya2IIlNYbB/x3Le9Vjt8KnCP
-         7yNoxlBtQ7I1kwfp1x4/hpHIEWbtR5tHtkB8jF08a+IKt6TyHHuHwBnMFoY4c5ubdU
-         gXO/xuRY7x5MWd/QZmjKypaOHlEUEdodTvtFdgDkNFMLSci1wv+7gH1cO0ndl2eidR
-         bbCVzzYX2Syyf7bNow953LVleA8hhw2EWMy224lS5ZNDTyxuDhuIIN8Vnmhj4feNEV
-         PjE04twgQ38Qw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        netdev@vger.kernel.org
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        security@kernel.org, ivansprundel@ioactive.com, vishal@chelsio.com
-Subject: Re: [PATCH] net: cxgb3_main: Add CAP_NET_ADMIN check to CHELSIO_GET_MEM
-In-Reply-To: <7a7d18d3-8c8d-af05-9aa0-fa54fa0dc0b7@cogentembedded.com>
-References: <20200124094144.15831-1-mpe@ellerman.id.au> <7a7d18d3-8c8d-af05-9aa0-fa54fa0dc0b7@cogentembedded.com>
-Date:   Tue, 28 Jan 2020 20:42:16 +1100
-Message-ID: <87lfprhq87.fsf@mpe.ellerman.id.au>
+        Tue, 28 Jan 2020 04:42:27 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1512 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726141AbgA1Jm0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 04:42:26 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S9XRJJ026097;
+        Tue, 28 Jan 2020 10:42:11 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Kmmsnt0GP19LNEdrBchAyZ2FdgB00aCxXbF9RNsjpVY=;
+ b=L75TFrdwxinDcyog/Ny+M12HWHDQn6p/hu+wpK++jUkFR3mHiXuSzx1jJUgXOLmowAly
+ SbpW6ULAXjmvz8CVKMRvE5OmhJH5990xBQaD/dfxgKbksxwsm6MaALEd1S20HQeE5TES
+ aEXQ9UL3jNu6m7zFcU7XvXRIcsyg7VoVviwEE3ky8D69BEiI1hUoqGNRb3owDfq2h9KE
+ jsImpwzSBBEMEDDxr0Mb1NQQEh7MBOLYGeGmF/eolceW84EvpOkHIS4kvdn4e/5mHmlG
+ 38Cx7W3ogTGatTcYpMp8+qkOvs2KQzjeo9+YiXPIbpwDPeJrTlmyHTyIUx6k5j+lsITO sg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrbpaw9xb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jan 2020 10:42:11 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C18FD100034;
+        Tue, 28 Jan 2020 10:42:07 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B396921D3C0;
+        Tue, 28 Jan 2020 10:42:07 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 28 Jan 2020 10:42:07
+ +0100
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <dmaengine@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [PATCH 0/4] STM32 DMAMUX driver fixes and improvements
+Date:   Tue, 28 Jan 2020 10:41:54 +0100
+Message-ID: <20200128094158.20361-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sergei Shtylyov <sergei.shtylyov@cogentembedded.com> writes:
-> Hello!
->
-> On 24.01.2020 12:41, Michael Ellerman wrote:
->
->> The cxgb3 driver for "Chelsio T3-based gigabit and 10Gb Ethernet
->> adapters" implements a custom ioctl as SIOCCHIOCTL/SIOCDEVPRIVATE in
->> cxgb_extension_ioctl().
->> 
->> One of the subcommands of the ioctl is CHELSIO_GET_MEM, which appears
->> to read memory directly out of the adapter and return it to userspace.
->> It's not entirely clear what the contents of the adapter memory
->> contains, but the assumption is that it shouldn't be accessible to all
->
->     s/contains/is/? Else it sounds tautological. :-)
+This series brings improvements to the DMAMUX driver with support of power
+management and probe function gets a cleanup.
 
-Yeah you're right that would have been clearer.
+Etienne Carriere (3):
+  dmaengine: stm32-dmamux: fix clock handling in probe sequence
+  dmaengine: stm32-dmamux: use reset controller only at probe time
+  dmaengine: stm32-dmamux: driver defers probe for clock and reset
 
-Dave beat me to it and has already applied it, but thanks for reviewing
-it anyway.
+Pierre-Yves MORDRET (1):
+  dmaengine: stm32-dmamux: add suspend/resume power management support
 
-cheers
+ drivers/dma/stm32-dmamux.c | 93 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 77 insertions(+), 16 deletions(-)
+
+-- 
+2.17.1
+
