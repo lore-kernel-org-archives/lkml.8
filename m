@@ -2,51 +2,53 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6269CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A69C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B4024686
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF31024685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221560;
-	bh=+87kAnNydczXb7BW97pURPntkWjZgoBlJtHDxJHMwDs=;
+	s=default; t=1580221562;
+	bh=1EACH4F58ZD1tdnCTIw6HDtVwy8XumsZjIIU30TsouU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SfW0N3vulUtGmbdYLE23AR21wY/V9kZulOjLDw+Tu/ogISAcX63ZNdjpaOv0VfP7Y
-	 0AqwnlJ/WLOQUA8y5+zGZyNsuPo/cR3fsIBqycZ07joi3T/Tt21kyiKaGTLgunNQ2X
-	 rDvCE3w03Tr6Aqvgidaj55Q8ZXAByRgXexvH/v/Q=
+	b=ts8JbN2gjRR1/usWdw/CSPSyiImFmku1kKVztBGKYGcYY/ctr40qyv6leaykLuHdT
+	 obv3I4Mc8cyfRDJI/Nze6tfj7desAuAEm0dqhe5t1PQvv1Muixl5+mzIIJk2Dho+Cx
+	 D0xYlXsnVKVhd8rSN3jKp/dVv/6UewM4wOjiTCU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733109AbgA1OZ7 (ORCPT
+        id S1733117AbgA1O0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:25:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53086 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:26:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733098AbgA1OZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:56 -0500
+        id S1729663AbgA1OZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:25:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D18420716;
-        Tue, 28 Jan 2020 14:25:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8355824685;
+        Tue, 28 Jan 2020 14:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221555;
-        bh=+87kAnNydczXb7BW97pURPntkWjZgoBlJtHDxJHMwDs=;
+        s=default; t=1580221558;
+        bh=1EACH4F58ZD1tdnCTIw6HDtVwy8XumsZjIIU30TsouU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0U63r2YWqhsOv9jdm1g8d0I/jQEsCN7Z/Wlh7FXFa96/lOVgV94N/1kGBFjOMeHrr
-         gD68W8c61YEu5q7ZJuqqwQXNT8TTFb/1CMbgCVXYTNtmdobXfPv4QWMAS86OcoLiNv
-         ZC/CnufwU6RVRUMs/JCFsdr4D4DWZXPdDKVgbYuw=
+        b=NNnvQd5ta9WIS6mp9yhO9ac9fyfGpOObt8XY51EgQr4TNufYQmm4wNf/FbZnEdNMB
+         5xvmKuNzmYXH9KkRAyJ3INpe8Jl6HrbBbHv0MV5cvYt4s6CSLFKYRet/UtJzzNyf3q
+         4P+7Ie1wBoh5TDivnPjTe8URwstUf5CNzvDIjs/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 235/271] firestream: fix memory leaks
-Date:   Tue, 28 Jan 2020 15:06:24 +0100
-Message-Id: <20200128135910.049750526@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 226/271] packet: fix data-race in fanout_flow_is_huge()
+Date:   Tue, 28 Jan 2020 15:06:15 +0100
+Message-Id: <20200128135909.384939014@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,52 +61,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit fa865ba183d61c1ec8cbcab8573159c3b72b89a4 ]
+[ Upstream commit b756ad928d98e5ef0b74af7546a6a31a8dadde00 ]
 
-In fs_open(), 'vcc' is allocated through kmalloc() and assigned to
-'atm_vcc->dev_data.' In the following execution, if an error occurs, e.g.,
-there is no more free channel, an error code EBUSY or ENOMEM will be
-returned. However, 'vcc' is not deallocated, leading to memory leaks. Note
-that, in normal cases where fs_open() returns 0, 'vcc' will be deallocated
-in fs_close(). But, if fs_open() fails, there is no guarantee that
-fs_close() will be invoked.
+KCSAN reported the following data-race [1]
 
-To fix this issue, deallocate 'vcc' before the error code is returned.
+Adding a couple of READ_ONCE()/WRITE_ONCE() should silence it.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Since the report hinted about multiple cpus using the history
+concurrently, I added a test avoiding writing on it if the
+victim slot already contains the desired value.
+
+[1]
+
+BUG: KCSAN: data-race in fanout_demux_rollover / fanout_demux_rollover
+
+read to 0xffff8880b01786cc of 4 bytes by task 18921 on cpu 1:
+ fanout_flow_is_huge net/packet/af_packet.c:1303 [inline]
+ fanout_demux_rollover+0x33e/0x3f0 net/packet/af_packet.c:1353
+ packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
+ deliver_skb net/core/dev.c:1888 [inline]
+ dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
+ xmit_one net/core/dev.c:3195 [inline]
+ dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
+ __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
+ dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
+ neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+ dst_output include/net/dst.h:436 [inline]
+ ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
+ ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
+ udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
+ udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
+ inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0x9f/0xc0 net/socket.c:657
+ ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
+ __sys_sendmmsg+0x123/0x350 net/socket.c:2413
+ __do_sys_sendmmsg net/socket.c:2442 [inline]
+ __se_sys_sendmmsg net/socket.c:2439 [inline]
+ __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+write to 0xffff8880b01786cc of 4 bytes by task 18922 on cpu 0:
+ fanout_flow_is_huge net/packet/af_packet.c:1306 [inline]
+ fanout_demux_rollover+0x3a4/0x3f0 net/packet/af_packet.c:1353
+ packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
+ deliver_skb net/core/dev.c:1888 [inline]
+ dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
+ xmit_one net/core/dev.c:3195 [inline]
+ dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
+ __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
+ dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
+ neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+ dst_output include/net/dst.h:436 [inline]
+ ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
+ ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
+ udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
+ udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
+ inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0x9f/0xc0 net/socket.c:657
+ ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
+ __sys_sendmmsg+0x123/0x350 net/socket.c:2413
+ __do_sys_sendmmsg net/socket.c:2442 [inline]
+ __se_sys_sendmmsg net/socket.c:2439 [inline]
+ __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 18922 Comm: syz-executor.3 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: 3b3a5b0aab5b ("packet: rollover huge flows before small flows")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/firestream.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/packet/af_packet.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/drivers/atm/firestream.c
-+++ b/drivers/atm/firestream.c
-@@ -927,6 +927,7 @@ static int fs_open(struct atm_vcc *atm_v
- 			}
- 			if (!to) {
- 				printk ("No more free channels for FS50..\n");
-+				kfree(vcc);
- 				return -EBUSY;
- 			}
- 			vcc->channo = dev->channo;
-@@ -937,6 +938,7 @@ static int fs_open(struct atm_vcc *atm_v
- 			if (((DO_DIRECTION(rxtp) && dev->atm_vccs[vcc->channo])) ||
- 			    ( DO_DIRECTION(txtp) && test_bit (vcc->channo, dev->tx_inuse))) {
- 				printk ("Channel is in use for FS155.\n");
-+				kfree(vcc);
- 				return -EBUSY;
- 			}
- 		}
-@@ -950,6 +952,7 @@ static int fs_open(struct atm_vcc *atm_v
- 			    tc, sizeof (struct fs_transmit_config));
- 		if (!tc) {
- 			fs_dprintk (FS_DEBUG_OPEN, "fs: can't alloc transmit_config.\n");
-+			kfree(vcc);
- 			return -ENOMEM;
- 		}
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 47a862cc7b349..fb643945e4244 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -1332,15 +1332,21 @@ static void packet_sock_destruct(struct sock *sk)
  
+ static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
+ {
+-	u32 rxhash;
++	u32 *history = po->rollover->history;
++	u32 victim, rxhash;
+ 	int i, count = 0;
+ 
+ 	rxhash = skb_get_hash(skb);
+ 	for (i = 0; i < ROLLOVER_HLEN; i++)
+-		if (po->rollover->history[i] == rxhash)
++		if (READ_ONCE(history[i]) == rxhash)
+ 			count++;
+ 
+-	po->rollover->history[prandom_u32() % ROLLOVER_HLEN] = rxhash;
++	victim = prandom_u32() % ROLLOVER_HLEN;
++
++	/* Avoid dirtying the cache line if possible */
++	if (READ_ONCE(history[victim]) != rxhash)
++		WRITE_ONCE(history[victim], rxhash);
++
+ 	return count > (ROLLOVER_HLEN >> 1);
+ }
+ 
+-- 
+2.20.1
+
 
 
