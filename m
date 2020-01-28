@@ -2,164 +2,125 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A66C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA2FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76FE5207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:36:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnkrjD/4"
+	by mail.kernel.org (Postfix) with ESMTP id E76D42467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgA1Sgw (ORCPT
+        id S1726608AbgA1Snj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:36:52 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:46580 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbgA1Sgw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:36:52 -0500
-Received: by mail-yw1-f66.google.com with SMTP id u139so6955597ywf.13;
-        Tue, 28 Jan 2020 10:36:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UAaJIyMCtfqDJNVGPg+VIxoXHpPloRjdhA2WOZPQuQo=;
-        b=nnkrjD/4eh4orr4I9QZwg2tsLzI/F7M1p9TKAUtbzdELO0mgklmIYiLAd5geqGJB7u
-         Vp9oLuyidZqIeV7sAIANKB3mkgnupXSadCS4j0ObyivnC1i/tOddlV+vsuPIAUU/ls0S
-         tZdA+/o1Az2iRUa9PGDQFPxR9n3pBaosh6ftpPW/oUWtDGnEQR86U1UHFcHpkrH2Yoav
-         qsqdzeTyoPS7xLCPxDSuogcNkMEJmctyj/vAJmazWs7EdBXnpdIM7fL9CgI6Mo0yJt9S
-         mTieWkt4sPblkKDg4sBkH/Pz3ShgtahvE3GOOdX+stAg3SdoXe33CdibMKAfBbQ8fLQZ
-         E22g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UAaJIyMCtfqDJNVGPg+VIxoXHpPloRjdhA2WOZPQuQo=;
-        b=NtKn0n3iOrcvT8wU5tX1XPsswCtOIwKf7w9Pv31p8GVH8Q6vKT0EhuQCq69BrSApo8
-         LAgg3VwlFVBYqduZ+AW5uEaNr8BSqpxx7QCofrBTI4b8nZjQo36oCEDVWDLyWdhYtPau
-         Y8tDNxTujanGxmpauGeZdGMQDV1NuiWpfS9Oif8aKZ5FuW4ghoqz+Gg8LoZ3HtGZucT2
-         AMpJsjlJOvV8w4TvNhO6k4NhHSn9Jd3qntos/pwJ8fbdcllvPf0qO20DGH5Y/eLEH8BT
-         EeBgfJM91wJkTFyHiUx2iDNTYwiDs0CbIbTaDCilHVy6gMoUB5C4ZdCbzQHO+D47NV7O
-         ikhg==
-X-Gm-Message-State: APjAAAX8997Rb5FkXJdKIbadhzmb2liggl+abXQAmp2ssFfktZujtoCh
-        nOh6J53+CrzeaAGN4/LTwNE=
-X-Google-Smtp-Source: APXvYqyzGvSY0gHjoEHGMOB4+0FYgIao/sa1DMQ5fP8MYcSTPmpU8qNnV4/4N227yIsPKr6z1eGTOA==
-X-Received: by 2002:a0d:df15:: with SMTP id i21mr2024857ywe.73.1580236610860;
-        Tue, 28 Jan 2020 10:36:50 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id t3sm8858935ywi.18.2020.01.28.10.36.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Jan 2020 10:36:50 -0800 (PST)
-Subject: Re: [RFC v1 0/6] kunit: create a centralized executor to dispatch all
- KUnit tests
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191216220555.245089-1-brendanhiggins@google.com>
- <20200106224022.GX11244@42.do-not-panic.com>
- <CAFd5g456c2Zs7rCvRPgio83G=SrtPGi25zbqAUyTBHspHwtu4w@mail.gmail.com>
- <594b7815-0611-34ea-beb5-0642114b5d82@gmail.com>
- <CAFd5g469TWzrLKmQNR2i0HACJ3FEu-=4-Rk005g9szB5UsZAcw@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <e801e4ac-b7c2-3d0a-71e7-f8153a3dfbc8@gmail.com>
-Date:   Tue, 28 Jan 2020 12:36:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 28 Jan 2020 13:43:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:33604 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726233AbgA1Sni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 13:43:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3784328;
+        Tue, 28 Jan 2020 10:43:37 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D25713F52E;
+        Tue, 28 Jan 2020 10:43:36 -0800 (PST)
+Subject: Re: [PATCH 1/3] clk: rockchip: convert rk3399 pll type to use
+ readl_poll_timeout
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-clk@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, zhangqing@rock-chips.com,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com
+References: <20200128100204.1318450-1-heiko@sntech.de>
+ <f8001dbb-ebbc-ebe3-d1db-c75d3888fd38@arm.com> <12366580.SORy7UBWfn@phil>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6349f721-60ae-b494-85c5-c1be8a669799@arm.com>
+Date:   Tue, 28 Jan 2020 18:43:31 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g469TWzrLKmQNR2i0HACJ3FEu-=4-Rk005g9szB5UsZAcw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <12366580.SORy7UBWfn@phil>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/28/20 1:19 AM, Brendan Higgins wrote:
-> On Mon, Jan 27, 2020 at 9:40 AM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 1/23/20 4:40 PM, Brendan Higgins wrote:
->>> Sorry for the late reply. I am still catching up from being on vacation.
->>>>> On Mon, Jan 6, 2020 at 2:40 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
->>>> It does beg the question if this means kunit is happy to not be a tool
->>>> to test pre basic setup stuff (terminology used in init.c, meaning prior
->>>> to running all init levels). I suspect this is the case.
+On 28/01/2020 4:29 pm, Heiko Stuebner wrote:
+> Am Dienstag, 28. Januar 2020, 16:28:44 CET schrieb Robin Murphy:
+>> On 28/01/2020 10:02 am, Heiko Stuebner wrote:
+>>> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 >>>
->>> Not sure. I still haven't seen any cases where this is necessary, so I
->>> am not super worried about it. Regardless, I don't think this patchset
->>> really changes anything in that regard, we are moving from late_init
->>> to after late_init, so it isn't that big of a change for most use
->>> cases.
+>>> Instead of open coding the polling of the lock status, use the
+>>> handy readl_poll_timeout for this. As the pll locking is normally
+>>> blazingly fast and we don't want to incur additional delays, we're
+>>> not doing any sleeps similar to for example the imx clk-pllv4
+>>> and define a very safe but still short timeout of 1ms.
 >>>
->>> Please share if you can think of some things that need to be tested in
->>> early init.
+>>> Suggested-by: Stephen Boyd <sboyd@kernel.org>
+>>> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+>>> ---
+>>>    drivers/clk/rockchip/clk-pll.c | 21 ++++++++++-----------
+>>>    1 file changed, 10 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/drivers/clk/rockchip/clk-pll.c b/drivers/clk/rockchip/clk-pll.c
+>>> index 198417d56300..43c9fd0086a2 100644
+>>> --- a/drivers/clk/rockchip/clk-pll.c
+>>> +++ b/drivers/clk/rockchip/clk-pll.c
+>>> @@ -585,19 +585,18 @@ static const struct clk_ops rockchip_rk3066_pll_clk_ops = {
+>>>    static int rockchip_rk3399_pll_wait_lock(struct rockchip_clk_pll *pll)
+>>>    {
+>>>    	u32 pllcon;
+>>> -	int delay = 24000000;
+>>> +	int ret;
+>>>    
+>>> -	/* poll check the lock status in rk3399 xPLLCON2 */
+>>> -	while (delay > 0) {
+>>> -		pllcon = readl_relaxed(pll->reg_base + RK3399_PLLCON(2));
+>>> -		if (pllcon & RK3399_PLLCON2_LOCK_STATUS)
+>>> -			return 0;
+>>> +	/*
+>>> +	 * Lock time typical 250, max 500 input clock cycles @24MHz
+>>> +	 * So define a very safe maximum of 1000us, meaning 24000 cycles.
+>>> +	 */
+>>> +	ret = readl_poll_timeout(pll->reg_base + RK3399_PLLCON(2), pllcon,
+>>> +				 pllcon & RK3399_PLLCON2_LOCK_STATUS, 0, 1000);
 >>
->> I don't have a specific need for this right now.  I had not thought about
->> how the current kunit implementation forces all kunit tests to run at a
->> specific initcall level before reading this email thread.
->>
->> I can see the value of being able to have some tests run at different
->> initcall levels to verify what functionality is available and working
->> at different points in the boot sequence.
+>> Note that the existing I/O accessor was readl_relaxed(), but using plain
+>> readl_poll_timeout() switches it to regular readl(). It may well not
+>> matter, but since it's not noted as an intentional change it seemed
+>> worth pointing out.
 > 
-> Let's cross that bridge when we get there. It should be fairly easy to
-> add that functionality.
+> So we end up with an additional __iormb() after each readl_relaxed call.
+> So except for a small speed-penalty per iteration is there some other
+> memory-barrier wirednes that could come into play? (Somehow I always
+> forget the contents of Will's memory-barrier talks after a time)
 
-Yes. I just wanted to add the thought to the back of your mind so that
-it does not get precluded by future changes to the kunit architecture.
+For the current arm64 implementation, probably not. For 32-bit it's 
+still a DSB, which might in theory generate a bunch of coherency traffic 
+synchronising with all the other CPUs each time, although unless you're 
+counting every last microWatt even that's unlikely to be anything to 
+worry about in practice. You *could* keep consistency with 
+readl_relaxed_poll_timeout() instead, but you could equally argue the 
+"use regular accessors for simplicity unless there's a provable benefit 
+to using relaxed ones" angle. Up to you :)
 
+Robin.
+
+>  From a bit of non-scientific testing, rk3328 seems to need at max 20
+> iterations in the wait_lock loop for the pll to lock, when doing cpufreq
+> scaling.
 > 
->> But more important than early initcall levels, I do not want the
->> framework to prevent using or testing code and data that are marked
->> as '__init'.  So it is important to retain a way to invoke the tests
->> while __init code and data are available, if there is also a change
->> to generally invoke the tests later.
+> While interestingly px30 takes somewhere between 900 and 2000 iterations
+> on the same pll type.
+> [Though sleeps are not really possible anyway due to pll rates also getting
+> set during of_clk_register early during boot which results in errors about
+> scheduling the idle thread, so in the end it doesn't really matter]
 > 
-> Definitely. For now that still works as long as you don't build KUnit
-> as a module, but I think Alan's new patches which allow KUnit to be
-> run at runtime via debugfs could cause some difficulty there. Again,
-
-Yes, Alan's patches are part of what triggered me thinking about the
-issues I raised.
-
-
-> we could add Kconfigs to control this, but the compiler nevertheless
-> complains because it doesn't know what phase KUnit runs in.
+> Heiko
 > 
-> Is there any way to tell the compiler that it is okay for non __init
-> code to call __init code? I would prefer not to have a duplicate
-> version of all the KUnit libraries with all the symbols marked __init.
-
-I'm not sure.  The build messages have always been useful and valid in
-my context, so I never thought to consider that possibility.
-
-> Thoughts?
-> .
 > 
-
