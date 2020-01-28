@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DABAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9B5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA79120716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65AA824688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222784;
-	bh=jI+YicMQN6RgKFZTPOi1pQ0Rp9DsZyiNeEI2BC3Qvrw=;
+	s=default; t=1580222791;
+	bh=qeubVtjGPkxwmdUo+kI9xbarZDGPcg0nVGIze15XR4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WTgGrBobBL0QX4F1r/wlHRS411x4tICWgKYjKcksvavRXhWcWM9dM2JyJX/hEjKoz
-	 Rh7F4Z/Q87Au3txBdXkqpFj0Wlq2ibB49iU5T4kBaEpUHOdPmjrRFck5r3CDb+jQ1y
-	 o5GC19RwcHvP+VdA63R5K6dTOjDb/X6pDigOg46I=
+	b=YL3+f+D2g88+J4p65ywc+kgWLS8H/82mH0R5h4NH65cpOPkHDlr3FNn06xCXkeNF5
+	 IJJ7yzNG07m7HtgR4XHXEWlTlww31OZlaEKyxncalBh/EN6DKv5VeepIBOuyHm0dIt
+	 kom6jJuktr4qGjNiFjddHjDOlpvPWP5btYfolmb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgA1OJP (ORCPT
+        id S1726504AbgA1Oq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:09:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57310 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:46:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbgA1OJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:09:02 -0500
+        id S1727789AbgA1OJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:09:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 468552468A;
-        Tue, 28 Jan 2020 14:09:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B56924688;
+        Tue, 28 Jan 2020 14:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220541;
-        bh=jI+YicMQN6RgKFZTPOi1pQ0Rp9DsZyiNeEI2BC3Qvrw=;
+        s=default; t=1580220551;
+        bh=qeubVtjGPkxwmdUo+kI9xbarZDGPcg0nVGIze15XR4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PoZ0NRlyYvt+vppN2szctH6fKTv/ZU71zBmSdmMx1G7UMdv8qFX3A+8YDavzCUVcV
-         Uf9rRB1fNxChe28T5hoUj28t9lDXHioqQUqg1kk+Z75u9HnD817DlqMJoHCjzjlOYj
-         qYFKEkXJxHms9/pXoFaZ5OVfzHdh+JJGC1d/+cCI=
+        b=NNNrJWw9KO2Om5lQzn0d2Xje9IC1QPMUGFrd7Hfq8txPn659WNfZI+zdWIoldIIQZ
+         vAPgnFS7+uFDPg6wUF3yO0AzKIgQnokyc356gGlNx76Kr7THzY36IVWobwNGffBm6K
+         8TF/2jHnwh3qF0tsvR9P5DZF1NnqXttUpUzPaDNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 049/183] cdc-wdm: pass return value of recover_from_urb_loss
-Date:   Tue, 28 Jan 2020 15:04:28 +0100
-Message-Id: <20200128135834.853941225@linuxfoundation.org>
+Subject: [PATCH 4.4 052/183] ASoC: qcom: Fix of-node refcount unbalance in apq8016_sbc_parse_of()
+Date:   Tue, 28 Jan 2020 15:04:31 +0100
+Message-Id: <20200128135835.112688114@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -59,33 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 0742a338f5b3446a26de551ad8273fb41b2787f2 ]
+[ Upstream commit 8d1667200850f8753c0265fa4bd25c9a6e5f94ce ]
 
-'rv' is the correct return value, pass it upstream instead of 0
+The apq8016 driver leaves the of-node refcount at aborting from the
+loop of for_each_child_of_node() in the error path.  Not only the
+iterator node of for_each_child_of_node(), the children nodes referred
+from it for codec and cpu have to be properly unreferenced.
 
-Fixes: 17d80d562fd7 ("USB: autosuspend for cdc-wdm")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: bdb052e81f62 ("ASoC: qcom: add apq8016 sound card support")
+Cc: Patrick Lai <plai@codeaurora.org>
+Cc: Banajit Goswami <bgoswami@codeaurora.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/cdc-wdm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/qcom/apq8016_sbc.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
-index 71ad04d542128..1a1d1cfc3704c 100644
---- a/drivers/usb/class/cdc-wdm.c
-+++ b/drivers/usb/class/cdc-wdm.c
-@@ -1098,7 +1098,7 @@ static int wdm_post_reset(struct usb_interface *intf)
- 	rv = recover_from_urb_loss(desc);
- 	mutex_unlock(&desc->wlock);
- 	mutex_unlock(&desc->rlock);
--	return 0;
-+	return rv;
+diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
+index 1efdf0088ecdf..886f2027e6712 100644
+--- a/sound/soc/qcom/apq8016_sbc.c
++++ b/sound/soc/qcom/apq8016_sbc.c
+@@ -98,13 +98,15 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
+ 
+ 		if (!cpu || !codec) {
+ 			dev_err(dev, "Can't find cpu/codec DT node\n");
+-			return ERR_PTR(-EINVAL);
++			ret = -EINVAL;
++			goto error;
+ 		}
+ 
+ 		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
+ 		if (!link->cpu_of_node) {
+ 			dev_err(card->dev, "error getting cpu phandle\n");
+-			return ERR_PTR(-EINVAL);
++			ret = -EINVAL;
++			goto error;
+ 		}
+ 
+ 		link->codec_of_node = of_parse_phandle(codec, "sound-dai", 0);
+@@ -116,13 +118,13 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
+ 		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting cpu dai name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		ret = snd_soc_of_get_dai_name(codec, &link->codec_dai_name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting codec dai name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		link->platform_of_node = link->cpu_of_node;
+@@ -132,15 +134,24 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
+ 		ret = of_property_read_string(np, "link-name", &link->name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting codec dai_link name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		link->stream_name = link->name;
+ 		link->init = apq8016_sbc_dai_init;
+ 		link++;
++
++		of_node_put(cpu);
++		of_node_put(codec);
+ 	}
+ 
+ 	return data;
++
++ error:
++	of_node_put(np);
++	of_node_put(cpu);
++	of_node_put(codec);
++	return ERR_PTR(ret);
  }
  
- static struct usb_driver wdm_driver = {
+ static int apq8016_sbc_platform_probe(struct platform_device *pdev)
 -- 
 2.20.1
 
