@@ -2,143 +2,124 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_DBL_ABUSE_MALW autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6CCC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E52C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B2224687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580214262;
-	bh=BtqscQvFbrm9Hvfh2uW51lnqhOWg/ZKqqk/HxI4Up1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vxIroYXdBv7vmcatVw9KsbDuDPeJni8gaZSFQIKrbXuutdWu2axhD5vRCF0tWK5Wx
-	 fU/m3ElrFPEg/reK7F/6nYmXrDfq/9mrNrHvIv4E86OlHVnUnsJ1/EuCLzbdzbTmZY
-	 4iM4GyqpVft1az+sAoLI4rR9XrEPsvS5NXsVkNwU=
+	by mail.kernel.org (Postfix) with ESMTP id 79E6824688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:30:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Rbz1P8X1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgA1MYV (ORCPT
+        id S1726114AbgA1MaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:24:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbgA1MYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:24:20 -0500
-Received: from localhost (unknown [223.226.101.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0041C24685;
-        Tue, 28 Jan 2020 12:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580214259;
-        bh=BtqscQvFbrm9Hvfh2uW51lnqhOWg/ZKqqk/HxI4Up1A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qdUQmUtqdRw+9h3xCJxZPnmgPE0w88p/uvrqPvpdpQY2NVJgCVCuG2L2bjiWb+6Ya
-         +esNf2jMmYgrO4zO0hnY9k3ICW/kPZa3jeUI5V2DENTSts4MCG59r2ICpRGBtdpHx+
-         95VeNeU3w44aK9YXEnraPxKQQRWuZOoQoSWmKgBU=
-Date:   Tue, 28 Jan 2020 17:54:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     peter.ujfalusi@ti.com, dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, corbet@lwn.net,
-        linux-doc@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: Docs build broken by driver-api/dmaengine/client.rst ? (was Re:
- [GIT PULL]: dmaengine updates for v5.6-rc1)
-Message-ID: <20200128122415.GU2841@vkoul-mobl>
-References: <20200127145835.GI2841@vkoul-mobl>
- <87imkvhkaq.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
+        Tue, 28 Jan 2020 07:30:16 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45642 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgA1MaQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 07:30:16 -0500
+Received: by mail-qk1-f194.google.com with SMTP id x1so13068634qkl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 04:30:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:date:subject:message-id
+         :cc:to;
+        bh=8GwDVchQDE0RRDd6Z1x4gzFv6pXtLF378PeW6dBbf+w=;
+        b=Rbz1P8X1bfckF8p5+fQPfltDNpYpc5sp5fHqq9u1T5/uhK6rRW78SfwJEw2v28znfV
+         wPfmUeOnrz7CBbeIgQixtLq2TPQmdgtO1vVi6z9urV65HN1x4ZK0nWUORD8codoMVkS8
+         rPApC12IYdkgP3grHEjFihd/Jh4OgeLy2QqFihiQOoNERJPGlH4ggjAY8evnQXoqrTaN
+         KqoP6/pkU7BjH0xE18gbhqENWpt3g5gz/4WQxHhB9FaTgVokGRGk0m2PJgFNbLse/V1Q
+         DUm5C86KbFXNmme7COzfebOm4aubFGvujqheNY2AxjxXyz7y4nv8h1Ou8ChS1lBEdbUk
+         SJNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version:date
+         :subject:message-id:cc:to;
+        bh=8GwDVchQDE0RRDd6Z1x4gzFv6pXtLF378PeW6dBbf+w=;
+        b=Hwb8HSjAMhK+ZdZn8FzSL400dvAIUmwCqXU2Xoy8Cbrnw+T/dBXmQTnagBEJcoeT81
+         us9ETCxWX89Ubt5dd8D4hmYbkPIapJZFEozD7gcRYNbJKM0N2O2vGUCDvDD2ruGQmlVj
+         i2edqvmZCOEjjhDIaDS5aARapPuVwQW8MRpXiZ3x2Bh2BPz5DbtI/ZLUlefj+fjat2NL
+         uTracoEvCwjfYEXTZMDe7twdG6gmlFn4Yu8xrXy69TBrx8blXal56MAJ6zJ10r7m3BqU
+         VbzKlQlN2w4JGvGaSiEfAX2ed2M5q+ZLeKciAHxenTdc+8mYSdTYKWBHCkC2k7ITPIhq
+         vtCA==
+X-Gm-Message-State: APjAAAWKHMkwHdj8RChpJEB131t0syisUHbuFu0ygIKoHopA0F/rpIAB
+        XAMMB3hvu4iryf4MyF3NGc/jqQ==
+X-Google-Smtp-Source: APXvYqw4NHHH616JlS/IrWEyv4wSaDB7EoG4ap5GXk6Z++ZZIlsdVUcHztpJPWJHmyylARL29R+hpQ==
+X-Received: by 2002:a37:9ce:: with SMTP id 197mr22314564qkj.194.1580214614838;
+        Tue, 28 Jan 2020 04:30:14 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 69sm11862264qkk.106.2020.01.28.04.30.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 04:30:14 -0800 (PST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87imkvhkaq.fsf@mpe.ellerman.id.au>
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Date:   Tue, 28 Jan 2020 07:30:13 -0500
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page table helpers
+Message-Id: <0C97A195-CBF2-43EF-88A0-7683BB9EF892@lca.pw>
+Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+To:     Mike Rapoport <rppt@linux.ibm.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
 
-On 28-01-20, 22:50, Michael Ellerman wrote:
-> Hi Vinod,
-> 
-> Vinod Koul <vkoul@kernel.org> writes:
-> > Hello Linus,
-> >
-> > Please pull to receive the dmaengine updates for v5.6-rc1. This time we
-> > have a bunch of core changes to support dynamic channels, hotplug of
-> > controllers, new apis for metadata ops etc along with new drivers for
-> > Intel data accelerators, TI K3 UDMA, PLX DMA engine and hisilicon
-> > Kunpeng DMA engine. Also usual assorted updates to drivers.
-> >
-> > The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-> >
-> >   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.6-rc1
-> >
-> > for you to fetch changes up to 71723a96b8b1367fefc18f60025dae792477d602:
-> >
-> >   dmaengine: Create symlinks between DMA channels and slaves (2020-01-24 11:41:32 +0530)
-> >
-> > ----------------------------------------------------------------
-> > dmaengine updates for v5.6-rc1
-> ...
-> >
-> > Peter Ujfalusi (9):
-> >       dmaengine: doc: Add sections for per descriptor metadata support
-> 
-> This broke the docs build for me with:
-> 
->   Sphinx parallel build error:
->   docutils.utils.SystemMessage: /linux/Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
 
-Thanks for the report.
+> On Jan 28, 2020, at 7:10 AM, Mike Rapoport <rppt@linux.ibm.com> wrote:
+>=20
+> Aren't x86 and arm64 not decent enough?
+> Even if this test could be used to detect regressions only on these two
+> platforms, the test is valuable.
 
->   Optional: per descriptor metadata
->   ---------------------------------
-> 
-> 
-> The patch below fixes the build. It may not produce the output you
-> intended, it just makes it bold rather than a heading, but it doesn't
-> really make sense to have a heading inside a numbered list.
-> 
-> diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
-> index a9a7a3c84c63..343df26e73e8 100644
-> --- a/Documentation/driver-api/dmaengine/client.rst
-> +++ b/Documentation/driver-api/dmaengine/client.rst
-> @@ -151,8 +151,8 @@ DMA usage
->       Note that callbacks will always be invoked from the DMA
->       engines tasklet, never from interrupt context.
->  
-> -  Optional: per descriptor metadata
-> -  ---------------------------------
-> +  **Optional: per descriptor metadata**
-> +
+The question is does it detect regressions good enough? Where is the list of=
+ past bugs that it had found?
 
-I have modified this to below as this:
-
---- a/Documentation/driver-api/dmaengine/client.rst
-+++ b/Documentation/driver-api/dmaengine/client.rst
-@@ -151,8 +151,8 @@ The details of these operations are:
-      Note that callbacks will always be invoked from the DMA
-      engines tasklet, never from interrupt context.
- 
--  Optional: per descriptor metadata
--  ---------------------------------
-+Optional: per descriptor metadata
-+---------------------------------
-   DMAengine provides two ways for metadata support.
- 
-   DESC_METADATA_CLIENT
-
-And I will add this as fixes and it should be in linux-next tomorrow
-
-Thanks
--- 
-~Vinod
+It is an usual deal for unproven debugging features remain out of tree first=
+ and keep gathering unique bugs it found and then justify for a mainline inc=
+lusion with enough data.=
