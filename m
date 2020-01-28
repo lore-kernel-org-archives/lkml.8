@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C33C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F567C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794602173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71C824688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580219993;
-	bh=VuZpuW+dKu4x+uDn4XeU2iKAEIXGuHGdpf8++Js0hxo=;
+	s=default; t=1580220001;
+	bh=tRcVvN46Y4RAgV5v44mhyVrXYUpFGZeT/y1UvAqhNxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGiwv+0iuQGFn1JYE7v5CeJuolH5t7HmseiNUlYNruUW6QUgjq65newLLPs8/on0O
-	 0BfIXnJrg0aRqG1sBI4QkRrLg/ryaF6UJxn1resGTSuoTERf4n0YbU+5U1Q5yFPrvs
-	 GvE2TZueHPsTryFLbqeaKloDmY7yU7Mg7xozJq+k=
+	b=YW28ZQEHGhNbNORa8mi3/tifa3lVAQ9Od4CDb2uLvqvuLdFMer5h0ShXsrhsQI0vN
+	 tDpHr9FSNMoWkQjtMP0o0HOdLk/E/vg6qtSF6WvWydy9vwbqiOhdwWBXO2e/jcskAO
+	 74MFzZk0D29RD7XkXfKe9nwpe2mlwlt3TTx6LnIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgA1N7w (ORCPT
+        id S1727167AbgA1OAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:59:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45276 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:00:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbgA1N7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:59:48 -0500
+        id S1726445AbgA1N7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:59:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AC4B2173E;
-        Tue, 28 Jan 2020 13:59:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B33424688;
+        Tue, 28 Jan 2020 13:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219987;
-        bh=VuZpuW+dKu4x+uDn4XeU2iKAEIXGuHGdpf8++Js0hxo=;
+        s=default; t=1580219990;
+        bh=tRcVvN46Y4RAgV5v44mhyVrXYUpFGZeT/y1UvAqhNxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L0Vvm/Pg1scABhCjeX+iAzySzTSZ/d0WcE/rMcA7h28PooXhf5GZIEgWPCA1SKL+h
-         BF0sYX3/FrdYeCD+8uU2GAZB6Hs++1ewj+oQx+/QvVC9YU9x3fpcQzf1SI2SeYp6A2
-         a9rmhnUSUEwICjrxcQJ++K5XuATFrpGy8fTrAMfM=
+        b=DmK7oQbSEM/L9vpTvSLwVoLMOJd87B6aq3YRaCAjXJNYr7NLpykBnpXeCn7GMuv27
+         vWNwsv7sXg8GcYlu+cEDshBqqPmK5AZgfJfuqSmk93JC96FBWcyju8JYuGIdjp6U8Q
+         di8hwQFkTgDULnUXnLOwK6C78KSIXpbW7mQ5/shA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 4.14 41/46] media: v4l2-ioctl.c: zero reserved fields for S/TRY_FMT
-Date:   Tue, 28 Jan 2020 14:58:15 +0100
-Message-Id: <20200128135755.133620718@linuxfoundation.org>
+        stable@vger.kernel.org, Bo Wu <wubo40@huawei.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 42/46] scsi: iscsi: Avoid potential deadlock in iscsi_if_rx func
+Date:   Tue, 28 Jan 2020 14:58:16 +0100
+Message-Id: <20200128135755.269649394@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -59,108 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Bo Wu <wubo40@huawei.com>
 
-commit ee8951e56c0f960b9621636603a822811cef3158 upstream.
+commit bba340c79bfe3644829db5c852fdfa9e33837d6d upstream.
 
-v4l2_vbi_format, v4l2_sliced_vbi_format and v4l2_sdr_format
-have a reserved array at the end that should be zeroed by drivers
-as per the V4L2 spec. Older drivers often do not do this, so just
-handle this in the core.
+In iscsi_if_rx func, after receiving one request through
+iscsi_if_recv_msg func, iscsi_if_send_reply will be called to try to
+reply to the request in a do-while loop.  If the iscsi_if_send_reply
+function keeps returning -EAGAIN, a deadlock will occur.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+For example, a client only send msg without calling recvmsg func, then
+it will result in the watchdog soft lockup.  The details are given as
+follows:
+
+	sock_fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ISCSI);
+	retval = bind(sock_fd, (struct sock addr*) & src_addr, sizeof(src_addr);
+	while (1) {
+		state_msg = sendmsg(sock_fd, &msg, 0);
+		//Note: recvmsg(sock_fd, &msg, 0) is not processed here.
+	}
+	close(sock_fd);
+
+watchdog: BUG: soft lockup - CPU#7 stuck for 22s! [netlink_test:253305] Sample time: 4000897528 ns(HZ: 250) Sample stat:
+curr: user: 675503481560, nice: 321724050, sys: 448689506750, idle: 4654054240530, iowait: 40885550700, irq: 14161174020, softirq: 8104324140, st: 0
+deta: user: 0, nice: 0, sys: 3998210100, idle: 0, iowait: 0, irq: 1547170, softirq: 242870, st: 0 Sample softirq:
+         TIMER:        992
+         SCHED:          8
+Sample irqstat:
+         irq    2: delta       1003, curr:    3103802, arch_timer
+CPU: 7 PID: 253305 Comm: netlink_test Kdump: loaded Tainted: G           OE
+Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+pstate: 40400005 (nZcv daif +PAN -UAO)
+pc : __alloc_skb+0x104/0x1b0
+lr : __alloc_skb+0x9c/0x1b0
+sp : ffff000033603a30
+x29: ffff000033603a30 x28: 00000000000002dd
+x27: ffff800b34ced810 x26: ffff800ba7569f00
+x25: 00000000ffffffff x24: 0000000000000000
+x23: ffff800f7c43f600 x22: 0000000000480020
+x21: ffff0000091d9000 x20: ffff800b34eff200
+x19: ffff800ba7569f00 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000000 x14: 0001000101000100
+x13: 0000000101010000 x12: 0101000001010100
+x11: 0001010101010001 x10: 00000000000002dd
+x9 : ffff000033603d58 x8 : ffff800b34eff400
+x7 : ffff800ba7569200 x6 : ffff800b34eff400
+x5 : 0000000000000000 x4 : 00000000ffffffff
+x3 : 0000000000000000 x2 : 0000000000000001
+x1 : ffff800b34eff2c0 x0 : 0000000000000300 Call trace:
+__alloc_skb+0x104/0x1b0
+iscsi_if_rx+0x144/0x12bc [scsi_transport_iscsi]
+netlink_unicast+0x1e0/0x258
+netlink_sendmsg+0x310/0x378
+sock_sendmsg+0x4c/0x70
+sock_write_iter+0x90/0xf0
+__vfs_write+0x11c/0x190
+vfs_write+0xac/0x1c0
+ksys_write+0x6c/0xd8
+__arm64_sys_write+0x24/0x30
+el0_svc_common+0x78/0x130
+el0_svc_handler+0x38/0x78
+el0_svc+0x8/0xc
+
+Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E3D4D2@dggeml505-mbx.china.huawei.com
+Signed-off-by: Bo Wu <wubo40@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/scsi/scsi_transport_iscsi.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1496,12 +1496,12 @@ static int v4l_s_fmt(const struct v4l2_i
- 	case V4L2_BUF_TYPE_VBI_CAPTURE:
- 		if (unlikely(!ops->vidioc_s_fmt_vbi_cap))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.vbi);
-+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
- 		return ops->vidioc_s_fmt_vbi_cap(file, fh, arg);
- 	case V4L2_BUF_TYPE_SLICED_VBI_CAPTURE:
- 		if (unlikely(!ops->vidioc_s_fmt_sliced_vbi_cap))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.sliced);
-+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
- 		return ops->vidioc_s_fmt_sliced_vbi_cap(file, fh, arg);
- 	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
- 		if (unlikely(!ops->vidioc_s_fmt_vid_out))
-@@ -1524,22 +1524,22 @@ static int v4l_s_fmt(const struct v4l2_i
- 	case V4L2_BUF_TYPE_VBI_OUTPUT:
- 		if (unlikely(!ops->vidioc_s_fmt_vbi_out))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.vbi);
-+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
- 		return ops->vidioc_s_fmt_vbi_out(file, fh, arg);
- 	case V4L2_BUF_TYPE_SLICED_VBI_OUTPUT:
- 		if (unlikely(!ops->vidioc_s_fmt_sliced_vbi_out))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.sliced);
-+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
- 		return ops->vidioc_s_fmt_sliced_vbi_out(file, fh, arg);
- 	case V4L2_BUF_TYPE_SDR_CAPTURE:
- 		if (unlikely(!ops->vidioc_s_fmt_sdr_cap))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.sdr);
-+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
- 		return ops->vidioc_s_fmt_sdr_cap(file, fh, arg);
- 	case V4L2_BUF_TYPE_SDR_OUTPUT:
- 		if (unlikely(!ops->vidioc_s_fmt_sdr_out))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.sdr);
-+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
- 		return ops->vidioc_s_fmt_sdr_out(file, fh, arg);
- 	case V4L2_BUF_TYPE_META_CAPTURE:
- 		if (unlikely(!ops->vidioc_s_fmt_meta_cap))
-@@ -1583,12 +1583,12 @@ static int v4l_try_fmt(const struct v4l2
- 	case V4L2_BUF_TYPE_VBI_CAPTURE:
- 		if (unlikely(!ops->vidioc_try_fmt_vbi_cap))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.vbi);
-+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
- 		return ops->vidioc_try_fmt_vbi_cap(file, fh, arg);
- 	case V4L2_BUF_TYPE_SLICED_VBI_CAPTURE:
- 		if (unlikely(!ops->vidioc_try_fmt_sliced_vbi_cap))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.sliced);
-+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
- 		return ops->vidioc_try_fmt_sliced_vbi_cap(file, fh, arg);
- 	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
- 		if (unlikely(!ops->vidioc_try_fmt_vid_out))
-@@ -1611,22 +1611,22 @@ static int v4l_try_fmt(const struct v4l2
- 	case V4L2_BUF_TYPE_VBI_OUTPUT:
- 		if (unlikely(!ops->vidioc_try_fmt_vbi_out))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.vbi);
-+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
- 		return ops->vidioc_try_fmt_vbi_out(file, fh, arg);
- 	case V4L2_BUF_TYPE_SLICED_VBI_OUTPUT:
- 		if (unlikely(!ops->vidioc_try_fmt_sliced_vbi_out))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.sliced);
-+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
- 		return ops->vidioc_try_fmt_sliced_vbi_out(file, fh, arg);
- 	case V4L2_BUF_TYPE_SDR_CAPTURE:
- 		if (unlikely(!ops->vidioc_try_fmt_sdr_cap))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.sdr);
-+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
- 		return ops->vidioc_try_fmt_sdr_cap(file, fh, arg);
- 	case V4L2_BUF_TYPE_SDR_OUTPUT:
- 		if (unlikely(!ops->vidioc_try_fmt_sdr_out))
- 			break;
--		CLEAR_AFTER_FIELD(p, fmt.sdr);
-+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
- 		return ops->vidioc_try_fmt_sdr_out(file, fh, arg);
- 	case V4L2_BUF_TYPE_META_CAPTURE:
- 		if (unlikely(!ops->vidioc_try_fmt_meta_cap))
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -37,6 +37,8 @@
+ 
+ #define ISCSI_TRANSPORT_VERSION "2.0-870"
+ 
++#define ISCSI_SEND_MAX_ALLOWED  10
++
+ static int dbg_session;
+ module_param_named(debug_session, dbg_session, int,
+ 		   S_IRUGO | S_IWUSR);
+@@ -3680,6 +3682,7 @@ iscsi_if_rx(struct sk_buff *skb)
+ 		struct nlmsghdr	*nlh;
+ 		struct iscsi_uevent *ev;
+ 		uint32_t group;
++		int retries = ISCSI_SEND_MAX_ALLOWED;
+ 
+ 		nlh = nlmsg_hdr(skb);
+ 		if (nlh->nlmsg_len < sizeof(*nlh) + sizeof(*ev) ||
+@@ -3710,6 +3713,10 @@ iscsi_if_rx(struct sk_buff *skb)
+ 				break;
+ 			err = iscsi_if_send_reply(portid, nlh->nlmsg_type,
+ 						  ev, sizeof(*ev));
++			if (err == -EAGAIN && --retries < 0) {
++				printk(KERN_WARNING "Send reply failed, error %d\n", err);
++				break;
++			}
+ 		} while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
+ 		skb_pull(skb, rlen);
+ 	}
 
 
