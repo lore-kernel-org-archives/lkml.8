@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4F4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B533AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCC920716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C85720716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222018;
-	bh=C80hO95fUlhePgToChD8CSc4I8Aj6cloQwLGUMaNs+s=;
+	s=default; t=1580222021;
+	bh=RoZ81vHe5oOwSF4DrAOn7tSXN8FoDE6hUlYToDbbnkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKwnsH/uYY3nd+OLxrKBCdIkxT44JrUWfDzyhg2AhQuBWNn12jZ/PWGHzf347RAB/
-	 qe8eZEqiKgCX4uwwBEU1+VEuPWBn211BbRyXKIftND4JxsXqBT6ks9lXvNteZS2fMg
-	 zGGuWydzuON48MDXbjC7S/L/PGnqwT2OKCE4hu5I=
+	b=SFQXAPVti9VnJW6aLwPPoz4VNg3ZQJqgrfnLiYABFf1CizNX8pR8uoa1BTpz3fHez
+	 osO+EhmA6JWUO7Ay5J6a7WeS62gBycKuQOcfHSR4vYr3vxuQR2EBe0G+/NqXzKh/cV
+	 ZLqzQYm9bwLokg7fNZbSzscXNqDxdQKEeDZ61INk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731074AbgA1Odg (ORCPT
+        id S1730359AbgA1OZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:33:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52086 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:25:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732869AbgA1OZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:25:11 -0500
+        id S1731420AbgA1OZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:25:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D14D121739;
-        Tue, 28 Jan 2020 14:25:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 674822071E;
+        Tue, 28 Jan 2020 14:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221510;
-        bh=C80hO95fUlhePgToChD8CSc4I8Aj6cloQwLGUMaNs+s=;
+        s=default; t=1580221502;
+        bh=RoZ81vHe5oOwSF4DrAOn7tSXN8FoDE6hUlYToDbbnkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DyyRYAlEw7hxIGLGSb0ZEkRxpnQoes8dIU+2sIfRjgdEw856q2f4dsdV6AjwMYjqu
-         x+9CmW/a9TawulEnXH3vSwWAmQMCsrJqVBEkHiWmbn+dXOpKc6g4tPqnRhNPGpb9rk
-         2KWKpV3XLXdNr5pqevsuNdCcqWMqhAjKa3/Xl/5g=
+        b=pykOWZBrIIj5YjmYBOik1Q+ulvJqKl6cvccVEQpYovxv9q5jc1oX5CpX5akmd5ncD
+         A3yp3ub1Hm+dA3R1B5K0IWL0xdFuBmLVKCqgl8X3UnogQpcZreWHbhjEiqwUG9wKSm
+         Wu2JRZ40pAhYaO4LwR/+2DlliOJScuko/6KSbW5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Vladis Dronov <vdronov@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.9 253/271] Input: gtco - fix endpoint sanity check
-Date:   Tue, 28 Jan 2020 15:06:42 +0100
-Message-Id: <20200128135911.409469855@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 250/271] mmc: tegra: fix SDR50 tuning override
+Date:   Tue, 28 Jan 2020 15:06:39 +0100
+Message-Id: <20200128135911.176417016@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -60,59 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit a8eeb74df5a6bdb214b2b581b14782c5f5a0cf83 upstream.
+commit f571389c0b015e76f91c697c4c1700aba860d34f upstream.
 
-The driver was checking the number of endpoints of the first alternate
-setting instead of the current one, something which could lead to the
-driver binding to an invalid interface.
+Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
+broke SDR50 tuning override. Use correct NVQUIRK_ name.
 
-This in turn could cause the driver to misbehave or trigger a WARN() in
-usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: 162f98dea487 ("Input: gtco - fix crash on detecting device without endpoints")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Vladis Dronov <vdronov@redhat.com>
-Link: https://lore.kernel.org/r/20191210113737.4016-5-johan@kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
+Cc: <stable@vger.kernel.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+Tested-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/9aff1d859935e59edd81e4939e40d6c55e0b55f6.1578390388.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/tablet/gtco.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/mmc/host/sdhci-tegra.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/input/tablet/gtco.c
-+++ b/drivers/input/tablet/gtco.c
-@@ -875,18 +875,14 @@ static int gtco_probe(struct usb_interfa
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -174,7 +174,7 @@ static void tegra_sdhci_reset(struct sdh
+ 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_DDR50;
+ 		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR104)
+ 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_SDR104;
+-		if (soc_data->nvquirks & SDHCI_MISC_CTRL_ENABLE_SDR50)
++		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR50)
+ 			clk_ctrl |= SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE;
  	}
  
- 	/* Sanity check that a device has an endpoint */
--	if (usbinterface->altsetting[0].desc.bNumEndpoints < 1) {
-+	if (usbinterface->cur_altsetting->desc.bNumEndpoints < 1) {
- 		dev_err(&usbinterface->dev,
- 			"Invalid number of endpoints\n");
- 		error = -EINVAL;
- 		goto err_free_urb;
- 	}
- 
--	/*
--	 * The endpoint is always altsetting 0, we know this since we know
--	 * this device only has one interrupt endpoint
--	 */
--	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
-+	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
- 
- 	/* Some debug */
- 	dev_dbg(&usbinterface->dev, "gtco # interfaces: %d\n", usbinterface->num_altsetting);
-@@ -973,7 +969,7 @@ static int gtco_probe(struct usb_interfa
- 	input_dev->dev.parent = &usbinterface->dev;
- 
- 	/* Setup the URB, it will be posted later on open of input device */
--	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
-+	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
- 
- 	usb_fill_int_urb(gtco->urbinfo,
- 			 udev,
 
 
