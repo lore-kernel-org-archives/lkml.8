@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2013FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7319C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF29A22522
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF32024688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220593;
-	bh=2wLAFD8Q/BkgaPwUDyunPTLaoG8N9NCstqyWYhtHsTo=;
+	s=default; t=1580220596;
+	bh=jtqMy6ATgTfI9cuLYEB8Nv9vnN6mjYtUcw08ByTMsL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ytT2Yeoe549iQX9qZvU6zsM1UanNE38u+IvYkfl7jImmldI6IgGbOaiKKKDntBEyy
-	 etVhKGr8JftoQyl+CyMI4kFHTXFn+28ED5Faa511ra6i/GiP7toSL1DgAtGXMQmrj/
-	 pvU4Hba3gbokxXmdrWoHhRTPXHFaZoEUAsDWKdtc=
+	b=IWqzyNuTq6g0T9LwEOVx2umRk/KZy4rSDl2zQ18IsFsdVzpj5/RfYSjweAH463asO
+	 SxAsHHxvAMoWoZdD4f/vGDMO6tAJ0Fb1/7yT/1vWvoJLcVRpqBgrHVbsx8jj/vxi0i
+	 QG5P1gewJOJkFjVk3HYLYNT4P3WgRkgAvrZDtoVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgA1OJv (ORCPT
+        id S1727510AbgA1OJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:09:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58264 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:09:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729052AbgA1OJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:09:45 -0500
+        id S1727901AbgA1OJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:09:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32EA124688;
-        Tue, 28 Jan 2020 14:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7C322468A;
+        Tue, 28 Jan 2020 14:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220584;
-        bh=2wLAFD8Q/BkgaPwUDyunPTLaoG8N9NCstqyWYhtHsTo=;
+        s=default; t=1580220587;
+        bh=jtqMy6ATgTfI9cuLYEB8Nv9vnN6mjYtUcw08ByTMsL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5uyvvBLwu7KMIpUTwM1wBX/UvNsfiylMI4+VWnhOs24ArZGu9JEOWLwTkGas36sh
-         JQEb9r5HHOuvwOpvKbVUjBBdyz4pd8qgV6QkSo4+ykYj1D3OHTM81TSlg5OvrQ9WBK
-         RqbiGqLdyTcWMmIeqkwhDn+XUgAkUHmIqGzrEQvw=
+        b=lW2iEx84RHqCYI+q6FDX34g+d88YZEKzS74qST82BTGfed60MxK0BZ9lec3oPkw0Q
+         tfNW6UjvhVB8ieXabp1yY8l8EXqkbwcRJvU49hIE6QbZUSvBAZRxLbF6FGT1rIHOvT
+         i2TEmbTLjW9ucsTHZ5UXKO/LBFn9kP+wOfx98nOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 064/183] media: cx23885: check allocation return
-Date:   Tue, 28 Jan 2020 15:04:43 +0100
-Message-Id: <20200128135836.395887091@linuxfoundation.org>
+Subject: [PATCH 4.4 065/183] jfs: fix bogus variable self-initialization
+Date:   Tue, 28 Jan 2020 15:04:44 +0100
+Message-Id: <20200128135836.496090438@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,41 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Mc Guire <hofrat@osadl.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit a3d7f22ef34ec4206b50ee121384d5c8bebd5591 ]
+[ Upstream commit a5fdd713d256887b5f012608701149fa939e5645 ]
 
-Checking of kmalloc() seems to have been committed - as
-cx23885_dvb_register() is checking for != 0 return, returning
--ENOMEM should be fine here.  While at it address the coccicheck
-suggestion to move to kmemdup rather than using kmalloc+memcpy.
+A statement was originally added in 2006 to shut up a gcc warning,
+now but now clang warns about it:
 
-Fixes: 46b21bbaa8a8 ("[media] Add support for DViCO FusionHDTV DVB-T Dual Express2")
+fs/jfs/jfs_txnmgr.c:1932:15: error: variable 'pxd' is uninitialized when used within its own initialization
+      [-Werror,-Wuninitialized]
+                pxd_t pxd = pxd;        /* truncated extent of xad */
+                      ~~~   ^~~
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Modern versions of gcc are fine without the silly assignment, so just
+drop it. Tested with gcc-4.6 (released 2011), 4.7, 4.8, and 4.9.
+
+Fixes: c9e3ad6021e5 ("JFS: Get rid of "may be used uninitialized" warnings")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/cx23885/cx23885-dvb.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/jfs/jfs_txnmgr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/pci/cx23885/cx23885-dvb.c b/drivers/media/pci/cx23885/cx23885-dvb.c
-index e543cbbf2ec4f..8fe78b8b1c25b 100644
---- a/drivers/media/pci/cx23885/cx23885-dvb.c
-+++ b/drivers/media/pci/cx23885/cx23885-dvb.c
-@@ -1452,8 +1452,9 @@ static int dvb_register(struct cx23885_tsport *port)
- 		if (fe0->dvb.frontend != NULL) {
- 			struct i2c_adapter *tun_i2c;
+diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
+index d595856453b24..de6351c1c8db2 100644
+--- a/fs/jfs/jfs_txnmgr.c
++++ b/fs/jfs/jfs_txnmgr.c
+@@ -1928,8 +1928,7 @@ static void xtLog(struct jfs_log * log, struct tblock * tblk, struct lrd * lrd,
+ 	 * header ?
+ 	 */
+ 	if (tlck->type & tlckTRUNCATE) {
+-		/* This odd declaration suppresses a bogus gcc warning */
+-		pxd_t pxd = pxd;	/* truncated extent of xad */
++		pxd_t pxd;	/* truncated extent of xad */
+ 		int twm;
  
--			fe0->dvb.frontend->sec_priv = kmalloc(sizeof(dib7000p_ops), GFP_KERNEL);
--			memcpy(fe0->dvb.frontend->sec_priv, &dib7000p_ops, sizeof(dib7000p_ops));
-+			fe0->dvb.frontend->sec_priv = kmemdup(&dib7000p_ops, sizeof(dib7000p_ops), GFP_KERNEL);
-+			if (!fe0->dvb.frontend->sec_priv)
-+				return -ENOMEM;
- 			tun_i2c = dib7000p_ops.get_i2c_master(fe0->dvb.frontend, DIBX000_I2C_INTERFACE_TUNER, 1);
- 			if (!dvb_attach(dib0070_attach, fe0->dvb.frontend, tun_i2c, &dib7070p_dib0070_config))
- 				return -ENODEV;
+ 		/*
 -- 
 2.20.1
 
