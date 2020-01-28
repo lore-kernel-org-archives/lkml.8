@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E1DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139ECC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34DE424692
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3152467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580221839;
-	bh=BQAj4qjdO1Cr/ZGUin3wq0t0sf/n7x0NI0Ilb+ugw/U=;
+	s=default; t=1580221849;
+	bh=+LihbHEmFvppMG2thshxBk924j40l+ZVzVgfiqYyC9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dx70qmABdrQSpMA/jr/GUqVyWUupHxdzRaS1+H6yIILBqPv9u/JJoX/8FHBXxefmW
-	 Nxo61nDXamR91wAdEeo893f79mGfZqYJlj+cZxOSOXuEG42VdNbRCe0geSwvklvZLp
-	 uuZK0XSZvll2zcOD+pbPH3V1VHgP11NPvMv1ZJJw=
+	b=ZTrsVBNuqRmPq3q7klpd9vJanhYmxGMmzH7BKtSh31X/ZpBth191teNLcaCqsv4Gt
+	 pcsXMnqeC+rNL2xmEEPhzyqreBwM10X4D2JO14Ph0tbNsAAOJXJdGVr3ygximw2tI1
+	 eagt/RvHyYYivCgILLupcxYyraXLO245/6w0pgwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbgA1Oai (ORCPT
+        id S2387638AbgA1Oaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:30:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:30:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387563AbgA1O2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:28:53 -0500
+        id S1727213AbgA1O2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:28:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BCA221739;
-        Tue, 28 Jan 2020 14:28:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EF5920716;
+        Tue, 28 Jan 2020 14:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221732;
-        bh=BQAj4qjdO1Cr/ZGUin3wq0t0sf/n7x0NI0Ilb+ugw/U=;
+        s=default; t=1580221723;
+        bh=+LihbHEmFvppMG2thshxBk924j40l+ZVzVgfiqYyC9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SVNl96tcuKicGiBguRA/uBKZC1BjZG7fCiPaI4oUCIw8Tjc9JvWe52LJmwrQZbevi
-         bd4kbLF/hm9awBj2gW1i5KlKMJZbEPW8vYL3h4PVetb7AiGgoeOz5xvDvRj4A/Ktnj
-         liuNQ/pMjFrNqvhP4dKLPWq5v7pDGBcNTDZ3qkW4=
+        b=DtjVczvkSivH0Fb3swj4ureXjWkI6FaNM9lNkkZLmSEkfb2j5FqUxtGxkfyRgw0hg
+         gCozJglZQ+rMzRuYr+NEr8i+EfHa13jLTlRNu2cyt7+UEGZXMO3jMfK3GaH2XNRF5x
+         KCZS1l05axlfgYMTAF8iBvXkRXNYehqAI6TslY5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
-        syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com,
-        syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 68/92] net/x25: fix nonblocking connect
-Date:   Tue, 28 Jan 2020 15:08:36 +0100
-Message-Id: <20200128135818.061653217@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.19 64/92] media: v4l2-ioctl.c: zero reserved fields for S/TRY_FMT
+Date:   Tue, 28 Jan 2020 15:08:32 +0100
+Message-Id: <20200128135817.488107509@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
 References: <20200128135809.344954797@linuxfoundation.org>
@@ -61,56 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit e21dba7a4df4d93da237da65a096084b4f2e87b4 upstream.
+commit ee8951e56c0f960b9621636603a822811cef3158 upstream.
 
-This patch fixes 2 issues in x25_connect():
+v4l2_vbi_format, v4l2_sliced_vbi_format and v4l2_sdr_format
+have a reserved array at the end that should be zeroed by drivers
+as per the V4L2 spec. Older drivers often do not do this, so just
+handle this in the core.
 
-1. It makes absolutely no sense to reset the neighbour and the
-connection state after a (successful) nonblocking call of x25_connect.
-This prevents any connection from being established, since the response
-(call accept) cannot be processed.
-
-2. Any further calls to x25_connect() while a call is pending should
-simply return, instead of creating new Call Request (on different
-logical channels).
-
-This patch should also fix the "KASAN: null-ptr-deref Write in
-x25_connect" and "BUG: unable to handle kernel NULL pointer dereference
-in x25_connect" bugs reported by syzbot.
-
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Reported-by: syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com
-Reported-by: syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/x25/af_x25.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/v4l2-core/v4l2-ioctl.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -765,6 +765,10 @@ static int x25_connect(struct socket *so
- 	if (sk->sk_state == TCP_ESTABLISHED)
- 		goto out;
- 
-+	rc = -EALREADY;	/* Do nothing if call is already in progress */
-+	if (sk->sk_state == TCP_SYN_SENT)
-+		goto out;
-+
- 	sk->sk_state   = TCP_CLOSE;
- 	sock->state = SS_UNCONNECTED;
- 
-@@ -811,7 +815,7 @@ static int x25_connect(struct socket *so
- 	/* Now the loop */
- 	rc = -EINPROGRESS;
- 	if (sk->sk_state != TCP_ESTABLISHED && (flags & O_NONBLOCK))
--		goto out_put_neigh;
-+		goto out;
- 
- 	rc = x25_wait_for_connection_establishment(sk);
- 	if (rc)
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1548,12 +1548,12 @@ static int v4l_s_fmt(const struct v4l2_i
+ 	case V4L2_BUF_TYPE_VBI_CAPTURE:
+ 		if (unlikely(!ops->vidioc_s_fmt_vbi_cap))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.vbi);
++		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+ 		return ops->vidioc_s_fmt_vbi_cap(file, fh, arg);
+ 	case V4L2_BUF_TYPE_SLICED_VBI_CAPTURE:
+ 		if (unlikely(!ops->vidioc_s_fmt_sliced_vbi_cap))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.sliced);
++		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+ 		return ops->vidioc_s_fmt_sliced_vbi_cap(file, fh, arg);
+ 	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
+ 		if (unlikely(!ops->vidioc_s_fmt_vid_out))
+@@ -1576,22 +1576,22 @@ static int v4l_s_fmt(const struct v4l2_i
+ 	case V4L2_BUF_TYPE_VBI_OUTPUT:
+ 		if (unlikely(!ops->vidioc_s_fmt_vbi_out))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.vbi);
++		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+ 		return ops->vidioc_s_fmt_vbi_out(file, fh, arg);
+ 	case V4L2_BUF_TYPE_SLICED_VBI_OUTPUT:
+ 		if (unlikely(!ops->vidioc_s_fmt_sliced_vbi_out))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.sliced);
++		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+ 		return ops->vidioc_s_fmt_sliced_vbi_out(file, fh, arg);
+ 	case V4L2_BUF_TYPE_SDR_CAPTURE:
+ 		if (unlikely(!ops->vidioc_s_fmt_sdr_cap))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.sdr);
++		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+ 		return ops->vidioc_s_fmt_sdr_cap(file, fh, arg);
+ 	case V4L2_BUF_TYPE_SDR_OUTPUT:
+ 		if (unlikely(!ops->vidioc_s_fmt_sdr_out))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.sdr);
++		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+ 		return ops->vidioc_s_fmt_sdr_out(file, fh, arg);
+ 	case V4L2_BUF_TYPE_META_CAPTURE:
+ 		if (unlikely(!ops->vidioc_s_fmt_meta_cap))
+@@ -1635,12 +1635,12 @@ static int v4l_try_fmt(const struct v4l2
+ 	case V4L2_BUF_TYPE_VBI_CAPTURE:
+ 		if (unlikely(!ops->vidioc_try_fmt_vbi_cap))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.vbi);
++		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+ 		return ops->vidioc_try_fmt_vbi_cap(file, fh, arg);
+ 	case V4L2_BUF_TYPE_SLICED_VBI_CAPTURE:
+ 		if (unlikely(!ops->vidioc_try_fmt_sliced_vbi_cap))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.sliced);
++		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+ 		return ops->vidioc_try_fmt_sliced_vbi_cap(file, fh, arg);
+ 	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
+ 		if (unlikely(!ops->vidioc_try_fmt_vid_out))
+@@ -1663,22 +1663,22 @@ static int v4l_try_fmt(const struct v4l2
+ 	case V4L2_BUF_TYPE_VBI_OUTPUT:
+ 		if (unlikely(!ops->vidioc_try_fmt_vbi_out))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.vbi);
++		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+ 		return ops->vidioc_try_fmt_vbi_out(file, fh, arg);
+ 	case V4L2_BUF_TYPE_SLICED_VBI_OUTPUT:
+ 		if (unlikely(!ops->vidioc_try_fmt_sliced_vbi_out))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.sliced);
++		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+ 		return ops->vidioc_try_fmt_sliced_vbi_out(file, fh, arg);
+ 	case V4L2_BUF_TYPE_SDR_CAPTURE:
+ 		if (unlikely(!ops->vidioc_try_fmt_sdr_cap))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.sdr);
++		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+ 		return ops->vidioc_try_fmt_sdr_cap(file, fh, arg);
+ 	case V4L2_BUF_TYPE_SDR_OUTPUT:
+ 		if (unlikely(!ops->vidioc_try_fmt_sdr_out))
+ 			break;
+-		CLEAR_AFTER_FIELD(p, fmt.sdr);
++		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+ 		return ops->vidioc_try_fmt_sdr_out(file, fh, arg);
+ 	case V4L2_BUF_TYPE_META_CAPTURE:
+ 		if (unlikely(!ops->vidioc_try_fmt_meta_cap))
 
 
