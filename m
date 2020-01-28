@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F05C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4FDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6CB24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E92D24683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220304;
-	bh=Q3+bwXq7BQOBJBv5muLfNMzHxiFz9MTdbmU/JiXsFbY=;
+	s=default; t=1580220308;
+	bh=cEY9Csq2IFQ1dLpeGxnxbWt/b8IdDawC5oUSWrgUMaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yDqZm+PbxJRR1Oag0K743TnQIGByg0S2k2JzdltlCFfwn2pRnN0Molyizd7TsbkCt
-	 0NdrHEzqDXdIxP8JJj5BIhAgiuL1dsF2hEDIKwEm21euUXQrNCrcxVaOOFKU4+oO6V
-	 vqSa1Uxu//l/r8LgHp1Sd/xjI5qRTLA0X23uPCAs=
+	b=kmTKWxA4yIzHK46qvlrjnWXaPddFeUK0wRn9tG8ZrbReLeyr0QfRxqC7pa+o4wmzN
+	 LW2RcW6SCzmIahjp0zfU+ix1iTgiYEn2x2A5lEvtbu2oL4kzJWXzpKGaGnvKccwO5q
+	 9b42AiXLpp2a65vlqwhWjqY6Ga09L7S1nUIDGTE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgA1OFE (ORCPT
+        id S1728206AbgA1OFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:05:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52442 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:05:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgA1OFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:05:00 -0500
+        id S1728192AbgA1OFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:05:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45993205F4;
-        Tue, 28 Jan 2020 14:04:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8542205F4;
+        Tue, 28 Jan 2020 14:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220299;
-        bh=Q3+bwXq7BQOBJBv5muLfNMzHxiFz9MTdbmU/JiXsFbY=;
+        s=default; t=1580220302;
+        bh=cEY9Csq2IFQ1dLpeGxnxbWt/b8IdDawC5oUSWrgUMaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NdMoZwlIQJ16rOlNZd6beC0KnlU4sHnM5SexgpDaA3uYXSBPuSC/lGutW8R1aeFnY
-         6IODAYiFkDQ7pLXmL1VmmAOC8OY9gOTv3wrLCbEnTFjgZCJCu0PsyCazCs1EaRIGdE
-         2kH5OSGaXGQLv+V8B3Y81phB9v1ZuGusdCkL8+m0=
+        b=XPRierrFvbrIbW1jN0hUZAtdtIOnHargfliL7qObkiHgiQDTAKyETSx5rJrJRELEt
+         D1hkeF/prSk/7n7U9JJ2G0BLis57dg7tAxUn7ld4tT9BeLtc8fnMGSS9bKMtx+S1Mp
+         CK+IEL7PeyAaI/u0E/uKLW9Q7fVbNIXBkJrRYjY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 097/104] net/sonic: Fix CAM initialization
-Date:   Tue, 28 Jan 2020 15:00:58 +0100
-Message-Id: <20200128135830.368959949@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>
+Subject: [PATCH 5.4 080/104] iwlwifi: mvm: fix SKB leak on invalid queue
+Date:   Tue, 28 Jan 2020 15:00:41 +0100
+Message-Id: <20200128135828.240592538@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,89 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 772f66421d5aa0b9f256056f513bbc38ac132271 upstream.
+commit b9f726c94224e863d4d3458dfec2e7e1284a39ce upstream.
 
-Section 4.3.1 of the datasheet says,
+It used to be the case that if we got here, we wouldn't warn
+but instead allocate the queue (DQA). With using the mac80211
+TXQs model this changed, and we really have nothing to do with
+the frame here anymore, hence the warning now.
 
-    This bit [TXP] must not be set if a Load CAM operation is in
-    progress (LCAM is set). The SONIC will lock up if both bits are
-    set simultaneously.
+However, clearly we missed in coding & review that this is now
+a pure error path and leaks the SKB if we return 0 instead of
+an indication that the SKB needs to be freed. Fix this.
 
-Testing has shown that the driver sometimes attempts to set LCAM
-while TXP is set. Avoid this by waiting for command completion
-before and after giving the LCAM command.
-
-After issuing the Load CAM command, poll for !SONIC_CR_LCAM rather than
-SONIC_INT_LCD, because the SONIC_CR_TXP bit can't be used until
-!SONIC_CR_LCAM.
-
-When in reset mode, take the opportunity to reset the CAM Enable
-register.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: cfbc6c4c5b91 ("iwlwifi: mvm: support mac80211 TXQs model")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/natsemi/sonic.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -634,6 +634,8 @@ static void sonic_multicast_list(struct
- 		    (netdev_mc_count(dev) > 15)) {
- 			rcr |= SONIC_RCR_AMC;
- 		} else {
-+			unsigned long flags;
-+
- 			netif_dbg(lp, ifup, dev, "%s: mc_count %d\n", __func__,
- 				  netdev_mc_count(dev));
- 			sonic_set_cam_enable(dev, 1);  /* always enable our own address */
-@@ -647,9 +649,14 @@ static void sonic_multicast_list(struct
- 				i++;
- 			}
- 			SONIC_WRITE(SONIC_CDC, 16);
--			/* issue Load CAM command */
- 			SONIC_WRITE(SONIC_CDP, lp->cda_laddr & 0xffff);
-+
-+			/* LCAM and TXP commands can't be used simultaneously */
-+			spin_lock_irqsave(&lp->lock, flags);
-+			sonic_quiesce(dev, SONIC_CR_TXP);
- 			SONIC_WRITE(SONIC_CMD, SONIC_CR_LCAM);
-+			sonic_quiesce(dev, SONIC_CR_LCAM);
-+			spin_unlock_irqrestore(&lp->lock, flags);
- 		}
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -1151,7 +1151,7 @@ static int iwl_mvm_tx_mpdu(struct iwl_mv
+ 	if (WARN_ONCE(txq_id == IWL_MVM_INVALID_QUEUE, "Invalid TXQ id")) {
+ 		iwl_trans_free_tx_cmd(mvm->trans, dev_cmd);
+ 		spin_unlock(&mvmsta->lock);
+-		return 0;
++		return -1;
  	}
  
-@@ -675,6 +682,9 @@ static int sonic_init(struct net_device
- 	SONIC_WRITE(SONIC_ISR, 0x7fff);
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
- 
-+	/* While in reset mode, clear CAM Enable register */
-+	SONIC_WRITE(SONIC_CE, 0);
-+
- 	/*
- 	 * clear software reset flag, disable receiver, clear and
- 	 * enable interrupts, then completely initialize the SONIC
-@@ -785,14 +795,7 @@ static int sonic_init(struct net_device
- 	 * load the CAM
- 	 */
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_LCAM);
--
--	i = 0;
--	while (i++ < 100) {
--		if (SONIC_READ(SONIC_ISR) & SONIC_INT_LCD)
--			break;
--	}
--	netif_dbg(lp, ifup, dev, "%s: CMD=%x, ISR=%x, i=%d\n", __func__,
--		  SONIC_READ(SONIC_CMD), SONIC_READ(SONIC_ISR), i);
-+	sonic_quiesce(dev, SONIC_CR_LCAM);
- 
- 	/*
- 	 * enable receiver, disable loopback
+ 	if (!iwl_mvm_has_new_tx_api(mvm)) {
 
 
