@@ -2,88 +2,131 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156C0C35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D9FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D370B2467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580196296;
-	bh=8d5KEtA0MtcFX/tvwSkP8O3V1B24nyrvW4j3Lhxmx8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mGFaTwA8vMnm2V5H57n+tI80AfoWiZUu6L7E8XlMIgkjLIAWQEtJNfooJYcqQSiln
-	 Voyg+50L0UH/hI5HBnvrrQBOysR3lHSYym0P/IpZzHKBCLJx1WQKPG3ICvWCVJDXna
-	 fiIVEq72KKpoMdp80S7F3KJx0HNDa5zy6bK8fqTc=
+	by mail.kernel.org (Postfix) with ESMTP id 8A9B122522
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 07:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Am17qSnk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbgA1HY4 (ORCPT
+        id S1725947AbgA1HZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 02:24:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgA1HY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 02:24:56 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17B0922522;
-        Tue, 28 Jan 2020 07:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580196295;
-        bh=8d5KEtA0MtcFX/tvwSkP8O3V1B24nyrvW4j3Lhxmx8c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AdBCn46c9rWfUGBVe74/2h7HyNSwDIb9KMdgcK5TSNpwJqLOWZ/GpnRcUJn4u+5km
-         lVJTFZnzh+DQAfVMErBZ7OoB7lxh5SKMtPGEn/0vTfYRmasHZkuS96dtC6PlLiaQrd
-         CWgp18z7JGgWPa+nRAwGWCcglj3ZIdCz0thahZ3A=
-Date:   Tue, 28 Jan 2020 08:24:53 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>, arnd@arndb.de,
-        smohanad@codeaurora.org, kvalo@codeaurora.org,
-        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/16] bus: mhi: core: Add support for registering MHI
- controllers
-Message-ID: <20200128072453.GA2103724@kroah.com>
-References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
- <20200123111836.7414-3-manivannan.sadhasivam@linaro.org>
- <c8fdf0b0-eaec-9672-4f43-f0254d6dbf0e@codeaurora.org>
- <20200127115627.GA16569@mani>
- <c542b098-3c68-2730-87fb-1b679379f9b9@codeaurora.org>
- <20200128063757.GA27811@Mani-XPS-13-9360>
+        Tue, 28 Jan 2020 02:25:16 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37670 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbgA1HZQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 02:25:16 -0500
+Received: by mail-pg1-f193.google.com with SMTP id q127so6517293pga.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jan 2020 23:25:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DeZTFb2+mSAxTYz3CEQPbL5r8uD0hmjwfhYDKzn7KHU=;
+        b=Am17qSnkbB2/QkD+PNBV7d2GDKqzvC8FjU0arBxwbxh6n1C9H4RtyzBoDbzrYvqXLH
+         +mhF7zYtUyt+CW4XxicKA8MI87/uIMV897oTuJAN9/n/V2T/5nd99niuOqNyiT2Emu8B
+         DWBPY4Q4E3iOFEyQTYErISv/9pXWgmxjvla19RqkopUc6iU2OCn9IGImG85mby9yRBez
+         YLVuoT42u+NG8QaXY1twMbu7GleyNk6BaJs30PxRUsIyxG0IAr8UVVXN4oNu7yHXTJMu
+         vd8iOexlIqAxASPEtwWN3hlfYXKoWjxCqQNDSX1lnvYwhAznFGAqLx2vF3VYz2n+CVP8
+         7EWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DeZTFb2+mSAxTYz3CEQPbL5r8uD0hmjwfhYDKzn7KHU=;
+        b=OOUjVNtLWdTYI6jFM31wxkKWJW23D08H3Mysi7SfY+01LSRN+JkRLea9fl7IkkmRgD
+         hDhiuRbSto+eP8tuHMhf8CX7+f2lueWCsOgaaGLjmovz2t1MdoJYJBH6OwvXkFyqAehF
+         eiX8hU1MZRzfX/JfH4/rtaBF0X2/0O3GsqjY/aNE+Xuu8YNDXHcinCjOzt9EjrhJgqM3
+         rr9PXzRTxPvs06HjrE4IIs/Ko9Rm0kdxiELkekwpUSh2WFfkqB5s5kZ5lUWtnZq/PR1V
+         0oFrE4Tyjsc3TVyOV8sbIAKcfvAuY86wKdOeZl77pS1v0NYDz752SmNRGTDfWG2ml2Pk
+         kwrg==
+X-Gm-Message-State: APjAAAWiy9FFAuRD9HXmbN+2WyYrGagWt63uYrpI7/F8tkISM5ga0Zz0
+        2Xwf+bOAnFP3Xtx1S+V9+tBgT+t7IAu1rfSvbpu7SA==
+X-Google-Smtp-Source: APXvYqzhDwtJNT/bYA0xB9hi/YED4F0baWbm6jieCSJoubq75bTBsJaQIbFNfHf6Vchc56tVkfTifNdIEiNND7TQyBk=
+X-Received: by 2002:a63:480f:: with SMTP id v15mr23047248pga.201.1580196314249;
+ Mon, 27 Jan 2020 23:25:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128063757.GA27811@Mani-XPS-13-9360>
+References: <20200127193549.187419-1-brendanhiggins@google.com>
+ <20200127193549.187419-2-brendanhiggins@google.com> <CAK7LNASR13WjasKPmq-8gURhNUpOsrsCN2ODUh56fpM9DKWq7A@mail.gmail.com>
+In-Reply-To: <CAK7LNASR13WjasKPmq-8gURhNUpOsrsCN2ODUh56fpM9DKWq7A@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 27 Jan 2020 23:25:03 -0800
+Message-ID: <CAFd5g47EOrbMdPFa2QO-5dEWZBq_N_MK5g4G2p3E8kEMmAECVw@mail.gmail.com>
+Subject: Re: [RFC v1 1/2] kbuild: add arch specific dependency for BTF support
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Gow <davidgow@google.com>,
+        Heidi Fahim <heidifahim@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 12:07:57PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Jan 27, 2020 at 07:52:13AM -0700, Jeffrey Hugo wrote:
-> > > > MHI_EE_PBL does not appear to be defined.  Are you perhaps missing an
-> > > > include?
-> > > > 
-> > > 
-> > > It is defined in mhi.h as mhi_ee_type.
-> > 
-> > mhi.h isn't included here.  You are relying on the users of this file to
-> > have included that, in particular to have included it before this file. That
-> > tends to result in really weird errors later on.  It would be best to
-> > include mhi.h here if you need these definitions.
-> > 
-> > Although, I suspect this struct should be moved out of internal.h and into
-> > mhi.h since clients need to know this, so perhaps this issue is moot.
-> > 
-> 
-> Yep. I've moved this enum to mhi.h since it will be used by controller drivers.
-> You can find this change in next iteration.
+On Mon, Jan 27, 2020 at 7:28 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi.
+>
+> On Tue, Jan 28, 2020 at 4:36 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > Some archs (like UM) do not build with CONFIG_DEBUG_INFO_BTF=y, so add
+> > an options for archs to select to opt-in or out of BTF typeinfo support.
+>
+>
+> Could you use a different subject prefix (e.g. "btf:") ?
+>
+> This is unrelated to kbuild.
 
-Both of you please learn to properly trim emails, digging through 1200
-lines to try to find 2 new lines in the middle is unworkable.
+Sure. My apologies, I just used the kbuild subject prefix because
+that's what the previous commit that touched BTF used. Will fix in
+next revision.
 
-greg k-h
+Thanks!
+
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > ---
+> >  lib/Kconfig.debug | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index e4676b992eae9..f5bcb391f1b7d 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -238,9 +238,12 @@ config DEBUG_INFO_DWARF4
+> >           But it significantly improves the success of resolving
+> >           variables in gdb on optimized code.
+> >
+> > +config ARCH_NO_BTF_TYPEINFO
+> > +       bool
+> > +
+> >  config DEBUG_INFO_BTF
+> >         bool "Generate BTF typeinfo"
+> > -       depends on DEBUG_INFO
+> > +       depends on DEBUG_INFO && !ARCH_NO_BTF_TYPEINFO
+> >         help
+> >           Generate deduplicated BTF type information from DWARF debug info.
+> >           Turning this on expects presence of pahole tool, which will convert
+> > --
+> > 2.25.0.341.g760bfbb309-goog
+> >
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
