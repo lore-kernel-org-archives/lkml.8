@@ -2,95 +2,117 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CC8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DBBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED30D24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XZJWzv5z"
+	by mail.kernel.org (Postfix) with ESMTP id CB70D24686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 13:47:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580219270;
+	bh=FAiIYynFKBuECEDgOwJSnnC0Hg3xYnzoyPy4Ysdo0HU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mRzKRknpnrVpyPQbW7/Han9Pf22DPt8nKmrr4NbhJRKyMoWVHuEUNKakXxBNLJjXY
+	 myHkfOeFHgWiyURgmiE0jyWkOEqoDsJnajBnfgoags6nPVpnmqV3/J9IySNC5C2Xq3
+	 Zl9+QC7kAr8Oh65s2+OMbXqnMDpXdaNCzS8UCm1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgA1Nq3 (ORCPT
+        id S1726291AbgA1Nru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 08:46:29 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44534 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbgA1Nq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:46:28 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00SDkMIW104215;
-        Tue, 28 Jan 2020 07:46:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580219182;
-        bh=nLQI+C5XwGclXFIKy6uZivmmFLD32zSmEnN6yUloQgs=;
-        h=From:To:CC:Subject:Date;
-        b=XZJWzv5zgniSL23TwtMZuJBrbsQAtf5ME6+uepG4CXXicciL+whMTpIVw/vddUKnt
-         luk8Lj1CAP4Jz1rME+OPw0iM6avXMxdJzbCX/Onv28Xm7Ow2UoP7WkXSoQZ6scAqb4
-         6NQDRKJXCvuAXcEjs13p8nAHC8ZjiEaVQDvQqOnM=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00SDkML2103119
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Jan 2020 07:46:22 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 28
- Jan 2020 07:46:21 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 28 Jan 2020 07:46:21 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00SDkIeO067211;
-        Tue, 28 Jan 2020 07:46:19 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <vigneshr@ti.com>, <j-keerthy@ti.com>, <lokeshvutla@ti.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
-        <bcousson@baylibre.com>
-Subject: [PATCH] arm: dts: dra76x: Fix mmc3 max-frequency
-Date:   Tue, 28 Jan 2020 19:17:59 +0530
-Message-ID: <20200128134759.21134-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
+        Tue, 28 Jan 2020 08:47:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbgA1Nrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:47:49 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DD0A24683;
+        Tue, 28 Jan 2020 13:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580219267;
+        bh=FAiIYynFKBuECEDgOwJSnnC0Hg3xYnzoyPy4Ysdo0HU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZLZiPPEJ3KZYFeEODDcAdKm12adgwJTR1qNu8E+/VB6oWCwBJucsQAZthyd25GaSm
+         jGHTqGPMfkhPC6+DP+HPoE6IHThhQiRXLcdyB7gkdtyywbpx1/t5r0aAVmnkRXDC2v
+         FoBHpKTogtOd0WgKUquetU0/w7h5gM/Rcd86KiYE=
+Date:   Tue, 28 Jan 2020 14:47:45 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports
+ hub property
+Message-ID: <20200128134745.GA3048749@kroah.com>
+References: <20200124152504.23411-1-mans@mansr.com>
+ <20200127153506.GA4589@bogus>
+ <yw1xy2tsvnww.fsf@mansr.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <yw1xy2tsvnww.fsf@mansr.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dra76x is not affected by i887 which requires mmc3 node to be limited to
-a max frequency of 64 MHz. Fix this by overwriting the correct value in
-the the dra76 specific dtsi.
+On Mon, Jan 27, 2020 at 04:56:15PM +0000, Måns Rullgård wrote:
+> Rob Herring <robh@kernel.org> writes:
+> 
+> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
+> >> Add a non-removable-ports property that lists the hardwired downstream
+> >> ports of a hub.  Although hubs can provide this information, they are
+> >> not always configured correctly.  An alternate means of indicating this
+> >> for built-in USB devices is thus useful.
+> >> 
+> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> >
+> > I reviewed this already, but since you didn't add my reviewed-by, I'm 
+> > looking at it again and having 2nd thoughts.
+> >
+> >> ---
+> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+> >>  1 file changed, 4 insertions(+)
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> >> index 036be172b1ae..92d863cc96b6 100644
+> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
+> >>  - #size-cells: shall be 0
+> >>  
+> >>  
+> >> +Optional properties for hub and host-controller nodes:
+> >> +- non-removable-ports: list of hardwired downstream ports
+> >
+> > If you have a hardwired device and need to know that, doesn't that imply 
+> > there's some other stuff you need to describe beyond what a standard USB 
+> > device has. Such as a power supply that's not Vbus from the hub.
+> 
+> I suppose there could be, but there isn't in my actual situation.
+> 
+> > At a minimum, I think this should be a per port property.
+> 
+> That's what I suggested first.  Greg told me to do it like this instead.
 
-Fixes: 895bd4b3e5ec ("ARM: dts: Add support for dra76-evm")
-Cc: stable@vger.kernel.org
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- arch/arm/boot/dts/dra76x.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+I said that?  I do not remember discussing this at all, when did that
+happen?
 
-diff --git a/arch/arm/boot/dts/dra76x.dtsi b/arch/arm/boot/dts/dra76x.dtsi
-index cdcba3f561c4..9f6fbe4c1fee 100644
---- a/arch/arm/boot/dts/dra76x.dtsi
-+++ b/arch/arm/boot/dts/dra76x.dtsi
-@@ -86,3 +86,8 @@
- &usb4_tm {
- 	status = "disabled";
- };
-+
-+&mmc3 {
-+	/* dra76x is not affected by i887 */
-+	max-frequency = <96000000>;
-+};
--- 
-2.19.2
+> > Though really, I think this should just be implied by describing the
+> > device in DT. I'm not sure if there's a case for hotpluggable devices
+> > described in DT.  Maybe with overlays.
+> 
+> That's also an option.  Greg, what do you think?
 
+I have no idea, sorry, I'm totally lost here...
+
+greg k-h
+
+> 
+> -- 
+> Måns Rullgård
