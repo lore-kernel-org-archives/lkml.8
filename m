@@ -2,196 +2,155 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19315C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D15C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF5020716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:24:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="NQsUUpf9";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="c80fPbgA"
+	by mail.kernel.org (Postfix) with ESMTP id 7347620716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgA1SYE (ORCPT
+        id S1727110AbgA1SYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Jan 2020 13:24:05 -0500
+Received: from mga18.intel.com ([134.134.136.126]:15937 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727080AbgA1SYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jan 2020 13:24:04 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:56550 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726276AbgA1SYD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:24:03 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 29E91C0664;
-        Tue, 28 Jan 2020 18:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1580235842; bh=6eeTy7ey1G8nCI7yBVqNlt6ut370YBbQZLpRB4CRIF0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=NQsUUpf9/IaZkiTBUpy51YK4Ij6YfKjVk38H4rike7LPqsVwQmFR6YnDoc4d/mweu
-         tXPOB6GmOGyGtqm2lfa+ZypVCp4p9t7TUBGt+wuvTd4CTgrOPouvU6kvv6LPOwsIl2
-         NMUjEL/VtRB7QAZGtj0E9RDY+SzQfSehsRhl2ZNrBwFZIg2598NNiTf9YuZ2KcIpnY
-         JPRyKIFy5wvolf6Ftn7GtQvJ5DzJXRyRwR0Atv0i4/yQsjGgdh2Ldf8W2+d8Pw5FXx
-         pkd00eHUGik7aLHQoF8saOSWUByA69oc3Rtu/LgBQ1aGra2L0hzuj7D4mhfvysXofL
-         BfAaKXJrDkZZQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id DA1EDA00A3;
-        Tue, 28 Jan 2020 18:23:59 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Jan 2020 10:23:55 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 28 Jan 2020 10:23:55 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RB/6HVgXMbuKohodVLESiaFVvfkNyQcYvvBZJ4uMgJl7rt4o42ZBG3M9EfuDzq+wQrAJ4BQtpkcWlXahiinuLYXIEZbfHp/Q7TBY1rJuzsW3T/Hci55rC8KrvSG3rXpWXwvHORGs7jJ516A34R17thXLvRsDhRZ2q+l5oe0exYSAZSl7lkkZyOEJhBDKeq5bE1XmYUHINl5og0NkvXRtEZOqlhsuKN+sI9eAZzaCywKIu3Ti2Po0Fzd0ZQis5jg3NY0hG3NAHYrfzEbGYxU2SVL8nTyIOJHml+Fhr5s6sx21WlnW+BAH5Y/k1u9PJ7RLWHyNUe6npxgqK8ZDGhqx7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6eeTy7ey1G8nCI7yBVqNlt6ut370YBbQZLpRB4CRIF0=;
- b=UoPsNkh6W/1bAzz9SMcBO/mgycMPt//GEGHu4/EU7uiki5OZTF5QSG3PRRPhSK6DtJ0E10TGR6EuNkhvbdj1sfcfAL6TW37v58ecDXu4CBvDc1WCLz64hmPszRjZjm/uAbhIEz5w6EemRKp/qkTJxeNcT+vGtMy7mYV0bw+wBTJkS7uK3Fs/QA29ySjB1OSCpjhtFWXow9Za+ow+M9nTtPMGn6ja/S10sdTEvpLMtfZ6iP7CLUWl4PefaySHk2eiZo0JEncAA+/zfcUtw8iRAtEBf3gmk9qY3h6v3BHd7rfZh/tZlIcc5+hSVsfQbOod5wkH+nADCtP7XL4vkr/EfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6eeTy7ey1G8nCI7yBVqNlt6ut370YBbQZLpRB4CRIF0=;
- b=c80fPbgANm9fkUzy82SHHi51VZsUErFfDVJv4gqmBYIruNd1qWRE77Pem0YWY9qD27g8+ojDvlg5QZwel7ytL7Geh4mMyQR6Hq3upd2wW1hz7rN4btLTMBOtfqh51AydpLQ3j5242v0fCoiy/BrAGKVxxXcc+rDFU+G2bETaskA=
-Received: from BYAPR12MB2710.namprd12.prod.outlook.com (20.177.124.11) by
- BYAPR12MB3336.namprd12.prod.outlook.com (20.178.53.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.22; Tue, 28 Jan 2020 18:23:53 +0000
-Received: from BYAPR12MB2710.namprd12.prod.outlook.com
- ([fe80::6cae:8d93:540f:1593]) by BYAPR12MB2710.namprd12.prod.outlook.com
- ([fe80::6cae:8d93:540f:1593%3]) with mapi id 15.20.2665.026; Tue, 28 Jan 2020
- 18:23:53 +0000
-From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-CC:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Yang Fei <fei.yang@intel.com>,
-        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
-        "Andrzej Pietrasiewicz" <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Linux USB List" <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl
- fields
-Thread-Topic: [PATCH v2] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl
- fields
-Thread-Index: AQHV1UhfPBULg1xTS0etamGDA83JAqgAEYcAgABUFwA=
-Date:   Tue, 28 Jan 2020 18:23:53 +0000
-Message-ID: <dfb83e3d-7e78-9568-6bed-f4ee67f90c69@synopsys.com>
-References: <20200127193046.110258-1-john.stultz@linaro.org>
- <87sgjz90lt.fsf@kernel.org>
-In-Reply-To: <87sgjz90lt.fsf@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thinhn@synopsys.com; 
-x-originating-ip: [149.117.75.13]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e10110ca-ab1a-4746-b11e-08d7a41f3af1
-x-ms-traffictypediagnostic: BYAPR12MB3336:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB3336819A5859DB43484A8003AA0A0@BYAPR12MB3336.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 029651C7A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39860400002)(346002)(376002)(366004)(199004)(189003)(64756008)(26005)(186003)(86362001)(36756003)(478600001)(316002)(66556008)(66476007)(81156014)(4326008)(8676002)(76116006)(2906002)(66446008)(66946007)(8936002)(81166006)(7416002)(54906003)(110136005)(2616005)(71200400001)(6512007)(31696002)(31686004)(6506007)(6486002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB3336;H:BYAPR12MB2710.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iONewOQExHl9UO2m4yY/Qwy6ADNMETDMCteH/nVYeFaMCtUy+Id89O2m77603MxE8jzx+OesFB+fRqmpc7/2FfbgvdGhic337YgMd9SJZlap56rIazcJYOCR4I+s2V+tK1oxNif8NxL/HfQZQraHXHddS/KnzJeG7FmMpTrIJq0omGH+uiCHBZFEo+T594xqS9G+xjNEI824/DrSRMLQIqzm3HyCAvCxtciHpOZwGK63jhiCTccIlvP0NQ5j/4rvvApxauXhL97SeFSEHLeraBRrQGQjd0+4jGRV+2uKNXpYt2HVdrpchMHBE1Nq/t1NGAjKFWksCl6M5Am3xAhYUAdiQkXOlFK2BJK+OmZ++MqJK7cnt0O5nvL6nOH8UGzZMF9hRvO/+x2uoPz4JGpEJSyVR30JXxrPUOSwkYpgAFqgSpwt47B2DWwdT8+spBqz
-x-ms-exchange-antispam-messagedata: F/PBpLJaGzMbSFfmhYrjQYq0oLkCVN7TBwpUQBaMviIWtcCtwAjaYvsejS88w5sucm68b/3Lj0+FCg1FZ6yhNFCPMJKXlk30kOvqSdRAAzM+oNmQ8YBBLNF5tkdhB2ZlA837nzT3aCzkd+Qsqe5r7A==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7E5DC99CEA22DD47926297ED9DA66484@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 10:24:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,374,1574150400"; 
+   d="scan'208";a="252352625"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Jan 2020 10:24:02 -0800
+Date:   Tue, 28 Jan 2020 10:24:03 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+Message-ID: <20200128182402.GA18652@linux.intel.com>
+References: <20200109145729.32898-1-peterx@redhat.com>
+ <20200109145729.32898-10-peterx@redhat.com>
+ <20200121155657.GA7923@linux.intel.com>
+ <20200128055005.GB662081@xz-x1>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e10110ca-ab1a-4746-b11e-08d7a41f3af1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2020 18:23:53.4864
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tcWprI1p5TWZUDnW+NUXKvCGtiQEAAPnbyQkeFccYmoQeACH7/IlAIs4ijiXEFssahd7QvK4Sfxb6/gtn8Nhiw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3336
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128055005.GB662081@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkZlbGlwZSBCYWxiaSB3cm90ZToNCj4gSGksDQo+DQo+IEpvaG4gU3R1bHR6IDxqb2hu
-LnN0dWx0ekBsaW5hcm8ub3JnPiB3cml0ZXM6DQo+DQo+PiBGcm9tOiBBbnVyYWcgS3VtYXIgVnVs
-aXNoYSA8YW51cmFnLmt1bWFyLnZ1bGlzaGFAeGlsaW54LmNvbT4NCj4+DQo+PiBUaGUgY3VycmVu
-dCBjb2RlIGluIGR3YzNfZ2FkZ2V0X2VwX3JlY2xhaW1fY29tcGxldGVkX3RyYigpIHdpbGwNCj4+
-IGNoZWNrIGZvciBJT0MvTFNUIGJpdCBpbiB0aGUgZXZlbnQtPnN0YXR1cyBhbmQgcmV0dXJucyBp
-Zg0KPj4gSU9DL0xTVCBiaXQgaXMgc2V0LiBUaGlzIGxvZ2ljIGRvZXNuJ3Qgd29yayBpZiBtdWx0
-aXBsZSBUUkJzDQo+PiBhcmUgcXVldWVkIHBlciByZXF1ZXN0IGFuZCB0aGUgSU9DL0xTVCBiaXQg
-aXMgc2V0IG9uIHRoZSBsYXN0DQo+PiBUUkIgb2YgdGhhdCByZXF1ZXN0Lg0KPj4NCj4+IENvbnNp
-ZGVyIGFuIGV4YW1wbGUgd2hlcmUgYSBxdWV1ZWQgcmVxdWVzdCBoYXMgbXVsdGlwbGUgcXVldWVk
-DQo+PiBUUkJzIGFuZCBJT0MvTFNUIGJpdCBpcyBzZXQgb25seSBmb3IgdGhlIGxhc3QgVFJCLiBJ
-biB0aGlzIGNhc2UsDQo+PiB0aGUgY29yZSBnZW5lcmF0ZXMgWGZlckNvbXBsZXRlL1hmZXJJblBy
-b2dyZXNzIGV2ZW50cyBvbmx5IGZvcg0KPj4gdGhlIGxhc3QgVFJCIChzaW5jZSBJT0MvTFNUIGFy
-ZSBzZXQgb25seSBmb3IgdGhlIGxhc3QgVFJCKS4gQXMNCj4+IHBlciB0aGUgbG9naWMgaW4gZHdj
-M19nYWRnZXRfZXBfcmVjbGFpbV9jb21wbGV0ZWRfdHJiKCkNCj4+IGV2ZW50LT5zdGF0dXMgaXMg
-Y2hlY2tlZCBmb3IgSU9DL0xTVCBiaXQgYW5kIHJldHVybnMgb24gdGhlDQo+PiBmaXJzdCBUUkIu
-IFRoaXMgbGVhdmVzIHRoZSByZW1haW5pbmcgVFJCcyBsZWZ0IHVuaGFuZGxlZC4NCj4+DQo+PiBT
-aW1pbGFybHksIGlmIHRoZSBnYWRnZXQgZnVuY3Rpb24gZW5xdWV1ZXMgYW4gdW5hbGlnbmVkIHJl
-cXVlc3QNCj4+IHdpdGggc2dsaXN0IGFscmVhZHkgaW4gaXQsIGl0IHNob3VsZCBmYWlsIHRoZSBz
-YW1lIHdheSwgc2luY2Ugd2UNCj4+IHdpbGwgYXBwZW5kIGFub3RoZXIgVFJCIHRvIHNvbWV0aGlu
-ZyB0aGF0IGFscmVhZHkgdXNlcyBtb3JlIHRoYW4NCj4+IG9uZSBUUkIuDQo+Pg0KPj4gVG8gYXZp
-b2QgdGhpcywgdGhpcyBwYXRjaCBjaGFuZ2VzIHRoZSBjb2RlIHRvIGNoZWNrIGZvciBJT0MvTFNU
-DQo+PiBiaXRzIGluIFRSQi0+Y3RybCBpbnN0ZWFkLg0KPj4NCj4+IEF0IGEgcHJhY3RpY2FsIGxl
-dmVsLCB0aGlzIHBhdGNoIHJlc29sdmVzIFVTQiB0cmFuc2ZlciBzdGFsbHMgc2Vlbg0KPj4gd2l0
-aCBhZGIgb24gZHdjMyBiYXNlZCBIaUtleTk2MCBhZnRlciBmdW5jdGlvbmZzIGdhZGdldCBhZGRl
-ZA0KPj4gc2NhdHRlci1nYXRoZXIgc3VwcG9ydCBhcm91bmQgdjQuMjAuDQo+Pg0KPj4gQ2M6IEZl
-bGlwZSBCYWxiaSA8YmFsYmlAa2VybmVsLm9yZz4NCj4+IENjOiBZYW5nIEZlaSA8ZmVpLnlhbmdA
-aW50ZWwuY29tPg0KPj4gQ2M6IFRoaW5oIE5ndXllbiA8dGhpbmhuQHN5bm9wc3lzLmNvbT4NCj4+
-IENjOiBUZWphcyBKb2dsZWthciA8dGVqYXMuam9nbGVrYXJAc3lub3BzeXMuY29tPg0KPj4gQ2M6
-IEFuZHJ6ZWogUGlldHJhc2lld2ljeiA8YW5kcnplai5wQGNvbGxhYm9yYS5jb20+DQo+PiBDYzog
-SmFjayBQaGFtIDxqYWNrcEBjb2RlYXVyb3JhLm9yZz4NCj4+IENjOiBUb2RkIEtqb3MgPHRram9z
-QGdvb2dsZS5jb20+DQo+PiBDYzogR3JlZyBLSCA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+
-DQo+PiBDYzogTGludXggVVNCIExpc3QgPGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmc+DQo+PiBD
-Yzogc3RhYmxlIDxzdGFibGVAdmdlci5rZXJuZWwub3JnPg0KPj4gVGVzdGVkLWJ5OiBUZWphcyBK
-b2dsZWthciA8dGVqYXMuam9nbGVrYXJAc3lub3BzeXMuY29tPg0KPj4gUmV2aWV3ZWQtYnk6IFRo
-aW5oIE5ndXllbiA8dGhpbmhuQHN5bm9wc3lzLmNvbT4NCj4+IFNpZ25lZC1vZmYtYnk6IEFudXJh
-ZyBLdW1hciBWdWxpc2hhIDxhbnVyYWcua3VtYXIudnVsaXNoYUB4aWxpbnguY29tPg0KPj4gW2pz
-dHVsdHo6IGZvcndhcmQgcG9ydGVkIHRvIG1haW5saW5lLCByZXdvcmRlZCBjb21taXQgbG9nLCBy
-ZXdvcmtlZA0KPj4gICB0byBvbmx5IGNoZWNrIHRyYi0+Y3RybCBhcyBzdWdnZXN0ZWQgYnkgRmVs
-aXBlXQ0KPj4gU2lnbmVkLW9mZi1ieTogSm9obiBTdHVsdHogPGpvaG4uc3R1bHR6QGxpbmFyby5v
-cmc+DQo+PiAtLS0NCj4+IHYyOg0KPj4gKiBSZXdvcmsgdG8gb25seSBjaGVjayB0cmItPmN0cmwg
-YXMgc3VnZ2VzdGVkIGJ5IEZlbGlwZQ0KPj4gKiBSZXdvcmQgdGhlIGNvbW1pdCBtZXNzYWdlIHRv
-IGluY2x1ZGUgbW9yZSBvZiBGZWxpcGUncyBhc3Nlc3NtZW50DQo+PiAtLS0NCj4+ICAgZHJpdmVy
-cy91c2IvZHdjMy9nYWRnZXQuYyB8IDMgKystDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2Vy
-dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2Iv
-ZHdjMy9nYWRnZXQuYyBiL2RyaXZlcnMvdXNiL2R3YzMvZ2FkZ2V0LmMNCj4+IGluZGV4IDE1NGYz
-ZjNlOGNmZi4uOWEwODVlZWUxYWUzIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy91c2IvZHdjMy9n
-YWRnZXQuYw0KPj4gKysrIGIvZHJpdmVycy91c2IvZHdjMy9nYWRnZXQuYw0KPj4gQEAgLTI0MjAs
-NyArMjQyMCw4IEBAIHN0YXRpYyBpbnQgZHdjM19nYWRnZXRfZXBfcmVjbGFpbV9jb21wbGV0ZWRf
-dHJiKHN0cnVjdCBkd2MzX2VwICpkZXAsDQo+PiAgIAlpZiAoZXZlbnQtPnN0YXR1cyAmIERFUEVW
-VF9TVEFUVVNfU0hPUlQgJiYgIWNoYWluKQ0KPj4gICAJCXJldHVybiAxOw0KPj4gICANCj4+IC0J
-aWYgKGV2ZW50LT5zdGF0dXMgJiBERVBFVlRfU1RBVFVTX0lPQykNCj4+ICsJaWYgKCh0cmItPmN0
-cmwgJiBEV0MzX1RSQl9DVFJMX0lPQykgfHwNCj4+ICsJICAgICh0cmItPmN0cmwgJiBEV0MzX1RS
-Ql9DVFJMX0xTVCkpDQo+IHdoeSB0aGUgTFNUIGJpdCBoZXJlPyBJdCB3YXNuJ3QgdGhlcmUgYmVm
-b3JlLiBJbiBmYWN0LCB3ZSBuZXZlciBzZXQgTFNUDQo+IGluIGR3YzMgYW55bW9yZSA6LSkNCj4N
-Cg0KSnVzdCBhIG5vdGU6IHJpZ2h0IG5vdywgaXQgbWF5IGJlIGZpbmUgZm9yIG5vbi1zdHJlYW0g
-ZW5kcG9pbnRzIHRvIG5vdCANCnNldCB0aGUgTFNUIGJpdCBpbiB0aGUgVFJCcy4gRm9yIHN0cmVh
-bXMsIHdlIG5lZWQgdG8gc2V0IHRoaXMgYml0IHNvIHRoZSANCmNvbnRyb2xsZXIga25vdyB0byBh
-bGxvY2F0ZSByZXNvdXJjZSBmb3IgZGlmZmVyZW50IHRyYW5zZmVycyBvZiANCmRpZmZlcmVudCBz
-dHJlYW1zLiBJdCBtYXkgYmUgZmluZSBub3cgaWYgeW91IHRoaW5rIHRoYXQgaXQgc2hvdWxkIGJl
-IA0KYWRkZWQgbGF0ZXIgd2hlbiBtb3JlIGZpeGVzIGZvciBzdHJlYW1zIGFyZSBhZGRlZCwgYnV0
-IEkgdGhpbmsgaXQgDQpkb2Vzbid0IGh1cnQgY2hlY2tpbmcgaXQgbm93IGVpdGhlci4NCg0KQlIs
-DQpUaGluaA0K
+On Tue, Jan 28, 2020 at 01:50:05PM +0800, Peter Xu wrote:
+> On Tue, Jan 21, 2020 at 07:56:57AM -0800, Sean Christopherson wrote:
+> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > index c4d3972dcd14..ff97782b3919 100644
+> > > --- a/arch/x86/kvm/x86.c
+> > > +++ b/arch/x86/kvm/x86.c
+> > > @@ -9584,7 +9584,15 @@ void kvm_arch_sync_events(struct kvm *kvm)
+> > >  	kvm_free_pit(kvm);
+> > >  }
+> > >  
+> > > -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+> > > +/*
+> > > + * If `uaddr' is specified, `*uaddr' will be returned with the
+> > > + * userspace address that was just allocated.  `uaddr' is only
+> > > + * meaningful if the function returns zero, and `uaddr' will only be
+> > > + * valid when with either the slots_lock or with the SRCU read lock
+> > > + * held.  After we release the lock, the returned `uaddr' will be invalid.
+> > 
+> > This is all incorrect.  Neither of those locks has any bearing on the
+> > validity of the hva.  slots_lock does as the name suggests and prevents
+> > concurrent writes to the memslots.  The SRCU lock ensures the implicit
+> > memslots lookup in kvm_clear_guest_page() won't result in a use-after-free
+> > due to derefencing old memslots.
+> > 
+> > Neither of those has anything to do with the userspace address, they're
+> > both fully tied to KVM's gfn->hva lookup.  As Paolo pointed out, KVM's
+> > mapping is instead tied to the lifecycle of the VM.  Note, even *that* has
+> > no bearing on the validity of the mapping or address as KVM only increments
+> > mm_count, not mm_users, i.e. guarantees the mm struct itself won't be freed
+> > but doesn't ensure the vmas or associated pages tables are valid.
+> > 
+> > Which is the entire point of using __copy_{to,from}_user(), as they
+> > gracefully handle the scenario where the process has not valid mapping
+> > and/or translation for the address.
+> 
+> Sorry I don't understand.
+> 
+> I do think either the slots_lock or SRCU would protect at least the
+> existing kvm.memslots, and if so at least the previous vm_mmap()
+> return value should still be valid.
+
+Nope.  kvm->slots_lock only protects gfn->hva lookups, e.g. userspace can
+munmap() the range at any time.
+
+> I agree that __copy_to_user() will protect us from many cases from process
+> mm pov (which allows page faults inside), but again if the kvm.memslots is
+> changed underneath us then it's another story, IMHO, and that's why we need
+> either the lock or SRCU.
+
+No, again, slots_lock and SRCU only protect gfn->hva lookups.
+
+> Or are you assuming that (1) __x86_set_memory_region() is only for the
+> 3 private kvm memslots, 
+
+It's not an assumption, the entire purpose of __x86_set_memory_region()
+is to provide support for private KVM memslots.
+
+> and (2) currently the kvm private memory slots will never change after VM
+> is created and before VM is destroyed?
+
+No, I'm not assuming the private memslots are constant, e.g. the flow in
+question, vmx_set_tss_addr() is directly tied to an unprotected ioctl().
+
+KVM's sole responsible for vmx_set_tss_addr() is to not crash the kernel.
+Userspace is responsible for ensuring it doesn't break its guests, e.g.
+that multiple calls to KVM_SET_TSS_ADDR are properly serialized.
+
+In the existing code, KVM ensures it doesn't crash by holding the SRCU lock
+for the duration of init_rmode_tss() so that the gfn->hva lookups in
+kvm_clear_guest_page() don't dereference a stale memslots array.  In no way
+does that ensure the validity of the resulting hva, e.g. multiple calls to
+KVM_SET_TSS_ADDR would race to set vmx->tss_addr and so init_rmode_tss()
+could be operating on a stale gpa.
+
+Putting the onus on KVM to ensure atomicity is pointless because concurrent
+calls to KVM_SET_TSS_ADDR would still race, i.e. the end value of
+vmx->tss_addr would be non-deterministic.  The intregrity of the underlying
+TSS would be guaranteed, but that guarantee isn't part of KVM's ABI.
+
+> If so, I agree with you.  However I don't see why we need to restrict
+> __x86_set_memory_region() with that assumption, after all taking a
+> lock is not expensive in this slow path.
+
+In what way would not holding slots_lock in vmx_set_tss_addr() restrict
+__x86_set_memory_region()?  Literally every other usage of
+__x86_set_memory_region() holds slots_lock for the duration of creating
+the private memslot, because in those flows, KVM *is* responsible for
+ensuring correct ordering.
+
+> Even if so, we'd better comment above __x86_set_memory_region() about this,
+> so we know that we should not use __x86_set_memory_region() for future kvm
+> internal memslots that are prone to change during VM's lifecycle (while
+> currently it seems to be a very general interface).
+
+There is no such restriction.  Obviously such a flow would need to ensure
+correctness, but hopefully that goes without saying.
