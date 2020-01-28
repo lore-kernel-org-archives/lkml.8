@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBB6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C469DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832CB24681
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8B524681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220430;
-	bh=C80hO95fUlhePgToChD8CSc4I8Aj6cloQwLGUMaNs+s=;
+	s=default; t=1580220433;
+	bh=4ur1Ix63mEhL4kZuXF7GWGOWcQMmuI6lxxCh9xmTNZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Vyn1W6NT0CeaJOL8SPHWYA6u95+0KQ8vum/Roc6dJ+DzbT1f57tmVgp+0+GLLncN
-	 jl+PYUHyFqwlJwv7nLOIjPgYELHOoXSGZkhHgJ8+dsNI+RUHDMOQ2Vie09patXyQ3R
-	 bQDOODYMk8Sel2B+qH+5CW+t+NIK1Ecb7ePe0gVk=
+	b=XKgVuFT3ARhCktRnVPShp2DyGJxZtkZN8S9Ei/d9ZBfLHbp2xnV+8jCQoLwBwSBSb
+	 2ejUqRo/GpBrmAibEt69FUr0Xi4kcUMOvvZj4i/v7zRyllvNDK7lbwAk0OSFPVps+g
+	 nuNvJx4/6/O6E5AznZv0yVXbG0oR0l+P4yb7shaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgA1ODz (ORCPT
+        id S1727915AbgA1OHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:03:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50614 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:07:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbgA1ODp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:03:45 -0500
+        id S1727960AbgA1OD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:03:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B9CD2468D;
-        Tue, 28 Jan 2020 14:03:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94891205F4;
+        Tue, 28 Jan 2020 14:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220224;
-        bh=C80hO95fUlhePgToChD8CSc4I8Aj6cloQwLGUMaNs+s=;
+        s=default; t=1580220237;
+        bh=4ur1Ix63mEhL4kZuXF7GWGOWcQMmuI6lxxCh9xmTNZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rkYkIQKdHOIAnblGcPs2yeXy7b5Nswxo/aS9ovvwUUZMkejKNFhzD5GgQcMLjpj/1
-         IJ7WMwX2of3MAX+p6wUiuGqK3nI5N+d4Bimm9y8oYsQEkVpF8KWGwYVN97vS8YARXN
-         /B4o8gqvzdHTtlnKWRe1KViFLZOVaj1KnxKNnxiQ=
+        b=UrLCmcr+CZpjnmTMssESJkMe68TYSVDmc+typSR5Acntt0oBaqB1eDqjGbC7vaUO1
+         02mtlvrW2uqtg7116YmLoJ0GZm8VUiufz8o8AJfHWRdWECHGThhq+vcjRizYZVw6fi
+         67n/FdFdzlAYwLlX/oKKaaiwYwAKGyu1YSHTyS8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Vladis Dronov <vdronov@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.4 066/104] Input: gtco - fix endpoint sanity check
-Date:   Tue, 28 Jan 2020 15:00:27 +0100
-Message-Id: <20200128135826.585359374@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+cf23983d697c26c34f60@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 070/104] netfilter: nft_osf: add missing check for DREG attribute
+Date:   Tue, 28 Jan 2020 15:00:31 +0100
+Message-Id: <20200128135827.019998828@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
 References: <20200128135817.238524998@linuxfoundation.org>
@@ -60,59 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Florian Westphal <fw@strlen.de>
 
-commit a8eeb74df5a6bdb214b2b581b14782c5f5a0cf83 upstream.
+commit 7eaecf7963c1c8f62d62c6a8e7c439b0e7f2d365 upstream.
 
-The driver was checking the number of endpoints of the first alternate
-setting instead of the current one, something which could lead to the
-driver binding to an invalid interface.
+syzbot reports just another NULL deref crash because of missing test
+for presence of the attribute.
 
-This in turn could cause the driver to misbehave or trigger a WARN() in
-usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: 162f98dea487 ("Input: gtco - fix crash on detecting device without endpoints")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Vladis Dronov <vdronov@redhat.com>
-Link: https://lore.kernel.org/r/20191210113737.4016-5-johan@kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reported-by: syzbot+cf23983d697c26c34f60@syzkaller.appspotmail.com
+Fixes:  b96af92d6eaf9fadd ("netfilter: nf_tables: implement Passive OS fingerprint module in nft_osf")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/tablet/gtco.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ net/netfilter/nft_osf.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/input/tablet/gtco.c
-+++ b/drivers/input/tablet/gtco.c
-@@ -875,18 +875,14 @@ static int gtco_probe(struct usb_interfa
- 	}
+--- a/net/netfilter/nft_osf.c
++++ b/net/netfilter/nft_osf.c
+@@ -61,6 +61,9 @@ static int nft_osf_init(const struct nft
+ 	int err;
+ 	u8 ttl;
  
- 	/* Sanity check that a device has an endpoint */
--	if (usbinterface->altsetting[0].desc.bNumEndpoints < 1) {
-+	if (usbinterface->cur_altsetting->desc.bNumEndpoints < 1) {
- 		dev_err(&usbinterface->dev,
- 			"Invalid number of endpoints\n");
- 		error = -EINVAL;
- 		goto err_free_urb;
- 	}
- 
--	/*
--	 * The endpoint is always altsetting 0, we know this since we know
--	 * this device only has one interrupt endpoint
--	 */
--	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
-+	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
- 
- 	/* Some debug */
- 	dev_dbg(&usbinterface->dev, "gtco # interfaces: %d\n", usbinterface->num_altsetting);
-@@ -973,7 +969,7 @@ static int gtco_probe(struct usb_interfa
- 	input_dev->dev.parent = &usbinterface->dev;
- 
- 	/* Setup the URB, it will be posted later on open of input device */
--	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
-+	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
- 
- 	usb_fill_int_urb(gtco->urbinfo,
- 			 udev,
++	if (!tb[NFTA_OSF_DREG])
++		return -EINVAL;
++
+ 	if (tb[NFTA_OSF_TTL]) {
+ 		ttl = nla_get_u8(tb[NFTA_OSF_TTL]);
+ 		if (ttl > 2)
 
 
