@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EFAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592F3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32AF82468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308122468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580220564;
-	bh=MN5SoSpRDTZYg4p45Ic50aDKFkzbON1FF6+o9HI5cN0=;
+	s=default; t=1580220568;
+	bh=O0BSSeKX/FRBdoZ5lblsi6TBdbSq7oNrpxeePRu9H4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FoOnPmouZgr0ZssppB3XPbeWiXvx+J0ZDOfzpliLKvWa8GzzMhgVbHpLvoeVQHsiT
-	 XAqiNPs8IF/xgd23wl1kY03Rwxs+md5IWqpKSBEVs3Mpw0iRIpt3E3XC170aHcH5rr
-	 jcECbhH5n+2f8oyFdORuGqUS5+8NywWWrfFa72tM=
+	b=P9uSIW2nZb5FCwnbw+Y8egbQW7LASWf4r6SiELWAZ/p0/qUB1t1xy4hyuimNA7zBR
+	 yb/035HSHxAwnply4Ttwi6uab03MLVFuSNdgTd/IDlyCiIk2DBS1X27SitILJBfMb0
+	 Hjo4M9ZEI65BNwIK0V8KMj5YOyt05SrwO3SaWhU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgA1OJX (ORCPT
+        id S1727608AbgA1OJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:09:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57464 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:09:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727381AbgA1OJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:09:09 -0500
+        id S1728684AbgA1OJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:09:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DFF722522;
-        Tue, 28 Jan 2020 14:09:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9D6724688;
+        Tue, 28 Jan 2020 14:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220549;
-        bh=MN5SoSpRDTZYg4p45Ic50aDKFkzbON1FF6+o9HI5cN0=;
+        s=default; t=1580220557;
+        bh=O0BSSeKX/FRBdoZ5lblsi6TBdbSq7oNrpxeePRu9H4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q8x07IFZawEEdBA7L93yR0P1w+h4uS55bsUkYZ7gY56F6gSgj6hh5jIu7/ZWwpGyA
-         0Ak/MqMBwIbXVpw9AtxtEOD1ehaXg/ayCr0CawtWdDthZDPm1TuZ9h70qoABHoUxhO
-         zRi8ztfNtdX5uvnh/a/N/wFm9nrdjdl5HVpVoICk=
+        b=JmXDYOSeyrDSx0cUHrcgige14jRXXcU5jzRF74Pf/EUKk00IxuQvdw/YkrbKTg3HU
+         4EHTQC1TCYXt3QdrCLp05DwGIlkXDQaA582ODQZu0D0Vdm5tUZw9w8QX4JG+A8kqMa
+         28F7wU5AM4jrE4YpvxQoUDwCKCcsyDwM8vckbnSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 051/183] drm/nouveau/pmu: dont print reply values if exec is false
-Date:   Tue, 28 Jan 2020 15:04:30 +0100
-Message-Id: <20200128135835.031574994@linuxfoundation.org>
+Subject: [PATCH 4.4 054/183] clocksource/drivers/sun5i: Fail gracefully when clock rate is unavailable
+Date:   Tue, 28 Jan 2020 15:04:33 +0100
+Message-Id: <20200128135835.285064027@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -60,42 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit b1d03fc36ec9834465a08c275c8d563e07f6f6bf ]
+[ Upstream commit e7e7e0d7beafebd11b0c065cd5fbc1e5759c5aab ]
 
-Currently the uninitialized values in the array reply are printed out
-when exec is false and nvkm_pmu_send has not updated the array. Avoid
-confusion by only dumping out these values if they have been actually
-updated.
+If the clock tree is not fully populated when the timer-sun5i init code
+is called, attempts to get the clock rate for the timer would fail and
+return 0.
 
-Detected by CoverityScan, CID#1271291 ("Uninitialized scaler variable")
-Fixes: ebb58dc2ef8c ("drm/nouveau/pmu: rename from pwr (no binary change)")
+Make the init code for both clock events and clocksource check the
+returned clock rate and fail gracefully if the result is 0, instead of
+causing a divide by 0 exception later on.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: 4a59058f0b09 ("clocksource/drivers/sun5i: Refactor the current code")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clocksource/timer-sun5i.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-index e6f74168238c7..2ef9e942f43a2 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-@@ -87,10 +87,10 @@ nvkm_memx_fini(struct nvkm_memx **pmemx, bool exec)
- 	if (exec) {
- 		nvkm_pmu_send(pmu, reply, PROC_MEMX, MEMX_MSG_EXEC,
- 			      memx->base, finish);
-+		nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
-+			   reply[0], reply[1]);
+diff --git a/drivers/clocksource/timer-sun5i.c b/drivers/clocksource/timer-sun5i.c
+index bca9573e036a7..32b2dab69fd71 100644
+--- a/drivers/clocksource/timer-sun5i.c
++++ b/drivers/clocksource/timer-sun5i.c
+@@ -201,6 +201,11 @@ static int __init sun5i_setup_clocksource(struct device_node *node,
  	}
  
--	nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
--		   reply[0], reply[1]);
- 	kfree(memx);
- 	return 0;
- }
+ 	rate = clk_get_rate(clk);
++	if (!rate) {
++		pr_err("Couldn't get parent clock rate\n");
++		ret = -EINVAL;
++		goto err_disable_clk;
++	}
+ 
+ 	cs->timer.base = base;
+ 	cs->timer.clk = clk;
+@@ -274,6 +279,11 @@ static int __init sun5i_setup_clockevent(struct device_node *node, void __iomem
+ 	}
+ 
+ 	rate = clk_get_rate(clk);
++	if (!rate) {
++		pr_err("Couldn't get parent clock rate\n");
++		ret = -EINVAL;
++		goto err_disable_clk;
++	}
+ 
+ 	ce->timer.base = base;
+ 	ce->timer.ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
 -- 
 2.20.1
 
