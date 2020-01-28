@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D67C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660C8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F3C207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34CFC207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222033;
-	bh=2AoDdejech8Pc1SzonmLabQ+qCGiH5x9p8y24qqZy0k=;
+	s=default; t=1580222042;
+	bh=g98h9zgHGfmJG7qp7shi05vz6GMzSl3GulPJVilvKv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JRM3xyiU2fKQaCPnLrjOQpLMmvt47ftH85ruTM1nvrwKrgNvNF+Es1l8tJg65yFuy
-	 r0ieFlgE0zbGiGcYkp9UIg1ggfHgjjNybDUeKp6rByf2eCGsLguwThOOkq0MVtVdZj
-	 Lyw0s39Y7tZopkdGL4Hj2Cne7eIVACg/OLjwBSUQ=
+	b=Vg7nEzHggC76k/mTREUgRZVHP7M+VN6JSQbZl7PXd7orEuySwC8frsyOe4+DPIJ5w
+	 raiY10L4zGJ2it8WVTcvrysll+6m6UFRwFP3NETK/gg8Lo3ev62i35lCYn5wUCNVfR
+	 YiHEMG79sOKlV6jI/KVrX3GJPiyoU2NFXk48UDCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733256AbgA1Odw (ORCPT
+        id S1732601AbgA1OYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:33:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51654 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:24:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729827AbgA1OYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:24:48 -0500
+        id S1732572AbgA1OYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:24:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 046B524696;
-        Tue, 28 Jan 2020 14:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42AE12468A;
+        Tue, 28 Jan 2020 14:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221487;
-        bh=2AoDdejech8Pc1SzonmLabQ+qCGiH5x9p8y24qqZy0k=;
+        s=default; t=1580221472;
+        bh=g98h9zgHGfmJG7qp7shi05vz6GMzSl3GulPJVilvKv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pqSA7Eyo9BIPkvooVhNlx4ePmn6/1o6pYRdQMnAAKTiBBRcC+em63ORD0ZTyvcf9G
-         125h7/cPQubWI+Ii5Ep0Ag+OScvbssXeUZd2UfJjfHU/gh2VX5wINucCnnBSQapo6C
-         yzr0tWCL4sUnxm98seO9/VoHTyLCclRqzhOvdJwY=
+        b=2OTe1qjwLxst8c287OfMfma93MvBqYw6+V30ii/hvrWuxeI/9MMP1LNILq/rbngc0
+         fu1+02X3uQOn47xQIHOAvLNvb6orrl8FxZsF21iSg0U3nWLDlGRrJnH0DnWwY+C/xT
+         pxx5mLW9uz2+tjb92w7+b2jQ4Z97mpnlOn+drRTc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 245/271] hwmon: Deal with errors from the thermal subsystem
-Date:   Tue, 28 Jan 2020 15:06:34 +0100
-Message-Id: <20200128135910.760531414@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+2f07903a5b05e7f36410@syzkaller.appspotmail.com,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 239/271] net_sched: fix datalen for ematch
+Date:   Tue, 28 Jan 2020 15:06:28 +0100
+Message-Id: <20200128135910.335176711@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -59,78 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 47c332deb8e89f6c59b0bb2615945c6e7fad1a60 upstream.
+[ Upstream commit 61678d28d4a45ef376f5d02a839cc37509ae9281 ]
 
-If the thermal subsystem returne -EPROBE_DEFER or any other error
-when hwmon calls devm_thermal_zone_of_sensor_register(), this is
-silently ignored.
+syzbot reported an out-of-bound access in em_nbyte. As initially
+analyzed by Eric, this is because em_nbyte sets its own em->datalen
+in em_nbyte_change() other than the one specified by user, but this
+value gets overwritten later by its caller tcf_em_validate().
+We should leave em->datalen untouched to respect their choices.
 
-I ran into this with an incorrectly defined thermal zone, making
-it non-existing and thus this call failed with -EPROBE_DEFER
-assuming it would appear later. The sensor was still added
-which is incorrect: sensors must strictly be added after the
-thermal zones, so deferred probe must be respected.
+I audit all the in-tree ematch users, all of those implement
+->change() set em->datalen, so we can just avoid setting it twice
+in this case.
 
-Fixes: d560168b5d0f ("hwmon: (core) New hwmon registration API")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Reported-and-tested-by: syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com
+Reported-by: syzbot+2f07903a5b05e7f36410@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hwmon/hwmon.c |   21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ net/sched/ematch.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hwmon/hwmon.c
-+++ b/drivers/hwmon/hwmon.c
-@@ -143,6 +143,7 @@ static int hwmon_thermal_add_sensor(stru
- 				    struct hwmon_device *hwdev, int index)
- {
- 	struct hwmon_thermal_data *tdata;
-+	struct thermal_zone_device *tzd;
- 
- 	tdata = devm_kzalloc(dev, sizeof(*tdata), GFP_KERNEL);
- 	if (!tdata)
-@@ -151,8 +152,14 @@ static int hwmon_thermal_add_sensor(stru
- 	tdata->hwdev = hwdev;
- 	tdata->index = index;
- 
--	devm_thermal_zone_of_sensor_register(&hwdev->dev, index, tdata,
--					     &hwmon_thermal_ops);
-+	tzd = devm_thermal_zone_of_sensor_register(&hwdev->dev, index, tdata,
-+						   &hwmon_thermal_ops);
-+	/*
-+	 * If CONFIG_THERMAL_OF is disabled, this returns -ENODEV,
-+	 * so ignore that error but forward any other error.
-+	 */
-+	if (IS_ERR(tzd) && (PTR_ERR(tzd) != -ENODEV))
-+		return PTR_ERR(tzd);
- 
- 	return 0;
- }
-@@ -586,14 +593,20 @@ __hwmon_device_register(struct device *d
- 				if (!chip->ops->is_visible(drvdata, hwmon_temp,
- 							   hwmon_temp_input, j))
- 					continue;
--				if (info[i]->config[j] & HWMON_T_INPUT)
--					hwmon_thermal_add_sensor(dev, hwdev, j);
-+				if (info[i]->config[j] & HWMON_T_INPUT) {
-+					err = hwmon_thermal_add_sensor(dev,
-+								hwdev, j);
-+					if (err)
-+						goto free_device;
-+				}
+--- a/net/sched/ematch.c
++++ b/net/sched/ematch.c
+@@ -267,12 +267,12 @@ static int tcf_em_validate(struct tcf_pr
+ 				}
+ 				em->data = (unsigned long) v;
  			}
++			em->datalen = data_len;
  		}
  	}
  
- 	return hdev;
+ 	em->matchid = em_hdr->matchid;
+ 	em->flags = em_hdr->flags;
+-	em->datalen = data_len;
+ 	em->net = net;
  
-+free_device:
-+	device_unregister(hdev);
- free_hwmon:
- 	kfree(hwdev);
- ida_remove:
+ 	err = 0;
 
 
