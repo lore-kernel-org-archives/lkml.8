@@ -2,129 +2,210 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD65EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B14FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDB824683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 393A124685
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgA1Pkv (ORCPT
+        id S1727077AbgA1Pkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Jan 2020 10:40:53 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32272 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726865AbgA1Pkv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jan 2020 10:40:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60600 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726389AbgA1Pku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:40:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D1E50AC9D;
-        Tue, 28 Jan 2020 15:40:47 +0000 (UTC)
-Date:   Tue, 28 Jan 2020 16:40:46 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20200128154046.trkpkdaz7qeovhii@pathway.suse.cz>
-References: <20191015182705.1aeec284@gandalf.local.home>
- <20191016074217.GL2328@hirez.programming.kicks-ass.net>
- <20191021150549.bitgqifqk2tbd3aj@treble>
- <20200120165039.6hohicj5o52gdghu@treble>
- <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
- <20200121161045.dhihqibnpyrk2lsu@treble>
- <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
- <20200122214239.ivnebi7hiabi5tbs@treble>
- <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
- <20200128150014.juaxfgivneiv6lje@treble>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128150014.juaxfgivneiv6lje@treble>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00SFb0ef110406
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 10:40:50 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrhv1vw3y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 10:40:50 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 28 Jan 2020 15:40:48 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 Jan 2020 15:40:44 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00SFeiUM42467494
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jan 2020 15:40:44 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0570BA4040;
+        Tue, 28 Jan 2020 15:40:44 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36FCFA4053;
+        Tue, 28 Jan 2020 15:40:43 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.138.98])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Jan 2020 15:40:43 +0000 (GMT)
+Subject: Re: [PATCH 2/2] ima: support calculating the boot_aggregate based
+ on different TPM banks
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Tue, 28 Jan 2020 10:40:42 -0500
+In-Reply-To: <465015d0c9ca4e278ed32f78eb3eb4a4@huawei.com>
+References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+         <1580140919-6127-2-git-send-email-zohar@linux.ibm.com>
+         <465015d0c9ca4e278ed32f78eb3eb4a4@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012815-0028-0000-0000-000003D5363D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012815-0029-0000-0000-000024997E80
+Message-Id: <1580226042.5088.90.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_05:2020-01-28,2020-01-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001280123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-01-28 09:00:14, Josh Poimboeuf wrote:
-> On Tue, Jan 28, 2020 at 10:28:07AM +0100, Miroslav Benes wrote:
-> > I don't think we have something special at SUSE not generally available...
+On Tue, 2020-01-28 at 14:19 +0000, Roberto Sassu wrote:
+> > -----Original Message-----
+> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
+> > owner@vger.kernel.org] On Behalf Of Mimi Zohar
+> > Sent: Monday, January 27, 2020 5:02 PM
+> > To: linux-integrity@vger.kernel.org
+> > Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
+> > <James.Bottomley@HansenPartnership.com>; linux-
+> > kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
+> > Subject: [PATCH 2/2] ima: support calculating the boot_aggregate based on
+> > different TPM banks
 > > 
-> > ...and I don't think it is really important to discuss that and replying 
-> > to the above, because there is a legitimate use case which relies on the 
-> > flag. We decided to support different use cases right at the beginning.
+> > Calculating the boot_aggregate attempts to read the TPM SHA1 bank,
+> > assuming it is always enabled.  With TPM 2.0 hash agility, TPM chips
+> > could support multiple TPM PCR banks, allowing firmware to configure and
+> > enable different banks.
 > > 
-> > I understand it currently complicates things for objtool, but objtool is 
-> > sensitive to GCC code generation by definition. "Issues" appear with every 
-> > new GCC version. I see no difference here and luckily it is not so 
-> > difficult to fix it.
+> > Instead of hard coding the TPM 2.0 bank hash algorithm used for calculating
+> > the boot-aggregate, see if the configured IMA_DEFAULT_HASH algorithm is
+> > an allocated TPM bank, otherwise use the first allocated TPM bank.
 > > 
-> > I am happy to help with acting on those objtool warning reports you 
-> > mentioned in the other email. Just Cc me where appropriate. We will take a 
-> > look.
+> > For TPM 1.2 SHA1 is the only supported hash algorithm.
+> > 
+> > Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> > ---
+> >  security/integrity/ima/ima_crypto.c | 37
+> > ++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 36 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/security/integrity/ima/ima_crypto.c
+> > b/security/integrity/ima/ima_crypto.c
+> > index 7967a6904851..b1b26d61f174 100644
+> > --- a/security/integrity/ima/ima_crypto.c
+> > +++ b/security/integrity/ima/ima_crypto.c
+> > @@ -656,8 +656,25 @@ static void __init ima_pcrread(u32 idx, struct
+> > tpm_digest *d)
+> >  		pr_err("Error Communicating to TPM chip\n");
+> >  }
+> > 
+> > +/* tpm2_hash_map is the same as defined in tpm2-cmd.c and
+> > trusted_tpm2.c */
+> > +static struct tpm2_hash tpm2_hash_map[] = {
+> > +	{HASH_ALGO_SHA1, TPM_ALG_SHA1},
+> > +	{HASH_ALGO_SHA256, TPM_ALG_SHA256},
+> > +	{HASH_ALGO_SHA384, TPM_ALG_SHA384},
+> > +	{HASH_ALGO_SHA512, TPM_ALG_SHA512},
+> > +	{HASH_ALGO_SM3_256, TPM_ALG_SM3_256},
+> > +};
+> > +
+> >  /*
+> > - * Calculate the boot aggregate hash
+> > + * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
+> > + * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
+> > + * allowing firmware to configure and enable different banks.
+> > + *
+> > + * Instead of hard coding the TPM bank hash algorithm used for calculating
+> > + * the boot-aggregate, see if the configured IMA_DEFAULT_HASH
+> > algorithm is
+> > + * an allocated TPM bank, otherwise use the first allocated TPM bank.
+> > + *
+> > + * For TPM 1.2 SHA1 is the only hash algorithm.
+> >   */
+> >  static int __init ima_calc_boot_aggregate_tfm(char *digest,
+> >  					      struct crypto_shash *tfm)
+> > @@ -673,6 +690,24 @@ static int __init ima_calc_boot_aggregate_tfm(char
+> > *digest,
+> >  	if (rc != 0)
+> >  		return rc;
+> > 
+> > +	for (i = 0; i < ARRAY_SIZE(tpm2_hash_map); i++) {
+> > +		if (tpm2_hash_map[i].crypto_id == ima_hash_algo) {
 > 
-> As I said, the objtool warnings aren't even the main issue.
+> It is not necessary to define a new map. ima_tpm_chip->allocated_banks
+> has a crypto_id field.
 
-Great.
+Ok, thanks.
 
-Anyway, I think that we might make your life easier with using
-the proposed -Wsuggest-attribute=noreturn.
+> 
+> > +			d.alg_id = tpm2_hash_map[i].tpm_id;
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
+> > +		if (ima_tpm_chip->allocated_banks[i].alg_id == d.alg_id)
+> > +			break;
+> > +	}
+> > +
+> > +	if (i == ima_tpm_chip->nr_allocated_banks)
+> > +		d.alg_id = ima_tpm_chip->allocated_banks[0].alg_id;
+> 
+> This code assumes that the algorithm used to calculate boot_aggregate and
+> the algorithm of the PCR bank can be different. I don't know if it is possible to
+> communicate to the verifier which bank has been selected (it depends on
+> the local configuration).
 
-Also it might be possible to create the list of global
-noreturn functions using some gcc tool. Similar way that we get
-the list of functions that need to be livepatched explicitly
-because of the problematic optimizations.
+Agreed, but defaulting to the first bank would only happen if the IMA
+default hash algorithm is not a configured TPM algorithm.
 
-It sounds like a win-win approach.
+> 
+> In my opinion the safest approach would be to use the same algorithm for the
+> digest and the PCR bank. If you agree to this, then the code above must be
+> moved to ima_calc_boot_aggregate() so that the algorithm of the selected
+> PCR bank can be passed to ima_alloc_tfm().
 
+Using the same hash algorithm, preferably the IMA hash default
+algorithm, for reading the TPM PCR bank and calculating the
+boot_aggregate makes sense.
 
-> There are N users[*] of CONFIG_LIVEPATCH, where N is perhaps dozens.
-> For N-1 users, they have to suffer ALL the drawbacks, with NONE of the
-> benefits.
+> 
+> The selected PCR bank might be not the first, if the algorithm is unknown to
+> the crypto subsystem.
 
-You wrote in the other mail:
+It sounds like you're suggesting finding a common configured hash
+algorithm between the TPM and the kernel. 
 
-  > The problems associated with it: performance, LTO incompatibility,
-  > clang incompatibility (I think?), the GCC dead code issue.
+> 
+> > +	pr_info("Calculating the boot-aggregregate, reading TPM PCR
+> 
+> Typo.
 
-SUSE performance team did extensive testing and did not found
-any real performance issues. It was discussed when the option
-was enabled upstream.
+thanks
 
-Are the other problems affecting real life usage, please?
-Could you be more specific about them, please?
+Mimi
 
-
-> And, even if they wanted those benefits, they have no idea how to get
-> them because the patch creation process isn't documented.
-
-I do not understand this. All the sample modules and selftests are
-using source based livepatches. It is actually the only somehow
-documented way. Sure, the documentation might get improved.
-Patches are welcome.
-
-The option is not currently needed by the selftests only because
-there is no selftest for this type of problems. But the problems
-are real. They would actually deserve selftests. Again, patches
-are welcome.
-
-My understanding is that the source based livepatches is the future.
-N-1 users are just waiting until the 1 user develops more helper
-tools for this. I would really like to hear about some serious problems
-before we do this step back in upstream.
-
-Best Regards,
-Petr
