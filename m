@@ -2,123 +2,138 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEE3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E077C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A385F20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B33C20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 16:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fC2DVCpP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rJxO2RNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgA1Q0n (ORCPT
+        id S1726363AbgA1Q23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 11:26:43 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30247 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726111AbgA1Q0m (ORCPT
+        Tue, 28 Jan 2020 11:28:29 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:35098 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgA1Q23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 11:26:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580228801;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eqVtRSzkoJjQLEgbdqSGEvfYPpwwOebXPgY4TxBNfDM=;
-        b=fC2DVCpPpNE6N08v7efcXeKu6GYAj+Sj8vjEUP9Cb85RfFNNZZZl3RXY/k9c+rWyR+2U2g
-        qdRH3tfjPJ5V+VE0jE3Ufv9ctZ4dFswZvtQ1sTGvW1s5iDwGIiGtgY7ul7+h4O3Lh7Akvo
-        X/saqig9dNbjaM4uFsAAt+k5yUk45Vk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-82-BRPZhQCpNfWq0jyeUaDVNA-1; Tue, 28 Jan 2020 11:26:17 -0500
-X-MC-Unique: BRPZhQCpNfWq0jyeUaDVNA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB3A48C05D2;
-        Tue, 28 Jan 2020 16:26:16 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A189863DE;
-        Tue, 28 Jan 2020 16:26:11 +0000 (UTC)
-Date:   Tue, 28 Jan 2020 11:26:10 -0500
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Stefan Bader <stefan.bader@canonical.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        Tyler Hicks <tyler.hicks@canonical.com>,
-        Alasdair Kergon <agk@redhat.com>
-Subject: Re: [PATCH 1/1] blk/core: Gracefully handle unset make_request_fn
-Message-ID: <20200128162610.GA15575@redhat.com>
-References: <20200123091713.12623-1-stefan.bader@canonical.com>
- <20200123091713.12623-2-stefan.bader@canonical.com>
- <20200123103541.GA28102@redhat.com>
- <20200123172816.GA31063@redhat.com>
- <81055166-37fb-ad65-6a53-11c22c626ab1@kernel.dk>
- <20200127193225.GA5065@redhat.com>
- <e0475dae-a55f-f30e-a82f-ee35cdb171c4@canonical.com>
+        Tue, 28 Jan 2020 11:28:29 -0500
+Received: by mail-yb1-f193.google.com with SMTP id q190so7015937ybq.2;
+        Tue, 28 Jan 2020 08:28:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vWO3OeAiXfzyZ72erBieMqPl2Y7Lzm8L2Ifg8da5JF8=;
+        b=rJxO2RNLPTuUjUV6vNl6RrKOgkIULVcpTeDb5UXy1n8sg8ySQOc7Za1RqxjYEtOpy1
+         l+YKLwRyZRo1Kd7LIQ8FZMv93PL8prVs6LIDHAg1t61cwz2VS7EyOosBZV6B5eIW5cKq
+         xZRz8k11atcP+qHTnO3OvcRwvEh4TPOV1J8cyA1QJJvTeV5uhSM3uNZ87nKXZrFH8jOI
+         bI1mZ7X/4qahrKdpYcNVWVbZs+l7XApPPHhUvBsoTSdKD72z6j+uxRi6zgcYcv73lgGl
+         8I5oIF0yYsh7MdHdHvpykJhyPEaK6gY5ewYAZg+oqxfyUYXFIguooTwo/A4c731Lkpo2
+         3jBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vWO3OeAiXfzyZ72erBieMqPl2Y7Lzm8L2Ifg8da5JF8=;
+        b=QcW9gXzKCpESzobklb/s4t/LV+2CGrxxR9eKVwOrNl2diaDxee70pp45hbstQd/mHR
+         TDBNBsZPHukxugYDz4W+JXaOqoetjoviWofuOsQlyDUOoCKMe990qJtW009oSkjT84p+
+         UomL0u2m2wvjicVsEBXAn7xWZfUEyitolHxbm7GaCXsXjUF7NVbcoFFaQ6u7yoLD/mty
+         qJcI1pgtpBuLi1/8qtJhM24uXB1hmyDFVkvoyCm4Hguj/UjqzlzX+YuQxxnuk+Fqfr1s
+         LPBXRXZBr4covhEv/s4LsatzIFfYT/V/Aj7hmx24ZTikl+Mc4mHgO0/R9WUAuG7XqUCY
+         fM0w==
+X-Gm-Message-State: APjAAAXKUIRGSlGD4VpbcOPRK+P0VXzTG36zmF9/TDe63EuDllCYiWFn
+        jKePbYinYsHWJ5x4bJKuXdI=
+X-Google-Smtp-Source: APXvYqzOLkzHKv5oWgTQCM3ZnUJPrHo2htc+ZoRkBhlHJpbO8trg30c+OjsJHmcvIDqswrYLDhvi5Q==
+X-Received: by 2002:a25:420c:: with SMTP id p12mr18270892yba.86.1580228907943;
+        Tue, 28 Jan 2020 08:28:27 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x131sm662380ywd.54.2020.01.28.08.28.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jan 2020 08:28:27 -0800 (PST)
+Date:   Tue, 28 Jan 2020 08:28:25 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: vcnl3020 hwmon/proximity driver
+Message-ID: <20200128162825.GA3322@roeck-us.net>
+References: <cb21d1285e04a8a7a3817398629431f69aeebf2f.camel@yadro.com>
+ <0e2f88e3-b7d3-9dd2-50ce-011be09d53c9@roeck-us.net>
+ <347fa610ef61d311486fa9eed66be3a4243a4459.camel@yadro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e0475dae-a55f-f30e-a82f-ee35cdb171c4@canonical.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <347fa610ef61d311486fa9eed66be3a4243a4459.camel@yadro.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28 2020 at  9:32am -0500,
-Stefan Bader <stefan.bader@canonical.com> wrote:
-
-> On 27.01.20 20:32, Mike Snitzer wrote:
+On Tue, Jan 28, 2020 at 06:31:55PM +0300, Ivan Mikhaylov wrote:
+> On Tue, 2020-01-28 at 05:22 -0800, Guenter Roeck wrote:
+> > On 1/28/20 3:31 AM, Ivan Mikhaylov wrote:
+> > > Hello, I want to make driver for vcnl3020 but not sure where should I put
+> > > it.
+> > > It's similar to vcnl40xx series which is already in iio/light/vcnl4000.c
+> > > but it perfectly fits with hwmon intrusion detection concept
+> > > (intrusion[0-*]_alarm), so I'm a little bit confused.
+> > > 
+> > > vcnl3020 - proximity sensor which mostly using for intrusion detection
+> > > vcnl4020 - light and proximity sensor
+> > > 
+> > > Doc's links:
+> > > https://www.vishay.com/docs/84150/vcnl3020.pdf
+> > > https://www.vishay.com/docs/83476/vcnl4020.pdf
+> > > 
+> > > That's what I think about possible ways:
+> > > 
+> > > 1. just iio/proximity/vcnl3020.c
+> > > 2. extend functionality inside vcnl4000.c with ifdefs and dts stuff and
+> > > maybe
+> > >     rename it with generalization inside
+> > > 3. hwmon driver for intrusion detection inside drivers/hwmon
+> > > 4. both iio/proximity/vcnl3020.c and hwmon/vcnl3020.c
+> > >     Example: hwmon/wm8350-hwmon.c + mfd/wm8350-core.c
+> > >     So, just make proximity driver, do the depend in Kconfig for hwmon
+> > > driver
+> > >     on proximity driver and use proximity driver calls if would be needed.
+> > > 
 > > 
-> > I just staged the following DM fix:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.6&id=28a101d6b344f5a38d482a686d18b1205bc92333
+> > "intrusion" in the context of hardware monitoring is for chassis intrusion,
+> > not for intrusion into an area. This driver should reside in iio.
+> > 
+> > Thanks,
+> > Guenter
 > 
-> Thanks Mike,
+> Guenter,
+> that's what I meant about intrusion, sorry for being inaccurate. This proximity
+> sensor can be used as chassis intrusion detector, that's why I mentioned about
+> hwmon and possible interface for such thing.
 > 
-> yeah this looks like it resolves the problem without adding any impact on the
-> generic I/O path. We certainly had thought about that but felt uncertain whether
-> it would not open other risks. Like something adding requests just before the
-> table load. Could this cause some I/O be handled by one function and the rest by
-> another? And would that really matter?
 
-I considered this too.  Any IO issued to the device before it is "ready"
-won't matter anyway (no where to send the IO due to not having a DM
-table -- such IO should result in an error (from dm.c:dm_process_bio's
-!map check).  But given the device has no size, a simple write will hit
--ENOSPC before.
+This is most definitely not a common use case for such a chip. Similar,
+one might argue that a light sensor could be used for chassis intrusion
+detection, or a movement sensor (after all, moving a chassis could be
+considered "intrusion", especially if it is a server chassis). Sure,
+technically one can use pretty much anything for "intrusion detection",
+but it is hard to imagine this as actual use case. This is made worse by
+the need for calibration - one would need to be able to determine what
+exactly defines "intrusion", and that would have to be chassis or even
+board specific and can not be hardcoded. This is way out of scope for
+a hardware monitoring driver.
 
-And the only way to get the DM device to have a proper destination for
-its IO is to load a table, which requires a sequence like:
+If you indeed choose such an approach in your company's systems, please
+use an iio driver.
 
-# dmsetup create -n test
-# dmsetup table
-test:
-# echo "0 20971520 linear 259:0 2048" | dmsetup load test
-# dmsetup table --inactive
-test: 0 20971520 linear 259:0 2048
-# dmsetup suspend test
-# dmsetup resume test
-# dmsetup table
-test: 0 20971520 linear 259:0 2048
-
-And once a table is loaded there will be accompanying change
-uevents that trigger udev, blkid, etc.
-
-(NOTE: the suspend phase implies a flush of all outstanding IO, but even
-if 'dmsetup suspend --noflush test' were used the IO would just get
-pushed onto a list in DM core and it would be issued after the new table
-is in place).
-
-> The other thing that was a bit strange but maybe someone else's problem is that
-> mount generated I/O requests to start with. The device size should be 0 still.
-
-That's just mount not having a negative check for device size being 0.
-
-Mike
-
+Thanks,
+Guenter
