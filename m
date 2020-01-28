@@ -2,105 +2,95 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98B0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26801C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760032173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:45:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lvsLAulh"
+	by mail.kernel.org (Postfix) with ESMTP id EC87721739
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 20:49:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580244543;
+	bh=98MCVD846R+F1HoStD4CD35pjFWenvaQvVXaHK8af/I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=swsyyVKGHRk9OdvmaA3X5jScgubwachjc10CdDUpFwtM14Y7c6YoD8wkunaRwkz0V
+	 lrNjQS7FFelb7msRbDUU77xVYephOT5YuewsiyM/+rgztppVuza7o2vc5mxjzXXivo
+	 uSWU2rx1qFmWvQGubBl8YW+DYOWAL+zBggv+6lAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgA1UpZ (ORCPT
+        id S1726384AbgA1UtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 15:45:25 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39852 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgA1UpY (ORCPT
+        Tue, 28 Jan 2020 15:49:02 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33958 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgA1UtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 15:45:24 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g6so5570762plp.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 12:45:24 -0800 (PST)
+        Tue, 28 Jan 2020 15:49:02 -0500
+Received: by mail-lf1-f66.google.com with SMTP id l18so10203831lfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 12:49:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q5Xif2KZlxqItit3sw6ycecM4cOFBN2t+5fxteCDrK8=;
-        b=lvsLAulhE7xtj+a4t9yoxvpe/kvn+YMj8o6UOLOucYmc3eJzopzxqhlatisRJT0HQ8
-         87JojLTO6qVJvhgZ8mFygTHptKMCk8Gzt7+FHu72+pmkldWZM8IccdP2PjN1R681lVVX
-         +x9FghhVKCTgIuxKgK9GMpQV4p7rZ8mazCWQY=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GmZOcC2KHTnaCYf4oE5bxsybrzf0YfINSmM6yhty+i8=;
+        b=Nx9uBzj6UigY8Oe7sJxYo1AbWDA51aAdcDv9umnB3fAS4k9I3ANt3MB9GiNm4Rtogo
+         2hqWXBEPAieaM/lI1/S72lnzj6P9nDPvv9UfXEiBEW4oMm85CmcYVuFMH3EiJIlyd2K0
+         U0AHK/BCEByiV7eahMTogwVDbexpknpBtEe3Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q5Xif2KZlxqItit3sw6ycecM4cOFBN2t+5fxteCDrK8=;
-        b=j1UDPsEqz9v1D4kzs6R+qDI/CQQkpLl6Qk5nJnhYF4U1umCwNqXTHoRDud+xwMomu8
-         f3DpTeTVVxDwbgyi785TszRTJKF/LRW8I2TfGj0ShAItZxiO0xEOLuGQIgPDnuVc3E+Q
-         VAskhJV4gdGBhO3eBlcDCq8KuuLu1pdJJb6KeyC8f2xUglIMladvohr2WOCWRDlY2Ytd
-         lVK1Axi2dPpWfiCFjnf1SmMHYLv0kTdHxwKQr1D1S6OklTojgxkERVW8tq+65bLtwYIl
-         HhZZoP/jtlznHAFxe4UpHTO0JwwYzsdISnZAoB7yHdSxg3RUq9153FOjM9v6Hd3qRlWE
-         BlSA==
-X-Gm-Message-State: APjAAAW8MbNtFsULWLdwvdGQRzFkPnFisCz08LpLn24NpYJZPGVPtaFw
-        dNAtTe7XxzmasVH/l5j17xY47w==
-X-Google-Smtp-Source: APXvYqwUTBN9TmhGuD1UiwT6ZcOmPkm1axw7mAwi6JPAz2IO8gca1uGK48ZbZszQ8uLcqbmvsakqBQ==
-X-Received: by 2002:a17:90a:ba98:: with SMTP id t24mr6937143pjr.12.1580244324192;
-        Tue, 28 Jan 2020 12:45:24 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 72sm17034196pfw.7.2020.01.28.12.45.23
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GmZOcC2KHTnaCYf4oE5bxsybrzf0YfINSmM6yhty+i8=;
+        b=Z9NAjXGhFANOpgnp/fdJvDXoYuBCMd6DauXyiWpgidwjQayHavbQtP9sCF1JtsC8E+
+         8+AC9mHR7POWdRfGWtQw9Gqce2nDr3MpVbfrQ4nkeMEDlGqIuk9E/WwjXIgqf2Qj8FNb
+         4e40gqz0bLsS8oBIxZs16v0GLaDxi8GY62wrW56Wn+QAlckfb1bGhVfG4sMRCUMNZTee
+         nBZzpncQJR5dmVSrnJW6k/hIU2Aac5j7YIcGMY1mhpK51+KQARD4Ly5Cf2B3WnYggyhX
+         69EwdKyJpjCbBr4ij2Tz8j2mm8g2lkq9NIssx/1h/0aFWJJKJn64OKgc9cgJ2GuGjCKh
+         rKog==
+X-Gm-Message-State: APjAAAVofepPFKCHkny7EmgnI0A5IqmcMk0zngHZZxmGG8vQefpV7eVE
+        Wt3BPUyvpMN1lUsQ6GsUUuJxZClvE64=
+X-Google-Smtp-Source: APXvYqwbWYf73sqOW4baemUeWYewyRR+JdZq964hCBQm0PmRhxINWwGhyxvAa8XU9z5vKlAcXIVqGw==
+X-Received: by 2002:a19:a416:: with SMTP id q22mr3466897lfc.60.1580244539315;
+        Tue, 28 Jan 2020 12:48:59 -0800 (PST)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id x29sm12741876lfg.45.2020.01.28.12.48.58
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 12:45:23 -0800 (PST)
-Date:   Tue, 28 Jan 2020 12:45:22 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org
-Subject: Re: [RFC v3 03/10] cpufreq: blacklist SC7180 in cpufreq-dt-platdev
-Message-ID: <20200128204522.GG46072@google.com>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <20200127200350.24465-4-sibis@codeaurora.org>
+        Tue, 28 Jan 2020 12:48:58 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id f24so10191443lfh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 12:48:58 -0800 (PST)
+X-Received: by 2002:a05:6512:78:: with SMTP id i24mr3553036lfo.10.1580244538010;
+ Tue, 28 Jan 2020 12:48:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200127200350.24465-4-sibis@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200128175751.GA35649@gmail.com>
+In-Reply-To: <20200128175751.GA35649@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 28 Jan 2020 12:48:42 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjoZfKFHL0wSsfnm32zv=zWNxtJcPob+1z2+P-tMcdoCg@mail.gmail.com>
+Message-ID: <CAHk-=wjoZfKFHL0wSsfnm32zv=zWNxtJcPob+1z2+P-tMcdoCg@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/cpu changes for v5.6
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 01:33:43AM +0530, Sibi Sankar wrote:
-> Add SC7180 to cpufreq-dt-platdev blacklist.
+On Tue, Jan 28, 2020 at 9:57 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cpu-for-linus
 
-nit: you could mention that cpufreq is handled by the
-'qcom-cpufreq-hw' driver.
+No diffstat in the pull request?
 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index 5492cf3c9dc18..580abc777d9d8 100644
-> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> @@ -130,6 +130,7 @@ static const struct of_device_id blacklist[] __initconst = {
->  	{ .compatible = "qcom,apq8096", },
->  	{ .compatible = "qcom,msm8996", },
->  	{ .compatible = "qcom,qcs404", },
-> +	{ .compatible = "qcom,sc7180", },
->  	{ .compatible = "qcom,sdm845", },
->  
->  	{ .compatible = "st,stih407", },
+The shortlog does match, and the diffstat I get looks sane, so I'm
+pulling it, but please fix whatever thing that caused the diffstat to
+not show in the email..
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+                 Linus
