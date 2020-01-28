@@ -2,164 +2,336 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3457DC35246
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DB9C35246
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5C424687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685A924686
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C8NqES1K"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RwfwFUC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgA1KEd (ORCPT
+        id S1726186AbgA1KEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:04:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48845 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725853AbgA1KEc (ORCPT
+        Tue, 28 Jan 2020 05:04:47 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47568 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbgA1KEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:04:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580205871;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=36cAX5ad4J5hjv4JjTiNHDGW7XbeM3TXjhy7xi3ZdOo=;
-        b=C8NqES1KRtJDp2nzYbrX1QNylklE0OoJMgBS87tcu1zn6SsVCq57WBBhRL9XB+HMHcO9Qw
-        7rZu3DXMCfhaEDjgP2xTN66bt8aqX3r4SpoysieRw9lubmWzczfrqVNfgV62utpUDPZlrs
-        bcylmQJ72acnRXlbXRWBSrn3YksQrIY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-64-XW4SLXpeOeizHftIaEgLKw-1; Tue, 28 Jan 2020 05:04:27 -0500
-X-MC-Unique: XW4SLXpeOeizHftIaEgLKw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA2A51005513;
-        Tue, 28 Jan 2020 10:04:25 +0000 (UTC)
-Received: from [10.36.116.207] (ovpn-116-207.ams2.redhat.com [10.36.116.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 12A545D9C9;
-        Tue, 28 Jan 2020 10:04:23 +0000 (UTC)
-Subject: Re: [Patch v2 1/4] mm/migrate.c: not necessary to check start and i
-To:     Wei Yang <richardw.yang@linux.intel.com>, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com,
-        yang.shi@linux.alibaba.com, rientjes@google.com
-References: <20200122011647.13636-1-richardw.yang@linux.intel.com>
- <20200122011647.13636-2-richardw.yang@linux.intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <fa4b94a7-4b70-ab01-e5e5-8eeb18b15c62@redhat.com>
-Date:   Tue, 28 Jan 2020 11:04:23 +0100
+        Tue, 28 Jan 2020 05:04:47 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00SA4aSh116455;
+        Tue, 28 Jan 2020 04:04:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580205876;
+        bh=KaBVDF333d50tyl+ezVv+2/YjxyaZOF6yYfqChbDnm0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RwfwFUC+3OZgG55Y5WffvYH2axkDc1vCft/1dhMzn/IsYRHNp+ye+ilUOHj3kuTrp
+         kzxZUm+3k1YZ4PXvZkCFb6Jl4Ku+ETn8XrR6A2E6k1RITfACCXSO/zQ6PLXuXDoGGg
+         9qDCh1T/ceYXHk2cBLmifw3LJwYXHs0/RRrXklzk=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00SA4a9U113766
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jan 2020 04:04:36 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 28
+ Jan 2020 04:04:35 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 28 Jan 2020 04:04:35 -0600
+Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00SA4WJN092468;
+        Tue, 28 Jan 2020 04:04:33 -0600
+Subject: Re: [PATCH v3 13/14] dt-bindings: phy: phy-cadence-torrent: Add
+ subnode bindings.
+To:     Rob Herring <robh@kernel.org>, Yuti Amonkar <yamonkar@cadence.com>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <kishon@ti.com>, <mark.rutland@arm.com>, <maxime@cerno.tech>,
+        <tomi.valkeinen@ti.com>, <praneeth@ti.com>, <mparab@cadence.com>,
+        <sjakhade@cadence.com>
+References: <1579689918-7181-1-git-send-email-yamonkar@cadence.com>
+ <1579689918-7181-14-git-send-email-yamonkar@cadence.com>
+ <20200127164235.GA7662@bogus>
+From:   Jyri Sarha <jsarha@ti.com>
+Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <3e5d7620-d1ec-ba37-0b5b-e28ed74e49d9@ti.com>
+Date:   Tue, 28 Jan 2020 12:04:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200122011647.13636-2-richardw.yang@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200127164235.GA7662@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.01.20 02:16, Wei Yang wrote:
-> Till here, i must no less than start. And if i equals to start,
-> store_status() would always return 0.
-
-I'd suggest
-
-"
-mm/migrate.c: no need to check for i > start in do_pages_move()
-
-At this point, we always have i >= start. If i == start, store_status()
-will return 0. So we can drop the check for i > start.
-"
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
+On 27/01/2020 18:42, Rob Herring wrote:
+> On Wed, Jan 22, 2020 at 11:45:17AM +0100, Yuti Amonkar wrote:
+>> From: Swapnil Jakhade <sjakhade@cadence.com>
+>>
+>> Add sub-node bindings for each group of PHY lanes based on PHY
+>> type. Only PHY_TYPE_DP is supported currently. Each sub-node
 > 
-> Remove some unnecessary check to make it easy to read and prepare for
-> further cleanup.
+> What the driver supports is not relevant to the binding. Define all 
+> modes.
 > 
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/migrate.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+>> includes properties such as master lane number, link reset, phy
+>> type, number of lanes etc.
 > 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 430fdccc733e..4c2a21856717 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1661,11 +1661,9 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->  		err = do_move_pages_to_node(mm, &pagelist, current_node);
->  		if (err)
->  			goto out;
-> -		if (i > start) {
-> -			err = store_status(status, start, current_node, i - start);
-> -			if (err)
-> -				goto out;
-> -		}
-> +		err = store_status(status, start, current_node, i - start);
-> +		if (err)
-> +			goto out;
->  		current_node = NUMA_NO_NODE;
->  	}
->  out_flush:
+> Given the conversion and this have no compatibility, just make the 
+> commits delete the old binding and add this new binding. I'd rather not 
+> have reviewed what just gets deleted here.
+> 
+>>
+>> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+>> ---
+>>  .../bindings/phy/phy-cadence-torrent.yaml          | 90 ++++++++++++++++++----
+>>  1 file changed, 73 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+>> index dbb8aa5..eb21615 100644
+>> --- a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+>> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+>> @@ -19,6 +19,12 @@ properties:
+>>        - cdns,torrent-phy
+>>        - ti,j721e-serdes-10g
+>>  
+>> +  '#address-cells':
+>> +    const: 1
+>> +
+>> +  '#size-cells':
+>> +    const: 0
+>> +
+>>    clocks:
+>>      maxItems: 1
+>>      description:
+>> @@ -41,44 +47,94 @@ properties:
+>>        - const: torrent_phy
+>>        - const: dptx_phy
+>>  
+>> -  "#phy-cells":
+>> -    const: 0
+>> +  resets:
+>> +    description:
+>> +      Must contain an entry for each in reset-names.
+>> +      See Documentation/devicetree/bindings/reset/reset.txt
+> 
+> How many reset entries? Needs a 'maxItems: 1' or an 'items' list if more 
+> than 1.
+> 
+>>  
+>> -  num_lanes:
+>> +  reset-names:
+>>      description:
+>> -      Number of DisplayPort lanes.
+>> -    allOf:
+>> -      - $ref: /schemas/types.yaml#/definitions/uint32
+>> -      - enum: [1, 2, 4]
+>> +      Must be "torrent_reset". It controls the reset to the
+> 
+> Should be a schema, not freeform text. However, not really a useful name 
+> as there's only 1, so I'd just remove 'reset-names'.
 > 
 
+This binding is trying to follow "cdns,sierra-phy-t0" binding [1] when
+it makes sense. Sierra defines two resets here. But if we can not name
+the other reset now (at least I can not), I guess we can just drop the
+reset-names here.
+
+>> +      torrent PHY.
+>>  
+>> -  max_bit_rate:
+>> +patternProperties:
+>> +  '^torrent-phy@[0-7]+$':
+>> +    type: object
+>>      description:
+>> -      Maximum DisplayPort link bit rate to use, in Mbps
+>> -    allOf:
+>> -      - $ref: /schemas/types.yaml#/definitions/uint32
+>> -      - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
+>> +      Each group of PHY lanes with a single master lane should be represented as a sub-node.
+>> +    properties:
+>> +      reg:
+>> +        description:
+>> +          The master lane number. This is the lowest numbered lane in the lane group.
+> 
+> Why not make it the list of lane numbers. Then you don't need num-lanes.
+> 
+
+Sierra binding already defines this method [1] and my plan was to rely
+on this method when selecting the lane types in the
+"ti,phy-j721e-wiz"-driver [2].
+
+IOW, I would like the both Sierra and Torrent bindings (which both are
+wrapped by the wiz wrapper IP) to be compatible enough for wiz driver to
+peek the lane types from the wrapped phy-node.
+
+>> +
+>> +      resets:
+>> +        description:
+>> +          Contains list of resets to get all the link lanes out of reset.
+> 
+> Needs a schema for how many? 1 per lane?
+> 
+
+That is what the current implementation is, but do we have to lock it
+down in the binding? There can hardly be more than 1 / lane, but I can
+imagine it to be just one for a number of lanes.
+
+>> +
+>> +      "#phy-cells":
+>> +        description:
+>> +          Generic PHY binding.
+> 
+> Not a useful description. Remove.
+> 
+>> +        const: 0
+>> +
+>> +      cdns,phy-type:
+>> +        description:
+>> +          Should be PHY_TYPE_DP.
+> 
+> Sounds like a constraint.
+> 
+
+I do not think there is point to limit this to PHY_TYPE_DP only. The
+current implementation may not support anything else but DP, but we
+should not limit the binding because of it. I think referring to the
+include/dt-bindings/phy/phy.h header here would be appropriate.
+
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+>> +      cdns,num-lanes:
+>> +        description:
+>> +          Number of DisplayPort lanes.
+>> +        allOf:
+>> +          - $ref: /schemas/types.yaml#/definitions/uint32
+>> +          - enum: [1, 2, 4]
+>> +
+>> +      cdns,max-bit-rate:
+>> +        description:
+>> +          Maximum DisplayPort link bit rate to use, in Mbps
+>> +        allOf:
+>> +          - $ref: /schemas/types.yaml#/definitions/uint32
+>> +          - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
+>> +
+>> +    required:
+>> +      - reg
+>> +      - resets
+>> +      - "#phy-cells"
+>> +      - cdns,phy-type
+> 
+> Add (for the child nodes):
+> 
+>        addtionalProperties: false
+> 
+>>  
+>>  required:
+>>    - compatible
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+>>    - clocks
+>>    - clock-names
+>>    - reg
+>>    - reg-names
+>> -  - "#phy-cells"
+>> +  - resets
+>> +  - reset-names
+>>  
+>>  additionalProperties: false
+>>  
+>>  examples:
+>>    - |
+>> -    dp_phy: phy@f0fb500000 {
+>> +    #include <dt-bindings/phy/phy.h>
+>> +    torrent_phy: phy@f0fb500000 {
+>>            compatible = "cdns,torrent-phy";
+>>            reg = <0xf0 0xfb500000 0x0 0x00100000>,
+>>                  <0xf0 0xfb030a00 0x0 0x00000040>;
+>>            reg-names = "torrent_phy", "dptx_phy";
+>> -          num_lanes = <4>;
+>> -          max_bit_rate = <8100>;
+>> -          #phy-cells = <0>;
+>> +          resets = <&phyrst 0>;
+>> +          reset-names = "torrent_reset";
+>>            clocks = <&ref_clk>;
+>>            clock-names = "refclk";
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +          torrent_phy_dp: torrent-phy@0 {
+> 
+> Just 'phy@...'
+> 
+>> +                    reg = <0>;
+>> +                    resets = <&phyrst 1>;
+>> +                    #phy-cells = <0>;
+>> +                    cdns,phy-type = <PHY_TYPE_DP>;
+>> +                    cdns,num-lanes = <4>;
+>> +                    cdns,max-bit-rate = <8100>;
+>> +          };
+>>      };
+>>  ...
+>> -- 
+>> 2.4.5
+>>
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/tree/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt?h=next
+
+[2]
+https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/tree/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml?h=next
 
 -- 
-Thanks,
-
-David / dhildenb
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
