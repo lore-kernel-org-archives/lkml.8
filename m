@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF913C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA32EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9264424687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7532720702
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222260;
-	bh=pfZmhNclWOdVpmT+NIxCBYUPY2XlVApOtvbptFEVmxY=;
+	s=default; t=1580222270;
+	bh=HY+wfotgluU10jnyLR4+EduJuquGEvYO7BcvVCfbxrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=09YVrtEl8VSdQQMMOHllI6FfmNtl1sysUaPwvdWAhR+WVVpDDPL/PdJ04MAYKKqs/
-	 3BE1afErnosu6OYenBrBQg1Ag2X4XGHfgIUFBlsPDb3FpsbhhYv4Cgb8NyVPibg643
-	 59RupAlxQ9ElxbaSotooaZTjiqBFTQRNC9VVvBeU=
+	b=ezgL71hMeUDlm5nyA8Iv6zTV42rGROLxK7c89G8/skpuySl1eVGJcXVg/rUJjg4pc
+	 ieqWDCnM5q0B7YXkFP2Fi91Paw1jLQJkiI9NoeLHvrtAM41r/GmhIwI0v6izJEsB1f
+	 2/+GENfnnYM+DpT7O5/LlQOl5IzTVfCFqpi/gEy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731367AbgA1Ohj (ORCPT
+        id S1731190AbgA1Oht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:37:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44720 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:37:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730992AbgA1OUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:20:04 -0500
+        id S1730923AbgA1OTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:19:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71A2E2071E;
-        Tue, 28 Jan 2020 14:20:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6DEC2468F;
+        Tue, 28 Jan 2020 14:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580221203;
-        bh=pfZmhNclWOdVpmT+NIxCBYUPY2XlVApOtvbptFEVmxY=;
+        s=default; t=1580221181;
+        bh=HY+wfotgluU10jnyLR4+EduJuquGEvYO7BcvVCfbxrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Jwmosmuj0NtmQQ/RVdwjRPlQ68caS6QYsxJfsyYz2KZUTts5nBoZntFmuwsFM3Dz
-         zUJTioM0R29zECZO+BfVEZ9n5LBZblOmME0VN5yjjA9TDlEv1a/al4zNbXFXKNLwir
-         8h4cSVuAx1rui7PPYF2Sp6j3/nnde3d7x/wscbi8=
+        b=GL5Ckk4G0VzlgHy6mnSMGAOSkSdD234RY9Ux13xY7Pq4cOtEo5g1PcT92SOPj4Z7C
+         gg0Pv/ck4BwPsJpWyogdD5VQ0/KZqeWl8m6wWa3aP8ylo6SgxI+DYTVPERUWhjllml
+         bj7BlzdtugwXNizTuSOyWLkXSo3ReVA3g+fn+OEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 130/271] net: ena: fix: Free napi resources when ena_up() fails
-Date:   Tue, 28 Jan 2020 15:04:39 +0100
-Message-Id: <20200128135902.279642467@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 122/271] dmaengine: axi-dmac: Dont check the number of frames for alignment
+Date:   Tue, 28 Jan 2020 15:04:31 +0100
+Message-Id: <20200128135901.671922895@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -61,36 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit b287cdbd1cedfc9606682c6e02b58d00ff3a33ae ]
+[ Upstream commit 648865a79d8ee3d1aa64aab5eb2a9d12eeed14f9 ]
 
-ena_up() calls ena_init_napi() but does not call ena_del_napi() in
-case of failure. This causes a segmentation fault upon rmmod when
-netif_napi_del() is called. Fix this bug by calling ena_del_napi()
-before returning error from ena_up().
+In 2D transfers (for the AXI DMAC), the number of frames (numf) represents
+Y_LENGTH, and the length of a frame is X_LENGTH. 2D transfers are useful
+for video transfers where screen resolutions ( X * Y ) are typically
+aligned for X, but not for Y.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+There is no requirement for Y_LENGTH to be aligned to the bus-width (or
+anything), and this is also true for AXI DMAC.
+
+Checking the Y_LENGTH for alignment causes false errors when initiating DMA
+transfers. This change fixes this by checking only that the Y_LENGTH is
+non-zero.
+
+Fixes: 0e3b67b348b8 ("dmaengine: Add support for the Analog Devices AXI-DMAC DMA controller")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/dma-axi-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 961f31c8356b7..da21886609e30 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -1702,6 +1702,7 @@ err_setup_rx:
- err_setup_tx:
- 	ena_free_io_irq(adapter);
- err_req_irq:
-+	ena_del_napi(adapter);
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 7f0b9aa158679..9887f2a14aa98 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -451,7 +451,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
  
- 	return rc;
- }
+ 	if (chan->hw_2d) {
+ 		if (!axi_dmac_check_len(chan, xt->sgl[0].size) ||
+-		    !axi_dmac_check_len(chan, xt->numf))
++		    xt->numf == 0)
+ 			return NULL;
+ 		if (xt->sgl[0].size + dst_icg > chan->max_length ||
+ 		    xt->sgl[0].size + src_icg > chan->max_length)
 -- 
 2.20.1
 
