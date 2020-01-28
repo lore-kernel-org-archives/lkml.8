@@ -2,91 +2,97 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C958C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D170C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29AE624687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXjK0EpU"
+	by mail.kernel.org (Postfix) with ESMTP id 3A39624688
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 11:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580212212;
+	bh=jW6H9OlD/jgob7HlVx2GQo9Y2WJ5ofqdPX2DH4cN0ws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bzm4lPnaboamaCXJ05z99/yncM5MW3JaEP9J1Ch9Mrv3RPPrQEz9qtomJqh2tp1IE
+	 KQDnjwA4jeZlbWXV7WcaIxlmr04aSSGJBTciPGvWWJumfV23XF5Q+PaKZBBKdfbTNI
+	 C+idsWDA+X7VR+Klf3fjIniCdbQYNtjK+SCRWT0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgA1Lse (ORCPT
+        id S1726073AbgA1LuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 06:48:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58981 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725959AbgA1Lsd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 06:48:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580212112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lz7R+vtlTh6RBBwj0e/+jD30ITTxMxb0pWI2woJxCN4=;
-        b=iXjK0EpUFLJbFcE55x3mbfbnjLLXQtocwKSWSYhlY8It3ijHFQkPYotuFa8ipLHnqnvan4
-        eQ/bciTlsFBtSJRiTR0kvbJHBaKtJU6Ky39LylENhcAteUgwhM9rjD2qIJ0c4hbmEXcxLo
-        1jMg/mLL1FB/toLRQ3yKq1jOCFHyk/c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-UsiETWpOOCi5duRfEJ096Q-1; Tue, 28 Jan 2020 06:48:24 -0500
-X-MC-Unique: UsiETWpOOCi5duRfEJ096Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 28 Jan 2020 06:50:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbgA1LuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 06:50:11 -0500
+Received: from localhost (unknown [223.226.101.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 949F0107ACC4;
-        Tue, 28 Jan 2020 11:48:22 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.70])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 3FDA788828;
-        Tue, 28 Jan 2020 11:48:20 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 28 Jan 2020 12:48:21 +0100 (CET)
-Date:   Tue, 28 Jan 2020 12:48:18 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Amol Grover <frextrite@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] cred: Use RCU primitives to access RCU pointers
-Message-ID: <20200128114818.GA17943@redhat.com>
-References: <20200128072740.21272-1-frextrite@gmail.com>
- <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 14C9F214AF;
+        Tue, 28 Jan 2020 11:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580212210;
+        bh=jW6H9OlD/jgob7HlVx2GQo9Y2WJ5ofqdPX2DH4cN0ws=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D2cb1YugqwH2Kyc7TSXkHPyGqa4SajqkS1G/5EzKpQt0ER0jWrgg8B8kx41irg/+P
+         BmEt88S8IfoSTGx/NcGkJg+nkUDwnlrAk26uaXIsT0nysYKSUK6RZBdYlykEVlKYRt
+         KA1+RCXSefrCA4DP2Z8kNYqDDPctG8DwSf0SHbPk=
+Date:   Tue, 28 Jan 2020 17:20:06 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dan.j.williams@intel.com, grygorii.strashko@ti.com, vigneshr@ti.com
+Subject: Re: [PATCH for-next 0/4] dmaengine: ti: k3-udma: Updates for next
+Message-ID: <20200128115006.GT2841@vkoul-mobl>
+References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
+ <41c53cc4-fa3e-1ab1-32b8-1d516cda7341@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <41c53cc4-fa3e-1ab1-32b8-1d516cda7341@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/28, Jann Horn wrote:
->
-> On Tue, Jan 28, 2020 at 8:28 AM Amol Grover <frextrite@gmail.com> wrote:
-> > task_struct.cred and task_struct.real_cred are annotated by __rcu,
->
-> task_struct.cred doesn't actually have RCU semantics though, see
-> commit d7852fbd0f0423937fa287a598bfde188bb68c22. For task_struct.cred,
-> it would probably be more correct to remove the __rcu annotation?
+On 28-01-20, 12:15, Peter Ujfalusi wrote:
+> Vinod,
+> 
+> On 27/01/2020 15.21, Peter Ujfalusi wrote:
+> > Hi Vinod,
+> > 
+> > Based on customer reports we have identified two issues with the UDMA driver:
+> > 
+> > TX completion (1st patch):
+> > The scheduled work based workaround for checking for completion worked well for
+> > UART, but it had significant impact on SPI performance.
+> > The underlying issue is coming from the fact that we have split data movement
+> > architecture.
+> > In order to know that the transfer is really done we need to check the remote
+> > end's (PDMA) byte counter.
+> > 
+> > RX channel teardown with stale data in PDMA (2nd patch):
+> > If we try to stop the RX DMA channel (teardown) then PDMA is trying to flush the
+> > data is might received from a peripheral, but if UDMA does not have a packet to
+> > use for this draining than it is going to push back on the PDMA and the flush
+> > will never completes.
+> > The workaround is to use a dummy descriptor for flush purposes when the channel
+> > is terminated and we did not have active transfer (no descriptor for UDMA).
+> > This allows UDMA to drain the data and the teardown can complete.
+> > 
+> > The last two patch is to use common code to set up the TR parameters for
+> > slave_sg, cyclic and memcpy. The setup code is the same as we used for memcpy
+> > with the change we can handle 4.2GB sg elements and periods in case of cyclic.
+> > It is also nice that we have single function to do the configuration.
+> 
+> I have marked these patches as for-next as 5.5 was not released yet.
+> Would it be possible to have these as fixes for 5.6?
 
-Yes, but get_task_cred() assumes it has RCU semantics... To be honest
-I didn't know we have this helper. Can't it race with revert_creds() in
-do_faccessat() ?
+Sure but are they really fixes, why cant they go for next release :)
 
-Oleg.
+They seem to improve things for sure, but do we want to call them as
+fixes..?
 
+-- 
+~Vinod
