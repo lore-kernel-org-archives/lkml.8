@@ -2,141 +2,92 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050B2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B29C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC10B2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222802;
-	bh=miFehrnF4sY0m5Yc8p0uYrJycjDEdRcjAxIwsiWLUAY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JiZ5YO9wo9Qw+nz8vdjPlNy4B/VrBrZjJ427vOcktBc7tKA7UlqaIJwR8Gq20Cr2E
-	 W2qEQ7TwMD/nbP5TU/0G56rrYxLRAoIxGOzdsUvD1pIG8HjbOck8CMejm5tC6J0SBK
-	 Gp1vPji07xQNgL+wdaIaTLtcXWBdYgJwc14/GdHo=
+	by mail.kernel.org (Postfix) with ESMTP id DE26924683
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgA1Oqm (ORCPT
+        id S1727024AbgA1Oqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:46:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728157AbgA1OIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:08:50 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08DB22468A;
-        Tue, 28 Jan 2020 14:08:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220529;
-        bh=miFehrnF4sY0m5Yc8p0uYrJycjDEdRcjAxIwsiWLUAY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RePC0INB5G+55vpgODxy5WLGTFoi001Lh/fKlyo+p1IoyPjLghvvJ+RGHmut7K0Ri
-         sAhKFOdN42+8CEeC0l/7ib0vc6Zogi1BEOxhiYfZ+4MzMC0DTH2CawR8WtSR4ihwCa
-         KjtcV6KJ0jZEqTL9BKfEdLCCPIr/F7FP7KeSg+Hw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 044/183] pinctrl: sh-pfc: emev2: Add missing pinmux functions
-Date:   Tue, 28 Jan 2020 15:04:23 +0100
-Message-Id: <20200128135834.385054563@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
-References: <20200128135829.486060649@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 28 Jan 2020 09:46:44 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49126 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgA1Oql (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:46:41 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iwS8U-0000J1-MK; Tue, 28 Jan 2020 15:46:38 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 433D91C1B3D;
+        Tue, 28 Jan 2020 15:46:38 +0100 (CET)
+Date:   Tue, 28 Jan 2020 14:46:38 -0000
+From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: smp/urgent] smp: Remove superfluous cond_func check in
+ smp_call_function_many_cond()
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200127083915.434tdkztorkklpdu@linutronix.de>
+References: <20200127083915.434tdkztorkklpdu@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <158022279803.396.3667557782682322607.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+The following commit has been merged into the smp/urgent branch of tip:
 
-[ Upstream commit 1ecd8c9cb899ae277e6986ae134635cb1a50f5de ]
+Commit-ID:     25a3a15417cf4311f812f5a2b18c5fc2809f66d7
+Gitweb:        https://git.kernel.org/tip/25a3a15417cf4311f812f5a2b18c5fc2809f66d7
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Mon, 27 Jan 2020 09:39:15 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 28 Jan 2020 15:43:00 +01:00
 
-The err_rst_reqb, ext_clki, lowpwr, and ref_clko pin groups are present,
-but no pinmux functions refer to them, hence they can not be selected.
+smp: Remove superfluous cond_func check in smp_call_function_many_cond()
 
-Fixes: 1e7d5d849cf4f0c5 ("sh-pfc: Add emev2 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+It was requested to remove the cond_func check but the follow up patch was
+overlooked. Remove it now.
+
+Fixes: 67719ef25eeb ("smp: Add a smp_cond_func_t argument to smp_call_function_many()")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200127083915.434tdkztorkklpdu@linutronix.de
+
 ---
- drivers/pinctrl/sh-pfc/pfc-emev2.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-emev2.c b/drivers/pinctrl/sh-pfc/pfc-emev2.c
-index 02118ab336fcb..5ab3ac61f418c 100644
---- a/drivers/pinctrl/sh-pfc/pfc-emev2.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-emev2.c
-@@ -1263,6 +1263,14 @@ static const char * const dtv_groups[] = {
- 	"dtv_b",
- };
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 3b7bedc..d0ada39 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -435,7 +435,7 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
  
-+static const char * const err_rst_reqb_groups[] = {
-+	"err_rst_reqb",
-+};
-+
-+static const char * const ext_clki_groups[] = {
-+	"ext_clki",
-+};
-+
- static const char * const iic0_groups[] = {
- 	"iic0",
- };
-@@ -1285,6 +1293,10 @@ static const char * const lcd_groups[] = {
- 	"yuv3",
- };
- 
-+static const char * const lowpwr_groups[] = {
-+	"lowpwr",
-+};
-+
- static const char * const ntsc_groups[] = {
- 	"ntsc_clk",
- 	"ntsc_data",
-@@ -1298,6 +1310,10 @@ static const char * const pwm1_groups[] = {
- 	"pwm1",
- };
- 
-+static const char * const ref_clko_groups[] = {
-+	"ref_clko",
-+};
-+
- static const char * const sd_groups[] = {
- 	"sd_cki",
- };
-@@ -1391,13 +1407,17 @@ static const struct sh_pfc_function pinmux_functions[] = {
- 	SH_PFC_FUNCTION(cam),
- 	SH_PFC_FUNCTION(cf),
- 	SH_PFC_FUNCTION(dtv),
-+	SH_PFC_FUNCTION(err_rst_reqb),
-+	SH_PFC_FUNCTION(ext_clki),
- 	SH_PFC_FUNCTION(iic0),
- 	SH_PFC_FUNCTION(iic1),
- 	SH_PFC_FUNCTION(jtag),
- 	SH_PFC_FUNCTION(lcd),
-+	SH_PFC_FUNCTION(lowpwr),
- 	SH_PFC_FUNCTION(ntsc),
- 	SH_PFC_FUNCTION(pwm0),
- 	SH_PFC_FUNCTION(pwm1),
-+	SH_PFC_FUNCTION(ref_clko),
- 	SH_PFC_FUNCTION(sd),
- 	SH_PFC_FUNCTION(sdi0),
- 	SH_PFC_FUNCTION(sdi1),
--- 
-2.20.1
-
-
-
+ 	/* Fastpath: do that cpu by itself. */
+ 	if (next_cpu >= nr_cpu_ids) {
+-		if (!cond_func || (cond_func && cond_func(cpu, info)))
++		if (!cond_func || cond_func(cpu, info))
+ 			smp_call_function_single(cpu, func, info, wait);
+ 		return;
+ 	}
