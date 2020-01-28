@@ -2,174 +2,240 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5717C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEF0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8554E24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB0D20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 15:25:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dgP5Cmdg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="daANP32j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgA1PVE (ORCPT
+        id S1726486AbgA1PZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 10:21:04 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:39289 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgA1PVE (ORCPT
+        Tue, 28 Jan 2020 10:25:49 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26133 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726141AbgA1PZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 10:21:04 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200128152102euoutp024088c369bf6847582b31cf7cb044152c~uFiPZtfPe0305603056euoutp02i
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 15:21:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200128152102euoutp024088c369bf6847582b31cf7cb044152c~uFiPZtfPe0305603056euoutp02i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580224862;
-        bh=c+5xU8gjZGqZjMpG2KUe0/mMVcXhBH61/Bs24x6Qd9E=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=dgP5Cmdgrm5YxCNjiD/5RvX7yjhLmxAqyPjPu3ro6u0bk1bNFKviQdwvFj8Zg7V5J
-         oSEJdTC8bowWSKt1jQarYKJunXXaI+mQYiZGSwjHUNHkjUTRYx36cxpgrPdf7T7+m1
-         ScAXLUKw/5FT7s4+E2f1aGdGoyj/kWme5Ui8D5Po=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200128152102eucas1p148763110247c0d5e63b0020bbaca8430~uFiPFWOFA0561805618eucas1p1F;
-        Tue, 28 Jan 2020 15:21:02 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 0A.EB.60679.D51503E5; Tue, 28
-        Jan 2020 15:21:01 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200128152101eucas1p1cfd0983fb01439e55279b62448fd8072~uFiOT7HZM0549005490eucas1p1G;
-        Tue, 28 Jan 2020 15:21:01 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200128152101eusmtrp25a14db7a27e704195c3240e0c3a66a8f~uFiOTP5Va0521105211eusmtrp2H;
-        Tue, 28 Jan 2020 15:21:01 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-38-5e30515d39da
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 69.42.07950.D51503E5; Tue, 28
-        Jan 2020 15:21:01 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200128152058eusmtip25574867aae5217c7a627d828c12d11db~uFiMGp6sN0896708967eusmtip24;
-        Tue, 28 Jan 2020 15:20:58 +0000 (GMT)
-Subject: Re: [PATCH] fbdev: wait for references go away
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, marmarek@invisiblethingslab.com,
-        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <e16f568b-c629-b81e-ec3a-7c7dd6edb766@samsung.com>
-Date:   Tue, 28 Jan 2020 16:20:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Tue, 28 Jan 2020 10:25:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580225146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4u1eecLUmt9wBhg+/Wu6HCzpTCvXarAFVysnsNaCuCA=;
+        b=daANP32jCVGQEGzUL6sHQKX8rZybWMD5G5YHOib6fBRqKI6ukHMX5yGt3SeQJxOj3wl6/1
+        Hb1tIn7MX8js4/qCix7dfsjOH70pSsw+J0GV+Fmr2FQCvzn/rnSM4DdV/HJBqvId+XJH1w
+        eocxJg3q2yIHx1+Sj9rtUvnwa4HiWtI=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-lxULVTxzObez6jAvSGJv8w-1; Tue, 28 Jan 2020 10:25:44 -0500
+X-MC-Unique: lxULVTxzObez6jAvSGJv8w-1
+Received: by mail-qv1-f72.google.com with SMTP id e26so8923312qvb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 07:25:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4u1eecLUmt9wBhg+/Wu6HCzpTCvXarAFVysnsNaCuCA=;
+        b=OnxoRyzOVvwVTnt1E05HqIgZh4YmeNrx+PrI+XfmmAbmIB/P/IcXtknOFfIzq8fyr4
+         YThoZFSkYjcA431rrezJWjU5nuZyK8JBkhhwTsKdMYdwH6NMX/9Ejo1ZDeECkVEA6qdi
+         hiwQQyvWVL8LdKpgcCmU9iTK5ex5NLTQlD1mc1DBim/wxZtbiHn4tTasBuacakdOynvS
+         RouU0xC0OBbSny/REBFzBIhk93AptD0o4l27OiqUbaxRBwTAloETm0nYZNz6k8+4H36L
+         Jcd17rlQHldk1Vubym1b7BlbyYoRlNphbMdUlTdqSNDb4ntivqrzYpDo6TvOpcKz8exg
+         9FyQ==
+X-Gm-Message-State: APjAAAW71nkMm6cITZ/KQ1r0yohPLb9N+0k+mT9gVukgGHl8K1d3MMjc
+        R6EzATXOl52vCzCxvZXPRG1/eASuaEmXPLaNu8SvbnGlngsh/M6Gwv9LJZg45fyVgMjulMaHxEY
+        OXHUpsLBeReusNrryZ/N2tLGZYXK8Qf0jmyF6YjE5
+X-Received: by 2002:ae9:ef4b:: with SMTP id d72mr22040725qkg.27.1580225144378;
+        Tue, 28 Jan 2020 07:25:44 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwa0r9/LJBQh84MY0bPX7/2+z98kqzE1ApQo3V/9ZMyGSk2kMAPZn6udWvO3iCtpJlQ3zhVkr+15X6sFqoFhBE=
+X-Received: by 2002:ae9:ef4b:: with SMTP id d72mr22040694qkg.27.1580225144075;
+ Tue, 28 Jan 2020 07:25:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200121055348.s4anrveo2z6avin6@sirius.home.kraxel.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDKsWRmVeSWpSXmKPExsWy7djPc7qxgQZxBu92aFpc+fqezeLZrZPM
-        Fif6PrBaXN41h83ic+MuFgdWj95999g97ncfZ/J4v+8qm8fnTXIBLFFcNimpOZllqUX6dglc
-        Gae23GMpOCRYseFXL1sD40/eLkYODgkBE4nNf1S7GLk4hARWMEpc/DuXDcL5wihx49cqFgjn
-        M6NEw+0HTF2MnGAdMz61QlUtZ5TYefU6C0hCSOAto8SKE+YgtrCAucSjD6+YQWwRAVWJhf+W
-        sII0MAusZ5TYt+YJI0iCTcBKYmL7KjCbV8BOoul5I9ggFqCGnes2gsVFBSIkPj04zApRIyhx
-        cuYTsBpOAVeJEwdOs4HYzALiEreezGeCsOUltr+dwwyyTEJgHrvEu9cTWSDOdpGYsXUJ1AvC
-        Eq+Ob2GHsGUk/u8EaQZpWMco8bfjBVT3dkaJ5ZP/sUFUWUvcOfeLDRRkzAKaEut36UOEHSW+
-        NC1hh4Qkn8SNt4IQR/BJTNo2nRkizCvR0SYEUa0msWHZBjaYtV07VzJPYFSaheS1WUjemYXk
-        nVkIexcwsqxiFE8tLc5NTy02ykst1ytOzC0uzUvXS87P3cQITDOn/x3/soNx15+kQ4wCHIxK
-        PLwzVAzihFgTy4orcw8xSnAwK4nwdjIBhXhTEiurUovy44tKc1KLDzFKc7AoifMaL3oZKySQ
-        nliSmp2aWpBaBJNl4uCUamAUt7ZqCZf5taek+fon4U01hStc9D9bm6yczbr03CXmXRNMetOD
-        5Wd+OHHPIe+gDn+rqUZ96w6241cUXmRUGHpk/fCZaCvCdF073sIy6IBDl92ngNksL7avTYqd
-        UqXfbpizwOpqYOj/SxcU99lt2a/fKi16aCKj2Itp37QFFrsq+fc42AUesldiKc5INNRiLipO
-        BAAlr2qRLwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xe7qxgQZxBsu7+SyufH3PZvHs1klm
-        ixN9H1gtLu+aw2bxuXEXiwOrR+++e+we97uPM3m833eVzePzJrkAlig9m6L80pJUhYz84hJb
-        pWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jFNb7rEUHBKs2PCrl62B8Sdv
-        FyMnh4SAicSMT61sXYxcHEICSxklpjUcZe9i5ABKyEgcX18GUSMs8edaF1TNa0aJN68fMYIk
-        hAXMJR59eMUMYosIqEos/LeEFaSIWWA9o8Sm32uZITp+MUqsunubBaSKTcBKYmL7KrBuXgE7
-        iabnjWBxFqDunes2gsVFBSIkDu+YBVUjKHFy5hOwGk4BV4kTB06zgdjMAuoSf+ZdYoawxSVu
-        PZnPBGHLS2x/O4d5AqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucVGesWJucWleel6yfm5
-        mxiBkbXt2M8tOxi73gUfYhTgYFTi4XVQMogTYk0sK67MPcQowcGsJMLbyQQU4k1JrKxKLcqP
-        LyrNSS0+xGgK9NxEZinR5Hxg1OeVxBuaGppbWBqaG5sbm1koifN2CByMERJITyxJzU5NLUgt
-        gulj4uCUamDc0F02x0DtocPOKfaOa29m/fkccfFOdW3WevkTU/vF7EzdpE4VCS2+euKTUUsn
-        f/U3E8PJW+7NfZLeMHn1wQ3eCoahl6OXFDD7rf7R8PTXtFsb/Bk+CXz5lpbNYp+/t8z0GsOM
-        8GfX5dcc3GMvdU3pblRVT6lW0EXxTElJ75ryJjulDQybu/KUWIozEg21mIuKEwGC5rG5wgIA
-        AA==
-X-CMS-MailID: 20200128152101eucas1p1cfd0983fb01439e55279b62448fd8072
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200120100025eucas1p21f5e2da0fd7c1fcb33cb47a97e9e645c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200120100025eucas1p21f5e2da0fd7c1fcb33cb47a97e9e645c
-References: <CGME20200120100025eucas1p21f5e2da0fd7c1fcb33cb47a97e9e645c@eucas1p2.samsung.com>
-        <20200120100014.23488-1-kraxel@redhat.com>
-        <d143e43b-8a38-940e-3ae5-e7b830a74bb3@samsung.com>
-        <20200121055348.s4anrveo2z6avin6@sirius.home.kraxel.org>
+References: <20200111192419.2503922-1-lains@archlinux.org> <aaca852e-cb31-2690-7f90-819ed673bacb@pedrovanzella.com>
+ <CAO-hwJJwqXbJSTY2iEBTv3=N1_NaoHii6JvpA7_1oJUWQHZHag@mail.gmail.com>
+In-Reply-To: <CAO-hwJJwqXbJSTY2iEBTv3=N1_NaoHii6JvpA7_1oJUWQHZHag@mail.gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Tue, 28 Jan 2020 16:25:33 +0100
+Message-ID: <CAO-hwJLXQSjq0J-emUMCu9Z69FmzzQO3Am0E3Xiw6aWBfiEjnA@mail.gmail.com>
+Subject: Re: [PATCH] HID: logitech-hidpp: BatteryVoltage: only read
+ chargeStatus if extPower is active
+To:     Pedro Vanzella <pedro@pedrovanzella.com>
+Cc:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jan 27, 2020 at 10:12 AM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> Hi,
+>
+> On Mon, Jan 20, 2020 at 2:43 PM Pedro Vanzella <pedro@pedrovanzella.com> =
+wrote:
+> >
+> > On 1/11/20 4:24 PM, Filipe La=C3=ADns wrote:
+> > > In the HID++ 2.0 function getBatteryInfo() from the BatteryVoltage
+> > > (0x1001) feature, chargeStatus is only valid if extPower is active.
+> > >
+> > > Previously we were ignoring extPower, which resulted in wrong values.
+> >
+> > Nice catch. Sorry for missing that the first time around.
+> >
+> > >
+> > > Example:
+> > >      With an unplugged mouse
+> > >
+> > >      $ cat /sys/class/power_supply/hidpp_battery_0/status
+> > >      Charging
+> >
+> > Tested and it works as expected now.
+>
+> Thanks for the patch and the tests.
+>
+> Unfortunately, the merge window is already opened, and I'd rather not
+> sneak this one right now. This patch doesn't seem very critical so I
+> rather not annoy the other maintainers.
+> I'll make sure it gets in the 5.6 final by pushing it into a rc when
+> things are calmer for everybody.
+>
+> So the plan would be:
+> - wait for the 'normal' 5.6 HID pull request to be sent
+> - apply this one in for-5.6/upstream-fixes
+> - sent this branch for either 5.6-rc1 or 5.6-rc2
+>
+> Cheers,
+> Benjamin
+>
+> >
+> > >
+> > > This patch makes fixes that, it also renames charge_sts to flags as
 
-On 1/21/20 6:53 AM, Gerd Hoffmann wrote:
->   Hi,
-> 
->>> open.  Which can result in drm driver not being able to grab resources
->>> (and fail initialization) because the firmware framebuffer still holds
->>> them.  Reportedly plymouth can trigger this.
->>
->> Could you please describe issue some more?
->>
->> I guess that a problem is happening during DRM driver load while fbdev
->> driver is loaded? I assume do_unregister_framebuffer() is called inside
->> do_remove_conflicting_framebuffers()?
-> 
-> Yes.  Specifically bochs-drm.ko and efifb in virtual machines.
-> 
->> At first glance it seems to be an user-space issue as it should not be
->> holding references on /dev/fb0 while DRM driver is being loaded.
-> 
-> Well, the drm driver is loaded by udev like everything else.
-> 
-> Dunno what plymouth (graphical boot screen tool) does to handle the
-> situation.  I guess listening to udev events.  So it should notice efifb
-> going away and drop the /dev/fb0 reference, but this races against
-> bochs-drm initializing.
+Fixed the typo: 's/makes //' and pushed to for-5.6/upstream-fixes
 
-It has been a week and there have been no alternative proposals to
-address the problem so I incline to accepting this approach..
+Cheers,
+Benjamin
 
-However please rework the patch slightly:
+> > > charge_sts can be confused with chargeStatus from the spec.
+> > >
+> > > Spec:
+> > > +--------+-----------------------------------------------------------=
+--------------+
+> > > |  byte  |                                    2                      =
+              |
+> > > +--------+--------------+------------+------------+----------+-------=
+---+----------+
+> > > |   bit  |     0..2     |      3     |      4     |     5    |     6 =
+   |     7    |
+> > > +--------+--------------+------------+------------+----------+-------=
+---+----------+
+> > > | buffer | chargeStatus | fastCharge | slowCharge | critical | (unuse=
+d) | extPower |
+> > > +--------+--------------+------------+------------+----------+-------=
+---+----------+
+> > > Table 1 - battery voltage (0x1001), getBatteryInfo() (ASE 0), 3rd byt=
+e
+> > >
+> > > +-------+--------------------------------------+
+> > > | value |                meaning               |
+> > > +-------+--------------------------------------+
+> > > |   0   | Charging                             |
+> > > +-------+--------------------------------------+
+> > > |   1   | End of charge (100% charged)         |
+> > > +-------+--------------------------------------+
+> > > |   2   | Charge stopped (any "normal" reason) |
+> > > +-------+--------------------------------------+
+> > > |   7   | Hardware error                       |
+> > > +-------+--------------------------------------+
+> > > Table 2 - chargeStatus value
+> > >
+> > > Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
+> > > ---
+> > >   drivers/hid/hid-logitech-hidpp.c | 43 ++++++++++++++++-------------=
+---
+> > >   1 file changed, 21 insertions(+), 22 deletions(-)
+> > >
+> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logit=
+ech-hidpp.c
+> > > index bb063e7d48df..39a5ee0aaab0 100644
+> > > --- a/drivers/hid/hid-logitech-hidpp.c
+> > > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > > @@ -1256,36 +1256,35 @@ static int hidpp20_battery_map_status_voltage=
+(u8 data[3], int *voltage,
+> > >   {
+> > >       int status;
+> > >
+> > > -     long charge_sts =3D (long)data[2];
+> > > +     long flags =3D (long) data[2];
+> > >
+> > > -     *level =3D POWER_SUPPLY_CAPACITY_LEVEL_UNKNOWN;
+> > > -     switch (data[2] & 0xe0) {
+> > > -     case 0x00:
+> > > -             status =3D POWER_SUPPLY_STATUS_CHARGING;
+> > > -             break;
+> > > -     case 0x20:
+> > > -             status =3D POWER_SUPPLY_STATUS_FULL;
+> > > -             *level =3D POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+> > > -             break;
+> > > -     case 0x40:
+> > > +     if (flags & 0x80)
+> > > +             switch (flags & 0x07) {
+> > > +             case 0:
+> > > +                     status =3D POWER_SUPPLY_STATUS_CHARGING;
+> > > +                     break;
+> > > +             case 1:
+> > > +                     status =3D POWER_SUPPLY_STATUS_FULL;
+> > > +                     *level =3D POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+> > > +                     break;
+> > > +             case 2:
+> > > +                     status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
+> > > +                     break;
+> > > +             default:
+> > > +                     status =3D POWER_SUPPLY_STATUS_UNKNOWN;
+> > > +                     break;
+> > > +             }
+> > > +     else
+> > >               status =3D POWER_SUPPLY_STATUS_DISCHARGING;
+> > > -             break;
+> > > -     case 0xe0:
+> > > -             status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
+> > > -             break;
+> > > -     default:
+> > > -             status =3D POWER_SUPPLY_STATUS_UNKNOWN;
+> > > -     }
+> > >
+> > >       *charge_type =3D POWER_SUPPLY_CHARGE_TYPE_STANDARD;
+> > > -     if (test_bit(3, &charge_sts)) {
+> > > +     if (test_bit(3, &flags)) {
+> > >               *charge_type =3D POWER_SUPPLY_CHARGE_TYPE_FAST;
+> > >       }
+> > > -     if (test_bit(4, &charge_sts)) {
+> > > +     if (test_bit(4, &flags)) {
+> > >               *charge_type =3D POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
+> > >       }
+> > > -
+> > > -     if (test_bit(5, &charge_sts)) {
+> > > +     if (test_bit(5, &flags)) {
+> > >               *level =3D POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+> > >       }
+> > >
+> > >
+> >
+> > Tested-by: Pedro Vanzella <pedro@pedrovanzella.com>
+> > Reviewed-by: Pedro Vanzella <pedro@pedrovanzella.com>
+> >
 
-- Don't wait in the usual fb_info removal code-path, only in the driver
-  replacement one. You can achieve this by adding additional "bool wait"
-  parameter to do_unregister_framebuffer()
-
-- Add a FIXME comment just before the wait loop with the description of
-  the issue (the above explanation of the race between plymouth and udev
-  would be fine) so we will remember why this workaround is needed.
-
-- Change patch summary to something more descriptive (i.e. to "fbdev:
-  workaround race on driver replacement").
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
->>> Fix this by trying to wait until all references are gone.  Don't wait
->>> forever though given that userspace might keep the file handle open.
->>
->> Where does the 1s maximum delay come from?
-> 
-> Pulled out something out of thin air which I expect being on the safe
-> side.  plymouth responding on the udev event should need only a small
-> fraction of that.
-> 
-> cheers,
->   Gerd
