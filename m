@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0521EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4C5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D4720716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6753E20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580223031;
-	bh=UDOslw//HU9T3CyQRE952D+mST3b7MPfW+u9hhNdxtw=;
+	s=default; t=1580223038;
+	bh=xPJ4DVVjuH7+QRs/g3mZ9AXjGQdLwflaajAmAbDLLC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKuil49n1AiWvR8/WnZAJbUQFmkUJLIBjOZ71oLEe48S4kU7YRljwTUjCQP1CnnQ5
-	 LmfM2eoyXk2y5jbTuBRsqYNRZKeEwvdE4mXmR51UR/gv09WB9eRJ/mWBGaVvPgW6cr
-	 ZasFkfgf2C9OgmHlyNQLYEQH31NzpFqojr5hkuZQ=
+	b=BULVD2AWqNFpnnLafhsMFX3DjrElp/4K6joSGVMW3tde71yZKOKot+0Hu73b91xPc
+	 7pNwDj+JzZ8fUcs+POgya2pQriYz2hCq7ZvfJTTuDo+lpOh1+U/IfBY8pQ7iG855x+
+	 11qEuixPL9iJFoSuCJz5aFijsISLAoQAslI24wdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgA1Oub (ORCPT
+        id S1727180AbgA1Ouh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:50:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:50:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726749AbgA1N7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 08:59:06 -0500
+        id S1726243AbgA1N7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 08:59:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 433572468F;
-        Tue, 28 Jan 2020 13:59:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6137724683;
+        Tue, 28 Jan 2020 13:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580219945;
-        bh=UDOslw//HU9T3CyQRE952D+mST3b7MPfW+u9hhNdxtw=;
+        s=default; t=1580219940;
+        bh=xPJ4DVVjuH7+QRs/g3mZ9AXjGQdLwflaajAmAbDLLC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PHiSwlv+EhWJYhriWGbYJxNHRqbdxE/BN478I8N71ZTAUtQaQfSLrwxT95eC2+7yu
-         WUGoLNZs99gkqExkyyU2wnNroxUexF7LdWeIgjLiJeQbuv1p0SsifkTuWGuq72Qju6
-         UQIhnweVt7Zj+iPcdjTQdrsxWTaUGDH7ILFMVfQ0=
+        b=c7Lf81ORGG/ExtlrzfoyXOZ0YKGIyTB1kYOsXFO1j2C+SEHd22owBmFMNf8bwWY7r
+         GHUBJI4hXG0ovKQVpp6zBhF+WzlHmPvTiSKfI0cwseC/zN6BQyMD50pjQliQMr6ens
+         i/BRmJAr7f0ioAopsBXPJh1nM66/CUPI7L9IeUEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Thierry Reding <treding@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 24/46] mmc: tegra: fix SDR50 tuning override
-Date:   Tue, 28 Jan 2020 14:57:58 +0100
-Message-Id: <20200128135752.969149082@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Timo Kaufmann <timokau@zoho.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 22/46] Revert "Input: synaptics-rmi4 - dont increment rmiaddr for SMBus transfers"
+Date:   Tue, 28 Jan 2020 14:57:56 +0100
+Message-Id: <20200128135752.743656510@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
 References: <20200128135749.822297911@linuxfoundation.org>
@@ -61,37 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit f571389c0b015e76f91c697c4c1700aba860d34f upstream.
+commit 8ff771f8c8d55d95f102cf88a970e541a8bd6bcf upstream.
 
-Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
-broke SDR50 tuning override. Use correct NVQUIRK_ name.
+This reverts commit a284e11c371e446371675668d8c8120a27227339.
 
-Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
-Cc: <stable@vger.kernel.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-Tested-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Link: https://lore.kernel.org/r/9aff1d859935e59edd81e4939e40d6c55e0b55f6.1578390388.git.mirq-linux@rere.qmqm.pl
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+This causes problems (drifting cursor) with at least the F11 function that
+reads more than 32 bytes.
+
+The real issue is in the F54 driver, and so this should be fixed there, and
+not in rmi_smbus.c.
+
+So first revert this bad commit, then fix the real problem in F54 in another
+patch.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Reported-by: Timo Kaufmann <timokau@zoho.com>
+Fixes: a284e11c371e ("Input: synaptics-rmi4 - don't increment rmiaddr for SMBus transfers")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200115124819.3191024-2-hverkuil-cisco@xs4all.nl
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-tegra.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/rmi4/rmi_smbus.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -177,7 +177,7 @@ static void tegra_sdhci_reset(struct sdh
- 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_DDR50;
- 		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR104)
- 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_SDR104;
--		if (soc_data->nvquirks & SDHCI_MISC_CTRL_ENABLE_SDR50)
-+		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR50)
- 			clk_ctrl |= SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE;
+--- a/drivers/input/rmi4/rmi_smbus.c
++++ b/drivers/input/rmi4/rmi_smbus.c
+@@ -166,6 +166,7 @@ static int rmi_smb_write_block(struct rm
+ 		/* prepare to write next block of bytes */
+ 		cur_len -= SMB_MAX_COUNT;
+ 		databuff += SMB_MAX_COUNT;
++		rmiaddr += SMB_MAX_COUNT;
+ 	}
+ exit:
+ 	mutex_unlock(&rmi_smb->page_mutex);
+@@ -217,6 +218,7 @@ static int rmi_smb_read_block(struct rmi
+ 		/* prepare to read next block of bytes */
+ 		cur_len -= SMB_MAX_COUNT;
+ 		databuff += SMB_MAX_COUNT;
++		rmiaddr += SMB_MAX_COUNT;
  	}
  
+ 	retval = 0;
 
 
