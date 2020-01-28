@@ -2,108 +2,132 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17429C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07637C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C61214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:07:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580234880;
-	bh=URNrGQ85A+aQ/sFdx+0oJ0TjRxzEpfHy2TufODcXz3g=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=UDqmjjIxmQpOuIE+wptN/mzXlPzjjlTkBbCiRGy4qyQhnj6zaqCo6ZVEwgjBVeo85
-	 0mdY2ZtpvOSEm76ksZqvjlBSgGhv5/cJz3wHq2IWZtlDRgrK6RHGqoyleyJVOZ1nGo
-	 KIOyLK6pFE+GpfTTB8GTDjPXS0Kr0SbhvbuxUcmc=
+	by mail.kernel.org (Postfix) with ESMTP id ACA1E2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 18:08:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gdIevUZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgA1SH7 (ORCPT
+        id S1726770AbgA1SIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 13:07:59 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44829 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgA1SH6 (ORCPT
+        Tue, 28 Jan 2020 13:08:22 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:55994 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgA1SIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 13:07:58 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q10so17140921wrm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 10:07:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=QPCuI/or6wdJJoyAUoVh8dctP6+KzRdtWWX/rDq6bUU=;
-        b=VP6P1PCflJJqraBHxidWkOdFjd/QgZRXU2w2tBK60xRjdVeTD0re9EN/ywVccoJPP0
-         R7F3x7rrHdU8mdEbfHWElVXNoyNA3QQ17Tf17gOag//QvULaWPy35kWphNec+U1hjusE
-         6ndK5E307lkjLFWxPXLSL7o4D+jrLAcqL4KsU53ZRkrp9l48YCCCdokFvbZBiDcT0i8I
-         H5R7fuWhfb+Gu52yeKQOZoCxGQCOYSex9d7bU3wU1LREDnzpD8+92uVBqsoTxX9AKUmh
-         9iqM92OYMDdXxyOseJGr522QFzFYKPsP5DZUlwaMhU8TpUcspZruXzoZgvx/P5EqwhBs
-         cyEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=QPCuI/or6wdJJoyAUoVh8dctP6+KzRdtWWX/rDq6bUU=;
-        b=Dgn0PMcXspma++3thSxPr1cajg3FepycWJaxmC+blPwY6JL3+JDWajtXCtF2ltdZLW
-         9Jxb8KMTLWcAeT5bKlZ6cTcFfAQcscKRRjSQuRotLmFKK/V5Tl4hlTt5P+rN0W/mBUgV
-         aAFwXAd15HltOgJbvWwAHrS29vXzfgdYLtdeOk9H6yIK81jAvyrCTFwVUYIkIpqkbaSq
-         OrDBVPb5+Ix/i22PtvkToRDJdHfxmQaAyGtmohKhGvrEWwBzRy2A7azns1CSkAt0A6O/
-         dgxs1/VXgZ9q5Qj5JJL1LRO3pDxXznNekUIVUFpYX6SuK6oN49M6zAtiM+WqHU1c2CCY
-         kUZQ==
-X-Gm-Message-State: APjAAAWTNfOJ6F7mVTjISedQjdpo/dHLFAaC4ORKs5KjTeH6PHZUsn4b
-        y1fHDZZ9mn6hhUeI1L3xP9E=
-X-Google-Smtp-Source: APXvYqw6wEGKZtPJSdWhMkgOtoMfX8TELcMS0xwGmidmgmlVcRIOjqUAUHo5K3aPlqzhYEVW50kHhg==
-X-Received: by 2002:adf:fd87:: with SMTP id d7mr31680223wrr.226.1580234876796;
-        Tue, 28 Jan 2020 10:07:56 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id e18sm26837291wrr.95.2020.01.28.10.07.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 10:07:56 -0800 (PST)
-Date:   Tue, 28 Jan 2020 19:07:54 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, bpetkov@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/fpu changes for v5.6
-Message-ID: <20200128180754.GA104974@gmail.com>
+        Tue, 28 Jan 2020 13:08:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=27BCOIqr/wU+I4IrmORaozwu+T70UyCl4JtrDd+CI94=; b=gdIevUZ2qK6OpxHho3MufWbPt
+        BAR6uXvIytSdD3mS/dJD8OEbTCxNlo+SuFbDltAklslGG5ORJQI5oY0XhpLsmd41S+k3JOAcWaEBW
+        +qrs0ZAor9GYpxnR9GXp6+VIP6VwicXFHpu/bPZZmkew4W+jAgYv9X4UqMX5avJH7sy+8WApdAnFL
+        En6RDgB4j2zlk+EkA6R0xyPLLJZqEc3UNI75Vo0tYLiFCVfyoRfE9aQqS05qpyloeFTQTOMXZtiiz
+        1Y9ORiDoYgTq8sE0nA1dSdYKIMr/AkfSgmVM+LTMQA4iTk/YzC6rFA2cLC6PqkAthxzzpXk1QGI0b
+        5aCCeNOaA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:32880)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iwVHT-0000c0-EH; Tue, 28 Jan 2020 18:08:10 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iwVHP-0002ak-1h; Tue, 28 Jan 2020 18:08:03 +0000
+Date:   Tue, 28 Jan 2020 18:08:03 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [RFC net-next 6/8] net: phylink: Configure MAC/PCS when link is
+ up without PHY
+Message-ID: <20200128180802.GD25745@shell.armlinux.org.uk>
+References: <cover.1580122909.git.Jose.Abreu@synopsys.com>
+ <9a2136885d9a892ff170be88fdffeda82c778a10.1580122909.git.Jose.Abreu@synopsys.com>
+ <20200127112102.GT25745@shell.armlinux.org.uk>
+ <BN8PR12MB3266714AE9EC1A97218120B3D30B0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20200127114600.GU25745@shell.armlinux.org.uk>
+ <20200127140038.GD13647@lunn.ch>
+ <20200127140834.GW25745@shell.armlinux.org.uk>
+ <20200127145107.GE13647@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200127145107.GE13647@lunn.ch>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Mon, Jan 27, 2020 at 03:51:07PM +0100, Andrew Lunn wrote:
+> I've also had issues with the DSA links, also being configured to
+> 10/Half. That seems to be related to having a phy-mode property in
+> device tree. I need to add a fixed-link property to set the correct
+> speed. Something is broken here, previously the fixed-link was only
+> needed if the speed needed to be lower than the ports maximum. I think
+> that is a separate issue i need to dig into, not part of the PCS to
+> MAC transfer.
 
-Please pull the latest x86-fpu-for-linus git tree from:
+I think I understand what is happening on this one more fully.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-fpu-for-linus
+When DSA initialises, the DSA and CPU ports are initially configured to
+maximum speed via mv88e6xxx_setup_port(), called via mv88e6xxx_setup(),
+the .setup method, dsa_switch_setup(), and dsa_tree_setup_switches().
 
-   # HEAD: bbc55341b9c67645d1a5471506370caf7dd4a203 x86/fpu: Deactivate FPU state after failure during state load
+dsa_tree_setup_switches() then moves on to calling dsa_port_setup().
+dsa_port_setup() calls dsa_port_link_register_of() for the DSA and CPU
+ports, which calls into dsa_port_phylink_register().
 
-Three changes: fix a race that can result in FPU corruption, plus two 
-cleanups.
+That calls phylink_create(), and then attempts to attach a PHY using
+phylink_of_phy_connect() - which itself is rather weird - since when
+has a DSA or CPU port been allowed to have a PHY in its DT node?
 
- Thanks,
+The upshot is, phylink_create() will (and always has) treated a node
+without a fixed-link or in-band specification as a "phy" mode link.
+Moving on, phylink_start() will be called.
 
-	Ingo
+phylink_start() attempts to set an initial configuration.  As there
+is no PHY attached, phylink has no idea what parameters to set, but
+it needs to set an initial configuration, so it does so.  The result
+is, dsa_port_phylink_mac_config() gets called without the speed and
+duplex being set as one would expect.
 
------------------->
-Sebastian Andrzej Siewior (1):
-      x86/fpu: Deactivate FPU state after failure during state load
+That hasn't changed in phylink yet - so it's a bug that dates back
+to the phylink integration into the DSA core, and is a regression
+resulting from that.
 
-Yu-cheng Yu (2):
-      x86/fpu/xstate: Fix small issues
-      x86/fpu/xstate: Make xfeature_is_supervisor()/xfeature_is_user() return bool
+The reason my patch above appears to solve it is because I'm ignoring
+calls to mac_config() with mode == MLO_AN_PHY in various circumstances,
+which results in the initial configuration by mv88e6xxx_setup_port()
+remaining.
 
+I'm not yet sure what to do about that; and I'm out of time to think
+about that anymore today - but I thought I'd post my analysis so far
+in the hope that it helps.
 
- arch/x86/kernel/fpu/signal.c |  3 +++
- arch/x86/kernel/fpu/xstate.c | 18 ++++++++----------
- 2 files changed, 11 insertions(+), 10 deletions(-)
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
