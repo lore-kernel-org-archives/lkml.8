@@ -2,140 +2,111 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F935C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC9DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0025A24687
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E2A24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 12:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Z2sdRUs8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgA1Muo (ORCPT
+        id S1726114AbgA1MxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 07:50:44 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:38203 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgA1Muo (ORCPT
+        Tue, 28 Jan 2020 07:53:03 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:37332 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgA1MxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 07:50:44 -0500
-Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MfYDO-1jTZIA1JYO-00g0pf; Tue, 28 Jan 2020 13:50:42 +0100
-Received: by mail-qv1-f50.google.com with SMTP id dc14so6158053qvb.9;
-        Tue, 28 Jan 2020 04:50:42 -0800 (PST)
-X-Gm-Message-State: APjAAAUlbMj3edb9FViq9eps2RGb60zdG8lN3Vf74v43TmedTXTOEPnx
-        BmDNf0v0QfjPbLYkXhvxwbc6vr7YH5m7rPxNuxs=
-X-Google-Smtp-Source: APXvYqwJy4DwfEzTsOkoi0YCpAanaatx64QLkeoLB3399GuTavZPkuD/rRK//KCoPuUtr3vyStofBIgJqCNGfmKx4so=
-X-Received: by 2002:a0c:ead1:: with SMTP id y17mr20934030qvp.210.1580215841088;
- Tue, 28 Jan 2020 04:50:41 -0800 (PST)
-MIME-Version: 1.0
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com> <1580210059-199540-3-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1580210059-199540-3-git-send-email-john.garry@huawei.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 28 Jan 2020 13:50:25 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2famGETLM7JgEh+eUJ9HSqm_Fu79uAkU_BPOkDvV2ROg@mail.gmail.com>
-Message-ID: <CAK8P3a2famGETLM7JgEh+eUJ9HSqm_Fu79uAkU_BPOkDvV2ROg@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
-To:     John Garry <john.garry@huawei.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, jeremy.linton@arm.com,
-        Olof Johansson <olof@lixom.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        gregkh <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:3nMHLYujwFcb9tdRgyh5pqOB2vOeaVGdkAJy7Iigx6xOA/kppSB
- Xmzua0GGpQ4F+4mZwBygccrfbLrpJDE/+hqngCif9WS/q4wGfCRsaZSvF9rV9Qk7RDu2VHm
- P0FZS9HOb7Yyez4DE4I/oBJspzXWb7NvXMRnqJTzrPl0tKW30LH7gzsNpITyW06DmRlUZ5o
- ca6a12vh1gngg6T66vv3Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MDP6mq5stY0=:AeGKJuejOqVgqxsGJ0wycJ
- 11NhK/41P7k7onJk3BhJdklMt7NQpdAUSaFj30J+HeCFAlSez13JYgG+Nk5VM2DqatIJKVMhs
- CU5PMSwMns2HR8j2FKn+Xl/2NC0SBg9fCfjSNEgrPsLy8RSniQ/8jpTfxSbtvLVlRxcKlJn7l
- cotp5oMjXFSvjzsTqdXAgyjOYwgc68/s01y6SWWJDYTlC4HGULTQbWvgy7+OTCk/EC5uLH9qQ
- Tj7TlNl8SovLqHxgtxqTVNNL5JmKMdAhu0SL2C7jSHzmlho2IgxV0KPmBHKFfPwREXWhJfJqk
- APp7l0QfVPuuo+M2BB0LSJwXpmDv8+nSnixdH4Y49d8K8asb6OMAhpHHiSRJIaohYvAOpQzr1
- lkIvXGdwAD6XB67DBtTKgAWF1WvN8njLlLBkknX+f9OgxCtSt4YVpj/0JRH9uIYOGIVEB4GAA
- ofPYzP8pPsseGKgnWpECxUWi3N2lGp3wP1BQcmY+dfOXs6FgIMceWEJFQHdiYZmVRZjnA4W0B
- G5tEhbe+/lRKG1thA78s7704I0ZVT1fe40Emrz0NR4d8az8i0ndWqHDm1ppTybDUd6kHGmb0o
- jB1zUDKRK6ceSnFYIEc6xbXe4Rv7p5uqbk0DdjmuVTQcSABshpPNI6BCtt7NgxcZqc3VTu4cI
- gvcw2oTmrKilAk/UlD2sIBhUMKnwyUsmLPgwxy4k3WHstEOVyBnj7eeKNGsIOEL91O8I/u8iP
- ULkxSF+j7uzVagC7UIIcRxx9YH7mN/kdSxCGyF7u9Vog9lOYaPMfFe0RF13WtTg7cgp8BWuiP
- HPz0PP10JP2aMGQhcKwA6m8cVbaxcZevJ6XXaN9E/F4zEo2+zw=
+        Tue, 28 Jan 2020 07:53:03 -0500
+Received: by mail-qv1-f68.google.com with SMTP id m5so3035372qvv.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 04:53:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=9DB/J78WdEiWma3kq2rh8LijmEsmMv+++6cwRIocUY4=;
+        b=Z2sdRUs8Buc7E9wpla0h4AStuy50Jk4R5HebWGCJIzXTd1rq7t8xOB5VxRIMXax+G7
+         icOLYCCj5Dq9wAGFJCSXu95kasvVSrJjJYyF6ZXxMDnylQpHbl+5rfWBArQDYbXZEAyA
+         Vmt9yVBzGLGlNWL+7x9tfhRSo8+/ZwoH+0TZKFSBYZ4zLwVnN63e4s9nZG3uZbTY1XHT
+         mb3P60MOjrS0xRETGaEc+mzS/2AdFL/LMJJYlP/BRcCJW4yWlv6bswn/IjA9WgIozy2k
+         uR4QUF5gp9B23nXO7BgpGTpfX+9EfjsW4vcwzvX9v6W9uETalGbqjfcfzvTOuqwpD6/W
+         2DsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=9DB/J78WdEiWma3kq2rh8LijmEsmMv+++6cwRIocUY4=;
+        b=ZNIggmmVll6l7UvRXRd3IDudY2jaRQEKtOTtxQS9wgRP2cprRXIO5z1X9UCjG+2/1B
+         AHoBtK7g6pca8KFbjCLE6IPJWcIL7MGA0iYBtIVkSt3wvBkcIxtqpVn9kt3JBgdc7RZB
+         TvdeQMMMfo0gSPSFl+asKFVVb4IVlgmpOe8qO+IUEprvfiCJoUawcBacWTIPy9+C7swR
+         yH2yinp2el4ofsNo/NWJisqvY2c0ZJlH24O2KN+d6t7DExVpI1EuacF0oaWdSoz7yMu4
+         cOWu5sH19DxmRZslmLWG43J/tydFeyuoKGnxS4FZUoC+2h0M2kwdE71KmXtG5XM6t4uJ
+         YfVg==
+X-Gm-Message-State: APjAAAWBvP4RwA3eZjbWbNZ3ZtZ3gXhfAqiMQl1iREY0qCR30jM9jvSY
+        IPndFedwX8VpjB0G42oAVyJhgg==
+X-Google-Smtp-Source: APXvYqyviDzAp9s8jtdTg8JKk0z8GVoI+Gm81CekqKyt6p3E1i2Z5rqHw302+GwftT5+g00pbwZQEA==
+X-Received: by 2002:a05:6214:965:: with SMTP id do5mr21816222qvb.202.1580215982182;
+        Tue, 28 Jan 2020 04:53:02 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id n55sm12637616qta.91.2020.01.28.04.53.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jan 2020 04:53:01 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+Date:   Tue, 28 Jan 2020 07:53:00 -0500
+Message-Id: <C50F23AD-7CCA-423B-9C13-E06596CB4399@lca.pw>
+References: <CANpmjNNo6yW-y-Af7JgvWi3t==+=02hE4-pFU4OiH8yvbT3Byg@mail.gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+In-Reply-To: <CANpmjNNo6yW-y-Af7JgvWi3t==+=02hE4-pFU4OiH8yvbT3Byg@mail.gmail.com>
+To:     Marco Elver <elver@google.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 12:18 PM John Garry <john.garry@huawei.com> wrote:
->
-> Add a generic driver for platforms which populate their ACPI PPTT
-> processor package ID Type Structure according to suggestion in the ACPI
-> spec - see ACPI 6.2, section 5.2.29.3 ID structure Type 2.
->
-> The soc_id is from member LEVEL_2_ID.
->
-> For this, we need to use a whitelist of platforms which are known to
-> populate the structure as suggested.
->
-> For now, only the vendor and soc_id fields are exposed.
->
-> Signed-off-by: John Garry <john.garry@huawei.com>
 
-Would it be possible to make this the root device for all on-chip devices
-to correctly reflect the hierarchy inside of the soc?
 
-> +/*
-> + * Known platforms that fill in PPTT package ID structures according to
-> + * ACPI spec examples, that being:
-> + * - Custom driver attribute is in ID Type Structure VENDOR_ID member
-> + * - SoC id is in ID Type Structure LEVEL_2_ID member
-> + *    See ACPI SPEC 6.2 Table 5-154 for PPTT ID Type Structure
-> + */
-> +static struct acpi_platform_list plat_list[] = {
-> +       {"HISI  ", "HIP08   ", 0, ACPI_SIG_PPTT, all_versions},
-> +       { } /* End */
-> +};
+> On Jan 28, 2020, at 6:46 AM, Marco Elver <elver@google.com> wrote:
+>=20
+> Qian: firstly I suggest you try
+> CONFIG_KCSAN_REPORT_ONCE_IN_MS=3D1000000000 as mentioned before so your
+> system doesn't get spammed, considering you do not use the default
+> config but want to use all debugging tools at once which seems to
+> trigger certain data races more than usual.
 
-That matches a single machine, right? It doesn't seem very generic
-that way.
+Yes, I had that. There are still many reports that I plan to look at them on=
+e by one. It takes so much time that cause systemd storage lookup timeouts a=
+nd I needed to manually get out of the emergency shell.
 
-> +struct acpi_generic_soc_struct {
-> +       struct soc_device_attribute dev_attr;
-> +       u32 vendor;
-> +};
-> +
-> +static ssize_t vendor_show(struct device *dev,
-> +                          struct device_attribute *attr,
-> +                          char *buf)
-> +{
-> +       struct acpi_generic_soc_struct *soc = dev_get_drvdata(dev);
-> +       u8 vendor_id[5] = {};
-> +
-> +       *(u32 *)vendor_id = soc->vendor;
-> +
-> +       return sprintf(buf, "%s\n", vendor_id);
-> +}
+>=20
+> Secondly, what are your expectations? If you expect the situation to
+> be perfect tomorrow, you'll be disappointed. This is inherent, given
+> the problem we face (safe concurrency). Consider the various parts to
+> this story: concurrent kernel code, the LKMM, people's preferences and
+> opinions, and KCSAN (which is late to the party). All of them are
+> still evolving, hopefully together. At least that's my expectation.
 
-I'd rather not see nonstandard attributes in a "generic" driver at
-all. Maybe the
-you can simply concatenate the vendor and  LEVEL_2_ID into a single string
-here?
+I=E2=80=99ll try to reduce splats as many as possible by any data_race(), di=
+sable the whole file or actually fix it. Any resolved splat will hurt the ab=
+ility to find the real data races at some degrees.
 
-> +                       soc = kzalloc(sizeof(*soc), GFP_KERNEL);
-> +                       if (!soc)
-> +                               return -ENOMEM;
-> +
-> +                       soc_dev_attr = &soc->dev_attr;
-> +                       soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "%s",
-> +                                                        soc_id);
+>=20
+> What to do about osq_lock here? If people agree that no further
+> annotations are wanted, and the reasoning above concludes there are no
+> bugs, we can blacklist the file. That would, however, miss new data
+> races in future.
 
-On the other hand, it would make sense to fill out additional fields here.
-You have already matched the name of the board from the
-acpi_platform_list, so there are two strings available that could be put
-into the "machine" field, and it would make sense to fill out "family" with
-something that identifies it as coming from ACPI PPTT data.
-
-             Arnd
+This is a question to locking maintainers. data_race() macro sounds reasonab=
+le to me, but blacklisted the file is still better than leaving it as-is.=
