@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03365C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4783DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4CD24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE632173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222460;
-	bh=9MdhLw8bCOJwhXjVcSWUEJ0OY99eCT6+70jrT5f0DKw=;
+	s=default; t=1580222463;
+	bh=brjujh9/asiNKUHrWJONIUMMD6cFhdS8tLGrvGYJw6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OaTZH62NNeTKigs8d3VdfGcRrieKZ9RiP3kbAWtY4ZAT15MMk75ZN0bu+bwq30Dee
-	 ttviCrnfoIGyV01DTy0GBZIiIsV0MkQFYGmC5wZEkxU7hYVxtHyv+yiBsaMZKUTJHC
-	 MHU26TeXue+GJGOeyTycK5WLaaTQoqUT+ua90nK0=
+	b=kMoizvJEZ+ZUgmwxQMaTLTD2S3HxEgqmJ0jU/fPJyU9hzgxS52tPNYWhfAdcDy+58
+	 zLya2E+iSL6amor6R3wruDKSZIfQR6wouQ2sksbZ61dDTzggySnYSCcl34W8QLRlrC
+	 uEbSgRoob8MB1IND9q2B8wwezbGWjkJv37GR7jEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbgA1OOm (ORCPT
+        id S1729910AbgA1OOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:14:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729912AbgA1OOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jan 2020 09:14:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727976AbgA1OOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:14:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A85E2468E;
-        Tue, 28 Jan 2020 14:14:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A789A2468D;
+        Tue, 28 Jan 2020 14:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220878;
-        bh=9MdhLw8bCOJwhXjVcSWUEJ0OY99eCT6+70jrT5f0DKw=;
+        s=default; t=1580220873;
+        bh=brjujh9/asiNKUHrWJONIUMMD6cFhdS8tLGrvGYJw6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=odBQUaO+FyJGyYBwYqUIkGScI0lI2S7emXqYvtrwT369+5WT7wq2C7ywLFm8ir504
-         BUuxbeSFZUrdBwESI2vmn3N6aRKhUYKDMj7PzJXtZbqX1srTDSS7cOYLXYGF+N0vi1
-         NsrhapshlO3ZfBHsynxMeY0OmaSRLQnuomP3xaGw=
+        b=tlqV7gdCMYN4KEuOJfCquH2JKBF/z+sElFttWTtp344jUqCxRocHLnva9eo7rzY5+
+         S5EyhFjFeP2srt8WztrWPePVAYE/+P07065L7F+Hb0Yqt84ETskKk2ZXvCCyBOqKOj
+         jkWDUZVGO9sank3l/vZWneqI9WasELa4f6A6MfKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
-        syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com,
-        syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 182/183] net/x25: fix nonblocking connect
-Date:   Tue, 28 Jan 2020 15:06:41 +0100
-Message-Id: <20200128135847.894325353@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.4 180/183] bitmap: Add bitmap_alloc(), bitmap_zalloc() and bitmap_free()
+Date:   Tue, 28 Jan 2020 15:06:39 +0100
+Message-Id: <20200128135847.718431075@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
 References: <20200128135829.486060649@linuxfoundation.org>
@@ -61,56 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit e21dba7a4df4d93da237da65a096084b4f2e87b4 upstream.
+commit c42b65e363ce97a828f81b59033c3558f8fa7f70 upstream.
 
-This patch fixes 2 issues in x25_connect():
+A lot of code become ugly because of open coding allocations for bitmaps.
 
-1. It makes absolutely no sense to reset the neighbour and the
-connection state after a (successful) nonblocking call of x25_connect.
-This prevents any connection from being established, since the response
-(call accept) cannot be processed.
+Introduce three helpers to allow users be more clear of intention
+and keep their code neat.
 
-2. Any further calls to x25_connect() while a call is pending should
-simply return, instead of creating new Call Request (on different
-logical channels).
+Note, due to multiple circular dependencies we may not provide
+the helpers as inliners. For now we keep them exported and, perhaps,
+at some point in the future we will sort out header inclusion and
+inheritance.
 
-This patch should also fix the "KASAN: null-ptr-deref Write in
-x25_connect" and "BUG: unable to handle kernel NULL pointer dereference
-in x25_connect" bugs reported by syzbot.
-
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Reported-by: syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com
-Reported-by: syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/x25/af_x25.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/linux/bitmap.h |    8 ++++++++
+ lib/bitmap.c           |   20 ++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -764,6 +764,10 @@ static int x25_connect(struct socket *so
- 	if (sk->sk_state == TCP_ESTABLISHED)
- 		goto out;
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -84,6 +84,14 @@
+  */
  
-+	rc = -EALREADY;	/* Do nothing if call is already in progress */
-+	if (sk->sk_state == TCP_SYN_SENT)
-+		goto out;
+ /*
++ * Allocation and deallocation of bitmap.
++ * Provided in lib/bitmap.c to avoid circular dependency.
++ */
++extern unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags);
++extern unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags);
++extern void bitmap_free(const unsigned long *bitmap);
 +
- 	sk->sk_state   = TCP_CLOSE;
- 	sock->state = SS_UNCONNECTED;
++/*
+  * lib/bitmap.c provides these functions:
+  */
  
-@@ -810,7 +814,7 @@ static int x25_connect(struct socket *so
- 	/* Now the loop */
- 	rc = -EINPROGRESS;
- 	if (sk->sk_state != TCP_ESTABLISHED && (flags & O_NONBLOCK))
--		goto out_put_neigh;
-+		goto out;
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -12,6 +12,7 @@
+ #include <linux/bitmap.h>
+ #include <linux/bitops.h>
+ #include <linux/bug.h>
++#include <linux/slab.h>
  
- 	rc = x25_wait_for_connection_establishment(sk);
- 	if (rc)
+ #include <asm/page.h>
+ #include <asm/uaccess.h>
+@@ -1081,3 +1082,22 @@ void bitmap_copy_le(unsigned long *dst,
+ }
+ EXPORT_SYMBOL(bitmap_copy_le);
+ #endif
++
++unsigned long *bitmap_alloc(unsigned int nbits, gfp_t flags)
++{
++	return kmalloc_array(BITS_TO_LONGS(nbits), sizeof(unsigned long),
++			     flags);
++}
++EXPORT_SYMBOL(bitmap_alloc);
++
++unsigned long *bitmap_zalloc(unsigned int nbits, gfp_t flags)
++{
++	return bitmap_alloc(nbits, flags | __GFP_ZERO);
++}
++EXPORT_SYMBOL(bitmap_zalloc);
++
++void bitmap_free(const unsigned long *bitmap)
++{
++	kfree(bitmap);
++}
++EXPORT_SYMBOL(bitmap_free);
 
 
