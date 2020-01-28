@@ -2,150 +2,149 @@ Return-Path: <SRS0=OrIQ=3R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB31C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D67C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B5020661
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17D220661
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 10:28:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="priCxcB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgA1K1J (ORCPT
+        id S1726107AbgA1K2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 05:27:09 -0500
-Received: from mga04.intel.com ([192.55.52.120]:17156 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgA1K1J (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 05:27:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 02:27:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,373,1574150400"; 
-   d="scan'208";a="223502235"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.213.218]) ([10.254.213.218])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Jan 2020 02:27:06 -0800
-Subject: Re: [PATCH v4 3/4] perf util: Flexible to set block info output
- formats
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200115192904.16798-1-yao.jin@linux.intel.com>
- <20200115192904.16798-3-yao.jin@linux.intel.com>
- <20200120094737.GF608405@krava>
- <6c35864b-e396-6865-12a9-2fd001b0f567@linux.intel.com>
- <23bec83b-b55d-8e9f-5b74-f58f0cd4a618@linux.intel.com>
- <20200128092151.GA1209308@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <073a0561-0e16-b4af-4678-fb211f81d9e5@linux.intel.com>
-Date:   Tue, 28 Jan 2020 18:27:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 28 Jan 2020 05:28:19 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38304 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgA1K2T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 05:28:19 -0500
+Received: by mail-lj1-f196.google.com with SMTP id w1so14152629ljh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 02:28:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unikie-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=R/hB3d9WV1ZfOuGwum6uaHEPLLo7pAkJ9wkfhb8ryno=;
+        b=priCxcB8LwrgDL3P9hJ8Fhmz7cxKGIy5qUbauEytJmHyUWYu7pXT5HSujg53hLD3Lr
+         krD7ENJZwPzwkJrsrHAK6YqYhHgULLtAv3mK/hHiODmlK32heqyLinOp00IRwaIuXApL
+         r2IK4w3Ajxik/4eEu8URX3EjVRQlMxzkY/UpVyhmwgZAszAKja9SosTyp8ojYQMuoUn0
+         cSNpivomMSRy5LkkEMTLTVtyJgXrq68NQ6QCCrfix2uFvQ4B4DMTtx0XOoo6Fk0Q4F37
+         Yc6wsBtUuRXwz3SS71tWgFCnxW+4bCcSWOKSvBjtE13pMU9IvLjbV3IrIpat5Uq1UorZ
+         0E6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version:content-transfer-encoding;
+        bh=R/hB3d9WV1ZfOuGwum6uaHEPLLo7pAkJ9wkfhb8ryno=;
+        b=LUYTw5hO1Eqdkne6d4zTfox74Mulq8rxgyokBBVq19QqEFSBxDnFzjcLSx3jJlzbVz
+         xHCSMhFFp7ACDKvGBnXpLiMRqeZZdDZDr/j0f/SvCvtFoVaSTGj9gpfWiQWnir6m/IoR
+         flsRFQin6EpMr/j4sJrkO4cN9l3iA9v6VK7yG3k89cYV99VG7iPB46NG7ajgmnYipMu0
+         7pbkwJob+2sisCaFm2DLgcdQnDtlNPbEHxIsZm0r38dy3arLPslFB+23CxnInncd/mpg
+         YF6H2UVCMMexkkNZW/7B4NW+bYw14LxZ8HxwHTl5blHeqCRXo1yEOCwR2mt8h7Ia9RXC
+         GFUw==
+X-Gm-Message-State: APjAAAW2Od591RCnq8JWJjWwHF9LGnZTWDIN3G3uYM/Lj4oUWr1JED5R
+        MLQKYxEkLM4KqM9IR7wIZKb7gw==
+X-Google-Smtp-Source: APXvYqz1H+G5sAa2YK3jJrrb2gl81iOk9gR7ql0r3PFxcDlQk+/3WQL3GKFf6/h+4lgSCFz2FboK2w==
+X-Received: by 2002:a2e:9c04:: with SMTP id s4mr13050425lji.147.1580207297152;
+        Tue, 28 Jan 2020 02:28:17 -0800 (PST)
+Received: from GL-434 ([109.204.235.119])
+        by smtp.gmail.com with ESMTPSA id d11sm9687741lfj.3.2020.01.28.02.28.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jan 2020 02:28:16 -0800 (PST)
+From:   jouni.hogander@unikie.com (Jouni =?utf-8?Q?H=C3=B6gander?=)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>, syzkaller@googlegroups.com
+Subject: Re: [PATCH 4.19 000/306] 4.19.87-stable review
+References: <20191127203114.766709977@linuxfoundation.org>
+        <CA+G9fYuAY+14aPiRVUcXLbsr5zJ-GLjULX=s9jcGWcw_vb5Kzw@mail.gmail.com>
+        <20191128073623.GE3317872@kroah.com>
+        <CAKXUXMy_=gVVw656AL5Rih_DJrdrFLoURS-et0+dpJ2cKaw6SQ@mail.gmail.com>
+        <20191129085800.GF3584430@kroah.com> <87sgk8szhc.fsf@unikie.com>
+Date:   Tue, 28 Jan 2020 12:28:15 +0200
+In-Reply-To: <87sgk8szhc.fsf@unikie.com> ("Jouni \=\?utf-8\?Q\?H\=C3\=B6gander\?\=
+ \=\?utf-8\?Q\?\=22's\?\= message of "Wed,
+        22 Jan 2020 09:48:47 +0200")
+Message-ID: <87zhe727uo.fsf@unikie.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200128092151.GA1209308@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Greg,
 
+jouni.hogander@unikie.com (Jouni H=C3=B6gander) writes:
 
-On 1/28/2020 5:21 PM, Jiri Olsa wrote:
-> On Mon, Jan 27, 2020 at 08:31:23PM +0800, Jin, Yao wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>>> > Now queued up, I'll push out -rc2 versions with this fix.
+>>> >
+>>> > greg k-h
+>>>=20
+>>> We have also been informed about another regression these two commits
+>>> are causing:
+>>>=20
+>>> https://lore.kernel.org/lkml/ace19af4-7cae-babd-bac5-cd3505dcd874@I-lov=
+e.SAKURA.ne.jp/
+>>>=20
+>>> I suggest to drop these two patches from this queue, and give us a
+>>> week to shake out the regressions of the change, and once ready, we
+>>> can include the complete set of fixes to stable (probably in a week or
+>>> two).
 >>
+>> Ok, thanks for the information, I've now dropped them from all of the
+>> queues that had them in them.
 >>
->> On 1/20/2020 11:00 PM, Jin, Yao wrote:
->>>
->>>
->>> On 1/20/2020 5:47 PM, Jiri Olsa wrote:
->>>> On Thu, Jan 16, 2020 at 03:29:03AM +0800, Jin Yao wrote:
->>>>
->>>> SNIP
->>>>
->>>>> +                   block_hpps, nr_hpps);
->>>>> -    perf_hpp_list__register_sort_field(&bh->block_list,
->>>>> -        &block_fmts[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT].fmt);
->>>>> +    /* Sort by the first fmt */
->>>>> +    perf_hpp_list__register_sort_field(&bh->block_list,
->>>>> &block_fmts[0].fmt);
->>>>>    }
->>>>> -static void process_block_report(struct hists *hists,
->>>>> -                 struct block_report *block_report,
->>>>> -                 u64 total_cycles)
->>>>> +static int process_block_report(struct hists *hists,
->>>>> +                struct block_report *block_report,
->>>>> +                u64 total_cycles, int *block_hpps,
->>>>> +                int nr_hpps)
->>>>>    {
->>>>>        struct rb_node *next = rb_first_cached(&hists->entries);
->>>>>        struct block_hist *bh = &block_report->hist;
->>>>>        struct hist_entry *he;
->>>>> -    init_block_hist(bh, block_report->fmts);
->>>>> +    if (nr_hpps > PERF_HPP_REPORT__BLOCK_MAX_INDEX)
->>>>
->>>> hum, should be '>=' above.. ?
->>>>
->>>> jirka
->>>>
->>>
->>> '=' should be OK.
->>>
->>> enum {
->>>       PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
->>>       PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
->>>       PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
->>>       PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
->>>       PERF_HPP_REPORT__BLOCK_RANGE,
->>>       PERF_HPP_REPORT__BLOCK_DSO,
->>>       PERF_HPP_REPORT__BLOCK_MAX_INDEX
->>> };
->>>
->>> PERF_HPP_REPORT__BLOCK_MAX_INDEX is 6.
->>>
->>> If nr_hpps is 6, for example, block_hpps[] is,
->>>
->>>           int block_hpps[6] = {
->>>               PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
->>>               PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
->>>               PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
->>>               PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
->>>               PERF_HPP_REPORT__BLOCK_RANGE,
->>>               PERF_HPP_REPORT__BLOCK_DSO,
->>>           };
->>>
->>>           block_info__create_report(session->evlist,
->>>                         rep->total_cycles,
->>>                                             block_hpps, 6,
->>>                                             &rep->nr_block_reports);
->>>
->>> That should be legal.
->>>
->>> Thanks
->>> Jin Yao
->>
->> Hi Jiri,
->>
->> Does this explanation make sense?
-> 
-> ok, make sense
-> 
-> thanks,
-> jirka
-> 
+>> greg k-h
+>
+> I have now run more extensive Syzkaller testing on following patches:
+>
+> cb626bf566eb net-sysfs: Fix reference count leak
+> ddd9b5e3e765 net-sysfs: Call dev_hold always in rx_queue_add_kobject
+> e0b60903b434 net-sysfs: Call dev_hold always in netdev_queue_add_kobje
+> 48a322b6f996 net-sysfs: fix netdev_queue_add_kobject() breakage
+> b8eb718348b8 net-sysfs: Fix reference count leak in rx|netdev_queue_add_k=
+object
+>
+> These patches are fixing couple of memory leaks including this one found
+> by Syzbot: https://syzkaller.appspot.com/bug?extid=3Dad8ca40ecd77896d51e2
+>
+> I can reproduce these memory leaks in following stable branches: 4.14,
+> 4.19, and 5.4.
+>
+> These are all now merged into net/master tree and based on my testing
+> they are ready to be taken into stable branches as well.
+>
+> Best Regards,
+>
+> Jouni H=C3=B6gander
 
-Thanks Jiri!
+These four patches are still missing from 4.14 and 4.19 branches:
 
-I will post v5 which only contains the change of dropping the 
-unnecessary release code.
+ddd9b5e3e765 net-sysfs: Call dev_hold always in rx_queue_add_kobject
+e0b60903b434 net-sysfs: Call dev_hold always in netdev_queue_add_kobje
+48a322b6f996 net-sysfs: fix netdev_queue_add_kobject() breakage
+b8eb718348b8 net-sysfs: Fix reference count leak in rx|netdev_queue_add_kob=
+ject
 
-Thanks
-Jin Yao
+Could you please consider taking them in or let me know if you want some
+further activities from my side?
 
+BR,
+
+Jouni H=C3=B6gander
