@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1FBC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46281C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A2120716
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E27320702
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jan 2020 14:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580222393;
-	bh=SgJWTW4n7ASg2yHjYEkALQkHjY6x8z5LrjxxF7dd860=;
+	s=default; t=1580222396;
+	bh=FjKs7kj1QyIdMdGW6JMz6tb12uo0pJoik3pgWS1XT2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=apkU5DEy/y6OFRypkM5IFZ6BmZfGkmcfo1Ss+55Xb7+W07oRn9QjdxasyMJLK2J5M
-	 06D2Y3Ht2LXap9CKe/9DCWFtH/xgGNEh4hvL0sB6UetI1WFZSxKJKw7naQqZLVg8Fb
-	 I+EdgRVU2DmdJV0HiRU+/VXOgCW8xClek8OQ25U0=
+	b=jrP1D+eMmIO1dWV+9IeIlTnIpnbp5G1N/kOP7I3ZsM0CU3dPulWyJh0XXoKF1Ay8p
+	 m23nRl89cI+jnrzJazLYrKrWfLk1oUh0+Nl76Tc3t1Lsv7w7kFPvmt+b7vmToLnssU
+	 OYkvgwr4XMcPoo2t2PcKcaJ2K8kFa/7VNEjVr+f0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbgA1OQf (ORCPT
+        id S1729834AbgA1OQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 09:16:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39980 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 09:16:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbgA1OQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 09:16:33 -0500
+        id S1727179AbgA1OQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 09:16:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2220021739;
-        Tue, 28 Jan 2020 14:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CB402468D;
+        Tue, 28 Jan 2020 14:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580220992;
-        bh=SgJWTW4n7ASg2yHjYEkALQkHjY6x8z5LrjxxF7dd860=;
+        s=default; t=1580220987;
+        bh=FjKs7kj1QyIdMdGW6JMz6tb12uo0pJoik3pgWS1XT2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zhYcfPJRX+7Lfye1XwMqlRKaXBk56BKCWkYK1a3eia7ysSqHM0/kZOhLJEvOsfu++
-         aXxR9Q0ww03N+UkZ9wSN6BpVevN58POv4FpOK2471AMTFeBk0Xp086g2dTNGXI0sUy
-         n2LZZKCAeDReh0HvHFSCjANOkFT0y+5Xfz4o3Cf8=
+        b=K0x439QPpLzilx/dUO5gxIGSxihv5C8MmqXrQJj96RViYamCE30xLg8BsF5E2qBPO
+         mDaNUqWOJzYyARjtC21RJKKhIX1o5MB3V4/j2WYGL8yyeYnarwnXgZcTa7cAD+Lzaa
+         kADePgO7qb8k/uCEpcU4h3Brw0E7/a/e9JYKWjuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 046/271] IB/iser: Pass the correct number of entries for dma mapped SGL
-Date:   Tue, 28 Jan 2020 15:03:15 +0100
-Message-Id: <20200128135856.072520674@linuxfoundation.org>
+Subject: [PATCH 4.9 044/271] crypto: tgr192 - fix unaligned memory access
+Date:   Tue, 28 Jan 2020 15:03:13 +0100
+Message-Id: <20200128135855.930739000@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
 References: <20200128135852.449088278@linuxfoundation.org>
@@ -62,59 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Israel Rukshin <israelr@mellanox.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 57b26497fabe1b9379b59fbc7e35e608e114df16 ]
+[ Upstream commit f990f7fb58ac8ac9a43316f09a48cff1a49dda42 ]
 
-ib_dma_map_sg() augments the SGL into a 'dma mapped SGL'. This process may
-change the number of entries and the lengths of each entry.
+Fix an unaligned memory access in tgr192_transform() by using the
+unaligned access helpers.
 
-Code that touches dma_address is iterating over the 'dma mapped SGL' and
-must use dma_nents which returned from ib_dma_map_sg().
-
-ib_sg_to_pages() and ib_map_mr_sg() are using dma_address so they must use
-dma_nents.
-
-Fixes: 39405885005a ("IB/iser: Port to new fast registration API")
-Fixes: bfe066e256d5 ("IB/iser: Reuse ib_sg_to_pages")
-Signed-off-by: Israel Rukshin <israelr@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Acked-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 06ace7a9bafe ("[CRYPTO] Use standard byte order macros wherever possible")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/iser/iser_memory.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ crypto/tgr192.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/iser/iser_memory.c b/drivers/infiniband/ulp/iser/iser_memory.c
-index 9c3e9ab53a415..759c2fe033e71 100644
---- a/drivers/infiniband/ulp/iser/iser_memory.c
-+++ b/drivers/infiniband/ulp/iser/iser_memory.c
-@@ -240,8 +240,8 @@ int iser_fast_reg_fmr(struct iscsi_iser_task *iser_task,
- 	page_vec->npages = 0;
- 	page_vec->fake_mr.page_size = SIZE_4K;
- 	plen = ib_sg_to_pages(&page_vec->fake_mr, mem->sg,
--			      mem->size, NULL, iser_set_page);
--	if (unlikely(plen < mem->size)) {
-+			      mem->dma_nents, NULL, iser_set_page);
-+	if (unlikely(plen < mem->dma_nents)) {
- 		iser_err("page vec too short to hold this SG\n");
- 		iser_data_buf_dump(mem, device->ib_device);
- 		iser_dump_page_vec(page_vec);
-@@ -450,10 +450,10 @@ static int iser_fast_reg_mr(struct iscsi_iser_task *iser_task,
+diff --git a/crypto/tgr192.c b/crypto/tgr192.c
+index 321bc6ff2a9d1..904c8444aa0a2 100644
+--- a/crypto/tgr192.c
++++ b/crypto/tgr192.c
+@@ -25,8 +25,9 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/mm.h>
+-#include <asm/byteorder.h>
+ #include <linux/types.h>
++#include <asm/byteorder.h>
++#include <asm/unaligned.h>
  
- 	ib_update_fast_reg_key(mr, ib_inc_rkey(mr->rkey));
+ #define TGR192_DIGEST_SIZE 24
+ #define TGR160_DIGEST_SIZE 20
+@@ -468,10 +469,9 @@ static void tgr192_transform(struct tgr192_ctx *tctx, const u8 * data)
+ 	u64 a, b, c, aa, bb, cc;
+ 	u64 x[8];
+ 	int i;
+-	const __le64 *ptr = (const __le64 *)data;
  
--	n = ib_map_mr_sg(mr, mem->sg, mem->size, NULL, SIZE_4K);
--	if (unlikely(n != mem->size)) {
-+	n = ib_map_mr_sg(mr, mem->sg, mem->dma_nents, NULL, SIZE_4K);
-+	if (unlikely(n != mem->dma_nents)) {
- 		iser_err("failed to map sg (%d/%d)\n",
--			 n, mem->size);
-+			 n, mem->dma_nents);
- 		return n < 0 ? n : -EINVAL;
- 	}
+ 	for (i = 0; i < 8; i++)
+-		x[i] = le64_to_cpu(ptr[i]);
++		x[i] = get_unaligned_le64(data + i * sizeof(__le64));
  
+ 	/* save */
+ 	a = aa = tctx->a;
 -- 
 2.20.1
 
