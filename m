@@ -2,205 +2,127 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE65DC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CC5C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987E22070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:46:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqdrnLxB"
+	by mail.kernel.org (Postfix) with ESMTP id A65542070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgA2Jqb (ORCPT
+        id S1726246AbgA2Jq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:46:31 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50514 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgA2Jqa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 04:46:30 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a5so5470583wmb.0;
-        Wed, 29 Jan 2020 01:46:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=al6msNrr1e7Fd/KciL8bEh7cwwwNLZSyBSiCZpA4ETU=;
-        b=aqdrnLxB+KxT3yGzlHTXVf+Ix+4LpEGQMYzU6WYrFTK6uoKAeQJMPyS4P1qcoVtK2R
-         xJIOOL53A5yDilhU45TI5hCJ2nkrUBdTmUzDbI7zUy9glygCTGm77blsYPqt48UBy5SM
-         8aT25qcI+JsvgTJiTbWYDmM8148J8KoTi/9qaKnjmwUApDtDnKzgyLD3p3KlGn+qu7pV
-         QxlkgNQgh3tubkXQyQbunnwyj39iAx7GRGCab0NdLG6qkYm3RN0P9QsX1/OG1SoAZlvc
-         Xkwl1iHwLJk/Na6VY2jsHjsrMZE3+IMItarNk0Hm2/fPmrCK+ri/g/ML6l6bhbH3EK9L
-         tuxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=al6msNrr1e7Fd/KciL8bEh7cwwwNLZSyBSiCZpA4ETU=;
-        b=dYsl5P+oInvuQQ9JjlraLyTmVW6tntQxYPGcRXEM6eDgqlBGWnfJoksUxl+3b9Rr3Z
-         Z9c6lK9tTQIgpm8h2Mq0PnZTVREbMp7XywE3P6E0kczH4uZvHstF2JerR+ipsqVyS76g
-         O8yL/TaqQ/hh/mDCbpVqH8uZt7dRFtr7/jqCvKRSOc6kvI6vt2jB3WxwWBSkz66exWGW
-         KpSbn0KZooUOnG6X1VTE6/bORQnRCYQuGhHc8/2pdz0V3w6VPbJCCSo7l6j4DSWNb3+1
-         lruCajFmC4cY77kefbZrc9pT+8Jmg68QKwgFRukT0qPPdjt6zbX7/SnuyQZBq061SL5Y
-         uBlg==
-X-Gm-Message-State: APjAAAUSGRxmN1BXF7L+nRINJW0xokfQU7pZO4RnHpvXXuS2mCkl4bbM
-        7CipAoN+/OlTUWzftvNIQqc=
-X-Google-Smtp-Source: APXvYqwt8+agV8bjA4Z1olKQ+WUI2s8AW0z6cfsqeh5Wr1CWSxlT1EVsjTbL2k2P0+s72RdTbPa8cg==
-X-Received: by 2002:a1c:38c7:: with SMTP id f190mr10179663wma.94.1580291186370;
-        Wed, 29 Jan 2020 01:46:26 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id w13sm2118757wru.38.2020.01.29.01.46.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 01:46:25 -0800 (PST)
-Date:   Wed, 29 Jan 2020 10:46:24 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 5/5] arm64: tegra: Add Tegra VI CSI suppport in
- device tree
-Message-ID: <20200129094624.GD2479935@ulmo>
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <1580235801-4129-6-git-send-email-skomatineni@nvidia.com>
+        Wed, 29 Jan 2020 04:46:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:38660 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbgA2Jq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 04:46:56 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C2011FB;
+        Wed, 29 Jan 2020 01:46:55 -0800 (PST)
+Received: from [10.37.12.123] (unknown [10.37.12.123])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C0A23F52E;
+        Wed, 29 Jan 2020 01:46:46 -0800 (PST)
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+To:     Sibi Sankar <sibis@codeaurora.org>, viresh.kumar@linaro.org,
+        sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com
+Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <88b3885a-5ddd-b942-c5a5-d560b2f196bd@arm.com>
+Date:   Wed, 29 Jan 2020 09:46:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SO98HVl1bnMOfKZd"
-Content-Disposition: inline
-In-Reply-To: <1580235801-4129-6-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200127200350.24465-1-sibis@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sibi,
 
---SO98HVl1bnMOfKZd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In my opinion this solution depends on not always true assumption that
+CPUFreq notification chain will be triggered when there is a frequency
+switch. Extending devfreq governor (as in one of the dependent patch
+series that you have referred) by attaching to this notification
+chain makes sense only when the SchedUtil and fast_switch is not in use.
+The Schedutil CPUFreq governor might use the fast_switch from this
+driver and the notifications will not be triggered. I have also
+commented patch 08/10 which tries to disable it.
 
-On Tue, Jan 28, 2020 at 10:23:21AM -0800, Sowjanya Komatineni wrote:
-> Tegra210 contains VI controller for video input capture from MIPI
-> CSI camera sensors and also supports built-in test pattern generator.
->=20
-> CSI ports can be one-to-one mapped to VI channels for capturing from
-> an external sensor or from built-in test pattern generator.
->=20
-> This patch adds support for VI and CSI and enables them in Tegra210
-> device tree.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi |  8 +++++++
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi       | 31 ++++++++++++++++++++=
-+++++-
->  2 files changed, 38 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/=
-boot/dts/nvidia/tegra210-p2597.dtsi
-> index b0095072bc28..ec1b3033fa03 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-> @@ -10,6 +10,14 @@
->  			status =3D "okay";
->  		};
-> =20
-> +		vi@54080000 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		csi@0x54080838 {
-> +			status =3D "okay";
-> +		};
-> +
->  		sor@54580000 {
->  			status =3D "okay";
-> =20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/d=
-ts/nvidia/tegra210.dtsi
-> index 48c63256ba7f..c6107ec03ad1 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> @@ -136,9 +136,38 @@
-> =20
->  		vi@54080000 {
->  			compatible =3D "nvidia,tegra210-vi";
-> -			reg =3D <0x0 0x54080000 0x0 0x00040000>;
-> +			reg =3D <0x0 0x54080000 0x0 0x808>;
->  			interrupts =3D <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
->  			status =3D "disabled";
-> +			assigned-clocks =3D <&tegra_car TEGRA210_CLK_VI>;
-> +			assigned-clock-parents =3D <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
-> +
-> +			clocks =3D <&tegra_car TEGRA210_CLK_VI>;
-> +			clock-names =3D "vi";
-> +			resets =3D <&tegra_car 20>;
-> +			reset-names =3D "vi";
-> +		};
-> +
-> +		csi@0x54080838 {
-> +			compatible =3D "nvidia,tegra210-csi";
-> +			reg =3D <0x0 0x54080838 0x0 0x2000>;
-> +			status =3D "disabled";
-> +			assigned-clocks =3D <&tegra_car TEGRA210_CLK_CILAB>,
-> +					  <&tegra_car TEGRA210_CLK_CILCD>,
-> +					  <&tegra_car TEGRA210_CLK_CILE>;
-> +			assigned-clock-parents =3D <&tegra_car TEGRA210_CLK_PLL_P>,
-> +						 <&tegra_car TEGRA210_CLK_PLL_P>,
-> +						 <&tegra_car TEGRA210_CLK_PLL_P>;
-> +			assigned-clock-rates =3D <102000000>,
-> +					       <102000000>,
-> +					       <102000000>;
-> +
-> +			clocks =3D <&tegra_car TEGRA210_CLK_CSI>,
-> +				 <&tegra_car TEGRA210_CLK_CILAB>,
-> +				 <&tegra_car TEGRA210_CLK_CILCD>,
-> +				 <&tegra_car TEGRA210_CLK_CILE>;
-> +			clock-names =3D "csi", "cilab", "cilcd", "cile";
-> +
->  		};
+Regards,
+Lukasz
 
-Can this be a child of the vi node? Looking at the register ranges it
-seems like these are actually a single IP block. If they have separate
-blocks with clearly separate functionality, then it makes sense to have
-CSI be a child node of VI, though it may also be okay to merge both and
-have a single node with the driver doing all of the differentiation
-between what's VI and what's CSI.
-
-Looking at later chips, the split between VI and CSI is more explicit,
-so having the split in DT for Tegra210 may make sense for consistency.
-
-I know we've discussed this before, but for some reason I keep coming
-back to this. I'll go through the other patches to see if I can get a
-clearer picture of how this could all work together.
-
-Thierry
-
---SO98HVl1bnMOfKZd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4xVGwACgkQ3SOs138+
-s6Htyw/+JrPQnVn82x/J0IALFgng73ubFhAn1ygQEOqCVn2aaRoq4OaGnWpxZRj1
-SpQs7FBqzYAkbl8XlAUEc8evI0WmQgk6UYutPXVaqnMNMLAryL7hpgaCOsm/y058
-81yVFJ+Me1nOZgJmdqKtJfN41h2WPvwwZDdfWpZ8zJzzG+wiCP4OWd9szMup9nzA
-FwjDpR3Nyk32ALJxxKXmw3PtrUfE0VzlWR2/ByMolxjtZ6H66sjPHoyO6QgdmKQo
-IqRgtvpucSuUDU1Jvs1AYG47uPqsVuD/i7UqukPWHPEO1I4LdtPgS7wdLekBPNqZ
-NmQ13J/CpfaaPak47Inqe1yUy17Fs7jWBIimneQzzhD4wY8gn6i6CgRRgOEMqhZl
-4R/lxF32owCYHyeyCU0aBo56osX8xD3Gplt8MRLSDolDpbdsdajPJNBEQcdbyQu8
-rUS9rxvcuHWJX7sghguZy54P3aEHiUgHuSw4sFVfbgorZpz0xPX0ZUa6XpIpb0Mp
-Gg1SlMsIY16JQEXIikgzxwRTKaN2PDcblDscY6W9QOOzSE87g3Hr6V82murkl5PM
-2OjfExlpjSr6Tf50WB0jSm4xWlSerJlozODQo/7TPmCjhBFSB4IE92gtZhvEJuLP
-7R6g41M/X2rI6YtE8wxFc7dg4I92twzPnZzxEZhN87lIE6B83CA=
-=ccse
------END PGP SIGNATURE-----
-
---SO98HVl1bnMOfKZd--
+On 1/27/20 8:03 PM, Sibi Sankar wrote:
+> This RFC series aims to extend cpu based scaling support to L3/DDR on
+> SDM845 and SC7180 SoCs.
+> 
+> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
+> Patches [5-7] - Hack in a way to add/remove multiple opp tables to
+>                  a single device. I am yet to fix the debugfs to
+> 		support multiple opp_tables per device but wanted to
+> 		send what was working upstream to get an idea if multiple
+> 		opp tables per device is a feature that will be useful
+> 		upstream.
+> Patches [9-10] - Add the cpu/cpu-ddr/cpu-l3 opp tables for SDM845
+>                   and SC7180 SoCs.
+> 
+> v3:
+>   * Migrated to using Saravana's opp-kBps bindings [1]
+>   * Fixed some misc comments from Rajendra
+>   * Added support for SC7180
+> 
+> v2:
+>   * Incorporated Viresh's comments from:
+>   https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+>   https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+>   * Dropped cpufreq-map passive governor
+> 
+> Git-branch: https://github.com/QuinAsura/linux/tree/lnext-012420
+> 
+> Some alternate ways of hosting the opp-tables:
+> https://github.com/QuinAsura/linux/commit/50b92bfaadc8f9a0d1e12249646e018bd6d1a9d3
+> https://github.com/QuinAsura/linux/commit/3d23d1eefd16ae6d9e3ef91e93e78749d8844e98
+> Viresh didn't really like ^^ bindings and they dont really scale well. Just
+> including them here for completeness.
+> 
+> Depends on the following series:
+> [1] https://patchwork.kernel.org/cover/11277199/
+> [2] https://patchwork.kernel.org/cover/11055499/
+> [3] https://patchwork.kernel.org/cover/11326381/
+> 
+> Sibi Sankar (10):
+>    arm64: dts: qcom: sdm845: Add SoC compatible to MTP
+>    cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+>    cpufreq: blacklist SC7180 in cpufreq-dt-platdev
+>    OPP: Add and export helper to update voltage
+>    opp: of: export _opp_of_get_opp_desc_node
+>    opp: Allow multiple opp_tables to be mapped to a single device
+>    opp: Remove multiple attached opp tables from a device
+>    cpufreq: qcom: Update the bandwidth levels on frequency change
+>    arm64: dts: qcom: sdm845: Add cpu OPP tables
+>    arm64: dts: qcom: sc7180: Add cpu OPP tables
+> 
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 287 +++++++++++++++
+>   arch/arm64/boot/dts/qcom/sdm845-mtp.dts |   2 +-
+>   arch/arm64/boot/dts/qcom/sdm845.dtsi    | 453 ++++++++++++++++++++++++
+>   drivers/cpufreq/cpufreq-dt-platdev.c    |   2 +
+>   drivers/cpufreq/qcom-cpufreq-hw.c       | 246 +++++++++++--
+>   drivers/opp/core.c                      | 111 +++++-
+>   drivers/opp/of.c                        |   3 +-
+>   drivers/opp/opp.h                       |   2 +
+>   include/linux/pm_opp.h                  |  10 +
+>   9 files changed, 1083 insertions(+), 33 deletions(-)
+> 
