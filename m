@@ -2,248 +2,105 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F83DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F756C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C461C207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:13:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580325229;
-	bh=92ff4QxUOJxWhCCK6LSimpjMkzXTi+lzOK+GW8Ovhh8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=P+/WiHVprKP51KAPkfl5AybCwj3qYCFkAgFO5osT5h68lsW6AOLVVfvImwtFZmXWo
-	 n5B+SWggz0xs9gBfF9YNEHqGI9jFSdKsDY2+0l1CHzy3GpK1mvSQzgdug/CoKDoMEZ
-	 VZDpoaOwHDtHiYRsqIBRF/5KrWcGxIvJqgKd/d+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 21E70205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgA2TNt (ORCPT
+        id S1727471AbgA2TPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 14:13:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
+        Wed, 29 Jan 2020 14:15:02 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36290 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgA2TNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 14:13:48 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C476B205F4;
-        Wed, 29 Jan 2020 19:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580325227;
-        bh=92ff4QxUOJxWhCCK6LSimpjMkzXTi+lzOK+GW8Ovhh8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=0zQWbA7VpvkVjjcsooqJF/p4CoSQfkGAT8SsS1x9SUtpQJses139aJ6Q6F9W4Se0W
-         y3CsJMxfjtFbiVognmRpXHnJ3QN6m9lLtApZnbI/4Fj2ko8q8GVZpJ/HJJtOXQwMai
-         bXHRejPpx48jD36ovimq2JBngR/lM5Lvh34EfSaU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 668C53521AEF; Wed, 29 Jan 2020 11:13:47 -0800 (PST)
-Date:   Wed, 29 Jan 2020 11:13:47 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Marco Elver <elver@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Daniel Axtens <dja@axtens.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kees Cook <keescook@chromium.org>, cyphar@cyphar.com,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] include/linux: Add instrumented.h infrastructure
-Message-ID: <20200129191347.GA21972@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200121160512.70887-1-elver@google.com>
- <CACT4Y+aRk5=7UoPb9zmDm5XL9CcJDv9YnzndjXYtt+3FKd8maw@mail.gmail.com>
+        id S1726171AbgA2TPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 14:15:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E3817AC22;
+        Wed, 29 Jan 2020 19:14:59 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 32A3EDA730; Wed, 29 Jan 2020 20:14:40 +0100 (CET)
+Date:   Wed, 29 Jan 2020 20:14:40 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     dsterba@suse.com, nborisov@suse.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH] btrfs: optimize barrier usage for Rmw atomics
+Message-ID: <20200129191439.GN3929@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Davidlohr Bueso <dave@stgolabs.net>,
+        dsterba@suse.com, nborisov@suse.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+References: <20200129180324.24099-1-dave@stgolabs.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+aRk5=7UoPb9zmDm5XL9CcJDv9YnzndjXYtt+3FKd8maw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200129180324.24099-1-dave@stgolabs.net>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 12:22:56PM +0100, Dmitry Vyukov wrote:
-> On Tue, Jan 21, 2020 at 5:05 PM 'Marco Elver' via kasan-dev
-> <kasan-dev@googlegroups.com> wrote:
-> >
-> > This adds instrumented.h, which provides generic wrappers for memory
-> > access instrumentation that the compiler cannot emit for various
-> > sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
-> > future this will also include KMSAN instrumentation.
-> >
-> > Note that, copy_{to,from}_user should use special instrumentation, since
-> > we should be able to instrument both source and destination memory
-> > accesses if both are kernel memory.
-> >
-> > The current patch only instruments the memory access where the address
-> > is always in kernel space, however, both may in fact be kernel addresses
-> > when a compat syscall passes an argument allocated in the kernel to a
-> > real syscall. In a future change, both KASAN and KCSAN should check both
-> > addresses in such cases, as well as KMSAN will make use of both
-> > addresses. [It made more sense to provide the completed function
-> > signature, rather than updating it and changing all locations again at a
-> > later time.]
+On Wed, Jan 29, 2020 at 10:03:24AM -0800, Davidlohr Bueso wrote:
+> Use smp_mb__after_atomic() instead of smp_mb() and avoid the
+> unnecessary barrier for non LL/SC architectures, such as x86.
+
+So that's a conflicting advice from what we got when discussing wich
+barriers to use in 6282675e6708ec78518cc0e9ad1f1f73d7c5c53d and the
+memory is still fresh. My first idea was to take the
+smp_mb__after_atomic and __before_atomic variants and after discussion
+with various people the plain smp_wmb/smp_rmb were suggested and used in
+the end.
+
+I can dig the email threads and excerpts from irc conversations, maybe
+Nik has them at hand too. We do want to get rid of all unnecessary and
+uncommented barriers in btrfs code, so I appreciate your patch.
+
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+> ---
+>  fs/btrfs/btrfs_inode.h | 2 +-
+>  fs/btrfs/file.c        | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> diff --git a/fs/btrfs/btrfs_inode.h b/fs/btrfs/btrfs_inode.h
+> index 4e12a477d32e..54e0d2ae22cc 100644
+> --- a/fs/btrfs/btrfs_inode.h
+> +++ b/fs/btrfs/btrfs_inode.h
+> @@ -325,7 +325,7 @@ struct btrfs_dio_private {
+>  static inline void btrfs_inode_block_unlocked_dio(struct btrfs_inode *inode)
+>  {
+>  	set_bit(BTRFS_INODE_READDIO_NEED_LOCK, &inode->runtime_flags);
+> -	smp_mb();
+> +	smp_mb__after_atomic();
 
-I have applied this and the other four with Dmitry's Reviewed-by.
+In this case I think we should use the smp_wmb/smp_rmb pattern rather
+than the full barrier.
 
-Thank you all!
+>  }
+>  
+>  static inline void btrfs_inode_resume_unlocked_dio(struct btrfs_inode *inode)
+> diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+> index a16da274c9aa..ea79ab068079 100644
+> --- a/fs/btrfs/file.c
+> +++ b/fs/btrfs/file.c
+> @@ -2143,7 +2143,7 @@ int btrfs_sync_file(struct file *file, loff_t start, loff_t end, int datasync)
+>  	}
+>  	atomic_inc(&root->log_batch);
+>  
+> -	smp_mb();
+> +	smp_mb__after_atomic();
 
-							Thanx, Paul
+That's the problem with uncommented barriers that it's not clear what
+are they related to. In this case it's not the atomic_inc above that
+would justify __after_atomic. The patch that added it is years old so
+any change to that barrier would require deeper analysis.
 
-> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > Acked-by: Alexander Potapenko <glider@google.com>
-> > ---
-> > v2:
-> > * Simplify header, since we currently do not need pre/post user-copy
-> >   distinction.
-> > * Make instrument_copy_{to,from}_user function arguments match
-> >   copy_{to,from}_user and update rationale in commit message.
-> > ---
-> >  include/linux/instrumented.h | 109 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 109 insertions(+)
-> >  create mode 100644 include/linux/instrumented.h
-> >
-> > diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
-> > new file mode 100644
-> > index 000000000000..43e6ea591975
-> > --- /dev/null
-> > +++ b/include/linux/instrumented.h
-> > @@ -0,0 +1,109 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +/*
-> > + * This header provides generic wrappers for memory access instrumentation that
-> > + * the compiler cannot emit for: KASAN, KCSAN.
-> > + */
-> > +#ifndef _LINUX_INSTRUMENTED_H
-> > +#define _LINUX_INSTRUMENTED_H
-> > +
-> > +#include <linux/compiler.h>
-> > +#include <linux/kasan-checks.h>
-> > +#include <linux/kcsan-checks.h>
-> > +#include <linux/types.h>
-> > +
-> > +/**
-> > + * instrument_read - instrument regular read access
-> > + *
-> > + * Instrument a regular read access. The instrumentation should be inserted
-> > + * before the actual read happens.
-> > + *
-> > + * @ptr address of access
-> > + * @size size of access
-> > + */
-> > +static __always_inline void instrument_read(const volatile void *v, size_t size)
-> > +{
-> > +       kasan_check_read(v, size);
-> > +       kcsan_check_read(v, size);
-> > +}
-> > +
-> > +/**
-> > + * instrument_write - instrument regular write access
-> > + *
-> > + * Instrument a regular write access. The instrumentation should be inserted
-> > + * before the actual write happens.
-> > + *
-> > + * @ptr address of access
-> > + * @size size of access
-> > + */
-> > +static __always_inline void instrument_write(const volatile void *v, size_t size)
-> > +{
-> > +       kasan_check_write(v, size);
-> > +       kcsan_check_write(v, size);
-> > +}
-> > +
-> > +/**
-> > + * instrument_atomic_read - instrument atomic read access
-> > + *
-> > + * Instrument an atomic read access. The instrumentation should be inserted
-> > + * before the actual read happens.
-> > + *
-> > + * @ptr address of access
-> > + * @size size of access
-> > + */
-> > +static __always_inline void instrument_atomic_read(const volatile void *v, size_t size)
-> > +{
-> > +       kasan_check_read(v, size);
-> > +       kcsan_check_atomic_read(v, size);
-> > +}
-> > +
-> > +/**
-> > + * instrument_atomic_write - instrument atomic write access
-> > + *
-> > + * Instrument an atomic write access. The instrumentation should be inserted
-> > + * before the actual write happens.
-> > + *
-> > + * @ptr address of access
-> > + * @size size of access
-> > + */
-> > +static __always_inline void instrument_atomic_write(const volatile void *v, size_t size)
-> > +{
-> > +       kasan_check_write(v, size);
-> > +       kcsan_check_atomic_write(v, size);
-> > +}
-> > +
-> > +/**
-> > + * instrument_copy_to_user - instrument reads of copy_to_user
-> > + *
-> > + * Instrument reads from kernel memory, that are due to copy_to_user (and
-> > + * variants). The instrumentation must be inserted before the accesses.
-> > + *
-> > + * @to destination address
-> > + * @from source address
-> > + * @n number of bytes to copy
-> > + */
-> > +static __always_inline void
-> > +instrument_copy_to_user(void __user *to, const void *from, unsigned long n)
-> > +{
-> > +       kasan_check_read(from, n);
-> > +       kcsan_check_read(from, n);
-> > +}
-> > +
-> > +/**
-> > + * instrument_copy_from_user - instrument writes of copy_from_user
-> > + *
-> > + * Instrument writes to kernel memory, that are due to copy_from_user (and
-> > + * variants). The instrumentation should be inserted before the accesses.
-> > + *
-> > + * @to destination address
-> > + * @from source address
-> > + * @n number of bytes to copy
-> > + */
-> > +static __always_inline void
-> > +instrument_copy_from_user(const void *to, const void __user *from, unsigned long n)
-> > +{
-> > +       kasan_check_write(to, n);
-> > +       kcsan_check_write(to, n);
-> > +}
-> > +
-> > +#endif /* _LINUX_INSTRUMENTED_H */
-> > --
-> > 2.25.0.341.g760bfbb309-goog
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200121160512.70887-1-elver%40google.com.
+>  	if (btrfs_inode_in_log(BTRFS_I(inode), fs_info->generation) ||
+>  	    BTRFS_I(inode)->last_trans <= fs_info->last_trans_committed) {
+>  		/*
