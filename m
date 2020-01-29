@@ -2,86 +2,137 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9B3C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9F7C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020BE2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CCD2064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="doI1v6YM"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jwWWXwsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgA2K4B (ORCPT
+        id S1726401AbgA2K4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 05:56:01 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39059 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgA2K4B (ORCPT
+        Wed, 29 Jan 2020 05:56:20 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3592 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbgA2K4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 05:56:01 -0500
-Received: by mail-qk1-f196.google.com with SMTP id w15so14820061qkf.6
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 02:56:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=R2GfLE1YBPy2zxLc6xgpWp5jwd9zTP6iHYDWoWRsFu0=;
-        b=doI1v6YMwfdi9cRvhIFdzf7HUa1YU4MrhdiNjQCdEPbWbLksGPj2h+Rc0l6/VQ1pGV
-         hmYV6/b8jlR/u5kQkTsh5Eohr5oXCQTGPY0xbBECFnAR56vZYd2SzfkFpbDcHmo8dZHy
-         GV9SJGYOEj9lNdahm6/dTl478+a9XSkBTnIwQLyrO7B0PUC5gcGLRmgHxMvvvBitp5ca
-         l8Zkfk9UQPTmN2h29+lLwxxr4L61h9rSK7Yu7o0PrjzRKuYt7YIGZAva4Z64ATrmpUj5
-         OaF19XHq1cwdmR7gWqqtngPNYHPWQ+j7Rii4Ps0/jCVZbMnOzVPkBlI6vUgJtoX7NK3y
-         5R7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=R2GfLE1YBPy2zxLc6xgpWp5jwd9zTP6iHYDWoWRsFu0=;
-        b=dvUWMJJUR2DF8k9m+OO9xVWxmxfOq0ZRGVboF3vuA9qbNny743sPVfjUKQP9V5OgiW
-         I6BwZXujIrFoKjgyKp4jbLueMuXE/MwGjnxHAeaAgh3l4JOo29xitzk0aqazAoPtNv1T
-         M+CNloqTt7zlpMJGfRkm7qHbX3C93/srOoe56DPxJG0fIPB7g/qp+m5lcf6ZMIrZ4kkU
-         TNwKd5XpZNRIxoTJ3iTS3/I0OtGHRfXZGLboxZUkqz81NvRqdP7H7WqyutYH4ZkjCRa4
-         U2oFZcA5opchOvCL2zSurGJz39MVCqyQw9TCq31N7DPiHCs11bbP/ImiEaUM0Mpvqg7P
-         CmLw==
-X-Gm-Message-State: APjAAAW/tYz11EhLEWc1TDXMI+KkDU19W0C6wWPFgMX2Eom4tpKHxVLD
-        O7/2bU1AvlTgHAH4raYS1ydiuBhcS955z1YtLSwf5A==
-X-Google-Smtp-Source: APXvYqxjw5pzYeGQTcVIqA7M2WTCWfxESWh8wOs2gTBNL2Ml2I9qClgT2H4h8+alnweWKSpamykEjDKmbAS29n/vhj8=
-X-Received: by 2002:a05:620a:12cf:: with SMTP id e15mr27629723qkl.120.1580295360011;
- Wed, 29 Jan 2020 02:56:00 -0800 (PST)
+        Wed, 29 Jan 2020 05:56:20 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3164a00000>; Wed, 29 Jan 2020 02:55:28 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 Jan 2020 02:56:18 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 Jan 2020 02:56:18 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jan
+ 2020 10:56:16 +0000
+Subject: Re: [PATCH v5 01/14] dmaengine: tegra-apb: Fix use-after-free
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200123230325.3037-1-digetx@gmail.com>
+ <20200123230325.3037-2-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <858021de-62fd-2d21-7152-42af4e3a04b2@nvidia.com>
+Date:   Wed, 29 Jan 2020 10:56:15 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200120104626.30518-1-warthog618@gmail.com>
-In-Reply-To: <20200120104626.30518-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 29 Jan 2020 11:55:49 +0100
-Message-ID: <CAMpxmJWCwtnuB4T3_no59cVvPS5gy6QwOBV3i4FU4N6hmYugEw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: remove unnecessary argument from set_config call
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200123230325.3037-2-digetx@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580295328; bh=Fje555DfDUE6kGnSNsqCRpVoc3wD3ZspNfNjXOQTA0o=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jwWWXwsLS3RIOIH3Updt2zyJEIjVb4v51V8oCPlpr/+Dcyc13CfyZIm99/xTSJNK/
+         pgKyRgJIx4S+QswHhyMhvP6oPIZqSo90hPdGb/0qnpPYbZK4A3wC06sJyqhLLZLYgu
+         LTcJW0KdCO+oSMV11EgmTFZAn1w4B3HfQt1f92tzcCauaXIIjPsicqMoHAlgT7f8sq
+         09SUShHGsSKPNNuTFCCM9ObcTWZNbPmxnKBdVcN77CSnBJSCAV2pv4k2QZ2cT7pXHr
+         TUSUZ6AJx5vAmNYMD3D+jG666sRgpIxTYRabIlHZwdX07hpDfYDkeFEIT1VrtNcrNW
+         LOaP9fBXVRaZQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 20 sty 2020 o 11:46 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
-):
->
-> Remove unnecessary argument when setting PIN_CONFIG_BIAS_DISABLE.
->
-> Fixes: 2148ad7790ea ("gpiolib: add support for disabling line bias")
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+
+On 23/01/2020 23:03, Dmitry Osipenko wrote:
+> I was doing some experiments with I2C and noticed that Tegra APB DMA
+> driver crashes sometime after I2C DMA transfer termination. The crash
+> happens because tegra_dma_terminate_all() bails out immediately if pending
+> list is empty, thus it doesn't release the half-completed descriptors
+> which are getting re-used before ISR tasklet kicks-in.
+> 
+>  tegra-i2c 7000c400.i2c: DMA transfer timeout
+>  elants_i2c 0-0010: elants_i2c_irq: failed to read data: -110
+>  ------------[ cut here ]------------
+>  WARNING: CPU: 0 PID: 142 at lib/list_debug.c:45 __list_del_entry_valid+0x45/0xac
+>  list_del corruption, ddbaac44->next is LIST_POISON1 (00000100)
+>  Modules linked in:
+>  CPU: 0 PID: 142 Comm: kworker/0:2 Not tainted 5.5.0-rc2-next-20191220-00175-gc3605715758d-dirty #538
+>  Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+>  Workqueue: events_freezable_power_ thermal_zone_device_check
+>  [<c010e5c5>] (unwind_backtrace) from [<c010a1c5>] (show_stack+0x11/0x14)
+>  [<c010a1c5>] (show_stack) from [<c0973925>] (dump_stack+0x85/0x94)
+>  [<c0973925>] (dump_stack) from [<c011f529>] (__warn+0xc1/0xc4)
+>  [<c011f529>] (__warn) from [<c011f7e9>] (warn_slowpath_fmt+0x61/0x78)
+>  [<c011f7e9>] (warn_slowpath_fmt) from [<c042497d>] (__list_del_entry_valid+0x45/0xac)
+>  [<c042497d>] (__list_del_entry_valid) from [<c047a87f>] (tegra_dma_tasklet+0x5b/0x154)
+>  [<c047a87f>] (tegra_dma_tasklet) from [<c0124799>] (tasklet_action_common.constprop.0+0x41/0x7c)
+>  [<c0124799>] (tasklet_action_common.constprop.0) from [<c01022ab>] (__do_softirq+0xd3/0x2a8)
+>  [<c01022ab>] (__do_softirq) from [<c0124683>] (irq_exit+0x7b/0x98)
+>  [<c0124683>] (irq_exit) from [<c0168c19>] (__handle_domain_irq+0x45/0x80)
+>  [<c0168c19>] (__handle_domain_irq) from [<c043e429>] (gic_handle_irq+0x45/0x7c)
+>  [<c043e429>] (gic_handle_irq) from [<c0101aa5>] (__irq_svc+0x65/0x94)
+>  Exception stack(0xde2ebb90 to 0xde2ebbd8)
+> 
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->
-> No argument is expected by pinctrl, so removing it should be harmless.
->
+>  drivers/dma/tegra20-apb-dma.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 3a45079d11ec..319f31d27014 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -756,10 +756,6 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>  	bool was_busy;
+>  
+>  	spin_lock_irqsave(&tdc->lock, flags);
+> -	if (list_empty(&tdc->pending_sg_req)) {
+> -		spin_unlock_irqrestore(&tdc->lock, flags);
+> -		return 0;
+> -	}
+>  
+>  	if (!tdc->busy)
+>  		goto skip_dma_stop;
 
-This doesn't really fix any bug, does it? If not, then I'll just take
-it for v5.7 after the merge window.
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-Bart
+I think that we should mark this one for stable.
+
+Cheers
+Jon
+
+-- 
+nvpublic
