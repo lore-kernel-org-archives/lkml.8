@@ -2,105 +2,97 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076B1C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D09C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D241A206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331C92468E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:38:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZVdw08C"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QULbXXD6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgA2Oi0 (ORCPT
+        id S1726851AbgA2Oia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:38:26 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44957 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbgA2OiY (ORCPT
+        Wed, 29 Jan 2020 09:38:30 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:48016 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgA2Oi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:38:24 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q8so18665360ljj.11;
-        Wed, 29 Jan 2020 06:38:22 -0800 (PST)
+        Wed, 29 Jan 2020 09:38:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=x9cas/+X1zyUKvZrT+ywQG9cQsvEI2jODuyH9GxwbZ4=;
-        b=lZVdw08CSa/FCqccdPfm83wSXIKemZJusaCVbpfc0SzvXEu6kp8tSYtr2QpidS5Nu0
-         EKdgNOlgqnoiTsPb4oiFwa2juxxAZR0s3fqYfOPNmtxTsZV2glwBcaEtUokTUI8YwFQ9
-         Xf25oFPCWI4vJ+lFzPdKw5SFcUBsspczaMyZTqPGn/WXbO2bqutA80e3eY2ofdE9UcEg
-         TzxeSehx91bDZMPwiWHrjzOoxPwqZDsOZHUk2ARfeTz8xh9rPBGuMYQecrj5a5EfF/31
-         WcGbXT492A4+WFkmUsUg2hvwUQooMDgMo4x/GL1NhJeU3lVjuM+ImSeZO31BDIm/vsya
-         ObGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x9cas/+X1zyUKvZrT+ywQG9cQsvEI2jODuyH9GxwbZ4=;
-        b=EWQy3O6h5GgdBiAx0YOvOhVHNU+r/MqlGkuwOMvfvfX9V/wR6Y1lDYPGs92YHUrRuP
-         Lk+COrhvZklEnQbUJEy41f++qrnAssw9eC658pJhPYzr7ioKKQmnXQnIRA5plYq2ABKf
-         4NH1ImRa56XsjPOQmDTS+kVtGstymF8OrUfP67f55SiLIGeExpeFN0FnUCC8koZk06mp
-         nTG31/4TFNczoyu3HF+rmxUS7XUtbIdrs304a6BZ/lFRU8uDM0h8/ajqXO/myVdxk1FX
-         tmZ/yGW/BAVMAq+7mEA1GQTuMTZbGDpiYxrvGLHdvwgxaGTnTGgPzcP8MTYHQtCYfLdG
-         id6A==
-X-Gm-Message-State: APjAAAUSZfvBkWXFaHOj3xGUKnX3IeMRN5GpYSsDVhc9oZhMDxhra3UH
-        bVOX1oRfvmSrCwT70Z8ERQejN8Xi
-X-Google-Smtp-Source: APXvYqz9jEDhSAUeU3Qrzbt8F84n3Y5kQKwkmX9toAPTv/ttf0K+IPzfxPVGwKu96wXuX6Z3tlV3Yw==
-X-Received: by 2002:a2e:88d6:: with SMTP id a22mr15515824ljk.163.1580308701573;
-        Wed, 29 Jan 2020 06:38:21 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id n11sm1072323ljg.15.2020.01.29.06.38.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 06:38:20 -0800 (PST)
-Subject: Re: [PATCH v5 01/14] dmaengine: tegra-apb: Fix use-after-free
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200123230325.3037-1-digetx@gmail.com>
- <20200123230325.3037-2-digetx@gmail.com>
- <858021de-62fd-2d21-7152-42af4e3a04b2@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <362d18b9-e928-bcdd-9183-88e2d487ba22@gmail.com>
-Date:   Wed, 29 Jan 2020 17:38:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1580308708; x=1611844708;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=bqxr2sAx9WQlUP82ojVknqUNvkUIq8pa07GIMIXno9s=;
+  b=QULbXXD6K8Jk5L0OLjMUg5rD9NyLcmUTrXTDWqBlEJtuKOKOIk0nYBiO
+   40t+LNutdYLWjEv32pZPS0zCX6peGCPaRH3IbMS3xek66/erDkjt9GQG+
+   6ieYuyl5oO8d8eXt8jYjf3riLqPFllELeyin6Mr2eEoLUOP824/AKe8SV
+   U=;
+IronPort-SDR: AClB7990+0/opEElcsfz8DKWhav6SwPcIhOng9L/QrIR61E1xBkJnpmolex7GGj0v2jaWOucPq
+ EOh+6YBOZfnQ==
+X-IronPort-AV: E=Sophos;i="5.70,378,1574121600"; 
+   d="scan'208";a="15303139"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 29 Jan 2020 14:38:25 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id E62C4A2A04;
+        Wed, 29 Jan 2020 14:38:23 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Wed, 29 Jan 2020 14:38:23 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 29 Jan 2020 14:38:13 +0000
+From:   <sjpark@amazon.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        SeongJae Park <sjpark@amazon.de>, <sj38.park@gmail.com>,
+        <acme@kernel.org>, <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
+        <corbet@lwn.net>, <dwmw@amazon.com>, <mgorman@suse.de>,
+        <rostedt@goodmis.org>, <kirill@shutemov.name>,
+        <brendanhiggins@google.com>, <colin.king@canonical.com>,
+        <minchan@kernel.org>, <vdavydov.dev@gmail.com>,
+        <vdavydov@parallels.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>
+Subject: Re: Re: Re: [PATCH v2 0/9] Introduce Data Access MONitor (DAMON)
+Date:   Wed, 29 Jan 2020 15:37:58 +0100
+Message-ID: <20200129143758.896-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200129125615.GQ14879@hirez.programming.kicks-ass.net> (raw)
 MIME-Version: 1.0
-In-Reply-To: <858021de-62fd-2d21-7152-42af4e3a04b2@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.26]
+X-ClientProxiedBy: EX13D02UWC001.ant.amazon.com (10.43.162.243) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-29.01.2020 13:56, Jon Hunter пишет:
-> On 23/01/2020 23:03, Dmitry Osipenko wrote:
-[snip]
+On Wed, 29 Jan 2020 13:56:15 +0100 Peter Zijlstra <peterz@infradead.org> wrote:
 
->> Cc: <stable@vger.kernel.org>
+> On Tue, Jan 28, 2020 at 01:00:33PM +0100, sjpark@amazon.com wrote:
+> 
+> > I worried whether it could be a bother to send the mail to everyone in the
+> > section, but seems it was an unnecessary worry.  Adding those to recipients.
+> > You can get the original thread of this patchset from
+> > https://lore.kernel.org/linux-mm/20200128085742.14566-1-sjpark@amazon.com/
+> 
+> I read first patch (the document) and still have no friggin clue.
 
-^^^
+Do you mean the document has insufficient description only?  If so, could you
+please point me me which information do you want to be added?
 
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
-[snip]
 
-> Acked-by: Jon Hunter <jonathanh@nvidia.com>
-
-Thanks!
-
-> I think that we should mark this one for stable.
-
-This one is marked already ;)
+Thanks,
+SeongJae Park
