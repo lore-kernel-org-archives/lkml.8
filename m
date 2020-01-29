@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FB8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9F0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4BC32063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C652071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgA2PUq (ORCPT
+        id S1727228AbgA2PUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:20:46 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:60113 "EHLO
+        Wed, 29 Jan 2020 10:20:50 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:45352 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727189AbgA2PUm (ORCPT
+        by vger.kernel.org with ESMTP id S1727171AbgA2PUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:20:42 -0500
+        Wed, 29 Jan 2020 10:20:45 -0500
 Received: from [109.168.11.45] (port=33588 helo=pc-ceresoli.dev.aim)
         by hostingweb31.netsons.net with esmtpa (Exim 4.92)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1iwp8y-004sQJ-I1; Wed, 29 Jan 2020 16:20:40 +0100
+        id 1iwp91-004sQJ-IU; Wed, 29 Jan 2020 16:20:43 +0100
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org
 Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
         Wolfram Sang <wsa@the-dreams.de>,
         Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/28] docs: i2c: i2c-protocol: use proper names for ACK and NACK
-Date:   Wed, 29 Jan 2020 16:19:35 +0100
-Message-Id: <20200129151953.31582-11-luca@lucaceresoli.net>
+Subject: [PATCH v3 11/28] docs: i2c: smbus-protocol: fix link syntax
+Date:   Wed, 29 Jan 2020 16:19:36 +0100
+Message-Id: <20200129151953.31582-12-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200129151953.31582-1-luca@lucaceresoli.net>
 References: <20200129151953.31582-1-luca@lucaceresoli.net>
@@ -54,28 +54,34 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Use the proper ACK and NACK naming from the I2C specification instead of
-"accept" and "reverse accept".
+Use the proper ReST syntax to generate a valid hyperlink.
 
 Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 Reviewed-by: Jean Delvare <jdelvare@suse.de>
----
- Documentation/i2c/i2c-protocol.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/i2c/i2c-protocol.rst b/Documentation/i2c/i2c-protocol.rst
-index 66adac3a5afd..9a4ac944cf9d 100644
---- a/Documentation/i2c/i2c-protocol.rst
-+++ b/Documentation/i2c/i2c-protocol.rst
-@@ -11,7 +11,7 @@ Key to symbols
- S               Start condition
- P               Stop condition
- Rd/Wr (1 bit)   Read/Write bit. Rd equals 1, Wr equals 0.
--A, NA (1 bit)   Accept and reverse accept bit.
-+A, NA (1 bit)   Acknowledge (ACK) and Not Acknowledge (NACK) bit
- Addr  (7 bits)  I2C 7 bit address. Note that this can be expanded as usual to
-                 get a 10 bit I2C address.
- Comm  (8 bits)  Command byte, a data byte which often selects a register on
+---
+
+Changes in v3:
+ - fix subject line (Jean Delvare)
+---
+ Documentation/i2c/smbus-protocol.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/i2c/smbus-protocol.rst b/Documentation/i2c/smbus-protocol.rst
+index e30eb1d274c6..1600b09ec0be 100644
+--- a/Documentation/i2c/smbus-protocol.rst
++++ b/Documentation/i2c/smbus-protocol.rst
+@@ -27,8 +27,8 @@ a different protocol operation entirely.
+ Each transaction type corresponds to a functionality flag. Before calling a
+ transaction function, a device driver should always check (just once) for
+ the corresponding functionality flag to ensure that the underlying I2C
+-adapter supports the transaction in question. See
+-<file:Documentation/i2c/functionality.rst> for the details.
++adapter supports the transaction in question. See :doc:`functionality` for
++the details.
+ 
+ 
+ Key to symbols
 -- 
 2.25.0
 
