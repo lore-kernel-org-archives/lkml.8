@@ -2,104 +2,111 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D693C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A04C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF84206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:45:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kblYlArl"
+	by mail.kernel.org (Postfix) with ESMTP id 72894206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgA2WpI (ORCPT
+        id S1726823AbgA2WrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:45:08 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51470 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgA2WpI (ORCPT
+        Wed, 29 Jan 2020 17:47:22 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51124 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgA2WrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:45:08 -0500
-Received: by mail-pj1-f65.google.com with SMTP id fa20so439462pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 14:45:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7HPpDZbGMNMzei0pX9Wie2HkG11xn2NGkIboTXv1pMs=;
-        b=kblYlArlD43JKi7Kimzz20yWN3J+YPLvrEcVUiS7bMzqY+m8gGEByLZ7fuO5ed0IGC
-         Y7bdpVuk3TQpws2xKmX059iHQfHrB98W9WnET9byqBobID6rPWsuWyhSesGRvvZsiH9A
-         +79v6YqQKBDsVviXA4z9+drqVcHSDe0hWSwyo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7HPpDZbGMNMzei0pX9Wie2HkG11xn2NGkIboTXv1pMs=;
-        b=M4qnWcKbQ17xFdf5I+Aq+oIu7YsIl9RxOf5RXv8zKnafamr5w5yUZla1W6gO5xsFnB
-         rTkVCdmQ4cVSaCgtxpHmD0BatilyWS1nNdhAKcaf79AJecr7Kukm4JFjjDcJBIQsMoDI
-         N/pld1ssdL3j4/W8gCSWll0TSSCxZbBY76C3HaHdclKC9v5QQ3hwtNxr9HrS3O6Gntfh
-         BBcIOO2MaA1IIoKr35mmmYm98QVuKnl64LSI9FzqpKVcm4/DP9k9LBAp7CMNqwdSadCF
-         43SctuRVG+0HkQhn/VdcIMdDp/Pzhnj3RpT/ABWLJ2lJ7dLqC2aGSdW5kW5bwyY3IpTo
-         9Y0Q==
-X-Gm-Message-State: APjAAAU3L5xwDYTtTQyUXgXwmFnZz710Ora42PJPQlHbzGX5HzCypxQa
-        esq6ll0Tya71iHhWiWUXfePSvg==
-X-Google-Smtp-Source: APXvYqweoX7bxY7A38/leYVBpMJSkaUgDlxuLg+gHSPQE9xAoBSFQInKPU+dD4vOdFLBmy8Ha6bjVw==
-X-Received: by 2002:a17:90a:8a0c:: with SMTP id w12mr2186440pjn.61.1580337907570;
-        Wed, 29 Jan 2020 14:45:07 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id g9sm3870602pfm.150.2020.01.29.14.45.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 14:45:07 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] arm64: dts: sc7180: Add the sleep_clk to gcc-sc7180 node
-Date:   Wed, 29 Jan 2020 14:44:42 -0800
-Message-Id: <20200129144432.1.Ie36f0532f67b0221c1e48e7cf6863a2738716a54@changeid>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+        Wed, 29 Jan 2020 17:47:21 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 2802B1C25FC; Wed, 29 Jan 2020 23:47:20 +0100 (CET)
+Date:   Wed, 29 Jan 2020 23:47:19 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>,
+        Wen Huang <huangwenabc@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 4.19 63/92] libertas: Fix two buffer overflows at parsing
+ bss descriptor
+Message-ID: <20200129224719.GA4342@amd>
+References: <20200128135809.344954797@linuxfoundation.org>
+ <20200128135817.338824312@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
+Content-Disposition: inline
+In-Reply-To: <20200128135817.338824312@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bindings say that we're supposed to have this in the node.  Who am
-I to argue with the bindings?
 
-Fixes: 90db71e48070 ("arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Hi!
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 8011c5fe2a31..4b621277744b 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -310,8 +310,9 @@ gcc: clock-controller@100000 {
- 			compatible = "qcom,gcc-sc7180";
- 			reg = <0 0x00100000 0 0x1f0000>;
- 			clocks = <&rpmhcc RPMH_CXO_CLK>,
--				 <&rpmhcc RPMH_CXO_CLK_A>;
--			clock-names = "bi_tcxo", "bi_tcxo_ao";
-+				 <&rpmhcc RPMH_CXO_CLK_A>,
-+				 <&sleep_clk>;
-+			clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
--- 
-2.25.0.341.g760bfbb309-goog
+> From: Wen Huang <huangwenabc@gmail.com>
+>=20
+> commit e5e884b42639c74b5b57dc277909915c0aefc8bb upstream.
 
+> --- a/drivers/net/wireless/marvell/libertas/cfg.c
+> +++ b/drivers/net/wireless/marvell/libertas/cfg.c
+> @@ -1717,6 +1721,9 @@ static int lbs_ibss_join_existing(struct
+>  	struct cmd_ds_802_11_ad_hoc_join cmd;
+>  	u8 preamble =3D RADIO_PREAMBLE_SHORT;
+>  	int ret =3D 0;
+> +	int hw, i;
+> +	u8 rates_max;
+> +	u8 *rates;
+> =20
+>  	/* TODO: set preamble based on scan result */
+>  	ret =3D lbs_set_radio(priv, preamble, 1);
+> @@ -1775,9 +1782,12 @@ static int lbs_ibss_join_existing(struct
+>  	if (!rates_eid) {
+>  		lbs_add_rates(cmd.bss.rates);
+>  	} else {
+> -		int hw, i;
+> -		u8 rates_max =3D rates_eid[1];
+> -		u8 *rates =3D cmd.bss.rates;
+> +		rates_max =3D rates_eid[1];
+
+I believe original version (with variables being local to the else)
+was better.
+
+> +		if (rates_max > MAX_RATES) {
+> +			lbs_deb_join("invalid rates");
+> +			goto out;
+> +		}
+> +		rates =3D cmd.bss.rates;
+
+"goto out" goes to "return ret". ret will be 0 at this point, so this
+will return success. I don't think that's right.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4yC3cACgkQMOfwapXb+vLVyACghs8u7hPnfijLNpwrwjW0IPzt
+lnwAoLHj4z9g4PWXiUk2z9YnHxQi4DUV
+=9E6d
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
