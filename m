@@ -2,104 +2,171 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C1BC33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD30FC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE6120708
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8564C2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZZvV9eMe"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="CfQzaORV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgA2HjZ (ORCPT
+        id S1726206AbgA2Hq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 02:39:25 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:15399 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726076AbgA2HjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 02:39:13 -0500
-X-UUID: 550fdfe733e94e9a88c29a40adb14693-20200129
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=RNlRrAtsmyEK+6KafSQgfCKsq/mGqkOCE3TvsRLFgBo=;
-        b=ZZvV9eMeMrNcjFbw6eg2s3+DPozptVyXWsm136eS41dmRVlHMmmfwq9izyblMjfidwkOXxiitVQmwfor7CjRstsHak+B/jvdZJWeaGdPPHHGCBXRz3E0CkZDQkQrYvCNZJLOhHdLQCxbuAk8G3yoB7WDE0D9yRYMrSrA55DydKc=;
-X-UUID: 550fdfe733e94e9a88c29a40adb14693-20200129
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 116438089; Wed, 29 Jan 2020 15:39:06 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 29 Jan 2020 15:37:44 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 29 Jan 2020 15:39:12 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <beanhuo@micron.com>
-CC:     <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v3 3/4] scsi: ufs: fix Auto-Hibern8 error detection
-Date:   Wed, 29 Jan 2020 15:39:01 +0800
-Message-ID: <20200129073902.5786-4-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200129073902.5786-1-stanley.chu@mediatek.com>
-References: <20200129073902.5786-1-stanley.chu@mediatek.com>
+        Wed, 29 Jan 2020 02:46:26 -0500
+Received: from mail-bn7nam10on2040.outbound.protection.outlook.com ([40.107.92.40]:8431
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726068AbgA2Hq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 02:46:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L2dMj8D8tXlyXnc1xvt/uVz8qvqtmosOqbecCvu09nvT/opb2vWPJrvZ4kiXobLSI0P2PFyHYnGYwyeaSVlwDaTo6bDlPcP33dFPzBNHLjksMo1EztN2oN8DnbhiNesK8njwdGfNiE8iMK3OeBjMHLd7cXBMsEn6bir2FfXCCA2KFp5kO0YYc6ZDZUpbUx/pvR90wQo20WSNOozoKy/PCjWtF/BmITimtfPNQicqY+pXkKnPKtbZkdOSduozpDcm72CU5o4l7Owp4D4sBu0E+FqZD9v+rIfPYxf0NyO/n3SA246f7nDLUgN4RG3FBp5m0CVWF9fRR+8J+rvZosB2cQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CoZdDF6284bu9kDyItPvd989wjFN46usW72yMhFdkC8=;
+ b=Vy98N5kZmpLZcCWLWy3O7AEIxIKZc1fl71ImzVftCt4qCe4Rz5ziuoR+R1kGmSDkLfvJvfzV7+vJfXtzX4xezHOKRmkUI8klDYCuAUjW0kDAkhJEYGa9Kg8tkOtCLeNqMSQlwUCx7nwcDywbZeBCJWyGLfm8iKJUu8jRk7dcnxcMeh3L9utyJwz6xcK6VWgaiBjgOgTs72I5ukd9QUd/NhevD075xOtI0gEm/rul+3f2chdgiU34idafqEogIwEsv1qpzCEaSpHqGnW4f4/rHi4ESuWnSlUrogptuShDTcqI/3h/mUq6xTyHbGb2SO9KqZAw5HMyEP0e+7S+akO+9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=xhdpunnaia40.localdomain; dmarc=none action=none
+ header.from=xilinx.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CoZdDF6284bu9kDyItPvd989wjFN46usW72yMhFdkC8=;
+ b=CfQzaORVWd8xbHnc1BcxLUNPblBbZoxb3rgANS/OSLh0rGOA7KaxNRWxM2WloHOKZgWAuxDhpPyilU2IA9eoUlmPJy2Xg7cCDzV3VfuhdXpSv881OyaumEboegwmtenTr919wh/v+3ptLRuzXDwUz0596OA/MAD2m4rv/aTDVeQ=
+Received: from BYAPR02CA0005.namprd02.prod.outlook.com (2603:10b6:a02:ee::18)
+ by BL0PR02MB6499.namprd02.prod.outlook.com (2603:10b6:208:1c5::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.22; Wed, 29 Jan
+ 2020 07:45:43 +0000
+Received: from SN1NAM02FT064.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::207) by BYAPR02CA0005.outlook.office365.com
+ (2603:10b6:a02:ee::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.13 via Frontend
+ Transport; Wed, 29 Jan 2020 07:45:43 +0000
+Authentication-Results: spf=none (sender IP is 149.199.60.83)
+ smtp.mailfrom=xhdpunnaia40.localdomain; vger.kernel.org; dkim=none (message
+ not signed) header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=xilinx.com;
+Received-SPF: None (protection.outlook.com: xhdpunnaia40.localdomain does not
+ designate permitted sender hosts)
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT064.mail.protection.outlook.com (10.152.72.143) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2665.18
+ via Frontend Transport; Wed, 29 Jan 2020 07:45:43 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <radheys@xhdpunnaia40.localdomain>)
+        id 1iwi2e-0003A3-26; Tue, 28 Jan 2020 23:45:40 -0800
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radheys@xhdpunnaia40.localdomain>)
+        id 1iwi2Y-0006jI-8Y; Tue, 28 Jan 2020 23:45:34 -0800
+Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00T7jXTW016420;
+        Tue, 28 Jan 2020 23:45:33 -0800
+Received: from [10.140.184.180] (helo=xhdpunnaia40.localdomain)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radheys@xhdpunnaia40.localdomain>)
+        id 1iwi2W-0006jE-Tu; Tue, 28 Jan 2020 23:45:33 -0800
+Received: by xhdpunnaia40.localdomain (Postfix, from userid 13245)
+        id 2293AFF8A7; Wed, 29 Jan 2020 13:15:31 +0530 (IST)
+From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To:     vkoul@kernel.org, dan.j.williams@intel.com,
+        michal.simek@xilinx.com, nick.graumann@gmail.com,
+        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
+        mcgrof@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        git@xilinx.com,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Subject: [PATCH v2 -next] dmaengine: xilinx_dma: Reset DMA channel in dma_terminate_all
+Date:   Wed, 29 Jan 2020 13:15:09 +0530
+Message-Id: <1580283909-32678-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--1.115-7.0-31-1
+X-imss-scan-details: No--1.115-7.0-31-1;No--1.115-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(376002)(136003)(428003)(249900001)(189003)(199004)(316002)(5660300002)(42186006)(107886003)(4326008)(8936002)(8676002)(81166006)(450100002)(6266002)(81156014)(82310400001)(2906002)(498600001)(36756003)(42882007)(356004)(70206006)(336012)(70586007)(2616005)(26005)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB6499;H:xsj-pvapsmtpgw01;FPR:;SPF:None;LANG:en;PTR:unknown-60-83.xilinx.com;MX:0;A:0;
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7ef309a5-d31b-40cc-1e78-08d7a48f3e68
+X-MS-TrafficTypeDiagnostic: BL0PR02MB6499:
+X-Microsoft-Antispam-PRVS: <BL0PR02MB6499A3218A9CD4D9297B2E01D5050@BL0PR02MB6499.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:651;
+X-Forefront-PRVS: 02973C87BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: RHc4MeN+D0IX9ppYXsp/UvFRUix7ZIFuIIAh1oXLYYNSdMJwLckvbdWhJgN+/Wyy4bQ3E6d5Mph3TGbRvrUs5eyNjFiI/TpRZDc+Q6Wbw0Fx3Ta3gfYFTdgqs+zF5zCOLE/MZainR/2gScsPe0DEF+7wnVGKuKBMeMNzkYu95czDX40dy3by/uZuQG2hZ0yu6nEy7d60LvYmGSDGcLHYMsj454wG5An1QeFGga3OMm0463rvZp7GoFVF8J6TxAeEkwu14LeYCxetXv+VQQl3GxeCzxipR9aU/KsM1LYSxh4jKCDjwtt0CJKJP7iIBrDHKXqe4fFprIXYu8Wqz8XjsJbBfZP/TvL1m+iqLGmBet960BDywEk426kempckDs/wFQ4/91oJb9mLgnlfxQVq3BUANR8vQPFWPKVUYmiqzeBRVkotWhx0G+TveBpeQ5oT
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2020 07:45:43.0083
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ef309a5-d31b-40cc-1e78-08d7a48f3e68
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB6499
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QXV0by1IaWJlcm44IG1heSBiZSBkaXNhYmxlZCBieSBzb21lIHZlbmRvcnMgb3Igc3lzZnMNCmlu
-IHJ1bnRpbWUgZXZlbiBpZiBBdXRvLUhpYmVybjggY2FwYWJpbGl0eSBpcyBzdXBwb3J0ZWQNCmJ5
-IGhvc3QuIElmIEF1dG8tSGliZXJuOCBjYXBhYmlsaXR5IGlzIHN1cHBvcnRlZCBieSBob3N0DQpi
-dXQgbm90IGFjdHVhbGx5IGVuYWJsZWQsIEF1dG8tSGliZXJuOCBlcnJvciBzaGFsbCBub3QgaGFw
-cGVuLg0KDQpUbyBmaXggdGhpcywgcHJvdmlkZSBhIHdheSB0byBkZXRlY3QgaWYgQXV0by1IaWJl
-cm44IGlzDQphY3R1YWxseSBlbmFibGVkIGZpcnN0LCBhbmQgYnlwYXNzIEF1dG8tSGliZXJuOCBk
-aXNhYmxpbmcNCmNhc2UgaW4gdWZzaGNkX2lzX2F1dG9faGliZXJuOF9lcnJvcigpLg0KDQpGaXhl
-czogODIxNzQ0NCAoInNjc2k6IHVmczogQWRkIGVycm9yLWhhbmRsaW5nIG9mIEF1dG8tSGliZXJu
-YXRlIikNCkNjOiBzdGFibGVAdmdlci5rZXJuZWwub3JnDQpTaWduZWQtb2ZmLWJ5OiBTdGFubGV5
-IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KUmV2aWV3ZWQtYnk6IEJlYW4gSHVvIDxi
-ZWFuaHVvQG1pY3Jvbi5jb20+DQotLS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIHwgMyAr
-Ky0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5oIHwgNiArKysrKysNCiAyIGZpbGVzIGNoYW5n
-ZWQsIDggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9zY3NpL3Vmcy91ZnNoY2QuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCmluZGV4IGFi
-ZDBlNmIwNWY3OS4uMjE0YTNmMzczZGQ4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91
-ZnNoY2QuYw0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KQEAgLTU0NzksNyArNTQ3
-OSw4IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCB1ZnNoY2RfdXBkYXRlX3VpY19lcnJvcihzdHJ1Y3Qg
-dWZzX2hiYSAqaGJhKQ0KIHN0YXRpYyBib29sIHVmc2hjZF9pc19hdXRvX2hpYmVybjhfZXJyb3Io
-c3RydWN0IHVmc19oYmEgKmhiYSwNCiAJCQkJCSB1MzIgaW50cl9tYXNrKQ0KIHsNCi0JaWYgKCF1
-ZnNoY2RfaXNfYXV0b19oaWJlcm44X3N1cHBvcnRlZChoYmEpKQ0KKwlpZiAoIXVmc2hjZF9pc19h
-dXRvX2hpYmVybjhfc3VwcG9ydGVkKGhiYSkgfHwNCisJICAgICF1ZnNoY2RfaXNfYXV0b19oaWJl
-cm44X2VuYWJsZWQoaGJhKSkNCiAJCXJldHVybiBmYWxzZTsNCiANCiAJaWYgKCEoaW50cl9tYXNr
-ICYgVUZTSENEX1VJQ19ISUJFUk44X01BU0spKQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91
-ZnMvdWZzaGNkLmggYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5oDQppbmRleCAyYWU2YzdjODUy
-OGMuLjgxYzcxYTNlMzQ3NCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgN
-CisrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgNCkBAIC01NSw2ICs1NSw3IEBADQogI2lu
-Y2x1ZGUgPGxpbnV4L2Nsay5oPg0KICNpbmNsdWRlIDxsaW51eC9jb21wbGV0aW9uLmg+DQogI2lu
-Y2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KKyNpbmNsdWRlIDxsaW51eC9iaXRm
-aWVsZC5oPg0KICNpbmNsdWRlICJ1bmlwcm8uaCINCiANCiAjaW5jbHVkZSA8YXNtL2lycS5oPg0K
-QEAgLTc3Myw2ICs3NzQsMTEgQEAgc3RhdGljIGlubGluZSBib29sIHVmc2hjZF9pc19hdXRvX2hp
-YmVybjhfc3VwcG9ydGVkKHN0cnVjdCB1ZnNfaGJhICpoYmEpDQogCXJldHVybiAoaGJhLT5jYXBh
-YmlsaXRpZXMgJiBNQVNLX0FVVE9fSElCRVJOOF9TVVBQT1JUKTsNCiB9DQogDQorc3RhdGljIGlu
-bGluZSBib29sIHVmc2hjZF9pc19hdXRvX2hpYmVybjhfZW5hYmxlZChzdHJ1Y3QgdWZzX2hiYSAq
-aGJhKQ0KK3sNCisJcmV0dXJuIEZJRUxEX0dFVChVRlNIQ0lfQUhJQkVSTjhfVElNRVJfTUFTSywg
-aGJhLT5haGl0KSA/IHRydWUgOiBmYWxzZTsNCit9DQorDQogI2RlZmluZSB1ZnNoY2Rfd3JpdGVs
-KGhiYSwgdmFsLCByZWcpCVwNCiAJd3JpdGVsKCh2YWwpLCAoaGJhKS0+bW1pb19iYXNlICsgKHJl
-ZykpDQogI2RlZmluZSB1ZnNoY2RfcmVhZGwoaGJhLCByZWcpCVwNCi0tIA0KMi4xOC4wDQo=
+Reset DMA channel after stop to ensure that pending transfers and FIFOs
+in the datapath are flushed or completed. It also cleanup the terminate
+path and removes stop for the cyclic mode as after the reset stop is not
+required. This fixes intermittent data verification failure when xilinx
+dma test the client is stressed and loaded/unloaded multiple times.
+
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+---
+Changes for v2:
+Modified commit description to add failure description and explain why
+stop is removed for cyclic mode.
+---
+ drivers/dma/xilinx/xilinx_dma.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index a9c5d5cc9f2b..6f1539cad1ee 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -2404,16 +2404,17 @@ static int xilinx_dma_terminate_all(struct dma_chan *dchan)
+ 	u32 reg;
+ 	int err;
+ 
+-	if (chan->cyclic)
+-		xilinx_dma_chan_reset(chan);
+-
+-	err = chan->stop_transfer(chan);
+-	if (err) {
+-		dev_err(chan->dev, "Cannot stop channel %p: %x\n",
+-			chan, dma_ctrl_read(chan, XILINX_DMA_REG_DMASR));
+-		chan->err = true;
++	if (!chan->cyclic) {
++		err = chan->stop_transfer(chan);
++		if (err) {
++			dev_err(chan->dev, "Cannot stop channel %p: %x\n",
++				chan, dma_ctrl_read(chan,
++				XILINX_DMA_REG_DMASR));
++			chan->err = true;
++		}
+ 	}
+ 
++	xilinx_dma_chan_reset(chan);
+ 	/* Remove and free all of the descriptors in the lists */
+ 	xilinx_dma_free_descriptors(chan);
+ 	chan->idle = true;
+-- 
+2.22.0
 
