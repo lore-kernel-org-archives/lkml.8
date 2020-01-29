@@ -2,270 +2,128 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B32BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 20:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0000DC33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 20:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E92206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 20:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C825720732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 20:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qagYbN+L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6HglhEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbgA2UPu (ORCPT
+        id S1727112AbgA2UUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 15:15:50 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41622 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbgA2UPu (ORCPT
+        Wed, 29 Jan 2020 15:20:00 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37600 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbgA2UT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 15:15:50 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x8so363300pgk.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 12:15:49 -0800 (PST)
+        Wed, 29 Jan 2020 15:19:59 -0500
+Received: by mail-lj1-f195.google.com with SMTP id v17so804373ljg.4;
+        Wed, 29 Jan 2020 12:19:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xUYJpOBIHFT2Q+fbwYwCce8J1hD/zrDr2WkofLApH0M=;
-        b=qagYbN+Lmcm1+NIrT2EoYkbq6Law+pIXujyl5Q4o/Ek5a/F4ymxJZn6re8z2qHr1B6
-         pol5R9hEoDKdtU3BpIVFgvarKP3eAagbF2dcWuwCr1Z5N4uCcRRiGnp0pilC0phNDc3Z
-         Pg1rUUbhcBZ+J538vgIoDhFsQo/IsiYBfhGl2ZfeFl9Y/gdZJtBx2cbw6JZ0YEOoKRyQ
-         iDs+/KJ5FaeM/gkUwNR/wUb50fBJEYfO9R8ncccFI04gk8Qmst9cMP1v8bS+JkYVbp8T
-         GNMTOCx5Oba595Otov+HLqHYjfzbzM0wAKVMdsHgld4wxNPfXlFre6P+EIE349bx4Dm2
-         Z8bQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cBAvgEILNC/DpIEeIO9O9bZop1LPit11TI5TK6r2sd0=;
+        b=f6HglhEYBtGlI+1MJLA1H4Vfw050nUY3c/mP1sFKr8Wb9XRxK7dw1/gnSfQDg06rRT
+         0t8ti8HFq9tZ3Jx3f/U1S+AUYfBV98K2Vf5Tjm9hW+c23UxJNS76DfzgOyoNHuvGx+zN
+         sXZWQY857pdIbKJ3bDqFr7UmhBFUETm66k9viw7YDkQ7/BuPNp+720SCEP1STs2CDdko
+         Ubjko+gAGEcIcIKdQdA3I6wNiIpQPIq/tdqPgKS03xo+OvvCVKoEETeJEHbByswy7sid
+         mK/nuxs14s0PqRbndIF4OxzPgDBL8JMwoqSQpFOLGhlaz/k0PLpe9/UAWs48Rq3olRho
+         dzPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xUYJpOBIHFT2Q+fbwYwCce8J1hD/zrDr2WkofLApH0M=;
-        b=N4d92EawJPNAUriKSw26S7TpYTAFHpa7d54HsqEdv4A9sQNvjdIMdM1xHYphr15meh
-         dEYqwZy50I/Gzxv7+vo1yu/F+CQqRBdrH1c8TFUKhTL3NdiUxEwEphldc8C9EVfc8dfh
-         +KplaxWMFavGIoPdFzUx+VangxFVSvdn+pU0655U9Zh77IF1BuWrHLp5ehILujewoou0
-         3dXZjE2lC8HB3zaqY7K3CJpYKnX01LZw4RRogQk+1c6OrsQ1v7xAddly26qn1GjP4s/I
-         6n5wkvXb7r3BeX8MdWQ6YcBv6D08xgTwdVLd4kcCnYihMKzliNS5Gcq5DEfz8wSWks/i
-         8/6A==
-X-Gm-Message-State: APjAAAUb0bPxM+8s1g6kq3LWTDFqBXmec0SIs2D4QE+rNvvGnkQCPwJq
-        EFA8QyzZm+6VQeLCXXonaVsiEQ==
-X-Google-Smtp-Source: APXvYqxkNYdrqBjmKBuCZmexGAW7j9RetTp4CexeM96VLdc5AcLaNv/SCk8ghWnuihsSYVLW/Ii4zw==
-X-Received: by 2002:a63:454a:: with SMTP id u10mr884844pgk.248.1580328949182;
-        Wed, 29 Jan 2020 12:15:49 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u13sm3474995pjn.29.2020.01.29.12.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 12:15:48 -0800 (PST)
-Date:   Wed, 29 Jan 2020 13:15:46 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: Re: [PATCH v2 7/8] remoteproc: qcom: q6v5: Add common panic handler
-Message-ID: <20200129201546.GA31696@xps15>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-8-bjorn.andersson@linaro.org>
- <20200110212806.GD11555@xps15>
- <20200122193936.GB3261042@ripper>
- <CANLsYkx-C9U4W3R3Xo6t3BJBM4UK_i3zuwzhnXMMEQ0-ur+8Kg@mail.gmail.com>
- <20200123171524.GV1511@yoga>
- <8d92c4b5-4238-23d2-50fc-1a5bdfc2c67b@st.com>
- <CANLsYkyhGjrxGiYqtCijwQiMOnvGdpXNKJ0XpxXsFYe=XEY0ZQ@mail.gmail.com>
- <d1f632b2-dff3-401d-f8f5-2d41d1589c79@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cBAvgEILNC/DpIEeIO9O9bZop1LPit11TI5TK6r2sd0=;
+        b=bHhIm1111hndF0w9rruS6EnEivohnUZvTeCSxsD8zwZwSNgLhW6BQto0MaiQ8byycr
+         iHSUkSDGIBogOz8ZHCsa2+Jyf2bMD/y6oih/lsiXG+yxg4BOxaGqPlkq1zAWuPqWItEQ
+         kY/TrNPVvGV6/DUciY0iHmGaqrDU/6ez+HgaaKsCrWjlC3Q9efcJKKuLAol/iybaLX0+
+         Rql1ObyB1LbTNIej7aLRAK0f0mcCYB/iO+q1pff9+L2BbRzK71vAzZxSSrLfvXFeN57K
+         wKYpLGNGm/vjWv2NbwdIg5Ny8hjY5/vz0mj6komZCB/rRr+UmA/uh6ERV7D5vIiDpcIx
+         5Pcw==
+X-Gm-Message-State: APjAAAXUWBg2U7dvXmC06qGW9bCKCW4NCydF7ya+RhUtfCZ8zkO4ML6i
+        g8ixfSPGUsytqJK6JLcnKnifNiQwYXSXm+zoJ1U=
+X-Google-Smtp-Source: APXvYqzuA9WbX+X2q0ILY1NfmpmvLlSyBrUHhpaWuevXJtsv/YP7zNE3FxI6k3UU76WiAjiLa4NEUjWGR9uylY0tU6c=
+X-Received: by 2002:a2e:5056:: with SMTP id v22mr557613ljd.164.1580329196994;
+ Wed, 29 Jan 2020 12:19:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1f632b2-dff3-401d-f8f5-2d41d1589c79@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
+In-Reply-To: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 29 Jan 2020 17:19:45 -0300
+Message-ID: <CAOMZO5AFJvEdWNSsnsRW70_M6rzyvO4ip3zJHET2Gc2Wzj5RPQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: imx-sdma: fix context cache
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc:     dmaengine@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 10:46:05AM +0100, Arnaud POULIQUEN wrote:
-> 
-> 
-> On 1/24/20 7:44 PM, Mathieu Poirier wrote:
-> > On Thu, 23 Jan 2020 at 10:49, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
-> >>
-> >> Hi Bjorn, Mathieu
-> >>
-> >> On 1/23/20 6:15 PM, Bjorn Andersson wrote:
-> >>> On Thu 23 Jan 09:01 PST 2020, Mathieu Poirier wrote:
-> >>>
-> >>>> On Wed, 22 Jan 2020 at 12:40, Bjorn Andersson
-> >>>> <bjorn.andersson@linaro.org> wrote:
-> >>>>>
-> >>>>> On Fri 10 Jan 13:28 PST 2020, Mathieu Poirier wrote:
-> >>>>>
-> >>>>>> On Thu, Dec 26, 2019 at 09:32:14PM -0800, Bjorn Andersson wrote:
-> >>>>>>> Add a common panic handler that invokes a stop request and sleep enough
-> >>>>>>> to let the remoteproc flush it's caches etc in order to aid post mortem
-> >>>>>>> debugging.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >>>>>>> ---
-> >>>>>>>
-> >>>>>>> Changes since v1:
-> >>>>>>> - None
-> >>>>>>>
-> >>>>>>>  drivers/remoteproc/qcom_q6v5.c | 19 +++++++++++++++++++
-> >>>>>>>  drivers/remoteproc/qcom_q6v5.h |  1 +
-> >>>>>>>  2 files changed, 20 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
-> >>>>>>> index cb0f4a0be032..17167c980e02 100644
-> >>>>>>> --- a/drivers/remoteproc/qcom_q6v5.c
-> >>>>>>> +++ b/drivers/remoteproc/qcom_q6v5.c
-> >>>>>>> @@ -6,6 +6,7 @@
-> >>>>>>>   * Copyright (C) 2014 Sony Mobile Communications AB
-> >>>>>>>   * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-> >>>>>>>   */
-> >>>>>>> +#include <linux/delay.h>
-> >>>>>>>  #include <linux/kernel.h>
-> >>>>>>>  #include <linux/platform_device.h>
-> >>>>>>>  #include <linux/interrupt.h>
-> >>>>>>> @@ -15,6 +16,8 @@
-> >>>>>>>  #include <linux/remoteproc.h>
-> >>>>>>>  #include "qcom_q6v5.h"
-> >>>>>>>
-> >>>>>>> +#define Q6V5_PANIC_DELAY_MS        200
-> >>>>>>> +
-> >>>>>>>  /**
-> >>>>>>>   * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
-> >>>>>>>   * @q6v5:  reference to qcom_q6v5 context to be reinitialized
-> >>>>>>> @@ -162,6 +165,22 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
-> >>>>>>>  }
-> >>>>>>>  EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
-> >>>>>>>
-> >>>>>>> +/**
-> >>>>>>> + * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
-> >>>>>>> + * @q6v5:  reference to qcom_q6v5 context
-> >>>>>>> + *
-> >>>>>>> + * Set the stop bit and sleep in order to allow the remote processor to flush
-> >>>>>>> + * its caches etc for post mortem debugging.
-> >>>>>>> + */
-> >>>>>>> +void qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
-> >>>>>>> +{
-> >>>>>>> +   qcom_smem_state_update_bits(q6v5->state,
-> >>>>>>> +                               BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
-> >>>>>>> +
-> >>>>>>> +   mdelay(Q6V5_PANIC_DELAY_MS);
-> >>>>>>
-> >>>>>> I really wonder if the delay should be part of the remoteproc core and
-> >>>>>> configurable via device tree.  Wanting the remote processor to flush its caches
-> >>>>>> is likely something other vendors will want when dealing with a kernel panic.
-> >>>>>> It would be nice to see if other people have an opinion on this topic.  If not
-> >>>>>> then we can keep the delay here and move it to the core if need be.
-> >>>>>>
-> >>>>>
-> >>>>> I gave this some more thought and what we're trying to achieve is to
-> >>>>> signal the remote processors about the panic and then give them time to
-> >>>>> react, but per the proposal (and Qualcomm downstream iirc) we will do
-> >>>>> this for each remote processor, one by one.
-> >>>>>
-> >>>>> So in the typical case of a Qualcomm platform with 4-5 remoteprocs we'll
-> >>>>> end up giving the first one a whole second to react and the last one
-> >>>>> "only" 200ms.
-> >>>>>
-> >>>>> Moving the delay to the core by iterating over rproc_list calling
-> >>>>> panic() and then delaying would be cleaner imo.
-> >>>>
-> >>>> I agree.
-> >>>>
-> >>>>>
-> >>>>> It might be nice to make this configurable in DT, but I agree that it
-> >>>>> would be nice to hear from others if this would be useful.
-> >>>>
-> >>>> I think the delay has to be configurable via DT if we move this to the
-> >>>> core.  The binding can be optional and default to 200ms if not
-> >>>> present.
-> >>>>
-> >>>
-> >>> How about I make the panic() return the required delay and then we let
-> >>> the core sleep for MAX() of the returned durations?
-> > 
-> > I like it.
-> > 
-> >> That way the default
-> >>> is still a property of the remoteproc drivers - and 200ms seems rather
-> >>> arbitrary to put in the core, even as a default.
-> >>
-> >> I agree with Bjorn, the delay should be provided by the platform.
-> >> But in this case i wonder if it is simpler to just let the platform take care it?
-> > 
-> > If I understand you correctly, that is what Bjorn's original
-> > implementation was doing and it had drawbacks.
-> Yes, 
-> Please tell me if i missed something, the only drawback seems mentioned is the accumulative delay.
+Hi Martin,
 
-Yes, that is correct.
+Thanks for the fix.
 
-> Could you elaborate how to implement the delay in remote proc core for multi rproc instance.
-> Here is my view:
-> To optimize the delay it would probably be necessary to compute:
-> - the delay based on an initial date,
-> - the delay requested by each rproc instance,
-> - the delay elapsed in each rproc panic ops.
-> Feasible but not straight forward... 
-> So I suppose that you are thinking about a solution based on the store of the max delay that would be applied after last panic() return?
+On Wed, Jan 29, 2020 at 10:41 AM Martin Fuzzey
+<martin.fuzzey@flowbird.group> wrote:
+>
+> There is a DMA problem with the serial ports on i.MX6.
+>
+> When the following sequence is performed:
+>
+> 1) Open a port
+> 2) Write some data
+> 3) Close the port
+> 4) Open a *different* port
+> 5) Write some data
+> 6) Close the port
+>
+> The second write sends nothing and the second close hangs.
+> If the first close() is omitted it works.
+>
+> Adding logs to the the UART driver shows that the DMA is being setup but
+> the callback is never invoked for the second write.
+>
+> This used to work in 4.19.
+>
+> Git bisect leads to:
+>         ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
+>
+> This commit adds a "context_loaded" flag used to avoid unnecessary context
+> setups.
+> However the flag is only reset in sdma_channel_terminate_work(),
+> which is only invoked in a worker triggered by sdma_terminate_all() IF
+> there is an active descriptor.
+>
+> So, if no active descriptor remains when the channel is terminated, the
+> flag is not reset and, when the channel is later reused the old context
+> is used.
+>
+> Fix the problem by always resetting the flag in sdma_free_chan_resources().
+>
+> Fixes: ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
 
-Yes
+Nit: in the Fixes tag we use 12 digits for the commit ID and the
+Subject is enclosed by parenthesis.
 
-> anyway, how do you determine the last rproc instance? seems that a prerequisite would be that the panic ops is mandatory... 
+The preferred format would be:
 
-Each ->panic() should return the amount of time to way or 0 if no delay is
-required.  If an rpoc doesn't implement ->panic() then it is treated as 0.
-From there wait for the maximum time that was collected.
+Fixes: ad0d92d7ba6a ("dmaengine: imx-sdma: refine to load context only once")
 
-It would be possible to do something more complicated like taking timestamps
-everytime a ->panic() returns and optimize the time to wait for but that may be
-for a future set.  The first implementation could go with an simple heuristic as
-detailed above.
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-> 
-> I'm not familiar with panic mechanism, but how panic ops are scheduled in SMP? Does panics ops would be treated in parallel (using msleep instead of mdelay)?
-> In this case delays could not be cumulative...
-
-The processor that triggered the panic sequentially runs the notifier registered
-with the panic_notifier_list.  Other processors are instructed to take
-themselves offline.  As such there won't be multiple ->panic() running
-concurrently. 
-
-> 
-> > 
-> >> For instance for stm32mp1 the stop corresponds to the reset on the remote processor core. To inform the coprocessor about an imminent shutdown we use a signal relying on a mailbox (cf. stm32_rproc_stop).
-> >> In this case we would need a delay between the signal and the reset, but not after (no cache management).
-> > 
-> > Here I believe you are referring to the upper limit of 500ms that is
-> > needed for the mbox_send_message() in stm32_rproc_stop() to complete.
-> > Since that is a blocking call I think it would fit with Bjorn's
-> > proposal above if a value of '0' is returned by rproc->ops->panic().
-> > That would mean no further delays are needed (because the blocking
-> > mbox_send_message() would have done the job already).  Let me know if
-> > I'm in the weeds.
-> Yes you are :), this is what i thought, if delay implemented in core.
-
-Not sure I understand your last reply but I _think_ we are saying the same
-thing.
-
-> 
-> Regards,
-> Arnaud
-> 
-> > 
-> >>
-> >> Regards,
-> >> Arnaud
-> >>>
-> >>> Regards,
-> >>> Bjorn
-> >>>
+Thanks
