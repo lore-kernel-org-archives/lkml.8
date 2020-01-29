@@ -2,73 +2,122 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0765C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B7BC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06A42082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2466720678
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgA2XQm (ORCPT
+        id S1726932AbgA2XUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:16:42 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52018 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgA2XQm (ORCPT
+        Wed, 29 Jan 2020 18:20:17 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41152 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726648AbgA2XUR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 18:16:42 -0500
-Received: from 51.26-246-81.adsl-static.isp.belgacom.be ([81.246.26.51] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iwwZV-0007Ms-KU; Thu, 30 Jan 2020 00:16:34 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 26CA7105CFD; Thu, 30 Jan 2020 00:16:28 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        x86@kernel.org, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
-In-Reply-To: <CAE=gft7mLAU3G+f8gi_etRSpUijoCh7_6ni9Ob2JqjW7Q1n3yQ@mail.gmail.com>
-References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com> <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com> <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de> <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com> <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com> <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com> <87d0b82a9o.fsf@nanos.tec.linutronix.de> <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com> <878slwmpu9.fsf@nanos.tec.linutronix.de> <87imkv63yf.fsf@nanos.tec.linutronix.de> <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com> <87pnf342pr.fsf@nanos.tec.linutronix.de> <CAE=gft69hQcbmT46b1T8eLdPFyb9Pp-sDYd5JfPsZ2JWL4PXqQ@mail.gmail.com> <877e1a2d11.fsf@nanos.tec.linutronix.de> <CAE=gft7mLAU3G+f8gi_etRSpUijoCh7_6ni9Ob2JqjW7Q1n3yQ@mail.gmail.com>
-Date:   Thu, 30 Jan 2020 00:16:28 +0100
-Message-ID: <874kwd3lbn.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Wed, 29 Jan 2020 18:20:17 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TNK6Yc115604
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 18:20:16 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xu5qbkxkv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 18:20:15 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 29 Jan 2020 23:20:13 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 29 Jan 2020 23:20:09 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00TNK8ch51838980
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jan 2020 23:20:08 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B12B14204B;
+        Wed, 29 Jan 2020 23:20:08 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D805742042;
+        Wed, 29 Jan 2020 23:20:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.138.224])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Jan 2020 23:20:07 +0000 (GMT)
+Subject: Re: [PATCH 2/2] ima: support calculating the boot_aggregate based
+ on different TPM banks
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Wed, 29 Jan 2020 18:20:07 -0500
+In-Reply-To: <1580226042.5088.90.camel@linux.ibm.com>
+References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+         <1580140919-6127-2-git-send-email-zohar@linux.ibm.com>
+         <465015d0c9ca4e278ed32f78eb3eb4a4@huawei.com>
+         <1580226042.5088.90.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012923-0012-0000-0000-00000381E127
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012923-0013-0000-0000-000021BE39D1
+Message-Id: <1580340007.4790.31.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-29_07:2020-01-28,2020-01-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ adultscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 clxscore=1015 bulkscore=0 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001290179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Evan,
+On Tue, 2020-01-28 at 10:40 -0500, Mimi Zohar wrote:
+> > This code assumes that the algorithm used to calculate boot_aggregate and
+> > the algorithm of the PCR bank can be different. I don't know if it is possible to
+> > communicate to the verifier which bank has been selected (it depends on
+> > the local configuration).
+> 
+> Agreed, but defaulting to the first bank would only happen if the IMA
+> default hash algorithm is not a configured TPM algorithm.
+> 
+> > 
+> > In my opinion the safest approach would be to use the same algorithm for the
+> > digest and the PCR bank. If you agree to this, then the code above must be
+> > moved to ima_calc_boot_aggregate() so that the algorithm of the selected
+> > PCR bank can be passed to ima_alloc_tfm().
+> 
+> Using the same hash algorithm, preferably the IMA hash default
+> algorithm, for reading the TPM PCR bank and calculating the
+> boot_aggregate makes sense.
+> 
+> > 
+> > The selected PCR bank might be not the first, if the algorithm is unknown to
+> > the crypto subsystem.
+> 
+> It sounds like you're suggesting finding a common configured hash
+> algorithm between the TPM and the kernel. 
 
-Evan Green <evgreen@chromium.org> writes:
-> On Wed, Jan 29, 2020 at 1:01 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
->> Could you please add some instrumentation to see how often this stuff
->> actually triggers spurious interrupts?
->
-> In about 10 minutes of this script running, I got 142 hits. My script
-> can toggle the HT cpus on and off about twice per second.
-> Here's my diff (sorry it's mangled by gmail). If you're looking for
-> something else, let me know, or I can run a patch.
->
-No, that's good data. Your testing is hiting the critical path and as
-you did not complain about negative side effects it seems to hold up to
-the expectations. I'm going to convert this to real patch with a
-proper changelog tomorrow.
+I'd like to clarify the logic for the case when a common algorithm
+does not exist.  None of the TPM allocated banks are known by the
+kernel.  If the hash algorithm of the boot_aggregate represents not
+only that of the digest included in the measurement list, but also of
+the TPM PCR bank read, what should happen?  Should the boot aggregate
+be 0's, like in the case when there isn't a TPM?
 
-Thanks for your help!
+thanks,
 
-       tglx
-
+Mimi
 
