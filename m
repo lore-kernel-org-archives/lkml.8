@@ -6,65 +6,67 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE1AC3F68F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E3AC47409
 	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D3A2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4404A206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580340915;
-	bh=K6TRPGvOjdtaQ8i5m+wxoXfKwpgVTDkn5LNBnjJbi8o=;
+	s=default; t=1580340916;
+	bh=CRHoM1bttD5ePrzojwwnwIxVos1znwcMOdr2HLYJqvs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=U3jCBNlwFWe7otgb5c3zgtcMFl5FvtAqR11O1Y+Itq5ZAHsFug8lKGCDcx4RYkloj
-	 UdwgGb+PqehUKeEe7tkRY0fBwpoH4QsWaXbLdKR0iPlfoVPfN0pgNIIeygXt1KWrHR
-	 bcTkiscIab7tI0urA3srkKgKK+Hg6ECIuWTUvw4g=
+	b=YzUNqeXa7U6SQiBPT6LUnKgw25qi9Ah4tmU1oLN9JT8bZ9IKpOCcL9PfmxZoLNjcv
+	 86dONzfjmwf1kg4wSOwp9p3OlvL4NjpQNZSCcABHAluyfQljWKbRns2xYUnz+WQ+di
+	 L/6JXGNhelqgmea07NabFHzoP5bbHC0YRk9vvjKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgA2XfJ (ORCPT
+        id S1727205AbgA2XfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:35:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56412 "EHLO mail.kernel.org"
+        Wed, 29 Jan 2020 18:35:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbgA2XfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 18:35:08 -0500
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.6-rc1
+        id S1726949AbgA2XfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 18:35:10 -0500
+Subject: Re: [GIT PULL] Kselftest kunit update for Linux 5.6-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580340908;
-        bh=K6TRPGvOjdtaQ8i5m+wxoXfKwpgVTDkn5LNBnjJbi8o=;
+        s=default; t=1580340909;
+        bh=CRHoM1bttD5ePrzojwwnwIxVos1znwcMOdr2HLYJqvs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=JsGZH4sVBaO9yJZ/dGo8AtjONxWKnesTGrfIQjhtjyFctkdkGDn7SBqi2rLcCI1dl
-         SsIgwo+MYPnd8IOfeeOCwS/OwC8BLxDPj8FJdXclvNCr7q6Ft+M5X5OKFTaKv76Tw9
-         besncl6boDC5vR4UEi1pqViyH1/Dibf+QHhlNPE0=
+        b=WsNsb4KsMf5XGWBAUWSlwuuD/DCQT0mRrMrUnc8v5ha8wZ4Ix5s32BFZ2y+aYIMLy
+         HL5YyE8L5fHjbHIGz3cy4FtYWGbqdTwDZ8JD5yiVg9tZCWDUMAj5lmfafl5w1hl6Qn
+         EDwauioEIJeo13vwNL3y/iuNLUTlo2ZNJFP9oww0=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <7ecbedec-d72c-62cb-3fd4-192910a8043d@linuxfoundation.org>
-References: <7ecbedec-d72c-62cb-3fd4-192910a8043d@linuxfoundation.org>
+In-Reply-To: <5d0a37f1-f857-eadf-5e20-872ca6c7f656@linuxfoundation.org>
+References: <5d0a37f1-f857-eadf-5e20-872ca6c7f656@linuxfoundation.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <7ecbedec-d72c-62cb-3fd4-192910a8043d@linuxfoundation.org>
+X-PR-Tracked-Message-Id: <5d0a37f1-f857-eadf-5e20-872ca6c7f656@linuxfoundation.org>
 X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
- tags/linux-kselftest-5.6-rc1
-X-PR-Tracked-Commit-Id: af4ddd607dff7aabd466a4a878e01b9f592a75ab
+ tags/linux-kselftest-5.6-rc1-kunit
+X-PR-Tracked-Commit-Id: 35c57fc3f8eac81b38664a0fe160e267b908d8b8
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ce7ae9d9fe4391413db680ce0732da2144b6f4a3
-Message-Id: <158034090845.30341.12650320254178497764.pr-tracker-bot@kernel.org>
-Date:   Wed, 29 Jan 2020 23:35:08 +0000
+X-PR-Merge-Commit-Id: 08a3ef8f6b0b1341c670caba35f782c9a452d488
+Message-Id: <158034090976.30341.6706812193591598185.pr-tracker-bot@kernel.org>
+Date:   Wed, 29 Jan 2020 23:35:09 +0000
 To:     Shuah Khan <skhan@linuxfoundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Shuah Khan <skhan@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:KERNEL SELFTEST FRAMEWORK" 
         <linux-kselftest@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
+        Mike Salvatore <mike.salvatore@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 29 Jan 2020 08:44:48 -0700:
+The pull request you sent on Wed, 29 Jan 2020 11:48:07 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux-kselftest-5.6-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux-kselftest-5.6-rc1-kunit
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ce7ae9d9fe4391413db680ce0732da2144b6f4a3
+https://git.kernel.org/torvalds/c/08a3ef8f6b0b1341c670caba35f782c9a452d488
 
 Thank you!
 
