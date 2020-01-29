@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0334C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A926C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4012465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AA42465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580258106;
-	bh=xWWd5rEbjjjyeFf0u3NTd3WBfnVaXrDrvpwqkK0g5ng=;
+	s=default; t=1580258111;
+	bh=DzmX5EuthMgnn/vw++nrliqEikrreBcsDg6sQ2pof0U=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=REe5nRr1K0Kv+Oc/uL/OhAEkkYOOhwn565YpQNP0ekc7WNgYPzEz1X7OBX5gX6MGa
-	 5hb//3E4a4io1Lto4SdPVxVyiF4pU5zWkuzK3TdX+GwapFB2i/Ji0Vn1buaRhN9hqo
-	 4T0ufll2Kd9cAFYAxpUX8/6nRfGKFFweSjdoYY2Q=
+	b=bK0YfFvgHu1PteydklKAu5F59oefRbfIsJayKbVo9Ccmt9DI9VpxfVNRVVQBfCoS9
+	 o1rkGm2LQ5hrE0NGUYOPlEztLYBYQtU1m3yihWYe9/KIZyqGsmzBm3d/veNqnV8THw
+	 1frG80GNmQvwHx/HVgB9mNkJhaWEogo30dg5FTzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgA2AfF (ORCPT
+        id S1728453AbgA2AfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 19:35:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56998 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 19:35:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728350AbgA2AfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728363AbgA2AfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jan 2020 19:35:05 -0500
-Subject: Re: [GIT PULL] sound updates for 5.6-rc1
+Subject: Re: [GIT PULL] Thermal for v5.6-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580258104;
-        bh=xWWd5rEbjjjyeFf0u3NTd3WBfnVaXrDrvpwqkK0g5ng=;
+        s=default; t=1580258105;
+        bh=DzmX5EuthMgnn/vw++nrliqEikrreBcsDg6sQ2pof0U=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=uxECoyM+OuE8dmRBnv/oZgNKekGt8JMuVgbGH8uDQOU5tlgWc40VsmlEzSAUVOA+Z
-         dKlnQjgvqIa8evj9PoaVyoXCf4SeeHQsbFQjJ4+VAz+oJDuA4IA5CHOtFAY14TtcS5
-         /0PL0kR608pQQo9P9dGVHmQlJx4DN/NgaxI5lveM=
+        b=ob0s0l8iVfyMa2LJL1JpgRtF8XSYvuBBCMCGSzZuYA+s9+ZrDINmyvfv1EtBkFeoQ
+         +GFhWfJgy7R7PAyPa33DinnaFSZlZerKBdtUsz/5LdmRkkdbRpu6nvqQWRzE+92ZMH
+         /BEpa/c+x+JBZA3lTjzNpFfU/LsIf6FIQU+A3hLY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <s5h5zgwouw8.wl-tiwai@suse.de>
-References: <s5h5zgwouw8.wl-tiwai@suse.de>
+In-Reply-To: <288933ba-a1fd-5954-df09-edaa4ea24abc@linaro.org>
+References: <288933ba-a1fd-5954-df09-edaa4ea24abc@linaro.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <s5h5zgwouw8.wl-tiwai@suse.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
- tags/sound-5.6-rc1
-X-PR-Tracked-Commit-Id: 90fb04f890bcb7384b4d4c216dc2640b0a870df3
+X-PR-Tracked-Message-Id: <288933ba-a1fd-5954-df09-edaa4ea24abc@linaro.org>
+X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
+ tags/thermal-v5.6-rc1
+X-PR-Tracked-Commit-Id: 2f23e319b133c7392493e77f515a237c8e1e6dd6
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fb95aae6e67c4e319a24b3eea32032d4246a5335
-Message-Id: <158025810480.31502.13174365546226279381.pr-tracker-bot@kernel.org>
-Date:   Wed, 29 Jan 2020 00:35:04 +0000
-To:     Takashi Iwai <tiwai@suse.de>
+X-PR-Merge-Commit-Id: abb22e44cff3f11d9e087bdd46c04bb32ff57678
+Message-Id: <158025810536.31502.2409530854539231665.pr-tracker-bot@kernel.org>
+Date:   Wed, 29 Jan 2020 00:35:05 +0000
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 28 Jan 2020 09:19:35 +0100:
+The pull request you sent on Tue, 28 Jan 2020 11:13:51 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.6-rc1
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-v5.6-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fb95aae6e67c4e319a24b3eea32032d4246a5335
+https://git.kernel.org/torvalds/c/abb22e44cff3f11d9e087bdd46c04bb32ff57678
 
 Thank you!
 
