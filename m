@@ -2,101 +2,141 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7209C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDD4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6121206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75557206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:09:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G6Ah1duV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oIY+T7f1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgA2SHz (ORCPT
+        id S1727300AbgA2SJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:07:55 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58056 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgA2SHz (ORCPT
+        Wed, 29 Jan 2020 13:09:08 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35337 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgA2SJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:07:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ti7tqcCoopz85yAZx6ODwlyVLtxIWBrtp0ypbKnSIIQ=; b=G6Ah1duV6XYd7U02JYqwA9701
-        BYJscf1GahK9hRHau93+bYNyshPFIk3rCBti2rpJlwa00ZJ8bV9SriQfyVqTZpxx0W07qDSzmMS7y
-        3Xk1UhhS0XHt9ksGdXz6TNCibZJoRghnWkWg8dusjDQmdcrhUw2l1vFyM1m8Uh1vjtsj8uPYkIrHh
-        u//Nm5ZeFBzPFR2Tj5OIPsXrKv8RB8HOLuJRwKl8G66axlVYIxXTedxqM9CdWMC7CvdYgOndg/4M9
-        Q+LAyDjlHHGUuIoY5S0lVRuPO1kcNj8lijzvMLmsNS8Fzx655R3eyr8T4hcdSlRFvhDY+a+F2rOWG
-        9tqRrZJ1w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwrk9-0005CU-1G; Wed, 29 Jan 2020 18:07:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E6CCD300606;
-        Wed, 29 Jan 2020 19:05:26 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B3EF12B7A8626; Wed, 29 Jan 2020 19:07:09 +0100 (CET)
-Date:   Wed, 29 Jan 2020 19:07:09 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     sjpark@amazon.com
-Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
-        sj38.park@gmail.com, acme@kernel.org, amit@kernel.org,
-        brendan.d.gregg@gmail.com, corbet@lwn.net, dwmw@amazon.com,
-        mgorman@suse.de, rostedt@goodmis.org, kirill@shutemov.name,
-        brendanhiggins@google.com, colin.king@canonical.com,
-        minchan@kernel.org, vdavydov.dev@gmail.com, vdavydov@parallels.com,
-        linux-mm@kvack.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Re: Re: [PATCH v2 0/9] Introduce Data Access MONitor (DAMON)
-Message-ID: <20200129180709.GS14879@hirez.programming.kicks-ass.net>
-References: <20200129125615.GQ14879@hirez.programming.kicks-ass.net>
- <20200129143758.896-1-sjpark@amazon.com>
+        Wed, 29 Jan 2020 13:09:08 -0500
+Received: by mail-pg1-f195.google.com with SMTP id l24so195226pgk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 10:09:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Qfgy4sCCCO9qTQgchyD2bDgwppQqFA1HOWEoZpdCsZk=;
+        b=oIY+T7f1/3KDhWmi+9XoCo3BKr+sq4W/mKeDPKem3BbD+RYGZFt1E4Jp4cyhzNTMxX
+         Vl4hyPH9kJOowMKuBPT14LZs8R7i6iRzAvLg4vy1iaGYIi3E5lYXku6DVG8xl258MhEl
+         E11Q+enPS9OJ02bTdGX9v8A4hEx02Brb38Kxi3nQOfl6km6CZ0My6MEozc6OUudKSHD2
+         kWixGUmfrVcQczIGzuiq4qKlMsZoHHEDPx8WHoXnoe6jMj96x4/AAWrNkteBp0x15qMV
+         yQPmd/JcBLUbLvLO4WCP/uNjORquLpGHF8O1GKCVNz0drUGPUSfR27pKbWBGJVtNZL31
+         wh4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Qfgy4sCCCO9qTQgchyD2bDgwppQqFA1HOWEoZpdCsZk=;
+        b=OMabP//BMbH5xk5rQ1/muWsw3pePJkJfAxEGBb2NiEa2AaNW3AjXb9trmRAg1rRdiO
+         EefnqexA/OUC0rc+hyElTwZJs4xB6hcnyxBXuRNqibtaN/m3atn0tsuNnPcVNCVljYQY
+         BF4d+4jD2pmZ4/x+JdrNOAWX3VvqCs+np+b7a3oc8TWr97siPj5ljBR/OR+zEazmHq63
+         5mYYZ5bWdkEfUSIAdH15svAEbm2IjpgLfxqcRBYW/jVIdAzc/i6ZuKpUha306BLa/TgO
+         q6wukgmhDHABxLi9kjNlExQ6QBkBvEwNnpIsX6xORlZSOWc+0J7MFzy3Zz8V3U5nbnPf
+         X8Rw==
+X-Gm-Message-State: APjAAAXzSiJBQoxEzsyd/hc8jYZptMjWRveW2Pu+UE/9D4s9satXaIB2
+        sZSKzc9QEsFNro9+MXIxKHI=
+X-Google-Smtp-Source: APXvYqwichPv1+UwFlqgSYCn8ypS1/PKPTuj/ovLT9rCDcB1J+64NLcb3U0HJ6idY1dU0SMjh5rnng==
+X-Received: by 2002:a63:1106:: with SMTP id g6mr282135pgl.13.1580321347528;
+        Wed, 29 Jan 2020 10:09:07 -0800 (PST)
+Received: from [192.168.0.16] (97-115-104-237.ptld.qwest.net. [97.115.104.237])
+        by smtp.gmail.com with ESMTPSA id n15sm204952pfq.168.2020.01.29.10.09.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 10:09:06 -0800 (PST)
+Subject: Re: [PATCH] kbuild: Include external modules compile flags
+From:   Gregory Rose <gvrose8192@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dev@openvswitch.org, dsahern@gmail.com
+References: <1580161806-8037-1-git-send-email-gvrose8192@gmail.com>
+ <CAK7LNAQyh9CFgKd1DtAPFW8DuHNp1gn8YABuP8-LsF=hHK2DFw@mail.gmail.com>
+ <f6ffa0d0-8214-8fc0-4fe9-4b70a1581d3e@gmail.com>
+Message-ID: <677aff5a-a52e-08ae-f341-547af08f7566@gmail.com>
+Date:   Wed, 29 Jan 2020 10:09:05 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129143758.896-1-sjpark@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f6ffa0d0-8214-8fc0-4fe9-4b70a1581d3e@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 03:37:58PM +0100, sjpark@amazon.com wrote:
-> On Wed, 29 Jan 2020 13:56:15 +0100 Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Tue, Jan 28, 2020 at 01:00:33PM +0100, sjpark@amazon.com wrote:
-> > 
-> > > I worried whether it could be a bother to send the mail to everyone in the
-> > > section, but seems it was an unnecessary worry.  Adding those to recipients.
-> > > You can get the original thread of this patchset from
-> > > https://lore.kernel.org/linux-mm/20200128085742.14566-1-sjpark@amazon.com/
-> > 
-> > I read first patch (the document) and still have no friggin clue.
-> 
-> Do you mean the document has insufficient description only?  If so, could you
-> please point me me which information do you want to be added?
 
-There was a lot of words; but I'm still not sure what it actually does.
+On 1/28/2020 7:37 AM, Gregory Rose wrote:
+> On 1/27/2020 7:35 PM, Masahiro Yamada wrote:
+>> On Tue, Jan 28, 2020 at 6:50 AM Greg Rose <gvrose8192@gmail.com> wrote:
+>>> Since this commit:
+>>> 'commit 9b9a3f20cbe0 ("kbuild: split final module linking out into 
+>>> Makefile.modfinal")'
+>>> at least one out-of-tree external kernel module build fails
+>>> during the modfinal make phase because Makefile.modfinal does
+>>> not include the ccflags-y variable from the exernal module's Kbuild.
+>> ccflags-y is passed only for compiling C files in that directory.
+>>
+>> It is not used for compiling *.mod.c
+>> This is true for both in-kernel and external modules.
+>>
+>> So, ccflags-y is not a good choice
+>> for passing such flags that should be globally effective.
+>>
+>>
+>> Maybe, KCFLAGS should work.
+>>
+>>
+>> module:
+>>         $(MAKE) KCFLAGS=...  M=$(PWD) -C /lib/modules/$(uname 
+>> -r)/build modules
+>>
 
-I've read some of the code that followed; is it simply sampling the
-page-table access bit? It did some really weird things though, like that
-whole 3 regions thing.
+Hi Masahiro,
 
-Also, you wrote you wanted feedback from perf people; but it doesn't use
-perf, what are you asking?
+I'm unable to get that to work.  KCFLAGS does not seem to be used in 
+Makefile.modfinal.
 
-Perf can do address based sampling of memops, I suspect you can create
-something using that.
+[snip]
+>>> --- a/scripts/Makefile.modfinal
+>>> +++ b/scripts/Makefile.modfinal
+>>> @@ -21,6 +21,10 @@ __modfinal: $(modules)
+>>>   modname = $(notdir $(@:.mod.o=))
+>>>   part-of-module = y
+>>>
+>>> +# Include the module's Makefile to find KBUILD_EXTRA_SYMBOLS
+>>> +include $(if $(wildcard $(KBUILD_EXTMOD)/Kbuild), \
+>>> +             $(KBUILD_EXTMOD)/Kbuild)
+>>> +
+
+I continue to wonder why this it is so bad to include the external 
+module's Kbuild.
+It used to be included in Makefile.modpost and did no harm, and in fact 
+was what
+made our external build work at all in the past.  Without the ability to 
+define our
+local kernel module build environment during the modfinal make I see no 
+way forward.
+
+That said, I'm no expert on the Linux kernel Makefile 
+interdependencies.  If you
+have some other idea we could try I'm game.
+
+Thanks,
+
+- Greg
+
