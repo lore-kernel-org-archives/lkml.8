@@ -2,181 +2,126 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B85C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8EEC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0732071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580296759;
-	bh=VfMfcqhfm+WjCDnHpcNf3MkqR5FQ8m74Dwz9cYyx4m4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=OMCc13emY1EbSlR8I7nkHsLBwAy9w6JXyERWt8hqD8xVZqYTfOxqtB/GVh/WoU1sZ
-	 6+XQ7cDupMtqSJs1EcbzbX/wS5RXyJuwZhIYh8sCcYcFJb4Bd6a2en7MNfaftV2Wkt
-	 LOIRCTVJBs+8OipmjkWd3TjK8eLzm/Sog15RZ3uM=
+	by mail.kernel.org (Postfix) with ESMTP id A268920708
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:21:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lo3mryy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgA2LTS (ORCPT
+        id S1726261AbgA2LVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 06:19:18 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36579 "EHLO
+        Wed, 29 Jan 2020 06:21:51 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33083 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgA2LTS (ORCPT
+        with ESMTP id S1726067AbgA2LVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 06:19:18 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so18030321ljg.3;
-        Wed, 29 Jan 2020 03:19:15 -0800 (PST)
+        Wed, 29 Jan 2020 06:21:50 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y6so18069606lji.0;
+        Wed, 29 Jan 2020 03:21:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=4dqWHdv0qrHd3fdZPTf0f4D+2/ihtxoiaJ94Krc3ahg=;
-        b=vIWZLKSm+3y/+75p3blXXHBratQSdjYwo+jOHbtfxIEeB6TbDkZsZ1LtkcP0+JOjG1
-         w/cYuxSpedrPYSQ7EqeRv0RqhI9qhuJNT7E8zLzT1Knv3NA1D22d3Rg1RTKLreGeDkQ+
-         M3iqvNEBJ9K7xHNjVgSaJ7rQ69YWrq3sQgkrrTtPKWXYXP+laxHyQImchiQCkcJWb+Xf
-         NSE1JXharu3320/8KMn2xsNXDKn+J4lR0psOymKP4gSaUey7uWIoPYcD/cFf/FeWNyMr
-         iUjiRvk/Kqu/92h0pScLp5gDtmcwqPpsRRo9tTmDBNt7jJXANc2LfavzTu5WoGOHfD8Q
-         L1Ew==
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=NPCUdLAYmbEspRBF05xZGb8x0Dpqva/T+gPsfhkFeOA=;
+        b=lo3mryy3EPGV3wjla57jjaGExvmgGbLwskoGo2f4aETMXTnZY4n8y3V4MVs5q8uuVn
+         0g33CDZIii/tmXcz40l8nSLVuHtSey5IcN88fgqai2D3Of2cf7pCNbb+thaEFxBB8CQf
+         4ktOVU2JIMVE9X2pEogqYMGScv63jddu2RiRv0hR5iPB7HI8EZY8tXTHHwO+sr8z0e3z
+         lBbv+KwyISNeEuOHs/oRvt3ynNR2+cnw+Yac7MqxruZH5vFi9wXHbLTZRKhYTZ5ai+Dq
+         OWktIQQvL2ywRr9jTZ4WnC2ZT5bwZPPYH2rROmp+ngU219FDIS2873/x4Fu+a+xFQV0r
+         Z0Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=4dqWHdv0qrHd3fdZPTf0f4D+2/ihtxoiaJ94Krc3ahg=;
-        b=qpIy0qTpkvw5tSJ51B3DlvfdNTZY6b8F78eIRwVHpZFRaEbh/XHyxPYC2TbL8PxKZm
-         VCaCIo0Z16gixFQiX6jL6co/8HCXSLf4B1NqhJz8nEWXJ0rU66iePEU5RiUgRHg1gS44
-         UtpU91cbdIBNJL5fB+5KGRNi1YnPcxkZAfmaxMZY5ZCNlh4LTklzcRyjxmuiUSjeDf1u
-         Qz4MQcbMPYmePURBQlj//QKB48xnlbH5LcXp4dA/NA8PYYVKAjotCjhX+LLRU5LIxvSx
-         YMB20SlXrGI0qEO9ZTHwvwAJdh/y5ykEC7DWlSbXRGYRUBV4huIy0MpM404GF+pQCRmk
-         NyOA==
-X-Gm-Message-State: APjAAAXHG18qiiYIyiCVgWAoUU7hudZ8C7uhYc1MI45zE7G6M4kzGZgI
-        IA6paII1/4eA3A2gTg37zw5X6fxaHPA=
-X-Google-Smtp-Source: APXvYqwd5YyySgaiM29kXaQ6GJaqSjqqDHoiA2AZNwIkeE/Bfpk5Ey/ifB3mdOyBnHer/QMlFTlhzA==
-X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr15183473ljm.218.1580296754412;
-        Wed, 29 Jan 2020 03:19:14 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id f16sm768170ljn.17.2020.01.29.03.19.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jan 2020 03:19:13 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
-In-Reply-To: <CALAqxLUNg_Oww17U=BW9XTzZAdkCoCWCg=92Js17SexhT8gy6g@mail.gmail.com>
-References: <20200127193046.110258-1-john.stultz@linaro.org> <87lfpq915x.fsf@kernel.org> <CALAqxLUNg_Oww17U=BW9XTzZAdkCoCWCg=92Js17SexhT8gy6g@mail.gmail.com>
-Date:   Wed, 29 Jan 2020 13:19:03 +0200
-Message-ID: <87imku8q8o.fsf@kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version:content-transfer-encoding;
+        bh=NPCUdLAYmbEspRBF05xZGb8x0Dpqva/T+gPsfhkFeOA=;
+        b=N6u64a4aLyKDduxLyCxpMrgK4kjHpQ0uKd+ThXLp3Wh6QVPD2CdfQSevlJeElvfjMu
+         p+MuACZRWVFVH+5lMkuey0zufTVIlbATZKbiZUD74KFUPjeDO1kvluNottLb9/DBy7yz
+         Lk457QDzUSKvdiZVutQpiMUgiGv22iVVjSq9oILpLM6WGX1rGBvPB9Prb+zv88sCju2I
+         T6whYgBCq6BbwNP/rNEN0E6gVR607Eqr1sYybEZ1LDqo9fg9BJhIAM/zzOlTo+QqjOjd
+         4lAajKOyy/QtsW/UGqiO4edD36yL7CGSEjB+KyuV7EhqzhhMBoiUKEVI2zZq4XzvxJW7
+         JmhA==
+X-Gm-Message-State: APjAAAW1Pc2zsK8DTeCUI+gn1VJP4CQZADOAbH4/q45M7UBYF6eo6XfE
+        Gg3sli+FoSYwp9eChbSp/a6jAEwc
+X-Google-Smtp-Source: APXvYqxNVehRNwku/wPhP1/6tlzSibCQ47vVcHhXNMgzbVJn6j32BloCUTvoaCwPYWpa+82n49fcJg==
+X-Received: by 2002:a2e:844e:: with SMTP id u14mr3111213ljh.183.1580296907910;
+        Wed, 29 Jan 2020 03:21:47 -0800 (PST)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id z7sm764137lji.30.2020.01.29.03.21.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jan 2020 03:21:47 -0800 (PST)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        =?utf-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v3] usb: gadget: serial: fix Tx stall after buffer overflow
+References: <87pnfi8xc2.fsf@osv.gnss.ru>
+Date:   Wed, 29 Jan 2020 14:21:46 +0300
+In-Reply-To: <87pnfi8xc2.fsf@osv.gnss.ru> (Sergey Organov's message of "Fri,
+        17 Jan 2020 08:29:33 +0300")
+Message-ID: <87sgjyzewl.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.4 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
+it while either USB cable is not connected, or nobody listens on the
+other side of the cable. If driver circular buffer overflows before
+connection is established, no data will be written to the USB layer
+until/unless /dev/ttyGS0 is closed and re-opened again by the
+application (the latter besides having no means of being notified about
+the event of establishing of the connection.)
 
+Fix: on open and/or connect, kick Tx to flush circular buffer data to
+USB layer.
 
-Hi,
+Signed-off-by: Sergey Organov <sorganov@gmail.com>
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
 
-John Stultz <john.stultz@linaro.org> writes:
-> On Tue, Jan 28, 2020 at 11:23 PM Felipe Balbi <balbi@kernel.org> wrote:
->> John Stultz <john.stultz@linaro.org> writes:
->> > From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
->> >
->> > The current code in dwc3_gadget_ep_reclaim_completed_trb() will
->> > check for IOC/LST bit in the event->status and returns if
->> > IOC/LST bit is set. This logic doesn't work if multiple TRBs
->> > are queued per request and the IOC/LST bit is set on the last
->> > TRB of that request.
->> >
->> > Consider an example where a queued request has multiple queued
->> > TRBs and IOC/LST bit is set only for the last TRB. In this case,
->> > the core generates XferComplete/XferInProgress events only for
->> > the last TRB (since IOC/LST are set only for the last TRB). As
->> > per the logic in dwc3_gadget_ep_reclaim_completed_trb()
->> > event->status is checked for IOC/LST bit and returns on the
->> > first TRB. This leaves the remaining TRBs left unhandled.
->> >
->> > Similarly, if the gadget function enqueues an unaligned request
->> > with sglist already in it, it should fail the same way, since we
->> > will append another TRB to something that already uses more than
->> > one TRB.
->> >
->> > To aviod this, this patch changes the code to check for IOC/LST
->> > bits in TRB->ctrl instead.
->> >
->> > At a practical level, this patch resolves USB transfer stalls seen
->> > with adb on dwc3 based HiKey960 after functionfs gadget added
->> > scatter-gather support around v4.20.
->> >
->> > Cc: Felipe Balbi <balbi@kernel.org>
->> > Cc: Yang Fei <fei.yang@intel.com>
->> > Cc: Thinh Nguyen <thinhn@synopsys.com>
->> > Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
->> > Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
->> > Cc: Jack Pham <jackp@codeaurora.org>
->> > Cc: Todd Kjos <tkjos@google.com>
->> > Cc: Greg KH <gregkh@linuxfoundation.org>
->> > Cc: Linux USB List <linux-usb@vger.kernel.org>
->> > Cc: stable <stable@vger.kernel.org>
->> > Tested-by: Tejas Joglekar <tejas.joglekar@synopsys.com>
->> > Reviewed-by: Thinh Nguyen <thinhn@synopsys.com>
->> > Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
->> > [jstultz: forward ported to mainline, reworded commit log, reworked
->> >  to only check trb->ctrl as suggested by Felipe]
->> > Signed-off-by: John Stultz <john.stultz@linaro.org>
->>
->> since v5.5 is already merged, I'll send this to Greg once -rc1 is
->> tagged. It's already in my testing/fixes branch waiting for a pull
->> request.
->
-> Great, thanks so much for queueing this! I'll be digging on the db845c
+Changes in v3:
 
-no worries, it was way past the time :-)
+- Add Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-> side wrt the dma-api issue to hopefully get that one sorted as well.
+Changes in v2:
 
-Thanks, that would, indeed, be great :-)
+- Add comment to document why tty_wakeup() is kept in place
+- Don't add debug print
+- Remove NOTE from description
 
-> Thanks again for the help and analysis!
+ drivers/usb/gadget/function/u_serial.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-no worries. If you find anything odd, just collect traces and I can help
-have a look.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4xaikACgkQzL64meEa
-mQbN3w//V3sy7UdebQ1Xo0antHtl+NK72TPw4TMUjIAsj+oup5UBBmN9zVHByNOU
-K1UjaWzFeH2IwAqmaIKoPbp/LNd1tKeEGASPQgN97Rjp8L5i6IS58th043gympLQ
-1yig3rvofyMaRlJlkt0EwXO1zfFLSVAj7Kd8nONMF7e86+yR9lNw4Sc/xT3vDZu4
-nDHw4YooT7vO5WiUpO1+rHv85lmv5fD7e5O7TYVAsk3wtdubBMX+Hv0MgtIjXeAD
-yRPCZEFDXAd1lgw5jwcluowH3GKIJp4aW0+WtF6uaUo5A9DtN7qOt88MNkrLXTjA
-Uzg7wOvBInUsDOW3OkrZsEYKNdAbo1SlVcfjAl9gIGRbxFju/xjTrYBP/rt6KITf
-k0B88PnD8amQiDl2ks3MRfIFeQa4lC/IzRFAuKVeCGnaOM+9Vhhbbt8WjsHw6qZr
-lhVopqA7jWP+yQs/bv1RK7+8uGoFZIVaAs1F8tP078+dd6v5bCKjWemSKojOVoWG
-/VHLugyWZLCiXg5ltUoHQlXgOnTXZboaD+zWbz9lLd+NYJJg0bqRbYmYUZyYr1yx
-+/RrSCJWgPqUHxMjPoQFqgbLxoBUPyU6fZxFBQPdPvpBFiB4FQ77uaja6/LjKiU1
-cm3Lro5pdwtO+MuY7QiXP4MyJGf+mzZPGJIzyd0eqM+SpHa0c3I=
-=98RO
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+index f986e5c..8167d37 100644
+--- a/drivers/usb/gadget/function/u_serial.c
++++ b/drivers/usb/gadget/function/u_serial.c
+@@ -561,8 +561,10 @@ static int gs_start_io(struct gs_port *port)
+ 	port->n_read = 0;
+ 	started = gs_start_rx(port);
+ 
+-	/* unblock any pending writes into our circular buffer */
+ 	if (started) {
++		gs_start_tx(port);
++		/* Unblock any pending writes into our circular buffer, in case
++		 * we didn't in gs_start_tx() */
+ 		tty_wakeup(port->port.tty);
+ 	} else {
+ 		gs_free_requests(ep, head, &port->read_allocated);
+-- 
+2.10.0.1.g57b01a3
