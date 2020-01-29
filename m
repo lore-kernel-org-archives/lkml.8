@@ -2,228 +2,109 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ADCC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57104C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0E1206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580335266;
-	bh=KMqCZfR8OC4MTYilPgyK7YPT+Qf5ChcD5B7b36gZO+Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mqPRYIKC/b3Yb7Vv73pG5ngaD+bb/b0SDgK3pL31s3oARTb4+NSPHALznsl7xparm
-	 COLh8bxuYq1v84rkKcEhbD5Vldbu1no3nhQorEvUAlpyfB0bg7XxH1mGCj79W8qBLH
-	 ki1HfxDqKCtWF48V1IcMdVk3hjzuf+TuYPtn7CGs=
+	by mail.kernel.org (Postfix) with ESMTP id 2272A206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:02:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WEB96WDw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgA2WBF (ORCPT
+        id S1726694AbgA2WC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:01:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgA2WBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:01:05 -0500
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F840206D5;
-        Wed, 29 Jan 2020 22:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580335264;
-        bh=KMqCZfR8OC4MTYilPgyK7YPT+Qf5ChcD5B7b36gZO+Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lLJRKTSsX/A9CVc3vR5U7iGVdFqQrxwzc2R1YVkFg12RKCfPCmWWY+vc2GFQQhmE1
-         I56LmMycL2MQAjXJjFYLroayjXTmVyNtu1TEhnpAO/UunDuRstpV6ltRzm7IVgVTY6
-         5KIvU2dfA2kASn3tW4hmVjNJKl2jqtJFQ9da4+iw=
-Received: by mail-qk1-f179.google.com with SMTP id g195so866694qke.13;
-        Wed, 29 Jan 2020 14:01:04 -0800 (PST)
-X-Gm-Message-State: APjAAAVTWC640kevNcm1vUGZ90kxkDZK+FkdRZ6Vf3m4YxNs/Fm3cx/E
-        R+Mf1aAJZXM2zFqsGDsMOGOkE/wA4Vvsk8B4+w==
-X-Google-Smtp-Source: APXvYqya7/HyzAZ7As4piQq5rd9Qp3/xxmPf0EVs5MW2ZyCiSIU+hACzOqVQcX2Xwp3PGxxJxs0ezV8toTxQNue7DHo=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr2130152qkg.152.1580335263500;
- Wed, 29 Jan 2020 14:01:03 -0800 (PST)
+        Wed, 29 Jan 2020 17:02:56 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41362 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgA2WCz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 17:02:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Fop62bTazPLo+WGNB+BfCgO9zchmyRpUfYX/ot3XXHk=; b=WEB96WDwGvjGlZ1G/woW/8P3L
+        7eraE+Yqe8ItWLr3zttniO9D1gPV7Y5hdupA0mtJtuJ6QmjriI9pKK7ogBjzXJkkv8Rll+Kopg8Bk
+        vnudFQN+wGCWsF2ptNGDPdxb2O3BM6RIoTBvvVAtPM36CNz6nnyAf46o3dOI7Y/zw2Y6auq1gFeIC
+        ezIuDIKKUrcxVy3LOWtD3f895LvLYBQblxIT8Txgb+2qnmo9gGCyt1cWtmKRUE4TWrAYW424TIqEL
+        g03kbDKjM/82JSW0ejGd8tXDFqeFN4gALcs6JuZ6DcueQ9hXtZFmAIzNai8SoU9/SBK7LTD+tvzmN
+        rCKDtDEoA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwvQE-0006zY-Ja; Wed, 29 Jan 2020 22:02:55 +0000
+Subject: Re: [PATCH] MAINTAINERS: mptcp@ mailing list is moderated
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        mptcp@lists.01.org, LKML <linux-kernel@vger.kernel.org>
+References: <0d3e4e6f-5437-ae85-f1f5-89971ea3423f@infradead.org>
+ <alpine.OSX.2.21.2001290857310.9282@cmossx-mobl1.amr.corp.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4112784b-a70b-8e4a-4110-9898e0626306@infradead.org>
+Date:   Wed, 29 Jan 2020 14:02:52 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200129132313.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
-In-Reply-To: <20200129132313.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 29 Jan 2020 16:00:51 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJk1NZSDAXgqc-CS9a1UCmNYPhC-LwjPUZaX2oK=EtHzQ@mail.gmail.com>
-Message-ID: <CAL_JsqJk1NZSDAXgqc-CS9a1UCmNYPhC-LwjPUZaX2oK=EtHzQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: clk: qcom: Fix self-validation, split, and
- clean cruft
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>, Taniya Das <tdas@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Abhishek Sahu <absahu@codeaurora.org>, sivaprak@codeaurora.org,
-        anusharao@codeaurora.org, Sricharan <sricharan@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <alpine.OSX.2.21.2001290857310.9282@cmossx-mobl1.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 3:23 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> The 'qcom,gcc.yaml' file failed self-validation (dt_binding_check)
-> because it required a property to be either (3 entries big),
-> (3 entries big), or (7 entries big), but not more than one of those
-> things.  That didn't make a ton of sense.
->
-> This patch splits all of the exceptional device trees (AKA those that
-> would have needed if/then/else rules) from qcom,gcc.yaml.  It also
-> cleans up some cruft found while doing that.
->
-> After this lands, this worked for me atop clk-next:
->   for f in \
->     Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml \
->     Documentation/devicetree/bindings/clock/qcom,gcc.yaml; do \
->       ARCH=arm64 make dt_binding_check DT_SCHEMA_FILES=$f; \
->       ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
->   done
+On 1/29/20 9:09 AM, Mat Martineau wrote:
+> 
+> On Tue, 28 Jan 2020, Randy Dunlap wrote:
+> 
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>>
+>> Note that mptcp@lists.01.org is moderated, like we note for
+>> other mailing lists.
+> 
+> Hi Randy -
+> 
+> The mptcp@lists.01.org list is not moderated, but there's a server-wide default rule that holds messages with 10 or more recipients for any sender (list member or not). I've turned off those server-wide defaults for this list so it shouldn't be a problem in the future.
 
-Note that using DT_SCHEMA_FILES may hide some errors in examples as
-all other schemas (including the core ones) are not used for
-validation. So just 'make dt_binding_check' needs to pass (ignoring
-any other unrelated errors as it breaks frequently). Supposedly a
-patch is coming explaining this in the documentation.
+OK, thanks for the clarification & revert...
 
-> Arbitrary decisions made (yell if you want changed):
-> - Left all the older devices (where clocks / clock-names weren't
->   specified) in a single file.
-> - Didn't make clocks "required" for msm8996/msm8998 but left them as
->   listed.  This seems a little weird but means I didn't need to open a
->   whole different can of worms.  It matches the old binding for
->   msm8996 and doesn't match the binding (but matches the dts) for
->   msm8998.
->
-> Misc cleanups as part of this patch:
-> - sm8150 was claimed to be same set of clocks as sc7180, but driver
->   and dts appear to say that "bi_tcxo_ao" doesn't exist.  Fixed.
-> - In "apq8064", "#thermal-sensor-cells" was missing the "#".
-> - Got rid of "|" at the end of top description since spacing doesn't
->   matter.
-> - Changed indentation to consistently 2 spaces (it was 3 in some
->   places).
-> - Added period at the end of protected-clocks description.
-> - No space before ":".
-> - Updated sc7180/sm8150 example to use the 'qcom,rpmh.h' include.
-> - Updated sc7180/sm8150 example to use larger address/size cells as
->   per reality.
-> - Updated sc7180/sm8150 example to point to the sleep_clk rather than
->   <0>.
-> - Made it so that gcc-ipq8074 didn't require #power-domain-cells since
->   actual dts didn't have it and I got no hits from:
->     git grep _GDSC include/dt-bindings/clock/qcom,gcc-ipq8074.h
-> - Made it so that gcc-qcs404 didn't require #power-domain-cells since
->   actual dts didn't have it and I got no hits from:
->     git grep _GDSC include/dt-bindings/clock/qcom,gcc-qcs404.h
->
-> Noticed, but not done in this patch (volunteers needed):
+> Thank you for your report on the build errors.
+> 
+> 
+> Mat
+> 
+> 
+>>
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+>> Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> Cc: netdev@vger.kernel.org
+>> Cc: mptcp@lists.01.org
+>> ---
+>> MAINTAINERS |    2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> --- mmotm-2020-0128-2005.orig/MAINTAINERS
+>> +++ mmotm-2020-0128-2005/MAINTAINERS
+>> @@ -11718,7 +11718,7 @@ NETWORKING [MPTCP]
+>> M:    Mat Martineau <mathew.j.martineau@linux.intel.com>
+>> M:    Matthieu Baerts <matthieu.baerts@tessares.net>
+>> L:    netdev@vger.kernel.org
+>> -L:    mptcp@lists.01.org
+>> +L:    mptcp@lists.01.org (moderated for non-subscribers)
+>> W:    https://github.com/multipath-tcp/mptcp_net-next/wiki
+>> B:    https://github.com/multipath-tcp/mptcp_net-next/issues
+>> S:    Maintained
 
-No requirement to fix dts file errors at this point.
 
-> - Add "aud_ref_clk" to sm8150 bindings / dts even though I found a
->   reference to it in "gcc-sm8150.c".
-> - Fix node name in actual ipq8074 to be "clock-controller" (it's gcc).
-> - Since the example doesn't need phandes to exist, in msm8998 could
->   just make up places providing some of the clocks currently bogused
->   out with <0>.
->
-> Fixes: ab91f72e018a ("clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
->  .../bindings/clock/qcom,gcc-apq8064.yaml      |  81 +++++++
->  .../bindings/clock/qcom,gcc-ipq8074.yaml      |  48 ++++
->  .../bindings/clock/qcom,gcc-msm8996.yaml      |  65 ++++++
->  .../bindings/clock/qcom,gcc-msm8998.yaml      |  88 ++++++++
->  .../bindings/clock/qcom,gcc-qcs404.yaml       |  48 ++++
->  .../bindings/clock/qcom,gcc-sc7180.yaml       |  72 ++++++
->  .../bindings/clock/qcom,gcc-sm8150.yaml       |  69 ++++++
->  .../devicetree/bindings/clock/qcom,gcc.yaml   | 212 ++----------------
->  8 files changed, 489 insertions(+), 194 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml
->
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
-> new file mode 100644
-> index 000000000000..c09497881cd2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
-> @@ -0,0 +1,81 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-apq8064.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Global Clock & Reset Controller Binding for APQ8064
-> +
-> +maintainers:
-> +  - Stephen Boyd <sboyd@kernel.org>
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description:
-> +  Qualcomm global clock control module which supports the clocks, resets and
-> +  power domains on APQ8064.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,gcc-apq8064
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  '#reset-cells':
-> +    const: 1
-> +
-> +  '#power-domain-cells':
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  nvmem-cells:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description:
-> +      Qualcomm TSENS (thermal sensor device) on some devices can
-> +      be part of GCC and hence the TSENS properties can also be part
-> +      of the GCC/clock-controller node.
-> +      For more details on the TSENS properties please refer
-> +      Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> +
-> +  nvmem-cell-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description:
-> +      Names for each nvmem-cells specified.
+-- 
+~Randy
 
-Isn't that every instance? So drop.
-
-Otherwise, assuming it all works:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
