@@ -2,467 +2,175 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2E6C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78065C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28A52465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E582051A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:06:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ZDPJ4Ujw";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="NLT+0lPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgA2BF5 (ORCPT
+        id S1726824AbgA2BGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 20:05:57 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51118 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgA2BF4 (ORCPT
+        Tue, 28 Jan 2020 20:06:15 -0500
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:63372 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgA2BGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 20:05:56 -0500
-Received: from [IPv6:2804:214:85ec:7f4b:5855:c301:43f0:c945] (unknown [IPv6:2804:214:85ec:7f4b:5855:c301:43f0:c945])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 41A61283BCE;
-        Wed, 29 Jan 2020 01:05:48 +0000 (GMT)
-Subject: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input driver for
- Tegra210
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
- <3cdea635-a9ca-7b9c-3c99-8f489f4d669a@collabora.com>
- <162488d0-4e74-963a-3366-e4c1f7cf04ca@nvidia.com>
- <017ca95e-7dd3-2d04-8d84-9047ac4e548b@nvidia.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- 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
-Message-ID: <655b9a64-10d7-3fd3-f443-babf33e67b62@collabora.com>
-Date:   Tue, 28 Jan 2020 22:05:43 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <017ca95e-7dd3-2d04-8d84-9047ac4e548b@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 28 Jan 2020 20:06:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1580259974; x=1611795974;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=Jq7S8+0ydLwEVWbHEoSJ4pfEBgN0bXxGspmcNr3ieBk=;
+  b=ZDPJ4UjwNcFCFqT/nWPRcmLZa9azeIVBGal/GjWDl7YshQj+/lHgssx5
+   MNKx5r5of7DOhQdDmcGy0dI2ADgTDq20fQkdkcxZ2pyzb4SOAoM3mFLfB
+   /Bmu684RmHyxwotYw5aVxrowyxd3xsSFcPfGot2WM4GFx+Vo7kH8VYwdP
+   G09JJP1rK2hofsMXj8XwECAOleTxvaL0/9XK+3Nm50Xh6aHSJ7nSUKTDK
+   BB6NEiqrnHbaA4gAYDbd6E1lIrfgiHCRvRHjOu2UsgZ+ewY5aE3GaogNI
+   m3Nj/5kop94s8SgdkzecwbHF5PydwNOscnctK557wdQWtWg4+ydbq0Aod
+   A==;
+IronPort-SDR: tJwUokIb+R4QaevTZSmxRAhsMq/OVNygvd6773xCdP86Rixy+T2z/rxqEZs3E9KE5nQ+oONEkN
+ AY43iTCbU4ENpPxnUQWS7JCao9XhWBJegtwV2i8tbZy9AzAwWgzHzbP0h9t8DKmFZQfNe3dsrF
+ LJs/TFeqCy+VhSMW4vc3Z6HuO42v9jWENMXXQHlCJCx64RvPvLjSGJCJqFzw5mp2vF7TNgnepq
+ cyqi/pBbCP7nMkj+abs9FhjjOWSrwoe/RnJDJv4VymqaLkJoikwgzX/doJR1WwbtJvHHaetx8m
+ S+o=
+X-IronPort-AV: E=Sophos;i="5.70,376,1574092800"; 
+   d="scan'208";a="128615455"
+Received: from mail-bn8nam12lp2172.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.172])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Jan 2020 09:05:44 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DZyeogTYefENSFLPdICVH844marC1V20i/xq06Ab+5dLFfXrIY2WZBV1/0sfK6kXydzAqjETv+mFIYS89iIpCcjrgi+8kJNMCxoYeLBApGRLVSu2BNr1dM3avM+x+V6ai2ZVTD9dpsFc/dP1tqzOD+13ZlxJT9hQzIIzH1fY9f8U6hJeEtXfyjA3a5X5N1wZdaJkPhFYwaM/ogmfL5SFY5oPOpGoPtMypMkhbkbgSQsn7pSB2wv5CsFDkWBkszuBKOWZeVIJV8yihZNQ2ZNTBQjfoSKOzAcCcvrr0O5tJ+1qwDq/8BHbWpggVXTf6/6XkgItFJSNocKK2NMT8PKg6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jq7S8+0ydLwEVWbHEoSJ4pfEBgN0bXxGspmcNr3ieBk=;
+ b=k+RTsHH56FTyHMpsdaodX+xdoQn8mKkZlQQBBWb0uPK/cDlIG9U0s5nxe2OfVVjKc6WdNdvAsNk6ivszccjl32fHrrcqklkZ1fyEhsSzYi0Y+ZTetXESq+2HhIvj40HnT8CG4ES9sWS8MgK5zKicseRv8U0JmmPoQm930KsULGgylauLpQ4gGAkVoAO7FS7zzjyfB/wH+v7hXLg0OOiQYHjtM7HBZo6sKwbq6mUanXsOmil4ZLcyTPvcel+/nJr+MDuRYNLteywZFv39mNAM/kj1E+TVXZyMy7fa3H30FhpYgOMk+Xo887f4VbHzyiZlG0byrOJex/Gp5kadn1szsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jq7S8+0ydLwEVWbHEoSJ4pfEBgN0bXxGspmcNr3ieBk=;
+ b=NLT+0lPRjoiSK5gXRLJv/9sW0Bw9HGRfL9+21nePceCLjo1qVjKSTWaXxlQm9OaTavGpqBZFcy8QJhskjPlLO+OyRAHgM1iLMI5M99a4XaLXBpq7qKMtD9J4r26wtWxyaoQbfsSaBqo9nac1hxAHFQxI1M8DfBAeQsWuazwh2ko=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.59.16) by
+ BYAPR04MB4951.namprd04.prod.outlook.com (52.135.232.220) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.22; Wed, 29 Jan 2020 01:05:44 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::cd8e:d1de:e661:a61]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::cd8e:d1de:e661:a61%5]) with mapi id 15.20.2665.027; Wed, 29 Jan 2020
+ 01:05:44 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@denx.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Masato Suzuki <masato.suzuki@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH 4.19 59/92] sd: Fix REQ_OP_ZONE_REPORT completion handling
+Thread-Topic: [PATCH 4.19 59/92] sd: Fix REQ_OP_ZONE_REPORT completion
+ handling
+Thread-Index: AQHV1edRzIEinANzs0mRqVpDC7kdnA==
+Date:   Wed, 29 Jan 2020 01:05:43 +0000
+Message-ID: <BYAPR04MB58166ABC7687F035123AFF6DE7050@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20200128135809.344954797@linuxfoundation.org>
+ <20200128135816.802992447@linuxfoundation.org> <20200128180231.GA11577@amd>
+ <20200128181513.GC3673744@kroah.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [199.255.47.12]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b14bb713-bf83-4b02-eba0-08d7a4575ddd
+x-ms-traffictypediagnostic: BYAPR04MB4951:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB4951D01A9C23F3CD498DD5E8E7050@BYAPR04MB4951.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02973C87BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(346002)(136003)(366004)(39860400002)(189003)(199004)(316002)(8676002)(9686003)(5660300002)(110136005)(54906003)(4326008)(53546011)(6506007)(26005)(71200400001)(478600001)(8936002)(66556008)(66476007)(81166006)(81156014)(66446008)(86362001)(64756008)(66946007)(33656002)(52536014)(76116006)(55016002)(186003)(91956017)(2906002)(7696005)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4951;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eIA7Leeiw0ShxfQ8ibWoBC96m7sXRu+YvUzGXs99g2jTB1cvIaFXIewn6azaMMAvoUvvyMW0slHIsW497hx2/rWqb6WVs6dzUXRvN7ggzlI18FHj3Tw6k9rNtxtHCTNmZOEC/6u9rufRBSw2jA/EQmYpOZS4CEjL6oGQ5XThGbMHI61ETwb7AgQnANilf+IdXWeyHoVsBXyLmUX6GvWiO27TZXGBbFwtqP5OcTIFt+mHUikl/qyeiFITNLCnZ8Hz6fx+Ruz9hWpHGzLfMxXf7FpoeL4faoiPeL75iCEqpi2EfDm9zZ82fUa/pdo52EgrL8mehGonzrKvFW898mvIARK1kQblkyCdeefbvFvhOXnkoWNaF11PlTr3kx9NUIjJBQctEc7ZveGhxghcL4E40mB6hwB+0nCFHG3ekGknUOxO1SEaUFPabarfYB+gdDqK24RD7l9KzcLpFLw3zxxIYlWWHR+zj2l5Oa7jhJqsTXL9F4pq2HuECgAWntxqO6lH
+x-ms-exchange-antispam-messagedata: zu8vQIEPFAs0ouhKBTCDVUF+perqDOiJD7UJWmZdTH0zzKqgxhBXpmExG9PH59+OdSe7HcNq9bf5irEGSRv8JuKHadmyxbZ1nb5UJTyKusX1QZd0Mmi+emwYfsMxkPdc11vsh7Qi5i87utWOu4rcxQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b14bb713-bf83-4b02-eba0-08d7a4575ddd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2020 01:05:43.7291
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BniQXuk23voqji2+YcfkquOPc/xp2UeDSYF+2RKs93CS5gurcHxlKiDmKETsJqoakjuM0YB+MdTkiJ6dYJNPxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4951
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/28/20 10:49 PM, Sowjanya Komatineni wrote:
-> 
-> On 1/28/20 2:13 PM, Sowjanya Komatineni wrote:
->>
->> On 1/28/20 1:45 PM, Helen Koike wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> Hi Sowjanya,
->>>
->>> I just took a really quick look, I didn't check the driver in deep, so just some small comments below.
->>>
->>> On 1/28/20 4:23 PM, Sowjanya Komatineni wrote:
->>>> Tegra210 contains a powerful Video Input (VI) hardware controller
->>>> which can support up to 6 MIPI CSI camera sensors.
->>>>
->>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
->>>> capture from an external camera sensor connected to CSI or from
->>>> built-in test pattern generator.
->>>>
->>>> Tegra210 supports built-in test pattern generator from CSI to VI.
->>>>
->>>> This patch adds a V4L2 media controller and capture driver support
->>>> for Tegra210 built-in CSI to VI test pattern generator.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> Could you send us the output of media-ctl --print-dot ? So we can view the media topology easily?
->> root@tegra-ubuntu:/home/ubuntu# ./media-ctl --print-dot
->> digraph board {
->>         rankdir=TB
->>         n00000001 [label="54080000.vi-output-0\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
->>         n00000005 [label="54080000.vi-output-1\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
->>         n00000009 [label="54080000.vi-output-2\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
->>         n0000000d [label="54080000.vi-output-3\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
->>         n00000011 [label="54080000.vi-output-4\n/dev/video4", shape=box, style=filled, fillcolor=yellow]
->>         n00000015 [label="54080000.vi-output-5\n/dev/video5", shape=box, style=filled, fillcolor=yellow]
->>         n00000019 [label="{{} | tpg-0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>         n00000019:port0 -> n00000001
->>         n0000001d [label="{{} | tpg-1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>         n0000001d:port0 -> n00000005
->>         n00000021 [label="{{} | tpg-2 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>         n00000021:port0 -> n00000009
->>         n00000025 [label="{{} | tpg-3 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>         n00000025:port0 -> n0000000d
->>         n00000029 [label="{{} | tpg-4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>         n00000029:port0 -> n00000011
->>         n0000002d [label="{{} | tpg-5 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>         n0000002d:port0 -> n00000015
->> }
->>
->>>
->>>> --- diff --git a/drivers/staging/media/tegra/host1x-video.h b/drivers/staging/media/tegra/host1x-video.h
->>>> new file mode 100644
->>>> index 000000000000..84d28e6f4362
->>>> --- /dev/null
->>>> +++ b/drivers/staging/media/tegra/host1x-video.h
->>>> @@ -0,0 +1,33 @@
->>>> +// SPDX-License-Identifier: GPL-2.0-only
->>>> +/*
->>>> + * Copyright (C) 2020 NVIDIA CORPORATION.  All rights reserved.
->>>> + */
->>>> +
->>>> +#ifndef HOST1X_VIDEO_H
->>>> +#define HOST1X_VIDEO_H 1
->>>> +
->>>> +#include <linux/host1x.h>
->>>> +
->>>> +#include <media/media-device.h>
->>>> +#include <media/media-entity.h>
->>>> +#include <media/v4l2-async.h>
->>>> +#include <media/v4l2-ctrls.h>
->>>> +#include <media/v4l2-device.h>
->>>> +#include <media/v4l2-dev.h>
->>>> +#include <media/videobuf2-v4l2.h>
->>>> +
->>>> +#include "tegra-vi.h"
->>>> +#include "csi.h"
->>>> +
->>>> +struct tegra_camera {
->>>> +     struct v4l2_device v4l2_dev;
->>>> +     struct media_device media_dev;
->>>> +     struct device *dev;
->>> You can use cam->media_dev.dev instead of having this pointer.
->>>
-> Will fix in v2
->>>> +     struct tegra_vi *vi;
->>>> +     struct tegra_csi_device *csi;
->>>> +};
->>>> +
->>>> +
->>>> +#define to_tegra_channel(vdev) \
->>>> +     container_of(vdev, struct tegra_channel, video)
->>> Why not inline instead of define. Inlines has the advantage of checking types.
-> Will change in v2
->>>
->>>> +static int __tegra_channel_try_format(struct tegra_channel *chan,
->>>> +                                   struct v4l2_pix_format *pix,
->>>> +                                   const struct tegra_video_format **vfmt)
->>>> +{
->>>> +     const struct tegra_video_format *fmt_info;
->>>> +     struct v4l2_subdev *subdev;
->>>> +     struct v4l2_subdev_format fmt;
->>>> +     struct v4l2_subdev_pad_config *pad_cfg;
->>>> +
->>>> +     subdev = tegra_channel_get_remote_subdev(chan);
->>>> +     pad_cfg = v4l2_subdev_alloc_pad_config(subdev);
->>>> +     if (!pad_cfg)
->>>> +             return -ENOMEM;
->>>> +
->>>> +     /*
->>>> +      * Retrieve format information and select the default format if the
->>>> +      * requested format isn't supported.
->>>> +      */
->>>> +     fmt_info = tegra_core_get_format_by_fourcc(chan, pix->pixelformat);
->>>> +     if (!fmt_info) {
->>>> +             pix->pixelformat = chan->format.pixelformat;
->>>> +             pix->colorspace = chan->format.colorspace;
->>>> +             fmt_info = tegra_core_get_format_by_fourcc(chan,
->>>> + pix->pixelformat);
->>>> +     }
->>>> +
->>>> +     /* Change this when start adding interlace format support */
->>>> +     pix->field = V4L2_FIELD_NONE;
->>>> +     fmt.which = V4L2_SUBDEV_FORMAT_TRY;
->>>> +     fmt.pad = 0;
->>>> +     v4l2_fill_mbus_format(&fmt.format, pix, fmt_info->code);
->>>> +     v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
->>> As fas as I understand, entities formats should be independent, it is up to link_validate
->>> to check formats between entities.
->>> The capture shouldn't change the format of the subdevice.
->>>
-> Tegra Built-in TPG on CSI accepts specific TPG sizes and CSI is source and VI is sink.
-> 
-> link validation happens only for sink ends of the link.
-
-And what is the problem with it being on the sink end?
-You just need to implement custom link validation in tegra_csi_media_ops that also checks the format
-between the capture and the subdevice, no? Unless I missunderstood something here (which is quite possible).
-
-Examples:
-drivers/staging/media/rkisp1/rkisp1-capture.c - rkisp1_capture_link_validate()
-drivers/media/pci/intel/ipu3/ipu3-cio2.c - cio2_video_link_validate()
-drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c - sun6i_video_link_validate()
-
-Regards,
-Helen
-
-> 
-> So with CSI subdev set_fmt sets width/height to default incase if width/height is not from one of the supported sizes.
-> 
->>>
->>>> +
->>>> +     v4l2_fill_pix_format(pix, &fmt.format);
->>>> +     tegra_channel_fmt_align(chan, &fmt_info->bpp, &pix->width, &pix->height,
->>>> +                             &pix->bytesperline);
->>>> +     pix->sizeimage = pix->bytesperline * pix->height;
->>>> +
->>>> +     if (vfmt)
->>>> +             *vfmt = fmt_info;
->>>> +
->>>> +     v4l2_subdev_free_pad_config(pad_cfg);
->>>> +
->>>> +     return 0;
->>>> +}
->>>> +
->>>> +static int tegra_channel_try_format(struct file *file, void *fh,
->>>> +                                 struct v4l2_format *format)
->>>> +{
->>>> +     struct v4l2_fh *vfh = file->private_data;
->>>> +     struct tegra_channel *chan = to_tegra_channel(vfh->vdev);
->>>> +
->>>> +     return __tegra_channel_try_format(chan, &format->fmt.pix, NULL);
->>>> +}
->>>> +
->>>> +static int tegra_channel_set_format(struct file *file, void *fh,
->>>> +                                 struct v4l2_format *format)
->>>> +{
->>>> +     struct v4l2_fh *vfh = file->private_data;
->>>> +     struct tegra_channel *chan = to_tegra_channel(vfh->vdev);
->>>> +     const struct tegra_video_format *info;
->>>> +     int ret;
->>>> +     struct v4l2_subdev_format fmt;
->>>> +     struct v4l2_subdev *subdev;
->>>> +     struct v4l2_pix_format *pix = &format->fmt.pix;
->>>> +
->>>> +     if (vb2_is_busy(&chan->queue))
->>>> +             return -EBUSY;
->>>> +
->>>> +     /* get supported format by try_fmt */
->>>> +     ret = __tegra_channel_try_format(chan, pix, &info);
->>>> +     if (ret)
->>>> +             return ret;
->>>> +
->>>> +     subdev = tegra_channel_get_remote_subdev(chan);
->>>> +
->>>> +     fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
->>>> +     fmt.pad = 0;
->>>> +     v4l2_fill_mbus_format(&fmt.format, pix, info->code);
->>>> +     v4l2_subdev_call(subdev, pad, set_fmt, NULL, &fmt);
->>> same here.
->>>
-> Calling subdev set_fmt here for the same reason as explained above.
->>>> +
->>>> +     v4l2_fill_pix_format(pix, &fmt.format);
->>>> +     chan->format = *pix;
->>>> +     chan->fmtinfo = info;
->>>> +     tegra_channel_update_format(chan, pix->width,
->>>> +                                 pix->height, info->fourcc,
->>>> +                                 &info->bpp,
->>>> +                                 pix->bytesperline);
->>>> +     *pix = chan->format;
->>>> +
->>>> +     return 0;
->>>> +}
->>>> +
->>>> +static int tegra_channel_enum_input(struct file *file, void *fh,
->>>> +                                 struct v4l2_input *inp)
->>>> +{
->>>> +     /* Currently driver supports internal TPG only */
->>>> +     if (inp->index != 0)
->>> just
->>> if (inp->index)
->>>
-> Will update in v2
->>>> +             return -EINVAL;
->>>> +
->>>> +     inp->type = V4L2_INPUT_TYPE_CAMERA;
->>>> +     strscpy(inp->name, "Tegra TPG", sizeof(inp->name));
->>>> +
->>>> +     return 0;
->>>> +}
->>>> +static const struct tegra_video_format tegra_default_format = {
->>>> +     /* RAW 10 */
->>>> +     TEGRA_VF_RAW10,
->>>> +     10,
->>>> +     MEDIA_BUS_FMT_SRGGB10_1X10,
->>>> +     {2, 1},
->>>> +     TEGRA_IMAGE_FORMAT_DEF,
->>>> +     TEGRA_IMAGE_DT_RAW10,
->>>> +     V4L2_PIX_FMT_SRGGB10,
->>>> +     "RGRG.. GBGB..",
->>> It would be more readable to do:
->>>
->>> .code = TEGRA_VF_RAW10,
->>> .width = 10,
->>> .code = MEDIA_BUS_FMT_SRGGB10_1X10,
->>>
->>> and so on
-> Will update in v2
->>>
->>>> +};
->>>> +
->>>> +/*
->>>> + * Helper functions
->>>> + */
->>>> +
->>>> +/**
->>>> + * tegra_core_get_default_format - Get default format
->>>> + *
->>>> + * Return: pointer to the format where the default format needs
->>>> + * to be filled in.
->>>> + */
->>>> +const struct tegra_video_format *tegra_core_get_default_format(void)
->>>> +{
->>>> +     return &tegra_default_format;
->>>> +}
->>> This is only used in tegra-channel.c, why not to declare it there as static?
->>>
-> Will move all video format retrieval helper functions to corresponding file as static in v2
->>>> + +static struct v4l2_frmsize_discrete tegra_csi_tpg_sizes[] = {
->>>> +     {1280, 720},
->>>> +     {1920, 1080},
->>>> +     {3840, 2160},
->>>> +};
->>>> +
->>>> +/*
->>>> + * V4L2 Subdevice Pad Operations
->>>> + */
->>>> +static int tegra_csi_get_format(struct v4l2_subdev *subdev,
->>>> +                             struct v4l2_subdev_pad_config *cfg,
->>>> +                             struct v4l2_subdev_format *fmt)
->>>> +{
->>>> +     struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
->>>> +
->>>> +     mutex_lock(&csi_chan->format_lock);
->>> Do you need this lock? I think there is already a serialization in the ioctls in place (to be confirmed).
->>>
-> This is on CSI v4l2 subdevice side during format updates
->>>> +     memcpy(fmt, &csi_chan->ports->format,
->>>> +            sizeof(struct v4l2_mbus_framefmt));
->>> I would prefer just:
->>> *fmt = *csi_chan->ports->format;
->>>
->>> I think it is easier to read IMHO.
->>> same in tegra_csi_set_format().
->>>
-> Will fix in v2
->>>> + mutex_unlock(&csi_chan->format_lock);
->>>> +
->>>> +     return 0;
->>>> +}
->>>> +
->>>> +static void tegra_csi_try_mbus_fmt(struct v4l2_subdev *subdev,
->>>> +                                struct v4l2_mbus_framefmt *mfmt)
->>>> +{
->>>> +     struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
->>>> +     struct tegra_csi_device *csi = csi_chan->csi;
->>>> +     const struct v4l2_frmsize_discrete *sizes;
->>>> +     int i, j;
->>> unsigned
->>>
-> Will fix in v2
->>>> +
->>>> +     for (i = 0; i < ARRAY_SIZE(tegra_csi_tpg_fmts); i++) {
->>>> +             struct v4l2_mbus_framefmt *mbus_fmt = &tegra_csi_tpg_fmts[i];
->>>> +
->>>> +             if (mfmt->code == mbus_fmt->code) {
->>>> +                     for (j = 0; j < ARRAY_SIZE(tegra_csi_tpg_sizes); j++) {
->>>> +                             sizes = &tegra_csi_tpg_sizes[j];
->>>> +                             if (mfmt->width == sizes->width &&
->>>> +                                 mfmt->height == sizes->height) {
->>>> +                                     return;
->>>> +                             }
->>>> +                     }
->>>> +             }
->>>> +
->>>> +             dev_info(csi->dev, "using Tegra default RAW10 video format\n");
->>>> +     }
->>>> +
->>>> +     dev_info(csi->dev, "using Tegra default WIDTH X HEIGHT (1920x1080)\n");
->>>> +     memcpy(mfmt, tegra_csi_tpg_fmts, sizeof(struct v4l2_mbus_framefmt));
->>>> +}
->>>> +
->>>> + 
->>>
+On 2020/01/29 3:15, Greg Kroah-Hartman wrote:=0A=
+> On Tue, Jan 28, 2020 at 07:02:31PM +0100, Pavel Machek wrote:=0A=
+>> Hi!=0A=
+>>=0A=
+>>> From: Masato Suzuki <masato.suzuki@wdc.com>=0A=
+>>>=0A=
+>>>=0A=
+>>=0A=
+>>> ZBC/ZAC report zones command may return less bytes than requested if th=
+e=0A=
+>>> number of matching zones for the report request is small. However, unli=
+ke=0A=
+>>> read or write commands, the remainder of incomplete report zones comman=
+ds=0A=
+>>> cannot be automatically requested by the block layer: the start sector =
+of=0A=
+>>> the next report cannot be known, and the report reply may not be 512B=
+=0A=
+>>> aligned for SAS drives (a report zone reply size is always a multiple o=
+f=0A=
+>>> 64B). The regular request completion code executing bio_advance() and=
+=0A=
+>>> restart of the command remainder part currently causes invalid zone=0A=
+>>> descriptor data to be reported to the caller if the report zone size is=
+=0A=
+>>> smaller than 512B (a case that can happen easily for a report of the la=
+st=0A=
+>>> zones of a SAS drive for example).=0A=
+>>=0A=
+>> What is the story here? Mainline does not seem to have this patch, so=0A=
+>> this is not the case of "upstream commit xxx" line simply missing. If=0A=
+>> the same bug is fixed in mainline different way, it would be nice to=0A=
+>> point to that commit..=0A=
+> =0A=
+> Yes, this is not needed in 5.4 as it was rewritten differently there.=0A=
+=0A=
+Correct. REQ_OP_ZONE_REPORT was dropped with kernel 4.20 and report zones=
+=0A=
+is now handled through a device file method with scsi_execute() instead of=
+=0A=
+a BIO. So this bug does not exist in kernels 4.20 and upward.=0A=
+=0A=
+> =0A=
+> thanks,=0A=
+> =0A=
+> greg k-h=0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
