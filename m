@@ -2,123 +2,93 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896AAC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669BDC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D32922522
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580257376;
-	bh=u6C1MVo9jXhGL921CEjIZKyAAcJehXxHmbS6eFZQhjc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=SS6+X1cLDLXT3YWtUIcN9w2mxvFtXC+/md8LjFlMiUFL4GJVoqqUOeLpQDl7YdSNA
-	 HqD0rhABqeWiizw/RYCxoz9mFhnw/osdcqGqXW7QMYZjq6/cNVE5pH1g2YfdFAwErP
-	 xejgfRNKMJWZvjfU/+SIi6v/AxmY7yHsYpKffdV0=
+	by mail.kernel.org (Postfix) with ESMTP id 3C3DD2467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgA2AWz (ORCPT
+        id S1726486AbgA2AZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 19:22:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgA2AWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 19:22:55 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A3DB2173E;
-        Wed, 29 Jan 2020 00:22:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580257374;
-        bh=u6C1MVo9jXhGL921CEjIZKyAAcJehXxHmbS6eFZQhjc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Jtv85/HYFicY6gu9wWS4weM5U4KubO3bs8Ui+oJHlNwIx/Wv/y5B3rjinppTv4EoM
-         kVvSHpsbX7j5VeVQCpDurg6i4hgXRVEKutrNnZSOh5b//MFbjaSYSGen0MO4Ui4dSH
-         hF4CgyDJ4IZXA0mQHeOI2ZTxcYiAeiXXITeOokjw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0084C352273D; Tue, 28 Jan 2020 16:22:53 -0800 (PST)
-Date:   Tue, 28 Jan 2020 16:22:53 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
-Message-ID: <20200129002253.GT2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200122165938.GA16974@willie-the-truck>
- <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
- <20200122223851.GA45602@google.com>
- <A90E2B85-77CB-4743-AEC3-90D7836C4D47@lca.pw>
- <20200123093905.GU14914@hirez.programming.kicks-ass.net>
- <E722E6E0-26CB-440F-98D7-D182B57D1F43@lca.pw>
- <CANpmjNNo6yW-y-Af7JgvWi3t==+=02hE4-pFU4OiH8yvbT3Byg@mail.gmail.com>
- <20200128165655.GM14914@hirez.programming.kicks-ass.net>
+        Tue, 28 Jan 2020 19:25:01 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:40046 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726293AbgA2AZB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 19:25:01 -0500
+Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 32C487E9A77;
+        Wed, 29 Jan 2020 11:24:56 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iwbA8-0005eI-Bd; Wed, 29 Jan 2020 11:24:56 +1100
+Date:   Wed, 29 Jan 2020 11:24:56 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com
+Subject: Re: [PATCH 04/12] mm: Add readahead address space operation
+Message-ID: <20200129002456.GH18610@dread.disaster.area>
+References: <20200125013553.24899-1-willy@infradead.org>
+ <20200125013553.24899-5-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200128165655.GM14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200125013553.24899-5-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=bQT49A20HjYUhGx6rhoA:9
+        a=UEMyszIiLG9v0jT0:21 a=UWfWf6Z2s6wDmKyN:21 a=CjuIK1q_8ugA:10
+        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 05:56:55PM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 28, 2020 at 12:46:26PM +0100, Marco Elver wrote:
+On Fri, Jan 24, 2020 at 05:35:45PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> > > Marco, any thought on improving KCSAN for this to reduce the false
-> > > positives?
-> > 
-> > Define 'false positive'.
-> 
-> I'll use it where the code as written is correct while the tool
-> complains about it.
+> This replaces ->readpages with a saner interface:
+>  - Return the number of pages not read instead of an ignored error code.
+>  - Pages are already in the page cache when ->readahead is called.
+>  - Implementation looks up the pages in the page cache instead of
+>    having them passed in a linked list.
+....
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 5a6676640f20..6d65dae6dad0 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -121,7 +121,18 @@ static void read_pages(struct address_space *mapping, struct file *filp,
+>  
+>  	blk_start_plug(&plug);
+>  
+> -	if (mapping->a_ops->readpages) {
+> +	if (mapping->a_ops->readahead) {
+> +		unsigned left = mapping->a_ops->readahead(filp, mapping,
+> +				start, nr_pages);
+> +
+> +		while (left) {
+> +			struct page *page = readahead_page(mapping,
+> +					start + nr_pages - left - 1);
 
-I could be wrong, but I would guess that Marco is looking for something
-a little less subjective and a little more specific.  ;-)
+Off by one? start = 2, nr_pages = 2, left = 1, this looks up the
+page at index 2, which is the one we issued IO on, not the one we
+"left behind" which is at index 3.
 
-> > From what I can tell, all 'false positives' that have come up are data
-> > races where the consequences on the behaviour of the code is
-> > inconsequential. In other words, all of them would require
-> > understanding of the intended logic of the code, and understanding if
-> > the worst possible outcome of a data race changes the behaviour of the
-> > code in such a way that we may end up with an erroneously behaving
-> > system.
-> > 
-> > As I have said before, KCSAN (or any data race detector) by definition
-> > only works at the language level. Any semantic analysis, beyond simple
-> > rules (such as ignore same-value stores) and annotations, is simply
-> > impossible since the tool can't know about the logic that the
-> > programmer intended.
-> > 
-> > That being said, if there are simple rules (like ignore same-value
-> > stores) or other minimal annotations that can help reduce such 'false
-> > positives', more than happy to add them.
-> 
-> OK, so KCSAN knows about same-value-stores? If so, that ->cpu =
-> smp_processor_id() case really doesn't need annotation, right?
+Cheers,
 
-If smp_processor_id() returns the value already stored in ->cpu,
-I believe that the default KCSAN setup refrains from complaining.
-
-Which reminds me, I need to disable this in my RCU runs.  If I create a
-bug that causes me to unknowingly access something that is supposed to
-be CPU-private from the wrong CPU, I want to know about it.
-
-> > What to do about osq_lock here? If people agree that no further
-> > annotations are wanted, and the reasoning above concludes there are no
-> > bugs, we can blacklist the file. That would, however, miss new data
-> > races in future.
-> 
-> I'm still hoping to convince you that the other case is one of those
-> 'simple-rules' too :-)
-
-On this I must defer to Marco.
-
-							Thanx, Paul
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
