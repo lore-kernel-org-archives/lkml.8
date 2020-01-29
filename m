@@ -2,133 +2,136 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595AEC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979D3C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA1120720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B98720720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:20:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ZbmCYLXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgA2IQl (ORCPT
+        id S1726216AbgA2IUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 03:16:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:37986 "EHLO foss.arm.com"
+        Wed, 29 Jan 2020 03:20:36 -0500
+Received: from mout.web.de ([212.227.17.11]:47441 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgA2IQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 03:16:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3264F328;
-        Wed, 29 Jan 2020 00:16:40 -0800 (PST)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FC113F52E;
-        Wed, 29 Jan 2020 00:20:16 -0800 (PST)
-Date:   Wed, 29 Jan 2020 08:16:36 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-        qperret@google.com, adharmap@codeaurora.org
-Subject: Re: [PATCH v3 1/3] sched/fair: Add asymmetric CPU capacity wakeup
- scan
-Message-ID: <20200129081633.3ezb7ucq5kkojkhg@e107158-lin>
-References: <20200126200934.18712-1-valentin.schneider@arm.com>
- <20200126200934.18712-2-valentin.schneider@arm.com>
- <20200128062245.GA27398@codeaurora.org>
- <1ed322d6-0325-ecac-cc68-326a14b8c1dd@arm.com>
- <20200129035258.GB27398@codeaurora.org>
+        id S1726116AbgA2IUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 03:20:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1580286022;
+        bh=tQri1edDa91kqLteq8ZB5NArUvsgvHIMED+tnqAit8U=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=ZbmCYLXWdZCT2u7MUK4E6UEbw6GOFyp5/JqSF+bf/ElTjE9TYrm7vme996pmTyJ6B
+         ueF8lIUa2ov78e9n10pwQ7Hk2GjovPj36ivG31+zJ9hwoI4kKMMolMilrewz6nwbmb
+         rfQ/ogKNXMFKKqBhOXm8t+pQGubyfRdwTlUV+nWY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.70.44]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M1X9B-1jpWCC3a9Z-00tPkz; Wed, 29
+ Jan 2020 09:20:21 +0100
+Subject: Re: [v9 1/2] fs: New zonefs file system
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>
+References: <23bf669d-b75f-ed94-478d-06bddd357919@web.de>
+ <5fe2d31c2f798b0768eec3ebc35bc973bc07ba1c.camel@wdc.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <938e70e3-0f45-2858-a4fc-dd90371e4e90@web.de>
+Date:   Wed, 29 Jan 2020 09:20:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <5fe2d31c2f798b0768eec3ebc35bc973bc07ba1c.camel@wdc.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200129035258.GB27398@codeaurora.org>
-User-Agent: NeoMutt/20171215
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:PLm4Glozz6oS0aLFLldM/En7SfLq1Lpc2hlL9LhSlqvSXqtmXLE
+ BY7eBssOkysJKFEfih/3tAi5i3E5URrz1g6MLOyQb6YpYAS9UG0Xxi93zb7sYkTrRzhT8BO
+ fhbFPlGZufA/XsS3gppL6LKWTAlEiVElX/Lj38RFcvMld9WJ430HSH8yts9a5L3p2bGGBEa
+ feeL5yBA781dnYwluK5kg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Z7sqPbNLeos=:81AATFj02WUoLyVQO6W3dX
+ t5V01gaDOXhBzyUIquL3o9bjFF38g97GdOs2+AL5qcpaBr3P4+pSPEExG97GDp+kCBUNBABs8
+ gdITGLifKZeYouH/Z3nRzQBESvutABwBm0IwciHiPpFDwA4nA7qlA7AXNUYweK93HBW8Fr60b
+ gl7+3S/Fb38+V4pkRkw0WThf3s6+GTL3sdyp9aOhUjKhe9S5eO7MRW8CYWw8xCdRhwkWxU+kV
+ e29DWN1w2f+r+pFoXxqGyiOwF1J3ekTAlqAVjfuSuNjPM8/f1F3X9B7cyposV8Kd0i/kEaRp/
+ EO7RYDb0E7DXEKFI+Yuzmp2Z6qT3/kgUJ91HIoteyKFlUhe2v9nSg8xk2YdTAcKfb6T2KUBD6
+ kUMabgt8/3oNJLc1gRBXUMewj5NMsRPCDdBtgocRMG++4a0jxO2cW0XPuS8UH1P5CWVKbTK+k
+ T1zmermha0HYlw+B38x68X9gsqLd7krfY4AIcX81QdjGM2cMoMya5yMPnx8t054ovY6vtFHXS
+ 4U2/LSdHQUzpsqqsJ55YFfbfn2XxaI9J+CIqA44WTwOM/9Ub8T8ypkLcTDtuI9u6cH7mYAjK5
+ C2ccVFeMTGMwBGL4g9KXeDApcC53eZUndpGI2e67bJyxrEAqVMuKGNdWXuhlJoKrUmM3lWTxh
+ MX5EU14NC6z+hdb8Pg/DnzK1blDJ3oUiHcscquDRnXGph1B4cRjPOcWPvyGbeySWBLNx8TMpY
+ j0ZQJMUSGR5NL8KyYMuz5dVIZ5vjn0bj0N/5oaGfV22U6xZIRVm/6x8vTvmQHhsGHLbITAE/v
+ /V5VRtTmejCJKH4Y7ZqHuNU+8mh48+8QywaRuC78KTH7geKfSl2Fu0P8RGkF8X9HFpbsEAY38
+ DsVDunJdfHmUooi2XmKoHr5E9Ol4a3WoPKhUfl6KgNsah7px+2sWDUNbvUmjiEkjI8VrhxpX1
+ hjNZHkqs/9YfFQqNI5pI+lSUsOjyLI69BykaLzTLMAtwkdIrPUn0GBV09PMd5kVy6ni3Cb3m3
+ RzSR2HYjqHnm9eb96sxyaxKYhtQX9t4IDrU1pRnCfRt4yMI7qa+3qqBwbAhiIk4kZxwn23TVf
+ zeW1ezQYNk+sR9HMOf4awPebXpYLZlGPiwU40FrYnPGUU/rWN/8ZAAf35Xe4Wz34hLiFamAtQ
+ pwVHrZ5CzZ3mdyhA4qmDh/cRveRHLBg2E1c3T/uuje52n9QpRdMqEnj/g0aFsIz6VKCHoazy6
+ pxjq1AlBGD2fr5B7T
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/29/20 09:22, Pavan Kondeti wrote:
-> On Tue, Jan 28, 2020 at 11:30:26AM +0000, Valentin Schneider wrote:
-> > Hi Pavan,
-> > 
-> > On 28/01/2020 06:22, Pavan Kondeti wrote:
-> > > Hi Valentin,
-> > > 
-> > > On Sun, Jan 26, 2020 at 08:09:32PM +0000, Valentin Schneider wrote:
-> > >>  
-> > >> +static inline int check_cpu_capacity(struct rq *rq, struct sched_domain *sd);
-> > >> +
-> > >> +/*
-> > >> + * Scan the asym_capacity domain for idle CPUs; pick the first idle one on which
-> > >> + * the task fits. If no CPU is big enough, but there are idle ones, try to
-> > >> + * maximize capacity.
-> > >> + */
-> > >> +static int select_idle_capacity(struct task_struct *p, int target)
-> > >> +{
-> > >> +	unsigned long best_cap = 0;
-> > >> +	struct sched_domain *sd;
-> > >> +	struct cpumask *cpus;
-> > >> +	int best_cpu = -1;
-> > >> +	struct rq *rq;
-> > >> +	int cpu;
-> > >> +
-> > >> +	if (!static_branch_unlikely(&sched_asym_cpucapacity))
-> > >> +		return -1;
-> > >> +
-> > >> +	sd = rcu_dereference(per_cpu(sd_asym_cpucapacity, target));
-> > >> +	if (!sd)
-> > >> +		return -1;
-> > >> +
-> > >> +	sync_entity_load_avg(&p->se);
-> > >> +
-> > >> +	cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
-> > >> +	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
-> > >> +
-> > >> +	for_each_cpu_wrap(cpu, cpus, target) {
-> > >> +		rq = cpu_rq(cpu);
-> > >> +
-> > >> +		if (!available_idle_cpu(cpu))
-> > >> +			continue;
-> > >> +		if (task_fits_capacity(p, rq->cpu_capacity))
-> > >> +			return cpu;
-> > > 
-> > > I have couple of questions.
-> > > 
-> > > (1) Any particular reason for not checking sched_idle_cpu() as a backup
-> > > for the case where all eligible CPUs are busy? select_idle_cpu() does
-> > > that.
-> > > 
-> > 
-> > No particular reason other than we didn't consider it, I think. I don't see
-> > any harm in folding it in, I'll do that for v4. I am curious however; are
-> > you folks making use of SCHED_IDLE? AFAIA Android isn't making use of it
-> > yet, though Viresh paved the way for that to happen.
-> > 
-> 
-> We are not using SCHED_IDLE in product setups. I am told Android may use it
-> for background tasks in future. I am not completely sure though. I asked it
-> because select_idle_cpu() is using it.
+>> Would you like to reconsider your name selection for such labels?
+=E2=80=A6
+> Fixed. Thanks !
 
-I believe Viresh intention when he pushed for the support was allowing this use
-case.
+Will a different identifier be occasionally more helpful than the label =
+=E2=80=9Cout=E2=80=9D
+also at other source code places?
 
-FWIW, I had a patch locally to implement this but waiting on latency_nice
-attribute to go in [1] before I attempt to upstream it.
-
-The design goals I had in mind:
-
-	1. If there are multiple energy efficient CPUs we can select, select
-	   the idle one.
-	2. If latency nice is set and the most energy efficient CPU is not
-	   idle, then fallback to the most energy efficient idle CPU.
-
-Android use case needs EAS path support before it can be useful to it.
-
-[1] https://lore.kernel.org/lkml/20190919144259.vpuv7hvtqon4qgrv@e107158-lin.cambridge.arm.com/
-
---
-Qais Yousef
+Regards,
+Markus
