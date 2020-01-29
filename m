@@ -2,102 +2,68 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E84C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55ABC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79572071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD97020716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgA2JZV (ORCPT
+        id S1726192AbgA2JZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:25:21 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46017 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgA2JZV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 04:25:21 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v19so3412340oic.12;
-        Wed, 29 Jan 2020 01:25:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oUhjMl/AlmJ59wYzrcHaZFBOUtqm+JrPDdjn+L5sDCE=;
-        b=WwbQ5PMnxDs/zds7hXIqFNmiO4owL7qkG96NDylXzaUTBv/o1otCbSutaorMVGRIYF
-         hK3iJd5Ot5G6NslSjZYDqhgoyv7WY41N32hrmOx1F/r/pzmobrVNnmA5/lcqqEWm21rL
-         zd5fJTlfdrF8D4Q3djNsDCk0p4Jfu6MXIg08+hecOWUfBF/wkz5d90KjgvzzANhEtPKD
-         9j7WXvUFTFQ1sukRgcmhdwFy8ndGntZ39ApZIwxObYFgujXLYLt7fiqhrgtMtTEtnnjh
-         iRH5Kb/i3qKktNVq9GZf2Zf1BHnet8Uug7JGzRdWF8vS9f1SK9g6ppWSp56Tkhcwgu6o
-         EXZQ==
-X-Gm-Message-State: APjAAAXCRd9EFXDMj1ZS8b2ZHJn0cm2IsiOaVQMYpnUSYT+/X62Crz+d
-        BLU5dpHuY0Odrex2Yb4IrXZLT/Mnogg/AK+yauJEfQ==
-X-Google-Smtp-Source: APXvYqxNSUA0NN2VeORoT7Xl02kvoS2AlUoGauJn4GhKLN+jaEFM97hL+bVRis1AQOb8lYCrsdYDM9w6Ul09Olonyxs=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr5573201oia.148.1580289920723;
- Wed, 29 Jan 2020 01:25:20 -0800 (PST)
+        Wed, 29 Jan 2020 04:25:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:38478 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbgA2JZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 04:25:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 087611FB;
+        Wed, 29 Jan 2020 01:25:58 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBB513F52E;
+        Wed, 29 Jan 2020 01:25:56 -0800 (PST)
+Subject: Re: [PATCH v3 1/3] sched/fair: Add asymmetric CPU capacity wakeup
+ scan
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
+        qperret@google.com, adharmap@codeaurora.org
+References: <20200126200934.18712-1-valentin.schneider@arm.com>
+ <20200126200934.18712-2-valentin.schneider@arm.com>
+ <20200128062245.GA27398@codeaurora.org>
+ <1ed322d6-0325-ecac-cc68-326a14b8c1dd@arm.com>
+ <20200129035258.GB27398@codeaurora.org>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <7dd8b850-855c-29e2-8580-357cf1c8ce30@arm.com>
+Date:   Wed, 29 Jan 2020 09:25:50 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200128190913.23086-1-geert+renesas@glider.be> <CAOtvUMfoND5iJi7p9YRb6C3To6FGTKGBSoD+cBhkHnLXSppKEw@mail.gmail.com>
-In-Reply-To: <CAOtvUMfoND5iJi7p9YRb6C3To6FGTKGBSoD+cBhkHnLXSppKEw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 29 Jan 2020 10:25:09 +0100
-Message-ID: <CAMuHMdXA3omJ+YRVMS6yfj8avsEo47DjpFPADBvQZuT+CfWMtA@mail.gmail.com>
-Subject: Re: [PATCH] [RFC] crypto: ccree - fix retry handling in cc_send_sync_request()
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200129035258.GB27398@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gilad,
 
-On Wed, Jan 29, 2020 at 10:11 AM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> On Tue, Jan 28, 2020 at 9:09 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > If cc_queues_status() indicates that the queue is full,
-> > cc_send_sync_request() should loop and retry.
-> >
-> > However, cc_queues_status() returns either 0 (for success), or -ENOSPC
-> > (for queue full), while cc_send_sync_request() checks for real errors by
-> > comparing with -EAGAIN.  Hence -ENOSPC is always considered a real
-> > error, and the code never retries the operation.
-> >
-> > Fix this by just removing the check, as cc_queues_status() never returns
-> > any other error value than -ENOSPC.
->
-> Thank you for spotting this!
->
-> The error is simply checking for the wrong error value.
-> We should be checking for -ENOSPC!
->
-> What this does aims to do is wait for the hardware queue to free up if
-> we were asked to queue a synchronous request and there was no room in
-> the hardware queue.
-> The cc_queue_status() function used to return -EAGAIN in this scenario
-> and this was missed in the change.
->
-> I'm curious as to how you found this - did you run into some problem
-> and traced it to this?
 
-I didn't run into a specific problem, but I'm working on cleaning up the driver
-a bit.
+On 29/01/2020 03:52, Pavan Kondeti wrote:
+>> No particular reason other than we didn't consider it, I think. I don't see
+>> any harm in folding it in, I'll do that for v4. I am curious however; are
+>> you folks making use of SCHED_IDLE? AFAIA Android isn't making use of it
+>> yet, though Viresh paved the way for that to happen.
+>>
+> 
+> We are not using SCHED_IDLE in product setups. I am told Android may use it
+> for background tasks in future. I am not completely sure though. I asked it
+> because select_idle_cpu() is using it.
+> 
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Fair enough! Thanks.
