@@ -2,81 +2,144 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E744C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5091C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1D820720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580291725;
-	bh=Qp4z6BxxO4jNfVLAjf+Lq7T3fqN2XTFayWA+61yLH38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r9Suz/8aNQGqEkoA7bFk/6LHRrM2q5dW/xy0D7GaB8rzGY4w6VsiU/gWqkpfHgaM1
-	 4awxxcZ7YwUqQuCg/2vN7riByA+Xj8/Uovs5koqhs1GQx/pST+n6uNjM/q/X0LDgj7
-	 9T7CmlkzqMdJwOhRKoA4oUZfSyt5SLJzkDu+RHH8=
+	by mail.kernel.org (Postfix) with ESMTP id A4CC62071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgA2JzY (ORCPT
+        id S1726358AbgA2J6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:55:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbgA2JzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 04:55:24 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13A2D20708;
-        Wed, 29 Jan 2020 09:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580291723;
-        bh=Qp4z6BxxO4jNfVLAjf+Lq7T3fqN2XTFayWA+61yLH38=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YkOB7FKkcx+naNcyRr3OAxOQvWFZoxDP8uwopMNvffxqcN/4+/72QEtDdMw7vN+oU
-         z2yjQZ9IwJgBzC8ga2/OLi9BJy8dganyc06dntY252aIlBKRoiBpUuNSGwW5g+sNnJ
-         DnYQqQrxCfDxbEQb8Y1uSzinYTl6SMy0Vm724cvM=
-Date:   Wed, 29 Jan 2020 10:55:21 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Andreas Schneider <asn@cryptomilk.org>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4.4.y] ALSA: pcm: Add missing copy ops check before
- clearing buffer
-Message-ID: <20200129095521.GA3852676@kroah.com>
-References: <20200129094041.12272-1-tiwai@suse.de>
+        Wed, 29 Jan 2020 04:58:08 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2326 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726068AbgA2J6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 04:58:07 -0500
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 6C5DEA6AF853B8C8AC10;
+        Wed, 29 Jan 2020 09:58:05 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 29 Jan 2020 09:58:05 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 29 Jan
+ 2020 09:58:04 +0000
+Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
+To:     Olof Johansson <olof@lixom.net>
+CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "jeremy.linton@arm.com" <jeremy.linton@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
+ <1580210059-199540-3-git-send-email-john.garry@huawei.com>
+ <CAOesGMiCVSvL8H+haLoz=xyiX1CxBSRL_pbCgx-DLhN+5xRn9g@mail.gmail.com>
+ <4c6462e3-e368-bd9f-260f-e8351c85bcc2@huawei.com>
+ <CAOesGMjrC=b781LLU-Btp1b9uKTiMXj8tF3rjK_Wy6Q4iaR+Rw@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <734a01d8-3b50-48ca-1d94-d79d0e6610ff@huawei.com>
+Date:   Wed, 29 Jan 2020 09:58:04 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129094041.12272-1-tiwai@suse.de>
+In-Reply-To: <CAOesGMjrC=b781LLU-Btp1b9uKTiMXj8tF3rjK_Wy6Q4iaR+Rw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 10:40:41AM +0100, Takashi Iwai wrote:
-> [ this is a fix specific to 4.4.y and 4.9.y stable trees;
->   4.14.y and older already contain the right fix ]
-> 
-> The stable 4.4.y and 4.9.y backports of the upstream commit
-> add9d56d7b37 ("ALSA: pcm: Avoid possible info leaks from PCM stream
-> buffers") dropped the check of substream->ops->copy_user as copy_user
-> is a new member that isn't present in the older kernels.
-> Although upstream drivers should work without this NULL check, it may
-> cause a regression with a downstream driver that sets some
-> inaccessible address to runtime->dma_area, leading to a crash at
-> worst.
-> 
-> Since such drivers must have ops->copy member on older kernels instead
-> of ops->copy_user, this patch adds the missing check of ops->copy for
-> fixing the regression.
-> 
-> Reported-and-tested-by: Andreas Schneider <asn@cryptomilk.org>
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Hi Olof,
 
-Thanks for the fix!
+>>>
+>>> Based on everything I've seen so far, this should go under drivers/acpi instead.
+>>
+>> soc drivers seem to live in drivers/soc (non-arm32, anyway), so I
+>> decided on this location. But drivers/acpi would also seem reasonable now.
+> 
+> We don't want drivers/soc to be too much of a catch-all -- it is meant
+> for some of the glue pieces that don't have good homes elsewhere.
+> Unfortunately, the slope is slippery and we've already gone down it a
+> bit, but I think we can fairly clearly declare that this kind of
+> cross-soc material is likely not the right home for it -- especially
+> when drivers/acpi is a good fit in this case.
 
-greg k-h
+ok
+
+> 
+>>>> diff --git a/drivers/soc/acpi_generic.c b/drivers/soc/acpi_generic.c
+>>>> new file mode 100644
+>>>> index 000000000000..34a1f5f8e063
+>>>> --- /dev/null
+>>>> +++ b/drivers/soc/acpi_generic.c
+>>>> @@ -0,0 +1,102 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Copyright (c) John Garry, john.garry@huawei.com
+>>>> + */
+>>>> +
+>>>> +#define pr_fmt(fmt) "SOC ACPI GENERIC: " fmt
+>>>> +
+>>>> +#include <linux/acpi.h>
+>>>> +#include <linux/sys_soc.h>
+>>>> +
+
+[...]
+
+>>>
+>>> Hmm, this doesn't look like much of a driver to me. This looks like
+>>> the export of an attribute to userspace, and should probably be done
+>>> by ACPI core instead of creating an empty driver for it.
+>>
+>> OK, but I'm thinking that having a soc driver can be useful as it is
+>> common to DT, and so userspace only has to check a single location. And
+>> the soc driver can also cover multiple-chip systems without have to
+>> reinvent that code for ACPI core. And it saves adding a new ABI.
+> 
+> While having a single location could be convenient, the actual data
+> read/written would be different (I'm guessing).
+
+Without doubt we would have different data sometimes between ACPI and DT 
+FW..
+
+And it is not ideal that the soc_id sysfs file could have different 
+contents for the same SoC, depending on ACPI or DT.
+
+> 
+> We also already have a supposed standard way of figuring out what SoC
+> we're on (toplevel compatible for the DT). 
+
+ From checking some soc drivers, there is a distinction between how 
+soc_id and machine is evaluated: machine comes from DT model, which 
+looks standard; however soc_id seems to have different methods of 
+evaluate, like sometimes reading some system id register (I'm checking 
+exynos-chipid.c there).
+
+We're just looking for soc_id. But, as before, it would probably be 
+different between ACPI and DT, so not ideal.
+
+So no matter what, I think
+> userspace will need to handle two ways of probing this.
+> 
+
+That should not be a big problem.
+
+> 
+
+Thanks,
+John
+
