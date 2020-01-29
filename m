@@ -2,102 +2,161 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0659FC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B38C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CAE20716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D54C206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e7L2TCwe"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pz9lJtil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgA2RrQ (ORCPT
+        id S1727392AbgA2Rr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 12:47:16 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:41992 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbgA2RrP (ORCPT
+        Wed, 29 Jan 2020 12:47:27 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:43852 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbgA2Rr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 12:47:15 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00THcwLG126119;
-        Wed, 29 Jan 2020 17:46:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=lwS0OgyEz/S/yIRyeJcc23PQIQm2EF2vWGxSVmIUGAA=;
- b=e7L2TCwetOgu6k5B5Z8EaCNGYbwyufGq0Z8/k1USa5mC8uk+J9qwFtymmQmDx8s4dBJK
- S5la3Bz0Ulowu0vrLKnEnJjqArbZiq8/vQGR9q4vBXfqkly3YF34QLh6+Q4+L+m9bfYW
- DcR+4yktC0OVgXRmYODEmOlRU5vDRCWkmiwXfUS7ehW0Z4rXmKOn+N08XLnpb1UWG6rX
- H92gHFWdF78Kpx/YhBV8pW5dVN0VlIzv+PH0X+WcdvFBKo/K4IcviN6UXWzLTaXbGKmk
- Lk6l+jZfdocS1OLRugjM4382estGhzX4MrfNjTnw84UEzRVMi0Wg1EA4rvlD18SZMRfm Fg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xrd3uf33d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jan 2020 17:46:52 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00THcF2d053105;
-        Wed, 29 Jan 2020 17:46:52 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2xu8e6ta9h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jan 2020 17:46:52 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00THkofY002378;
-        Wed, 29 Jan 2020 17:46:50 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Jan 2020 09:46:50 -0800
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 24/28] ata: start separating SATA specific code from libata-scsi.c
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200128133343.29905-1-b.zolnierkie@samsung.com>
-        <CGME20200128133418eucas1p157933935f14f9c83c604bc5dc38bcbae@eucas1p1.samsung.com>
-        <20200128133343.29905-25-b.zolnierkie@samsung.com>
-        <20200129173156.GL12616@infradead.org>
-Date:   Wed, 29 Jan 2020 12:46:46 -0500
-In-Reply-To: <20200129173156.GL12616@infradead.org> (Christoph Hellwig's
-        message of "Wed, 29 Jan 2020 09:31:56 -0800")
-Message-ID: <yq1h80e6tq1.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 29 Jan 2020 12:47:27 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200129174724euoutp02385056956592c2d2322d18f183cc6ca5~ubLU95pbg1331813318euoutp02K
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 17:47:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200129174724euoutp02385056956592c2d2322d18f183cc6ca5~ubLU95pbg1331813318euoutp02K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1580320044;
+        bh=Gv4yBUMCeYHdHBHWfyFydKrL6tXtlVDup9vy81yiy50=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=pz9lJtiln5AXtGTpuPv3Wgqxb373lIHBSsOFUsAmccxO1fuQ2cN87R3aBM3tjgexW
+         oluuxs3/UvkI+ioLlOMqsAdTcqMfpmNpLXQIp6VXp1wOefYlzkDoD5ns4+YvkTuFkh
+         8x7VjPPe2RzK3ef/AHxplzufQy+77ox3GfjPHm4g=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200129174724eucas1p2b1ab8eb72df18d25afac410fd98ee200~ubLUglMA72293422934eucas1p2y;
+        Wed, 29 Jan 2020 17:47:24 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 6E.75.61286.C25C13E5; Wed, 29
+        Jan 2020 17:47:24 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb~ubLUC1z9l1193711937eucas1p11;
+        Wed, 29 Jan 2020 17:47:23 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200129174723eusmtrp27e6644c724431c052887f52ce7594860~ubLUCPrV-2706627066eusmtrp2J;
+        Wed, 29 Jan 2020 17:47:23 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-8d-5e31c52c4e2d
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id D5.C0.07950.B25C13E5; Wed, 29
+        Jan 2020 17:47:23 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200129174723eusmtip1fc91445ca438891f4e1af0c633757ce7~ubLTqw4nq1608116081eusmtip1L;
+        Wed, 29 Jan 2020 17:47:23 +0000 (GMT)
+Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and
+ slaves
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <fde812a2-aea6-c16e-5ed7-ab5195b1259f@samsung.com>
+Date:   Wed, 29 Jan 2020 18:47:21 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001290145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001290145
+In-Reply-To: <20200117153056.31363-1-geert+renesas@glider.be>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsWy7djP87o6Rw3jDK7OlbCYPvUCo8XqqX9Z
+        LebOnsRocXnXHDaLrS/fMVnsvHOC2YHNY+JZXY/Fe14yeWxa1cnm8XmTXABLFJdNSmpOZllq
+        kb5dAlfG0wmlBUt5Kw79OMjewPieq4uRk0NCwERi1uE/LCC2kMAKRol9i5W6GLmA7C+MEhdW
+        /mGFcD4zSryY9IUFpmPevK2MEB3LGSX2TPSEKHrLKPFpz2ImkISwQIjEvnPtYEUiAlUSZ77+
+        YwOxmQUSJE48vgxWwyZgKNH1tgsszitgJ/F97zawBSwCqhJv7/0HqxEViJW4v3oqI0SNoMTJ
+        mU/AajgFbCWmnp/KAjFTXqJ562xmCFtc4taT+UwgB0kIzGOXaJrxFOpqF4m7K1ugbGGJV8e3
+        sEPYMhL/d8I0NDNKPDy3lh3C6WGUuNw0gxGiylrizrlfQKdyAK3QlFi/Sx/ElBBwlGi8HQlh
+        8knceCsIcQOfxKRt05khwrwSHW1CEDPUJGYdXwe39eCFS8wTGJVmIflsFpJvZiH5ZhbC2gWM
+        LKsYxVNLi3PTU4sN81LL9YoTc4tL89L1kvNzNzECE83pf8c/7WD8einpEKMAB6MSD69EmWGc
+        EGtiWXFl7iFGCQ5mJRFeUVegEG9KYmVValF+fFFpTmrxIUZpDhYlcV7jRS9jhQTSE0tSs1NT
+        C1KLYLJMHJxSDYyKS/NiXs1IWvBw+WtPbk/hn49j0vtfdv9Z8mta9LsjU2KPnO5Y9c69PFVs
+        9/XvPy5JLiz2c4qXqC9Zs9njhn3lZ6sA/ml5zTUMm3csvHTZZo/ArarbrMr2KnNX8eV+ehRa
+        pywSXFX7cQH/gx7NjAnn7mv98mHhqarkbBTRYN0ox3bjCNPEb4eVWIozEg21mIuKEwHMQNfw
+        MAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xu7raRw3jDJbtM7KYPvUCo8XqqX9Z
+        LebOnsRocXnXHDaLrS/fMVnsvHOC2YHNY+JZXY/Fe14yeWxa1cnm8XmTXABLlJ5NUX5pSapC
+        Rn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G0wmlBUt5Kw79OMje
+        wPieq4uRk0NCwERi3rytjCC2kMBSRonfq6Ug4jISJ6c1sELYwhJ/rnWxdTFyAdW8ZpRYcvwU
+        E0hCWCBEYt+5drBmEYEqiXl7toDFmQUSJE48X8HexcgB1GAjcee1C0iYTcBQoustyBxODl4B
+        O4nve7exgNgsAqoSb+/9B2sVFYiV+H/mGlSNoMTJmU/AajgFbCWmnp/KAjHeTGLe5ofMELa8
+        RPPW2VC2uMStJ/OZJjAKzULSPgtJyywkLbOQtCxgZFnFKJJaWpybnltspFecmFtcmpeul5yf
+        u4kRGFnbjv3csoOx613wIUYBDkYlHl6JMsM4IdbEsuLK3EOMEhzMSiK8oq5AId6UxMqq1KL8
+        +KLSnNTiQ4ymQM9NZJYSTc4HRn1eSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILU
+        Ipg+Jg5OqQbGHeoHbmcckGgJr4+uf1wsGZd66eYbvoxc8+CqyVpXuX/8ePeyMfXRJ93yb0vv
+        vb7QPJf535qpQfYVj9JPcz0RTFz5lmOy6Zpp7d+ULO7yLtyYqVP9SdFZssJh6pl1Ld8r/qzh
+        d/u+0Tv90g43BZ9/87LS2k88n/Z/U63DGvNHyt/EX9QeVfO+ocRSnJFoqMVcVJwIANypueDC
+        AgAA
+X-CMS-MailID: 20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb
+References: <20200117153056.31363-1-geert+renesas@glider.be>
+        <CGME20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Geert,
 
-Christoph,
-
-> On Tue, Jan 28, 2020 at 02:33:39PM +0100, Bartlomiej Zolnierkiewicz wrote:
->> * include libata-scsi-sata.c in the build when CONFIG_SATA_HOST=y
+On 17.01.2020 16:30, Geert Uytterhoeven wrote:
+> Currently it is not easy to find out which DMA channels are in use, and
+> which slave devices are using which channels.
 >
-> The libata-core.c vs libata-scsi.c split already is a bit weird, any
-> reason not to simply have a single libata-sata.c?
+> Fix this by creating two symlinks between the DMA channel and the actual
+> slave device when a channel is requested:
+>    1. A "slave" symlink from DMA channel to slave device,
+>    2. A "dma:<name>" symlink slave device to DMA channel.
+> When the channel is released, the symlinks are removed again.
+> The latter requires keeping track of the slave device and the channel
+> name in the dma_chan structure.
+>
+> Note that this is limited to channel request functions for requesting an
+> exclusive slave channel that take a device pointer (dma_request_chan()
+> and dma_request_slave_channel*()).
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
 
-I agree, I also tripped over libata-scsi-sata.
+This patch breaks booting on almost all Exynos based boards:
 
+https://lore.kernel.org/linux-samsung-soc/20200129161113.GE3928@sirena.org.uk/T/#u
+
+I've already sent a fix:
+
+https://lkml.org/lkml/2020/1/29/498
+
+BTW, this patch reminds me some of my earlier work:
+
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1329778.html
+
+I had similar need to keep a client's struct device pointer for every 
+requested channel, but it turned out to be much more complicated than 
+I've initially thought. I've abandoned that, due to lack of time, but 
+maybe some of that discussion and concerns are still valid (I hope that 
+links to earlier versions are still working)...
+
+ > ...
+
+Best regards
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
