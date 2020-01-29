@@ -2,125 +2,132 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F353CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5CCC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C089E24688
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FFE21739
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EJlH9jGd"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RJhq8Mah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgA2BYP (ORCPT
+        id S1726671AbgA2BZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 20:24:15 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46731 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgA2BYO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 20:24:14 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so7941059pgb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 17:24:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ABEaCl8eghaB63SlspLn6OWSOfbEB+69FRLfk57jKew=;
-        b=EJlH9jGdkWKVSguyJVfmQBTJ5NeJpIP3u1q/DrM1f/oEIt8AqWPPhQFYdTidDimERP
-         R4xlzFe4jg5q7RZqboH+BnQhCBYfPcTPKolCBnW00OrziW8SAqc/gqALlAiZmo//9mgW
-         H9EnTD9jr3RcBl1lE93i7D6NITgAq6mqcbEXI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ABEaCl8eghaB63SlspLn6OWSOfbEB+69FRLfk57jKew=;
-        b=Oj3neD1f2TJBj8zyhttHukGdwdLNEzWqu+++5+5viwHUff6Q14NVm1whawCRTYTHiH
-         /QoSRIFcaKaz/4a84+P0J+V/XlybkaQ+gsfbspTxR0d7pluEaQkenwZLhoUrmU6Xm+Be
-         v3/NYGgaZnI2ZCvXOlgC/MY48x6FJWiSe+CXObhegiuNVDz5FH9aWtEoGVBo6t74Hub8
-         uKRzeJB/liqe3I+/rvZqKvPwsiwfTk4CPIrr8oEyQge4qnVoJjnZyoVMwZvAGICxH+wU
-         09ONoKxXD9FurLNurhwlo37qDkdcMS+4Gb+b++V5u14UpmE88O5Ajk5+G6qDMK5aZJl8
-         58lw==
-X-Gm-Message-State: APjAAAXlCxezLcc3Cszk9MsTebj3EFbKp9JFxTxcEPCui2JtVCY3oDfR
-        1k/h44jvQtM9zyo+8RNF/8gTVA==
-X-Google-Smtp-Source: APXvYqy0fsqJgkgNmjAYKqDfm+xayl+seLu9bJsiaQkshHwfjny7qJQa0p/fg20lUSyxfvS//wUEcw==
-X-Received: by 2002:a63:fe0a:: with SMTP id p10mr27309683pgh.96.1580261053832;
-        Tue, 28 Jan 2020 17:24:13 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id a10sm289964pgm.81.2020.01.28.17.24.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 17:24:13 -0800 (PST)
-Date:   Tue, 28 Jan 2020 17:24:11 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org
-Subject: Re: [RFC v3 09/10] arm64: dts: qcom: sdm845: Add cpu OPP tables
-Message-ID: <20200129012411.GI46072@google.com>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <20200127200350.24465-10-sibis@codeaurora.org>
+        Tue, 28 Jan 2020 20:25:41 -0500
+Received: from ozlabs.org ([203.11.71.1]:44195 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726556AbgA2BZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 20:25:40 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 486m5C6Pkyz9s29;
+        Wed, 29 Jan 2020 12:25:35 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580261138;
+        bh=bNk4+04lZrrQBvhTZxDuTUNrFeZd4M8y80KF6+f/G6c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RJhq8MahjkRuDkbjdqvqJykdgLR1D6IR0d68XayASh7HLJfyn9+T60k6mCM5iNIUO
+         OfFlyna5UmHE68VHPs/z5usSUyaK3Mba1fW67SnzOyxs7FRkPg9s7CxryAJ5mY4fCp
+         WoNbFgPNHtM6DBm8u63UeEqAwssBeJx+y0M3dAqsI3wvWybdGm8eynWiQAHgA0d58j
+         KHifPwPkIN5rwDy1w0tLroznv/dPbO58/ZDgo0J9qJs5UoqwsHb5A2Cu4nHq/7nojP
+         zpy9z0MrovXjIY1BAmg1Nf2SCu5zgLqUICZMgyd2H9SRiY6Nm3f1eHXEN80qMhF1rC
+         JvxRjy4q62EFA==
+Date:   Wed, 29 Jan 2020 12:25:30 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: Re: linux-next: manual merge of the selinux tree with the keys tree
+Message-ID: <20200129122530.7d4659f6@canb.auug.org.au>
+In-Reply-To: <20191210105037.085b3418@canb.auug.org.au>
+References: <20191210105037.085b3418@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200127200350.24465-10-sibis@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/AqXG295sS9XOYlLq+q3g.f+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sibi,
+--Sig_/AqXG295sS9XOYlLq+q3g.f+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 28, 2020 at 01:33:49AM +0530, Sibi Sankar wrote:
-> Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 453 +++++++++++++++++++++++++++
->  1 file changed, 453 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index c036bab49fc03..8cb976118407b 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -199,6 +199,12 @@
->  			qcom,freq-domain = <&cpufreq_hw 0>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_0>;
-> +			operating-points-v2 = <&cpu0_opp_table>,
-> +					      <&cpu0_ddr_bw_opp_table>,
-> +					      <&cpu0_l3_bw_opp_table>;
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+Hi all,
 
-This apparently depends on the 'Split SDM845 interconnect nodes and
-consolidate RPMh support' series
-(https://patchwork.kernel.org/project/linux-arm-msm/list/?series=226281),
-which isn't mentioned in the cover letter.
+On Tue, 10 Dec 2019 10:50:37 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the selinux tree got a conflict in:
+>=20
+>   include/linux/lsm_audit.h
+>=20
+> between commit:
+>=20
+>   59336b0f8000 ("smack: Implement the watch_key and post_notification hoo=
+ks")
+>=20
+> from the keys tree and commit:
+>=20
+>   59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
+>=20
+> from the selinux tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc include/linux/lsm_audit.h
+> index 734d67889826,99d629fd9944..000000000000
+> --- a/include/linux/lsm_audit.h
+> +++ b/include/linux/lsm_audit.h
+> @@@ -74,7 -74,7 +74,8 @@@ struct common_audit_data=20
+>   #define LSM_AUDIT_DATA_FILE	12
+>   #define LSM_AUDIT_DATA_IBPKEY	13
+>   #define LSM_AUDIT_DATA_IBENDPORT 14
+>  -#define LSM_AUDIT_DATA_LOCKDOWN 15
+>  +#define LSM_AUDIT_DATA_NOTIFICATION 15
+> ++#define LSM_AUDIT_DATA_LOCKDOWN 16
+>   	union 	{
+>   		struct path path;
+>   		struct dentry *dentry;
 
-I also couldn't find a patch on the lists that adds the 'osm_l3'
-interconnect node for SDM845. The same is true for SC7180 (next
-patch of this series). These patches may be available in custom trees,
-but that isn't really helpful for upstream review.
+This is now a conflict between the keys tree and Linus' tree.
 
-I would suggest to focus on landing the dependencies of this series,
-before proceding with it (or at least most of them), there are plenty
-and without the dependencies this series isn't going to land, it also
-makes it hard for testers and reviewers to get all the pieces
-together. In particular the last post of the series 'Add
-required-opps support to devfreq passive gov'
-(https://patchwork.kernel.org/cover/11055499/) is from July 2019 ...
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks
+--Sig_/AqXG295sS9XOYlLq+q3g.f+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Matthias
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4w3woACgkQAVBC80lX
+0GzElAf+KEy7SHAbO38xCJdlsXNy/wNDUDp5cWwrraYJbV1gXViajkHtlPBsTDre
+P8AJsXSBLbLUg0glDpIFJfVueC6P5y5JacBrcOh2vRjq96K2KnHdwTY7GZfdYb8y
+re4mkNQsblh6pjRZAWpjwOn0I/n79fiPZD1nSBIvQnA29cU7CMd/G2JyQG/Njdc6
+IYQBMhfXDOU7jQmFOIHWOISqTYFYufxIIZvnUqJBvh8YIQ2AXqwAt+jw2IYzx6Og
+S6Csu00TYvzQ+HLE9V90kc/KEzfCM0hsb2zvFhaIIoWJiV9Upv3cZOwe5HMSCHDf
+UlhhcIoYtZuYbCI+sVRDjJ23OZwOVA==
+=/lgy
+-----END PGP SIGNATURE-----
+
+--Sig_/AqXG295sS9XOYlLq+q3g.f+--
