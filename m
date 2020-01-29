@@ -2,79 +2,173 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D02C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773E7C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A88E206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5634B206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:18:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vqr407+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbgA2SSK (ORCPT
+        id S1727438AbgA2SSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:18:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43660 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgA2SSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:18:10 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 925F4B28E;
-        Wed, 29 Jan 2020 18:18:08 +0000 (UTC)
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     colyli@suse.de, kent.overstreet@gmail.com
-Cc:     linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dave@stgolabs.net, Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH] bcache: optimize barrier usage for Rmw atomic bitops
-Date:   Wed, 29 Jan 2020 10:08:02 -0800
-Message-Id: <20200129180802.24626-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.16.4
+        Wed, 29 Jan 2020 13:18:20 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35922 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbgA2SSU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 13:18:20 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 185so68021pfv.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 10:18:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=f7H8V33x8TSaOVVVtMrepShUU/hwcU6izxAXRT/mzfw=;
+        b=Vqr407+sv8WoZA1hzU5mx0uQKQWeEp/YlSdH1oWaQDmhjqHhxJIIfJOA/76vIGcYsU
+         v9lMc8lNDWj3kScIP4wQyHM8vvhSsGhdGhsnCqwRmBC2eRPg9JWFto0TAy1RHnGlaNMr
+         X2FaZkAIJyYtpCubCxug3D9XiHEOQr9QUg4To=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f7H8V33x8TSaOVVVtMrepShUU/hwcU6izxAXRT/mzfw=;
+        b=fdgSKiLtSRyvR3a1SoNGM0xrXSKRJqGRl5P7iK4RJ42YHlzO+yGnWj5L6M1z1mu6yQ
+         wFQZAsUn8Px4oiIRdmJA0OcDz+yGd1XG/4WCCifMn7e0VQ5Cm4k50NzxjpdMYINqL2Yk
+         NeDwWMVoy6HvV8s+4ZpPQDJ6YcTI24BepToVOHm4lScvv9VoiMz3X5Kxv6eRYXFAJuQl
+         tH01TabFyfqFNC3ZMJyCCxFir1o2fZYjESvr4hTcoK9+CDpCHds7P8WeUOJpt23wsadb
+         897jt8o8/QI+YmQTqOdIzRjvcj/BOqW8ZD//y1fHA3x0KVfkBfrcutE7u2JlyDDUWQn8
+         KPfg==
+X-Gm-Message-State: APjAAAXRh3ijp9UQkbNKu3sWjOYogFSePfe1OWRk/roQ5RrL92dQ6ZZx
+        fPM9J6ey2BewDmVe/DEL4vCHhg==
+X-Google-Smtp-Source: APXvYqx20g2qD4qMi2aZtS1b5wov2GagAFH0c6dk7k38lCVp0fm4wKaqKecYBrirjd8drUcktw0P5A==
+X-Received: by 2002:a65:66c8:: with SMTP id c8mr335019pgw.161.1580321899818;
+        Wed, 29 Jan 2020 10:18:19 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id m71sm6735468pje.0.2020.01.29.10.18.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 10:18:19 -0800 (PST)
+Date:   Wed, 29 Jan 2020 10:18:17 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org
+Subject: Re: [RFC v3 09/10] arm64: dts: qcom: sdm845: Add cpu OPP tables
+Message-ID: <20200129181817.GA71044@google.com>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <20200127200350.24465-10-sibis@codeaurora.org>
+ <20200129012411.GI46072@google.com>
+ <4f2b98a1dae3bc737a43a1e46255657b@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4f2b98a1dae3bc737a43a1e46255657b@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can avoid the unnecessary barrier on non LL/SC architectures,
-such as x86. Instead, use the smp_mb__after_atomic().
+Hi Sibi,
 
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
----
- drivers/md/bcache/writeback.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Wed, Jan 29, 2020 at 07:35:21PM +0530, Sibi Sankar wrote:
+> Hey Matthias,
+> 
+> Thanks for the review!
+> 
+> On 2020-01-29 06:54, Matthias Kaehlcke wrote:
+> > Hi Sibi,
+> > 
+> > On Tue, Jan 28, 2020 at 01:33:49AM +0530, Sibi Sankar wrote:
+> > > Add OPP tables required to scale DDR/L3 per freq-domain on SDM845
+> > > SoCs.
+> > > 
+> > > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 453
+> > > +++++++++++++++++++++++++++
+> > >  1 file changed, 453 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > index c036bab49fc03..8cb976118407b 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > @@ -199,6 +199,12 @@
+> > >  			qcom,freq-domain = <&cpufreq_hw 0>;
+> > >  			#cooling-cells = <2>;
+> > >  			next-level-cache = <&L2_0>;
+> > > +			operating-points-v2 = <&cpu0_opp_table>,
+> > > +					      <&cpu0_ddr_bw_opp_table>,
+> > > +					      <&cpu0_l3_bw_opp_table>;
+> > > +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc
+> > > SLAVE_EBI1>,
+> > > +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+> > 
+> > This apparently depends on the 'Split SDM845 interconnect nodes and
+> > consolidate RPMh support' series
+> > (https://patchwork.kernel.org/project/linux-arm-msm/list/?series=226281),
+> > which isn't mentioned in the cover letter.
+> > 
+> > I also couldn't find a patch on the lists that adds the 'osm_l3'
+> > interconnect node for SDM845. The same is true for SC7180 (next
+> > patch of this series). These patches may be available in custom trees,
+> > but that isn't really helpful for upstream review.
+> 
+> yeah I missed adding the interconnect
+> refactor dependency and the nodes.
+> 
+> > 
+> > I would suggest to focus on landing the dependencies of this series,
+> > before proceding with it (or at least most of them), there are plenty
+> > and without the dependencies this series isn't going to land, it also
+> > makes it hard for testers and reviewers to get all the pieces
+> 
+> yes I understand but wanted the series
+> out asap because since there are a few
+> points where we still havn't reached
+> a consensus on.
 
-diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-index 4a40f9eadeaf..284ff10f480f 100644
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -183,7 +183,7 @@ static void update_writeback_rate(struct work_struct *work)
- 	 */
- 	set_bit(BCACHE_DEV_RATE_DW_RUNNING, &dc->disk.flags);
- 	/* paired with where BCACHE_DEV_RATE_DW_RUNNING is tested */
--	smp_mb();
-+	smp_mb__after_atomic();
- 
- 	/*
- 	 * CACHE_SET_IO_DISABLE might be set via sysfs interface,
-@@ -193,7 +193,7 @@ static void update_writeback_rate(struct work_struct *work)
- 	    test_bit(CACHE_SET_IO_DISABLE, &c->flags)) {
- 		clear_bit(BCACHE_DEV_RATE_DW_RUNNING, &dc->disk.flags);
- 		/* paired with where BCACHE_DEV_RATE_DW_RUNNING is tested */
--		smp_mb();
-+		smp_mb__after_atomic();
- 		return;
- 	}
- 
-@@ -229,7 +229,7 @@ static void update_writeback_rate(struct work_struct *work)
- 	 */
- 	clear_bit(BCACHE_DEV_RATE_DW_RUNNING, &dc->disk.flags);
- 	/* paired with where BCACHE_DEV_RATE_DW_RUNNING is tested */
--	smp_mb();
-+	smp_mb__after_atomic();
- }
- 
- static unsigned int writeback_delay(struct cached_dev *dc,
--- 
-2.16.4
+Ok, I just wanted to make sure we are not burning the limited
+maintainer/reviewer bandwidth on code with hard dependencies on
+things that aren't moving forward.
 
+> > together. In particular the last post of the series 'Add
+> > required-opps support to devfreq passive gov'
+> > (https://patchwork.kernel.org/cover/11055499/) is from July 2019 ...
+> 
+> https://lore.kernel.org/lkml/CAGTfZH37ALwUHd8SpRRrBzZ6x1-++YtzS60_yRQvN-TN6rOzaA@mail.gmail.com/
+> 
+> The pending patch for lazy linking
+> was posted a while back. Now that
+> it has a tested-by, majority of the
+> series should go in since the devfreq
+> maintainers wanted the series pulled
+> in.
+
+Thanks for the clarification. For reference the post is
+https://patchwork.kernel.org/patch/11048277/#23020727
+
+It sems the series will require at least another re-spin:
+
+  "So once that's (lazy linking) added, I should be able to drop a few
+  patches in this series, do some minor updates and then this will be
+  good to go."
+
+  https://patchwork.kernel.org/cover/11055499/#23001445
+
+So it looks like we are waiting for the lazy linking patch to
+land in the PM/Linus' tree and then a re-spin of the 'Add
+required-opps support to devfreq passive gov' series.
