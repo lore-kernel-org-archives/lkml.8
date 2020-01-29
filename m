@@ -2,205 +2,199 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEE4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D546C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C582070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D9CC20708
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:07:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="na0yHElP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgA2JA3 convert rfc822-to-8bit (ORCPT
+        id S1726069AbgA2JGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:00:29 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:35164 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgA2JA3 (ORCPT
+        Wed, 29 Jan 2020 04:06:54 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38674 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbgA2JGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 04:00:29 -0500
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id C984BCECB0;
-        Wed, 29 Jan 2020 10:09:46 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [Bluez PATCH v1] bluetooth: secure bluetooth stack from bluedump
- attack
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200106181425.Bluez.v1.1.I5ee1ea8e19d41c5bdffb4211aeb9cd9efa5e0a4a@changeid>
-Date:   Wed, 29 Jan 2020 10:00:26 +0100
-Cc:     BlueZ devel list <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <9E07917B-E3B0-4AD9-9771-4CE325F1290F@holtmann.org>
-References: <20200106181425.Bluez.v1.1.I5ee1ea8e19d41c5bdffb4211aeb9cd9efa5e0a4a@changeid>
-To:     Yun-hao Chung <howardchung@google.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Wed, 29 Jan 2020 04:06:53 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l9so13262272oii.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 01:06:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t2s6x20EEWG92600QNdFV4esykKiTJqORk9G9g0F7T8=;
+        b=na0yHElPJgb8ZKTDyya2uNiDGIJ+JxF+qDGOrdj03iQI5D/HgjkyxO2oMTJR+GaHZV
+         FN5f3LwUUXQj4q/8MRhZwRHC6Hq+FlnzM8IQ+/LxLiUF25E3PA8AwkXB6uFCE8uLbxUW
+         i6JBkHhySsci7kLCUKlI4rmsWuMIlCqAvR7WMseWdw4lJShZ2f+xcV6f88OTGviPuV9y
+         GgUXrUe13YEGDZliycAuhs6uw9mTjQq/aDen6gLTAr9WJfpxHycbodZElceAoQugypuP
+         DnAB4j3JpB1gUtAlf/qBWLoSVsskkEec3DkNC2mdH3vMUWKcCPwxA/TgccaxtxEw/b+t
+         DYag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t2s6x20EEWG92600QNdFV4esykKiTJqORk9G9g0F7T8=;
+        b=tbbEr/5KprKMoEQIu94vzvQ4Ot2TwQldkWhZVh/MtDkB4uLA0M7kqXAOeaOIqM0hiG
+         MGgynpkVeylb+5XLBXbJ/ttOJ7TuXsLrv9SQ6FwjeXeuFhGa+feOVjpgVlBcwV4mGXki
+         I7wkisqfHW07auRIxVVlH0ZFwPL9/3eaOWg/tWnAo9331nd/SWI1/R8W8aoILgFQGK7d
+         JO8QChVvxLxM5YHkWM3rEFT/ysf5eLUrlHHdCR8S7C569FqUbzFwlls49/ShReQdMCsP
+         JVbdpSj2RkhGsjW8pcNh8I1Xi2X/pMPrQf4DTpBZtOik+mbi50bAszRPBw8uEo/ubx3+
+         Wz6g==
+X-Gm-Message-State: APjAAAX4COkxcOaOtLdegRmwFqwMWJs/+mt7iCqlxSaoWl8i9yL+dDlZ
+        SdTi29kmruf2iVfvYDm59Y8s8LDzajCCFokQoDTKhg==
+X-Google-Smtp-Source: APXvYqwpzNHXG7UZJVurZ6ZnBKo2tCEq58PM1Lk3Ya7fuzeuWmvDzy1wRuCPRWutEkSn9Cjd0ohlbPdxDhaTqokQ5O8=
+X-Received: by 2002:aca:d4c1:: with SMTP id l184mr5832340oig.172.1580288811877;
+ Wed, 29 Jan 2020 01:06:51 -0800 (PST)
+MIME-Version: 1.0
+References: <20200129042019.3632-1-cai@lca.pw> <20200129085124.GF24244@dhcp22.suse.cz>
+In-Reply-To: <20200129085124.GF24244@dhcp22.suse.cz>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 29 Jan 2020 10:06:40 +0100
+Message-ID: <CANpmjNNaCtL+vqpPKug9_DoFUue=PdoTyQFXLOx5H_BYCyDMzA@mail.gmail.com>
+Subject: Re: [PATCH -next] mm/page_counter: mark intentional data races
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Howard,
+On Wed, 29 Jan 2020 at 09:51, Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 28-01-20 23:20:19, Qian Cai wrote:
+> > The commit 3e32cb2e0a12 ("mm: memcontrol: lockless page counters")
+> > had memcg->memsw->failcnt and ->watermark could be accessed concurrently
+> > as reported by KCSAN,
+> >
+> >  Reported by Kernel Concurrency Sanitizer on:
+> >  BUG: KCSAN: data-race in page_counter_try_charge / page_counter_try_charge
+> >
+> >  read to 0xffff8fb18c4cd190 of 8 bytes by task 1081 on cpu 59:
+> >   page_counter_try_charge+0x4d/0x150 mm/page_counter.c:138
+> >   try_charge+0x131/0xd50
 
-> Attack scenario:
-> 1. A Chromebook (let's call this device A) is paired to a legitimate
->   Bluetooth classic device (e.g. a speaker) (let's call this device
->   B).
-> 2. A malicious device (let's call this device C) pretends to be the
->   Bluetooth speaker by using the same BT address.
-> 3. If device A is not currently connected to device B, device A will
->   be ready to accept connection from device B in the background
->   (technically, doing Page Scan).
-> 4. Therefore, device C can initiate connection to device A
->   (because device A is doing Page Scan) and device A will accept the
->   connection because device A trusts device C's address which is the
->   same as device B's address.
-> 5. Device C won't be able to communicate at any high level Bluetooth
->   profile with device A because device A enforces that device C is
->   encrypted with their common Link Key, which device C doesn't have.
->   But device C can initiate pairing with device A with just-works
->   model without requiring user interaction (there is only pairing
->   notification). After pairing, device A now trusts device C with a
->   new different link key, common between device A and C.
-> 6. From now on, device A trusts device C, so device C can at anytime
->   connect to device A to do any kind of high-level hijacking, e.g.
->   speaker hijack or mouse/keyboard hijack.
-> 
-> To fix this, reject the pairing if all the conditions below are met.
-> - the pairing is initialized by peer
-> - the authorization method is just-work
-> - host already had the link key to the peer
-> 
-> Also create a debugfs option to permit the pairing even the
-> conditions above are met.
-> 
-> Signed-off-by: howardchung <howardchung@google.com>
-> ---
-> 
-> include/net/bluetooth/hci.h |  1 +
-> net/bluetooth/hci_core.c    | 47 +++++++++++++++++++++++++++++++++++++
-> net/bluetooth/hci_event.c   | 12 ++++++++++
-> 3 files changed, 60 insertions(+)
-> 
-> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> index 07b6ecedc6ce..4918b79baa41 100644
-> --- a/include/net/bluetooth/hci.h
-> +++ b/include/net/bluetooth/hci.h
-> @@ -283,6 +283,7 @@ enum {
-> 	HCI_FORCE_STATIC_ADDR,
-> 	HCI_LL_RPA_RESOLUTION,
-> 	HCI_CMD_PENDING,
-> +	HCI_PERMIT_JUST_WORK_REPAIR,
+Why are the line numbers for the remaining symbols missing?  Doesn't
+scripts/decode_stacktrace.sh give you all line numbers?
 
-Call this simply JUST_WORKS_REPAIRING.
+[ As an aside: if you want to use what syzbot uses to put line numbers
+on symbols, which is a bit faster:
+https://github.com/google/syzkaller/tree/master/tools/syz-symbolize
+https://github.com/google/syzkaller/blob/master/docs/linux/setup.md
+then 'go build tools/syz-symbolize'. ]
 
-> 
-> 	__HCI_NUM_FLAGS,
-> };
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index 9e19d5a3aac8..9014aa567e7b 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -172,10 +172,57 @@ static const struct file_operations vendor_diag_fops = {
-> 	.llseek		= default_llseek,
-> };
-> 
-> +static ssize_t permit_just_work_repair_read(struct file *file,
-> +					    char __user *user_buf,
-> +					    size_t count, loff_t *ppos)
-> +{
-> +	struct hci_dev *hdev = file->private_data;
-> +	char buf[3];
-> +
-> +	buf[0] = hci_dev_test_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR) ? 'Y'
-> +								      : 'N';
-> +	buf[1] = '\n';
-> +	buf[2] = '\0';
-> +	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-> +}
-> +
-> +static ssize_t permit_just_work_repair_write(struct file *file,
-> +					     const char __user *user_buf,
-> +					     size_t count, loff_t *ppos)
-> +{
-> +	struct hci_dev *hdev = file->private_data;
-> +	char buf[32];
-> +	size_t buf_size = min(count, (sizeof(buf) - 1));
-> +	bool enable;
-> +
-> +	if (copy_from_user(buf, user_buf, buf_size))
-> +		return -EFAULT;
-> +
-> +	buf[buf_size] = '\0';
-> +	if (strtobool(buf, &enable))
-> +		return -EINVAL;
-> +
-> +	if (enable)
-> +		hci_dev_set_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR);
-> +	else
-> +		hci_dev_clear_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR);
-> +
-> +	return count;
-> +}
-> +
-> +static const struct file_operations permit_just_work_repair_fops = {
-> +	.open		= simple_open,
-> +	.read		= permit_just_work_repair_read,
-> +	.write		= permit_just_work_repair_write,
-> +	.llseek		= default_llseek,
-> +};
-> +
-> static void hci_debugfs_create_basic(struct hci_dev *hdev)
-> {
-> 	debugfs_create_file("dut_mode", 0644, hdev->debugfs, hdev,
-> 			    &dut_mode_fops);
-> +	debugfs_create_file("permit_just_work_repair", 0644, hdev->debugfs,
-> +			    hdev, &permit_just_work_repair_fops);
+> >   __memcg_kmem_charge_memcg+0x58/0x140
+> >   __memcg_kmem_charge+0xcc/0x280
+> >   __alloc_pages_nodemask+0x1e1/0x450
+> >   alloc_pages_current+0xa6/0x120
+> >   pte_alloc_one+0x17/0xd0
+> >   __pte_alloc+0x3a/0x1f0
+> >   copy_p4d_range+0xc36/0x1990
+> >   copy_page_range+0x21d/0x360
+> >   dup_mmap+0x5f5/0x7a0
+> >   dup_mm+0xa2/0x240
+> >   copy_process+0x1b3f/0x3460
+> >   _do_fork+0xaa/0xa20
+> >   __x64_sys_clone+0x13b/0x170
+> >   do_syscall_64+0x91/0xb47
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> >  write to 0xffff8fb18c4cd190 of 8 bytes by task 1153 on cpu 120:
+> >   page_counter_try_charge+0x5b/0x150 mm/page_counter.c:139
+> >   try_charge+0x131/0xd50
+> >   mem_cgroup_try_charge+0x159/0x460
+> >   mem_cgroup_try_charge_delay+0x3d/0xa0
+> >   wp_page_copy+0x14d/0x930
+> >   do_wp_page+0x107/0x7b0
+> >   __handle_mm_fault+0xce6/0xd40
+> >   handle_mm_fault+0xfc/0x2f0
+> >   do_page_fault+0x263/0x6f9
+> >   page_fault+0x34/0x40
+> >
+> > Since the failcnt and watermark are tolerant of some inaccuracy, a data
+> > race will not be harmful, thus mark them as intentional data races with
+> > the data_race() macro.
+>
+> I am not familiar with KCSAN and git grep for data_race on the current
+> linux-next doesn't really show any users of this macro. Is there a
+> general consensus that data_race is going to be used to silence all
+> KCSAN false positives?
 
-Call this just_works_repairing.
+It was discussed here:
+https://lore.kernel.org/linux-fsdevel/CAHk-=wg5CkOEF8DTez1Qu0XTEFw_oHhxN98bDnFqbY7HL5AB2g@mail.gmail.com/
 
-I have a bad association with “repair” since that means to me that you are trying to repair something that is broken.
+If they're intentional data races that should remain, data_race() is
+one option. There are 4 options (other than address the data race) to
+deal with 'false positives':
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/dev-tools/kcsan.rst#n101
 
-> 
-> 	if (hdev->set_diag)
-> 		debugfs_create_file("vendor_diag", 0644, hdev->debugfs, hdev,
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index 6ddc4a74a5e4..898e347e19e0 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -4539,6 +4539,18 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
-> 		goto unlock;
-> 	}
-> 
-> +	/* If there already exists link key in local host, terminate the
-> +	 * connection by default since the remote device could be malicious.
-> +	 * Permit the connection if permit_just_work_repair is enabled.
-> +	 */
-> +	if (!hci_dev_test_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR) &&
-> +	    hci_find_link_key(hdev, &ev->bdaddr)) {
-> +		BT_DBG("Rejecting request: local host already have link key");
-> +		hci_send_cmd(hdev, HCI_OP_USER_CONFIRM_NEG_REPLY,
-> +			     sizeof(ev->bdaddr), &ev->bdaddr);
-> +		goto unlock;
-> +	}
-> +
-> 	/* If no side requires MITM protection; auto-accept */
-> 	if ((!loc_mitm || conn->remote_cap == HCI_IO_NO_INPUT_OUTPUT) &&
-> 	    (!rem_mitm || conn->io_capability == HCI_IO_NO_INPUT_OUTPUT)) {
+That being said, every use of data_race() needs to be justified, and
+not just applied without understanding the issue. See below.
 
-Looking at this patch as my own second pair of eyes, I am not sure this is the right location to just outright reject the confirmation request.
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> >  mm/page_counter.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/mm/page_counter.c b/mm/page_counter.c
+> > index de31470655f6..13934636eafd 100644
+> > --- a/mm/page_counter.c
+> > +++ b/mm/page_counter.c
+> > @@ -82,8 +82,8 @@ void page_counter_charge(struct page_counter *counter, unsigned long nr_pages)
+> >                * This is indeed racy, but we can live with some
+> >                * inaccuracy in the watermark.
+> >                */
+> > -             if (new > c->watermark)
+> > -                     c->watermark = new;
+> > +             if (data_race(new > c->watermark))
+> > +                     data_race(c->watermark = new);
 
-We need to support upgrading an unauthenticated key into an authenticated key (there is a qualification test case for this). Only when we decided that we are doing just-works auto-accept, then we should reject the pairing if there is an existing link key.
+These should be using 'READ_ONCE' and 'WRITE_ONCE' for c->watermark.
+Store or load tearing would change the logic here, since the
+comparison might see garbage.
 
-I know that PTS has a test case, but I wonder we actually have a test case in our own test suite. Maybe we don’t and we should really add one to ensure we behave correctly.
+> >       }
+> >  }
+> >
+> > @@ -126,7 +126,7 @@ bool page_counter_try_charge(struct page_counter *counter,
+> >                        * This is racy, but we can live with some
+> >                        * inaccuracy in the failcnt.
+> >                        */
+> > -                     c->failcnt++;
+> > +                     data_race(c->failcnt++);
 
-Regards
+This is probably fine.
 
-Marcel
+> >                       *fail = c;
+> >                       goto failed;
+> >               }
+> > @@ -135,8 +135,8 @@ bool page_counter_try_charge(struct page_counter *counter,
+> >                * Just like with failcnt, we can live with some
+> >                * inaccuracy in the watermark.
+> >                */
+> > -             if (new > c->watermark)
+> > -                     c->watermark = new;
+> > +             if (data_race(new > c->watermark))
+> > +                     data_race(c->watermark = new);
 
+This should be READ_ONCE / WRITE_ONCE.
+
+> >       }
+> >       return true;
+> >
+> > --
+> > 2.21.0 (Apple Git-122.2)
+>
+> --
+> Michal Hocko
+> SUSE Labs
