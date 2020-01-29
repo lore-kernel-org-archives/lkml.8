@@ -2,30 +2,30 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEE7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463CDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A2120732
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BA720732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgA2Nwc (ORCPT
+        id S1726826AbgA2Nwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:52:32 -0500
+        Wed, 29 Jan 2020 08:52:33 -0500
 Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:11989 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726240AbgA2Nwa (ORCPT
+        by vger.kernel.org with ESMTP id S1726768AbgA2Nwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:52:30 -0500
+        Wed, 29 Jan 2020 08:52:32 -0500
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Jan 2020 19:22:26 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Jan 2020 19:22:03 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Jan 2020 19:22:12 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id BE94A257F; Wed, 29 Jan 2020 19:22:02 +0530 (IST)
+        id 33B2F257F; Wed, 29 Jan 2020 19:22:11 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -38,59 +38,42 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v4 0/8] Add QUSB2 PHY support for SC7180
-Date:   Wed, 29 Jan 2020 19:21:51 +0530
-Message-Id: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v4 8/8] arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP device
+Date:   Wed, 29 Jan 2020 19:21:59 +0530
+Message-Id: <1580305919-30946-9-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Converting dt binding to yaml.
-Adding compatible for SC7180 in dt bindings.
-Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
+Overriding the QUSB2 V2 Phy tuning parameters for SC7180 IDP device.
 
-Changes in v4:
-*Addressed Rob Herrings comments in dt bindings.
-*Added new structure for all the overriding tuning params.
-*Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy. 
-*Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845. 
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Changes in v3:
-*Using the generic phy cfg table for QUSB2 V2 phy.
-*Added support for overriding tuning parameters in QUSB2 V2 PHY
-from device tree.
-
-Changes in v2:
-Sorted the compatible in driver.
-Converted dt binding to yaml.
-Added compatible in yaml.
-
-Sandeep Maheswaram (8):
-  dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
-  dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
-    SC7180
-  phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
-  dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
-    parameters
-  phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
-    V2 PHY
-  arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
-  arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
-  arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
-    device
-
- .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 182 +++++++++++++++++++++
- .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
- arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
- arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
- arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
- drivers/phy/qualcomm/phy-qcom-qusb2.c              | 143 +++++++++++-----
- 6 files changed, 291 insertions(+), 114 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 388f50a..826cf02 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -276,9 +276,11 @@
+ 	vdda-pll-supply = <&vreg_l11a_1p8>;
+ 	vdda-phy-dpdm-supply = <&vreg_l17a_3p0>;
+ 	qcom,imp-res-offset-value = <8>;
+-	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
+-	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_15_PERCENT>;
+ 	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++	qcom,bias-ctrl-value = <0x22>;
++	qcom,charge-ctrl-value = <3>;
++	qcom,hsdisc-trim-value = <0>;
+ };
+ 
+ &usb_1_qmpphy {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
