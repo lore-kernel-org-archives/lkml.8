@@ -2,75 +2,181 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E8FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F7FC33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5830820716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F872071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OnfUsUx5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgA2Nrx (ORCPT
+        id S1726679AbgA2Ntu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:47:53 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:60830 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbgA2Nrx (ORCPT
+        Wed, 29 Jan 2020 08:49:50 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46163 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726240AbgA2Ntu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:47:53 -0500
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 00TDlpWv007890;
-        Wed, 29 Jan 2020 22:47:51 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp);
- Wed, 29 Jan 2020 22:47:51 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp)
-Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 00TDlp73007874
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 29 Jan 2020 22:47:51 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] mm/page_counter: fix various data races
-To:     Marco Elver <elver@google.com>
-Cc:     Qian Cai <cai@lca.pw>, Dmitry Vyukov <dvyukov@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200129105224.4016-1-cai@lca.pw>
- <20200129120302.GJ24244@dhcp22.suse.cz>
- <59f892d0-5fc4-ae32-ce65-5a688d9180c8@I-love.SAKURA.ne.jp>
- <CANpmjNOdFsU9gg7FSv7Pue0L2eAQ+5UHHaz9bgZ83r94prA4vQ@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <9575c1cc-1669-9492-d657-ad4ba6494e88@i-love.sakura.ne.jp>
-Date:   Wed, 29 Jan 2020 22:47:45 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 29 Jan 2020 08:49:50 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580305789; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=+GsoW3Ht6gEeRhdmfArROpfXpxG5uRnhOhHDj5W5KcU=;
+ b=OnfUsUx5a8ARUFxGeBT6wJgJosGS85mVqHeNqjOSpfGJwsIRBSCCHY3yil4Ktl25hxNWBIgA
+ oR+zA+BIy4dnf2rzgcSVBbkMLRE0xAFk+l94A7wD965RKp8tOLVgv0ku2QuEZAsyf7zfNhPB
+ 2oUZa9wpA0yX/O3zDuMXdACuSWI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e318d7c.7fbed6630ca8-smtp-out-n01;
+ Wed, 29 Jan 2020 13:49:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 56EB5C447A1; Wed, 29 Jan 2020 13:49:48 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 80EC3C43383;
+        Wed, 29 Jan 2020 13:49:47 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <CANpmjNOdFsU9gg7FSv7Pue0L2eAQ+5UHHaz9bgZ83r94prA4vQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jan 2020 19:19:47 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org
+Subject: Re: [RFC v3 04/10] OPP: Add and export helper to update voltage
+In-Reply-To: <20200128213336.GH46072@google.com>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <20200127200350.24465-5-sibis@codeaurora.org>
+ <20200128213336.GH46072@google.com>
+Message-ID: <634183c54f18b4500da6aa16e9cf4185@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/01/29 21:21, Marco Elver wrote:
->> By the way, can READ_ONCE()/WRITE_ONCE() really solve this warning?
->> The link above says read/write on the same location ( mm/page_counter.c:129 ).
->> I don't know how READ_ONCE()/WRITE_ONCE() can solve the race.
+On 2020-01-29 03:03, Matthias Kaehlcke wrote:
+> Hi Sibi,
 > 
-> It avoids the *data* race, with *_ONCE telling the compiler to not
-> optimize the accesses in concurrency-unfriendly ways.  Since *_ONCE is
-> used, it conveys clear intent that the code here is meant to be
-> concurrent, and KCSAN stops complaining (and assumes that the *logic*
-> is correct).
+> On Tue, Jan 28, 2020 at 01:33:44AM +0530, Sibi Sankar wrote:
+>> Add and export 'dev_pm_opp_update_voltage' to find and update voltage
+>> of an opp for a given frequency. This will be useful to update the 
+>> opps
+>> with voltages read back from firmware.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  drivers/opp/core.c     | 55 
+>> ++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/pm_opp.h | 10 ++++++++
+>>  2 files changed, 65 insertions(+)
+>> 
+>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+>> index 9aa2a44a5d638..f241e83ec926a 100644
+>> --- a/drivers/opp/core.c
+>> +++ b/drivers/opp/core.c
+>> @@ -2503,6 +2503,61 @@ int dev_pm_opp_disable(struct device *dev, 
+>> unsigned long freq)
+>>  }
+>>  EXPORT_SYMBOL_GPL(dev_pm_opp_disable);
+>> 
+>> +/**
+>> + * dev_pm_opp_update_voltage() - Find and update voltage
+> 
+> The comment should mention that this is done for an OPP.
+> 
+> Maybe omit the 'find' part here and just say 'Update the voltage of
+> an OPP'?
 
-I see. Unlike c->failcnt++ which involves read-modify-write, *_ONCE() can be used for
-simple read (like c->watermark) or simple write (like c->watermark = new) case.
+sure makes sense
+
+> 
+>> + * @dev:	device for which we do this operation
+>> + * @freq:	OPP frequency to update voltage
+>> + * @u_volt:	voltage requested for this opp
+>> + *
+>> + * Find and update voltage of a disabled opp corresponding to the 
+>> given
+>> + * frequency. This is useful only for devices with single power 
+>> supply.
+>> + *
+>> + * Return: 0 if modification was successful or a negative error 
+>> value.
+>> + */
+>> +int dev_pm_opp_update_voltage(struct device *dev, unsigned long freq,
+>> +			      unsigned long u_volt)
+>> +{
+>> +	struct dev_pm_opp *opp = ERR_PTR(-ENODEV);
+> 
+> initialization is not needed
+> 
+>> +	struct opp_table *opp_table;
+>> +	unsigned long tol;
+>> +	int ret = 0;
+>> +
+>> +	/* Find the opp_table */
+> 
+> Drop the comment, it's obvious from the code.
+> 
+>> +	opp_table = _find_opp_table(dev);
+>> +	if (IS_ERR(opp_table)) {
+>> +		ret = PTR_ERR(opp_table);
+>> +		dev_err(dev, "%s: OPP table not found (%d)\n", __func__, ret);
+>> +		return PTR_ERR(opp_table);
+> 
+>   		return ret;
+
+missed that :(
+
+> 
+>> +	}
+>> +
+>> +	opp = dev_pm_opp_find_freq_exact(dev, freq, false);
+>> +	if (IS_ERR(opp)) {
+>> +		ret = PTR_ERR(opp);
+>> +		goto put_table;
+>> +	}
+>> +
+>> +	mutex_lock(&opp_table->lock);
+>> +
+>> +	/* update only if the opp is disabled */
+>> +	if (opp->available) {
+>> +		ret = -EBUSY;
+>> +		goto unlock;
+>> +	}
+>> +
+>> +	tol = u_volt * opp_table->voltage_tolerance_v1 / 100;
+>> +	opp->supplies[0].u_volt_min = u_volt - tol;
+>> +	opp->supplies[0].u_volt = u_volt;
+>> +	opp->supplies[0].u_volt_min = u_volt + tol;
+> 
+>   			.u_volt_max =
+> 
+> I suppose the assignments need to be done for all possible supplies,
+> i.e. 0 to (opp_table->regulator_count - 1).
+
+a single value for all possible
+supplies seems wrong. Anyway
+will wait to see what Viresh
+thinks about it.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
