@@ -2,110 +2,101 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFC7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA35C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A102071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F0420716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:31:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qm5WLSTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgA2O27 (ORCPT
+        id S1726599AbgA2ObL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:28:59 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:38182 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgA2O27 (ORCPT
+        Wed, 29 Jan 2020 09:31:11 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38532 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgA2ObL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:28:59 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwoKv-004L1o-Uq; Wed, 29 Jan 2020 14:28:58 +0000
-Date:   Wed, 29 Jan 2020 14:28:57 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [git pull] adfs series
-Message-ID: <20200129142857.GY23230@ZenIV.linux.org.uk>
+        Wed, 29 Jan 2020 09:31:11 -0500
+Received: by mail-lf1-f68.google.com with SMTP id r14so12027984lfm.5;
+        Wed, 29 Jan 2020 06:31:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R91c9ntZBlaQPLyZ3wJ8nBbTe0YSkDQN97EOOHvSD+8=;
+        b=qm5WLSTVvRQQw9NA8BW6L1l7nF8NSOarFCXgMoxmpB2VVJqt198tbokl4Doj6RjaX2
+         zu2jABl64d6IgDGQkeuuq9IkrHBmZkgzVPxb2hX8NVYMD+6T1niUF2fv5nn/3r005psU
+         jcH66osAbyof6mdWpU8e/vHTlXXVuUkRQeDQPK+T3F7WfjsjvkWlYFVk0Brj8pBSz/fM
+         NFYMNTaqDN7OUwENhNCOZGrgBFdP5RjfrHaXlInEw20sZ2mKePpTtmJ92AJXXBbJi0WQ
+         O9L+ljA4I1SsqdJvagSzgnD7bIO8QFjZ47oY5G77DKU2F1aik0sYeL08phAOxPCbaZns
+         A+dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R91c9ntZBlaQPLyZ3wJ8nBbTe0YSkDQN97EOOHvSD+8=;
+        b=twCVGhR7io4efdSDtc7rZdVbfWWH06ztaXDFtecq1KBeW6gVxTF7B/tQyhHeeBrrsv
+         mSdgSyWiQ7MVd//+zfMBrNA2D8T49oCDhOffBqJ5sO4JzI8+ZDSfskcd2hsKkS002ud/
+         vGkdaSnjJisbt/KW3inqMlimQeC7feA6E07P+vUbACeUxWlH0yHQlRbLw/jH2SLj8Cyb
+         06QRqiycH3JkA2kLtt3E/BuMFngAFHyVg+WiUZqSZiY/XveHuYWjGMXQISNu/0kuNSwy
+         hpW6y6yLd1fPEhOyu8SV43pr0ghIvbm/AH8nwqRoj5SpDElzRnSi6GSbSqSI5MZ3s+0p
+         HnVA==
+X-Gm-Message-State: APjAAAX0U1gEljef+Zz0Kbu+x4+uNE+Dz/Vaity2i3cbcMXWQ0dZdnWV
+        BhWOTRLdlWvPCoCxctXaooWzfjTZ
+X-Google-Smtp-Source: APXvYqzz2jPA2pFPn9WN/J9pcbI/wLvRYdPhKymxgZi3LpG4PWstlzWJpvg8L3XrcDw/Wwo6bhQg7A==
+X-Received: by 2002:a19:ee1a:: with SMTP id g26mr5710270lfb.147.1580308268269;
+        Wed, 29 Jan 2020 06:31:08 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id l64sm1164871lfd.30.2020.01.29.06.31.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 06:31:07 -0800 (PST)
+Subject: Re: [PATCH v5 08/14] dmaengine: tegra-apb: Fix coding style problems
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200123230325.3037-1-digetx@gmail.com>
+ <20200123230325.3037-9-digetx@gmail.com>
+ <f724fd45-aa91-face-a267-5ea4caf6d8d5@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5f540eb8-07ab-eb42-b5de-e198d5439cbd@gmail.com>
+Date:   Wed, 29 Jan 2020 17:31:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <f724fd45-aa91-face-a267-5ea4caf6d8d5@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	adfs stuff for this cycle
+29.01.2020 14:03, Jon Hunter пишет:
+> On 23/01/2020 23:03, Dmitry Osipenko wrote:
+>>  	ahb_seq = TEGRA_APBDMA_AHBSEQ_INTR_ENB;
+>> @@ -1269,7 +1284,6 @@ static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
+>>  	int ret;
+>>  
+>>  	dma_cookie_init(&tdc->dma_chan);
+>> -	tdc->config_init = false;
+> 
+> Please put this in a separate patch. It is easily overlooked in this big
+> change.
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+Somehow I missed context of yours reply to the v4 of this patch and was
+thinking that you were talking about the "unsigned int".. sorry :)
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.adfs
-
-for you to fetch changes up to 587065dcac64e88132803cdb0a7f26bb4a79cf46:
-
-  fs/adfs: bigdir: Fix an error code in adfs_fplus_read() (2020-01-25 11:31:59 -0500)
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      fs/adfs: bigdir: Fix an error code in adfs_fplus_read()
-
-Russell King (41):
-      fs/adfs: inode: update timestamps to centisecond precision
-      fs/adfs: inode: fix adfs_mode2atts()
-      fs/adfs: map: move map reading and validation to map.c
-      fs/adfs: map: rename adfs_map_free() to adfs_map_statfs()
-      fs/adfs: map: break up adfs_read_map()
-      fs/adfs: map: factor out map cleanup
-      fs/adfs: map: incorporate map offsets into layout
-      fs/adfs: map: use find_next_bit_le() rather than open coding it
-      fs/adfs: map: move map-specific sb initialisation to map.c
-      fs/adfs: map: fix map scanning
-      fs/adfs: dir: rename bh_fplus to bhs
-      fs/adfs: dir: add common dir object initialisation
-      fs/adfs: dir: add common directory buffer release method
-      fs/adfs: dir: add common directory sync method
-      fs/adfs: dir: add generic copy functions
-      fs/adfs: dir: add generic directory reading
-      fs/adfs: dir: add helper to read directory using inode
-      fs/adfs: dir: add helper to mark directory buffers dirty
-      fs/adfs: dir: update directory locking
-      fs/adfs: dir: modernise on-disk directory structures
-      fs/adfs: dir: improve update failure handling
-      fs/adfs: dir: improve compiler coverage in adfs_dir_update
-      fs/adfs: dir: switch to iterate_shared method
-      fs/adfs: dir: add more efficient iterate() per-format method
-      fs/adfs: dir: use pointers to access directory head/tails
-      fs/adfs: newdir: factor out directory format validation
-      fs/adfs: newdir: improve directory validation
-      fs/adfs: newdir: merge adfs_dir_read() into adfs_f_read()
-      fs/adfs: newdir: clean up adfs_f_update()
-      fs/adfs: newdir: split out directory commit from update
-      fs/adfs: bigdir: factor out directory entry offset calculation
-      fs/adfs: bigdir: extract directory validation
-      fs/adfs: bigdir: directory validation strengthening
-      fs/adfs: bigdir: calculate and validate directory checkbyte
-      fs/adfs: bigdir: implement directory update support
-      fs/adfs: super: fix inode dropping
-      fs/adfs: dir: remove debug in adfs_dir_update()
-      fs/adfs: super: extract filesystem block probe
-      fs/adfs: super: add support for E and E+ floppy image formats
-      fs/adfs: mostly divorse inode number from indirect disc address
-      Documentation: update adfs filesystem documentation
-
- Documentation/filesystems/adfs.txt |  24 +++
- fs/adfs/adfs.h                     |  32 ++--
- fs/adfs/dir.c                      | 314 +++++++++++++++++++++++++--------
- fs/adfs/dir_f.c                    | 302 +++++++++-----------------------
- fs/adfs/dir_f.h                    |  52 +++---
- fs/adfs/dir_fplus.c                | 346 +++++++++++++++++++++----------------
- fs/adfs/dir_fplus.h                |   6 +-
- fs/adfs/inode.c                    |  64 +++----
- fs/adfs/map.c                      | 247 +++++++++++++++++++-------
- fs/adfs/super.c                    | 267 ++++++++++------------------
- 10 files changed, 914 insertions(+), 740 deletions(-)
+I'll factor out this change into a separate patch in v6.
