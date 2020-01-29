@@ -4,147 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EFAC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F76C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F652064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5AA2064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="DKhRjstW"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="d4uPOyyt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgA2Kwg (ORCPT
+        id S1726620AbgA2KxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 05:52:36 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:44424 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgA2Kwf (ORCPT
+        Wed, 29 Jan 2020 05:53:00 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:41405 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726339AbgA2Kw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 05:52:35 -0500
-Received: by mail-qv1-f66.google.com with SMTP id n8so7751425qvg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 02:52:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8HkYUIvWOezC0v9NUiQvjyLeLXue41vWGlRjf5Gh4Qc=;
-        b=DKhRjstWsgyVPPC0+8k699sVyJG9i4rGYVSw2/cXxQwfOub9SBfGcpKLwELrH5GhcH
-         p0/BbJmNkT5NrA95atCLbZXHNLLQHoa2OJAoiJD8aDBGPxoqgrghg4VqUIF1L1FJ4tCy
-         CyZl0Z6KnQf0jhuXLf3P+VpZEzks+bJ7EOC5PcGE2WP+/LbgF0UGrdXQAMH+kGIePqJ8
-         55nd9F3cC105PkigbKMngIDCyUGM14hkf+UH9OY7h/4NDCeCAPK3ErLj+IeyWEz/VH2G
-         vOfcqtjKoCTi3dARGYowIV1XjCfOBs/1hzei9baoDkq7S6x77L901CSK2VeykDz4Jx10
-         3Bzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8HkYUIvWOezC0v9NUiQvjyLeLXue41vWGlRjf5Gh4Qc=;
-        b=H1GprQAUIxqXjzkTEJoHKvjH/w/80EsJcJwkbsAZG2g1stWLR2iIj3bzkj+fdGZCLs
-         wUr2kV8+CsfubHe8y3a/b4BITd6yVA5yhTUoBNmnx6RUDyemRHALP9FJYSjZhzBdq495
-         KtHU0oA5I8+6m14jXiqELx+nAoZThI3u7H942C/CsYJGmqEqMTfsEelUMDeBkQL7bbV1
-         BsQV9Ed8fJsPHyZ5Evj3bkqgrtyZtbhbghZSory+cnk0d+ddD+NLBFMaczQfEeEx/Nif
-         ZRaXHPINc5yB/sXeE7aPYKcMysbwvxJaonlRzm/xg9BYx9+xk3xsRC0Vsv2f2SoZd0Ns
-         Llhw==
-X-Gm-Message-State: APjAAAX1JA6NkOpRifCrbiA/ZuBINtN7lWXm9zg+odIfJfIgx7VbjKPJ
-        RdZ3nkSVCRCpzUz52tggNY8lRA==
-X-Google-Smtp-Source: APXvYqy1woZdF7zW7v1V674PosCNrOoNkrQqAXmAtm63gS86urtUje052UtvMRAufBNIRcW0ngOhJg==
-X-Received: by 2002:ad4:518b:: with SMTP id b11mr27603196qvp.195.1580295154750;
-        Wed, 29 Jan 2020 02:52:34 -0800 (PST)
-Received: from ovpn-120-127.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id f11sm744574qkh.96.2020.01.29.02.52.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jan 2020 02:52:34 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     hannes@cmpxchg.org, elver@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/page_counter: fix various data races
-Date:   Wed, 29 Jan 2020 05:52:24 -0500
-Message-Id: <20200129105224.4016-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Wed, 29 Jan 2020 05:52:59 -0500
+X-UUID: 1ae9ea4e460e488bb68a93205392e4df-20200129
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=On3ymt2nIzso/VupG3uq3vXt9HiMtRzJKLdz08bIXPs=;
+        b=d4uPOyytD6ZfR4ey2Yg5Mrq5s05ZrIkpNH3wuXaPINdSpi+V4p36y8OdS1SNVSi6/l/xssfbcK4nRpBIz6prwYGCxzWZ0rFhz8AUtXUOSmNpuMfv1/XFWHG7cqjIru2rJ6qVcYokP85DEifotSInvw9nnE526mWH6xNdt+exzOA=;
+X-UUID: 1ae9ea4e460e488bb68a93205392e4df-20200129
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2016043192; Wed, 29 Jan 2020 18:52:54 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 29 Jan 2020 18:53:16 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 29 Jan 2020 18:52:59 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>
+CC:     <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH RESEND v3 3/4] scsi: ufs: fix Auto-Hibern8 error detection
+Date:   Wed, 29 Jan 2020 18:52:50 +0800
+Message-ID: <20200129105251.12466-4-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200129105251.12466-1-stanley.chu@mediatek.com>
+References: <20200129105251.12466-1-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 3e32cb2e0a12 ("mm: memcontrol: lockless page counters") could
-had memcg->memsw->watermark been accessed concurrently as reported by
-KCSAN,
-
- Reported by Kernel Concurrency Sanitizer on:
- BUG: KCSAN: data-race in page_counter_try_charge / page_counter_try_charge
-
- read to 0xffff8fb18c4cd190 of 8 bytes by task 1081 on cpu 59:
-  page_counter_try_charge+0x4d/0x150 mm/page_counter.c:138
-  try_charge+0x131/0xd50 mm/memcontrol.c:2405
-  __memcg_kmem_charge_memcg+0x58/0x140
-  __memcg_kmem_charge+0xcc/0x280
-  __alloc_pages_nodemask+0x1e1/0x450
-  alloc_pages_current+0xa6/0x120
-  pte_alloc_one+0x17/0xd0
-  __pte_alloc+0x3a/0x1f0
-  copy_p4d_range+0xc36/0x1990
-  copy_page_range+0x21d/0x360
-  dup_mmap+0x5f5/0x7a0
-  dup_mm+0xa2/0x240
-  copy_process+0x1b3f/0x3460
-  _do_fork+0xaa/0xa20
-  __x64_sys_clone+0x13b/0x170
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- write to 0xffff8fb18c4cd190 of 8 bytes by task 1153 on cpu 120:
-  page_counter_try_charge+0x5b/0x150 mm/page_counter.c:139
-  try_charge+0x131/0xd50 mm/memcontrol.c:2405
-  mem_cgroup_try_charge+0x159/0x460
-  mem_cgroup_try_charge_delay+0x3d/0xa0
-  wp_page_copy+0x14d/0x930
-  do_wp_page+0x107/0x7b0
-  __handle_mm_fault+0xce6/0xd40
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
-
-Since watermark could be compared or set to garbage due to load or
-store tearing which would change the code logic, fix it by adding a pair
-of READ_ONCE() and WRITE_ONCE() in those places.
-
-Fixes: 3e32cb2e0a12 ("mm: memcontrol: lockless page counters")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/page_counter.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/mm/page_counter.c b/mm/page_counter.c
-index de31470655f6..a17841150906 100644
---- a/mm/page_counter.c
-+++ b/mm/page_counter.c
-@@ -82,8 +82,8 @@ void page_counter_charge(struct page_counter *counter, unsigned long nr_pages)
- 		 * This is indeed racy, but we can live with some
- 		 * inaccuracy in the watermark.
- 		 */
--		if (new > c->watermark)
--			c->watermark = new;
-+		if (new > READ_ONCE(c->watermark))
-+			WRITE_ONCE(c->watermark, new);
- 	}
- }
- 
-@@ -135,8 +135,8 @@ bool page_counter_try_charge(struct page_counter *counter,
- 		 * Just like with failcnt, we can live with some
- 		 * inaccuracy in the watermark.
- 		 */
--		if (new > c->watermark)
--			c->watermark = new;
-+		if (new > READ_ONCE(c->watermark))
-+			WRITE_ONCE(c->watermark, new);
- 	}
- 	return true;
- 
--- 
-2.21.0 (Apple Git-122.2)
+QXV0by1IaWJlcm44IG1heSBiZSBkaXNhYmxlZCBieSBzb21lIHZlbmRvcnMgb3Igc3lzZnMNCmlu
+IHJ1bnRpbWUgZXZlbiBpZiBBdXRvLUhpYmVybjggY2FwYWJpbGl0eSBpcyBzdXBwb3J0ZWQNCmJ5
+IGhvc3QuIElmIEF1dG8tSGliZXJuOCBjYXBhYmlsaXR5IGlzIHN1cHBvcnRlZCBieSBob3N0DQpi
+dXQgbm90IGFjdHVhbGx5IGVuYWJsZWQsIEF1dG8tSGliZXJuOCBlcnJvciBzaGFsbCBub3QgaGFw
+cGVuLg0KDQpUbyBmaXggdGhpcywgcHJvdmlkZSBhIHdheSB0byBkZXRlY3QgaWYgQXV0by1IaWJl
+cm44IGlzDQphY3R1YWxseSBlbmFibGVkIGZpcnN0LCBhbmQgYnlwYXNzIEF1dG8tSGliZXJuOCBk
+aXNhYmxpbmcNCmNhc2UgaW4gdWZzaGNkX2lzX2F1dG9faGliZXJuOF9lcnJvcigpLg0KDQpGaXhl
+czogODIxNzQ0NDAzOTEzICgic2NzaTogdWZzOiBBZGQgZXJyb3ItaGFuZGxpbmcgb2YgQXV0by1I
+aWJlcm5hdGUiKQ0KQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcNClNpZ25lZC1vZmYtYnk6IFN0
+YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQpSZXZpZXdlZC1ieTogQmVhbiBI
+dW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCi0tLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMg
+fCAzICsrLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmggfCA2ICsrKysrKw0KIDIgZmlsZXMg
+Y2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9k
+cml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KaW5k
+ZXggYWJkMGU2YjA1Zjc5Li4yMTRhM2YzNzNkZDggMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kv
+dWZzL3Vmc2hjZC5jDQorKysgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQpAQCAtNTQ3OSw3
+ICs1NDc5LDggQEAgc3RhdGljIGlycXJldHVybl90IHVmc2hjZF91cGRhdGVfdWljX2Vycm9yKHN0
+cnVjdCB1ZnNfaGJhICpoYmEpDQogc3RhdGljIGJvb2wgdWZzaGNkX2lzX2F1dG9faGliZXJuOF9l
+cnJvcihzdHJ1Y3QgdWZzX2hiYSAqaGJhLA0KIAkJCQkJIHUzMiBpbnRyX21hc2spDQogew0KLQlp
+ZiAoIXVmc2hjZF9pc19hdXRvX2hpYmVybjhfc3VwcG9ydGVkKGhiYSkpDQorCWlmICghdWZzaGNk
+X2lzX2F1dG9faGliZXJuOF9zdXBwb3J0ZWQoaGJhKSB8fA0KKwkgICAgIXVmc2hjZF9pc19hdXRv
+X2hpYmVybjhfZW5hYmxlZChoYmEpKQ0KIAkJcmV0dXJuIGZhbHNlOw0KIA0KIAlpZiAoIShpbnRy
+X21hc2sgJiBVRlNIQ0RfVUlDX0hJQkVSTjhfTUFTSykpDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnNoY2QuaCBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgNCmluZGV4IDJhZTZj
+N2M4NTI4Yy4uODFjNzFhM2UzNDc0IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNo
+Y2QuaA0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuaA0KQEAgLTU1LDYgKzU1LDcgQEAN
+CiAjaW5jbHVkZSA8bGludXgvY2xrLmg+DQogI2luY2x1ZGUgPGxpbnV4L2NvbXBsZXRpb24uaD4N
+CiAjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+DQorI2luY2x1ZGUgPGxpbnV4
+L2JpdGZpZWxkLmg+DQogI2luY2x1ZGUgInVuaXByby5oIg0KIA0KICNpbmNsdWRlIDxhc20vaXJx
+Lmg+DQpAQCAtNzczLDYgKzc3NCwxMSBAQCBzdGF0aWMgaW5saW5lIGJvb2wgdWZzaGNkX2lzX2F1
+dG9faGliZXJuOF9zdXBwb3J0ZWQoc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJcmV0dXJuIChoYmEt
+PmNhcGFiaWxpdGllcyAmIE1BU0tfQVVUT19ISUJFUk44X1NVUFBPUlQpOw0KIH0NCiANCitzdGF0
+aWMgaW5saW5lIGJvb2wgdWZzaGNkX2lzX2F1dG9faGliZXJuOF9lbmFibGVkKHN0cnVjdCB1ZnNf
+aGJhICpoYmEpDQorew0KKwlyZXR1cm4gRklFTERfR0VUKFVGU0hDSV9BSElCRVJOOF9USU1FUl9N
+QVNLLCBoYmEtPmFoaXQpID8gdHJ1ZSA6IGZhbHNlOw0KK30NCisNCiAjZGVmaW5lIHVmc2hjZF93
+cml0ZWwoaGJhLCB2YWwsIHJlZykJXA0KIAl3cml0ZWwoKHZhbCksIChoYmEpLT5tbWlvX2Jhc2Ug
+KyAocmVnKSkNCiAjZGVmaW5lIHVmc2hjZF9yZWFkbChoYmEsIHJlZykJXA0KLS0gDQoyLjE4LjAN
+Cg==
 
