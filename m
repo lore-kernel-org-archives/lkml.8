@@ -2,115 +2,114 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B6FC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A9FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3A220708
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F097D2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgA2Kgt (ORCPT
+        id S1726224AbgA2KjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 05:36:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:39040 "EHLO foss.arm.com"
+        Wed, 29 Jan 2020 05:39:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:39128 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgA2Kgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 05:36:49 -0500
+        id S1726069AbgA2KjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 05:39:01 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F35521FB;
-        Wed, 29 Jan 2020 02:36:47 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.47])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1FB23F52E;
-        Wed, 29 Jan 2020 02:36:42 -0800 (PST)
-Date:   Wed, 29 Jan 2020 10:36:40 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, linux-ia64@vger.kernel.org,
-        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        James Hogan <jhogan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, linux-s390@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vlastimil Babka <vbabka@suse.cz>, x86@kernel.org,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-snps-arc@lists.infradead.org,
-        Kees Cook <keescook@chromium.org>,
-        Anshuman Khandual <Anshuman.Khandual@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-Message-ID: <20200129103640.GA668562@arrakis.emea.arm.com>
-References: <20200128174709.GK655507@arrakis.emea.arm.com>
- <69091BA4-18C4-4425-A5E2-31FBE4654AF9@lca.pw>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E03F51FB;
+        Wed, 29 Jan 2020 02:39:00 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8573E3F52E;
+        Wed, 29 Jan 2020 02:38:59 -0800 (PST)
+Subject: Re: [PATCH v3 1/3] sched/fair: Add asymmetric CPU capacity wakeup
+ scan
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        morten.rasmussen@arm.com, qperret@google.com,
+        adharmap@codeaurora.org
+References: <20200126200934.18712-1-valentin.schneider@arm.com>
+ <20200126200934.18712-2-valentin.schneider@arm.com>
+ <20200128062245.GA27398@codeaurora.org>
+ <1ed322d6-0325-ecac-cc68-326a14b8c1dd@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <1aa14491-517e-92d2-08b0-568338d75812@arm.com>
+Date:   Wed, 29 Jan 2020 11:38:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69091BA4-18C4-4425-A5E2-31FBE4654AF9@lca.pw>
+In-Reply-To: <1ed322d6-0325-ecac-cc68-326a14b8c1dd@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 02:07:10PM -0500, Qian Cai wrote:
-> On Jan 28, 2020, at 12:47 PM, Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > The primary goal here is not finding regressions but having clearly
-> > defined semantics of the page table accessors across architectures. x86
-> > and arm64 are a good starting point and other architectures will be
-> > enabled as they are aligned to the same semantics.
+On 28/01/2020 12:30, Valentin Schneider wrote:
+> Hi Pavan,
 > 
-> This still does not answer the fundamental question. If this test is
-> simply inefficient to find bugs,
+> On 28/01/2020 06:22, Pavan Kondeti wrote:
+>> Hi Valentin,
+>>
+>> On Sun, Jan 26, 2020 at 08:09:32PM +0000, Valentin Schneider wrote:
 
-Who said this is inefficient (other than you)?
+[...]
 
-> who wants to spend time to use it regularly? 
+>>> +
+>>> +	if (!static_branch_unlikely(&sched_asym_cpucapacity))
+>>> +		return -1;
 
-Arch maintainers, mm maintainers introducing new macros or assuming
-certain new semantics of the existing macros.
+We do need this one to bail out quickly on non CPU asym systems. (1)
 
-> If this is just one off test that may get running once in a few years
-> (when introducing a new arch), how does it justify the ongoing cost to
-> maintain it?
+>>> +	sd = rcu_dereference(per_cpu(sd_asym_cpucapacity, target));
+>>> +	if (!sd)
+>>> +		return -1;
 
-You are really missing the point. It's not only for a new arch but
-changes to existing arch code. And if the arch code churn in this area
-is relatively small, I'd expect a similarly small cost of maintaining
-this test.
+And I assume we can't return target here because of exclusive cpusets
+which can form symmetric CPU capacities islands on a CPU asymmetric
+system? (2)
 
-If you only turn DEBUG_VM on once every few years, don't generalise this
-to the rest of the kernel developers (as others pointed out, this test
-is default y if DEBUG_VM).
+>>> +	sync_entity_load_avg(&p->se);
+>>> +
+>>> +	cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+>>> +	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
+>>> +
+>>> +	for_each_cpu_wrap(cpu, cpus, target) {
+>>> +		rq = cpu_rq(cpu);
+>>> +
+>>> +		if (!available_idle_cpu(cpu))
+>>> +			continue;
+>>> +		if (task_fits_capacity(p, rq->cpu_capacity))
+>>> +			return cpu;
+>>
+>> I have couple of questions.
 
-Anyway, I think that's a pointless discussion, so not going to reply
-further (unless you have technical content to add).
+[...]
 
--- 
-Catalin
+>> (2) Assuming all CPUs are busy, we return -1 from here and end up
+>> calling select_idle_cpu(). The traversal in select_idle_cpu() may be
+>> waste in cases where sd_llc == sd_asym_cpucapacity . For example SDM845.
+>> Should we worry about this?
+>>
+> 
+> Before v3, since we didn't have the fallback CPU selection within
+> select_idle_capacity(), we would need the fall-through to select_idle_cpu()
+> (we could've skipped an idle CPU just because its capacity wasn't high
+> enough).
+> 
+> That's not the case anymore, so indeed we may be able to bail out of
+> select_idle_sibling() right after select_idle_capacity() (or after the
+> prev / recent_used_cpu checks). Our only requirement here is that sd_llc
+> remains a subset of sd_asym_cpucapacity.
+
+How do you distinguish '-1' in (1), (2) and 'best_cpu = -1' (3)?
+
+In (1) and (2) you want to check if target is idle (or sched_idle) but
+in (3) you probably only want to check 'recent_used_cpu'?
