@@ -2,151 +2,74 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06497C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F43C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F80206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:31:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BcPiQZ5S"
+	by mail.kernel.org (Postfix) with ESMTP id A7A8B207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580340908;
+	bh=w/GA0XpevFnHqKABigx6k3IqC4t9Mo+SckVsxo7uS5M=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=nNXYs1RWV1aeBUoxT9qEncRSYYG5CMxJYL4vRGo3eYiwV7GNbbGlsK/faQJp1viNP
+	 qJtMFiyY3EwKkfQwh96b2JF/bwd2Vxi9fxV0/CMmjw3Cs9K95VMfIAAYTgaM4vgq2J
+	 i8HHkTjk2Oxt7WrY0Pgx5TIxTV3n4o5pqQ0/u31I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgA2Xbh (ORCPT
+        id S1726947AbgA2XfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:31:37 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:44781 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727166AbgA2Xbg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 18:31:36 -0500
-Received: by mail-yw1-f65.google.com with SMTP id t141so942229ywc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 15:31:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i7N+u7jIEmW2dEm6HMr/PJpc28EuZkXAo6+795EdEII=;
-        b=BcPiQZ5SuJEvE1fQj57PZ+wzmmd808hNTnOOB4AlJVy5FOFhfMhZ+eYc5VslB0c9p7
-         HWIZA9A3sPKouTjZOwZA0VIgpcHe4dXyeW66GQcjrOoysN1VklosEVlDkDgnXaTfNQWR
-         tV1nUX1/Ny+DJaWid/uedWBQVBp/0+6z+ajuc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i7N+u7jIEmW2dEm6HMr/PJpc28EuZkXAo6+795EdEII=;
-        b=lMpWbOrvEeFVgFRyxGlBL8BG33IAsbr7tX0JE9syFsYfIQqVVWQzDA35zjfuypo9+m
-         HtwoqHD6hXppYjq9LyQx4rAzuQLVav4opFyX62Sl1l0hP6X/l4bFq3FJzrkbyPeMp81Z
-         T+klEFNWnayDllLDmoW2g9rcBJo6eQQ1ZNKpEoEoeuZ1jA3LXLNVtnQ8d81TwEh8SgAG
-         2LOG0rfn2ipvf0tXP8Jntmj2FX1HdWZ0YcW0l00McMqVeDEI5MWDpwMcTv5q2IDLUp+A
-         1oz+qowSvUfR6n1vzyyLuOao43QMRkOy3Lp/RRg11tbJUz7/VSV+HZzvJiJ8OI9dBTuY
-         ZgrA==
-X-Gm-Message-State: APjAAAW/60gZCgSUuLublEIY7GRI4ikMFkWMrfO42NUTDCVg6LkjeJom
-        NexvFaK+av+xAc6KdqXotLdEiF3LdBs=
-X-Google-Smtp-Source: APXvYqxEDvUP6ecO7Ng7HS+GSeImLtb/ocspwJigXkUAZle3KZZTwgTvMmHDT+SWBeBDVgObwp+WDg==
-X-Received: by 2002:a81:7cd7:: with SMTP id x206mr1131535ywc.466.1580340695207;
-        Wed, 29 Jan 2020 15:31:35 -0800 (PST)
-Received: from mail-yw1-f42.google.com (mail-yw1-f42.google.com. [209.85.161.42])
-        by smtp.gmail.com with ESMTPSA id j11sm1675450ywg.37.2020.01.29.15.31.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 15:31:35 -0800 (PST)
-Received: by mail-yw1-f42.google.com with SMTP id b186so982890ywc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 15:31:35 -0800 (PST)
-X-Received: by 2002:ab0:30c2:: with SMTP id c2mr955764uam.8.1580340388829;
- Wed, 29 Jan 2020 15:26:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20200129132313.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
- <CAL_JsqJk1NZSDAXgqc-CS9a1UCmNYPhC-LwjPUZaX2oK=EtHzQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqJk1NZSDAXgqc-CS9a1UCmNYPhC-LwjPUZaX2oK=EtHzQ@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 29 Jan 2020 15:26:16 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XLq4-EdsuKnDjuc3-6P3i6o-tV5MJbdFbvAscF_ouOpg@mail.gmail.com>
-Message-ID: <CAD=FV=XLq4-EdsuKnDjuc3-6P3i6o-tV5MJbdFbvAscF_ouOpg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: clk: qcom: Fix self-validation, split, and
- clean cruft
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>, Taniya Das <tdas@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Abhishek Sahu <absahu@codeaurora.org>, sivaprak@codeaurora.org,
-        anusharao@codeaurora.org, Sricharan <sricharan@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 Jan 2020 18:35:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbgA2XfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 18:35:07 -0500
+Subject: Re: [GIT PULL] printk for 5.6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580340907;
+        bh=w/GA0XpevFnHqKABigx6k3IqC4t9Mo+SckVsxo7uS5M=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=qI9nXLAF7zVD6/2qgpy+RQKSB0B43RdIZEw5l7iUIOUMp6Nm7/F66ZxkPfPZHveLE
+         0qjp9plK15wfm72reGroiQl30VHzpo1m5mAqCNKgznopRA7eBKkAvEw7uq08YW2YWs
+         mhEkTb6KuqVjApQkGgS9VRL5mzb95szj5WWF4CiY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200129130729.fhxnq2gcyqoum3i2@pathway.suse.cz>
+References: <20200129130729.fhxnq2gcyqoum3i2@pathway.suse.cz>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200129130729.fhxnq2gcyqoum3i2@pathway.suse.cz>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk
+ tags/printk-for-5.6
+X-PR-Tracked-Commit-Id: def97da136515cb289a14729292c193e0a93bc64
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a4fe2b4d87c9f2298ae6a641a7a64bc941d079d0
+Message-Id: <158034090718.30341.12910392977931430763.pr-tracker-bot@kernel.org>
+Date:   Wed, 29 Jan 2020 23:35:07 +0000
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The pull request you sent on Wed, 29 Jan 2020 14:07:29 +0100:
 
-On Wed, Jan 29, 2020 at 2:01 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Wed, Jan 29, 2020 at 3:23 PM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > The 'qcom,gcc.yaml' file failed self-validation (dt_binding_check)
-> > because it required a property to be either (3 entries big),
-> > (3 entries big), or (7 entries big), but not more than one of those
-> > things.  That didn't make a ton of sense.
-> >
-> > This patch splits all of the exceptional device trees (AKA those that
-> > would have needed if/then/else rules) from qcom,gcc.yaml.  It also
-> > cleans up some cruft found while doing that.
-> >
-> > After this lands, this worked for me atop clk-next:
-> >   for f in \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml \
-> >     Documentation/devicetree/bindings/clock/qcom,gcc.yaml; do \
-> >       ARCH=arm64 make dt_binding_check DT_SCHEMA_FILES=$f; \
-> >       ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
-> >   done
->
-> Note that using DT_SCHEMA_FILES may hide some errors in examples as
-> all other schemas (including the core ones) are not used for
-> validation. So just 'make dt_binding_check' needs to pass (ignoring
-> any other unrelated errors as it breaks frequently). Supposedly a
-> patch is coming explaining this in the documentation.
+> git://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk tags/printk-for-5.6
 
-That seems like it's going to be a huge pain going forward, but OK.  I
-kept running "dtbs_check" with the DT_SCHEMA_FILES since I guess this
-was OK?  Then I ran this atop next-20200129:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a4fe2b4d87c9f2298ae6a641a7a64bc941d079d0
 
-# Delete broken yaml:
-rm Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-ARCH=arm64 make dt_binding_check | grep 'clock/qcom'
+Thank you!
 
-...and that seemed OK to me.  I've updated the commit message to
-include what I did.  Hopefully it's right.
-
-> > +  nvmem-cell-names:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    description:
-> > +      Names for each nvmem-cells specified.
->
-> Isn't that every instance? So drop.
-
-Dropped the description here.
-
-> Otherwise, assuming it all works:
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Thanks.  v2 now with your feedback and Jeffrey's at:
-http://lore.kernel.org/r/20200129152458.v2.1.I4452dc951d7556ede422835268742b25a18b356b@changeid
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
