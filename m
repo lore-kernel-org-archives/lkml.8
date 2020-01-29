@@ -2,109 +2,120 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE0FC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86428C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3DAF20678
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D07020678
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:13:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UE2ntlRa"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="dN+OhM8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgA2NMP (ORCPT
+        id S1726677AbgA2NNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:12:15 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3034 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgA2NMO (ORCPT
+        Wed, 29 Jan 2020 08:13:06 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46847 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbgA2NNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:12:14 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e31849a0000>; Wed, 29 Jan 2020 05:11:54 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Jan 2020 05:12:13 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Jan 2020 05:12:13 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jan
- 2020 13:12:11 +0000
-Subject: Re: [PATCH 4.4 000/183] 4.4.212-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200128135829.486060649@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <062d1c63-3c68-fbd4-14d9-5d1198ae565b@nvidia.com>
-Date:   Wed, 29 Jan 2020 13:12:09 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 29 Jan 2020 08:13:04 -0500
+Received: by mail-qk1-f193.google.com with SMTP id g195so16869339qke.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 05:13:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m52WK5Z5XQq82/j8v4s/y36gQF19HkrLAFVCUl6oUUU=;
+        b=dN+OhM8S4hz8ITKdQ8cPe7L1x7Zdw4PDQS7fwn5JmwrcJeZHTbbS/Zy+a7QBRTNvuc
+         +GAPWZveujBFHEp8zmkpzMKTzke6B76la96B4kOZ1MMsDCNKoTAIX/7oCJUsbhOkXHXW
+         VRG+f0i1n3DfJUAOfe5cDDoZIXBMZCokqqLLRYKGGUzrE6cqS32154wgkoRwe3GIR+5G
+         v6Kow0YLG92LHI262SkZb/RR8grOI8tyOvAO4xC4rfzHJ4//xjqlE5mc1Nr7RL1BVsLp
+         qcVqyYaf3FelNGfUKC0uldhpctJ1P/mlFcaYxAnUf/WHdMUrS3HsxrMIWs8Dn6lfcRo9
+         Gq9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m52WK5Z5XQq82/j8v4s/y36gQF19HkrLAFVCUl6oUUU=;
+        b=jWx49BEz6GhcQXFQ30H96wtk360fdqud8sWHsYjeWPrYAxg6CrF1kQrqDZT5I8Nwys
+         +I3zdXkr0QvLvzPctDdHtZNCLLHjZCHL7OKanBAQ1eFkCG0nNrgI6/7u2G1H0Ts1d+sf
+         FcivIz3sJBeXoaNUK7TwuB+Quk6l4Dy0o4XlzA0oHqMY6rmPdKT/dyakTzQMVpTUy0BU
+         giWbM+v74DcQ4RGfwYfhEn65HylxOKydbNPS/rAWRbJt7wBtgZ9hW41c65RySo8gi0jA
+         bo9ASfkpw4KPid+K+IC1HjRal+/PsaMsPY2PV39coZuE1RHTJlscCSwMQXo+Q/W1jrhc
+         Qqvg==
+X-Gm-Message-State: APjAAAX7WN/gSO3bhZIWLDOpz5TfxCCT36duDuXPUzBlhIixuG7VBVFc
+        qVNjSLx2qZQv/E+W5KeUub70oA==
+X-Google-Smtp-Source: APXvYqwcz9xmy2SBNP141x/Q0aIZXP7Do55yli6TYd+VQ3isG5dtxETymcoQhSEBaEJobi2TRuqn0Q==
+X-Received: by 2002:a37:5fc2:: with SMTP id t185mr27427944qkb.271.1580303583086;
+        Wed, 29 Jan 2020 05:13:03 -0800 (PST)
+Received: from ovpn-120-127.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 11sm910293qko.76.2020.01.29.05.13.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jan 2020 05:13:02 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     penguin-kernel@i-love.sakura.ne.jp, hannes@cmpxchg.org,
+        elver@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>,
+        syzbot+f36cfe60b1006a94f9dc@syzkaller.appspotmail.com
+Subject: [PATCH -next] mm/page_counter: annotate an intentional data race
+Date:   Wed, 29 Jan 2020 08:12:42 -0500
+Message-Id: <20200129131242.4329-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-In-Reply-To: <20200128135829.486060649@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580303514; bh=0piV9Lgz8AFvzH2FLbpSr7DKVx71UR1mKXzkXgu5hxQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=UE2ntlRa5ws8oNBQdczRTLXxmIFI6KTbeOcH1y9bLJSYKcOTXP6dTpW04gVVGqleh
-         wMdVV2SDIgToPMQ26YKDyDu0PBvNUAznXp85az8hs96BMVYTo1kyyw63oEfQw/mFbC
-         ReEdq3358fv65IAbeXVWOikNnW+Y0K0R4wISI02bCE6hXjMYGGcxY4NcQwZ9yAAQnj
-         cuw2zRckovct6+b6XtLRKFvECESdTmIKxfiaDNQ6w0ZhSeBpCQhFj4oGkVQoHKW3Xj
-         WeqnHufbJjE0KPj43kbl3sCkwJ2AGoRb9xd+dz7XCTWBtpH9UvhF0t8XtHfXfaiEz6
-         2Y9WGc8T8nTCQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit 3e32cb2e0a12 ("mm: memcontrol: lockless page counters") could
+had memcg->memsw->failcnt been accessed concurrently as reported by
+KCSAN,
 
-On 28/01/2020 14:03, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.212 release.
-> There are 183 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.212-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+BUG: KCSAN: data-race in page_counter_try_charge / page_counter_try_charge
 
+write to 0xffff88809bbf2158 of 8 bytes by task 11782 on cpu 0:
+ page_counter_try_charge+0x100/0x170 mm/page_counter.c:129
+ try_charge+0x185/0xbf0 mm/memcontrol.c:2405
+ __memcg_kmem_charge_memcg+0x4a/0xe0 mm/memcontrol.c:2837
+ __memcg_kmem_charge+0xcf/0x1b0 mm/memcontrol.c:2877
+ __alloc_pages_nodemask+0x26c/0x310 mm/page_alloc.c:4780
 
-All tests are passing for Tegra ...
+read to 0xffff88809bbf2158 of 8 bytes by task 11814 on cpu 1:
+ page_counter_try_charge+0xef/0x170 mm/page_counter.c:129
+ try_charge+0x185/0xbf0 mm/memcontrol.c:2405
+ __memcg_kmem_charge_memcg+0x4a/0xe0 mm/memcontrol.c:2837
+ __memcg_kmem_charge+0xcf/0x1b0 mm/memcontrol.c:2877
+ __alloc_pages_nodemask+0x26c/0x310 mm/page_alloc.c:4780
 
-Test results for stable-v4.4:
-    6 builds:	6 pass, 0 fail
-    12 boots:	12 pass, 0 fail
-    19 tests:	19 pass, 0 fail
+Since the "failcnt" counter is tolerant of some degree of inaccuracy and
+is only used to report stats, a data race will not be harmful, thus mark
+it as an intentional data races with the data_race() macro.
 
-Linux version:	4.4.212-rc1-gc4e686398655
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra30-cardhu-a04
+Reported-by: syzbot+f36cfe60b1006a94f9dc@syzkaller.appspotmail.com
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/page_counter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers
-Jon
-
+diff --git a/mm/page_counter.c b/mm/page_counter.c
+index a17841150906..7c82072cda25 100644
+--- a/mm/page_counter.c
++++ b/mm/page_counter.c
+@@ -126,7 +126,7 @@ bool page_counter_try_charge(struct page_counter *counter,
+ 			 * This is racy, but we can live with some
+ 			 * inaccuracy in the failcnt.
+ 			 */
+-			c->failcnt++;
++			data_race(c->failcnt++);
+ 			*fail = c;
+ 			goto failed;
+ 		}
 -- 
-nvpublic
+2.21.0 (Apple Git-122.2)
+
