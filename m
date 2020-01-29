@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B961AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987F1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F90206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B89206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgA2QW5 (ORCPT
+        id S1727219AbgA2QW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:22:57 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:57565 "EHLO
+        Wed, 29 Jan 2020 11:22:56 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46449 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727168AbgA2QWx (ORCPT
+        by vger.kernel.org with ESMTP id S1727161AbgA2QWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jan 2020 11:22:53 -0500
 Received: from [109.168.11.45] (port=34038 helo=pc-ceresoli.dev.aim)
         by hostingweb31.netsons.net with esmtpa (Exim 4.92)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1iwq79-005NDl-JW; Wed, 29 Jan 2020 17:22:51 +0100
+        id 1iwq78-005NDl-Q1; Wed, 29 Jan 2020 17:22:50 +0100
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org
 Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
         Wolfram Sang <wsa@the-dreams.de>,
         Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 20/28] docs: i2c: instantiating-devices: fix internal hyperlink
-Date:   Wed, 29 Jan 2020 16:19:45 +0100
-Message-Id: <20200129151953.31582-21-luca@lucaceresoli.net>
+Subject: [PATCH v3 17/28] docs: i2c: smbus-protocol: fix typo
+Date:   Wed, 29 Jan 2020 16:19:42 +0100
+Message-Id: <20200129151953.31582-18-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200129151953.31582-1-luca@lucaceresoli.net>
 References: <20200129151953.31582-1-luca@lucaceresoli.net>
@@ -54,7 +54,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Use ReST syntax so that a proper hyperlink is generated.
+The subject is plural, fix the verb.
 
 Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 Reviewed-by: Jean Delvare <jdelvare@suse.de>
@@ -62,24 +62,24 @@ Reviewed-by: Jean Delvare <jdelvare@suse.de>
 ---
 
 Changes in v2:
- - remove space before dot (Jean Delvare)
+ - fix subject line (Jean Delvare)
 ---
- Documentation/i2c/instantiating-devices.rst | 2 +-
+ Documentation/i2c/smbus-protocol.rst | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/i2c/instantiating-devices.rst b/Documentation/i2c/instantiating-devices.rst
-index 53244e2f0378..e823c4ad4e7f 100644
---- a/Documentation/i2c/instantiating-devices.rst
-+++ b/Documentation/i2c/instantiating-devices.rst
-@@ -86,7 +86,7 @@ Method 1c: Declare the I2C devices via ACPI
- -------------------------------------------
+diff --git a/Documentation/i2c/smbus-protocol.rst b/Documentation/i2c/smbus-protocol.rst
+index 3c0fb3a2044d..de7285de5e93 100644
+--- a/Documentation/i2c/smbus-protocol.rst
++++ b/Documentation/i2c/smbus-protocol.rst
+@@ -145,7 +145,7 @@ SMBus Write Word
+ Implemented by i2c_smbus_write_word_data()
  
- ACPI can also describe I2C devices. There is special documentation for this
--which is currently located at Documentation/firmware-guide/acpi/enumeration.rst.
-+which is currently located at :doc:`../firmware-guide/acpi/enumeration`.
+ This is the opposite of the Read Word operation. 16 bits
+-of data is written to a device, to the designated register that is
++of data are written to a device, to the designated register that is
+ specified through the Comm byte.::
  
- 
- Method 2: Instantiate the devices explicitly
+   S Addr Wr [A] Comm [A] DataLow [A] DataHigh [A] P
 -- 
 2.25.0
 
