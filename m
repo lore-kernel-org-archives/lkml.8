@@ -2,193 +2,182 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391ACC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94071C35246
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07FD20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:26:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWPs3Yfh"
+	by mail.kernel.org (Postfix) with ESMTP id 612832082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgA2J0N (ORCPT
+        id S1726484AbgA2J0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:26:13 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40817 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgA2J0M (ORCPT
+        Wed, 29 Jan 2020 04:26:23 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48870 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726184AbgA2J0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 04:26:12 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so5564932wmi.5;
-        Wed, 29 Jan 2020 01:26:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C5FR3KDweP6mgB/gUrjId83AFc5dsG2FHxcfHuDP3Nk=;
-        b=XWPs3YfhoZhgZ49WSridwi1KL+p6zWe4PrD0xfpxieWsY/sye5pk9qb3nJTy7EB4pJ
-         mpJrvC9koAEjr0WWj9Xj6MoqQBe0OrnVmwwoy/K352EFLAud7HicR0FLCJB7oE+0KX+1
-         3H++iI9hyoLPstvU96Vd8q+nkogZvjYTGBHLg76ZTmb3lHwgoi33wgloQlMEWU8Z+APz
-         AuwAW+aJQSGppGdqgACTps+67h/yGPnfbMQtb96DffgW29jNj4JKe1S0btshPiRDR+kj
-         JQ2Qu+GND23OaCHSEzOonYb8oPawtwhxtBCfSsn3xKO8PKFopfqrp9thrUVtiQAes5Dz
-         FbYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C5FR3KDweP6mgB/gUrjId83AFc5dsG2FHxcfHuDP3Nk=;
-        b=lsRsssBvKmpH3myuNd9QmvERc24m78oFoQpx1NW0dDof9iJ8WzeH4WetKRfY2a1PD2
-         +PoSg13AIEHrRk3IQrmipND9pXL1zvDJYWlj97wEK3ZvbR4lvZ1gayPFa/vRXY+T3jNJ
-         wCQFCVGLYTZpxFrg6mHjM8z6FuSMOUg17z8UfC5eODhqLU3oxonnatCzoMzc5+51D4oj
-         lBy6e8UIjX0qh6elGr6o3RIMUOh6Auav0pa4+74E9+Ca3pFsnEPiFnnQ2d6r3LF2hCZm
-         DJoUGDC5PZrM9+LxN2TzNmJCWHS91Bd2uF4/4ex+CH0dyMe1df6m0IMuTzKxAXNejtb3
-         VfNQ==
-X-Gm-Message-State: APjAAAW1zv7W7AKaTVFT6YK14H5yl+gk1GXehoxp36SVUTXV8IGnMXiA
-        oH7ypE9oWf31o3TreQRfVbY=
-X-Google-Smtp-Source: APXvYqxRIXERmuEjll6+nCJOcZ8zT2G/LmRprlxssw2+Z9UuQupmkMh6GjWfWtXgajV1GbXVe6eCbQ==
-X-Received: by 2002:a05:600c:22d3:: with SMTP id 19mr10206267wmg.20.1580289970274;
-        Wed, 29 Jan 2020 01:26:10 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id h2sm2107589wrt.45.2020.01.29.01.26.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 01:26:08 -0800 (PST)
+        Wed, 29 Jan 2020 04:26:23 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00T99vQU097055
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 04:26:22 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xtrmb3pf2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 04:26:22 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ubraun@linux.ibm.com>;
+        Wed, 29 Jan 2020 09:26:19 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 29 Jan 2020 09:26:10 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00T9Q94X54919184
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jan 2020 09:26:09 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 25FA05204E;
+        Wed, 29 Jan 2020 09:26:09 +0000 (GMT)
+Received: from oc5311105230.ibm.com (unknown [9.152.224.222])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 14F875204F;
+        Wed, 29 Jan 2020 09:26:08 +0000 (GMT)
+Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches as
+ usercopy caches
+To:     Kees Cook <keescook@chromium.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Jiri Slaby <jslaby@suse.cz>, Julian Wiedmann <jwi@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, David Windsor <dave@nullcore.net>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christoph Lameter <cl@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rik van Riel <riel@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Kubecek <mkubecek@suse.cz>
+References: <1515636190-24061-1-git-send-email-keescook@chromium.org>
+ <1515636190-24061-10-git-send-email-keescook@chromium.org>
+ <9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz>
+ <201911121313.1097D6EE@keescook> <201911141327.4DE6510@keescook>
+ <bfca96db-bbd0-d958-7732-76e36c667c68@suse.cz>
+ <202001271519.AA6ADEACF0@keescook>
+ <5861936c-1fe1-4c44-d012-26efa0c8b6e7@de.ibm.com>
+ <202001281457.FA11CC313A@keescook>
+From:   Ursula Braun <ubraun@linux.ibm.com>
 Date:   Wed, 29 Jan 2020 10:26:07 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V3 03/18] phy: tegra: xusb: Add usb-role-switch support
-Message-ID: <20200129092607.GA2479935@ulmo>
-References: <1577704195-2535-1-git-send-email-nkristam@nvidia.com>
- <1577704195-2535-4-git-send-email-nkristam@nvidia.com>
- <20200128173244.GA2293590@ulmo>
- <b6de0078-f1cd-31a1-70bd-dfc320eab70e@nvidia.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
-Content-Disposition: inline
-In-Reply-To: <b6de0078-f1cd-31a1-70bd-dfc320eab70e@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <202001281457.FA11CC313A@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012909-0012-0000-0000-00000381AD82
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012909-0013-0000-0000-000021BE0418
+Message-Id: <009da641-175c-4a50-d658-a40ac0ca7bc6@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-29_01:2020-01-28,2020-01-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1011 adultscore=0 spamscore=0
+ mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001290076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 29, 2020 at 02:45:38PM +0530, Nagarjuna Kristam wrote:
->=20
->=20
-> On 28-01-2020 23:02, Thierry Reding wrote:
-> > On Mon, Dec 30, 2019 at 04:39:40PM +0530, Nagarjuna Kristam wrote:
-> > > If usb-role-switch property is present in USB 2 port, register
-> > > usb-role-switch to receive usb role changes.
-> > >=20
-> > > Signed-off-by: Nagarjuna Kristam<nkristam@nvidia.com>
-> > > ---
-> > > V3:
-> > >   - Driver aborts if usb-role-switch is not added in dt forotg/periph=
-eral
-> > >     roles.
-> > >   - Added role name strings instead of enum values in debug prints.
-> > >   - Updated arguments and variable allignments as per Thierry inputs.
-> > > ---
-> > > V2:
-> > >   - Removed dev_set_drvdata for port->dev.
-> > >   - Added of_platform_depopulate during error handling and driver rem=
-oval.
-> > > ---
-> > >   drivers/phy/tegra/Kconfig |  1 +
-> > >   drivers/phy/tegra/xusb.c  | 57 ++++++++++++++++++++++++++++++++++++=
-+++++++++++
-> > >   drivers/phy/tegra/xusb.h  |  3 +++
-> > >   3 files changed, 61 insertions(+)
-> > >=20
-> > > diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
-> > > index f9817c3..df07c4d 100644
-> > > --- a/drivers/phy/tegra/Kconfig
-> > > +++ b/drivers/phy/tegra/Kconfig
-> > > @@ -2,6 +2,7 @@
-> > >   config PHY_TEGRA_XUSB
-> > >   	tristate "NVIDIA Tegra XUSB pad controller driver"
-> > >   	depends on ARCH_TEGRA
-> > > +	select USB_CONN_GPIO
-> > >   	help
-> > >   	  Choose this option if you have an NVIDIA Tegra SoC.
-> > > diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-> > > index f98ec39..11ea9b5 100644
-> > > --- a/drivers/phy/tegra/xusb.c
-> > > +++ b/drivers/phy/tegra/xusb.c
-> > > @@ -523,6 +523,7 @@ static int tegra_xusb_port_init(struct tegra_xusb=
-_port *port,
-> > >   	port->dev.type =3D &tegra_xusb_port_type;
-> > >   	port->dev.of_node =3D of_node_get(np);
-> > >   	port->dev.parent =3D padctl->dev;
-> > > +	port->dev.driver =3D padctl->dev->driver;
-> > This looks wrong. I don't think driver's are supposed to set this
-> > because it basically means that the device is being attached to the
-> > driver, but in this case it doesn't get probed by the driver and in
-> > fact the ports don't match the pad controller, so they can't really
-> > be driven by the same driver.
-> >=20
-> > Is there any particular reason why you need this?
-> >=20
-> > Thierry
->=20
-> Yes, port->dev.driver->owner is accessed in USB role switch driver in API
-> usb_role_switch_get. If driver param is not updated, it causes NULL point=
-er
-> exception. Based on your inputs, since this assignment is not supposed to
-> used, I believe option available is to create a new device_driver structu=
-re
-> and assign the same here.
-> Please share your thoughts.
+On 1/29/20 12:01 AM, Kees Cook wrote:
+> On Tue, Jan 28, 2020 at 08:58:31AM +0100, Christian Borntraeger wrote:
+>>
+>>
+>> On 28.01.20 00:19, Kees Cook wrote:
+>>> On Thu, Jan 23, 2020 at 09:14:20AM +0100, Jiri Slaby wrote:
+>>>> On 14. 11. 19, 22:27, Kees Cook wrote:
+>>>>> On Tue, Nov 12, 2019 at 01:21:54PM -0800, Kees Cook wrote:
+>>>>>> How is iucv the only network protocol that has run into this? Do others
+>>>>>> use a bounce buffer?
+>>>>>
+>>>>> Another solution would be to use a dedicated kmem cache (instead of the
+>>>>> shared kmalloc dma one)?
+>>>>
+>>>> Has there been any conclusion to this thread yet? For the time being, we
+>>>> disabled HARDENED_USERCOPY on s390...
+>>>>
+>>>> https://lore.kernel.org/kernel-hardening/9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz/
+>>>
+>>> I haven't heard anything new. What did people think of a separate kmem
+>>> cache?
+>>>
+>>
+>> Adding Julian and Ursula. A separate kmem cache for iucv might be indeed
+>> a solution for the user hardening issue.
+> 
+> It should be very clean -- any existing kmallocs already have to be
+> "special" in the sense that they're marked with the DMA flag. So
+> converting these to a separate cache should be mostly mechanical.
+> 
 
-Sounds to me more like what we want is to make the module_get() and
-module_put() calls conditional to avoid the NULL pointer dereference.
-Another common variant that I've seen in other subsystems is to make
-drivers pass in an owner explicitly via some operations structure to
-allow more fine-grained control over the reference count.
+Linux on System z can run within a guest hosted by the IBM mainframe operating system
+z/VM. z/VM offers a transport called Inter-User Communications Vehicle (short IUCV).
+It is limited to 4-byte-addresses when sending and receiving data.
+One base transport for AF_IUCV sockets in the Linux kernel is this Inter-User
+Communications Vehicle of z/VM. AF_IUCV sockets exist for s390 only. 
 
-In this particular case one option to do this would be to add a struct
-module *owner field to usb_role_switch_desc and that's copied to struct
-usb_role_switch in usb_role_switch_register() so that that can be used
-for reference counting (perhaps with the current code as fallback).
+AF_IUCV sockets make use of the base socket layer, and work with sk_buffs for sending
+and receiving data of variable length.
+Storage for sk_buffs is allocated with __alloc_skb(), which invokes
+   data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
+For IUCV transport the "data"-address should fit into 4 bytes. That's the reason why
+we work with GFP_DMA here.
 
-That would allow using simple devices (i.e. not bound to a driver) to
-work with this framework as well.
+kmem_caches manage memory of fixed size. This does not fit well for sk_buff memory
+of variable length. Do you propose to add a kmem_cache solution for sk_buff memory here?
 
-Thierry
+>> On the other hand not marking the DMA caches still seems questionable.
+> 
+> My understanding is that exposing DMA memory to userspace copies can
+> lead to unexpected results, especially for misbehaving hardware, so I'm
+> not convinced this is a generically bad hardening choice.
+> 
 
---lrZ03NoBR/3+SXJZ
-Content-Type: application/pgp-signature; name="signature.asc"
+We have not yet been reported a memory problem here. Do you have more details, if
+this is really a problem for the s390 architecture?
 
------BEGIN PGP SIGNATURE-----
+Kind regards, Ursula 
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4xT60ACgkQ3SOs138+
-s6G/uA//YgHnzWFjeDa1ZwWsKGhC1WNt8IJjC2xeJ/pryhlhg2NeANB+/JosYFWz
-RRLRUYZ13Z4uvB/j2I437JXluVs3QZ9GKtdjxbWDqpJYX4l0c4Nk3ZBnxLeoG1Zn
-QFM6j+ZLfbYTeSacA0EX+sKC/qK5EJuFZ8pW+D8wf9EE2VO6O8qB6/k4/sKHUwyv
-hUokfc6zwlVfrZ7YDKRtleaiPbABS7frYnel5Mio6tFpyEKSw94KyyD5wBFSF6K+
-En806WquNFG8c9LgfFszwLBinbCOML93TbFiz4gLuWtwqzik5XtwBdkOQVAQoHK7
-kPp6D91/1PuG9zIVe6WWePjiCWXdbka9ScfYKdYMFDkRnkETsThbKZfdmien3X3H
-Zzn4iFU4PzoRpLP//ctdv4PtX8TbEbdD/fmkMI1LxyqflF3XTNujpqQ8XOM1+ifg
-BwNrM+MvfHdo4iCgZVMKF38QRKzRdTaq8G9NlDBqy06pZwKsDBWuAIydybwvfw9b
-PekrIuhSRHWaKvtznDKBKy/pHv0RFdjVx6DYb8SNGJ3U28kXeYyjqi0RHX7VzENF
-FlIGWZLbFmWa6TNipcN5GvlKfi8oCHy+hcpVUBLf0OBCzvkOAIjano7Mf7xugcHt
-ea/keKxOJjLCdgMD1kpOVhbbgrjtlLVoYA0JLzq3OqXGXUf1c3E=
-=exCt
------END PGP SIGNATURE-----
+> -Kees
+> 
+>>
+>> For reference
+>> https://bugzilla.suse.com/show_bug.cgi?id=1156053
+>> the kernel hardening now triggers a warning.
+>>
+> 
 
---lrZ03NoBR/3+SXJZ--
