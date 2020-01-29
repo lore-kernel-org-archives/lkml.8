@@ -2,142 +2,144 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8EBC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56E5C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFBD207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92B420702
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZhvTsaxy"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="UxmaH9oP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgA2Wx4 (ORCPT
+        id S1726927AbgA2WyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:53:56 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36544 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgA2Wx4 (ORCPT
+        Wed, 29 Jan 2020 17:54:15 -0500
+Received: from sonic312-27.consmr.mail.bf2.yahoo.com ([74.6.128.89]:38913 "EHLO
+        sonic312-27.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726795AbgA2WyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:53:56 -0500
-Received: by mail-lj1-f195.google.com with SMTP id r19so1227247ljg.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 14:53:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uOj9kLL9OKVQ4bW9RaNCXxV8jEQPASFBUj6KpH5YEho=;
-        b=ZhvTsaxyumUnK5Lu8sLn5DccXNEakQ95xz2a5jJgoALEIjbzYMz+4NuzN5D0bwSDAZ
-         ZUxe18Sf15dIFiwptjxYt4tad25GXwWuCR0g5arQP9n5P5K+RmXgEeO23cOuZYzu2YBx
-         3B334rQ7Kc4A2unostW515ssokqI5D0CdGCL0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uOj9kLL9OKVQ4bW9RaNCXxV8jEQPASFBUj6KpH5YEho=;
-        b=PWKGIztTqgH1rEznIHYvO4fj7wTEYz+VUEQswilQByx652R7e337JK8hV82vBSGKmF
-         vKAaFEFPr1FBzTZ6MMzCXhGXAE7VOaxi6PDZuZb83Mii4ozA7mWEWrVO5jBHTYVm2zXH
-         pmEbqwQ8LeOJapopmqwCL8jyZymDLLOj0Ffo7xEp+lYK4LgxDbT263J3kFlpdu20Rt//
-         WoyiUUVuitc68I5lNqkD4gkiiJkP6KiFI6nbX5QeR/v4j+LGWBiO007rR70tAlN8WwNw
-         fWdM8b03scRxG0Moa78rTUM9bt5nfjdrfh3a3vQ6+r3vF/Rdz2v1EjAS9Y7pCkf+/K0X
-         QYDQ==
-X-Gm-Message-State: APjAAAXuZZIfwcL8hxjNo/tRAQanRFQF4SVvw86Xm0sB7eI8/1xhtMXX
-        Dfnf7Fgut3g1eqnNa0eSdvynTsrYE5Y=
-X-Google-Smtp-Source: APXvYqwk4ckcMTvX+7gn7Z26lK5WaGXIdQQidh3KQLC2AZ/l7ib16h4i3xWm405xbczYM5h7nA3D1w==
-X-Received: by 2002:a05:651c:111c:: with SMTP id d28mr846934ljo.32.1580338433828;
-        Wed, 29 Jan 2020 14:53:53 -0800 (PST)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id t9sm1719109lfl.51.2020.01.29.14.53.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 14:53:52 -0800 (PST)
-Received: by mail-lj1-f182.google.com with SMTP id v17so1215226ljg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 14:53:52 -0800 (PST)
-X-Received: by 2002:a2e:8702:: with SMTP id m2mr596560lji.278.1580338432116;
- Wed, 29 Jan 2020 14:53:52 -0800 (PST)
+        Wed, 29 Jan 2020 17:54:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1580338452; bh=3wknnWUBj6qFIGuljZKDjmuGgec62eX9+MWDo24faJc=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=UxmaH9oPQll6no4+a1Wma5URYyPY2vcHwqxPq22aWrQ5l5uKFPB08JFu3Pwdh9BLBnbgMsm0ArETKm5YUXeVHJHkDWwdwOH52FB/aysEgNhxEroILwZj9odS9+d9Oiv6+2Fbdm2B0rXIiRXP9fDOKoW5xXmRWeXfbCYMyP2kuF+0GyLk0wmIwQMKkEgYcD9DExQOCN5IY6IR4tDN1NzUJGoWdUxB+K5YHB2fybQIMBNu4tSVLbCfxZ4PkFe5NzSWtYzmTBsWWrd1j5B6408GYCe983Slip6FeF7UjlapYcr0JaySA/Xl3x8h1bOQ3gvOXbmD6tlWgxqXdsFfPmP8aQ==
+X-YMail-OSG: prhkVm8VM1mAz.U9DQtdpC.HTfw81S58m61UkzokY4ixMaGHbns6NmcpQr4a2OO
+ gDSoVjk2gUs9frIiaIW_9yNvSV92eLzx.TmnyS.hPWN0ZxpBs7uUFzLxSIGIgXqOAVWrgGBtxTqx
+ WoQ.vP6CK.ZkOV2M2nj9hjdwL8jXtJdVMUwJjvE8tmS6STcKJx7yEsx8S1_w.v.EPhkL5YaMmawM
+ SsokPF3oSgWss4YWMjXvnIadQMkhYXtfuJ8fAeJMYoQPgY137x.o2jr2ufOWVDkvJqLvLDZFY8x8
+ MS1V7yaAcRSQiQ8RKjP4ZnsQEHUVkpO3vnTY4DuZ5zxsP2aSCHt5zX.M7zXE2xpDV5QFBuKuw7uf
+ 48cP9.qJSrdRfuL6hriJJoBLQCjegOb0tsdcEVnONrdCIjV9QW6YYG6XITZjiKquePGoVKPfOorw
+ hXv7LTA5LWn1GB72wvwvnZoOBToGRovajlx9o9Tt_P5epk9WqmvT3cDoKgFwwDcritMbm8wslgQf
+ 9Gg6yC_QTMZJF_.IeHKOxcLbXwWoNm.hckZMKGqm4WYnNgJu8f0nbailjDr6Gr70CEQeC9vNLGoi
+ kG0eueAktZ3QXfNDrRsONHfqCRL7nmIGHlFAYMR4NEQLbjg2eHwBI2v_7mt09SMtKX0bMw1FHOMr
+ 5B40nfH5RsvLgaS2U10FGM7NUhWRHqIVrVRk.6KjtBexHrTt4QuLeUDX5gO_Q.RIzGzS_1PZZex_
+ Ve7Q7Ni_OTvS5ciShhrcX9jwve6MWGqGYG4CPdZejLi5dPh1gJmB2q1OMhfAJPP9CmWqTR2mXynJ
+ 6gb82DlCdtnvtrvzSvptY3tH7rb2H397mqC6oKXJcNfrOsAteS3HapQC7XR2vR3XeDM8_UDuOtOh
+ x2v8oAss6eCp2.5iD3_O_891oRYQYwJdBXgXTa3fV_eXzbFr5IurCxnYMV3GC1Wp8cufeOHUpLU.
+ MvlhB_V4RaswCQ9efFsk_kfzAsf4J..8Z2f9kO8xXQnpgDd6t0MRZRABW1udV4r95xCo4TEh205G
+ UBusO8CpxR42gbba2BvWqk7oB7sp3hD_EcfrHoTf0.WVLsTCFfjlWG92yPLbLroo3vJJxU8I51Sx
+ UQ4VsSEq1Y.jJOBcwzeakrVsBFkpTrmqOrYl1lzfp8ALmChxNoT7G_Xj85ze5VsSnMshIQVY2JBa
+ gMD5OlJQu8y.wTiaOA7zRio28h8K1P1rtahTTlWgA8aY2l7smNpfxXPr4Ev5El4jH2pxssCAtWaL
+ XvokjrL4yrF2xv8VH7kNgtsIvcEGUByqT.PY5HociFPa8EHfl8T_0U.3RbbK_IEJ0.kOMmWgTLKE
+ CYurqEPhFBHXWtscEjSQ5MmTta5JQPg1ulYlYVEq3C6DLhrGFroh9tcS1H7sHntIpZdSurYo41b4
+ wLoflNzqQTwrJAFSaO7IykDjDEmjE
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.bf2.yahoo.com with HTTP; Wed, 29 Jan 2020 22:54:12 +0000
+Received: by smtp417.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID d9bd0d7869ff9b44bd25a04729356b77;
+          Wed, 29 Jan 2020 22:54:10 +0000 (UTC)
+Subject: Re: linux-next: Tree for Jan 29 (security/smack/)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20200129155431.76bd7f25@canb.auug.org.au>
+ <e66a563e-b612-c5b6-7bdd-b55113a9b822@infradead.org>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <3ac1c817-b310-c8f8-6990-1602db540106@schaufler-ca.com>
+Date:   Wed, 29 Jan 2020 14:54:09 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
- <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
- <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
- <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de>
- <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
- <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
- <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com>
- <87d0b82a9o.fsf@nanos.tec.linutronix.de> <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
- <878slwmpu9.fsf@nanos.tec.linutronix.de> <87imkv63yf.fsf@nanos.tec.linutronix.de>
- <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com>
- <87pnf342pr.fsf@nanos.tec.linutronix.de> <CAE=gft69hQcbmT46b1T8eLdPFyb9Pp-sDYd5JfPsZ2JWL4PXqQ@mail.gmail.com>
- <877e1a2d11.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <877e1a2d11.fsf@nanos.tec.linutronix.de>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 29 Jan 2020 14:53:15 -0800
-X-Gmail-Original-Message-ID: <CAE=gft7mLAU3G+f8gi_etRSpUijoCh7_6ni9Ob2JqjW7Q1n3yQ@mail.gmail.com>
-Message-ID: <CAE=gft7mLAU3G+f8gi_etRSpUijoCh7_6ni9Ob2JqjW7Q1n3yQ@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        x86@kernel.org, Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e66a563e-b612-c5b6-7bdd-b55113a9b822@infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.15116 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 1:01 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+On 1/29/2020 2:18 PM, Randy Dunlap wrote:
+> On 1/28/20 8:54 PM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Please do not add any v5.7 material to your linux-next included
+>> branches until after v5.6-rc1 has been released.
+>>
+>> Changes since 20200128:
+>>
+This keeps coming up. It's in David Howells' watch queue changes.
+David, could you please fix this?
+
+> ../security/smack/smack_lsm.c: In function �smack_post_notification�:
+> ../security/smack/smack_lsm.c:4383:7: error: dereferencing pointer to incomplete type �struct watch_notification�
+>   if (n->type == WATCH_TYPE_META)
+>        ^~
+>   CC      kernel/time/hrtimer.o
+> ../security/smack/smack_lsm.c:4383:17: error: �WATCH_TYPE_META� undeclared (first use in this function); did you mean �TCA_PIE_BETA�?
+>   if (n->type == WATCH_TYPE_META)
+>                  ^~~~~~~~~~~~~~~
+>                  TCA_PIE_BETA
 >
-> Evan,
 >
-> Evan Green <evgreen@chromium.org> writes:
-> > On Tue, Jan 28, 2020 at 2:48 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>
-> >> Bah. I'm sure I looked at that call chain, noticed the double vector
-> >> lock and then forgot. Delta patch below.
-> >
-> > It's working well with the delta patch, been running for about an hour
-> > with no issues.
+> Probably just missing
+> #include <linux/watch_queue.h>
 >
-> thanks for the info and for testing!
 >
-> Could you please add some instrumentation to see how often this stuff
-> actually triggers spurious interrupts?
-
-In about 10 minutes of this script running, I got 142 hits. My script
-can toggle the HT cpus on and off about twice per second.
-Here's my diff (sorry it's mangled by gmail). If you're looking for
-something else, let me know, or I can run a patch.
-
-diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
-index 90baf2c66bd40..f9c46fc30d658 100644
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -61,6 +61,8 @@ static void irq_msi_update_msg(struct irq_data
-*irqd, struct irq_cfg *cfg)
-        irq_data_get_irq_chip(irqd)->irq_write_msi_msg(irqd, msg);
- }
-
-+int evanpending;
-+
- static int
- msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
- {
-@@ -155,8 +157,10 @@ msi_set_affinity(struct irq_data *irqd, const
-struct cpumask *mask, bool force)
-
-        unlock_vector_lock();
-
--       if (pending)
-+       if (pending) {
-+               printk("EVAN pending %d", ++evanpending);
-                irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
-+       }
-
-        return ret;
- }
-
--Evan
