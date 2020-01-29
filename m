@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85662C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB022C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE1A206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86293206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbgA2Xqs (ORCPT
+        id S1727267AbgA2Xqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:46:48 -0500
-Received: from mga06.intel.com ([134.134.136.31]:46690 "EHLO mga06.intel.com"
+        Wed, 29 Jan 2020 18:46:55 -0500
+Received: from mga06.intel.com ([134.134.136.31]:46692 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbgA2Xqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 18:46:46 -0500
+        id S1727165AbgA2Xqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 18:46:50 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 15:46:43 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 15:46:44 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="309551716"
+   d="scan'208";a="309551761"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga001.jf.intel.com with ESMTP; 29 Jan 2020 15:46:43 -0800
+  by orsmga001.jf.intel.com with ESMTP; 29 Jan 2020 15:46:44 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 08/26] KVM: x86: Move RTIT (Intel PT) MSR existence checks into vendor code
-Date:   Wed, 29 Jan 2020 15:46:22 -0800
-Message-Id: <20200129234640.8147-9-sean.j.christopherson@intel.com>
+Subject: [PATCH 23/26] KVM: x86: Handle Intel PT CPUID adjustment in vendor code
+Date:   Wed, 29 Jan 2020 15:46:37 -0800
+Message-Id: <20200129234640.8147-24-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200129234640.8147-1-sean.j.christopherson@intel.com>
 References: <20200129234640.8147-1-sean.j.christopherson@intel.com>
@@ -49,98 +49,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the Processor Trace MSR checks into VMX to help pave the way toward
-removing ->pt_supported().
+Move the Processor Trace CPUID adjustment into vendor code to eliminate
+an instance of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
+pattern in the common CPUID handling code, and to pave the way toward
+eventually removing ->pt_supported().
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/svm.c     |  6 ++++++
- arch/x86/kvm/vmx/vmx.c | 16 ++++++++++++++++
- arch/x86/kvm/x86.c     | 23 -----------------------
- 3 files changed, 22 insertions(+), 23 deletions(-)
+ arch/x86/kvm/cpuid.c   | 3 +--
+ arch/x86/kvm/svm.c     | 1 +
+ arch/x86/kvm/vmx/vmx.c | 2 ++
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 75971c254b4d..eb61a1d83598 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -321,7 +321,6 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_entry2 *entry,
+ 
+ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+ {
+-	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
+ 	unsigned f_la57;
+ 
+ 	/* cpuid 7.0.ebx */
+@@ -330,7 +329,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+ 		F(BMI2) | F(ERMS) | F(INVPCID) | F(RTM) | F(MPX) | F(RDSEED) |
+ 		F(ADX) | F(SMAP) | F(AVX512IFMA) | F(AVX512F) | F(AVX512PF) |
+ 		F(AVX512ER) | F(AVX512CD) | F(CLFLUSHOPT) | F(CLWB) | F(AVX512DQ) |
+-		F(SHA_NI) | F(AVX512BW) | F(AVX512VL) | f_intel_pt;
++		F(SHA_NI) | F(AVX512BW) | F(AVX512VL) | F(INTEL_PT);
+ 
+ 	/* cpuid 7.0.ecx*/
+ 	const u32 kvm_cpuid_7_0_ecx_x86_features =
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 504118c49f46..df4d0b6f31c8 100644
+index 7d6f46399e5a..350cdf91a576 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
-@@ -5991,6 +5991,12 @@ static bool svm_has_virtualized_msr(u32 index)
- 	case MSR_TSC_AUX:
- 		return boot_cpu_has(X86_FEATURE_RDTSCP);
- 	case MSR_IA32_BNDCFGS:
-+	case MSR_IA32_RTIT_CTL:
-+	case MSR_IA32_RTIT_STATUS:
-+	case MSR_IA32_RTIT_CR3_MATCH:
-+	case MSR_IA32_RTIT_OUTPUT_BASE:
-+	case MSR_IA32_RTIT_OUTPUT_MASK:
-+	case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
- 		return false;
- 	default:
+@@ -6066,6 +6066,7 @@ static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+ 		cpuid_entry_clear(entry, X86_FEATURE_PKU);
+ 		cpuid_entry_clear(entry, X86_FEATURE_MPX);
+ 		cpuid_entry_clear(entry, X86_FEATURE_INVPCID);
++		cpuid_entry_clear(entry, X86_FEATURE_INTEL_PT);
  		break;
+ 	case 0x80000001:
+ 		if (nested)
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index de62ce6fd3b9..ed63219ca52e 100644
+index 941ac7296735..35134dbed2f0 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6281,8 +6281,24 @@ static bool vmx_has_virtualized_msr(u32 index)
- 		return cpu_has_vmx_rdtscp();
- 	case MSR_IA32_BNDCFGS:
- 		return kvm_mpx_supported();
-+	case MSR_IA32_RTIT_CTL:
-+	case MSR_IA32_RTIT_STATUS:
-+		return vmx_pt_mode_is_host_guest();
-+	case MSR_IA32_RTIT_CR3_MATCH:
-+		return vmx_pt_mode_is_host_guest() &&
-+		       intel_pt_validate_hw_cap(PT_CAP_cr3_filtering);
-+	case MSR_IA32_RTIT_OUTPUT_BASE:
-+	case MSR_IA32_RTIT_OUTPUT_MASK:
-+		return vmx_pt_mode_is_host_guest() &&
-+		       (intel_pt_validate_hw_cap(PT_CAP_topa_output) ||
-+			intel_pt_validate_hw_cap(PT_CAP_single_range_output));
-+	case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
-+		return vmx_pt_mode_is_host_guest() &&
-+		       (index - MSR_IA32_RTIT_ADDR0_A <
-+			intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2);
- 	default:
- 		break;
-+
- 	}
+@@ -7149,6 +7149,8 @@ static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+ 			cpuid_entry_clear(entry, X86_FEATURE_MPX);
+ 		if (!cpu_has_vmx_invpcid())
+ 			cpuid_entry_clear(entry, X86_FEATURE_INVPCID);
++		if (!vmx_pt_mode_is_host_guest())
++			cpuid_entry_clear(entry, X86_FEATURE_INTEL_PT);
  
- 	return true;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 70cbb9164088..adbdbe785f05 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -5237,29 +5237,6 @@ static void kvm_init_msr_list(void)
- 		 * to the guests in some cases.
- 		 */
- 		switch (msr_index) {
--		case MSR_IA32_RTIT_CTL:
--		case MSR_IA32_RTIT_STATUS:
--			if (!kvm_x86_ops->pt_supported())
--				continue;
--			break;
--		case MSR_IA32_RTIT_CR3_MATCH:
--			if (!kvm_x86_ops->pt_supported() ||
--			    !intel_pt_validate_hw_cap(PT_CAP_cr3_filtering))
--				continue;
--			break;
--		case MSR_IA32_RTIT_OUTPUT_BASE:
--		case MSR_IA32_RTIT_OUTPUT_MASK:
--			if (!kvm_x86_ops->pt_supported() ||
--				(!intel_pt_validate_hw_cap(PT_CAP_topa_output) &&
--				 !intel_pt_validate_hw_cap(PT_CAP_single_range_output)))
--				continue;
--			break;
--		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
--			if (!kvm_x86_ops->pt_supported() ||
--				msr_index - MSR_IA32_RTIT_ADDR0_A >=
--				intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2)
--				continue;
--			break;
- 		case MSR_ARCH_PERFMON_PERFCTR0 ... MSR_ARCH_PERFMON_PERFCTR0 + 17:
- 			if (msr_index - MSR_ARCH_PERFMON_PERFCTR0 >=
- 			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
+ 		if (vmx_umip_emulated())
+ 			cpuid_entry_set(entry, X86_FEATURE_UMIP);
 -- 
 2.24.1
 
