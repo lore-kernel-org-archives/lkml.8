@@ -2,173 +2,139 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773E7C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C8DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5634B206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE50206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vqr407+s"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SVe+SHYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgA2SSU (ORCPT
+        id S1727427AbgA2STC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:18:20 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35922 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbgA2SSU (ORCPT
+        Wed, 29 Jan 2020 13:19:02 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:37959 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726823AbgA2STC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:18:20 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 185so68021pfv.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 10:18:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f7H8V33x8TSaOVVVtMrepShUU/hwcU6izxAXRT/mzfw=;
-        b=Vqr407+sv8WoZA1hzU5mx0uQKQWeEp/YlSdH1oWaQDmhjqHhxJIIfJOA/76vIGcYsU
-         v9lMc8lNDWj3kScIP4wQyHM8vvhSsGhdGhsnCqwRmBC2eRPg9JWFto0TAy1RHnGlaNMr
-         X2FaZkAIJyYtpCubCxug3D9XiHEOQr9QUg4To=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f7H8V33x8TSaOVVVtMrepShUU/hwcU6izxAXRT/mzfw=;
-        b=fdgSKiLtSRyvR3a1SoNGM0xrXSKRJqGRl5P7iK4RJ42YHlzO+yGnWj5L6M1z1mu6yQ
-         wFQZAsUn8Px4oiIRdmJA0OcDz+yGd1XG/4WCCifMn7e0VQ5Cm4k50NzxjpdMYINqL2Yk
-         NeDwWMVoy6HvV8s+4ZpPQDJ6YcTI24BepToVOHm4lScvv9VoiMz3X5Kxv6eRYXFAJuQl
-         tH01TabFyfqFNC3ZMJyCCxFir1o2fZYjESvr4hTcoK9+CDpCHds7P8WeUOJpt23wsadb
-         897jt8o8/QI+YmQTqOdIzRjvcj/BOqW8ZD//y1fHA3x0KVfkBfrcutE7u2JlyDDUWQn8
-         KPfg==
-X-Gm-Message-State: APjAAAXRh3ijp9UQkbNKu3sWjOYogFSePfe1OWRk/roQ5RrL92dQ6ZZx
-        fPM9J6ey2BewDmVe/DEL4vCHhg==
-X-Google-Smtp-Source: APXvYqx20g2qD4qMi2aZtS1b5wov2GagAFH0c6dk7k38lCVp0fm4wKaqKecYBrirjd8drUcktw0P5A==
-X-Received: by 2002:a65:66c8:: with SMTP id c8mr335019pgw.161.1580321899818;
-        Wed, 29 Jan 2020 10:18:19 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id m71sm6735468pje.0.2020.01.29.10.18.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 10:18:19 -0800 (PST)
-Date:   Wed, 29 Jan 2020 10:18:17 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org
-Subject: Re: [RFC v3 09/10] arm64: dts: qcom: sdm845: Add cpu OPP tables
-Message-ID: <20200129181817.GA71044@google.com>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <20200127200350.24465-10-sibis@codeaurora.org>
- <20200129012411.GI46072@google.com>
- <4f2b98a1dae3bc737a43a1e46255657b@codeaurora.org>
+        Wed, 29 Jan 2020 13:19:02 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580321941; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=rNueugt7+ShJvXDNSBQmIyNMaj5LO03LUNGcC7CqzMg=; b=SVe+SHYeUVfcIlZF+MBXjwXo2eeOOWwFdyMrC0OCJBtfAUk9ZM70qJ++TNyFKzCyamgpca7/
+ Vi25BUea64QdkJPE/OcLfPPmFqRQ5rqGUBILndNUUSqqXkYjB4P0b5FkbEsWj2H1CdcYRyqu
+ ixr1V+TePR8BY2Gnokvfds0pnys=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e31cc8f.7f3013566688-smtp-out-n03;
+ Wed, 29 Jan 2020 18:18:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 916C1C447A4; Wed, 29 Jan 2020 18:18:55 +0000 (UTC)
+Received: from [10.71.154.194] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37EFCC43383;
+        Wed, 29 Jan 2020 18:18:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37EFCC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH RESEND v3 3/4] scsi: ufs: fix Auto-Hibern8 error detection
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com, beanhuo@micron.com
+Cc:     cang@codeaurora.org, matthias.bgg@gmail.com, bvanassche@acm.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
+        stable@vger.kernel.org
+References: <20200129105251.12466-1-stanley.chu@mediatek.com>
+ <20200129105251.12466-4-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <daaf442c-1fad-b6dc-8206-beb535c21ec3@codeaurora.org>
+Date:   Wed, 29 Jan 2020 10:18:52 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4f2b98a1dae3bc737a43a1e46255657b@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200129105251.12466-4-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sibi,
-
-On Wed, Jan 29, 2020 at 07:35:21PM +0530, Sibi Sankar wrote:
-> Hey Matthias,
+On 1/29/2020 2:52 AM, Stanley Chu wrote:
+> Auto-Hibern8 may be disabled by some vendors or sysfs
+> in runtime even if Auto-Hibern8 capability is supported
+> by host. If Auto-Hibern8 capability is supported by host
+> but not actually enabled, Auto-Hibern8 error shall not happen.
 > 
-> Thanks for the review!
+> To fix this, provide a way to detect if Auto-Hibern8 is
+> actually enabled first, and bypass Auto-Hibern8 disabling
+> case in ufshcd_is_auto_hibern8_error().
 > 
-> On 2020-01-29 06:54, Matthias Kaehlcke wrote:
-> > Hi Sibi,
-> > 
-> > On Tue, Jan 28, 2020 at 01:33:49AM +0530, Sibi Sankar wrote:
-> > > Add OPP tables required to scale DDR/L3 per freq-domain on SDM845
-> > > SoCs.
-> > > 
-> > > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 453
-> > > +++++++++++++++++++++++++++
-> > >  1 file changed, 453 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > index c036bab49fc03..8cb976118407b 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > @@ -199,6 +199,12 @@
-> > >  			qcom,freq-domain = <&cpufreq_hw 0>;
-> > >  			#cooling-cells = <2>;
-> > >  			next-level-cache = <&L2_0>;
-> > > +			operating-points-v2 = <&cpu0_opp_table>,
-> > > +					      <&cpu0_ddr_bw_opp_table>,
-> > > +					      <&cpu0_l3_bw_opp_table>;
-> > > +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc
-> > > SLAVE_EBI1>,
-> > > +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-> > 
-> > This apparently depends on the 'Split SDM845 interconnect nodes and
-> > consolidate RPMh support' series
-> > (https://patchwork.kernel.org/project/linux-arm-msm/list/?series=226281),
-> > which isn't mentioned in the cover letter.
-> > 
-> > I also couldn't find a patch on the lists that adds the 'osm_l3'
-> > interconnect node for SDM845. The same is true for SC7180 (next
-> > patch of this series). These patches may be available in custom trees,
-> > but that isn't really helpful for upstream review.
+> Fixes: 821744403913 ("scsi: ufs: Add error-handling of Auto-Hibernate")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> Reviewed-by: Bean Huo <beanhuo@micron.com>
+> ---
+
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+
+>   drivers/scsi/ufs/ufshcd.c | 3 ++-
+>   drivers/scsi/ufs/ufshcd.h | 6 ++++++
+>   2 files changed, 8 insertions(+), 1 deletion(-)
 > 
-> yeah I missed adding the interconnect
-> refactor dependency and the nodes.
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index abd0e6b05f79..214a3f373dd8 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -5479,7 +5479,8 @@ static irqreturn_t ufshcd_update_uic_error(struct ufs_hba *hba)
+>   static bool ufshcd_is_auto_hibern8_error(struct ufs_hba *hba,
+>   					 u32 intr_mask)
+>   {
+> -	if (!ufshcd_is_auto_hibern8_supported(hba))
+> +	if (!ufshcd_is_auto_hibern8_supported(hba) ||
+> +	    !ufshcd_is_auto_hibern8_enabled(hba))
+>   		return false;
+>   
+>   	if (!(intr_mask & UFSHCD_UIC_HIBERN8_MASK))
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 2ae6c7c8528c..81c71a3e3474 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -55,6 +55,7 @@
+>   #include <linux/clk.h>
+>   #include <linux/completion.h>
+>   #include <linux/regulator/consumer.h>
+> +#include <linux/bitfield.h>
+>   #include "unipro.h"
+>   
+>   #include <asm/irq.h>
+> @@ -773,6 +774,11 @@ static inline bool ufshcd_is_auto_hibern8_supported(struct ufs_hba *hba)
+>   	return (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT);
+>   }
+>   
+> +static inline bool ufshcd_is_auto_hibern8_enabled(struct ufs_hba *hba)
+> +{
+> +	return FIELD_GET(UFSHCI_AHIBERN8_TIMER_MASK, hba->ahit) ? true : false;
+> +}
+> +
+>   #define ufshcd_writel(hba, val, reg)	\
+>   	writel((val), (hba)->mmio_base + (reg))
+>   #define ufshcd_readl(hba, reg)	\
 > 
-> > 
-> > I would suggest to focus on landing the dependencies of this series,
-> > before proceding with it (or at least most of them), there are plenty
-> > and without the dependencies this series isn't going to land, it also
-> > makes it hard for testers and reviewers to get all the pieces
-> 
-> yes I understand but wanted the series
-> out asap because since there are a few
-> points where we still havn't reached
-> a consensus on.
 
-Ok, I just wanted to make sure we are not burning the limited
-maintainer/reviewer bandwidth on code with hard dependencies on
-things that aren't moving forward.
 
-> > together. In particular the last post of the series 'Add
-> > required-opps support to devfreq passive gov'
-> > (https://patchwork.kernel.org/cover/11055499/) is from July 2019 ...
-> 
-> https://lore.kernel.org/lkml/CAGTfZH37ALwUHd8SpRRrBzZ6x1-++YtzS60_yRQvN-TN6rOzaA@mail.gmail.com/
-> 
-> The pending patch for lazy linking
-> was posted a while back. Now that
-> it has a tested-by, majority of the
-> series should go in since the devfreq
-> maintainers wanted the series pulled
-> in.
-
-Thanks for the clarification. For reference the post is
-https://patchwork.kernel.org/patch/11048277/#23020727
-
-It sems the series will require at least another re-spin:
-
-  "So once that's (lazy linking) added, I should be able to drop a few
-  patches in this series, do some minor updates and then this will be
-  good to go."
-
-  https://patchwork.kernel.org/cover/11055499/#23001445
-
-So it looks like we are waiting for the lazy linking patch to
-land in the PM/Linus' tree and then a re-spin of the 'Add
-required-opps support to devfreq passive gov' series.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
