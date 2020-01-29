@@ -2,69 +2,101 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756E1C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0C2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5471820720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580320814;
-	bh=QhESBAiw7dwRYWBRHAdpEnX6b2o4NudzOnPf8BfBK2Y=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=IyFKUZyAQ7wuEQtllvlhGkN8QvaLTTCR6jlW7pkdKYTtkxPqlQqv4j9eR1WRPVIv3
-	 BZpwQZ5AyfCpSTMnRDDZsLbnHYTAP64eFCSo963pNGsjwkIZWfnasRIKraX0U6EIxK
-	 a48eB74suYVpTQNDRQziTD+U3c3IgbcvVv6ZoSdI=
+	by mail.kernel.org (Postfix) with ESMTP id 6A9FF20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbgA2SAH (ORCPT
+        id S1727297AbgA2SAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:00:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35436 "EHLO mail.kernel.org"
+        Wed, 29 Jan 2020 13:00:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbgA2SAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:00:06 -0500
-Subject: Re: [GIT PULL] Pin control bulk changes for the v5.6 kernel cycle
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580320805;
-        bh=QhESBAiw7dwRYWBRHAdpEnX6b2o4NudzOnPf8BfBK2Y=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=f5B4auvKg2lmeOicBajDwjcPcx2t5FEDS3HtG0PRdI4s7L9eP49vZtzaXy79uuR5V
-         M8dLPEV4Wm3++PrFnTBgQ+hptcgx9/ZdgQ52EgXZT5uk16h2yUyDezaYmiYiqjXwHZ
-         mcs+NxnCm3MuFfcX1y9pEdUikuLXjsnYZTm9DpS8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYOsqTh51Ta4UR1c77zpu2Vstri5wCQRVYb1iV9Kkt5Aw@mail.gmail.com>
-References: <CACRpkdYOsqTh51Ta4UR1c77zpu2Vstri5wCQRVYb1iV9Kkt5Aw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYOsqTh51Ta4UR1c77zpu2Vstri5wCQRVYb1iV9Kkt5Aw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
- tags/pinctrl-v5.6-1
-X-PR-Tracked-Commit-Id: 122ce22cb37b087e7e28ebb16044a622b0a22233
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6ba3d7066c71d2103da255df19eb613d299bab15
-Message-Id: <158032080544.27486.10311010542133012524.pr-tracker-bot@kernel.org>
-Date:   Wed, 29 Jan 2020 18:00:05 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        id S1726171AbgA2SAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 13:00:22 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E8DC206D4;
+        Wed, 29 Jan 2020 18:00:19 +0000 (UTC)
+Date:   Wed, 29 Jan 2020 13:00:18 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        ndesaulniers@google.com
+Subject: Re: [PATCH v3 04/12] tracing: Add dynamic event command creation
+ interface
+Message-ID: <20200129130018.230cef12@gandalf.local.home>
+In-Reply-To: <4a38478f56b9e831803500f82af896bda92a5370.1579904761.git.zanussi@kernel.org>
+References: <cover.1579904761.git.zanussi@kernel.org>
+        <4a38478f56b9e831803500f82af896bda92a5370.1579904761.git.zanussi@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 29 Jan 2020 09:33:24 +0100:
+On Fri, 24 Jan 2020 16:56:15 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.6-1
+> +/**
+> + * dynevent_arg_add - Add an arg to a dynevent_cmd
+> + * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
+> + * @arg: The argument to append to the current cmd
+> + *
+> + * Append an argument to a dynevent_cmd.  The argument string will be
+> + * appended to the current cmd string, followed by a separator, if
+> + * applicable.  Before the argument is added, the check_arg()
+> + * function, if defined, is called.
+> + *
+> + * The cmd string, separator, and check_arg() function should be set
+> + * using the dynevent_arg_init() before any arguments are added using
+> + * this function.
+> + *
+> + * Return: 0 if successful, error otherwise.
+> + */
+> +int dynevent_arg_add(struct dynevent_cmd *cmd,
+> +		     struct dynevent_arg *arg)
+> +{
+> +	int ret = 0;
+> +	int delta;
+> +	char *q;
+> +
+> +	if (arg->check_arg) {
+> +		ret = arg->check_arg(arg);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	q = cmd->buf + (cmd->maxlen - cmd->remaining);
+> +
+> +	delta = snprintf(q, cmd->remaining, " %s%c", arg->str, arg->separator);
+> +	if (delta >= cmd->remaining) {
+> +		pr_err("String is too long: %s\n", arg->str);
+> +		return -E2BIG;
+> +	}
+> +	cmd->remaining -= delta;
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6ba3d7066c71d2103da255df19eb613d299bab15
+This looks like you can take advantage of the seq_buf code
+(see /lib/seq_buf.c), as that handles a lot of this for you.
 
-Thank you!
+As I'm trying to get this into the merge window, I won't delay this for
+that (unless I find something else to delay this for), but this should
+definitely incorporate seq_buf and not handle its own buffering.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+-- Steve
+
+
+
+> +
+> +	return ret;
+> +}
