@@ -2,92 +2,169 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CABC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35CFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABC720716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:44:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qwPLYGOu"
+	by mail.kernel.org (Postfix) with ESMTP id A2EED20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:44:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580309071;
+	bh=KVTVlsCwX0svxszmvdyFRjFYpaLIQusEz0BKnDft2Rg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=u+K7gGVVT9+HKtjARL2/htU4UVSyJOV81q74GtN/4xlvB2cQrO0IupOYPayQeDp8x
+	 St5Dx81TeGeuHldsz8mmh1PZTDrC96DcSP8nfkm7zZTz7ZeLK19Og6ALkdlHN6poKj
+	 JATfT1Go6Km7OHY4bQmodI22fhR13OJTDvMu6I30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgA2On7 (ORCPT
+        id S1726723AbgA2Ooa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:43:59 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:33837 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgA2On7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:43:59 -0500
-Received: by mail-yb1-f193.google.com with SMTP id w17so8789396ybm.1;
-        Wed, 29 Jan 2020 06:43:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wKswmljTOiEW0VVv8djG8gNyyeh29y7K32emEYsaq9Q=;
-        b=qwPLYGOuOyyG5OVF7dSSi9zlqdxFiz8vhCcs1RTpTVAodHr9a6QqXVRC5FQ/w6vZk3
-         qBOjiES0CG88FItQh/d5EoIWnUFo1X+KT/tss/DLQo7ty/JsL/lyy0NxkrT/5Zo9CG/P
-         E6NqLzEJVSZMhneOwrOqVIYhRWhnZBdaPa3otrfiA7Ra6HIdgVgFGrynvTVTtavcEjk9
-         6Xegn1LVVRvcDTqFQyj8mSxejBUXhawmpmiLjW8SRuKVttUAZKh8F4r79UP7na6Zhc3w
-         uUYicmDMbC2ONiF3FqofQpfvi0yY0+gYFRVTuvetZ2yUNyZy0EYCqNAzdQaF4MyLjPei
-         7cSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wKswmljTOiEW0VVv8djG8gNyyeh29y7K32emEYsaq9Q=;
-        b=Yvjw/Czj3zoQLTrZwmvZr/PVtTKKvOXIDnN+rXq423uMgmnll5op8MY290lnGji9pQ
-         8czGDQMCGrKTauuFpKnNiOyXv2eY1tuPkOtrpI3HyBELTNHOdsaRrLdGKn/hADfbSFhH
-         rBEkqGKaxs3uo4lqzYvSheXO0ocRw94tBoemdFmwuCE66o9lJ0ve+oTaL6bBeJZCaACE
-         C6Oj0TspcnlMni0MGgzxuHW1fLmWfOmrb0/8+1DnDqyxWVHoRy6sKZbmDY3SwU4Az37W
-         VbuV96aRGbu5PoMN9Z4zUxfGN7ZmU06qyZNpjdrDPSXMaytiUJTrxDFBaTDvAxb45Ecf
-         SRNA==
-X-Gm-Message-State: APjAAAV3cTfNtlLoxP4LS3UTL4WGC40duWF7fWyXMmV+fkptlXBR53y4
-        7e96cWnJlY3/HQcqNwrUd5c=
-X-Google-Smtp-Source: APXvYqw/Yybgc78szjVTT3dTVme2vD6QlBAeYCBvyJq6LOy9arFuyrP2CBI3KoG8en0bB6L336ocPQ==
-X-Received: by 2002:a5b:f01:: with SMTP id x1mr22139793ybr.313.1580309037871;
-        Wed, 29 Jan 2020 06:43:57 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m62sm991975ywb.107.2020.01.29.06.43.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jan 2020 06:43:57 -0800 (PST)
-Date:   Wed, 29 Jan 2020 06:43:56 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/104] 5.4.16-stable review
-Message-ID: <20200129144356.GC23179@roeck-us.net>
-References: <20200128135817.238524998@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128135817.238524998@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 29 Jan 2020 09:44:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgA2Ooa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 09:44:30 -0500
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AAE6206F0;
+        Wed, 29 Jan 2020 14:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580309069;
+        bh=KVTVlsCwX0svxszmvdyFRjFYpaLIQusEz0BKnDft2Rg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=M0ODqQfbKAnr5zFA39OHRozdkp79dR+0yIJ27i62Ip8NeypwVhphpfsx8fTbrwINB
+         VgFD6ohequlhPGg7by37uyUp+3BEEhOStPMLwa7uO1BSbkCawiHLviLIDCGEPktwVg
+         PX0wFgcO9qO1RtOeHdhjUx4g7jIocLL/Nzb+GfQ8=
+Message-ID: <1580309067.2312.1.camel@kernel.org>
+Subject: Re: [PATCH v2 4/4] tracing: Add new testcases for hist trigger
+ parsing errors
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 29 Jan 2020 08:44:27 -0600
+In-Reply-To: <20200129092200.2200db5e@gandalf.local.home>
+References: <cover.1561743018.git.zanussi@kernel.org>
+         <62ec58d9aca661cde46ba678e32a938427945e9e.1561743018.git.zanussi@kernel.org>
+         <20200129092200.2200db5e@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 02:59:21PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.16 release.
-> There are 104 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hi Steve,
+
+On Wed, 2020-01-29 at 09:22 -0500, Steven Rostedt wrote:
+> On Fri, 28 Jun 2019 12:40:23 -0500
+> Tom Zanussi <zanussi@kernel.org> wrote:
 > 
-> Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
-> Anything received after that time might be too late.
+> > Add a testcase ensuring that the tracing error_log correctly
+> > displays
+> > hist trigger parsing errors.
+> 
+> Hi Tom,
+> 
+> I noticed that I never applied these patches (just did), but I also
+> notice that this test case fails.
+> 
+> Can you have a look on my ftrace/core branch:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-
+> trace.git
 > 
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 388 pass: 388 fail: 0
+All the trigger testcases are passing for me, including this one:
 
-Guenter
+  # ./ftracetest test.d/trigger/trigger-hist-syntax-errors.tc 
+=== Ftrace unit tests ===
+[1] event trigger - test histogram parser errors	[PASS]
+
+
+# of passed:  1
+# of failed:  0
+# of unresolved:  0
+# of untested:  0
+# of unsupported:  0
+# of xfailed:  0
+# of undefined(test bug):  0
+
+
+Tom
+
+
+> Thanks,
+> 
+> -- Steve
+> 
+> > 
+> > Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> > Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  .../test.d/trigger/trigger-hist-syntax-errors.tc   | 32
+> > ++++++++++++++++++++++
+> >  1 file changed, 32 insertions(+)
+> >  create mode 100644
+> > tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-syntax-
+> > errors.tc
+> > 
+> > diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-
+> > hist-syntax-errors.tc
+> > b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-
+> > syntax-errors.tc
+> > new file mode 100644
+> > index 000000000000..d44087a2f3d1
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-
+> > syntax-errors.tc
+> > @@ -0,0 +1,32 @@
+> > +#!/bin/sh
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# description: event trigger - test histogram parser errors
+> > +
+> > +if [ ! -f set_event -o ! -d events/kmem ]; then
+> > +    echo "event tracing is not supported"
+> > +    exit_unsupported
+> > +fi
+> > +
+> > +if [ ! -f events/kmem/kmalloc/trigger ]; then
+> > +    echo "event trigger is not supported"
+> > +    exit_unsupported
+> > +fi
+> > +
+> > +if [ ! -f events/kmem/kmalloc/hist ]; then
+> > +    echo "hist trigger is not supported"
+> > +    exit_unsupported
+> > +fi
+> > +
+> > +[ -f error_log ] || exit_unsupported
+> > +
+> > +check_error() { # command-with-error-pos-by-^
+> > +    ftrace_errlog_check 'hist:kmem:kmalloc' "$1"
+> > 'events/kmem/kmalloc/trigger'
+> > +}
+> > +
+> > +check_error
+> > 'hist:keys=common_pid:vals=bytes_req:sort=common_pid,^junk'	
+> > # INVALID_SORT_FIELD
+> > +check_error 'hist:keys=common_pid:vals=bytes_req:^sort='		
+> > # EMPTY_ASSIGNMENT
+> > +check_error
+> > 'hist:keys=common_pid:vals=bytes_req:^sort=common_pid,'	#
+> > EMPTY_SORT_FIELD
+> > +check_error
+> > 'hist:keys=common_pid:vals=bytes_req:sort=common_pid.^junk'	
+> > # INVALID_SORT_MODIFIER
+> > +check_error
+> > 'hist:keys=common_pid:vals=bytes_req,bytes_alloc:^sort=common_pid,b
+> > ytes_req,bytes_alloc'	# TOO_MANY_SORT_FIELDS
+> > +
+> > +exit 0
+> 
+> 
