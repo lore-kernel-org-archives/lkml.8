@@ -2,123 +2,106 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D91CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 02:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14558C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 02:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69412207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 02:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D358C20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 02:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vx5C78b7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBgG2VEc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgA2CRZ (ORCPT
+        id S1726590AbgA2CXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 21:17:25 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43758 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726401AbgA2CRZ (ORCPT
+        Tue, 28 Jan 2020 21:23:38 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39059 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgA2CXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 21:17:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580264244;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=m+nJONZZoTQaSQ5XpfMtUdufvZ+z5SCiJsRhF9C0wds=;
-        b=Vx5C78b7ZlJ0TXS3cP0gOp0dkTGqPwXGsFOR+GeUA4+vD/v3FEMAFV4dIqd8Glp3/yNoN9
-        KYnemaMWPgptzG5adTxe4Ep6tb41gY0F/r2mzlpl++5raKpWRZ3EpO/I3WiWFLT3rDFCs5
-        ygHEzL+Q//4o7ZeT6PJ3YELhm57wG6I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-282-SUZ9hjDgOgiZxJRTzgB8tg-1; Tue, 28 Jan 2020 21:17:20 -0500
-X-MC-Unique: SUZ9hjDgOgiZxJRTzgB8tg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C3A610054E3;
-        Wed, 29 Jan 2020 02:17:17 +0000 (UTC)
-Received: from treble (ovpn-120-83.rdu2.redhat.com [10.10.120.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BEC5984BB8;
-        Wed, 29 Jan 2020 02:17:08 +0000 (UTC)
-Date:   Tue, 28 Jan 2020 20:17:06 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20200129021619.cvbsvmag2v4tyjek@treble>
-References: <20200120165039.6hohicj5o52gdghu@treble>
- <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
- <20200121161045.dhihqibnpyrk2lsu@treble>
- <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
- <20200122214239.ivnebi7hiabi5tbs@treble>
- <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
- <20200128150014.juaxfgivneiv6lje@treble>
- <20200128154046.trkpkdaz7qeovhii@pathway.suse.cz>
- <20200128170254.igb72ib5n7lvn3ds@treble>
- <nycvar.YFH.7.76.2001290141140.31058@cbobk.fhfr.pm>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.2001290141140.31058@cbobk.fhfr.pm>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Tue, 28 Jan 2020 21:23:38 -0500
+Received: by mail-qt1-f194.google.com with SMTP id c5so2570791qtj.6;
+        Tue, 28 Jan 2020 18:23:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fmN/pVtssbxT3Pr5E1F9HLzDYsx7npNCg2efVd+HMmU=;
+        b=QBgG2VEcnqZ+75WvmHHQDCu0DVOaEAm7gKkBtuRdPRSKVXgX7VybeZ6nSLCtbnBGtq
+         UPVZ5p/NRTacrxdm5LOn4YTS2RVxkbdNuklfw+tLMQ+NiSlws8WfKkZwbZMzuIe9u+6Y
+         rZgDvgO+PVkVs2vq8JRpRjJH1/MsHkCzVjaixUzXAbRKytiUfzhbhtLtshPPtoxy4GZW
+         3aWiQyPZfblfd/QTJrOBONXR0xCc9BTQJ9o6cy3Ig6+BkO7WsfeO7+oBoR0E0Wt16W1X
+         j+y8zzyP1Cpt+XsC/ZfbuZKwf7xX/PfmsyOXcchNJZBhN5LdhCDuYFpq5W/IyOBOUWsR
+         6Z9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fmN/pVtssbxT3Pr5E1F9HLzDYsx7npNCg2efVd+HMmU=;
+        b=t9bDXe4AykBwGpF6oD5ObnRVMfN4Wc+YG9oQDI1kuq2PCsGt9oinO5NLV/qJH5zfYC
+         6eFBoVtDoG8tCTqqoIvE7Z27wqMDk9SMZpM2jErRmRtp2y3kD6vvJTNU5ChEoHgYFbMr
+         2i1aKjvQFjT9auLz6hEMa0f3mgPVX8B8EISQ/toOwqMIpLcAHpgJDANuT8K5kgS4g3ZR
+         n7VVEUysByw+WrcnW7Gk9JKovk34RT28MLo/9p8ujGRqB1arULeZsHJtvYe4JNmIKWq4
+         BUBLe4hmEv1jeVxAK9WLhA7KrX2PkviPEn48xdKCBxxp58ITUfhajup/KEC8a7/YDKFD
+         ghcw==
+X-Gm-Message-State: APjAAAW16TcPd218SAqhSlmzcRvjYHPzgd7VVorN/nNwpaCGdtNrvBmA
+        0uRrn59Cjlyt3Ox2ixFQOiQ=
+X-Google-Smtp-Source: APXvYqyNA49ujrtKNcqXZwElb1RXS2xg+isb9ANhOquR30a4f55p2QQEwGGEfffQDYg2TuhvAW7OWg==
+X-Received: by 2002:ac8:71cf:: with SMTP id i15mr24882255qtp.383.1580264617446;
+        Tue, 28 Jan 2020 18:23:37 -0800 (PST)
+Received: from localhost ([209.222.10.104])
+        by smtp.gmail.com with ESMTPSA id f10sm241377qkk.70.2020.01.28.18.23.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jan 2020 18:23:37 -0800 (PST)
+From:   Wu Bo <wubo.oduw@gmail.com>
+Cc:     Wu Bo <wubo.oduw@gmail.com>, Dan Murphy <dmurphy@ti.com>,
+        Sriram Dash <sriram.dash@samsung.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] can: m_can: the state change mistake
+Date:   Wed, 29 Jan 2020 10:23:29 +0800
+Message-Id: <20200129022330.21248-1-wubo.oduw@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 01:46:55AM +0100, Jiri Kosina wrote:
-> On Tue, 28 Jan 2020, Josh Poimboeuf wrote:
-> 
-> > > Anyway, I think that we might make your life easier with using the 
-> > > proposed -Wsuggest-attribute=noreturn.
-> > 
-> > Maybe.  Though if I understand correctly, this doesn't help for any of 
-> > the new warnings because they're for static functions, and this only 
-> > warns about global functions.
-> 
-> Could you please provide a pointer where those have been 
-> reported/analyzed?
-> 
-> For the cases I've seen so far, it has always been gcc deciding under 
-> certain circumstances not to propagate __attribute__((__noreturn__)) from 
-> callee to caller even in the cases when caller unconditionally called 
-> callee.
-> 
-> AFAIU, the behavior is (and always will) be dependent on the state of gcc 
-> optimizations, and therefore I don't see any other way than adding 
-> __noreturn anotation transitively everywhere in order to silence objtool.
-> 
-> So those cases have to be fixed anyway.
-> 
-> What are the other cases please? Either I have completely missed those, or 
-> they haven't been mentioned in this thread.
+The new state is change to CAN_STATE_ERROR_WARNING, but the value of
+switch case is CAN_STATE_ERROR_ACTIVE.
 
-For example, see:
+Signed-off-by: Wu Bo <wubo.oduw@gmail.com>
+---
+ drivers/net/can/m_can/m_can.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/commit/?h=objtool-fixes&id=6265238af90b395a1e5e5032a41f012a552d8a9e
-
-Many of those callees are static noreturns, for which we've *never*
-needed annotations.  Disabling -fipa-pure-const has apparently changed
-that.
-
--Wsuggest-attribute=noreturn doesn't seem to suggest annotations for
-static functions, probably because most reasonable setups use -O2 which
-allows GCC to detect them.
-
+diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+index 02c5795b7393..63887e23d89c 100644
+--- a/drivers/net/can/m_can/m_can.c
++++ b/drivers/net/can/m_can/m_can.c
+@@ -665,7 +665,7 @@ static int m_can_handle_state_change(struct net_device *dev,
+ 	unsigned int ecr;
+ 
+ 	switch (new_state) {
+-	case CAN_STATE_ERROR_ACTIVE:
++	case CAN_STATE_ERROR_WARNING:
+ 		/* error warning state */
+ 		cdev->can.can_stats.error_warning++;
+ 		cdev->can.state = CAN_STATE_ERROR_WARNING;
+@@ -694,7 +694,7 @@ static int m_can_handle_state_change(struct net_device *dev,
+ 	__m_can_get_berr_counter(dev, &bec);
+ 
+ 	switch (new_state) {
+-	case CAN_STATE_ERROR_ACTIVE:
++	case CAN_STATE_ERROR_WARNING:
+ 		/* error warning state */
+ 		cf->can_id |= CAN_ERR_CRTL;
+ 		cf->data[1] = (bec.txerr > bec.rxerr) ?
 -- 
-Josh
+2.17.1
 
