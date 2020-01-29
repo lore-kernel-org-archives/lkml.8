@@ -2,101 +2,151 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83C6C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518BCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4389206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:38:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DrEnxIvC"
+	by mail.kernel.org (Postfix) with ESMTP id 28716206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:41:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580319681;
+	bh=fjifcePPtlIyvBkA/K3j1WYBoijltRnpMklePcRk3mM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ulhdFIrHhzOnX7CS8z7/cLisdUHELc/tFN9NpZ5HTSQa4hylATpoli7unQx0Ixm/t
+	 3p0pyHMHtk1pFyt4CSVM9uut4Hq5zeasHSOEcUQ642/LrUBVRHQEjCLOuI9q1D4nkj
+	 bXRwRsbi7N0ed1XBIs2VF88QcKNSGg2s9imiKD+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbgA2Ri7 (ORCPT
+        id S1727364AbgA2RlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 12:38:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54192 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbgA2Ri6 (ORCPT
+        Wed, 29 Jan 2020 12:41:20 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37384 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgA2RlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 12:38:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Gc3ks24OG6X76f+yAGA45eM4fknNEyoh+zvpOec4XLI=; b=DrEnxIvCOx0T33JROVafFekwY
-        od8NQOjAsF4gsSr7L8yMUUamw6VwZ1Wyft5tj9oxTzG4tggqa6ey8DL49jQvhTQdsFvPDBmIU/KVG
-        PB0J9pjy9pJ3BfdksVsr8Zld0Yko146sw5ph/We4CMg3DxBh6Tak08DBYSCF9azbKb+GNy5nbpR7V
-        HwRqrp2IREayDQEteLRQ5hopWzdUMdrI1uQZ5bOZVdHvtlmqXcERa+8H20vpXLPZLXdcC8iEjvK7R
-        WS/hdcvcFX7FO0SUm/yYqkFvg/RMAyGc43DOlfjjB4jqWqVYT3OboKwHOkv9ywOFKlONZAFB2auMs
-        EmC7jW0gg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwrIk-0003Xh-JK; Wed, 29 Jan 2020 17:38:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 52E533035D4;
-        Wed, 29 Jan 2020 18:37:09 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3BFEA2B7334C0; Wed, 29 Jan 2020 18:38:52 +0100 (CET)
-Date:   Wed, 29 Jan 2020 18:38:52 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Dave Chinner <david@fromorbit.com>, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>, Phil Auld <pauld@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
- stack on the same CPU
-Message-ID: <20200129173852.GP14914@hirez.programming.kicks-ass.net>
-References: <20200127143608.GX3466@techsingularity.net>
- <20200127223256.GA18610@dread.disaster.area>
- <20200128011936.GY3466@techsingularity.net>
- <20200128091012.GZ3466@techsingularity.net>
+        Wed, 29 Jan 2020 12:41:20 -0500
+Received: by mail-lj1-f194.google.com with SMTP id v17so268315ljg.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 09:41:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pzs29JuQG9++PU2+nVCtLhiO0+B6uu2BSoJd1SQI/+8=;
+        b=ZDNjBOoofmM2bds+jVfTEyLsLeyDbhxcaAyiKBnrSn4Xan7211Upqh8nXpEeFDwuyf
+         IddxBvFqfzrjXn57FCei7ld78d8HXdBDP59mRVWlDUrlx9QRuZC3pUiGXrWG+zWw+K6Y
+         s6j6nsO7YVwFHN8zWZDB8QmMfJDQ41htP6RlU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pzs29JuQG9++PU2+nVCtLhiO0+B6uu2BSoJd1SQI/+8=;
+        b=kz78aJnMZKbuTi8KEQOfoI7XbeBeodJXqzzc+VxAViOFJ2jkBnkv29x7ePilvUxq09
+         d8/Egp0kdlSf5kyYBHw83t5I2QkH6wD4xMRPDU7NEsnHXNd6L/knUMoaKRKuCQrJgeKS
+         vJrKij5VeifD+wuN+yp0K/0WJdq5W5m2SeX3si/947yP2go3Fk5G8Otb6WJ/k4vnBtNu
+         1sKWApXPlSpJLALWXJaxoU7tiGuqiNTg1yIrgexLffxpFb1E3t+wdHWTGKF2s/X6n/Wb
+         4IJ509P5gF9ZAqI7agc9i71iwfWe4sMsE09RvL6H6+mUSrDqO9JoVWxl3dQKaJ3GklNY
+         KndQ==
+X-Gm-Message-State: APjAAAWPcr5pQFAUvKIbv80eJpYC/BjSSiZ7RQgMVBnr9Vc3XpaYg6Nb
+        ZwrvDiggqJx80PU7Fus9qkrqtY9o1U0=
+X-Google-Smtp-Source: APXvYqwBXX4wKUtTPf14H0IlkeiFuSYwdKnFHPdO89+h3IUNgUj3b+1DnwhneIGk8sKNRtFZQP6zFQ==
+X-Received: by 2002:a2e:b4cf:: with SMTP id r15mr181057ljm.52.1580319676414;
+        Wed, 29 Jan 2020 09:41:16 -0800 (PST)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id d24sm1336093lja.82.2020.01.29.09.41.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 09:41:15 -0800 (PST)
+Received: by mail-lf1-f41.google.com with SMTP id n25so308807lfl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 09:41:14 -0800 (PST)
+X-Received: by 2002:a05:6512:78:: with SMTP id i24mr256499lfo.10.1580319674390;
+ Wed, 29 Jan 2020 09:41:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128091012.GZ3466@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200128165906.GA67781@gmail.com> <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
+ <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+ <20200129132618.GA30979@zn.tnic> <20200129170725.GA21265@agluck-desk2.amr.corp.intel.com>
+In-Reply-To: <20200129170725.GA21265@agluck-desk2.amr.corp.intel.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 29 Jan 2020 09:40:58 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgns2Tvph77XZWN=r_qAtUwxrTzDXNffi8nGKz1mLZNHw@mail.gmail.com>
+Message-ID: <CAHk-=wgns2Tvph77XZWN=r_qAtUwxrTzDXNffi8nGKz1mLZNHw@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/asm changes for v5.6
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 09:10:12AM +0000, Mel Gorman wrote:
-> Peter, Ingo and Vincent -- I know the timing is bad due to the merge
-> window but do you have any thoughts on allowing select_idle_sibling to
-> stack a wakee task on the same CPU as a waker in this specific case?
+On Wed, Jan 29, 2020 at 9:07 AM Luck, Tony <tony.luck@intel.com> wrote:
+>
+> This returns "3" ... not what we want. But swapping the ERMS/FSRM order
+> gets the correct version.
 
-I sort of see, but *groan*...
+That actually makes sense, and is what I suspected (after I wrote the
+patch) what would happen. It would just be good to have it explicitly
+documented at the macro.
 
-so if the kworker unlocks a contended mutex/rwsem/completion...
+> > And yes, your idea makes sense to use ALTERNATIVE_2 but as it is, it
+> > triple-faults my guest. I'll debug it more later to find out why, when I
+> > get a chance.
+>
+> Triple fault is a surprise.  As long as you have ERMS, it shouldn't
+> hurt to take the FSRM code path.
+>
+> Does the code that performs the patch use memmove() to copy the alternate
+> version into place? That could get ugly!
 
-I suppose the fact that it limits it to tasks that were running on the
-same CPU limits the impact if we do get it wrong.
+That would be bad indeed, but I don't think it should matter
+particularly for this case - it would have been bad before too.
 
-Elsewhere you write:
+I suspect there is some other issue going on, like the NOP padding
+logic being confused.
 
-> I would prefer the wakeup code did not have to signal that it's a
-> synchronous wakeup. Sync wakeups so exist but callers got it wrong many
-> times where stacking was allowed and then the waker did not go to sleep.
-> While the chain of events are related, they are not related in a very
-> obvious way. I think it's much safer to keep this as a scheduler
-> heuristic instead of depending on callers to have sufficient knowledge
-> of the scheduler implementation.
+In particular, look here, this is the alt_instruction entries:
 
-That is true; the existing WF_SYNC has caused many issues for maybe
-being too strong.
+   altinstruction_entry 140b,143f,\feature1,142b-140b,144f-143f,142b-141b
+   altinstruction_entry 140b,144f,\feature2,142b-140b,145f-144f,142b-141b
 
-But what if we create a new hint that combines both these ideas? Say
-WF_COMPLETE and subject that to these same criteria. This way we can
-eliminate wakeups from locks and such (they won't have this set).
+where the arguments are "orig alt feature orig_len alt_len pad_len" in
+that order.
 
-Or am I just making things complicated again?
+Notice how "pad_len" in both cases is the padding from the _original_
+instruction (142b-141b).
+
+So what happens when all the three alternatives are different sizes?
+In particular, we have
+
+ (a) first 'orig' with 'orig_pad'
+
+ (b) then we do the first feature replacement, and we use that correct
+original padding
+
+ (c) then we do the _second_ feature replacemement - except now
+'orig_len, pad_len' doesn't actually match what the code is, because
+we've done that first replacement.
+
+I still don't see why it would be a problem, really, because the two
+replacement sequences don't actually care about the padding (they both
+end with a 'ret', so you don't need to get the padding nops right),
+but I wonder if this casues confusion.
+
+I do note that all the existing uses of ALTERNATIVE_2 in asm code that
+might have this issue (REP_GOOD vs ERMS) has an empty instruction in
+the middle, and the final instruction is the same size as the
+original. So _if_ there is some padding confusion in alternatives
+handling, it might easily have been hidden by that.
+
+So I'm just hand-waving. Maybe there was some simpler explanation
+(like me just picking the wrong instructions when I did the rough
+conversion and simply breaking things with some stupid bug).
+
+               Linus
