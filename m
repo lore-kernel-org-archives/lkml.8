@@ -2,94 +2,94 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D971CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBA4C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A250A20702
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:31:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaaLsCCu"
+	by mail.kernel.org (Postfix) with ESMTP id 5378F2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgA2MbA (ORCPT
+        id S1726620AbgA2Mbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:31:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22035 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726186AbgA2MbA (ORCPT
+        Wed, 29 Jan 2020 07:31:36 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:51279 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbgA2Mbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:31:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580301059;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mVoGmnbnu+6R1pSCl0dLyuO7kwDWvlmj5m5kaifObZg=;
-        b=ZaaLsCCub7Z4xmuXFeLEhSU6vMEN5NwNHeaaEzoCGXSXfKE2yartIajPJEYizEgjx4OzKw
-        0tHjngx8fOA9hg1hJ6noOcdSHz77jk6jFckJoCfUUHZbt0nQzrLE8hLlsFM1cxtPc/hArq
-        s2b45Xcm+NP7jE1nsGgYBWl4N2I+DT4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-Q5wd-9RhPqyzHHEuMF8AeA-1; Wed, 29 Jan 2020 07:30:53 -0500
-X-MC-Unique: Q5wd-9RhPqyzHHEuMF8AeA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7238E800D41;
-        Wed, 29 Jan 2020 12:30:51 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.70])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 8A0695C1B5;
-        Wed, 29 Jan 2020 12:30:49 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 29 Jan 2020 13:30:49 +0100 (CET)
-Date:   Wed, 29 Jan 2020 13:30:47 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     peterz@infradead.org, mingo@kernel.org,
-        christian.brauner@ubuntu.com, paulmck@kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, rcu@vger.kernel.org
-Subject: Re: [PATCH] exit.c: Fix Sparse errors and warnings
-Message-ID: <20200129123046.GA1726@redhat.com>
-References: <20200128172008.22665-1-madhuparnabhowmik10@gmail.com>
+        Wed, 29 Jan 2020 07:31:36 -0500
+Received: from konstanz.wlan.tk-bodensee.net ([185.80.169.68] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iwmVA-0000Vy-Pq; Wed, 29 Jan 2020 13:31:25 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 0F5FC105CFD; Wed, 29 Jan 2020 13:31:24 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Luck\, Tony" <tony.luck@intel.com>
+Cc:     Mark D Rustad <mrustad@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        "Christopherson\, Sean J" <sean.j.christopherson@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu\, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj\, Ashok" <ashok.raj@intel.com>,
+        "Shankar\, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v17] x86/split_lock: Enable split lock detection by kernel
+In-Reply-To: <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com>
+References: <4E95BFAA-A115-4159-AA4F-6AAB548C6E6C@gmail.com> <C3302B2F-177F-4C39-910E-EADBA9285DD0@intel.com> <8CC9FBA7-D464-4E58-8912-3E14A751D243@gmail.com> <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com>
+Date:   Wed, 29 Jan 2020 13:31:24 +0100
+Message-ID: <87d0b24f6r.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128172008.22665-1-madhuparnabhowmik10@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/28, madhuparnabhowmik10@gmail.com wrote:
->
-> kernel/exit.c:626:40: warning: incorrect type in assignment
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> ---
->  kernel/exit.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index bcbd59888e67..c5a9d6360440 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -623,8 +623,8 @@ static void forget_original_parent(struct task_struct *father,
->  	reaper = find_new_reaper(father, reaper);
->  	list_for_each_entry(p, &father->children, sibling) {
->  		for_each_thread(p, t) {
-> -			t->real_parent = reaper;
-> -			BUG_ON((!t->ptrace) != (t->parent == father));
-> +			rcu_assign_pointer(t->real_parent, reaper);
+"Luck, Tony" <tony.luck@intel.com> writes:
+> +static bool __sld_msr_set(bool on)
+> +{
+> +	u64 test_ctrl_val;
+> +
+> +	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
+> +		return false;
+> +
+> +	if (on)
+> +		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+> +	else
+> +		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+> +
+> +	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
+> +}
+> +
+> +static void split_lock_init(void)
+> +{
+> +	if (sld_state == sld_off)
+> +		return;
+> +
+> +	if (__sld_msr_set(true))
+> +		return;
+> +
+> +	/*
+> +	 * If this is anything other than the boot-cpu, you've done
+> +	 * funny things and you get to keep whatever pieces.
+> +	 */
+> +	pr_warn("MSR fail -- disabled\n");
+> +	__sld_msr_set(sld_off);
 
-Another case when RCU_INIT_POINTER() makes more sense (although to me it
-too looks confusing). We didn't modify the new parent.
+This one is pretty pointless. If the rdmsrl or the wrmsrl failed, then
+the next attempt is going to fail too. Aside of that sld_off would be not
+really the right argument value here. I just zap that line.
 
-Oleg.
+Thanks,
 
+        tglx
