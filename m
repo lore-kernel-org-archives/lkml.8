@@ -2,117 +2,138 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A55C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50321C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92BF207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580289131;
-	bh=3PbAV8xHa5J1shODJC/9vqbomQlLbIG5XwG5BrUPB+s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RqTkrySoJEc/s/BnSv135a4gTOEKtEGvxkS2J+PCgGwfZJcdc16tsKOPq+GGumMPr
-	 PVMYXnrI4I9GGfTycfK/MuyayGnO8KQMem9z0e1qCBkS2n/3CawPeN9cy63u5KvoCt
-	 KxtIopxPbkKx+C24XkyhK1XoQDzAfAUIZhj8aYus=
+	by mail.kernel.org (Postfix) with ESMTP id 1F9C520716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:13:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MBAooP6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgA2JML (ORCPT
+        id S1726252AbgA2JNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:12:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbgA2JMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 04:12:10 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C371920708;
-        Wed, 29 Jan 2020 09:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580289129;
-        bh=3PbAV8xHa5J1shODJC/9vqbomQlLbIG5XwG5BrUPB+s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=o011yhgIai4vAfp6DxIAk6OX++mtFKDDNVaRJUxPNVXWQEo1PtH3nX+IBfs8/cv/K
-         MbYVdQ1hHusvG/nXheJpX9kJT+rEYrkI/r+P5TFKNy+LfCv8u/D8miQ0aR/QyCcq8Y
-         xV7xzBc3J7YDnUoPjSJYKh3+ygKNl6TEg0vecg/8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1iwjOK-001zHw-1b; Wed, 29 Jan 2020 09:12:08 +0000
+        Wed, 29 Jan 2020 04:13:32 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17471 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgA2JNc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 04:13:32 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e314c880000>; Wed, 29 Jan 2020 01:12:40 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 29 Jan 2020 01:13:30 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 29 Jan 2020 01:13:30 -0800
+Received: from [10.19.66.205] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jan
+ 2020 09:13:27 +0000
+Subject: Re: [Patch V3 03/18] phy: tegra: xusb: Add usb-role-switch support
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <kishon@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1577704195-2535-1-git-send-email-nkristam@nvidia.com>
+ <1577704195-2535-4-git-send-email-nkristam@nvidia.com>
+ <20200128173244.GA2293590@ulmo>
+X-Nvconfidentiality: public
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <b6de0078-f1cd-31a1-70bd-dfc320eab70e@nvidia.com>
+Date:   Wed, 29 Jan 2020 14:45:38 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200128173244.GA2293590@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 Jan 2020 09:12:08 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     JaeJoon Jung <rgbi3307@gmail.com>
-Cc:     Yash Shah <yash.shah@sifive.com>, atish.patra@wdc.com,
-        wesley@sifive.com, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
-        Palmer Dabbelt <palmer@dabbelt.com>, sachin.ghadi@sifive.com,
-        linux-gpio@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH] gpio/sifive: fix static checker warning
-In-Reply-To: <CAHOvCC5A4usY0k4+0Y13N_zbAG8PD4H++fngAu+yJsVba9+6Ng@mail.gmail.com>
-References: <1580189061-14091-1-git-send-email-yash.shah@sifive.com>
- <ecb0e9404a3f6256a7ba1fe48b5a1471@kernel.org>
- <CAHOvCC5A4usY0k4+0Y13N_zbAG8PD4H++fngAu+yJsVba9+6Ng@mail.gmail.com>
-Message-ID: <934410721310a3107e1d9d2600ec438a@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: rgbi3307@gmail.com, yash.shah@sifive.com, atish.patra@wdc.com, wesley@sifive.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com, palmer@dabbelt.com, sachin.ghadi@sifive.com, linux-gpio@vger.kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580289160; bh=AfKsN9drip9fGF1J0qLuc6MudsZ5rcBopOsTLJQmYOU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=MBAooP6zorBL94Rw5yws9+pE/JuBQTCObfMRTLoCqHa7DkGpdPFUVTuyxJNMrl2Yn
+         uNS7Ry4YpvrYeuh4Vtez6/SPp7MiOVe8GMHYaqMmNnhUptibVxL8XLaDTPUVSUepM+
+         AmhQ0jo5hhnn+7fnT+I4soRC6ZpbeO9ZV0MUdGO04iVKOqpITv+LRl0JqvHk6JVXzm
+         D66WU5Mtr+iC9LEgwd+GPB9RKWzvt275lKagF6mHDNM/8HCwOmK7EOXKatldBrWuoA
+         iWfnXwllUpw96TA64d9dVETfJIVNZQp0nIEOtTNpmDWGUk6pz9SU2gUoMXyeAxXwTM
+         tPZGwOIA1GCeQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-JaeJoon,
 
-On 2020-01-29 01:27, JaeJoon Jung wrote:
-> Because SiFive FU540 GPIO Registers are aligned 32-bit,
-> I think that irq_state is good "unsigned int" than "unsigned long".
+
+On 28-01-2020 23:02, Thierry Reding wrote:
+> On Mon, Dec 30, 2019 at 04:39:40PM +0530, Nagarjuna Kristam wrote:
+>> If usb-role-switch property is present in USB 2 port, register
+>> usb-role-switch to receive usb role changes.
+>>
+>> Signed-off-by: Nagarjuna Kristam<nkristam@nvidia.com>
+>> ---
+>> V3:
+>>   - Driver aborts if usb-role-switch is not added in dt forotg/peripheral
+>>     roles.
+>>   - Added role name strings instead of enum values in debug prints.
+>>   - Updated arguments and variable allignments as per Thierry inputs.
+>> ---
+>> V2:
+>>   - Removed dev_set_drvdata for port->dev.
+>>   - Added of_platform_depopulate during error handling and driver removal.
+>> ---
+>>   drivers/phy/tegra/Kconfig |  1 +
+>>   drivers/phy/tegra/xusb.c  | 57 +++++++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/phy/tegra/xusb.h  |  3 +++
+>>   3 files changed, 61 insertions(+)
+>>
+>> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+>> index f9817c3..df07c4d 100644
+>> --- a/drivers/phy/tegra/Kconfig
+>> +++ b/drivers/phy/tegra/Kconfig
+>> @@ -2,6 +2,7 @@
+>>   config PHY_TEGRA_XUSB
+>>   	tristate "NVIDIA Tegra XUSB pad controller driver"
+>>   	depends on ARCH_TEGRA
+>> +	select USB_CONN_GPIO
+>>   	help
+>>   	  Choose this option if you have an NVIDIA Tegra SoC.
+>>   
+>> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+>> index f98ec39..11ea9b5 100644
+>> --- a/drivers/phy/tegra/xusb.c
+>> +++ b/drivers/phy/tegra/xusb.c
+>> @@ -523,6 +523,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+>>   	port->dev.type = &tegra_xusb_port_type;
+>>   	port->dev.of_node = of_node_get(np);
+>>   	port->dev.parent = padctl->dev;
+>> +	port->dev.driver = padctl->dev->driver;
+> This looks wrong. I don't think driver's are supposed to set this
+> because it basically means that the device is being attached to the
+> driver, but in this case it doesn't get probed by the driver and in
+> fact the ports don't match the pad controller, so they can't really
+> be driven by the same driver.
 > 
-> I refer to SiFive FU540-C000 Manual v1p0 (GPIO Register Table 103)
-> as "Only naturally aligned 32-bit memory accesses are supported"
-
-You realize that we're talking about variables here, and not hardware
-registers, right?
-
-> when you use assign_bit(offset, &chip->irq_state, 1),
-> offset is 32-bit.
-
-And? assign_bit takes an "unsigned long *" as a parameter. irrespective
-of the size of long on a given architecture, by the way.
-
-> I prefer to use bit operation instead of assign_bit().
+> Is there any particular reason why you need this?
 > 
-> u32 bit = BIT(offset);
-> chip->irq_state |= bit;
+> Thierry
 
-which is not what assign_bit() does.
+Yes, port->dev.driver->owner is accessed in USB role switch driver in 
+API usb_role_switch_get. If driver param is not updated, it causes NULL 
+pointer exception. Based on your inputs, since this assignment is not 
+supposed to used, I believe option available is to create a new 
+device_driver structure and assign the same here.
+Please share your thoughts.
 
-> If you use this code, you do not use the assign_bit() and
-> need not change irq_state data type.
-
-Or we can use the correct API and not introduce additional bugs, which
-your suggestion above would lead to.
-
-> There are many improvements in my works for drivers/gpio/gpio-sifive.c.
-> I hope to check my attached source file.
-
-That's not how we submit patches to the Linux kernel. I suggest you
-read the documentation on how to do this.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+- Nagarjuna
