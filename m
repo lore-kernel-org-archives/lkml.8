@@ -2,209 +2,205 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94404C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEE4C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695B520716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:56:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vFIp6Fy5"
+	by mail.kernel.org (Postfix) with ESMTP id 38C582070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgA2I4j (ORCPT
+        id S1726643AbgA2JA3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 03:56:39 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28886 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726116AbgA2I4j (ORCPT
+        Wed, 29 Jan 2020 04:00:29 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:35164 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgA2JA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 03:56:39 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00T8rQw4007229;
-        Wed, 29 Jan 2020 09:56:16 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=6TM5tHd0OOg3IdmLX0VJnp+7Y7ouSwiUy4aohPlYHZM=;
- b=vFIp6Fy5bb1siklaSX9IeOlwb5zbFJRzVqEeWcmuk/lt2zbO+tn5LW7QmzxesNktT2HR
- opLqFAISEvYpyjhN4O4to0YZoxK/nKm8oU2QzQdYf9XoOpfySx2zx2TroPz+T2BiVLkO
- AjH+PIe/tucVezvHcOEvjs+vU5wTemUYkBMfGN/4tkiR7KYR5vVCgzx6M5j+lSSho4ns
- 4yEDCTqtadJ3jbnVRO/3KRU01ww8NurrDQ1pmpZmrDRwuUCUEOKkNihB2roU5mWvbwyT
- Eh5ViyJDdTBnqz4giGR5bwX03WcYBamHFSY9HR0Uzo2n8QV16yjx38CfdnTBSNje79KJ tg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrcay23x4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 09:56:16 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 586B010002A;
-        Wed, 29 Jan 2020 09:56:15 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3E2572116C3;
-        Wed, 29 Jan 2020 09:56:15 +0100 (CET)
-Received: from localhost (10.75.127.51) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Jan 2020 09:56:14
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <l.stach@pengutronix.de>, <linux+etnaviv@armlinux.org.uk>,
-        <christian.gmeiner@gmail.com>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <maxime@cerno.tech>
-CC:     <etnaviv@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <philippe.cornu@st.com>, <pierre-yves.mordret@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v3] dt-bindings: display: Convert etnaviv to json-schema
-Date:   Wed, 29 Jan 2020 09:56:13 +0100
-Message-ID: <20200129085613.3036-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-29_01:2020-01-28,2020-01-29 signatures=0
+        Wed, 29 Jan 2020 04:00:29 -0500
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id C984BCECB0;
+        Wed, 29 Jan 2020 10:09:46 +0100 (CET)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [Bluez PATCH v1] bluetooth: secure bluetooth stack from bluedump
+ attack
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200106181425.Bluez.v1.1.I5ee1ea8e19d41c5bdffb4211aeb9cd9efa5e0a4a@changeid>
+Date:   Wed, 29 Jan 2020 10:00:26 +0100
+Cc:     BlueZ devel list <linux-bluetooth@vger.kernel.org>,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <9E07917B-E3B0-4AD9-9771-4CE325F1290F@holtmann.org>
+References: <20200106181425.Bluez.v1.1.I5ee1ea8e19d41c5bdffb4211aeb9cd9efa5e0a4a@changeid>
+To:     Yun-hao Chung <howardchung@google.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert etnaviv bindings to yaml format.
-Move bindings file from display to gpu folder.
+Hi Howard,
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-version 3:
-- describe clock-names as enum to allow all possible mix
+> Attack scenario:
+> 1. A Chromebook (let's call this device A) is paired to a legitimate
+>   Bluetooth classic device (e.g. a speaker) (let's call this device
+>   B).
+> 2. A malicious device (let's call this device C) pretends to be the
+>   Bluetooth speaker by using the same BT address.
+> 3. If device A is not currently connected to device B, device A will
+>   be ready to accept connection from device B in the background
+>   (technically, doing Page Scan).
+> 4. Therefore, device C can initiate connection to device A
+>   (because device A is doing Page Scan) and device A will accept the
+>   connection because device A trusts device C's address which is the
+>   same as device B's address.
+> 5. Device C won't be able to communicate at any high level Bluetooth
+>   profile with device A because device A enforces that device C is
+>   encrypted with their common Link Key, which device C doesn't have.
+>   But device C can initiate pairing with device A with just-works
+>   model without requiring user interaction (there is only pairing
+>   notification). After pairing, device A now trusts device C with a
+>   new different link key, common between device A and C.
+> 6. From now on, device A trusts device C, so device C can at anytime
+>   connect to device A to do any kind of high-level hijacking, e.g.
+>   speaker hijack or mouse/keyboard hijack.
+> 
+> To fix this, reject the pairing if all the conditions below are met.
+> - the pairing is initialized by peer
+> - the authorization method is just-work
+> - host already had the link key to the peer
+> 
+> Also create a debugfs option to permit the pairing even the
+> conditions above are met.
+> 
+> Signed-off-by: howardchung <howardchung@google.com>
+> ---
+> 
+> include/net/bluetooth/hci.h |  1 +
+> net/bluetooth/hci_core.c    | 47 +++++++++++++++++++++++++++++++++++++
+> net/bluetooth/hci_event.c   | 12 ++++++++++
+> 3 files changed, 60 insertions(+)
+> 
+> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> index 07b6ecedc6ce..4918b79baa41 100644
+> --- a/include/net/bluetooth/hci.h
+> +++ b/include/net/bluetooth/hci.h
+> @@ -283,6 +283,7 @@ enum {
+> 	HCI_FORCE_STATIC_ADDR,
+> 	HCI_LL_RPA_RESOLUTION,
+> 	HCI_CMD_PENDING,
+> +	HCI_PERMIT_JUST_WORK_REPAIR,
 
-version 2:
-- move bindings file from display to gpu folder
- .../bindings/display/etnaviv/etnaviv-drm.txt       | 36 -----------
- .../devicetree/bindings/gpu/vivante,gc.yaml        | 69 ++++++++++++++++++++++
- 2 files changed, 69 insertions(+), 36 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/vivante,gc.yaml
+Call this simply JUST_WORKS_REPAIRING.
 
-diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-deleted file mode 100644
-index 8def11b16a24..000000000000
---- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--Vivante GPU core devices
--========================
--
--Required properties:
--- compatible: Should be "vivante,gc"
--  A more specific compatible is not needed, as the cores contain chip
--  identification registers at fixed locations, which provide all the
--  necessary information to the driver.
--- reg: should be register base and length as documented in the
--  datasheet
--- interrupts: Should contain the cores interrupt line
--- clocks: should contain one clock for entry in clock-names
--  see Documentation/devicetree/bindings/clock/clock-bindings.txt
--- clock-names:
--   - "bus":    AXI/master interface clock
--   - "reg":    AHB/slave interface clock
--               (only required if GPU can gate slave interface independently)
--   - "core":   GPU core clock
--   - "shader": Shader clock (only required if GPU has feature PIPE_3D)
--
--Optional properties:
--- power-domains: a power domain consumer specifier according to
--  Documentation/devicetree/bindings/power/power_domain.txt
--
--example:
--
--gpu_3d: gpu@130000 {
--	compatible = "vivante,gc";
--	reg = <0x00130000 0x4000>;
--	interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
--	         <&clks IMX6QDL_CLK_GPU3D_CORE>,
--	         <&clks IMX6QDL_CLK_GPU3D_SHADER>;
--	clock-names = "bus", "core", "shader";
--	power-domains = <&gpc 1>;
--};
-diff --git a/Documentation/devicetree/bindings/gpu/vivante,gc.yaml b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-new file mode 100644
-index 000000000000..0bc4b38d5cbb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/vivante,gc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Vivante GPU Bindings
-+
-+description: Vivante GPU core devices
-+
-+maintainers:
-+  -  Lucas Stach <l.stach@pengutronix.de>
-+
-+properties:
-+  compatible:
-+    const: vivante,gc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: AXI/master interface clock
-+      - description: GPU core clock
-+      - description: Shader clock (only required if GPU has feature PIPE_3D)
-+      - description: AHB/slave interface clock (only required if GPU can gate slave interface independently)
-+    minItems: 1
-+    maxItems: 4
-+
-+  clock-names:
-+    items:
-+      enum: [ bus, core, shader, reg ]
-+    minItems: 1
-+    maxItems: 4
-+
-+  resets:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6qdl-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    gpu@130000 {
-+      compatible = "vivante,gc";
-+      reg = <0x00130000 0x4000>;
-+      interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
-+               <&clks IMX6QDL_CLK_GPU3D_CORE>,
-+               <&clks IMX6QDL_CLK_GPU3D_SHADER>;
-+      clock-names = "bus", "core", "shader";
-+      power-domains = <&gpc 1>;
-+    };
-+
-+...
--- 
-2.15.0
+> 
+> 	__HCI_NUM_FLAGS,
+> };
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 9e19d5a3aac8..9014aa567e7b 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -172,10 +172,57 @@ static const struct file_operations vendor_diag_fops = {
+> 	.llseek		= default_llseek,
+> };
+> 
+> +static ssize_t permit_just_work_repair_read(struct file *file,
+> +					    char __user *user_buf,
+> +					    size_t count, loff_t *ppos)
+> +{
+> +	struct hci_dev *hdev = file->private_data;
+> +	char buf[3];
+> +
+> +	buf[0] = hci_dev_test_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR) ? 'Y'
+> +								      : 'N';
+> +	buf[1] = '\n';
+> +	buf[2] = '\0';
+> +	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
+> +}
+> +
+> +static ssize_t permit_just_work_repair_write(struct file *file,
+> +					     const char __user *user_buf,
+> +					     size_t count, loff_t *ppos)
+> +{
+> +	struct hci_dev *hdev = file->private_data;
+> +	char buf[32];
+> +	size_t buf_size = min(count, (sizeof(buf) - 1));
+> +	bool enable;
+> +
+> +	if (copy_from_user(buf, user_buf, buf_size))
+> +		return -EFAULT;
+> +
+> +	buf[buf_size] = '\0';
+> +	if (strtobool(buf, &enable))
+> +		return -EINVAL;
+> +
+> +	if (enable)
+> +		hci_dev_set_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR);
+> +	else
+> +		hci_dev_clear_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR);
+> +
+> +	return count;
+> +}
+> +
+> +static const struct file_operations permit_just_work_repair_fops = {
+> +	.open		= simple_open,
+> +	.read		= permit_just_work_repair_read,
+> +	.write		= permit_just_work_repair_write,
+> +	.llseek		= default_llseek,
+> +};
+> +
+> static void hci_debugfs_create_basic(struct hci_dev *hdev)
+> {
+> 	debugfs_create_file("dut_mode", 0644, hdev->debugfs, hdev,
+> 			    &dut_mode_fops);
+> +	debugfs_create_file("permit_just_work_repair", 0644, hdev->debugfs,
+> +			    hdev, &permit_just_work_repair_fops);
+
+Call this just_works_repairing.
+
+I have a bad association with “repair” since that means to me that you are trying to repair something that is broken.
+
+> 
+> 	if (hdev->set_diag)
+> 		debugfs_create_file("vendor_diag", 0644, hdev->debugfs, hdev,
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index 6ddc4a74a5e4..898e347e19e0 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -4539,6 +4539,18 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
+> 		goto unlock;
+> 	}
+> 
+> +	/* If there already exists link key in local host, terminate the
+> +	 * connection by default since the remote device could be malicious.
+> +	 * Permit the connection if permit_just_work_repair is enabled.
+> +	 */
+> +	if (!hci_dev_test_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR) &&
+> +	    hci_find_link_key(hdev, &ev->bdaddr)) {
+> +		BT_DBG("Rejecting request: local host already have link key");
+> +		hci_send_cmd(hdev, HCI_OP_USER_CONFIRM_NEG_REPLY,
+> +			     sizeof(ev->bdaddr), &ev->bdaddr);
+> +		goto unlock;
+> +	}
+> +
+> 	/* If no side requires MITM protection; auto-accept */
+> 	if ((!loc_mitm || conn->remote_cap == HCI_IO_NO_INPUT_OUTPUT) &&
+> 	    (!rem_mitm || conn->io_capability == HCI_IO_NO_INPUT_OUTPUT)) {
+
+Looking at this patch as my own second pair of eyes, I am not sure this is the right location to just outright reject the confirmation request.
+
+We need to support upgrading an unauthenticated key into an authenticated key (there is a qualification test case for this). Only when we decided that we are doing just-works auto-accept, then we should reject the pairing if there is an existing link key.
+
+I know that PTS has a test case, but I wonder we actually have a test case in our own test suite. Maybe we don’t and we should really add one to ensure we behave correctly.
+
+Regards
+
+Marcel
 
