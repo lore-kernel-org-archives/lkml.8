@@ -2,230 +2,107 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C78BC33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E107C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D674220720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69F52070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:23:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gdkONAdz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nNy4UT56"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgA2RUr (ORCPT
+        id S1727080AbgA2RX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 12:20:47 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58237 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727107AbgA2RUq (ORCPT
+        Wed, 29 Jan 2020 12:23:26 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52292 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgA2RX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 12:20:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580318442;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=CDEy69IL/eMYtpmDS3XjUwKwXrl7W0ck1hqzenez+2c=;
-        b=gdkONAdzy+pd4yBkwcpuqpZLD1tKOLuPAfVsUnlWO7rcuC1kTdGJKLdue/bsmp/OY7xuYs
-        5cFgLjxxDhHJ1+JIjQMxTbQuH9riVpH97zM1ktcYGcOhHaTyfjwadxP5SNI/i5/7XhPWd8
-        CXIujZGQTeQw/kl/4HEv7DpiMnb0mNY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-358-IuDla0bKOH2KmPPH79RJLw-1; Wed, 29 Jan 2020 12:20:20 -0500
-X-MC-Unique: IuDla0bKOH2KmPPH79RJLw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46763477;
-        Wed, 29 Jan 2020 17:20:19 +0000 (UTC)
-Received: from localhost (ovpn-117-180.ams2.redhat.com [10.36.117.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D7B5F5DE53;
-        Wed, 29 Jan 2020 17:20:11 +0000 (UTC)
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Avi Kivity <avi@scylladb.com>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: [RFC] eventfd: add EFD_AUTORESET flag
-Date:   Wed, 29 Jan 2020 17:20:10 +0000
-Message-Id: <20200129172010.162215-1-stefanha@redhat.com>
+        Wed, 29 Jan 2020 12:23:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qxdWzWOmCgoWbYz3jX66IwOH4z93WpdKcTgyPys1vnI=; b=nNy4UT56yYmek26tiBSDr79oy
+        +kdv3L5++5fKBpzwML+ST6IsZxj9RqnKWWGps9+QHjH1+DELnLQC+5pMIFlGOJz1LmDn7gdLSiNCi
+        +000sFv1xoavMAuyOYlOw9gA08XEq1KInBW/qZjTOyZmhH68hUykvI7jeSn3j46JSo9NsjrnsojH2
+        y8tcmaKLXv5fwj1PXV8b1TwdI7N7eTGn2tjJq1v7AlvQOcnr/bADrXNm1EjN9WR4giMfnWFm95YvN
+        V0tXd3mLQ+gmlfx4GDiCIsMtDBF0GWBftCIwQfWIZqRhMD13x6zHkr1ktijZmAi3u8r/mB2WinsNG
+        nhr3QNX9w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwr3j-0006vV-E7; Wed, 29 Jan 2020 17:23:23 +0000
+Date:   Wed, 29 Jan 2020 09:23:23 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/28] ata: separate PATA timings code from libata-core.c
+Message-ID: <20200129172323.GF12616@infradead.org>
+References: <20200128133343.29905-1-b.zolnierkie@samsung.com>
+ <CGME20200128133414eucas1p14b041a2d58ca70817f3007c0f405ee73@eucas1p1.samsung.com>
+ <20200128133343.29905-11-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128133343.29905-11-b.zolnierkie@samsung.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some applications simply use eventfd for inter-thread notifications
-without requiring counter or semaphore semantics.  They wait for the
-eventfd to become readable using poll(2)/select(2) and then call read(2)
-to reset the counter.
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + *  libata-pata-timings.c - helper library for PATA timings
 
-This patch adds the EFD_AUTORESET flag to reset the counter when
-f_ops->poll() finds the eventfd is readable, eliminating the need to
-call read(2) to reset the counter.
+Please remove the file name from the top of the file header.
 
-This results in a small but measurable 1% performance improvement with
-QEMU virtio-blk emulation.  Each read(2) takes 1 microsecond execution
-time in the event loop according to perf.
+> +static void ata_timing_quantize(const struct ata_timing *t, struct ata_timing *q, int T, int UT)
+> +{
 
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
----
-Does this look like a reasonable thing to do?  I'm not very familiar
-with f_ops->poll() or the eventfd internals, so maybe I'm overlooking a
-design flaw.
+> +void ata_timing_merge(const struct ata_timing *a, const struct ata_timing *b,
+> +		      struct ata_timing *m, unsigned int what)
+> +{
 
-I've tested this with QEMU and it works fine:
-https://github.com/stefanha/qemu/commits/eventfd-autoreset
----
- fs/eventfd.c            | 99 +++++++++++++++++++++++++----------------
- include/linux/eventfd.h |  3 +-
- 2 files changed, 62 insertions(+), 40 deletions(-)
+Please fix the overly long lines while you're at it.
 
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index 8aa0ea8c55e8..208f6b9e2234 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -116,45 +116,62 @@ static __poll_t eventfd_poll(struct file *file, pol=
-l_table *wait)
-=20
- 	poll_wait(file, &ctx->wqh, wait);
-=20
--	/*
--	 * All writes to ctx->count occur within ctx->wqh.lock.  This read
--	 * can be done outside ctx->wqh.lock because we know that poll_wait
--	 * takes that lock (through add_wait_queue) if our caller will sleep.
--	 *
--	 * The read _can_ therefore seep into add_wait_queue's critical
--	 * section, but cannot move above it!  add_wait_queue's spin_lock acts
--	 * as an acquire barrier and ensures that the read be ordered properly
--	 * against the writes.  The following CAN happen and is safe:
--	 *
--	 *     poll                               write
--	 *     -----------------                  ------------
--	 *     lock ctx->wqh.lock (in poll_wait)
--	 *     count =3D ctx->count
--	 *     __add_wait_queue
--	 *     unlock ctx->wqh.lock
--	 *                                        lock ctx->qwh.lock
--	 *                                        ctx->count +=3D n
--	 *                                        if (waitqueue_active)
--	 *                                          wake_up_locked_poll
--	 *                                        unlock ctx->qwh.lock
--	 *     eventfd_poll returns 0
--	 *
--	 * but the following, which would miss a wakeup, cannot happen:
--	 *
--	 *     poll                               write
--	 *     -----------------                  ------------
--	 *     count =3D ctx->count (INVALID!)
--	 *                                        lock ctx->qwh.lock
--	 *                                        ctx->count +=3D n
--	 *                                        **waitqueue_active is false**
--	 *                                        **no wake_up_locked_poll!**
--	 *                                        unlock ctx->qwh.lock
--	 *     lock ctx->wqh.lock (in poll_wait)
--	 *     __add_wait_queue
--	 *     unlock ctx->wqh.lock
--	 *     eventfd_poll returns 0
--	 */
--	count =3D READ_ONCE(ctx->count);
-+	if (ctx->flags & EFD_AUTORESET) {
-+		unsigned long flags;
-+		__poll_t requested =3D poll_requested_events(wait);
-+
-+		spin_lock_irqsave(&ctx->wqh.lock, flags);
-+		count =3D ctx->count;
-+
-+		/* Reset counter if caller is polling for read */
-+		if (count !=3D 0 && (requested & EPOLLIN)) {
-+			ctx->count =3D 0;
-+			events |=3D EPOLLOUT;
-+			/* TODO is a EPOLLOUT wakeup necessary here? */
-+		}
-+
-+		spin_unlock_irqrestore(&ctx->wqh.lock, flags);
-+	} else {
-+		/*
-+		 * All writes to ctx->count occur within ctx->wqh.lock.  This read
-+		 * can be done outside ctx->wqh.lock because we know that poll_wait
-+		 * takes that lock (through add_wait_queue) if our caller will sleep.
-+		 *
-+		 * The read _can_ therefore seep into add_wait_queue's critical
-+		 * section, but cannot move above it!  add_wait_queue's spin_lock acts
-+		 * as an acquire barrier and ensures that the read be ordered properly
-+		 * against the writes.  The following CAN happen and is safe:
-+		 *
-+		 *     poll                               write
-+		 *     -----------------                  ------------
-+		 *     lock ctx->wqh.lock (in poll_wait)
-+		 *     count =3D ctx->count
-+		 *     __add_wait_queue
-+		 *     unlock ctx->wqh.lock
-+		 *                                        lock ctx->qwh.lock
-+		 *                                        ctx->count +=3D n
-+		 *                                        if (waitqueue_active)
-+		 *                                          wake_up_locked_poll
-+		 *                                        unlock ctx->qwh.lock
-+		 *     eventfd_poll returns 0
-+		 *
-+		 * but the following, which would miss a wakeup, cannot happen:
-+		 *
-+		 *     poll                               write
-+		 *     -----------------                  ------------
-+		 *     count =3D ctx->count (INVALID!)
-+		 *                                        lock ctx->qwh.lock
-+		 *                                        ctx->count +=3D n
-+		 *                                        **waitqueue_active is false*=
-*
-+		 *                                        **no wake_up_locked_poll!**
-+		 *                                        unlock ctx->qwh.lock
-+		 *     lock ctx->wqh.lock (in poll_wait)
-+		 *     __add_wait_queue
-+		 *     unlock ctx->wqh.lock
-+		 *     eventfd_poll returns 0
-+		 */
-+		count =3D READ_ONCE(ctx->count);
-+	}
-=20
- 	if (count > 0)
- 		events |=3D EPOLLIN;
-@@ -400,6 +417,10 @@ static int do_eventfd(unsigned int count, int flags)
- 	if (flags & ~EFD_FLAGS_SET)
- 		return -EINVAL;
-=20
-+	/* Semaphore semantics don't make sense when autoreset is enabled */
-+	if ((flags & EFD_SEMAPHORE) && (flags & EFD_AUTORESET))
-+		return -EINVAL;
-+
- 	ctx =3D kmalloc(sizeof(*ctx), GFP_KERNEL);
- 	if (!ctx)
- 		return -ENOMEM;
-diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
-index ffcc7724ca21..27577fafc553 100644
---- a/include/linux/eventfd.h
-+++ b/include/linux/eventfd.h
-@@ -21,11 +21,12 @@
-  * shared O_* flags.
-  */
- #define EFD_SEMAPHORE (1 << 0)
-+#define EFD_AUTORESET (1 << 6) /* aliases O_CREAT */
- #define EFD_CLOEXEC O_CLOEXEC
- #define EFD_NONBLOCK O_NONBLOCK
-=20
- #define EFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
--#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE)
-+#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE | EFD_AUTO=
-RESET)
-=20
- struct eventfd_ctx;
- struct file;
---=20
-2.24.1
+> +	if (what & ATA_TIMING_SETUP  ) m->setup   = max(a->setup,   b->setup);
+> +	if (what & ATA_TIMING_ACT8B  ) m->act8b   = max(a->act8b,   b->act8b);
+> +	if (what & ATA_TIMING_REC8B  ) m->rec8b   = max(a->rec8b,   b->rec8b);
+> +	if (what & ATA_TIMING_CYC8B  ) m->cyc8b   = max(a->cyc8b,   b->cyc8b);
+> +	if (what & ATA_TIMING_ACTIVE ) m->active  = max(a->active,  b->active);
+> +	if (what & ATA_TIMING_RECOVER) m->recover = max(a->recover, b->recover);
+> +	if (what & ATA_TIMING_DMACK_HOLD) m->dmack_hold = max(a->dmack_hold, b->dmack_hold);
+> +	if (what & ATA_TIMING_CYCLE  ) m->cycle   = max(a->cycle,   b->cycle);
+> +	if (what & ATA_TIMING_UDMA   ) m->udma    = max(a->udma,    b->udma);
 
+and this very strange coding style.
+
+> +	if (!(s = ata_timing_find_mode(speed)))
+> +		return -EINVAL;
+
+This should be:
+
+	s = ata_timing_find_mode(speed);
+	if (!s)
+		return -EINVAL;
+
+> +	/* In a few cases quantisation may produce enough errors to
+> +	   leave t->cycle too low for the sum of active and recovery
+> +	   if so we must correct this */
+
+.. non-standard comment style here.
+
+> +#ifdef CONFIG_ATA_ACPI
+>  extern u8 ata_timing_cycle2mode(unsigned int xfer_shift, int cycle);
+> +#endif
+
+I don't think we need this ifdef - unused prototypes are completely
+harmless.
