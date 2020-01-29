@@ -2,123 +2,262 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F362FC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B4DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C97312070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580304595;
-	bh=WSfaj6iZUNvq/tzkmMf0eY3u1apppaSyX8HXl6Rg7+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DJhDo+Xid4eHUAz2kuU5pUbxNG7NoF2vQWsr6inqyfjmqMrKuoXVp2OaEP/y79Miz
-	 HcSaalTt8LC4OhnZIohiyGh/oC0EoDXbOX+xUTFgULRhO93jSlY1vvMEXz1qt30mQ2
-	 C9M9s//7OsUq1d4MmCOEANPUK7l+RPplJFq6ejWI=
+	by mail.kernel.org (Postfix) with ESMTP id 92BB12070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgA2N3z (ORCPT
+        id S1726484AbgA2Ne0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:29:55 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43041 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgA2N3y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:29:54 -0500
-Received: by mail-wr1-f65.google.com with SMTP id d16so20185245wre.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 05:29:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=prpS7rraPt/GjCivc8V6REqwcGP4nAyD1IPQ65+5P0g=;
-        b=H3x1RDTwWkfTVU+QVGVfvJyiyRyR7hsr2qppvopieE5eq7yk1sz6nk245NneIF4MMY
-         Ic+xPF8StU5BRphRNmiFbDnfMrj8x1kPVksxCTJyNjJcF0jPUUeH2Bny7L+6LmVNw1U5
-         Qhq+ooZxh+GLxILQe5TIC7p6s7K50Scb6aIDWd9v3wGEURqn43DAQ21JFk9rV/ZcPgkl
-         Ak/bmMXccHG49OhKt+rC5hZCYmhaUiGszE56083jj7kpyKobYBy7f//pb82PVS5P6x/a
-         yU2yn4ggp0U4XNuSGzm2oo/y6YLBoL60w8K2AnI0emyEcy/2zKplqIu1f5McllgummkG
-         jQvw==
-X-Gm-Message-State: APjAAAXrg7UTfuQY0YySsGc8R9APTRDoJOk2ciBgZg3SdtRAwi5dicTu
-        /Z56VgIZDWAt4g7VjtifF8Q=
-X-Google-Smtp-Source: APXvYqwUgwcj23f6v0orkfDA43EGCM8GKFKUL1BSo+4dxdZTryjlU8NEkhX/qps/nQ25dswX65X1bQ==
-X-Received: by 2002:a5d:540f:: with SMTP id g15mr33967169wrv.86.1580304592326;
-        Wed, 29 Jan 2020 05:29:52 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id y20sm2334628wmi.23.2020.01.29.05.29.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 05:29:51 -0800 (PST)
-Date:   Wed, 29 Jan 2020 14:29:50 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, penguin-kernel@i-love.sakura.ne.jp,
-        hannes@cmpxchg.org, elver@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        syzbot+f36cfe60b1006a94f9dc@syzkaller.appspotmail.com
-Subject: Re: [PATCH -next] mm/page_counter: annotate an intentional data race
-Message-ID: <20200129132950.GL24244@dhcp22.suse.cz>
-References: <20200129131242.4329-1-cai@lca.pw>
+        Wed, 29 Jan 2020 08:34:26 -0500
+Received: from mga03.intel.com ([134.134.136.65]:12309 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbgA2Ne0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 08:34:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 05:34:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,378,1574150400"; 
+   d="scan'208";a="277467906"
+Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.249.172.225]) ([10.249.172.225])
+  by FMSMGA003.fm.intel.com with ESMTP; 29 Jan 2020 05:34:23 -0800
+Subject: Re: [kbuild-all] Re: block/blk-merge.c:166:19: note: in expansion of
+ macro 'page_to_phys'
+To:     Ming Lei <ming.lei@redhat.com>, kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Chris Mason <chris.mason@fusionio.com>
+References: <202001271456.g9ITPCEb%lkp@intel.com>
+ <20200129113258.GA1831@ming.t460p>
+From:   "Chen, Rong A" <rong.a.chen@intel.com>
+Message-ID: <bd726c66-afb6-cbc2-ae1c-4a6633272f13@intel.com>
+Date:   Wed, 29 Jan 2020 21:34:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129131242.4329-1-cai@lca.pw>
+In-Reply-To: <20200129113258.GA1831@ming.t460p>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29-01-20 08:12:42, Qian Cai wrote:
-> The commit 3e32cb2e0a12 ("mm: memcontrol: lockless page counters") could
-> had memcg->memsw->failcnt been accessed concurrently as reported by
-> KCSAN,
-> 
-> BUG: KCSAN: data-race in page_counter_try_charge / page_counter_try_charge
-> 
-> write to 0xffff88809bbf2158 of 8 bytes by task 11782 on cpu 0:
->  page_counter_try_charge+0x100/0x170 mm/page_counter.c:129
->  try_charge+0x185/0xbf0 mm/memcontrol.c:2405
->  __memcg_kmem_charge_memcg+0x4a/0xe0 mm/memcontrol.c:2837
->  __memcg_kmem_charge+0xcf/0x1b0 mm/memcontrol.c:2877
->  __alloc_pages_nodemask+0x26c/0x310 mm/page_alloc.c:4780
-> 
-> read to 0xffff88809bbf2158 of 8 bytes by task 11814 on cpu 1:
->  page_counter_try_charge+0xef/0x170 mm/page_counter.c:129
->  try_charge+0x185/0xbf0 mm/memcontrol.c:2405
->  __memcg_kmem_charge_memcg+0x4a/0xe0 mm/memcontrol.c:2837
->  __memcg_kmem_charge+0xcf/0x1b0 mm/memcontrol.c:2877
->  __alloc_pages_nodemask+0x26c/0x310 mm/page_alloc.c:4780
-> 
-> Since the "failcnt" counter is tolerant of some degree of inaccuracy and
-> is only used to report stats, a data race will not be harmful, thus mark
-> it as an intentional data races with the data_race() macro.
-> 
-> Reported-by: syzbot+f36cfe60b1006a94f9dc@syzkaller.appspotmail.com
-> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
 
-> ---
->  mm/page_counter.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_counter.c b/mm/page_counter.c
-> index a17841150906..7c82072cda25 100644
-> --- a/mm/page_counter.c
-> +++ b/mm/page_counter.c
-> @@ -126,7 +126,7 @@ bool page_counter_try_charge(struct page_counter *counter,
->  			 * This is racy, but we can live with some
->  			 * inaccuracy in the failcnt.
->  			 */
-> -			c->failcnt++;
-> +			data_race(c->failcnt++);
->  			*fail = c;
->  			goto failed;
->  		}
-> -- 
-> 2.21.0 (Apple Git-122.2)
+On 1/29/2020 7:32 PM, Ming Lei wrote:
+> On Mon, Jan 27, 2020 at 02:38:58PM +0800, kbuild test robot wrote:
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>> head:   d5226fa6dbae0569ee43ecfc08bdcd6770fc4755
+>> commit: 429120f3df2dba2bf3a4a19f4212a53ecefc7102 block: fix splitting segments on boundary masks
+>> date:   4 weeks ago
+>> config: riscv-randconfig-a001-20200127 (attached as .config)
+>> compiler: riscv64-linux-gcc (GCC) 7.5.0
+>> reproduce:
+>>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>          chmod +x ~/bin/make.cross
+>>          git checkout 429120f3df2dba2bf3a4a19f4212a53ecefc7102
+>>          # save the attached .config to linux build tree
+>>          GCC_VERSION=7.5.0 make.cross ARCH=riscv
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All warnings (new ones prefixed by >>):
+>>
+>>                      from include/asm-generic/preempt.h:5,
+>>                      from ./arch/riscv/include/generated/asm/preempt.h:1,
+>>                      from include/linux/preempt.h:78,
+>>                      from include/linux/spinlock.h:51,
+>>                      from include/linux/seqlock.h:36,
+>>                      from include/linux/time.h:6,
+>>                      from include/linux/stat.h:19,
+>>                      from include/linux/module.h:13,
+>>                      from block/blk-merge.c:6:
+>>     include/linux/scatterlist.h: In function 'sg_phys':
+>>     include/asm-generic/memory_model.h:55:54: error: 'vmemmap' undeclared (first use in this function); did you mean 'vm_mmap'?
+>>      #define __page_to_pfn(page) (unsigned long)((page) - vmemmap)
+>>                                                           ^
+>>     include/linux/pfn.h:21:36: note: in definition of macro 'PFN_PHYS'
+>>      #define PFN_PHYS(x) ((phys_addr_t)(x) << PAGE_SHIFT)
+>>                                         ^
+>>     arch/riscv/include/asm/page.h:115:29: note: in expansion of macro 'pfn_to_phys'
+>>      #define page_to_phys(page) (pfn_to_phys(page_to_pfn(page)))
+>>                                  ^~~~~~~~~~~
+>>     include/asm-generic/memory_model.h:81:21: note: in expansion of macro '__page_to_pfn'
+>>      #define page_to_pfn __page_to_pfn
+>>                          ^~~~~~~~~~~~~
+>>     arch/riscv/include/asm/page.h:115:41: note: in expansion of macro 'page_to_pfn'
+>>      #define page_to_phys(page) (pfn_to_phys(page_to_pfn(page)))
+>>                                              ^~~~~~~~~~~
+>>     include/linux/scatterlist.h:224:9: note: in expansion of macro 'page_to_phys'
+>>       return page_to_phys(sg_page(sg)) + sg->offset;
+>>              ^~~~~~~~~~~~
+>>     In file included from arch/riscv/include/asm/page.h:131:0,
+>>                      from arch/riscv/include/asm/thread_info.h:11,
+>>                      from include/linux/thread_info.h:38,
+>>                      from include/asm-generic/preempt.h:5,
+>>                      from ./arch/riscv/include/generated/asm/preempt.h:1,
+>>                      from include/linux/preempt.h:78,
+>>                      from include/linux/spinlock.h:51,
+>>                      from include/linux/seqlock.h:36,
+>>                      from include/linux/time.h:6,
+>>                      from include/linux/stat.h:19,
+>>                      from include/linux/module.h:13,
+>>                      from block/blk-merge.c:6:
+>>     include/linux/scatterlist.h: In function 'sg_page_iter_page':
+>>     include/asm-generic/memory_model.h:54:29: error: 'vmemmap' undeclared (first use in this function); did you mean 'vm_mmap'?
+>>      #define __pfn_to_page(pfn) (vmemmap + (pfn))
+>>                                  ^
+>>     include/asm-generic/memory_model.h:82:21: note: in expansion of macro '__pfn_to_page'
+>>      #define pfn_to_page __pfn_to_page
+>>                          ^~~~~~~~~~~~~
+>>     include/linux/mm.h:213:26: note: in expansion of macro 'pfn_to_page'
+>>      #define nth_page(page,n) pfn_to_page(page_to_pfn((page)) + (n))
+>>                               ^~~~~~~~~~~
+>>     include/linux/scatterlist.h:384:9: note: in expansion of macro 'nth_page'
+>>       return nth_page(sg_page(piter->sg), piter->sg_pgoffset);
+>>              ^~~~~~~~
+>>     In file included from arch/riscv/include/asm/page.h:12:0,
+>>                      from arch/riscv/include/asm/thread_info.h:11,
+>>                      from include/linux/thread_info.h:38,
+>>                      from include/asm-generic/preempt.h:5,
+>>                      from ./arch/riscv/include/generated/asm/preempt.h:1,
+>>                      from include/linux/preempt.h:78,
+>>                      from include/linux/spinlock.h:51,
+>>                      from include/linux/seqlock.h:36,
+>>                      from include/linux/time.h:6,
+>>                      from include/linux/stat.h:19,
+>>                      from include/linux/module.h:13,
+>>                      from block/blk-merge.c:6:
+>>     block/blk.h: In function 'biovec_phys_mergeable':
+>>     include/asm-generic/memory_model.h:55:54: error: 'vmemmap' undeclared (first use in this function); did you mean 'vm_mmap'?
+>>      #define __page_to_pfn(page) (unsigned long)((page) - vmemmap)
+>>                                                           ^
+>>     include/linux/pfn.h:21:36: note: in definition of macro 'PFN_PHYS'
+>>      #define PFN_PHYS(x) ((phys_addr_t)(x) << PAGE_SHIFT)
+>>                                         ^
+>>     arch/riscv/include/asm/page.h:115:29: note: in expansion of macro 'pfn_to_phys'
+>>      #define page_to_phys(page) (pfn_to_phys(page_to_pfn(page)))
+>>                                  ^~~~~~~~~~~
+>>     include/asm-generic/memory_model.h:81:21: note: in expansion of macro '__page_to_pfn'
+>>      #define page_to_pfn __page_to_pfn
+>>                          ^~~~~~~~~~~~~
+>>     arch/riscv/include/asm/page.h:115:41: note: in expansion of macro 'page_to_pfn'
+>>      #define page_to_phys(page) (pfn_to_phys(page_to_pfn(page)))
+>>                                              ^~~~~~~~~~~
+>>     block/blk.h:79:22: note: in expansion of macro 'page_to_phys'
+>>       phys_addr_t addr1 = page_to_phys(vec1->bv_page) + vec1->bv_offset;
+>>                           ^~~~~~~~~~~~
+>>     block/blk-merge.c: In function 'get_max_segment_size':
+>>     include/asm-generic/memory_model.h:55:54: error: 'vmemmap' undeclared (first use in this function); did you mean 'vm_mmap'?
+>>      #define __page_to_pfn(page) (unsigned long)((page) - vmemmap)
+>>                                                           ^
+>>     include/linux/pfn.h:21:36: note: in definition of macro 'PFN_PHYS'
+>>      #define PFN_PHYS(x) ((phys_addr_t)(x) << PAGE_SHIFT)
+>>                                         ^
+>>     arch/riscv/include/asm/page.h:115:29: note: in expansion of macro 'pfn_to_phys'
+>>      #define page_to_phys(page) (pfn_to_phys(page_to_pfn(page)))
+>>                                  ^~~~~~~~~~~
+>>     include/asm-generic/memory_model.h:81:21: note: in expansion of macro '__page_to_pfn'
+>>      #define page_to_pfn __page_to_pfn
+>>                          ^~~~~~~~~~~~~
+>>     arch/riscv/include/asm/page.h:115:41: note: in expansion of macro 'page_to_pfn'
+>>      #define page_to_phys(page) (pfn_to_phys(page_to_pfn(page)))
+>>                                              ^~~~~~~~~~~
+>>>> block/blk-merge.c:166:19: note: in expansion of macro 'page_to_phys'
+>>       offset = mask & (page_to_phys(start_page) + offset);
+>>                        ^~~~~~~~~~~~
+>>     In file included from arch/riscv/include/asm/page.h:131:0,
+>>                      from arch/riscv/include/asm/thread_info.h:11,
+>>                      from include/linux/thread_info.h:38,
+>>                      from include/asm-generic/preempt.h:5,
+>>                      from ./arch/riscv/include/generated/asm/preempt.h:1,
+>>                      from include/linux/preempt.h:78,
+>>                      from include/linux/spinlock.h:51,
+>>                      from include/linux/seqlock.h:36,
+>>                      from include/linux/time.h:6,
+>>                      from include/linux/stat.h:19,
+>>                      from include/linux/module.h:13,
+>>                      from block/blk-merge.c:6:
+>>     block/blk-merge.c: In function 'blk_rq_map_sg':
+>>     include/asm-generic/memory_model.h:54:29: error: 'vmemmap' undeclared (first use in this function); did you mean 'vm_mmap'?
+>>      #define __pfn_to_page(pfn) (vmemmap + (pfn))
+>>                                  ^
+>>     include/asm-generic/memory_model.h:82:21: note: in expansion of macro '__pfn_to_page'
+>>      #define pfn_to_page __pfn_to_page
+>>                          ^~~~~~~~~~~~~
+>>     arch/riscv/include/asm/page.h:112:30: note: in expansion of macro 'pfn_to_page'
+>>      #define virt_to_page(vaddr) (pfn_to_page(virt_to_pfn(vaddr)))
+>>                                   ^~~~~~~~~~~
+>>     block/blk-merge.c:545:19: note: in expansion of macro 'virt_to_page'
+>>        sg_set_page(sg, virt_to_page(q->dma_drain_buffer),
+>>                        ^~~~~~~~~~~~
+>>
+>> vim +/page_to_phys +166 block/blk-merge.c
+>>
+>>     159	
+>>     160	static inline unsigned get_max_segment_size(const struct request_queue *q,
+>>     161						    struct page *start_page,
+>>     162						    unsigned long offset)
+>>     163	{
+>>     164		unsigned long mask = queue_segment_boundary(q);
+>>     165	
+>>   > 166		offset = mask & (page_to_phys(start_page) + offset);
+>>     167		return min_t(unsigned long, mask - offset + 1,
+>>     168			     queue_max_segment_size(q));
+>>     169	}
+>>     170	
+>>
+>> ---
+>> 0-DAY kernel test infrastructure                 Open Source Technology Center
+>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+> Hello,
+>
+> Thanks for your report!
+>
+> Could you test the following patch?
 
--- 
-Michal Hocko
-SUSE Labs
+Hi Ming,
+
+We're on leave for the Chinese New Year, could you try the following steps?
+
+reproduce:
+         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+         chmod +x ~/bin/make.cross
+         # save the attached .config to linux build tree
+         GCC_VERSION=7.5.0 make.cross ARCH=riscv
+
+Best Regards,
+Rong Chen
+
+>
+> diff --git a/block/blk-merge.c b/block/blk-merge.c
+> index d783bdc4559b..e693d64e2565 100644
+> --- a/block/blk-merge.c
+> +++ b/block/blk-merge.c
+> @@ -7,6 +7,7 @@
+>   #include <linux/bio.h>
+>   #include <linux/blkdev.h>
+>   #include <linux/scatterlist.h>
+> +#include <linux/mm.h>
+>   
+>   #include <trace/events/block.h>
+>   
+>
+>
+> Thanks,
+> Ming
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+
