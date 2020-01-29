@@ -2,93 +2,102 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D68C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0659FC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8AD320716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7CAE20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:47:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="U8tlsOs7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="OdzFqS49"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e7L2TCwe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbgA2RmY (ORCPT
+        id S1727368AbgA2RrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 12:42:24 -0500
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:51887 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727367AbgA2RmY (ORCPT
+        Wed, 29 Jan 2020 12:47:16 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:41992 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgA2RrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 12:42:24 -0500
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id F0A504ABE4;
-        Wed, 29 Jan 2020 12:42:21 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=urXaZyuslkka/AZilaZBFQEXjW0=; b=U8tlsO
-        s78YueUM3moRfJqYpeynOXYu55Qau7oh4VNGh9gOGFMBNi0H1VWX+2NlGidfjorB
-        REBCC+65j9uYy8nzYU7NJQ7G3CFg/jgGTiv7cHZ0Awf2asfFJuuhWsn01qtD4d6Q
-        yJib7QYosnyNmBn2pd2CDqwwS46jIIaX0jGd0=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id E7E494ABE3;
-        Wed, 29 Jan 2020 12:42:21 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=ypnyA5Le1GB3vJhvCC+unW73zp9xV1VgoxlnMuNbIyM=; b=OdzFqS49NuV/wUi36fGDNunUr5TJ4XfD8SIvD9FxlcksFMU+dVAAcgcx5wuUzJy6+HyZ0FFS6Hv6Gpx8fKVtEMaLh0Tdr6dwWb2jO4uceGmaQQlwFUJXR94LwB1ojM0GqOqzUYdySEC3Lu0uD4L5eLS4Df5hVlpbJ59A18r4ctI=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 689F44ABE2;
-        Wed, 29 Jan 2020 12:42:21 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 7B2562DA013B;
-        Wed, 29 Jan 2020 12:42:20 -0500 (EST)
-Date:   Wed, 29 Jan 2020 12:42:20 -0500 (EST)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Quentin Perret <qperret@google.com>
-cc:     masahiroy@kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, maennich@google.com,
-        kernel-team@android.com
-Subject: Re: [PATCH] kbuild: allow symbol whitelisting with
- TRIM_UNUSED_KSYMS
-In-Reply-To: <20200129173714.GA193443@google.com>
-Message-ID: <nycvar.YSQ.7.76.2001291240370.1655@knanqh.ubzr>
-References: <20200129150612.19200-1-qperret@google.com> <nycvar.YSQ.7.76.2001291152540.1655@knanqh.ubzr> <20200129173714.GA193443@google.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Wed, 29 Jan 2020 12:47:15 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00THcwLG126119;
+        Wed, 29 Jan 2020 17:46:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=lwS0OgyEz/S/yIRyeJcc23PQIQm2EF2vWGxSVmIUGAA=;
+ b=e7L2TCwetOgu6k5B5Z8EaCNGYbwyufGq0Z8/k1USa5mC8uk+J9qwFtymmQmDx8s4dBJK
+ S5la3Bz0Ulowu0vrLKnEnJjqArbZiq8/vQGR9q4vBXfqkly3YF34QLh6+Q4+L+m9bfYW
+ DcR+4yktC0OVgXRmYODEmOlRU5vDRCWkmiwXfUS7ehW0Z4rXmKOn+N08XLnpb1UWG6rX
+ H92gHFWdF78Kpx/YhBV8pW5dVN0VlIzv+PH0X+WcdvFBKo/K4IcviN6UXWzLTaXbGKmk
+ Lk6l+jZfdocS1OLRugjM4382estGhzX4MrfNjTnw84UEzRVMi0Wg1EA4rvlD18SZMRfm Fg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xrd3uf33d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jan 2020 17:46:52 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00THcF2d053105;
+        Wed, 29 Jan 2020 17:46:52 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2xu8e6ta9h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jan 2020 17:46:52 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00THkofY002378;
+        Wed, 29 Jan 2020 17:46:50 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 Jan 2020 09:46:50 -0800
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 24/28] ata: start separating SATA specific code from libata-scsi.c
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200128133343.29905-1-b.zolnierkie@samsung.com>
+        <CGME20200128133418eucas1p157933935f14f9c83c604bc5dc38bcbae@eucas1p1.samsung.com>
+        <20200128133343.29905-25-b.zolnierkie@samsung.com>
+        <20200129173156.GL12616@infradead.org>
+Date:   Wed, 29 Jan 2020 12:46:46 -0500
+In-Reply-To: <20200129173156.GL12616@infradead.org> (Christoph Hellwig's
+        message of "Wed, 29 Jan 2020 09:31:56 -0800")
+Message-ID: <yq1h80e6tq1.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: B3B61098-42BE-11EA-8FFC-C28CBED8090B-78420484!pb-smtp1.pobox.com
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001290145
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001290145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020, Quentin Perret wrote:
 
-> On Wednesday 29 Jan 2020 at 12:11:12 (-0500), Nicolas Pitre wrote:
-> > This way, if $CONFIG_UNUSED_KSYMS_WHITELIST is non empty, it'll get 
-> > quoted.
-> 
-> A shorter alternative would be something a little like so perhaps ?
-> 
-> diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
-> index 1a6f7f377230..8e1b7f70e800 100755
-> --- a/scripts/adjust_autoksyms.sh
-> +++ b/scripts/adjust_autoksyms.sh
-> @@ -48,7 +48,7 @@ cat > "$new_ksyms_file" << EOT
->  EOT
->  sed 's/ko$/mod/' modules.order |
->  xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
-> -cat - $CONFIG_UNUSED_KSYMS_WHITELIST |
-> +cat - "${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}" |
+Christoph,
 
-That's even better.
+> On Tue, Jan 28, 2020 at 02:33:39PM +0100, Bartlomiej Zolnierkiewicz wrote:
+>> * include libata-scsi-sata.c in the build when CONFIG_SATA_HOST=y
+>
+> The libata-core.c vs libata-scsi.c split already is a bit weird, any
+> reason not to simply have a single libata-sata.c?
 
+I agree, I also tripped over libata-scsi-sata.
 
-Nicolas
+-- 
+Martin K. Petersen	Oracle Linux Engineering
