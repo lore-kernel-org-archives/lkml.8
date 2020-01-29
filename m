@@ -2,104 +2,161 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC407C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5F2C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E81920720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:17:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HeGuhWKA"
+	by mail.kernel.org (Postfix) with ESMTP id 82F61207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580300280;
+	bh=djniQwpAmOkXiqKoYRepG4IzFpRTfrhyZnnTKzmOSYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ohvHsMIOU0KHSYGBMj0dy9Ki5+uAwn/l8tJhDvnBrxgwRQGJp5KmmCRq7QIia65GS
+	 iT/yVtU30S750psjFyNci0uQLdpB154H/1fEfTlpHf7mOayRnxcrriG3yL4INniWub
+	 YtB+SecAkos3a1cyzEWY73Ngo7pzLCT4slkFR0/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgA2MR5 (ORCPT
+        id S1726824AbgA2MR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:17:57 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:40402 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726145AbgA2MRm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:17:42 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Wed, 29 Jan 2020 07:17:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726788AbgA2MR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 07:17:58 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6230A40829;
-        Wed, 29 Jan 2020 12:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1580300261; bh=EWznO/7FCN3HQvpSq9KAAmnQZlA5wLD6bU4uUlvRy1Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=HeGuhWKA79xkjv8P+Gup8W5OG9GV4gOdWlHYCFsUYIhx0FsBO+jeqN+oIO4Y3vjhN
-         hVULQnS2Cj/HQPSKbAcBQxnt74tHZX0/uVLwqz7DbJwwL9Ha8wFSM4tqqAfLzGsB+k
-         qcgFrkkiaHWlvY8X7Hcuf4FTYLQGH0QRU3DizlEi+Tt4kDiqCWM7XfPqNC2nZqmKxD
-         owpywKt4gmhVfCb7o9wNJYGel7/Uj3ZH5kfBrnnXEtQ5JMZ5hOOaLWnAUsgykyLXex
-         W43U6rX4FRL0fjf5V80R4zy8Cp6Zua6RYumW29jmIu522nRUq6+zLxpJb9C3q+BDJc
-         M+ZmB7A809n1g==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 5C76FA0072;
-        Wed, 29 Jan 2020 12:17:38 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 2BE1F3F035;
-        Wed, 29 Jan 2020 13:17:38 +0100 (CET)
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org
-Cc:     Joao.Pinto@synopsys.com, Jose.Abreu@synopsys.com,
-        bbrezillon@kernel.org, gregkh@linuxfoundation.org,
-        wsa@the-dreams.de, arnd@arndb.de, broonie@kernel.org,
-        Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: [RFC v2 1/4] i3c: master: export i3c_masterdev_type
-Date:   Wed, 29 Jan 2020 13:17:32 +0100
-Message-Id: <7c742fba6c488b29f6fb15a5b910e799d50c5051.1580299067.git.vitor.soares@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1580299067.git.vitor.soares@synopsys.com>
-References: <cover.1580299067.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1580299067.git.vitor.soares@synopsys.com>
-References: <cover.1580299067.git.vitor.soares@synopsys.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 60B2E2071E;
+        Wed, 29 Jan 2020 12:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580300277;
+        bh=djniQwpAmOkXiqKoYRepG4IzFpRTfrhyZnnTKzmOSYs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R7DckY2edL+G1YkQB/jXviAq1y7oMqWOu1VCCTYBH8mofjDZikpzgpKYKmKtiko9y
+         1+nQQQPt9ucxk0Zd0K8zMzfhzTzKiNVQMfSS/RZTPfIfS9hzNCL+l5XkkdLQ6vnXqw
+         5yduSf0orhMf4HyNk6SgTvu3MZbVoPkNfI89LLcU=
+Date:   Wed, 29 Jan 2020 12:17:53 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] m68k,mm: Extend table allocator for multiple sizes
+Message-ID: <20200129121752.GB31582@willie-the-truck>
+References: <20200129103941.304769381@infradead.org>
+ <20200129104345.491163937@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129104345.491163937@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exporte i3c_masterdev_type so i3cdev module can verify if an i3c device
-is a master.
+On Wed, Jan 29, 2020 at 11:39:45AM +0100, Peter Zijlstra wrote:
+> In addition to the PGD/PMD table size (128*4) add a PTE table size
+> (64*4) to the table allocator. This completely removes the pte-table
+> overhead compared to the old code, even for dense tables.
+> 
+> Notes:
+> 
+>  - the allocator gained __flush_page_to_ram(), since the old
+>    page-based allocator had that.
+> 
+>  - the allocator gained a list_empty() check to deal with there not
+>    being any pages at all.
+> 
+>  - the free mask is extended to cover more than the 8 bits required
+>    for the (512 byte) PGD/PMD tables.
+> 
+>  - NR_PAGETABLE accounting is restored.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/m68k/include/asm/motorola_pgalloc.h |   24 +++++-----
+>  arch/m68k/mm/init.c                      |    6 +-
+>  arch/m68k/mm/memory.c                    |   70 ++++++++++++++++++++-----------
+>  3 files changed, 61 insertions(+), 39 deletions(-)
+> 
+> --- a/arch/m68k/include/asm/motorola_pgalloc.h
+> +++ b/arch/m68k/include/asm/motorola_pgalloc.h
+> @@ -5,61 +5,61 @@
+>  #include <asm/tlb.h>
+>  #include <asm/tlbflush.h>
+>  
+> -extern pmd_t *get_pointer_table(void);
+> -extern int free_pointer_table(pmd_t *);
+> +extern void *get_pointer_table(int type);
 
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
----
- drivers/i3c/internals.h | 1 +
- drivers/i3c/master.c    | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+Could be prettier/obfuscated with an enum type?
 
-diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
-index 86b7b44..bc062e8 100644
---- a/drivers/i3c/internals.h
-+++ b/drivers/i3c/internals.h
-@@ -11,6 +11,7 @@
- #include <linux/i3c/master.h>
- 
- extern struct bus_type i3c_bus_type;
-+extern const struct device_type i3c_masterdev_type;
- 
- void i3c_bus_normaluse_lock(struct i3c_bus *bus);
- void i3c_bus_normaluse_unlock(struct i3c_bus *bus);
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index 7f8f896..8a0ba34 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -523,9 +523,10 @@ static void i3c_masterdev_release(struct device *dev)
- 	of_node_put(dev->of_node);
- }
- 
--static const struct device_type i3c_masterdev_type = {
-+const struct device_type i3c_masterdev_type = {
- 	.groups	= i3c_masterdev_groups,
- };
-+EXPORT_SYMBOL_GPL(i3c_masterdev_type);
- 
- static int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
- 			    unsigned long max_i2c_scl_rate)
--- 
-2.7.4
+> --- a/arch/m68k/mm/memory.c
+> +++ b/arch/m68k/mm/memory.c
+> @@ -27,24 +27,34 @@
+>     arch/sparc/mm/srmmu.c ... */
+>  
+>  typedef struct list_head ptable_desc;
+> -static LIST_HEAD(ptable_list);
+> +
+> +static struct list_head ptable_list[2] = {
+> +	LIST_HEAD_INIT(ptable_list[0]),
+> +	LIST_HEAD_INIT(ptable_list[1]),
+> +};
+>  
+>  #define PD_PTABLE(page) ((ptable_desc *)&(virt_to_page(page)->lru))
+>  #define PD_PAGE(ptable) (list_entry(ptable, struct page, lru))
+> -#define PD_MARKBITS(dp) (*(unsigned char *)&PD_PAGE(dp)->index)
+> +#define PD_MARKBITS(dp) (*(unsigned int *)&PD_PAGE(dp)->index)
+> +
+> +static const int ptable_shift[2] = {
+> +	7+2, /* PGD, PMD */
+> +	6+2, /* PTE */
+> +};
+>  
+> -#define PTABLE_SIZE (PTRS_PER_PMD * sizeof(pmd_t))
+> +#define ptable_size(type) (1U << ptable_shift[type])
+> +#define ptable_mask(type) ((1U << (PAGE_SIZE / ptable_size(type))) - 1)
+>  
+> -void __init init_pointer_table(unsigned long ptable)
+> +void __init init_pointer_table(unsigned long ptable, int type)
+>  {
+>  	ptable_desc *dp;
+>  	unsigned long page = ptable & PAGE_MASK;
+> -	unsigned char mask = 1 << ((ptable - page)/PTABLE_SIZE);
+> +	unsigned int mask = 1U << ((ptable - page)/ptable_size(type));
+>  
+>  	dp = PD_PTABLE(page);
+>  	if (!(PD_MARKBITS(dp) & mask)) {
+> -		PD_MARKBITS(dp) = 0xff;
+> -		list_add(dp, &ptable_list);
+> +		PD_MARKBITS(dp) = ptable_mask(type);
+> +		list_add(dp, &ptable_list[type]);
+>  	}
+>  
+>  	PD_MARKBITS(dp) &= ~mask;
+> @@ -57,12 +67,10 @@ void __init init_pointer_table(unsigned
+>  	return;
+>  }
+>  
+> -pmd_t *get_pointer_table (void)
+> +void *get_pointer_table (int type)
+>  {
+> -	ptable_desc *dp = ptable_list.next;
+> -	unsigned char mask = PD_MARKBITS (dp);
+> -	unsigned char tmp;
+> -	unsigned int off;
+> +	ptable_desc *dp = ptable_list[type].next;
+> +	unsigned int mask, tmp, off;
 
+nit, but if you do:
+
+	unsigned int mask = list_empty(&ptable_list[type]) ? 0 : PD_MARKBITS(dp);
+
+then you can leave the existing mask logic as-is.
+
+Will
