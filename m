@@ -2,37 +2,37 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FC6C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6B7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86CA820720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C061F20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgA2QXD (ORCPT
+        id S1727206AbgA2QW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:23:03 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:33097 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727191AbgA2QW4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jan 2020 11:22:56 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:37444 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727089AbgA2QWx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 11:22:53 -0500
 Received: from [109.168.11.45] (port=34038 helo=pc-ceresoli.dev.aim)
         by hostingweb31.netsons.net with esmtpa (Exim 4.92)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1iwq7B-005NDl-8Z; Wed, 29 Jan 2020 17:22:53 +0100
+        id 1iwq79-005NDl-2T; Wed, 29 Jan 2020 17:22:51 +0100
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org
 Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
         Wolfram Sang <wsa@the-dreams.de>,
         Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 27/28] docs: i2c: i2c-protocol: use same wording as smbus-protocol
-Date:   Wed, 29 Jan 2020 16:19:52 +0100
-Message-Id: <20200129151953.31582-28-luca@lucaceresoli.net>
+Subject: [PATCH v3 18/28] docs: i2c: smbus-protocol: fix punctuation
+Date:   Wed, 29 Jan 2020 16:19:43 +0100
+Message-Id: <20200129151953.31582-19-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200129151953.31582-1-luca@lucaceresoli.net>
 References: <20200129151953.31582-1-luca@lucaceresoli.net>
@@ -54,52 +54,32 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-In smbus-protocol.rst we use the text "Implemented by" for the same meaning
-as "This corresponds to". Change everything to "Implemented by" for
-coherency.
+Remove misplaced dot before colon.
 
 Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Reported-by: Jean Delvare <jdelvare@suse.de>
 Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
 ---
 
-This patch is new in v2.
+Changes in v2:
+ - fix subject line (Jean Delvare)
 ---
- Documentation/i2c/i2c-protocol.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/i2c/smbus-protocol.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/i2c/i2c-protocol.rst b/Documentation/i2c/i2c-protocol.rst
-index 6aafc3880bce..b2092f8f815d 100644
---- a/Documentation/i2c/i2c-protocol.rst
-+++ b/Documentation/i2c/i2c-protocol.rst
-@@ -28,7 +28,7 @@ Count (8 bits)  A data byte containing the length of a block operation.
- Simple send transaction
- =======================
+diff --git a/Documentation/i2c/smbus-protocol.rst b/Documentation/i2c/smbus-protocol.rst
+index de7285de5e93..7350e4b2c2fa 100644
+--- a/Documentation/i2c/smbus-protocol.rst
++++ b/Documentation/i2c/smbus-protocol.rst
+@@ -146,7 +146,7 @@ Implemented by i2c_smbus_write_word_data()
  
--This corresponds to i2c_master_send()::
-+Implemented by i2c_master_send()::
+ This is the opposite of the Read Word operation. 16 bits
+ of data are written to a device, to the designated register that is
+-specified through the Comm byte.::
++specified through the Comm byte::
  
-   S Addr Wr [A] Data [A] Data [A] ... [A] Data [A] P
+   S Addr Wr [A] Comm [A] DataLow [A] DataHigh [A] P
  
-@@ -36,7 +36,7 @@ This corresponds to i2c_master_send()::
- Simple receive transaction
- ==========================
- 
--This corresponds to i2c_master_recv()::
-+Implemented by i2c_master_recv()::
- 
-   S Addr Rd [A] [Data] A [Data] A ... A [Data] NA P
- 
-@@ -44,7 +44,7 @@ This corresponds to i2c_master_recv()::
- Combined transactions
- =====================
- 
--This corresponds to i2c_transfer().
-+Implemented by i2c_transfer().
- 
- They are just like the above transactions, but instead of a stop
- condition P a start condition S is sent and the transaction continues.
 -- 
 2.25.0
 
