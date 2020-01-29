@@ -2,118 +2,197 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA7FC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFB0C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7D22468A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:05:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="bSukH/zF"
+	by mail.kernel.org (Postfix) with ESMTP id DDA9D20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgA2MFk (ORCPT
+        id S1726620AbgA2MGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:05:40 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38161 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgA2MFk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:05:40 -0500
-Received: by mail-qt1-f193.google.com with SMTP id c24so12995520qtp.5;
-        Wed, 29 Jan 2020 04:05:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mBhYDjlMYt9oPvJDVZEMOGajq1ap97bap+avx9OLRTo=;
-        b=bSukH/zF9ERehDN/leiT06EaG3VBfbDrDV4lszITXI4Bv+2DtvigXYXFE1g7lcxN0O
-         U2TKdN0v29NYCpDpbbW1Oj8POlnIAD5jLUQ1X+Apt36OVF4hjycewluABof0RELDGbNI
-         X55E988XDoPirlb+bbSnfoASlDrXczeMzHdX4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mBhYDjlMYt9oPvJDVZEMOGajq1ap97bap+avx9OLRTo=;
-        b=NdZxfRQy0PH1j0typkcwxQEZr+mbrDLW8wnbbEGlaZhJoNIrk8rrEAfkLTuQA3/Fc9
-         xv37t8B2nhMIG7BoD77FdSXdjfyBvUfyHiSMHXng0PLXIV33vvtaKc/gwum48mcvjk3C
-         ZdzZ5GsKTBPpgTgrfchn6eFeUHL8TvzTDDrAYne9UEVEr4wTMRgHLOJ0f3gPiHbhYLvh
-         9a4DgW/YWu+xrsBNeo5ZK++GXqZQMJN4lCJMc0rdwE6ID8j3EGdkyrAJ2qbAK4YH1ncV
-         T++OyeAP1CioQm04ycvFTIt1VkqEhDhNBaXEJUcrlDNtI0peOqj3O2kpFozPeFftpbYm
-         O21A==
-X-Gm-Message-State: APjAAAWPaL7iPNn/PIuEHivJUU/4nj/BzdJb66OeiMiUOPiIx62tLj78
-        j2w3NKehBauQtjDJ7dIYIUIR+njz6hGQweZkLcQULw==
-X-Google-Smtp-Source: APXvYqwwYOnEPeP6zNxmB7ArfBKhqOZuvhZ78RvYhGJ4L6VqO8SHJNxy14/eqW+VoKPy2f0j6WfUfjKO/Jnfil+w88c=
-X-Received: by 2002:aed:3b3b:: with SMTP id p56mr26336771qte.234.1580299538663;
- Wed, 29 Jan 2020 04:05:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20191107094218.13210-1-joel@jms.id.au> <20191107094218.13210-2-joel@jms.id.au>
- <747e3c0a-ee10-4a41-d0b7-1d54e0f56dd0@linaro.org> <CACPK8XeWY-upP-b_aAMWv-Rx9qaNSbPxOZLVd67-khEVjG877A@mail.gmail.com>
- <805bbfa2-e6ff-3b22-02cf-cd1419bcf929@linaro.org>
-In-Reply-To: <805bbfa2-e6ff-3b22-02cf-cd1419bcf929@linaro.org>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 29 Jan 2020 12:05:27 +0000
-Message-ID: <CACPK8Xcq27cRQOwKCmVHD0uphERPm=hxQUscw2Z6zzi8DTT9Nw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] clocksource: fttmr010: Parametrise shutdown
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 29 Jan 2020 07:06:40 -0500
+Received: from mga03.intel.com ([134.134.136.65]:59025 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgA2MGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 07:06:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 04:06:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,377,1574150400"; 
+   d="scan'208";a="222433148"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga008.jf.intel.com with ESMTP; 29 Jan 2020 04:06:38 -0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, eric.auger@redhat.com
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        joro@8bytes.org, ashok.raj@intel.com, yi.l.liu@intel.com,
+        jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe.brucker@arm.com, peterx@redhat.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC v3 5/8] vfio/type1: Report 1st-level/stage-1 page table format to userspace
+Date:   Wed, 29 Jan 2020 04:11:49 -0800
+Message-Id: <1580299912-86084-6-git-send-email-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
+References: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 at 11:53, Daniel Lezcano <daniel.lezcano@linaro.org> wr=
-ote:
->
-> On 29/01/2020 12:41, Joel Stanley wrote:
-> > On Wed, 29 Jan 2020 at 11:25, Daniel Lezcano <daniel.lezcano@linaro.org=
-> wrote:
-> >>
-> >> On 07/11/2019 10:42, Joel Stanley wrote:
-> >>> In preparation for supporting the ast2600 which uses a different meth=
-od
-> >>> to clear bits in the control register, use a callback for performing =
-the
-> >>> shutdown sequence.
-> >>>
-> >>> Reviewed-by: C=C3=A9dric Le Goater <clg@kaod.org>
-> >>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >>> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> >>
-> >> It will be cleaner if you create a struct of_device_id array where you
-> >> store the different variant data.
-> >
-> > I agree, and that's the path I would have taken when writing a normal
-> > driver. However as the timer drivers probe with the
-> > TIMER_OF_DECLARE/timer_probe infrastructure, we can't register our own
-> > .data pointer (TIMER_OF_DECLARE uses .data  to store the _init
-> > function).
-> >
-> > Unless I'm missing something?
->
-> I was suggesting to add the array like:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-rivers/clocksource/timer-atmel-tcb.c#n351
->
-> TIMER_OF_DECLARE is used and the probe functions relies on the match arra=
-y:
->
-> match =3D of_match_node(atmel_tcb_of_match, node->parent);
+From: Liu Yi L <yi.l.liu@intel.com>
 
-I see. So we don't use this table for probing the driver, just getting
-the associated data.
+VFIO exposes IOMMU nesting translation (a.k.a dual stage translation)
+capability to userspace. Thus applications like QEMU could support
+vIOMMU with hardware's nesting translation capability for pass-through
+devices. Before setting up nesting translation for pass-through devices,
+QEMU and other applications need to learn the supported 1st-lvl/stage-1
+translation structure format like page table format.
 
-I'm not convinced that's an improvement over what we have. If you have
-a strong preference I can try it out.
+Take vSVA (virtual Shared Virtual Addressing) as an example, to support
+vSVA for pass-through devices, QEMU setup nesting translation for pass-
+through devices. The guest page table are configured to host as 1st-lvl/
+stage-1 page table. Therefore, guest format should be compatible with
+host side.
+
+This patch reports the supported 1st-lvl/stage-1 page table format on the
+current platform to userspace. QEMU and other alike applications should
+use this format info when trying to setup IOMMU nesting translation on
+host IOMMU.
+
+Cc: Kevin Tian <kevin.tian@intel.com>
+CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Eric Auger <eric.auger@redhat.com>
+Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+---
+ drivers/vfio/vfio_iommu_type1.c | 79 +++++++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/vfio.h       |  7 ++++
+ 2 files changed, 86 insertions(+)
+
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 1cf75f5..e0bbcfb 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -2243,6 +2243,81 @@ static int vfio_iommu_type1_pasid_free(struct vfio_iommu *iommu,
+ 	return ret;
+ }
+ 
++static int vfio_iommu_get_pasid_format(struct vfio_iommu *iommu,
++					u32 *pasid_format)
++{
++	struct vfio_domain *domain;
++	u32 format = 0, tmp_format = 0;
++	int ret;
++
++	mutex_lock(&iommu->lock);
++	if (list_empty(&iommu->domain_list)) {
++		mutex_unlock(&iommu->lock);
++		return -EINVAL;
++	}
++
++	list_for_each_entry(domain, &iommu->domain_list, next) {
++		if (iommu_domain_get_attr(domain->domain,
++			DOMAIN_ATTR_PASID_FORMAT, &format)) {
++			ret = -EINVAL;
++			format = 0;
++			goto out_unlock;
++		}
++		/*
++		 * format is always non-zero (the first format is
++		 * IOMMU_PASID_FORMAT_INTEL_VTD which is 1). For
++		 * the reason of potential different backed IOMMU
++		 * formats, here we expect to have identical formats
++		 * in the domain list, no miexed formats support.
++		 * return -EINVAL to fail the attempt of setup
++		 * VFIO_TYPE1_NESTING_IOMMU if non-identical formats
++		 * are detected.
++		 */
++		if (tmp_format && tmp_format != format) {
++			ret = -EINVAL;
++			format = 0;
++			goto out_unlock;
++		}
++
++		tmp_format = format;
++	}
++	ret = 0;
++
++out_unlock:
++	if (format)
++		*pasid_format = format;
++	mutex_unlock(&iommu->lock);
++	return ret;
++}
++
++static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
++					 struct vfio_info_cap *caps)
++{
++	struct vfio_info_cap_header *header;
++	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
++	u32 format = 0;
++	int ret;
++
++	ret = vfio_iommu_get_pasid_format(iommu, &format);
++	if (ret) {
++		pr_warn("Failed to get domain format\n");
++		return ret;
++	}
++
++	header = vfio_info_cap_add(caps, sizeof(*nesting_cap) + sizeof(format),
++				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
++	if (IS_ERR(header))
++		return PTR_ERR(header);
++
++	nesting_cap = container_of(header,
++				struct vfio_iommu_type1_info_cap_nesting,
++				header);
++
++	nesting_cap->pasid_format = format;
++
++	return 0;
++}
++
+ static int vfio_iommu_type1_set_pasid_quota(struct vfio_iommu *iommu,
+ 					    u32 quota)
+ {
+@@ -2313,6 +2388,10 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
+ 		if (ret)
+ 			return ret;
+ 
++		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
++		if (ret)
++			return ret;
++
+ 		if (caps.size) {
+ 			info.flags |= VFIO_IOMMU_INFO_CAPS;
+ 
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 62113be..633c07f 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -748,6 +748,13 @@ struct vfio_iommu_type1_info_cap_iova_range {
+ 	struct	vfio_iova_range iova_ranges[];
+ };
+ 
++#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  2
++
++struct vfio_iommu_type1_info_cap_nesting {
++	struct	vfio_info_cap_header header;
++	__u32	pasid_format;
++};
++
+ #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+ 
+ /**
+-- 
+2.7.4
+
