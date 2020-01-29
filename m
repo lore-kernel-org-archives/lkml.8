@@ -2,112 +2,75 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96CEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E8FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D0120720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:46:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bC+fkcLT"
+	by mail.kernel.org (Postfix) with ESMTP id 5830820716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgA2Nqn (ORCPT
+        id S1726659AbgA2Nrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:46:43 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:33589 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726261AbgA2Nqn (ORCPT
+        Wed, 29 Jan 2020 08:47:53 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:60830 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgA2Nrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:46:43 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580305602; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=tYnhvPtUZWMfIu+rPetMRGgQXJ3DSZh8Ukm/WNsB5/o=;
- b=bC+fkcLTIWeuhsXuOi3oARK7We9ipgoajGNS4qcey6biaNfLfCp+nZc2z3y72LJPhWn4t/A4
- 6lQ+KXM8A9rlhThBJfv+PBUaLeNig359miiuh/kJvmlVYLB3SRVJifm3klH/uqHpPk6crb3m
- szhFtlfzQfHN3dolYkfo6uImGvM=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e318cbc.7ff49ee484c8-smtp-out-n02;
- Wed, 29 Jan 2020 13:46:36 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 451A3C433A2; Wed, 29 Jan 2020 13:46:36 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1628EC43383;
-        Wed, 29 Jan 2020 13:46:35 +0000 (UTC)
+        Wed, 29 Jan 2020 08:47:53 -0500
+Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 00TDlpWv007890;
+        Wed, 29 Jan 2020 22:47:51 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp);
+ Wed, 29 Jan 2020 22:47:51 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp)
+Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 00TDlp73007874
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 29 Jan 2020 22:47:51 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] mm/page_counter: fix various data races
+To:     Marco Elver <elver@google.com>
+Cc:     Qian Cai <cai@lca.pw>, Dmitry Vyukov <dvyukov@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200129105224.4016-1-cai@lca.pw>
+ <20200129120302.GJ24244@dhcp22.suse.cz>
+ <59f892d0-5fc4-ae32-ce65-5a688d9180c8@I-love.SAKURA.ne.jp>
+ <CANpmjNOdFsU9gg7FSv7Pue0L2eAQ+5UHHaz9bgZ83r94prA4vQ@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <9575c1cc-1669-9492-d657-ad4ba6494e88@i-love.sakura.ne.jp>
+Date:   Wed, 29 Jan 2020 22:47:45 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CANpmjNOdFsU9gg7FSv7Pue0L2eAQ+5UHHaz9bgZ83r94prA4vQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 Jan 2020 19:16:35 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [RFC v3 02/10] cpufreq: blacklist SDM845 in cpufreq-dt-platdev
-In-Reply-To: <20200128204423.GF46072@google.com>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <20200127200350.24465-3-sibis@codeaurora.org>
- <20200128204423.GF46072@google.com>
-Message-ID: <90e6f5aa28b907ad0331fed6ef75b797@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the review!
-
-On 2020-01-29 02:14, Matthias Kaehlcke wrote:
-> On Tue, Jan 28, 2020 at 01:33:42AM +0530, Sibi Sankar wrote:
->> Add SDM845 to cpufreq-dt-platdev blacklist.
+On 2020/01/29 21:21, Marco Elver wrote:
+>> By the way, can READ_ONCE()/WRITE_ONCE() really solve this warning?
+>> The link above says read/write on the same location ( mm/page_counter.c:129 ).
+>> I don't know how READ_ONCE()/WRITE_ONCE() can solve the race.
 > 
-> nit: you could mention that cpufreq is handled by the
-> 'qcom-cpufreq-hw' driver.
+> It avoids the *data* race, with *_ONCE telling the compiler to not
+> optimize the accesses in concurrency-unfriendly ways.  Since *_ONCE is
+> used, it conveys clear intent that the code here is meant to be
+> concurrent, and KCSAN stops complaining (and assumes that the *logic*
+> is correct).
 
-will add it in the next
-re-spin.
-
-> 
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
->>  1 file changed, 1 insertion(+)
->> 
->> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c 
->> b/drivers/cpufreq/cpufreq-dt-platdev.c
->> index f2ae9cd455c17..5492cf3c9dc18 100644
->> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
->> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
->> @@ -130,6 +130,7 @@ static const struct of_device_id blacklist[] 
->> __initconst = {
->>  	{ .compatible = "qcom,apq8096", },
->>  	{ .compatible = "qcom,msm8996", },
->>  	{ .compatible = "qcom,qcs404", },
->> +	{ .compatible = "qcom,sdm845", },
->> 
->>  	{ .compatible = "st,stih407", },
->>  	{ .compatible = "st,stih410", },
-> 
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+I see. Unlike c->failcnt++ which involves read-modify-write, *_ONCE() can be used for
+simple read (like c->watermark) or simple write (like c->watermark = new) case.
