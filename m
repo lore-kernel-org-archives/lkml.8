@@ -2,58 +2,58 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F694C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B11C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1E32071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAF92071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTNp2TLz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhvJsNow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgA2FrQ (ORCPT
+        id S1726271AbgA2FrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 00:47:16 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:38724 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbgA2FrO (ORCPT
+        Wed, 29 Jan 2020 00:47:20 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:32843 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgA2FrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 00:47:14 -0500
-Received: by mail-qv1-f68.google.com with SMTP id g6so7175048qvy.5;
-        Tue, 28 Jan 2020 21:47:13 -0800 (PST)
+        Wed, 29 Jan 2020 00:47:15 -0500
+Received: by mail-qk1-f196.google.com with SMTP id h23so15939011qkh.0;
+        Tue, 28 Jan 2020 21:47:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xfz6zEu269nO7TFXDejivUti4a8WtukAu+M7aAAzk9Y=;
-        b=lTNp2TLzzRWn/0tcwTvaqlTGOFpqfVxPnDsJNMPkf4g4EeCQ7mXHMkM0SGw6n29ebf
-         VEfn019QYCfFmRdiWtAA1ZRrkagTiSsYrwnxmewoI7456aJPTr+zR8jQUDq1OTM59G2X
-         PjK0Y14drHGy5CvkwUkj3/boa0kxXHARSqQBKFed+HuuL3tyTFeed+MliIj0hRZhv3lS
-         OlxoZNRB2e2atDA3mavw82eUWsfOlM+T1xVaQDU5XAo631iA+OY6zvf6Y4hk/OidAbtB
-         JfvvnGdSfpKPKuU9LWzjUJ7gzyerM86+Py5pvLXuyyltu9oUfR0fBHCzjNXGSTKOeDP5
-         vTXQ==
+        bh=A4+wJ+PUiP40Fz15hW4qhr1ByVOkQnsD2DcJWPX6hTI=;
+        b=fhvJsNowGxZyWxPK36xVb8UTsnaLNY13m3iInezisLA4NvgegUSJaqDElIslsIfd2J
+         o8wglFTgqEjWUs6mzUAUtlVWg16gM9sq32HAOFYvtV6EwjWHXyMbfgqC9/OebM3zmd+R
+         zCrSDfYhkQr3YWvNKcyD703DMr5chMi1ncWDt4BxNvXvWVgdx7TlJ4me3HwRFbeMG0+4
+         kzqxl3TUbQ+2H9xdUnvBggdeJdtsHvOodcfijs4w3/oRrk3a9onhInAZSxpYrPXre2oz
+         2m0ej12TW3oVORTD1dEbA6gm85QJL2qzyP6IVSS4BCOTzvtSAtGWoJnnRgaZ2CHg4Gpw
+         JYcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=xfz6zEu269nO7TFXDejivUti4a8WtukAu+M7aAAzk9Y=;
-        b=BHhrOUa+NykFkaQvYvueJXDsv8gK+0RPg6qH3UyhWLWxoFMXeAFoRc3CzOj5VoqcvD
-         3XWJn3aULQNkRlfFnCXwER9WMlD2TO4WPZ0qaiWRTNKYhU+3eUdzbr/BkzpOhup54E+9
-         tHD2q7UNUnAvAsdiUyNPSLXHi1JpGFE9/s7wdNRHJXfsbLls+aN9G0Hzwnkz4lq2eI3d
-         QHqlwZhxerocu+uuT99ZDUy9YHlXZyWceXsauqDZ1Ie0IFGrEvjz4UWhRJ/F1kx1BESP
-         67Jbwx9mrPZ4TMluF1ELm0H/3cYMORYICT5V9yObD8DNoqRZQkjmLrtQRVOJdqzpU6DS
-         gNSQ==
-X-Gm-Message-State: APjAAAUVvNEcKZZuIeyImOvFgSJQsl5gWoFHMyurCT+Ce7799K3VEb0e
-        SqSYSvAIb/WoeMx8xKLxN/I=
-X-Google-Smtp-Source: APXvYqxuYtGi39Fwxg8m+aST5/e5geBNG6IXu6XE4U5vXYNWPCO+/7KlVrkwmD6NeEloCBomHLnVKQ==
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr24669127qvu.136.1580276832511;
-        Tue, 28 Jan 2020 21:47:12 -0800 (PST)
+        bh=A4+wJ+PUiP40Fz15hW4qhr1ByVOkQnsD2DcJWPX6hTI=;
+        b=eAojh8cixXw0Oun89VEFF1l1NTtY6EqQz0gIOupjDlQGcvNqCapA9/p7x1Q6rGAQw7
+         emEwP+V2Jfl0ne54T2LAmtzAgrEHRqzU65oh3xhs+jeceHPK9g1cj8Ma6sJWDEtIYOHV
+         1uh6lft4/ta8/QJa0/pRl7PbEqm7UKKSdzHeHuzqRG8YIDwOhn7YLi7zBSqupq8uMgH4
+         aXKHRH7YSv0I1Br/a2+iRhs3Qo7oro0VAhnzjzBT/aCUnF3SBXoAeixP6Yq5ZrzUdAkS
+         LLDHZruUEyt5PWcYlPJ+SbADRaO98cxmPhE/yN87jF19DwaiU9ZjveTO1JYazzGMJt0B
+         K4wg==
+X-Gm-Message-State: APjAAAVvCoHHM6OpHspjTq6DaY1l9ZECe/Gorf2DnX9weo1fRQRWwG5q
+        FxmM3Q7Ye8GH5gpM1kmE6/K966hK
+X-Google-Smtp-Source: APXvYqz0tOlcstJ8T9KgboS+YQb78MsRxpuUHm+uuqKYBjnWS0bQqlT6TDbJ/SMIvMFxxwTfG++Rng==
+X-Received: by 2002:a05:620a:1116:: with SMTP id o22mr26779495qkk.190.1580276833290;
+        Tue, 28 Jan 2020 21:47:13 -0800 (PST)
 Received: from localhost.localdomain (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id r10sm472929qkm.23.2020.01.28.21.47.11
+        by smtp.gmail.com with ESMTPSA id r10sm472929qkm.23.2020.01.28.21.47.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
         Tue, 28 Jan 2020 21:47:12 -0800 (PST)
 From:   frowand.list@gmail.com
@@ -62,9 +62,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         pantelis.antoniou@konsulko.com
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alan Tull <atull@kernel.org>
-Subject: [PATCH 1/2] of: unittest: add overlay gpio test to catch gpio hog problem
-Date:   Tue, 28 Jan 2020 23:46:04 -0600
-Message-Id: <1580276765-29458-2-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH 2/2] of: unittest: annotate warnings triggered by unittest
+Date:   Tue, 28 Jan 2020 23:46:05 -0600
+Message-Id: <1580276765-29458-3-git-send-email-frowand.list@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1580276765-29458-1-git-send-email-frowand.list@gmail.com>
 References: <1580276765-29458-1-git-send-email-frowand.list@gmail.com>
@@ -75,521 +75,666 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Geert reports that gpio hog nodes are not properly processed when
-the gpio hog node is added via an overlay reply and provides an
-RFC patch to fix the problem [1].
+Some tests in the devicetree unittests result in printk messages
+from the code being tested.  It can be difficult to determine
+whether the messages are the result of unittest or are potentially
+reporting bugs that should be fixed.  The most recent example of
+a person asking whether to be concerned about these messages is [1].
 
-Add a unittest that shows the problem.  Unittest will report "1 failed"
-test before applying Geert's RFC patch and "0 failed" after applying
-Geert's RFC patch.
+Add annotations for all messages triggered by unittests, except
+KERN_DEBUG messages.  (KERN_DEBUG is a special case due to the
+possible interaction of CONFIG_DYNAMIC_DEBUG.)
 
-[1] https://lore.kernel.org/linux-devicetree/20191230133852.5890-1-geert+renesas@glider.be/
+The annotations added in patch 2/2 add a small amount of verbosity
+to the console output.  I have created a proof of concept tool to
+explore (1) how test harnesses could use the annotations and
+(2) how to make the resulting console output easier to read and
+understand as a human being.  The tool 'of_unittest_expect' is
+available at https://github.com/frowand/dt_tools
+
+The format of the annotations is expected to change when unittests
+are converted to use the kunit infrastructure when the broader
+testing community has an opportunity to discuss the implementation
+of annotations of test triggered messages.
+
+[1] https://lore.kernel.org/r/6021ac63-b5e0-ed3d-f964-7c6ef579cd68@huawei.com
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
-
-There are checkpatch warnings.
-  - New files are in a directory already covered by MAINTAINERS
-  - The undocumented compatibles are restricted to use by unittest
-    and should not be documented under Documentation
-  - The printk() KERN_<LEVEL> warnings are false positives.  The level
-    is supplied by a define parameter instead of a hard coded constant
-  - The lines over 80 characters are consistent with unittest.c style
-
-This unittest was also valuable in that it allowed me to explore
-possible issues related to the proposed solution to the gpio hog
-problem.
-
 changes since RFC:
-  - fixed node names in overlays
-  - removed unused fields from struct unittest_gpio_dev
-  - of_unittest_overlay_gpio() cleaned up comments
-  - of_unittest_overlay_gpio() moved saving global values into
-    probe_pass_count and chip_request_count more tightly around
-    test code expected to trigger changes in the global values
+  - none
 
- drivers/of/unittest-data/Makefile             |   8 +-
- drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +++
- drivers/of/unittest-data/overlay_gpio_02a.dts |  16 ++
- drivers/of/unittest-data/overlay_gpio_02b.dts |  16 ++
- drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +++
- drivers/of/unittest-data/overlay_gpio_04a.dts |  16 ++
- drivers/of/unittest-data/overlay_gpio_04b.dts |  16 ++
- drivers/of/unittest.c                         | 255 ++++++++++++++++++++++++++
- 8 files changed, 372 insertions(+), 1 deletion(-)
- create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
- create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
- create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
- create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
- create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
- create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
+ drivers/of/unittest.c | 375 ++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 345 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
-index 9b6807065827..009f4045c8e4 100644
---- a/drivers/of/unittest-data/Makefile
-+++ b/drivers/of/unittest-data/Makefile
-@@ -21,7 +21,13 @@ obj-$(CONFIG_OF_OVERLAY) += overlay.dtb.o \
- 			    overlay_bad_add_dup_prop.dtb.o \
- 			    overlay_bad_phandle.dtb.o \
- 			    overlay_bad_symbol.dtb.o \
--			    overlay_base.dtb.o
-+			    overlay_base.dtb.o \
-+			    overlay_gpio_01.dtb.o \
-+			    overlay_gpio_02a.dtb.o \
-+			    overlay_gpio_02b.dtb.o \
-+			    overlay_gpio_03.dtb.o \
-+			    overlay_gpio_04a.dtb.o \
-+			    overlay_gpio_04b.dtb.o
- 
- # enable creation of __symbols__ node
- DTC_FLAGS_overlay += -@
-diff --git a/drivers/of/unittest-data/overlay_gpio_01.dts b/drivers/of/unittest-data/overlay_gpio_01.dts
-new file mode 100644
-index 000000000000..f039e8bce3b6
---- /dev/null
-+++ b/drivers/of/unittest-data/overlay_gpio_01.dts
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+/plugin/;
-+
-+&unittest_test_bus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	gpio_01 {
-+		compatible = "unittest-gpio";
-+		reg = <0>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		ngpios = <2>;
-+		gpio-line-names = "line-A", "line-B";
-+
-+		line_b {
-+			gpio-hog;
-+			gpios = <2 0>;
-+			input;
-+			line-name = "line-B-input";
-+		};
-+	};
-+};
-diff --git a/drivers/of/unittest-data/overlay_gpio_02a.dts b/drivers/of/unittest-data/overlay_gpio_02a.dts
-new file mode 100644
-index 000000000000..cdafab604793
---- /dev/null
-+++ b/drivers/of/unittest-data/overlay_gpio_02a.dts
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+/plugin/;
-+
-+&unittest_test_bus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	gpio_02 {
-+		compatible = "unittest-gpio";
-+		reg = <1>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		ngpios = <2>;
-+		gpio-line-names = "line-A", "line-B";
-+	};
-+};
-diff --git a/drivers/of/unittest-data/overlay_gpio_02b.dts b/drivers/of/unittest-data/overlay_gpio_02b.dts
-new file mode 100644
-index 000000000000..0cea0dccafba
---- /dev/null
-+++ b/drivers/of/unittest-data/overlay_gpio_02b.dts
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+/plugin/;
-+
-+&unittest_test_bus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	gpio_02 {
-+		line_a {
-+			gpio-hog;
-+			gpios = <1 0>;
-+			input;
-+			line-name = "line-A-input";
-+		};
-+	};
-+};
-diff --git a/drivers/of/unittest-data/overlay_gpio_03.dts b/drivers/of/unittest-data/overlay_gpio_03.dts
-new file mode 100644
-index 000000000000..1d5c680fa254
---- /dev/null
-+++ b/drivers/of/unittest-data/overlay_gpio_03.dts
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+/plugin/;
-+
-+&unittest_test_bus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	gpio_03 {
-+		compatible = "unittest-gpio";
-+		reg = <0>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		ngpios = <2>;
-+		gpio-line-names = "line-A", "line-B", "line-C", "line-D";
-+
-+		line_d {
-+			gpio-hog;
-+			gpios = <4 0>;
-+			input;
-+			line-name = "line-D-input";
-+		};
-+	};
-+};
-diff --git a/drivers/of/unittest-data/overlay_gpio_04a.dts b/drivers/of/unittest-data/overlay_gpio_04a.dts
-new file mode 100644
-index 000000000000..d2482cde310e
---- /dev/null
-+++ b/drivers/of/unittest-data/overlay_gpio_04a.dts
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+/plugin/;
-+
-+&unittest_test_bus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	gpio_04 {
-+		compatible = "unittest-gpio";
-+		reg = <1>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		ngpios = <2>;
-+		gpio-line-names = "line-A", "line-B", "line-C", "line-D";
-+	};
-+};
-diff --git a/drivers/of/unittest-data/overlay_gpio_04b.dts b/drivers/of/unittest-data/overlay_gpio_04b.dts
-new file mode 100644
-index 000000000000..70ad05d759f9
---- /dev/null
-+++ b/drivers/of/unittest-data/overlay_gpio_04b.dts
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+/plugin/;
-+
-+&unittest_test_bus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	gpio_04 {
-+		line_c {
-+			gpio-hog;
-+			gpios = <3 0>;
-+			input;
-+			line-name = "line-C-input";
-+		};
-+	};
-+};
 diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 68b87587b2ef..b1cf9972d866 100644
+index b1cf9972d866..59169d143caf 100644
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -24,6 +24,7 @@
+@@ -51,6 +51,9 @@
+  * Expected message may have a message level other than KERN_INFO.
+  * Print the expected message only if the current loglevel will allow
+  * the actual message to print.
++ *
++ * Do not use EXPECT_BEGIN() or EXPECT_END() for messages generated by
++ * pr_debug().
+  */
+ #define EXPECT_BEGIN(level, fmt, ...) \
+ 	printk(level pr_fmt("EXPECT \\ : ") fmt, ##__VA_ARGS__)
+@@ -540,29 +543,77 @@ static void __init of_unittest_parse_phandle_with_args(void)
  
- #include <linux/i2c.h>
- #include <linux/i2c-mux.h>
-+#include <linux/gpio/driver.h>
+ 	/* Check for missing cells property */
+ 	memset(&args, 0, sizeof(args));
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1");
++
+ 	rc = of_parse_phandle_with_args(np, "phandle-list",
+ 					"#phandle-cells-missing", 0, &args);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1");
++
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1");
++
+ 	rc = of_count_phandle_with_args(np, "phandle-list",
+ 					"#phandle-cells-missing");
++
++	EXPECT_END(KERN_INFO,
++		   "OF: /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1");
++
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
  
- #include <linux/bitops.h>
+ 	/* Check for bad phandle in list */
+ 	memset(&args, 0, sizeof(args));
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: /testcase-data/phandle-tests/consumer-a: could not find phandle");
++
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-phandle",
+ 					"#phandle-cells", 0, &args);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: /testcase-data/phandle-tests/consumer-a: could not find phandle");
++
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: /testcase-data/phandle-tests/consumer-a: could not find phandle");
++
+ 	rc = of_count_phandle_with_args(np, "phandle-list-bad-phandle",
+ 					"#phandle-cells");
++
++	EXPECT_END(KERN_INFO,
++		   "OF: /testcase-data/phandle-tests/consumer-a: could not find phandle");
++
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
  
-@@ -46,6 +47,101 @@
- 	failed; \
- })
+ 	/* Check for incorrectly formed argument list */
+ 	memset(&args, 0, sizeof(args));
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: /testcase-data/phandle-tests/consumer-a: #phandle-cells = 3 found -1");
++
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-args",
+ 					"#phandle-cells", 1, &args);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: /testcase-data/phandle-tests/consumer-a: #phandle-cells = 3 found -1");
++
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: /testcase-data/phandle-tests/consumer-a: #phandle-cells = 3 found -1");
++
+ 	rc = of_count_phandle_with_args(np, "phandle-list-bad-args",
+ 					"#phandle-cells");
++
++	EXPECT_END(KERN_INFO,
++		   "OF: /testcase-data/phandle-tests/consumer-a: #phandle-cells = 3 found -1");
++
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ }
  
-+/*
-+ * Expected message may have a message level other than KERN_INFO.
-+ * Print the expected message only if the current loglevel will allow
-+ * the actual message to print.
-+ */
-+#define EXPECT_BEGIN(level, fmt, ...) \
-+	printk(level pr_fmt("EXPECT \\ : ") fmt, ##__VA_ARGS__)
+@@ -673,20 +724,41 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
+ 
+ 	/* Check for missing cells,map,mask property */
+ 	memset(&args, 0, sizeof(args));
 +
-+#define EXPECT_END(level, fmt, ...) \
-+	printk(level pr_fmt("EXPECT / : ") fmt, ##__VA_ARGS__)
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: /testcase-data/phandle-tests/consumer-b: could not get #phandle-missing-cells for /testcase-data/phandle-tests/provider1");
 +
-+struct unittest_gpio_dev {
-+	void __iomem *base;
-+	struct gpio_chip chip;
-+	spinlock_t gpio_lock;
-+};
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list",
+ 					    "phandle-missing", 0, &args);
++	EXPECT_END(KERN_INFO,
++		   "OF: /testcase-data/phandle-tests/consumer-b: could not get #phandle-missing-cells for /testcase-data/phandle-tests/provider1");
 +
-+static int unittest_gpio_chip_request_count;
-+static int unittest_gpio_probe_count;
-+static int unittest_gpio_probe_pass_count;
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for bad phandle in list */
+ 	memset(&args, 0, sizeof(args));
 +
-+static int unittest_gpio_chip_request(struct gpio_chip *chip, unsigned int offset)
-+{
-+	unittest_gpio_chip_request_count++;
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: /testcase-data/phandle-tests/consumer-b: could not find phandle");
 +
-+	pr_debug("%s(): %s %d %d\n", __func__, chip->label, offset,
-+		 unittest_gpio_chip_request_count);
-+	return 0;
-+}
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-phandle",
+ 					    "phandle", 0, &args);
++	EXPECT_END(KERN_INFO,
++		   "OF: /testcase-data/phandle-tests/consumer-b: could not find phandle");
 +
-+static int unittest_gpio_probe(struct platform_device *pdev)
-+{
-+	struct unittest_gpio_dev *devptr;
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for incorrectly formed argument list */
+ 	memset(&args, 0, sizeof(args));
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: /testcase-data/phandle-tests/consumer-b: #phandle-cells = 2 found -1");
++
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-args",
+ 					    "phandle", 1, &args);
++	EXPECT_END(KERN_INFO,
++		   "OF: /testcase-data/phandle-tests/consumer-b: #phandle-cells = 2 found -1");
++
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ }
+ 
+@@ -1217,7 +1289,15 @@ static void __init of_unittest_platform_populate(void)
+ 		np = of_find_node_by_path("/testcase-data/testcase-device2");
+ 		pdev = of_find_device_by_node(np);
+ 		unittest(pdev, "device 2 creation failed\n");
++
++		EXPECT_BEGIN(KERN_INFO,
++			     "platform testcase-data:testcase-device2: IRQ index 0 not found");
++
+ 		irq = platform_get_irq(pdev, 0);
++
++		EXPECT_END(KERN_INFO,
++			   "platform testcase-data:testcase-device2: IRQ index 0 not found");
++
+ 		unittest(irq < 0 && irq != -EPROBE_DEFER,
+ 			 "device parsing error failed - %d\n", irq);
+ 	}
+@@ -1421,6 +1501,9 @@ static int __init unittest_data_add(void)
+ 		return 0;
+ 	}
+ 
++	EXPECT_BEGIN(KERN_INFO,
++		     "Duplicate name in testcase-data, renamed to \"duplicate-name#1\"");
++
+ 	/* attach the sub-tree to live tree */
+ 	np = unittest_data_node->child;
+ 	while (np) {
+@@ -1431,6 +1514,9 @@ static int __init unittest_data_add(void)
+ 		np = next;
+ 	}
+ 
++	EXPECT_END(KERN_INFO,
++		   "Duplicate name in testcase-data, renamed to \"duplicate-name#1\"");
++
+ 	of_overlay_mutex_unlock();
+ 
+ 	return 0;
+@@ -1773,8 +1859,18 @@ static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
+ /* test activation of device */
+ static void __init of_unittest_overlay_0(void)
+ {
 +	int ret;
 +
-+	unittest_gpio_probe_count++;
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest0/status");
 +
-+	devptr = kzalloc(sizeof(*devptr), GFP_KERNEL);
-+	if (!devptr)
-+		return -ENOMEM;
+ 	/* device should enable */
+-	if (of_unittest_apply_overlay_check(0, 0, 0, 1, PDEV_OVERLAY))
++	ret = of_unittest_apply_overlay_check(0, 0, 0, 1, PDEV_OVERLAY);
 +
-+	spin_lock_init(&devptr->gpio_lock);
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest0/status");
 +
-+	platform_set_drvdata(pdev, devptr);
++	if (ret)
+ 		return;
+ 
+ 	unittest(1, "overlay test %d passed\n", 0);
+@@ -1783,28 +1879,58 @@ static void __init of_unittest_overlay_0(void)
+ /* test deactivation of device */
+ static void __init of_unittest_overlay_1(void)
+ {
++	int ret;
 +
-+	devptr->chip.of_node = pdev->dev.of_node;
-+	devptr->chip.label = "of-unittest-gpio";
-+	devptr->chip.base = -1; /* dynamic allocation */
-+	devptr->chip.ngpio = 5;
-+	devptr->chip.request = unittest_gpio_chip_request;
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest1/status");
 +
-+	ret = gpiochip_add_data(&devptr->chip, NULL);
+ 	/* device should disable */
+-	if (of_unittest_apply_overlay_check(1, 1, 1, 0, PDEV_OVERLAY))
++	ret = of_unittest_apply_overlay_check(1, 1, 1, 0, PDEV_OVERLAY);
 +
-+	unittest(!ret,
-+		 "gpiochip_add_data() for node @%pOF failed, ret = %d\n", devptr->chip.of_node, ret);
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest1/status");
++
++	if (ret)
+ 		return;
+ 
+ 	unittest(1, "overlay test %d passed\n", 1);
++
+ }
+ 
+ /* test activation of device */
+ static void __init of_unittest_overlay_2(void)
+ {
++	int ret;
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest2/status");
++
+ 	/* device should enable */
+-	if (of_unittest_apply_overlay_check(2, 2, 0, 1, PDEV_OVERLAY))
+-		return;
++	ret = of_unittest_apply_overlay_check(2, 2, 0, 1, PDEV_OVERLAY);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest2/status");
+ 
++	if (ret)
++		return;
+ 	unittest(1, "overlay test %d passed\n", 2);
+ }
+ 
+ /* test deactivation of device */
+ static void __init of_unittest_overlay_3(void)
+ {
++	int ret;
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest3/status");
++
+ 	/* device should disable */
+-	if (of_unittest_apply_overlay_check(3, 3, 1, 0, PDEV_OVERLAY))
++	ret = of_unittest_apply_overlay_check(3, 3, 1, 0, PDEV_OVERLAY);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest3/status");
++
++	if (ret)
+ 		return;
+ 
+ 	unittest(1, "overlay test %d passed\n", 3);
+@@ -1823,8 +1949,18 @@ static void __init of_unittest_overlay_4(void)
+ /* test overlay apply/revert sequence */
+ static void __init of_unittest_overlay_5(void)
+ {
++	int ret;
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest5/status");
++
+ 	/* device should disable */
+-	if (of_unittest_apply_revert_overlay_check(5, 5, 0, 1, PDEV_OVERLAY))
++	ret = of_unittest_apply_revert_overlay_check(5, 5, 0, 1, PDEV_OVERLAY);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest5/status");
++
++	if (ret)
+ 		return;
+ 
+ 	unittest(1, "overlay test %d passed\n", 5);
+@@ -1838,6 +1974,8 @@ static void __init of_unittest_overlay_6(void)
+ 	int before = 0, after = 1;
+ 	const char *overlay_name;
+ 
++	int ret;
++
+ 	/* unittest device must be in before state */
+ 	for (i = 0; i < 2; i++) {
+ 		if (of_unittest_device_exists(unittest_nr + i, PDEV_OVERLAY)
+@@ -1852,18 +1990,41 @@ static void __init of_unittest_overlay_6(void)
+ 	}
+ 
+ 	/* apply the overlays */
+-	for (i = 0; i < 2; i++) {
+ 
+-		overlay_name = overlay_name_from_nr(overlay_nr + i);
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest6/status");
++
++	overlay_name = overlay_name_from_nr(overlay_nr + 0);
+ 
+-		if (!overlay_data_apply(overlay_name, &ovcs_id)) {
+-			unittest(0, "could not apply overlay \"%s\"\n",
+-					overlay_name);
++	ret = overlay_data_apply(overlay_name, &ovcs_id);
++
++	if (!ret) {
++		unittest(0, "could not apply overlay \"%s\"\n", overlay_name);
++			return;
++	}
++	ov_id[0] = ovcs_id;
++	of_unittest_track_overlay(ov_id[0]);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest6/status");
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest7/status");
++
++	overlay_name = overlay_name_from_nr(overlay_nr + 1);
++
++	ret = overlay_data_apply(overlay_name, &ovcs_id);
++
++	if (!ret) {
++		unittest(0, "could not apply overlay \"%s\"\n", overlay_name);
+ 			return;
+-		}
+-		ov_id[i] = ovcs_id;
+-		of_unittest_track_overlay(ov_id[i]);
+ 	}
++	ov_id[1] = ovcs_id;
++	of_unittest_track_overlay(ov_id[1]);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest7/status");
++
+ 
+ 	for (i = 0; i < 2; i++) {
+ 		/* unittest device must be in after state */
+@@ -1904,6 +2065,7 @@ static void __init of_unittest_overlay_6(void)
+ 	}
+ 
+ 	unittest(1, "overlay test %d passed\n", 6);
++
+ }
+ 
+ /* test overlay application in sequence */
+@@ -1912,26 +2074,65 @@ static void __init of_unittest_overlay_8(void)
+ 	int i, ov_id[2], ovcs_id;
+ 	int overlay_nr = 8, unittest_nr = 8;
+ 	const char *overlay_name;
++	int ret;
+ 
+ 	/* we don't care about device state in this test */
+ 
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest8/status");
++
++	overlay_name = overlay_name_from_nr(overlay_nr + 0);
++
++	ret = overlay_data_apply(overlay_name, &ovcs_id);
++	if (!ret)
++		unittest(0, "could not apply overlay \"%s\"\n", overlay_name);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest8/status");
 +
 +	if (!ret)
-+		unittest_gpio_probe_pass_count++;
-+	return ret;
-+}
-+
-+static int unittest_gpio_remove(struct platform_device *pdev)
-+{
-+	struct unittest_gpio_dev *gdev = platform_get_drvdata(pdev);
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
-+
-+	if (!gdev)
-+		return -EINVAL;
-+
-+	if (gdev->chip.base != -1)
-+		gpiochip_remove(&gdev->chip);
-+
-+	platform_set_drvdata(pdev, NULL);
-+	kfree(pdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id unittest_gpio_id[] = {
-+	{ .compatible = "unittest-gpio", },
-+	{}
-+};
-+
-+static struct platform_driver unittest_gpio_driver = {
-+	.probe	= unittest_gpio_probe,
-+	.remove	= unittest_gpio_remove,
-+	.driver	= {
-+		.name		= "unittest-gpio",
-+		.of_match_table	= of_match_ptr(unittest_gpio_id),
-+	},
-+};
-+
- static void __init of_unittest_find_node_by_name(void)
- {
- 	struct device_node *np;
-@@ -2183,6 +2279,151 @@ static inline void of_unittest_overlay_i2c_15(void) { }
- 
- #endif
- 
-+static void __init of_unittest_overlay_gpio(void)
-+{
-+	int chip_request_count;
-+	int probe_pass_count;
-+	int ret;
-+
-+	/*
-+	 * tests: apply overlays before registering driver
-+	 * Similar to installing a driver as a module, the
-+	 * driver is registered after applying the overlays.
-+	 *
-+	 * - apply overlay_gpio_01
-+	 * - apply overlay_gpio_02a
-+	 * - apply overlay_gpio_02b
-+	 * - register driver
-+	 *
-+	 * register driver will result in
-+	 *   - probe and processing gpio hog for overlay_gpio_01
-+	 *   - probe for overlay_gpio_02a
-+	 *   - processing gpio for overlay_gpio_02b
-+	 *
-+	 * overlay_gpio_01 contains gpio node and child gpio hog node
-+	 * overlay_gpio_02a contains gpio node
-+	 * overlay_gpio_02b contains child gpio hog node
-+	 *
-+	 * "GPIO line <<int>> (line-*-input) hogged as input"
-+	 * messages are the result of the gpio driver probe
-+	 * finding the gpio hog node.
-+	 */
-+
-+	unittest(overlay_data_apply("overlay_gpio_01", NULL),
-+		 "Adding overlay 'overlay_gpio_01' failed\n");
-+
-+	unittest(overlay_data_apply("overlay_gpio_02a", NULL),
-+		 "Adding overlay 'overlay_gpio_02a' failed\n");
-+
-+	unittest(overlay_data_apply("overlay_gpio_02b", NULL),
-+		 "Adding overlay 'overlay_gpio_02b' failed\n");
-+
-+	EXPECT_BEGIN(KERN_INFO,
-+		     "GPIO line <<int>> (line-B-input) hogged as input\n");
-+
-+	EXPECT_BEGIN(KERN_INFO,
-+		     "GPIO line <<int>> (line-A-input) hogged as input\n");
-+
-+	probe_pass_count = unittest_gpio_probe_pass_count;
-+	chip_request_count = unittest_gpio_chip_request_count;
-+
-+	ret = platform_driver_register(&unittest_gpio_driver);
-+	if (unittest(ret == 0, "could not register unittest gpio driver\n"))
 +		return;
 +
-+	EXPECT_END(KERN_INFO,
-+		   "GPIO line <<int>> (line-A-input) hogged as input\n");
-+	EXPECT_END(KERN_INFO,
-+		   "GPIO line <<int>> (line-B-input) hogged as input\n");
++	ov_id[0] = ovcs_id;
++	of_unittest_track_overlay(ov_id[0]);
 +
-+	unittest(probe_pass_count + 2 == unittest_gpio_probe_pass_count,
-+		 "unittest_gpio_probe() failed or not called\n");
-+
-+	unittest(chip_request_count + 2 == unittest_gpio_chip_request_count,
-+		 "unittest_gpio_chip_request() called %d times (expected 1 time)\n",
-+		 unittest_gpio_chip_request_count - chip_request_count);
-+
-+	/*
-+	 * tests: apply overlays after registering driver
-+	 *
-+	 * Similar to a driver built-in to the kernel, the
-+	 * driver is registered before applying the overlays.
-+	 *
-+	 * - apply overlay_gpio_03
-+	 *
-+	 * apply overlay will result in
-+	 *   - probe and processing gpio hog.
-+	 *
-+	 * overlay_gpio_03 contains gpio node and child gpio hog node
-+	 */
++	overlay_name = overlay_name_from_nr(overlay_nr + 1);
 +
 +	EXPECT_BEGIN(KERN_INFO,
-+		     "GPIO line <<int>> (line-D-input) hogged as input\n");
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest8/property-foo");
 +
-+	probe_pass_count = unittest_gpio_probe_pass_count;
-+	chip_request_count = unittest_gpio_chip_request_count;
-+
-+	unittest(overlay_data_apply("overlay_gpio_03", NULL),
-+		 "Adding overlay 'overlay_gpio_03' failed\n");
-+
+ 	/* apply the overlays */
+-	for (i = 0; i < 2; i++) {
++	ret = overlay_data_apply(overlay_name, &ovcs_id);
+ 
+-		overlay_name = overlay_name_from_nr(overlay_nr + i);
 +	EXPECT_END(KERN_INFO,
-+		   "GPIO line <<int>> (line-D-input) hogged as input\n");
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest8/property-foo");
+ 
+-		if (!overlay_data_apply(overlay_name, &ovcs_id)) {
+-			unittest(0, "could not apply overlay \"%s\"\n",
+-					overlay_name);
+-			return;
+-		}
+-		ov_id[i] = ovcs_id;
+-		of_unittest_track_overlay(ov_id[i]);
++	if (!ret) {
++		unittest(0, "could not apply overlay \"%s\"\n", overlay_name);
++		return;
+ 	}
+ 
++	ov_id[1] = ovcs_id;
++	of_unittest_track_overlay(ov_id[1]);
 +
-+	unittest(probe_pass_count + 1 == unittest_gpio_probe_pass_count,
-+		 "unittest_gpio_probe() failed or not called\n");
-+
-+	unittest(chip_request_count + 1 == unittest_gpio_chip_request_count,
-+		 "unittest_gpio_chip_request() called %d times (expected 1 time)\n",
-+		 unittest_gpio_chip_request_count - chip_request_count);
-+
-+	/*
-+	 * tests: apply overlay containing gpio node but no gpio hog node
-+	 *
-+	 * - apply overlay_gpio_04a
-+	 *
-+	 * apply the overlay will result in
-+	 *   - probe for overlay_gpio_04a
-+	 *
-+	 * overlay_gpio_04a contains gpio node
-+	 */
-+
-+	probe_pass_count = unittest_gpio_probe_pass_count;
-+
-+	/* overlay_gpio_04a contains gpio node */
-+
-+	unittest(overlay_data_apply("overlay_gpio_04a", NULL),
-+		 "Adding overlay 'overlay_gpio_04a' failed\n");
-+
-+	unittest(probe_pass_count + 1 == unittest_gpio_probe_pass_count,
-+		 "unittest_gpio_probe() failed or not called\n");
-+
-+	/*
-+	 * tests: apply overlay containing the gpio hog node
-+	 *
-+	 * - apply overlay_gpio_04b
-+	 *
-+	 * apply the overlay will result in
-+	 *   - processing gpio for overlay_gpio_04b
-+	 *
-+	 * overlay_gpio_04b contains child gpio hog node
-+	 */
+ 	/* now try to remove first overlay (it should fail) */
+ 	ovcs_id = ov_id[0];
+-	if (!of_overlay_remove(&ovcs_id)) {
 +
 +	EXPECT_BEGIN(KERN_INFO,
-+		     "GPIO line <<int>> (line-C-input) hogged as input\n");
++		     "OF: overlay: node_overlaps_later_cs: #6 overlaps with #7 @/testcase-data/overlay-node/test-bus/test-unittest8");
 +
-+	chip_request_count = unittest_gpio_chip_request_count;
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: overlay #6 is not topmost");
 +
-+	unittest(overlay_data_apply("overlay_gpio_04b", NULL),
-+		 "Adding overlay 'overlay_gpio_04b' failed\n");
++	ret = of_overlay_remove(&ovcs_id);
 +
 +	EXPECT_END(KERN_INFO,
-+		   "GPIO line <<int>> (line-C-input) hogged as input\n");
++		   "OF: overlay: overlay #6 is not topmost");
 +
-+	unittest(chip_request_count + 1 == unittest_gpio_chip_request_count,
-+		 "unittest_gpio_chip_request() called %d times (expected 1 time)\n",
-+		 unittest_gpio_chip_request_count - chip_request_count);
-+}
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: node_overlaps_later_cs: #6 overlaps with #7 @/testcase-data/overlay-node/test-bus/test-unittest8");
 +
- static void __init of_unittest_overlay(void)
++	if (!ret) {
+ 		unittest(0, "%s was destroyed @\"%s\"\n",
+ 				overlay_name_from_nr(overlay_nr + 0),
+ 				unittest_path(unittest_nr,
+@@ -1963,6 +2164,7 @@ static void __init of_unittest_overlay_10(void)
+ 
+ 	/* device should disable */
+ 	ret = of_unittest_apply_overlay_check(10, 10, 0, 1, PDEV_OVERLAY);
++
+ 	if (unittest(ret == 0,
+ 			"overlay test %d failed; overlay application\n", 10))
+ 		return;
+@@ -1986,6 +2188,7 @@ static void __init of_unittest_overlay_11(void)
+ 	/* device should disable */
+ 	ret = of_unittest_apply_revert_overlay_check(11, 11, 0, 1,
+ 			PDEV_OVERLAY);
++
+ 	unittest(ret == 0, "overlay test %d failed; overlay apply\n", 11);
+ }
+ 
+@@ -2216,12 +2419,21 @@ static int of_unittest_overlay_i2c_init(void)
+ 		return ret;
+ 
+ 	ret = platform_driver_register(&unittest_i2c_bus_driver);
++
+ 	if (unittest(ret == 0,
+ 			"could not register unittest i2c bus driver\n"))
+ 		return ret;
+ 
+ #if IS_BUILTIN(CONFIG_I2C_MUX)
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "i2c i2c-1: Added multiplexed i2c bus 2");
++
+ 	ret = i2c_add_driver(&unittest_i2c_mux_driver);
++
++	EXPECT_END(KERN_INFO,
++		   "i2c i2c-1: Added multiplexed i2c bus 2");
++
+ 	if (unittest(ret == 0,
+ 			"could not register unittest i2c mux driver\n"))
+ 		return ret;
+@@ -2241,8 +2453,18 @@ static void of_unittest_overlay_i2c_cleanup(void)
+ 
+ static void __init of_unittest_overlay_i2c_12(void)
  {
- 	struct device_node *bus_np = NULL;
-@@ -2242,6 +2483,8 @@ static void __init of_unittest_overlay(void)
- 	of_unittest_overlay_i2c_cleanup();
- #endif
- 
-+	of_unittest_overlay_gpio();
++	int ret;
 +
- 	of_unittest_destroy_tracked_overlays();
+ 	/* device should enable */
+-	if (of_unittest_apply_overlay_check(12, 12, 0, 1, I2C_OVERLAY))
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/i2c-test-bus/test-unittest12/status");
++
++	ret = of_unittest_apply_overlay_check(12, 12, 0, 1, I2C_OVERLAY);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/i2c-test-bus/test-unittest12/status");
++
++	if (ret)
+ 		return;
  
- out:
-@@ -2295,6 +2538,12 @@ struct overlay_info {
- OVERLAY_INFO_EXTERN(overlay_12);
- OVERLAY_INFO_EXTERN(overlay_13);
- OVERLAY_INFO_EXTERN(overlay_15);
-+OVERLAY_INFO_EXTERN(overlay_gpio_01);
-+OVERLAY_INFO_EXTERN(overlay_gpio_02a);
-+OVERLAY_INFO_EXTERN(overlay_gpio_02b);
-+OVERLAY_INFO_EXTERN(overlay_gpio_03);
-+OVERLAY_INFO_EXTERN(overlay_gpio_04a);
-+OVERLAY_INFO_EXTERN(overlay_gpio_04b);
- OVERLAY_INFO_EXTERN(overlay_bad_add_dup_node);
- OVERLAY_INFO_EXTERN(overlay_bad_add_dup_prop);
- OVERLAY_INFO_EXTERN(overlay_bad_phandle);
-@@ -2319,6 +2568,12 @@ struct overlay_info {
- 	OVERLAY_INFO(overlay_12, 0),
- 	OVERLAY_INFO(overlay_13, 0),
- 	OVERLAY_INFO(overlay_15, 0),
-+	OVERLAY_INFO(overlay_gpio_01, 0),
-+	OVERLAY_INFO(overlay_gpio_02a, 0),
-+	OVERLAY_INFO(overlay_gpio_02b, 0),
-+	OVERLAY_INFO(overlay_gpio_03, 0),
-+	OVERLAY_INFO(overlay_gpio_04a, 0),
-+	OVERLAY_INFO(overlay_gpio_04b, 0),
- 	OVERLAY_INFO(overlay_bad_add_dup_node, -EINVAL),
- 	OVERLAY_INFO(overlay_bad_add_dup_prop, -EINVAL),
- 	OVERLAY_INFO(overlay_bad_phandle, -EINVAL),
+ 	unittest(1, "overlay test %d passed\n", 12);
+@@ -2251,8 +2473,18 @@ static void __init of_unittest_overlay_i2c_12(void)
+ /* test deactivation of device */
+ static void __init of_unittest_overlay_i2c_13(void)
+ {
++	int ret;
++
++	EXPECT_BEGIN(KERN_INFO,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/i2c-test-bus/test-unittest13/status");
++
+ 	/* device should disable */
+-	if (of_unittest_apply_overlay_check(13, 13, 1, 0, I2C_OVERLAY))
++	ret = of_unittest_apply_overlay_check(13, 13, 1, 0, I2C_OVERLAY);
++
++	EXPECT_END(KERN_INFO,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/i2c-test-bus/test-unittest13/status");
++
++	if (ret)
+ 		return;
+ 
+ 	unittest(1, "overlay test %d passed\n", 13);
+@@ -2265,8 +2497,18 @@ static void of_unittest_overlay_i2c_14(void)
+ 
+ static void __init of_unittest_overlay_i2c_15(void)
+ {
++	int ret;
++
+ 	/* device should enable */
+-	if (of_unittest_apply_overlay_check(15, 15, 0, 1, I2C_OVERLAY))
++	EXPECT_BEGIN(KERN_INFO,
++		     "i2c i2c-1: Added multiplexed i2c bus 3");
++
++	ret = of_unittest_apply_overlay_check(15, 15, 0, 1, I2C_OVERLAY);
++
++	EXPECT_END(KERN_INFO,
++		   "i2c i2c-1: Added multiplexed i2c bus 3");
++
++	if (ret)
+ 		return;
+ 
+ 	unittest(1, "overlay test %d passed\n", 15);
+@@ -2725,6 +2967,7 @@ static __init void of_unittest_overlay_high_level(void)
+ 	struct device_node *overlay_base_symbols;
+ 	struct device_node **pprev;
+ 	struct property *prop;
++	int ret;
+ 
+ 	if (!overlay_base_root) {
+ 		unittest(0, "overlay_base_root not initialized\n");
+@@ -2839,15 +3082,86 @@ static __init void of_unittest_overlay_high_level(void)
+ 
+ 	/* now do the normal overlay usage test */
+ 
+-	unittest(overlay_data_apply("overlay", NULL),
+-		 "Adding overlay 'overlay' failed\n");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/status");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/fairway-1/status");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/fairway-1/ride@100/track@30/incline-up");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/fairway-1/ride@100/track@40/incline-up");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/lights@40000/status");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/lights@40000/color");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/lights@40000/rate");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/hvac_2");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/ride_200");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/ride_200_left");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/ride_200_right");
++
++	ret = overlay_data_apply("overlay", NULL);
++
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/ride_200_right");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/ride_200_left");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/ride_200");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/hvac_2");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/lights@40000/rate");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/lights@40000/color");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/lights@40000/status");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/fairway-1/ride@100/track@40/incline-up");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/fairway-1/ride@100/track@30/incline-up");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/fairway-1/status");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/status");
++
++	unittest(ret, "Adding overlay 'overlay' failed\n");
++
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: ERROR: multiple fragments add and/or delete node /testcase-data-2/substation@100/motor-1/controller");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/controller/name");
+ 
+ 	unittest(overlay_data_apply("overlay_bad_add_dup_node", NULL),
+ 		 "Adding overlay 'overlay_bad_add_dup_node' failed\n");
+ 
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/controller/name");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: ERROR: multiple fragments add and/or delete node /testcase-data-2/substation@100/motor-1/controller");
++
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail");
++	EXPECT_BEGIN(KERN_ERR,
++		     "OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/rpm_avail");
++
+ 	unittest(overlay_data_apply("overlay_bad_add_dup_prop", NULL),
+ 		 "Adding overlay 'overlay_bad_add_dup_prop' failed\n");
+ 
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/rpm_avail");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail");
++	EXPECT_END(KERN_ERR,
++		   "OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail");
++
+ 	unittest(overlay_data_apply("overlay_bad_phandle", NULL),
+ 		 "Adding overlay 'overlay_bad_phandle' failed\n");
+ 
+@@ -2871,6 +3185,8 @@ static int __init of_unittest(void)
+ 	struct device_node *np;
+ 	int res;
+ 
++	pr_info("start of unittest - you will see error messages\n");
++
+ 	/* adding data for unittest */
+ 
+ 	if (IS_ENABLED(CONFIG_UML))
+@@ -2889,7 +3205,6 @@ static int __init of_unittest(void)
+ 	}
+ 	of_node_put(np);
+ 
+-	pr_info("start of unittest - you will see error messages\n");
+ 	of_unittest_check_tree_linkage();
+ 	of_unittest_check_phandles();
+ 	of_unittest_find_node_by_name();
 -- 
 Frank Rowand <frank.rowand@sony.com>
 
