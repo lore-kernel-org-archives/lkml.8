@@ -2,270 +2,118 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A482C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CFEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2D2214DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDFF20708
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lf/eBtDN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PuB4FG0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgA2SjN (ORCPT
+        id S1727520AbgA2Skj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:39:13 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36765 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgA2SjN (ORCPT
+        Wed, 29 Jan 2020 13:40:39 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:51970 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgA2Skj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:39:13 -0500
-Received: by mail-qt1-f196.google.com with SMTP id t13so302655qto.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 10:39:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Vcw2wwP47iPnOh9yAaL5AbxhfW0bgLj/TyBjuK7W/YA=;
-        b=lf/eBtDND0f2N3a4xyCytFNtmaiqlW0OVDHTsNIMH/LtHGCRC/et6wvwqo6erQfxpW
-         0zgsWGoq1kr8KB+yrMBaUyjXat+TSXrYxIw0IoqIF3Ku2CGJ43sRnHzXVcrpNxJdTJYn
-         SMycjrRXaljssE7ll7AJCBzp/tgUONSW2FDCt35EbK+uQdxEtsZZJnluSLsxIgz5jbyN
-         6IvEMuG8k4D05TGnpS1tNzZCSLldvI3nB3s3rGr9lX0pucJUgaE6geVwd7zGEn2miieS
-         EVEVwSEkIiBXtSr8DrxV6hpg0pNmFQAaZKTlZMlTmt0QvKmTMFrkP/gpt/HYbGove8yo
-         biFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Vcw2wwP47iPnOh9yAaL5AbxhfW0bgLj/TyBjuK7W/YA=;
-        b=p3xBviYFk8PprNd3yl85xvcnqtpb8fvgq7Y4zRYaNA3OK9pXJV3PkoAxXc1HS4ZSLf
-         bXreBfdLyhu5jF1ZHz2Gy3AilNjLPwGVqgXgoAAF6JSQmsArInKzi9Mh4Uv00aIrYVUz
-         YFBq52maDMNnRxMso/vNTsyW4KSXkp93DdNXry393EL+AgzCENAEHiqjQ5cFkJ7ExffO
-         gh0+N1XWiuIZlAYt91190sGAnyezQWGHqaa+O+e/65fcGgbgtT0Ihsfw7CdTmYv6XLfE
-         9NEFFWSDcLLSAv2Y9OwkOT9sgfdnuqO76dAK2fSWtIUS4XV7LIUEnm3oc1QLTf6aIGLY
-         G5Hg==
-X-Gm-Message-State: APjAAAWMH/CMV2O9vuOd/jxD6VCt2o6HHq1td4e0i0Yl13dmUymTpzSD
-        AeMk1X+gyL5vloKdemjoC8lVKQ==
-X-Google-Smtp-Source: APXvYqyJf4fAmTuUiYulkJtzr8yBGVbXd+MgMyUBCAcdaphHCEWY7SLDkAvkPfiaemRE61x9F2Ubqg==
-X-Received: by 2002:aed:2344:: with SMTP id i4mr638908qtc.136.1580323151503;
-        Wed, 29 Jan 2020 10:39:11 -0800 (PST)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id o33sm1539349qta.27.2020.01.29.10.39.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jan 2020 10:39:10 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH 1/1] mm: sysctl: add panic_on_inconsistent_mm sysctl
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200129180851.551109-1-ghalat@redhat.com>
-Date:   Wed, 29 Jan 2020 13:39:09 -0500
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, ssaner@redhat.com, atomlin@redhat.com,
-        oleksandr@redhat.com, vbendel@redhat.com, kirill@shutemov.name,
-        khlebnikov@yandex-team.ru, borntraeger@de.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <84C253EB-B348-4B62-B863-F192FBA8C202@lca.pw>
-References: <20200129180851.551109-1-ghalat@redhat.com>
-To:     Grzegorz Halat <ghalat@redhat.com>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Wed, 29 Jan 2020 13:40:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GQmHDll3iwjJrh7vaYQic2Eyspa/xass3sVAm/tVDXo=; b=PuB4FG0maamYdnPkJ3vdw3gqi
+        y6ap2ZzpOs4wHdqI9YHQiHVKpUXQT+91i/69doYzXL6vv7S9545yGuFbZsEc/OwkXCYMv6+IM1Niu
+        zLM/Vw3i/DPTGm14pGgq2J3LpD4lq+G7599hUV3tuPbp9BUVnhurGZlK3Au9Wuk476grez5rrlAUF
+        +h61UIoSRpFjsM59DdAXaMOE+TA7qAPh2tTw3lnkab49dvePMafTOJWhkLpWiWyYOgbPa48Eg3QWv
+        X7aT8EM2RK2wJQxumaT0mwyNeRan56hrOMOzSpE4oCHQ2ZZh8WgnwBf7VoukSSt2yCSw8Gr2DCy9i
+        z5yhM8UjA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwsGJ-00064A-0j; Wed, 29 Jan 2020 18:40:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3626F300DD5;
+        Wed, 29 Jan 2020 19:38:41 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 245202B7334F2; Wed, 29 Jan 2020 19:40:24 +0100 (CET)
+Date:   Wed, 29 Jan 2020 19:40:24 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, Qian Cai <cai@lca.pw>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+Message-ID: <20200129184024.GT14879@hirez.programming.kicks-ass.net>
+References: <20200122165938.GA16974@willie-the-truck>
+ <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
+ <20200122223851.GA45602@google.com>
+ <A90E2B85-77CB-4743-AEC3-90D7836C4D47@lca.pw>
+ <20200123093905.GU14914@hirez.programming.kicks-ass.net>
+ <E722E6E0-26CB-440F-98D7-D182B57D1F43@lca.pw>
+ <CANpmjNNo6yW-y-Af7JgvWi3t==+=02hE4-pFU4OiH8yvbT3Byg@mail.gmail.com>
+ <20200128165655.GM14914@hirez.programming.kicks-ass.net>
+ <20200129002253.GT2935@paulmck-ThinkPad-P72>
+ <CANpmjNN8J1oWtLPHTgCwbbtTuU_Js-8HD=cozW5cYkm8h-GTBg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNN8J1oWtLPHTgCwbbtTuU_Js-8HD=cozW5cYkm8h-GTBg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 29, 2020 at 04:29:43PM +0100, Marco Elver wrote:
 
+> On Tue, 28 Jan 2020 at 17:52, Peter Zijlstra <peterz@infradead.org> wrote:
+> > I'm claiming that in the first case, the only thing that's ever done
+> > with a racy load is comparing against 0, there is no possible bad
+> > outcome ever. While obviously if you let the load escape, or do anything
+> > other than compare against 0, there is.
+> 
+> It might sound like a simple rule, but implementing this is anything
+> but simple: This would require changing the compiler,
 
-> On Jan 29, 2020, at 1:08 PM, Grzegorz Halat <ghalat@redhat.com> wrote:
->=20
-> Memory management subsystem performs various checks at runtime,
-> if an inconsistency is detected then such event is being logged and =
-kernel
-> continues to run. While debugging such problems it is helpful to =
-collect
-> memory dump as early as possible. Currently, there is no easy way to =
-panic
-> kernel when such error is detected.
->=20
-> It was proposed[1] to panic the kernel if panic_on_oops is set but =
-this
-> approach was not accepted. One of alternative proposals was =
-introduction of
-> a new sysctl.
->=20
-> Add a new sysctl - panic_on_inconsistent_mm. If the sysctl is set then =
-the
-> kernel will be crashed when an inconsistency is detected by memory
-> management. This currently means panic when bad page or bad PTE
-> is detected(this may be extended to other places in MM).
->=20
-> Another use case of this sysctl may be in security-wise environments,
-> it may be more desired to crash machine than continue to run with
-> potentially damaged data structures.
+Right.
 
-It is annoying that I have to repeat my feedback, but I don=E2=80=99t =
-know why
-admins want to enable this by allowing normal users to crash the systems
-more easily through recoverable MM bugs where I am sure we have plenty.
-How does that improve the security?
+> which we said we'd like to avoid as it introduces new problems.
 
-If this is mainly for debugging purpose, then debugfs would suite =
-better?
+Ah, I missed that brief.
 
->=20
-> Changes since v1 [2]:
-> - rename the sysctl to panic_on_inconsistent_mm
-> - move the sysctl from kernel to vm table
-> - print modules in print_bad_pte() only before calling panic
->=20
-> [1] =
-https://lore.kernel.org/linux-mm/1426495021-6408-1-git-send-email-borntrae=
-ger@de.ibm.com/
-> [2] =
-https://lore.kernel.org/lkml/20200127101100.92588-1-ghalat@redhat.com/
->=20
-> Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
-> ---
-> Documentation/admin-guide/sysctl/vm.rst | 14 ++++++++++++++
-> include/linux/kernel.h                  |  1 +
-> kernel/sysctl.c                         |  9 +++++++++
-> mm/memory.c                             |  8 ++++++++
-> mm/page_alloc.c                         |  4 +++-
-> 5 files changed, 35 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/admin-guide/sysctl/vm.rst =
-b/Documentation/admin-guide/sysctl/vm.rst
-> index 64aeee1009ca..57f7926a64b8 100644
-> --- a/Documentation/admin-guide/sysctl/vm.rst
-> +++ b/Documentation/admin-guide/sysctl/vm.rst
-> @@ -61,6 +61,7 @@ Currently, these files are in /proc/sys/vm:
-> - overcommit_memory
-> - overcommit_ratio
-> - page-cluster
-> +- panic_on_inconsistent_mm
-> - panic_on_oom
-> - percpu_pagelist_fraction
-> - stat_interval
-> @@ -741,6 +742,19 @@ extra faults and I/O delays for following faults =
-if they would have been part of
-> that consecutive pages readahead would have brought in.
->=20
->=20
-> +panic_on_inconsistent_mm
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+> This particular rule relies on semantic analysis that is beyond what
+> the TSAN instrumentation currently supports. Right now we support GCC
+> and Clang; changing the compiler probably means we'd end up with only
+> one (probably Clang), and many more years before the change has
+> propagated to the majority of used compiler versions. It'd be good if
+> we can do this purely as a change in the kernel's codebase.
 
-> +
-> +Controls the kernel's behaviour when inconsistency is detected
-> +by memory management code, for example bad page state or bad PTE.
-> +
-> +0: try to continue operation.
-> +
-> +1: panic immediately.
-> +
-> +The default value is 0.
-> +
-> +
-> panic_on_oom
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 0d9db2a14f44..b3bd94c558ab 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -518,6 +518,7 @@ extern int oops_in_progress;		/* If =
-set, an oops, panic(), BUG() or die() is in
-> extern int panic_timeout;
-> extern unsigned long panic_print;
-> extern int panic_on_oops;
-> +extern int panic_on_inconsistent_mm;
-> extern int panic_on_unrecovered_nmi;
-> extern int panic_on_io_nmi;
-> extern int panic_on_warn;
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 70665934d53e..a9733311e3a1 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1303,6 +1303,15 @@ static struct ctl_table vm_table[] =3D {
-> 		.extra1		=3D SYSCTL_ZERO,
-> 		.extra2		=3D &two,
-> 	},
-> +	{
-> +		.procname	=3D "panic_on_inconsistent_mm",
-> +		.data		=3D &panic_on_inconsistent_mm,
-> +		.maxlen		=3D sizeof(int),
-> +		.mode		=3D 0644,
-> +		.proc_handler	=3D proc_dointvec_minmax,
-> +		.extra1		=3D SYSCTL_ZERO,
-> +		.extra2		=3D SYSCTL_ONE,
-> +	},
-> 	{
-> 		.procname	=3D "panic_on_oom",
-> 		.data		=3D &sysctl_panic_on_oom,
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 45442d9a4f52..b29a18077a6a 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -71,6 +71,7 @@
-> #include <linux/dax.h>
-> #include <linux/oom.h>
-> #include <linux/numa.h>
-> +#include <linux/module.h>
->=20
-> #include <trace/events/kmem.h>
->=20
-> @@ -88,6 +89,8 @@
-> #warning Unfortunate NUMA and NUMA Balancing config, growing =
-page-frame for last_cpupid.
-> #endif
->=20
-> +int panic_on_inconsistent_mm __read_mostly;
-> +
-> #ifndef CONFIG_NEED_MULTIPLE_NODES
-> /* use the per-pgdat data instead for discontigmem - mbligh */
-> unsigned long max_mapnr;
-> @@ -543,6 +546,11 @@ static void print_bad_pte(struct vm_area_struct =
-*vma, unsigned long addr,
-> 		 vma->vm_ops ? vma->vm_ops->fault : NULL,
-> 		 vma->vm_file ? vma->vm_file->f_op->mmap : NULL,
-> 		 mapping ? mapping->a_ops->readpage : NULL);
-> +
-> +	if (panic_on_inconsistent_mm) {
-> +		print_modules();
-> +		panic("Bad page map detected");
-> +	}
-> 	dump_stack();
-> 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
-> }
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index d047bf7d8fd4..a20cd3ece5ba 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -643,9 +643,11 @@ static void bad_page(struct page *page, const =
-char *reason,
-> 	if (bad_flags)
-> 		pr_alert("bad because of flags: %#lx(%pGp)\n",
-> 						bad_flags, &bad_flags);
-> -	dump_page_owner(page);
->=20
-> +	dump_page_owner(page);
-> 	print_modules();
-> +	if (panic_on_inconsistent_mm)
-> +		panic("Bad page state detected");
-> 	dump_stack();
-> out:
-> 	/* Leave bad fields for debug, except PageBuddy could make =
-trouble */
-> --=20
-> 2.21.1
->=20
+*sigh*, I didn't know there was such a resistance to change the tooling.
+That seems very unfortunate :-/
+
+> Keeping the bigger picture in mind, how frequent is this case, and
+> what are we really trying to accomplish?
+
+It's trying to avoid the RmW pulling the line in exclusive/modified
+state in a loop. The basic C-CAS pattern if you will.
+
+> Is it only to avoid a READ_ONCE? Why is the READ_ONCE bad here? If
+> there is a racing access, why not be explicit about it?
+
+It's probably not terrible to put a READ_ONCE() there; we just need to
+make sure the compiler doesn't do something stupid (it is known to do
+stupid when 'volatile' is present).
+
+But the fact remains that it is entirely superfluous, there is no
+possible way the compiler can wreck this.
 
