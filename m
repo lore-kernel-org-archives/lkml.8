@@ -2,46 +2,47 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CE3C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC407C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761342071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E81920720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:17:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fH0Ti3or"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HeGuhWKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgA2MRt (ORCPT
+        id S1726799AbgA2MR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:17:49 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:40438 "EHLO
+        Wed, 29 Jan 2020 07:17:57 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:40402 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726256AbgA2MRp (ORCPT
+        by vger.kernel.org with ESMTP id S1726145AbgA2MRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:17:45 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        Wed, 29 Jan 2020 07:17:42 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8D3E54082B;
-        Wed, 29 Jan 2020 12:17:44 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6230A40829;
+        Wed, 29 Jan 2020 12:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1580300264; bh=THplBxZ0iV9F6K6doQzhuA0Zoa7QrZvTKvia+grxBPY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fH0Ti3orXuqtTvNNatvWyna/wAvShh0qvfkPulaqXGhwS+ToO7KzQxU18vwbBhowI
-         yhpdd+5Rnp7k/Zs2jM5liMQV/tKK8v2fBfValrewrE8X1+i690PszpxrvPEfhgB99z
-         9MAluDbT8PXmR2PgCtyZfxmiJ8yV0v4BlbVGhq0huKpDvOsSdrzAi4wkZt5e3+/qPP
-         XAjqUweizL6xxSPFXfeAwgaCeCnJNvyDciE0Rf92t5ZIDWowKPoqVLJY07BTo9Ysmh
-         mp6uQUMPRxckxHgjYh599yewIR53JaAp5zoqE3EB8GIe9l+VNNF+j6+7m9Iz/XbGJ2
-         L+hrda14VbteA==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 3CDDBA006E;
+        t=1580300261; bh=EWznO/7FCN3HQvpSq9KAAmnQZlA5wLD6bU4uUlvRy1Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=HeGuhWKA79xkjv8P+Gup8W5OG9GV4gOdWlHYCFsUYIhx0FsBO+jeqN+oIO4Y3vjhN
+         hVULQnS2Cj/HQPSKbAcBQxnt74tHZX0/uVLwqz7DbJwwL9Ha8wFSM4tqqAfLzGsB+k
+         qcgFrkkiaHWlvY8X7Hcuf4FTYLQGH0QRU3DizlEi+Tt4kDiqCWM7XfPqNC2nZqmKxD
+         owpywKt4gmhVfCb7o9wNJYGel7/Uj3ZH5kfBrnnXEtQ5JMZ5hOOaLWnAUsgykyLXex
+         W43U6rX4FRL0fjf5V80R4zy8Cp6Zua6RYumW29jmIu522nRUq6+zLxpJb9C3q+BDJc
+         M+ZmB7A809n1g==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 5C76FA0072;
         Wed, 29 Jan 2020 12:17:38 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 2731E3F031;
+        by de02.synopsys.com (Postfix) with ESMTP id 2BE1F3F035;
         Wed, 29 Jan 2020 13:17:38 +0100 (CET)
 From:   Vitor Soares <Vitor.Soares@synopsys.com>
 To:     linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org
@@ -49,72 +50,56 @@ Cc:     Joao.Pinto@synopsys.com, Jose.Abreu@synopsys.com,
         bbrezillon@kernel.org, gregkh@linuxfoundation.org,
         wsa@the-dreams.de, arnd@arndb.de, broonie@kernel.org,
         Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: [RFC v2 0/4] Introduce i3c device userspace interface
-Date:   Wed, 29 Jan 2020 13:17:31 +0100
-Message-Id: <cover.1580299067.git.vitor.soares@synopsys.com>
+Subject: [RFC v2 1/4] i3c: master: export i3c_masterdev_type
+Date:   Wed, 29 Jan 2020 13:17:32 +0100
+Message-Id: <7c742fba6c488b29f6fb15a5b910e799d50c5051.1580299067.git.vitor.soares@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1580299067.git.vitor.soares@synopsys.com>
+References: <cover.1580299067.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1580299067.git.vitor.soares@synopsys.com>
+References: <cover.1580299067.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For today there is no way to use i3c devices from user space and
-the introduction of such API will help developers during the i3c device
-or i3c host controllers development.
+Exporte i3c_masterdev_type so i3cdev module can verify if an i3c device
+is a master.
 
-The i3cdev module is highly based on i2c-dev and yet I tried to address
-the concerns raised in [1].
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+---
+ drivers/i3c/internals.h | 1 +
+ drivers/i3c/master.c    | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-NOTES:
-- The i3cdev dynamically request an unused major number.
-
-- The i3c devices are dynamically exposed/removed from dev/ folder based
-  on if they have a device driver bound to it.
-
-- For now, the module exposes i3c devices without device driver on
-  dev/i3c-<bus>-<pid>, but we can change the path to
-  dev/bus/i3c/<bus>-<pid> or dev/i3c/<bus>-<pid>.
-
-- As in the i2c subsystem, here it is exposed the i3c_priv_xfer to
-  userspace. I tried to use a dedicated structure as in spidev but I don't
-  see any obvious advantage.
-
-- Since the i3c API only exposes i3c_priv_xfer to devices, for now, the
-  module just makes use of one ioctl(). This can change in the future with
-  the introduction hdr commands or by the need of exposing some CCC
-  commands to the device API (private contract between master-slave).
-  Regarding the i3c device info, some information is already available
-  through sysfs. We can add more device attributes to expose more
-  information or add a dedicated ioctl() request for that purpose or both.
-
-- Similar to i2c, I have also created a tool that you can find in [2]
-  for testing purposes. If you have some time available I would appreciate
-  your feedback about it as well.
-
-[1] https://lkml.org/lkml/2018/11/15/853
-[2] https://github.com/vitor-soares-snps/i3c-tools.git
-
-Changes in v2:
-  Use IDR api for minor numbering
-  Modify ioctl struct
-  Fix SPDX license
-
-Vitor Soares (4):
-  i3c: master: export i3c_masterdev_type
-  i3c: master: export i3c_bus_type symbol
-  i3c: master: add i3c_for_each_dev helper
-  i3c: add i3cdev module to expose i3c dev in /dev
-
- drivers/i3c/Kconfig             |  15 ++
- drivers/i3c/Makefile            |   1 +
- drivers/i3c/i3cdev.c            | 429 ++++++++++++++++++++++++++++++++++++++++
- drivers/i3c/internals.h         |   2 +
- drivers/i3c/master.c            |  16 +-
- include/uapi/linux/i3c/i3cdev.h |  38 ++++
- 6 files changed, 500 insertions(+), 1 deletion(-)
- create mode 100644 drivers/i3c/i3cdev.c
- create mode 100644 include/uapi/linux/i3c/i3cdev.h
-
+diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
+index 86b7b44..bc062e8 100644
+--- a/drivers/i3c/internals.h
++++ b/drivers/i3c/internals.h
+@@ -11,6 +11,7 @@
+ #include <linux/i3c/master.h>
+ 
+ extern struct bus_type i3c_bus_type;
++extern const struct device_type i3c_masterdev_type;
+ 
+ void i3c_bus_normaluse_lock(struct i3c_bus *bus);
+ void i3c_bus_normaluse_unlock(struct i3c_bus *bus);
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 7f8f896..8a0ba34 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -523,9 +523,10 @@ static void i3c_masterdev_release(struct device *dev)
+ 	of_node_put(dev->of_node);
+ }
+ 
+-static const struct device_type i3c_masterdev_type = {
++const struct device_type i3c_masterdev_type = {
+ 	.groups	= i3c_masterdev_groups,
+ };
++EXPORT_SYMBOL_GPL(i3c_masterdev_type);
+ 
+ static int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
+ 			    unsigned long max_i2c_scl_rate)
 -- 
 2.7.4
 
