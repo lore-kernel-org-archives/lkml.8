@@ -2,132 +2,128 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04923C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E7EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C73512071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112EE207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:33:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580279589;
+	bh=28tEdmx9LwLU3uCpRLofPRp2G5hnsl0hstln6/EfErI=;
+	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
+	b=FC6/dtr/5w9jonjSheVa3tfci3MFAAc9LAiQrziFOV5+xg/8N2rjHpdEVT3LwIRUi
+	 iRq0wGMMoeu6C/Wy2RpIbGfUniHuSVNQI1dxQX66GXfsXsmEU6W5AtBukY3bUxCzZ1
+	 Q81m1xXp5QbamQfsojbb8Ag12ESU371NHqx81dJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgA2Gar (ORCPT
+        id S1726157AbgA2GdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 01:30:47 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:5402 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725858AbgA2Gaq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 01:30:46 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00T6UAxr008707;
-        Wed, 29 Jan 2020 01:30:32 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xrkfak9ty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 01:30:32 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00T6UU36040828
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 29 Jan 2020 01:30:30 -0500
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 28 Jan
- 2020 22:30:28 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 28 Jan 2020 22:30:28 -0800
-Received: from mircea-Precision-5530-2-in-1.ad.analog.com ([10.48.65.114])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00T6UOO5001325;
-        Wed, 29 Jan 2020 01:30:25 -0500
-From:   Mircea Caprioru <mircea.caprioru@analog.com>
-To:     <jic23@kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [RESEND PATCH V2] iio: adc: ad7124: Add direct reg access
-Date:   Wed, 29 Jan 2020 08:30:32 +0200
-Message-ID: <20200129063032.18047-1-mircea.caprioru@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 29 Jan 2020 01:33:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbgA2GdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 01:33:08 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19CB4206F0;
+        Wed, 29 Jan 2020 06:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580279587;
+        bh=28tEdmx9LwLU3uCpRLofPRp2G5hnsl0hstln6/EfErI=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=hpswgamHW1zjyT7O2a0FPMr/N6O6c98hZVj9cwxMj0wb0TseNdIUbahMdqnjEt2MI
+         xVOcrIYzJkoZJx5HLe2VlxdXmzVlbPisafSWULSODIosWLIfeqnBYwPRfPIzFL/yNt
+         4UYFNxSqh81kJeAcn3CiA9aSzpockL2inznJnyWU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-28_09:2020-01-28,2020-01-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=1 mlxlogscore=818 clxscore=1015 phishscore=0 spamscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001290051
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200128072002.79250-7-brendanhiggins@google.com>
+References: <20200128072002.79250-1-brendanhiggins@google.com> <20200128072002.79250-7-brendanhiggins@google.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v1 6/7] kunit: Add 'kunit_shutdown' option
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        akpm@linux-foundation.org, alan.maguire@oracle.com,
+        anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        davidgow@google.com, frowand.list@gmail.com, jdike@addtoit.com,
+        keescook@chromium.org, richard@nod.at, rppt@linux.ibm.com,
+        skhan@linuxfoundation.org, yzaikin@google.com
+Cc:     gregkh@linuxfoundation.org, logang@deltatee.com, mcgrof@kernel.org,
+        knut.omang@oracle.com, linux-um@lists.infradead.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>
+User-Agent: alot/0.8.1
+Date:   Tue, 28 Jan 2020 22:33:06 -0800
+Message-Id: <20200129063307.19CB4206F0@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the posibility do read and write registers from userspace
-using the kernel debug direct register access option.
+Quoting Brendan Higgins (2020-01-27 23:20:01)
+> From: David Gow <davidgow@google.com>
+>=20
+> Add a new kernel command-line option, 'kunit_shutdown', which allows the
+> user to specify that the kernel poweroff, halt, or reboot after
+> completing all KUnit tests; this is very handy for running KUnit tests
+> on UML or a VM so that the UML/VM process exits cleanly immediately
+> after running all tests without needing a special initramfs.
+>=20
+> Signed-off-by: David Gow <davidgow@google.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
----
- drivers/iio/adc/ad7124.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Two nitpicks below
 
-diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-index 52f45b13da4a..38e67e08a79a 100644
---- a/drivers/iio/adc/ad7124.c
-+++ b/drivers/iio/adc/ad7124.c
-@@ -93,6 +93,14 @@ static const unsigned int ad7124_gain[8] = {
- 	1, 2, 4, 8, 16, 32, 64, 128
- };
- 
-+static const unsigned int ad7124_reg_size[] = {
-+	1, 2, 3, 3, 2, 1, 3, 3, 1, 2, 2, 2, 2,
-+	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-+	2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3
-+};
-+
- static const int ad7124_master_clk_freq_hz[3] = {
- 	[AD7124_LOW_POWER] = 76800,
- 	[AD7124_MID_POWER] = 153600,
-@@ -360,6 +368,25 @@ static int ad7124_write_raw(struct iio_dev *indio_dev,
- 	}
- }
- 
-+static int ad7124_reg_access(struct iio_dev *indio_dev,
-+			     unsigned int reg,
-+			     unsigned int writeval,
-+			     unsigned int *readval)
-+{
-+	struct ad7124_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+
-+	if (readval)
-+		ret = ad_sd_read_reg(&st->sd, reg, ad7124_reg_size[reg],
-+				     readval);
-+	else
-+		ret = ad_sd_write_reg(&st->sd, reg, ad7124_reg_size[reg],
-+				      writeval);
-+
-+	return ret;
-+}
-+
- static IIO_CONST_ATTR(in_voltage_scale_available,
- 	"0.000001164 0.000002328 0.000004656 0.000009313 0.000018626 0.000037252 0.000074505 0.000149011 0.000298023");
- 
-@@ -375,6 +402,7 @@ static const struct attribute_group ad7124_attrs_group = {
- static const struct iio_info ad7124_info = {
- 	.read_raw = ad7124_read_raw,
- 	.write_raw = ad7124_write_raw,
-+	.debugfs_reg_access = &ad7124_reg_access,
- 	.validate_trigger = ad_sd_validate_trigger,
- 	.attrs = &ad7124_attrs_group,
- };
--- 
-2.17.1
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
+> diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+> index 7fd16feff157e..d3ec1265a72fd 100644
+> --- a/lib/kunit/executor.c
+> +++ b/lib/kunit/executor.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> =20
+>  #include <kunit/test.h>
+> +#include <linux/reboot.h>
+
+Should this include come before kunit/test.h? I imagine the order of
+includes would be linux, kunit, local?
+
+> =20
+>  /*
+>   * These symbols point to the .kunit_test_suites section and are defined=
+ in
+> @@ -11,6 +12,23 @@ extern struct kunit_suite * const * const __kunit_suit=
+es_end[];
+> =20
+>  #if IS_BUILTIN(CONFIG_KUNIT)
+> =20
+> +static char *kunit_shutdown;
+> +core_param(kunit_shutdown, kunit_shutdown, charp, 0644);
+> +
+> +static void kunit_handle_shutdown(void)
+> +{
+> +       if (!kunit_shutdown)
+> +               return;
+> +
+> +       if (!strcmp(kunit_shutdown, "poweroff")) {
+> +               kernel_power_off();
+> +       } else if (!strcmp(kunit_shutdown, "halt")) {
+> +               kernel_halt();
+> +       } else if (!strcmp(kunit_shutdown, "reboot")) {
+> +               kernel_restart(NULL);
+> +       }
+
+Kernel style would be to not have braces on single line if statements.
+
+> +}
+> +
+>  static void kunit_print_tap_header(void)
+>  {
+>         struct kunit_suite * const * const *suites, * const *subsuite;
