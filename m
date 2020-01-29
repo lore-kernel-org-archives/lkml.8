@@ -2,138 +2,164 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6400C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4C9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BCE2070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53EE420716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d9whXo4z"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UHycOpck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgA2PGS (ORCPT
+        id S1726830AbgA2PG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:06:18 -0500
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:56607 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgA2PGS (ORCPT
+        Wed, 29 Jan 2020 10:06:58 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:46241 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgA2PG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:06:18 -0500
-Received: by mail-wm1-f74.google.com with SMTP id g26so2796571wmk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 07:06:16 -0800 (PST)
+        Wed, 29 Jan 2020 10:06:58 -0500
+Received: by mail-qv1-f66.google.com with SMTP id y2so4300688qvu.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 07:06:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=uCpdzEHc8A3bUPd0dC/9LcWhiifeT6vJeqIWIxSo4hE=;
-        b=d9whXo4z/rPrHEhtFwgiufARTCatr3EbDq+0gz1Ge/+H8QTU5ZhQqkQlbbE4eE4iOh
-         gAa8I0vaY7KwadF8OajtS5tM0vxSiIRsIHI5HE8OT5xYAoUgAG6UKoalS4ihglgTd3d8
-         ssDJRIgGNv1SwUNDQP2bp7/I6pFiskWBFz46b+Qs0Jrf5CsHvca/sejydLpPuRG54+SP
-         0ZV3+t8b0kGPYyxoPMOuJVI77sR4jRpPITke75Mo4SHZkY272PgFmLc+B2vMpEdAcuI7
-         yvbOJMlBXeR9S8KnzV4pejs88wByZHJOKyWThFFWjphyIyJwlR4+R5/Yagpa30/TWC9L
-         oXDg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=InuKBX2au5PgZW6T2UC0fko2cqbcK+Z9FZ9mVarwTPc=;
+        b=UHycOpckqcmEHlujxurhr+2yzJXIdF3P7M/bxMu5HRHXUFMy8t5uMpeIIvIg1zAf5a
+         9O/hNk7D/5yWbFCcGAmsKMfAfuBtI7SpykFLDbojMWNcU+0Bltcr98zTC2AnVpvojl1U
+         1BVzpyYAs5zc7l1o40O6rgqjAzUvfLnkNpaYhIGOZlu6GfF+RSyCvS+ah7wl66zbboVN
+         GG5mZR2jJavEE60EAldt5qavIpwXX56JK5PB7+AHnQD9PbOXfurtN4qmGbPRvvNYdW7H
+         I/9oH45TGNXxln3ZF2BpyQ5Vu19jrkPl4KQ6KGwstRBIOiE0PfrRsDtOzoPS0dEOMS+j
+         pe9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=uCpdzEHc8A3bUPd0dC/9LcWhiifeT6vJeqIWIxSo4hE=;
-        b=g3w7VizHmLouN2aqpLLJWdTgaWFWgSqIR7SnCadvxwKPDTPyWwZ44lVXaOP7j1K2au
-         wohb+mb5lCqoZF6JRx2TfsL2rhziavUcHHahUasqYUoDPxCcYKNbCU7VuGXOuhbM6EC3
-         7xMIAedshdd0w2WdgA3L0bgPLyZMALDjO1F2HRLhBXTgo2PQlou4fx6VnF4bGQ1NU0SU
-         M/w37HhGdt5W3/nqSjwsdJxo8QYOgqurBjhOR57fSkW4RuZJnbomTfJ4ToyLYmyeH4B6
-         93QEbPi0BSpa3sXHuwmdnZvfqjtxY9utDyoWjkemdIQoOjoXFEikYqXVHgtmxHA0NX/C
-         jaNA==
-X-Gm-Message-State: APjAAAXuuluXboi8zMhCXeHuo1WBi1rjyvLmL+BbIkWmBIkwWlBEoDbG
-        KGtqMhQahc3CpScU7jBviCvhZgeAiswG
-X-Google-Smtp-Source: APXvYqzyXoInm3l0njOq44y5o7xliwDXBgC2/8u5zICqd2UgK2H9m/XHByx5BI0zHDixEzjUd+eJOBcmEMXF
-X-Received: by 2002:adf:ce87:: with SMTP id r7mr35598404wrn.245.1580310375660;
- Wed, 29 Jan 2020 07:06:15 -0800 (PST)
-Date:   Wed, 29 Jan 2020 15:06:12 +0000
-Message-Id: <20200129150612.19200-1-qperret@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH] kbuild: allow symbol whitelisting with TRIM_UNUSED_KSYMS
-From:   Quentin Perret <qperret@google.com>
-To:     masahiroy@kernel.org, nico@fluxnic.net
-Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        maennich@google.com, kernel-team@android.com, qperret@google.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=InuKBX2au5PgZW6T2UC0fko2cqbcK+Z9FZ9mVarwTPc=;
+        b=OTQP0GZl6uwAjzb5qtoYpU+jrVtVzE4ocA8wzROt0+93frmQT1z+us4Ieii2qLPo0h
+         7eo+eoVPrRkXfy7ojxgq/ZaeBlJ4lzcvYlh3y7EqXIOTuJYIQ7IBt7BfJ+0c3ti64ncq
+         ewSDBqoxw0fpnEaGG3k51uwSsJzhF/JgMeTV/Zl6Ab0B9WKeoleMtMsEH9fRAVyF8Ij5
+         fqVzY/VH06aIiYj62Bt7x4bdEOOizcswafxtRovsW6hHKWEvibGcnjC4MNduTRs/tH0e
+         dzn7A9p6yh/0/c3X6sqg4YiLe/jQD2WVRBNK3/BLYLfQekweb0690YQ4V2/F1Xm+/2Pw
+         rjKA==
+X-Gm-Message-State: APjAAAUGv+1SGY9AWiwZ3jcAm9VQViCM5JhyDTzLa7035wuPhQfIfMGc
+        WlCA6oBI6N+J8st6P5CdOt2/0NdPF5EQ/HhTbX066g==
+X-Google-Smtp-Source: APXvYqxGXya7Ub3SmIcL1siAW7Ztqg0GnN7Sc8WRiWlrbmRJSMj/AvnQ1pJy7D+Vx9YUjv/TNuT7lT3ae0M7TlCuxdc=
+X-Received: by 2002:a05:6214:1874:: with SMTP id eh20mr28761173qvb.122.1580310416499;
+ Wed, 29 Jan 2020 07:06:56 -0800 (PST)
+MIME-Version: 1.0
+References: <CAA=061EoW8AmjUrBLsJy5nTDz-1jeArLeB+z6HJuyZud0zZXug@mail.gmail.com>
+ <CGME20200128124918eucas1p1f0ce2b2b7b33a5d63d33f876ef30f454@eucas1p1.samsung.com>
+ <20200128124912.chttagasucdpydhk@pathway.suse.cz> <4ab69855-6112-52f4-bee2-3358664d0c20@samsung.com>
+ <20200129141517.GA13721@jagdpanzerIV.localdomain> <20200129141759.GB13721@jagdpanzerIV.localdomain>
+ <20200129143754.GA15445@jagdpanzerIV.localdomain> <CACT4Y+bavHG8esK3jsv0V40+9+mUOFaSdOD1+prpw6L4Wv816g@mail.gmail.com>
+In-Reply-To: <CACT4Y+bavHG8esK3jsv0V40+9+mUOFaSdOD1+prpw6L4Wv816g@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 29 Jan 2020 16:06:45 +0100
+Message-ID: <CACT4Y+arS5GsyUa0A0s51OAWj7eJohZsCoY-7cuoU0HVsyeZ6Q@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Write in vgacon_scroll
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     anon anon <742991625abc@gmail.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        syzkaller <syzkaller@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_TRIM_UNUSED_KSYMS currently removes all unused exported symbols
-from ksymtab. This works really well when using in-tree drivers, but
-cannot be used in its current form if some of them are out-of-tree.
+On Wed, Jan 29, 2020 at 3:59 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Wed, Jan 29, 2020 at 3:40 PM Sergey Senozhatsky
+> <sergey.senozhatsky@gmail.com> wrote:
+> >
+> > Cc-ing Dmitry and Tetsuo
+> >
+> > Original Message-id: CAA=061EoW8AmjUrBLsJy5nTDz-1jeArLeB+z6HJuyZud0zZXug@mail.gmail.com
+> >
+> > On (20/01/29 23:17), Sergey Senozhatsky wrote:
+> > > > Hmm. There is something strange about it. I use vga console quite
+> > > > often, and scrolling happens all the time, yet I can't get the same
+> > > > out-of-bounds report (nor have I ever seen it in the past), even with
+> > > > the reproducer. Is it supposed to be executed as it is, or are there
+> > > > any preconditions? Any chance that something that runs prior to that
+> > > > reproducer somehow impacts the system? Just asking.
+> > >
+> > > These questions were addressed to anon anon (742991625abc@gmail.com),
+> > > not to Bartlomiej.
+> >
+> > Could this be GCC_PLUGIN related?
+>
+> syzkaller repros are meant to be self-contained, but they don't
+> capture the image and VM setup (or actual hardware). I suspect it may
+> have something to do with these bugs.
+> syzbot has reported a bunch of similar bugs in one of our internal kernels:
+>
+> KASAN: slab-out-of-bounds Read in vgacon_scroll
+> KASAN: slab-out-of-bounds Read in vgacon_invert_region
+> KASAN: use-after-free Write in vgacon_scroll
+> KASAN: use-after-free Read in vgacon_scroll
+> KASAN: use-after-free Read in vgacon_invert_region
+> BUG: unable to handle kernel paging request in vgacon_scroll
+>
+> But none on upstream kernels. That may be some difference in config?
+> I actually don't know what affects these things. When I tried to get
+> at least some coverage of that code in syzkaller I just understood
+> that relations between all these
+> tty/pty/ptmx/vt/pt/ldisc/vcs/vcsu/fb/con/dri/drm/etc are complex to
+> say the least...
 
-Indeed, even if the list of symbols required by out-of-tree drivers is
-known at compile time, the only solution today to guarantee these don't
-get trimmed is to set CONFIG_TRIM_UNUSED_KSYMS=n. This not only wastes
-space, but also makes it difficult to control the ABI usable by vendor
-modules in distribution kernels such as Android. Being able to control
-the kernel ABI surface is particularly useful to ship a unique Generic
-Kernel Image (GKI) for all vendors.
 
-As such, attempt to improve the situation by enabling users to specify a
-symbol 'whitelist' at compile time. Any symbol specified in this
-whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is set,
-even if it has no in-tree user. The whitelist is defined as a simple
-text file, listing symbols, one per line.
+It would also be good to figure out how we can cover this on syzbot/upstream.
 
-Signed-off-by: Quentin Perret <qperret@google.com>
+Our upstream config is:
 
----
+$ grep VGA upstream-kasan.config
+CONFIG_VGA_ARB=y
+CONFIG_VGA_ARB_MAX_GPUS=16
+# CONFIG_VGA_SWITCHEROO is not set
+CONFIG_FB_VGA16=y
+CONFIG_VGASTATE=y
+CONFIG_VGA_CONSOLE=y
+CONFIG_VGACON_SOFT_SCROLLBACK=y
+CONFIG_VGACON_SOFT_SCROLLBACK_SIZE=64
+# CONFIG_VGACON_SOFT_SCROLLBACK_PERSISTENT_ENABLE_BY_DEFAULT is not set
+CONFIG_LOGO_LINUX_VGA16=y
+# CONFIG_USB_SISUSBVGA is not set
+# CONFIG_VFIO_PCI_VGA is not set
 
-Not sure if this was relevant for the commit message so I'll put it
-here: more context about the GKI effort in Android can found in these
-talk at LPC2018 [1] and LPC2019 [2].
+where anon's is:
+CONFIG_VGA_ARB=y
+CONFIG_VGA_ARB_MAX_GPUS=16
+# CONFIG_VGA_SWITCHEROO is not set
+# CONFIG_FB_VGA16 is not set
+CONFIG_VGA_CONSOLE=y
+CONFIG_VGACON_SOFT_SCROLLBACK=y
+CONFIG_VGACON_SOFT_SCROLLBACK_SIZE=64
+# CONFIG_VGACON_SOFT_SCROLLBACK_PERSISTENT_ENABLE_BY_DEFAULT is not set
+# CONFIG_LOGO_LINUX_VGA16 is not set
+# CONFIG_USB_SISUSBVGA is not set
 
-[1] https://linuxplumbersconf.org/event/2/contributions/61/
-[2] https://linuxplumbersconf.org/event/4/contributions/401/
----
- init/Kconfig                | 12 ++++++++++++
- scripts/adjust_autoksyms.sh |  1 +
- 2 files changed, 13 insertions(+)
+And the one on which are catching the bugs in vgacon on internal kernel is:
+CONFIG_VGA_ARB=y
+CONFIG_VGA_ARB_MAX_GPUS=16
+# CONFIG_VGA_SWITCHEROO is not set
+# CONFIG_VGASTATE is not set
+CONFIG_VGA_CONSOLE=y
+# CONFIG_VGACON_SOFT_SCROLLBACK is not set
+# CONFIG_USB_SISUSBVGA is not set
+# CONFIG_VFIO_PCI_VGA is not set
 
-diff --git a/init/Kconfig b/init/Kconfig
-index a34064a031a5..d9c977ef7de5 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -2180,6 +2180,18 @@ config TRIM_UNUSED_KSYMS
- 
- 	  If unsure, or if you need to build out-of-tree modules, say N.
- 
-+config UNUSED_KSYMS_WHITELIST
-+	string "Whitelist of symbols to keep in ksymtab"
-+	depends on TRIM_UNUSED_KSYMS
-+	help
-+	  By default, all unused exported symbols will be trimmed from the
-+	  build when TRIM_UNUSED_KSYMS is selected.
-+
-+	  UNUSED_KSYMS_WHITELIST allows to whitelist symbols that must be kept
-+	  exported at all times, even in absence of in-tree users. The value to
-+	  set here is the path to a text file containing the list of symbols,
-+	  one per line.
-+
- endif # MODULES
- 
- config MODULES_TREE_LOOKUP
-diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
-index a904bf1f5e67..1a6f7f377230 100755
---- a/scripts/adjust_autoksyms.sh
-+++ b/scripts/adjust_autoksyms.sh
-@@ -48,6 +48,7 @@ cat > "$new_ksyms_file" << EOT
- EOT
- sed 's/ko$/mod/' modules.order |
- xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
-+cat - $CONFIG_UNUSED_KSYMS_WHITELIST |
- sort -u |
- sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
- 
--- 
-2.25.0.341.g760bfbb309-goog
 
+May it be related to CONFIG_VGASTATE?
