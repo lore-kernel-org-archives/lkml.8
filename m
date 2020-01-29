@@ -2,113 +2,117 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09710C33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A55C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3AFE20708
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:11:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="a++gLIAF"
+	by mail.kernel.org (Postfix) with ESMTP id C92BF207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580289131;
+	bh=3PbAV8xHa5J1shODJC/9vqbomQlLbIG5XwG5BrUPB+s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RqTkrySoJEc/s/BnSv135a4gTOEKtEGvxkS2J+PCgGwfZJcdc16tsKOPq+GGumMPr
+	 PVMYXnrI4I9GGfTycfK/MuyayGnO8KQMem9z0e1qCBkS2n/3CawPeN9cy63u5KvoCt
+	 KxtIopxPbkKx+C24XkyhK1XoQDzAfAUIZhj8aYus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgA2JLy (ORCPT
+        id S1726206AbgA2JML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:11:54 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:42817 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgA2JLy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 04:11:54 -0500
-Received: by mail-ua1-f67.google.com with SMTP id u17so5909396uap.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 01:11:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m8DeBR3ywE5BStJvUpTceu94rxUL71zPmj3cpgCJEJA=;
-        b=a++gLIAF1FEOcrFCMq4xVdmkxU5ir6QrUsrbRHj/nnEOI3+Cpf2VX/n/8phxwaHxS4
-         GxmHeMr5ec8gdSyXHDKDnIsvhfKdX3oVZLwmw35xOalmu5AKz17wW1i0ZAuZ7MoT/Wm1
-         h6+RXq3l2NLi0hbKqoLO55daQGozT6siSDgq1RDFho78WXGvrQeL4Hvd13Rg9ifqRC0z
-         H84mccExPAxGhSvaS8JdDjpByKyTR32oLC4bMDBWgL1hseHslLjKj8Dip2T/Q3WeAnuc
-         XBc6/rV4YRNH6VhT46wv2rJA6MioHze0Vfu3KCtXRWk+tew6JRBfvLGSabtvFlhbOd6K
-         ZlLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m8DeBR3ywE5BStJvUpTceu94rxUL71zPmj3cpgCJEJA=;
-        b=DWM0HBMVI3cz524iYYfty2WUfn8F9RsnHJOfewWY5FroGR9VLlS2e0iSw6Ebt2vGv9
-         cEG8jw9bWIMv4vN5H7jy2dpCqSny34A54lbsPcd41tsKqzq2iefX5VspobQoDSDqAOUd
-         TviKezVuh1tN+qDUU1NaWnvhf93zIwlqMkUpIDS1JMvgi1bzE0orWAxS60tchgjT4yvU
-         Jnc3HODlE01+Jyj9XqtOIL2eAdygClnZuW0oYNpHnLR9x66F8WI2c3rqfuCj9665+v2J
-         GyWBppO0vb8VM66DNXUF6cvP+cihpOrg7+zX9RRPT8bgrq44xzXpgn7jYTf+MXBDu3gr
-         UorQ==
-X-Gm-Message-State: APjAAAX1cQw5Ny/9VJX7xnMIltq1zLrULwXSF24vrFzVoH022/LCjF0s
-        vxt0d0RLV1Hrpiw5eFJrEBa9zNb0sAv3leA8KNSgYA==
-X-Google-Smtp-Source: APXvYqyTkaqaoLOTCKnsL7k/lnpsdDsn2eStLFJDpnZmQNugeoMpf9pQp1jxpAj2Xc4peTCoju25rIPfLKrgLGX82LE=
-X-Received: by 2002:a9f:226d:: with SMTP id 100mr15413840uad.107.1580289113246;
- Wed, 29 Jan 2020 01:11:53 -0800 (PST)
+        Wed, 29 Jan 2020 04:12:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbgA2JMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 04:12:10 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C371920708;
+        Wed, 29 Jan 2020 09:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580289129;
+        bh=3PbAV8xHa5J1shODJC/9vqbomQlLbIG5XwG5BrUPB+s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=o011yhgIai4vAfp6DxIAk6OX++mtFKDDNVaRJUxPNVXWQEo1PtH3nX+IBfs8/cv/K
+         MbYVdQ1hHusvG/nXheJpX9kJT+rEYrkI/r+P5TFKNy+LfCv8u/D8miQ0aR/QyCcq8Y
+         xV7xzBc3J7YDnUoPjSJYKh3+ygKNl6TEg0vecg/8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1iwjOK-001zHw-1b; Wed, 29 Jan 2020 09:12:08 +0000
 MIME-Version: 1.0
-References: <20200128190913.23086-1-geert+renesas@glider.be>
-In-Reply-To: <20200128190913.23086-1-geert+renesas@glider.be>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Wed, 29 Jan 2020 11:11:42 +0200
-Message-ID: <CAOtvUMfoND5iJi7p9YRb6C3To6FGTKGBSoD+cBhkHnLXSppKEw@mail.gmail.com>
-Subject: Re: [PATCH] [RFC] crypto: ccree - fix retry handling in cc_send_sync_request()
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jan 2020 09:12:08 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     JaeJoon Jung <rgbi3307@gmail.com>
+Cc:     Yash Shah <yash.shah@sifive.com>, atish.patra@wdc.com,
+        wesley@sifive.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
+        Palmer Dabbelt <palmer@dabbelt.com>, sachin.ghadi@sifive.com,
+        linux-gpio@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH] gpio/sifive: fix static checker warning
+In-Reply-To: <CAHOvCC5A4usY0k4+0Y13N_zbAG8PD4H++fngAu+yJsVba9+6Ng@mail.gmail.com>
+References: <1580189061-14091-1-git-send-email-yash.shah@sifive.com>
+ <ecb0e9404a3f6256a7ba1fe48b5a1471@kernel.org>
+ <CAHOvCC5A4usY0k4+0Y13N_zbAG8PD4H++fngAu+yJsVba9+6Ng@mail.gmail.com>
+Message-ID: <934410721310a3107e1d9d2600ec438a@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: rgbi3307@gmail.com, yash.shah@sifive.com, atish.patra@wdc.com, wesley@sifive.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com, palmer@dabbelt.com, sachin.ghadi@sifive.com, linux-gpio@vger.kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 9:09 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> If cc_queues_status() indicates that the queue is full,
-> cc_send_sync_request() should loop and retry.
->
-> However, cc_queues_status() returns either 0 (for success), or -ENOSPC
-> (for queue full), while cc_send_sync_request() checks for real errors by
-> comparing with -EAGAIN.  Hence -ENOSPC is always considered a real
-> error, and the code never retries the operation.
->
-> Fix this by just removing the check, as cc_queues_status() never returns
-> any other error value than -ENOSPC.
+JaeJoon,
 
-Thank you for spotting this!
+On 2020-01-29 01:27, JaeJoon Jung wrote:
+> Because SiFive FU540 GPIO Registers are aligned 32-bit,
+> I think that irq_state is good "unsigned int" than "unsigned long".
+> 
+> I refer to SiFive FU540-C000 Manual v1p0 (GPIO Register Table 103)
+> as "Only naturally aligned 32-bit memory accesses are supported"
 
-The error is simply checking for the wrong error value.
-We should be checking for -ENOSPC!
+You realize that we're talking about variables here, and not hardware
+registers, right?
 
-What this does aims to do is wait for the hardware queue to free up if
-we were asked to queue a synchronous request and there was no room in
-the hardware queue.
-The cc_queue_status() function used to return -EAGAIN in this scenario
-and this was missed in the change.
+> when you use assign_bit(offset, &chip->irq_state, 1),
+> offset is 32-bit.
 
-I'm curious as to how you found this - did you run into some problem
-and traced it to this?
-This can lead to a setkey() failing in very high load situations but I
-expect this occurrence to be very rare indeed since cc_queue_status()
-already loops several times waiting for the room to be freeed.
+And? assign_bit takes an "unsigned long *" as a parameter. irrespective
+of the size of long on a given architecture, by the way.
 
+> I prefer to use bit operation instead of assign_bit().
+> 
+> u32 bit = BIT(offset);
+> chip->irq_state |= bit;
 
-Gilad
+which is not what assign_bit() does.
 
+> If you use this code, you do not use the assign_bit() and
+> need not change irq_state data type.
 
+Or we can use the correct API and not introduce additional bugs, which
+your suggestion above would lead to.
 
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
+> There are many improvements in my works for drivers/gpio/gpio-sifive.c.
+> I hope to check my attached source file.
 
-values of =CE=B2 will give rise to dom!
+That's not how we submit patches to the Linux kernel. I suggest you
+read the documentation on how to do this.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
