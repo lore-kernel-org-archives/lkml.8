@@ -2,113 +2,77 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756B3C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AE8C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8502070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:53:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580298834;
-	bh=NW470bArjmOYoEq0M/1wPZ1cUy2AkkoYUfzs731O7xE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=YoTpyj9Px6ftafjqKR8ZZWcRsidCeiISh9FhCCogcQPoc0SeaJvXT5uF8KnOXWAnn
-	 4kJw8UcgleAiz2ZLhBIPXLtnLoU6rgprneiA7TGtlnuMSTOa8oqotTue9YssFfyNHv
-	 RKcOGR3xZ25RzhJj0PBcrH2ru6iVmghQGSxleb1c=
+	by mail.kernel.org (Postfix) with ESMTP id DCDEA2070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:54:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s0H5pn8L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgA2Lxx (ORCPT
+        id S1726591AbgA2LyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 06:53:53 -0500
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:42300 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgA2Lxw (ORCPT
+        Wed, 29 Jan 2020 06:54:19 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:48814 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgA2LyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 06:53:52 -0500
-Received: by mail-wr1-f41.google.com with SMTP id k11so5149959wrd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 03:53:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Y05EfyJNi14bOEE5ZvYiIMjjtZ7yNSpp/7KfSnBt91Y=;
-        b=miJIWpJyg5dYTUaRZ0OB503gPB7VG6lsvE+0dGkzHgkJgvxwvRYdEhCxsJ/kj2K16f
-         ESSJF5Y8IAjB3XtAcPc6QCRFeTS8w2iChXQIe+xBX1ETpm0qO+RHwW7As/JUq+Ti/aNC
-         Mi2Ot+RxDv2F16FyMreM/fxJ5Y88QxpuKWRBmbD28yWwLkhFSPQ2GNH3vm1AwWgGWApb
-         fNWAavYovqIR/X7MVJ3Yj05y4mwErl8nyqizdT9qOe9nDjLzMdUCL+TPTA33YBaAffus
-         E6aYjRNaFsL3G/yQLSt82jYB1nZI6u4yuPLL7MZTSPHtsWZRBbVaP8GjOmvU/Jh1FWh0
-         ELug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=Y05EfyJNi14bOEE5ZvYiIMjjtZ7yNSpp/7KfSnBt91Y=;
-        b=jyRiO47CptQZVXMrDhxyR1FBT86d+lAQHpXEii0L+zros4GHIy87NTqDPkJjgiUtA/
-         x0Y8HRPwd5gOBLHAwlasWjRkbWUge9gWjlpdFSjBgcG/v06Uvg4B0jxSnHF/y+n7t3Ik
-         cg3wAejQxp7MWnBRP3FRJl9Ey+fLnQiBD81EUIU73xLKjPkCwvRVAAcUQ3+bAdVcXFFr
-         z+x/qWvbWDUV1XO1wn6F63DBze1YBGQBXBObGERqPJSqlN6+VJFYOhhG7IYcHxxs7UGd
-         VLBcFLh3b4H0ZjQk90rJKYKF7mZ2iPXeXdw5gcOuXlniW4a/NJbzuYxv0ARR+YMlZfBP
-         RO3Q==
-X-Gm-Message-State: APjAAAVKAArnH6+L3MRFonGjEm0OuzGXLtn5K9c+wiBK5kMO58OhKSjX
-        NuNJtA11z22KGFXpwm8S9iXGvH1M
-X-Google-Smtp-Source: APXvYqzNkUJ7IzGACqFO5elTneGAD+WiGqJOg1NhNxCM78Ka0Gy+hdpILUvoFbzWqbc8DLuWKuigsQ==
-X-Received: by 2002:a5d:4f90:: with SMTP id d16mr35064320wru.395.1580298830796;
-        Wed, 29 Jan 2020 03:53:50 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id b10sm2545053wrt.90.2020.01.29.03.53.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 03:53:50 -0800 (PST)
-Date:   Wed, 29 Jan 2020 12:53:48 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] core kernel fixes
-Message-ID: <20200129115348.GA128016@gmail.com>
+        Wed, 29 Jan 2020 06:54:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=viw1pgj3UogsAw7+u8jcwAXIxlZhoRVAlbBEaKmYHEU=; b=s0H5pn8LMLr3Yl8gUeu9meC/1
+        WRCEk1qrwxaD1fHKE7U6YRLPuCG58IQOfu0ez1ToL5tQkebQOpKBQA4LPoYSrJp0iufVoGx5uUlpr
+        xqGADIDLQLJbb/MHTDknT1jABwkt2CwVfz9cvuZZyJoHifT6MwwXOS8+SdhtRsmQnO+hjy+9xjROf
+        3vyzeq4a4vfiuL0D+MVvjLal7S05D+xDj0ik1xz/iW61xt4wAafJ+V5M3TFZB7NnkviyHRUwaxsZf
+        R+pQwEHXcHMy92Hb4MjgKbsWawX6vy8/9FfRD8fntHvrxC8Q/Xthpya/SySmTRGupBoBuoiVgZO3m
+        kKhPCgjNQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwlvD-0001xz-PJ; Wed, 29 Jan 2020 11:54:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DD7FF30607E;
+        Wed, 29 Jan 2020 12:52:29 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AD1562B2E7F22; Wed, 29 Jan 2020 12:54:12 +0100 (CET)
+Date:   Wed, 29 Jan 2020 12:54:12 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Michael Schmitz <schmitzmic@gmail.com>
+Subject: Re: [PATCH 0/5] Rewrite Motorola MMU page-table layout
+Message-ID: <20200129115412.GN14914@hirez.programming.kicks-ass.net>
+References: <20200129103941.304769381@infradead.org>
+ <bbdb9596-583e-5d26-ac1c-4775440059b9@physik.fu-berlin.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <bbdb9596-583e-5d26-ac1c-4775440059b9@physik.fu-berlin.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Wed, Jan 29, 2020 at 11:49:13AM +0100, John Paul Adrian Glaubitz wrote:
 
-Please pull the latest core-urgent-for-linus git tree from:
+> > [1] https://wiki.debian.org/M68k/QemuSystemM68k
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-for-linus
+Now, if only debian would actually ship that :/
 
-   # HEAD: 74777eaf7aef0f80276cb1c3fad5b8292c368859 Merge branch 'core/documentation' into core/urgent, to pick up single commit
+AFAICT that emulates a q800 which is another 68040 and should thus not
+differ from ARAnyM.
 
-Three objtool fixes, plus marking SFI as obsolete.
-
- Thanks,
-
-	Ingo
-
------------------->
-Josh Poimboeuf (1):
-      objtool: Skip samples subdirectory
-
-Lukas Bulwahn (1):
-      MAINTAINERS: Mark simple firmware interface (SFI) obsolete
-
-Olof Johansson (1):
-      objtool: Silence build output
-
-Shile Zhang (1):
-      objtool: Fix ARCH=x86_64 build error
-
-
- MAINTAINERS                 | 5 +----
- samples/Makefile            | 1 +
- tools/objtool/Makefile      | 6 +-----
- tools/objtool/sync-check.sh | 2 --
- 4 files changed, 3 insertions(+), 11 deletions(-)
+I'm fairly confident in the 040 bits, it's the 020/030 things that need
+coverage.
