@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C4CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F1BC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBE42071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC4D2070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:09:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eamuglrt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7W8xJl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgA2QJM (ORCPT
+        id S1727067AbgA2QJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:09:12 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46364 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgA2QJM (ORCPT
+        Wed, 29 Jan 2020 11:09:17 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36447 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgA2QJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:09:12 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z124so9037976pgb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 08:09:11 -0800 (PST)
+        Wed, 29 Jan 2020 11:09:16 -0500
+Received: by mail-pl1-f194.google.com with SMTP id a6so112742plm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 08:09:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+oq96d085fk9R1zembWjfCyukhjjIatlVof2J+sNPxs=;
-        b=EamuglrtmZ9uGundx/IPRJmVpL0Y/3ThnGKOVz4Zqb8m1MOH+bYP3fPoP5u8oz49Pn
-         1Ij0uVWlWzH+x4BHRgxbd/WvXmQvpf1139nKPgvcQwhptH7/kdEQp58OBYTmsNidNqu+
-         t2BBYY5mNpfr1yt+vHtvAupk/RTbYduLBjxPdP3PIsc4rgg5R1XSPm2TAPcEGkAOASzE
-         kY1PCIFULGkg/YJjrCq9QmJB8D/tSTQv/nAfwwkcDJjKNBiSDRAPmySG9yxlrYhEs4qd
-         uM1e2ZNWjtHQ2PpOvWQBMcJKxfTO350EfYmBRbw1WpRyyTa+cta9B1bu6pubqqsmNGK6
-         5oVg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2w+XND7PBGeesb5X+LaSnTAVC7q/SmsQ7bhG7hGGu3k=;
+        b=c7W8xJl31owTz1Yx+RJ0t0lJeWMHmojPOvI9FTa0hToQ9rjk61F9cJpECaP8EbV9jV
+         WRZWrG5hZ7ErbuZZDvb4Z2ar70aqpQH+u6FO0iuWYBi7MWWnFPiRRLuaAnpssV+DyGNN
+         MisbUq3yuk+p3LM/1fKZ+8GjZEWkz7BLcGV8HFs/oPmu3w8rA+kTmif0eg8BeaZU0AuK
+         cEO1sVF3TrYI7hjmzlHWu4qdxcwtEn6XUo4TH+0B33NSGwu2HBe9wer6Pfz1830NTLdq
+         erOkBytkQCIlCU8kECVoDaG7m+JHQrcGcj1Tgu21IsrQnesl0MMlbNHzSs20osvTKgHn
+         Ahqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+oq96d085fk9R1zembWjfCyukhjjIatlVof2J+sNPxs=;
-        b=PWF1q0Oq4VaeWQSxnS+WykWRwRJjn1JT2tHR6ndhjBK0DoWkWibRCoMl6iFO1esgBZ
-         C52N7kUu55dERpSyVRFAUacOmfeQoRFO2PcEWZAU1s7bOqQQ79MLI1iYsccPIwRn541E
-         IJxUQDYcsIrg9D4SI3X03wl526M6kokrWpDfEDibNWMSoPN8KwMPP7MMYBPvTI/9UL71
-         +4nKWz1UFtLaLSG5ZWx7r6hzupMTwdeNepxKk/jw2X+sMcRUyKzzWFgiJNuVvSK32hX0
-         onywIj7ASKaJ128/NFw+xbH/C+GlwSTLWWOHxM54PCuCwB1JjS9TKyqUNQTqrMe9gqdV
-         sxKg==
-X-Gm-Message-State: APjAAAUdBth0FCu6d99NqpKzfH6TRNF4i17ywTBA71gAvFINbp+Oq1jE
-        zJaUIIY2g6uXFUBy7zPCiuo=
-X-Google-Smtp-Source: APXvYqyhg/HldHGGdfEgHowy5IgtRURU9SafwhhUwsow9z2iqxxg52P1LutbN5nUIyb+3aqkQpZ/Eg==
-X-Received: by 2002:a65:5809:: with SMTP id g9mr31259946pgr.146.1580314151330;
-        Wed, 29 Jan 2020 08:09:11 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2w+XND7PBGeesb5X+LaSnTAVC7q/SmsQ7bhG7hGGu3k=;
+        b=B6oWT3x/5lTTjzuHs8PEIBpJCPo/8oiL36K2UsHpjTzg7G6y1eZC5HnQU9nPi+9vww
+         +fqSlDjeCTzr/s65D0sKNoGF6icUFgcPEkjtQCk8yfZBhwcNw3f8cyqY55BmSJlwUtZQ
+         jp8+gEWj8CnyIBOITKXxqNSRhSi4HE2vE7eX1knhue0lA3w3gyJsQn3+sXXB/frV1KDW
+         YHPKjFcu3i5hBhL+SBFLBozdBQVs0M8q6TmxdQl/1JgYUobQIq7HW6BQsHedO/OEQdue
+         Uh7zfDQZkF3kCciA2wL8C/o+J6BtIsYY7vdpRAWwNRWsszHkfH1NnjwiScAWHcuBC+3D
+         qu9A==
+X-Gm-Message-State: APjAAAUS/9IFmAMh1zh1KFW5CGfPWIIJW5DpDE+S7xpLn0R+qN4TmyKe
+        e6RL7l4aWMNstAERqJtzkRw=
+X-Google-Smtp-Source: APXvYqyecajgm+oWpK3P0WbUAVW3ldWDqy8/QBKpagphreZeSIqivw+c88aMbpIHn528OveKK7/n2g==
+X-Received: by 2002:a17:90a:9f04:: with SMTP id n4mr363732pjp.76.1580314155804;
+        Wed, 29 Jan 2020 08:09:15 -0800 (PST)
 Received: from localhost.localdomain ([146.196.37.139])
-        by smtp.googlemail.com with ESMTPSA id 73sm3258801pgc.13.2020.01.29.08.09.08
+        by smtp.googlemail.com with ESMTPSA id 73sm3258801pgc.13.2020.01.29.08.09.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 08:09:10 -0800 (PST)
+        Wed, 29 Jan 2020 08:09:15 -0800 (PST)
 From:   Amol Grover <frextrite@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -71,10 +71,12 @@ Cc:     linux-kernel@vger.kernel.org,
         Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Amol Grover <frextrite@gmail.com>
-Subject: [PATCH 1/2] events: callchain: Annotate RCU pointer with __rcu
-Date:   Wed, 29 Jan 2020 21:38:12 +0530
-Message-Id: <20200129160813.14263-1-frextrite@gmail.com>
+Subject: [PATCH 2/2] events: callchain: Use RCU API to access RCU pointer
+Date:   Wed, 29 Jan 2020 21:38:13 +0530
+Message-Id: <20200129160813.14263-2-frextrite@gmail.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200129160813.14263-1-frextrite@gmail.com>
+References: <20200129160813.14263-1-frextrite@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,34 +84,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes following instances of sparse error
-error: incompatible types in comparison expression
-(different address spaces)
-kernel/events/callchain.c:66:9: error: incompatible types in comparison
-kernel/events/callchain.c:96:9: error: incompatible types in comparison
-kernel/events/callchain.c:161:19: error: incompatible types in comparison
+callchain_cpus_entries is annotated as an RCU pointer.
+Hence rcu_dereference_protected or similar RCU API is
+required to dereference the pointer.
 
-This introduces the following warning
+This fixes the following sparse warning
 kernel/events/callchain.c:65:17: warning: incorrect type in assignment
 
 Signed-off-by: Amol Grover <frextrite@gmail.com>
 ---
- kernel/events/callchain.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/callchain.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index c2b41a263166..f91e1f41d25d 100644
+index f91e1f41d25d..a672d02a1b3a 100644
 --- a/kernel/events/callchain.c
 +++ b/kernel/events/callchain.c
-@@ -32,7 +32,7 @@ static inline size_t perf_callchain_entry__sizeof(void)
- static DEFINE_PER_CPU(int, callchain_recursion[PERF_NR_CONTEXTS]);
- static atomic_t nr_callchain_events;
- static DEFINE_MUTEX(callchain_mutex);
--static struct callchain_cpus_entries *callchain_cpus_entries;
-+static struct callchain_cpus_entries __rcu *callchain_cpus_entries;
+@@ -62,7 +62,8 @@ static void release_callchain_buffers(void)
+ {
+ 	struct callchain_cpus_entries *entries;
  
- 
- __weak void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
+-	entries = callchain_cpus_entries;
++	entries = rcu_dereference_protected(callchain_cpus_entries,
++					    lockdep_is_held(&callchain_mutex));
+ 	RCU_INIT_POINTER(callchain_cpus_entries, NULL);
+ 	call_rcu(&entries->rcu_head, release_callchain_buffers_rcu);
+ }
 -- 
 2.24.1
 
