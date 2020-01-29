@@ -2,116 +2,102 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EDDC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71C7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929D120CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:49:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bsgyrNxk"
+	by mail.kernel.org (Postfix) with ESMTP id B23DC20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580295016;
+	bh=jHwJpm2yRmwh7TjlKXTA2UFU1Yy6KXRu81Yj3516AGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fZuQ+1ONcWWze5ngWh+7uZOGQLmr6DyyiaMJv/pJ4qDTQPTo3u43yn/UMC9zC5Z6m
+	 R4OFMze29tieLTeZAe8J/3zuyLxhajXjQEdiM30DPKXrzXZ2g25EEvQHPjhCXoMQE6
+	 6hypOrMUXARUzCq3LVnozwRfQwVpI15aJTJvamFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgA2Kta (ORCPT
+        id S1726487AbgA2KuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 05:49:30 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60734 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgA2Kt3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 05:49:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ekaLsCwMQDEgP33Uu27b/1osxPW25kXxN7+YpOV4y48=; b=bsgyrNxkkQgAoQHj/4H9VWg0N
-        BYsLqJysTjNSgmBABm8S5YQWI1DcUZk6nleemESGdQWJv3wIzq3sGGupizG+s/cDiTtI/UvIctZiG
-        5k6FiuO4Mup1k9l46KybgPMSMk5EwE/5FwToNuFO5vIAhvKlfjwU7rL1awecWueGMETKAFlNbfSCI
-        A8eAUwTGuUolJB7vMZPCOAr6pXlnj0XVsA4fCZSLO1WL8ZoJWx3DlfuWa10UuvPGTwZtMSXMVGA1d
-        UyjylwaWinAr3GjMyBmqlkRgbwz4DakMbxKbC3JioBuZyr2/OkwP38aDlFAZ33INLQT0aRSOnBnRV
-        BNhN/+TgA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwkuN-0001y9-RH; Wed, 29 Jan 2020 10:49:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 29 Jan 2020 05:50:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726068AbgA2KuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 05:50:15 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 85D05300606;
-        Wed, 29 Jan 2020 11:47:34 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3B7A82B49B91B; Wed, 29 Jan 2020 11:49:17 +0100 (CET)
-Date:   Wed, 29 Jan 2020 11:49:17 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        ying.huang@intel.com, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH v2 05/10] READ_ONCE: Enforce atomicity for
- {READ,WRITE}_ONCE() memory accesses
-Message-ID: <20200129104917.GN14946@hirez.programming.kicks-ass.net>
-References: <20200123153341.19947-1-will@kernel.org>
- <20200123153341.19947-6-will@kernel.org>
- <20200125082746.GT11457@worktop.programming.kicks-ass.net>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85E1720720;
+        Wed, 29 Jan 2020 10:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580295015;
+        bh=jHwJpm2yRmwh7TjlKXTA2UFU1Yy6KXRu81Yj3516AGA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fjCiN/BJOb2/B7vg2e94h8DAzpYS3l38HMIdqnZ0MvLsLuQHXGF6CJ5LiGWk7Uy4n
+         skUSY0DwR78Yh17dtmt5PHQnlqrlBCKpZ/rjIqjPXikOg1KWUUffnnvkONMO0jSVct
+         r8eKt+0D1j/6ya7l0kBtiyMAQQbpZNhAP0Odd9dU=
+Date:   Wed, 29 Jan 2020 11:50:12 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pragat Pandya <pragat.pandya@gmail.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org, valdis.kletnieks@vt.edu,
+        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH 09/22] staging: exfat: Rename variable "Size" to "size"
+Message-ID: <20200129105012.GA3884393@kroah.com>
+References: <20200127101343.20415-1-pragat.pandya@gmail.com>
+ <20200127101343.20415-10-pragat.pandya@gmail.com>
+ <20200127115741.GA1847@kadam>
+ <287916429826dd2f14d82f9b7b6b15a9cace2734.camel@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200125082746.GT11457@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <287916429826dd2f14d82f9b7b6b15a9cace2734.camel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 09:27:46AM +0100, Peter Zijlstra wrote:
-> On Thu, Jan 23, 2020 at 03:33:36PM +0000, Will Deacon wrote:
-> > {READ,WRITE}_ONCE() cannot guarantee atomicity for arbitrary data sizes.
-> > This can be surprising to callers that might incorrectly be expecting
-> > atomicity for accesses to aggregate structures, although there are other
-> > callers where tearing is actually permissable (e.g. if they are using
-> > something akin to sequence locking to protect the access).
+On Wed, Jan 29, 2020 at 04:10:39PM +0530, Pragat Pandya wrote:
+> On Mon, 2020-01-27 at 14:57 +0300, Dan Carpenter wrote:
+> > On Mon, Jan 27, 2020 at 03:43:30PM +0530, Pragat Pandya wrote:
+> > > Change all the occurences of "Size" to "size" in exfat.
+> > > 
+> > > Signed-off-by: Pragat Pandya <pragat.pandya@gmail.com>
+> > > ---
+> > >  drivers/staging/exfat/exfat.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/staging/exfat/exfat.h
+> > > b/drivers/staging/exfat/exfat.h
+> > > index 52f314d50b91..a228350acdb4 100644
+> > > --- a/drivers/staging/exfat/exfat.h
+> > > +++ b/drivers/staging/exfat/exfat.h
+> > > @@ -233,7 +233,7 @@ struct date_time_t {
+> > >  
+> > >  struct part_info_t {
+> > >  	u32      offset;    /* start sector number of the partition */
+> > > -	u32      Size;      /* in sectors */
+> > > +	u32      size;      /* in sectors */
+> > >  };
 > > 
-> > Linus sayeth:
+> > We just renamed all the struct members of this without changing any
+> > users.  Which suggests that this is unused and can be deleted.
 > > 
-> >   | We could also look at being stricter for the normal READ/WRITE_ONCE(),
-> >   | and require that they are
-> >   |
-> >   | (a) regular integer types
-> >   |
-> >   | (b) fit in an atomic word
-> >   |
-> >   | We actually did (b) for a while, until we noticed that we do it on
-> >   | loff_t's etc and relaxed the rules. But maybe we could have a
-> >   | "non-atomic" version of READ/WRITE_ONCE() that is used for the
-> >   | questionable cases?
+> > regards,
+> > dan carpenter
 > > 
-> > The slight snag is that we also have to support 64-bit accesses on 32-bit
-> > architectures, as these appear to be widespread and tend to work out ok
-> > if either the architecture supports atomic 64-bit accesses (x86, armv7)
-> > or if the variable being accesses represents a virtual address and
-> > therefore only requires 32-bit atomicity in practice.
-> > 
-> > Take a step in that direction by introducing a variant of
-> > 'compiletime_assert_atomic_type()' and use it to check the pointer
-> > argument to {READ,WRITE}_ONCE(). Expose __{READ,WRITE_ONCE}() variants
-> > which are allowed to tear and convert the two broken callers over to the
-> > new macros.
-> 
-> The build robot is telling me we also need this for m68k; they have:
-> 
->   arch/m68k/include/asm/page.h:typedef struct { unsigned long pmd[16]; } pmd_t;
+> Can I just drop this commit from this patchset and do a separate patch
+> to remove the unused structure?
 
-Fixed that with these patches:
+Drop this one, and the other ones that touch this structure, and do a
+separate patch.  This series needs fixing up anyway, I can't take it
+as-is.
 
-  https://lkml.kernel.org/r/20200129103941.304769381@infradead.org
+thanks,
+
+greg k-h
