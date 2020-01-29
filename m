@@ -2,126 +2,157 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B3AC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85FEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8811F20702
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5DB22522
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:20:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZohCZp8"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="tBAYxoa0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgA2ERn (ORCPT
+        id S1726599AbgA2EUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 23:17:43 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:45706 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgA2ERn (ORCPT
+        Tue, 28 Jan 2020 23:20:30 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43192 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbgA2EUa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 23:17:43 -0500
-Received: by mail-yb1-f193.google.com with SMTP id x191so8079673ybg.12;
-        Tue, 28 Jan 2020 20:17:42 -0800 (PST)
+        Tue, 28 Jan 2020 23:20:30 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so12246232qtj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 20:20:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YgN2vJdNk1lL2IID1Scb4JgUP1haIp4B4zNHK5VBexM=;
-        b=HZohCZp8ZN9vFhOZgrf/KLupunbdQWYsFXlPefiGgT0P9W9sYk4bfS1qGWcet0bVRe
-         xkaAvFHA/i9ENPRV7O+Eb9qs65WDFIqLGt4712EM2CdtxN95Ymv9drvaTybsQ7pQ7kEV
-         eO62COFCNiXiBgskB2F2avqc6rDDBVBK1Gp/SPf7y00FDbXeCpKmkG1keD1gq02nBA1d
-         dMjbNKjZ+Shz9qWayoYUhxt1FDt9XC0y+npfxFTC63+G/DgLwzWsQ80KAkFCpHers6bm
-         nZjDxTeP+lfUUR9I6WZBhmNF+d+jN9KWX4mn+UxDHp/Lm6Sr+DnW4euNch20ZvaivXiO
-         ikVg==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YM4OJsNfZ+Cg/1QyXpcZd//8p772lihOuiLpGLKYKgo=;
+        b=tBAYxoa0LP9S6BVo0xwNO6RFKmWwFseh0I4ad83I/ovAIpLNwY3jGjSbvb8/EE11jA
+         322Jc3BAu4ampLF0Kl0KZdrvmplWNQ+pwXTMicz0kgsot56ugzrbCVtzGj8NA72lopiF
+         IXNVRujAb/kjdeh3Wjnw3iylsl2vKXQv9YpJsJNECeT2Xsh3nZfOIx8OLTL0QRSymD9o
+         s4R79a+qgLO7MTiQ7Zwo9BsRq/+siFKiMK1W+Zt7aTRzKW1JWLmLHo4ZWdX9rzLaTRLf
+         192X3yGqDaGtIqNcgVLoBFpvyCobAD4pFybkMYtPChUyGuhI0xW6Qai35x1YL8aR0mOc
+         6IfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=YgN2vJdNk1lL2IID1Scb4JgUP1haIp4B4zNHK5VBexM=;
-        b=uAURAZYOjsGcfgxzio7FWv69iFCdKuwNpgoCi+sYjP2UALnjcsJdZ+0CpTPPvtK00n
-         aKvx2P5IZYmtIkpMmdPY0zmUsstx+xBGqIuy0IsdS3xeFb0ufm1jNmP4XaIQ50qB5MUH
-         ikHWjSnaJ4jkZS3p73Tkg2bcUl3RHIIqjLQidK5r9VE3L/3ngj2cH9yvlLBkWHS2rTVv
-         NqsU4l0m9HrNyPnN/5MHnmO3Rf8PEpOMSt8gr4jMs11DHF5RbWueo9CJhmVrH6pdpFhd
-         W3gHtNkQRvWFPwzkB7+cbOZ6Gew0Vs2CMhyfZAEhSsmbwxvmfTEVEqeGhanUkLX4fNni
-         htew==
-X-Gm-Message-State: APjAAAUE920N+7MPFd+Vxo0McidaMIDph4NBG37EW7Kqay0rq1hMH6S5
-        LucSaEtOTGjboXD0+076mJ4vINmw
-X-Google-Smtp-Source: APXvYqzBrkPShoR+ShGfyr94vYImAiHD+5VC/An9AX/npCHND/fCueWVOdnbCq+cKoNY7bXtO18Lbw==
-X-Received: by 2002:a25:d156:: with SMTP id i83mr18620000ybg.254.1580271462331;
-        Tue, 28 Jan 2020 20:17:42 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e186sm450145ywb.73.2020.01.28.20.17.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 20:17:41 -0800 (PST)
-Subject: Re: [PATCH] brcmfmac: abort and release host after error
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>
-References: <20200128221457.12467-1-linux@roeck-us.net>
- <20200129033257.GC1754@kadam>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <f9f1dfab-2c48-f37b-836b-6dc7fa5bc801@roeck-us.net>
-Date:   Tue, 28 Jan 2020 20:17:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        bh=YM4OJsNfZ+Cg/1QyXpcZd//8p772lihOuiLpGLKYKgo=;
+        b=swqjp9a+ifdzPCiwFRcVXk4oHgsAYbK5lwUOF6cBYpsmmNpW47eCSrP9/1l2JUT2Ev
+         zQ/DOrNgjGNsHTOSunGZaPY6Q+ykvOMgx1vLI/KT0Ue5y+2FofrH9ZHPMbRmJyfj4ZfE
+         fB4KzAK3w3oC3NNYhGJ64Jb/CKbjKgtUMRdx0MnhKR+V/RWS/gFOMNGl0er4HuNTdG91
+         E3PnQIAB+U9lQswdZta8vIyUTGSxN1cqz+EMCZfM1VNx+XorcZV1PO2i3pFz3zJte3Qm
+         BcGoRAanX1jSFkMtn5by5svvwezgM5HQMY4ZPjbj12E/PhygjRG9aMAr/usx0Pd7TU+d
+         yhWA==
+X-Gm-Message-State: APjAAAVcUyKNnOe2bMrKoApx/go4eqKE+cA8xAyJUhjmBChoTtteqEoB
+        yAl5GKoeQwXPSGXTw+7jMCOkTADODE4JzQ==
+X-Google-Smtp-Source: APXvYqxNOUDfMDbEmpgP46ytX31I8ri4xVc/Mgt9EiYdhovVnqIvbJLp4JcBOFq+G4DAiJFilo9jug==
+X-Received: by 2002:ac8:6f5b:: with SMTP id n27mr14407953qtv.96.1580271628969;
+        Tue, 28 Jan 2020 20:20:28 -0800 (PST)
+Received: from ovpn-120-127.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i28sm487275qtc.57.2020.01.28.20.20.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Jan 2020 20:20:28 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     hannes@cmpxchg.org, elver@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] mm/page_counter: mark intentional data races
+Date:   Tue, 28 Jan 2020 23:20:19 -0500
+Message-Id: <20200129042019.3632-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-In-Reply-To: <20200129033257.GC1754@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/28/20 7:32 PM, Dan Carpenter wrote:
-> On Tue, Jan 28, 2020 at 02:14:57PM -0800, Guenter Roeck wrote:
->> With commit 216b44000ada ("brcmfmac: Fix use after free in
->> brcmf_sdio_readframes()") applied, we see locking timeouts in
->> brcmf_sdio_watchdog_thread().
->>
->> brcmfmac: brcmf_escan_timeout: timer expired
->> INFO: task brcmf_wdog/mmc1:621 blocked for more than 120 seconds.
->> Not tainted 4.19.94-07984-g24ff99a0f713 #1
->> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->> brcmf_wdog/mmc1 D    0   621      2 0x00000000 last_sleep: 2440793077.  last_runnable: 2440766827
->> [<c0aa1e60>] (__schedule) from [<c0aa2100>] (schedule+0x98/0xc4)
->> [<c0aa2100>] (schedule) from [<c0853830>] (__mmc_claim_host+0x154/0x274)
->> [<c0853830>] (__mmc_claim_host) from [<bf10c5b8>] (brcmf_sdio_watchdog_thread+0x1b0/0x1f8 [brcmfmac])
->> [<bf10c5b8>] (brcmf_sdio_watchdog_thread [brcmfmac]) from [<c02570b8>] (kthread+0x178/0x180)
->>
->> In addition to restarting or exiting the loop, it is also necessary to
->> abort the command and to release the host.
->>
->> Fixes: 216b44000ada ("brcmfmac: Fix use after free in brcmf_sdio_readframes()")
-> 
-> Huh...  Thanks for fixing the bug.  That seems to indicate that we were
-> triggering the use after free but no one noticed at runtime.  With
+The commit 3e32cb2e0a12 ("mm: memcontrol: lockless page counters")
+had memcg->memsw->failcnt and ->watermark could be accessed concurrently
+as reported by KCSAN,
 
-Actually, we did see the problem. We just didn't realize it.
+ Reported by Kernel Concurrency Sanitizer on:
+ BUG: KCSAN: data-race in page_counter_try_charge / page_counter_try_charge
 
-> kfree(), a use after free can be harmless if you don't have poisoning
-> enabled and no other thread has re-used the memory.  I'm not sure about
-> kfree_skb() but presumably it's the same.
-> 
+ read to 0xffff8fb18c4cd190 of 8 bytes by task 1081 on cpu 59:
+  page_counter_try_charge+0x4d/0x150 mm/page_counter.c:138
+  try_charge+0x131/0xd50
+  __memcg_kmem_charge_memcg+0x58/0x140
+  __memcg_kmem_charge+0xcc/0x280
+  __alloc_pages_nodemask+0x1e1/0x450
+  alloc_pages_current+0xa6/0x120
+  pte_alloc_one+0x17/0xd0
+  __pte_alloc+0x3a/0x1f0
+  copy_p4d_range+0xc36/0x1990
+  copy_page_range+0x21d/0x360
+  dup_mmap+0x5f5/0x7a0
+  dup_mm+0xa2/0x240
+  copy_process+0x1b3f/0x3460
+  _do_fork+0xaa/0xa20
+  __x64_sys_clone+0x13b/0x170
+  do_syscall_64+0x91/0xb47
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Not really; it ultimately does result in a crash. We see that in ChromeOS
-R80 (and probably in all earlier releases, but I didn't check), which does
-not (yet) include 216b44000ada. The upcoming R81, which does include
-216b44000ada, doesn't crash but there are lots of stalls like the one
-above. The combination of both (ie the difference in behavior) helped
-tracking down the problem.
+ write to 0xffff8fb18c4cd190 of 8 bytes by task 1153 on cpu 120:
+  page_counter_try_charge+0x5b/0x150 mm/page_counter.c:139
+  try_charge+0x131/0xd50
+  mem_cgroup_try_charge+0x159/0x460
+  mem_cgroup_try_charge_delay+0x3d/0xa0
+  wp_page_copy+0x14d/0x930
+  do_wp_page+0x107/0x7b0
+  __handle_mm_fault+0xce6/0xd40
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
 
-Guenter
+Since the failcnt and watermark are tolerant of some inaccuracy, a data
+race will not be harmful, thus mark them as intentional data races with
+the data_race() macro.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/page_counter.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/mm/page_counter.c b/mm/page_counter.c
+index de31470655f6..13934636eafd 100644
+--- a/mm/page_counter.c
++++ b/mm/page_counter.c
+@@ -82,8 +82,8 @@ void page_counter_charge(struct page_counter *counter, unsigned long nr_pages)
+ 		 * This is indeed racy, but we can live with some
+ 		 * inaccuracy in the watermark.
+ 		 */
+-		if (new > c->watermark)
+-			c->watermark = new;
++		if (data_race(new > c->watermark))
++			data_race(c->watermark = new);
+ 	}
+ }
+ 
+@@ -126,7 +126,7 @@ bool page_counter_try_charge(struct page_counter *counter,
+ 			 * This is racy, but we can live with some
+ 			 * inaccuracy in the failcnt.
+ 			 */
+-			c->failcnt++;
++			data_race(c->failcnt++);
+ 			*fail = c;
+ 			goto failed;
+ 		}
+@@ -135,8 +135,8 @@ bool page_counter_try_charge(struct page_counter *counter,
+ 		 * Just like with failcnt, we can live with some
+ 		 * inaccuracy in the watermark.
+ 		 */
+-		if (new > c->watermark)
+-			c->watermark = new;
++		if (data_race(new > c->watermark))
++			data_race(c->watermark = new);
+ 	}
+ 	return true;
+ 
+-- 
+2.21.0 (Apple Git-122.2)
+
