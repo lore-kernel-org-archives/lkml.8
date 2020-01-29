@@ -2,97 +2,132 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD94C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04923C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8DFD2067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:27:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=permerror (0-bit key) header.d=oxplot.com header.i=@oxplot.com header.b="T0PTfwvc"
+	by mail.kernel.org (Postfix) with ESMTP id C73512071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbgA2G1m (ORCPT
+        id S1726076AbgA2Gar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 01:27:42 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45602 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbgA2G1l (ORCPT
+        Wed, 29 Jan 2020 01:30:47 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:5402 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725858AbgA2Gaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 01:27:41 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 2so7895329pfg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 22:27:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oxplot.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q6UFif4QYuYoVHHF8C0fUM38tDzpkMkldis3l9HA1rE=;
-        b=T0PTfwvcBHdhJQunyXRO7sXkGNa3wLUE4IkhKGHmwUc+KLBFE94b5wOgrbq+4MttL5
-         q72wf4JpiCBtmsSUV4OmP9vCXWGwYHELqlxl3g2HhrCWhz3tfKpSfOzV2ZGwEApVepqd
-         C5z2cFJXTAgWFVtozND7MZJGLVlM9N7Y6IqfA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q6UFif4QYuYoVHHF8C0fUM38tDzpkMkldis3l9HA1rE=;
-        b=CQhrpiUfUnjv3j1HjbyNbK3o36QoXvnzgb9y3A0NF1G5vSeuYi+k6HHyZl4t/5xrV3
-         UGNz8HgHsDY1L5fsGHe6mTeoi0fpFXy4ji8DSfBAGQWaG8AV31oa/kdfpNiwNmmao+iY
-         DNLo1nAHzinBflp8o0/ksxmHGuEzld+MnYRbylEtdkYZyfrGR2JFuByiQMjduXSDZUyj
-         M6KqZy+NERvSrDpXczuO5GtyS82ymQWzFzaACUbe1pkRopcGnGFhbZTYDgzAzQ0YtBEE
-         To5Q+K016WjDuZE0+8FKwKFGQoZQivP6G1GBDDVP3RZEKJgQJRE0l9BIDdlBT24UkR3Q
-         37Zg==
-X-Gm-Message-State: APjAAAWDf8VFRyVugRHdBz+q4zJuY93zLiXd2AtVUAXAWGC2kVGh/QG8
-        i+ik81UtH4NUE3FVBLMPAo62
-X-Google-Smtp-Source: APXvYqxirriyZDHUUb67XKllGd4slvU4+TLQOBA3G0ePKugX+3aj8cC+8K0lLIQ8gZZIAOhbHpGvZQ==
-X-Received: by 2002:a63:cb48:: with SMTP id m8mr29851187pgi.128.1580279261163;
-        Tue, 28 Jan 2020 22:27:41 -0800 (PST)
-Received: from localhost.localdomain (110-174-242-179.static.tpgi.com.au. [110.174.242.179])
-        by smtp.googlemail.com with ESMTPSA id n2sm1145244pfq.50.2020.01.28.22.27.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jan 2020 22:27:40 -0800 (PST)
-From:   Mansour Behabadi <mansour@oxplot.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Mansour Behabadi <mansour@oxplot.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: apple: Add support for recent firmware
-Date:   Wed, 29 Jan 2020 17:26:31 +1100
-Message-Id: <20200129062631.22694-1-mansour@oxplot.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 29 Jan 2020 01:30:46 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00T6UAxr008707;
+        Wed, 29 Jan 2020 01:30:32 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xrkfak9ty-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jan 2020 01:30:32 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00T6UU36040828
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 29 Jan 2020 01:30:30 -0500
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 28 Jan
+ 2020 22:30:28 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 28 Jan 2020 22:30:28 -0800
+Received: from mircea-Precision-5530-2-in-1.ad.analog.com ([10.48.65.114])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00T6UOO5001325;
+        Wed, 29 Jan 2020 01:30:25 -0500
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [RESEND PATCH V2] iio: adc: ad7124: Add direct reg access
+Date:   Wed, 29 Jan 2020 08:30:32 +0200
+Message-ID: <20200129063032.18047-1-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_09:2020-01-28,2020-01-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=1 mlxlogscore=818 clxscore=1015 phishscore=0 spamscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001290051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Magic Keyboards with more recent firmware (0x0100) report
-Fn key differently. Without this patch, Fn key may not
-behave as expected and may not be configurable via hid_apple
-fnmode module parameter.
+This patch adds the posibility do read and write registers from userspace
+using the kernel debug direct register access option.
 
-Signed-off-by: Mansour Behabadi <mansour@oxplot.com>
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
- drivers/hid/hid-apple.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iio/adc/ad7124.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index 6ac8becc2372..d732d1d10caf 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -340,7 +340,8 @@ static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
- 		unsigned long **bit, int *max)
- {
- 	if (usage->hid == (HID_UP_CUSTOM | 0x0003) ||
--			usage->hid == (HID_UP_MSVENDOR | 0x0003)) {
-+			usage->hid == (HID_UP_MSVENDOR | 0x0003) ||
-+			usage->hid == (HID_UP_HPVENDOR2 | 0x0003)) {
- 		/* The fn key on Apple USB keyboards */
- 		set_bit(EV_REP, hi->input->evbit);
- 		hid_map_usage_clear(hi, usage, bit, max, EV_KEY, KEY_FN);
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index 52f45b13da4a..38e67e08a79a 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -93,6 +93,14 @@ static const unsigned int ad7124_gain[8] = {
+ 	1, 2, 4, 8, 16, 32, 64, 128
+ };
+ 
++static const unsigned int ad7124_reg_size[] = {
++	1, 2, 3, 3, 2, 1, 3, 3, 1, 2, 2, 2, 2,
++	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
++	2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3,
++	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
++	3, 3, 3, 3, 3
++};
++
+ static const int ad7124_master_clk_freq_hz[3] = {
+ 	[AD7124_LOW_POWER] = 76800,
+ 	[AD7124_MID_POWER] = 153600,
+@@ -360,6 +368,25 @@ static int ad7124_write_raw(struct iio_dev *indio_dev,
+ 	}
+ }
+ 
++static int ad7124_reg_access(struct iio_dev *indio_dev,
++			     unsigned int reg,
++			     unsigned int writeval,
++			     unsigned int *readval)
++{
++	struct ad7124_state *st = iio_priv(indio_dev);
++	int ret;
++
++
++	if (readval)
++		ret = ad_sd_read_reg(&st->sd, reg, ad7124_reg_size[reg],
++				     readval);
++	else
++		ret = ad_sd_write_reg(&st->sd, reg, ad7124_reg_size[reg],
++				      writeval);
++
++	return ret;
++}
++
+ static IIO_CONST_ATTR(in_voltage_scale_available,
+ 	"0.000001164 0.000002328 0.000004656 0.000009313 0.000018626 0.000037252 0.000074505 0.000149011 0.000298023");
+ 
+@@ -375,6 +402,7 @@ static const struct attribute_group ad7124_attrs_group = {
+ static const struct iio_info ad7124_info = {
+ 	.read_raw = ad7124_read_raw,
+ 	.write_raw = ad7124_write_raw,
++	.debugfs_reg_access = &ad7124_reg_access,
+ 	.validate_trigger = ad_sd_validate_trigger,
+ 	.attrs = &ad7124_attrs_group,
+ };
 -- 
-2.25.0
+2.17.1
 
