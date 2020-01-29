@@ -2,1663 +2,391 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B92C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45722C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C038A20720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052F320708
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxbLU33W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/u9azcT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgA2Ib1 (ORCPT
+        id S1726271AbgA2Idj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 03:31:27 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:44296 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgA2Ib0 (ORCPT
+        Wed, 29 Jan 2020 03:33:39 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35074 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbgA2Idi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 03:31:26 -0500
-Received: by mail-vs1-f66.google.com with SMTP id p6so9883398vsj.11;
-        Wed, 29 Jan 2020 00:31:24 -0800 (PST)
+        Wed, 29 Jan 2020 03:33:38 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q8so13378897ljb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 00:33:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lWL82YgfV+s2qJHO18SandF40e0xXXMSfTNIrhKpJHQ=;
-        b=SxbLU33WOkFVD/LZxxUrHME3p0vVbtXGXgmktPk/fXWIdIvWI6cBXWZCbwxXeC9dII
-         hF2TYIVE4bOdtllksUn2y+36211g4CU1RRBEVK85hRkogZO6XznK/17f0SaUQgZ0eyE/
-         SbXX7cIDCdr8ftSC1zcHLI5KzV5TjR0OPBTTa7Nb4Yu77I37T+rQUXC29ArKbE8FHo7r
-         KMO1091/DSgwg1l/u44bvJWl5Aeo/ULQ8/e/8CZV8zKUvWTPIgwxXyCD8AzyfIo9Ni/O
-         rcvTqNGj/R58TSsLhOlaHG6sCc8qJHYLq7MRCgv2lGWfLHpfS+ClrgypoLu2GQp67nPy
-         jeHQ==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=uF89ZOVbSUW69p7B6m8WJR/8cWtmTHd1PrtCuMBzdXI=;
+        b=R/u9azcTl+DGupC8/CjwKz3v5x01jxH6uTAtggx+wjukx1boRoZhdgDiN35HjCVB3k
+         yKR1MWYHP5I352RVe9+L8IiOcW7EirEyAj5i8R+bOcqWc5lbrgzqzwPSp5ocxO+067m4
+         ktsLi5JH0H7DivSWNoDP++bOHD3Fyk+GRVOTzgoQXYNUW0yIJFp0svAo/JmO6bFGMAo6
+         inYZJjtEUV5dozDWl0wfm8EhDX4rEd2yrwyU1o0KiCp97SVpIFKTc/yeLBGoHR/i3opX
+         VvqIKSCf/cFbMxB1L1NtkSmrr2gMEvC8x3Qqh8l+V4IWVK2ZJZSijGoM+yRZp00Cb9FL
+         OySw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lWL82YgfV+s2qJHO18SandF40e0xXXMSfTNIrhKpJHQ=;
-        b=JWxUXGOw3tAuTIkgo4sudQZxJv6h8b9yeEYwb3pRcCq6lXmLVlWeKf53pFgXUxQxDM
-         zWGMO/BmMV91+uL3e9V8mZ+RJ6mmAdNWKw+A7s60DFuvIOCbO6U8D5Dhog2qWZW6/HPS
-         EOIXcwKQ2biWL86OXMRbTlWWvR9jcnMvvoIU49qNbELXEU55sFVTrPAFFXEvSPpwGJS1
-         8qzcma6g94ky7L1LZDN6a9zNcPSuOxjTQUpAMQJpE42xdzLj7qqENhZDZ+2ENG7/1u8C
-         gsLqMmbFvE32IW9opF/UfVdyOq/6P6wQ2CS9WBo0nLJa0w6Xeaq1UeTGZrlvepFlyd37
-         WUpA==
-X-Gm-Message-State: APjAAAXn+QWFt7aMBmSeHKYPI+0v5F3yHQyZ0GOxfKnm4rXS4jHoFdwE
-        QAdtxJwAcOM0+Gpq9j5jrt1klKmzLkb2cj7KsgM=
-X-Google-Smtp-Source: APXvYqwEfv0b2lop6I4N1nDB775453kQladnPWO278MsyryRjHQFi5dK3EbTk+b7PWx8hS3TKvX8yoblaMz02KIEt+M=
-X-Received: by 2002:a05:6102:30a7:: with SMTP id y7mr15471150vsd.212.1580286683727;
- Wed, 29 Jan 2020 00:31:23 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=uF89ZOVbSUW69p7B6m8WJR/8cWtmTHd1PrtCuMBzdXI=;
+        b=Mg+km+gmAY7R0BHoVzlQ8JzGibsoO2DBBb1JPjrsrdfSRHYFDsUzoT3Q2GI6Y/2xMl
+         1NtwbTlLqDjzJmtrHFA11aWlpNC7StQwg8l5QArYCKdsUiqHa3JWE+dvKjgOnRxA/G8O
+         9Uz+r4/AdRKlVO4tsr+j04CGBKmB0x4uekZPDpdWQaM2/tkYIPGstGOHl//IR3uahvDb
+         uP5SyHWwYwjBTF30woz1Uzv7uCQ3TYRmCCeJ+U8cdgErfiv/HxjS1dMGgSyN7KAdDVZS
+         5/mtGoi2Sa+QOKnxcrHe24Zum2P8/R4/dgYTdYoHqRWGONPgfXWjNSdaGFLnqBOHdxIK
+         jWgA==
+X-Gm-Message-State: APjAAAXJiWcFrT1wtKL0rQNySq2A5WQp8pn6l3bjMJTq5LHYhIccMWrb
+        52uo9znMVB0TJJWiRgOEdxM6Mrixlse0nceeeodEXQ==
+X-Google-Smtp-Source: APXvYqzkKtapc1PfWAsmDSzwPAtKNZyY44hIqed2cgRqMIp40xGMdpTevktjiH8FbZPtB7g+4X0SX/4edadlgM6fWEA=
+X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr16351913ljc.39.1580286815112;
+ Wed, 29 Jan 2020 00:33:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20200129072455.35807-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200129072455.35807-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-In-Reply-To: <20200129072455.35807-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Date:   Wed, 29 Jan 2020 09:31:12 +0100
-Message-ID: <CAAh8qszwQ5sJw4G_fM5vKjYu24xs03CuW371gyFE4G0hNJHdXw@mail.gmail.com>
-Subject: Re: [PATCH v8 2/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     Mark Brown <broonie@kernel.org>, Vignesh R <vigneshr@ti.com>,
-        linux-spi@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 29 Jan 2020 09:33:24 +0100
+Message-ID: <CACRpkdYOsqTh51Ta4UR1c77zpu2Vstri5wCQRVYb1iV9Kkt5Aw@mail.gmail.com>
+Subject: [GIT PULL] Pin control bulk changes for the v5.6 kernel cycle
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 8:25 AM Ramuthevar,Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->
-> Add support for the Cadence QSPI controller. This controller is
-> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
-> This driver has been tested on the Intel LGM SoCs.
+Hi Linus,
 
-So it has been tested on LGM and Vignesh gave his ok for TI. Is there anyone
-in the loop by now checking that this is valid for the 3rd platform using this
-(Altera)?
+here is the bulk of pin control changes for v5.6, nothing too
+exciting about this.
 
-Or am I wrong in thinking that this driver is meant to replace
-drivers/mtd/spi-nor/cadence-quadspi.c used on that platform?
+Some changes hit arch/sh and arch/arm but are well isolated
+and acknowledged by the respective arch maintainers.
 
-Regards,
-Simon
+The major details are in the signed tag as usual.
 
->
-> This driver does not support generic SPI and also the implementation
-> only supports spi-mem interface to replace the existing driver in
-> mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
-> flash memory.
->
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/spi/Kconfig               |    9 +
->  drivers/spi/Makefile              |    1 +
->  drivers/spi/spi-cadence-quadspi.c | 1510 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 1520 insertions(+)
->  create mode 100644 drivers/spi/spi-cadence-quadspi.c
->
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index 870f7797b56b..2210e4582796 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -193,6 +193,15 @@ config SPI_CADENCE
->           This selects the Cadence SPI controller master driver
->           used by Xilinx Zynq and ZynqMP.
->
-> +config SPI_CADENCE_QUADSPI
-> +       tristate "Cadence Quad SPI controller"
-> +       depends on OF && (ARM || ARM64 || COMPILE_TEST || X86)
-> +       depends on MTD || MTD_SPI_NOR || MTD_SPI_NAND
-> +       help
-> +         Cadence QSPI is a specialized controller for connecting an SPI
-> +         Flash over 1/2/4/8-bit wide bus. This enables support for the Octal
-> +         and Quad SPI variants of Cadence QSPI IP.
-> +
->  config SPI_CLPS711X
->         tristate "CLPS711X host SPI controller"
->         depends on ARCH_CLPS711X || COMPILE_TEST
-> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-> index bb49c9e6d0a0..288f5fa903fe 100644
-> --- a/drivers/spi/Makefile
-> +++ b/drivers/spi/Makefile
-> @@ -29,6 +29,7 @@ obj-$(CONFIG_SPI_BCM_QSPI)            += spi-iproc-qspi.o spi-brcmstb-qspi.o spi-bcm-qspi.
->  obj-$(CONFIG_SPI_BITBANG)              += spi-bitbang.o
->  obj-$(CONFIG_SPI_BUTTERFLY)            += spi-butterfly.o
->  obj-$(CONFIG_SPI_CADENCE)              += spi-cadence.o
-> +obj-$(CONFIG_SPI_CADENCE_QUADSPI)      += spi-cadence-quadspi.o
->  obj-$(CONFIG_SPI_CLPS711X)             += spi-clps711x.o
->  obj-$(CONFIG_SPI_COLDFIRE_QSPI)                += spi-coldfire-qspi.o
->  obj-$(CONFIG_SPI_DAVINCI)              += spi-davinci.o
-> diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-> new file mode 100644
-> index 000000000000..5b0609260f73
-> --- /dev/null
-> +++ b/drivers/spi/spi-cadence-quadspi.c
-> @@ -0,0 +1,1510 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Driver for Cadence QSPI Controller
-> + *
-> + * Copyright Altera Corporation (C) 2012-2014. All rights reserved.
-> + * Copyright Intel Corporation (C) 2019-2020. All rights reserved.
-> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/completion.h>
-> +#include <linux/delay.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/err.h>
-> +#include <linux/errno.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/reset.h>
-> +#include <linux/sched.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/spi/spi-mem.h>
-> +#include <linux/timer.h>
-> +
-> +#define CQSPI_NAME                     "cadence-qspi"
-> +#define CQSPI_MAX_CHIPSELECT           16
-> +
-> +/* Quirks */
-> +#define CQSPI_NEEDS_WR_DELAY           BIT(0)
-> +#define CQSPI_DISABLE_DAC_MODE         BIT(1)
-> +
-> +/* Capabilities*/
-> +#define CQSPI_SUPPORTS_OCTAL           BIT(0)
-> +
-> +struct cqspi_st;
-> +
-> +struct cqspi_flash_pdata {
-> +       struct cqspi_st *cqspi;
-> +       u32             clk_rate;
-> +       u32             read_delay;
-> +       u32             tshsl_ns;
-> +       u32             tsd2d_ns;
-> +       u32             tchsh_ns;
-> +       u32             tslch_ns;
-> +       u8              inst_width;
-> +       u8              addr_width;
-> +       u8              data_width;
-> +       u8              cs;
-> +       bool            registered;
-> +};
-> +
-> +struct cqspi_st {
-> +       struct platform_device  *pdev;
-> +
-> +       struct clk              *clk;
-> +       unsigned int            sclk;
-> +
-> +       void __iomem            *iobase;
-> +       void __iomem            *ahb_base;
-> +       resource_size_t         ahb_size;
-> +       struct completion       transfer_complete;
-> +
-> +       struct dma_chan         *rx_chan;
-> +       struct completion       rx_dma_complete;
-> +       dma_addr_t              mmap_phys_base;
-> +
-> +       int                     current_cs;
-> +       unsigned long           master_ref_clk_hz;
-> +       u32                     fifo_depth;
-> +       u32                     fifo_width;
-> +       u32                     bus_num;
-> +       u32                     num_chipselect;
-> +       bool                    rclk_en;
-> +       u32                     trigger_address;
-> +       u32                     wr_delay;
-> +       bool                    use_dac_mode;
-> +       bool                    soc_selection;
-> +       struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
-> +};
-> +
-> +struct cqspi_driver_platdata {
-> +       u32 hwcaps_mask;
-> +       u8 quirks;
-> +};
-> +
-> +/* Operation timeout value */
-> +#define CQSPI_TIMEOUT_MS                       500
-> +#define CQSPI_READ_TIMEOUT_MS                  10
-> +
-> +/* Instruction type */
-> +#define CQSPI_INST_TYPE_SINGLE                 0
-> +#define CQSPI_INST_TYPE_DUAL                   1
-> +#define CQSPI_INST_TYPE_QUAD                   2
-> +#define CQSPI_INST_TYPE_OCTAL                  3
-> +
-> +#define CQSPI_DUMMY_CLKS_PER_BYTE              8
-> +#define CQSPI_DUMMY_BYTES_MAX                  4
-> +#define CQSPI_DUMMY_CLKS_MAX                   31
-> +
-> +#define CQSPI_STIG_DATA_LEN_MAX                        8
-> +
-> +/* Register map */
-> +#define CQSPI_REG_CONFIG                       0x00
-> +#define CQSPI_REG_CONFIG_ENABLE_MASK           BIT(0)
-> +#define CQSPI_REG_CONFIG_ENB_DIR_ACC_CTRL      BIT(7)
-> +#define CQSPI_REG_CONFIG_DECODE_MASK           BIT(9)
-> +#define CQSPI_REG_CONFIG_CHIPSELECT_LSB                10
-> +#define CQSPI_REG_CONFIG_DMA_MASK              BIT(15)
-> +#define CQSPI_REG_CONFIG_BAUD_LSB              19
-> +#define CQSPI_REG_CONFIG_IDLE_LSB              31
-> +#define CQSPI_REG_CONFIG_CHIPSELECT_MASK       0xF
-> +#define CQSPI_REG_CONFIG_BAUD_MASK             0xF
-> +
-> +#define CQSPI_REG_RD_INSTR                     0x04
-> +#define CQSPI_REG_RD_INSTR_OPCODE_LSB          0
-> +#define CQSPI_REG_RD_INSTR_TYPE_INSTR_LSB      8
-> +#define CQSPI_REG_RD_INSTR_TYPE_ADDR_LSB       12
-> +#define CQSPI_REG_RD_INSTR_TYPE_DATA_LSB       16
-> +#define CQSPI_REG_RD_INSTR_MODE_EN_LSB         20
-> +#define CQSPI_REG_RD_INSTR_DUMMY_LSB           24
-> +#define CQSPI_REG_RD_INSTR_TYPE_INSTR_MASK     0x3
-> +#define CQSPI_REG_RD_INSTR_TYPE_ADDR_MASK      0x3
-> +#define CQSPI_REG_RD_INSTR_TYPE_DATA_MASK      0x3
-> +#define CQSPI_REG_RD_INSTR_DUMMY_MASK          0x1F
-> +
-> +#define CQSPI_REG_WR_INSTR                     0x08
-> +#define CQSPI_REG_WR_INSTR_OPCODE_LSB          0
-> +#define CQSPI_REG_WR_INSTR_TYPE_ADDR_LSB       12
-> +#define CQSPI_REG_WR_INSTR_TYPE_DATA_LSB       16
-> +#define        CQSPI_REG_WR_INSTR_TYPE_ADDR_MASK       3
-> +#define        CQSPI_REG_WR_INSTR_TYPE_DATA_MASK       3
-> +#define        CQSPI_REG_WR_CONFIG_WEL_DIS_FLD_POS     8
-> +
-> +#define CQSPI_REG_DELAY                                0x0C
-> +#define CQSPI_REG_DELAY_TSLCH_LSB              0
-> +#define CQSPI_REG_DELAY_TCHSH_LSB              8
-> +#define CQSPI_REG_DELAY_TSD2D_LSB              16
-> +#define CQSPI_REG_DELAY_TSHSL_LSB              24
-> +#define CQSPI_REG_DELAY_TSLCH_MASK             0xFF
-> +#define CQSPI_REG_DELAY_TCHSH_MASK             0xFF
-> +#define CQSPI_REG_DELAY_TSD2D_MASK             0xFF
-> +#define CQSPI_REG_DELAY_TSHSL_MASK             0xFF
-> +
-> +#define CQSPI_REG_READCAPTURE                  0x10
-> +#define CQSPI_REG_READCAPTURE_BYPASS_LSB       0
-> +#define CQSPI_REG_READCAPTURE_DELAY_LSB                1
-> +#define CQSPI_REG_READCAPTURE_DELAY_MASK       0xF
-> +
-> +#define CQSPI_REG_SIZE                         0x14
-> +#define CQSPI_REG_SIZE_ADDRESS_LSB             0
-> +#define CQSPI_REG_SIZE_PAGE_LSB                        4
-> +#define CQSPI_REG_SIZE_BLOCK_LSB               16
-> +#define CQSPI_REG_SIZE_ADDRESS_MASK            0xF
-> +#define CQSPI_REG_SIZE_PAGE_MASK               0xFFF
-> +#define CQSPI_REG_SIZE_BLOCK_MASK              0x3F
-> +
-> +#define CQSPI_REG_SRAMPARTITION                        0x18
-> +#define CQSPI_REG_INDIRECTTRIGGER              0x1C
-> +
-> +#define CQSPI_REG_DMA                          0x20
-> +#define CQSPI_REG_DMA_SINGLE_LSB               0
-> +#define CQSPI_REG_DMA_BURST_LSB                        8
-> +#define CQSPI_REG_DMA_SINGLE_MASK              0xFF
-> +#define CQSPI_REG_DMA_BURST_MASK               0xFF
-> +
-> +#define CQSPI_REG_REMAP                                0x24
-> +#define CQSPI_REG_MODE_BIT                     0x28
-> +
-> +#define CQSPI_REG_SDRAMLEVEL                   0x2C
-> +#define CQSPI_REG_SDRAMLEVEL_RD_LSB            0
-> +#define CQSPI_REG_SDRAMLEVEL_WR_LSB            16
-> +#define CQSPI_REG_SDRAMLEVEL_RD_MASK           0xFFFF
-> +#define CQSPI_REG_SDRAMLEVEL_WR_MASK           0xFFFF
-> +
-> +#define CQSPI_REG_WR_COMPLETION_CTRL           0x38
-> +#define CQSPI_REG_WR_DISABLE_AUTO_POLL         BIT(14)
-> +
-> +#define CQSPI_REG_IRQSTATUS                    0x40
-> +#define CQSPI_REG_IRQMASK                      0x44
-> +
-> +#define CQSPI_REG_INDIRECTRD                   0x60
-> +#define CQSPI_REG_INDIRECTRD_START_MASK                BIT(0)
-> +#define CQSPI_REG_INDIRECTRD_CANCEL_MASK       BIT(1)
-> +#define CQSPI_REG_INDIRECTRD_DONE_MASK         BIT(5)
-> +
-> +#define CQSPI_REG_INDIRECTRDWATERMARK          0x64
-> +#define CQSPI_REG_INDIRECTRDSTARTADDR          0x68
-> +#define CQSPI_REG_INDIRECTRDBYTES              0x6C
-> +
-> +#define CQSPI_REG_CMDCTRL                      0x90
-> +#define CQSPI_REG_CMDCTRL_EXECUTE_MASK         BIT(0)
-> +#define CQSPI_REG_CMDCTRL_INPROGRESS_MASK      BIT(1)
-> +#define CQSPI_REG_CMDCTRL_WR_BYTES_LSB         12
-> +#define CQSPI_REG_CMDCTRL_WR_EN_LSB            15
-> +#define CQSPI_REG_CMDCTRL_ADD_BYTES_LSB                16
-> +#define CQSPI_REG_CMDCTRL_ADDR_EN_LSB          19
-> +#define CQSPI_REG_CMDCTRL_RD_BYTES_LSB         20
-> +#define CQSPI_REG_CMDCTRL_RD_EN_LSB            23
-> +#define CQSPI_REG_CMDCTRL_OPCODE_LSB           24
-> +#define CQSPI_REG_CMDCTRL_WR_BYTES_MASK                0x7
-> +#define CQSPI_REG_CMDCTRL_ADD_BYTES_MASK       0x3
-> +#define CQSPI_REG_CMDCTRL_RD_BYTES_MASK                0x7
-> +
-> +#define CQSPI_REG_INDIRECTWR                   0x70
-> +#define CQSPI_REG_INDIRECTWR_START_MASK                BIT(0)
-> +#define CQSPI_REG_INDIRECTWR_CANCEL_MASK       BIT(1)
-> +#define CQSPI_REG_INDIRECTWR_DONE_MASK         BIT(5)
-> +
-> +#define CQSPI_REG_INDIRECTWRWATERMARK          0x74
-> +#define CQSPI_REG_INDIRECTWRSTARTADDR          0x78
-> +#define CQSPI_REG_INDIRECTWRBYTES              0x7C
-> +
-> +#define CQSPI_REG_CMDADDRESS                   0x94
-> +#define CQSPI_REG_CMDREADDATALOWER             0xA0
-> +#define CQSPI_REG_CMDREADDATAUPPER             0xA4
-> +#define CQSPI_REG_CMDWRITEDATALOWER            0xA8
-> +#define CQSPI_REG_CMDWRITEDATAUPPER            0xAC
-> +
-> +/* Interrupt status bits */
-> +#define CQSPI_REG_IRQ_MODE_ERR                 BIT(0)
-> +#define CQSPI_REG_IRQ_UNDERFLOW                        BIT(1)
-> +#define CQSPI_REG_IRQ_IND_COMP                 BIT(2)
-> +#define CQSPI_REG_IRQ_IND_RD_REJECT            BIT(3)
-> +#define CQSPI_REG_IRQ_WR_PROTECTED_ERR         BIT(4)
-> +#define CQSPI_REG_IRQ_ILLEGAL_AHB_ERR          BIT(5)
-> +#define CQSPI_REG_IRQ_WATERMARK                        BIT(6)
-> +#define CQSPI_REG_IRQ_IND_SRAM_FULL            BIT(12)
-> +
-> +#define CQSPI_IRQ_MASK_RD              (CQSPI_REG_IRQ_WATERMARK        | \
-> +                                        CQSPI_REG_IRQ_IND_SRAM_FULL    | \
-> +                                        CQSPI_REG_IRQ_IND_COMP)
-> +
-> +#define CQSPI_IRQ_MASK_WR              (CQSPI_REG_IRQ_IND_COMP         | \
-> +                                        CQSPI_REG_IRQ_WATERMARK        | \
-> +                                        CQSPI_REG_IRQ_UNDERFLOW)
-> +
-> +#define CQSPI_IRQ_STATUS_MASK          0x1FFFF
-> +
-> +static int cqspi_wait_for_bit(void __iomem *reg, const u32 mask, bool clr)
-> +{
-> +       u32 val;
-> +
-> +       return readl_relaxed_poll_timeout(reg, val,
-> +                                         (((clr ? ~val : val) & mask) == mask),
-> +                                         10, CQSPI_TIMEOUT_MS * 1000);
-> +}
-> +
-> +static bool cqspi_is_idle(struct cqspi_st *cqspi)
-> +{
-> +       u32 reg = readl(cqspi->iobase + CQSPI_REG_CONFIG);
-> +
-> +       return reg & (1 << CQSPI_REG_CONFIG_IDLE_LSB);
-> +}
-> +
-> +static u32 cqspi_get_rd_sram_level(struct cqspi_st *cqspi)
-> +{
-> +       u32 reg = readl(cqspi->iobase + CQSPI_REG_SDRAMLEVEL);
-> +
-> +       reg >>= CQSPI_REG_SDRAMLEVEL_RD_LSB;
-> +       return reg & CQSPI_REG_SDRAMLEVEL_RD_MASK;
-> +}
-> +
-> +static irqreturn_t cqspi_irq_handler(int this_irq, void *dev)
-> +{
-> +       struct cqspi_st *cqspi = dev;
-> +       unsigned int irq_status;
-> +
-> +       /* Read interrupt status */
-> +       irq_status = readl(cqspi->iobase + CQSPI_REG_IRQSTATUS);
-> +
-> +       /* Clear interrupt */
-> +       writel(irq_status, cqspi->iobase + CQSPI_REG_IRQSTATUS);
-> +
-> +       irq_status &= CQSPI_IRQ_MASK_RD | CQSPI_IRQ_MASK_WR;
-> +
-> +       if (irq_status)
-> +               complete(&cqspi->transfer_complete);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static u32 cqspi_cmd2addr(const struct spi_mem_op *op)
-> +{
-> +       const unsigned char *addr_buf = NULL;
-> +       unsigned int tmpbufsize;
-> +       unsigned int addr = 0;
-> +       u8 *tmpbuf;
-> +       int i;
-> +
-> +       tmpbufsize = op->addr.nbytes + op->dummy.nbytes;
-> +       tmpbuf = kzalloc(tmpbufsize, GFP_KERNEL | GFP_DMA);
-> +       if (!tmpbuf)
-> +               return -ENOMEM;
-> +
-> +       if (op->addr.nbytes) {
-> +               for (i = 0; i < op->addr.nbytes; i++)
-> +                       tmpbuf[i] = op->addr.val >> (8 * (op->addr.nbytes - i - 1));
-> +
-> +               addr_buf = tmpbuf;
-> +       }
-> +       /* Invalid address return zero. */
-> +       if (op->addr.nbytes > 4)
-> +               return 0;
-> +
-> +       for (i = 0; i < op->addr.nbytes; i++) {
-> +               addr = addr << 8;
-> +               addr |= addr_buf[i];
-> +       }
-> +
-> +       return addr;
-> +}
-> +
-> +static unsigned int cqspi_calc_rdreg(struct cqspi_flash_pdata *f_pdata)
-> +{
-> +       u32 rdreg = 0;
-> +
-> +       rdreg |= f_pdata->inst_width << CQSPI_REG_RD_INSTR_TYPE_INSTR_LSB;
-> +       rdreg |= f_pdata->addr_width << CQSPI_REG_RD_INSTR_TYPE_ADDR_LSB;
-> +       rdreg |= f_pdata->data_width << CQSPI_REG_RD_INSTR_TYPE_DATA_LSB;
-> +
-> +       return rdreg;
-> +}
-> +
-> +static int cqspi_wait_idle(struct cqspi_st *cqspi)
-> +{
-> +       const unsigned int poll_idle_retry = 3;
-> +       unsigned int count = 0;
-> +       unsigned long timeout;
-> +
-> +       timeout = jiffies + msecs_to_jiffies(CQSPI_TIMEOUT_MS);
-> +       while (1) {
-> +               /*
-> +                * Read few times in succession to ensure the controller
-> +                * is indeed idle, that is, the bit does not transition
-> +                * low again.
-> +                */
-> +               if (cqspi_is_idle(cqspi))
-> +                       count++;
-> +               else
-> +                       count = 0;
-> +
-> +               if (count >= poll_idle_retry)
-> +                       return 0;
-> +
-> +               if (time_after(jiffies, timeout)) {
-> +                       /* Timeout, in busy mode. */
-> +                       dev_err(&cqspi->pdev->dev,
-> +                               "QSPI is still busy after %dms timeout.\n",
-> +                               CQSPI_TIMEOUT_MS);
-> +                       return -ETIMEDOUT;
-> +               }
-> +
-> +               cpu_relax();
-> +       }
-> +}
-> +
-> +static int cqspi_exec_flash_cmd(struct cqspi_st *cqspi, unsigned int reg)
-> +{
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       int ret;
-> +
-> +       /* Write the CMDCTRL without start execution. */
-> +       writel(reg, reg_base + CQSPI_REG_CMDCTRL);
-> +       /* Start execute */
-> +       reg |= CQSPI_REG_CMDCTRL_EXECUTE_MASK;
-> +       writel(reg, reg_base + CQSPI_REG_CMDCTRL);
-> +
-> +       /* Polling for completion. */
-> +       ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_CMDCTRL,
-> +                                CQSPI_REG_CMDCTRL_INPROGRESS_MASK, 1);
-> +       if (ret) {
-> +               dev_err(&cqspi->pdev->dev,
-> +                       "Flash command execution timed out.\n");
-> +               return ret;
-> +       }
-> +
-> +       /* Polling QSPI idle status. */
-> +       return cqspi_wait_idle(cqspi);
-> +}
-> +
-> +static int cqspi_command_read(struct cqspi_flash_pdata *f_pdata,
-> +                             const struct spi_mem_op *op)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       u8 *rxbuf = op->data.buf.in;
-> +       u8 opcode = op->cmd.opcode;
-> +       size_t n_rx = op->data.nbytes;
-> +       unsigned int rdreg;
-> +       unsigned int reg;
-> +       size_t read_len;
-> +       int status;
-> +
-> +       if (!n_rx || n_rx > CQSPI_STIG_DATA_LEN_MAX || !rxbuf) {
-> +               dev_err(&cqspi->pdev->dev,
-> +                       "Invalid input argument, len %zu rxbuf 0x%p\n",
-> +                       n_rx, rxbuf);
-> +               return -EINVAL;
-> +       }
-> +
-> +       reg = opcode << CQSPI_REG_CMDCTRL_OPCODE_LSB;
-> +
-> +       rdreg = cqspi_calc_rdreg(f_pdata);
-> +       writel(rdreg, reg_base + CQSPI_REG_RD_INSTR);
-> +
-> +       reg |= (0x1 << CQSPI_REG_CMDCTRL_RD_EN_LSB);
-> +
-> +       /* 0 means 1 byte. */
-> +       reg |= (((n_rx - 1) & CQSPI_REG_CMDCTRL_RD_BYTES_MASK)
-> +               << CQSPI_REG_CMDCTRL_RD_BYTES_LSB);
-> +       status = cqspi_exec_flash_cmd(cqspi, reg);
-> +       if (status)
-> +               return status;
-> +
-> +       reg = readl(reg_base + CQSPI_REG_CMDREADDATALOWER);
-> +
-> +       /* Put the read value into rx_buf */
-> +       read_len = (n_rx > 4) ? 4 : n_rx;
-> +       memcpy(rxbuf, &reg, read_len);
-> +       rxbuf += read_len;
-> +
-> +       if (n_rx > 4) {
-> +               reg = readl(reg_base + CQSPI_REG_CMDREADDATAUPPER);
-> +
-> +               read_len = n_rx - read_len;
-> +               memcpy(rxbuf, &reg, read_len);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int cqspi_command_write(struct cqspi_flash_pdata *f_pdata,
-> +                              const struct spi_mem_op *op)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       const u8 opcode = op->cmd.opcode;
-> +       const u8 *txbuf = op->data.buf.out;
-> +       size_t n_tx = op->data.nbytes;
-> +       unsigned int reg;
-> +       unsigned int data;
-> +       size_t write_len;
-> +
-> +       if (n_tx > CQSPI_STIG_DATA_LEN_MAX || (n_tx && !txbuf)) {
-> +               dev_err(&cqspi->pdev->dev,
-> +                       "Invalid input argument, cmdlen %zu txbuf 0x%p\n",
-> +                       n_tx, txbuf);
-> +               return -EINVAL;
-> +       }
-> +
-> +       reg = opcode << CQSPI_REG_CMDCTRL_OPCODE_LSB;
-> +
-> +       if (op->addr.nbytes) {
-> +               reg |= (0x1 << CQSPI_REG_CMDCTRL_ADDR_EN_LSB);
-> +               reg |= ((op->addr.nbytes - 1) & CQSPI_REG_CMDCTRL_ADD_BYTES_MASK)
-> +               << CQSPI_REG_CMDCTRL_ADD_BYTES_LSB;
-> +
-> +               writel(op->addr.val, reg_base + CQSPI_REG_CMDADDRESS);
-> +       }
-> +
-> +       if (n_tx) {
-> +               reg |= (0x1 << CQSPI_REG_CMDCTRL_WR_EN_LSB);
-> +               reg |= ((n_tx - 1) & CQSPI_REG_CMDCTRL_WR_BYTES_MASK)
-> +                       << CQSPI_REG_CMDCTRL_WR_BYTES_LSB;
-> +               data = 0;
-> +               write_len = (n_tx > 4) ? 4 : n_tx;
-> +               memcpy(&data, txbuf, write_len);
-> +               txbuf += write_len;
-> +               writel(data, reg_base + CQSPI_REG_CMDWRITEDATALOWER);
-> +
-> +               if (n_tx > 4) {
-> +                       data = 0;
-> +                       write_len = n_tx - 4;
-> +                       memcpy(&data, txbuf, write_len);
-> +                       writel(data, reg_base + CQSPI_REG_CMDWRITEDATAUPPER);
-> +               }
-> +       }
-> +
-> +       return cqspi_exec_flash_cmd(cqspi, reg);
-> +}
-> +
-> +static int cqspi_read_setup(struct cqspi_flash_pdata *f_pdata,
-> +                           const struct spi_mem_op *op)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       size_t dummy_bytes = op->dummy.nbytes;
-> +       unsigned int reg, addr_value;
-> +       unsigned int dummy_clk = 0;
-> +
-> +       if (op->addr.nbytes && cqspi->soc_selection) {
-> +               addr_value = cqspi_cmd2addr(op);
-> +               writel(addr_value, reg_base + CQSPI_REG_INDIRECTRDSTARTADDR);
-> +       }
-> +
-> +       reg = op->cmd.opcode << CQSPI_REG_RD_INSTR_OPCODE_LSB;
-> +       if (!cqspi->soc_selection) {
-> +               reg |= cqspi_calc_rdreg(f_pdata);
-> +
-> +               /* Setup dummy clock cycles */
-> +               dummy_clk = op->dummy.nbytes * 8;
-> +               if (dummy_clk > CQSPI_DUMMY_CLKS_MAX)
-> +                       dummy_clk = CQSPI_DUMMY_CLKS_MAX;
-> +
-> +               if (dummy_clk / 8)
-> +                       reg |= (dummy_clk & CQSPI_REG_RD_INSTR_DUMMY_MASK)
-> +                              << CQSPI_REG_RD_INSTR_DUMMY_LSB;
-> +       } else {
-> +               reg |= (CQSPI_INST_TYPE_QUAD & CQSPI_REG_RD_INSTR_TYPE_DATA_MASK) <<
-> +                       CQSPI_REG_RD_INSTR_TYPE_DATA_LSB;
-> +
-> +               if (dummy_bytes) {
-> +                       if (dummy_bytes > CQSPI_DUMMY_BYTES_MAX)
-> +                               dummy_bytes = CQSPI_DUMMY_BYTES_MAX;
-> +
-> +                       reg |= BIT(CQSPI_REG_RD_INSTR_MODE_EN_LSB);
-> +                       writel(0xFF, reg_base + CQSPI_REG_MODE_BIT);
-> +
-> +                       dummy_clk = dummy_bytes * CQSPI_DUMMY_CLKS_PER_BYTE;
-> +                       dummy_clk -= CQSPI_DUMMY_CLKS_PER_BYTE;
-> +
-> +                       if (dummy_clk)
-> +                               reg |= (dummy_clk & CQSPI_REG_RD_INSTR_DUMMY_MASK)
-> +                                       << CQSPI_REG_RD_INSTR_DUMMY_LSB;
-> +               }
-> +       }
-> +
-> +       writel(reg, reg_base + CQSPI_REG_RD_INSTR);
-> +
-> +       /* Set address width */
-> +       reg = readl(reg_base + CQSPI_REG_SIZE);
-> +       reg &= ~CQSPI_REG_SIZE_ADDRESS_MASK;
-> +       reg |= (op->addr.nbytes - 1);
-> +       writel(reg, reg_base + CQSPI_REG_SIZE);
-> +       return 0;
-> +}
-> +
-> +static int cqspi_indirect_read_execute(struct cqspi_flash_pdata *f_pdata,
-> +                                      u8 *rxbuf, loff_t from_addr,
-> +                                      const size_t n_rx)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       struct device *dev = &cqspi->pdev->dev;
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       void __iomem *ahb_base = cqspi->ahb_base;
-> +       unsigned int remaining = n_rx;
-> +       unsigned int mod_bytes = n_rx % 4;
-> +       unsigned int bytes_to_read = 0;
-> +       u8 *rxbuf_end = rxbuf + n_rx;
-> +       int ret = 0;
-> +
-> +       writel(from_addr, reg_base + CQSPI_REG_INDIRECTRDSTARTADDR);
-> +       writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
-> +
-> +       /* Clear all interrupts. */
-> +       writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
-> +
-> +       writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
-> +
-> +       reinit_completion(&cqspi->transfer_complete);
-> +       writel(CQSPI_REG_INDIRECTRD_START_MASK,
-> +              reg_base + CQSPI_REG_INDIRECTRD);
-> +
-> +       while (remaining > 0) {
-> +               if (!wait_for_completion_timeout(&cqspi->transfer_complete,
-> +                               msecs_to_jiffies(CQSPI_READ_TIMEOUT_MS)))
-> +                       ret = -ETIMEDOUT;
-> +
-> +               bytes_to_read = cqspi_get_rd_sram_level(cqspi);
-> +
-> +               if (ret && bytes_to_read == 0) {
-> +                       dev_err(dev, "Indirect read timeout, no bytes\n");
-> +                       goto failrd;
-> +               }
-> +
-> +               while (bytes_to_read != 0) {
-> +                       unsigned int word_remain = round_down(remaining, 4);
-> +
-> +                       bytes_to_read *= cqspi->fifo_width;
-> +                       bytes_to_read = bytes_to_read > remaining ?
-> +                                       remaining : bytes_to_read;
-> +                       bytes_to_read = round_down(bytes_to_read, 4);
-> +                       /* Read 4 byte word chunks then single bytes */
-> +                       if (bytes_to_read) {
-> +                               ioread32_rep(ahb_base, rxbuf,
-> +                                            (bytes_to_read / 4));
-> +                       } else if (!word_remain && mod_bytes) {
-> +                               unsigned int temp = ioread32(ahb_base);
-> +
-> +                               bytes_to_read = mod_bytes;
-> +                               memcpy(rxbuf, &temp, min((unsigned int)
-> +                                                        (rxbuf_end - rxbuf),
-> +                                                        bytes_to_read));
-> +                       }
-> +                       rxbuf += bytes_to_read;
-> +                       remaining -= bytes_to_read;
-> +                       bytes_to_read = cqspi_get_rd_sram_level(cqspi);
-> +               }
-> +
-> +               if (remaining > 0)
-> +                       reinit_completion(&cqspi->transfer_complete);
-> +       }
-> +
-> +       /* Check indirect done status */
-> +       ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTRD,
-> +                                CQSPI_REG_INDIRECTRD_DONE_MASK, 0);
-> +       if (ret) {
-> +               dev_err(dev, "Indirect read completion error (%i)\n", ret);
-> +               goto failrd;
-> +       }
-> +
-> +       /* Disable interrupt */
-> +       writel(0, reg_base + CQSPI_REG_IRQMASK);
-> +
-> +       /* Clear indirect completion status */
-> +       writel(CQSPI_REG_INDIRECTRD_DONE_MASK, reg_base + CQSPI_REG_INDIRECTRD);
-> +
-> +       return 0;
-> +
-> +failrd:
-> +       /* Disable interrupt */
-> +       writel(0, reg_base + CQSPI_REG_IRQMASK);
-> +
-> +       /* Cancel the indirect read */
-> +       writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
-> +              reg_base + CQSPI_REG_INDIRECTRD);
-> +       return ret;
-> +}
-> +
-> +static int cqspi_write_setup(struct cqspi_flash_pdata *f_pdata,
-> +                            const struct spi_mem_op *op)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       const u8 *txbuf = &op->cmd.opcode;
-> +       unsigned int reg;
-> +
-> +       if (!cqspi->soc_selection) {
-> +               /* Set opcode. */
-> +               reg = op->cmd.opcode << CQSPI_REG_WR_INSTR_OPCODE_LSB;
-> +               writel(reg, reg_base + CQSPI_REG_WR_INSTR);
-> +               reg = cqspi_calc_rdreg(f_pdata);
-> +               writel(reg, reg_base + CQSPI_REG_RD_INSTR);
-> +       } else {
-> +               reg = readl(reg_base + CQSPI_REG_CONFIG);
-> +               reg &= ~(CQSPI_REG_CONFIG_ENB_DIR_ACC_CTRL);
-> +               reg &= ~(CQSPI_REG_CONFIG_DMA_MASK);
-> +               writel(reg, reg_base + CQSPI_REG_CONFIG);
-> +
-> +               /* Set opcode. */
-> +               reg = txbuf[0] << CQSPI_REG_WR_INSTR_OPCODE_LSB;
-> +               reg |= BIT(CQSPI_REG_WR_CONFIG_WEL_DIS_FLD_POS);
-> +               /* Configure the mode for address */
-> +               reg |= (CQSPI_INST_TYPE_QUAD & CQSPI_REG_WR_INSTR_TYPE_ADDR_MASK) <<
-> +                       CQSPI_REG_WR_INSTR_TYPE_ADDR_LSB;
-> +
-> +               /* Configure the mode for data */
-> +               reg |= (CQSPI_INST_TYPE_QUAD & CQSPI_REG_WR_INSTR_TYPE_DATA_MASK) <<
-> +                       CQSPI_REG_WR_INSTR_TYPE_DATA_LSB;
-> +               writel(reg, reg_base + CQSPI_REG_WR_INSTR);
-> +               /* Setup write address. */
-> +               reg = cqspi_cmd2addr(op);
-> +               writel(reg, reg_base + CQSPI_REG_INDIRECTWRSTARTADDR);
-> +       }
-> +
-> +       reg = readl(reg_base + CQSPI_REG_SIZE);
-> +       reg &= ~CQSPI_REG_SIZE_ADDRESS_MASK;
-> +       reg |= (op->addr.nbytes - 1);
-> +       writel(reg, reg_base + CQSPI_REG_SIZE);
-> +       return 0;
-> +}
-> +
-> +static int cqspi_indirect_write_execute(struct cqspi_flash_pdata *f_pdata,
-> +                                       loff_t to_addr, const u8 *txbuf,
-> +                                       const size_t n_tx)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       struct device *dev = &cqspi->pdev->dev;
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       unsigned int remaining = n_tx;
-> +       unsigned int write_bytes;
-> +       int ret;
-> +
-> +       writel(to_addr, reg_base + CQSPI_REG_INDIRECTWRSTARTADDR);
-> +       writel(remaining, reg_base + CQSPI_REG_INDIRECTWRBYTES);
-> +
-> +       /* Clear all interrupts. */
-> +       writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
-> +
-> +       writel(CQSPI_IRQ_MASK_WR, reg_base + CQSPI_REG_IRQMASK);
-> +
-> +       reinit_completion(&cqspi->transfer_complete);
-> +       writel(CQSPI_REG_INDIRECTWR_START_MASK,
-> +              reg_base + CQSPI_REG_INDIRECTWR);
-> +       /*
-> +        * As per 66AK2G02 TRM SPRUHY8F section 11.15.5.3 Indirect Access
-> +        * Controller programming sequence, couple of cycles of
-> +        * QSPI_REF_CLK delay is required for the above bit to
-> +        * be internally synchronized by the QSPI module. Provide 5
-> +        * cycles of delay.
-> +        */
-> +       if (cqspi->wr_delay)
-> +               ndelay(cqspi->wr_delay);
-> +
-> +       while (remaining > 0) {
-> +               size_t write_words, mod_bytes;
-> +
-> +               write_bytes = remaining;
-> +               write_words = write_bytes / 4;
-> +               mod_bytes = write_bytes % 4;
-> +               /* Write 4 bytes at a time then single bytes. */
-> +               if (write_words) {
-> +                       iowrite32_rep(cqspi->ahb_base, txbuf, write_words);
-> +                       txbuf += (write_words * 4);
-> +               }
-> +               if (mod_bytes) {
-> +                       unsigned int temp = 0xFFFFFFFF;
-> +
-> +                       memcpy(&temp, txbuf, mod_bytes);
-> +                       iowrite32(temp, cqspi->ahb_base);
-> +                       txbuf += mod_bytes;
-> +               }
-> +
-> +               if (!wait_for_completion_timeout(&cqspi->transfer_complete,
-> +                                       msecs_to_jiffies(CQSPI_TIMEOUT_MS))) {
-> +                       dev_err(dev, "Indirect write timeout\n");
-> +                       ret = -ETIMEDOUT;
-> +                       goto failwr;
-> +               }
-> +
-> +               remaining -= write_bytes;
-> +
-> +               if (remaining > 0)
-> +                       reinit_completion(&cqspi->transfer_complete);
-> +       }
-> +
-> +       /* Check indirect done status */
-> +       ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTWR,
-> +                                CQSPI_REG_INDIRECTWR_DONE_MASK, 0);
-> +       if (ret) {
-> +               dev_err(dev, "Indirect write completion error (%i)\n", ret);
-> +               goto failwr;
-> +       }
-> +
-> +       /* Disable interrupt. */
-> +       writel(0, reg_base + CQSPI_REG_IRQMASK);
-> +
-> +       /* Clear indirect completion status */
-> +       writel(CQSPI_REG_INDIRECTWR_DONE_MASK, reg_base + CQSPI_REG_INDIRECTWR);
-> +
-> +       cqspi_wait_idle(cqspi);
-> +
-> +       return 0;
-> +
-> +failwr:
-> +       /* Disable interrupt. */
-> +       writel(0, reg_base + CQSPI_REG_IRQMASK);
-> +
-> +       /* Cancel the indirect write */
-> +       writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
-> +              reg_base + CQSPI_REG_INDIRECTWR);
-> +       return ret;
-> +}
-> +
-> +static void cqspi_chipselect(struct cqspi_flash_pdata *f_pdata)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       unsigned int chip_select = f_pdata->cs;
-> +       unsigned int reg;
-> +
-> +       reg = readl(reg_base + CQSPI_REG_CONFIG);
-> +       reg &= ~CQSPI_REG_CONFIG_DECODE_MASK;
-> +
-> +       /* Convert CS if without decoder.
-> +        * CS0 to 4b'1110
-> +        * CS1 to 4b'1101
-> +        * CS2 to 4b'1011
-> +        * CS3 to 4b'0111
-> +        */
-> +       chip_select = 0xF & ~(1 << chip_select);
-> +
-> +       reg &= ~(CQSPI_REG_CONFIG_CHIPSELECT_MASK
-> +                << CQSPI_REG_CONFIG_CHIPSELECT_LSB);
-> +       reg |= (chip_select & CQSPI_REG_CONFIG_CHIPSELECT_MASK)
-> +           << CQSPI_REG_CONFIG_CHIPSELECT_LSB;
-> +       writel(reg, reg_base + CQSPI_REG_CONFIG);
-> +}
-> +
-> +static unsigned int calculate_ticks_for_ns(const unsigned int ref_clk_hz,
-> +                                          const unsigned int ns_val)
-> +{
-> +       unsigned int ticks;
-> +
-> +       ticks = ref_clk_hz / 1000;      /* kHz */
-> +       ticks = DIV_ROUND_UP(ticks * ns_val, 1000000);
-> +
-> +       return ticks;
-> +}
-> +
-> +static void cqspi_delay(struct cqspi_flash_pdata *f_pdata)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       void __iomem *iobase = cqspi->iobase;
-> +       const unsigned int ref_clk_hz = cqspi->master_ref_clk_hz;
-> +       unsigned int tshsl, tchsh, tslch, tsd2d;
-> +       unsigned int reg;
-> +       unsigned int tsclk;
-> +
-> +       /* calculate the number of ref ticks for one sclk tick */
-> +       tsclk = DIV_ROUND_UP(ref_clk_hz, cqspi->sclk);
-> +
-> +       tshsl = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tshsl_ns);
-> +       /* this particular value must be at least one sclk */
-> +       if (tshsl < tsclk)
-> +               tshsl = tsclk;
-> +
-> +       tchsh = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tchsh_ns);
-> +       tslch = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tslch_ns);
-> +       tsd2d = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tsd2d_ns);
-> +
-> +       reg = (tshsl & CQSPI_REG_DELAY_TSHSL_MASK)
-> +              << CQSPI_REG_DELAY_TSHSL_LSB;
-> +       reg |= (tchsh & CQSPI_REG_DELAY_TCHSH_MASK)
-> +               << CQSPI_REG_DELAY_TCHSH_LSB;
-> +       reg |= (tslch & CQSPI_REG_DELAY_TSLCH_MASK)
-> +               << CQSPI_REG_DELAY_TSLCH_LSB;
-> +       reg |= (tsd2d & CQSPI_REG_DELAY_TSD2D_MASK)
-> +               << CQSPI_REG_DELAY_TSD2D_LSB;
-> +       writel(reg, iobase + CQSPI_REG_DELAY);
-> +}
-> +
-> +static void cqspi_config_baudrate_div(struct cqspi_st *cqspi)
-> +{
-> +       const unsigned int ref_clk_hz = cqspi->master_ref_clk_hz;
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       u32 reg, div;
-> +
-> +       /* Recalculate the baudrate divisor based on QSPI specification. */
-> +       div = DIV_ROUND_UP(ref_clk_hz, 2 * cqspi->sclk) - 1;
-> +
-> +       reg = readl(reg_base + CQSPI_REG_CONFIG);
-> +       reg &= ~(CQSPI_REG_CONFIG_BAUD_MASK << CQSPI_REG_CONFIG_BAUD_LSB);
-> +       reg |= (div & CQSPI_REG_CONFIG_BAUD_MASK) << CQSPI_REG_CONFIG_BAUD_LSB;
-> +       writel(reg, reg_base + CQSPI_REG_CONFIG);
-> +}
-> +
-> +static void cqspi_readdata_capture(struct cqspi_st *cqspi,
-> +                                  const bool bypass,
-> +                                  const unsigned int delay)
-> +{
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       unsigned int reg;
-> +
-> +       reg = readl(reg_base + CQSPI_REG_READCAPTURE);
-> +
-> +       if (bypass)
-> +               reg |= (1 << CQSPI_REG_READCAPTURE_BYPASS_LSB);
-> +       else
-> +               reg &= ~(1 << CQSPI_REG_READCAPTURE_BYPASS_LSB);
-> +
-> +       reg &= ~(CQSPI_REG_READCAPTURE_DELAY_MASK
-> +                << CQSPI_REG_READCAPTURE_DELAY_LSB);
-> +
-> +       reg |= (delay & CQSPI_REG_READCAPTURE_DELAY_MASK)
-> +               << CQSPI_REG_READCAPTURE_DELAY_LSB;
-> +
-> +       writel(reg, reg_base + CQSPI_REG_READCAPTURE);
-> +}
-> +
-> +static void cqspi_controller_enable(struct cqspi_st *cqspi, bool enable)
-> +{
-> +       void __iomem *reg_base = cqspi->iobase;
-> +       unsigned int reg;
-> +
-> +       reg = readl(reg_base + CQSPI_REG_CONFIG);
-> +
-> +       if (enable)
-> +               reg |= CQSPI_REG_CONFIG_ENABLE_MASK;
-> +       else
-> +               reg &= ~CQSPI_REG_CONFIG_ENABLE_MASK;
-> +
-> +       writel(reg, reg_base + CQSPI_REG_CONFIG);
-> +}
-> +
-> +static void cqspi_configure(struct cqspi_flash_pdata *f_pdata,
-> +                           unsigned long sclk)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       int switch_cs = (cqspi->current_cs != f_pdata->cs);
-> +       int switch_ck = (cqspi->sclk != sclk);
-> +
-> +       if (switch_cs || switch_ck)
-> +               cqspi_controller_enable(cqspi, 0);
-> +
-> +       /* Switch chip select. */
-> +       if (switch_cs) {
-> +               cqspi->current_cs = f_pdata->cs;
-> +               cqspi_chipselect(f_pdata);
-> +       }
-> +
-> +       /* Setup baudrate divisor and delays */
-> +       if (switch_ck) {
-> +               cqspi->sclk = sclk;
-> +               cqspi_config_baudrate_div(cqspi);
-> +               cqspi_delay(f_pdata);
-> +               cqspi_readdata_capture(cqspi, !cqspi->rclk_en,
-> +                                      f_pdata->read_delay);
-> +       }
-> +
-> +       if (switch_cs || switch_ck)
-> +               cqspi_controller_enable(cqspi, 1);
-> +}
-> +
-> +static int cqspi_set_protocol(struct cqspi_flash_pdata *f_pdata,
-> +                             const struct spi_mem_op *op)
-> +{
-> +       f_pdata->inst_width = CQSPI_INST_TYPE_SINGLE;
-> +       f_pdata->addr_width = CQSPI_INST_TYPE_SINGLE;
-> +       f_pdata->data_width = CQSPI_INST_TYPE_SINGLE;
-> +
-> +       if (op->data.dir == SPI_MEM_DATA_IN) {
-> +               switch (op->data.buswidth) {
-> +               case 1:
-> +                       f_pdata->data_width = CQSPI_INST_TYPE_SINGLE;
-> +                       break;
-> +               case 2:
-> +                       f_pdata->data_width = CQSPI_INST_TYPE_DUAL;
-> +                       break;
-> +               case 4:
-> +                       f_pdata->data_width = CQSPI_INST_TYPE_QUAD;
-> +                       break;
-> +               case 8:
-> +                       f_pdata->data_width = CQSPI_INST_TYPE_OCTAL;
-> +                       break;
-> +               default:
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static ssize_t cqspi_write(struct cqspi_flash_pdata *f_pdata,
-> +                          const struct spi_mem_op *op)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       loff_t to = op->addr.val;
-> +       size_t len = op->data.nbytes;
-> +       const u_char *buf = op->data.buf.out;
-> +       int ret;
-> +
-> +       ret = cqspi_set_protocol(f_pdata, op);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = cqspi_write_setup(f_pdata, op);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (cqspi->use_dac_mode && ((to + len) <= cqspi->ahb_size)) {
-> +               memcpy_toio(cqspi->ahb_base + to, buf, len);
-> +               return cqspi_wait_idle(cqspi);
-> +       }
-> +
-> +       return cqspi_indirect_write_execute(f_pdata, to, buf, len);
-> +}
-> +
-> +static void cqspi_rx_dma_callback(void *param)
-> +{
-> +       struct cqspi_st *cqspi = param;
-> +
-> +       complete(&cqspi->rx_dma_complete);
-> +}
-> +
-> +static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
-> +                                    u_char *buf, loff_t from, size_t len)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       struct device *ddev = cqspi->rx_chan->device->dev;
-> +       enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> +       dma_addr_t dma_src = (dma_addr_t)cqspi->mmap_phys_base + from;
-> +       int ret = 0;
-> +       struct dma_async_tx_descriptor *tx;
-> +       dma_cookie_t cookie;
-> +       dma_addr_t dma_dst;
-> +
-> +       if (!cqspi->rx_chan || !virt_addr_valid(buf)) {
-> +               memcpy_fromio(buf, cqspi->ahb_base + from, len);
-> +               return 0;
-> +       }
-> +
-> +       dma_dst = dma_map_single(ddev, buf, len, DMA_FROM_DEVICE);
-> +       if (dma_mapping_error(ddev, dma_dst)) {
-> +               dev_err(ddev, "dma mapping failed\n");
-> +               return -ENOMEM;
-> +       }
-> +       tx = dmaengine_prep_dma_memcpy(cqspi->rx_chan, dma_dst, dma_src,
-> +                                      len, flags);
-> +       if (!tx) {
-> +               dev_err(ddev, "device_prep_dma_memcpy error\n");
-> +               ret = -EIO;
-> +               goto err_unmap;
-> +       }
-> +
-> +       tx->callback = cqspi_rx_dma_callback;
-> +       tx->callback_param = cqspi;
-> +       cookie = tx->tx_submit(tx);
-> +       reinit_completion(&cqspi->rx_dma_complete);
-> +
-> +       ret = dma_submit_error(cookie);
-> +       if (ret) {
-> +               dev_err(ddev, "dma_submit_error %d\n", cookie);
-> +               ret = -EIO;
-> +               goto err_unmap;
-> +       }
-> +
-> +       dma_async_issue_pending(cqspi->rx_chan);
-> +       if (!wait_for_completion_timeout(&cqspi->rx_dma_complete,
-> +                                        msecs_to_jiffies(len))) {
-> +               dmaengine_terminate_sync(cqspi->rx_chan);
-> +               dev_err(ddev, "DMA wait_for_completion_timeout\n");
-> +               ret = -ETIMEDOUT;
-> +               goto err_unmap;
-> +       }
-> +
-> +err_unmap:
-> +       dma_unmap_single(ddev, dma_dst, len, DMA_FROM_DEVICE);
-> +
-> +       return ret;
-> +}
-> +
-> +static ssize_t cqspi_read(struct cqspi_flash_pdata *f_pdata,
-> +                         const struct spi_mem_op *op)
-> +{
-> +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> +       loff_t from = op->addr.val;
-> +       size_t len = op->data.nbytes;
-> +       u_char *buf = op->data.buf.in;
-> +       int ret;
-> +
-> +       ret = cqspi_set_protocol(f_pdata, op);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = cqspi_read_setup(f_pdata, op);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (cqspi->use_dac_mode && ((from + len) <= cqspi->ahb_size))
-> +               return cqspi_direct_read_execute(f_pdata, buf, from, len);
-> +
-> +       return cqspi_indirect_read_execute(f_pdata, buf, from, len);
-> +}
-> +
-> +static int cqspi_mem_process(struct spi_mem *mem, const struct spi_mem_op *op)
-> +{
-> +       struct cqspi_st *cqspi = spi_master_get_devdata(mem->spi->master);
-> +       struct cqspi_flash_pdata *f_pdata;
-> +
-> +       f_pdata = &cqspi->f_pdata[mem->spi->chip_select];
-> +       cqspi_configure(f_pdata, mem->spi->max_speed_hz);
-> +
-> +       if (op->data.dir == SPI_MEM_DATA_IN && op->data.buf.in) {
-> +               if (!op->addr.nbytes)
-> +                       return cqspi_command_read(f_pdata, op);
-> +
-> +               return cqspi_read(f_pdata, op);
-> +       }
-> +
-> +       if (!op->addr.nbytes || !op->data.buf.out)
-> +               return cqspi_command_write(f_pdata, op);
-> +
-> +       return cqspi_write(f_pdata, op);
-> +}
-> +
-> +static int cqspi_exec_mem_op(struct spi_mem *mem, const struct spi_mem_op *op)
-> +{
-> +       int ret;
-> +
-> +       ret = cqspi_mem_process(mem, op);
-> +       if (ret)
-> +               dev_err(&mem->spi->dev, "operation failed with %d\n", ret);
-> +
-> +       return ret;
-> +}
-> +
-> +static int cqspi_of_get_flash_pdata(struct platform_device *pdev,
-> +                                   struct cqspi_flash_pdata *f_pdata,
-> +                                   struct device_node *np)
-> +{
-> +       if (of_property_read_u32(np, "cdns,read-delay", &f_pdata->read_delay)) {
-> +               dev_err(&pdev->dev, "couldn't determine read-delay\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       if (of_property_read_u32(np, "cdns,tshsl-ns", &f_pdata->tshsl_ns)) {
-> +               dev_err(&pdev->dev, "couldn't determine tshsl-ns\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       if (of_property_read_u32(np, "cdns,tsd2d-ns", &f_pdata->tsd2d_ns)) {
-> +               dev_err(&pdev->dev, "couldn't determine tsd2d-ns\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       if (of_property_read_u32(np, "cdns,tchsh-ns", &f_pdata->tchsh_ns)) {
-> +               dev_err(&pdev->dev, "couldn't determine tchsh-ns\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       if (of_property_read_u32(np, "cdns,tslch-ns", &f_pdata->tslch_ns)) {
-> +               dev_err(&pdev->dev, "couldn't determine tslch-ns\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       if (of_property_read_u32(np, "spi-max-frequency", &f_pdata->clk_rate)) {
-> +               dev_err(&pdev->dev, "couldn't determine spi-max-frequency\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int cqspi_of_get_pdata(struct cqspi_st *cqspi)
-> +{
-> +       struct device *dev = &cqspi->pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +
-> +       if (of_property_read_u32(np, "cdns,fifo-depth", &cqspi->fifo_depth)) {
-> +               dev_err(dev, "couldn't determine fifo-depth\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       if (of_property_read_u32(np, "cdns,fifo-width", &cqspi->fifo_width)) {
-> +               dev_err(dev, "couldn't determine fifo-width\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       if (of_property_read_u32(np, "cdns,trigger-address",
-> +                                &cqspi->trigger_address)) {
-> +               dev_err(dev, "couldn't determine trigger-address\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       if (!cqspi->soc_selection)
-> +               cqspi->rclk_en = of_property_read_bool(np, "cdns,rclk-en");
-> +
-> +       return 0;
-> +}
-> +
-> +static void cqspi_controller_init(struct cqspi_st *cqspi)
-> +{
-> +       cqspi_controller_enable(cqspi, 0);
-> +
-> +       /* Configure the remap address register, no remap */
-> +       writel(0, cqspi->iobase + CQSPI_REG_REMAP);
-> +
-> +       /* Disable all interrupts. */
-> +       writel(0, cqspi->iobase + CQSPI_REG_IRQMASK);
-> +
-> +       /* Configure the SRAM split to 1:1 . */
-> +       writel(cqspi->fifo_depth / 2, cqspi->iobase + CQSPI_REG_SRAMPARTITION);
-> +
-> +       /* Load indirect trigger address. */
-> +       writel(cqspi->trigger_address,
-> +              cqspi->iobase + CQSPI_REG_INDIRECTTRIGGER);
-> +
-> +       /* Program read watermark -- 1/2 of the FIFO. */
-> +       writel(cqspi->fifo_depth * cqspi->fifo_width / 2,
-> +              cqspi->iobase + CQSPI_REG_INDIRECTRDWATERMARK);
-> +       /* Program write watermark -- 1/8 of the FIFO. */
-> +       writel(cqspi->fifo_depth * cqspi->fifo_width / 8,
-> +              cqspi->iobase + CQSPI_REG_INDIRECTWRWATERMARK);
-> +
-> +       if (!cqspi->use_dac_mode) {
-> +               u32 reg;
-> +
-> +               reg = readl(cqspi->iobase + CQSPI_REG_CONFIG);
-> +               reg &= ~CQSPI_REG_CONFIG_ENB_DIR_ACC_CTRL;
-> +               writel(reg, cqspi->iobase + CQSPI_REG_CONFIG);
-> +
-> +               reg = readl(cqspi->iobase + CQSPI_REG_WR_COMPLETION_CTRL);
-> +               reg |= CQSPI_REG_WR_DISABLE_AUTO_POLL;
-> +               writel(reg, cqspi->iobase + CQSPI_REG_WR_COMPLETION_CTRL);
-> +       }
-> +
-> +       cqspi_controller_enable(cqspi, 1);
-> +}
-> +
-> +static int cqspi_request_mmap_dma(struct cqspi_st *cqspi)
-> +{
-> +       dma_cap_mask_t mask;
-> +
-> +       dma_cap_zero(mask);
-> +       dma_cap_set(DMA_MEMCPY, mask);
-> +
-> +       cqspi->rx_chan = dma_request_chan_by_mask(&mask);
-> +       if (IS_ERR(cqspi->rx_chan)) {
-> +               int ret = PTR_ERR(cqspi->rx_chan);
-> +
-> +               if (ret != -EPROBE_DEFER)
-> +                       dev_err(&cqspi->pdev->dev, "No Rx DMA available\n");
-> +               cqspi->rx_chan = NULL;
-> +
-> +               return ret;
-> +       }
-> +       init_completion(&cqspi->rx_dma_complete);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct spi_controller_mem_ops cqspi_mem_ops = {
-> +       .exec_op = cqspi_exec_mem_op,
-> +};
-> +
-> +static int cqspi_setup_flash(struct cqspi_st *cqspi)
-> +{
-> +       struct platform_device *pdev = cqspi->pdev;
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +       struct cqspi_flash_pdata *f_pdata;
-> +       unsigned int cs;
-> +       int ret;
-> +
-> +       /* Get flash device data */
-> +       for_each_available_child_of_node(dev->of_node, np) {
-> +               ret = of_property_read_u32(np, "reg", &cs);
-> +               if (ret) {
-> +                       dev_err(dev, "Couldn't determine chip select.\n");
-> +                       return -EINVAL;
-> +               }
-> +
-> +               if (cs >= CQSPI_MAX_CHIPSELECT) {
-> +                       dev_err(dev, "Chip select %d out of range.\n", cs);
-> +                       return -EINVAL;
-> +               }
-> +
-> +               f_pdata = &cqspi->f_pdata[cs];
-> +               f_pdata->cqspi = cqspi;
-> +               f_pdata->cs = cs;
-> +
-> +               return cqspi_of_get_flash_pdata(pdev, f_pdata, np);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int cqspi_probe(struct platform_device *pdev)
-> +{
-> +       const struct cqspi_driver_platdata *ddata;
-> +       struct reset_control *rstc, *rstc_ocp;
-> +       struct device *dev = &pdev->dev;
-> +       struct spi_master *master;
-> +       struct resource *res_ahb;
-> +       struct cqspi_st *cqspi;
-> +       struct resource *res;
-> +       int ret;
-> +       int irq;
-> +
-> +       master = spi_alloc_master(&pdev->dev, sizeof(*cqspi));
-> +       if (!master) {
-> +               dev_err(&pdev->dev, "spi_alloc_master failed\n");
-> +               return -ENOMEM;
-> +       }
-> +       master->mode_bits = SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL;
-> +       master->mem_ops = &cqspi_mem_ops;
-> +       master->dev.of_node = pdev->dev.of_node;
-> +
-> +       cqspi = spi_master_get_devdata(master);
-> +
-> +       cqspi->pdev = pdev;
-> +
-> +       ddata  = of_device_get_match_data(dev);
-> +       if (ddata->quirks & CQSPI_DISABLE_DAC_MODE)
-> +               cqspi->soc_selection = true;
-> +
-> +       /* Obtain configuration from OF. */
-> +       ret = cqspi_of_get_pdata(cqspi);
-> +       if (ret) {
-> +               dev_err(dev, "Cannot get mandatory OF data.\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       /* Obtain QSPI clock. */
-> +       cqspi->clk = devm_clk_get(dev, NULL);
-> +       if (IS_ERR(cqspi->clk)) {
-> +               dev_err(dev, "Cannot claim QSPI clock.\n");
-> +               return PTR_ERR(cqspi->clk);
-> +       }
-> +
-> +       /* Obtain and remap controller address. */
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       cqspi->iobase = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(cqspi->iobase)) {
-> +               dev_err(dev, "Cannot remap controller address.\n");
-> +               return PTR_ERR(cqspi->iobase);
-> +       }
-> +
-> +       /* Obtain and remap AHB address. */
-> +       res_ahb = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       cqspi->ahb_base = devm_ioremap_resource(dev, res_ahb);
-> +       if (IS_ERR(cqspi->ahb_base)) {
-> +               dev_err(dev, "Cannot remap AHB address.\n");
-> +               return PTR_ERR(cqspi->ahb_base);
-> +       }
-> +       cqspi->mmap_phys_base = (dma_addr_t)res_ahb->start;
-> +       cqspi->ahb_size = resource_size(res_ahb);
-> +
-> +       init_completion(&cqspi->transfer_complete);
-> +
-> +       /* Obtain IRQ line. */
-> +       irq = platform_get_irq(pdev, 0);
-> +       if (irq < 0)
-> +               return -ENXIO;
-> +
-> +       pm_runtime_enable(dev);
-> +       ret = pm_runtime_get_sync(dev);
-> +       if (ret < 0) {
-> +               pm_runtime_put_noidle(dev);
-> +               return ret;
-> +       }
-> +
-> +       ret = clk_prepare_enable(cqspi->clk);
-> +       if (ret) {
-> +               dev_err(dev, "Cannot enable QSPI clock.\n");
-> +               goto probe_clk_failed;
-> +       }
-> +
-> +       /* Obtain QSPI reset control */
-> +       rstc = devm_reset_control_get_optional_exclusive(dev, "qspi");
-> +       if (IS_ERR(rstc)) {
-> +               dev_err(dev, "Cannot get QSPI reset.\n");
-> +               goto probe_reset_failed;
-> +       }
-> +
-> +       rstc_ocp = devm_reset_control_get_optional_exclusive(dev, "qspi-ocp");
-> +       if (IS_ERR(rstc_ocp)) {
-> +               dev_err(dev, "Cannot get QSPI OCP reset.\n");
-> +               goto probe_reset_failed;
-> +       }
-> +
-> +       reset_control_assert(rstc);
-> +       reset_control_deassert(rstc);
-> +
-> +       reset_control_assert(rstc_ocp);
-> +       reset_control_deassert(rstc_ocp);
-> +
-> +       cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
-> +       ddata  = of_device_get_match_data(dev);
-> +       if (ddata) {
-> +               if (ddata->quirks & CQSPI_NEEDS_WR_DELAY)
-> +                       cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
-> +                                               cqspi->master_ref_clk_hz);
-> +               if (ddata->hwcaps_mask & CQSPI_SUPPORTS_OCTAL)
-> +                       master->mode_bits |= SPI_RX_OCTAL;
-> +               if (!(ddata->quirks & CQSPI_DISABLE_DAC_MODE))
-> +                       cqspi->use_dac_mode = true;
-> +       }
-> +
-> +       ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
-> +                              pdev->name, cqspi);
-> +       if (ret) {
-> +               dev_err(dev, "Cannot request IRQ.\n");
-> +               goto probe_reset_failed;
-> +       }
-> +
-> +       cqspi_wait_idle(cqspi);
-> +       cqspi_controller_init(cqspi);
-> +       cqspi->current_cs = -1;
-> +       cqspi->sclk = 0;
-> +
-> +       ret = cqspi_setup_flash(cqspi);
-> +       if (ret) {
-> +               dev_err(dev, "failed to setup flash parameters %d\n", ret);
-> +               goto probe_setup_failed;
-> +       }
-> +
-> +       if (cqspi->use_dac_mode) {
-> +               ret = cqspi_request_mmap_dma(cqspi);
-> +               if (ret == -EPROBE_DEFER)
-> +                       goto probe_setup_failed;
-> +       }
-> +
-> +       ret = devm_spi_register_master(dev, master);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "failed to register SPI ctlr %d\n", ret);
-> +               goto probe_setup_failed;
-> +       }
-> +
-> +       return 0;
-> +probe_setup_failed:
-> +       cqspi_controller_enable(cqspi, 0);
-> +probe_reset_failed:
-> +       clk_disable_unprepare(cqspi->clk);
-> +probe_clk_failed:
-> +       pm_runtime_put_sync(dev);
-> +       pm_runtime_disable(dev);
-> +       return ret;
-> +}
-> +
-> +static int cqspi_remove(struct platform_device *pdev)
-> +{
-> +       struct cqspi_st *cqspi = platform_get_drvdata(pdev);
-> +
-> +       cqspi_controller_enable(cqspi, 0);
-> +
-> +       if (cqspi->rx_chan)
-> +               dma_release_channel(cqspi->rx_chan);
-> +
-> +       clk_disable_unprepare(cqspi->clk);
-> +
-> +       pm_runtime_put_sync(&pdev->dev);
-> +       pm_runtime_disable(&pdev->dev);
-> +
-> +       return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int cqspi_suspend(struct device *dev)
-> +{
-> +       struct cqspi_st *cqspi = dev_get_drvdata(dev);
-> +
-> +       cqspi_controller_enable(cqspi, 0);
-> +       return 0;
-> +}
-> +
-> +static int cqspi_resume(struct device *dev)
-> +{
-> +       struct cqspi_st *cqspi = dev_get_drvdata(dev);
-> +
-> +       cqspi_controller_enable(cqspi, 1);
-> +       return 0;
-> +}
-> +
-> +static const struct dev_pm_ops cqspi__dev_pm_ops = {
-> +       .suspend = cqspi_suspend,
-> +       .resume = cqspi_resume,
-> +};
-> +
-> +#define CQSPI_DEV_PM_OPS       (&cqspi__dev_pm_ops)
-> +#else
-> +#define CQSPI_DEV_PM_OPS       NULL
-> +#endif
-> +
-> +static const struct cqspi_driver_platdata cdns_qspi = {
-> +       .quirks = CQSPI_DISABLE_DAC_MODE,
-> +};
-> +
-> +static const struct cqspi_driver_platdata k2g_qspi = {
-> +       .quirks = CQSPI_NEEDS_WR_DELAY,
-> +};
-> +
-> +static const struct cqspi_driver_platdata am654_ospi = {
-> +       .hwcaps_mask = CQSPI_SUPPORTS_OCTAL,
-> +       .quirks = CQSPI_NEEDS_WR_DELAY,
-> +};
-> +
-> +static const struct cqspi_driver_platdata intel_lgm_qspi = {
-> +       .quirks = CQSPI_DISABLE_DAC_MODE,
-> +};
-> +
-> +static const struct of_device_id cqspi_dt_ids[] = {
-> +       {
-> +               .compatible = "cdns,qspi-nor",
-> +               .data = &cdns_qspi,
-> +       },
-> +       {
-> +               .compatible = "ti,k2g-qspi",
-> +               .data = &k2g_qspi,
-> +       },
-> +       {
-> +               .compatible = "ti,am654-ospi",
-> +               .data = &am654_ospi,
-> +       },
-> +       {
-> +               .compatible = "intel,lgm-qspi",
-> +               .data = &intel_lgm_qspi,
-> +       },
-> +       { /* end of table */ }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, cqspi_dt_ids);
-> +
-> +static struct platform_driver cqspi_platform_driver = {
-> +       .probe = cqspi_probe,
-> +       .remove = cqspi_remove,
-> +       .driver = {
-> +               .name = CQSPI_NAME,
-> +               .pm = CQSPI_DEV_PM_OPS,
-> +               .of_match_table = cqspi_dt_ids,
-> +       },
-> +};
-> +
-> +module_platform_driver(cqspi_platform_driver);
-> +
-> +MODULE_DESCRIPTION("Cadence QSPI Controller Driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:" CQSPI_NAME);
-> +MODULE_AUTHOR("Ley Foon Tan <lftan@altera.com>");
-> +MODULE_AUTHOR("Graham Moore <grmoore@opensource.altera.com>");
-> +MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@intel.com>");
-> +MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
-> --
-> 2.11.0
->
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46=
+:
+
+  Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.6-1
+
+for you to fetch changes up to 122ce22cb37b087e7e28ebb16044a622b0a22233:
+
+  pinctrl: madera: Remove extra blank line (2020-01-24 00:31:41 +0100)
+
+----------------------------------------------------------------
+This is the bulk of pin control changes for the v5.6 kernel cycle:
+
+Core changes:
+
+- Dropped the chained IRQ setup callback into GPIOLIB as we
+  got rid of the last users of that in this changeset.
+
+New drivers:
+
+- New driver for Ingenic X1830.
+
+- New driver for Freescale i.MX8MP.
+
+Driver enhancements:
+
+- Fix all remaining Intel drivers to pass their IRQ chips
+  along with the GPIO chips.
+
+- Intel Baytrail allocates its irqchip dynamically.
+
+- Intel Lynxpoint is thoroughly rewritten and modernized.
+
+- Aspeed AST2600 pin muxing and configuration is much
+  improved.
+
+- Qualcomm SC7180 functions are updated and wakeup interrupt
+  map is provided.
+
+- A whole slew of Renesas SH-PFC cleanups and improvements.
+
+- Fix up the Intel DT bindings to use the generic YAML
+  DT bindings schema. (A first user of this.)
+
+----------------------------------------------------------------
+Andrew Jeffery (1):
+      dt-bindings: pinctrl: aspeed-g6: Add USB functions and groups
+
+Andy Shevchenko (31):
+      pinctrl: baytrail: Allocate IRQ chip dynamic
+      pinctrl: baytrail: Group GPIO IRQ chip initialization
+      pinctrl: baytrail: Move IRQ valid mask initialization to a
+dedicated callback
+      pinctrl: intel: Share struct intel_pinctrl for wider use
+      pinctrl: baytrail: Keep pointer to struct device instead of its conta=
+iner
+      pinctrl: baytrail: Use local variable to keep device pointer
+      pinctrl: baytrail: Reuse struct intel_pinctrl in the driver
+      pinctrl: lynxpoint: Move GPIO driver to pin controller folder
+      pinctrl: lynxpoint: Use raw_spinlock for locking
+      pinctrl: lynxpoint: Correct amount of pins
+      pinctrl: lynxpoint: Drop useless assignment
+      pinctrl: lynxpoint: Use %pR to print IO resource
+      pinctrl: lynxpoint: Use standard pattern for memory allocation
+      pinctrl: lynxpoint: Assume 2 bits for mode selector
+      pinctrl: lynxpoint: Relax GPIO request rules
+      pinctrl: lynxpoint: Keep pointer to struct device instead of its cont=
+ainer
+      pinctrl: lynxpoint: Switch to memory mapped IO accessors
+      pinctrl: lynxpoint: Convert unsigned to unsigned int
+      pinctrl: lynxpoint: Extract lp_gpio_acpi_use() for future use
+      pinctrl: lynxpoint: Move ->remove closer to ->probe()
+      pinctrl: lynxpoint: Move lp_irq_type() closer to IRQ related routines
+      pinctrl: lynxpoint: Move ownership check to IRQ chip
+      pinctrl: lynxpoint: Implement ->irq_ack() callback
+      pinctrl: lynxpoint: Implement intel_gpio_get_direction callback
+      pinctrl: lynxpoint: Add pin control data structures
+      pinctrl: lynxpoint: Reuse struct intel_pinctrl in the driver
+      pinctrl: lynxpoint: Add pin control operations
+      pinctrl: lynxpoint: Implement ->pin_dbg_show()
+      pinctrl: lynxpoint: Add GPIO <-> pin mapping ranges via callback
+      pinctrl: lynxpoint: Switch to pin control API
+      pinctrl: lynxpoint: Update summary in the driver
+
+Anson Huang (2):
+      dt-bindings: imx: Add pinctrl binding doc for i.MX8MP
+      pinctrl: freescale: Add i.MX8MP pinctrl driver support
+
+Ben Dooks (Codethink) (4):
+      pinctrl: tegra: fix missing __iomem in suspend/resume
+      pinctrl: actions: remove duplicate dsi entry
+      pinctrl: qcom: make 'm_voc_groups' static
+      pinctrl: artpec6: fix __iomem on reg in set
+
+Boyan Ding (1):
+      pinctrl: sunrisepoint: Add missing Interrupt Status register offset
+
+Charles Keepax (1):
+      pinctrl: madera: Remove extra blank line
+
+Chris Brandt (1):
+      pinctrl: rza1: Reduce printed messages
+
+Geert Uytterhoeven (10):
+      pinctrl: sh-pfc: Make legacy function GPIO handling less fragile
+      pinctrl: sh-pfc: Remove use of ARCH_R8A7796
+      pinctrl: sh-pfc: r8a77965: Fix DU_DOTCLKIN3 drive/bias control
+      pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
+      pinctrl: sh-pfc: sh7264: Fix Port K I/O Register 0 definition
+      pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
+      pinctrl: sh-pfc: sh7269: Fix CAN function GPIOs
+      sh: sh7264: Remove bogus SSU GPIO function definitions
+      sh: sh7269: Remove bogus SSU GPIO function definitions
+      pinctrl: sh-pfc: Split R-Car H3 support in two independent drivers
+
+Hamish Martin (1):
+      pinctrl: iproc: Set irq handler based on trig type
+
+Hans de Goede (3):
+      pinctrl: Allow modules to use pinctrl_[un]register_mappings
+      pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
+      pinctrl: baytrail: Replace WARN with dev_info_once when setting
+direct-irq pin to output
+
+Johnny Huang (6):
+      pinctrl: aspeed-g6: Add AST2600 I3C1 and I3C2 pinmux config
+      pinctrl: aspeed-g6: Add support for the AST2600 USB pinmux
+      pinctrl: aspeed: Add ASPEED_SB_PINCONF() helper
+      pinctrl: aspeed: Move aspeed_pin_config_map to separate source file
+      pinctrl: aspeed: Use masks to describe pinconf bitfields
+      pinctrl: aspeed-g6: Add AST2600 pinconf support
+
+Julia Lawall (3):
+      pinctrl: ssbi-mpp: constify copied structure
+      pinctrl: qcom: ssbi-gpio: constify copied structure
+      pinctrl: nuvoton: npcm7xx: constify copied structure
+
+Krzysztof Kozlowski (3):
+      pinctrl: samsung: Enable compile test for build coverage
+      pinctrl: samsung: Clarify the option titles/names
+      pinctrl: samsung: Fix missing OF and GPIOLIB dependency on
+S3C24xx and S3C64xx
+
+Linus Walleij (10):
+      Merge branch 'ib-pinctrl-default-state' into devel
+      Merge tag 'v5.5-rc3' into devel
+      Merge branch 'ib-pinctrl-unreg-mappings' into devel
+      Merge tag 'sh-pfc-for-v5.6-tag1' of
+git://git.kernel.org/.../geert/renesas-drivers into devel
+      pinctrl: intel: Add GPIO <-> pin mapping ranges via callback
+      pinctrl: intel: Pass irqchip when adding gpiochip
+      pinctrl: dt-bindings: Fix some errors in the lgm and pinmux schema
+      Merge tag 'samsung-pinctrl-5.6' of
+https://git.kernel.org/.../pinctrl/samsung into devel
+      Merge tag 'intel-pinctrl-v5.6-1' of
+git://git.kernel.org/.../pinctrl/intel into devel
+      gpio: Drop the chained IRQ handler assign function
+
+Ma Feng (1):
+      pinctrl: armada-37xx: Remove unneeded semicolon
+
+Martin Blumenstingl (1):
+      pinctrl: meson: meson8b: add the GPIOH pinmux settings for ETH_RXD{2,=
+3}
+
+Matti Vaittinen (3):
+      pinctrl: baytrail: Use GPIO direction definitions
+      pinctrl: cherryview: Use GPIO direction definitions
+      pinctrl: intel: Use GPIO direction definitions
+
+Maulik Shah (1):
+      pinctrl: qcom: sc7180: Add GPIO wakeup interrupt map
+
+Mika Westerberg (2):
+      pinctrl: sunrisepoint: Add Coffee Lake-S ACPI ID
+      pinctrl: tigerlake: Tiger Lake uses _HID enumeration
+
+Nishad Kamdar (3):
+      pinctrl: mediatek: Use the correct style for SPDX License Identifier
+      pinctrl: meson-axg: Use the correct style for SPDX License Identifier
+      pinctrl: stm32: Use the correct style for SPDX License Identifier
+
+Paul Cercueil (5):
+      pinctrl: ingenic: Remove platform ID table
+      pinctrl: ingenic: Put ingenic_chip_info pointer in match data
+      pinctrl: ingenic: Remove duplicated ingenic_chip_info structures
+      pinctrl: ingenic: Factorize irq_set_type function
+      pinctrl: ingenic: Use devm_platform_ioremap_resource()
+
+Peng Fan (2):
+      pinctrl: sunxi: sun50i-h5 use platform_irq_count
+      pinctrl: mvebu: armada-37xx: use use platform api
+
+Rahul Tanwar (1):
+      dt-bindings: pinctrl: intel: Update to use generic bindings
+
+Rajendra Nayak (2):
+      dt-bindings: pinctrl: qcom: Add new qup functions for sc7180
+      pinctrl: qcom: sc7180: Add new qup functions
+
+Rayagonda Kokatanur (1):
+      pinctrl: iproc: Use platform_get_irq_optional() to avoid error messag=
+e
+
+Stephen Boyd (1):
+      pinctrl: qcom: Don't lock around irq_set_irq_wake()
+
+Ulf Hansson (1):
+      pinctrl: core: Add pinctrl_select_default_state() and export it
+
+=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) (5):
+      pinctrl: Ingenic: Fix bugs in X1000 and X1500.
+      pinctrl: Ingenic: Add missing parts for X1000 and X1500.
+      pinctrl: Ingenic: Introduce reg_offset and use it instead hard code.
+      dt-bindings: pinctrl: Add bindings for Ingenic X1830.
+      pinctrl: Ingenic: Add pinctrl driver for X1830.
+
+ .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml   |   9 +-
+ .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml       |  69 ++
+ .../bindings/pinctrl/ingenic,pinctrl.txt           |   8 +-
+ .../devicetree/bindings/pinctrl/intel,lgm-io.yaml  |  75 ++
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 ---
+ .../devicetree/bindings/pinctrl/pinmux-node.yaml   |   2 +-
+ .../bindings/pinctrl/qcom,sc7180-pinctrl.txt       |   5 +-
+ Documentation/driver-api/gpio/driver.rst           |   5 -
+ MAINTAINERS                                        |   1 -
+ arch/arm/mach-u300/core.c                          |   2 +-
+ arch/sh/include/cpu-sh2a/cpu/sh7264.h              |   6 -
+ arch/sh/include/cpu-sh2a/cpu/sh7269.h              |  17 +-
+ drivers/gpio/Kconfig                               |   8 -
+ drivers/gpio/Makefile                              |   1 -
+ drivers/gpio/gpio-lynxpoint.c                      | 471 ----------
+ drivers/gpio/gpio-mt7621.c                         |   3 +-
+ drivers/gpio/gpio-xgs-iproc.c                      |   3 +-
+ drivers/gpio/gpiolib.c                             |  25 +-
+ drivers/pinctrl/actions/pinctrl-s700.c             |   1 -
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         | 170 ++--
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         | 212 ++---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         | 387 +++++++-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c            |  50 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.h            |  38 +-
+ drivers/pinctrl/aspeed/pinmux-aspeed.h             |   1 +
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           |  10 +-
+ drivers/pinctrl/cirrus/pinctrl-madera-core.c       |   1 -
+ drivers/pinctrl/core.c                             |  74 +-
+ drivers/pinctrl/core.h                             |   4 -
+ drivers/pinctrl/devicetree.c                       |   4 +-
+ drivers/pinctrl/freescale/Kconfig                  |   7 +
+ drivers/pinctrl/freescale/Makefile                 |   1 +
+ drivers/pinctrl/freescale/pinctrl-imx8mp.c         | 345 ++++++++
+ drivers/pinctrl/intel/Kconfig                      |  13 +
+ drivers/pinctrl/intel/Makefile                     |   1 +
+ drivers/pinctrl/intel/pinctrl-baytrail.c           | 311 ++++---
+ drivers/pinctrl/intel/pinctrl-cherryview.c         |   5 +-
+ drivers/pinctrl/intel/pinctrl-intel.c              | 101 +--
+ drivers/pinctrl/intel/pinctrl-intel.h              |  44 +
+ drivers/pinctrl/intel/pinctrl-lynxpoint.c          | 975 +++++++++++++++++=
+++++
+ drivers/pinctrl/intel/pinctrl-sunrisepoint.c       |   2 +
+ drivers/pinctrl/intel/pinctrl-tigerlake.c          | 547 ++++++------
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h      |   2 +-
+ drivers/pinctrl/meson/pinctrl-meson-axg-pmx.h      |   2 +-
+ drivers/pinctrl/meson/pinctrl-meson8b.c            |   7 +-
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |  16 +-
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c          |   2 +-
+ drivers/pinctrl/pinctrl-artpec6.c                  |   2 +-
+ drivers/pinctrl/pinctrl-ingenic.c                  | 637 +++++++++-----
+ drivers/pinctrl/pinctrl-rza1.c                     |   4 +-
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |   5 -
+ drivers/pinctrl/qcom/pinctrl-msm8976.c             |   2 +-
+ drivers/pinctrl/qcom/pinctrl-sc7180.c              |  78 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |   2 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c            |   2 +-
+ drivers/pinctrl/samsung/Kconfig                    |  16 +-
+ drivers/pinctrl/sh-pfc/Kconfig                     |  12 +-
+ drivers/pinctrl/sh-pfc/Makefile                    |   4 +-
+ drivers/pinctrl/sh-pfc/core.c                      |  57 +-
+ drivers/pinctrl/sh-pfc/gpio.c                      |  11 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c               |   4 +-
+ .../sh-pfc/{pfc-r8a7795-es1.c =3D> pfc-r8a77950.c}   |  26 +-
+ .../sh-pfc/{pfc-r8a7795.c =3D> pfc-r8a77951.c}       |  39 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a77965.c              |   6 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c                |  33 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7269.c                |  39 +-
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |   4 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.h              |   2 +-
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c          |  13 +-
+ drivers/pinctrl/tegra/pinctrl-tegra.c              |   4 +-
+ include/linux/gpio/driver.h                        |   5 -
+ include/linux/pinctrl/consumer.h                   |   6 +
+ include/linux/pinctrl/machine.h                    |   5 +
+ 73 files changed, 3379 insertions(+), 1798 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-io.=
+yaml
+ delete mode 100644
+Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ delete mode 100644 drivers/gpio/gpio-lynxpoint.c
+ create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mp.c
+ create mode 100644 drivers/pinctrl/intel/pinctrl-lynxpoint.c
+ rename drivers/pinctrl/sh-pfc/{pfc-r8a7795-es1.c =3D> pfc-r8a77950.c} (99%=
+)
+ rename drivers/pinctrl/sh-pfc/{pfc-r8a7795.c =3D> pfc-r8a77951.c} (99%)
