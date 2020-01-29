@@ -2,105 +2,101 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F756C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5D9C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E70205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479CD205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgA2TPC (ORCPT
+        id S1727496AbgA2TQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 14:15:02 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36290 "EHLO mx2.suse.de"
+        Wed, 29 Jan 2020 14:16:25 -0500
+Received: from mga11.intel.com ([192.55.52.93]:42142 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgA2TPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 14:15:01 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E3817AC22;
-        Wed, 29 Jan 2020 19:14:59 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 32A3EDA730; Wed, 29 Jan 2020 20:14:40 +0100 (CET)
-Date:   Wed, 29 Jan 2020 20:14:40 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     dsterba@suse.com, nborisov@suse.com, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH] btrfs: optimize barrier usage for Rmw atomics
-Message-ID: <20200129191439.GN3929@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Davidlohr Bueso <dave@stgolabs.net>,
-        dsterba@suse.com, nborisov@suse.com, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
-References: <20200129180324.24099-1-dave@stgolabs.net>
+        id S1726171AbgA2TQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 14:16:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 11:16:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,378,1574150400"; 
+   d="scan'208";a="315381629"
+Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Jan 2020 11:16:24 -0800
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v1 1/1] PCI/ATS: For VF PCIe device use PF PASID Capability
+Date:   Wed, 29 Jan 2020 11:14:00 -0800
+Message-Id: <fe891f9755cb18349389609e7fed9940fc5b081a.1580325170.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129180324.24099-1-dave@stgolabs.net>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 10:03:24AM -0800, Davidlohr Bueso wrote:
-> Use smp_mb__after_atomic() instead of smp_mb() and avoid the
-> unnecessary barrier for non LL/SC architectures, such as x86.
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-So that's a conflicting advice from what we got when discussing wich
-barriers to use in 6282675e6708ec78518cc0e9ad1f1f73d7c5c53d and the
-memory is still fresh. My first idea was to take the
-smp_mb__after_atomic and __before_atomic variants and after discussion
-with various people the plain smp_wmb/smp_rmb were suggested and used in
-the end.
+Per PCIe r5.0, sec 9.3.7.14, if a PF implements the PASID Capability,
+the PF PASID configuration is shared by its VFs. VFs must not implement
+their own PASID Capability. But, commit 751035b8dc06 ("PCI/ATS: Cache
+PASID Capability offset") when adding support for PASID Capability
+offset caching, modified the pci_max_pasids() and pci_pasid_features()
+APIs to use PASID Capability offset of VF device instead of using
+PASID Capability offset of associated PF device. This change leads to
+IOMMU bind failures when pci_max_pasids() and pci_pasid_features()
+functions are invoked by PCIe VF devices.
 
-I can dig the email threads and excerpts from irc conversations, maybe
-Nik has them at hand too. We do want to get rid of all unnecessary and
-uncommented barriers in btrfs code, so I appreciate your patch.
+So modify pci_max_pasids() and pci_pasid_features() functions to use
+correct PASID Capability offset.
 
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-> ---
->  fs/btrfs/btrfs_inode.h | 2 +-
->  fs/btrfs/file.c        | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/btrfs/btrfs_inode.h b/fs/btrfs/btrfs_inode.h
-> index 4e12a477d32e..54e0d2ae22cc 100644
-> --- a/fs/btrfs/btrfs_inode.h
-> +++ b/fs/btrfs/btrfs_inode.h
-> @@ -325,7 +325,7 @@ struct btrfs_dio_private {
->  static inline void btrfs_inode_block_unlocked_dio(struct btrfs_inode *inode)
->  {
->  	set_bit(BTRFS_INODE_READDIO_NEED_LOCK, &inode->runtime_flags);
-> -	smp_mb();
-> +	smp_mb__after_atomic();
+Fixes: 751035b8dc06 ("PCI/ATS: Cache PASID Capability offset")
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/pci/ats.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-In this case I think we should use the smp_wmb/smp_rmb pattern rather
-than the full barrier.
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index 982b46f0a54d..b6f064c885c3 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -424,11 +424,12 @@ void pci_restore_pasid_state(struct pci_dev *pdev)
+ int pci_pasid_features(struct pci_dev *pdev)
+ {
+ 	u16 supported;
+-	int pasid = pdev->pasid_cap;
++	int pasid;
+ 
+ 	if (pdev->is_virtfn)
+ 		pdev = pci_physfn(pdev);
+ 
++	pasid = pdev->pasid_cap;
+ 	if (!pasid)
+ 		return -EINVAL;
+ 
+@@ -451,11 +452,12 @@ int pci_pasid_features(struct pci_dev *pdev)
+ int pci_max_pasids(struct pci_dev *pdev)
+ {
+ 	u16 supported;
+-	int pasid = pdev->pasid_cap;
++	int pasid;
+ 
+ 	if (pdev->is_virtfn)
+ 		pdev = pci_physfn(pdev);
+ 
++	pasid = pdev->pasid_cap;
+ 	if (!pasid)
+ 		return -EINVAL;
+ 
+-- 
+2.21.0
 
->  }
->  
->  static inline void btrfs_inode_resume_unlocked_dio(struct btrfs_inode *inode)
-> diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-> index a16da274c9aa..ea79ab068079 100644
-> --- a/fs/btrfs/file.c
-> +++ b/fs/btrfs/file.c
-> @@ -2143,7 +2143,7 @@ int btrfs_sync_file(struct file *file, loff_t start, loff_t end, int datasync)
->  	}
->  	atomic_inc(&root->log_batch);
->  
-> -	smp_mb();
-> +	smp_mb__after_atomic();
-
-That's the problem with uncommented barriers that it's not clear what
-are they related to. In this case it's not the atomic_inc above that
-would justify __after_atomic. The patch that added it is years old so
-any change to that barrier would require deeper analysis.
-
->  	if (btrfs_inode_in_log(BTRFS_I(inode), fs_info->generation) ||
->  	    BTRFS_I(inode)->last_trans <= fs_info->last_trans_committed) {
->  		/*
