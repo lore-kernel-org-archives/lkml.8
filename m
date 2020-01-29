@@ -2,117 +2,112 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14649C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CFFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E2B207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD53206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:46:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgA2XjU (ORCPT
+        id S1726959AbgA2Xqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:39:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:46970 "EHLO foss.arm.com"
+        Wed, 29 Jan 2020 18:46:44 -0500
+Received: from mga06.intel.com ([134.134.136.31]:46688 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgA2XjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 18:39:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39A9331B;
-        Wed, 29 Jan 2020 15:39:19 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 570803F52E;
-        Wed, 29 Jan 2020 15:39:17 -0800 (PST)
-Subject: Re: [PATCH v2 6/6] arm64: use activity monitors for frequency
- invariance
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        dietmar.eggemann@arm.com
-Cc:     peterz@infradead.org, mingo@redhat.com, ggherdovich@suse.cz,
-        vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191218182607.21607-1-ionela.voinescu@arm.com>
- <20191218182607.21607-7-ionela.voinescu@arm.com>
- <96fdead6-9896-5695-6744-413300d424f5@arm.com>
-Message-ID: <3ed9af08-82ef-e30c-b1ec-3a1dac0d2091@arm.com>
-Date:   Wed, 29 Jan 2020 23:39:11 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726401AbgA2Xqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 18:46:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 15:46:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
+   d="scan'208";a="309551709"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga001.jf.intel.com with ESMTP; 29 Jan 2020 15:46:43 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 06/26] KVM: x86: Move MSR_IA32_BNDCFGS existence checks into vendor code
+Date:   Wed, 29 Jan 2020 15:46:20 -0800
+Message-Id: <20200129234640.8147-7-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200129234640.8147-1-sean.j.christopherson@intel.com>
+References: <20200129234640.8147-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <96fdead6-9896-5695-6744-413300d424f5@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/01/2020 17:13, Valentin Schneider wrote:
-> I had a brief look at the Arm ARM, for the arch timer it says it is
-> "typically in the range 1-50MHz", but then also gives an example with 20KHz
-> in a low-power mode.
-> 
-> If we take say 5GHz max CPU frequency, our lower bound for the arch timer
-> (with that SCHED_CAPACITY_SCALE² trick) is about ~4.768KHz. It's not *too*
-> far from that 20KHz, but I'm not sure we would actually be executing stuff
-> in that low-power mode.
-> 
+Move the MSR_IA32_BNDCFGS existence check into vendor code by way of
+->has_virtualized_msr().  AMD does not support MPX, and given that Intel
+is in the process of removing MPX, it's extremely unlikely AMD will ever
+support MPX.
 
-I mixed up a few things in there; that low-power mode is supposed to do
-higher increments, so it would emulate a similar frequency as the non-low-power
-mode. Thus the actual frequency matters less than what is reported in CNTFRQ
-(though we hope to get the behaviour we're told we should see), so we should
-be quite safe from that ~5KHz value. Still, to make it obvious, I don't think
-something like this would hurt:
+Note, invoking ->has_virtualized_msr() requires an extra retpoline, but
+kvm_init_msr_list() is not a hot path.  As alluded to above, the
+motivation is to quarantine MPX as much as possible.
 
+No functional change intended.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 9a5464c625b45..a72832093575a 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -885,6 +885,17 @@ static int arch_timer_starting_cpu(unsigned int cpu)
- 	return 0;
- }
- 
-+static int validate_timer_rate(void)
-+{
-+	if (!arch_timer_rate)
-+		return 1;
-+
-+	/* Arch timer frequency < 1MHz is shady */
-+	WARN_ON(arch_timer_rate < 1000000);
-+
-+	return 0;
-+}
-+
- /*
-  * For historical reasons, when probing with DT we use whichever (non-zero)
-  * rate was probed first, and don't verify that others match. If the first node
-@@ -900,7 +911,7 @@ static void arch_timer_of_configure_rate(u32 rate, struct device_node *np)
- 		arch_timer_rate = rate;
- 
- 	/* Check the timer frequency. */
--	if (arch_timer_rate == 0)
-+	if (validate_timer_rate())
- 		pr_warn("frequency not available\n");
- }
- 
-@@ -1594,7 +1605,7 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
- 	 * CNTFRQ value. This *must* be correct.
- 	 */
- 	arch_timer_rate = arch_timer_get_cntfrq();
--	if (!arch_timer_rate) {
-+	if (validate_timer_rate()) {
- 		pr_err(FW_BUG "frequency not available.\n");
- 		return -EINVAL;
+ arch/x86/kvm/svm.c     | 2 ++
+ arch/x86/kvm/vmx/vmx.c | 2 ++
+ arch/x86/kvm/x86.c     | 4 ----
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 4c8427f57b71..504118c49f46 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5990,6 +5990,8 @@ static bool svm_has_virtualized_msr(u32 index)
+ 	switch (index) {
+ 	case MSR_TSC_AUX:
+ 		return boot_cpu_has(X86_FEATURE_RDTSCP);
++	case MSR_IA32_BNDCFGS:
++		return false;
+ 	default:
+ 		break;
  	}
----
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 9588914e941e..dbeef64f7409 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6279,6 +6279,8 @@ static bool vmx_has_virtualized_msr(u32 index)
+ 	switch (index) {
+ 	case MSR_TSC_AUX:
+ 		return cpu_has_vmx_rdtscp();
++	case MSR_IA32_BNDCFGS:
++		return kvm_mpx_supported();
+ 	default:
+ 		break;
+ 	}
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index a8619c52ea86..70cbb9164088 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5237,10 +5237,6 @@ static void kvm_init_msr_list(void)
+ 		 * to the guests in some cases.
+ 		 */
+ 		switch (msr_index) {
+-		case MSR_IA32_BNDCFGS:
+-			if (!kvm_mpx_supported())
+-				continue;
+-			break;
+ 		case MSR_IA32_RTIT_CTL:
+ 		case MSR_IA32_RTIT_STATUS:
+ 			if (!kvm_x86_ops->pt_supported())
+-- 
+2.24.1
 
-> Long story short, we're probably fine, but it would nice to shove some of
-> the above into comments (especially the SCHED_CAPACITY_SCALE² trick)
-> 
