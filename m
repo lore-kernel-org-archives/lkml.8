@@ -2,126 +2,101 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26437C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7209C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0192B206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6121206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:07:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LowdrKlK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G6Ah1duV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbgA2SEe (ORCPT
+        id S1727198AbgA2SHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:04:34 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36312 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgA2SEd (ORCPT
+        Wed, 29 Jan 2020 13:07:55 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58056 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgA2SHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:04:33 -0500
-Received: by mail-pj1-f68.google.com with SMTP id gv17so130688pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 10:04:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6QNebILk02STEyIe5/0fAJxmh4v1Dv7+qDAzRC1FUDQ=;
-        b=LowdrKlK0P6qecyQGM0hzYenViTrLksQTfxjJ9ni4gKyCCIp1FahM6Ho5TjGK9OAVj
-         7oqM88GFtBs997v7Yh1XJCADc6MeqKnvobn1CGwvE1MPLZNH0uZswwf2Zu4yOPQi3Cdi
-         0e9TIPoczxRInL3Xrd1lCEWURMROuKtqa8IP4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6QNebILk02STEyIe5/0fAJxmh4v1Dv7+qDAzRC1FUDQ=;
-        b=mE9DgXn/HsYgOyIUwWpSdnB+I05d5q7/4y+Z5nUBHaA8hpPhXVsb34w6i6H5szwuAu
-         xkC9v4y1eevJvlpmRr27d8RQFbQoLcLulN1+XtsfmqNNAfdnU9O4dExYLnR9hBPQLV93
-         7OXGuf85xB7U6/kuZqeOr3id9SbS2ndZl7AY+uadXPtzpn9iwDqwTc/qrAEURcRorKVu
-         TpjvBG0B8emA0dw7E9k0Qrb1JiVB+0NKNiG1y/DL/4UKFSAgPRdAJoQlk6l0tYwABVXY
-         0umaGZAKXh4LA7OO92hdNi5eH23JRdpB2JTySalPah+zs0+zx6GuyQTlwKd5jGrYtASU
-         cB6w==
-X-Gm-Message-State: APjAAAU1kXPlxIcg+piaqM5KQB6ZJb9Qya5Xgaz76x3h3goyhiXF/CXB
-        OIZI1JT/HXJIhxj5GxdR/TmkoO6+r0k=
-X-Google-Smtp-Source: APXvYqxVUyW4yrpYAV6X6fDHS+gRG2rAx1gwUyY8QSDnEvQsn0QmEVreNGiM5X7rKr6GWTnyLky0ug==
-X-Received: by 2002:a17:902:bf41:: with SMTP id u1mr552856pls.207.1580321073273;
-        Wed, 29 Jan 2020 10:04:33 -0800 (PST)
-Received: from google.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id q6sm3385291pgt.47.2020.01.29.10.04.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 10:04:32 -0800 (PST)
-Date:   Wed, 29 Jan 2020 10:04:30 -0800
-From:   Brian Norris <briannorris@chromium.org>
-To:     Franky Lin <franky.lin@broadcom.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Doug Anderson <dianders@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] brcmfmac: abort and release host after error
-Message-ID: <20200129180428.GA99393@google.com>
-References: <20200128221457.12467-1-linux@roeck-us.net>
- <CAD=FV=Wg2MZ56fsCk+TvRSSeZVz5eM4cwugK=HN6imm5wfGgiw@mail.gmail.com>
- <20200129000551.GA17256@roeck-us.net>
- <CA+8PC_f=qCUjihwbjd3vtGaNkG-=R1qm83oS7AmgtLTy6EgjyQ@mail.gmail.com>
+        Wed, 29 Jan 2020 13:07:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ti7tqcCoopz85yAZx6ODwlyVLtxIWBrtp0ypbKnSIIQ=; b=G6Ah1duV6XYd7U02JYqwA9701
+        BYJscf1GahK9hRHau93+bYNyshPFIk3rCBti2rpJlwa00ZJ8bV9SriQfyVqTZpxx0W07qDSzmMS7y
+        3Xk1UhhS0XHt9ksGdXz6TNCibZJoRghnWkWg8dusjDQmdcrhUw2l1vFyM1m8Uh1vjtsj8uPYkIrHh
+        u//Nm5ZeFBzPFR2Tj5OIPsXrKv8RB8HOLuJRwKl8G66axlVYIxXTedxqM9CdWMC7CvdYgOndg/4M9
+        Q+LAyDjlHHGUuIoY5S0lVRuPO1kcNj8lijzvMLmsNS8Fzx655R3eyr8T4hcdSlRFvhDY+a+F2rOWG
+        9tqRrZJ1w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwrk9-0005CU-1G; Wed, 29 Jan 2020 18:07:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E6CCD300606;
+        Wed, 29 Jan 2020 19:05:26 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B3EF12B7A8626; Wed, 29 Jan 2020 19:07:09 +0100 (CET)
+Date:   Wed, 29 Jan 2020 19:07:09 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     sjpark@amazon.com
+Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
+        sj38.park@gmail.com, acme@kernel.org, amit@kernel.org,
+        brendan.d.gregg@gmail.com, corbet@lwn.net, dwmw@amazon.com,
+        mgorman@suse.de, rostedt@goodmis.org, kirill@shutemov.name,
+        brendanhiggins@google.com, colin.king@canonical.com,
+        minchan@kernel.org, vdavydov.dev@gmail.com, vdavydov@parallels.com,
+        linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: Re: Re: [PATCH v2 0/9] Introduce Data Access MONitor (DAMON)
+Message-ID: <20200129180709.GS14879@hirez.programming.kicks-ass.net>
+References: <20200129125615.GQ14879@hirez.programming.kicks-ass.net>
+ <20200129143758.896-1-sjpark@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+8PC_f=qCUjihwbjd3vtGaNkG-=R1qm83oS7AmgtLTy6EgjyQ@mail.gmail.com>
+In-Reply-To: <20200129143758.896-1-sjpark@amazon.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Franky,
-
-[I'm very unfamiliar with this driver, but I had the same questions as
-Guenter, I think:]
-
-On Tue, Jan 28, 2020 at 04:57:59PM -0800, Franky Lin wrote:
-> On Tue, Jan 28, 2020 at 4:05 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > On Tue, Jan 28, 2020 at 03:14:45PM -0800, Doug Anderson wrote:
-> > > On Tue, Jan 28, 2020 at 2:15 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > > > --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> > > > +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> > > > @@ -1938,6 +1938,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
-> > > >                         if (brcmf_sdio_hdparse(bus, bus->rxhdr, &rd_new,
-> > > >                                                BRCMF_SDIO_FT_NORMAL)) {
-> > > >                                 rd->len = 0;
-> > > > +                               brcmf_sdio_rxfail(bus, true, true);
-> > > > +                               sdio_release_host(bus->sdiodev->func1);
-> > >
-> > > I don't know much about this driver so I don't personally know if
-> > > "true, true" is the correct thing to pass to brcmf_sdio_rxfail(), but
-> > > it seems plausible.  Definitely the fix to call sdio_release_host() is
-> > > sane.
-> > >
-> > > Thus, unless someone knows for sure that brcmf_sdio_rxfail()'s
-> > > parameters should be different:
-> > >
-> > Actually, looking at brcmf_sdio_hdparse() and its other callers,
-> > I think it may not be needed at all - other callers don't do it, and
-> > there already are some calls to brcmf_sdio_rxfail() in that function.
-> > It would be nice though to get a confirmation before I submit v2.
+On Wed, Jan 29, 2020 at 03:37:58PM +0100, sjpark@amazon.com wrote:
+> On Wed, 29 Jan 2020 13:56:15 +0100 Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> I think invoking rxfail with both abort and NACK set to true is the
-> right thing to do here so that the pipeline can be properly purged.
+> > On Tue, Jan 28, 2020 at 01:00:33PM +0100, sjpark@amazon.com wrote:
+> > 
+> > > I worried whether it could be a bother to send the mail to everyone in the
+> > > section, but seems it was an unnecessary worry.  Adding those to recipients.
+> > > You can get the original thread of this patchset from
+> > > https://lore.kernel.org/linux-mm/20200128085742.14566-1-sjpark@amazon.com/
+> > 
+> > I read first patch (the document) and still have no friggin clue.
+> 
+> Do you mean the document has insufficient description only?  If so, could you
+> please point me me which information do you want to be added?
 
-Thanks for looking here. I'm not sure I totally understand your answer:
-brcmf_sdio_hdparse() already calls brcmf_sdio_rxfail() in several error
-cases. Is it really OK to call it twice in a row?
+There was a lot of words; but I'm still not sure what it actually does.
 
-Brian
+I've read some of the code that followed; is it simply sampling the
+page-table access bit? It did some really weird things though, like that
+whole 3 regions thing.
+
+Also, you wrote you wanted feedback from perf people; but it doesn't use
+perf, what are you asking?
+
+Perf can do address based sampling of memops, I suspect you can create
+something using that.
