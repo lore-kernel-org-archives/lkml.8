@@ -2,151 +2,89 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABE0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C81C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 709C3206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A731A206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:05:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QhyJlO9Z"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CYbAx8ec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgA2OF2 (ORCPT
+        id S1726829AbgA2OFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:05:28 -0500
+        Wed, 29 Jan 2020 09:05:44 -0500
 Received: from mail26.static.mailgun.info ([104.130.122.26]:17018 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726177AbgA2OF2 (ORCPT
+        by vger.kernel.org with ESMTP id S1726811AbgA2OFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:05:28 -0500
+        Wed, 29 Jan 2020 09:05:43 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580306727; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=OYXu3ND/s2/4ySCf9M0xA490SGByupUTGY02AD+jy9Y=;
- b=QhyJlO9Zaw4gRAvu+1vaF7U/bCR7mGHaqL6Simc4gxCg3Eq3GAUZNMgLW1NPiUBwI5CQ724P
- ARKtoffqHrEvnLsyaNvNYi1jHrAVPqswh/MELQjND2l9vrpJAPR3ILceIbzsuFCJITa2cLVt
- FMjMQ8K6MQLNvbp5BWEeGAgu5jA=
+ s=smtp; t=1580306743; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=15AGAb6xpQISvcFQW1tkjmK4LdTdUPgvzOyitjXpL0s=; b=CYbAx8ecDnTfv4kJ5onzSO2iAIio9TMi/JmW4s4TtHxfrSTL+UnWXI5rNB0v+eWzHE3DE0Qh
+ dg5YhduN0uhVXEReurOt9mS6GBvbz3vfjbShIjh59X4YBB5PlYXlY7TIaKmYlqoayOFUHC3r
+ fwj1pCosHKy2zDSLqP0gya2W5f8=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e319124.7fede9397650-smtp-out-n02;
- Wed, 29 Jan 2020 14:05:24 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e319133.7f32a97f3d88-smtp-out-n02;
+ Wed, 29 Jan 2020 14:05:39 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 20A7AC447A4; Wed, 29 Jan 2020 14:05:22 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id 590FBC447A1; Wed, 29 Jan 2020 14:05:38 +0000 (UTC)
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 44569C433CB;
-        Wed, 29 Jan 2020 14:05:21 +0000 (UTC)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28446C43383;
+        Wed, 29 Jan 2020 14:05:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28446C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Wireless <linux-wireless@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: Re: linux-next: Fixes tag needs some work in the wireless-drivers-next tree
+References: <20200127114221.52ba6027@canb.auug.org.au>
+Date:   Wed, 29 Jan 2020 16:05:32 +0200
+In-Reply-To: <20200127114221.52ba6027@canb.auug.org.au> (Stephen Rothwell's
+        message of "Mon, 27 Jan 2020 11:42:21 +1100")
+Message-ID: <87k15a8ij7.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 Jan 2020 19:35:21 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org
-Subject: Re: [RFC v3 09/10] arm64: dts: qcom: sdm845: Add cpu OPP tables
-In-Reply-To: <20200129012411.GI46072@google.com>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <20200127200350.24465-10-sibis@codeaurora.org>
- <20200129012411.GI46072@google.com>
-Message-ID: <4f2b98a1dae3bc737a43a1e46255657b@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Matthias,
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
 
-Thanks for the review!
+> Hi all,
+>
+> n commit
+>
+>   6ba8b3b6bd77 ("ath10k: Correct the DMA direction for management tx buffers")
+>
+> Fixes tag
+>
+>   Fixes: dc405152bb6 ("ath10k: handle mgmt tx completion event")
+>
+> has these problem(s):
+>
+>   - SHA1 should be at least 12 digits long
+>     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+>     or later) just making sure it is not set (or set to "auto").
 
-On 2020-01-29 06:54, Matthias Kaehlcke wrote:
-> Hi Sibi,
-> 
-> On Tue, Jan 28, 2020 at 01:33:49AM +0530, Sibi Sankar wrote:
->> Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 
->> SoCs.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 453 
->> +++++++++++++++++++++++++++
->>  1 file changed, 453 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
->> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index c036bab49fc03..8cb976118407b 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -199,6 +199,12 @@
->>  			qcom,freq-domain = <&cpufreq_hw 0>;
->>  			#cooling-cells = <2>;
->>  			next-level-cache = <&L2_0>;
->> +			operating-points-v2 = <&cpu0_opp_table>,
->> +					      <&cpu0_ddr_bw_opp_table>,
->> +					      <&cpu0_l3_bw_opp_table>;
->> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
->> SLAVE_EBI1>,
->> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
-> 
-> This apparently depends on the 'Split SDM845 interconnect nodes and
-> consolidate RPMh support' series
-> (https://patchwork.kernel.org/project/linux-arm-msm/list/?series=226281),
-> which isn't mentioned in the cover letter.
-> 
-> I also couldn't find a patch on the lists that adds the 'osm_l3'
-> interconnect node for SDM845. The same is true for SC7180 (next
-> patch of this series). These patches may be available in custom trees,
-> but that isn't really helpful for upstream review.
-
-yeah I missed adding the interconnect
-refactor dependency and the nodes.
-
-> 
-> I would suggest to focus on landing the dependencies of this series,
-> before proceding with it (or at least most of them), there are plenty
-> and without the dependencies this series isn't going to land, it also
-> makes it hard for testers and reviewers to get all the pieces
-
-yes I understand but wanted the series
-out asap because since there are a few
-points where we still havn't reached
-a consensus on.
-
-> together. In particular the last post of the series 'Add
-> required-opps support to devfreq passive gov'
-> (https://patchwork.kernel.org/cover/11055499/) is from July 2019 ...
-
-https://lore.kernel.org/lkml/CAGTfZH37ALwUHd8SpRRrBzZ6x1-++YtzS60_yRQvN-TN6rOzaA@mail.gmail.com/
-
-The pending patch for lazy linking
-was posted a while back. Now that
-it has a tested-by, majority of the
-series should go in since the devfreq
-maintainers wanted the series pulled
-in.
-
-> 
-> Thanks
-> 
-> Matthias
+Doh, I missed that but naturally there's nothing we can do now as the
+commit is in Linus' tree. I really should implement some kind of
+automatic check to my patchwork script for this.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
