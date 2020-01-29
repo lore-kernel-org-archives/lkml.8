@@ -2,93 +2,109 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C36C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A4CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF78220CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561A720678
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:16:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dYM6t4xn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgA2NP5 (ORCPT
+        id S1726694AbgA2NQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:15:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48188 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgA2NP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:15:57 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2CFB8B278;
-        Wed, 29 Jan 2020 13:15:55 +0000 (UTC)
-Date:   Wed, 29 Jan 2020 14:15:52 +0100
-From:   Libor Pechacek <lpechacek@suse.cz>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v4 1/3] PCI: pciehp: Add support for disabling in-band
- presence
-Message-ID: <20200129131530.GA3208@fm.suse.cz>
-References: <20191025190047.38130-2-stuart.w.hayes@gmail.com>
- <20191127013613.GA233706@google.com>
- <CAL5oW00Lh4v2YpX2GcDoRS2fFJjvHRsdhNjtvyYGpWOpgL=TCg@mail.gmail.com>
- <f14d8325-8635-329f-cdc7-fd27a52b2704@gmail.com>
+        Wed, 29 Jan 2020 08:16:41 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14865 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgA2NQl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 08:16:41 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3185850002>; Wed, 29 Jan 2020 05:15:49 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 Jan 2020 05:16:40 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 Jan 2020 05:16:40 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jan
+ 2020 13:16:38 +0000
+Subject: Re: [PATCH 4.19 00/92] 4.19.100-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200128135809.344954797@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <91c18db4-8fa9-0b2a-db16-e92603e22a24@nvidia.com>
+Date:   Wed, 29 Jan 2020 13:16:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f14d8325-8635-329f-cdc7-fd27a52b2704@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200128135809.344954797@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580303749; bh=dSZLLWmgWrVycGKJWyQqqW4+C169YCghPO7KV4kdWj8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dYM6t4xnQmRNw9AH+0Eeo2SFCmFmkRtBc16JWUsq4jUoONMzbQKvaK7P0EQuA39cR
+         UsxcehgRDxfar58WQToZjvOfVfpbUy34opWZXQO9rRqLDVCsFORLZVlArAd4ZVa+YY
+         i7hxD9Uuzur7olHThGYg4cjMPbMnw3jbrE4MZ61I+YrcgLYwOwIUA0pQoT2mDMFrih
+         w2iSelX3rRvSJJijAi9OoFdLdiImtYQt8dYh4XcI/22JZR6pmEE66Qvt/Mz/lxND61
+         B1DsGttz6XgaVySaib3XxzLYiLUWmXIvj0PvKISgVjMakM/ECunrAFkCaGlsD01AYB
+         B67ArTZE9oQZQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 31-12-19 16:06:45, Stuart Hayes wrote:
-> On 11/26/19 8:19 PM, Stuart Hayes wrote:
-> > On Tue, Nov 26, 2019 at 7:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-[...]
-> >> I think I'm fine with this patch, but I would like to include the
-> >> specific reference for this recommendation.  If you have it handy, I
-> >> can just insert it.
-> >>
-> > 
-> > The PCI Express Base Specification Revision 5.0, Version 1.0, in the
-> > implementation note under Appendix I ("Async Hot-Plug Reference
-> > Model"), it says "If OOB PD is being used and the associated DSP
-> > supports In-Band PD Disable, it is recommended that the In-Band PD
-> > Disable bit be Set, ..."
-> > 
-> > 
+
+On 28/01/2020 14:07, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.100 release.
+> There are 92 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Is that what you were looking for?  Please let me know if there's anything
-> else I can do to help.
+> Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.100-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Gentlemen,
+All tests are passing for Tegra ...
 
-I'm wondering about that is the status of this patch set. Reading through the
-discussion, it looks to me that it has been accepted. However, I cannot find
-the corresponding changes in Bjorn's Git tree.
+Test results for stable-v4.19:
+    11 builds:	11 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
 
-I'm asking because we've got a request for including the patches in our distro
-and I'd like to shepherd the changes there. Knowing if, and possibly also when,
-the patch set will hit the repo would help me plan my actions. If, by any
-chance, I can help here, let me know.
+Linux version:	4.19.100-rc1-g26d743063ae6
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
-Thanks!
+Cheers
+Jon
 
-Libor
 -- 
-Libor Pechacek
-SUSE Labs                                Remember to have fun...
+nvpublic
