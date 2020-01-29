@@ -3,78 +3,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5622C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B93C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5E72070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2253C2070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgA2LzU (ORCPT
+        id S1726339AbgA2L7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 06:55:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59898 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbgA2LzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 06:55:20 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0C8C2AE3F;
-        Wed, 29 Jan 2020 11:55:18 +0000 (UTC)
-Date:   Wed, 29 Jan 2020 12:55:16 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH 0/2] printf: add support for %de
-Message-ID: <20200129115516.zsvxu56e6h7gheiw@pathway.suse.cz>
-References: <20200120085508.25522-1-u.kleine-koenig@pengutronix.de>
- <CAHp75Vei9_xqxiiAWBrcMp3yOWmMNmdRmNEwO=Ht+URsnoD4Pw@mail.gmail.com>
- <f039631b-8a90-48fc-c80f-1160628469a9@rasmusvillemoes.dk>
+        Wed, 29 Jan 2020 06:59:33 -0500
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:34584 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgA2L7d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 06:59:33 -0500
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jan 2020 06:59:32 EST
+IronPort-SDR: +iI0BjRVuvOjgbvcqHgxxLfxwDgAXPVWZhdrY8CEHBgdr4PZyqOjLtt3y3yVsie9tKn+gIfNK/
+ UuRd0/zNEg/zSSgXY+UUfT+E7RD/Zz3jcuZ+t2tQ46Q42NnQm039uOVUTv7qv2UiiMuKk9keK6
+ Vf0b8bWlMXfiHyULVzwM9R8L0ohVHoM3i0BxDv7DeiePTDw4NdJM9jgwZ27xAavhclRAPZYze7
+ wqjD9qxbnM1BjgJvJ1yVkVVqfde78pQJma/134RAnkccqv0yRYpGsTp0SPyEH01iihWJpd6XJn
+ svg=
+X-IronPort-AV: E=Sophos;i="5.70,377,1574150400"; 
+   d="scan'208";a="47219317"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 29 Jan 2020 03:52:25 -0800
+IronPort-SDR: 6DT1J8DgygeSeODfXba2E5y98oSykhyivTsvkj6BwLSUzh5+AQ4vPRkCXrywWnrzEGqG5tjAIk
+ zIivE0J87TqQ==
+Subject: Re: [PATCH v6 24/48] Input: atmel_mxt_ts - make bootloader interrupt
+ driven
+To:     Bartosz Szczepanek <bsz@semihalf.com>, <nick.dyer@itdev.co.uk>
+CC:     <Andrew_Gabbasov@mentor.com>, <benjamin.tissoires@redhat.com>,
+        <dmitry.torokhov@gmail.com>, <erosca@de.adit-jv.com>,
+        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <nick@shmanahar.org>,
+        <rydberg@bitmath.org>, <levinale@google.com>, <rad@semihalf.com>
+References: <20191122082402.18173-25-jiada_wang@mentor.com>
+ <20200127174127.25522-1-bsz@semihalf.com>
+From:   "Wang, Jiada (ESD)" <jiada_wang@mentor.com>
+Message-ID: <4665e505-4f33-2a29-fc95-cacd40767e43@mentor.com>
+Date:   Wed, 29 Jan 2020 20:52:19 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f039631b-8a90-48fc-c80f-1160628469a9@rasmusvillemoes.dk>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20200127174127.25522-1-bsz@semihalf.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-01-21 11:27:34, Rasmus Villemoes wrote:
-> On 20/01/2020 10.32, Andy Shevchenko wrote:
-> > On Mon, Jan 20, 2020 at 10:57 AM Uwe Kleine-König
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > 
-> >> this is an reiteration of my patch from some time ago that introduced
-> >> %dE with the same semantic. Back then this resulted in the support for
-> >> %pe which was less contentious.
-> >>
-> > 
-> >> I still consider %de (now with a small 'e' to match %pe) useful.
-> > 
-> > Please, don't spread the extensions over the standard specifiers. The
-> > %p* extensions are enough for my opinion.
-> > NAK.
-> > 
+Hi Bartosz
+
+thanks for the report,
+I will test firmware update on my chromebook
+
+Thanks,
+Jiada
+
+On 2020/01/28 2:41, Bartosz Szczepanek wrote:
+> Hi,
 > 
-> As I think I already mentioned (and what led me to do the %pe), I'm with
-> Andy and Joe here, I don't think modifying the behaviour of stuff other
-> than %p is a good idea - especially not when it's only about saving a
-> few characters to avoid the ERR_PTR() wrapping.
-
-+1
-
-Best Regards,
-Petr
+> I've been testing this patchset on Chromebook equipped with Atmel touchscreen &
+> touchpad. In my setup, this particular patch seems to introduce a regression
+> on firmware update:
+> 
+>> localhost /sys/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-6/i2c-ATML0001:00 # echo maxtouch-ts.fw > update_fw
+>> bash: echo: write error: Remote I/O error
+> 
+> Kernel logs show that the reason is failed I2C transfer:
+> 
+>> [ 111.632131] atmel_mxt_ts i2c-ATML0001:00: Found bootloader addr:27 ID:21 version:4
+>> [ 111.637711] atmel_mxt_ts i2c-ATML0001:00: Unlocking bootloader
+>> [ 129.155091] atmel_mxt_ts i2c-ATML0001:00: Sent 1356 frames, 212224 bytes
+>> [ 129.263269] atmel_mxt_ts i2c-ATML0001:00: The firmware update succeeded
+>> [ 129.263952] atmel_mxt_ts i2c-ATML0001:00: __mxt_read_chunk: i2c transfer failed (-121)
+>> [ 129.265072] atmel_mxt_ts i2c-ATML0001:00: mxt_bootloader_read: i2c recv failed (-121)
+>> [ 129.265588] atmel_mxt_ts i2c-ATML0001:00: Trying alternate bootloader address
+>> [ 129.266375] atmel_mxt_ts i2c-ATML0001:00: mxt_bootloader_read: i2c recv failed (-121)
+> 
+> Surprisingly, only touchscreen device is affected. When I checked out to
+> 119e1b7e8481 ("Input: atmel_mxt_ts - refactor code to enter bootloader into
+> separate func") all worked fine. In between these commits I got some mixed
+> results, including timeout while waiting for completion:
+> 
+>> [ 190.006174] atmel_mxt_ts i2c-ATML0001:00: Found bootloader addr:27 ID:21 version:4
+>> [ 190.317819] atmel_mxt_ts i2c-ATML0001:00: Wait for completion timed out.
+>> [ 190.318267] atmel_mxt_ts i2c-ATML0001:00: Update wait error -110
+>> [ 190.319310] atmel_mxt_ts i2c-ATML0001:00: Unlocking bootloader
+>> [ 208.369825] atmel_mxt_ts i2c-ATML0001:00: Sent 1356 frames, 212224 bytes
+>> [ 208.536942] atmel_mxt_ts i2c-ATML0001:00: The firmware update succeeded
+>> [ 208.544835] atmel_mxt_ts i2c-ATML0001:00: Family: 164 Variant: 14 Firmware V2.3.AA Objects: 40
+>> [ 208.547623] atmel_mxt_ts i2c-ATML0001:00: Touchscreen size X4095Y2729
+> 
+> Some more details - the touchscreen device reports itself as:
+> 
+>> atmel_mxt_ts i2c-ATML0001:00: Family: 164 Variant: 14 Firmware V2.3.AA Objects: 40
+> 
+> Due to Chromebook limitations on kernel version, I'm running 4.19 kernel
+> with patches backported from master (so that atmel_mxt_ts is aligned between
+> master and 4.19). The platform is Samsung Chromebook Pro.
+> 
+> Best regards,
+> Bartosz
+> 
