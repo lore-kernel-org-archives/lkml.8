@@ -2,57 +2,129 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=DATE_IN_PAST_24_48,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C0EC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9519C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F6C2070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D48E2070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzePr+ho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgA2Q6u (ORCPT
+        id S1727179AbgA2Q65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:58:50 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:34528 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgA2Q6s (ORCPT
+        Wed, 29 Jan 2020 11:58:57 -0500
+Received: from mail-pg1-f176.google.com ([209.85.215.176]:42674 "EHLO
+        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727134AbgA2Q6z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:58:48 -0500
-Received: from localhost (dhcp-077-249-119-090.chello.nl [77.249.119.90])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7A0AA14F0D680;
-        Wed, 29 Jan 2020 08:58:46 -0800 (PST)
-Date:   Tue, 28 Jan 2020 11:00:35 +0100 (CET)
-Message-Id: <20200128.110035.1287294869237249484.davem@davemloft.net>
-To:     scott.branden@broadcom.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] net: phy: add default ARCH_BCM_IPROC for
- MDIO_BCM_IPROC
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200128003828.20439-1-scott.branden@broadcom.com>
-References: <20200128003828.20439-1-scott.branden@broadcom.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 29 Jan 2020 08:58:48 -0800 (PST)
+        Wed, 29 Jan 2020 11:58:55 -0500
+Received: by mail-pg1-f176.google.com with SMTP id s64so55367pgb.9;
+        Wed, 29 Jan 2020 08:58:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=eD+vRWY6gNxHaAV067ybERz640J/iRSAZ6Igbxb8aJA=;
+        b=LzePr+ho2mkMe7rrNfWRFX+CZgPIUeo9UTtw7QPUjt74C05Xi6AAXoWzxFDL2OQfPp
+         XE2FnCXuNWtEkD/9MhuOc0BEN8hJQVcJSk0VoOav/PF4eEwSLVcoaxWJx6WMjSwDBfh7
+         biWGjzQFxbwgYH1YlpeSbMZ510lZq8uTMreaXWXUfG/QwipOfChGjk4lc3CX929NjZ8Y
+         JJ7yLtWJb94bl2oW/deQvXy+zQbzP2C/lULG6lAE3iD9OUOyeqZ6EC1iegdxOTKyl0xh
+         qpbnFODvHEN0BVVdDv3/cBdVL64i/V26f+QaUYHB9aVHPaC2TAo0B9kqXR0nNkOK8MaU
+         76+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eD+vRWY6gNxHaAV067ybERz640J/iRSAZ6Igbxb8aJA=;
+        b=gjSU4e1TDS3uyzT4XXriKQyj5JVlSpOzT5xhMKfvwMOto0nSN1HHDK+2aLI978aVGO
+         +S9pAskH24xdGe2tO3mpu/BRXbJ4XR0sHeeKQSGQWIU4nS0XCG4aUSZGhekrefO7sHIq
+         HjKHCA+ae8c9KELsuFAyPsI5k18Qek6WHX/XTU02OFyanHtDYgQcYbDiBSbPv8+MslYv
+         R1fQtYK4oxPJ9VvYRy0v/WTa3Q3ZKpu03llULj36kWi2jLxRBpGsx6L56klrYBtrafVc
+         5GPGHyyTtuYU731RSlRbFUp5sYgdKWFwDhE6lR7yVy0VwQny9TWpybmEK6LeDKcO40zW
+         hJLQ==
+X-Gm-Message-State: APjAAAXMF62vBmdQBuX6OVK8SBL5wdQan0cRMGkcdVKw+iqwWvYzWkDq
+        yMs/dotoQ/yyhoeOpjQKhKc=
+X-Google-Smtp-Source: APXvYqxs/Jl7PMhYtjwLBwzCSSLuYsfivJj3Uv7KEyLY8Gtm/XNRdAwennWZZ0/+2Dr0Yhxg6rPsYg==
+X-Received: by 2002:a65:66c4:: with SMTP id c4mr32175251pgw.429.1580317134361;
+        Wed, 29 Jan 2020 08:58:54 -0800 (PST)
+Received: from localhost.localdomain ([2405:205:c92f:3ccd:49ce:a9e3:28b5:cf94])
+        by smtp.gmail.com with ESMTPSA id f8sm3223610pfn.2.2020.01.29.08.58.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 08:58:53 -0800 (PST)
+From:   Pragat Pandya <pragat.pandya@gmail.com>
+To:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Pragat Pandya <pragat.pandya@gmail.com>
+Subject: [PATCH 00/19] Renaming some identifiers
+Date:   Wed, 29 Jan 2020 22:28:13 +0530
+Message-Id: <20200129165832.10574-1-pragat.pandya@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Branden <scott.branden@broadcom.com>
-Date: Mon, 27 Jan 2020 16:38:28 -0800
+This patchset renames following nineteen variables in exfat.h
+Fix checkpatch warning: Avoid CamelCase
+ -Year->year
+ -Day->day
+ -Hour->hour
+ -Minute->minute
+ -Second->second
+ -Millisecond->millisecond
+ -FatType->fat_type
+ -ClusterSize->cluster_size
+ -NumClusters->num_clusters
+ -FreeClusters->free_clusters
+ -UsedClusters->used_clusters
+ -Name->name
+ -ShortName->short_name
+ -Attr->attr
+ -NumSubdirs->num_subdirs
+ -CreateTimestamp->create_timestamp
+ -ModifyTimestamp->modify_timestamp
+ -AccessTimestamp->access_timestamp
 
-> Add default MDIO_BCM_IPROC Kconfig setting such that it is default
-> on for IPROC family of devices.
-> 
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+v2:
+ -Correct misplaced quatation character in subject line(s).
+ -Remove unnecessary '_'(underscore) character in renaming of identifier
+  MilliSecond.
+ -Drop commits renaming unused struct members.
+ 
 
-Applied, thanks.
+Pragat Pandya (19):
+  staging: exfat: Rename variable 'Year' to 'year'
+  staging: exfat: Rename variable 'Month' to 'month'
+  staging: exfat: Rename variable 'Day' to 'day'
+  staging: exfat: Rename variable 'Hour' to 'hour'
+  staging: exfat: Rename variable 'Minute' to 'minute'
+  staging: exfat: Rename variable 'Second' to 'second'
+  staging: exfat: Rename variable 'MilliSecond' to 'millisecond'
+  staging: exfat: Rename variable 'FatType' to 'fat_type'
+  staging: exfat: Rename variable 'ClusterSize' to 'cluster_size'
+  staging: exfat: Rename variable 'NumClusters' to 'num_cluster'
+  staging: exfat: Rename variable 'FreeClusters' to 'free_clusters'
+  staging: exfat: Rename variable 'UsedClusters' to 'used_clusters'
+  staging: exfat: Rename variable 'Name' to 'name'
+  staging: exfat: Rename variable 'ShortName' to 'short_name'
+  staging: exfat: Rename variable 'Attr' to 'attr'
+  staging: exfat: Rename variable 'NumSubdirs' to 'num_subdirs'
+  staging: exfat: Rename variable 'CreateTimestamp' to
+    'create_timestamp'
+  staging: exfat: Rename variable 'ModifyTimestamp' to
+    'modify_timestamp'
+  staging: exfat: Rename variable 'AccessTimestamp' to
+    'access_timestamp'
+
+ drivers/staging/exfat/exfat.h       |  38 ++---
+ drivers/staging/exfat/exfat_super.c | 232 ++++++++++++++--------------
+ 2 files changed, 135 insertions(+), 135 deletions(-)
+
+-- 
+2.17.1
+
