@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C22FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990C1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E854206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605DC206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgA2Xr7 (ORCPT
+        id S1727455AbgA2XsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:47:59 -0500
-Received: from mga06.intel.com ([134.134.136.31]:46690 "EHLO mga06.intel.com"
+        Wed, 29 Jan 2020 18:48:04 -0500
+Received: from mga06.intel.com ([134.134.136.31]:46692 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbgA2Xqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727142AbgA2Xqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jan 2020 18:46:47 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,9 +25,9 @@ Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 15:46:44 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="309551730"
+   d="scan'208";a="309551724"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga001.jf.intel.com with ESMTP; 29 Jan 2020 15:46:44 -0800
+  by orsmga001.jf.intel.com with ESMTP; 29 Jan 2020 15:46:43 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 13/26] KVM: x86: Use u32 for holding CPUID register value in helpers
-Date:   Wed, 29 Jan 2020 15:46:27 -0800
-Message-Id: <20200129234640.8147-14-sean.j.christopherson@intel.com>
+Subject: [PATCH 11/26] KVM: x86: Make kvm_mpx_supported() an inline function
+Date:   Wed, 29 Jan 2020 15:46:25 -0800
+Message-Id: <20200129234640.8147-12-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200129234640.8147-1-sean.j.christopherson@intel.com>
 References: <20200129234640.8147-1-sean.j.christopherson@intel.com>
@@ -49,47 +49,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the intermediate CPUID output register values from "int" to "u32"
-to match both hardware and the storage type in struct cpuid_reg.
+Expose kvm_mpx_supported() as a static inline so that it can be inlined
+in kvm_intel.ko.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kvm/cpuid.c | 6 ------
+ arch/x86/kvm/cpuid.h | 1 -
+ arch/x86/kvm/x86.h   | 5 +++++
+ 3 files changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index c1ac0995843d..72a79bdfed6b 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -95,7 +95,7 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
- 	return reverse_cpuid[x86_leaf];
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index b951d9222ab5..e9e63faf0157 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -45,12 +45,6 @@ static u32 xstate_required_size(u64 xstate_bv, bool compacted)
+ 	return ret;
  }
  
--static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
-+static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
- {
- 	struct kvm_cpuid_entry2 *entry;
- 	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
-@@ -121,7 +121,7 @@ static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
+-bool kvm_mpx_supported(void)
+-{
+-	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
+-}
+-EXPORT_SYMBOL_GPL(kvm_mpx_supported);
+-
+ #define F feature_bit
  
- static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_feature)
- {
--	int *reg;
-+	u32 *reg;
+ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+index 7366c618aa04..c1ac0995843d 100644
+--- a/arch/x86/kvm/cpuid.h
++++ b/arch/x86/kvm/cpuid.h
+@@ -7,7 +7,6 @@
+ #include <asm/processor.h>
  
- 	reg = guest_cpuid_get_register(vcpu, x86_feature);
- 	if (!reg)
-@@ -132,7 +132,7 @@ static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_
+ int kvm_update_cpuid(struct kvm_vcpu *vcpu);
+-bool kvm_mpx_supported(void);
+ struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
+ 					      u32 function, u32 index);
+ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 02b49ee49e24..bfac4a80956c 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -283,6 +283,11 @@ enum exit_fastpath_completion handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vc
+ extern u64 host_xcr0;
+ extern u64 supported_xcr0;
  
- static __always_inline void guest_cpuid_clear(struct kvm_vcpu *vcpu, unsigned x86_feature)
- {
--	int *reg;
-+	u32 *reg;
++static inline bool kvm_mpx_supported(void)
++{
++	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
++}
++
+ extern unsigned int min_timer_period_us;
  
- 	reg = guest_cpuid_get_register(vcpu, x86_feature);
- 	if (reg)
+ extern bool enable_vmware_backdoor;
 -- 
 2.24.1
 
