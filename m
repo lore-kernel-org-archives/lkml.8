@@ -2,83 +2,78 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2BBC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA801C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7082071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F1A2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580312184;
+	bh=/XrUFl8xZ3WjaZdihjrJQqITqwZJFVwGF5yIhKthqyg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=whOkT6b9Bbgb4y3bPs/rs2eaYqQuWvagVfGaOQ2OnPCh+EFmpSyDaqFxESMlebtGB
+	 pbeaRnhLW8dfzdBpKW5il8Vc4AeRy4FdieXblIJdOgvCifYdsT52eKQ0fz0lROmJhS
+	 mEaYlPurwNY6Mu/8YobXCTkRJm7eX5xf566SABsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgA2PfX convert rfc822-to-8bit (ORCPT
+        id S1726717AbgA2PgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:35:23 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:43945 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726271AbgA2PfX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:35:23 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-6-xUshFdb3PkyTVE3XILwyZw-1;
- Wed, 29 Jan 2020 15:35:19 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 29 Jan 2020 15:35:18 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 29 Jan 2020 15:35:18 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Robert Milkowski' <rmilkowski@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        'Trond Myklebust' <trondmy@hammerspace.com>
-CC:     'Anna Schumaker' <anna.schumaker@netapp.com>,
-        'Chuck Lever' <chuck.lever@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        'Trond Myklebust' <trond.myklebust@hammerspace.com>
-Subject: RE: [PATCH v4] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease
- renewals
-Thread-Topic: [PATCH v4] NFSv4.0: nfs4_do_fsinfo() should not do implicit
- lease renewals
-Thread-Index: AdXV6tGXVv4pqJJkS9G0izuAHIy3vAAzr9Pw
-Date:   Wed, 29 Jan 2020 15:35:18 +0000
-Message-ID: <1d098aa2dfea466a9aaa4c55353221e2@AcuMS.aculab.com>
-References: <004e01d5d5ed$5e7ca490$1b75edb0$@gmail.com>
-In-Reply-To: <004e01d5d5ed$5e7ca490$1b75edb0$@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 29 Jan 2020 10:36:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbgA2PgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 10:36:23 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99B7B206F0;
+        Wed, 29 Jan 2020 15:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580312183;
+        bh=/XrUFl8xZ3WjaZdihjrJQqITqwZJFVwGF5yIhKthqyg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y6ojsMvMNJT5ZLHt/zGp6MeryTkGgwvD5FG4VRjQqtQuxjovTFRgTYEOqJBlVp3ID
+         aNbIv7/j8jGt/frjnzumkJiHCvxCepLxEXFNeqQVioQoBFnIFjd3e1yBJZhdWdCESd
+         xhHWaMuOYH/jgKkqHj/wmCP2kFIWzGb8XOKxXZ4c=
+Date:   Wed, 29 Jan 2020 16:36:20 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/104] 5.4.16-stable review
+Message-ID: <20200129153620.GA439013@kroah.com>
+References: <20200128135817.238524998@linuxfoundation.org>
+ <20200129144356.GC23179@roeck-us.net>
 MIME-Version: 1.0
-X-MC-Unique: xUshFdb3PkyTVE3XILwyZw-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129144356.GC23179@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski
-> Sent: 28 January 2020 15:13
+On Wed, Jan 29, 2020 at 06:43:56AM -0800, Guenter Roeck wrote:
+> On Tue, Jan 28, 2020 at 02:59:21PM +0100, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.16 release.
+> > There are 104 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
+> > Anything received after that time might be too late.
+> > 
 > 
-> Currently, each time nfs4_do_fsinfo() is called it will do an implicit
-> NFS4 lease renewal, which is not compliant with the NFS4 specification.
-> This can result in a lease being expired by an NFS server.
-...
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 76d3716..7b2d88b 100644
-...
-> +	if(status == 0)
+> Build results:
+> 	total: 158 pass: 158 fail: 0
+> Qemu test results:
+> 	total: 388 pass: 388 fail: 0
 
-Whitespace
-	David
+Wonderful, thanks for testing all of these and letting me know.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+greg k-h
