@@ -2,210 +2,81 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46F4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02181C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B766420720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A0720720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:29:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eAcfRzxt"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Y90O7yK2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgA2FYN (ORCPT
+        id S1726076AbgA2F3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 00:24:13 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37854 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgA2FYM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 00:24:12 -0500
-Received: by mail-lf1-f65.google.com with SMTP id b15so10930793lfc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 21:24:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3LtlN808L/eCSbIBoZuFWZkXYkhY8RQIoVO6UQH1e2E=;
-        b=eAcfRzxtPLrP35bNQsSw+ImsilucwpYXka/5rc02WJqVXvNR2JDnLBaZddzjpcCMQX
-         C8fAPpxqinvkP/iFe/kOsxYl2QLNaekJWsrDszFbilfj7emdGwvAQOStzJH5PHGJ6Wmb
-         5g1d6PGvnwrPsWHtYA6uHy38CIvBUNXDspgUgePniIg87yEHTdkJiXF9s7UatU2I7Wz1
-         XS3zwMWSuvY8jnDgrUO5KQi/fMeT/ND0TrsBm5+m/Myy/z9jzxnX38L/mp+JvXJtjdiR
-         f2xWkL2nCEQc5z/INZqAOrAkqGv++EGWgOtr6PsQS8aIhd2+iJs1/rTI1ODlL7hYnEHX
-         uoaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3LtlN808L/eCSbIBoZuFWZkXYkhY8RQIoVO6UQH1e2E=;
-        b=cgBdFrU78iBTJaFKoR4Uf4OeaP73w624pjtAFUzg8szT65tliqqcP5YGUzzAJz9Wad
-         5yDyUENA2iWN9zy67IAUHCEO7GnH4yF9KileEXqqojq3yTSfoDS62K7HT1pS1T8JTeGw
-         DSVW1qsYrQDFJSoR6hBTfJ3oKdp3UckssaDL+fDH/G5yovA3uTGsTnM44QARnO9if2U/
-         YwDjOnWEtp7MSxn6LqnfXWlPf5sTmcPvG+CBw6d1oS6oRheg1kT/tsdO8udEfNvecsV8
-         eLkpwBGT2F12uREzC2wkD2IvSlgCs+dAmtq/w4ebNhOLOj30WHkjOIE/hLzTVJoCmU9i
-         xgRQ==
-X-Gm-Message-State: APjAAAUsug+SMTTAkmnggPS4p6CV5Cvd8+j4n6q8fuS+kjFvh42gRq+r
-        1lVizxYdmO+VreN2boI6Tb7ZKEPCkO4nnUl/7i0l6g==
-X-Google-Smtp-Source: APXvYqwwA7ZrSqc9LfOKonkJ6y8BQLNlPN2DFVLvqiuvKtRb97MAB9TuY4RqV1wSfz6TdIpOCtcbUgcRA0i10VfcdC0=
-X-Received: by 2002:a05:6512:64:: with SMTP id i4mr4470456lfo.55.1580275450572;
- Tue, 28 Jan 2020 21:24:10 -0800 (PST)
+        Wed, 29 Jan 2020 00:29:40 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48951 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbgA2F3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 00:29:39 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 486sVm2BfSz9sPW;
+        Wed, 29 Jan 2020 16:29:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1580275776;
+        bh=pHwGwtOAVJ9TnzSVuPy5VmTYAx1l6PoUUub/aiK1wwo=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Y90O7yK2wwBKXKgGqeryzb1XuKLpTkvrkbORegBzJWY+/5coWv9J/SDXOBuYnMzV7
+         tnUzmF4hVKFyDiUqqjB7jsmkA49NMDHn+k8t14If5dzUr9srs37K4X8JE+rWfaQErO
+         z+kijznKJDvF20+jfybcfIEQFqZCby0bOHtWLE9tkPmuJcnzgLS/XyBk8gYMv3BB65
+         SZ35YJ3wTSINy4L8ro/wbE/L7pg6APuLTY/8xN3t2r2GYMT/kVG3yKccA2vvKcyUKg
+         pzqqorKCPfTOCoKWcUxeH0xJmNO4jVrOL5Qqy04NaYXReqCtP+H4ZhRotL0SFCEea+
+         zYESTIFuK1jPQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     peter.ujfalusi@ti.com, dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, corbet@lwn.net,
+        linux-doc@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: Docs build broken by driver-api/dmaengine/client.rst ? (was Re: [GIT PULL]: dmaengine updates for v5.6-rc1)
+In-Reply-To: <20200128122415.GU2841@vkoul-mobl>
+References: <20200127145835.GI2841@vkoul-mobl> <87imkvhkaq.fsf@mpe.ellerman.id.au> <20200128122415.GU2841@vkoul-mobl>
+Date:   Wed, 29 Jan 2020 16:29:33 +1100
+Message-ID: <875zguhltu.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200128135829.486060649@linuxfoundation.org> <20200128175119.GA8176@roeck-us.net>
- <20200128181435.GB3673744@kroah.com>
-In-Reply-To: <20200128181435.GB3673744@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 29 Jan 2020 10:53:59 +0530
-Message-ID: <CA+G9fYt66SB2RtYz2uE=5tDKJEtoNLRjvocUv60NgN0E-SUJZQ@mail.gmail.com>
-Subject: Re: [PATCH 4.4 000/183] 4.4.212-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Will go fix this in 4.4.y and 4.9.y and push out new -rc2 trees with
+Vinod Koul <vkoul@kernel.org> writes:
+> On 28-01-20, 22:50, Michael Ellerman wrote:
+...
+>
+> I have modified this to below as this:
+>
+> --- a/Documentation/driver-api/dmaengine/client.rst
+> +++ b/Documentation/driver-api/dmaengine/client.rst
+> @@ -151,8 +151,8 @@ The details of these operations are:
+>       Note that callbacks will always be invoked from the DMA
+>       engines tasklet, never from interrupt context.
+>  
+> -  Optional: per descriptor metadata
+> -  ---------------------------------
+> +Optional: per descriptor metadata
+> +---------------------------------
+>    DMAengine provides two ways for metadata support.
+>  
+>    DESC_METADATA_CLIENT
+>
+> And I will add this as fixes and it should be in linux-next tomorrow
 
-This is 4.4.212-rc2 test report.
+Thanks!
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.212-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: fc5b03776f2d3b13543520d5a61a0c56ee4d1a5f
-git describe: v4.4.211-184-gfc5b03776f2d
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.211-184-gfc5b03776f2d
-
-No regressions (compared to build v4.4.211)
-
-No fixes (compared to build v4.4.211)
-
-Ran 18829 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* prep-tmp-disk
-* spectre-meltdown-checker-test
-* kvm-unit-tests
-* v4l2-compliance
-* install-android-platform-tools-r2600
-* kselftest-vsyscall-mode-native
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.208-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.208-rc1-hikey-20200101-645
-git commit: 45aaddb4efb9c8a83ada6caeb9594f7fc5130ec3
-git describe: 4.4.208-rc1-hikey-20200101-645
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.208-rc1-hikey-20200101-645
-
-
-No regressions (compared to build 4.4.208-rc1-hikey-20200101-644)
-
-
-No fixes (compared to build 4.4.208-rc1-hikey-20200101-644)
-
-Ran 1568 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+cheers
