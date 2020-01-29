@@ -2,105 +2,162 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5D3C33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59641C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 20:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6994F2067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:59:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R40RTKe7"
+	by mail.kernel.org (Postfix) with ESMTP id 2482E207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 20:01:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580328111;
+	bh=eUqnYUa8xJcvz8vjf0xZN38k+FZQvoRAsBz21Xm6sZU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=h0kycsH1Ip50FpellthQwssJ56gB+giIxLVBFMi6gG6fjd5pI3hfy8H+WM1j1Plh0
+	 LrfSosJfI2alpZtOTFDl09S063EyXNv5cYHgZtUIaBgVCawqHa+VRpOk8l+mFVacDW
+	 AJis+88Ymg0gWfdYyZhObJaha0r3E5pLgJM6DYl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbgA2T7t (ORCPT
+        id S1727464AbgA2UBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 14:59:49 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33722 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgA2T7t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 14:59:49 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so1032693wrq.0;
-        Wed, 29 Jan 2020 11:59:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=KQIYlN5HOzFLhj5jtZda0TleOgpJJL47WY9lbMV5qaE=;
-        b=R40RTKe7WBKBnBEp0jxvh939RGtvGnrdQ6+w2eJ9G3ZTyQm04eL1t1l8zGvypgaWEP
-         ny4vpG+D418EgNv5qlyB2KYXj/ENl/0NIktSuYURCuX7G+n6zOmsT6o68lAstP3J0Wim
-         /V7+yDVa4tAn50n8OEqPX8jRaLwq8zodDV4XFmpqVty7vgD/shUTJX4wbm/9Q7gjOCY3
-         VOEtrFELoH0qF1Thdg1nab6Rx0LLHDOqI1TEBG73rX8kDJRQh/5nJQ3WIGe6F80jOkp6
-         cpkZD+Ml0stPGI3ul6akaAlXrSdrA6SThselx7k/90lWuy37rw0EgeFFmLS/AOtda3Ww
-         AQ+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=KQIYlN5HOzFLhj5jtZda0TleOgpJJL47WY9lbMV5qaE=;
-        b=ZeUcXvmN+8yJE4r8Wlq7RMaMIvuR0+ihkgt94BAneEt+EOFcV3LM1SJzyj/lzLC9WA
-         s5NuOv+ULIUezn0N+yNRA0w0kblEXBqTaHNQF5AP4MDuBl8f9s1OHrVaVj1c/kGnqQEN
-         4Py1nI3zod/iqdIgNdsEB5mJu57f6KDfJkmsaiUd3u4sbhgkI5Om8OpUJCv1fLAVF/Jl
-         fV8EL2ZUeDqs7gMN2hrdEzIyAwmWiPQXpm64XgeYavLem0m0a5Ov2JSwLA3Vd6spEPsF
-         eIFau3HtkK/3NU+gruUGRHikhNH6kiOu5CJBAUGOREKtkBg9txM8vRxcX+mN/2ZxnE9H
-         v9nA==
-X-Gm-Message-State: APjAAAU47et+qD2vdC+kJROIkYxqSeJ0WgQcdQivX3vJT5izvX4q8B8I
-        dTO1XVNkdO6xwaGHKUsZHKg=
-X-Google-Smtp-Source: APXvYqz0KHMdjB7MhvC0D8454io/mcZS6Qf9m8UNey648Oqs3gRg9sIQpSRw2pSRTKlNbq3z5VwmpA==
-X-Received: by 2002:adf:f3d1:: with SMTP id g17mr495290wrp.378.1580327986979;
-        Wed, 29 Jan 2020 11:59:46 -0800 (PST)
-Received: from localhost.localdomain ([2a02:2450:10d2:194d:8f9:806b:30e8:a48e])
-        by smtp.gmail.com with ESMTPSA id z19sm3303877wmi.35.2020.01.29.11.59.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 11:59:46 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     SeongJae Park <sj38.park@gmail.com>, sjpark@amazon.com,
-        akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
-        acme@kernel.org, amit@kernel.org, brendan.d.gregg@gmail.com,
-        corbet@lwn.net, dwmw@amazon.com, mgorman@suse.de,
-        rostedt@goodmis.org, kirill@shutemov.name,
-        brendanhiggins@google.com, colin.king@canonical.com,
-        minchan@kernel.org, vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Re: Re: Re: Re: [PATCH v2 0/9] Introduce Data Access MONitor (DAMON)
-Date:   Wed, 29 Jan 2020 20:59:07 +0100
-Message-Id: <20200129195907.4589-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200129193616.GT14914@hirez.programming.kicks-ass.net> (raw)
+        Wed, 29 Jan 2020 15:01:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgA2UBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 15:01:50 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B276F2067C;
+        Wed, 29 Jan 2020 20:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580328109;
+        bh=eUqnYUa8xJcvz8vjf0xZN38k+FZQvoRAsBz21Xm6sZU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rjv5RFPqGSLFBb+bMIdmwauMlY6BQgrgduh+b+BbCWLmSNE5sAYkGdk3gjtU5l0cm
+         yM1Mevx+pg8NIM1pZfvo4qhbpqD3PvHGA8bqty+FHme7kVyyJLyOe0Au3HwLzHqd3c
+         2zZHeagcFw2DxanCXC2NByH9ip34n2nnY56U3X64=
+Date:   Wed, 29 Jan 2020 20:01:43 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, joel@jms.id.au, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v1 2/2] iio: adc: modify NPCM reset support
+Message-ID: <20200129200143.08bf4a91@archlinux>
+In-Reply-To: <20200119110032.124745-2-tmaimon77@gmail.com>
+References: <20200119110032.124745-1-tmaimon77@gmail.com>
+        <20200119110032.124745-2-tmaimon77@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 20:36:16 +0100 Peter Zijlstra <peterz@infradead.org> wrote:
+On Sun, 19 Jan 2020 13:00:32 +0200
+Tomer Maimon <tmaimon77@gmail.com> wrote:
 
-> On Wed, Jan 29, 2020 at 08:06:45PM +0100, SeongJae Park wrote:
-> > > Perf can do address based sampling of memops, I suspect you can create
-> > > something using that.
-> > 
-> > If you're saying implementing DAMON in 'perf mem', I think it would conflict
-> > with abovely explained DAMON's goal.
-> > 
-> > Else, if you're saying it would be the right place to handle the DAMON
-> > generated data, I agree, thank you for pointing me that.  Will keep it in mind
-> > while shaping the interface of DAMON.
+> Modify NPCM ADC reset support from
+> direct register access to reset controller support.
 > 
-> I'm saying it might be able to provide the data you need; without damon.
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+
+Hmm.  This presumably breaks all old DT. 
+
+If that's not a problem please say why.
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/npcm_adc.c | 30 +++++++++---------------------
+>  1 file changed, 9 insertions(+), 21 deletions(-)
 > 
-> Might; because I'm not entirely sure what you're looking for, nor
-> exactly what events we have that provide address information.
+> diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
+> index a6170a37ebe8..83bad2d5575d 100644
+> --- a/drivers/iio/adc/npcm_adc.c
+> +++ b/drivers/iio/adc/npcm_adc.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/reset.h>
+>  
+>  struct npcm_adc {
+>  	bool int_status;
+> @@ -23,13 +24,9 @@ struct npcm_adc {
+>  	struct clk *adc_clk;
+>  	wait_queue_head_t wq;
+>  	struct regulator *vref;
+> -	struct regmap *rst_regmap;
+> +	struct reset_control *reset;
+>  };
+>  
+> -/* NPCM7xx reset module */
+> -#define NPCM7XX_IPSRST1_OFFSET		0x020
+> -#define NPCM7XX_IPSRST1_ADC_RST		BIT(27)
+> -
+>  /* ADC registers */
+>  #define NPCM_ADCCON	 0x00
+>  #define NPCM_ADCDATA	 0x04
+> @@ -106,13 +103,11 @@ static int npcm_adc_read(struct npcm_adc *info, int *val, u8 channel)
+>  					       msecs_to_jiffies(10));
+>  	if (ret == 0) {
+>  		regtemp = ioread32(info->regs + NPCM_ADCCON);
+> -		if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
+> +		if (regtemp & NPCM_ADCCON_ADC_CONV) {
+>  			/* if conversion failed - reset ADC module */
+> -			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
+> -				     NPCM7XX_IPSRST1_ADC_RST);
+> +			reset_control_assert(info->reset);
+>  			msleep(100);
+> -			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
+> -				     0x0);
+> +			reset_control_deassert(info->reset);
+>  			msleep(100);
+>  
+>  			/* Enable ADC and start conversion module */
+> @@ -186,7 +181,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
+>  	struct npcm_adc *info;
+>  	struct iio_dev *indio_dev;
+>  	struct device *dev = &pdev->dev;
+> -	struct device_node *np = pdev->dev.of_node;
+>  
+>  	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
+>  	if (!indio_dev)
+> @@ -199,6 +193,10 @@ static int npcm_adc_probe(struct platform_device *pdev)
+>  	if (IS_ERR(info->regs))
+>  		return PTR_ERR(info->regs);
+>  
+> +	info->reset = devm_reset_control_get(&pdev->dev, NULL);
+> +	if (IS_ERR(info->reset))
+> +		return PTR_ERR(info->reset);
+> +
+>  	info->adc_clk = devm_clk_get(&pdev->dev, NULL);
+>  	if (IS_ERR(info->adc_clk)) {
+>  		dev_warn(&pdev->dev, "ADC clock failed: can't read clk\n");
+> @@ -211,16 +209,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
+>  	div = div >> NPCM_ADCCON_DIV_SHIFT;
+>  	info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1) * 2);
+>  
+> -	if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
+> -		info->rst_regmap = syscon_regmap_lookup_by_compatible
+> -			("nuvoton,npcm750-rst");
+> -		if (IS_ERR(info->rst_regmap)) {
+> -			dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-rst\n");
+> -			ret = PTR_ERR(info->rst_regmap);
+> -			goto err_disable_clk;
+> -		}
+> -	}
+> -
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq <= 0) {
+>  		ret = -EINVAL;
 
-Thank you for further clarifying this :)  Will also address this concern in
-next spin.
-
-
-Thanks,
-SeongJae Park
