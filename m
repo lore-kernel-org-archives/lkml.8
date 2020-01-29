@@ -2,187 +2,209 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5F0C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA31C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED9D42070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9675620716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:57:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QKHwAWGm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pf9+Egvd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgA2G44 (ORCPT
+        id S1726216AbgA2G5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 01:56:56 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41642 "EHLO
+        Wed, 29 Jan 2020 01:57:46 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:47067 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgA2G4z (ORCPT
+        with ESMTP id S1726020AbgA2G5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 01:56:55 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x8so8331720pgk.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 22:56:55 -0800 (PST)
+        Wed, 29 Jan 2020 01:57:46 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z124so8316599pgb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 22:57:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=th9dM6ur5ptqhvYRUmVKLbFwuIqQif/Q5YDIPAzrV5o=;
-        b=QKHwAWGmudqsth1f1OQRiW/3rvkqGwZ1HNrv5d4evNdvm+mVBIg6ZRLJZn0TU0GY83
-         Ty7kIHovGvX9+DI41SS1B+LlVUXYcl2zf2rzYNjxGav/UC4aqquBdn6b5EbIM6Ssad7Y
-         EYZdiNP32G+l0mdNbODgBiGCztFLAdrJA1X7mlrYoJECfgTeWazr+VUvY3UKmk4mZ8Ge
-         LYrw+DF8mOL3jfuC8wXnmod9R36/DOL/yUeLYPh6Aiv8X43pufYZdQqTL9xCWXSqR+uD
-         BORWJ9XYUzWZXjWtgX3UmwI5WSF67O8okv7um7KJ31JFCS6dtMAXT11TLVMeFDxkLPz8
-         EynA==
+         :content-disposition:in-reply-to;
+        bh=4Vt2Aqkg/R7zTsybACOEGE3vp2GaBTi2UK3kITyWRgs=;
+        b=pf9+Egvdq2fsOww8uv4qog07L54mIDZpa1b7UUxmXe9zPsDKoOqPZTG11ICsD2jGbQ
+         MRvi3pCGhdgyYmPt+F/3ih8uz109NMBEVa/aruioiWIz7asb1Y2qmhYYeeLIMO2C5sP9
+         QjFrjupxrd8K3pjxT43DTPjUqFOZYreqGavG9+miTl2WabJn6vFpS9BO07nlnKaaLxpa
+         eMCh1MEIn3mLAn1gqYQSF23hoXu6dkCBgVn8PJMmk/58thKxRgKP04swUYikNKG3eV3c
+         RAqKlrjEzv899nXk3Kub1WNxRbxjEYBaRwTV/erOpJh+DagS5FGS/WjgUBiXwwCpOsEz
+         K6Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=th9dM6ur5ptqhvYRUmVKLbFwuIqQif/Q5YDIPAzrV5o=;
-        b=J8OJDtHnE2jqaJu/Vfr5YKK91DyRj3bQbgnCb5+db0pITJD3q5CfaY6ldnN226AHLy
-         dy+TEoj5in843Gs9FHGCxCNYv+eDwq8S6Q3mnSIgeE+AJlvS0jpFWSVF02XjaAO0Z7R8
-         KAjzopxOILOZ7jn1mIffaDpjL+TgN78BK2WCJQgIeVeZ43Ad/TOB4DeAGaCMQJT76X1c
-         GpQ1l7VWhSjLihUEnhpBCNrIWQ+zo0pOflu9FgCAtM5TQECLcWxT82Mk9fqgXqOU28Ph
-         /1qqrHqokjBE1drGrLsYMDmb7+d95ifhbOMeO3ATBUcyTSQ9DrL42qDJYK2xFWg8OyEp
-         9xfg==
-X-Gm-Message-State: APjAAAUCSTFRQpbJrN2YyqCO//ly76m2JNFf66fSCLG45PrBF1xA8z1o
-        XzEsBLeoviKP1FFc0J2tKbsz4gaTDA==
-X-Google-Smtp-Source: APXvYqxTbs28lV9H8hzcG6YUV4yTJ5fYtYQmqEhRX+rPfB7YI+QbnE0U+nijaLZ5lWNBt+LwNcXuyA==
-X-Received: by 2002:a63:6c09:: with SMTP id h9mr28290990pgc.34.1580281015090;
-        Tue, 28 Jan 2020 22:56:55 -0800 (PST)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id m12sm1126551pjf.25.2020.01.28.22.56.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jan 2020 22:56:53 -0800 (PST)
-Date:   Wed, 29 Jan 2020 12:26:46 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, smohanad@codeaurora.org,
-        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
-        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/16] bus: mhi: core: Add support for downloading
- firmware over BHIe
-Message-ID: <20200129065645.GA25437@mani>
-References: <20200123111836.7414-1-manivannan.sadhasivam@linaro.org>
- <20200123111836.7414-9-manivannan.sadhasivam@linaro.org>
- <00e3d4f8-89ab-79f0-7094-90cc6d85fa41@codeaurora.org>
+         :mime-version:content-disposition:in-reply-to;
+        bh=4Vt2Aqkg/R7zTsybACOEGE3vp2GaBTi2UK3kITyWRgs=;
+        b=BaFbp+v85hIar+sOq0UTgI+SSUXli83JuG+pFrIclICR+NxIWKd/VT3kQTFKbC2nPy
+         NSyFbNRduNBzuMbxX/MG5NJzDC6NoCk4vlsupSDKdL92gq9LZlZ2q0UCZ2fs15FgeyxA
+         Xxq41Acjyg5Cxk1+Wiz3/NvkIfahUXvZ/GrArBReHx7qqxW9MiD/wjglvQyXJBbDbP7H
+         JgsCg63B6gouI0fRXyiSF1+Sb7okxX6svEsJsofsoAxcRa3MOxjXtXgtH1/e8nG/+3T5
+         7Hm53X2LvVuC1v3KJ/UGsY1vt/zuv6+THmF5DQVqwYxH4Wa3V3ZOI4k8WjutTRLmT/0U
+         UV8A==
+X-Gm-Message-State: APjAAAWuHQIkarXIVNb/Kq9VzFYgoOY0qs84f4kDt7BBUboIo42Knvvg
+        JZgAXEB1ycz3F0vgi5RwX/g=
+X-Google-Smtp-Source: APXvYqzkSiAX18kbjvXpkNuPb3q3++T6V7dP7MsbkTfbLALxTBgUnpdOBTU8ALjrfnPu2w6tUFAT/g==
+X-Received: by 2002:a62:6c6:: with SMTP id 189mr7969753pfg.224.1580281065467;
+        Tue, 28 Jan 2020 22:57:45 -0800 (PST)
+Received: from workstation-portable ([146.196.37.139])
+        by smtp.gmail.com with ESMTPSA id o11sm1117716pjs.6.2020.01.28.22.57.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jan 2020 22:57:44 -0800 (PST)
+Date:   Wed, 29 Jan 2020 12:27:38 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] cred: Use RCU primitives to access RCU pointers
+Message-ID: <20200129065738.GA17486@workstation-portable>
+References: <20200128072740.21272-1-frextrite@gmail.com>
+ <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
+ <20200128170426.GA10277@workstation-portable>
+ <CAG48ez3bLC3dzXn7Ep0YmBENg7wp6TMrocGa6q2RLtYoOdUSxg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00e3d4f8-89ab-79f0-7094-90cc6d85fa41@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAG48ez3bLC3dzXn7Ep0YmBENg7wp6TMrocGa6q2RLtYoOdUSxg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 12:36:04PM -0700, Jeffrey Hugo wrote:
-> On 1/23/2020 4:18 AM, Manivannan Sadhasivam wrote:
-> > MHI supports downloading the device firmware over BHI/BHIe (Boot Host
-> > Interface) protocol. Hence, this commit adds necessary helpers, which
-> > will be called during device power up stage.
-> > 
-> > This is based on the patch submitted by Sujeev Dias:
-> > https://lkml.org/lkml/2018/7/9/989
-> > 
-> > Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
-> > Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-> > [mani: splitted the data transfer patch and cleaned up for upstream]
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >   drivers/bus/mhi/core/boot.c     | 268 ++++++++++++++++++++++++++++++++
-> >   drivers/bus/mhi/core/init.c     |   1 +
-> >   drivers/bus/mhi/core/internal.h |   1 +
-> >   3 files changed, 270 insertions(+)
-> > 
-> > diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-> > index 0996f18c4281..36956fb6eff2 100644
-> > --- a/drivers/bus/mhi/core/boot.c
-> > +++ b/drivers/bus/mhi/core/boot.c
-> > @@ -20,6 +20,121 @@
-> >   #include <linux/wait.h>
-> >   #include "internal.h"
-> > +/* Download AMSS image to device */
+On Tue, Jan 28, 2020 at 08:09:17PM +0100, Jann Horn wrote:
+> On Tue, Jan 28, 2020 at 6:04 PM Amol Grover <frextrite@gmail.com> wrote:
+> > On Tue, Jan 28, 2020 at 10:30:19AM +0100, Jann Horn wrote:
+> > > On Tue, Jan 28, 2020 at 8:28 AM Amol Grover <frextrite@gmail.com> wrote:
+> > > > task_struct.cred and task_struct.real_cred are annotated by __rcu,
+> > >
+> > > task_struct.cred doesn't actually have RCU semantics though, see
+> > > commit d7852fbd0f0423937fa287a598bfde188bb68c22. For task_struct.cred,
+> > > it would probably be more correct to remove the __rcu annotation?
+> > >
+> >
+> > Hi Jann,
+> >
+> > I went through the commit you mentioned. If I understand it correctly,
+> > ->cred was not being accessed concurrently (via RCU), hence, a non_rcu
+> > flag was introduced, which determined if the clean-up should wait for
+> > RCU grace-periods or not. And since, the changes were 'thread local'
+> > there was no need to wait for an entire RCU GP to elapse.
 > 
-> Nit: I don't feel like this comment really adds any value.  I feel like it
-> either should have more content, or be removed.  What do you think?
-
-Okay, I think it can be removed.
-
-> > +static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
-> > +			    const struct mhi_buf *mhi_buf)
-> > +{
+> Yeah.
+> 
+> > The commit too, as you said, mentions the removal of __rcu annotation.
+> > However, simply removing the annotation won't work, as there are quite a
+> > few instances where RCU primitives are used. Even get_current_cred()
+> > uses RCU APIs to get a reference to ->cred.
+> 
+> Luckily, there aren't too many places that directly access ->cred,
+> since luckily there are helper functions like get_current_cred() that
+> will do it for you. Grepping through the kernel, I see:
+> 
+> Places that need adjustment:
+> 
+> include/linux/cred.h:   rcu_dereference_protected(current->cred, 1)
+> kernel/auditsc.c: * the only situations where tsk->cred may be
+> accessed without an rcu read lock.
+> kernel/auditsc.c:       cred = rcu_dereference_check(tsk->cred, tsk ==
+> current || task_creation);
+> kernel/cred.c:  rcu_assign_pointer(task->cred, new);
+> kernel/cred.c:  rcu_assign_pointer(current->cred, new);
+> kernel/cred.c:  rcu_assign_pointer(current->cred, old);
 > 
 > 
-> > +/* Download SBL image to device */
+> Places that already don't use RCU accessors:
 > 
-> Same here.  Comment seems self evident from the function name.
-
-Ack.
-
-> > +static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
-> > +			   dma_addr_t dma_addr,
-> > +			   size_t size)
-> > +{
-> > +	u32 tx_status, val, session_id;
-> > +	int i, ret;
-> > +	void __iomem *base = mhi_cntrl->bhi;
-> > +	rwlock_t *pm_lock = &mhi_cntrl->pm_lock;
-> > +	struct {
-> > +		char *name;
-> > +		u32 offset;
-> > +	} error_reg[] = {
-> > +		{ "ERROR_CODE", BHI_ERRCODE },
-> > +		{ "ERROR_DBG1", BHI_ERRDBG1 },
-> > +		{ "ERROR_DBG2", BHI_ERRDBG2 },
-> > +		{ "ERROR_DBG3", BHI_ERRDBG3 },
-> > +		{ NULL },
-> > +	};
-> > +
-> > +	read_lock_bh(pm_lock);
-> > +	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
-> > +		read_unlock_bh(pm_lock);
-> > +		goto invalid_pm_state;
-> > +	}
-> > +
-> > +	/* Start SBL download via BHI protocol */
+> drivers/virt/vboxguest/vboxguest_linux.c:       if
+> (from_kuid(current_user_ns(), current->cred->uid) == 0)
+> kernel/cred.c:  BUG_ON(cred == current->cred);
+> kernel/cred.c:  kdebug("exit_creds(%u,%p,%p,{%d,%d})", tsk->pid,
+> tsk->real_cred, tsk->cred,
+> kernel/cred.c:         atomic_read(&tsk->cred->usage),
+> kernel/cred.c:         read_cred_subscribers(tsk->cred));
+> kernel/cred.c:  cred = (struct cred *) tsk->cred;
+> kernel/cred.c:  tsk->cred = NULL;
+> kernel/cred.c:  old = task->cred;
+> kernel/cred.c:          !p->cred->thread_keyring &&
+> kernel/cred.c:          p->real_cred = get_cred(p->cred);
+> kernel/cred.c:          get_cred(p->cred);
+> kernel/cred.c:          alter_cred_subscribers(p->cred, 2);
+> kernel/cred.c:                 p->cred, atomic_read(&p->cred->usage),
+> kernel/cred.c:                 read_cred_subscribers(p->cred));
+> kernel/cred.c:          atomic_inc(&p->cred->user->processes);
+> kernel/cred.c:  p->cred = p->real_cred = get_cred(new);
+> kernel/cred.c:  BUG_ON(task->cred != old);
+> kernel/cred.c:  const struct cred *old = current->cred;
+> kernel/cred.c:   * '->cred' pointer, not the '->real_cred' pointer that is
+> kernel/cred.c:  const struct cred *override = current->cred;
+> kernel/cred.c:         cred == tsk->cred ? "[eff]" : "");
+> kernel/cred.c:  if (tsk->cred == tsk->real_cred) {
+> kernel/cred.c:          if (unlikely(read_cred_subscribers(tsk->cred) < 2 ||
+> kernel/cred.c:                       creds_are_invalid(tsk->cred)))
+> kernel/cred.c:                       read_cred_subscribers(tsk->cred) < 1 ||
+> kernel/cred.c:                       creds_are_invalid(tsk->cred)))
+> kernel/cred.c:  if (tsk->cred != tsk->real_cred)
+> kernel/cred.c:          dump_invalid_creds(tsk->cred, "Effective", tsk);
+> kernel/cred.c:         tsk->real_cred, tsk->cred,
+> kernel/cred.c:         atomic_read(&tsk->cred->usage),
+> kernel/cred.c:         read_cred_subscribers(tsk->cred));
+> kernel/fork.c:  atomic_dec(&p->cred->user->processes);
+> security/security.c:    lsm_early_cred((struct cred *) current->cred);
+> security/smack/smack_lsm.c:     struct cred *cred = (struct cred *)
+> current->cred;
+> security/tomoyo/common.c:           (!uid_eq(task->cred->uid,
+> GLOBAL_ROOT_UID) ||
+> security/tomoyo/common.c:            !uid_eq(task->cred->euid,
+> GLOBAL_ROOT_UID)))
 > 
-> I'm wondering, what do you think about having a debug level message here
-> that SBL is being loaded?  I think it would be handy for looking into the
-> device state.
 > 
-
-Agree. will add.
-
-> > +	mhi_write_reg(mhi_cntrl, base, BHI_STATUS, 0);
-> > +	mhi_write_reg(mhi_cntrl, base, BHI_IMGADDR_HIGH,
-> > +		      upper_32_bits(dma_addr));
-> > +	mhi_write_reg(mhi_cntrl, base, BHI_IMGADDR_LOW,
-> > +		      lower_32_bits(dma_addr));
-> > +	mhi_write_reg(mhi_cntrl, base, BHI_IMGSIZE, size);
-> > +	session_id = prandom_u32() & BHI_TXDB_SEQNUM_BMSK;
-> > +	mhi_write_reg(mhi_cntrl, base, BHI_IMGTXDB, session_id);
-> > +	read_unlock_bh(pm_lock);
-> > +
-> > +
-> > +static void mhi_firmware_copy(struct mhi_controller *mhi_cntrl,
-> > +			      const struct firmware *firmware,
-> > +			      struct image_info *img_info)
+> Places that don't use RCU and are broken:
 > 
-> Perhaps its just me, but the parameters on the second and third lines do not
-> look aligned in the style used in the rest of the file.
+> security/smack/smack_lsm.c:     struct smack_known *tkp =
+> smk_of_task(smack_cred(tsk->cred));
 > 
-
-Yep, will fix it.
-
-Thanks,
-Mani
-
+> So actually, the number of places that already don't use RCU accessors
+> is much higher than the number of places that use them.
 > 
-> -- 
-> Jeffrey Hugo
-> Qualcomm Technologies, Inc. is a member of the
-> Code Aurora Forum, a Linux Foundation Collaborative Project.
+> > So, currently, maybe we
+> > should continue to use RCU APIs and leave the __rcu annotation in?
+> > (Until someone who takes it on himself to remove __rcu annotation and
+> > fix all the instances). Does that sound good? Or do you want me to
+> > remove __rcu annotation and get the process started?
+> 
+> I don't think it's a good idea to add more uses of RCU APIs for
+> ->cred; you shouldn't "fix" warnings by making the code more wrong.
+> 
+> If you want to fix this, I think it would be relatively easy to fix
+> this properly - as far as I can tell, there are only seven places that
+> you'll have to change, although you may have to split it up into three
+> patches.
+
+Thank you for the detailed analysis. I'll try my best and send you a
+patch. But before I start I want to make sure one thing. The changes
+done by the commit you mentioned (which introduced non_rcu flag), should
+be now reverted, right?  Since, prior to the commit RCU semantics were
+there and RCU was being used (which was unnecessary) and the fix merely,
+removed these (unnecessary) RCU usages (with checks to either use them
+or not, but now we actually don't use RCU for subjective credentials).
+
+So, now what's left is the unused RCU code (which needs to be removed)
+and the changes done in the temporary fix (which would be reverted since
+we don't want to use RCU).
+
+Thanks
+Amol
