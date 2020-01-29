@@ -2,184 +2,152 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9690C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299B6C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB0F214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEE5206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:52:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ut1dDBrR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dIGAw0i+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgA2Eui (ORCPT
+        id S1726663AbgA2Ewd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 23:50:38 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33561 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgA2Eui (ORCPT
+        Tue, 28 Jan 2020 23:52:33 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57150 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgA2Ewc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 23:50:38 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n25so10897472lfl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 20:50:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Wim94widKA03iNuJRk9so3EwVNvjN2LdiRVfz6nHdGg=;
-        b=Ut1dDBrReZ+s/c2Hff6XjuKCaDzlAw9J91bOdU7BFhTfc/vBYOqLFZ86XVwda6x4vd
-         JyPMXJ529/CgY17ePJ3MN+6xdlCCt9AIvQX8hxxOtby6rDb2vN3hmVfJ3chgOZ0B9qin
-         SpAF5PzNOiwA+lAZVoPYAGXQLRwpe8wu2x5VPCUNhKXzfCVkw+6v0DV7/wywrcdYjfe+
-         3gRwq7idDemW2u9T3ajMoDB4kAm9eR6mzfcGWbaDeN+8uXIKD8toohKy4i6l1v49NplP
-         bQkXF5M9PPfeNuIptYshYiHPe6HPTIPkjqeEyk6lUMadXCUMdLknBvAKlPcRg0Tjfibd
-         tJDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Wim94widKA03iNuJRk9so3EwVNvjN2LdiRVfz6nHdGg=;
-        b=eovjdP33s/BrqOWeqpBrclhPdepex6SN73eQkvt0AflfssP6BkdtXyeUE1dBn8hbz/
-         ZMzrUUKRxDggzqRPnkXhz9VFPvw+AiXKWLQ+6595rlpz19vr/TDNOmnzt0bTJ12gMRy0
-         xyIVvbXIaDJydVCFvYT6Pztpfp49iLpZkPAu/fsVWo3YVaoOOANZ6Kvb/ZGTNDy+Le3o
-         CRF0DCy+xalXKF8UTlA57swcXXmIipPhwGzQrbSKfokGvNZRRbnwZ5npikEVkYuvt55O
-         yG2g3v18xYKNk+MXWN2pjx7StISX4Lm8oKXoq09wLWScclUnLbNgNqtRMLIPwLOiasAG
-         M9kQ==
-X-Gm-Message-State: APjAAAULKGIg5eASu5PKf/I/AddOWnNfoJOQznI7IIhvCMQXRo7Jf5Kn
-        B497RRSNzaa/1/OGBkjGFPU5g1Zs+E95SpmqkxLfjEIxpWU=
-X-Google-Smtp-Source: APXvYqxFX4aCqNvA5hqlXrgKCF20fYm8bkSYUTXShZmJ31tdAOSiXRf+BHB0BP8xgJ9VKlTZDiZiI4qbyMOtbW5pBLo=
-X-Received: by 2002:ac2:5e7a:: with SMTP id a26mr4469755lfr.167.1580273436449;
- Tue, 28 Jan 2020 20:50:36 -0800 (PST)
+        Tue, 28 Jan 2020 23:52:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=avy9Fk+Wu+NJ94LNqZYBATBErrgaEc+SgcZanTZL+Rs=; b=dIGAw0i+1CpXM2BqH2c4Thj7b
+        G8cL7MShJeRXwRyPprM+2iBeC+CSB3cz97AQTksPha5YOErUWdujv1cYFz2C3ua73imUeIYcuaiPx
+        N9TPRedtu6nztuBEjtWYnbrEZuC74IQpI2m9hc9mjPw/jgPrUBOXG8ObgaP0/yi6tvN25OhiH6+Zi
+        yUGrMUOqLD1VgXFICy/mZuVkOt1jPZUYuUQtPPPm+navZDqVnRkHzh7IPtcrLikHPWYsocl2BaC8g
+        weRrmQ5Ghr81IvTTNQtY2n9smYTpsLZ2tvJROO4uVLM1OomLV5rhcb86uJ6Ruz7v13F73QeQmqHML
+        QLQQSN/HA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwfL3-0004uW-Up; Wed, 29 Jan 2020 04:52:30 +0000
+Subject: Re: mmotm 2020-01-28-20-05 uploaded (security/security.c)
+To:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+References: <20200129040640.6PNuz0vcp%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <56177bc4-441d-36f4-fe73-4e86edf02899@infradead.org>
+Date:   Tue, 28 Jan 2020 20:52:28 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200128135852.449088278@linuxfoundation.org>
-In-Reply-To: <20200128135852.449088278@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 29 Jan 2020 10:20:25 +0530
-Message-ID: <CA+G9fYs=Fd27J7==VEYc_0=7=xH4sS003EwXMQHCRs0zL3iANw@mail.gmail.com>
-Subject: Re: [PATCH 4.9 000/271] 4.9.212-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        LTP List <ltp@lists.linux.it>,
-        Jan Stancek <jstancek@redhat.com>, rpalethorpe@suse.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200129040640.6PNuz0vcp%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jan 2020 at 19:46, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.212 release.
-> There are 271 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.212-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 1/28/20 8:06 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2020-01-28-20-05 has been uploaded to
+> 
+>    http://www.ozlabs.org/~akpm/mmotm/
+> 
+> mmotm-readme.txt says
+> 
+> README for mm-of-the-moment:
+> 
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+> 
 
-This is 4.9.212-rc2 test report.
+security/security.c contains duplicate lines for <lockdown_reasons> array:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+/*
+ * These are descriptions of the reasons that can be passed to the
+ * security_locked_down() LSM hook. Placing this array here allows
+ * all security modules to use the same descriptions for auditing
+ * purposes.
+ */
+const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+	[LOCKDOWN_NONE] = "none",
+	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
+	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
+	[LOCKDOWN_EFI_TEST] = "/dev/efi_test access",
+	[LOCKDOWN_KEXEC] = "kexec of unsigned images",
+	[LOCKDOWN_HIBERNATION] = "hibernation",
+	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
+	[LOCKDOWN_IOPORT] = "raw io port access",
+	[LOCKDOWN_MSR] = "raw MSR access",
+	[LOCKDOWN_ACPI_TABLES] = "modifying ACPI tables",
+	[LOCKDOWN_PCMCIA_CIS] = "direct PCMCIA CIS storage",
+	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
+	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
+	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
+	[LOCKDOWN_DEBUGFS] = "debugfs access",
+	[LOCKDOWN_XMON_WR] = "xmon write access",
+	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+	[LOCKDOWN_KCORE] = "/proc/kcore access",
+	[LOCKDOWN_KPROBES] = "use of kprobes",
+	[LOCKDOWN_BPF_READ] = "use of bpf to read kernel RAM",
+	[LOCKDOWN_PERF] = "unsafe use of perf",
+	[LOCKDOWN_TRACEFS] = "use of tracefs",
+	[LOCKDOWN_XMON_RW] = "xmon read and write access",
+	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+};
+
+/*
+ * These are descriptions of the reasons that can be passed to the
+ * security_locked_down() LSM hook. Placing this array here allows
+ * all security modules to use the same descriptions for auditing
+ * purposes.
+ */
+const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+	[LOCKDOWN_NONE] = "none",
+	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
+	[LOCKDOWN_DEV_MEM] = "/dev/mem,kmem,port",
+	[LOCKDOWN_EFI_TEST] = "/dev/efi_test access",
+	[LOCKDOWN_KEXEC] = "kexec of unsigned images",
+	[LOCKDOWN_HIBERNATION] = "hibernation",
+	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
+	[LOCKDOWN_IOPORT] = "raw io port access",
+	[LOCKDOWN_MSR] = "raw MSR access",
+	[LOCKDOWN_ACPI_TABLES] = "modifying ACPI tables",
+	[LOCKDOWN_PCMCIA_CIS] = "direct PCMCIA CIS storage",
+	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
+	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
+	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
+	[LOCKDOWN_DEBUGFS] = "debugfs access",
+	[LOCKDOWN_XMON_WR] = "xmon write access",
+	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+	[LOCKDOWN_KCORE] = "/proc/kcore access",
+	[LOCKDOWN_KPROBES] = "use of kprobes",
+	[LOCKDOWN_BPF_READ] = "use of bpf to read kernel RAM",
+	[LOCKDOWN_PERF] = "unsafe use of perf",
+	[LOCKDOWN_TRACEFS] = "use of tracefs",
+	[LOCKDOWN_XMON_RW] = "xmon read and write access",
+	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+};
 
 
-NOTE:
-LTP fs test read_all_proc fails intermittently on 4.9 and 4.14 branches.
 
-Summary
-------------------------------------------------------------------------
+Stephen, you might delete half of those for linux-next....
 
-kernel: 4.9.212-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: 91ff8226a074449fcd2b96214d1927fd3e8d8114
-git describe: v4.9.211-272-g91ff8226a074
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.211-272-g91ff8226a074
+-- 
+~Randy
 
-No regressions (compared to build v4.9.211)
-
-No fixes (compared to build v4.9.211)
-
-Ran 23560 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* prep-tmp-disk
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
