@@ -2,265 +2,151 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB52C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364D0C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C722082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P93p1HBy"
+	by mail.kernel.org (Postfix) with ESMTP id 06CCE20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580297715;
+	bh=NIsZX4pgljyK2CM9OoHSCXA887GDNOni8VTWXPA7VTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pgkW2UPvMRiSTEfr0opXO4uAlV3xYf9h/pSZnkex1pSOCRQRf5MvwlfJkEVcWcahE
+	 D4Zzsr99YDNLeEdB+aADmVJeJw20peOrJPE9f9IQLPMh4YXoffOCVpQo4+W5i8LC2i
+	 KJA76ilz3jIAmfJ6GxfE1URm1Ia42XlrYa4quu/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgA2LeV (ORCPT
+        id S1726632AbgA2LfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 06:34:21 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:14142 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbgA2LeU (ORCPT
+        Wed, 29 Jan 2020 06:35:14 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37067 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgA2LfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 06:34:20 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200129113418epoutp016970a4bc22e7f81e7c713cc3e260c68f~uWFkBQgNM0044600446epoutp01l
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 11:34:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200129113418epoutp016970a4bc22e7f81e7c713cc3e260c68f~uWFkBQgNM0044600446epoutp01l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580297658;
-        bh=dZpZLGiMiSwje8YHHJxOlxCUUy21vccxwXWxrORqna4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=P93p1HByYvkyb7tGvK6HyPSBBa9KGAvkioj0+5GLYUPY1Tvz14ksLe9Fz3f3m6ltN
-         GTOgnZkBP9E2s7TFKd5mlOGYMqBEuO4WgYP3geqfmARzM4VxvBGAk/NW9Sd/qYNPRP
-         77LQwF3wVGiYuKnGpSTeWJNmDTH3WwmKnTVYOj9M=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200129113418epcas1p3c930f8ee8d2fa429f9bfbd6232902c9f~uWFjnVVm70473404734epcas1p3c;
-        Wed, 29 Jan 2020 11:34:18 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.155]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4871bR61GzzMqYkZ; Wed, 29 Jan
-        2020 11:34:11 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        81.2F.57028.3BD613E5; Wed, 29 Jan 2020 20:34:11 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200129113411epcas1p27949df511b1284425e9d284d61b9bb41~uWFdTxpyX1912319123epcas1p2i;
-        Wed, 29 Jan 2020 11:34:11 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200129113411epsmtrp19a53a2c33686b05655cc2b715654d208~uWFdTBORZ0526205262epsmtrp1w;
-        Wed, 29 Jan 2020 11:34:11 +0000 (GMT)
-X-AuditID: b6c32a35-4f3ff7000001dec4-db-5e316db30a96
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C9.43.06569.3BD613E5; Wed, 29 Jan 2020 20:34:11 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200129113411epsmtip183fee66781f1e38368691526762f8e21~uWFdJstLc0853208532epsmtip1G;
-        Wed, 29 Jan 2020 11:34:11 +0000 (GMT)
-Subject: Re: [PATCH 2/2] PM / devfreq: Change to DEVFREQ_GOV_UPDATE_INTERVAL
- event name
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <cb22cfaf-ad28-9697-f2f2-b6f79c19220d@samsung.com>
-Date:   Wed, 29 Jan 2020 20:41:49 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Wed, 29 Jan 2020 06:35:13 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so19816521wru.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 03:35:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EvhTSqKe0KTZSxbOIZ3ttCfoqhIVfAMnz2yZe7ho1Gg=;
+        b=FFSuItjdKrntW2osVDwsEpGbFPCjQIlrfCBXderoGApcvG9bX/dr5jdLEwSAIR/j1W
+         p2zYMlE9r4cpS2cSTpYBDP2OpusV9LcAUaoHGHEJn2aeZlHCNcsvV0nH67PRufpFrmbf
+         z7a1W/l/YecEJWkKJfMFdyOeS3HGskV/nXsmMoqndcFduee60Y8jrBJm5V+cTx+ZVOxg
+         AjRKGmFd3cgYk64BLHV4Da7Tewj605eY7UZxbSJvZTr6JprcwuZCXbe8JVsExWjr6dFh
+         kA97BTRkKadpa5g4quvzUvxtk8f6ThC2ctgNJkWLDuAUi2+npcyeE9Bbkc7wu5oD/pAd
+         FxQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EvhTSqKe0KTZSxbOIZ3ttCfoqhIVfAMnz2yZe7ho1Gg=;
+        b=DsypbE2OA+nKNBgTIVKIbIm3oIcV0BimBpSw+hrVnRZogTiPDnzgBOp9XX/VYHcefq
+         6v5dBGd7SzuaGvqAR3W6683wWfbkxHacEY7xqGm7307Z2HcMr2GXTa5+u5+RWfpEVbbQ
+         kv1h0oRcbwbLwcmXoUYHlKzqChZUCUu+iUqveEKC0PO8BN642aZM78DglZqsY3Z6tIjz
+         FwmrVygdiY7k9sc+EyDfdHNmwW5j/jhOUgWcKeY2+ArCsPKc1UDkbOLI7lxxwfq7EJhS
+         JqP3WDH+1kU2FxgNbuj1yCFxOjWGbKUzEerq8nNUXNLtDxd4yFd1r28Y03U6m/MS5HMK
+         uP8Q==
+X-Gm-Message-State: APjAAAWzZ70te1X21h8O6/2CZpBo+iuJROpb31HoZzcH7Da8FgKJFNYI
+        VedLEQBhsJzoYe8/RyZPElTYp19n
+X-Google-Smtp-Source: APXvYqzeKHKlvJowSv5C3aWR0q0arCg96YOaG598FXB2raKvWKP4WEjHJetfsraj4Pau+rwIa47lqA==
+X-Received: by 2002:a05:6000:1183:: with SMTP id g3mr6698716wrx.374.1580297712119;
+        Wed, 29 Jan 2020 03:35:12 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id q124sm9978903wme.2.2020.01.29.03.35.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 03:35:11 -0800 (PST)
+Date:   Wed, 29 Jan 2020 12:35:09 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] x86/cpu changes for v5.6
+Message-ID: <20200129113509.GB89586@gmail.com>
+References: <20200128175751.GA35649@gmail.com>
+ <CAHk-=wjoZfKFHL0wSsfnm32zv=zWNxtJcPob+1z2+P-tMcdoCg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <bc60b915-1975-b623-6b85-fc034cf649f3@arm.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmnu7mXMM4gzX9ehYTb1xhsTjb9Ibd
-        4vKuOWwWn3uPMFosbGpht7jduILNgc1jzbw1jB6bVnWyefRtWcXo8XmTXABLVLZNRmpiSmqR
-        Qmpecn5KZl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJuqq2Si0+ArltmDtByJYWyxJxSoFBAYnGx
-        kr6dTVF+aUmqQkZ+cYmtUmpBSk6BZYFecWJucWleul5yfq6VoYGBkSlQYUJ2xoWLa9gLfulX
-        TF3QxdbAuEmzi5GTQ0LARGLetBtMXYxcHEICOxglps9awQ6SEBL4xCixtbMEIvGNUeLfqlds
-        MB2bdtxmhUjsZZT42vAQqv09o8TOJ7fA2oUFIiV+bf0N1iEiEC/xtnsNmM0s4C2x+O1qRhCb
-        TUBLYv+LG2BxfgFFias/HoPFeQXsJM70HwGzWQRUJX5sfM4EYosKhEmc3NYCVSMocXLmExYQ
-        m1PAWuLg3VtQ88Ulbj2ZzwRhy0s0b53NDHKchMBjNokVx98BFXEAOS4SFyYXQHwjLPHq+BZ2
-        CFtK4mV/G5RdLbHy5BE2iN4ORokt+y+wQiSMJfYvncwEModZQFNi/S59iLCixM7fcxkh9vJJ
-        vPvawwqxileio00IokRZ4vKDu0wQtqTE4vZOtgmMSrOQfDMLyQezkHwwC2HZAkaWVYxiqQXF
-        uempxYYFhsiRvYkRnC61THcwTjnnc4hRgINRiYfXQckgTog1say4MvcQowQHs5IIr6irYZwQ
-        b0piZVVqUX58UWlOavEhRlNgYE9klhJNzgem8rySeENTI2NjYwsTQzNTQ0Mlcd6HkZpxQgLp
-        iSWp2ampBalFMH1MHJxSDYzzo70yhJo8P0kY8jmkN7w4MPGZyUWPum+vbjZM0j7qqnp9R2b3
-        19OnDN79qLfdsjuLe9Xr3sWnGjZNCny6w+NtLFfkazHmHM2ORfW2n8L53MsaEi7w3/tsvbC0
-        9P+KwM+vlwTMFkruldTuW39zviaf+OeS4p7EHN4ZsxsTV2xoT8mVfbRm2WYlluKMREMt5qLi
-        RAD41rxtrQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJTndzrmGcwY8vAhYTb1xhsTjb9Ibd
-        4vKuOWwWn3uPMFosbGpht7jduILNgc1jzbw1jB6bVnWyefRtWcXo8XmTXABLFJdNSmpOZllq
-        kb5dAlfGhYtr2At+6VdMXdDF1sC4SbOLkZNDQsBEYtOO26xdjFwcQgK7GSX61q9mhkhISky7
-        eBTI5gCyhSUOHy6GqHnLKNG9bjc7SI2wQKTEr62/2UBsEYF4iZsTHrKA2MwC3hKL365mhGh4
-        xyhx9eZEsASbgJbE/hc3wBr4BRQlrv54zAhi8wrYSZzpPwJmswioSvzY+JwJxBYVCJPYueQx
-        E0SNoMTJmU/A5nAKWEscvHuLDWKZusSfeZeYIWxxiVtP5jNB2PISzVtnM09gFJ6FpH0WkpZZ
-        SFpmIWlZwMiyilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/dxMjOHa0tHYwnjgRf4hRgINR
-        iYfXQckgTog1say4MvcQowQHs5IIr6irYZwQb0piZVVqUX58UWlOavEhRmkOFiVxXvn8Y5FC
-        AumJJanZqakFqUUwWSYOTqkGxtiXfF9q0tlqPaZbaKVPPpS0S6p2p2juXMEFCxg9+n8KiWgl
-        NZYtz6yc7DktwOL85qxlW7cv/XlF+k1q5/Yl6YUF5a+rZ+ibpxxXdLhvevH052nvb3Gc9Jl8
-        tfGKwZu9y42Lf0dPX3j3eq39hIUnfmt+vCEyY/LuZ1vSP3N4NVsmhK8/setJb5YSS3FGoqEW
-        c1FxIgB79w/+mQIAAA==
-X-CMS-MailID: 20200129113411epcas1p27949df511b1284425e9d284d61b9bb41
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200129111225epcas1p1c262e46a878ad68836a676bc351840bf
-References: <20200129112002.6998-1-cw00.choi@samsung.com>
-        <CGME20200129111225epcas1p1c262e46a878ad68836a676bc351840bf@epcas1p1.samsung.com>
-        <20200129112002.6998-2-cw00.choi@samsung.com>
-        <bc60b915-1975-b623-6b85-fc034cf649f3@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjoZfKFHL0wSsfnm32zv=zWNxtJcPob+1z2+P-tMcdoCg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/29/20 8:28 PM, Lukasz Luba wrote:
-> Hi Chanwoo,
-> 
-> Apart from small mistakes in the commit message, looks good to me.
-> 
-> On 1/29/20 11:20 AM, Chanwoo Choi wrote:
->> DEVFREQ_GOV_INTERVAL event indicates that update the interval
->> for polling mode of devfreq device. But, this event name doesn't
->> specify exactly what to do.
->>
->> Change DEVFREQ_GOV_INTERVAL event name to DEVFREQ_GOV_UPDATE_INTERVAL
->> which specifies what to do by event name.
->>
->> And modify the functio name for DEVFREQ_GOV_UPDATE_INTERVAL
-> 
-> s/functio/function
 
-I'll fix it.
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
+> On Tue, Jan 28, 2020 at 9:57 AM Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cpu-for-linus
 > 
->> with 'devfreq_' prefix + verb + obejct as following:
+> No diffstat in the pull request?
 > 
-> 'obejct'?
+> The shortlog does match, and the diffstat I get looks sane, so I'm
+> pulling it, but please fix whatever thing that caused the diffstat to
+> not show in the email..
+> 
+>                  Linus
 
-I'll fix it to 'object'.
+My bad: I erased the patch part manually and went too far accidentally. :-/
 
-Thanks for the review.
+Just for the record, this looks good:
 
-> 
->> - devfreq_interval_update -> devfreq_updatee_interval
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>   drivers/devfreq/devfreq.c                 | 10 +++++-----
->>   drivers/devfreq/governor.h                |  4 ++--
->>   drivers/devfreq/governor_simpleondemand.c |  4 ++--
->>   drivers/devfreq/tegra30-devfreq.c         |  4 ++--
->>   4 files changed, 11 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->> index cceee8bc3c2f..8494c5f05a73 100644
->> --- a/drivers/devfreq/devfreq.c
->> +++ b/drivers/devfreq/devfreq.c
->> @@ -550,14 +550,14 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
->>   EXPORT_SYMBOL(devfreq_monitor_resume);
->>     /**
->> - * devfreq_interval_update() - Update device devfreq monitoring interval
->> + * devfreq_update_interval() - Update device devfreq monitoring interval
->>    * @devfreq:    the devfreq instance.
->>    * @delay:      new polling interval to be set.
->>    *
->>    * Helper function to set new load monitoring polling interval. Function
->> - * to be called from governor in response to DEVFREQ_GOV_INTERVAL event.
->> + * to be called from governor in response to DEVFREQ_GOV_UPDATE_INTERVAL event.
->>    */
->> -void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay)
->> +void devfreq_update_interval(struct devfreq *devfreq, unsigned int *delay)
->>   {
->>       unsigned int cur_delay = devfreq->profile->polling_ms;
->>       unsigned int new_delay = *delay;
->> @@ -597,7 +597,7 @@ void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay)
->>   out:
->>       mutex_unlock(&devfreq->lock);
->>   }
->> -EXPORT_SYMBOL(devfreq_interval_update);
->> +EXPORT_SYMBOL(devfreq_update_interval);
->>     /**
->>    * devfreq_notifier_call() - Notify that the device frequency requirements
->> @@ -1426,7 +1426,7 @@ static ssize_t polling_interval_store(struct device *dev,
->>       if (ret != 1)
->>           return -EINVAL;
->>   -    df->governor->event_handler(df, DEVFREQ_GOV_INTERVAL, &value);
->> +    df->governor->event_handler(df, DEVFREQ_GOV_UPDATE_INTERVAL, &value);
->>       ret = count;
->>         return ret;
->> diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
->> index 5ba3e051b1d0..c07ce77c253d 100644
->> --- a/drivers/devfreq/governor.h
->> +++ b/drivers/devfreq/governor.h
->> @@ -18,7 +18,7 @@
->>   /* Devfreq events */
->>   #define DEVFREQ_GOV_START            0x1
->>   #define DEVFREQ_GOV_STOP            0x2
->> -#define DEVFREQ_GOV_INTERVAL            0x3
->> +#define DEVFREQ_GOV_UPDATE_INTERVAL        0x3
->>   #define DEVFREQ_GOV_SUSPEND            0x4
->>   #define DEVFREQ_GOV_RESUME            0x5
->>   @@ -61,7 +61,7 @@ void devfreq_monitor_start(struct devfreq *devfreq);
->>   void devfreq_monitor_stop(struct devfreq *devfreq);
->>   void devfreq_monitor_suspend(struct devfreq *devfreq);
->>   void devfreq_monitor_resume(struct devfreq *devfreq);
->> -void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay);
->> +void devfreq_update_interval(struct devfreq *devfreq, unsigned int *delay);
->>     int devfreq_add_governor(struct devfreq_governor *governor);
->>   int devfreq_remove_governor(struct devfreq_governor *governor);
->> diff --git a/drivers/devfreq/governor_simpleondemand.c b/drivers/devfreq/governor_simpleondemand.c
->> index 3d809f228619..1b314e1df028 100644
->> --- a/drivers/devfreq/governor_simpleondemand.c
->> +++ b/drivers/devfreq/governor_simpleondemand.c
->> @@ -96,8 +96,8 @@ static int devfreq_simple_ondemand_handler(struct devfreq *devfreq,
->>           devfreq_monitor_stop(devfreq);
->>           break;
->>   -    case DEVFREQ_GOV_INTERVAL:
->> -        devfreq_interval_update(devfreq, (unsigned int *)data);
->> +    case DEVFREQ_GOV_UPDATE_INTERVAL:
->> +        devfreq_update_interval(devfreq, (unsigned int *)data);
->>           break;
->>         case DEVFREQ_GOV_SUSPEND:
->> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
->> index 0b65f89d74d5..28b2c7ca416e 100644
->> --- a/drivers/devfreq/tegra30-devfreq.c
->> +++ b/drivers/devfreq/tegra30-devfreq.c
->> @@ -734,7 +734,7 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
->>           devfreq_monitor_stop(devfreq);
->>           break;
->>   -    case DEVFREQ_GOV_INTERVAL:
->> +    case DEVFREQ_GOV_UPDATE_INTERVAL:
->>           /*
->>            * ACTMON hardware supports up to 256 milliseconds for the
->>            * sampling period.
->> @@ -745,7 +745,7 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
->>           }
->>             tegra_actmon_pause(tegra);
->> -        devfreq_interval_update(devfreq, new_delay);
->> +        devfreq_update_interval(devfreq, new_delay);
->>           ret = tegra_actmon_resume(tegra);
->>           break;
->>  
-> 
-> 
-> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-> 
-> 
-> Regards,
-> Lukasz
-> 
-> 
+   commit c0275ae758f8ce72306da200b195d1e1d66d0a8d
+   Merge: f6170f0afbe2 283bab980978
+   Author: Linus Torvalds <torvalds@linux-foundation.org>
+   Date:   Tue Jan 28 12:46:42 2020 -0800
 
+And the missing diffstat is attached below.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Thanks,
+
+	Ingo
+
+=============>
+
+ MAINTAINERS                                            |   2 +-
+ arch/x86/Kconfig.cpu                                   |   8 ++
+ arch/x86/boot/mkcpustr.c                               |   1 +
+ arch/x86/include/asm/cpufeatures.h                     |   1 +
+ arch/x86/include/asm/msr-index.h                       |  14 +--
+ arch/x86/include/asm/perf_event.h                      |  22 +++--
+ arch/x86/include/asm/processor.h                       |  11 +--
+ arch/x86/include/asm/vmx.h                             | 105 ++++++++++----------
+ arch/x86/include/asm/vmxfeatures.h                     |  86 ++++++++++++++++
+ arch/x86/kernel/cpu/Makefile                           |   6 +-
+ arch/x86/kernel/cpu/bugs.c                             |   7 ++
+ arch/x86/kernel/cpu/centaur.c                          |  37 +------
+ arch/x86/kernel/cpu/common.c                           |   3 +
+ arch/x86/kernel/cpu/cpu.h                              |   4 +
+ arch/x86/kernel/cpu/feat_ctl.c                         | 145 +++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/intel.c                            |  49 +--------
+ arch/x86/kernel/cpu/mce/intel.c                        |  15 +--
+ arch/x86/kernel/cpu/mkcapflags.sh                      |  15 ++-
+ arch/x86/kernel/cpu/proc.c                             |  15 +++
+ arch/x86/kernel/cpu/tsx.c                              |   5 +-
+ arch/x86/kernel/cpu/zhaoxin.c                          |  37 +------
+ arch/x86/kvm/Kconfig                                   |  10 +-
+ arch/x86/kvm/vmx/nested.c                              |   4 +-
+ arch/x86/kvm/vmx/vmx.c                                 |  67 ++++---------
+ arch/x86/kvm/vmx/vmx.h                                 |   2 +-
+ arch/x86/kvm/x86.c                                     |   2 +-
+ drivers/idle/intel_idle.c                              |   2 +-
+ tools/arch/x86/include/asm/msr-index.h                 |  14 +--
+ tools/power/x86/turbostat/turbostat.c                  |   4 +-
+ tools/testing/selftests/kvm/Makefile                   |   4 +-
+ tools/testing/selftests/kvm/include/x86_64/processor.h | 726 +------------------------------------------------------------------------------------------------------------------------------------
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c           |   8 +-
+ 32 files changed, 432 insertions(+), 999 deletions(-)
+ create mode 100644 arch/x86/include/asm/vmxfeatures.h
+ create mode 100644 arch/x86/kernel/cpu/feat_ctl.c
