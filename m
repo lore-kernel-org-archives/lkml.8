@@ -2,71 +2,72 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C817C33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30913C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3509B2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92E42071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MNWayklz"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="OvKOKJfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgA2NjT (ORCPT
+        id S1726643AbgA2Njy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:39:19 -0500
-Received: from mail-pj1-f42.google.com ([209.85.216.42]:37416 "EHLO
-        mail-pj1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgA2NjT (ORCPT
+        Wed, 29 Jan 2020 08:39:54 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36063 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgA2Njx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:39:19 -0500
-Received: by mail-pj1-f42.google.com with SMTP id m13so2664353pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 05:39:18 -0800 (PST)
+        Wed, 29 Jan 2020 08:39:53 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k3so8855717pgc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 05:39:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=jRw4gHj3o+0fDg3wZL+MId/7a4nIQ2wDAMiYdbQUCIE=;
-        b=MNWayklz5DOaPLQuHOF6vvFj3L/UpWZ8cJxmLJMaJ2B3hV7J4/9PyCQIcZCUniepHJ
-         BC0JgUyyh2JTo+rYIfijyJo2csqrMSk1NgZBZKNj4JoFSTpCCSnmwXp9hTjd+enGGYYu
-         dqkx50Nhvd9ugjHLtwOvHFXIyfMxuo4IIZXDTX3odQaI4VhjtqQ0KDXjmpOIgQI0s3hr
-         xAA2Ua3U6sFfwiAYFP5TCXJaRWNEfK66QIqkG5sJ8mWFZaC+q0zLWJ9jTDKzIu6P2dQd
-         3iqpEuVIMD13B9AWJ3jDbkj6Jl8DUhBR49cpjtsK2RCtSD+xdC3tcuaZn6yy6Rmb6xzQ
-         ExQw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ah4QQ6K1QfptejU5H4/uQ+LpdR24t+eMpQnEA0OsMVc=;
+        b=OvKOKJfD9FMElCBRo0DyjnznMUFKfW/uGVfNasmNIX6FPKGms0PK685vFMzIqxxH/U
+         /+yM03X/HYthyDI8DvX/W80ggNAJPR1RyjzSYkrPrjeB9DBBzGMTH2HnXiYqyOUOJbJJ
+         iWgFVH2wcrOxpq5jFfnw++WvWBVgj7m+yqJ+vc4owJe8fRY4d7/qJI+ucBBmTxoEM4Kw
+         C6reNVX0eHX4nh9mb+z9HxIKI4w9XQN38LD4Af/4/8OGx5bgc8NWNVuOXo7m/ewvwYYJ
+         lTgmAGbQi+AWzGghj6iAbzYZ6Kt0Fr16qckmpDtw5wqcwftOdijj2I2Nj2queDIuuJbh
+         77BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=jRw4gHj3o+0fDg3wZL+MId/7a4nIQ2wDAMiYdbQUCIE=;
-        b=Z+3MQL30YsagA9rIOVtsE8qPY4X3Er6rjj4GPD8ihbwrP89U8hpa7XMwf3tPcBIcTe
-         87hOBdrk8gil0fgp16DPoyY6Ha+dw+4QxzdoOPpECeCJJebzEqPRj3jDRrahZjJlt3ki
-         Jd0VsCsyrdkRTB8Jxg4QSvIMuVeGCP74jv+XG3YObQWenYH8jNNnAp2lrfbz7duQXyL0
-         5I5+Se7GZzxuQ6/2vMUUnSSm4Im+F1afCiRZDA9DvbvmEQonzbpH+nKmn5Gi5MZ/2O8w
-         73UIdaQ+HOJe1f+3L2TZY5Y85P0Nai3PDQQ089LI9M2CsuS8954md/Rm6B6MGKMzo4MZ
-         bKTA==
-X-Gm-Message-State: APjAAAU2+2Gd7h4aOsLcSKoSf9ZYMzg8Kbr5JS+xc2bHNFUtyG7O6Okk
-        bbnjRqlBbHOzP/pY8lIQXdGriU5Ewv4=
-X-Google-Smtp-Source: APXvYqyPhfTyC7VNpA0L1MnRS7VkitmsDY5CbseGZBhvbp+Wxs1WEbNLbRh9ExN3O88DCJIhHovfdQ==
-X-Received: by 2002:a17:90a:c708:: with SMTP id o8mr11397427pjt.104.1580305157936;
-        Wed, 29 Jan 2020 05:39:17 -0800 (PST)
+        bh=ah4QQ6K1QfptejU5H4/uQ+LpdR24t+eMpQnEA0OsMVc=;
+        b=VYjLOXmjF7umsxN6DHEo559wXCSv1at+CGytPUaAUROplYDaZZLKAA8yy5BOL/1Lso
+         2u9d2atrshfJmaD6vfUuSm2tGaZFfpwRzrgL9tm4wjAcmXno1hvwGiAySqrVtOrepB3A
+         27Mwit2SM51ou0NZxYRn1fLgkoXNM5NMiJLhI7c2qIknC3S373pPZZWEVWNEJmFsn1j3
+         YU9oX9/WtYwyF0D2rLUj9jBUpEnE8GcHlweSYmnAfwhzvNVt8d7zy9KB2ZkKHO+1+Skx
+         Svon6bGz4vci5F2fWZq2rXaRtZx3pdGHFeQ0roN8h+U0a+ZSoSSsVWhyvgeB50RBiRfU
+         2pmA==
+X-Gm-Message-State: APjAAAWlSTLlzqNISKXUX9ikyTyEQ/PvxdcG4gBca1D5ayNmbp9ctPUN
+        Dg66nUeUrqDVTok8+/Mjja9e67KVcE4=
+X-Google-Smtp-Source: APXvYqyTXQ8n2bMp+ka9gBWrzTDS5UvGh7HozYikOd0DAM7NwUNGRbjsd8Jpw3ZYdpnkrDBfziplwQ==
+X-Received: by 2002:a63:e80d:: with SMTP id s13mr31323854pgh.134.1580305193016;
+        Wed, 29 Jan 2020 05:39:53 -0800 (PST)
 Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id i68sm2972265pfe.173.2020.01.29.05.39.17
+        by smtp.gmail.com with ESMTPSA id q8sm2857780pgg.92.2020.01.29.05.39.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 05:39:17 -0800 (PST)
-Subject: Re: [PATCH] io-wq: use put instead of revert creds
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <c79bab7a6bd174f32121c9508390264bff9950ca.1580292613.git.asml.silence@gmail.com>
+        Wed, 29 Jan 2020 05:39:52 -0800 (PST)
+Subject: Re: [PATCH liburing v2] .gitignore: add missing tests to ignore
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200129091723.16746-1-sgarzare@redhat.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <044f452e-76ab-c555-9dce-3c7a711d3c5e@kernel.dk>
-Date:   Wed, 29 Jan 2020 06:39:16 -0700
+Message-ID: <9942eb1e-5652-3520-9657-f9cef8ea6bba@kernel.dk>
+Date:   Wed, 29 Jan 2020 06:39:51 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <c79bab7a6bd174f32121c9508390264bff9950ca.1580292613.git.asml.silence@gmail.com>
+In-Reply-To: <20200129091723.16746-1-sgarzare@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,12 +76,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/29/20 3:10 AM, Pavel Begunkov wrote:
-> There is no need to publish creds twice in io_wq_switch_creds() (in
-> revert_creds() and override_creds()). Just do override_creds() and
-> put_creds() if needed.
+On 1/29/20 2:17 AM, Stefano Garzarella wrote:
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+> v1 -> v2:
+>     - rebased on master
+>     - forced 8-bit content transfer encoding (I hope it works)
 
-Thanks, looks good. Applied.
+It does work - applied, thanks!
 
 -- 
 Jens Axboe
