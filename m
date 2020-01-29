@@ -2,89 +2,145 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61794C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0733FC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFEA2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:25:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fZa691zx"
+	by mail.kernel.org (Postfix) with ESMTP id DB66020702
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgA2MZn (ORCPT
+        id S1726650AbgA2M1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:25:43 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36241 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgA2MZn (ORCPT
+        Wed, 29 Jan 2020 07:27:11 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:53877 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgA2M1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:25:43 -0500
-Received: by mail-qt1-f194.google.com with SMTP id t13so12627472qto.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 04:25:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=P5Dt2dH1joRUG7g3rFIqA/IEm4rCryr2l+IoRrIYc+k=;
-        b=fZa691zxlM8/PJTWvAjVvOyAIwK0md/9eQKUpY4fOIYint3eJHeyBeSS58Qf9ho0yV
-         4DD5NH38GD8PIaL46eBZMhdoUjPenGjLpIzHQDZfIYIP3b7YgYviRGtUqGJ7xsDUS8OU
-         WdGIYnMT9NDRGVS+VO2AQa/6qHJzdcqSjHZOCeTW1y1Y1Sd1M8patjPq78Xtea/rfJTR
-         RNa8Utyx4i/HcZz0CDl+eV2X049QsTBi7HHh+WTjOO2+++dj1ftGukMOPCfy6q1j/wzf
-         /3cj5skE+bh3gvQZRLRk6z6zaGJqYsbLMfFSUZF6HwpnKAGQft4Rnmx5W4v5eK/mO+Gx
-         p+iA==
+        Wed, 29 Jan 2020 07:27:10 -0500
+Received: by mail-io1-f70.google.com with SMTP id q24so6534669iot.20
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 04:27:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=P5Dt2dH1joRUG7g3rFIqA/IEm4rCryr2l+IoRrIYc+k=;
-        b=iYL0e7fV6xepiHXHdU72dFMvkrR2S/dzZGj5qufgYzItrWa/9Q3hQECM9jKBbHapBG
-         4Ge826ozKsREKqEpCn53ArfBaawiLZUHhGtxPF/Jf95zPVUgtF6oTbOHkM1Io+KE/zig
-         nO4lFdzbBgbldC9mYy+3qKqbZaU7trX3nNxCVMupcaPHIYUulNqsxvepNhipHnxs56ik
-         4jn/woIfq9e97Sain6Shvwz+KCjSoeJ9iuehnKCOF2CV1PdiLFTIWkmhmzBfDGQaSk7y
-         G3Dm5X6llGr83V2gpO4YX7oCpRB1GhXcsmkbcau4LQy8ROatvNxdPazmbuyP0ZyJiJP0
-         WTDQ==
-X-Gm-Message-State: APjAAAWZAHifvYEYX9CPMl76hEPMsgGPhaako3zr47lWfQoUFNHQ9TR2
-        S0RPXkFssev8MIauGXC98quHFK5zZGmVlg==
-X-Google-Smtp-Source: APXvYqwEWkCWvO9EEpMi+Z6FMCIN1Z7CxF4fxPuVh9lX0A+QJ0UGpEg3ISsl/+aqCUKxTfc9H9S2Rw==
-X-Received: by 2002:aed:2050:: with SMTP id 74mr26490917qta.217.1580300740519;
-        Wed, 29 Jan 2020 04:25:40 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r185sm875146qke.102.2020.01.29.04.25.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 04:25:39 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm/page_counter: fix various data races
-Date:   Wed, 29 Jan 2020 07:25:39 -0500
-Message-Id: <2D795DB7-66FE-4F01-872F-F8ACAE9505EF@lca.pw>
-References: <59f892d0-5fc4-ae32-ce65-5a688d9180c8@I-love.SAKURA.ne.jp>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Michal Hocko <mhocko@kernel.org>, akpm@linux-foundation.org,
-        hannes@cmpxchg.org, elver@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <59f892d0-5fc4-ae32-ce65-5a688d9180c8@I-love.SAKURA.ne.jp>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-X-Mailer: iPhone Mail (17C54)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=1LU7cT1NM4zJrmEpKD8Xx8DzjfpEkyjd7mAueUGcFA4=;
+        b=cKkZNus8attjqA5agCC9rRZ+oknQiQ3oJLL9XROoJS48sCfNtAF1Eo+MJdgbXlZRMx
+         80gzEIe9vLZV91452QGBUxfcy6Nk+exyyKsjTLoquuALeNJ2sZEHv1rlR8rMCo346Qtj
+         cZ2uBzIXQSnmnMXUTU30BWiEjXwE9mqFUja2SvW0BgXZz1fwPZTu7IdyWSLt0dH9casT
+         dZU2HCo6ZH2fDYeGH9clVcJ2YX/Tm8icaH6VIT+eS2kxTv5qYOiBgV9BT4dzX6/6OG+A
+         6dzUK3ubfTXZqfljpQBdk2bXIcuJ4O0SvsG/QcaeUnNSclVGqSm2oq5P2vdUyI0V66nf
+         c97w==
+X-Gm-Message-State: APjAAAV52Q+IxTiyuV4Z1YztoSqcubyibOa6BG63CTXBLm3KWiyepRxM
+        nQWNdX+aTsuMTzn66BF9hLtHdL56OZf5gw+nbMUvxkrZVXYZ
+X-Google-Smtp-Source: APXvYqyNNrRfVc3UyNQSHPkK7stFmdv/ZckLWKDUYrA32R2im2tl3cGAMvD4/gIXTVOHZxoxgKtB42vprg8vDW7+E4Q2MgUMWssJ
+MIME-Version: 1.0
+X-Received: by 2002:a02:5206:: with SMTP id d6mr3952937jab.8.1580300829579;
+ Wed, 29 Jan 2020 04:27:09 -0800 (PST)
+Date:   Wed, 29 Jan 2020 04:27:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000095e1d8059d4675ac@google.com>
+Subject: WARNING in ar5523_cmd/usb_submit_urb
+From:   syzbot <syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    cd234325 usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=146bf3c9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bb745005307bc641
+dashboard link: https://syzkaller.appspot.com/bug?extid=1bc2c2afd44f820a669f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1646cf35e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11017735e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com
+
+usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+usb 1-1: Product: syz
+usb 1-1: Manufacturer: syz
+usb 1-1: SerialNumber: syz
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 3 != type 1
+WARNING: CPU: 0 PID: 95 at drivers/usb/core/urb.c:478 usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 95 Comm: kworker/0:2 Not tainted 5.5.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ panic+0x2aa/0x6e1 kernel/panic.c:221
+ __warn.cold+0x2f/0x30 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+Code: 4d 85 ed 74 46 e8 28 2d e1 fd 4c 89 f7 e8 d0 87 17 ff 41 89 d8 44 89 e1 4c 89 ea 48 89 c6 48 c7 c7 a0 2b 3b 86 e8 20 13 b6 fd <0f> 0b e9 20 f4 ff ff e8 fc 2c e1 fd 0f 1f 44 00 00 e8 f2 2c e1 fd
+RSP: 0018:ffff8881d58cf0d8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff81295a0d RDI: ffffed103ab19e0d
+RBP: ffff8881cd478050 R08: ffff8881d71ac980 R09: fffffbfff1269cae
+R10: fffffbfff1269cad R11: ffffffff8934e56f R12: 0000000000000003
+R13: ffff8881d098eee8 R14: ffff8881cda730a0 R15: ffff8881d5583b00
+ ar5523_cmd+0x438/0x7a0 drivers/net/wireless/ath/ar5523/ar5523.c:271
+ ar5523_cmd_read drivers/net/wireless/ath/ar5523/ar5523.c:298 [inline]
+ ar5523_host_available drivers/net/wireless/ath/ar5523/ar5523.c:1372 [inline]
+ ar5523_probe+0xc11/0x1ad0 drivers/net/wireless/ath/ar5523/ar5523.c:1652
+ usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
+ generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+ usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2538
+ hub_port_connect drivers/usb/core/hub.c:5185 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5325 [inline]
+ port_event drivers/usb/core/hub.c:5471 [inline]
+ hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5553
+ process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-> On Jan 29, 2020, at 7:13 AM, Tetsuo Handa <penguin-kernel@i-love.sakura.ne=
-.jp> wrote:
->=20
-> By the way, can READ_ONCE()/WRITE_ONCE() really solve this warning?
-> The link above says read/write on the same location ( mm/page_counter.c:12=
-9 ).
-> I don't know how READ_ONCE()/WRITE_ONCE() can solve the race.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-That looks like a different one where it complains about c->failcnt++. I=E2=80=
-=99ll send a separate patch for that.=
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
